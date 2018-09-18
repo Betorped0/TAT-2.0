@@ -1,13 +1,17 @@
-﻿using System;
+﻿using ExcelDataReader;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI.HtmlControls;
 using TAT001.Entities;
 using TAT001.Models;
+using TAT001.Services;
 
 namespace TAT001.Controllers.Catalogos
 {
@@ -707,5 +711,661 @@ namespace TAT001.Controllers.Catalogos
             }
             base.Dispose(disposing);
         }
+
+
+
+        public ActionResult Carga()
+        {
+            int pagina = 601;
+            using (TAT001Entities db = new TAT001Entities())
+            {
+                string u = User.Identity.Name;
+                //string u = "admin";
+                var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
+                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
+                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
+                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+
+                try
+                {
+                    string p = Session["pais"].ToString();
+                    ViewBag.pais = p + ".png";
+                }
+                catch
+                {
+                    //ViewBag.pais = "mx.png";
+                    //return RedirectToAction("Pais", "Home");
+                }
+                Session["spras"] = user.SPRAS_ID;
+            }
+            return View();
+        }
+        [HttpPost]
+        public ActionResult Carga(IEnumerable<HttpPostedFileBase> files)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public JsonResult LoadExcel()
+        {
+            List<DET_AGENTE1> ld = new List<DET_AGENTE1>();
+
+
+            if (Request.Files.Count > 0)
+            {
+                HttpPostedFileBase file = Request.Files["FileUpload"];
+                string extension = System.IO.Path.GetExtension(file.FileName);
+                IExcelDataReader reader = ExcelReaderFactory.CreateReader(file.InputStream);
+                DataSet result = reader.AsDataSet();
+                DataTable dt = result.Tables[0];
+                ld = objAList1(dt);
+
+                reader.Close();
+            }
+
+            List<Usuarios> uu = new List<Usuarios>();
+            List<USUARIO> usuarios = new List<USUARIO>();
+            List<CLIENTE> clientes = new List<CLIENTE>();
+            List<PUESTO> puesto = new List<PUESTO>();
+            List<SOCIEDAD> sociedad = new List<SOCIEDAD>();
+            int rowst = ld.Count();
+            int rowst2 = 1;
+            string[] IDs = new string[rowst];
+            int cont2= 0;
+            string[,] tablas = new string[rowst, 11];
+            string[,] client = new string[rowst,2];
+            string[] gua = new string[rowst];
+
+            foreach (DET_AGENTE1 da in ld)
+            {
+                int cont = 1;
+                string messa = null;
+                bool vus = false;
+                Usuarios us = new Usuarios();
+
+                us.KUNNR = da.KUNNR;
+                us.KUNNRX = true;
+                us.BUNIT = da.BUNIT;
+                us.BUNITX = true;
+                us.PUESTO_ID = da.PUESTO_ID;
+                us.PUESTO_IDX = true;
+                us.ID = da.ID;
+                us.IDX = true;
+                us.NOMBRE = da.NOMBRE;
+                us.APELLIDO_P = da.APELLIDO_P;
+                us.APELLIDO_M = da.APELLIDO_M;
+                us.EMAIL = da.EMAIL;
+                us.EMAILX = true;
+                us.SPRAS_ID = da.SPRAS_ID;
+                us.SPRAS_IDX = true;
+                us.PASS = da.PASS;
+
+                tablas[cont2, 0] = da.KUNNR.ToString();
+                gua[cont2] = da.KUNNR.ToString();
+                tablas[cont2, 1] = da.BUNIT.ToString();
+                tablas[cont2, 2] = da.PUESTO_ID.ToString();
+                tablas[cont2, 3] = da.ID.ToString();
+                tablas[cont2, 4] = da.NOMBRE.ToString();
+                tablas[cont2, 5] = da.APELLIDO_P.ToString();
+                tablas[cont2, 6] = da.APELLIDO_M.ToString();
+                tablas[cont2, 7] = da.EMAIL.ToString();
+                tablas[cont2, 8] = da.SPRAS_ID.ToString();
+                tablas[cont2, 9] = da.PASS.ToString();
+
+                if(cont2>0)
+                if (us.KUNNR != gua[cont2 - 1] && us.BUNIT == "" && us.PUESTO_ID == null && us.ID == "" && us.NOMBRE == "" && us.APELLIDO_P == "" && us.APELLIDO_M == "" && us.EMAIL == "" && us.SPRAS_ID == "" && us.PASS == "")
+                {
+                    vus = true;
+                }
+
+                if (vus == false)
+                {
+                    CLIENTE k = clientes.Where(x => x.KUNNR.Equals(us.KUNNR)).FirstOrDefault();
+                    if (k == null)
+                    {
+                        k = db.CLIENTEs.Where(cc => cc.KUNNR.Equals(us.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
+                        if (k == null)
+                            us.KUNNRX = false;
+                        else
+                        {
+                            clientes.Add(k);
+                            client[cont2, 0] = us.KUNNR.ToString();
+                        }
+                    }
+                    if (!us.KUNNRX)
+                    {
+                        us.KUNNR = "<span class='red white-text'>" + us.KUNNR + "</span>";
+                        messa = cont + ". Error en el cliente \n\r";
+                        cont++;
+                    }
+                }
+                else
+                {
+                    CLIENTE k = clientes.Where(x => x.KUNNR.Equals(us.KUNNR)).FirstOrDefault();
+                    if (k == null)
+                    {
+                        k = db.CLIENTEs.Where(cc => cc.KUNNR.Equals(us.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
+                        if (k == null)
+                            us.KUNNRX = false;
+                        else
+                        {
+                            clientes.Add(k);
+                            client[cont2, 0] = us.KUNNR.ToString();
+                        }
+                    }
+                }
+
+                if (vus == false)
+                {
+                    SOCIEDAD b = sociedad.Where(x => x.BUKRS.Equals(us.BUNIT)).FirstOrDefault();
+                    if (b == null)
+                    {
+                        b = db.SOCIEDADs.Where(x => x.BUKRS.Equals(us.BUNIT) & x.ACTIVO == true).FirstOrDefault();
+                        if (b == null)
+                            us.BUNITX = false;
+                        else
+                            sociedad.Add(b);
+                    }
+                    if (!us.BUNITX)
+                    {
+                        us.BUNIT = "<span class='red white-text'>" + us.BUNIT + "</span>";
+                        messa = messa + cont + ". Error en la sociedad \n\r";
+                        cont++;
+                    }
+
+                    PUESTO pi = puesto.Where(x => x.ID == us.PUESTO_ID).FirstOrDefault();
+                    if (pi == null)
+                    {
+                        pi = db.PUESTOes.Where(x => x.ID == us.PUESTO_ID & x.ACTIVO == true).FirstOrDefault();
+                        if (pi == null)
+                            us.PUESTO_IDX = false;
+                        else
+                            puesto.Add(pi);
+                    }
+                    if (!us.PUESTO_IDX)
+                    {
+                        us.PUESTO_ID = us.PUESTO_ID;
+                        messa = messa + cont + ". Error en el nivel \n\r";
+                        cont++;
+                    }
+                }
+                if (vus == false)
+                {
+                    if (us.ID == null || us.ID == "")
+                        us.IDX = false;
+                    else if (IDs.Contains(us.ID))
+                        us.IDX = false;
+                    else
+                    {
+                        USUARIO u = db.USUARIOs.Where(xu => xu.ID.Equals(us.ID)).FirstOrDefault();
+                        if (u != null)
+                            us.IDX = false;
+                        else
+                        {
+                            usuarios.Add(u);
+                            IDs[cont2] = us.ID;
+                            client[cont2, 1] = us.ID.ToString();
+                        }
+                    }
+
+                    if (!us.IDX)
+                    {
+                        us.ID = "<span class='red white-text'>" + us.ID + "</span>";
+                        messa = messa + cont + ". Error en el ID de usuario \n\r";
+                        cont++;
+                    }
+                }
+                else
+                {
+                    client[cont2, 1] = us.ID.ToString();
+                }
+
+                if (vus == false)
+                {
+                    if (ComprobarEmail(us.EMAIL) == false)
+                        us.EMAILX = false;
+                    if (!us.EMAILX)
+                    {
+                        us.EMAIL = "<span class='red white-text'>" + us.EMAIL + "</span>";
+                        messa = messa + cont + ". Error en el correo \n\r";
+                        cont++;
+                    }
+
+                    if (us.SPRAS_ID == "")
+                        us.SPRAS_ID = "ES";
+                    SPRA si = db.SPRAS.Where(x => x.ID.Equals(us.SPRAS_ID) == true).FirstOrDefault();
+                    if (si == null)
+                        us.SPRAS_IDX = false;
+                    if (!us.SPRAS_IDX)
+                    {
+                        us.SPRAS_ID = "<span class='red white-text'>" + us.SPRAS_ID + "</span>";
+                        messa = messa + cont + ". Error en el idioma \n\r";
+                        cont++;
+                    }
+
+                    da.mess = messa;
+                    us.mess = da.mess;
+                    tablas[cont2, 10] = messa;
+                    rowst2++;
+                }
+                cont2++;
+
+                uu.Add(us);
+            }
+            Session["tablas"] = tablas;
+            Session["client"] = client;
+            Session["rowst"] = rowst;
+            Session["rowst2"] = rowst2;
+            JsonResult jl = Json(uu, JsonRequestBehavior.AllowGet);
+            return jl;
+        }
+
+        public static bool ComprobarEmail(string email)
+        {
+            String sFormato;
+            sFormato = "\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*";
+            if (Regex.IsMatch(email, sFormato))
+            {
+                if (Regex.Replace(email, sFormato, String.Empty).Length == 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private string completa(string s, int longitud)
+        {
+            string cadena = "";
+            try
+            {
+                long a = Int64.Parse(s);
+                int l = a.ToString().Length;
+                for (int i = l; i < longitud; i++)
+                {
+                    cadena += "0";
+                }
+                cadena += a.ToString();
+            }
+            catch
+            {
+                cadena = s;
+            }
+            return cadena;
+        }
+
+        private List<DET_AGENTE1> objAList1(DataTable dt)
+        {
+
+            List<DET_AGENTE1> ld = new List<DET_AGENTE1>();
+            List<CLIENTE> clientes = new List<CLIENTE>();
+
+            var rowsc = dt.Rows.Count;
+            var columnsc = dt.Columns.Count;
+            var rows = 1;
+            var pos = 1;
+
+            for (int i = rows; i < rowsc; i++)
+            {
+                DET_AGENTE1 doc = new DET_AGENTE1();
+
+                string a = Convert.ToString(pos);
+
+                doc.POS = Convert.ToInt32(a);
+                try
+                {
+                    doc.KUNNR = dt.Rows[i][0].ToString();
+                    doc.KUNNR = completa(doc.KUNNR, 10);
+
+                    CLIENTE u = clientes.Where(x => x.KUNNR.Equals(doc.KUNNR)).FirstOrDefault();
+                    if (u == null)
+                    {
+                        u = db.CLIENTEs.Where(cc => cc.KUNNR.Equals(doc.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
+                        if (u == null)
+                            doc.VKORG = null;
+                        else
+                            clientes.Add(u);
+                    }
+
+                    CLIENTE c = clientes.Where(cc => cc.KUNNR.Equals(doc.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
+                    if (c != null)
+                    {
+                        doc.VKORG = c.VKORG;
+                        doc.VTWEG = c.VTWEG;
+                        doc.SPART = c.SPART;
+                    }
+                    else
+                    {
+                        doc.VKORG = null;
+                    }
+                }
+                catch (Exception e)
+                {
+                    doc.KUNNR = null;
+                }
+                try
+                {
+                    doc.BUNIT = dt.Rows[i][1].ToString();
+                }
+                catch (Exception e)
+                {
+                    doc.BUNIT = null;
+                }
+                try
+                {
+                    doc.PUESTO_ID = int.Parse(dt.Rows[i][2].ToString());
+                }
+                catch (Exception e)
+                {
+                    doc.PUESTO_ID = null;
+                }
+                try
+                {
+                    doc.ID = dt.Rows[i][3].ToString();
+                }
+                catch (Exception e)
+                {
+                    doc.ID = null;
+                }
+                try
+                {
+                    doc.NOMBRE = dt.Rows[i][4].ToString();
+                }
+                catch (Exception e)
+                {
+                    doc.NOMBRE = null;
+                }
+                try
+                {
+                    doc.APELLIDO_P = dt.Rows[i][5].ToString();
+                }
+                catch (Exception e)
+                {
+                    doc.APELLIDO_P = null;
+                }
+                try
+                {
+                    doc.APELLIDO_M = dt.Rows[i][6].ToString();
+                }
+                catch (Exception e)
+                {
+                    doc.APELLIDO_M = null;
+                }
+                try
+                {
+                    doc.EMAIL = dt.Rows[i][7].ToString();
+                }
+                catch (Exception e)
+                {
+                    doc.EMAIL = null;
+                }
+                try
+                {
+                    doc.SPRAS_ID = dt.Rows[i][8].ToString().ToUpper();
+                }
+                catch (Exception e)
+                {
+                    doc.SPRAS_ID = null;
+                }
+                try
+                {
+                    doc.PASS = dt.Rows[i][9].ToString();
+                }
+                catch (Exception e)
+                {
+                    doc.PASS = null;
+                }
+                try
+                {
+                    doc.mess = dt.Rows[i][10].ToString();
+                }
+                catch (Exception e)
+                {
+                    doc.mess = null;
+                }
+
+                ld.Add(doc);
+                pos++;
+            }
+            return ld;
+        }
+
+        public partial class DET_AGENTE1 : IEquatable<DET_AGENTE1>
+        {
+            public string KUNNR { get; set; }
+            public string VKORG { get; set; }
+            public string VTWEG { get; set; }
+            public string SPART { get; set; }
+            public string BUNIT { get; set; }
+            public Nullable<int> PUESTO_ID { get; set; }
+            public string ID { get; set; }
+            public string NOMBRE { get; set; }
+            public string APELLIDO_P { get; set; }
+            public string APELLIDO_M { get; set; }
+            public string EMAIL { get; set; }
+            public string SPRAS_ID { get; set; }
+            public string PASS { get; set; }
+            public string mess { get; set; }
+            public int POS { get; set; }
+
+            public virtual CLIENTE CLIENTE { get; set; }
+            public virtual USUARIO USUARIO { get; set; }
+
+            public bool Equals(DET_AGENTE1 other)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        public ActionResult Agregar()
+        {
+            List<DET_AGENTE1> ld = new List<DET_AGENTE1>();
+            var rowsc = (int)Session["rowst"];
+            var tablas = (string[,])Session["tablas"];
+            ld = ObjAList2();
+
+            int cont = 1;
+
+            foreach (DET_AGENTE1 da in ld)
+            {
+                USUARIO us = new USUARIO();
+                USUARIOF uf = new USUARIOF();
+
+                if (da.mess == null)
+                {
+
+                    ////---------------------------- USUARIO
+                    us.ID = da.ID;
+                    us.PASS = da.PASS;
+                    us.NOMBRE = da.NOMBRE;
+                    us.APELLIDO_P = da.APELLIDO_P;
+                    us.APELLIDO_M = da.APELLIDO_M;
+                    us.EMAIL = da.EMAIL;
+                    us.SPRAS_ID = da.SPRAS_ID;
+                    us.ACTIVO = true;
+                    us.PUESTO_ID = da.PUESTO_ID;
+                    us.MANAGER = null;
+                    us.BACKUP_ID = null;
+                    us.BUNIT = da.BUNIT;
+
+                    db.USUARIOs.Add(us);
+                    db.SaveChanges();
+
+                    cont++;
+                }
+                    //////---------------------------- USUARIOF
+                    //uf.USUARIO_ID = da.ID;
+                    //uf.VKORG = da.VKORG;
+                    //uf.VTWEG = da.VTWEG;
+                    //uf.SPART = da.SPART;
+                    //uf.KUNNR = da.KUNNR;
+                    //uf.ACTIVO = true;
+                    //uf.USUARIOC_ID = null;
+                    //uf.FECHAC = DateTime.Today;
+                    //uf.USUARIOM_ID = null;
+                    //uf.FECHAM = null;
+
+                    //db.USUARIOFs.Add(uf);
+                    //db.SaveChanges();
+
+                    //cont++;
+                //}
+            }
+            //JsonResult jl = Json(null, JsonRequestBehavior.AllowGet);
+            //return jl;
+            return View(Index());
+        }
+
+        private List<DET_AGENTE1> ObjAList2()
+        {
+
+            List<DET_AGENTE1> ld = new List<DET_AGENTE1>();
+            List<CLIENTE> clientes = new List<CLIENTE>();
+
+            var dt = (string[,])Session["tablas"];
+            var rowsc = (int)Session["rowst"];
+            var rows = 1;
+            var pos = 1;
+
+            for (int i = rows; i < rowsc; i++)
+            {
+                DET_AGENTE1 doc = new DET_AGENTE1();
+
+                string a = Convert.ToString(pos);
+
+                doc.POS = Convert.ToInt32(a);
+                try
+                {
+                    doc.KUNNR = dt[i,0];
+                    doc.KUNNR = completa(doc.KUNNR, 10);
+
+                    CLIENTE u = clientes.Where(x => x.KUNNR.Equals(doc.KUNNR)).FirstOrDefault();
+                    if (u == null)
+                    {
+                        u = db.CLIENTEs.Where(cc => cc.KUNNR.Equals(doc.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
+                        if (u == null)
+                            doc.VKORG = null;
+                        else
+                            clientes.Add(u);
+                    }
+
+                    CLIENTE c = clientes.Where(cc => cc.KUNNR.Equals(doc.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
+                    if (c != null)
+                    {
+                        doc.VKORG = c.VKORG;
+                        doc.VTWEG = c.VTWEG;
+                        doc.SPART = c.SPART;
+                    }
+                    else
+                    {
+                        doc.VKORG = null;
+                    }
+                }
+                catch (Exception e)
+                {
+                    doc.KUNNR = null;
+                }
+                try
+                {
+                    doc.BUNIT = dt[i,1];
+                }
+                catch (Exception e)
+                {
+                    doc.BUNIT = null;
+                }
+                try
+                {
+                    doc.PUESTO_ID = int.Parse(dt[i,2]);
+                }
+                catch (Exception e)
+                {
+                    doc.PUESTO_ID = null;
+                }
+                try
+                {
+                    doc.ID = dt[i,3];
+                }
+                catch (Exception e)
+                {
+                    doc.ID = null;
+                }
+                try
+                {
+                    doc.NOMBRE = dt[i,4];
+                }
+                catch (Exception e)
+                {
+                    doc.NOMBRE = null;
+                }
+                try
+                {
+                    doc.APELLIDO_P = dt[i,5];
+                }
+                catch (Exception e)
+                {
+                    doc.APELLIDO_P = null;
+                }
+                try
+                {
+                    doc.APELLIDO_M = dt[i,6];
+                }
+                catch (Exception e)
+                {
+                    doc.APELLIDO_M = null;
+                }
+                try
+                {
+                    doc.EMAIL = dt[i,7];
+                }
+                catch (Exception e)
+                {
+                    doc.EMAIL = null;
+                }
+                try
+                {
+                    doc.SPRAS_ID = dt[i,8];
+                }
+                catch (Exception e)
+                {
+                    doc.SPRAS_ID = null;
+                }
+                try
+                {
+                    doc.PASS = dt[i,9];
+                }
+                catch (Exception e)
+                {
+                    doc.PASS = null;
+                }
+                try
+                {
+                    doc.mess = dt[i,10];
+                }
+                catch (Exception e)
+                {
+                    doc.mess = null;
+                }
+
+                ld.Add(doc);
+                pos++;
+            }
+            return ld;
+        }
     }
 }
+
