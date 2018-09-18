@@ -5,6 +5,7 @@ var disdistribucion = true;
 // PARA GIT
 // Omar
 //para causar cnflicto
+//Comentario Rogelio
 var interval; //B20180625 MGC 2018.07.04
 var borradorinac = 300000; //B20180625 MGC 2018.07.04 Tiempo de espera de inactividad 5 minutos
 //var borradorinac = 60000; //B20180625 MGC 2018.07.04 Tiempo de espera de inactividad 1 minuto
