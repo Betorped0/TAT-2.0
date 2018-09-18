@@ -1,0 +1,242 @@
+﻿@model IEnumerable<TAT001.Entities.DOCUMENTO>
+@using TAT001.Entities;
+@using TAT001.Controllers;
+
+@{
+    ViewBag.pagina_r = 221;
+    ViewBag.carpeta_r = 200;
+    //ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<script>
+        var elem = document.querySelector('select');
+        var options = [];
+        var instance = M.Select.init(elem, options);
+    </script>*@
+<script src="//code.jquery.com/jquery-1.12.4.js"></script>
+<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
+<link href="~/Content/dataTable.css" rel="stylesheet" />
+<link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
+<input class="form-control" id="txt_spras" value="@(ViewBag.usuario.SPRAS_ID)" hidden>
+
+<div class="row">
+    <div class="row left">
+        <a class="" href="@Url.Action("Archivo", "Masiva", new { varArch = "X"})">
+            <i class='material-icons green-text'>archive</i>FORMATO MASIVA
+        </a>
+        <a class="" href="@Url.Action("Archivo", "Masiva", new { varArch = "L"})">
+            <i class='material-icons green-text'>archive</i>LISTADO CLIENTE/PROVEEDOR
+        </a>
+    </div>
+    <div class="row right">
+        <a class="waves-effect waves-light btn" href="@Url.Action("Details", "Excel")">Borrar</a>
+        <a class="waves-effect waves-light btn" href="@Url.Action("Details", "Excel")">Enviar</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="row" style="height:10px;width:100%;">
+        <div class="col l7 pink darken-1" style="height:10px;padding:0;"></div>
+        <div class="col l3 pink darken-4" style="height:10px;padding:0;">
+            <div class="col l3 pink darken-4" style="height:10px;padding:0;"></div>
+            <div class="col l8 orange" style="height:10px;padding:0;"></div>
+            <div class="col l1 red" style="height:10px;padding:0;"></div>
+        </div>
+        <div class="col l2 yellow" style="height:10px;padding:0;"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col s12">
+        <ul class="tabs" id="tabs">
+            <li class="tab col s2 tabs_menu"><a id="tab_info" href="#test1">Tab 1</a></li>
+            <li class="tab col s3 tabs_menu"><a id="tab_dis" href="#test2">Tab 2</a></li>
+            <li class="tab col s3 tabs_menu"><a id="tab_rec" href="#test3">Tab 3</a></li>
+            <li class="tab col s2 tabs_menu"><a id="tab_fin" href="#test4">Tab 4</a></li>
+            <li class="tab col s2 tabs_menu"><a id="tab_fin2" href="#test5">Tab 5</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="row">
+    @using (Html.BeginForm("Index", "Masiva", new { enctype = "multipart/form-data" }))
+    {
+        <div class="file-field input-field col s8 m8 l8">
+            <div class="waves-effect waves-light btn">
+                <span>Seleccionar archivo</span>
+                <input type="file" name="miMas" id="miMas">
+            </div>
+        </div>
+    }
+    &nbsp;
+    <a class="waves-effect waves-light btn col s4 m4 l4" href="@Url.Action("Details", "Excel")" disabled>Exportar vista a Excel</a>
+</div>
+
+
+<div class="row">
+    <div id="test1" class="card-panel col s12" style="overflow:auto;">
+        <div style="overflow:auto;">
+            <table id="tab_test1" class="display" cellspacing="0" width="100%" style="display:none">
+                <thead>
+                    <tr>
+                        <th>NUM_DOC</th>
+                        <th>T_SOL</th>
+                        <th>GALL_ID</th>
+                        <th>SOCIEDAD</th>
+                        <th>LANDX</th>
+                        <th>ESTADO</th>
+                        <th>CIUDAD</th>
+                        <th>CONCEPTO</th>
+                        <th>NOTAS</th>
+                        <th>PAYER_ID</th>
+                        <th>PAYER_NOMBRE</th>
+                        <th>PAYER_EMAIL</th>
+                        <th>FECHAI_VIG</th>
+                        <th>FECHAF_VIG</th>
+                        <th>MONEDA_ID</th>
+                        <th hidden>LABEL</th>
+                        <th hidden>LABEL</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <br />
+    </div>
+    <div id="test2" class="card-panel col s12">
+        <table id="tab_test2" class="display" cellspacing="0" width="100%" style="display:none">
+            <thead>
+                <tr>
+                    <th>NUM_DOC</th>
+                    <th>FACTURA</th>
+                    <th>FECHA</th>
+                    <th>PROVEEDOR</th>
+                    <th>PROVEEDOR_NOMBRE</th>
+                    <th>AUTORIZACION</th>
+                    <th>VENCIMIENTO</th>
+                    <th>FACTURAK</th>
+                    <th>EJERCICIOK</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <br />
+    </div>
+
+    <div id="test3" class="card-panel col s12">
+        <table id="tab_test3" class="display" cellspacing="0" width="100%" style="display:none">
+            <thead>
+                <tr>
+                    <th>NUM_DOC</th>
+                    <th>FACTURA</th>
+                    <th>BILL_DOC</th>
+                    <th>EJERCICIOK</th>
+                    <th>PAYER</th>
+                    <th>IMPORTE_FAC</th>
+                    <th>BELNR</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <br />
+    </div>
+
+    @*<div id="test2" class="card-panel col s12">
+            <table id="tab_test2" class="display" cellspacing="0" width="100%" style="display:none">
+                <thead>
+                    <tr>
+                        <th>NUM_DOC</th>
+                        <th>VIGENCIA_DE</th>
+                        <th>VIGENCIA_AL</th>
+                        <th>MATNR</th>
+                        <th>MATKL</th>
+                        <th>MONTO</th>
+                        <th>PORC_APOYO</th>
+                        <th>PRECIO_SUG</th>
+                        <th>VOLUMEN_REAL</th>
+                        <th>APOYO</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <br />
+        </div>*@
+    @*<div id="test4" class="card-panel col s12">
+            <table id="tab_test4" class="display" cellspacing="0" width="100%" style="display:none">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;">NUM_DOC</th>
+                        <th style="text-align:center;">RUTA</th>
+                        <th style="text-align:center;">BOTON</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <br />
+        </div>*@
+</div>
+
+
+
+<script>
+    var el = document.querySelector(".tabs");
+    var instance = M.Tabs.init(el, []);
+</script>
+
+
+<script src="~/Scripts/autocomplete1.10.2.js"></script>
+<script src="~/Scripts/autocomplete1.11.4.js"></script>
+<script src="~/Scripts/Masiva/create.js"></script><!--LGPP 30.08.2018-->
+<link href="~/Content/autocomplete.css" rel="stylesheet" />
+
+<script>
+    var auto = $.noConflict();
+</script>
+
+
+<style>
+    .dataTables_length {
+        display: none;
+    }
+
+    .dataTables_filter {
+        display: none;
+    }
+
+    .dataTables_scrollHeadInner, .mdl-data-table {
+        width: 100%;
+    }
+</style>
+
+@*<script>
+        //function formatoTabla() {
+        //    var table = $(".table").DataTable({
+        //        scrollX: "50vh",
+        //        scrollY: "50vh",
+        //        scrollCollapse: true,
+        //        language: {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"},
+        //        order: [[0, "asc"]],
+        //        initComplete: function () {
+        //            this.api().columns().every(function () {
+        //                var column = this;
+        //                var select = $('<select style="display:initial;" class="browser-default"><option value=""></option></select>')
+        //                    .appendTo($(column.footer()).empty())
+        //                    .on('change', function () {
+        //                        var val = $.fn.dataTable.util.escapeRegex(
+        //                            $(this).val()
+        //                        );
+        //                        column
+        //                            .search(val ? '^' + val + '$' : '', true, false)
+        //                            .draw();
+        //                    });
+        //                column.cells('', column[0]).render('display').sort().unique().each(function (d, j) {
+        //                    var val = $('<div/>').html(d).text();
+        //                    select.append('<option value="' + val + '">' + val + '</option>');
+        //                });
+        //            });
+        //        }
+        //    });
+        //};
+    </script>*@
