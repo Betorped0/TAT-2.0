@@ -1,0 +1,47 @@
+﻿@model TAT001.Entities.PROVEEDOR
+@{
+    ViewBag.pagina_r = 775;
+    ViewBag.carpeta_r = 500;
+    //ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div>
+        <div class="row">
+            <button id="btnDel" type="submit" value="Delete" class="btn btn-default" style="float:right;"></button>
+        </div>
+        <div class="row">
+            <div class="card-panel">
+                <div class="row">
+                    <div class="row">
+                        <div class="input-field col l6 m6" style="margin-bottom:0;">
+                            @Html.EditorFor(model => model.ID, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            @Html.LabelFor(model => model.ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblId" })
+                        </div>
+                        <div class="input-field col l6 m6" style="margin-bottom:0;">
+                            @Html.EditorFor(model => model.NOMBRE, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            @Html.LabelFor(model => model.NOMBRE, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblNombre" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col l6 m6" style="margin-bottom:0;">
+                            @Html.EditorFor(model => model.SOCIEDAD_ID, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            @Html.LabelFor(model => model.SOCIEDAD_ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblSociedadId" })
+                        </div>
+                        <div class="input-field col l6 m6" style="margin-bottom:0;">
+                            @Html.EditorFor(model => model.PAIS_ID, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            @Html.LabelFor(model => model.PAIS_ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblPais" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions no-color">
+            @Html.ActionLink("Back to List", "Index", null, new { id = "lblRegresar" })
+        </div>
+    </div>
+}

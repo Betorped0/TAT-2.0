@@ -1,0 +1,232 @@
+﻿@model TAT001.Entities.CLIENTE
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Delete</title>
+</head>
+<body>
+    <h3>Are you sure you want to delete this?</h3>
+    <div>
+        <h4>CLIENTE</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.NAME1)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.NAME1)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.STCD1)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.STCD1)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.STCD2)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.STCD2)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.REGION)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.REGION)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.SUBREGION)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.SUBREGION)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.REGIO)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.REGIO)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.ORT01)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.ORT01)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.STRAS_GP)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.STRAS_GP)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.PSTLZ)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.PSTLZ)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.CONTAC)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.CONTAC)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.CONT_EMAIL)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.CONT_EMAIL)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.PAYER)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.PAYER)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.GRUPO)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.GRUPO)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.SPRAS)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.SPRAS)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.ACTIVO)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.ACTIVO)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.BDESCRIPCION)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.BDESCRIPCION)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.BANNER)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.BANNER)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.CANAL)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.CANAL)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.BZIRK)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.BZIRK)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.KONDA)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.KONDA)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.VKGRP)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.VKGRP)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.VKBUR)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.VKBUR)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.BANNERG)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.BANNERG)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.PAI.SPRAS)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.PAI.SPRAS)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.TCLIENTE.ID)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.TCLIENTE.ID)
+            </dd>
+    
+        </dl>
+    
+        @using (Html.BeginForm()) {
+            @Html.AntiForgeryToken()
+    
+            <div class="form-actions no-color">
+                <input type="submit" value="Delete" class="btn btn-default" /> |
+                @Html.ActionLink("Back to List", "Index")
+            </div>
+        }
+    </div>
+</body>
+</html>

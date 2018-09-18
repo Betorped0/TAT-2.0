@@ -1,0 +1,64 @@
+﻿@model TAT001.Entities.TAXEOH
+
+@{
+    //ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.pagina_r = 852;
+    ViewBag.carpeta_r = 500;
+}
+<div class="row right-align">
+    <div class="col s12">
+        <a href="@Url.Action("Index", "Taxeoh", new { kun = Model.KUNNR, vko = Model.VKORG, vtw = Model.VTWEG, spa = Model.SPART })" id="lblRegresar" class="btn-small"></a>
+        <a href="@Url.Action("Edit", "Taxeoh", new { kun = Model.KUNNR, vk = Model.VKORG, vtw = Model.VTWEG, spa = Model.SPART, con=Model.CONCEPTO_ID })" class="btn-small">Editar</a>
+    </div>
+</div>
+<div class="row">
+    <div class="card-panel">
+        <div class="row">
+            <div class="col s6 m6 l6">
+                <div class="col l12 m12 s12">
+                    <div class="input-field col l10 m10" style="margin-bottom:0;">
+                        @Html.EditorFor(model => model.KUNNR, null, "kunnr", new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.LabelFor(model => model.KUNNR, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblKun" })
+                    </div>
+                </div>
+                <div class="col l12 m12 s12">
+                    <div class="input-field col l10 m10" style="margin-bottom:0;">
+                        @Html.EditorFor(model => model.CONCEPTO_ID, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.LabelFor(model => model.CONCEPTO_ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblConId" })
+                    </div>
+                </div>
+                <div class="col l12 m12 s12">
+                    <div class="input-field col l10 m10" style="margin-bottom:0;">
+                        @Html.EditorFor(model => model.SPART, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.LabelFor(model => model.SPART, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblSpart" })
+                    </div>
+                </div>
+            </div>
+            <div class="col s6 m6 l6">
+                <div class="col l12 m12 s12">
+                    <div class="input-field col l10 m10" style="margin-bottom:0;">
+                        @Html.EditorFor(model => model.VKORG, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.LabelFor(model => model.VKORG, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblVorkg" })
+                    </div>
+                </div>
+                <div class="col l12 m12 s12">
+                    <div class="input-field col l10 m10" style="margin-bottom:0;">
+                        @Html.EditorFor(model => model.VTWEG, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.LabelFor(model => model.VTWEG, htmlAttributes: new { @class = "control-label col-md-2", @id = "lvlVtweg" })
+                    </div>
+                </div>
+                <div class="col l12 m12 s12">
+                    <div class="input-field col l10 m10" style="margin-bottom:0;">
+                        @Html.EditorFor(model => model.SOCIEDAD_ID, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.LabelFor(model => model.SOCIEDAD_ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblSocId" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { kun = Model.KUNNR, vk = Model.VKORG, con = Model.CONCEPTO_ID }, new { id = "lblEdit" }) |
+    @Html.ActionLink("Back to List", "Index", new { vko = Model.VKORG, vtw = Model.VTWEG, kun = Model.KUNNR, spa = Model.SPART }, new { id = "lblRegresar" })
+</p>

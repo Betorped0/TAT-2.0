@@ -1,0 +1,86 @@
+﻿@model TAT001.Entities.MATERIAL
+
+@{
+    ViewBag.pagina_r = 664;
+    ViewBag.carpeta_r = 500;
+    //ViewBag.Title = "Páginas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.ID)
+
+        <div class="row">
+            <div class="row" style="height:10px;width:100%;">
+                <div class="col l7 pink darken-1" style="height:10px;padding:0;"></div>
+                <div class="col l3 pink darken-4" style="height:10px;padding:0;">
+                    <div class="col l3 pink darken-4" style="height:10px;padding:0;"></div>
+                    <div class="col l8 orange" style="height:10px;padding:0;"></div>
+                    <div class="col l1 red" style="height:10px;padding:0;"></div>
+                </div>
+                <div class="col l2 yellow" style="height:10px;padding:0;"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s6 m6 l6">
+                <div class="col l12 m12 s12">
+                    <div class="input-field col l10 m10" style="margin-bottom:0;">
+                        @Html.EditorFor(model => model.MTART, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.LabelFor(model => model.MTART, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_tipom" })
+                    </div>
+
+                    <div class="input-field col l10 m10" style="margin-bottom:0;">
+                        @Html.EditorFor(model => model.MAKTX, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.LabelFor(model => model.MAKTX, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_textobm" })
+                    </div>
+
+                    <div class="input-field col l10 m10" style="margin-bottom:0;">
+                        @Html.EditorFor(model => model.MAKTG, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.LabelFor(model => model.MAKTG, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_textobmm" })
+                    </div>
+
+                    <div class="input-field col l10 m10" style="margin-bottom:0;">
+                        @Html.EditorFor(model => model.PUNIT, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.LabelFor(model => model.PUNIT, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_unidadmm" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col s6 m6 l6">
+                <div class="col l12 m12 s12">
+                    <div class="input-field col l10 m10" style="margin-bottom:0;">
+                        @Html.EditorFor(model => model.CATEGORIA.DESCRIPCION, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.LabelFor(model => model.CATEGORIA.DESCRIPCION, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_grupoa" })
+                     </div>
+
+                    <div class="input-field col l10 m10" style="margin-bottom:0;">
+                        @Html.EditorFor(model => model.MEINS, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.LabelFor(model => model.MEINS, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_unidadmm" })
+                    </div>
+
+                    <div class="input-field col l10 m10" style="margin-bottom:0;">
+                        @Html.EditorFor(model => model.ZCTGR.DESCRIPCION, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.LabelFor(model => model.ZCTGR.DESCRIPCION, htmlAttributes: new { @class = "control-label col-md-2", @id = "" })
+                    </div>
+
+                    <div class="input-field col l10 m10" style="margin-bottom:0;">
+                        @Html.EditorFor(model => model.ZBRAND.Descripcion, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.LabelFor(model => model.ZBRAND.Descripcion, htmlAttributes: new { @class = "control-label col-md-2", @id = "" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <br />
+}
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

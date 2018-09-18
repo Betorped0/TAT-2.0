@@ -1,0 +1,63 @@
+﻿@model TAT001.Entities.TAXEOH
+
+@{
+    //ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.pagina_r = 854;
+    ViewBag.carpeta_r = 500;
+}
+<script src="~/Scripts/ProbarFiltrado.js"></script>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="row right-align">
+            <div class="col l12 m12 s12" style="margin-top:24px;">
+               <a href="@Url.Action("Index", "Taxeoh", new { kun = @ViewBag.kun, vko = @ViewBag.vko, vtw = @ViewBag.vtw, spa = @ViewBag.spa })"id = "lblRegresar" class = "btn-small"></a>
+                <button id="btnAg" type="submit" value="Submit" class="btn-small" >Submit</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="card-panel">
+            <div class="row">
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="col s6 m6 l6">
+                        <div class="col l12 m12 s12">
+                            @Html.LabelFor(model => model.SOCIEDAD_ID, "SOCIEDAD_ID", htmlAttributes: new { @class = "control-label col-md-2", @id = "lblSocId" })
+                            @Html.DropDownList("SOCIEDAD_ID", null, htmlAttributes: new { @class = "form-control clSc" })
+                            @Html.ValidationMessageFor(model => model.SOCIEDAD_ID, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col l12 m12 s12">
+                            @Html.LabelFor(model => model.CONCEPTO_ID, "CONCEPTO_ID", htmlAttributes: new { @class = "control-label col-md-2", @id = "lblConId" })
+                            @Html.DropDownList("CONCEPTO_ID", null, htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.CONCEPTO_ID, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col l12 m12 s12">
+                            @Html.LabelFor(model => model.TNOTA_ID, "TNOTA_ID", htmlAttributes: new { @class = "control-label col-md-2", @id = "lblNotas" })
+                            @Html.DropDownList("TNOTA_ID", null, htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.TNOTA_ID, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="col s6 m6 l6">
+                        <div class="col l12 m12 s12">
+                            @Html.LabelFor(model => model.IMPUESTO_ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblImpId" })
+                            @Html.DropDownList("IMPUESTO_ID", null, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.IMPUESTO_ID, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="input-field col l12 m12 s12">
+                            @Html.LabelFor(model => model.PAY_T, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblPayt" })
+                            @Html.EditorFor(model => model.PAY_T, new { htmlAttributes = new { @class = "form-control", @maxlength = "4" } })
+                            @Html.ValidationMessageFor(model => model.PAY_T, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    var elem = document.querySelectorAll('select');
+    var instance = M.FormSelect.init(elem, []);
+</script>
+<div>
+   </div>

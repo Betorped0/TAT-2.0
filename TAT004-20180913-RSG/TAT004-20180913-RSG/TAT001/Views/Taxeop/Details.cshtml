@@ -1,0 +1,59 @@
+﻿@model TAT001.Entities.TAXEOP
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>TAXEOP</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.PORC)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PORC)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ACTIVO)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ACTIVO)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RETENCION.DESCRIPCIÓN)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RETENCION.DESCRIPCIÓN)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TAXEOH.USUARIOC_ID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TAXEOH.USUARIOC_ID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TRETENCION.DESCRIPCION)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TRETENCION.DESCRIPCION)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

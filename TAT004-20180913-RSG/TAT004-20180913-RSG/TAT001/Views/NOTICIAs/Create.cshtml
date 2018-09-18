@@ -1,0 +1,144 @@
+﻿@model TAT001.Entities.NOTICIA
+@using System.Web.Hosting;
+@{
+
+    //ViewBag.Title = "Index";
+    ViewBag.pagina_r = 911;
+    ViewBag.carpeta_r = 900;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Scripts/subirNoticias.js"></script>
+@if (ViewBag.error != "")
+{
+    <script>
+        $(document).ready(function () {
+            function errorMessage(msg) {
+            M.toast({ html: msg });
+        }
+            var message = '@ViewBag.error';
+            if (message != "") {
+                errorMessage(message);
+            }
+        });
+    </script>
+}
+@if (ViewBag.imgnoticia != null)
+{
+    if (String.IsNullOrEmpty(ViewBag.imgnoticia) == false)
+    {
+        <div class="parallax-container" style="height:250px;">
+            <div class="@*parallax*@">
+                @if (Request.Url.PathAndQuery != "/")
+                {
+                    <img src="@Request.Url.OriginalString.Replace(Request.Url.PathAndQuery, "")@HostingEnvironment.ApplicationVirtualPath/@ViewBag.imgnoticia" style="height: 200px; position:absolute; width:100%;" />
+                }
+                else
+                {
+                    <img src="@Request.Url.OriginalString@HostingEnvironment.ApplicationVirtualPath/@ViewBag.imgnoticia" style="height: 200px; position:absolute; width:100%;" />
+                }
+            </div>
+        </div>
+    }
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="PATH" id="PATH" value="" />
+    <div class="row">
+        <div class="col s12 l8 offset-l2">
+            <div class="card horizontal green white-text">
+                <div class="col s12" style="margin-bottom:0;">
+                    <p>
+                       Se recomienda subir una imagen en formato .jpeg/.jpg con resolucion ideal de 2560 x 390.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-horizontal">
+        <div id="file_Imagen" class="file-field input-field">
+            <div class="btn">
+                <span>File</span>
+                <input type="file" class="fileImg" id="fileImg" accept="image/*" />
+            </div>
+            <div class="file-path-wrapper">
+                <input class="file-path validate fileImg" id="lblImgText" type="text">
+            </div>
+        </div>
+    </div>
+    <div class="parallax-container" style="height:250px;">
+        <div class="@*parallax*@">
+            <h5 id="lblPrevia" style="display:none;">Vista Previa</h5>
+            <img id="previa" src="" style="height: 200px; position:absolute; width:100%; display:none;" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="card-panel oc" style="display:none;">
+            <div class="row">
+                <div class="col s6">
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix oc" style="display:none;">date_range</i>
+                        @*@Html.HiddenFor(model => model.FECHAI, new { htmlAttributes = new { @class = "form-control datepicker" } })*@
+                        <input id="FECHAI" name="FECHAI" type="text" class="validate oc" style="display:none;" />
+                        <label for="FECHAI" class="oc" style="display:none;">Fecha Inicio</label>
+                    </div>
+                </div>
+                <div class="col s6 ">
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix oc" style="display:none;">date_range</i>
+                        @*@Html.HiddenFor(model => model.FECHAF, new { htmlAttributes = new { @class = "form-control datepicker" } })*@
+                        <input id="FECHAF" name="FECHAF" type="text" class="validate oc" style="display:none;" />
+                        <label for="FECHAF" class="oc" style="display:none;">Fecha Termino</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group right-align right" style=" display: inline-block;">
+            <input id="btnCancelar" type="button" value="Cancelar" class="btn-small red" style="display:none;" />
+            <input id="btnAp" type="button" value="Guardar" class="btn-small" style="display:none;" />
+            <button id="btnCrear" type="submit" value="Create" class="btn-small" style="display:none;">X</button>
+        </div>
+    </div>
+}
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+<script>
+    var elemdp = document.querySelector('#FECHAI');
+    var optionsdp = {
+        format: 'dd/mm/yyyy',
+        i18n: {
+            clear: 'Limpiar',
+            today: 'Hoy',
+            done: 'Seleccionar',
+            previousMonth: '‹',
+            nextMonth: '›',
+            months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+            weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+            weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+            weekdaysAbbrev: ['D', 'L', 'M', 'X', 'J', 'V', 'S']
+        }
+    };
+    var instancedp = M.Datepicker.init(elemdp, optionsdp);
+
+    var elemdp_ = document.querySelector('#FECHAF');
+    var optionsdp_ = {
+        format: 'dd/mm/yyyy',
+        i18n: {
+            clear: 'Limpiar',
+            today: 'Hoy',
+            done: 'Seleccionar',
+            previousMonth: '‹',
+            nextMonth: '›',
+            months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+            weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+            weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+            weekdaysAbbrev: ['D', 'L', 'M', 'X', 'J', 'V', 'S']
+        }
+    };
+    var instancedp1 = M.Datepicker.init(elemdp_, optionsdp_);
+</script>

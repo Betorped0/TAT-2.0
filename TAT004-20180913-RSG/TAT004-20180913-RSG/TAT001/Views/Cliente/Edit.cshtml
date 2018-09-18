@@ -1,0 +1,158 @@
+﻿@model TAT001.Models.Cliente
+@{
+    ViewBag.pagina_r = 632;
+    ViewBag.carpeta_r = 500;
+    //ViewBag.Title = "MODIFICAR";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using TAT001.Entities;
+@using (TAT001Entities db = new TAT001Entities())
+            {
+                var con = db.PAIS.Where(x => x.LAND == Model.pais).First();
+                Model.pais = con.LANDX;
+
+using (Html.BeginForm())
+                {
+        @Html.AntiForgeryToken()
+
+        <div class="row">
+            <div class="row right">
+                <div class="col l12 m12 right">
+                    <input type="submit" value="Editar" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="card-panel">
+                <div class="row">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div class="row" style="height:10px;width:100%;">
+                        <div class="col l7 pink darken-1" style="height:10px;padding:0;"></div>
+                        <div class="col l3 pink darken-4" style="height:10px;padding:0;">
+                            <div class="col l3 pink darken-4" style="height:10px;padding:0;"></div>
+                            <div class="col l8 orange" style="height:10px;padding:0;"></div>
+                            <div class="col l1 red" style="height:10px;padding:0;"></div>
+                        </div>
+                        <div class="col l2 yellow" style="height:10px;padding:0;"></div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col s6 m6 l6">
+                            <div class="col l12 m12 s12">
+                                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                                    @Html.EditorFor(model => model.nombre, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.LabelFor(model => model.nombre, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_nombre" })
+                                </div>
+
+                                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                                    @Html.EditorFor(model => model.identificadorF, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.LabelFor(model => model.identificadorF, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_identificador" })
+                                </div>
+
+                                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                                    @Html.EditorFor(model => model.identificadorF2, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.LabelFor(model => model.identificadorF2, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_identificador2" })
+                                </div>
+
+                                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                                    @Html.EditorFor(model => model.pais, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.LabelFor(model => model.pais, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_pais" })
+                                </div>
+
+                                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                                    @Html.EditorFor(model => model.estado, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.LabelFor(model => model.estado, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_estado" })
+                                </div>
+
+                                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                                    @Html.EditorFor(model => model.municipio, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.LabelFor(model => model.municipio, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_ciudad" })
+                                </div>
+
+                                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                                    @Html.EditorFor(model => model.direccion, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.LabelFor(model => model.direccion, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_direccion" })
+                                </div>
+
+                                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                                    @Html.EditorFor(model => model.cp, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.LabelFor(model => model.cp, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_cp" })
+                                </div>
+
+                                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                                    @Html.EditorFor(model => model.contacC, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.LabelFor(model => model.contacC, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_contacto" })
+                                </div>
+
+                                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                                    @Html.EditorFor(model => model.contacE, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.LabelFor(model => model.contacE, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_email" })
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col s6 m6 l6">
+                            <div class="col l12 m12 s12">
+                                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                                    @Html.EditorFor(model => model.parvw, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.LabelFor(model => model.parvw, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_tipocli" })
+                                </div>
+
+                                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                                    @Html.EditorFor(model => model.payer, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.LabelFor(model => model.payer, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_payer" })
+                                </div>
+
+                                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                                    @Html.EditorFor(model => model.grupo, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.LabelFor(model => model.grupo, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_grupo" })
+                                </div>
+
+                                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                                    @Html.EditorFor(model => model.spras, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.LabelFor(model => model.spras, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_idioma" })
+                                </div>
+
+                                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                                    @Html.EditorFor(model => model.banner, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.LabelFor(model => model.banner, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_banner" })
+                                </div>
+
+                                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                                    @Html.EditorFor(model => model.canal, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.LabelFor(model => model.canal, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_canal" })
+                                </div>
+
+                                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                                    @Html.EditorFor(model => model.salesDisc, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.LabelFor(model => model.salesDisc, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_distritov" })
+                                </div>
+
+                                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                                    @Html.EditorFor(model => model.priceGro, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.LabelFor(model => model.priceGro, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_preciog" })
+                                </div>
+
+                                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                                    @Html.EditorFor(model => model.salesGro, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.LabelFor(model => model.salesGro, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_ventasg" })
+                                </div>
+
+                                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                                    @Html.EditorFor(model => model.salesOff, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.LabelFor(model => model.salesOff, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_oficinav" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+}

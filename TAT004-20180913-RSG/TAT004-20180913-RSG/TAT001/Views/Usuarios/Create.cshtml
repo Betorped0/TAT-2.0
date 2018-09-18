@@ -1,0 +1,183 @@
+﻿@model TAT001.Models.Usuario
+
+@{
+    /**/
+
+    //ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.pagina_r = 601;
+    ViewBag.carpeta_r = 500;
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        <div class="col s12 right-align">
+            <input type="submit" value="Create" class="btn btn-default" />
+        </div>
+    </div>
+    <div class="row right">
+        <div class="col l6 s12">
+            <div class="card-panel">
+                <div class="row">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="input-field col s12">
+                        @Html.EditorFor(model => model.ID, new { htmlAttributes = new { @aria_required = "true", @required = "required", @class = "validate", @onchange="valorID(this);" } })
+                        @Html.LabelFor(model => model.ID, htmlAttributes: new { @id = "lbl_id" })
+                        <span class="helper-text" id="hlp_id" data-error="Id repetido" data-success="Correcto"></span>
+                    </div>
+
+                    <div class="input-field col s12">
+                        @Html.PasswordFor(model => model.PASS, new { @class = "form-control", @id="txt_pass" })
+                        @Html.LabelFor(model => model.PASS, htmlAttributes: new { @id = "lbl_pass" })
+                        @Html.ValidationMessageFor(model => model.PASS, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="input-field col s12">
+                        @Html.PasswordFor(model => model.MANAGER,new { @class = "validate", @onchange = "valorPass(this);", @id="txt_pass2"  })
+                        @Html.LabelFor(model => model.MANAGER, "Confirmar contraseña", htmlAttributes: new { @id = "lbl_conf" })
+                        @Html.ValidationMessageFor(model => model.MANAGER, "", new { @class = "text-danger" })
+                        @*<span class="helper-text" id="hlp_pass" data-error="No coinciden" data-success=""></span>*@
+                    </div>
+                </div>
+                <script>
+                    function valorID(campo) {
+                        if (campo.value == "") {
+                            document.getElementById("hlp_id").setAttribute("data-error", "Campo requerido");
+                            document.getElementById(campo.id).className = "validate invalid";
+                        } else {
+                            var regex = new RegExp(/^[a-z0-9]+$/i);
+                            var ban = regex.test(campo.value);
+                            if (ban) {
+                                document.getElementById("hlp_id").setAttribute("data-error", "Id repetido");
+                                document.getElementById(campo.id).className = "validate valid";
+                            } else {
+                                document.getElementById("hlp_id").setAttribute("data-error", "Solo letras y números");
+                                document.getElementById(campo.id).className = "validate invalid";
+                            }
+                        }
+                    }
+                    function valorPass(campo) {
+                        //if (campo.value == "") {
+                        //    document.getElementById("hlp_id").setAttribute("data-error", "Campo requerido");
+                        //    document.getElementById(campo.id).className = "validate invalid";
+                        //} else {
+                        //    document.getElementById("hlp_id").setAttribute("data-error", "No coinciden");
+                        //    if (campo.value != document.getElementById("txt_pass").value) {
+                        //        document.getElementById(campo.id).className = "validate invalid";
+                        //    } else {
+                        //        document.getElementById(campo.id).className = "validate valid";
+                        //    }
+                           
+                        //}
+                    }
+                </script>
+            </div>
+        </div>
+        <div class="col l6 s12 right">
+            <div class="card-panel">
+                <div class="row">
+                    <div class="input-field col s12">
+                        @Html.EditorFor(model => model.NOMBRE, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.LabelFor(model => model.NOMBRE, htmlAttributes: new { @id = "lbl_nombre" })
+                        @Html.ValidationMessageFor(model => model.NOMBRE, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="input-field col s12">
+                        @Html.EditorFor(model => model.APELLIDO_P, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.LabelFor(model => model.APELLIDO_P, htmlAttributes: new { @id = "lbl_appPat" })
+                        @Html.ValidationMessageFor(model => model.APELLIDO_P, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="input-field col s12">
+                        @Html.EditorFor(model => model.APELLIDO_M, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.LabelFor(model => model.APELLIDO_M, htmlAttributes: new { @id = "lbl_appMat" })
+                        @Html.ValidationMessageFor(model => model.APELLIDO_M, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="input-field col s12">
+                        @Html.EditorFor(model => model.EMAIL, new { htmlAttributes = new { @class = "validate", @type = "email" } })
+                        @Html.LabelFor(model => model.EMAIL, htmlAttributes: new { @id = "lbl_email" })
+                        @Html.ValidationMessageFor(model => model.EMAIL, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="input-field col s12">
+                        @Html.DropDownList("SPRAS_ID", null, htmlAttributes: new { @class = "form-control" })
+                        <label id="lbl_spras">SPRAS</label>
+                        @*@Html.LabelFor(model => model.SPRAS_ID, "SPRAS_ID", htmlAttributes: new { @class = "active" })*@
+                    </div>
+
+                    @*<div class="form-group">
+                            @Html.LabelFor(model => model.ACTIVO, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                <div class="checkbox">
+                                    @Html.EditorFor(model => model.ACTIVO)
+                                    @Html.ValidationMessageFor(model => model.ACTIVO, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>*@
+
+
+                    @*<div class="input-field col s12">
+                            @Html.LabelFor(model => model.MANAGER, htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.EditorFor(model => model.MANAGER, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.MANAGER, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="input-field col s12">
+                            @Html.LabelFor(model => model.BACKUP_ID, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.BACKUP_ID, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.BACKUP_ID, "", new { @class = "text-danger" })
+                            </div>
+                        </div>*@
+                </div>
+            </div>
+        </div>
+        <div class="col l6 s12">
+            <div class="card-panel">
+                <div class="row">
+
+                    <div class="input-field col s12">
+                        @Html.DropDownList("BUNIT", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.LabelFor(model => model.BUNIT, htmlAttributes: new { @id = "lbl_bukrs" })
+                        @*@Html.EditorFor(model => model.BUNIT, new { htmlAttributes = new { @class = "form-control" } })*@
+                        @Html.ValidationMessageFor(model => model.BUNIT, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="input-field col s12">
+                        @Html.DropDownList("PUESTO_ID", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.LabelFor(model => model.PUESTO_ID, "PUESTO_ID", htmlAttributes: new { @id = "lbl_puesto" })
+                        @Html.ValidationMessageFor(model => model.PUESTO_ID, "", new { @class = "text-danger" })
+                    </div>
+
+                    @*<div class="input-field col s12">
+                        @Html.DropDownList("ROLs", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.LabelFor(model => model.ROL, "ROL", htmlAttributes: new { @id = "lbl_rol" })
+                        @Html.ValidationMessageFor(model => model.ROL, "", new { @class = "text-danger" })
+                    </div>*@
+                    <script>
+
+                        var elem = document.querySelectorAll('select');
+                        var instance = M.FormSelect.init(elem, []);
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+@if (ViewBag.Error != null)
+{
+    @*<div class="row red-text">
+            @ViewBag.Error
+        </div>*@
+
+    <script>
+            M.toast({ html: '@ViewBag.Error', classes: 'red' });
+    </script>
+}

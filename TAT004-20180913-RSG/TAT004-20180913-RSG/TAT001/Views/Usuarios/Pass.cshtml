@@ -1,0 +1,50 @@
+﻿@model TAT001.Models.Pass
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.pagina_r = 601;
+    ViewBag.carpeta_r = 500;
+}
+
+
+@using (Html.BeginForm("Pass", "Usuarios", null, FormMethod.Post, null))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col s12 l12 right-align">
+            <a class="btn" href="@Url.Action("Edit", new { id = Model.ID })">Cancelar</a>
+            <input type="submit" value="Guardar" class="btn" />
+        </div>
+    </div>
+    @Html.HiddenFor(model => model.ID, new { @id = "ID" })
+    <div class="row">
+        <div class="col s12 m12 l12">
+            <div class="row">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="input-field col s6">
+                    @Html.PasswordFor(model => model.pass, new { @id = "pass" })
+                    @Html.LabelFor(model => model.pass, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.ValidationMessageFor(model => model.pass, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div class="input-field col s6">
+            @Html.PasswordFor(model => model.npass1, new { @id = "npass1" })
+            @Html.LabelFor(model => model.npass1, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.ValidationMessageFor(model => model.npass1, "", new { @class = "text-danger" })
+        </div>
+        <div class="input-field col s6">
+            @Html.PasswordFor(model => model.npass2, new { @id = "npass2" })
+            @Html.LabelFor(model => model.npass2, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.ValidationMessageFor(model => model.npass2, "", new { @class = "text-danger" })
+        </div>
+    </div>
+}
+
+@if (ViewBag.message != null)
+{
+    <script>
+            M.toast({ html: '@ViewBag.message', classes: 'red' });
+    </script>
+}
+

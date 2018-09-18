@@ -1,0 +1,114 @@
+﻿@model TAT001.Entities.NEGOCIACION
+
+@{
+    ViewBag.pagina_r = 751;
+    ViewBag.carpeta_r = 500;
+    // ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if (ViewBag.error != "")
+{
+    <script>
+        $(document).ready(function () {
+        $(document).ready(function () {
+            function errorMessage(msg) {
+                M.toast({ html: msg });
+            }
+
+            var message = '@ViewBag.error';
+
+            if (message != "")
+            {
+                // do drop down loic
+                errorMessage(message);
+            }
+            });
+        });
+
+    </script>
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-md-offset-2 col-md-10">
+            <button type="submit" id="btnGEd"value="Save" class="btn btn-default" style="float:right;"></button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="card-panel">
+            <div class="row">
+                <div class="col l12">
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        @Html.HiddenFor(model => model.ID)
+
+                        <div class="input-field col l6">
+                            <i class="material-icons prefix">date_range</i>
+                            <input value="@Model.FECHAI.Year/@Model.FECHAI.Month/@Model.FECHAI.Day" id="FECHAI" name="FECHAI" type="text" class="validate" />
+                            <label id="lblDesde" for="FECHAI">De</label>
+                        </div>
+                        <div class="input-field col l6">
+                            <i class="material-icons prefix">date_range</i>
+                            <input id="FECHAF" value="@Model.FECHAF.Year/@Model.FECHAF.Month/@Model.FECHAF.Day" name="FECHAF" type="text" class="validate" />
+                            <label id="lblHasta" for="FECHAF">Hasta</label>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    var elemdp = document.querySelector('#FECHAI');
+    var optionsdp = {
+        format: 'dd/mm/yyyy',
+        onClose: function (e) {
+            var date = $('#FECHAI').val();
+            var periodo = date.split("/");
+
+            $('#periodo').val(periodo[1]);
+        },
+        i18n: {
+            clear: 'Limpiar',
+            today: 'Hoy',
+            done: 'Seleccionar',
+            previousMonth: '‹',
+            nextMonth: '›',
+            months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+            weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+            weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+            weekdaysAbbrev: ['D', 'L', 'M', 'X', 'J', 'V', 'S']
+        }
+    };
+    var instancedp = M.Datepicker.init(elemdp, optionsdp);
+
+    var elemdp2 = document.querySelector('#FECHAF');
+    var optionsdp2 = {
+        format: 'dd/mm/yyyy',
+        onClose: function (e) {
+            var date = $('#FECHAF').val();
+            var periodo = date.split("/");
+
+            $('#periodo').val(periodo[1]);
+        },
+        i18n: {
+            clear: 'Limpiar',
+            today: 'Hoy',
+            done: 'Seleccionar',
+            previousMonth: '‹',
+            nextMonth: '›',
+            months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+            weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+            weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+            weekdaysAbbrev: ['D', 'L', 'M', 'X', 'J', 'V', 'S']
+        }
+    };
+    var instancedp2 = M.Datepicker.init(elemdp2, optionsdp2);
+</script>
+<div>
+    @Html.ActionLink("Back to List", "Index",null, new { id="lblRegresar"})
+</div>
