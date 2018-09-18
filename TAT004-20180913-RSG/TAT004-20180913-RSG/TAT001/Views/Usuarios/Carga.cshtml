@@ -1,0 +1,315 @@
+﻿
+@{
+    ViewBag.Title = "Carga de usuarios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.pagina_r = 601;
+    ViewBag.carpeta_r = 500;
+}
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedcolumns/3.2.6/css/fixedColumns.dataTables.min.css" />
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/3.2.6/js/dataTables.fixedColumns.min.js"></script>
+
+@using (Html.BeginForm("Carga", "Usuarios", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="row right-align">
+        <div class="col s12">
+            <form method="post">
+                <input type="submit" value="Agregar" class="btn btn-small" onclick="Agregar()" />
+            </form>
+                <input type="button" value="Borrar" class="btn btn-small" onclick="javascript: document.location.reload();" />
+                @*<input type="submit" value="Actualizar" class="btn-small" />*@
+        </div>
+    </div>
+    @Html.AntiForgeryToken()
+    <div class="card-panel">
+        <div class="row">
+            <div class="file-field input-field col s12 m12 l6">
+                <div class="btn-small" style="float:left;">
+                    <span>File</span>
+                    <input type="file" id="files" name="files" onchange="subeExcel();">
+                </div>
+                <div class="file-path-wrapper">
+                    <input class="file-path validate" type="text">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12 ">
+                <table class="table mdl-data-table striped" id="table" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Company Code</th>
+                            <th>Nivel</th>
+                            <th>Usuario ID</th>
+                            <th>Nombre</th>
+                            <th>Apellido Paterno</th>
+                            <th>Apellido Materno</th>
+                            <th>Correo</th>
+                            <th>Idioma</th>
+                            <th>Password</th>
+                            <th>Mensaje</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+
+<script>
+
+    $(document).ready(function () {
+        $('#table').DataTable({
+            //scrollY: "true",
+            scrollX: "true",
+            scrollCollapse: true,
+            order: [],
+                       language: {
+                //"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                "url": "../Scripts/lang/@Session["spras"].ToString()"+".json"
+            },
+            "paging": false,
+            //        "ordering": false,
+            "info": false,
+            "searching": false,
+            //fixedColumns: {
+            //    leftColumns: 0
+            //},
+
+            "columns": [
+                {
+                    "name": 'KUNNR',
+                    "className": 'KUNNR'
+                },
+                {
+                    "name": 'BUNIT',
+                    "className": 'BUNIT'
+                },
+                {
+                    "name": 'PUESTO_ID',
+                    "className": 'PUESTO_ID'
+                },
+                {
+                    "name": 'ID',
+                    "className": 'ID',
+                },
+                {
+                    "name": 'NOMBRE',
+                    "className": 'NOMBRE'
+                },
+                {
+                    "name": 'APELLIDO_P',
+                    "className": 'APELLIDO_P'
+                },
+                {
+                    "name": 'APELLIDO_M',
+                    "className": 'APELLIDO_M'
+                },
+                {
+                    "name": 'EMAIL',
+                    "className": 'EMAIL'
+                },
+                {
+                    "name": 'SPRAS_ID',
+                    "className": 'SPRAS_ID'
+                },
+                {
+                    "name": 'PASS',
+                    "className": 'PASS'
+                },
+                {
+                    "name": 'mess',
+                    "className": 'mess'
+                }
+            ]
+        });
+
+    });
+
+    function subeExcel() {
+        var filenum = $('#files').get(0).files.length;
+        if (filenum > 0) {
+            var file = document.getElementById("files").files[0];
+            var filename = file.name;
+            if (evaluarExt(filename)) {
+                M.toast({ html: 'Cargando ' + filename });
+                loadExcelDis(file);
+                //updateFooter();
+            } else {
+                document.getElementById("files").value = "";
+                M.toast({ html: 'Tipo de archivo incorrecto: ' + filename });
+            }
+        } else {
+            M.toast({ html: 'Seleccione un archivo' });
+            var table = $('#table').DataTable();
+            table.clear().draw();
+        }
+    }
+
+    function evaluarExt(filename) {
+
+        var exts = ['xls', 'xlsx'];
+        // split file name at dot
+        var get_ext = filename.split('.');
+        // reverse name to check extension
+        get_ext = get_ext.reverse();
+        // check file type is valid as given in 'exts' array
+        if ($.inArray(get_ext[0].toLowerCase(), exts) > -1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function loadExcelDis(file) {
+
+        document.getElementById("loader").style.display = "initial";
+        var formData = new FormData();
+
+        formData.append("FileUpload", file);
+
+
+        var table = $('#table').DataTable();
+        table.clear().draw();
+        $.ajax({
+            type: "POST",
+            url: 'LoadExcel',
+            data: formData,
+            dataType: "json",
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+
+                if (data !== null || data !== "") {
+
+                    $.each(data, function (i, dataj) {
+
+                        var cli = dataj.KUNNR;
+                        var com = dataj.BUNIT;
+                        var niv = dataj.PUESTO_ID;
+                        var usc = dataj.ID;
+                        var spr = dataj.SPRAS_ID;
+
+                        var addedRow = addRow(table, dataj.POS, cli, com, niv, usc, dataj.NOMBRE, dataj.APELLIDO_P, dataj.APELLIDO_M, dataj.EMAIL, spr, dataj.PASS, dataj.mess);
+
+                        var cols = addedRow.cells[0];
+                        var a = $(cols).find("span").hasClass("orange");
+                        if (a) {
+                            $(cols).addClass("red");
+                        }
+                        var cols = addedRow.cells[1];
+                        var a = $(cols).find("span").hasClass("red");
+                        if (a) {
+                            $(cols).addClass("red");
+                        }
+                        var cols = addedRow.cells[2];
+                        var a = $(cols).find("span").hasClass("red");
+                        if (a) {
+                            $(cols).addClass("red");
+                        }
+                        var cols = addedRow.cells[3];
+                        var a = $(cols).find("span").hasClass("red");
+                        if (a) {
+                            $(cols).addClass("red");
+                        }
+                        var cols = addedRow.cells[7];
+                        var a = $(cols).find("span").hasClass("red");
+                        if (a) {
+                            $(cols).addClass("red");
+                        }
+                        var cols = addedRow.cells[8];
+                        var a = $(cols).find("span").hasClass("red");
+                        if (a) {
+                            $(cols).addClass("red");
+                        }
+                    });
+                    $('#table_dis').css("font-size", "12px");
+                    $('#table_dis').css("display", "table");
+                    $('#tfoot_dis').css("display", "table-footer-group");
+                    document.getElementById("loader").style.display = "none";
+                }
+            },
+            error: function (xhr, httpStatusMessage, customErrorMessage) {
+                M.toast({
+                    html: "Request couldn't be processed. Please try again later. the reason        " + xhr.status + " : " + httpStatusMessage + ": " + customErrorMessage
+                });
+                document.getElementById("loader").style.display = "none";
+            },
+            async: true
+        });
+        $("#table > tbody  > tr[role='row']").each(function () {
+            alert("as");
+        });
+    }
+
+    function addRow(t, POS, k, b, pi, id, n, ap, am, e, si, sp, me) {
+        var ppr = "";
+        var r = addRowl(
+            t,
+            POS,
+            k,
+            b,
+            pi,
+            id,
+            n,
+            ap,
+            am,
+            e,
+            si,
+            sp,
+            me
+        );
+        return r;
+    }
+    function addRowl(t, pos, k, b, pi, id, n, ap, am, e, si, sp, me) {
+        var r = t.row.add([
+            k,
+            b,
+            pi,
+            id,
+            n,
+            ap,
+            am,
+            e,
+            si,
+            sp,
+            me
+        ]).draw(false).node();
+        return r;
+    }
+    
+    function Agregar() {
+        $.ajax({
+            type: "POST",
+            url: 'Agregar',
+            data: null,
+            //dataType: "json",
+            success: function () {
+                location.href='@Url.Action("Agregar","UsuariosController")';
+            },
+            error: function (request, status, error) {
+                alert(request.responseText);
+            }
+        });
+    }
+
+</script>
+<style>
+    .dataTables_length {
+        display: none;
+    }
+
+    .dataTables_filter {
+        display: none;
+    }
+
+    .dataTables_scrollHeadInner, .mdl-data-table {
+        width: 100%;
+    }
+</style>
