@@ -1443,7 +1443,6 @@
     <Content Include="obj\Release\edmxResourcesToEmbed\Entities\TAT001.ssdl" />
     <Content Include="obj\Release\TAT001.csproj.CopyComplete" />
     <Content Include="obj\Release\TAT001.csproj.CoreCompileInputs.cache" />
-=======
     <Content Include="obj\Debug\edmxResourcesToEmbed\Entities\TAT001.csdl" />
     <Content Include="obj\Debug\edmxResourcesToEmbed\Entities\TAT001.msl" />
     <Content Include="obj\Debug\edmxResourcesToEmbed\Entities\TAT001.ssdl" />
@@ -1454,7 +1453,6 @@
     <Content Include="PdfTemp\Doc29\05\2018.xlsx" />
     <Content Include="PdfTemp\DocPr04\06\2018.xlsx" />
     <Content Include="PdfTemp\20180913_200852.pdf" />
->>>>>>> 6ef2b0d2cbf9c4265f769f5fcf72842c183c3834
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile2.pubxml" />
     <None Include="Properties\PublishProfiles\SERVER.pubxml" />
