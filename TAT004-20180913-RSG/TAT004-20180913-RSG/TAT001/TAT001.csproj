@@ -425,6 +425,9 @@
     <Compile Include="Entities\DOCUMENTOBORRP.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\DOCUMENTOBORRREC.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\DOCUMENTOF.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
@@ -441,6 +444,9 @@
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\DOCUMENTOR.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DOCUMENTORAN.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\DOCUMENTOREC.cs">
@@ -1693,7 +1699,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="obj\Debug\TempPE\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
