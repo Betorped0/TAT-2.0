@@ -274,6 +274,7 @@ function validarNC(id, num, mensaje, icon, color, elem, ii, ban) {
 
 
 function warning(val1, comp, val2) {
+    var ban = false;
     if (comp == '=') {
         if (val1 == val2)
             return true;
@@ -324,28 +325,28 @@ function warning(val1, comp, val2) {
         }
     }
     else if (comp == "f") {
-        return evaluarFiles();
+        ban =  evaluarFiles();
     }
     else if (comp == "d") {
-        return isDate(val1)
+        ban = isDate(val1);
     }
     else if (comp == "M") {
-        return ($("#select_neg").val() == "M")
+        ban = ($("#select_neg").val() == "M");
     }
     else if (comp == "P") {
-        return ($("#select_neg").val() == "P")
+        ban = ($("#select_neg").val() == "P");
     }
     else if (comp == "MA") {
-        return ($("#select_dis").val() == "M")
+        ban = ($("#select_dis").val() == "M");
     }
     else if (comp == "CA") {
-        return ($("#select_dis").val() == "C")
+        ban = ($("#select_dis").val() == "C");
     }
     else if (comp == "TOT") {
-        return (toNum(val1) == toNum($("#total_dis").text()))
+        ban =  (toNum(val1) == toNum($("#total_dis").text()))
     }
     else if (comp == "T") {
-        return (parseFloat(toNum($("#total_dis").text()))>0)
+        ban =  (parseFloat(toNum($("#total_dis").text()))>0)
     }
     else if (comp == "DIS") {
         evaluarDisTable();
@@ -362,15 +363,21 @@ function warning(val1, comp, val2) {
 
             });
         }
-        return cont > 0;
+        ban =  cont > 0;
     }
     else if (comp == "INI") {
-        return (val1.startsWith(val2))
+        ban = (val1.startsWith(val2));
     }
     else if (comp == "mail") {
-        return validateEmail(val1);
+        ban =  validateEmail(val1);
     }
-    return false;
+    else if (comp == "L") {
+        ban =  ligada();
+    }
+    else if (comp == "nL") {
+        ban =  !ligada();
+    }
+    return ban;
 }
 
 function validateEmail(email) {
