@@ -31,6 +31,8 @@ namespace TAT001.Entities
         public List<TAT001.Models.DOCUMENTOP_MOD> DOCUMENTOP { get; set; }
         public List<DOCUMENTOF> DOCUMENTOF { get; set; }
         public List<DOCUMENTOREC> DOCUMENTOREC { get; set; }
+        public List<DOCUMENTORAN> DOCUMENTORAN { get; set; }
+
         public decimal NUM_DOC { get; set; }
         public string TSOL_ID { get; set; }
         public string TALL_ID { get; set; }
