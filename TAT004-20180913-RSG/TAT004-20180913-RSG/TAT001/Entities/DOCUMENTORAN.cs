@@ -12,15 +12,14 @@ namespace TAT001.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class TSOLT
+    public partial class DOCUMENTORAN
     {
-        public string SPRAS_ID { get; set; }
-        public string TSOL_ID { get; set; }
-        public string TXT020 { get; set; }
-        public string TXT50 { get; set; }
-        public string TXT010 { get; set; }
+        public decimal NUM_DOC { get; set; }
+        public int POS { get; set; }
+        public int LIN { get; set; }
+        public Nullable<decimal> OBJETIVOI { get; set; }
+        public Nullable<decimal> PORCENTAJE { get; set; }
     
-        public virtual SPRA SPRA { get; set; }
-        public virtual TSOL TSOL { get; set; }
+        public virtual DOCUMENTOREC DOCUMENTOREC { get; set; }
     }
 }

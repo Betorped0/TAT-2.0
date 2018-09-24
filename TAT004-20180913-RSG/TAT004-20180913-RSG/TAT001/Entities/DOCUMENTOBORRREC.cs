@@ -12,15 +12,9 @@ namespace TAT001.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class DOCUMENTOREC
+    public partial class DOCUMENTOBORRREC
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public DOCUMENTOREC()
-        {
-            this.DOCUMENTORANs = new HashSet<DOCUMENTORAN>();
-        }
-    
-        public decimal NUM_DOC { get; set; }
+        public string USUARIOC_ID { get; set; }
         public int POS { get; set; }
         public Nullable<System.DateTime> FECHAF { get; set; }
         public Nullable<int> PERIODO { get; set; }
@@ -34,8 +28,6 @@ namespace TAT001.Entities
         public Nullable<decimal> DOC_REF { get; set; }
         public Nullable<System.DateTime> FECHAV { get; set; }
     
-        public virtual DOCUMENTO DOCUMENTO { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DOCUMENTORAN> DOCUMENTORANs { get; set; }
+        public virtual DOCUMENTBORR DOCUMENTBORR { get; set; }
     }
 }
