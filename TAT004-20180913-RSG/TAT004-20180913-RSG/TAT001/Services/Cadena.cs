@@ -25,5 +25,23 @@ namespace TAT001.Services
             }
             return m;
         }
+        public string completaCliente(string cliente)//RSG 07.06.2018---------------------------------------------
+        {
+            string m = cliente;
+            try
+            {
+                long matnr1 = long.Parse(m);
+                int l = 10 - m.Length;
+                for (int i = 0; i < l; i++)
+                {
+                    m = "0" + m;
+                }
+            }
+            catch
+            {
+
+            }
+            return m;
+        }
     }
 }

@@ -244,6 +244,7 @@
     <Compile Include="Controllers\Catalogos\PuestosController.cs" />
     <Compile Include="Controllers\Catalogos\RolesController.cs" />
     <Compile Include="Controllers\RecurrenciasController.cs" />
+    <Compile Include="Controllers\Reportes\ReportesController.cs" />
     <Compile Include="Controllers\SolicitudesController.cs" />
     <Compile Include="Controllers\SolicitudesController3.cs" />
     <Compile Include="Controllers\SolicitudesController2.cs" />
@@ -744,6 +745,7 @@
     <Compile Include="Models\CartaD.cs" />
     <Compile Include="Models\CartaDEsqueleto.cs" />
     <Compile Include="Models\CategoriaMaterial.cs" />
+    <Compile Include="Models\Comentarios.cs" />
     <Compile Include="Models\dby.cs" />
     <Compile Include="Models\Documento.cs" />
     <Compile Include="Models\DOCUMENTOM_MOD.cs" />
@@ -830,6 +832,7 @@
     <Content Include="Content\material.min.css" />
     <Content Include="Content\materialize.css" />
     <Content Include="Content\sideMenu.css" />
+    <Content Include="Content\subfilters\jquery.tablesorter.pager.css" />
     <Content Include="Entities\TAT001.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>TAT001.edmx</DependentUpon>
@@ -1186,6 +1189,12 @@
     <Content Include="obj\Debug\TAT001.csproj.FileListAbsolute.txt" />
     <Content Include="Scripts\copiacreatesolicitud.js" />
     <Content Include="Scripts\Masiva\create.js" />
+    <Content Include="Scripts\rangos.js" />
+    <Content Include="Scripts\subfilters\jquery.tablesorter.js" />
+    <Content Include="Scripts\subfilters\jquery.tablesorter.pager.js" />
+    <Content Include="Scripts\subfilters\script.js" />
+    <Content Include="Scripts\subfilters\widget-filter.js" />
+    <Content Include="Scripts\tablesort\tableToExcel.js" />
     <Content Include="Scripts\warning.js" />
     <Content Include="Scripts\analisis.js" />
     <Content Include="Scripts\autocomplete1.11.4.js" />
@@ -1693,7 +1702,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="obj\Debug\TempPE\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
