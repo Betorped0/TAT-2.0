@@ -16,7 +16,7 @@
     <div class="row right-align">
         <div class="col s12">
             <form method="post">
-                <input type="submit" value="Agregar" class="btn btn-small" onclick="Agregar()" />
+                <input type="button" value="Agregar" class="btn btn-small" onclick="Carga()" />
             </form>
                 <input type="button" value="Borrar" class="btn btn-small" onclick="javascript: document.location.reload();" />
                 @*<input type="submit" value="Actualizar" class="btn-small" />*@
@@ -149,6 +149,7 @@
             var table = $('#table').DataTable();
             table.clear().draw();
         }
+        sessionStorage.setItem("num", filenum);
     }
 
     function evaluarExt(filename) {
@@ -284,19 +285,26 @@
         return r;
     }
     
-    function Agregar() {
-        $.ajax({
-            type: "POST",
-            url: 'Agregar',
-            data: null,
-            //dataType: "json",
-            success: function () {
-                location.href='@Url.Action("Agregar","UsuariosController")';
-            },
-            error: function (request, status, error) {
-                alert(request.responseText);
-            }
-        });
+    function Carga() {
+        var doc = sessionStorage.getItem("num");
+        if (doc > 0) {
+            $.ajax({
+                type: "POST",
+                url: 'Agregar',
+                data: null,
+                dataType: "json",
+                success: function () {
+                
+                },
+                error: function (request, status, error) {
+                    //alert(request.responseText);
+                }
+            });
+            window.location.replace("/Usuarios/Index");
+        }
+        else
+            M.toast({ html: 'Seleccione un archivo' });
+        
     }
 
 </script>
