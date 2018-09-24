@@ -1671,6 +1671,7 @@ function _ff() {
     var meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
     var datei = $("#fechai_vig").val().split(" ")[0];
     var _anoi = datei.split('/')[2];
+
     $.ajax({
         type: "POST",
         url: 'getPeriodo',
@@ -1678,7 +1679,16 @@ function _ff() {
         data: { "fecha": datei },
         success: function (data) {
             var _xd = data;
-            $("#periodoi_id").val(parseInt(data));
+            var pp = parseInt(data);
+            if (pp != 0) {
+                $("#periodoi_id").val(pp);
+                document.getElementById("btn-peri").checked = true;
+                $("#btn-peri").trigger("change");
+                $("#anioi_id").val(_anoi);
+            } else {
+                document.getElementById("btn-date").checked = true;
+                $("#btn-date").trigger("change");
+            }
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             M.toast({ html: httpStatusMessage });
@@ -1694,7 +1704,16 @@ function _ff() {
         data: { "fecha": datef },
         success: function (data) {
             var _xd = data;
-            $("#periodof_id").val(parseInt(data));
+            var pp = parseInt(data);
+            if (pp != 0) {
+                $("#periodof_id").val(pp);
+                document.getElementById("btn-peri").checked = true;
+                $("#btn-peri").trigger("change");
+                $("#aniof_id").val(_anof);
+            } else {
+                document.getElementById("btn-date").checked = true;
+                $("#btn-date").trigger("change");
+            }
 
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
@@ -1702,8 +1721,6 @@ function _ff() {
         },
         async: true
     });
-    $("#anioi_id").val(_anoi);
-    $("#aniof_id").val(_anof);
 }
 //LEJ 30.07.2018--------------------------------------T
 

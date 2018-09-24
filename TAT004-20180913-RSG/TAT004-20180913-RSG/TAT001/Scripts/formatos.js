@@ -37,6 +37,7 @@ function toNum(string) {
                 _i = -1;
             string = string.replace('(', '');
             string = string.replace(')', '');
+            string = string.replace('-', '0');
             //string = string.replace(_miles, '');
             if (_miles === '.')
                 string = string.replace(/\./g, '')
@@ -72,6 +73,35 @@ function toShow(string) {
             var _xv = xx.replace('.', '');
             xx = _xv.replace(',', '.');
             var _xpf = parseFloat(xx.replace(',', '.')).toFixed(2);
+            _xpf = _xpf.replace('.', ',');
+            string = ("$" + _xpf.toString().replace(/\B(?=(?=\d*\,)(\d{3})+(?!\d))/g, "."));
+        }
+    }
+    else {
+        $(this).val("$0" + _decimales + "00");
+    }
+    if (_i < 0) string = string.replace('$', '$(') + ')';
+    return string;
+}
+function toShow5(string) {
+    string = toNum(string);
+    var _miles = $("#miles").val();
+    var _decimales = $("#dec").val();
+    var xx = parseFloat(string).toFixed(5);
+    var _i = 1; if (xx < 0) _i = -1;
+    xx = (xx * _i) + "";
+    xx = xx.replace('.', _decimales);
+    //string = xx.toString().replace(/\B(?=(\d{3})+(?!\d))/g, _miles) + '%';
+    if (string != '') {
+        if (_decimales === '.') {
+            //Hace la conversion a 2 decimales
+            var _xv = xx.replace(',', '');
+            xx = _xv;
+            string = ("$" + parseFloat(xx).toFixed(5).toString().replace(/\B(?=(?=\d*\.)(\d{3})+(?!\d))/g, ","));
+        } else if (_decimales === ',') {
+            var _xv = xx.replace('.', '');
+            xx = _xv.replace(',', '.');
+            var _xpf = parseFloat(xx.replace(',', '.')).toFixed(5);
             _xpf = _xpf.replace('.', ',');
             string = ("$" + _xpf.toString().replace(/\B(?=(?=\d*\,)(\d{3})+(?!\d))/g, "."));
         }
