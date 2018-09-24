@@ -14,19 +14,28 @@
 <script src="~/Scripts/ValidarNumero.js"></script><!--LEJ 09.07.2018-->
 @if (ViewBag.error != "")
 {
-    <script>
-$(document).ready(function () {
-bmonto_apoyo
-function errorMessage(msg) {
-M.toast({ html: msg });
-}
-var message = '@ViewBag.error';
+<script>
+    $(document).ready(function () {
+        bmonto_apoyo
+        function errorMessage(msg) {
+        M.toast({ html: msg });
+        }
+        var message = '@ViewBag.error';
 
-if (message != "") {
-errorMessage(message);
-}
-});
-    </script>
+        if (message != "") {
+        errorMessage(message);
+        }
+        $("#tab_fin").click(
+            function () {
+                $("table tbody tr").each(function () {
+                    var classval = $("#table_dis tr").find("td").eq(3).attr("class");
+                    alert(classval);
+                });
+            }
+        );
+
+    });
+</script>
 }
 @* ------------------------------------------------------------------------silverio *@
 <input id="rob" name="rob" type="hidden" value="">
@@ -1197,8 +1206,8 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                             </div>
                         }
                         @{List<TAT001.Entities.DOCUMENTOA>
-                                                                                                                                                                archivos = ViewBag.files as List<TAT001.Entities.DOCUMENTOA>
-                                                                                                                                                                    ;
+                                                                                                                                                                  archivos = ViewBag.files as List<TAT001.Entities.DOCUMENTOA>
+                                                                                                                                                                      ;
                             if (ViewBag.relacionadan != "" && archivos.Count > 0)
                             {
                                 string[] nombrefile;

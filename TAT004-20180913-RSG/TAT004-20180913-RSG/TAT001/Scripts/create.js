@@ -2,6 +2,7 @@
 var monedafinanciera = true;
 var negdistribucion = true;
 var disdistribucion = true;
+var unica = false;
 // PARA GIT
 // Omar
 //para causar cnflicto
@@ -259,6 +260,7 @@ $(document).ready(function () {
     });
 
     $('#delRow').click(function (e) {
+        
         var t = $('#table_dis').DataTable();
         t.rows('.selected').remove().draw(false);
         //Validar si es categoría por porcentaje
@@ -274,6 +276,7 @@ $(document).ready(function () {
         }
         event.returnValue = false;
         event.cancel = true;
+        $("#addRow").parent().show();
     });
 
     //Mostrar los materiales (detalle) de la categoria 
@@ -305,7 +308,6 @@ $(document).ready(function () {
     });
 
     $('#addRow').on('click', function () {
-        alert('en el click');
         var relacionada = "";
 
         if ($("#txt_rel").length) {
@@ -431,38 +433,37 @@ $(document).ready(function () {
                     }
 
                 } else if (dis == "M") {//falta validar
-                    //Distribución por material      
-                   
-                    //var addedRow = addRowMat(t, "", "", "", "", "", "", "", "", "", "", "", relacionada, reversa, ddate, adate, "");
-                    var addedRow = addRowMat(t, "", "", "", "", "", "", "", "", "", "", "", relacionada, relacionadaed, reversa, ddate, adate, "", "");//Add MGC B20180705 2018.07.05 ne no eliminar //Add MGC B20180705 2018.07.05 relacionadaed editar el material en los nuevos renglones
-
-                    //t.row.add([
-                    //    "",
-                    //    "",
-                    //    "",
-                    //    "<input class=\"" + relacionada + " input_oper format_date input_fe\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
-                    //    "<input class=\"" + relacionada + " input_oper format_date input_fe\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
-                    //    "<input class=\"" + relacionada + " input_oper input_material number\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
-                    //    "",
-                    //    "",
-                    //    "<input class=\"" + reversa + " input_oper numberd input_dc\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
-                    //    "<input class=\"" + reversa + " input_oper numberd input_dc\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
-                    //    "<input class=\"" + reversa + " input_oper numberd\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
-                    //    "",
-                    //    "<input class=\"" + reversa + " input_oper numberd input_dc\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
-                    //    "<input class=\"" + reversa + " input_oper numberd input_dc\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
-                    //    "<input class=\"" + reversa + " input_oper numberd input_dc total\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
-                    //]).draw(false);
-
-                    $('#table_dis').css("font-size", "12px");
-                    $('#table_dis').css("display", "table");
-                    //$('#tfoot_dis').css("display", "table-footer-group");
-
-                    //if ($('#select_dis').val() == "M") {
-
-                    t.column(0).visible(false);
-                    t.column(1).visible(false);
-                    //}
+                    var classtd = $("#table_dis tbody tr:first td").attr("class");
+                    indext = getIndex();
+                    //Distribución por material 
+                    if (classtd == "dataTables_empty" || $('#table_dis').length==0) {
+                        unica = false;
+                        var addedRow = addRowMat(t, "", "", "", "", "", "", "", "", "", "", "", relacionada, relacionadaed, reversa, ddate, adate, "", "");//Add MGC B20180705 2018.07.05 ne no eliminar //Add MGC B20180705 2018.07.05 relacionadaed editar el material en los nuevos renglones
+                        $('#table_dis').css("font-size", "12px");
+                        $('#table_dis').css("display", "table");
+                        t.column(0).visible(false);
+                        t.column(1).visible(false);
+                    }
+                    else
+                    {
+                        if (unica) {
+                            $(this).find('td').eq((5 + indext)).addClass("errorMaterial");
+                            M.toast({ html: 'Esta categoría no se puede mezclar con otras' });
+                        }
+                        else if(!unica)
+                        {
+                            var addedRow = addRowMat(t, "", "", "", "", "", "", "", "", "", "", "", relacionada, relacionadaed, reversa, ddate, adate, "", "");
+                            $('#table_dis').css("font-size", "12px");
+                            $('#table_dis').css("display", "table");
+                            t.column(0).visible(false);
+                            t.column(1).visible(false);
+                        }
+                        else if (unica && $('#table_dis tr').length > 1 ) {
+                            $(this).find('td').eq((5 + indext)).addClass("errorMaterial");
+                            M.toast({ html: 'Esta categoría no se puede mezclar con otras' });
+                        }
+                    }
+                    
                 }
                 updateFooter();
 
@@ -4819,6 +4820,15 @@ function evaluarDisTable() {
             //Distribución por material
             if (dis == "M") {
                 var val = $(this).find("td:eq(" + (5 + indext) + ") input").val();
+                var noError = $(this).find('td').eq((5 + indext)).attr("class");
+                var errorMat = false;
+                if (noError == "errorMaterial" && unica) {
+                    alert(noError);
+                    $(this).addClass('selected');
+                    errorMat = true;
+                    unica = false;
+                    return false;
+                }
                 //Validar material
                 if (val == "") {
                     //Sin material elimina el renglón
@@ -4841,10 +4851,15 @@ function evaluarDisTable() {
                             }
                         }
 
-                    } else {
+                    } else if (errorMat) {
+                        return false;
+                    }
+
+                    else {
                         $(this).find('td').eq((5 + indext)).addClass("errorMaterial");
                         return false;
                     }
+                    
                 }
             }
 
@@ -5925,6 +5940,38 @@ function valMaterial(mat, message) {
     return localval;
 }
 
+//Get MAtGP ID from mat CATEGORIA_ID
+function getUniqueMat(mat, message) {
+    materialVal = "";
+    var localval = "";
+    var spras = "ES"; //
+    if (mat != "") {
+        $.ajax({
+            type: "POST",
+            url: 'getCatByMatId',
+            dataType: "json",
+            data: { "mat": mat },
+
+            success: function (data) {
+
+                if (data !== null || data !== "") {
+                    asignarValMat(data);
+                }
+
+            },
+            error: function (xhr, httpStatusMessage, customErrorMessage) {
+                if (message == "X") {
+                    M.toast({ html: "Valor no encontrado" });
+                }
+            },
+            async: false
+        });
+    }
+
+    localval = materialVal;
+    return localval;
+}
+
 function asignarValMat(val) {
     materialVal = val;
 }
@@ -5997,7 +6044,39 @@ function valcategoria(cat) {
 
     return res;
 }
+function valcategoriaMat(cat) {
 
+    var res = 0;
+    var t = $('#table_dis').DataTable();
+    t.rows().every(function (rowIdx, tableLoop, rowLoop) {
+
+        var tr = this.node();
+        var row = t.row(tr);
+
+        //Obtener el id de la categoría
+        var index = t.row(tr).index();
+        //Categoría en el row
+        var catid = t.row(index).data()[0];
+        var _xxx = $.parseJSON($('#catmat').val());//LEJ 18.07.2018
+        for (var i = 0; i < _xxx.length; i++) {
+            if (catid === _xxx[i].ID | cat === _xxx[i].ID) {
+                if (_xxx[i].UNICA === true) {
+                    res = 2;
+                }
+            }
+        }
+        //Comparar la categoría en la tabla y la agregada
+        // if (catid === "000" | cat === "000") {//RSG 05.06.2018
+        //   res = true;
+        // }
+        if (cat == catid) {
+            res = 1;
+        }
+
+    });
+
+    return res;
+}
 
 //Add MGC B20180705 2018.07.09 Validar que los materiales no existan duplicados en la tabla
 function valmaterial(mat) {
@@ -6080,6 +6159,7 @@ function categoriaUnica(cat) {
         //Categoría en el row
         var catid = t.row(index).data()[0];
         var _xxx = $.parseJSON($('#catmat').val());//LEJ 18.07.2018
+        console.log(_xxx);
         for (var i = 0; i < _xxx.length; i++) {
             if (cat === _xxx[i].ID) {
                 if (_xxx[i].UNICA === true) {

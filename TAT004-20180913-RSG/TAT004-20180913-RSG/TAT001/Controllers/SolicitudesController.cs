@@ -7802,6 +7802,7 @@ namespace TAT001.Controllers
             JsonResult cc = Json(matt, JsonRequestBehavior.AllowGet);
             return cc;
         }
+        
 
         [HttpPost]
         public JsonResult getProveedor(string prov)
@@ -7891,7 +7892,8 @@ namespace TAT001.Controllers
                             {
                                 SPRAS_ID = ct.SPRAS_ID.ToString(),
                                 CATEGORIA_ID = ct.MATERIALGP_ID.ToString(),
-                                TXT50 = ct.TXT50.ToString()
+                                TXT50 = ct.TXT50.ToString(),
+                                UNICA = c.UNICA
                             })
                         .FirstOrDefault();
             }
