@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="39639cd7ab5047319b44d4f7f5983555" Name="Diagram1" ZoomLevel="54">
+      <Diagram DiagramId="39639cd7ab5047319b44d4f7f5983555" Name="Diagram1" ZoomLevel="39">
         <EntityTypeShape EntityType="TAT001Model.ACCION" Width="1.5" PointX="27" PointY="64.75" IsExpanded="true" />
         <EntityTypeShape EntityType="TAT001Model.ACCIONT" Width="1.5" PointX="3" PointY="95.75" IsExpanded="true" />
         <EntityTypeShape EntityType="TAT001Model.APPSETTING" Width="1.5" PointX="10.75" PointY="3.75" IsExpanded="true" />
@@ -332,6 +332,10 @@
         <AssociationConnector Association="TAT001Model.FK_WORKFP_WORKFV" ManuallyRouted="false" />
         <AssociationConnector Association="TAT001Model.FK_WORKFT_WORKFV" ManuallyRouted="false" />
         <AssociationConnector Association="TAT001Model.USUARIOGA" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="TAT001Model.DOCUMENTOBORRREC" Width="1.5" PointX="3" PointY="20.125" />
+        <EntityTypeShape EntityType="TAT001Model.DOCUMENTORAN" Width="1.5" PointX="27.75" PointY="99" />
+        <AssociationConnector Association="TAT001Model.FK_DOCUMENTOBORRREC_DOCUMENTBORR" />
+        <AssociationConnector Association="TAT001Model.FK_DOCUMENTORAN_DOCUMENTOREC" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

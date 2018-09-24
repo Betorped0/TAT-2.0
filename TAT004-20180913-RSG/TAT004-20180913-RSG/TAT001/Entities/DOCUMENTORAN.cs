@@ -12,19 +12,14 @@ namespace TAT001.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class DET_APROBP
+    public partial class DOCUMENTORAN
     {
-        public string SOCIEDAD_ID { get; set; }
-        public int PUESTOC_ID { get; set; }
-        public int VERSION { get; set; }
+        public decimal NUM_DOC { get; set; }
         public int POS { get; set; }
-        public Nullable<int> PUESTOA_ID { get; set; }
-        public Nullable<decimal> MONTO { get; set; }
-        public Nullable<bool> PRESUPUESTO { get; set; }
-        public bool ACTIVO { get; set; }
-        public Nullable<int> N_MONTO { get; set; }
-        public Nullable<int> N_PRESUP { get; set; }
+        public int LIN { get; set; }
+        public Nullable<decimal> OBJETIVOI { get; set; }
+        public Nullable<decimal> PORCENTAJE { get; set; }
     
-        public virtual DET_APROBH DET_APROBH { get; set; }
+        public virtual DOCUMENTOREC DOCUMENTOREC { get; set; }
     }
 }
