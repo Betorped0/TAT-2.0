@@ -877,11 +877,13 @@
                             <table class="table_rec display" id="table_rec" cellspacing="0" style="width:100%;display:none">
                                 <thead>
                                     <tr>
-                                        <th>NO</th>
-                                        <th>TSOL</th>
-                                        <th>FECHA</th>
-                                        <th width="150px">Monto</th>@*LEJ 06.08.2018*@
-                                        <th>Porcentaje</th>
+                                        <th id=""></th>@*B20180801 MGC Textos*@
+                                        <th id="thead_rnumero">NO</th>@*B20180801 MGC Textos*@
+                                        <th id="thead_rperiodo">Periodo</th>@*B20180801 MGC Textos*@
+                                        <th id="thead_rtiposol">Solicitud</th>@*B20180801 MGC Textos*@
+                                        <th id="thead_rfecha">FECHA</th>@*B20180801 MGC Textos*@
+                                        <th id="thead_rmonto">Monto</th>@*B20180801 MGC Textos*@
+                                        <th id="thead_rporc">Porcentaje</th>@*B20180801 MGC Textos*@
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -1587,9 +1589,14 @@
                                     <div class="form-group input-field col s6">
                                         @Html.LabelFor(model => model.TIPO_CAMBIO, "Tipo de cambio", htmlAttributes: new { @class = "control-label active" })
                                         <div class="col-md-10">
-                                            @Html.EditorFor(model => model.TIPO_CAMBIO, new { htmlAttributes = new { @id = "tipo_cambio", @class = "form-control " + @ViewBag.relacionada, @Value = ViewBag.tcambio } })
+                                            @*@Html.EditorFor(model => model.TIPO_CAMBIO, new { htmlAttributes = new { @id = "tipo_cambio", @class = "form-control " + @ViewBag.relacionada, @Value = ViewBag.tcambio } })*@
+                                            @*@Html.EditorFor(model => model.TIPO_CAMBIO, new { htmlAttributes = new { @id = "tipo_cambio", @class = "form-control " + @ViewBag.relacionada } })*@
+                                            <input type="text" disabled="disabled" id="tipo_cambio" value="@Model.TIPO_CAMBIO" />
                                         </div>
                                     </div>
+                                    <script>
+                                                                                var aa = $("#tipo_cambio").val();
+                                    </script>
                                     <div class=" input-field col s6">
                                         <input value="" id="montos_doc_ml2" type="text" class="" disabled="disabled" />
                                         <label for="montos_doc_ml2">Monto en USD</label>

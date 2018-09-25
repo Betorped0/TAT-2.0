@@ -2620,6 +2620,7 @@ namespace TAT001.Controllers
                                 drec.PERIODO = cal.getPeriodo(drec.FECHAV.Value);
                                 if (dOCUMENTO.TIPO_RECURRENTE == "1")
                                     drec.PERIODO--;
+                                if (drec.PERIODO == 0) drec.PERIODO = 12;
                                 ////int num = int.Parse(sel_nn);
                                 ////int pos = drec.POS % num;
                                 //RSG 29.07.2018-add----------------------------------
@@ -2865,7 +2866,7 @@ namespace TAT001.Controllers
                         {
                             decimal num_ref = (decimal)dOCUMENTO.DOCUMENTO_REF;
                             DOCUMENTO referencia = db1.DOCUMENTOes.Find(num_ref);
-                            referencia.ESTATUS = "C";
+                            referencia.ESTATUS = "R";
                             db1.Entry(referencia).State = EntityState.Modified;
                             db1.SaveChanges();
                         }
@@ -4285,26 +4286,27 @@ namespace TAT001.Controllers
                 }
                 d.MONEDA_ID = id_bukrs.WAERS;
                 var date = DateTime.Now.Date;
-                TAT001.Entities.TCAMBIO tcambio = new TAT001.Entities.TCAMBIO();
-                try
-                {
-                    tcambio = db.TCAMBIOs.Where(t => t.FCURR.Equals(id_bukrs.WAERS) && t.TCURR.Equals("USD") && t.GDATU.Equals(date)).FirstOrDefault();
-                    if (tcambio == null)
-                    {
-                        var max = db.TCAMBIOs.Where(t => t.FCURR.Equals(id_bukrs.WAERS) && t.TCURR.Equals("USD")).Max(a => a.GDATU);
-                        tcambio = db.TCAMBIOs.Where(t => t.FCURR.Equals(id_bukrs.WAERS) && t.TCURR.Equals("USD") && t.GDATU.Equals(max)).FirstOrDefault();
-                    }
-                    decimal con = Convert.ToDecimal(tcambio.UKURS);
-                    var cons = con.ToString("0.##");
+                //TAT001.Entities.TCAMBIO tcambio = new TAT001.Entities.TCAMBIO();
+                //try
+                //{
+                //    tcambio = db.TCAMBIOs.Where(t => t.FCURR.Equals(id_bukrs.WAERS) && t.TCURR.Equals("USD") && t.GDATU.Equals(date)).FirstOrDefault();
+                //    if (tcambio == null)
+                //    {
+                //        var max = db.TCAMBIOs.Where(t => t.FCURR.Equals(id_bukrs.WAERS) && t.TCURR.Equals("USD")).Max(a => a.GDATU);
+                //        tcambio = db.TCAMBIOs.Where(t => t.FCURR.Equals(id_bukrs.WAERS) && t.TCURR.Equals("USD") && t.GDATU.Equals(max)).FirstOrDefault();
+                //    }
+                //    decimal con = Convert.ToDecimal(tcambio.UKURS);
+                //    var cons = con.ToString("0.##");
 
-                    ViewBag.tcambio = cons;
-                }
-                catch (Exception e)
-                {
-                    errorString = e.Message + "detail: conversion " + id_bukrs.WAERS + " to " + "USD" + " in date " + DateTime.Now.Date;
-                    ViewBag.tcambio = "";
-                }
+                //    ViewBag.tcambio = cons;
+                //}
+                //catch (Exception e)
+                //{
+                //    errorString = e.Message + "detail: conversion " + id_bukrs.WAERS + " to " + "USD" + " in date " + DateTime.Now.Date;
+                //    ViewBag.tcambio = "";
+                //}
 
+                ViewBag.tcambio = d.TIPO_CAMBIO;
 
             }//RSG 13.06.2018
 

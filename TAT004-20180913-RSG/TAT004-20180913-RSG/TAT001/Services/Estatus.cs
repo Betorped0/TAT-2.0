@@ -146,6 +146,8 @@ namespace TAT001.Services
                 ret = "Por gen.txt ";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[C]..[A]...."))
                 ret = "Cerrada";
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]...."))
+                ret = "Reversada";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[P]..[A]...."))
                 ret = "Por contabilizar ";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[P][A]...[R]"))

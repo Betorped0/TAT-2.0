@@ -31,9 +31,13 @@ for (var i = 0; i < lista.length; i++) {
 app += "$('#tab_soporte').on('click', function (e) {var ban = validarTab(e, 'tab_info','Informacion_cont'); }); ";
 app += "$('#tab_dis').on('click', function (e) { var ban = validarTab(e, 'tab_info', 'Informacion_cont');" +
     " if(ban){ ban = validarTab(e, 'tab_soporte', 'Soporte_cont');} }); ";
-app += "$('#tab_fin').on('click', function (e) { var ban = validarTab(e, 'tab_info', 'Informacion_cont');" +
+app += "$('#tab_rec').on('click', function (e) { var ban = validarTab(e, 'tab_info', 'Informacion_cont');" +
     " if(ban){ ban = validarTab(e, 'tab_soporte', 'Soporte_cont');} " +
     " if(ban){ ban = validarTab(e, 'tab_dis', 'Distribucion_cont');} }); ";
+app += "$('#tab_fin').on('click', function (e) { var ban = validarTab(e, 'tab_info', 'Informacion_cont');" +
+    " if(ban){ ban = validarTab(e, 'tab_soporte', 'Soporte_cont');} " +
+    " if(ban){ ban = validarTab(e, 'tab_dis', 'Distribucion_cont');} " +
+    " if(ban){ ban = validarTab(e, 'tab_rec', 'Recurrente_cont');} }); ";
 
 app += "function validarTab(e, tabid, div) {";
 app += "var ban = true;";
