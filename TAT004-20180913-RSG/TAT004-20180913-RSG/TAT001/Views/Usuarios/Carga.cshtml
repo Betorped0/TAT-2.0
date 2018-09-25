@@ -1,4 +1,5 @@
-﻿
+﻿@model TAT001.Models.Usuarios
+
 @{
     ViewBag.Title = "Carga de usuarios";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -10,16 +11,14 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedcolumns/3.2.6/css/fixedColumns.dataTables.min.css" />
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/3.2.6/js/dataTables.fixedColumns.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jeditable.js/2.0.6/jquery.jeditable.js"></script>
 
-@using (Html.BeginForm("Carga", "Usuarios", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
+
     <div class="row right-align">
         <div class="col s12">
-            <form method="post">
-                <input type="button" value="Agregar" class="btn btn-small" onclick="Carga()" />
-            </form>
-                <input type="button" value="Borrar" class="btn btn-small" onclick="javascript: document.location.reload();" />
-                @*<input type="submit" value="Actualizar" class="btn-small" />*@
+            <input type="button" value="Agregar" class="btn btn-small" onclick="Carga()" />
+            <input type="button" value="Borrar" class="btn btn-small" onclick="javascript: document.location.reload();" />
+            <input type="button" value="Actualizar" class="btn btn-small" onclick="Actualizar()"/>
         </div>
     </div>
     @Html.AntiForgeryToken()
@@ -36,29 +35,34 @@
             </div>
         </div>
         <div class="row">
-            <div class="col s12 ">
-                <table class="table mdl-data-table striped" id="table" style="width:100%;">
-                    <thead>
-                        <tr>
-                            <th>Cliente</th>
-                            <th>Company Code</th>
-                            <th>Nivel</th>
-                            <th>Usuario ID</th>
-                            <th>Nombre</th>
-                            <th>Apellido Paterno</th>
-                            <th>Apellido Materno</th>
-                            <th>Correo</th>
-                            <th>Idioma</th>
-                            <th>Password</th>
-                            <th>Mensaje</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
+            @using (Html.BeginForm("Carga", "Usuarios", FormMethod.Post, new { enctype = "multipart/form-data", id = "tabla" }))
+            {
+                <div class="col s12 ">
+                    <form id="tabla" action="" method="post">
+                        <table class="table mdl-data-table striped" id="table" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th id="thead_kunnr">Cliente</th>
+                                    <th id="thead_bunnyt">Company Code</th>
+                                    <th id="thead_puesto_id">Nivel</th>
+                                    <th id="thead_id">Usuario ID</th>
+                                    <th id="thead_nombre">Nombre</th>
+                                    <th id="thead_apellido_p">Apellido Paterno</th>
+                                    <th id="thead_apellido_m">Apellido Materno</th>
+                                    <th id="thead_email">Correo</th>
+                                    <th id="thead_spras_id">Idioma</th>
+                                    <th id="thead_pass">Password</th>
+                                    <th id="thead_mess">Mensaje</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </form>
+                </div>
+            }
         </div>
     </div>
-}
+
 
 
 <script>
@@ -69,9 +73,9 @@
             scrollX: "true",
             scrollCollapse: true,
             order: [],
-                       language: {
+            language: {
                 //"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
-                "url": "../Scripts/lang/@Session["spras"].ToString()"+".json"
+                "url": "../Scripts/lang/@Session["spras"].ToString()" + ".json"
             },
             "paging": false,
             //        "ordering": false,
@@ -81,7 +85,7 @@
             //    leftColumns: 0
             //},
 
-            "columns": [
+            "columns":[
                 {
                     "name": 'KUNNR',
                     "className": 'KUNNR'
@@ -128,7 +132,6 @@
                 }
             ]
         });
-
     });
 
     function subeExcel() {
@@ -196,37 +199,58 @@
                         var niv = dataj.PUESTO_ID;
                         var usc = dataj.ID;
                         var spr = dataj.SPRAS_ID;
+                        var ema = dataj.EMAIL;
 
-                        var addedRow = addRow(table, dataj.POS, cli, com, niv, usc, dataj.NOMBRE, dataj.APELLIDO_P, dataj.APELLIDO_M, dataj.EMAIL, spr, dataj.PASS, dataj.mess);
+                        //identificacion de error
+                        if (cli.indexOf('?') != -1) {
+                            cli = cli.slice(0, -1);
+                            var clix = true;
+                        }
+                        if (com.indexOf('?') != -1) {
+                            com = niv.slice(0, -1);
+                            var comx = true;
+                        }
+                        if (niv.indexOf('?') != -1) {
+                            niv = niv.slice(0, -1);
+                            var nivx = true;
+                        }
+                        if (usc.indexOf('?') != -1) {
+                            usc = usc.slice(0, -1);
+                            var uscx = true;
+                        }
+                        if (spr.indexOf('?') != -1) {
+                            spr = spr.slice(0, -1);
+                            var sprx = true;
+                        }
+                        if (ema.indexOf('?') != -1) {
+                            ema = ema.slice(0, -1);
+                            var emax = true;
+                        }//Termina identificacion
+
+                        var addedRow = addRow(table, dataj.POS, cli, com, niv, usc, dataj.NOMBRE, dataj.APELLIDO_P, dataj.APELLIDO_M, ema, spr, dataj.PASS, dataj.mess);
 
                         var cols = addedRow.cells[0];
-                        var a = $(cols).find("span").hasClass("orange");
-                        if (a) {
+                        if (clix == true) {
                             $(cols).addClass("red");
                         }
                         var cols = addedRow.cells[1];
-                        var a = $(cols).find("span").hasClass("red");
-                        if (a) {
+                        if (comx == true) {
                             $(cols).addClass("red");
                         }
                         var cols = addedRow.cells[2];
-                        var a = $(cols).find("span").hasClass("red");
-                        if (a) {
+                        if (nivx == true) {
                             $(cols).addClass("red");
                         }
                         var cols = addedRow.cells[3];
-                        var a = $(cols).find("span").hasClass("red");
-                        if (a) {
+                        if (uscx == true) {
                             $(cols).addClass("red");
                         }
                         var cols = addedRow.cells[7];
-                        var a = $(cols).find("span").hasClass("red");
-                        if (a) {
+                        if (emax == true) {
                             $(cols).addClass("red");
                         }
                         var cols = addedRow.cells[8];
-                        var a = $(cols).find("span").hasClass("red");
-                        if (a) {
+                        if (sprx == true) {
                             $(cols).addClass("red");
                         }
                     });
@@ -254,20 +278,22 @@
         var r = addRowl(
             t,
             POS,
-            k,
-            b,
-            pi,
-            id,
-            n,
-            ap,
-            am,
-            e,
-            si,
-            sp,
-            me
+            "<input class='input_cli' style='font-size:12px;' type='text' id='' name='cli' value='" + k + "'>",
+            "<input class='input_com' style='font-size:12px;' type='text' id='' name='com' value='" + b + "'>",
+            "<input class='input_niv' style='font-size:12px;' type='text' id='' name='niv' value='" + pi + "'>",
+            "<input class='input_usc' style='font-size:12px;' type='text' id='' name='usc' value='" + id + "'>",
+            "<input class='input_nom' style='font-size:12px;' type='text' id='' name='nom' value='" + n + "'>",
+            "<input class='input_app' style='font-size:12px;' type='text' id='' name='app' value='" + ap + "'>",
+            "<input class='input_apm' style='font-size:12px;' type='text' id='' name='apm' value='" + am + "'>",
+            "<input class='input_ema' style='font-size:12px;' type='text' id='' name='ema' value='" + e + "'>",
+            "<input class='input_idi' style='font-size:12px;' type='text' id='' name='idi' value='" + si + "'>",
+            "<input class='input_pas' style='font-size:12px;' type='text' id='' name='pas' value='" + sp + "'>",
+            //"<input class='input_mes' style='font-size:12px;' type='hidden' id='' name='mes' value='" + me + ">"+me,
+            "<span class='input_mes' style='font-size:12px;'>" + me + "</span>"
         );
         return r;
     }
+
     function addRowl(t, pos, k, b, pi, id, n, ap, am, e, si, sp, me) {
         var r = t.row.add([
             k,
@@ -284,28 +310,136 @@
         ]).draw(false).node();
         return r;
     }
-    
+
     function Carga() {
         var doc = sessionStorage.getItem("num");
         if (doc > 0) {
-            $.ajax({
-                type: "POST",
-                url: 'Agregar',
-                data: null,
-                dataType: "json",
-                success: function () {
-                
-                },
-                error: function (request, status, error) {
-                    //alert(request.responseText);
-                }
-            });
-            window.location.replace("/Usuarios/Index");
+            if ($('.input_mes').val() == "" || $('.input_mes').val() == null) {
+                $.ajax({
+                    type: "POST",
+                    url: 'Agregar',
+                    data: null,
+                    dataType: "json",
+                    success: function () {
+
+                    },
+                    error: function (request, status, error) {
+                        //alert(request.responseText);
+                    }
+                });
+                M.toast({ html: 'Se agregaron los nuevos usuarios' });
+                window.location.replace("/Usuarios/Index");
+            }
+            else
+                M.toast({ html: 'Hay errores por corregir' });
         }
         else
             M.toast({ html: 'Seleccione un archivo' });
-        
+
     }
+
+    function Actualizar() {
+
+        var table = $('#table').DataTable();
+        //var formtabla = $('#tabla').serializeArray();
+        //console.log(formtabla);
+        $.ajax({
+            type: "POST",
+            url: 'Actualizar',
+            dataType: "json",
+            //data: { clie, comp, nive, usua, nomb, apep, apem, emai, idio, pass, mess },
+            //data: formData,
+            data: $('#tabla').serializeArray(),
+            success: function (data) {
+                console.log(data);
+                if (data !== null || data !== "") {
+
+                    table.clear().draw();
+
+                    $.each(data, function (i, dataj) {
+
+                        var cli = dataj.KUNNR;
+                        var com = dataj.BUNIT;
+                        var niv = dataj.PUESTO_ID;
+                        var usc = dataj.ID;
+                        var spr = dataj.SPRAS_ID;
+                        var ema = dataj.EMAIL;
+
+                        //identificacion de error
+                        if (cli.indexOf('?') != -1) {
+                            cli = cli.slice(0, -1);
+                            var clix = true;
+                        }
+                        if (com.indexOf('?') != -1) {
+                            com = niv.slice(0, -1);
+                            var comx = true;
+                        }
+                        if (niv.indexOf('?') != -1) {
+                            niv = niv.slice(0, -1);
+                            var nivx = true;
+                        }
+                        if (usc.indexOf('?') != -1) {
+                            usc = usc.slice(0, -1);
+                            var uscx = true;
+                        }
+                        if (spr.indexOf('?') != -1) {
+                            spr = spr.slice(0, -1);
+                            var sprx = true;
+                        }
+                        if (ema.indexOf('?') != -1) {
+                            ema = ema.slice(0, -1);
+                            var emax = true;
+                        }//Termina identificacion
+
+                        var addedRow = addRow(table, dataj.POS, cli, com, niv, usc, dataj.NOMBRE, dataj.APELLIDO_P, dataj.APELLIDO_M, ema, spr, dataj.PASS, dataj.mess);
+
+                        var cols = addedRow.cells[0];
+                        if (clix == true) {
+                            $(cols).addClass("red");
+                        }
+                        var cols = addedRow.cells[1];
+                        if (comx == true) {
+                            $(cols).addClass("red");
+                        }
+                        var cols = addedRow.cells[2];
+                        if (nivx == true) {
+                            $(cols).addClass("red");
+                        }
+                        var cols = addedRow.cells[3];
+                        if (uscx == true) {
+                            $(cols).addClass("red");
+                        }
+                        var cols = addedRow.cells[7];
+                        if (emax == true) {
+                            $(cols).addClass("red");
+                        }
+                        var cols = addedRow.cells[8];
+                        if (sprx == true) {
+                            $(cols).addClass("red");
+                        }
+                    });
+                    $('#table_dis').css("font-size", "12px");
+                    $('#table_dis').css("display", "table");
+                    $('#tfoot_dis').css("display", "table-footer-group");
+                    document.getElementById("loader").style.display = "none";
+                }
+            },
+            error: function (xhr, httpStatusMessage, customErrorMessage) {
+                M.toast({
+                    html: "Request couldn't be processed. Please try again later. the reason        " + xhr.status + " : " + httpStatusMessage + ": " + customErrorMessage
+                });
+                document.getElementById("loader").style.display = "none";
+            },
+            async: true
+        });
+        //$("#table > tbody  > tr[role='row']").each(function () {
+        //    alert("as");
+        //});;
+
+
+        M.toast({ html: 'Registro modificado' });
+    }
+
 
 </script>
 <style>

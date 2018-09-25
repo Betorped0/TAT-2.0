@@ -817,6 +817,8 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bin\TAT001.dll" />
+    <Content Include="bin\TAT001.pdb" />
     <Content Include="Content\autocomplete.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -928,6 +930,8 @@
     <Content Include="images\sf-logo.jpg" />
     <Content Include="images\Simple-wallpapers-HD-for-desktop.png" />
     <Content Include="obj\Debug\TAT001.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Debug\TAT001.dll" />
+    <Content Include="obj\Debug\TAT001.pdb" />
     <Content Include="Scripts\copiacreatesolicitud.js" />
     <Content Include="Scripts\Masiva\create.js" />
     <Content Include="Scripts\warning.js" />
@@ -962,6 +966,8 @@
     <Content Include="PdfTemp\Doc29\05\2018.xlsx" />
     <Content Include="PdfTemp\DocPr04\06\2018.xlsx" />
     <Content Include="PdfTemp\20180913_200852.pdf" />
+    <Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
+    <Content Include="obj\Debug\TAT001.csproj.CopyComplete" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile2.pubxml" />
     <None Include="Properties\PublishProfiles\SERVER.pubxml" />
