@@ -20,6 +20,7 @@ namespace TAT001.Entities
             this.DOCUMENTOBORRFs = new HashSet<DOCUMENTOBORRF>();
             this.DOCUMENTOBORRNs = new HashSet<DOCUMENTOBORRN>();
             this.DOCUMENTOBORRPs = new HashSet<DOCUMENTOBORRP>();
+            this.DOCUMENTOBORRRECs = new HashSet<DOCUMENTOBORRREC>();
         }
     
         public string USUARIOC_ID { get; set; }
@@ -97,5 +98,7 @@ namespace TAT001.Entities
         public virtual ICollection<DOCUMENTOBORRN> DOCUMENTOBORRNs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DOCUMENTOBORRP> DOCUMENTOBORRPs { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DOCUMENTOBORRREC> DOCUMENTOBORRRECs { get; set; }
     }
 }

@@ -22,6 +22,8 @@ namespace TAT001.Entities
         public Nullable<decimal> MONTO { get; set; }
         public Nullable<bool> PRESUPUESTO { get; set; }
         public bool ACTIVO { get; set; }
+        public Nullable<int> N_MONTO { get; set; }
+        public Nullable<int> N_PRESUP { get; set; }
     
         public virtual DET_APROBH DET_APROBH { get; set; }
     }

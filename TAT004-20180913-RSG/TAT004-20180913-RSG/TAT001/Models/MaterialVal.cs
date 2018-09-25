@@ -15,4 +15,11 @@ namespace TAT001.Models
         public Nullable<decimal> PUNIT { get; set; }
         public Nullable<bool> ACTIVO { get; set; }
     }
+    public class MaterialGPId
+    {
+        public string CATEGORY_ID { get; set; }
+        public Nullable<bool> ACTIVO { get; set; }
+        public Nullable<bool> UNICA { get; set; }
+        public Nullable<bool> EXCLUIR { get; set; }
+    }
 }

@@ -86,7 +86,7 @@
             </div>
         </li>
         <li>
-            <a id="cerrar-menu" href="#!" data-target="slide-out" class="sidenav-close pink darken-1" onclick="cerrar();"><i class="material-icons right white-text" style="margin: 0; font-size: 1.3rem;">menu</i></a>
+            <a id="cerrar-menu" href="javascript:cerrar();" data-target="slide-out" class="sidenav-close pink darken-1" onclick=""><i class="material-icons right white-text" style="margin: 0; font-size: 1.3rem;">menu</i></a>
         </li>
         <li>
             <div class="user-view" style="padding: 0">
@@ -114,84 +114,84 @@
         <li class='no-padding'>
             <ul class='collapsible collapsible-accordion'>
                 @foreach (TAT001.Entities.CARPETAV c in ViewBag.carpetas)
+            {
+                if (c.URL.Equals(""))
                 {
-                    if (c.URL.Equals(""))
+                    foreach (TAT001.Entities.PAGINAV p in ViewBag.permisos)
                     {
-                        foreach (TAT001.Entities.PAGINAV p in ViewBag.permisos)
+                        if (c.ID.Equals(p.CARPETA_ID))
+                        {
+                            if (ViewBag.pagina_r.Equals(p.PAGINA_ID))
+                            {
+                                <li class='bold active'><a href='#'><i class='material-icons'>@p.ICON</i>@p.TXT50</a></li>
+                        }
+                        else
+                        {
+                            string[] uu = p.PAGINA_URL.Split('/');
+                            <li class='bold'><a href='@Url.Action(uu[1], uu[0])'><i class='material-icons'>@p.ICON</i>@p.TXT50</a></li>
+                    }
+                }
+            }
+        }
+        else
+        {
+            if (ViewBag.carpeta_r.Equals(c.ID))
+            {
+
+                <li class='bold active'>
+                    <a class='collapsible-header waves-effect waves-teal'><i class='material-icons'>@c.ICON</i>@c.TXT50</a>
+                    <div class='collapsible-body'>
+                        <ul>
+                            @foreach (TAT001.Entities.PAGINAV p in ViewBag.permisos)
                         {
                             if (c.ID.Equals(p.CARPETA_ID))
                             {
                                 if (ViewBag.pagina_r.Equals(p.PAGINA_ID))
                                 {
-                                    <li class='bold active'><a href='#'><i class='material-icons'>@p.ICON</i>@p.TXT50</a></li>
-                                }
-                                else
-                                {
-                                    string[] uu = p.PAGINA_URL.Split('/');
-                                    <li class='bold'><a href='@Url.Action(uu[1], uu[0])'><i class='material-icons'>@p.ICON</i>@p.TXT50</a></li>
-                                }
+                                    <li class="active"><a href='@Url.Action(p.PAGINA_URL,c.URL)'>@p.TXT50</a></li>
                             }
-                        }
-                    }
-                    else
-                    {
-                        if (ViewBag.carpeta_r.Equals(c.ID))
-                        {
-
-                            <li class='bold active'>
-                                <a class='collapsible-header waves-effect waves-teal'><i class='material-icons'>@c.ICON</i>@c.TXT50</a>
-                                <div class='collapsible-body'>
-                                    <ul>
-                                        @foreach (TAT001.Entities.PAGINAV p in ViewBag.permisos)
-                                        {
-                                            if (c.ID.Equals(p.CARPETA_ID))
-                                            {
-                                                if (ViewBag.pagina_r.Equals(p.PAGINA_ID))
-                                                {
-                                                    <li class="active"><a href='@Url.Action(p.PAGINA_URL,c.URL)'>@p.TXT50</a></li>
-                                                }
-                                                else
-                                                {
-                                                    <li><a href="@Url.Action(p.PAGINA_URL,c.URL)">@p.TXT50</a></li>
-                                                }
-                                            }
-                                        }
-                                    </ul>
-                                </div>
-                            </li>
-                        }
-                        else
-                        {
-
-                            <li class='bold'>
-                                <a class='collapsible-header waves-effect waves-teal'><i class='material-icons'>@c.ICON</i>@c.TXT50</a>
-                                <div class='collapsible-body'>
-                                    <ul class="collapsible" data-collapsible="accordion">
-                                        @foreach (TAT001.Entities.PAGINAV p in ViewBag.permisos)
-                                        {
-                                            if (c.ID.Equals(p.CARPETA_ID))
-                                            {
-                                                <li><a href="@Url.Action(p.PAGINA_URL, c.URL)">@p.TXT50</a></li>
-                                                @*<li class="bold">
-                                                    <a class="collapsible-header">
-                                                        <span class="nav-text">Second level child</span>
-                                                        <i class="material-icons">keyboard_arrow_right</i>
-                                                    </a>
-                                                    <div class="collapsible-body" style="display: block;">
-                                                        <ul>
-                                                            <li><a href="ui-basic-buttons.html"><i class="material-icons">keyboard_arrow_right</i><span>Third level</span></a></li>
-                                                            <li><a href="ui-basic-buttons.html"><i class="material-icons">keyboard_arrow_right</i><span>Third level</span></a></li>
-                                                        </ul>
-                                                    </div>
-                                                </li>*@
-                                            }
-                                        }
-                                    </ul>
-                                </div>
-                            </li>
+                            else
+                            {
+                                <li><a href="@Url.Action(p.PAGINA_URL,c.URL)">@p.TXT50</a></li>
                         }
                     }
                 }
+                        </ul>
+                    </div>
+                </li>
+        }
+        else
+        {
+
+            <li class='bold'>
+                <a class='collapsible-header waves-effect waves-teal'><i class='material-icons'>@c.ICON</i>@c.TXT50</a>
+                <div class='collapsible-body'>
+                    <ul class="collapsible" data-collapsible="accordion">
+                        @foreach (TAT001.Entities.PAGINAV p in ViewBag.permisos)
+                    {
+                        if (c.ID.Equals(p.CARPETA_ID))
+                        {
+                            <li><a href="@Url.Action(p.PAGINA_URL, c.URL)">@p.TXT50</a></li>
+                            @*<li class="bold">
+                                <a class="collapsible-header">
+                                    <span class="nav-text">Second level child</span>
+                                    <i class="material-icons">keyboard_arrow_right</i>
+                                </a>
+                                <div class="collapsible-body" style="display: block;">
+                                    <ul>
+                                        <li><a href="ui-basic-buttons.html"><i class="material-icons">keyboard_arrow_right</i><span>Third level</span></a></li>
+                                        <li><a href="ui-basic-buttons.html"><i class="material-icons">keyboard_arrow_right</i><span>Third level</span></a></li>
+                                    </ul>
+                                </div>
+                            </li>*@
+                    }
+                }
+                    </ul>
+                </div>
+            </li>
+    }
+}
+}
 
 
             </ul>

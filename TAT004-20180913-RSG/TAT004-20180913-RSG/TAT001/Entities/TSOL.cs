@@ -17,6 +17,7 @@ namespace TAT001.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public TSOL()
         {
+            this.CALENDARIO_AC = new HashSet<CALENDARIO_AC>();
             this.CONSOPORTEs = new HashSet<CONSOPORTE>();
             this.DOCUMENTOes = new HashSet<DOCUMENTO>();
             this.TSOL1 = new HashSet<TSOL>();
@@ -38,6 +39,8 @@ namespace TAT001.Entities
         public bool CARTA { get; set; }
         public bool REVERSO { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CALENDARIO_AC> CALENDARIO_AC { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CONSOPORTE> CONSOPORTEs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

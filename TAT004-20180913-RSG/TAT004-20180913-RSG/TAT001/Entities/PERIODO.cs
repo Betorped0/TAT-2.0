@@ -17,6 +17,7 @@ namespace TAT001.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public PERIODO()
         {
+            this.CALENDARIO_AC = new HashSet<CALENDARIO_AC>();
             this.PERIODOTs = new HashSet<PERIODOT>();
         }
     
@@ -24,6 +25,8 @@ namespace TAT001.Entities
         public string DESCRIPCION { get; set; }
         public string ACTIVO { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CALENDARIO_AC> CALENDARIO_AC { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PERIODOT> PERIODOTs { get; set; }
     }

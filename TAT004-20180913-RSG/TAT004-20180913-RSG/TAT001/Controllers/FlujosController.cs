@@ -337,6 +337,17 @@ namespace TAT001.Controllers
             if (ModelState.IsValid)
             {
                 string res = pf.procesa(flujo, "");
+
+                using (TAT001Entities db1 = new TAT001Entities())
+                {
+                    FLUJO ff = db1.FLUJOes.Where(x => x.NUM_DOC == flujo.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+                    Estatus es = new Estatus();//RSG 18.09.2018
+                    d = db1.DOCUMENTOes.Find(d.NUM_DOC);
+                    ff.STATUS = es.getEstatus(d);
+                    db1.Entry(ff).State = EntityState.Modified;
+                    db1.SaveChanges();
+                }
+
                 if (res.Equals("0"))//Aprobado
                 {
                     return RedirectToAction("Details", "Solicitudes", new { id = flujo.NUM_DOC });
