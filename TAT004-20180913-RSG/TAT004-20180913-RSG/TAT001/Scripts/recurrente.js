@@ -135,6 +135,13 @@ $(document).ready(function () {
         ]
     });
 
+    $("#table_objQ").DataTable({
+        "paging": false,
+        "ordering": false,
+        "info": false,
+        searching: false
+    });
+
     $('#table_rec tbody').on('click', 'tr', function () {
         if ($(this).hasClass('selected') | listaRangos.length == 0) {
             $(this).removeClass('selected');
@@ -754,4 +761,8 @@ function changeFile(campo) {
 
 function ligada() {
     return ($("#chk_ligada").is(":checked"));
+}
+
+function isObjetivoQ() {
+    return ($("#check_objetivoq").is(":checked"));
 }

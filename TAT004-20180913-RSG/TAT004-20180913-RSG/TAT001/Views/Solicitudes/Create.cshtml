@@ -1550,12 +1550,7 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                                         else {
                                             document.getElementById('table_objQ').classList.add("hide");
                                         }
-                                        $("#table_objQ").DataTable({
-                                            "paging": false,
-                                            "ordering": false,
-                                            "info": false,
-                                            searching: false
-                                        });
+                                        $("#table_objQ").DataTable();
                                     }
                                     function updateObjQ() {
                                         $(".objqT").remove();

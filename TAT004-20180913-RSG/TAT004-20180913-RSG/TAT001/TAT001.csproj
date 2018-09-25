@@ -260,6 +260,9 @@
     <Compile Include="Entities\APPSETTING.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\CALENDARIO_AC.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\CAMPOS.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
@@ -1192,6 +1195,7 @@
     <Content Include="obj\Debug\TAT001.csproj.FileListAbsolute.txt" />
     <Content Include="Scripts\copiacreatesolicitud.js" />
     <Content Include="Scripts\Masiva\create.js" />
+    <Content Include="Scripts\rangos.js" />
     <Content Include="Scripts\warning.js" />
     <Content Include="Scripts\analisis.js" />
     <Content Include="Scripts\autocomplete1.11.4.js" />
@@ -1207,13 +1211,6 @@
     <Content Include="Scripts\dataTables.fixedColumns.min.js" />
     <Content Include="Scripts\dataTables.material.min.js" />
     <Content Include="files\masiva.xlsx" />
-    <EntityDeploy Include="Entities\TAT001.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>TAT001.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Entities\TAT001.edmx.diagram">
-      <DependentUpon>TAT001.edmx</DependentUpon>
-    </Content>
     <Content Include="obj\Debug\DesignTimeResolveAssemblyReferences.cache" />
     <Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
     <Content Include="obj\Debug\edmxResourcesToEmbed\Entities\TAT001.csdl" />
@@ -1238,6 +1235,13 @@
     <Content Include="obj\Release\AspnetCompileMerge\Source\fonts\roboto\Roboto-Regular.woff2" />
     <Content Include="obj\Release\AspnetCompileMerge\Source\fonts\roboto\Roboto-Thin.woff" />
     <Content Include="obj\Release\AspnetCompileMerge\Source\fonts\roboto\Roboto-Thin.woff2" />
+    <EntityDeploy Include="Entities\TAT001.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>TAT001.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Entities\TAT001.edmx.diagram">
+      <DependentUpon>TAT001.edmx</DependentUpon>
+    </Content>
     <None Include="obj\Release\AspnetCompileMerge\Source\packages.config" />
     <Content Include="obj\Release\AspnetCompileMerge\Source\Scripts\jquery-3.0.0.min.map" />
     <Content Include="obj\Release\AspnetCompileMerge\Source\Scripts\jquery-3.0.0.slim.min.map" />

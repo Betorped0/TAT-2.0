@@ -317,6 +317,18 @@
                                 </div>
                                 @Html.HiddenFor(model => model.D.GALL_ID, new { @id = "gall_id" })
                                 @Html.HiddenFor(model => model.D.TALL_ID, new { @id = "tall_id" })
+                                @*--------- DRS 24.09.18-------------- *@
+                                @if (ViewBag.nombreC != null)
+                                {
+                                    foreach (var cuenta in ViewBag.nombreC)
+                                    {
+                                        <input id="cuentaNombre" type="hidden" value="@cuenta">
+                                    }
+                                }
+                                else
+                                {
+                                    <input id="cuentaNombre" type="hidden" value="">
+                                }
                                 @Html.HiddenFor(model => model.D.MONTO_DOC_MD, new { @id = "monto_dis" })
                             </div>
                         </div>
@@ -690,7 +702,7 @@
                                     @*//}
                                         //else
                                         //{*@
-                                    <div class="row">
+                                    <div class="row" style="overflow:auto;">
                                         <div class="col s12">
                                             <table>
                                                 <thead>
@@ -740,7 +752,7 @@
                                                         </tr>
                                                         foreach (TAT001.Entities.DOCUMENTORAN ran in iteem.DOCUMENTORANs)//RSG 20.09.2018
                                                         {
-                                                            <tr class="ran-@ran.POS" style="display:none;">
+                                                            <tr class="ran-@ran.POS" style="display:none;background-color:rgba(242, 242, 242, 0.5);">
                                                                 <td></td>
                                                                 <td></td>
                                                                 <td></td>
@@ -779,16 +791,12 @@
                                         </script>
                                     </div>
                                     <br />
-                                    @if (Convert.ToInt32(caso) == 3)
+                                    @*@if (Convert.ToInt32(caso) == 3)*@
+                                    @if (Model.D.OBJETIVOQ == true)
                                     {
                                         decimal? totalMon = 0;
                                         string fechaE = "", periodoE = "";
-                                        foreach (var iteem in Model.D.DOCUMENTORECs)
-                                        {
-                                            totalMon = totalMon + iteem.MONTO_BASE;
-                                            fechaE = iteem.FECHAV.Value.ToShortDateString();
-                                            periodoE = "P" + iteem.PERIODO + "-" + iteem.EJERCICIO;
-                                        }
+
                                         <div class="row">
                                             <h5>Objetivo Q</h5>
                                             <table>
@@ -805,16 +813,27 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        <td>Q</td>
-                                                        <td>@periodoE</td>
-                                                        <td>@Model.D.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50</td>
-                                                        <td>No generado</td>
-                                                        <td>@fechaE</td>
-                                                        <td class="porcentaje">@Model.D.OBJQ_PORC</td>
-                                                        <td class="precio">@totalMon</td>
-                                                        <td>Pendiente</td>
-                                                    </tr>
+                                                    @foreach (var iteem in Model.D.DOCUMENTORECs)
+                                                    {
+                                                        totalMon = totalMon + iteem.MONTO_BASE;
+                                                        fechaE = iteem.FECHAV.Value.ToShortDateString();
+                                                        periodoE = "P" + iteem.PERIODO + "-" + iteem.EJERCICIO;
+
+                                                        <tr>
+                                                            <td>Q @iteem.POS</td>
+                                                            <td>@periodoE</td>
+                                                            <td>@Model.D.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50</td>
+                                                            <td></td>
+                                                            <td>@fechaE</td>
+                                                            <td class="porcentaje">@Model.D.OBJQ_PORC</td>
+
+                                                            @foreach (TAT001.Entities.DOCUMENTORAN ran in iteem.DOCUMENTORANs.Where(x => x.LIN == 1))//RSG 20.09.2018
+                                                            {
+                                                                <td class="precio">@ran.OBJETIVOI</td>
+                                                            }
+                                                            <td>Pendiente</td>
+                                                        </tr>
+                                                    }
                                                 </tbody>
                                             </table>
                                         </div>
@@ -1564,17 +1583,20 @@
                                         getClearing(document.getElementById("tall_id").value);
                                         $("#div_clearing").empty();
                                         var monto = document.getElementById("monto_dis").value;
+                                        //DRS 24.09.18---------------------------------------------
+                                        var nombreC = document.getElementById("cuentaNombre").value;
+
                                         //LEJ 09.07.18---------------------------------------------
                                         var _monto = monto.split('.');
                                         var _miles = document.getElementById("miles").value;
                                         var _decimales = document.getElementById("dec").value;
                                         var _millesMonto = _monto[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, _miles);
                                         var div = "<ul class='collection'><li class='collection-item'>";
-                                        div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>Abono</div><div class='col s4'>" + clearing[0] + "</div><div class='col s4 right-align'>$" + _millesMonto + _decimales + _monto[1] + "</div></div>";
+                                        //DRS 24.09.18
+                                        div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>Abono</div><div class='col s8'><div class='col s4'>" + nombreC + "</div><div class='col s4'>" + clearing[0] + "</div><div class='col s4 right-align'>$" + _millesMonto + _decimales + _monto[1] + "</div></div>";
                                         div += "</li><li class='collection-item'>";
-
                                         if (clearing[3] == null) {
-                                            div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>Cargo</div><div class='col s4'>" + clearing[1] + "</div><div class='col s4 right-align'>$" + _millesMonto + _decimales + _monto[1] + "</div></div>";
+                                            div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>Cargo</div><div class='col s8'><div class='col s4'></div><div class='col s4'>" + clearing[1] + "</div><div class='col s4 right-align'>$" + _millesMonto + _decimales + _monto[1] + "</div></div>";
                                         }
                                         else {
                                             if (clearing[2] != null) {
@@ -1614,7 +1636,8 @@
                                                 <thead>
                                                     <tr class="header">
                                                         <th>
-                                                            @Html.LabelFor(model => model.D.TSOL_ID, "Tipo")
+                                                            @* -----------DRS 24.09.18-------- *@
+                                                            @Html.LabelFor(model => model.D.TSOL.TSOLTs.First().TXT010, "Tipo")
                                                         </th>
                                                         <th>
                                                             @Html.LabelFor(model => model.D.NUM_DOC, "Documento")
@@ -1638,7 +1661,7 @@
                                                     {
                                                         <tr>
                                                             <td>
-                                                                @miCi.TSOL_ID
+                                                                @miCi.TSOL.TSOLTs.Where(x => x.SPRAS_ID == Session["spras"].ToString()).FirstOrDefault().TXT010
                                                             </td>
                                                             <td>
                                                                 <a href="@Url.Action("Details",new { id = miCi.NUM_DOC})">@miCi.NUM_DOC</a>
@@ -1688,7 +1711,7 @@
                                                 <tbody>
                                                     <tr>
                                                         <td>
-                                                            @Model.D.TSOL_ID
+                                                            @Model.D.TSOL.TSOLTs.Where(x => x.SPRAS_ID == Session["spras"].ToString()).FirstOrDefault().TXT010
                                                         </td>
                                                         <td>
                                                             @Model.D.NUM_DOC
@@ -2196,6 +2219,10 @@
                                     <th width=""> Hora inicio</th>
                                     <th width=""> Fecha término</th>
                                     <th width=""> Hora término</th>
+                                    @* -------DRS 24.09.18------- *@
+                                    <th width="">
+                                        Estatus WF
+                                    </th>
                                     <th width="">
                                         Estatus
                                     </th>
@@ -2215,6 +2242,17 @@
                                         <td width=""> @f.FECHAM.Value.ToShortDateString() </td>
                                         <td width=""> @f.FECHAM.Value.TimeOfDay.ToString().Split('.')[0] </td>
                                         <td width=""> @Html.DisplayFor(modelItem => f.ESTATUS) </td>
+                                        @* ------DRS 24.09.18------ *@
+                                        <td width="">
+                                            @{
+                                                string est = (Html.DisplayFor(modelItem => f.STATUS)).ToString();
+
+                                                TAT001.Services.Estatus c = new TAT001.Services.Estatus();
+                                                c.getText(est);
+                                            }
+                                            @c.getText(est)
+
+                                        </td>
                                         <td width="30%"> @Html.DisplayFor(modelItem => f.COMENTARIO) </td>
                                     </tr>
                                 }
