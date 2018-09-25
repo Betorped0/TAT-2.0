@@ -1203,14 +1203,11 @@
     <Content Include="Scripts\copiacreatesolicitud.js" />
     <Content Include="Scripts\Masiva\create.js" />
     <Content Include="Scripts\rangos.js" />
-<<<<<<< HEAD
-=======
     <Content Include="Scripts\subfilters\jquery.tablesorter.js" />
     <Content Include="Scripts\subfilters\jquery.tablesorter.pager.js" />
     <Content Include="Scripts\subfilters\script.js" />
     <Content Include="Scripts\subfilters\widget-filter.js" />
     <Content Include="Scripts\tablesort\tableToExcel.js" />
->>>>>>> d1783736ab9ff8e369145a5310c64f68b9ab71b2
     <Content Include="Scripts\warning.js" />
     <Content Include="Scripts\analisis.js" />
     <Content Include="Scripts\autocomplete1.11.4.js" />
