@@ -2607,6 +2607,8 @@ namespace TAT001.Controllers
                                 if (drec.PORC == null) //RSG 31.05.2018-------------------
                                     drec.PORC = 0;
                                 dOCUMENTO.TIPO_RECURRENTE = db.TSOLs.Where(x => x.ID.Equals(dOCUMENTO.TSOL_ID)).FirstOrDefault().TRECU;
+                                if (dOCUMENTO.TIPO_RECURRENTE == "1" & dOCUMENTO.LIGADA == true)
+                                    dOCUMENTO.TIPO_RECURRENTE = "2";
                                 if (dOCUMENTO.TIPO_RECURRENTE != "1" & dOCUMENTO.OBJETIVOQ == true)
                                     dOCUMENTO.TIPO_RECURRENTE = "3";
                                 //RSG 29.07.2018-add----------------------------------
@@ -2617,7 +2619,7 @@ namespace TAT001.Controllers
                                 else
                                     drec.FECHAF = cal.getNextLunes((DateTime)drec.FECHAF);
                                 drec.EJERCICIO = drec.FECHAV.Value.Year;
-                                drec.PERIODO = cal.getPeriodo(drec.FECHAV.Value);
+                                drec.PERIODO = cal.getPeriodoF(drec.FECHAV.Value);
                                 if (dOCUMENTO.TIPO_RECURRENTE == "1")
                                     drec.PERIODO--;
                                 if (drec.PERIODO == 0) drec.PERIODO = 12;
@@ -6425,6 +6427,9 @@ namespace TAT001.Controllers
                 kunnr = "";
             }
 
+            Cadena cad = new Cadena();
+            kunnr = cad.completaCliente(kunnr);
+
             //if (catid == null)
             //{
             //    catid = "";
@@ -7031,6 +7036,8 @@ namespace TAT001.Controllers
             {
                 kunnr = "";
             }
+            Cadena cad = new Cadena();
+            kunnr = cad.completaCliente(kunnr);
 
             List<DOCUMENTOM_MOD> jd = new List<DOCUMENTOM_MOD>();
 
@@ -7258,6 +7265,9 @@ namespace TAT001.Controllers
             {
                 kunnr = "";
             }
+
+            Cadena cad = new Cadena();
+            kunnr = cad.completaCliente(kunnr);
 
             if (catid == null)
             {
@@ -7673,6 +7683,8 @@ namespace TAT001.Controllers
 
             //Negaciación por monto
 
+            Cadena cad = new Cadena();
+            kunnr = cad.completaCliente(kunnr);
 
             //Obtener de la lista de categorias los materiales de la categoría del item
             List<CategoriaMaterial> ccategor = new List<CategoriaMaterial>();

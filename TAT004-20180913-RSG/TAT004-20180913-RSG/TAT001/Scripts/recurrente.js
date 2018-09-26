@@ -645,7 +645,7 @@ function ultimoDiaT(t, num, periodo, ejercicio, monto, tipo, porc, meses) {
             var dates = new Date(dd[2], dd[1] - 1, dd[0]);
             datee = dates.getDate() + "/" + (dates.getMonth() + 1) + "/" + dates.getFullYear();
 
-            addRowRec(t, num, datee, monto, tipo, porc, "P" + (periodo - 2 + num) + "-" + ejercicio, meses);
+            addRowRec(t, num, datee, monto, tipo, porc, "P" + (periodo - 1 + num) + "-" + ejercicio, meses);
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             M.toast({ html: httpStatusMessage });
@@ -766,3 +766,8 @@ function ligada() {
 function isObjetivoQ() {
     return ($("#check_objetivoq").is(":checked"));
 }
+
+function isRecurrente() {
+    return ($("#check_recurrente").is(":checked"));
+}
+

@@ -243,7 +243,7 @@ namespace TAT001.Services
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[E][A]...."))
                 ret = "Error en contabiización ";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A].[P].."))
-                ret = "abierta";
+                ret = "Provisión abierta";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A]...."))
                 ret = "Registrada en SAP";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[R]..[8]."))

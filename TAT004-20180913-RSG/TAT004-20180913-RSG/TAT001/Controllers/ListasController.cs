@@ -218,6 +218,9 @@ namespace TAT001.Controllers
         [HttpGet]
         public JsonResult Grupos(string pais, string user, string vkorg, string vtweg, string spart, string kunnr)
         {
+            Cadena cad = new Cadena();
+            kunnr = cad.completaCliente(kunnr);
+
             TAT001Entities db = new TAT001Entities();
             var c = (from N in db.DET_AGENTEC
                      where N.PAIS_ID == pais
