@@ -16,8 +16,8 @@
 
     <div class="row right-align">
         <div class="col s12">
-            <input type="button" value="Agregar" class="btn btn-small" onclick="Carga()" />
-            <input type="button" value="Borrar" class="btn btn-small" onclick="javascript: document.location.reload();" />
+            <input type="button" value="Agregar" class="btn btn-small" onclick="Carga();"/>
+            <input type="button" value="Borrar" class="btn btn-small" onclick="Borrar()" />
             <input type="button" value="Actualizar" class="btn btn-small" onclick="Actualizar()"/>
         </div>
     </div>
@@ -42,6 +42,7 @@
                         <table class="table mdl-data-table striped" id="table" style="width:100%;">
                             <thead>
                                 <tr>
+                                    <th><label><input class='input_bor' type='checkbox' id='borrar' name='borrar' onclick="check();" /><span></span></label></th>
                                     <th id="thead_kunnr">Cliente</th>
                                     <th id="thead_bunnyt">Company Code</th>
                                     <th id="thead_puesto_id">Nivel</th>
@@ -64,7 +65,6 @@
     </div>
 
 
-
 <script>
 
     $(document).ready(function () {
@@ -85,7 +85,11 @@
             //    leftColumns: 0
             //},
 
-            "columns":[
+            "columns": [
+                {
+                    "name": 'Borrar',
+                    "className": 'Borrar'
+                },
                 {
                     "name": 'KUNNR',
                     "className": 'KUNNR'
@@ -177,7 +181,6 @@
 
         formData.append("FileUpload", file);
 
-
         var table = $('#table').DataTable();
         table.clear().draw();
         $.ajax({
@@ -200,6 +203,7 @@
                         var usc = dataj.ID;
                         var spr = dataj.SPRAS_ID;
                         var ema = dataj.EMAIL;
+                        var bor = i;
 
                         //identificacion de error
                         if (cli.indexOf('?') != -1) {
@@ -227,29 +231,29 @@
                             var emax = true;
                         }//Termina identificacion
 
-                        var addedRow = addRow(table, dataj.POS, cli, com, niv, usc, dataj.NOMBRE, dataj.APELLIDO_P, dataj.APELLIDO_M, ema, spr, dataj.PASS, dataj.mess);
+                        var addedRow = addRow(table, dataj.POS, bor, cli, com, niv, usc, dataj.NOMBRE, dataj.APELLIDO_P, dataj.APELLIDO_M, ema, spr, dataj.PASS, dataj.mess);
 
-                        var cols = addedRow.cells[0];
+                        var cols = addedRow.cells[1];
                         if (clix == true) {
                             $(cols).addClass("red");
                         }
-                        var cols = addedRow.cells[1];
+                        var cols = addedRow.cells[2];
                         if (comx == true) {
                             $(cols).addClass("red");
                         }
-                        var cols = addedRow.cells[2];
+                        var cols = addedRow.cells[3];
                         if (nivx == true) {
                             $(cols).addClass("red");
                         }
-                        var cols = addedRow.cells[3];
+                        var cols = addedRow.cells[4];
                         if (uscx == true) {
                             $(cols).addClass("red");
                         }
-                        var cols = addedRow.cells[7];
+                        var cols = addedRow.cells[8];
                         if (emax == true) {
                             $(cols).addClass("red");
                         }
-                        var cols = addedRow.cells[8];
+                        var cols = addedRow.cells[9];
                         if (sprx == true) {
                             $(cols).addClass("red");
                         }
@@ -273,29 +277,30 @@
         });
     }
 
-    function addRow(t, POS, k, b, pi, id, n, ap, am, e, si, sp, me) {
+    function addRow(t, POS, br, k, b, pi, id, n, ap, am, e, si, sp, me) {
         var ppr = "";
         var r = addRowl(
             t,
             POS,
-            "<input class='input_cli' style='font-size:12px;' type='text' id='' name='cli' value='" + k + "'>",
-            "<input class='input_com' style='font-size:12px;' type='text' id='' name='com' value='" + b + "'>",
-            "<input class='input_niv' style='font-size:12px;' type='text' id='' name='niv' value='" + pi + "'>",
-            "<input class='input_usc' style='font-size:12px;' type='text' id='' name='usc' value='" + id + "'>",
-            "<input class='input_nom' style='font-size:12px;' type='text' id='' name='nom' value='" + n + "'>",
-            "<input class='input_app' style='font-size:12px;' type='text' id='' name='app' value='" + ap + "'>",
-            "<input class='input_apm' style='font-size:12px;' type='text' id='' name='apm' value='" + am + "'>",
-            "<input class='input_ema' style='font-size:12px;' type='text' id='' name='ema' value='" + e + "'>",
-            "<input class='input_idi' style='font-size:12px;' type='text' id='' name='idi' value='" + si + "'>",
-            "<input class='input_pas' style='font-size:12px;' type='text' id='' name='pas' value='" + sp + "'>",
-            //"<input class='input_mes' style='font-size:12px;' type='hidden' id='' name='mes' value='" + me + ">"+me,
+            "<label><input class='input_bor' type='checkbox' id='' name='bor' onclick='checkoff();' value='" + br + "'><span></span></label>",
+            "<input class='input_cli' style='font-size:12px;' type='text' id='' name='cli' value='" + k + "' onchange='Comprobar()'>",
+            "<input class='input_com' style='font-size:12px;' type='text' id='' name='com' value='" + b + "' onchange='Comprobar()'>",
+            "<input class='input_niv' style='font-size:12px;' type='text' id='' name='niv' value='" + pi + "' onchange='Comprobar()'>",
+            "<input class='input_usc' style='font-size:12px;' type='text' id='' name='usc' value='" + id + "' onchange='Comprobar()'>",
+            "<input class='input_nom' style='font-size:12px;' type='text' id='' name='nom' value='" + n + "' onchange='Comprobar()'>",
+            "<input class='input_app' style='font-size:12px;' type='text' id='' name='app' value='" + ap + "' onchange='Comprobar()'>",
+            "<input class='input_apm' style='font-size:12px;' type='text' id='' name='apm' value='" + am + "' onchange='Comprobar()'>",
+            "<input class='input_ema' style='font-size:12px;' type='text' id='' name='ema' value='" + e + "' onchange='Comprobar()'>",
+            "<input class='input_idi' style='font-size:12px;' type='text' id='' name='idi' value='" + si + "' onchange='Comprobar()'>",
+            "<input class='input_pas' style='font-size:12px;' type='text' id='' name='pas' value='" + sp + "' onchange='Comprobar()'>",
             "<span class='input_mes' style='font-size:12px;'>" + me + "</span>"
         );
         return r;
     }
 
-    function addRowl(t, pos, k, b, pi, id, n, ap, am, e, si, sp, me) {
+    function addRowl(t, pos, br, k, b, pi, id, n, ap, am, e, si, sp, me) {
         var r = t.row.add([
+            br,
             k,
             b,
             pi,
@@ -338,20 +343,50 @@
 
     }
 
-    function Actualizar() {
+    function Comprobar() {
+        var datos = $('#tabla').serializeArray();
+        console.log(datos);
+        creart('Comprobar', datos);
+        M.toast({ html: 'Registro modificado' });
+    }
 
+    function Borrar() {
+        var datos = $('#tabla').serializeArray();
+        //console.log(datos);
+        creart('Borrar', datos);
+        M.toast({ html: 'Registros borrados' });
+    }
+
+    function Actualizar() {
+        var doc = sessionStorage.getItem("num");
+        if (doc > 0) {
+            $.ajax({
+                type: "POST",
+                url: 'Actualizar',
+                data: null,
+                dataType: "json",
+                success: function () {
+
+                },
+                error: function (request, status, error) {
+                    //alert(request.responseText);
+                }
+            });
+            M.toast({ html: 'Se actualizaron los usuarios' });
+            window.location.replace("/Usuarios/Index");
+        }
+        else
+            M.toast({ html: 'Seleccione un archivo' });
+    }
+
+    function creart(metodo, datos) {
         var table = $('#table').DataTable();
-        //var formtabla = $('#tabla').serializeArray();
-        //console.log(formtabla);
         $.ajax({
             type: "POST",
-            url: 'Actualizar',
+            url: metodo,
             dataType: "json",
-            //data: { clie, comp, nive, usua, nomb, apep, apem, emai, idio, pass, mess },
-            //data: formData,
-            data: $('#tabla').serializeArray(),
+            data: datos,
             success: function (data) {
-                console.log(data);
                 if (data !== null || data !== "") {
 
                     table.clear().draw();
@@ -364,6 +399,7 @@
                         var usc = dataj.ID;
                         var spr = dataj.SPRAS_ID;
                         var ema = dataj.EMAIL;
+                        var bor = i;
 
                         //identificacion de error
                         if (cli.indexOf('?') != -1) {
@@ -391,29 +427,29 @@
                             var emax = true;
                         }//Termina identificacion
 
-                        var addedRow = addRow(table, dataj.POS, cli, com, niv, usc, dataj.NOMBRE, dataj.APELLIDO_P, dataj.APELLIDO_M, ema, spr, dataj.PASS, dataj.mess);
+                        var addedRow = addRow(table, dataj.POS, bor, cli, com, niv, usc, dataj.NOMBRE, dataj.APELLIDO_P, dataj.APELLIDO_M, ema, spr, dataj.PASS, dataj.mess);
 
-                        var cols = addedRow.cells[0];
+                        var cols = addedRow.cells[1];
                         if (clix == true) {
                             $(cols).addClass("red");
                         }
-                        var cols = addedRow.cells[1];
+                        var cols = addedRow.cells[2];
                         if (comx == true) {
                             $(cols).addClass("red");
                         }
-                        var cols = addedRow.cells[2];
+                        var cols = addedRow.cells[3];
                         if (nivx == true) {
                             $(cols).addClass("red");
                         }
-                        var cols = addedRow.cells[3];
+                        var cols = addedRow.cells[4];
                         if (uscx == true) {
                             $(cols).addClass("red");
                         }
-                        var cols = addedRow.cells[7];
+                        var cols = addedRow.cells[8];
                         if (emax == true) {
                             $(cols).addClass("red");
                         }
-                        var cols = addedRow.cells[8];
+                        var cols = addedRow.cells[9];
                         if (sprx == true) {
                             $(cols).addClass("red");
                         }
@@ -432,14 +468,18 @@
             },
             async: true
         });
-        //$("#table > tbody  > tr[role='row']").each(function () {
-        //    alert("as");
-        //});;
-
-
-        M.toast({ html: 'Registro modificado' });
     }
 
+    function check() {
+        if ($("#borrar").prop('checked'))
+            $(".input_bor").prop('checked', true);
+        else
+            $(".input_bor").prop('checked', false);
+    }
+
+    function checkoff() {
+        $("#borrar").prop('checked', false);
+    }
 
 </script>
 <style>
