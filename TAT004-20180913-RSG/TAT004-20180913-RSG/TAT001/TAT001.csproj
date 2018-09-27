@@ -1047,7 +1047,7 @@
     <Content Include="images\logo-kellogg2.png" />
     <Content Include="images\logo_kellogg.png" />
     <Content Include="images\sf-logo.jpg" />
-    <Content Include="obj\Debug\TAT001.csproj.FileListAbsolute.txt" />
+    <!--<Content Include="obj\Debug\TAT001.csproj.FileListAbsolute.txt" />
     <Content Include="obj\Debug\TempPE\Entities.Model1.Context.cs.dll" />
     <Content Include="obj\Debug\TempPE\Entities.Model1.cs.dll" />
     <Content Include="obj\Debug\TempPE\Entities.Model1.Designer.cs.dll" />
@@ -1299,11 +1299,11 @@
     <Content Include="obj\Release\TAT001.csproj.FileListAbsolute.txt" />
     <Content Include="obj\Release\TempPE\Entities.TAT001.Context.cs.dll" />
     <Content Include="obj\Release\TempPE\Entities.TAT001.cs.dll" />
-    <Content Include="obj\Release\TempPE\Entities.TAT001.Designer.cs.dll" />
+    <Content Include="obj\Release\TempPE\Entities.TAT001.Designer.cs.dll" />-->
     <Content Include="images\Simple-wallpapers-HD-for-desktop.png" />
-    <Content Include="obj\Debug\TAT001.csproj.FileListAbsolute.txt" />
+    <!--<Content Include="obj\Debug\TAT001.csproj.FileListAbsolute.txt" />
     <Content Include="obj\Debug\TAT001.dll" />
-    <Content Include="obj\Debug\TAT001.pdb" />
+    <Content Include="obj\Debug\TAT001.pdb" />-->
     <Content Include="Scripts\copiacreatesolicitud.js" />
     <Content Include="Scripts\Masiva\create.js" />
     <Content Include="Scripts\rangos.js" />
@@ -1327,7 +1327,7 @@
     <Content Include="Scripts\dataTables.fixedColumns.min.js" />
     <Content Include="Scripts\dataTables.material.min.js" />
     <Content Include="files\masiva.xlsx" />
-    <Content Include="obj\Debug\DesignTimeResolveAssemblyReferences.cache" />
+    <!--<Content Include="obj\Debug\DesignTimeResolveAssemblyReferences.cache" />
     <Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
     <Content Include="obj\Debug\edmxResourcesToEmbed\Entities\TAT001.csdl" />
     <Content Include="obj\Debug\edmxResourcesToEmbed\Entities\TAT001.msl" />
@@ -1350,7 +1350,11 @@
     <Content Include="obj\Release\AspnetCompileMerge\Source\fonts\roboto\Roboto-Regular.woff" />
     <Content Include="obj\Release\AspnetCompileMerge\Source\fonts\roboto\Roboto-Regular.woff2" />
     <Content Include="obj\Release\AspnetCompileMerge\Source\fonts\roboto\Roboto-Thin.woff" />
-    <Content Include="obj\Release\AspnetCompileMerge\Source\fonts\roboto\Roboto-Thin.woff2" />
+    <Content Include="obj\Release\AspnetCompileMerge\Source\fonts\roboto\Roboto-Thin.woff2" />-->
+    <Content Include="bin\roslyn\Microsoft.CSharp.Core.targets" />
+    <Content Include="bin\roslyn\Microsoft.VisualBasic.Core.targets" />
+    <Content Include="bin\roslyn\VBCSCompiler.exe.config" />
+    <Content Include="bin\TAT001.dll.config" />
     <EntityDeploy Include="Entities\TAT001.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>TAT001.Designer.cs</LastGenOutput>
@@ -1358,12 +1362,8 @@
     <Content Include="Entities\TAT001.edmx.diagram">
       <DependentUpon>TAT001.edmx</DependentUpon>
     </Content>
-    <Content Include="bin\roslyn\Microsoft.CSharp.Core.targets" />
-    <Content Include="bin\roslyn\Microsoft.VisualBasic.Core.targets" />
-    <Content Include="bin\roslyn\VBCSCompiler.exe.config" />
-    <Content Include="bin\TAT001.dll.config" />
     <None Include="obj\Release\AspnetCompileMerge\Source\packages.config" />
-    <Content Include="obj\Release\AspnetCompileMerge\Source\Scripts\jquery-3.0.0.min.map" />
+    <!--<Content Include="obj\Release\AspnetCompileMerge\Source\Scripts\jquery-3.0.0.min.map" />
     <Content Include="obj\Release\AspnetCompileMerge\Source\Scripts\jquery-3.0.0.slim.min.map" />
     <Content Include="obj\Release\AspnetCompileMerge\Source\Views\Account\ConfirmEmail.cshtml" />
     <Content Include="obj\Release\AspnetCompileMerge\Source\Views\Account\ExternalLoginConfirmation.cshtml" />
@@ -1577,15 +1577,10 @@
     <Content Include="obj\Debug\edmxResourcesToEmbed\Entities\TAT001.msl" />
     <Content Include="obj\Debug\edmxResourcesToEmbed\Entities\TAT001.ssdl" />
     <Content Include="obj\Debug\TAT001.csproj.CoreCompileInputs.cache" />
-    <Content Include="obj\Debug\TAT001.csprojAssemblyReference.cache" />
+    <Content Include="obj\Debug\TAT001.csprojAssemblyReference.cache" />-->
     <Content Include="Content\LAYOUT CARGA MASIVA.xlsx" />
-    <Content Include="PdfTemp\Doc06\06\2018.xlsx" />
-    <Content Include="PdfTemp\Doc29\05\2018.xlsx" />
-    <Content Include="PdfTemp\DocPr04\06\2018.xlsx" />
-    <Content Include="PdfTemp\20180913_200852.pdf" />
-    <Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
-    <Content Include="obj\Debug\TAT001.csproj.CopyComplete" />
-    <Content Include="PdfTemp\20180924_180000.pdf" />
+    <!--<Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
+    <Content Include="obj\Debug\TAT001.csproj.CopyComplete" />-->
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile2.pubxml" />
     <None Include="Properties\PublishProfiles\SERVER.pubxml" />

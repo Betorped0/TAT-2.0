@@ -10,7 +10,7 @@ for (var i = 0; i < lista.length; i++) {
             app += lista[i].COND[j].andor + "warning($(this).val(), '" + lista[i].COND[j].comp + "', '" + lista[i].COND[j].val2 + "')" + lista[i].COND[j].orand;
         }
         app += ";";
-        app += "if($('#tsol_id').val() =='" + lista[i].TSOL+ "' |'"+lista[i].TSOL+"'== ''){";
+        app += "if($('#tsol_id').val() =='" + lista[i].TSOL + "' |'" + lista[i].TSOL + "'== ''){";
         app += " validarN('" + lista[i].ID + "', " + lista[i].NUM + ", '" + lista[i].MSG + "', '" + lista[i].TIPO + "', '";
         app += lista[i].COLOR + "', '" + lista[i].ELEM + "', " + i + ", ban)}}); ";
 
@@ -31,9 +31,14 @@ for (var i = 0; i < lista.length; i++) {
 app += "$('#tab_soporte').on('click', function (e) {var ban = validarTab(e, 'tab_info','Informacion_cont'); }); ";
 app += "$('#tab_dis').on('click', function (e) { var ban = validarTab(e, 'tab_info', 'Informacion_cont');" +
     " if(ban){ ban = validarTab(e, 'tab_soporte', 'Soporte_cont');} }); ";
-app += "$('#tab_fin').on('click', function (e) { var ban = validarTab(e, 'tab_info', 'Informacion_cont');" +
+app += "$('#tab_rec').on('click', function (e) { var ban = validarTab(e, 'tab_info', 'Informacion_cont');" +
     " if(ban){ ban = validarTab(e, 'tab_soporte', 'Soporte_cont');} " +
     " if(ban){ ban = validarTab(e, 'tab_dis', 'Distribucion_cont');} }); ";
+app += "$('#tab_fin').on('click', function (e) { var ban = validarTab(e, 'tab_info', 'Informacion_cont');" +
+    " if(ban){ ban = validarTab(e, 'tab_soporte', 'Soporte_cont');} " +
+    " if(ban){ ban = validarTab(e, 'tab_dis', 'Distribucion_cont');} " +
+    " if(isRecurrente()){ " +
+    " if(ban){ ban = validarTab(e, 'tab_rec', 'Recurrente_cont');}} }); ";
 
 app += "function validarTab(e, tabid, div) {";
 app += "var ban = true;";
@@ -82,22 +87,22 @@ for (var i = 0; i < lista.length; i++) {
         }
         app += ";";
         app += "if($('#tsol_id').val() =='" + lista[i].TSOL + "' |'" + lista[i].TSOL + "'== ''){";
-            app += " validarNC('" + lista[i].ID + "', " + lista[i].NUM + ", '" + lista[i].MSG + "', '" + lista[i].TIPO + "', '";
-            app += lista[i].COLOR + "', '" + lista[i].ELEM + "', " + i + ", ban);}else{ban=true;}";
-        }
+        app += " validarNC('" + lista[i].ID + "', " + lista[i].NUM + ", '" + lista[i].MSG + "', '" + lista[i].TIPO + "', '";
+        app += lista[i].COLOR + "', '" + lista[i].ELEM + "', " + i + ", ban);}else{ban=true;}";
+    }
     //}
-        app += "if('" + lista[i].TIPO + "'=='info'){ban=true;}";
-        var tabb = "";
-        if (lista[i].TAB == "tab_info") {
-            tabb = "Informacion_cont";
-        }
-        if (lista[i].TAB == "tab_soporte") {
-            tabb = "Soporte_cont";
-        }
-        if (lista[i].TAB == "tab_dist") {
-            tabb = "Distribucion_cont";
-        }
-    app += "if(!ban){selectTab('" + tabb + "', e)}}";
+    app += "if('" + lista[i].TIPO + "'=='info'){ban=true;}";
+    var tabb = "";
+    if (lista[i].TAB == "tab_info") {
+        tabb = "Informacion_cont";
+    }
+    if (lista[i].TAB == "tab_soporte") {
+        tabb = "Soporte_cont";
+    }
+    if (lista[i].TAB == "tab_dist") {
+        tabb = "Distribucion_cont";
+    }
+    app += "if(!ban){selectTab('" + tabb + "', e);} activaSubmit('" + tabb + "');}";
 }
 app += " return ban;}";
 
@@ -151,9 +156,19 @@ function dismiss(clase) {
 function selectTab(tab, e) {
     e.preventDefault();
     e.stopPropagation();
+    if (tab == "Financiera_cont")
+        $("#btn_guardarh").removeClass("disabled");
+    else
+        $("#btn_guardarh").addClass("disabled");
     var ell = document.getElementById("tabs");
     var instances = M.Tabs.getInstance(ell);
     instances.select(tab);
+}
+function activaSubmit(tab) {
+    if (tab == "Financiera_cont")
+        $("#btn_guardarh").removeClass("disabled");
+    else
+        $("#btn_guardarh").addClass("disabled");
 }
 
 function esValido(campo) {
@@ -325,7 +340,7 @@ function warning(val1, comp, val2) {
         }
     }
     else if (comp == "f") {
-        ban =  evaluarFiles();
+        ban = evaluarFiles();
     }
     else if (comp == "d") {
         ban = isDate(val1);
@@ -343,10 +358,10 @@ function warning(val1, comp, val2) {
         ban = ($("#select_dis").val() == "C");
     }
     else if (comp == "TOT") {
-        ban =  (toNum(val1) == toNum($("#total_dis").text()))
+        ban = (toNum(val1) == toNum($("#total_dis").text()))
     }
     else if (comp == "T") {
-        ban =  (parseFloat(toNum($("#total_dis").text()))>0)
+        ban = (parseFloat(toNum($("#total_dis").text())) > 0)
     }
     else if (comp == "DIS") {
         evaluarDisTable();
@@ -358,24 +373,54 @@ function warning(val1, comp, val2) {
                 var cat = $(this).find("td:eq(" + (4) + ")").text();
                 if (mat != undefined & mat != "")
                     cont++;
-                else if(cat != undefined & cat != "")
+                else if (cat != undefined & cat != "")
                     cont++;
 
             });
         }
-        ban =  cont > 0;
+        ban = cont > 0;
     }
     else if (comp == "INI") {
         ban = (val1.startsWith(val2));
     }
     else if (comp == "mail") {
-        ban =  validateEmail(val1);
+        ban = validateEmail(val1);
     }
     else if (comp == "L") {
-        ban =  ligada();
+        ban = ligada();
     }
     else if (comp == "nL") {
-        ban =  !ligada();
+        ban = !ligada();
+    }
+    else if (comp == "r1") {
+        if (isRecurrente() & !ligada()) {
+            var len = $("#table_rec > tbody  > tr[role='row']").length;
+            ban = len > 1;
+        }
+    }
+    else if (comp == "r2") {
+        if (isRecurrente() & ligada() & !isObjetivoQ()) {
+            var len = $("#table_rec > tbody  > tr[role='row']").length;
+            if (listaRangos.length > 0)
+                for (var j = 0; j < listaRangos.length; j++) {
+                    ban = parseFloat(listaRangos[j].OBJ1) > 0 & parseFloat(listaRangos[j].PORC) > 0;
+                    if (!ban)
+                        j = listaRangos.length;
+                }
+            ban = (len > 1) & ban;
+        }
+    }
+    else if (comp == "r3") {
+        if (isRecurrente() & ligada() & isObjetivoQ()) {
+            var len = $("#table_rec > tbody  > tr[role='row']").length;
+            if (listaRangos.length > 0)
+                for (var j = 0; j < listaRangos.length; j++) {
+                    ban = parseFloat(listaRangos[j].OBJ1) > 0 & parseFloat(listaRangos[j].PORC) > 0;
+                    if (!ban)
+                        j = listaRangos.length;
+                }
+            ban = (len > 1) & ban & parseFloat(toNum($("#objPORC").val())) > 0;
+        }
     }
     return ban;
 }
@@ -389,7 +434,7 @@ function validateEmail(email) {
                 ////var qq = warning(warning(val, "n", 0), '|', warning(warning(val, ">", 0), "&", warning(val, "<=", 100)));
                 //var qq = warning(warning(val, "n", 0), '|', warning(warning(val, "==", "200c"), "|", warning(val, "==", "201c")));
                 //alert(qq);
-        
+
 //function validarTab(e, tabId, tab) {
 //    //M.Toast.dismissAll();
 //    var ban = true;
