@@ -1822,6 +1822,7 @@
     <Content Include="Views\Reportes\ReporteIntegracionTs.cshtml" />
     <Content Include="Views\Reportes\ReporteProvisiones.cshtml" />
     <Content Include="Views\Solicitudes\_PartialRanTr.cshtml" />
+    <Content Include="Views\Clientes\Carga.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
