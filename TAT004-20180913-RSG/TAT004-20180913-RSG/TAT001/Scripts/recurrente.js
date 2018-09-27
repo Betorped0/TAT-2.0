@@ -230,7 +230,7 @@ function cambiaRec() {
     }
     if (campo.checked) {
         $("#tabs_rec").removeClass("disabled");
-        if (montoo === "") {
+        if (montoo === "" | ligada()) {
             var dist = $('#table_dis').DataTable();
             var montooo = 0.00;
             $('#table_dis > tbody  > tr').each(function () {
