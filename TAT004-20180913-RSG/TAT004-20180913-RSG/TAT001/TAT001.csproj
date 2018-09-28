@@ -204,6 +204,8 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CartaDController.cs" />
     <Compile Include="Controllers\CartaVController.cs" />
+    <Compile Include="Controllers\Catalogos\Calendario445Controller.cs" />
+    <Compile Include="Controllers\Catalogos\CalendarioEx445Controller.cs" />
     <Compile Include="Controllers\Catalogos\GALLController.cs" />
     <Compile Include="Controllers\Catalogos\IimpuestoController.cs" />
     <Compile Include="Controllers\Catalogos\ImpuestosController.cs" />
@@ -262,6 +264,9 @@
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\CALENDARIO_AC.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\CALENDARIO_EX.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\CAMPOS.cs">
@@ -606,9 +611,6 @@
     <Compile Include="Entities\STATE.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\sysdiagram.cs">
-      <DependentUpon>TAT001.tt</DependentUpon>
-    </Compile>
     <Compile Include="Entities\TAB.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
@@ -750,6 +752,7 @@
     <Compile Include="Entities\ZCTGR.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Calendario445ViewModel.cs" />
     <Compile Include="Models\CargaMasivaModels.cs" />
     <Compile Include="Models\CartaD.cs" />
     <Compile Include="Models\CartaDEsqueleto.cs" />
@@ -939,6 +942,7 @@
     <Content Include="Content\dataTables.material.min.css" />
     <Content Include="Content\g-materialize.css" />
     <Content Include="Content\material.min.css" />
+    <Content Include="Content\materialize.clockpicker.css" />
     <Content Include="Content\materialize.css" />
     <Content Include="Content\sideMenu.css" />
     <Content Include="Content\subfilters\jquery.tablesorter.pager.css" />
@@ -1305,7 +1309,16 @@
     <Content Include="obj\Debug\TAT001.dll" />
     <Content Include="obj\Debug\TAT001.pdb" />-->
     <Content Include="Scripts\copiacreatesolicitud.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\fnCommon.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\Masiva\create.js" />
+    <Content Include="Scripts\materialize.clockpicker.js" />
+    <Content Include="Scripts\moment-with-locales.js" />
+    <Content Include="Scripts\moment-with-locales.min.js" />
+    <Content Include="Scripts\moment.js" />
+    <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\rangos.js" />
     <Content Include="Scripts\subfilters\jquery.tablesorter.js" />
     <Content Include="Scripts\subfilters\jquery.tablesorter.pager.js" />
@@ -1821,6 +1834,11 @@
     <Content Include="Views\Reportes\Index.cshtml" />
     <Content Include="Views\Reportes\ReporteIntegracionTs.cshtml" />
     <Content Include="Views\Reportes\ReporteProvisiones.cshtml" />
+    <Content Include="Views\Calendario445\Create.cshtml" />
+    <Content Include="Views\Calendario445\Edit.cshtml" />
+    <Content Include="Views\Calendario445\Index.cshtml" />
+    <Content Include="Views\CalendarioEx445\Edit.cshtml" />
+    <Content Include="Views\CalendarioEx445\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1903,7 +1921,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>64497</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:60621/</IISUrl>
+          <IISUrl>http://localhost:64497/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
