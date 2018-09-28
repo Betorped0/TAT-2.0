@@ -14,6 +14,12 @@ namespace TAT001.Entities
     
     public partial class CALENDARIO_AC
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public CALENDARIO_AC()
+        {
+            this.CALENDARIO_EX = new HashSet<CALENDARIO_EX>();
+        }
+    
         public short EJERCICIO { get; set; }
         public int PERIODO { get; set; }
         public string SOCIEDAD_ID { get; set; }
@@ -35,5 +41,7 @@ namespace TAT001.Entities
         public virtual PERIODO PERIODO1 { get; set; }
         public virtual SOCIEDAD SOCIEDAD { get; set; }
         public virtual TSOL TSOL { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CALENDARIO_EX> CALENDARIO_EX { get; set; }
     }
 }

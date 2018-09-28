@@ -340,6 +340,9 @@
         <AssociationConnector Association="TAT004Model.FK_WORKFP_WORKFV" ManuallyRouted="false" />
         <AssociationConnector Association="TAT004Model.FK_WORKFT_WORKFV" ManuallyRouted="false" />
         <AssociationConnector Association="TAT004Model.USUARIOGA" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="TAT004Model.CALENDARIO_EX" Width="1.5" PointX="37.5" PointY="90.125" />
+        <AssociationConnector Association="TAT004Model.FK_CALENDARIO_EX_CALENDARIO_AC" />
+        <AssociationConnector Association="TAT004Model.FK_CALENDARIO_EX_USUARIO" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

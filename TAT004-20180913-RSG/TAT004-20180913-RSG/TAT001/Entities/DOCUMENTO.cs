@@ -27,7 +27,6 @@ namespace TAT001.Entities
             this.DOCUMENTOTS = new HashSet<DOCUMENTOT>();
             this.FLUJOes = new HashSet<FLUJO>();
         }
-
         public List<TAT001.Models.DOCUMENTOP_MOD> DOCUMENTOP { get; set; }
         public List<DOCUMENTOF> DOCUMENTOF { get; set; }
         public List<DOCUMENTOREC> DOCUMENTOREC { get; set; }

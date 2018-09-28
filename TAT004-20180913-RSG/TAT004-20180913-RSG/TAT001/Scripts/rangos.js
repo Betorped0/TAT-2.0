@@ -18,6 +18,7 @@ function addRowRan(t, pos, lin, obj1, obj2, porc) {
             "<input type='text' style='font-size:12px;height:2rem;' value='" + toShow(obj1) + "' onblur='cambiaRango(this, \"o1\", " + pos + "," + lin + ", this.value)'/>",
             "<input type='text' style='font-size:12px;height:2rem;' value='" + toShow(obj2) + "' onblur='cambiaRango(this, \"o2\", " + pos + "," + lin + ", this.value)'/>",
             "<input type='text' style='font-size:12px;height:2rem;' value='" + toShowPorc(porc) + "' onblur='cambiaRango(this, \"p1\", " + pos + "," + lin + ", this.value)'/>"
+            , ""
         );
     } else {
         addRowRanl(t,
@@ -26,14 +27,16 @@ function addRowRan(t, pos, lin, obj1, obj2, porc) {
             "<input type='text' style='font-size:12px;height:2rem;' value='" + toShow(obj1) + "' onblur='cambiaRango(this, \"o1\", " + pos + "," + lin + ", this.value)'/>",
             "<input type='text' style='font-size:12px;height:2rem;' value='" + toShow(obj2) + "' onblur='cambiaRango(this, \"o2\", " + pos + "," + lin + ", this.value)'/>",
             toShowPorc(porc)
+            , "X"
         );
     }
 }
 
-function addRowRanl(t, pos, lin, obj1, obj2, porc) {
+function addRowRanl(t, pos, lin, obj1, obj2, porc, prim) {
     //var t = $('#table_rec').DataTable();
 
     t.row.add([
+        //"",
         pos
         , lin
         , obj1
@@ -183,4 +186,27 @@ function enviaRan(borrador) { //B20180625 MGC 2018.07.03
         });
     }
 
+}
+
+function delRango() {
+    var t = $('#table_rangos').DataTable();
+    var lin = listaRangos[listaRangos.length - 1].LIN;
+    if (lin != 1 & lin != "1") {
+        var tempList = [];
+        for (var i = 0; i < listaRangos.length; i++) {
+            if (listaRangos[i].LIN != lin) {
+                tempList.push(listaRangos[i]);
+            }
+        }
+        listaRangos = tempList;
+    }
+
+    $('#table_rangos > tbody  > tr').each(function () {
+        var linn = $(this).find('td.LIN').text();
+        if (linn != 1 & linn == lin) {
+            $(this).addClass("selected");
+        }
+    });
+
+    t.rows('.selected').remove().draw(false);
 }

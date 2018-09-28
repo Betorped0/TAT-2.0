@@ -34,6 +34,7 @@ namespace TAT001.Entities
             this.PRESUPUESTOHs = new HashSet<PRESUPUESTOH>();
             this.USUARIOFs = new HashSet<USUARIOF>();
             this.GAUTORIZACIONs = new HashSet<GAUTORIZACION>();
+            this.CALENDARIO_EX = new HashSet<CALENDARIO_EX>();
         }
     
         public string ID { get; set; }
@@ -86,5 +87,7 @@ namespace TAT001.Entities
         public virtual ICollection<USUARIOF> USUARIOFs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GAUTORIZACION> GAUTORIZACIONs { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CALENDARIO_EX> CALENDARIO_EX { get; set; }
     }
 }

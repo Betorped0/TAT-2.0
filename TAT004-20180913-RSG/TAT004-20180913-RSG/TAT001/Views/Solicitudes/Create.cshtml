@@ -1460,6 +1460,7 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                         <div class="row" style="margin-bottom:0;">
                             <div class="col s12 m6 offset-m6 right-align">
                                 <input type="button" id="btnRango" style="display:none;" class="btn-small" onclick="addRango()" value="Agragar rango" />
+                                <input type="button" id="btnDelRango" style="display:none;" class="btn-small" onclick="delRango()" value="Quitar rangos" />
                                 @*<input type="button" id="dd" style="" class="btn-small" onclick="enviaRan()" value="Enviar" />*@
                             </div>
                             <div class="col s12 m6 offset-m6">
@@ -1467,6 +1468,7 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                                     <!--RSG 01.08.2018-->
                                     <thead>
                                         <tr>
+                                            @*<th></th>*@
                                             <th id="">Documento</th>
                                             <th id="">Rango</th>
                                             <th id="">Objetivo inicio</th>
