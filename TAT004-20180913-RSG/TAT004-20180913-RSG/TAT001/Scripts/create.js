@@ -3,11 +3,8 @@ var monedafinanciera = true;
 var negdistribucion = true;
 var disdistribucion = true;
 // PARA GIT
-<<<<<<< HEAD
 // Omar
-=======
 //para causar cnflicto
->>>>>>> 7acf7fef38638a3dc9d86d485aa89e48f1191f7e
 var interval; //B20180625 MGC 2018.07.04
 var borradorinac = 300000; //B20180625 MGC 2018.07.04 Tiempo de espera de inactividad 5 minutos
 //var borradorinac = 60000; //B20180625 MGC 2018.07.04 Tiempo de espera de inactividad 1 minuto
