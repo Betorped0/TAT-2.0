@@ -33,7 +33,7 @@
         public string SPRAS_ID { get; set; }
         public bool SPRAS_IDX { get; set; }
         public Nullable<bool> ACTIVO { get; set; }
-        public Nullable<int> PUESTO_ID { get; set; }
+        public string PUESTO_ID { get; set; }
         public bool PUESTO_IDX { get; set; }
         public string MANAGER { get; set; }
         public string BACKUP_ID { get; set; }

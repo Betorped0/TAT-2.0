@@ -43,7 +43,6 @@ function addRowRanl(t, pos, lin, obj1, obj2, porc) {
 }
 
 function cambiaRango(e, tipo, pos, lin, val) {
-
     //for (var i = 0; i < listaRangos.length; i++) {
     //    if (listaRangos[i].LIN == lin) {
     //      if (tipo == "p1") {
@@ -107,7 +106,8 @@ function cambiaRango(e, tipo, pos, lin, val) {
             }
         }
         e.value = toShow(val);
-        updateObjQ();
+        if (isObjetivoQ())
+            updateObjQ();
     }
 }
 
@@ -122,8 +122,8 @@ function addRango() {
 
     $('#table_rec > tbody  > tr').each(function () {
         var o = { POS: cont, LIN: lin, PERIODO: 0, OBJ1: 0, OBJ2: 0, PORC: 0 };
-        if(cont==1)
-        addRowRan(tableR, 0, o.LIN, 0, 0, 0);
+        if (cont == 1)
+            addRowRan(tableR, 0, o.LIN, 0, 0, 0);
         listaRangos.push(o);
 
         cont++;

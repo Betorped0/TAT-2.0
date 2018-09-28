@@ -1460,7 +1460,7 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                         <div class="row" style="margin-bottom:0;">
                             <div class="col s12 m6 offset-m6 right-align">
                                 <input type="button" id="btnRango" style="display:none;" class="btn-small" onclick="addRango()" value="Agragar rango" />
-                                <input type="button" id="dd" style="" class="btn-small" onclick="enviaRan()" value="Enviar" />
+                                @*<input type="button" id="dd" style="" class="btn-small" onclick="enviaRan()" value="Enviar" />*@
                             </div>
                             <div class="col s12 m6 offset-m6">
                                 <table class="table_rangos display" id="table_rangos" cellspacing="0" style="width:100%;display:none;font-size:12px;">
@@ -1550,12 +1550,7 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                                         else {
                                             document.getElementById('table_objQ').classList.add("hide");
                                         }
-                                        $("#table_objQ").DataTable({
-                                            "paging": false,
-                                            "ordering": false,
-                                            "info": false,
-                                            searching: false
-                                        });
+                                        $("#table_objQ").DataTable();
                                     }
                                     function updateObjQ() {
                                         $(".objqT").remove();
@@ -1750,7 +1745,7 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                         <div class="card-panel">
                             <h5 id="head_montob">Monto Base</h5>@*B20180801 MGC Textos*@
                             <div class="row" style="margin-bottom:0">
-                                @if (ViewBag.ligada != null)
+                                @if (ViewBag.ligada != null & false)
                                 {
                                     @*if (Model.PAI.BACKORDER)
                                         {
@@ -1825,8 +1820,8 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                                         </div>
                                     </div>
                                     <div id="div_btns_row" style="display:none">
-                                        <a class="btn"><i class="material-icons left">add</i><span id="addRow">Registros</span></a>  @*B20180801 MGC Textos*@
-                                        <a class="btn"><i class="material-icons left">clear</i><span id="delRow">Registro</span></a>  @*B20180801 MGC Textos*@
+                                        <a class="btn" id="addRowB"><i class="material-icons left">add</i><span id="addRow">Registros</span></a>  @*B20180801 MGC Textos*@
+                                        <a class="btn" id="delRowB"><i class="material-icons left">clear</i><span id="delRow">Registro</span></a>  @*B20180801 MGC Textos*@
                                     </div>
                                 }@*//Add MGC B20180705 2018.07.05 Agregar rows a la tabla deshabilitar para relacionadas*@
                                 @*//Add MGC B20180705 2018.07.05 Agregar rows a la tabla*@
@@ -1834,8 +1829,8 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                                 {
                                     <input type="text" id="txt_addrowt" name="txt_addrowt" value="@ViewBag.addrowt" disabled="disabled" hidden /> @*//Add MGC B20180705 2018.07.05*@
                                     <div id="div_btns_row" style="display:none">
-                                        <a class="btn"><i class="material-icons left">add</i><span id="addRow">Registros</span></a>  @*B20180801 MGC Textos*@
-                                        <a class="btn"><i class="material-icons left">clear</i><span id="delRow">Registro</span></a>  @*B20180801 MGC Textos*@
+                                        <a class="btn" id="addRowB"><i class="material-icons left">add</i><span id="addRow">Registros</span></a>  @*B20180801 MGC Textos*@
+                                        <a class="btn" id="delRowB"><i class="material-icons left">clear</i><span id="delRow">Registro</span></a>  @*B20180801 MGC Textos*@
                                     </div>
                                 } @*//Add MGC B20180705 2018.07.05 Agregar rows a la tabla*@
                                 <div id="div_picker"></div>

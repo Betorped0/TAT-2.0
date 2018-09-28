@@ -2,6 +2,7 @@
 var monedafinanciera = true;
 var negdistribucion = true;
 var disdistribucion = true;
+var unica = false;
 var interval; //B20180625 MGC 2018.07.04
 var borradorinac = 300000; //B20180625 MGC 2018.07.04 Tiempo de espera de inactividad 5 minutos
 //var borradorinac = 60000; //B20180625 MGC 2018.07.04 Tiempo de espera de inactividad 1 minuto
@@ -841,12 +842,12 @@ $(document).ready(function () {
             //var tc = parseFloat(tipo_cambio.replace(',', '')).toFixed(2);
             var tc = 0;//LEJ 09.07.18
             if (_decimales === ',') {
-                tc = parseFloat(tipo_cambio.replace(',', '.')).toFixed(2);
+                tc = parseFloat(tipo_cambio.replace(',', '.')).toFixed(5);
                 tipo_cambio = tipo_cambio.replace('.', '');
                 tipo_cambio = tipo_cambio.replace(',', '.');
             }//LEJ 09.07.18
             else if (_decimales === '.') {
-                tc = parseFloat(tipo_cambio.replace(',', '')).toFixed(2);//LEJ 09.07.18
+                tc = parseFloat(tipo_cambio.replace(',', '')).toFixed(5);//LEJ 09.07.18
             }
             //Validar el monto en tipo de cambio
             var is_num2 = $.isNumeric(tipo_cambio);
@@ -978,7 +979,7 @@ $(document).ready(function () {
             }
             //LEJ 09.07.18------------------------T
             var is_num = $.isNumeric(tipo_cambio);
-            var tc = parseFloat(tipo_cambio.replace(',', '')).toFixed(2);
+            var tc = parseFloat(tipo_cambio.replace(',', '')).toFixed(5);
             //Validar el monto en tipo de cambio
             if (tc > 0 & is_num == true) {
                 //Validar el monto
@@ -1092,7 +1093,7 @@ $(document).ready(function () {
 
         //selectTcambio(MONEDA_ID, mt);
         var tipo_cambio = $('#tipo_cambio').val();
-        var tc = parseFloat(tipo_cambio.replace(',', '')).toFixed(2);
+        var tc = parseFloat(tipo_cambio.replace(',', '')).toFixed(5);
         //Validar el monto en tipo de cambio
         var is_num2 = $.isNumeric(tipo_cambio);
         if (tc > 0 & is_num2 == true) {
@@ -1179,21 +1180,22 @@ $(document).ready(function () {
             //loadFilesf();
             //LEJ 10.07.18--------------------------------------------------
             //Provisional
-            var tipo_cambio = $('#tipo_cambio').val().replace('$', '');
-            if (_decimales === '.') {
-                tipo_cambio = tipo_cambio.replace(',', '');
-            }
-            else if (_decimales === ',') {
-                var tc = tipo_cambio.replace('.', '');
-                tc = tc.replace(',', '.');
-                tipo_cambio = tc;
-            }
+            //var tipo_cambio = $('#tipo_cambio').val().replace('$', '');
+            //if (_decimales === '.') {
+            //    tipo_cambio = tipo_cambio.replace(',', '');
+            //}
+            //else if (_decimales === ',') {
+            //    var tc = tipo_cambio.replace('.', '');
+            //    tc = tc.replace(',', '.');
+            //    tipo_cambio = tc;
+            //}
+            var tipo_cambio = toNum($('#tipo_cambio').val());
             //LEJ 10.07.18--------------------------------------------------
             //Para que el controlador no tenga problema
             $('#tipo_cambio').val(tipo_cambio);
             ////var tipo_cambio = $('#tipo_cambio').val();
             //var iNum = parseFloat(tipo_cambio.replace(',', '.')).toFixed(2);
-            var iNum = parseFloat(tipo_cambio.replace(',', ''));
+            var iNum = parseFloat(toNum(tipo_cambio).replace(',', ''));
 
             if (iNum > 0) {
                 //var num = "" + iNum;
@@ -1219,7 +1221,7 @@ $(document).ready(function () {
             $('#monto_doc_ml2').val(tipo_cambiod);
 
             //var iNum2 = parseFloat(tipo_cambio.replace(',', '.')).toFixed(2);
-            var iNum2 = parseFloat(tipo_cambio.replace(',', ''));
+            var iNum2 = parseFloat(toNum(tipo_cambio));
             //var iNum2 = parseFloat(tipo_cambio.replace('.', ','));
             if (iNum2 > 0) {
                 //var nums = "" + iNum2;
@@ -1660,7 +1662,7 @@ $(window).on('load', function () {
         var optionsdpc = [];
         var instancesc = M.FormSelect.init(elemdpc, optionsdpc);
     }
-    var mt = parseFloat(tipocambio.replace(',', '.')) //B20180625 MGC 2018.07.02
+    var mt = parseFloat(toNum(tipocambio)) //B20180625 MGC 2018.07.02
     if (mt > 0) { //B20180625 MGC 2018.07.02
         $('#tipo_cambio').val(mt); //B20180625 MGC 2018.07.02
     }

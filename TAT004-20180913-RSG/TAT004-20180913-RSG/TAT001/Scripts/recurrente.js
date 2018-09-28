@@ -135,6 +135,13 @@ $(document).ready(function () {
         ]
     });
 
+    $("#table_objQ").DataTable({
+        "paging": false,
+        "ordering": false,
+        "info": false,
+        searching: false
+    });
+
     $('#table_rec tbody').on('click', 'tr', function () {
         if ($(this).hasClass('selected') | listaRangos.length == 0) {
             $(this).removeClass('selected');
@@ -223,7 +230,7 @@ function cambiaRec() {
     }
     if (campo.checked) {
         $("#tabs_rec").removeClass("disabled");
-        if (montoo === "") {
+        if (montoo === "" | ligada()) {
             var dist = $('#table_dis').DataTable();
             var montooo = 0.00;
             $('#table_dis > tbody  > tr').each(function () {
@@ -638,7 +645,7 @@ function ultimoDiaT(t, num, periodo, ejercicio, monto, tipo, porc, meses) {
             var dates = new Date(dd[2], dd[1] - 1, dd[0]);
             datee = dates.getDate() + "/" + (dates.getMonth() + 1) + "/" + dates.getFullYear();
 
-            addRowRec(t, num, datee, monto, tipo, porc, "P" + (periodo - 2 + num) + "-" + ejercicio, meses);
+            addRowRec(t, num, datee, monto, tipo, porc, "P" + (periodo - 1 + num) + "-" + ejercicio, meses);
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             M.toast({ html: httpStatusMessage });
@@ -755,3 +762,12 @@ function changeFile(campo) {
 function ligada() {
     return ($("#chk_ligada").is(":checked"));
 }
+
+function isObjetivoQ() {
+    return ($("#check_objetivoq").is(":checked"));
+}
+
+function isRecurrente() {
+    return ($("#check_recurrente").is(":checked"));
+}
+

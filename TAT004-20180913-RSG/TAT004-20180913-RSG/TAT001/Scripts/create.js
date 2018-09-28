@@ -2,6 +2,13 @@
 var monedafinanciera = true;
 var negdistribucion = true;
 var disdistribucion = true;
+<<<<<<< HEAD
+// PARA GIT
+// Omar
+//para causar cnflicto
+=======
+var unica = false;
+>>>>>>> 3496b924103c90400a700be44a001da3c07dedd4
 var interval; //B20180625 MGC 2018.07.04
 var borradorinac = 300000; //B20180625 MGC 2018.07.04 Tiempo de espera de inactividad 5 minutos
 //var borradorinac = 60000; //B20180625 MGC 2018.07.04 Tiempo de espera de inactividad 1 minuto
@@ -254,7 +261,7 @@ $(document).ready(function () {
         }
     });
 
-    $('#delRow').click(function (e) {
+    $('#delRowB').click(function (e) {
         var t = $('#table_dis').DataTable();
         t.rows('.selected').remove().draw(false);
         //Validar si es categoría por porcentaje
@@ -300,7 +307,7 @@ $(document).ready(function () {
         }
     });
 
-    $('#addRow').on('click', function () {
+    $('#addRowB').on('click', function () {
 
         var relacionada = "";
 
@@ -1315,6 +1322,7 @@ $(document).ready(function () {
             //objq
             $('#objPORC').val(toNum($('#objPORC').val()));//RSG 01.08.2018
 
+
             $('#select_negi').prop('disabled', false); //B20180618 v1 MGC 2018.06.18
             $('#select_disi').prop('disabled', false); //B20180618 v1 MGC 2018.06.18
 
@@ -1322,6 +1330,7 @@ $(document).ready(function () {
             copiarTableControl("");//Distribución //B20180625 MGC 2018.07.03
             copiarSopTableControl(""); //Soporte ahora en información //B20180625 MGC 2018.07.03
             enviaRec("");//RSG 28.05.2018 //B20180625 MGC 2018.07.03
+            enviaRan();//RSG 26.09.2018
             excedePresup();
 
             //B20180625 MGC2 2018.07.04
@@ -2553,7 +2562,7 @@ function copiarTableControl(borrador) { //B20180625 MGC 2018.07.03
 
                     $("table#table_dish tbody").append(data);
                     if (borrador != "X") { //B20180625 MGC 2018.07.03
-                        $('#delRow').click();
+                        $('#delRowB').click();
                     }
                 }
 
@@ -2958,6 +2967,7 @@ $('body').on('focusout', '.input_oper', function () {
             //} else if (trimStart('0', val.ID) == mat) {
 
             selectMaterial(val.ID, val.MAKTX, tr);
+            tr.find('td').eq((5 + index)).removeClass("errorMaterial");//RSG 26.09.2018
 
         } else {
             tr.find('td').eq((5 + index)).addClass("errorMaterial");

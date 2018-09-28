@@ -44,6 +44,10 @@ function toNum(string) {
             else
                 string = string.replace(new RegExp(_miles, 'g'), '');
             string = string.replace(_decimales, '.');
+
+            if (!$.isNumeric(string))
+                string = "0";
+
             string = string * _i;
         } else {
             string = "0.00";

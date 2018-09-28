@@ -30,6 +30,7 @@ namespace TAT001.Entities
         public virtual DbSet<ACCION> ACCIONs { get; set; }
         public virtual DbSet<ACCIONT> ACCIONTs { get; set; }
         public virtual DbSet<APPSETTING> APPSETTINGs { get; set; }
+        public virtual DbSet<CALENDARIO_AC> CALENDARIO_AC { get; set; }
         public virtual DbSet<CAMPOS> CAMPOS { get; set; }
         public virtual DbSet<CAMPOZKE24> CAMPOZKE24 { get; set; }
         public virtual DbSet<CAMPOZKE24T> CAMPOZKE24T { get; set; }
@@ -72,12 +73,14 @@ namespace TAT001.Entities
         public virtual DbSet<DOCUMENTOBORRM> DOCUMENTOBORRMs { get; set; }
         public virtual DbSet<DOCUMENTOBORRN> DOCUMENTOBORRNs { get; set; }
         public virtual DbSet<DOCUMENTOBORRP> DOCUMENTOBORRPs { get; set; }
+        public virtual DbSet<DOCUMENTOBORRREC> DOCUMENTOBORRRECs { get; set; }
         public virtual DbSet<DOCUMENTOF> DOCUMENTOFs { get; set; }
         public virtual DbSet<DOCUMENTOL> DOCUMENTOLs { get; set; }
         public virtual DbSet<DOCUMENTOM> DOCUMENTOMs { get; set; }
         public virtual DbSet<DOCUMENTON> DOCUMENTONs { get; set; }
         public virtual DbSet<DOCUMENTOP> DOCUMENTOPs { get; set; }
         public virtual DbSet<DOCUMENTOR> DOCUMENTORs { get; set; }
+        public virtual DbSet<DOCUMENTORAN> DOCUMENTORANs { get; set; }
         public virtual DbSet<DOCUMENTOREC> DOCUMENTORECs { get; set; }
         public virtual DbSet<DOCUMENTOSAP> DOCUMENTOSAPs { get; set; }
         public virtual DbSet<DOCUMENTOT> DOCUMENTOTS { get; set; }
@@ -173,8 +176,6 @@ namespace TAT001.Entities
         public virtual DbSet<DOCUMENTOV> DOCUMENTOVs { get; set; }
         public virtual DbSet<PAGINAV> PAGINAVs { get; set; }
         public virtual DbSet<WARNINGV> WARNINGVs { get; set; }
-        public virtual DbSet<DOCUMENTOBORRREC> DOCUMENTOBORRRECs { get; set; }
-        public virtual DbSet<DOCUMENTORAN> DOCUMENTORANs { get; set; }
     
         [DbFunction("TAT001Entities", "split")]
         public virtual IQueryable<split_Result> split(string delimited, string delimiter)

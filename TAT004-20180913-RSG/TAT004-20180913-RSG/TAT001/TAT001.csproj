@@ -204,6 +204,8 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CartaDController.cs" />
     <Compile Include="Controllers\CartaVController.cs" />
+    <Compile Include="Controllers\Catalogos\Calendario445Controller.cs" />
+    <Compile Include="Controllers\Catalogos\CalendarioEx445Controller.cs" />
     <Compile Include="Controllers\Catalogos\GALLController.cs" />
     <Compile Include="Controllers\Catalogos\IimpuestoController.cs" />
     <Compile Include="Controllers\Catalogos\ImpuestosController.cs" />
@@ -259,6 +261,12 @@
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\APPSETTING.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\CALENDARIO_AC.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\CALENDARIO_EX.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\CAMPOS.cs">
@@ -603,9 +611,7 @@
     <Compile Include="Entities\STATE.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\sysdiagram.cs">
-      <DependentUpon>TAT001.tt</DependentUpon>
-    </Compile>
+    <Compile Include="Entities\sysdiagram.cs" />
     <Compile Include="Entities\TAB.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
@@ -747,6 +753,7 @@
     <Compile Include="Entities\ZCTGR.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Calendario445ViewModel.cs" />
     <Compile Include="Models\CargaMasivaModels.cs" />
     <Compile Include="Models\CartaD.cs" />
     <Compile Include="Models\CartaDEsqueleto.cs" />
@@ -803,12 +810,13 @@
     <Compile Include="Models\Pass.cs" />
     <Compile Include="Models\PresupuestoModels.cs" />
     <Compile Include="Models\Usuario.cs" />
-    <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <!--<Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
     <Compile Include="obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
     <Compile Include="obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
     <Compile Include="obj\Release\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
     <Compile Include="obj\Release\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
-    <Compile Include="obj\Release\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
+    <Compile Include="obj\Release\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />-->
+    <!-->>>>>>> 3496b924103c90400a700be44a001da3c07dedd4-->
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ProcesaFlujo3.cs" />
     <Compile Include="Services\Warning.cs" />
@@ -828,6 +836,76 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <!--<Content Include="bin\Antlr3.Runtime.dll" />
+    <Content Include="bin\Antlr3.Runtime.pdb" />
+    <Content Include="bin\ClosedXML.dll" />
+    <Content Include="bin\ClosedXML.pdb" />
+    <Content Include="bin\DocumentFormat.OpenXml.dll" />
+    <Content Include="bin\EntityFramework.BulkInsert.dll" />
+    <Content Include="bin\EntityFramework.dll" />
+    <Content Include="bin\EntityFramework.MappingAPI.dll" />
+    <Content Include="bin\EntityFramework.MappingAPI.pdb" />
+    <Content Include="bin\EntityFramework.SqlServer.dll" />
+    <Content Include="bin\es\EntityFramework.resources.dll" />
+    <Content Include="bin\es\EntityFramework.SqlServer.resources.dll" />
+    <Content Include="bin\es\Microsoft.AspNet.Identity.Core.resources.dll" />
+    <Content Include="bin\es\Microsoft.AspNet.Identity.EntityFramework.resources.dll" />
+    <Content Include="bin\es\Microsoft.AspNet.Identity.Owin.resources.dll" />
+    <Content Include="bin\es\Microsoft.Owin.Host.SystemWeb.resources.dll" />
+    <Content Include="bin\es\Microsoft.Owin.resources.dll" />
+    <Content Include="bin\es\Microsoft.Owin.Security.Facebook.resources.dll" />
+    <Content Include="bin\es\Microsoft.Owin.Security.Google.resources.dll" />
+    <Content Include="bin\es\Microsoft.Owin.Security.MicrosoftAccount.resources.dll" />
+    <Content Include="bin\es\Microsoft.Owin.Security.resources.dll" />
+    <Content Include="bin\es\Microsoft.Owin.Security.Twitter.resources.dll" />
+    <Content Include="bin\es\System.Web.Helpers.resources.dll" />
+    <Content Include="bin\es\System.Web.Mvc.resources.dll" />
+    <Content Include="bin\es\System.Web.Optimization.resources.dll" />
+    <Content Include="bin\es\System.Web.Razor.resources.dll" />
+    <Content Include="bin\es\System.Web.WebPages.Deployment.resources.dll" />
+    <Content Include="bin\es\System.Web.WebPages.Razor.resources.dll" />
+    <Content Include="bin\es\System.Web.WebPages.resources.dll" />
+    <Content Include="bin\ExcelDataReader.DataSet.dll" />
+    <Content Include="bin\ExcelDataReader.dll" />
+    <Content Include="bin\ExcelNumberFormat.dll" />
+    <Content Include="bin\FastMember.Signed.dll" />
+    <Content Include="bin\itextsharp.dll" />
+    <Content Include="bin\Microsoft.AspNet.Identity.Core.dll" />
+    <Content Include="bin\Microsoft.AspNet.Identity.EntityFramework.dll" />
+    <Content Include="bin\Microsoft.AspNet.Identity.Owin.dll" />
+    <Content Include="bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll" />
+    <Content Include="bin\Microsoft.Owin.dll" />
+    <Content Include="bin\Microsoft.Owin.Host.SystemWeb.dll" />
+    <Content Include="bin\Microsoft.Owin.Security.Cookies.dll" />
+    <Content Include="bin\Microsoft.Owin.Security.dll" />
+    <Content Include="bin\Microsoft.Owin.Security.Facebook.dll" />
+    <Content Include="bin\Microsoft.Owin.Security.Google.dll" />
+    <Content Include="bin\Microsoft.Owin.Security.MicrosoftAccount.dll" />
+    <Content Include="bin\Microsoft.Owin.Security.OAuth.dll" />
+    <Content Include="bin\Microsoft.Owin.Security.Twitter.dll" />
+    <Content Include="bin\Microsoft.Web.Infrastructure.dll" />
+    <Content Include="bin\Newtonsoft.Json.dll" />
+    <Content Include="bin\Owin.dll" />
+    <Content Include="bin\roslyn\csc.exe" />
+    <Content Include="bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll" />
+    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll" />
+    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.dll" />
+    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll" />
+    <Content Include="bin\roslyn\System.Collections.Immutable.dll" />
+    <Content Include="bin\roslyn\System.Reflection.Metadata.dll" />
+    <Content Include="bin\roslyn\vbc.exe" />
+    <Content Include="bin\roslyn\VBCSCompiler.exe" />
+    <Content Include="bin\SimpleImpersonation.dll" />
+    <Content Include="bin\System.Web.Helpers.dll" />
+    <Content Include="bin\System.Web.Mvc.dll" />
+    <Content Include="bin\System.Web.Optimization.dll" />
+    <Content Include="bin\System.Web.Razor.dll" />
+    <Content Include="bin\System.Web.WebPages.Deployment.dll" />
+    <Content Include="bin\System.Web.WebPages.dll" />
+    <Content Include="bin\System.Web.WebPages.Razor.dll" />
+    <Content Include="bin\TAT001.dll" />-->
+    <!--<Content Include="bin\TAT001.pdb" />-->
+    <!--<Content Include="bin\WebGrease.dll" />-->
     <Content Include="Content\autocomplete.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -836,6 +914,7 @@
     <Content Include="Content\dataTables.material.min.css" />
     <Content Include="Content\g-materialize.css" />
     <Content Include="Content\material.min.css" />
+    <Content Include="Content\materialize.clockpicker.css" />
     <Content Include="Content\materialize.css" />
     <Content Include="Content\sideMenu.css" />
     <Content Include="Content\subfilters\jquery.tablesorter.pager.css" />
@@ -873,6 +952,7 @@
     <Content Include="images\flags\1x1\at.png" />
     <Content Include="images\flags\1x1\be.png" />
     <Content Include="images\flags\1x1\br.png" />
+    <Content Include="images\flags\1x1\bs.png" />
     <Content Include="images\flags\1x1\bz.png" />
     <Content Include="images\flags\1x1\cl.png" />
     <Content Include="images\flags\1x1\co.png" />
@@ -886,7 +966,9 @@
     <Content Include="images\flags\1x1\ni.png" />
     <Content Include="images\flags\1x1\pa.png" />
     <Content Include="images\flags\1x1\pa.svg" />
+    <Content Include="images\flags\1x1\pe.png" />
     <Content Include="images\flags\1x1\pr.png" />
+    <Content Include="images\flags\1x1\py.png" />
     <Content Include="images\flags\1x1\sg.png" />
     <Content Include="images\flags\1x1\sg.svg" />
     <Content Include="images\flags\1x1\sv.png" />
@@ -898,6 +980,7 @@
     <Content Include="images\flags\4x3\at.png" />
     <Content Include="images\flags\4x3\be.png" />
     <Content Include="images\flags\4x3\br.png" />
+    <Content Include="images\flags\4x3\bs.png" />
     <Content Include="images\flags\4x3\bz.png" />
     <Content Include="images\flags\4x3\cl.png" />
     <Content Include="images\flags\4x3\co.png" />
@@ -911,7 +994,9 @@
     <Content Include="images\flags\4x3\ni.png" />
     <Content Include="images\flags\4x3\pa.png" />
     <Content Include="images\flags\4x3\pa.svg" />
+    <Content Include="images\flags\4x3\pe.png" />
     <Content Include="images\flags\4x3\pr.png" />
+    <Content Include="images\flags\4x3\py.png" />
     <Content Include="images\flags\4x3\sg.png" />
     <Content Include="images\flags\4x3\sg.svg" />
     <Content Include="images\flags\4x3\sv.png" />
@@ -939,6 +1024,9 @@
     <Content Include="images\logo_kellogg.png" />
     <Content Include="images\sf-logo.jpg" />
     <Content Include="obj\Debug\TAT001.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Debug\TAT001.dll" />
+    <Content Include="obj\Debug\TAT001.pdb" />
+    <!--<Content Include="obj\Debug\TAT001.csproj.FileListAbsolute.txt" />
     <Content Include="obj\Debug\TempPE\Entities.Model1.Context.cs.dll" />
     <Content Include="obj\Debug\TempPE\Entities.Model1.cs.dll" />
     <Content Include="obj\Debug\TempPE\Entities.Model1.Designer.cs.dll" />
@@ -1190,11 +1278,23 @@
     <Content Include="obj\Release\TAT001.csproj.FileListAbsolute.txt" />
     <Content Include="obj\Release\TempPE\Entities.TAT001.Context.cs.dll" />
     <Content Include="obj\Release\TempPE\Entities.TAT001.cs.dll" />
-    <Content Include="obj\Release\TempPE\Entities.TAT001.Designer.cs.dll" />
+    <Content Include="obj\Release\TempPE\Entities.TAT001.Designer.cs.dll" />-->
     <Content Include="images\Simple-wallpapers-HD-for-desktop.png" />
-    <Content Include="obj\Debug\TAT001.csproj.FileListAbsolute.txt" />
+    <!--<Content Include="obj\Debug\TAT001.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Debug\TAT001.dll" />
+    <Content Include="obj\Debug\TAT001.pdb" />-->
+    <!-->>>>>>> 3496b924103c90400a700be44a001da3c07dedd4-->
     <Content Include="Scripts\copiacreatesolicitud.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\fnCommon.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\Masiva\create.js" />
+    <Content Include="Scripts\materialize.clockpicker.js" />
+    <Content Include="Scripts\moment-with-locales.js" />
+    <Content Include="Scripts\moment-with-locales.min.js" />
+    <Content Include="Scripts\moment.js" />
+    <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\rangos.js" />
     <Content Include="Scripts\subfilters\jquery.tablesorter.js" />
     <Content Include="Scripts\subfilters\jquery.tablesorter.pager.js" />
@@ -1216,14 +1316,7 @@
     <Content Include="Scripts\dataTables.fixedColumns.min.js" />
     <Content Include="Scripts\dataTables.material.min.js" />
     <Content Include="files\masiva.xlsx" />
-    <EntityDeploy Include="Entities\TAT001.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>TAT001.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Entities\TAT001.edmx.diagram">
-      <DependentUpon>TAT001.edmx</DependentUpon>
-    </Content>
-    <Content Include="obj\Debug\DesignTimeResolveAssemblyReferences.cache" />
+    <!--<Content Include="obj\Debug\DesignTimeResolveAssemblyReferences.cache" />
     <Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
     <Content Include="obj\Debug\edmxResourcesToEmbed\Entities\TAT001.csdl" />
     <Content Include="obj\Debug\edmxResourcesToEmbed\Entities\TAT001.msl" />
@@ -1246,9 +1339,31 @@
     <Content Include="obj\Release\AspnetCompileMerge\Source\fonts\roboto\Roboto-Regular.woff" />
     <Content Include="obj\Release\AspnetCompileMerge\Source\fonts\roboto\Roboto-Regular.woff2" />
     <Content Include="obj\Release\AspnetCompileMerge\Source\fonts\roboto\Roboto-Thin.woff" />
-    <Content Include="obj\Release\AspnetCompileMerge\Source\fonts\roboto\Roboto-Thin.woff2" />
+    <Content Include="obj\Release\AspnetCompileMerge\Source\fonts\roboto\Roboto-Thin.woff2" />-->
+    <!--<Content Include="bin\roslyn\Microsoft.CSharp.Core.targets" />
+    <Content Include="bin\roslyn\Microsoft.VisualBasic.Core.targets" />
+    <Content Include="bin\roslyn\VBCSCompiler.exe.config" />
+    <Content Include="bin\TAT001.dll.config" />-->
+    <EntityDeploy Include="Entities\TAT001.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>TAT001.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Entities\TAT001.edmx.diagram">
+      <DependentUpon>TAT001.edmx</DependentUpon>
+    </Content>
+    <Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
+    <Content Include="obj\Debug\edmxResourcesToEmbed\Entities\TAT001.csdl" />
+    <Content Include="obj\Debug\edmxResourcesToEmbed\Entities\TAT001.msl" />
+    <Content Include="obj\Debug\edmxResourcesToEmbed\Entities\TAT001.ssdl" />
+    <Content Include="obj\Debug\TAT001.csproj.CopyComplete" />
+    <Content Include="obj\Debug\TAT001.csproj.CoreCompileInputs.cache" />
+    <Content Include="obj\Debug\TAT001.csprojAssemblyReference.cache" />
+    <Content Include="PdfTemp\Doc06\06\2018.xlsx" />
+    <Content Include="PdfTemp\Doc29\05\2018.xlsx" />
+    <Content Include="PdfTemp\DocPr04\06\2018.xlsx" />
+    <Content Include="PdfTemp\20180913_200852.pdf" />
     <None Include="obj\Release\AspnetCompileMerge\Source\packages.config" />
-    <Content Include="obj\Release\AspnetCompileMerge\Source\Scripts\jquery-3.0.0.min.map" />
+    <!--<Content Include="obj\Release\AspnetCompileMerge\Source\Scripts\jquery-3.0.0.min.map" />
     <Content Include="obj\Release\AspnetCompileMerge\Source\Scripts\jquery-3.0.0.slim.min.map" />
     <Content Include="obj\Release\AspnetCompileMerge\Source\Views\Account\ConfirmEmail.cshtml" />
     <Content Include="obj\Release\AspnetCompileMerge\Source\Views\Account\ExternalLoginConfirmation.cshtml" />
@@ -1462,12 +1577,11 @@
     <Content Include="obj\Debug\edmxResourcesToEmbed\Entities\TAT001.msl" />
     <Content Include="obj\Debug\edmxResourcesToEmbed\Entities\TAT001.ssdl" />
     <Content Include="obj\Debug\TAT001.csproj.CoreCompileInputs.cache" />
-    <Content Include="obj\Debug\TAT001.csprojAssemblyReference.cache" />
+    <Content Include="obj\Debug\TAT001.csprojAssemblyReference.cache" />-->
     <Content Include="Content\LAYOUT CARGA MASIVA.xlsx" />
-    <Content Include="PdfTemp\Doc06\06\2018.xlsx" />
-    <Content Include="PdfTemp\Doc29\05\2018.xlsx" />
-    <Content Include="PdfTemp\DocPr04\06\2018.xlsx" />
-    <Content Include="PdfTemp\20180913_200852.pdf" />
+    <!--<Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
+    <Content Include="obj\Debug\TAT001.csproj.CopyComplete" />-->
+    <!-->>>>>>> 3496b924103c90400a700be44a001da3c07dedd4-->
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile2.pubxml" />
     <None Include="Properties\PublishProfiles\SERVER.pubxml" />
@@ -1705,9 +1819,21 @@
     <Content Include="Views\Masiva\_Hoja1.cshtml" />
     <Content Include="Views\Masiva\_Hoja2.cshtml" />
     <Content Include="Views\Usuarios\Carga.cshtml" />
+    <Content Include="Views\Reportes\Index.cshtml" />
+    <Content Include="Views\Reportes\ReporteIntegracionTs.cshtml" />
+    <Content Include="Views\Reportes\ReporteProvisiones.cshtml" />
+    <Content Include="Views\Solicitudes\_PartialRanTr.cshtml" />
+    <Content Include="Views\Clientes\Carga.cshtml" />
+    <Content Include="Views\Calendario445\Create.cshtml" />
+    <Content Include="Views\Calendario445\Edit.cshtml" />
+    <Content Include="Views\Calendario445\Index.cshtml" />
+    <Content Include="Views\CalendarioEx445\Edit.cshtml" />
+    <Content Include="Views\CalendarioEx445\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <!-->>>>>>> 3496b924103c90400a700be44a001da3c07dedd4-->
     <Folder Include="App_Data\" />
+    <Folder Include="obj\Debug\TempPE\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
