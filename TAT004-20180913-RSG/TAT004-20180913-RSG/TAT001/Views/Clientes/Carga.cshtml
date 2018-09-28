@@ -1,7 +1,7 @@
-﻿@model TAT001.Models.Usuarios
+﻿@model TAT001.Models.Cliente
 
 @{
-    ViewBag.Title = "Carga de usuarios";
+    ViewBag.Title = "Carga de clientes";
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.pagina_r = 601;
     ViewBag.carpeta_r = 500;
@@ -35,7 +35,7 @@
             </div>
         </div>
         <div class="row">
-            @using (Html.BeginForm("Carga", "Usuarios", FormMethod.Post, new { enctype = "multipart/form-data", id = "tabla" }))
+            @using (Html.BeginForm("Carga", "Clientes", FormMethod.Post, new { enctype = "multipart/form-data", id = "tabla" }))
             {
                 <div class="col s12 ">
                     <form id="tabla" action="" method="post">
@@ -43,32 +43,27 @@
                             <thead>
                                 <tr>
                                     <th><label><input class='input_bor' type='checkbox' id='borrar' name='borrar' onclick="check();" /><span></span></label></th>
-                                    <th id="thead_kunnr">Cliente</th>
-                                    <th id="thead_bunnyt">Company Code</th>
-                                    <th id="thead_puesto_id">Nivel</th>
-                                    <th id="thead_id">Usuario ID</th>
-                                    <th id="thead_nombre">Nombre</th>
-                                    <th id="thead_apellido_p">Apellido Paterno</th>
-                                    <th id="thead_apellido_m">Apellido Materno</th>
-                                    <th id="thead_email">Correo</th>
-                                    <th id="thead_spras_id">Idioma</th>
-                                    <th id="thead_pass">Password</th>
-                                    <th id="thead_mess">Mensaje</th>
+                                    <th id="thead_cocode">CoCode</th>
+                                    <th id="thead_pais">País</th>
+                                    <th id="thead_cliente">Cliente</th>
+                                    <th id="thead_nombre_cliente">Nombre cliente</th>
+                                    <th id="thead_nivel0">Nivel 0</th>
+                                    <th id="thead_nivel1">Nivel 1</th>
+                                    <th id="thead_nivel2">Nivel 2</th>
+                                    <th id="thead_nivel3">Nivel 3</th>
+                                    <th id="thead_nivel4">Nivel 4</th>
+                                    <th id="thead_nivel5">Nivel 5</th>
+                                    <th id="thead_vendor">Vendor</th>
+                                    <th id="thead_banner">Banner</th>
+                                    <th id="thead_banner_agrupador">Banner Agrupador</th>
+                                    <th id="thead_canal">Canal</th>
+                                    <th id="thead_contacto">Contacto</th>
+                                    <th id="thead_email_contacto">Email Contacto</th>
+                                    <th id="thead_mensaje">Mensaje</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td><label><input class='input_bor' type='checkbox' id='' name='bor' onclick='numrow(this)' value=''><span></span></label></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td><input class='input_usc' style='font-size:12px;' type='text' id='' name='usc' value='' @*onchange='Comprobar()'*@></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
                                     <td></td>
                                 </tr>
                             </tbody>
@@ -106,49 +101,74 @@
                     "className": 'Borrar'
                 },
                 {
-                    "name": 'KUNNR',
-                    "className": 'KUNNR'
+                    "name": 'CoCode',
+                    "className": 'CoCode'
                 },
                 {
-                    "name": 'BUNIT',
-                    "className": 'BUNIT'
+                    "name": 'País',
+                    "className": 'País'
                 },
                 {
-                    "name": 'PUESTO_ID',
-                    "className": 'PUESTO_ID'
+                    "name": 'Cliente',
+                    "className": 'Cliente'
                 },
                 {
-                    "name": 'ID',
-                    "className": 'ID',
+                    "name": 'Nombre_cliente',
+                    "className": 'Nombre_cliente',
                 },
                 {
-                    "name": 'NOMBRE',
-                    "className": 'NOMBRE'
+                    "name": 'Nivel_0',
+                    "className": 'Nivel_0'
                 },
                 {
-                    "name": 'APELLIDO_P',
-                    "className": 'APELLIDO_P'
+                    "name": 'Nivel_1',
+                    "className": 'Nivel_1'
                 },
                 {
-                    "name": 'APELLIDO_M',
-                    "className": 'APELLIDO_M'
+                    "name": 'Nivel_2',
+                    "className": 'Nivel_2'
                 },
                 {
-                    "name": 'EMAIL',
-                    "className": 'EMAIL'
+                    "name": 'Nivel_3',
+                    "className": 'Nivel_3'
                 },
                 {
-                    "name": 'SPRAS_ID',
-                    "className": 'SPRAS_ID'
+                    "name": 'Nivel_4',
+                    "className": 'Nivel_4'
                 },
                 {
-                    "name": 'PASS',
-                    "className": 'PASS'
+                    "name": 'Nivel_5',
+                    "className": 'Nivel_5'
                 },
                 {
-                    "name": 'mess',
-                    "className": 'mess'
+                    "name": 'Vendor',
+                    "className": 'Vendor'
+                },
+                {
+                    "name": 'Banner',
+                    "className": 'Banner'
+                },
+                {
+                    "name": 'Banner_Agrupador',
+                    "className": 'Banner_Agrupador'
+                },
+                {
+                    "name": 'Canal',
+                    "className": 'Canal'
+                },
+                {
+                    "name": 'Contacto',
+                    "className": 'Contacto'
+                },
+                {
+                    "name": 'Email_Contacto',
+                    "className": 'Email_Contacto'
+                },
+                {
+                    "name": 'Mensaje',
+                    "className": 'Mensaje'
                 }
+
             ]
         });
     });
@@ -498,17 +518,6 @@
 
     function checkoff() {
         $("#borrar").prop('checked', false);
-    }
-
-    function numrow(dat) {
-        var tabla = document.getElementsByTagName("table")[0];
-        var filas = tabla.getElementsByTagName("tr");
-        var posi = 0;
-        for (var i = 0; i < filas.length; i++)
-            if (filas[i] == dat) {
-                posi = i;
-            }
-        return posi;
     }
 
 </script>

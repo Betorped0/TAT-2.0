@@ -834,20 +834,16 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="bin\Antlr3.Runtime.dll" />
+    <!--<Content Include="bin\Antlr3.Runtime.dll" />
     <Content Include="bin\Antlr3.Runtime.pdb" />
     <Content Include="bin\ClosedXML.dll" />
     <Content Include="bin\ClosedXML.pdb" />
-    <Content Include="bin\ClosedXML.xml" />
     <Content Include="bin\DocumentFormat.OpenXml.dll" />
-    <Content Include="bin\DocumentFormat.OpenXml.xml" />
     <Content Include="bin\EntityFramework.BulkInsert.dll" />
     <Content Include="bin\EntityFramework.dll" />
     <Content Include="bin\EntityFramework.MappingAPI.dll" />
     <Content Include="bin\EntityFramework.MappingAPI.pdb" />
     <Content Include="bin\EntityFramework.SqlServer.dll" />
-    <Content Include="bin\EntityFramework.SqlServer.xml" />
-    <Content Include="bin\EntityFramework.xml" />
     <Content Include="bin\es\EntityFramework.resources.dll" />
     <Content Include="bin\es\EntityFramework.SqlServer.resources.dll" />
     <Content Include="bin\es\Microsoft.AspNet.Identity.Core.resources.dll" />
@@ -868,43 +864,25 @@
     <Content Include="bin\es\System.Web.WebPages.Razor.resources.dll" />
     <Content Include="bin\es\System.Web.WebPages.resources.dll" />
     <Content Include="bin\ExcelDataReader.DataSet.dll" />
-    <Content Include="bin\ExcelDataReader.DataSet.xml" />
     <Content Include="bin\ExcelDataReader.dll" />
-    <Content Include="bin\ExcelDataReader.xml" />
     <Content Include="bin\ExcelNumberFormat.dll" />
-    <Content Include="bin\ExcelNumberFormat.xml" />
     <Content Include="bin\FastMember.Signed.dll" />
     <Content Include="bin\itextsharp.dll" />
-    <Content Include="bin\itextsharp.xml" />
     <Content Include="bin\Microsoft.AspNet.Identity.Core.dll" />
-    <Content Include="bin\Microsoft.AspNet.Identity.Core.xml" />
     <Content Include="bin\Microsoft.AspNet.Identity.EntityFramework.dll" />
-    <Content Include="bin\Microsoft.AspNet.Identity.EntityFramework.xml" />
     <Content Include="bin\Microsoft.AspNet.Identity.Owin.dll" />
-    <Content Include="bin\Microsoft.AspNet.Identity.Owin.xml" />
     <Content Include="bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll" />
-    <Content Include="bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml" />
     <Content Include="bin\Microsoft.Owin.dll" />
     <Content Include="bin\Microsoft.Owin.Host.SystemWeb.dll" />
-    <Content Include="bin\Microsoft.Owin.Host.SystemWeb.xml" />
     <Content Include="bin\Microsoft.Owin.Security.Cookies.dll" />
-    <Content Include="bin\Microsoft.Owin.Security.Cookies.xml" />
     <Content Include="bin\Microsoft.Owin.Security.dll" />
     <Content Include="bin\Microsoft.Owin.Security.Facebook.dll" />
-    <Content Include="bin\Microsoft.Owin.Security.Facebook.xml" />
     <Content Include="bin\Microsoft.Owin.Security.Google.dll" />
-    <Content Include="bin\Microsoft.Owin.Security.Google.xml" />
     <Content Include="bin\Microsoft.Owin.Security.MicrosoftAccount.dll" />
-    <Content Include="bin\Microsoft.Owin.Security.MicrosoftAccount.xml" />
     <Content Include="bin\Microsoft.Owin.Security.OAuth.dll" />
-    <Content Include="bin\Microsoft.Owin.Security.OAuth.xml" />
     <Content Include="bin\Microsoft.Owin.Security.Twitter.dll" />
-    <Content Include="bin\Microsoft.Owin.Security.Twitter.xml" />
-    <Content Include="bin\Microsoft.Owin.Security.xml" />
-    <Content Include="bin\Microsoft.Owin.xml" />
     <Content Include="bin\Microsoft.Web.Infrastructure.dll" />
     <Content Include="bin\Newtonsoft.Json.dll" />
-    <Content Include="bin\Newtonsoft.Json.xml" />
     <Content Include="bin\Owin.dll" />
     <Content Include="bin\roslyn\csc.exe" />
     <Content Include="bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll" />
@@ -916,24 +894,16 @@
     <Content Include="bin\roslyn\vbc.exe" />
     <Content Include="bin\roslyn\VBCSCompiler.exe" />
     <Content Include="bin\SimpleImpersonation.dll" />
-    <Content Include="bin\SimpleImpersonation.xml" />
     <Content Include="bin\System.Web.Helpers.dll" />
-    <Content Include="bin\System.Web.Helpers.xml" />
     <Content Include="bin\System.Web.Mvc.dll" />
-    <Content Include="bin\System.Web.Mvc.xml" />
     <Content Include="bin\System.Web.Optimization.dll" />
-    <Content Include="bin\System.Web.Optimization.xml" />
     <Content Include="bin\System.Web.Razor.dll" />
-    <Content Include="bin\System.Web.Razor.xml" />
     <Content Include="bin\System.Web.WebPages.Deployment.dll" />
-    <Content Include="bin\System.Web.WebPages.Deployment.xml" />
     <Content Include="bin\System.Web.WebPages.dll" />
     <Content Include="bin\System.Web.WebPages.Razor.dll" />
-    <Content Include="bin\System.Web.WebPages.Razor.xml" />
-    <Content Include="bin\System.Web.WebPages.xml" />
-    <Content Include="bin\TAT001.dll" />
-    <Content Include="bin\TAT001.pdb" />
-    <Content Include="bin\WebGrease.dll" />
+    <Content Include="bin\TAT001.dll" />-->
+    <!--<Content Include="bin\TAT001.pdb" />-->
+    <!--<Content Include="bin\WebGrease.dll" />-->
     <Content Include="Content\autocomplete.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -1364,10 +1334,10 @@
     <Content Include="obj\Release\AspnetCompileMerge\Source\fonts\roboto\Roboto-Regular.woff2" />
     <Content Include="obj\Release\AspnetCompileMerge\Source\fonts\roboto\Roboto-Thin.woff" />
     <Content Include="obj\Release\AspnetCompileMerge\Source\fonts\roboto\Roboto-Thin.woff2" />-->
-    <Content Include="bin\roslyn\Microsoft.CSharp.Core.targets" />
+    <!--<Content Include="bin\roslyn\Microsoft.CSharp.Core.targets" />
     <Content Include="bin\roslyn\Microsoft.VisualBasic.Core.targets" />
     <Content Include="bin\roslyn\VBCSCompiler.exe.config" />
-    <Content Include="bin\TAT001.dll.config" />
+    <Content Include="bin\TAT001.dll.config" />-->
     <EntityDeploy Include="Entities\TAT001.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>TAT001.Designer.cs</LastGenOutput>
@@ -1834,6 +1804,8 @@
     <Content Include="Views\Reportes\Index.cshtml" />
     <Content Include="Views\Reportes\ReporteIntegracionTs.cshtml" />
     <Content Include="Views\Reportes\ReporteProvisiones.cshtml" />
+    <Content Include="Views\Solicitudes\_PartialRanTr.cshtml" />
+    <Content Include="Views\Clientes\Carga.cshtml" />
     <Content Include="Views\Calendario445\Create.cshtml" />
     <Content Include="Views\Calendario445\Edit.cshtml" />
     <Content Include="Views\Calendario445\Index.cshtml" />
@@ -1921,7 +1893,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>64497</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:64497/</IISUrl>
+          <IISUrl>http://localhost:60621/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

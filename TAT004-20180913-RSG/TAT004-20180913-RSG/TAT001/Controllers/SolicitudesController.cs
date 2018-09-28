@@ -6536,14 +6536,11 @@ namespace TAT001.Controllers
                 {
                     //Obtener el historial de compras de los clientesd
                     var matt = matl.ToList();
-                    //kunnr = kunnr.TrimStart('0').Trim();
                     var pres = db.PRESUPSAPPs.Where(a => a.VKORG.Equals(vkorg) & a.SPART.Equals(spart) & a.KUNNR == kunnr & (a.GRSLS != null | a.NETLB != null)).ToList();
 
-                    var cat = db.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(spras)).ToList();
-                    //foreach (var c in cie)
-                    //{
-                    //    c.KUNNR = c.KUNNR.TrimStart('0').Trim();
-                    //}
+                    //var cat = db.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(spras)).ToList();
+                    var cat = db.MATERIALGPs.Where(a => a.ACTIVO == true).ToList();
+
 
                     CONFDIST_CAT conf = getCatConf(soc_id);
                     if (conf != null)
@@ -6555,7 +6552,7 @@ namespace TAT001.Controllers
                                   join m in matt
                                   on ps.MATNR equals m.ID
                                   join mk in cat
-                                  on m.MATERIALGP_ID equals mk.MATERIALGP_ID
+                                  on m.MATERIALGP_ID equals mk.ID
                                   where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) &&
                                   (ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART //&& ps.VKBUR == cl.VKBUR &&
                                                                                                         //ps.VKGRP == cl.VKGRP && ps.BZIRK == cl.BZIRK
@@ -6567,7 +6564,7 @@ namespace TAT001.Controllers
                                       MATNR = ps.MATNR,
                                       //mk.TXT50
                                       VAL = Convert.ToDecimal(ps.GRSLS),
-                                      EXCLUIR = mk.MATERIALGP.EXCLUIR //RSG 09.07.2018 ID167
+                                      EXCLUIR = mk.EXCLUIR //RSG 09.07.2018 ID167
                                   }).ToList();
                         }
                         else
@@ -6578,7 +6575,7 @@ namespace TAT001.Controllers
                                   join m in matt
                                   on ps.MATNR equals m.ID
                                   join mk in cat
-                                  on m.MATKL_ID equals mk.MATERIALGP_ID
+                                  on m.MATKL_ID equals mk.ID
                                   where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) &&
                                   (ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART //&& ps.VKBUR == cl.VKBUR &&
                                                                                                         //ps.VKGRP == cl.VKGRP && ps.BZIRK == cl.BZIRK
@@ -6591,7 +6588,7 @@ namespace TAT001.Controllers
                                       //mk.TXT50
 
                                       VAL = Convert.ToDecimal(ps.NETLB),
-                                      EXCLUIR = mk.MATERIALGP.EXCLUIR //RSG 09.07.2018 ID167
+                                      EXCLUIR = mk.EXCLUIR //RSG 09.07.2018 ID167
                                   }).ToList();
                         }
                 }
