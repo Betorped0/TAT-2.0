@@ -31,6 +31,7 @@ namespace TAT001.Entities
         public virtual DbSet<ACCIONT> ACCIONTs { get; set; }
         public virtual DbSet<APPSETTING> APPSETTINGs { get; set; }
         public virtual DbSet<CALENDARIO_AC> CALENDARIO_AC { get; set; }
+        public virtual DbSet<CALENDARIO_EX> CALENDARIO_EX { get; set; }
         public virtual DbSet<CAMPOS> CAMPOS { get; set; }
         public virtual DbSet<CAMPOZKE24> CAMPOZKE24 { get; set; }
         public virtual DbSet<CAMPOZKE24T> CAMPOZKE24T { get; set; }

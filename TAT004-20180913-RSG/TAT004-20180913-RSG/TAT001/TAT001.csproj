@@ -611,7 +611,9 @@
     <Compile Include="Entities\STATE.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\sysdiagram.cs" />
+    <Compile Include="Entities\sysdiagram.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\TAB.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
@@ -1285,6 +1287,13 @@
     <Content Include="obj\Debug\TAT001.pdb" />-->
     <!-->>>>>>> 3496b924103c90400a700be44a001da3c07dedd4-->
     <Content Include="Scripts\copiacreatesolicitud.js" />
+    <EntityDeploy Include="Entities\TAT001.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>TAT001.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Entities\TAT001.edmx.diagram">
+      <DependentUpon>TAT001.edmx</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\fnCommon.js" />
     <Content Include="Scripts\jquery.validate.js" />
@@ -1344,13 +1353,6 @@
     <Content Include="bin\roslyn\Microsoft.VisualBasic.Core.targets" />
     <Content Include="bin\roslyn\VBCSCompiler.exe.config" />
     <Content Include="bin\TAT001.dll.config" />-->
-    <EntityDeploy Include="Entities\TAT001.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>TAT001.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Entities\TAT001.edmx.diagram">
-      <DependentUpon>TAT001.edmx</DependentUpon>
-    </Content>
     <Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
     <Content Include="obj\Debug\edmxResourcesToEmbed\Entities\TAT001.csdl" />
     <Content Include="obj\Debug\edmxResourcesToEmbed\Entities\TAT001.msl" />
