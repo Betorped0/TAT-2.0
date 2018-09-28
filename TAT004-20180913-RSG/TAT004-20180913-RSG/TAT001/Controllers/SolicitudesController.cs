@@ -223,8 +223,9 @@ namespace TAT001.Controllers
                     ld.PERIODO = item.PERIODO + "";
 
                     Estatus e = new Estatus();
-                    ld.ESTATUS = e.getText(item);
-                    ld.ESTATUS_CLASS = e.getClass(item);
+                    ld.ESTATUS = e.getText(item.ESTATUS, ld.NUM_DOC);
+                    ld.ESTATUS_CLASS = e.getClass(item.ESTATUS, ld.NUM_DOC);
+
 
                     ld.PAYER_ID = item.PAYER_ID;
                     if (item.CLIENTE == null)
