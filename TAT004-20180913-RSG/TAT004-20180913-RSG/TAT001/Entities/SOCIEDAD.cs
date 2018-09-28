@@ -17,6 +17,7 @@ namespace TAT001.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public SOCIEDAD()
         {
+            this.CALENDARIO_AC = new HashSet<CALENDARIO_AC>();
             this.CONPOSAPHs = new HashSet<CONPOSAPH>();
             this.CUENTAs = new HashSet<CUENTA>();
             this.DET_AGENTEH = new HashSet<DET_AGENTEH>();
@@ -42,6 +43,8 @@ namespace TAT001.Entities
         public bool ACTIVO { get; set; }
         public string REGION { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CALENDARIO_AC> CALENDARIO_AC { get; set; }
         public virtual CONFDIST_CAT CONFDIST_CAT { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CONPOSAPH> CONPOSAPHs { get; set; }

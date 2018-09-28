@@ -96,7 +96,7 @@
                                 </a>
                                 <ul>
                                     <li>@*<a id="lbl_wfn" class="btn-floating yellow darken-1 modal-trigger" href="#modal1" onclick="siguiente()"><i class="material-icons">play_arrow</i></a>*@</li>
-                                    <li><a id="lbl_wfn" class="btn-floating yellow darken-1 modal-trigger" href="@Url.Action("Edit","Solicitudes", new { id_d = Model.D.NUM_DOC})"><i class="material-icons">edit</i></a></li>
+                                    <li><a id="lbl_wfn" class="btn-floating yellow darken-1 modal-trigger" href="@Url.Action(" Edit","Solicitudes", new { id_d=Model.D.NUM_DOC})"><i class="material-icons">edit</i></a></li>
                                 </ul>
                             </div>
                             <script>
@@ -111,7 +111,7 @@
                             </script>
                             @*<a id="lbl_wfn" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="N" })">Siguiente</a>*@
                             @*<a id="lbl_wfn" class="btn-small modal-trigger" href="#modal1" onclick="siguiente()">Siguiente</a>*@
-                            <a id="lbl_wfn" class="btn-small modal-trigger" href="@Url.Action("Edit","Solicitudes", new { id_d = Model.D.NUM_DOC})">Editar</a>
+                            <a id="lbl_wfn" class="btn-small modal-trigger" href="@Url.Action(" Edit","Solicitudes", new { id_d=Model.D.NUM_DOC})">Editar</a>
                         }
                         else if (ViewBag.accion == "P")
                         {
@@ -158,13 +158,13 @@
                                     </div>
                                     <div class="modal-footer right">
                                         <a href="#!" class="modal-action modal-close btn-flat">No</a>
-                                        <a class="modal-action btn-flat" href="@Url.Action("Cancelar", "Solicitudes" , new { id=Model.D.NUM_DOC })">Si</a>
+                                        <a class="modal-action btn-flat" href="@Url.Action(" Cancelar", "Solicitudes" , new { id=Model.D.NUM_DOC })">Si</a>
                                     </div>
                                 </div>
                             }
                         }
                     }
-                    else if (Model.D.ESTATUS.Equals("A") && (Model.D.TSOL.PADRE) && Model.D.DOCUMENTORECs.Count < 1 && Model.D.DOCUMENTOLs.Count < 1)
+                    else if (Model.D.ESTATUS.Equals("A") && (Model.D.TSOL.PADRE) /*&& Model.D.DOCUMENTORECs.Count < 1 && Model.D.DOCUMENTOLs.Count < 1*/)
                     {
                         if (Model.D.USUARIOC_ID == ViewBag.usuario.ID & Model.D.DOCUMENTO_SAP != null)
                         {
@@ -178,9 +178,9 @@
                                         foreach (TSOL inte in ViewBag.TSOL_RELA)
                                         {
                                             @*
-                                                <li><a href="@Url.Action(" Create", "Solicitudes" , new { id_d=Model.D.NUM_DOC.ToString(), tsol="NC" })" id="lbl_nc">Nota de crédito</a></li>
-                                                <li><a href="@Url.Action(" Create", "Solicitudes" , new { id_d=Model.D.NUM_DOC.ToString(), tsol="NCI" })" id="lbl_nc">Nota de crédito Int</a></li>
-                                                <li><a href="@Url.Action(" Create", "Solicitudes" , new { id_d=Model.D.NUM_DOC.ToString(), tsol="OP" })" id="lbl_op">Orden de pago</a></li>*@
+                                                <li><a href="@Url.Action("Create", "Solicitudes" , new { id_d=Model.D.NUM_DOC.ToString(), tsol="NC" })" id="lbl_nc">Nota de crédito</a></li>
+                                                <li><a href="@Url.Action("Create", "Solicitudes" , new { id_d=Model.D.NUM_DOC.ToString(), tsol="NCI" })" id="lbl_nc">Nota de crédito Int</a></li>
+                                                <li><a href="@Url.Action("Create", "Solicitudes" , new { id_d=Model.D.NUM_DOC.ToString(), tsol="OP" })" id="lbl_op">Orden de pago</a></li>*@
                                             <li><a href="@Url.Action("Create", "Solicitudes" , new { id_d=Model.D.NUM_DOC.ToString(), tsol=inte.ID })" id="lbl_@inte.ID">@inte.TSOLTs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50 </a></li>
                                         }
                                     }
@@ -219,7 +219,7 @@
                                 </div>
                                 <div class="modal-footer right">
                                     <a href="#!" class="modal-action modal-close btn-flat">No</a>
-                                    <a class="modal-action btn-flat" href="@Url.Action("Cancelar", "Solicitudes" , new { id=Model.D.NUM_DOC })">Si</a>
+                                    <a class="modal-action btn-flat" href="@Url.Action(" Cancelar", "Solicitudes" , new { id=Model.D.NUM_DOC })">Si</a>
                                 </div>
                             </div>
                         }
@@ -231,28 +231,29 @@
                         <button type="button" class="btn-small  " data-target="list_carta" id="btn_carta">Carta</button>
                         @*<button type="button" class="btn-small  " id="btn_cancel">Cancelar</button>*@
                         <ul id='list_carta' class='dropdown-content'>
-                            @*<li><a href="@Url.Action(" Index", "CartaF" , new { id=Model.D.NUM_DOC })" id="lbl_list">Lista de cartas</a></li>*@ @*//B20180720P MGC Guardar Carta*@
-                            <li><a href="@Url.Action("Lista", "CartaV", new { id = Model.D.NUM_DOC, swf = Model.D.ESTATUS_WF })" id="lbl_list">Lista de cartas</a></li> @*//B20180720P MGC Guardar Carta*@
-                            @if (Model.D.ESTATUS_WF.Equals("S"))
-                            {
-                                <li><a href="@Url.Action("Create", "CartaV", new { id = Model.D.NUM_DOC })" id="lbl_genc">Generar carta</a></li>
-                            }
-                            else
-                            {
-                                <li><a href="@Url.Action("Create", "CartaD", new { id = Model.D.NUM_DOC })" id="lbl_genc">Imprimir draft</a></li>
-                            }
-                        </ul>
-                        <script>
-                            var elem = document.getElementById('btn_carta');
-                            var options = {
-                                constrainWidth: false
-                                //,hover: true
-                            };
-                            var instance = M.Dropdown.init(elem, options);
-                        </script>
+                            @*
+                                <li><a href="@Url.Action(" Index", "CartaF" , new { id=Model.D.NUM_DOC })" id="lbl_list">Lista de cartas</a></li>*@ @*//B20180720P MGC Guardar Carta*@
+                                <li><a href="@Url.Action(" Lista", "CartaV" , new { id=Model.D.NUM_DOC, swf=Model.D.ESTATUS_WF })" id="lbl_list">Lista de cartas</a></li> @*//B20180720P MGC Guardar Carta*@
+                                @if (Model.D.ESTATUS_WF.Equals("S"))
+                                {
+                                    <li><a href="@Url.Action("Create", "CartaV" , new { id=Model.D.NUM_DOC })" id="lbl_genc">Generar carta</a></li>
+                                }
+                                else
+                                {
+                                    <li><a href="@Url.Action("Create", "CartaD" , new { id=Model.D.NUM_DOC })" id="lbl_genc">Imprimir draft</a></li>
+                                }
+                            </ul>
+                            <script>
+                                var elem = document.getElementById('btn_carta');
+                                var options = {
+                                    constrainWidth: false
+                                    //,hover: true
+                                };
+                                var instance = M.Dropdown.init(elem, options);
+                            </script>
+                        }
+                        @* } *@
                     }
-                    @* } *@
-                }
             </div>
         </div>
     </div>
@@ -300,7 +301,7 @@
                                         @Html.LabelFor(model => model.D.DOCUMENTO_REF, "Provisión")
                                     </div>
                                     <div class="col s4 right-align">
-                                        <a href="@Url.Action("Details", new { id = Model.D.DOCUMENTO_REF })" class="btn-small  ">Ver</a>
+                                        <a href="@Url.Action("Details", new { id=Model.D.DOCUMENTO_REF })" class="btn-small  ">Ver</a>
                                     </div>
                                 </div>
                             </div>
@@ -317,6 +318,18 @@
                                 </div>
                                 @Html.HiddenFor(model => model.D.GALL_ID, new { @id = "gall_id" })
                                 @Html.HiddenFor(model => model.D.TALL_ID, new { @id = "tall_id" })
+                                @*--------- DRS 24.09.18-------------- *@
+                                @if (ViewBag.nombreC != null)
+                                {
+                                    foreach (var cuenta in ViewBag.nombreC)
+                                    {
+                                        <input id="cuentaNombre" type="hidden" value="@cuenta">
+                                    }
+                                }
+                                else
+                                {
+                                    <input id="cuentaNombre" type="hidden" value="">
+                                }
                                 @Html.HiddenFor(model => model.D.MONTO_DOC_MD, new { @id = "monto_dis" })
                             </div>
                         </div>
@@ -537,7 +550,7 @@
                                 <div class="row" style="margin-bottom:0">
                                     <div class="input-field col s12">
                                         @Html.EditorFor(model => model.D.CLIENTE.KUNNR, new { htmlAttributes = new { @disabled = "disabled", @id = "payer_id" } })
-                                        @Html.LabelFor(model => model.D.CLIENTE.KUNNR, "Cliente", new { @id = "lbl_payer" } )
+                                        @Html.LabelFor(model => model.D.CLIENTE.KUNNR, "Cliente", new { @id = "lbl_payer" })
                                     </div>
                                     <div class="input-field col s12">
                                         @Html.EditorFor(model => model.D.CLIENTE.NAME1, new { htmlAttributes = new { @disabled = "disabled" } })
@@ -632,12 +645,12 @@
 
                                                     @if (Convert.ToInt32(caso) == 1)
                                                     {
-                                                        <th>Monto</th>
+                                                    <th>Monto</th>
                                                     }
                                                     else if (Convert.ToInt32(caso) == 2)
                                                     {
-                                                        <th>%</th>
-                                                        <th>Objetivo</th>
+                                                    <th>%</th>
+                                                    <th>Objetivo</th>
                                                     }
                                                     <th>Estatus</th>
                                                 </tr>
@@ -645,52 +658,52 @@
                                             <tbody>
                                                 @foreach (var iteem in Model.D.DOCUMENTORECs)
                                                 {
-                                                    <tr>
-                                                        <td>@iteem.POS/@Model.D.DOCUMENTORECs.Count()</td>
-                                                        @{ string periodo = "P" + iteem.PERIODO + "-" + iteem.EJERCICIO; }
-                                                        <td>@periodo</td>
-                                                        <td>@Model.D.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50</td>
-                                                        @if (iteem.DOC_REF > 0)
-                                                        {
-                                                            <td><a href="@Url.Action("Details", new { id = iteem.DOC_REF })">@iteem.DOC_REF</a></td>
-                                                        }
-                                                        else
-                                                        {
-                                                            <td></td>
-                                                        }
-                                                        <td>@iteem.FECHAF.Value.ToShortDateString()</td>
+                                                <tr>
+                                                    <td>@iteem.POS/@Model.D.DOCUMENTORECs.Count()</td>
+                                                    @{ string periodo = "P" + iteem.PERIODO + "-" + iteem.EJERCICIO; }
+                                                    <td>@periodo</td>
+                                                    <td>@Model.D.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50</td>
+                                                    @if (iteem.DOC_REF > 0)
+                                                    {
+                                                    <td><a href="@Url.Action("Details", new { id=iteem.DOC_REF })">@iteem.DOC_REF</a></td>
+                                                    }
+                                                    else
+                                                    {
+                                                    <td></td>
+                                                    }
+                                                    <td>@iteem.FECHAF.Value.ToShortDateString()</td>
 
-                                                        @if (Convert.ToInt32(caso) == 1)
-                                                        {
-                                                            <td class="precio">@iteem.MONTO_BASE</td>
-                                                        }
-                                                        else if (Convert.ToInt32(caso) == 2)
-                                                        {
-                                                            <td class="porcentaje">@Math.Round(iteem.PORC.Value, 2)</td>
-                                                            <td class="precio">@iteem.MONTO_BASE</td>
-                                                        }
+                                                    @if (Convert.ToInt32(caso) == 1)
+                                                    {
+                                                    <td class="precio">@iteem.MONTO_BASE</td>
+                                                    }
+                                                    else if (Convert.ToInt32(caso) == 2)
+                                                    {
+                                                    <td class="porcentaje">@Math.Round(iteem.PORC.Value, 2)</td>
+                                                    <td class="precio">@iteem.MONTO_BASE</td>
+                                                    }
 
-                                                        @if (iteem.ESTATUS == "P")
-                                                        {
-                                                            <td>Contabilizado</td>
-                                                        }
-                                                        else if (iteem.ESTATUS == "C")
-                                                        {
+                                                    @if (iteem.ESTATUS == "P")
+                                                    {
+                                                    <td>Contabilizado</td>
+                                                    }
+                                                    else if (iteem.ESTATUS == "C")
+                                                    {
 
-                                                            <td>Cancelado</td>
-                                                        }
-                                                        else
-                                                        {
-                                                            <td>Pendiente</td>
-                                                        }
-                                                    </tr>
+                                                    <td>Cancelado</td>
+                                                    }
+                                                    else
+                                                    {
+                                                    <td>Pendiente</td>
+                                                    }
+                                                </tr>
                                                 }
                                             </tbody>
                                         </table>*@
                                     @*//}
                                         //else
                                         //{*@
-                                    <div class="row">
+                                    <div class="row" style="overflow:auto;">
                                         <div class="col s12">
                                             <table>
                                                 <thead>
@@ -708,29 +721,41 @@
                                                 <tbody>
                                                     @foreach (var iteem in Model.D.DOCUMENTORECs)
                                                     {
-                                                        <tr>
+                                                        <tr id="rec-@iteem.POS" onclick="muestraRan(this.id);">
                                                             <td>@iteem.POS/@Model.D.DOCUMENTORECs.Count()</td>
                                                             @{ string periodo = "P" + iteem.PERIODO + "-" + iteem.EJERCICIO; }
                                                             <td>@periodo</td>
                                                             <td>@Model.D.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50</td>
                                                             @if (iteem.DOC_REF > 0)
                                                             {
-                                                                <td><a href="@Url.Action("Details", new { id = iteem.DOC_REF })">@iteem.DOC_REF</a></td>
+                                                                <td><a href="@Url.Action("Details", new { id=iteem.DOC_REF })">@iteem.DOC_REF</a></td>
                                                             }
                                                             else
                                                             {
                                                                 <td></td>
                                                             }
                                                             <td>@iteem.FECHAV.Value.ToShortDateString()</td>
-                                                            <td class="porcentaje">@Math.Round(iteem.PORC.Value, 2)</td>
-                                                            <td class="precio">@iteem.MONTO_BASE</td>
+                                                            @if (Model.D.LIGADA == true)
+                                                            {
+                                                                foreach (TAT001.Entities.DOCUMENTORAN ran in iteem.DOCUMENTORANs.Where(x => x.LIN == 1))//RSG 20.09.2018
+                                                                {
+                                                                    <td class="porcentaje">@ran.PORCENTAJE</td>
+                                                                    <td class="precio">@ran.OBJETIVOI</td>
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                <td class="porcentaje">@Math.Round(iteem.PORC.Value, 2)</td>
+                                                                <td class="precio">@iteem.MONTO_BASE</td>
+                                                            }
                                                             @if (iteem.ESTATUS == "P")
                                                             {
                                                                 <td>Contabilizado</td>
                                                             }
                                                             else if (iteem.ESTATUS == "C")
                                                             {
-                                                                @*<td><i class="material-icons">close</i></td>*@
+                                                                @*
+                                                                    <td><i class="material-icons">close</i></td>*@
                                                                 <td>Cancelado</td>
                                                             }
                                                             else
@@ -738,22 +763,53 @@
                                                                 <td>Pendiente</td>
                                                             }
                                                         </tr>
+                                                        foreach (TAT001.Entities.DOCUMENTORAN ran in iteem.DOCUMENTORANs.Where(x => x.LIN > 1))//RSG 20.09.2018
+                                                        {
+                                                            <tr class="ran-@ran.POS" style="display:none;background-color:rgba(242, 242, 242, 0.5);">
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td class="porcentaje">@ran.PORCENTAJE</td>
+                                                                <td class="precio">@ran.OBJETIVOI</td>
+                                                                <td></td>
+                                                            </tr>
+                                                        }
                                                     }
                                                 </tbody>
                                             </table>
                                         </div>
+                                        <script>
+                                            function muestraRan(id) {
+                                                var ii = id.split('-')[1];
+                                                var clas = $("#" + id).hasClass("ran");
+                                                if (!clas) {
+                                                    var a = document.getElementsByClassName("ran-" + ii);
+                                                    var i;
+                                                    for (i = 0; i < a.length; i++) {
+                                                        a[i].style.display = "table-row";
+                                                    }
+                                                    document.getElementById("rec-" + ii).classList.add("ran");
+                                                }
+                                                else {
+                                                    var a = document.getElementsByClassName("ran-" + ii);
+                                                    var i;
+                                                    for (i = 0; i < a.length; i++) {
+                                                        a[i].style.display = "none";
+                                                    }
+                                                    document.getElementById("rec-" + ii).classList.remove("ran");
+                                                }
+                                            }
+                                        </script>
                                     </div>
                                     <br />
-                                    @if (Convert.ToInt32(caso) == 3)
+                                    @*@if (Convert.ToInt32(caso) == 3)*@
+                                    @if (Model.D.OBJETIVOQ == true)
                                     {
                                         decimal? totalMon = 0;
                                         string fechaE = "", periodoE = "";
-                                        foreach (var iteem in Model.D.DOCUMENTORECs)
-                                        {
-                                            totalMon = totalMon + iteem.MONTO_BASE;
-                                            fechaE = iteem.FECHAV.Value.ToShortDateString();
-                                            periodoE = "P" + iteem.PERIODO + "-" + iteem.EJERCICIO;
-                                        }
+
                                         <div class="row">
                                             <h5>Objetivo Q</h5>
                                             <table>
@@ -770,23 +826,35 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        <td>Q</td>
-                                                        <td>@periodoE</td>
-                                                        <td>@Model.D.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50</td>
-                                                        <td>No generado</td>
-                                                        <td>@fechaE</td>
-                                                        <td class="porcentaje">@Model.D.OBJQ_PORC</td>
-                                                        <td class="precio">@totalMon</td>
-                                                        <td>Pendiente</td>
-                                                    </tr>
+                                                    @foreach (var iteem in Model.D.DOCUMENTORECs)
+                                                    {
+                                                        totalMon = totalMon + iteem.MONTO_BASE;
+                                                        fechaE = iteem.FECHAV.Value.ToShortDateString();
+                                                        periodoE = "P" + iteem.PERIODO + "-" + iteem.EJERCICIO;
+
+                                                        <tr>
+                                                            <td>Q @iteem.POS</td>
+                                                            <td>@periodoE</td>
+                                                            <td>@Model.D.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50</td>
+                                                            <td></td>
+                                                            <td>@fechaE</td>
+                                                            <td class="porcentaje">@Model.D.OBJQ_PORC</td>
+
+                                                            @foreach (TAT001.Entities.DOCUMENTORAN ran in iteem.DOCUMENTORANs.Where(x => x.LIN == 1))//RSG 20.09.2018
+                                                            {
+                                                                <td class="precio">@ran.OBJETIVOI</td>
+                                                            }
+                                                            <td>Pendiente</td>
+                                                        </tr>
+                                                    }
                                                 </tbody>
                                             </table>
                                         </div>
                                     }
                                 </div>
                             </div>
-                            @*</div>
+                            @*
+                                    </div>
                                 </div>*@
                         }
                     </div>
@@ -900,7 +968,8 @@
                                                                             <th>Vigencia de</th>
                                                                             <th>Vigencia al </th>
                                                                             <th>Material</th>
-                                                                            @*<th>CANTIDAD</th>
+                                                                            @*
+                                                                                <th>CANTIDAD</th>
                                                                                 <th>Monto</th>*@
                                                                             <th>Porc Apoyo</th>
                                                                             <th>Monto Apoyo</th>
@@ -925,7 +994,8 @@
                                                                                 <td id="Vigd-@i-@y">@lstCF[y].VIGENCIA_DE.Value.Year/@lstCF[y].VIGENCIA_DE.Value.Month/@lstCF[y].VIGENCIA_DE.Value.Day</td>
                                                                                 <td id="Viga-@i-@y-@y">@lstCF[y].VIGENCIA_AL.Value.Year/@lstCF[y].VIGENCIA_AL.Value.Month/@lstCF[y].VIGENCIA_DE.Value.Day</td>
                                                                                 <td id="mantr-@i-@y">@lstCF[y].MATNR </td>
-                                                                                @*<td id="cant-@i-@y"> @lstCF[y].CANTIDAD </td>
+                                                                                @*
+                                                                                    <td id="cant-@i-@y"> @lstCF[y].CANTIDAD </td>
                                                                                     <td id="pap-@i-@y">@lstCF[y].MONTO </td>*@
                                                                                 <td id="papo-@i-@y"> @lstCF[y].PORC_APOYO </td>
                                                                                 <td id="mnt-@i-@y">@lstCF[y].MONTO_APOYO </td>
@@ -966,7 +1036,7 @@
                                     @*@foreach (var iteem in Model.D.DOCUMENTORs)
                                         {*@
                                     <div class="input-field col s12">
-                                        <input id="txt_trev" type="text" disabled="disabled" value="@Model.D.DOCUMENTOR.TREVERSA.TREVERSATs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT100" />
+                                        <input id="txt_trev" type="text" disabled="disabled" value="@Model.D.DOCUMENTOR.TREVERSA.TREVERSATs.Where(a => a.SPRAS_ID.Equals(Session[" spras"].ToString())).FirstOrDefault().TXT100" />
                                         <label for="txt_trev">Tipo de reversa</label>
                                     </div>
                                     <div class="input-field col s12">
@@ -1028,7 +1098,7 @@
                                         <div class="row" style="margin-bottom:0">
                                             <div class="input-field col s6">
                                                 @Html.EditorFor(model => model.D.TIPO_TECNICO, new { htmlAttributes = new { @disabled = "disabled" } })
-                                                @Html.LabelFor(model => model.D.TIPO_TECNICO, "Negociación", htmlAttributes: new { @id = "lbl_tiponeg"})
+                                                @Html.LabelFor(model => model.D.TIPO_TECNICO, "Negociación", htmlAttributes: new { @id = "lbl_tiponeg" })
                                             </div>
                                             <div class="input-field col s6">
                                                 @Html.EditorFor(model => model.D.TSOL_ID, new { htmlAttributes = new { @disabled = "disabled", @Value = ViewBag.mat } })
@@ -1276,135 +1346,165 @@
                                                     </div>
                                                 </div>
                                                 <script>
-                                                taxeo("txt_concepto");
+                                        taxeo("txt_concepto");
 
-                                                function taxeo(id) {
-                                                    var campo = document.getElementById(id);
-                                                    $("#" + id).find('option').remove();
-                                                    //$("#lbl_puestos").empty();
-                                                    ///1
+                                        function taxeo(id) {
+                                            var campo = document.getElementById(id);
+                                            $("#" + id).find('option').remove();
+                                            //$("#lbl_puestos").empty();
+                                            ///1
 
+                                            /**/
+                                            /**/
+                                            var soci = '@Model.D.SOCIEDAD_ID';
+                                        /**/
+                                        /**/
+                                        /**/
+                                        /**/
+                                        var pais = '@Model.D.PAIS_ID';
+                                        /**/
+                                        /**/
+                                        /**/
+                                        /**/
+                                        var vkorg = '@Model.D.VKORG';
+                                        /**/
+                                        /**/
+                                        /**/
+                                        /**/
+                                        var vtweg = '@Model.D.VTWEG';
+                                        /**/
+                                        /**/
+                                        /**/
+                                        /**/
+                                        var spart = '@Model.D.SPART';
+                                        /**/
+                                        /**/
+                                        /**/
+                                        /**/
+                                        var kunnr = '@Model.D.PAYER_ID';
+                                        /**/
+                                        /**/
+                                        /**/
+                                        /**/
+                                        var spras = '@Session["spras"].ToString()';
+                                        /**/
+                                        /**/
+                                        $.ajax({
+                                            url: "../../Listas/selectTaxeo",
+                                            type: "GET",
+                                            async: false,
+                                            timeout: 30000,
+                                            dataType: "json",
+                                            data: { bukrs: soci, pais: pais, vkorg: vkorg, vtweg: vtweg, spart: spart, kunnr: kunnr, spras: spras },
+                                            success: function (data) {
+                                                var pp = ($.map(data, function (item) {
+                                                    return { label: item.TXT50, value: item.CONCEPTO_ID };
+                                                }))
+                                                $("#" + id)
+                                                    .append($("<option></option>")
+                                                        .attr("value", "")
+                                                        .text(""));
+                                                for (var i = 0; i < pp.length; i++) {
+                                                    //var div =  "<option value='" + pp[i].value + "'>" + pp[i].label + "</option>"
+                                                    //$("#txt_pai").append(div);
+                                                    $("#" + id)
+                                                        .append($("<option></option>")
+                                                            .attr("value", pp[i].value)
+                                                            .text(pp[i].label));
+                                                }
+                                                var el = document.getElementById(id);
+                                                var instances = M.FormSelect.init(el, []);
+                                            }
+                                        });
+                                    }
+
+                                    function selConcepto(value) {
+                                        //2
+                                        //$("#lbl_puestos").empty();
+                                        /**/
+                                        /**/
+                                        var soci = '@Model.D.SOCIEDAD_ID';
+                                        /**/
+                                        /**/
+                                        /**/
+                                        /**/
+                                        var pais = '@Model.D.PAIS_ID';
+                                        /**/
+                                        /**/
+                                        /**/
+                                        /**/
+                                        var vkorg = '@Model.D.VKORG';
+                                        /**/
+                                        /**/
+                                        /**/
+                                        /**/
+                                        var vtweg = '@Model.D.VTWEG';
+                                        /**/
+                                        /**/
+                                        /**/
+                                        /**/
+                                        var spart = '@Model.D.SPART';
+                                        /**/
+                                        /**/
+                                        /**/
+                                        /**/
+                                        var kunnr = '@Model.D.PAYER_ID';
+                                        /**/
+                                        /**/
+                                        var concepto_id = value;
+                                        /**/
+                                        /**/
+                                        var spras = '@Session["spras"].ToString()';
+                                        /**/
+                                        /**/
+                                        $.ajax({
+                                            url: "../../Listas/selectConcepto",
+                                            type: "POST",
+                                            async: false,
+                                            timeout: 30000,
+                                            dataType: "json",
+                                            data: { bukrs: soci, pais: pais, vkorg: vkorg, vtweg: vtweg, spart: spart, kunnr: kunnr, concepto: concepto_id, spras: spras },
+                                            success: function (data) {
+                                                var pp = ($.map(data, function (item) {
+                                                    return { label: item.TXT50, value: item.CONCEPTO_ID };
+                                                }))
+                                                if (pp.length > 0) {
+                                                    $("#txt_nota").val(pp[0].label);
+                                                    $("#lbl_nota").addClass("active");
+                                                }
+                                                else {
+                                                    $("#txt_nota").val("");
+                                                    $("#lbl_nota").removeClass("active");
+                                                }
+                                            }
+                                        });
+                                        $.ajax({
+                                            url: "../../Listas/selectImpuesto",
+                                            type: "POST",
+                                            async: false,
+                                            timeout: 30000,
+                                            dataType: "json",
+                                            data: { bukrs: soci, pais: pais, vkorg: vkorg, vtweg: vtweg, spart: spart, kunnr: kunnr, concepto: concepto_id, spras: spras },
+                                            success: function (data) {
+                                                $("#tab_conc tbody").empty();
+                                                var pp = ($.map(data, function (item) {
+                                                    return { IMPUESTO_ID: item.IMPUESTO_ID, PORC: item.PORC, TEXT: item.TXT50 };
+                                                }))
+                                                for (var i = 0; i < pp.length; i++) {
+                                                    var cod = pp[i].IMPUESTO_ID;
+                                                    var por = pp[i].PORC;
                                                     /**/
-                                                    var soci = '@Model.D.SOCIEDAD_ID';
-                                                /**/
-                                                /**/
-                                                var pais = '@Model.D.PAIS_ID';
-                                                /**/
-                                                /**/
-                                                var vkorg = '@Model.D.VKORG';
-                                                /**/
-                                                /**/
-                                                var vtweg = '@Model.D.VTWEG';
-                                                /**/
-                                                /**/
-                                                var spart = '@Model.D.SPART';
-                                                /**/
-                                                /**/
-                                                var kunnr = '@Model.D.PAYER_ID';
-                                                /**/
-                                                /**/
-                                                var spras = '@Session["spras"].ToString()';
-                                                /**/
-                                                $.ajax({
-                                                    url: "../../Listas/selectTaxeo",
-                                                    type: "GET",
-                                                    async: false,
-                                                    timeout: 30000,
-                                                    dataType: "json",
-                                                    data: { bukrs: soci, pais: pais, vkorg: vkorg, vtweg: vtweg, spart: spart, kunnr: kunnr, spras: spras },
-                                                    success: function (data) {
-                                                        var pp = ($.map(data, function (item) {
-                                                            return { label: item.TXT50, value: item.CONCEPTO_ID };
-                                                        }))
-                                                        $("#" + id)
-                                                            .append($("<option></option>")
-                                                                .attr("value", "")
-                                                                .text(""));
-                                                        for (var i = 0; i < pp.length; i++) {
-                                                            //var div =  "<option value='" + pp[i].value + "'>" + pp[i].label + "</option>"
-                                                            //$("#txt_pai").append(div);
-                                                            $("#" + id)
-                                                                .append($("<option></option>")
-                                                                    .attr("value", pp[i].value)
-                                                                    .text(pp[i].label));
-                                                        }
-                                                        var el = document.getElementById(id);
-                                                        var instances = M.FormSelect.init(el, []);
-                                                    }
-                                                });
-                                            }
+                                                    /**/
+                                                    var tot = @Model.D.MONTO_DOC_ML;
+                                        /**/
+                                        /**/
+                                        var sub = tot * por / 100;
 
-                                            function selConcepto(value) {
-                                                //2
-                                                //$("#lbl_puestos").empty();
-                                                /**/
-                                                var soci = '@Model.D.SOCIEDAD_ID';
-                                                /**/
-                                                /**/
-                                                var pais = '@Model.D.PAIS_ID';
-                                                /**/
-                                                /**/
-                                                var vkorg = '@Model.D.VKORG';
-                                                /**/
-                                                /**/
-                                                var vtweg = '@Model.D.VTWEG';
-                                                /**/
-                                                /**/
-                                                var spart = '@Model.D.SPART';
-                                                /**/
-                                                /**/
-                                                var kunnr = '@Model.D.PAYER_ID';
-                                                /**/
-                                                var concepto_id = value;
-                                                /**/
-                                                var spras = '@Session["spras"].ToString()';
-                                                /**/
-                                                $.ajax({
-                                                    url: "../../Listas/selectConcepto",
-                                                    type: "POST",
-                                                    async: false,
-                                                    timeout: 30000,
-                                                    dataType: "json",
-                                                    data: { bukrs: soci, pais: pais, vkorg: vkorg, vtweg: vtweg, spart: spart, kunnr: kunnr, concepto: concepto_id, spras: spras },
-                                                    success: function (data) {
-                                                        var pp = ($.map(data, function (item) {
-                                                            return { label: item.TXT50, value: item.CONCEPTO_ID };
-                                                        }))
-                                                        if (pp.length > 0) {
-                                                            $("#txt_nota").val(pp[0].label);
-                                                            $("#lbl_nota").addClass("active");
-                                                        }
-                                                        else {
-                                                            $("#txt_nota").val("");
-                                                            $("#lbl_nota").removeClass("active");
-                                                        }
-                                                    }
-                                                });
-                                                $.ajax({
-                                                    url: "../../Listas/selectImpuesto",
-                                                    type: "POST",
-                                                    async: false,
-                                                    timeout: 30000,
-                                                    dataType: "json",
-                                                    data: { bukrs: soci, pais: pais, vkorg: vkorg, vtweg: vtweg, spart: spart, kunnr: kunnr, concepto: concepto_id, spras: spras },
-                                                    success: function (data) {
-                                                        $("#tab_conc tbody").empty();
-                                                        var pp = ($.map(data, function (item) {
-                                                            return { IMPUESTO_ID: item.IMPUESTO_ID, PORC: item.PORC, TEXT: item.TXT50 };
-                                                        }))
-                                                        for (var i = 0; i < pp.length; i++) {
-                                                            var cod = pp[i].IMPUESTO_ID;
-                                                            var por = pp[i].PORC;
-                                                            /**/
-                                                            var tot = @Model.D.MONTO_DOC_ML;
-                                                /**/
-                                                var sub = tot * por / 100;
-
-                                                $("#tab_conc tbody").append("<tr><td>" + pp[i].TEXT + "</td><td>" + toShow(por / 100) + "%</td><td>" + cod + "</td><td>" + toShow(sub) + "</td><tr>");
-                                            }
-                                        }
-                                    });
+                                        $("#tab_conc tbody").append("<tr><td>" + pp[i].TEXT + "</td><td>" + toShow(por / 100) + "%</td><td>" + cod + "</td><td>" + toShow(sub) + "</td><tr>");
+                                    }
                                 }
+                            });
+                        }
                                                 </script>
                                             </div>
                                             <div class="col s12 right-align">
@@ -1482,85 +1582,94 @@
                                 </div>
                             </div>
                             <script>
-                                        var clearing = [];
-                                        function getClearing(gall) {
-                                            $("#div_clearing").empty();
-                                            clearing = [];
-                                            /**/
-                                            /**/
-                                            var bukrs = '@Model.D.SOCIEDAD_ID';
-                                        /**/
-                                        /**/
-                                        /**/
-                                        /**/
-                                        var land = '@Model.D.PAIS_ID';
-                                        /**/
-                                        /**/
-                                        /**/
-                                        /**/
-                                        var ejercicio = '@Model.D.EJERCICIO';
-                                        /**/
-                                        /**/
-                                        $.ajax({
-                                            type: "POST",
-                                            url: '../../Listas/clearing',
-                                            dataType: "json",
-                                            data: { bukrs: bukrs, land: land, gall: gall, ejercicio: ejercicio },
+                                var clearing = [];
+                                function getClearing(gall) {
+                                    $("#div_clearing").empty();
+                                    clearing = [];
+                                    /**/
+                                    /**/
+                                    /**/
+                                    var bukrs = '@Model.D.SOCIEDAD_ID';
+                                /**/
+                                /**/
+                                /**/
+                                /**/
+                                /**/
+                                /**/
+                                var land = '@Model.D.PAIS_ID';
+                                /**/
+                                /**/
+                                /**/
+                                /**/
+                                /**/
+                                /**/
+                                var ejercicio = '@Model.D.EJERCICIO';
+                                /**/
+                                /**/
+                                /**/
+                                $.ajax({
+                                    type: "POST",
+                                    url: '../../Listas/clearing',
+                                    dataType: "json",
+                                    data: { bukrs: bukrs, land: land, gall: gall, ejercicio: ejercicio },
 
-                                            success: function (data) {
-                                                if (data !== null || data !== "") {
-                                                    //RSG 26.04.2018----------------
-                                                    clearing.push(data.ABONO);
-                                                    clearing.push(data.CARGO);
-                                                    clearing.push(data.CLEARING);
-                                                    clearing.push(data.LIMITE);
-                                                    //RSG 26.04.2018----------------
-                                                }
+                                    success: function (data) {
+                                        if (data !== null || data !== "") {
+                                            //RSG 26.04.2018----------------
+                                            clearing.push(data.ABONO);
+                                            clearing.push(data.CARGO);
+                                            clearing.push(data.CLEARING);
+                                            clearing.push(data.LIMITE);
+                                            //RSG 26.04.2018----------------
+                                        }
 
-                                            },
-                                            error: function (xhr, httpStatusMessage, customErrorMessage) {
-                                                M.toast({ html: httpStatusMessage });
-                                            },
-                                            async: false
-                                        });
+                                    },
+                                    error: function (xhr, httpStatusMessage, customErrorMessage) {
+                                        M.toast({ html: httpStatusMessage });
+                                    },
+                                    async: false
+                                });
 
-                                    }
-                                    function formaClearing() {
-                                        getClearing(document.getElementById("tall_id").value);
-                                        $("#div_clearing").empty();
-                                        var monto = document.getElementById("monto_dis").value;
-                                        //LEJ 09.07.18---------------------------------------------
-                                        var _monto = monto.split('.');
-                                        var _miles = document.getElementById("miles").value;
-                                        var _decimales = document.getElementById("dec").value;
-                                        var _millesMonto = _monto[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, _miles);
-                                        var div = "<ul class='collection'><li class='collection-item'>";
-                                        div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>Abono</div><div class='col s4'>" + clearing[0] + "</div><div class='col s4 right-align'>$" + _millesMonto + _decimales + _monto[1] + "</div></div>";
-                                        div += "</li><li class='collection-item'>";
+                            }
+                            function formaClearing() {
+                                getClearing(document.getElementById("tall_id").value);
+                                $("#div_clearing").empty();
+                                var monto = document.getElementById("monto_dis").value;
+                                //DRS 24.09.18---------------------------------------------
+                                var nombreC = document.getElementById("cuentaNombre").value;
 
-                                        if (clearing[3] == null) {
+                                //LEJ 09.07.18---------------------------------------------
+                                var _monto = monto.split('.');
+                                var _miles = document.getElementById("miles").value;
+                                var _decimales = document.getElementById("dec").value;
+                                var _millesMonto = _monto[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, _miles);
+                                var div = "<ul class='collection'><li class='collection-item'>";
+                                //DRS 24.09.18
+                                div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>Abono</div><div class='col s8'><div class='col s4'>" + nombreC + "</div><div class='col s4'>" + clearing[0] + "</div><div class='col s4 right-align'>$" + _millesMonto + _decimales + _monto[1] + "</div></div>";
+                                div += "</li><li class='collection-item'>";
+                                if (clearing[3] == null) {
+                                    div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>Cargo</div><div class='col s8'><div class='col s4'></div><div class='col s4'>" + clearing[1] + "</div><div class='col s4 right-align'>$" + _millesMonto + _decimales + _monto[1] + "</div></div>";
+                                }
+                                else {
+                                    if (clearing[2] != null) {
+                                        if (monto <= clearing[3]) {
                                             div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>Cargo</div><div class='col s4'>" + clearing[1] + "</div><div class='col s4 right-align'>$" + _millesMonto + _decimales + _monto[1] + "</div></div>";
+                                            div += "</li><li class='collection-item'>                                        ";
+                                            div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>Clearing</div><div class='col s4'>" + clearing[2] + "</div><div class='col s4 right-align'>$0.00</div></div>";
+                                            div += "    </li>";
                                         }
                                         else {
-                                            if (clearing[2] != null) {
-                                                if (monto <= clearing[3]) {
-                                                    div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>Cargo</div><div class='col s4'>" + clearing[1] + "</div><div class='col s4 right-align'>$" + _millesMonto + _decimales + _monto[1] + "</div></div>";
-                                                    div += "</li><li class='collection-item'>                                        ";
-                                                    div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>Clearing</div><div class='col s4'>" + clearing[2] + "</div><div class='col s4 right-align'>$0.00</div></div>";
-                                                    div += "    </li>";
-                                                }
-                                                else {
-                                                    div += "  <div class='row' style='margin-bottom:0;'><div class='col s4'>Cargo</div><div class='col s4'>" + clearing[1] + "</div><div class='col s4 right-align'>$" + clearing[3] + "</div></div>";
-                                                    div += "</li><li class='collection-item'>                                     ";
-                                                    div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>Clearing</div><div class='col s4'>" + clearing[2] + "</div><div class='col s4 right-align'>$" + (monto - clearing[3]) + "</div></div>";
-                                                    div += "          </li>";
-                                                }
-                                            }
+                                            div += "  <div class='row' style='margin-bottom:0;'><div class='col s4'>Cargo</div><div class='col s4'>" + clearing[1] + "</div><div class='col s4 right-align'>$" + clearing[3] + "</div></div>";
+                                            div += "</li><li class='collection-item'>                                     ";
+                                            div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>Clearing</div><div class='col s4'>" + clearing[2] + "</div><div class='col s4 right-align'>$" + (monto - clearing[3]) + "</div></div>";
+                                            div += "          </li>";
                                         }
-                                        div += "</li>";
-                                        div += "       </ul>";
-                                        $("#div_clearing").append(div);
                                     }
+                                }
+                                div += "</li>";
+                                div += "       </ul>";
+                                $("#div_clearing").append(div);
+                            }
                             </script>
                         </div>
                         @using (TAT001Entities db = new TAT001Entities())
@@ -1579,7 +1688,8 @@
                                                 <thead>
                                                     <tr class="header">
                                                         <th>
-                                                            @Html.LabelFor(model => model.D.TSOL_ID, "Tipo")
+                                                            @* -----------DRS 24.09.18-------- *@
+                                                            @Html.LabelFor(model => model.D.TSOL.TSOLTs.First().TXT010, "Tipo")
                                                         </th>
                                                         <th>
                                                             @Html.LabelFor(model => model.D.NUM_DOC, "Documento")
@@ -1603,10 +1713,10 @@
                                                     {
                                                         <tr>
                                                             <td>
-                                                                @miCi.TSOL_ID
+                                                                @miCi.TSOL.TSOLTs.Where(x => x.SPRAS_ID == Session["spras"].ToString()).FirstOrDefault().TXT010
                                                             </td>
                                                             <td>
-                                                                <a href="@Url.Action("Details",new { id = miCi.NUM_DOC})">@miCi.NUM_DOC</a>
+                                                                <a href="@Url.Action("Details",new { id=miCi.NUM_DOC})">@miCi.NUM_DOC</a>
                                                             </td>
                                                             <td>
                                                                 @miCi.DOCUMENTO_SAP
@@ -1653,7 +1763,7 @@
                                                 <tbody>
                                                     <tr>
                                                         <td>
-                                                            @Model.D.TSOL_ID
+                                                            @Model.D.TSOL.TSOLTs.Where(x => x.SPRAS_ID == Session["spras"].ToString()).FirstOrDefault().TXT010
                                                         </td>
                                                         <td>
                                                             @Model.D.NUM_DOC
@@ -1816,86 +1926,104 @@
                                             </div>
                                         </div>
                                         <script>
-                                                selConcepto(document.getElementById("txt_concepto").value);
+                                        selConcepto(document.getElementById("txt_concepto").value);
 
 
-                                                function selConcepto(value) {
-                                                    //3
-                                                    //$("#lbl_puestos").empty();
-                                                    /**/
-                                                    var soci = '@Model.D.SOCIEDAD_ID';
-                                                /**/
-                                                /**/
-                                                var pais = '@Model.D.PAIS_ID';
-                                                /**/
-                                                /**/
-                                                var vkorg = '@Model.D.VKORG';
-                                                /**/
-                                                /**/
-                                                var vtweg = '@Model.D.VTWEG';
-                                                /**/
-                                                /**/
-                                                var spart = '@Model.D.SPART';
-                                                /**/
-                                                /**/
-                                                var kunnr = '@Model.D.PAYER_ID';
-                                                /**/
-                                                var concepto_id = value;
-                                                /**/
-                                                var spras = '@Session["spras"].ToString()';
-                                                /**/
-                                                $.ajax({
-                                                    url: "../../Listas/selectConcepto",
-                                                    type: "POST",
-                                                    async: false,
-                                                    timeout: 30000,
-                                                    dataType: "json",
-                                                    data: { bukrs: soci, pais: pais, vkorg: vkorg, vtweg: vtweg, spart: spart, kunnr: kunnr, concepto: concepto_id, spras: spras },
-                                                    success: function (data) {
-                                                        var pp = ($.map(data, function (item) {
-                                                            return { label: item.TXT50, value: item.CONCEPTO_ID };
-                                                        }))
-                                                        if (pp.length > 0) {
-                                                            $("#txt_nota").val(pp[0].label);
-                                                            $("#lbl_nota").addClass("active");
-                                                        }
-                                                        else {
-                                                            $("#txt_nota").val("");
-                                                            $("#lbl_nota").removeClass("active");
-                                                        }
-                                                    }
-                                                });
-                                                $.ajax({
-                                                    url: "../../Listas/selectImpuesto",
-                                                    type: "POST",
-                                                    async: false,
-                                                    timeout: 30000,
-                                                    dataType: "json",
-                                                    data: { bukrs: soci, pais: pais, vkorg: vkorg, vtweg: vtweg, spart: spart, kunnr: kunnr, concepto: concepto_id, spras: spras },
-                                                    success: function (data) {
-                                                        $("#tab_conc tbody").empty();
-                                                        var pp = ($.map(data, function (item) {
-                                                            return { IMPUESTO_ID: item.IMPUESTO_ID, PORC: item.PORC, label: item.TXT50 };
-                                                        }))
-                                                        /**/
-                                                        var foot = @Model.D.MONTO_DOC_ML;
-                                                /**/
-                                                for (var i = 0; i < pp.length; i++) {
-                                                    var cod = pp[i].IMPUESTO_ID;
-                                                    var por = pp[i].PORC;
-                                                    /**/
-                                                    var tot = @Model.D.MONTO_DOC_ML;
-                                                /**/
-                                                var sub = tot * por / 100;
-                                                foot = foot + sub;
-
-                                                $("#tab_conc tbody").append("<tr><td>" + pp[i].label + "</td><td>" + toShowPorc(por / 100) + "</td><td>" + cod + "</td><td>" + toShow(sub) + "</td><tr>");
+                                        function selConcepto(value) {
+                                            //3
+                                            //$("#lbl_puestos").empty();
+                                            /**/
+                                            /**/
+                                            var soci = '@Model.D.SOCIEDAD_ID';
+                                        /**/
+                                        /**/
+                                        /**/
+                                        /**/
+                                        var pais = '@Model.D.PAIS_ID';
+                                        /**/
+                                        /**/
+                                        /**/
+                                        /**/
+                                        var vkorg = '@Model.D.VKORG';
+                                        /**/
+                                        /**/
+                                        /**/
+                                        /**/
+                                        var vtweg = '@Model.D.VTWEG';
+                                        /**/
+                                        /**/
+                                        /**/
+                                        /**/
+                                        var spart = '@Model.D.SPART';
+                                        /**/
+                                        /**/
+                                        /**/
+                                        /**/
+                                        var kunnr = '@Model.D.PAYER_ID';
+                                        /**/
+                                        /**/
+                                        var concepto_id = value;
+                                        /**/
+                                        /**/
+                                        var spras = '@Session["spras"].ToString()';
+                                        /**/
+                                        /**/
+                                        $.ajax({
+                                            url: "../../Listas/selectConcepto",
+                                            type: "POST",
+                                            async: false,
+                                            timeout: 30000,
+                                            dataType: "json",
+                                            data: { bukrs: soci, pais: pais, vkorg: vkorg, vtweg: vtweg, spart: spart, kunnr: kunnr, concepto: concepto_id, spras: spras },
+                                            success: function (data) {
+                                                var pp = ($.map(data, function (item) {
+                                                    return { label: item.TXT50, value: item.CONCEPTO_ID };
+                                                }))
+                                                if (pp.length > 0) {
+                                                    $("#txt_nota").val(pp[0].label);
+                                                    $("#lbl_nota").addClass("active");
+                                                }
+                                                else {
+                                                    $("#txt_nota").val("");
+                                                    $("#lbl_nota").removeClass("active");
+                                                }
                                             }
+                                        });
+                                        $.ajax({
+                                            url: "../../Listas/selectImpuesto",
+                                            type: "POST",
+                                            async: false,
+                                            timeout: 30000,
+                                            dataType: "json",
+                                            data: { bukrs: soci, pais: pais, vkorg: vkorg, vtweg: vtweg, spart: spart, kunnr: kunnr, concepto: concepto_id, spras: spras },
+                                            success: function (data) {
+                                                $("#tab_conc tbody").empty();
+                                                var pp = ($.map(data, function (item) {
+                                                    return { IMPUESTO_ID: item.IMPUESTO_ID, PORC: item.PORC, label: item.TXT50 };
+                                                }))
+                                                /**/
+                                                /**/
+                                                var foot = @Model.D.MONTO_DOC_ML;
+                                        /**/
+                                        /**/
+                                        for (var i = 0; i < pp.length; i++) {
+                                            var cod = pp[i].IMPUESTO_ID;
+                                            var por = pp[i].PORC;
+                                            /**/
+                                            /**/
+                                            var tot = @Model.D.MONTO_DOC_ML;
+                                        /**/
+                                        /**/
+                                        var sub = tot * por / 100;
+                                        foot = foot + sub;
 
-                                            $("#tab_conc tfoot").append("<tr><td></td><td></td><td></td><th>" + toShow(foot) + "</th><tr>");
-                                        }
-                                    });
+                                        $("#tab_conc tbody").append("<tr><td>" + pp[i].label + "</td><td>" + toShowPorc(por / 100) + "</td><td>" + cod + "</td><td>" + toShow(sub) + "</td><tr>");
+                                    }
+
+                                    $("#tab_conc tfoot").append("<tr><td></td><td></td><td></td><th>" + toShow(foot) + "</th><tr>");
                                 }
+                            });
+                        }
                                         </script>
                                     </div>
                                 </div>
@@ -2005,7 +2133,7 @@
                 <div class="modal-fixed-footer right">
                     <a href="#!" class="modal-action modal-close btn-flat">Cancelar</a>
                     <input type="submit" value="Aceptar" class="modal-action modal-close btn-flat" onclick="document.getElementById('loader').style.display = 'initial';" />
-                    @*<a class="btn-small btn-default" href="@Url.Action(" Details", "Solicitudes" , new { id=Model.F.NUM_DOC})">Cancelar</a>*@
+                    @*<a class="btn-small btn-default" href="@Url.Action("Details", "Solicitudes" , new { id=Model.F.NUM_DOC})">Cancelar</a>*@
                 </div>
             </div>
             if (ViewBag.accion == "R")
@@ -2161,6 +2289,7 @@
                                     <th width=""> Hora inicio</th>
                                     <th width=""> Fecha término</th>
                                     <th width=""> Hora término</th>
+                                    @* -------DRS 24.09.18------- *@
                                     <th width="">
                                         Estatus WF
                                     </th>
@@ -2175,31 +2304,27 @@
                             <tbody>
                                 @foreach (TAT001.Entities.FLUJO f in ViewBag.workflow)
                                 {
-                                    string estatus = Html.DisplayFor(modelItem => f.ESTATUS).ToString();
-                                <tr>
-                                    <td width=""> @Html.DisplayFor(modelItem => f.USUARIOA_ID) - @Html.DisplayFor(modelItem => f.USUARIO.NOMBRE) @Html.DisplayFor(modelItem => f.USUARIO.APELLIDO_P) @Html.DisplayFor(modelItem => f.USUARIO.APELLIDO_M) </td>
-                                    <td width=""> @Html.DisplayFor(modelItem => f.WORKFP.ACCION.DESCCRIPCION) </td>
-                                    <td width=""> @f.FECHAC.Value.ToShortDateString() </td>
-                                    <td width=""> @f.FECHAC.Value.TimeOfDay.ToString().Split('.')[0] </td>
-                                    <td width=""> @f.FECHAM.Value.ToShortDateString() </td>
-                                    <td width=""> @f.FECHAM.Value.TimeOfDay.ToString().Split('.')[0] </td>
-                                    <td width=""> @Html.DisplayFor(modelItem => f.ESTATUS) </td>
+                                    <tr>
+                                        <td width=""> @Html.DisplayFor(modelItem => f.USUARIOA_ID) - @Html.DisplayFor(modelItem => f.USUARIO.NOMBRE) @Html.DisplayFor(modelItem => f.USUARIO.APELLIDO_P) @Html.DisplayFor(modelItem => f.USUARIO.APELLIDO_M) </td>
+                                        <td width=""> @Html.DisplayFor(modelItem => f.WORKFP.ACCION.DESCCRIPCION) </td>
+                                        <td width=""> @f.FECHAC.Value.ToShortDateString() </td>
+                                        <td width=""> @f.FECHAC.Value.TimeOfDay.ToString().Split('.')[0] </td>
+                                        <td width=""> @f.FECHAM.Value.ToShortDateString() </td>
+                                        <td width=""> @f.FECHAM.Value.TimeOfDay.ToString().Split('.')[0] </td>
+                                        <td width=""> @Html.DisplayFor(modelItem => f.ESTATUS) </td>
+                                        @* ------DRS 24.09.18------ *@
+                                        <td width="">
+                                            @{
+                                                string est = (Html.DisplayFor(modelItem => f.STATUS)).ToString();
 
-                                    
-                                    <td width="">
-                                        @{
-                                            string est = (Html.DisplayFor(modelItem => f.STATUS)).ToString();
-                                           
-                                            TAT001.Services.Estatus c = new TAT001.Services.Estatus();
-                                            c.getText(est);
-                                        }
-                                        @c.getText(est)
+                                                TAT001.Services.Estatus c = new TAT001.Services.Estatus();
+                                                c.getText(est);
+                                            }
+                                            @c.getText(est)
 
-                                    </td>
-                                           
-                                       
-                                    <td width="30%"> @Html.DisplayFor(modelItem => f.COMENTARIO) </td>
-                                </tr>
+                                        </td>
+                                        <td width="30%"> @Html.DisplayFor(modelItem => f.COMENTARIO) </td>
+                                    </tr>
                                 }
                             </tbody>
                         </table>
@@ -2215,8 +2340,6 @@ catch (Exception ee)
     Session["error"] = ee.Message.ToString();
     <script>
         document.location.replace("../../Home/Index");
-
-      
     </script>
 }
 <p>
@@ -2299,24 +2422,28 @@ catch (Exception ee)
     if (TempData["error"].ToString() != "")
     {
         <script>
-                /**/
-                /**/
-                M.toast({ html: '@TempData["error"]', classes: '' });
-                /**/
-                /**/
+            /**/
+            /**/
+            /**/
+            M.toast({ html: '@TempData["error"]', classes: '' });
+            /**/
+            /**/
+            /**/
         </script>
     }
 }
 @* LEJ 09.07.18 *@
 <script src="~/Scripts/ValidarFormatosDec.js"></script>
 <script>
-    $(document).ready(function () {
-        $('.collapsible').collapsible();
-                });
+            $(document).ready(function () {
+                $('.collapsible').collapsible();
+            });
 
-    function ligada() {
-        var a = '@Model.D.LIGADA';
+            function ligada() {
+                /**/
+                var a = '@Model.D.LIGADA';
+            /**/
 
-        return (a=="True");
-    }
+            return (a == "True");
+        }
 </script>

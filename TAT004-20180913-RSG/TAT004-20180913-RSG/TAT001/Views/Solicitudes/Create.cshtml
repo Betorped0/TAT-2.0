@@ -10,6 +10,7 @@
 <script src="~/Scripts/formatos.js"></script>
 <script src="~/Scripts/soporte.js"></script><!--RSG 23.05.2018-->
 <script src="~/Scripts/recurrente.js"></script><!--RSG 27.05.2018-->
+<script src="~/Scripts/rangos.js"></script><!--RSG 27.05.2018-->
 <script src="~/Scripts/analisis.js"></script><!--RSG 13.06.2018-->
 <script src="~/Scripts/ValidarNumero.js"></script><!--LEJ 09.07.2018-->
 @if (ViewBag.error != "")
@@ -28,10 +29,6 @@ errorMessage(message);
 });
     </script>
 }
-@* ------------------------------------------------------------------------silverio *@
-<input id="rob" name="rob" type="hidden" value="">
-@* ------------------------------------------------------------------------LEJ 09-07-18 *@
-
 @* ------------------------------------------------------------------------LEJ 09-07-18 *@
 <input id="miles" name="miles" type="hidden" value="@ViewBag.miles">
 <input id="dec" name="dec" type="hidden" value="@ViewBag.dec">
@@ -79,7 +76,6 @@ errorMessage(message);
         }
     }
     <style>
-
 
 
 
@@ -520,7 +516,7 @@ data: { Prefix: request.term, usuario: user, pais: '@Model.PAIS_ID' },
 /**/
 success: function (data) {
 response(auto.map(data, function (item) {
-return { label: item.KUNNR + " - " + item.NAME1, value: item.KUNNR };
+    return { label: trimStart('0', item.KUNNR) + " - " + item.NAME1, value: trimStart('0', item.KUNNR) };
 }))
 }
 })
@@ -633,25 +629,39 @@ selectCliente(value);
                                     <div class="col s12">
                                         <p>
                                             <label>
-                                                <input id="check_recurrente" type="checkbox" onchange="cambiaCheckRec(this)" />
+                                                @if (Model.DOCUMENTORECs.Count > 1)
+                                                {
+                                                    <input id="check_recurrente" type="checkbox" onchange="cambiaCheckRec(this)" checked="checked" />
+                                                }
+                                                else
+                                                {
+                                                    <input id="check_recurrente" type="checkbox" onchange="cambiaCheckRec(this)" />
+                                                }
                                                 <span id="span_docrec">Documento recurrente</span>
                                             </label>
                                         </p>
                                     </div>
                                     <div class="col s12">
                                         <label class="col s6">
-                                            <input name="group1" type="radio" checked id="btn-date" onchange="cambiaTemp(this.id)" />
+                                            <input name="group1" type="radio" id="btn-date" onchange="cambiaTemp(this.id)" />
                                             <span id="span_pfecha">Por fecha</span> @*B20180801 MGC Textos*@
                                         </label>
                                         <label class="col s6">
-                                            <input name="group1" type="radio" id="btn-peri" onchange="cambiaTemp(this.id)" />
+                                            @if (Model.DOCUMENTORECs.Count > 1)
+                                            {
+                                                <input name="group1" type="radio" checked id="btn-peri" onchange="cambiaTemp(this.id)" />
+                                            }
+                                            else
+                                            {
+                                                <input name="group1" type="radio" id="btn-peri" onchange="cambiaTemp(this.id)" />
+                                            }
                                             <span id="span_pperiodo">Por periodo</span> @*B20180801 MGC Textos*@
                                         </label>
                                     </div>
                                     <script>
                                         function cambiaTemp(id) {
                                             var tipo = id.split('-')[1];
-                                            if (tipo == "date") {
+                                            if (tipo == "date" & document.getElementById(id).checked) {
                                                 document.getElementById("periodoi_id").setAttribute("disabled", "disabled");
                                                 document.getElementById("anioi_id").setAttribute("disabled", "disabled");
                                                 document.getElementById("periodof_id").setAttribute("disabled", "disabled");
@@ -782,6 +792,7 @@ selectCliente(value);
                                         function borrar(field) {
                                             field.value = "";
                                         }
+
                                     </script>
                                 }
                                 else
@@ -915,6 +926,7 @@ selectCliente(value);
                     </div>
                 </div>
             </div>
+
             @*Temporalidad*@
             <!--<div id="Temporalidad_cont" class="col s12" style="font-size:12px;">
             <div class="row">
@@ -1197,8 +1209,8 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                             </div>
                         }
                         @{List<TAT001.Entities.DOCUMENTOA>
-                                                                                                                                                                archivos = ViewBag.files as List<TAT001.Entities.DOCUMENTOA>
-                                                                                                                                                                    ;
+                                                                                                                                                                                        archivos = ViewBag.files as List<TAT001.Entities.DOCUMENTOA>
+                                                                                                                                                                                            ;
                             if (ViewBag.relacionadan != "" && archivos.Count > 0)
                             {
                                 string[] nombrefile;
@@ -1330,17 +1342,12 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                     <div class="card-panel">
                         @*<h5>Recurrente</h5>*@
                         <input type="hidden" id="txt_trec" />
-                        <div class="row" style="margin-bottom:0;">
-                            @*<p>
-                                <label>
-                                <input id="check_recurrente" type="checkbox" onchange="cambiaRec(this)" />
-                                <span id="span_docrec">Documento recurrente</span>
-                                </label>
-                                </p>*@
+                        <div class="row">
                             <table class="table_rec display" id="table_rec" cellspacing="0" style="width:100%;display:none;font-size:12px;">
                                 <!--RSG 01.08.2018-->
                                 <thead>
                                     <tr>
+                                        <th id=""></th>@*B20180801 MGC Textos*@
                                         <th id="thead_rnumero">NO</th>@*B20180801 MGC Textos*@
                                         <th id="thead_rperiodo">Periodo</th>@*B20180801 MGC Textos*@
                                         <th id="thead_rtiposol">Solicitud</th>@*B20180801 MGC Textos*@
@@ -1411,6 +1418,66 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                                 </tbody>
                             </table>
                         </div>
+                        <div>
+
+                            <table id="table_ranh" class="display" cellspacing="0" style="display:none">
+                                <thead>
+                                    <tr>
+                                        <th>NO</th>
+                                        <th>POS</th>
+                                        <th>LIN</th>
+                                        <th>OBJ</th>
+                                        <th>PORC</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.DOCUMENTORAN != null)
+                                    {
+                                        for (var i = 0; i < Model.DOCUMENTORAN.Count; i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Html.EditorFor(m => m.DOCUMENTORAN[i].NUM_DOC)
+                                                </td>
+                                                <td>
+                                                    @Html.EditorFor(m => m.DOCUMENTORAN[i].POS)
+                                                </td>
+                                                <td>
+                                                    @Html.EditorFor(m => m.DOCUMENTORAN[i].LIN)
+                                                </td>
+                                                <td>
+                                                    @Html.EditorFor(m => m.DOCUMENTORAN[i].OBJETIVOI)
+                                                </td>
+                                                <td>
+                                                    @Html.EditorFor(m => m.DOCUMENTORAN[i].PORCENTAJE)
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row" style="margin-bottom:0;">
+                            <div class="col s12 m6 offset-m6 right-align">
+                                <input type="button" id="btnRango" style="display:none;" class="btn-small" onclick="addRango()" value="Agragar rango" />
+                                @*<input type="button" id="dd" style="" class="btn-small" onclick="enviaRan()" value="Enviar" />*@
+                            </div>
+                            <div class="col s12 m6 offset-m6">
+                                <table class="table_rangos display" id="table_rangos" cellspacing="0" style="width:100%;display:none;font-size:12px;">
+                                    <!--RSG 01.08.2018-->
+                                    <thead>
+                                        <tr>
+                                            <th id="">Documento</th>
+                                            <th id="">Rango</th>
+                                            <th id="">Objetivo inicio</th>
+                                            @*<th id="">Objetivo limite</th>*@
+                                            <th id="">Porcentaje</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col s12">
@@ -1433,6 +1500,7 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                                 }
                                 <script>
                                     function objetivoQ(ban) {
+                                        $(".objqT").remove();
                                         if (ban) {
                                             var lengthT = $("table#table_rec tbody tr[role='row']").length;
                                             if (lengthT > 0) {
@@ -1442,31 +1510,94 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                                                 var fecha = "";
                                                 var tsol = "";
                                                 $("#table_rec > tbody  > tr[role='row']").each(function () {
-                                                    total += parseFloat(toNum($(this).find("td.MONTO input").val()));
+                                                    //total += parseFloat(toNum($(this).find("td.MONTO input").val()));
                                                     //porc = toNum($(this).find("td.PORCENTAJE").text());
                                                     fecha = ($(this).find("td.FECHA").text());
                                                     tsol = $(this).find("td.TSOL").text();
+
+
+                                                    var pos = $(this).find("td.POS").text().split("/")[0];
+                                                    if (pos != "1") {
+                                                        var tr = "";
+                                                        tr += "<tr class='objqT'>"
+                                                        tr += "<td>Q " + pos + "</td>"
+                                                        tr += "<td>" + tsol + "</td>";
+                                                        tr += "<td>" + fecha + "</td>";
+                                                        total = 0;
+                                                        for (var i = 0; i < listaRangos.length; i++) {
+                                                            var poss = listaRangos[i].LIN;
+                                                            if (poss == 1 & pos == listaRangos[i].POS)
+                                                                total += parseFloat(toNum(listaRangos[i].OBJ1));
+                                                        }
+                                                        tr += "<td>" + toShow(total) + "</td>";
+                                                        tr += "<td>" + 0 + "</td>";
+                                                        tr += "</tr>"
+                                                        $("#table_objQ tbody").append(tr);
+                                                    } else {
+                                                        total = 0;
+                                                        for (var i = 0; i < listaRangos.length; i++) {
+                                                            var poss = listaRangos[i].LIN;
+                                                            if (poss == 1 & pos == listaRangos[i].POS)
+                                                                total += parseFloat(toNum(listaRangos[i].OBJ1));
+                                                        }
+                                                        document.getElementById("obqTSOL").innerText = tsol;
+                                                        document.getElementById("obqFECHA").innerText = fecha;
+                                                        document.getElementById("obqMONTO").innerText = toShow(total);
+                                                    }
                                                 });
-                                                document.getElementById("obqTSOL").innerText = tsol;
-                                                document.getElementById("obqFECHA").innerText = fecha;
-                                                document.getElementById("obqMONTO").innerText = toShow(total);
-                                                //document.getElementById("obqPORC").innerText = toShowPorc(porc);
                                             }
                                         }
                                         else {
                                             document.getElementById('table_objQ').classList.add("hide");
                                         }
+                                        $("#table_objQ").DataTable();
                                     }
                                     function updateObjQ() {
+                                        $(".objqT").remove();
                                         var lengthT = $("table#table_rec tbody tr[role='row']").length;
                                         if (lengthT > 0) {
                                             var total = 0;
+                                            var porc = 0;
+                                            var fecha = "";
+                                            var tsol = "";
                                             $("#table_rec > tbody  > tr[role='row']").each(function () {
-                                                total += parseFloat(toNum($(this).find("td.MONTO input").val()));
-                                            });
-                                            document.getElementById("obqMONTO").innerText = toShow(total);
-                                        }
+                                                //total += parseFloat(toNum($(this).find("td.MONTO input").val()));
+                                                //porc = toNum($(this).find("td.PORCENTAJE").text());
+                                                fecha = ($(this).find("td.FECHA").text());
+                                                tsol = $(this).find("td.TSOL").text();
 
+
+                                                var pos = $(this).find("td.POS").text().split("/")[0];
+                                                if (pos != "1") {
+                                                    var tr = "";
+                                                    tr += "<tr class='objqT'>"
+                                                    tr += "<td>Q " + pos + "</td>"
+                                                    tr += "<td>" + tsol + "</td>";
+                                                    tr += "<td>" + fecha + "</td>";
+                                                    total = 0;
+                                                    for (var i = 0; i < listaRangos.length; i++) {
+                                                        var poss = listaRangos[i].LIN;
+                                                        if (poss == 1 & pos == listaRangos[i].POS)
+                                                            total += parseFloat(toNum(listaRangos[i].OBJ1));
+                                                    }
+                                                    tr += "<td>" + toShow(total) + "</td>";
+                                                    tr += "<td>" + 0 + "</td>";
+                                                    tr += "</tr>"
+                                                    $("#table_objQ tbody").append(tr);
+                                                } else {
+                                                    total = 0;
+                                                    for (var i = 0; i < listaRangos.length; i++) {
+                                                        var poss = listaRangos[i].LIN;
+                                                        if (poss == 1 & pos == listaRangos[i].POS)
+                                                            total += parseFloat(toNum(listaRangos[i].OBJ1));
+                                                    }
+                                                    document.getElementById("obqTSOL").innerText = tsol;
+                                                    document.getElementById("obqFECHA").innerText = fecha;
+                                                    document.getElementById("obqMONTO").innerText = toShow(total);
+                                                }
+                                            });
+                                        }
+                                        $("#table_objQ").DataTable();
                                     }
                                 </script>
                             </p>
@@ -1483,7 +1614,7 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>Q</td>
+                                            <td>Q 1</td>
                                             <td id="obqTSOL"></td>
                                             <td id="obqFECHA"></td>
                                             <td id="obqMONTO"></td>
@@ -1602,19 +1733,19 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                     {
                         <script>
                             $("#select_neg").prop("disabled", "disabled");
-                            $("#select_dis").prop("disabled", "disabled");
+                            //$("#select_dis").prop("disabled", "disabled");
 
                             var elem = document.getElementById('select_neg');
                             var instance = M.FormSelect.init(elem, []);
-                            elem = document.getElementById('select_dis');
-                            instance = M.FormSelect.init(elem, []);
+                            //elem = document.getElementById('select_dis');
+                            //instance = M.FormSelect.init(elem, []);
                         </script>
                     }
                     <div id="div_montobase" class="col s12 m6 l6" style="display:none">
                         <div class="card-panel">
                             <h5 id="head_montob">Monto Base</h5>@*B20180801 MGC Textos*@
                             <div class="row" style="margin-bottom:0">
-                                @if (ViewBag.ligada != null)
+                                @if (ViewBag.ligada != null & false)
                                 {
                                     @*if (Model.PAI.BACKORDER)
                                         {
@@ -1689,8 +1820,8 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                                         </div>
                                     </div>
                                     <div id="div_btns_row" style="display:none">
-                                        <a class="btn"><i class="material-icons left">add</i><span id="addRow">Registros</span></a>  @*B20180801 MGC Textos*@
-                                        <a class="btn"><i class="material-icons left">clear</i><span id="delRow">Registro</span></a>  @*B20180801 MGC Textos*@
+                                        <a class="btn" id="addRowB"><i class="material-icons left">add</i><span id="addRow">Registros</span></a>  @*B20180801 MGC Textos*@
+                                        <a class="btn" id="delRowB"><i class="material-icons left">clear</i><span id="delRow">Registro</span></a>  @*B20180801 MGC Textos*@
                                     </div>
                                 }@*//Add MGC B20180705 2018.07.05 Agregar rows a la tabla deshabilitar para relacionadas*@
                                 @*//Add MGC B20180705 2018.07.05 Agregar rows a la tabla*@
@@ -1698,8 +1829,8 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                                 {
                                     <input type="text" id="txt_addrowt" name="txt_addrowt" value="@ViewBag.addrowt" disabled="disabled" hidden /> @*//Add MGC B20180705 2018.07.05*@
                                     <div id="div_btns_row" style="display:none">
-                                        <a class="btn"><i class="material-icons left">add</i><span id="addRow">Registros</span></a>  @*B20180801 MGC Textos*@
-                                        <a class="btn"><i class="material-icons left">clear</i><span id="delRow">Registro</span></a>  @*B20180801 MGC Textos*@
+                                        <a class="btn" id="addRowB"><i class="material-icons left">add</i><span id="addRow">Registros</span></a>  @*B20180801 MGC Textos*@
+                                        <a class="btn" id="delRowB"><i class="material-icons left">clear</i><span id="delRow">Registro</span></a>  @*B20180801 MGC Textos*@
                                     </div>
                                 } @*//Add MGC B20180705 2018.07.05 Agregar rows a la tabla*@
                                 <div id="div_picker"></div>
@@ -1833,6 +1964,7 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                             <div class="row" style="margin-bottom:0">
                                 <div class="row">
                                     <div class="input-field col s6">
+                                        <input value=" " id="txtPres" name="txtPres" type="hidden" class="" />
                                         <input value="" id="monto_doc_md" type="text" class="" disabled="disabled" />
                                         <label id="lbl_montodoc" for="monto_doc_md">Monto</label> @*B20180801 MGC Textos*@
                                         @Html.HiddenFor(model => model.MONTO_DOC_MD)
@@ -2288,10 +2420,15 @@ $("#div_clearing").append(div);
             </div>
         </div>
     }
+
     <div id="validaciones">
         <script>
-var lista1 = [];
-var lista = @Html.Raw(ViewBag.listaValid);
+            var lista1 = [];
+            var lista = @Html.Raw(ViewBag.listaValid);
+
+            //LEJ 30.07.2018
+            _ff();
+
         </script>
         <script src="~/Scripts/warning.js"></script>
     </div>

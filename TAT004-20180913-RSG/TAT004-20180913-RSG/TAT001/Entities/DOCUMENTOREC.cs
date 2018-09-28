@@ -14,6 +14,12 @@ namespace TAT001.Entities
     
     public partial class DOCUMENTOREC
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public DOCUMENTOREC()
+        {
+            this.DOCUMENTORANs = new HashSet<DOCUMENTORAN>();
+        }
+    
         public decimal NUM_DOC { get; set; }
         public int POS { get; set; }
         public Nullable<System.DateTime> FECHAF { get; set; }
@@ -29,5 +35,7 @@ namespace TAT001.Entities
         public Nullable<System.DateTime> FECHAV { get; set; }
     
         public virtual DOCUMENTO DOCUMENTO { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DOCUMENTORAN> DOCUMENTORANs { get; set; }
     }
 }

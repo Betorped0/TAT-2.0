@@ -29,6 +29,7 @@ namespace TAT001.Entities
         public bool ACTIVO { get; set; }
         public Nullable<System.DateTime> FECHAC { get; set; }
         public Nullable<System.DateTime> FECHAM { get; set; }
+        public string USUARIO7_ID { get; set; }
     
         public virtual CLIENTE CLIENTE { get; set; }
     }
