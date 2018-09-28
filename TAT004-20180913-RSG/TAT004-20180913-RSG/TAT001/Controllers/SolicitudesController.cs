@@ -136,8 +136,8 @@ namespace TAT001.Controllers
                     else
                         item.ESTATUSS += " ";
                     Estatus e = new Estatus();
-                    ld.ESTATUS = e.getText(item.ESTATUSS);
-                    ld.ESTATUS_CLASS = e.getClass(item.ESTATUSS);
+                    ld.ESTATUS = e.getText(item.ESTATUSS, ld.NUM_DOC);
+                    ld.ESTATUS_CLASS = e.getClass(item.ESTATUSS, ld.NUM_DOC);
 
                     ld.PAYER_ID = item.PAYER_ID;
 

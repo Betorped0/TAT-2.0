@@ -435,7 +435,7 @@ namespace TAT001.Services
 
 
             DOCUMENTO referencia = db.DOCUMENTOes.Find(dOCUMENTO.DOCUMENTO_REF);
-            referencia.ESTATUS = "C";
+            referencia.ESTATUS = "R";
             db.Entry(referencia).State = EntityState.Modified;
             db.SaveChanges();
             //Guardar los documentos p para el documento guardado
