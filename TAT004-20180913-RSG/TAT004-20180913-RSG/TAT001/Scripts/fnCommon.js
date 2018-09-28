@@ -65,11 +65,11 @@
                 finalM = M.Datepicker.getInstance(final);
 
             if (inicio.val()) {
-                var date = moment(inicio.val()).format('DD/MM/YYYY');
+                var date = moment(inicio.val(),'DD/MM/YYYY');
                 finalM.options.minDate = new Date(date);
             }
             if (final.val()) {
-                var date = moment(final.val()).format('DD/MM/YYYY');
+                var date = moment(final.val(),'DD/MM/YYYY');
                 inicioM.options.maxDate = new Date(date);
             }
             inicioM.options.onSelect = function (val) {
