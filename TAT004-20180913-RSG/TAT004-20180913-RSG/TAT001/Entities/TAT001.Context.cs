@@ -31,6 +31,7 @@ namespace TAT001.Entities
         public virtual DbSet<ACCIONT> ACCIONTs { get; set; }
         public virtual DbSet<APPSETTING> APPSETTINGs { get; set; }
         public virtual DbSet<CALENDARIO_AC> CALENDARIO_AC { get; set; }
+        public virtual DbSet<CALENDARIO_EX> CALENDARIO_EX { get; set; }
         public virtual DbSet<CAMPOS> CAMPOS { get; set; }
         public virtual DbSet<CAMPOZKE24> CAMPOZKE24 { get; set; }
         public virtual DbSet<CAMPOZKE24T> CAMPOZKE24T { get; set; }
@@ -176,7 +177,6 @@ namespace TAT001.Entities
         public virtual DbSet<DOCUMENTOV> DOCUMENTOVs { get; set; }
         public virtual DbSet<PAGINAV> PAGINAVs { get; set; }
         public virtual DbSet<WARNINGV> WARNINGVs { get; set; }
-        public virtual DbSet<CALENDARIO_EX> CALENDARIO_EX { get; set; }
     
         [DbFunction("TAT001Entities", "split")]
         public virtual IQueryable<split_Result> split(string delimited, string delimiter)

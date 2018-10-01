@@ -17,6 +17,7 @@ namespace TAT001.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public USUARIO()
         {
+            this.CALENDARIO_EX = new HashSet<CALENDARIO_EX>();
             this.CARTAs = new HashSet<CARTA>();
             this.DELEGARs = new HashSet<DELEGAR>();
             this.DELEGARs1 = new HashSet<DELEGAR>();
@@ -50,6 +51,8 @@ namespace TAT001.Entities
         public string BACKUP_ID { get; set; }
         public string BUNIT { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CALENDARIO_EX> CALENDARIO_EX { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CARTA> CARTAs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -87,7 +90,6 @@ namespace TAT001.Entities
         public virtual ICollection<USUARIOF> USUARIOFs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GAUTORIZACION> GAUTORIZACIONs { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CALENDARIO_EX> CALENDARIO_EX { get; set; }
+        
     }
 }
