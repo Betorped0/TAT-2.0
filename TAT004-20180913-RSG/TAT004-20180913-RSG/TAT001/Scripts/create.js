@@ -447,7 +447,6 @@ $(document).ready(function () {
                     else {
                         if (unica) {
                             $(this).find('td').eq((5 + indext)).addClass("errorMaterial");
-                            M.toast({ html: 'Esta categoría no se puede mezclar con otras' });
                         }
                         else if (!unica) {
                             var addedRow = addRowMat(t, "", "", "", "", "", "", "", "", "", "", "", relacionada, relacionadaed, reversa, ddate, adate, "", "");
