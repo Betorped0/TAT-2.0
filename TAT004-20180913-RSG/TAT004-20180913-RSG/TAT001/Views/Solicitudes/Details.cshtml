@@ -2318,9 +2318,9 @@
                                                 string est = (Html.DisplayFor(modelItem => f.STATUS)).ToString();
 
                                                 TAT001.Services.Estatus c = new TAT001.Services.Estatus();
-                                                c.getText(est);
+                                                c.getText(est, Model.D.NUM_DOC);
                                             }
-                                            @c.getText(est)
+                                            @c.getText(est, Model.D.NUM_DOC)
 
                                         </td>
                                         <td width="30%"> @Html.DisplayFor(modelItem => f.COMENTARIO) </td>
