@@ -27,7 +27,11 @@ namespace TAT001.Entities
             this.DOCUMENTOTS = new HashSet<DOCUMENTOT>();
             this.FLUJOes = new HashSet<FLUJO>();
         }
-    
+
+        public List<TAT001.Models.DOCUMENTOP_MOD> DOCUMENTOP { get; set; }
+        public List<DOCUMENTOF> DOCUMENTOF { get; set; }
+        public List<DOCUMENTOREC> DOCUMENTOREC { get; set; }
+        public List<DOCUMENTORAN> DOCUMENTORAN { get; set; }
         public decimal NUM_DOC { get; set; }
         public string TSOL_ID { get; set; }
         public string TALL_ID { get; set; }
@@ -113,9 +117,6 @@ namespace TAT001.Entities
         public virtual CUENTAGL CUENTAGL { get; set; }
         public virtual CUENTAGL CUENTAGL1 { get; set; }
         public virtual GALL GALL { get; set; }
-        public List<TAT001.Models.DOCUMENTOP_MOD> DOCUMENTOP { get; set; }
-        public List<DOCUMENTOF> DOCUMENTOF { get; set; }
-        public List<DOCUMENTOREC> DOCUMENTOREC { get; set; }
         public virtual PAI PAI { get; set; }
         public virtual SOCIEDAD SOCIEDAD { get; set; }
         public virtual TALL TALL { get; set; }
@@ -139,6 +140,5 @@ namespace TAT001.Entities
         public virtual ICollection<DOCUMENTOT> DOCUMENTOTS { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<FLUJO> FLUJOes { get; set; }
-        public List<DOCUMENTORAN> DOCUMENTORAN { get; set; }
     }
 }
