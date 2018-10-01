@@ -75,17 +75,16 @@ function trimStart(character, string) {//RSG 07.06.2018
 //}
 function selectMaterial(val, desc, tr) {
     var index = getIndex();
+    var cat = getCategoria(val);
+    console.log(cat);
     desc = $.trim(desc);
     if (index == -2) {
-        var classtd = $("#table_dis tbody tr:first td").attr("class");
-        if (unica == true && $("#table_dis tbody tr").length>1)
-        {
+        if (unica == true && $("#table_dis tbody tr").length > 1) {
             M.toast({ html: 'Healthy drinks no pueden mezclarse con otras categorías y/o materiales.' });
             tr.find('td').eq((5 + index)).addClass("errorMaterial");
 
         }
-        var cat = getCategoria(val);
-        M.toast
+        
         tr.find("td:eq(" + (6 + index) + ")").text(cat.TXT50);
         //Descripción
         tr.find("td:eq(" + (7 + index) + ")").text(desc);
