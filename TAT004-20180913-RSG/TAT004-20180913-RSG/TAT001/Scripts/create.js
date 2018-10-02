@@ -8,6 +8,12 @@ var borradorinac = 300000; //B20180625 MGC 2018.07.04 Tiempo de espera de inacti
 //var borradorinac = 60000; //B20180625 MGC 2018.07.04 Tiempo de espera de inactividad 1 minuto
 var proverror = "";//B20180625 MGC 2018.06.27
 var importe_fac = 0; // jemo 25-07-2018
+var globalUnica = false;
+var pastCat;
+var pastTEXT50;
+var unica1;
+var catsArr = new Array();
+var uniqueArr = new Array();
 $(document).ready(function () {
 
     //Validar que los labels esten activos
@@ -304,7 +310,12 @@ $(document).ready(function () {
     $('#addRowB').on('click', function () {
 
         var relacionada = "";
-
+        if ($('#table_dis > tbody > tr').length == 1 && $('table_dis').find(' tbody tr:eq(0)').attr('class')!="row") {
+            catsArr = new Array();
+            uniqueArr = new Array();
+            unica1 = false;
+            unica = false;
+        }
         if ($("#txt_rel").length) {
             var vrelacionada = $('#txt_rel').val();
             if (vrelacionada != "") {
@@ -430,6 +441,7 @@ $(document).ready(function () {
                 } else if (dis == "M") {//falta validar
                     var classtd = $("#table_dis tbody tr:first td").attr("class");
                     indext = getIndex();
+                    
                     //Distribución por material 
                         var addedRow = addRowMat(t, "", "", "", "", "", "", "", "", "", "", "", relacionada, relacionadaed, reversa, ddate, adate, "", "");//Add MGC B20180705 2018.07.05 ne no eliminar //Add MGC B20180705 2018.07.05 relacionadaed editar el material en los nuevos renglones
                         $('#table_dis').css("font-size", "12px");

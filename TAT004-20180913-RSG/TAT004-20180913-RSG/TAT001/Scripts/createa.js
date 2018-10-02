@@ -6,8 +6,7 @@ $('body').on('keydown.autocomplete', '.input_material', function () {
     var vt = '50';
     vt = document.getElementById("txt_vtweg").value;
     var sp = 'ES';
-    var pastCat;
-    var pastTEXT50;
+    
     sp = document.getElementById("txt_spras").value;
     auto(this).autocomplete({
         source: function (request, response) {
@@ -76,43 +75,79 @@ function trimStart(character, string) {//RSG 07.06.2018
 //}
 function selectMaterial(val, desc, tr) {
     var index = getIndex();
-    var cat = getCategoria(val);
-    console.log(cat);
-    
+    var cat = getCategoria(val);    
     desc = $.trim(desc);
     if (index == -2) {
-        if (unica == true && $("#table_dis tbody tr").length > 1 && cat.CATEGORIA_ID!=pastCat) {
-            var catt = categoriaUnica(cat);
-            tr.find('td').eq((5 + index)).addClass("errorMaterial");
-            M.toast({ html: pastTEXT50 + ' no pueden mezclarse con otras categorías y/o materiales.' });
+        unica1 = false;
+        if (cat.UNICA){
+            catsArr.push(cat.CATEGORIA_ID);
+            console.log(catsArr);
+            uniqueArr.push(true); 
+            unica1 = true;
+            if (catsArr.length > 0) {
+
+                for (var i = 1; i < catsArr.length; i++) {
+                    if (catsArr[i] !== catsArr[0]) {
+                        unica1 = false;
+                    }
+                    else {
+                        unica1 = true;
+                    }
+                }
+                if (unica1) {
+                    tr.find("td:eq(" + (6 + index) + ")").text(cat.TXT50);
+                    //Descripción
+                    tr.find("td:eq(" + (7 + index) + ")").text(desc);
+                }
+                else
+                {
+                    M.toast({ html: cat.TXT50 + ' no puede mezclarse con otras categorías y/o materiales.' });
+                    unica1 = false;
+                    tr.remove();
+                }
+            }
+            else
+            {
+                tr.find("td:eq(" + (6 + index) + ")").text(cat.TXT50);
+                //Descripción
+                tr.find("td:eq(" + (7 + index) + ")").text(desc);
+            }
+            if (unica1) {
+                tr.find("td:eq(" + (6 + index) + ")").text(cat.TXT50);
+                //Descripción
+                tr.find("td:eq(" + (7 + index) + ")").text(desc);
+            } else {
+                M.toast({ html: cat.TXT50 + ' no puede mezclarse con otras categorías y/o materiales.' });
+                tr.remove();
+                unica1 = false;
+            }
         }
         
-        tr.find("td:eq(" + (6 + index) + ")").text(cat.TXT50);
-        //Descripción
-        tr.find("td:eq(" + (7 + index) + ")").text(desc);
-        if (cat.UNICA && cat.CATEGORIA_ID == pastCat) {
-            pastCat = cat.CATEGORIA_ID;
-            pastTEXT50 = cat.TXT50;
-            unica = true;
-            //tr.find('td').eq((5 + index)).addClass("unica");
-        }
-        if (cat.UNICA && cat.CATEGORIA_ID != pastCat) {
-            pastCat = cat.CATEGORIA_ID;
-            pastTEXT50 = cat.TXT50;
-            unica = true;
-            M.toast({ html: cat.TXT50 + ' no pueden mezclarse con otras categorías y/o materiales.' });
-            tr.remove(); 
-            tr.empty();
-            
-            pastCat = 0;
-            pastTEXT50 = "";
-        }
         else if (!cat.UNICA)
         {
-            pastCat = cat.CATEGORIA_ID;
-            pastTEXT50 = cat.TXT50;
-            unica = false;
-            //$(this).find('td').eq((5 + index)).removeClass("errorMaterial");
+            uniqueArr.push(false);
+            if (uniqueArr.length > 0) {
+
+                for (var i = 1; i < uniqueArr.length; i++) {
+                    if (uniqueArr[i] !== uniqueArr[0]) {
+                        unica1 = true;
+                    }
+                    else {
+                        unica1 = false;
+                        
+                    }
+                }
+            }
+            catsArr.push(cat.CATEGORIA_ID);
+            if (unica1) {
+                M.toast({ html: cat.TXT50 + ' no puede mezclarse con la categoría y/o material anterior.' });
+                tr.remove();
+            } else
+            {
+                tr.find("td:eq(" + (6 + index) + ")").text(cat.TXT50);
+                //Descripción
+                tr.find("td:eq(" + (7 + index) + ")").text(desc);
+            }
         }
 
     } else { 
