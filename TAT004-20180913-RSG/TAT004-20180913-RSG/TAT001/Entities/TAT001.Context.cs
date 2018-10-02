@@ -170,13 +170,15 @@ namespace TAT001.Entities
         public virtual DbSet<WORKFV> WORKFVs { get; set; }
         public virtual DbSet<ZBRAND> ZBRANDs { get; set; }
         public virtual DbSet<ZCTGR> ZCTGRs { get; set; }
+        public virtual DbSet<TAB_CAMPO> TAB_CAMPO { get; set; }
         public virtual DbSet<CARPETAV> CARPETAVs { get; set; }
         public virtual DbSet<CREADOR> CREADORs { get; set; }
         public virtual DbSet<CREADOR2> CREADOR2 { get; set; }
         public virtual DbSet<DET_APROBV> DET_APROBV { get; set; }
         public virtual DbSet<DOCUMENTOV> DOCUMENTOVs { get; set; }
         public virtual DbSet<PAGINAV> PAGINAVs { get; set; }
-        public virtual DbSet<WARNINGV> WARNINGVs { get; set; }    
+        public virtual DbSet<WARNINGV> WARNINGVs { get; set; }
+    
         [DbFunction("TAT001Entities", "split")]
         public virtual IQueryable<split_Result> split(string delimited, string delimiter)
         {

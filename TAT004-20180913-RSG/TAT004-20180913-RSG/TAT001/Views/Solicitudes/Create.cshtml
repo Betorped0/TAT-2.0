@@ -805,6 +805,8 @@ selectCliente(value);
                                 else
                                 {
                                     <input id="check_recurrente" type="hidden" value="" />
+                                    <input name="group1" type="hidden" id="btn-date" />
+                                    <input name="group1" type="hidden" checked id="btn-peri" />
                                     <div class="col s12">
                                         <div class="input-field col s6">
                                             <i class="material-icons prefix">date_range</i>
@@ -1216,8 +1218,8 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                             </div>
                         }
                         @{List<TAT001.Entities.DOCUMENTOA>
-                                                                                                                                                                                            archivos = ViewBag.files as List<TAT001.Entities.DOCUMENTOA>
-                                                                                                                                                                                                ;
+                                                                                                                                                                                              archivos = ViewBag.files as List<TAT001.Entities.DOCUMENTOA>
+                                                                                                                                                                                                  ;
                             if (ViewBag.relacionadan != "" && archivos.Count > 0)
                             {
                                 string[] nombrefile;
