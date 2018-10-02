@@ -19,6 +19,7 @@ namespace TAT001.Models
             tabs = new List<SelectListItem>();
             tiposSolicitud = new List<SelectListItem>();
             campos = new List<SelectListItem>();
+            tipos = new List<SelectListItem>();
 
         }
         public List<WARNINGP> alertas { get; set; }
@@ -28,5 +29,6 @@ namespace TAT001.Models
         public List<SelectListItem> tiposSolicitud { get; set; }
         public List<SelectListItem> tabs { get; set; }
         public List<SelectListItem> campos { get; set; }
+        public List<SelectListItem> tipos { get; set; }
     }
 }

@@ -21,7 +21,7 @@
 <script type="text/javascript" src="~/Scripts/materialize.clockpicker.js"></script>
 <script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
 <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
-@using (Html.BeginForm("Create", "Alertas", FormMethod.Post, new { @id = "alertasForm" }))
+@using (Html.BeginForm("Create", "Alertas", FormMethod.Post, new { @id = "alertaForm" }))
 {
     @Html.AntiForgeryToken()
     <div class="col s12 l12 right-align">
@@ -37,11 +37,19 @@
                         </div>
                     </div>
                 </div>
-                <div class="col s3">
+                <div class="col s6">
                     <div class="form-group">
                         <label id="lbl_descAlerta"></label>
                         <div class="col-md-10">
                           @Html.TextBoxFor(model => model.alerta.DESCR, new { @required = true })
+                        </div>
+                    </div>
+                </div>
+                <div class="col s3">
+                    <div class="form-group">
+                        <label id="lbl_alerta_error"></label>
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(model => model.alerta.TIPO, Model.tipos, "")
                         </div>
                     </div>
                 </div>
@@ -83,27 +91,27 @@
             <p class="text-center"><label id="lbl_mensaje"></label></p>
             <hr>
             <div class="row">
-                <div class="col s3">
+                <div class="col s4">
                     <div class="form-group">
                         <label>ES</label>
                         <div class="col-md-10">
-                            @Html.EditorFor(model => model.alertaMensajes[0].TXT100, new { @required = ""  })
+                            @Html.TextBoxFor(model => model.alertaMensajes[0].TXT100, new { @required = ""  })
                         </div>
                     </div>
                 </div>
-                <div class="col s3">
+                <div class="col s4">
                     <div class="form-group">
                         <label>EN</label>
                         <div class="col-md-10">
-                            @Html.EditorFor(model => model.alertaMensajes[1].TXT100, new { @required = "" })                     
+                            @Html.TextBoxFor(model => model.alertaMensajes[1].TXT100, new { @required = "" })                     
                         </div>
                     </div>
                 </div>
-                <div class="col s3">
+                <div class="col s4">
                     <div class="form-group">
                         <label>PT</label>
                         <div class="col-md-10">
-                            @Html.EditorFor(model => model.alertaMensajes[2].TXT100, new { @required = "" })                
+                            @Html.TextBoxFor(model => model.alertaMensajes[2].TXT100, new { @required = "" })                
                         </div>
                     </div>
                 </div>       
@@ -118,15 +126,34 @@
 <script>
         //---- Inicializador de componentes Materialize----
         fnCommon.materializeInit('select', 'select');
-   
 
         //----  Se agrega validaciones al formulario----
         fnCommon.selectRequired();
         fnCommon.formValidation('alertaForm');
 
+        $("#alerta_TAB_ID").change(function () {
+            var tab_id = $("#alerta_TAB_ID").val();
+            var root = "@Url.Content("~")";
+            $.ajax({
+                url: root +"Alertas/ObtenerCampos",
+                data: { tab_id: tab_id },
+                cache: false,
+                type: "POST",
+                success: function (selectItems) {
+                    var options = "";
+                    selectItems.forEach(function (selectItem) {
+                        options += "<option value=" + selectItem.Value + ">"+ selectItem.Text + "</option>";
+                    });
+                    if (selectItems.length>0){
+                        $("#alerta_CAMPO_ID").html(options).show();
+                    }
+                }
+            });
+        });
+
         // Valida si ocurrio un error al intentar crear el periodo y otro.
         var mnjError = '@ViewBag.mnjError';
-        if (mnjError){
+        if (mnjError) {
             M.toast({ html: mnjError });
         }
 </script>

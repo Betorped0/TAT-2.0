@@ -62,7 +62,7 @@ namespace TAT001.Controllers.Catalogos
                 {
                      throw new Exception();
                 }
-                db.CALENDARIO_AC.Add(modelView.calendario445);
+                db.CALENDARIO_AC.Add(calendarioAc);
                 db.SaveChanges();
 
                 return RedirectToAction("Index");

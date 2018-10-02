@@ -17,6 +17,7 @@ namespace TAT001.Controllers.Catalogos
         const string CMB_TIPOSSOLICITUD = "TSOL";
         const string CMB_TABS = "TAB";
         const string CMB_CAMPOS = "CAMP";
+        const string CMB_TIPOS = "TIP";
 
 
         // GET: Alertas
@@ -27,6 +28,7 @@ namespace TAT001.Controllers.Catalogos
 
             AlertaViewModel modelView = new AlertaViewModel();
             modelView.alertas = db.WARNINGPs.ToList();
+            modelView.alertaMensajes = db.WARNINGPTs.ToList();
 
             return View(modelView);
         }
@@ -34,36 +36,78 @@ namespace TAT001.Controllers.Catalogos
         // GET: Alertas/Create
         public ActionResult Create()
         {
+            int pagina_id = 541;//ID EN BASE DE DATOS
+            ObtenerConfPage(pagina_id);
+
             AlertaViewModel modelView = new AlertaViewModel();
             modelView.alertaMensajes = new List<WARNINGPT> { new WARNINGPT { SPRAS_ID = "ES" }, new WARNINGPT { SPRAS_ID = "EN" }, new WARNINGPT { SPRAS_ID = "PT" } };
-            return View();
+            CargarSelectList(ref modelView, new string[] { CMB_SOCIEDADES, CMB_TIPOSSOLICITUD, CMB_TABS,CMB_TIPOS });
+            return View(modelView);
         }
 
         // POST: Alertas/Create
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public ActionResult Create(AlertaViewModel modelView)
         {
+            int pagina_id = 531;//ID EN BASE DE DATOS
             try
             {
-                // TODO: Add insert logic here
+                WARNINGP warningP= modelView.alerta;
+                List<WARNINGPT> warningts = modelView.alertaMensajes;
+
+                warningP.PAGINA_ID = null;
+                warningP.ACCION = "focusout";
+                warningP.CAMPOVAL_ID = warningP.CAMPO_ID;
+
+                if (!ValidarAlertaExistente(warningP))
+                {
+                    throw new Exception();
+                }
+                db.WARNINGPs.Add(warningP);
+                db.SaveChanges();
+
+                warningts.ForEach(x=>
+                {
+                    x.TAB_ID = warningP.TAB_ID;
+                    x.WARNING_ID = warningP.ID;
+                    db.WARNINGPTs.Add(x);
+                });
+                db.SaveChanges();
 
                 return RedirectToAction("Index");
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                ObtenerConfPage(pagina_id);
+                CargarSelectList(ref modelView, new string[] { CMB_SOCIEDADES, CMB_TIPOSSOLICITUD, CMB_TABS, CMB_TIPOS });
+                return View(modelView);
             }
         }
 
-        // GET: Alertas/Edit/5
-        public ActionResult Edit(int id)
+        // GET: Alertas/Edit
+        public ActionResult Edit(string id, string tab_id)
         {
-            return View();
+            int pagina_id = 542;//ID EN BASE DE DATOS
+            ObtenerConfPage(pagina_id);
+
+            AlertaViewModel modelView = new AlertaViewModel();
+            modelView.alerta = db.WARNINGPs.Where(x=>x.ID==id && x.TAB_ID== tab_id).FirstOrDefault();
+            modelView.alertaMensajes = new List<WARNINGPT>();
+
+            WARNINGPT mensaje = db.WARNINGPTs.Where(x => x.WARNING_ID == modelView.alerta.ID && x.SPRAS_ID== "ES").FirstOrDefault();
+            modelView.alertaMensajes.Add(mensaje==null? new WARNINGPT { SPRAS_ID = "ES" }: mensaje);
+            mensaje = db.WARNINGPTs.Where(x => x.WARNING_ID == modelView.alerta.ID && x.SPRAS_ID == "EN").FirstOrDefault();
+            modelView.alertaMensajes.Add(mensaje == null ? new WARNINGPT { SPRAS_ID = "EN" } : mensaje);
+            mensaje = db.WARNINGPTs.Where(x => x.WARNING_ID == modelView.alerta.ID && x.SPRAS_ID == "PT").FirstOrDefault();
+            modelView.alertaMensajes.Add(mensaje == null ? new WARNINGPT { SPRAS_ID = "PT" } : mensaje);
+
+            CargarSelectList(ref modelView, new string[] { CMB_SOCIEDADES, CMB_TIPOSSOLICITUD, CMB_TABS,CMB_CAMPOS }, modelView.alerta.TAB_ID);
+            return View(modelView);
         }
 
-        // POST: Alertas/Edit/5
+        // POST: Alertas/Edit
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit(AlertaViewModel modelView)
         {
             try
             {
@@ -98,7 +142,24 @@ namespace TAT001.Controllers.Catalogos
                 return View();
             }
         }
-
+        [HttpPost]
+        public ActionResult ObtenerCampos(string tab_id)
+        {
+            AlertaViewModel modelView = new AlertaViewModel();
+            CargarSelectList(ref modelView, new string[] { CMB_CAMPOS }, tab_id);
+            return Json(modelView.campos);
+        }
+        bool ValidarAlertaExistente(WARNINGP warningP)
+        {
+            int pagina_id = 530;
+            if (db.WARNINGPs.Any(x=>x.ID== warningP.ID && x.TAB_ID==warningP.TAB_ID))
+            {
+                ViewBag.mnjError = ObtenerTextoMnj(pagina_id, "lbl_mnjExisteAlerta");
+                return false;
+            }
+            
+            return true;
+        }
         void ObtenerConfPage(int pagina)//ID EN BASE DE DATOS
         {
             var user = ObtenerUsuario();
@@ -112,6 +173,8 @@ namespace TAT001.Controllers.Catalogos
             ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
 
         }
+        
+
         void CargarSelectList(ref AlertaViewModel modelView, string[] combos, string tab_id=null)
         {
             USUARIO user = ObtenerUsuario();
@@ -155,7 +218,7 @@ namespace TAT001.Controllers.Catalogos
                             }).ToList();
                         break;
                     case CMB_CAMPOS:
-                       /* modelView.tabs = db.TAB_CAMPO
+                        modelView.tabs = db.TAB_CAMPO
                             .Where(x=>x.TAB_ID== tab_id)
                             .Join(db.TEXTOes, tc => tc.CAMPO_ID, te => te.CAMPO_ID, (ta, te) => te)
                             .Where(x => x.SPRAS_ID == spras_id && (x.CAMPO_ID == id || id == null))
@@ -163,7 +226,13 @@ namespace TAT001.Controllers.Catalogos
                             {
                                 Value = x.CAMPO_ID,
                                 Text = x.TEXTOS
-                            }).ToList();*/
+                            }).ToList();
+                        break;
+                    case CMB_TIPOS:
+                        modelView.tipos = new List<SelectListItem> {
+                            new SelectListItem{ Value = "A", Text = "A"},
+                            new SelectListItem {Value = "E",Text = "E"}
+                        };
                         break;
                     default:
                         break;
@@ -171,6 +240,7 @@ namespace TAT001.Controllers.Catalogos
             }
         }
 
+        
         USUARIO ObtenerUsuario()
         {
             string u = User.Identity.Name;

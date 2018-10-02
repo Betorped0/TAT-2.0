@@ -1,10 +1,18 @@
-﻿@model TAT001.Models.AlertaViewModel
+﻿@using TAT001.Entities;
+@model TAT001.Models.AlertaViewModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.pagina_r = 540;
     ViewBag.carpeta_r = 500;
 }
 <style>
+    .text-left th {
+        text-align: left !important;
+    }
+
+    .text-left td {
+        text-align: left !important;
+    }
     .dataTables_length {
         display: none;
     }
@@ -48,23 +56,23 @@
                 <div style="width:100%;">
                     <table class="table mdl-data-table striped" id="tablePeriodo445" style="width:100%; overflow-x: scroll;">
                         <thead>
-                            <tr>
-                                <th class="lbl_alerta"></th>
-                                <th class="lbl_descAlerta"></th>
-                                <th class="lbl_bu"></th>
-                                <th class="lbl_tipo"></th>
-                                <th class="lbl_tab"></th>
-                                <th class="lbl_campo"></th>
-                                <th class="lbl_mensaje"></th>
-                                <th class="lbl_alerta_error"></th>
-                                <th class="lbl_condicion_regla"></th>
+                            <tr class="text-left">
+                                <th id="lbl_alerta"></th>
+                                <th id="lbl_descAlerta"></th>
+                                <th id="lbl_bu"></th>
+                                <th id="lbl_tipo"></th>
+                                <th id="lbl_tab"></th>
+                                <th id="lbl_campo"></th>
+                                <th id="lbl_mensaje"></th>
+                                <th id="lbl_alerta_error"></th>
+                                <th id="lbl_condicion_regla"></th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model.alertas)
                             {
-                                <tr>
+                                <tr class="text-left">
                                     <td>
                                         @Html.DisplayFor(modelItem => item.ID)
                                     </td>
@@ -84,7 +92,17 @@
                                         @Html.DisplayFor(modelItem => item.CAMPO_ID)
                                     </td>
                                     <td>
-                                       
+                                       @{ 
+                                           string mensaje = "";
+                                           Model.alertaMensajes.ForEach(x =>
+                                           {
+                                               if (x.WARNING_ID==item.ID) {
+                                                   mensaje = mensaje + x.TXT100;
+                                               }
+                                           });
+                                           });
+                                        @mensaje
+                                       }
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.TIPO)
