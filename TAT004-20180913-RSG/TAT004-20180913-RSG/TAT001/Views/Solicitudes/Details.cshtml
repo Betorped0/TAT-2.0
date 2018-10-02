@@ -137,7 +137,7 @@
                             @*<a id="lbl_wfn" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="N" })">Siguiente</a>*@
                             <a id="lbl_wfn" class="btn-small modal-trigger" href="#modal1" onclick="contabilizar()">Contabilizar</a>
                         }
-                        else if (!Model.D.ESTATUS.Equals("A"))
+                        else if (!Model.D.ESTATUS.Equals("A") & !Model.D.ESTATUS.Equals("R"))//RSG 20181002
                         {
                             if (Model.D.USUARIOC_ID == ViewBag.usuario.ID)
                             {
@@ -164,12 +164,12 @@
                             }
                         }
                     }
-                    else if (Model.D.ESTATUS.Equals("A") && (Model.D.TSOL.PADRE) /*&& Model.D.DOCUMENTORECs.Count < 1 && Model.D.DOCUMENTOLs.Count < 1*/)
+                    else if ((Model.D.ESTATUS.Equals("A")| Model.D.ESTATUS.Equals("R")) && (Model.D.TSOL.PADRE) /*&& Model.D.DOCUMENTORECs.Count < 1 && Model.D.DOCUMENTOLs.Count < 1*/)//RSG 20181002
                     {
                         if (Model.D.USUARIOC_ID == ViewBag.usuario.ID & Model.D.DOCUMENTO_SAP != null)
                         {
                             <div id="div_drop">
-                                <a href="@Url.Action(" Create", "Solicitudes" , new { id_d=Model.D.NUM_DOC.ToString(), tsol="CPR" })" class="btn-small">Reversar</a>
+                                <a href="@Url.Action("Create", "Solicitudes" , new { id_d=Model.D.NUM_DOC.ToString(), tsol="CPR" })" class="btn-small">Reversar</a>
                                 <button type="button" class="btn-small dropdown-trigger" data-target="list_rela" id="btn_rela">Crear solicitud relacionada</button>
                                 @*<button type="button" class="btn-small  " id="btn_cancel">Cancelar</button>*@
                                 <ul id='list_rela' class='dropdown-content'>
@@ -178,10 +178,10 @@
                                         foreach (TSOL inte in ViewBag.TSOL_RELA)
                                         {
                                             @*
-                                                <li><a href="@Url.Action(" Create", "Solicitudes" , new { id_d=Model.D.NUM_DOC.ToString(), tsol="NC" })" id="lbl_nc">Nota de crédito</a></li>
-                                                <li><a href="@Url.Action(" Create", "Solicitudes" , new { id_d=Model.D.NUM_DOC.ToString(), tsol="NCI" })" id="lbl_nc">Nota de crédito Int</a></li>
-                                                <li><a href="@Url.Action(" Create", "Solicitudes" , new { id_d=Model.D.NUM_DOC.ToString(), tsol="OP" })" id="lbl_op">Orden de pago</a></li>*@
-                                            <li><a href="@Url.Action(" Create", "Solicitudes" , new { id_d=Model.D.NUM_DOC.ToString(), tsol=inte.ID })" id="lbl_@inte.ID">@inte.TSOLTs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50 </a></li>
+                                                <li><a href="@Url.Action("Create", "Solicitudes" , new { id_d=Model.D.NUM_DOC.ToString(), tsol="NC" })" id="lbl_nc">Nota de crédito</a></li>
+                                                <li><a href="@Url.Action("Create", "Solicitudes" , new { id_d=Model.D.NUM_DOC.ToString(), tsol="NCI" })" id="lbl_nc">Nota de crédito Int</a></li>
+                                                <li><a href="@Url.Action("Create", "Solicitudes" , new { id_d=Model.D.NUM_DOC.ToString(), tsol="OP" })" id="lbl_op">Orden de pago</a></li>*@
+                                            <li><a href="@Url.Action("Create", "Solicitudes" , new { id_d=Model.D.NUM_DOC.ToString(), tsol=inte.ID })" id="lbl_@inte.ID">@inte.TSOLTs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50 </a></li>
                                         }
                                     }
                                 </ul>
@@ -236,11 +236,11 @@
                                 <li><a href="@Url.Action(" Lista", "CartaV" , new { id=Model.D.NUM_DOC, swf=Model.D.ESTATUS_WF })" id="lbl_list">Lista de cartas</a></li> @*//B20180720P MGC Guardar Carta*@
                                 @if (Model.D.ESTATUS_WF.Equals("S"))
                                 {
-                                    <li><a href="@Url.Action(" Create", "CartaV" , new { id=Model.D.NUM_DOC })" id="lbl_genc">Generar carta</a></li>
+                                    <li><a href="@Url.Action("Create", "CartaV" , new { id=Model.D.NUM_DOC })" id="lbl_genc">Generar carta</a></li>
                                 }
                                 else
                                 {
-                                    <li><a href="@Url.Action(" Create", "CartaD" , new { id=Model.D.NUM_DOC })" id="lbl_genc">Imprimir draft</a></li>
+                                    <li><a href="@Url.Action("Create", "CartaD" , new { id=Model.D.NUM_DOC })" id="lbl_genc">Imprimir draft</a></li>
                                 }
                             </ul>
                             <script>
@@ -329,6 +329,18 @@
                                 else
                                 {
                                     <input id="cuentaNombre" type="hidden" value="">
+                                }
+                                @*--------- DRS 24.09.18-------------- *@
+                                @if (ViewBag.nombreC2 != null)
+                                {
+                                    foreach (var cuenta2 in ViewBag.nombreC2)
+                                    {
+                                        <input id="cuentaNombre2" type="hidden" value="@cuenta2">
+                                    }
+                                }
+                                else
+                                {
+                                    <input id="cuentaNombre2" type="hidden" value="">
                                 }
                                 @Html.HiddenFor(model => model.D.MONTO_DOC_MD, new { @id = "monto_dis" })
                             </div>
@@ -1637,6 +1649,7 @@
                                 var monto = document.getElementById("monto_dis").value;
                                 //DRS 24.09.18---------------------------------------------
                                 var nombreC = document.getElementById("cuentaNombre").value;
+                                var nombreC2 = document.getElementById("cuentaNombre2").value;
 
                                 //LEJ 09.07.18---------------------------------------------
                                 var _monto = monto.split('.');
@@ -1645,10 +1658,10 @@
                                 var _millesMonto = _monto[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, _miles);
                                 var div = "<ul class='collection'><li class='collection-item'>";
                                 //DRS 24.09.18
-                                div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>Abono</div><div class='col s8'><div class='col s4'>" + nombreC + "</div><div class='col s4'>" + clearing[0] + "</div><div class='col s4 right-align'>$" + _millesMonto + _decimales + _monto[1] + "</div></div>";
+                                div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>Abono</div><div class='col s3'>" + nombreC + "</div><div class='col s3'>" + clearing[0] + "</div><div class='col s3 right-align'>$" + _millesMonto + _decimales + _monto[1] + "</div>";
                                 div += "</li><li class='collection-item'>";
                                 if (clearing[3] == null) {
-                                    div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>Cargo</div><div class='col s8'><div class='col s4'></div><div class='col s4'>" + clearing[1] + "</div><div class='col s4 right-align'>$" + _millesMonto + _decimales + _monto[1] + "</div></div>";
+                                    div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>Cargo</div><div class='col s3'>" + nombreC2 + "</div><div class='col s3'>" + clearing[1] + "</div><div class='col s3 right-align'>$" + _millesMonto + _decimales + _monto[1] + "</div>";
                                 }
                                 else {
                                     if (clearing[2] != null) {
@@ -2318,9 +2331,9 @@
                                                 string est = (Html.DisplayFor(modelItem => f.STATUS)).ToString();
 
                                                 TAT001.Services.Estatus c = new TAT001.Services.Estatus();
-                                                c.getText(est);
+                                                c.getText(est, Model.D.NUM_DOC);
                                             }
-                                            @c.getText(est)
+                                            @c.getText(est, Model.D.NUM_DOC)
 
                                         </td>
                                         <td width="30%"> @Html.DisplayFor(modelItem => f.COMENTARIO) </td>

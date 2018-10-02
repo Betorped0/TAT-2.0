@@ -1,0 +1,170 @@
+﻿@model TAT001.Models.Calendario445ViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.pagina_r = 531;
+    ViewBag.carpeta_r = 500;
+}
+<style>
+    .text-center {
+        text-align: center !important;
+    }
+    #lbl_precierre {
+        font-size: 20px !important;
+        color: #202020;
+    }
+    #lbl_cierre {
+        font-size: 20px !important;
+        color: #202020;
+    }
+    .select-wrapper input.select-dropdown {
+        z-index:0 !important;
+    }
+    label .invalid {
+        display: none !important;
+    }
+</style>
+<link href="~/Content/materialize.clockpicker.css" rel="stylesheet" />
+<script type="text/javascript" src="~/Scripts/materialize.clockpicker.js"></script>
+<script type="text/javascript"  src="~/Scripts/jquery.validate.min.js"></script>
+<script type="text/javascript" src="~/Scripts/moment.min.js"></script>
+@using (Html.BeginForm("Create", "Calendario445", FormMethod.Post,new { @id="calendario445Form"}))
+{
+    @Html.AntiForgeryToken()
+        <div class="col s12 l12 right-align">
+            <button type="submit" id="btn_save" class="btn btn-default"></button>
+        </div>
+        <div class="card-panel">
+            <div class="row">
+                <div class="col s3">
+                    <div class="form-group">
+                        <label id="lbl_coCode"></label>
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(model => model.calendario445.SOCIEDAD_ID, Model.sociedades, "")
+                        </div>
+                    </div>
+                </div>
+                <div class="col s3">
+                    <div class="form-group">
+                        <label id="lbl_periodo"></label>
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(model => model.calendario445.PERIODO, Model.periodos, "")
+                        </div>
+                    </div>
+                </div>
+                <div class="col s6">
+                    <div class="form-group">
+                        <label id="lbl_tipoSolicitud"></label>
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(model => model.calendario445.TSOL_ID, Model.tipoSolicitudes, "")
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <p class="text-center"> <label id="lbl_precierre"></label></p>
+            <hr>
+            <div class="row">
+                <div class="col s3">
+                    <div class="form-group">
+                        <label class="lbl_desdeDia"></label>
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.calendario445.PRE_FROMF, new { htmlAttributes = new { @required = "", @class = "datepicker" } })
+                        </div>
+                    </div>
+                </div>
+                <div class="col s3">
+                    <div class="form-group">
+                        <label class="lbl_desdeHora"></label>
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.calendario445.PRE_FROMH, new { htmlAttributes = new { @required = "", @class = "timepicker", @type = "time" } })
+                        </div>
+                    </div>
+                </div>
+                <div class="col s3">
+                    <div class="form-group">
+                        <label class="lbl_hastaDia"></label>
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.calendario445.PRE_TOF, new { htmlAttributes = new { @required = "", @class = "datepicker" } })
+                        </div>
+                    </div>
+                </div>
+                <div class="col s3">
+                    <div class="form-group">
+                        <label class="lbl_hastaHora"></label>
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.calendario445.PRE_TOH, new { htmlAttributes = new { @required = "", @class = "timepicker", @type = "time" } })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="text-center"><label id="lbl_cierre"></label></p>
+            <hr>
+            <div class="row">
+                <div class="col s3">
+                    <div class="form-group">
+                        <label class="lbl_desdeDia"></label>
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.calendario445.CIE_FROMF, new { htmlAttributes = new { @required = "", @class = "datepicker" } })
+                        </div>
+                    </div>
+                </div>
+                <div class="col s3">
+                    <div class="form-group">
+                        <label class="lbl_desdeHora"></label>
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.calendario445.CIE_FROMH, new { htmlAttributes = new { @required = "", @class = "timepicker", @type = "time" } })
+                        </div>
+                    </div>
+                </div>
+                <div class="col s3">
+                    <div class="form-group">
+                        <label class="lbl_hastaDia"></label>
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.calendario445.CIE_TOF, new { htmlAttributes = new { @required = "", @class = "datepicker" } })
+                        </div>
+                    </div>
+                </div>
+                <div class="col s3">
+                    <div class="form-group">
+                        <label class="lbl_hastaHora"></label>
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.calendario445.CIE_TOH, new { htmlAttributes = new { @required = "", @class = "timepicker", @type = "time" } })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+}
+        <div class="col s12">
+            <a id="btn_return" href="@Url.Action("Index")"></a>
+        </div>
+        <script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
+        <script>
+        //---- Inicializador de componentes Materialize----
+        fnCommon.materializeInit('.datepicker', 'datepicker');
+        fnCommon.materializeInit('.timepicker', 'timepicker');
+        fnCommon.materializeInit('select', 'select');
+
+        // Remover Fecha y Hora
+        var sinFecha = "01/01/0001 12:00:00 a. m.";
+        document.querySelectorAll('.datepicker').forEach(function (datePicker) {
+            if (datePicker.value === sinFecha) { datePicker.value = ''; }
+        });
+        var sinHora = "00:00";
+        document.querySelectorAll('.timepicker').forEach(function (timepicker) {
+            if (timepicker.value === sinHora) { timepicker.value = ''; }
+        });
+
+        //----  Se agrega validaciones al formulario----
+        fnCommon.selectRequired();
+        fnCommon.formValidation('calendario445Form');
+        fnCommon.dateRangeValidation('calendario445_PRE_FROMF', 'calendario445_PRE_TOF', 'calendario445_CIE_FROMF', 'calendario445_CIE_TOF');
+
+        // Valida si ocurrio un error al intentar crear el periodo y otro.
+        var mnjError = '@ViewBag.mnjError';
+        if (mnjError){
+            M.toast({ html: mnjError });
+        }
+        </script>
+
+

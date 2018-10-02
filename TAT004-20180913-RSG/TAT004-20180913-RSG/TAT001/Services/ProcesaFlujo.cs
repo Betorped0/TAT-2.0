@@ -785,7 +785,7 @@ namespace TAT001.Services
                             if (d.EXCEDE_PRES == "X" & dp.PRESUPUESTO == true)
                             {
                                 ppos--;
-                                detp = dp.N_PRESUP == null ? (pos+1) : (int)dp.N_PRESUP;
+                                detp = dp.N_PRESUP == null ? (pos + 1) : (int)dp.N_PRESUP;
                             }
                 }
                 else

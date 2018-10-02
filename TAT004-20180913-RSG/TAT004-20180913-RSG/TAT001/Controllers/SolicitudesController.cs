@@ -223,8 +223,9 @@ namespace TAT001.Controllers
                     ld.PERIODO = item.PERIODO + "";
 
                     Estatus e = new Estatus();
-                    ld.ESTATUS = e.getText(item);
-                    ld.ESTATUS_CLASS = e.getClass(item);
+                    ld.ESTATUS = e.getText(item.ESTATUS, ld.NUM_DOC);
+                    ld.ESTATUS_CLASS = e.getClass(item.ESTATUS, ld.NUM_DOC);
+
 
                     ld.PAYER_ID = item.PAYER_ID;
                     if (item.CLIENTE == null)
@@ -440,12 +441,18 @@ namespace TAT001.Controllers
             ViewBag.miles = DF.D.PAI.MILES;//LEJGG 090718
             ViewBag.dec = DF.D.PAI.DECIMAL;//LEJGG 090718
 
-            /////////DRS 24.09.18/////////
-            var nombrec = from x in db.CUENTAGLs
-                          join c in db.CUENTAs on x.ID equals c.ABONO
-                          where c.ABONO == x.ID
-                          select x.NOMBRE;
-            ViewBag.nombreC = nombrec;
+            /////////DRS 24.09.18/////////          
+            var nombrec = from cuen in db.CUENTAs
+                          join cg in db.CUENTAGLs on cuen.ABONO equals cg.ID
+                          where cuen.TALL_ID == dOCUMENTO.TALL_ID
+                          select cg.NOMBRE;
+            ViewBag.nombreC = nombrec.ToList();
+
+            var nombrec1 = from cuen in db.CUENTAs
+                           join cg in db.CUENTAGLs on cuen.CARGO equals cg.ID
+                           where cuen.TALL_ID == dOCUMENTO.TALL_ID
+                           select cg.NOMBRE;
+            ViewBag.nombreC2 = nombrec1.ToList();
 
             ///////////////////////////////CAMBIOS LGPP INICIO//////////////////////////*@
             if (DF.D.TIPO_TECNICO == "M")
@@ -2619,7 +2626,10 @@ namespace TAT001.Controllers
                                 else
                                     drec.FECHAF = cal.getNextLunes((DateTime)drec.FECHAF);
                                 drec.EJERCICIO = drec.FECHAV.Value.Year;
-                                drec.PERIODO = cal.getPeriodoF(drec.FECHAV.Value);
+                                if (dOCUMENTO.TIPO_RECURRENTE == "1")
+                                    drec.PERIODO = cal.getPeriodo(drec.FECHAV.Value);
+                                else
+                                    drec.PERIODO = cal.getPeriodoF(drec.FECHAV.Value);
                                 if (dOCUMENTO.TIPO_RECURRENTE == "1")
                                     drec.PERIODO--;
                                 if (drec.PERIODO == 0) drec.PERIODO = 12;
@@ -6536,14 +6546,11 @@ namespace TAT001.Controllers
                 {
                     //Obtener el historial de compras de los clientesd
                     var matt = matl.ToList();
-                    //kunnr = kunnr.TrimStart('0').Trim();
                     var pres = db.PRESUPSAPPs.Where(a => a.VKORG.Equals(vkorg) & a.SPART.Equals(spart) & a.KUNNR == kunnr & (a.GRSLS != null | a.NETLB != null)).ToList();
 
-                    var cat = db.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(spras)).ToList();
-                    //foreach (var c in cie)
-                    //{
-                    //    c.KUNNR = c.KUNNR.TrimStart('0').Trim();
-                    //}
+                    //var cat = db.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(spras)).ToList();
+                    var cat = db.MATERIALGPs.Where(a => a.ACTIVO == true).ToList();
+
 
                     CONFDIST_CAT conf = getCatConf(soc_id);
                     if (conf != null)
@@ -6555,7 +6562,7 @@ namespace TAT001.Controllers
                                   join m in matt
                                   on ps.MATNR equals m.ID
                                   join mk in cat
-                                  on m.MATERIALGP_ID equals mk.MATERIALGP_ID
+                                  on m.MATERIALGP_ID equals mk.ID
                                   where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) &&
                                   (ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART //&& ps.VKBUR == cl.VKBUR &&
                                                                                                         //ps.VKGRP == cl.VKGRP && ps.BZIRK == cl.BZIRK
@@ -6567,7 +6574,7 @@ namespace TAT001.Controllers
                                       MATNR = ps.MATNR,
                                       //mk.TXT50
                                       VAL = Convert.ToDecimal(ps.GRSLS),
-                                      EXCLUIR = mk.MATERIALGP.EXCLUIR //RSG 09.07.2018 ID167
+                                      EXCLUIR = mk.EXCLUIR //RSG 09.07.2018 ID167
                                   }).ToList();
                         }
                         else
@@ -6578,7 +6585,7 @@ namespace TAT001.Controllers
                                   join m in matt
                                   on ps.MATNR equals m.ID
                                   join mk in cat
-                                  on m.MATKL_ID equals mk.MATERIALGP_ID
+                                  on m.MATKL_ID equals mk.ID
                                   where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) &&
                                   (ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART //&& ps.VKBUR == cl.VKBUR &&
                                                                                                         //ps.VKGRP == cl.VKGRP && ps.BZIRK == cl.BZIRK
@@ -6591,7 +6598,7 @@ namespace TAT001.Controllers
                                       //mk.TXT50
 
                                       VAL = Convert.ToDecimal(ps.NETLB),
-                                      EXCLUIR = mk.MATERIALGP.EXCLUIR //RSG 09.07.2018 ID167
+                                      EXCLUIR = mk.EXCLUIR //RSG 09.07.2018 ID167
                                   }).ToList();
                         }
                 }
@@ -8108,7 +8115,9 @@ namespace TAT001.Controllers
                             {
                                 SPRAS_ID = ct.SPRAS_ID.ToString(),
                                 CATEGORIA_ID = ct.MATERIALGP_ID.ToString(),
-                                TXT50 = ct.TXT50.ToString()
+                                TXT50 = ct.TXT50.ToString(),
+                                UNICA = c.UNICA
+
                             })
                         .FirstOrDefault();
             }

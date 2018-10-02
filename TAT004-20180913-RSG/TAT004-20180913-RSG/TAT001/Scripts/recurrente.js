@@ -112,6 +112,10 @@ $(document).ready(function () {
         "info": false,
         "searching": false,
         "columns": [
+            //{
+            //    "name": 'SEL',
+            //    "className": 'select_row',
+            //},
             {
                 "name": 'POS',
                 "className": 'POS',
@@ -147,16 +151,26 @@ $(document).ready(function () {
             $(this).removeClass('selected');
             $(".table_rangos").css("display", "none");
             $("#btnRango").css("display", "none");
+            $("#btnDelRango").css("display", "none");
         }
         else {
             table.$('tr.selected').removeClass('selected');
             $(this).addClass('selected');
             $(".table_rangos").css("display", "table");
             $("#btnRango").css("display", "inline-block");
+            $("#btnDelRango").css("display", "inline-block");
             var tableR = $('#table_rangos').DataTable();
             showRangos(tableR, $(this));
         }
     });
+
+    //$('#table_rangos tbody').on('click', 'td.select_row', function () {
+    //    var tr = $(this).closest('tr');
+    //    var lin = tr.find('.LIN').text();
+    //    if (lin != "1") {
+    //        $(tr).toggleClass('selected');
+    //    }
+    //});
     cambiaCheckRec();
 });
 //LEJ 31.07.2018---------------------
@@ -230,7 +244,7 @@ function cambiaRec() {
     }
     if (campo.checked) {
         $("#tabs_rec").removeClass("disabled");
-        if (montoo === "") {
+        if (montoo === "" | ligada()) {
             var dist = $('#table_dis').DataTable();
             var montooo = 0.00;
             $('#table_dis > tbody  > tr').each(function () {
