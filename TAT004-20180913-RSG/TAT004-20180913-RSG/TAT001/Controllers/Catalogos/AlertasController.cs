@@ -155,7 +155,7 @@ namespace TAT001.Controllers.Catalogos
                             }).ToList();
                         break;
                     case CMB_CAMPOS:
-                        modelView.tabs = db.TAB_CAMPO
+                       /* modelView.tabs = db.TAB_CAMPO
                             .Where(x=>x.TAB_ID== tab_id)
                             .Join(db.TEXTOes, tc => tc.CAMPO_ID, te => te.CAMPO_ID, (ta, te) => te)
                             .Where(x => x.SPRAS_ID == spras_id && (x.CAMPO_ID == id || id == null))
@@ -163,7 +163,7 @@ namespace TAT001.Controllers.Catalogos
                             {
                                 Value = x.CAMPO_ID,
                                 Text = x.TEXTOS
-                            }).ToList();
+                            }).ToList();*/
                         break;
                     default:
                         break;

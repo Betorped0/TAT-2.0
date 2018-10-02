@@ -4,11 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-<<<<<<< HEAD
-    <Schema Namespace="TAT004Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-=======
-      <Schema Namespace="TAT001Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
->>>>>>> c8237191da525483c9bf44b4688659b8524538ea
+      <Schema Namespace="TAT004Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="ACCION">
           <Key>
             <PropertyRef Name="ID" />
@@ -4733,7 +4729,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </CollectionType>
           </ReturnType>
         </Function>
-        <EntityContainer Name="TAT001ModelStoreContainer">
+        <EntityContainer Name="TAT004ModelStoreContainer">
           <EntitySet Name="ACCION" EntityType="Self.ACCION" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ACCIONT" EntityType="Self.ACCIONT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="APPSETTING" EntityType="Self.APPSETTING" Schema="dbo" store:Type="Tables" />
@@ -4879,141 +4875,155 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
           <EntitySet Name="ZBRAND" EntityType="Self.ZBRAND" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ZCTGR" EntityType="Self.ZCTGR" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CARPETAV" EntityType="Self.CARPETAV" store:Type="Views" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [CARPETAV].[USUARIO_ID] AS [USUARIO_ID], 
-    [CARPETAV].[ID] AS [ID], 
-    [CARPETAV].[URL] AS [URL], 
-    [CARPETAV].[TXT50] AS [TXT50], 
-    [CARPETAV].[ICON] AS [ICON]
-    FROM [dbo].[CARPETAV] AS [CARPETAV]</DefiningQuery>
+            <DefiningQuery>
+              SELECT
+              [CARPETAV].[USUARIO_ID] AS [USUARIO_ID],
+              [CARPETAV].[ID] AS [ID],
+              [CARPETAV].[URL] AS [URL],
+              [CARPETAV].[TXT50] AS [TXT50],
+              [CARPETAV].[ICON] AS [ICON]
+              FROM [dbo].[CARPETAV] AS [CARPETAV]
+            </DefiningQuery>
           </EntitySet>
           <EntitySet Name="CREADOR" EntityType="Self.CREADOR" store:Type="Views" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [CREADOR].[ID] AS [ID], 
-    [CREADOR].[PUESTOC_ID] AS [PUESTOC_ID], 
-    [CREADOR].[POS] AS [POS], 
-    [CREADOR].[AGROUP_ID] AS [AGROUP_ID], 
-    [CREADOR].[ACTIVO] AS [ACTIVO], 
-    [CREADOR].[BUKRS] AS [BUKRS], 
-    [CREADOR].[LAND] AS [LAND]
-    FROM [dbo].[CREADOR] AS [CREADOR]</DefiningQuery>
+            <DefiningQuery>
+              SELECT
+              [CREADOR].[ID] AS [ID],
+              [CREADOR].[PUESTOC_ID] AS [PUESTOC_ID],
+              [CREADOR].[POS] AS [POS],
+              [CREADOR].[AGROUP_ID] AS [AGROUP_ID],
+              [CREADOR].[ACTIVO] AS [ACTIVO],
+              [CREADOR].[BUKRS] AS [BUKRS],
+              [CREADOR].[LAND] AS [LAND]
+              FROM [dbo].[CREADOR] AS [CREADOR]
+            </DefiningQuery>
           </EntitySet>
           <EntitySet Name="CREADOR2" EntityType="Self.CREADOR2" store:Type="Views" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [CREADOR2].[ID] AS [ID], 
-    [CREADOR2].[PUESTOC_ID] AS [PUESTOC_ID], 
-    [CREADOR2].[POS] AS [POS], 
-    [CREADOR2].[AGROUP_ID] AS [AGROUP_ID], 
-    [CREADOR2].[ACTIVO] AS [ACTIVO], 
-    [CREADOR2].[BUKRS] AS [BUKRS], 
-    [CREADOR2].[LAND] AS [LAND]
-    FROM [dbo].[CREADOR2] AS [CREADOR2]</DefiningQuery>
+            <DefiningQuery>
+              SELECT
+              [CREADOR2].[ID] AS [ID],
+              [CREADOR2].[PUESTOC_ID] AS [PUESTOC_ID],
+              [CREADOR2].[POS] AS [POS],
+              [CREADOR2].[AGROUP_ID] AS [AGROUP_ID],
+              [CREADOR2].[ACTIVO] AS [ACTIVO],
+              [CREADOR2].[BUKRS] AS [BUKRS],
+              [CREADOR2].[LAND] AS [LAND]
+              FROM [dbo].[CREADOR2] AS [CREADOR2]
+            </DefiningQuery>
           </EntitySet>
           <EntitySet Name="DET_APROBV" EntityType="Self.DET_APROBV" store:Type="Views" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [DET_APROBV].[BUKRS] AS [BUKRS], 
-    [DET_APROBV].[PUESTOC_ID] AS [PUESTOC_ID], 
-    [DET_APROBV].[TXT50] AS [TXT50], 
-    [DET_APROBV].[SPRAS_ID] AS [SPRAS_ID]
-    FROM [dbo].[DET_APROBV] AS [DET_APROBV]</DefiningQuery>
+            <DefiningQuery>
+              SELECT
+              [DET_APROBV].[BUKRS] AS [BUKRS],
+              [DET_APROBV].[PUESTOC_ID] AS [PUESTOC_ID],
+              [DET_APROBV].[TXT50] AS [TXT50],
+              [DET_APROBV].[SPRAS_ID] AS [SPRAS_ID]
+              FROM [dbo].[DET_APROBV] AS [DET_APROBV]
+            </DefiningQuery>
           </EntitySet>
           <EntitySet Name="DOCUMENTOV" EntityType="Self.DOCUMENTOV" store:Type="Views" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [DOCUMENTOV].[POS] AS [POS], 
-    [DOCUMENTOV].[NUM_DOC] AS [NUM_DOC], 
-    [DOCUMENTOV].[TSOL_ID] AS [TSOL_ID], 
-    [DOCUMENTOV].[TALL_ID] AS [TALL_ID], 
-    [DOCUMENTOV].[SOCIEDAD_ID] AS [SOCIEDAD_ID], 
-    [DOCUMENTOV].[PAIS_ID] AS [PAIS_ID], 
-    [DOCUMENTOV].[PERIODO] AS [PERIODO], 
-    [DOCUMENTOV].[EJERCICIO] AS [EJERCICIO], 
-    [DOCUMENTOV].[TIPO_TECNICO] AS [TIPO_TECNICO], 
-    [DOCUMENTOV].[TIPO_RECURRENTE] AS [TIPO_RECURRENTE], 
-    [DOCUMENTOV].[CANTIDAD_EV] AS [CANTIDAD_EV], 
-    [DOCUMENTOV].[USUARIOC_ID] AS [USUARIOC_ID], 
-    [DOCUMENTOV].[FECHAD] AS [FECHAD], 
-    [DOCUMENTOV].[FECHAC] AS [FECHAC], 
-    [DOCUMENTOV].[HORAC] AS [HORAC], 
-    [DOCUMENTOV].[FECHAC_PLAN] AS [FECHAC_PLAN], 
-    [DOCUMENTOV].[FECHAC_USER] AS [FECHAC_USER], 
-    [DOCUMENTOV].[HORAC_USER] AS [HORAC_USER], 
-    [DOCUMENTOV].[ESTATUS] AS [ESTATUS], 
-    [DOCUMENTOV].[ESTATUS_C] AS [ESTATUS_C], 
-    [DOCUMENTOV].[ESTATUS_SAP] AS [ESTATUS_SAP], 
-    [DOCUMENTOV].[ESTATUS_WF] AS [ESTATUS_WF], 
-    [DOCUMENTOV].[DOCUMENTO_REF] AS [DOCUMENTO_REF], 
-    [DOCUMENTOV].[CONCEPTO] AS [CONCEPTO], 
-    [DOCUMENTOV].[NOTAS] AS [NOTAS], 
-    [DOCUMENTOV].[MONTO_DOC_MD] AS [MONTO_DOC_MD], 
-    [DOCUMENTOV].[MONTO_FIJO_MD] AS [MONTO_FIJO_MD], 
-    [DOCUMENTOV].[MONTO_BASE_GS_PCT_MD] AS [MONTO_BASE_GS_PCT_MD], 
-    [DOCUMENTOV].[MONTO_BASE_NS_PCT_MD] AS [MONTO_BASE_NS_PCT_MD], 
-    [DOCUMENTOV].[MONTO_DOC_ML] AS [MONTO_DOC_ML], 
-    [DOCUMENTOV].[MONTO_FIJO_ML] AS [MONTO_FIJO_ML], 
-    [DOCUMENTOV].[MONTO_BASE_GS_PCT_ML] AS [MONTO_BASE_GS_PCT_ML], 
-    [DOCUMENTOV].[MONTO_BASE_NS_PCT_ML] AS [MONTO_BASE_NS_PCT_ML], 
-    [DOCUMENTOV].[MONTO_DOC_ML2] AS [MONTO_DOC_ML2], 
-    [DOCUMENTOV].[MONTO_FIJO_ML2] AS [MONTO_FIJO_ML2], 
-    [DOCUMENTOV].[MONTO_BASE_GS_PCT_ML2] AS [MONTO_BASE_GS_PCT_ML2], 
-    [DOCUMENTOV].[MONTO_BASE_NS_PCT_ML2] AS [MONTO_BASE_NS_PCT_ML2], 
-    [DOCUMENTOV].[PORC_ADICIONAL] AS [PORC_ADICIONAL], 
-    [DOCUMENTOV].[IMPUESTO] AS [IMPUESTO], 
-    [DOCUMENTOV].[FECHAI_VIG] AS [FECHAI_VIG], 
-    [DOCUMENTOV].[FECHAF_VIG] AS [FECHAF_VIG], 
-    [DOCUMENTOV].[ESTATUS_EXT] AS [ESTATUS_EXT], 
-    [DOCUMENTOV].[SOLD_TO_ID] AS [SOLD_TO_ID], 
-    [DOCUMENTOV].[PAYER_ID] AS [PAYER_ID], 
-    [DOCUMENTOV].[PAYER_NOMBRE] AS [PAYER_NOMBRE], 
-    [DOCUMENTOV].[PAYER_EMAIL] AS [PAYER_EMAIL], 
-    [DOCUMENTOV].[GRUPO_CTE_ID] AS [GRUPO_CTE_ID], 
-    [DOCUMENTOV].[CANAL_ID] AS [CANAL_ID], 
-    [DOCUMENTOV].[MONEDA_ID] AS [MONEDA_ID], 
-    [DOCUMENTOV].[MONEDAL_ID] AS [MONEDAL_ID], 
-    [DOCUMENTOV].[MONEDAL2_ID] AS [MONEDAL2_ID], 
-    [DOCUMENTOV].[TIPO_CAMBIO] AS [TIPO_CAMBIO], 
-    [DOCUMENTOV].[TIPO_CAMBIOL] AS [TIPO_CAMBIOL], 
-    [DOCUMENTOV].[TIPO_CAMBIOL2] AS [TIPO_CAMBIOL2], 
-    [DOCUMENTOV].[NO_FACTURA] AS [NO_FACTURA], 
-    [DOCUMENTOV].[FECHAD_SOPORTE] AS [FECHAD_SOPORTE], 
-    [DOCUMENTOV].[METODO_PAGO] AS [METODO_PAGO], 
-    [DOCUMENTOV].[NO_PROVEEDOR] AS [NO_PROVEEDOR], 
-    [DOCUMENTOV].[PASO_ACTUAL] AS [PASO_ACTUAL], 
-    [DOCUMENTOV].[AGENTE_ACTUAL] AS [AGENTE_ACTUAL], 
-    [DOCUMENTOV].[FECHA_PASO_ACTUAL] AS [FECHA_PASO_ACTUAL], 
-    [DOCUMENTOV].[VKORG] AS [VKORG], 
-    [DOCUMENTOV].[VTWEG] AS [VTWEG], 
-    [DOCUMENTOV].[SPART] AS [SPART], 
-    [DOCUMENTOV].[USUARIOA_ID] AS [USUARIOA_ID], 
-    [DOCUMENTOV].[EXPR2] AS [EXPR2], 
-    [DOCUMENTOV].[CIUDAD] AS [CIUDAD], 
-    [DOCUMENTOV].[ESTADO] AS [ESTADO]
-    FROM [dbo].[DOCUMENTOV] AS [DOCUMENTOV]</DefiningQuery>
+            <DefiningQuery>
+              SELECT
+              [DOCUMENTOV].[POS] AS [POS],
+              [DOCUMENTOV].[NUM_DOC] AS [NUM_DOC],
+              [DOCUMENTOV].[TSOL_ID] AS [TSOL_ID],
+              [DOCUMENTOV].[TALL_ID] AS [TALL_ID],
+              [DOCUMENTOV].[SOCIEDAD_ID] AS [SOCIEDAD_ID],
+              [DOCUMENTOV].[PAIS_ID] AS [PAIS_ID],
+              [DOCUMENTOV].[PERIODO] AS [PERIODO],
+              [DOCUMENTOV].[EJERCICIO] AS [EJERCICIO],
+              [DOCUMENTOV].[TIPO_TECNICO] AS [TIPO_TECNICO],
+              [DOCUMENTOV].[TIPO_RECURRENTE] AS [TIPO_RECURRENTE],
+              [DOCUMENTOV].[CANTIDAD_EV] AS [CANTIDAD_EV],
+              [DOCUMENTOV].[USUARIOC_ID] AS [USUARIOC_ID],
+              [DOCUMENTOV].[FECHAD] AS [FECHAD],
+              [DOCUMENTOV].[FECHAC] AS [FECHAC],
+              [DOCUMENTOV].[HORAC] AS [HORAC],
+              [DOCUMENTOV].[FECHAC_PLAN] AS [FECHAC_PLAN],
+              [DOCUMENTOV].[FECHAC_USER] AS [FECHAC_USER],
+              [DOCUMENTOV].[HORAC_USER] AS [HORAC_USER],
+              [DOCUMENTOV].[ESTATUS] AS [ESTATUS],
+              [DOCUMENTOV].[ESTATUS_C] AS [ESTATUS_C],
+              [DOCUMENTOV].[ESTATUS_SAP] AS [ESTATUS_SAP],
+              [DOCUMENTOV].[ESTATUS_WF] AS [ESTATUS_WF],
+              [DOCUMENTOV].[DOCUMENTO_REF] AS [DOCUMENTO_REF],
+              [DOCUMENTOV].[CONCEPTO] AS [CONCEPTO],
+              [DOCUMENTOV].[NOTAS] AS [NOTAS],
+              [DOCUMENTOV].[MONTO_DOC_MD] AS [MONTO_DOC_MD],
+              [DOCUMENTOV].[MONTO_FIJO_MD] AS [MONTO_FIJO_MD],
+              [DOCUMENTOV].[MONTO_BASE_GS_PCT_MD] AS [MONTO_BASE_GS_PCT_MD],
+              [DOCUMENTOV].[MONTO_BASE_NS_PCT_MD] AS [MONTO_BASE_NS_PCT_MD],
+              [DOCUMENTOV].[MONTO_DOC_ML] AS [MONTO_DOC_ML],
+              [DOCUMENTOV].[MONTO_FIJO_ML] AS [MONTO_FIJO_ML],
+              [DOCUMENTOV].[MONTO_BASE_GS_PCT_ML] AS [MONTO_BASE_GS_PCT_ML],
+              [DOCUMENTOV].[MONTO_BASE_NS_PCT_ML] AS [MONTO_BASE_NS_PCT_ML],
+              [DOCUMENTOV].[MONTO_DOC_ML2] AS [MONTO_DOC_ML2],
+              [DOCUMENTOV].[MONTO_FIJO_ML2] AS [MONTO_FIJO_ML2],
+              [DOCUMENTOV].[MONTO_BASE_GS_PCT_ML2] AS [MONTO_BASE_GS_PCT_ML2],
+              [DOCUMENTOV].[MONTO_BASE_NS_PCT_ML2] AS [MONTO_BASE_NS_PCT_ML2],
+              [DOCUMENTOV].[PORC_ADICIONAL] AS [PORC_ADICIONAL],
+              [DOCUMENTOV].[IMPUESTO] AS [IMPUESTO],
+              [DOCUMENTOV].[FECHAI_VIG] AS [FECHAI_VIG],
+              [DOCUMENTOV].[FECHAF_VIG] AS [FECHAF_VIG],
+              [DOCUMENTOV].[ESTATUS_EXT] AS [ESTATUS_EXT],
+              [DOCUMENTOV].[SOLD_TO_ID] AS [SOLD_TO_ID],
+              [DOCUMENTOV].[PAYER_ID] AS [PAYER_ID],
+              [DOCUMENTOV].[PAYER_NOMBRE] AS [PAYER_NOMBRE],
+              [DOCUMENTOV].[PAYER_EMAIL] AS [PAYER_EMAIL],
+              [DOCUMENTOV].[GRUPO_CTE_ID] AS [GRUPO_CTE_ID],
+              [DOCUMENTOV].[CANAL_ID] AS [CANAL_ID],
+              [DOCUMENTOV].[MONEDA_ID] AS [MONEDA_ID],
+              [DOCUMENTOV].[MONEDAL_ID] AS [MONEDAL_ID],
+              [DOCUMENTOV].[MONEDAL2_ID] AS [MONEDAL2_ID],
+              [DOCUMENTOV].[TIPO_CAMBIO] AS [TIPO_CAMBIO],
+              [DOCUMENTOV].[TIPO_CAMBIOL] AS [TIPO_CAMBIOL],
+              [DOCUMENTOV].[TIPO_CAMBIOL2] AS [TIPO_CAMBIOL2],
+              [DOCUMENTOV].[NO_FACTURA] AS [NO_FACTURA],
+              [DOCUMENTOV].[FECHAD_SOPORTE] AS [FECHAD_SOPORTE],
+              [DOCUMENTOV].[METODO_PAGO] AS [METODO_PAGO],
+              [DOCUMENTOV].[NO_PROVEEDOR] AS [NO_PROVEEDOR],
+              [DOCUMENTOV].[PASO_ACTUAL] AS [PASO_ACTUAL],
+              [DOCUMENTOV].[AGENTE_ACTUAL] AS [AGENTE_ACTUAL],
+              [DOCUMENTOV].[FECHA_PASO_ACTUAL] AS [FECHA_PASO_ACTUAL],
+              [DOCUMENTOV].[VKORG] AS [VKORG],
+              [DOCUMENTOV].[VTWEG] AS [VTWEG],
+              [DOCUMENTOV].[SPART] AS [SPART],
+              [DOCUMENTOV].[USUARIOA_ID] AS [USUARIOA_ID],
+              [DOCUMENTOV].[EXPR2] AS [EXPR2],
+              [DOCUMENTOV].[CIUDAD] AS [CIUDAD],
+              [DOCUMENTOV].[ESTADO] AS [ESTADO]
+              FROM [dbo].[DOCUMENTOV] AS [DOCUMENTOV]
+            </DefiningQuery>
           </EntitySet>
           <EntitySet Name="PAGINAV" EntityType="Self.PAGINAV" store:Type="Views" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [PAGINAV].[ID] AS [ID], 
-    [PAGINAV].[PAGINA_ID] AS [PAGINA_ID], 
-    [PAGINAV].[PAGINA_URL] AS [PAGINA_URL], 
-    [PAGINAV].[TXT50] AS [TXT50], 
-    [PAGINAV].[CARPETA_ID] AS [CARPETA_ID], 
-    [PAGINAV].[CARPETA_URL] AS [CARPETA_URL], 
-    [PAGINAV].[ICON] AS [ICON], 
-    [PAGINAV].[PERMISO] AS [PERMISO], 
-    [PAGINAV].[SPRAS_ID] AS [SPRAS_ID], 
-    [PAGINAV].[USUARIO_SPRAS] AS [USUARIO_SPRAS]
-    FROM [dbo].[PAGINAV] AS [PAGINAV]</DefiningQuery>
+            <DefiningQuery>
+              SELECT
+              [PAGINAV].[ID] AS [ID],
+              [PAGINAV].[PAGINA_ID] AS [PAGINA_ID],
+              [PAGINAV].[PAGINA_URL] AS [PAGINA_URL],
+              [PAGINAV].[TXT50] AS [TXT50],
+              [PAGINAV].[CARPETA_ID] AS [CARPETA_ID],
+              [PAGINAV].[CARPETA_URL] AS [CARPETA_URL],
+              [PAGINAV].[ICON] AS [ICON],
+              [PAGINAV].[PERMISO] AS [PERMISO],
+              [PAGINAV].[SPRAS_ID] AS [SPRAS_ID],
+              [PAGINAV].[USUARIO_SPRAS] AS [USUARIO_SPRAS]
+              FROM [dbo].[PAGINAV] AS [PAGINAV]
+            </DefiningQuery>
           </EntitySet>
           <EntitySet Name="WARNINGV" EntityType="Self.WARNINGV" store:Type="Views" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [WARNINGV].[PAGINA_ID] AS [PAGINA_ID], 
-    [WARNINGV].[ID] AS [ID], 
-    [WARNINGV].[DESCRIPCION] AS [DESCRIPCION], 
-    [WARNINGV].[TIPO] AS [TIPO], 
-    [WARNINGV].[SPRAS_ID] AS [SPRAS_ID], 
-    [WARNINGV].[WARNING] AS [WARNING], 
-    [WARNINGV].[POSICION] AS [POSICION], 
-    [WARNINGV].[ACTIVO] AS [ACTIVO]
-    FROM [dbo].[WARNINGV] AS [WARNINGV]</DefiningQuery>
+            <DefiningQuery>
+              SELECT
+              [WARNINGV].[PAGINA_ID] AS [PAGINA_ID],
+              [WARNINGV].[ID] AS [ID],
+              [WARNINGV].[DESCRIPCION] AS [DESCRIPCION],
+              [WARNINGV].[TIPO] AS [TIPO],
+              [WARNINGV].[SPRAS_ID] AS [SPRAS_ID],
+              [WARNINGV].[WARNING] AS [WARNING],
+              [WARNINGV].[POSICION] AS [POSICION],
+              [WARNINGV].[ACTIVO] AS [ACTIVO]
+              FROM [dbo].[WARNINGV] AS [WARNINGV]
+            </DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK_ACCIONT_ACCION" Association="Self.FK_ACCIONT_ACCION">
             <End Role="ACCION" EntitySet="ACCION" />
@@ -5772,10 +5782,11 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             <End Role="WORKFV" EntitySet="WORKFV" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="TAT001Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="TAT004Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <ComplexType Name="split_Result">
           <Property Name="id" Type="Int32" Nullable="false" />
           <Property Name="val" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
@@ -5837,34 +5848,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
           <NavigationProperty Name="PERIODO1" Relationship="Self.FK_CALENDARIO_AC_PERIODO" FromRole="CALENDARIO_AC" ToRole="PERIODO" />
           <NavigationProperty Name="SOCIEDAD" Relationship="Self.FK_CALENDARIO_AC_SOCIEDAD" FromRole="CALENDARIO_AC" ToRole="SOCIEDAD" />
           <NavigationProperty Name="TSOL" Relationship="Self.FK_CALENDARIO_AC_TSOL" FromRole="CALENDARIO_AC" ToRole="TSOL" />
-<<<<<<< HEAD
           <NavigationProperty Name="CALENDARIO_EX" Relationship="TAT004Model.FK_CALENDARIO_EX_CALENDARIO_AC" FromRole="CALENDARIO_AC" ToRole="CALENDARIO_EX" />
-=======
-          <NavigationProperty Name="CALENDARIO_EX" Relationship="Self.FK_CALENDARIO_EX_CALENDARIO_AC" FromRole="CALENDARIO_AC" ToRole="CALENDARIO_EX" />
-        </EntityType>
-        <EntityType Name="CALENDARIO_EX">
-          <Key>
-            <PropertyRef Name="EJERCICIO" />
-            <PropertyRef Name="PERIODO" />
-            <PropertyRef Name="SOCIEDAD_ID" />
-            <PropertyRef Name="TSOL_ID" />
-            <PropertyRef Name="USUARIO_ID" />
-          </Key>
-          <Property Name="EJERCICIO" Type="Int16" Nullable="false" />
-          <Property Name="PERIODO" Type="Int32" Nullable="false" />
-          <Property Name="SOCIEDAD_ID" Type="String" MaxLength="4" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="TSOL_ID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="USUARIO_ID" Type="String" MaxLength="16" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="EX_FROMF" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="EX_FROMH" Type="Time" Nullable="false" Precision="7" />
-          <Property Name="EX_TOF" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="EX_TOH" Type="Time" Nullable="false" Precision="7" />
-          <Property Name="USUARIOC_ID" Type="String" MaxLength="16" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="FEHAC" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="ACTIVO" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="CALENDARIO_AC" Relationship="Self.FK_CALENDARIO_EX_CALENDARIO_AC" FromRole="CALENDARIO_EX" ToRole="CALENDARIO_AC" />
-          <NavigationProperty Name="USUARIO" Relationship="Self.FK_CALENDARIO_EX_USUARIO" FromRole="CALENDARIO_EX" ToRole="USUARIO" />
->>>>>>> c8237191da525483c9bf44b4688659b8524538ea
         </EntityType>
         <EntityType Name="CAMPOS">
           <Key>
@@ -8046,7 +8030,6 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
           <Property Name="MANAGER" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
           <Property Name="BACKUP_ID" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
           <Property Name="BUNIT" Type="String" MaxLength="4" FixedLength="true" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="CALENDARIO_EX" Relationship="Self.FK_CALENDARIO_EX_USUARIO" FromRole="USUARIO" ToRole="CALENDARIO_EX" />
           <NavigationProperty Name="CARTAs" Relationship="Self.FK_CARTA_USUARIO" FromRole="USUARIO" ToRole="CARTA" />
           <NavigationProperty Name="DELEGARs" Relationship="Self.FK_DELEGAR_USUARIO" FromRole="USUARIO" ToRole="DELEGAR" />
           <NavigationProperty Name="DELEGARs1" Relationship="Self.FK_DELEGAR_USUARIO1" FromRole="USUARIO" ToRole="DELEGAR" />
@@ -8474,36 +8457,6 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </Principal>
             <Dependent Role="CALENDARIO_AC">
               <PropertyRef Name="TSOL_ID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_CALENDARIO_EX_CALENDARIO_AC">
-          <End Role="CALENDARIO_AC" Type="Self.CALENDARIO_AC" Multiplicity="1" />
-          <End Role="CALENDARIO_EX" Type="Self.CALENDARIO_EX" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="CALENDARIO_AC">
-              <PropertyRef Name="EJERCICIO" />
-              <PropertyRef Name="PERIODO" />
-              <PropertyRef Name="SOCIEDAD_ID" />
-              <PropertyRef Name="TSOL_ID" />
-            </Principal>
-            <Dependent Role="CALENDARIO_EX">
-              <PropertyRef Name="EJERCICIO" />
-              <PropertyRef Name="PERIODO" />
-              <PropertyRef Name="SOCIEDAD_ID" />
-              <PropertyRef Name="TSOL_ID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_CALENDARIO_EX_USUARIO">
-          <End Role="USUARIO" Type="Self.USUARIO" Multiplicity="1" />
-          <End Role="CALENDARIO_EX" Type="Self.CALENDARIO_EX" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="USUARIO">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="CALENDARIO_EX">
-              <PropertyRef Name="USUARIO_ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -10752,7 +10705,6 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
           <EntitySet Name="ACCIONTs" EntityType="Self.ACCIONT" />
           <EntitySet Name="APPSETTINGs" EntityType="Self.APPSETTING" />
           <EntitySet Name="CALENDARIO_AC" EntityType="Self.CALENDARIO_AC" />
-          <EntitySet Name="CALENDARIO_EX" EntityType="Self.CALENDARIO_EX" />
           <EntitySet Name="CAMPOS" EntityType="Self.CAMPOS" />
           <EntitySet Name="CAMPOZKE24" EntityType="Self.CAMPOZKE24" />
           <EntitySet Name="CAMPOZKE24T" EntityType="Self.CAMPOZKE24T" />
@@ -10921,14 +10873,6 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
           <AssociationSet Name="FK_CALENDARIO_AC_TSOL" Association="Self.FK_CALENDARIO_AC_TSOL">
             <End Role="TSOL" EntitySet="TSOLs" />
             <End Role="CALENDARIO_AC" EntitySet="CALENDARIO_AC" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CALENDARIO_EX_CALENDARIO_AC" Association="Self.FK_CALENDARIO_EX_CALENDARIO_AC">
-            <End Role="CALENDARIO_AC" EntitySet="CALENDARIO_AC" />
-            <End Role="CALENDARIO_EX" EntitySet="CALENDARIO_EX" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CALENDARIO_EX_USUARIO" Association="Self.FK_CALENDARIO_EX_USUARIO">
-            <End Role="USUARIO" EntitySet="USUARIOs" />
-            <End Role="CALENDARIO_EX" EntitySet="CALENDARIO_EX" />
           </AssociationSet>
           <AssociationSet Name="FK_CAMPOS_PAGINA" Association="Self.FK_CAMPOS_PAGINA">
             <End Role="PAGINA" EntitySet="PAGINAs" />
@@ -11650,25 +11594,20 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             <End Role="GAUTORIZACION" EntitySet="GAUTORIZACIONs" />
             <End Role="USUARIO" EntitySet="USUARIOs" />
           </AssociationSet>
-          <FunctionImport Name="split" IsComposable="true" ReturnType="Collection(TAT001Model.split_Result)">
+          <FunctionImport Name="split" IsComposable="true" ReturnType="Collection(TAT004Model.split_Result)">
             <Parameter Name="delimited" Mode="In" Type="String" />
             <Parameter Name="delimiter" Mode="In" Type="String" />
           </FunctionImport>
-          <FunctionImport Name="CPS_LISTA_CLI_PRO" ReturnType="Collection(TAT001Model.CPS_LISTA_CLI_PRO_Result)" />
+          <FunctionImport Name="CPS_LISTA_CLI_PRO" ReturnType="Collection(TAT004Model.CPS_LISTA_CLI_PRO_Result)" />
           <FunctionImport Name="CSP_BANNERSINCANAL" ReturnType="Collection(String)" />
-<<<<<<< HEAD
           <FunctionImport Name="CSP_CAMBIO" ReturnType="Collection(TAT004Model.CSP_CAMBIO_Result)">
-          <Parameter Name="sociedad" Mode="In" Type="String" />
-=======
-          <FunctionImport Name="CSP_CAMBIO" ReturnType="Collection(TAT001Model.CSP_CAMBIO_Result)">
             <Parameter Name="sociedad" Mode="In" Type="String" />
->>>>>>> c8237191da525483c9bf44b4688659b8524538ea
           </FunctionImport>
-          <FunctionImport Name="CSP_CARPETA" ReturnType="Collection(TAT001Model.CSP_CARPETA_Result)">
+          <FunctionImport Name="CSP_CARPETA" ReturnType="Collection(TAT004Model.CSP_CARPETA_Result)">
             <Parameter Name="ID" Mode="In" Type="String" />
             <Parameter Name="ACCION" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="CSP_CONSULTARPRESUPUESTO" ReturnType="Collection(TAT001Model.CSP_CONSULTARPRESUPUESTO_Result)">
+          <FunctionImport Name="CSP_CONSULTARPRESUPUESTO" ReturnType="Collection(TAT004Model.CSP_CONSULTARPRESUPUESTO_Result)">
             <Parameter Name="SOCIEDAD" Mode="In" Type="String" />
             <Parameter Name="ANIOC" Mode="In" Type="String" />
             <Parameter Name="ANIOS" Mode="In" Type="String" />
@@ -11678,15 +11617,15 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             <Parameter Name="MONEDAA" Mode="In" Type="String" />
             <Parameter Name="CPT" Mode="In" Type="String" />
           </FunctionImport>
-          <FunctionImport Name="CSP_DOCUMENTOSXUSER" ReturnType="Collection(TAT001Model.CSP_DOCUMENTOSXUSER_Result)">
+          <FunctionImport Name="CSP_DOCUMENTOSXUSER" ReturnType="Collection(TAT004Model.CSP_DOCUMENTOSXUSER_Result)">
             <Parameter Name="USUARIO" Mode="In" Type="String" />
             <Parameter Name="SPRAS" Mode="In" Type="String" />
           </FunctionImport>
-          <FunctionImport Name="CSP_PERMISO" ReturnType="Collection(TAT001Model.CSP_PERMISO_Result)">
+          <FunctionImport Name="CSP_PERMISO" ReturnType="Collection(TAT004Model.CSP_PERMISO_Result)">
             <Parameter Name="ID" Mode="In" Type="String" />
             <Parameter Name="ACCION" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="CSP_PRESU_CLIENT" ReturnType="Collection(TAT001Model.CSP_PRESU_CLIENT_Result)">
+          <FunctionImport Name="CSP_PRESU_CLIENT" ReturnType="Collection(TAT004Model.CSP_PRESU_CLIENT_Result)">
             <Parameter Name="CLIENTE" Mode="In" Type="String" />
             <Parameter Name="PERIODO" Mode="In" Type="String" />
           </FunctionImport>
@@ -11698,15 +11637,10 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             <Parameter Name="auto" Mode="In" Type="String" />
             <Parameter Name="caso" Mode="In" Type="Int32" />
           </FunctionImport>
-<<<<<<< HEAD
           <FunctionImport Name="CSP_PRESUPUESTO_ADDP" ReturnType="Collection(TAT004Model.CSP_PRESUPUESTO_ADDP_Result)">
-          <Parameter Name="path" Mode="In" Type="String" />
-=======
-          <FunctionImport Name="CSP_PRESUPUESTO_ADDP" ReturnType="Collection(TAT001Model.CSP_PRESUPUESTO_ADDP_Result)">
             <Parameter Name="path" Mode="In" Type="String" />
->>>>>>> c8237191da525483c9bf44b4688659b8524538ea
           </FunctionImport>
-          <FunctionImport Name="CSP_USUARIO" ReturnType="Collection(TAT001Model.CSP_USUARIO_Result)">
+          <FunctionImport Name="CSP_USUARIO" ReturnType="Collection(TAT004Model.CSP_USUARIO_Result)">
             <Parameter Name="ID" Mode="In" Type="String" />
             <Parameter Name="PASS" Mode="In" Type="String" />
             <Parameter Name="NOMBRE" Mode="In" Type="String" />
@@ -11733,11 +11667,11 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             <Parameter Name="diagramname" Mode="In" Type="String" />
             <Parameter Name="owner_id" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(TAT001Model.sp_helpdiagramdefinition_Result)">
+          <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(TAT004Model.sp_helpdiagramdefinition_Result)">
             <Parameter Name="diagramname" Mode="In" Type="String" />
             <Parameter Name="owner_id" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(TAT001Model.sp_helpdiagrams_Result)">
+          <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(TAT004Model.sp_helpdiagrams_Result)">
             <Parameter Name="diagramname" Mode="In" Type="String" />
             <Parameter Name="owner_id" Mode="In" Type="Int32" />
           </FunctionImport>
@@ -11965,9 +11899,9 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="TAT001ModelStoreContainer" CdmEntityContainer="TAT001Entities">
+        <EntityContainerMapping StorageEntityContainer="TAT004ModelStoreContainer" CdmEntityContainer="TAT001Entities">
           <EntitySetMapping Name="ACCIONs">
-            <EntityTypeMapping TypeName="TAT001Model.ACCION">
+            <EntityTypeMapping TypeName="TAT004Model.ACCION">
               <MappingFragment StoreEntitySet="ACCION">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="DESCCRIPCION" ColumnName="DESCCRIPCION" />
@@ -11976,7 +11910,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="ACCIONTs">
-            <EntityTypeMapping TypeName="TAT001Model.ACCIONT">
+            <EntityTypeMapping TypeName="TAT004Model.ACCIONT">
               <MappingFragment StoreEntitySet="ACCIONT">
                 <ScalarProperty Name="SPRAS_ID" ColumnName="SPRAS_ID" />
                 <ScalarProperty Name="ACCION_ID" ColumnName="ACCION_ID" />
@@ -11985,7 +11919,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="APPSETTINGs">
-            <EntityTypeMapping TypeName="TAT001Model.APPSETTING">
+            <EntityTypeMapping TypeName="TAT004Model.APPSETTING">
               <MappingFragment StoreEntitySet="APPSETTING">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
@@ -11995,7 +11929,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CALENDARIO_AC">
-            <EntityTypeMapping TypeName="TAT001Model.CALENDARIO_AC">
+            <EntityTypeMapping TypeName="TAT004Model.CALENDARIO_AC">
               <MappingFragment StoreEntitySet="CALENDARIO_AC">
                 <ScalarProperty Name="EJERCICIO" ColumnName="EJERCICIO" />
                 <ScalarProperty Name="PERIODO" ColumnName="PERIODO" />
@@ -12017,26 +11951,8 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="CALENDARIO_EX">
-            <EntityTypeMapping TypeName="TAT001Model.CALENDARIO_EX">
-              <MappingFragment StoreEntitySet="CALENDARIO_EX">
-                <ScalarProperty Name="EJERCICIO" ColumnName="EJERCICIO" />
-                <ScalarProperty Name="PERIODO" ColumnName="PERIODO" />
-                <ScalarProperty Name="SOCIEDAD_ID" ColumnName="SOCIEDAD_ID" />
-                <ScalarProperty Name="TSOL_ID" ColumnName="TSOL_ID" />
-                <ScalarProperty Name="USUARIO_ID" ColumnName="USUARIO_ID" />
-                <ScalarProperty Name="EX_FROMF" ColumnName="EX_FROMF" />
-                <ScalarProperty Name="EX_FROMH" ColumnName="EX_FROMH" />
-                <ScalarProperty Name="EX_TOF" ColumnName="EX_TOF" />
-                <ScalarProperty Name="EX_TOH" ColumnName="EX_TOH" />
-                <ScalarProperty Name="USUARIOC_ID" ColumnName="USUARIOC_ID" />
-                <ScalarProperty Name="FEHAC" ColumnName="FEHAC" />
-                <ScalarProperty Name="ACTIVO" ColumnName="ACTIVO" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="CAMPOS">
-            <EntityTypeMapping TypeName="TAT001Model.CAMPOS">
+            <EntityTypeMapping TypeName="TAT004Model.CAMPOS">
               <MappingFragment StoreEntitySet="CAMPOS">
                 <ScalarProperty Name="PAGINA_ID" ColumnName="PAGINA_ID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
@@ -12046,7 +11962,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CAMPOZKE24">
-            <EntityTypeMapping TypeName="TAT001Model.CAMPOZKE24">
+            <EntityTypeMapping TypeName="TAT004Model.CAMPOZKE24">
               <MappingFragment StoreEntitySet="CAMPOZKE24">
                 <ScalarProperty Name="CAMPO" ColumnName="CAMPO" />
                 <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
@@ -12055,7 +11971,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CAMPOZKE24T">
-            <EntityTypeMapping TypeName="TAT001Model.CAMPOZKE24T">
+            <EntityTypeMapping TypeName="TAT004Model.CAMPOZKE24T">
               <MappingFragment StoreEntitySet="CAMPOZKE24T">
                 <ScalarProperty Name="SPRAS_ID" ColumnName="SPRAS_ID" />
                 <ScalarProperty Name="CAMPO_ID" ColumnName="CAMPO_ID" />
@@ -12064,7 +11980,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CANALs">
-            <EntityTypeMapping TypeName="TAT001Model.CANAL">
+            <EntityTypeMapping TypeName="TAT004Model.CANAL">
               <MappingFragment StoreEntitySet="CANAL">
                 <ScalarProperty Name="CANAL1" ColumnName="CANAL" />
                 <ScalarProperty Name="CDESCRIPCION" ColumnName="CDESCRIPCION" />
@@ -12072,7 +11988,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CARPETAs">
-            <EntityTypeMapping TypeName="TAT001Model.CARPETA">
+            <EntityTypeMapping TypeName="TAT004Model.CARPETA">
               <MappingFragment StoreEntitySet="CARPETA">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="URL" ColumnName="URL" />
@@ -12083,7 +11999,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CARPETATs">
-            <EntityTypeMapping TypeName="TAT001Model.CARPETAT">
+            <EntityTypeMapping TypeName="TAT004Model.CARPETAT">
               <MappingFragment StoreEntitySet="CARPETAT">
                 <ScalarProperty Name="SPRAS_ID" ColumnName="SPRAS_ID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
@@ -12092,7 +12008,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CARTAs">
-            <EntityTypeMapping TypeName="TAT001Model.CARTA">
+            <EntityTypeMapping TypeName="TAT004Model.CARTA">
               <MappingFragment StoreEntitySet="CARTA">
                 <ScalarProperty Name="NUM_DOC" ColumnName="NUM_DOC" />
                 <ScalarProperty Name="POS" ColumnName="POS" />
@@ -12163,7 +12079,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CARTAPs">
-            <EntityTypeMapping TypeName="TAT001Model.CARTAP">
+            <EntityTypeMapping TypeName="TAT004Model.CARTAP">
               <MappingFragment StoreEntitySet="CARTAP">
                 <ScalarProperty Name="NUM_DOC" ColumnName="NUM_DOC" />
                 <ScalarProperty Name="POS_ID" ColumnName="POS_ID" />
@@ -12185,7 +12101,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CATEGORIAs">
-            <EntityTypeMapping TypeName="TAT001Model.CATEGORIA">
+            <EntityTypeMapping TypeName="TAT004Model.CATEGORIA">
               <MappingFragment StoreEntitySet="CATEGORIA">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
@@ -12194,7 +12110,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CATEGORIATs">
-            <EntityTypeMapping TypeName="TAT001Model.CATEGORIAT">
+            <EntityTypeMapping TypeName="TAT004Model.CATEGORIAT">
               <MappingFragment StoreEntitySet="CATEGORIAT">
                 <ScalarProperty Name="SPRAS_ID" ColumnName="SPRAS_ID" />
                 <ScalarProperty Name="CATEGORIA_ID" ColumnName="CATEGORIA_ID" />
@@ -12203,7 +12119,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CITIES">
-            <EntityTypeMapping TypeName="TAT001Model.CITy">
+            <EntityTypeMapping TypeName="TAT004Model.CITy">
               <MappingFragment StoreEntitySet="CITIES">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="NAME" ColumnName="NAME" />
@@ -12212,7 +12128,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CLIENTEs">
-            <EntityTypeMapping TypeName="TAT001Model.CLIENTE">
+            <EntityTypeMapping TypeName="TAT004Model.CLIENTE">
               <MappingFragment StoreEntitySet="CLIENTE">
                 <ScalarProperty Name="VKORG" ColumnName="VKORG" />
                 <ScalarProperty Name="VTWEG" ColumnName="VTWEG" />
@@ -12250,7 +12166,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CLIENTEFs">
-            <EntityTypeMapping TypeName="TAT001Model.CLIENTEF">
+            <EntityTypeMapping TypeName="TAT004Model.CLIENTEF">
               <MappingFragment StoreEntitySet="CLIENTEF">
                 <ScalarProperty Name="VKORG" ColumnName="VKORG" />
                 <ScalarProperty Name="VTWEG" ColumnName="VTWEG" />
@@ -12272,7 +12188,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CLIENTEIs">
-            <EntityTypeMapping TypeName="TAT001Model.CLIENTEI">
+            <EntityTypeMapping TypeName="TAT004Model.CLIENTEI">
               <MappingFragment StoreEntitySet="CLIENTEI">
                 <ScalarProperty Name="VKORG" ColumnName="VKORG" />
                 <ScalarProperty Name="VTWEG" ColumnName="VTWEG" />
@@ -12284,7 +12200,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CONDICIONs">
-            <EntityTypeMapping TypeName="TAT001Model.CONDICION">
+            <EntityTypeMapping TypeName="TAT004Model.CONDICION">
               <MappingFragment StoreEntitySet="CONDICION">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="DESCR" ColumnName="DESCR" />
@@ -12294,7 +12210,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CONFDIST_CAT">
-            <EntityTypeMapping TypeName="TAT001Model.CONFDIST_CAT">
+            <EntityTypeMapping TypeName="TAT004Model.CONFDIST_CAT">
               <MappingFragment StoreEntitySet="CONFDIST_CAT">
                 <ScalarProperty Name="SOCIEDAD_ID" ColumnName="SOCIEDAD_ID" />
                 <ScalarProperty Name="CAMPO" ColumnName="CAMPO" />
@@ -12305,7 +12221,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CONMAILs">
-            <EntityTypeMapping TypeName="TAT001Model.CONMAIL">
+            <EntityTypeMapping TypeName="TAT004Model.CONMAIL">
               <MappingFragment StoreEntitySet="CONMAIL">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="HOST" ColumnName="HOST" />
@@ -12318,7 +12234,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CONPOSAPHs">
-            <EntityTypeMapping TypeName="TAT001Model.CONPOSAPH">
+            <EntityTypeMapping TypeName="TAT004Model.CONPOSAPH">
               <MappingFragment StoreEntitySet="CONPOSAPH">
                 <ScalarProperty Name="CONSECUTIVO" ColumnName="CONSECUTIVO" />
                 <ScalarProperty Name="TIPO_SOL" ColumnName="TIPO_SOL" />
@@ -12342,7 +12258,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CONPOSAPPs">
-            <EntityTypeMapping TypeName="TAT001Model.CONPOSAPP">
+            <EntityTypeMapping TypeName="TAT004Model.CONPOSAPP">
               <MappingFragment StoreEntitySet="CONPOSAPP">
                 <ScalarProperty Name="CONSECUTIVO" ColumnName="CONSECUTIVO" />
                 <ScalarProperty Name="POSICION" ColumnName="POSICION" />
@@ -12382,7 +12298,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CONSOPORTEs">
-            <EntityTypeMapping TypeName="TAT001Model.CONSOPORTE">
+            <EntityTypeMapping TypeName="TAT004Model.CONSOPORTE">
               <MappingFragment StoreEntitySet="CONSOPORTE">
                 <ScalarProperty Name="TSOL_ID" ColumnName="TSOL_ID" />
                 <ScalarProperty Name="TSOPORTE_ID" ColumnName="TSOPORTE_ID" />
@@ -12392,7 +12308,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CONTACTOCs">
-            <EntityTypeMapping TypeName="TAT001Model.CONTACTOC">
+            <EntityTypeMapping TypeName="TAT004Model.CONTACTOC">
               <MappingFragment StoreEntitySet="CONTACTOC">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
@@ -12408,7 +12324,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="COUNTRIES">
-            <EntityTypeMapping TypeName="TAT001Model.COUNTRy">
+            <EntityTypeMapping TypeName="TAT004Model.COUNTRy">
               <MappingFragment StoreEntitySet="COUNTRIES">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="SORTNAME" ColumnName="SORTNAME" />
@@ -12418,7 +12334,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CUENTAs">
-            <EntityTypeMapping TypeName="TAT001Model.CUENTA">
+            <EntityTypeMapping TypeName="TAT004Model.CUENTA">
               <MappingFragment StoreEntitySet="CUENTA">
                 <ScalarProperty Name="SOCIEDAD_ID" ColumnName="SOCIEDAD_ID" />
                 <ScalarProperty Name="PAIS_ID" ColumnName="PAIS_ID" />
@@ -12432,7 +12348,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CUENTAGLs">
-            <EntityTypeMapping TypeName="TAT001Model.CUENTAGL">
+            <EntityTypeMapping TypeName="TAT004Model.CUENTAGL">
               <MappingFragment StoreEntitySet="CUENTAGL">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
@@ -12441,7 +12357,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DELEGARs">
-            <EntityTypeMapping TypeName="TAT001Model.DELEGAR">
+            <EntityTypeMapping TypeName="TAT004Model.DELEGAR">
               <MappingFragment StoreEntitySet="DELEGAR">
                 <ScalarProperty Name="USUARIO_ID" ColumnName="USUARIO_ID" />
                 <ScalarProperty Name="USUARIOD_ID" ColumnName="USUARIOD_ID" />
@@ -12452,7 +12368,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DET_AGENTE">
-            <EntityTypeMapping TypeName="TAT001Model.DET_AGENTE">
+            <EntityTypeMapping TypeName="TAT004Model.DET_AGENTE">
               <MappingFragment StoreEntitySet="DET_AGENTE">
                 <ScalarProperty Name="PUESTOC_ID" ColumnName="PUESTOC_ID" />
                 <ScalarProperty Name="POS" ColumnName="POS" />
@@ -12467,7 +12383,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DET_AGENTEC">
-            <EntityTypeMapping TypeName="TAT001Model.DET_AGENTEC">
+            <EntityTypeMapping TypeName="TAT004Model.DET_AGENTEC">
               <MappingFragment StoreEntitySet="DET_AGENTEC">
                 <ScalarProperty Name="USUARIOC_ID" ColumnName="USUARIOC_ID" />
                 <ScalarProperty Name="PAIS_ID" ColumnName="PAIS_ID" />
@@ -12486,7 +12402,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DET_AGENTEH">
-            <EntityTypeMapping TypeName="TAT001Model.DET_AGENTEH">
+            <EntityTypeMapping TypeName="TAT004Model.DET_AGENTEH">
               <MappingFragment StoreEntitySet="DET_AGENTEH">
                 <ScalarProperty Name="SOCIEDAD_ID" ColumnName="SOCIEDAD_ID" />
                 <ScalarProperty Name="PUESTOC_ID" ColumnName="PUESTOC_ID" />
@@ -12498,7 +12414,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DET_AGENTEP">
-            <EntityTypeMapping TypeName="TAT001Model.DET_AGENTEP">
+            <EntityTypeMapping TypeName="TAT004Model.DET_AGENTEP">
               <MappingFragment StoreEntitySet="DET_AGENTEP">
                 <ScalarProperty Name="SOCIEDAD_ID" ColumnName="SOCIEDAD_ID" />
                 <ScalarProperty Name="PUESTOC_ID" ColumnName="PUESTOC_ID" />
@@ -12514,7 +12430,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DET_APROB">
-            <EntityTypeMapping TypeName="TAT001Model.DET_APROB">
+            <EntityTypeMapping TypeName="TAT004Model.DET_APROB">
               <MappingFragment StoreEntitySet="DET_APROB">
                 <ScalarProperty Name="PUESTOC_ID" ColumnName="PUESTOC_ID" />
                 <ScalarProperty Name="POS" ColumnName="POS" />
@@ -12527,7 +12443,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DET_APROBH">
-            <EntityTypeMapping TypeName="TAT001Model.DET_APROBH">
+            <EntityTypeMapping TypeName="TAT004Model.DET_APROBH">
               <MappingFragment StoreEntitySet="DET_APROBH">
                 <ScalarProperty Name="SOCIEDAD_ID" ColumnName="SOCIEDAD_ID" />
                 <ScalarProperty Name="PUESTOC_ID" ColumnName="PUESTOC_ID" />
@@ -12537,7 +12453,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DET_APROBP">
-            <EntityTypeMapping TypeName="TAT001Model.DET_APROBP">
+            <EntityTypeMapping TypeName="TAT004Model.DET_APROBP">
               <MappingFragment StoreEntitySet="DET_APROBP">
                 <ScalarProperty Name="SOCIEDAD_ID" ColumnName="SOCIEDAD_ID" />
                 <ScalarProperty Name="PUESTOC_ID" ColumnName="PUESTOC_ID" />
@@ -12553,7 +12469,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DET_TAX">
-            <EntityTypeMapping TypeName="TAT001Model.DET_TAX">
+            <EntityTypeMapping TypeName="TAT004Model.DET_TAX">
               <MappingFragment StoreEntitySet="DET_TAX">
                 <ScalarProperty Name="SOCIEDAD_ID" ColumnName="SOCIEDAD_ID" />
                 <ScalarProperty Name="PUESTOC_ID" ColumnName="PUESTOC_ID" />
@@ -12566,7 +12482,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DET_TAXEO">
-            <EntityTypeMapping TypeName="TAT001Model.DET_TAXEO">
+            <EntityTypeMapping TypeName="TAT004Model.DET_TAXEO">
               <MappingFragment StoreEntitySet="DET_TAXEO">
                 <ScalarProperty Name="SOCIEDAD_ID" ColumnName="SOCIEDAD_ID" />
                 <ScalarProperty Name="PAIS_ID" ColumnName="PAIS_ID" />
@@ -12580,7 +12496,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DET_TAXEOC">
-            <EntityTypeMapping TypeName="TAT001Model.DET_TAXEOC">
+            <EntityTypeMapping TypeName="TAT004Model.DET_TAXEOC">
               <MappingFragment StoreEntitySet="DET_TAXEOC">
                 <ScalarProperty Name="USUARIOC_ID" ColumnName="USUARIOC_ID" />
                 <ScalarProperty Name="PAIS_ID" ColumnName="PAIS_ID" />
@@ -12595,7 +12511,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DOCUMENTBORRs">
-            <EntityTypeMapping TypeName="TAT001Model.DOCUMENTBORR">
+            <EntityTypeMapping TypeName="TAT004Model.DOCUMENTBORR">
               <MappingFragment StoreEntitySet="DOCUMENTBORR">
                 <ScalarProperty Name="USUARIOC_ID" ColumnName="USUARIOC_ID" />
                 <ScalarProperty Name="TSOL_ID" ColumnName="TSOL_ID" />
@@ -12669,7 +12585,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DOCUMENTOes">
-            <EntityTypeMapping TypeName="TAT001Model.DOCUMENTO">
+            <EntityTypeMapping TypeName="TAT004Model.DOCUMENTO">
               <MappingFragment StoreEntitySet="DOCUMENTO">
                 <ScalarProperty Name="NUM_DOC" ColumnName="NUM_DOC" />
                 <ScalarProperty Name="TSOL_ID" ColumnName="TSOL_ID" />
@@ -12753,7 +12669,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DOCUMENTOAs">
-            <EntityTypeMapping TypeName="TAT001Model.DOCUMENTOA">
+            <EntityTypeMapping TypeName="TAT004Model.DOCUMENTOA">
               <MappingFragment StoreEntitySet="DOCUMENTOA">
                 <ScalarProperty Name="NUM_DOC" ColumnName="NUM_DOC" />
                 <ScalarProperty Name="POS" ColumnName="POS" />
@@ -12767,7 +12683,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DOCUMENTOBORRFs">
-            <EntityTypeMapping TypeName="TAT001Model.DOCUMENTOBORRF">
+            <EntityTypeMapping TypeName="TAT004Model.DOCUMENTOBORRF">
               <MappingFragment StoreEntitySet="DOCUMENTOBORRF">
                 <ScalarProperty Name="USUARIOC_ID" ColumnName="USUARIOC_ID" />
                 <ScalarProperty Name="POS" ColumnName="POS" />
@@ -12790,7 +12706,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DOCUMENTOBORRMs">
-            <EntityTypeMapping TypeName="TAT001Model.DOCUMENTOBORRM">
+            <EntityTypeMapping TypeName="TAT004Model.DOCUMENTOBORRM">
               <MappingFragment StoreEntitySet="DOCUMENTOBORRM">
                 <ScalarProperty Name="USUARIOC_ID" ColumnName="USUARIOC_ID" />
                 <ScalarProperty Name="POS_ID" ColumnName="POS_ID" />
@@ -12806,7 +12722,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DOCUMENTOBORRNs">
-            <EntityTypeMapping TypeName="TAT001Model.DOCUMENTOBORRN">
+            <EntityTypeMapping TypeName="TAT004Model.DOCUMENTOBORRN">
               <MappingFragment StoreEntitySet="DOCUMENTOBORRN">
                 <ScalarProperty Name="USUARIOC_ID" ColumnName="USUARIOC_ID" />
                 <ScalarProperty Name="POS" ColumnName="POS" />
@@ -12817,7 +12733,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DOCUMENTOBORRPs">
-            <EntityTypeMapping TypeName="TAT001Model.DOCUMENTOBORRP">
+            <EntityTypeMapping TypeName="TAT004Model.DOCUMENTOBORRP">
               <MappingFragment StoreEntitySet="DOCUMENTOBORRP">
                 <ScalarProperty Name="USUARIOC_ID" ColumnName="USUARIOC_ID" />
                 <ScalarProperty Name="POS" ColumnName="POS" />
@@ -12838,7 +12754,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DOCUMENTOBORRRECs">
-            <EntityTypeMapping TypeName="TAT001Model.DOCUMENTOBORRREC">
+            <EntityTypeMapping TypeName="TAT004Model.DOCUMENTOBORRREC">
               <MappingFragment StoreEntitySet="DOCUMENTOBORRREC">
                 <ScalarProperty Name="USUARIOC_ID" ColumnName="USUARIOC_ID" />
                 <ScalarProperty Name="POS" ColumnName="POS" />
@@ -12857,7 +12773,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DOCUMENTOFs">
-            <EntityTypeMapping TypeName="TAT001Model.DOCUMENTOF">
+            <EntityTypeMapping TypeName="TAT004Model.DOCUMENTOF">
               <MappingFragment StoreEntitySet="DOCUMENTOF">
                 <ScalarProperty Name="NUM_DOC" ColumnName="NUM_DOC" />
                 <ScalarProperty Name="POS" ColumnName="POS" />
@@ -12877,7 +12793,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DOCUMENTOLs">
-            <EntityTypeMapping TypeName="TAT001Model.DOCUMENTOL">
+            <EntityTypeMapping TypeName="TAT004Model.DOCUMENTOL">
               <MappingFragment StoreEntitySet="DOCUMENTOL">
                 <ScalarProperty Name="NUM_DOC" ColumnName="NUM_DOC" />
                 <ScalarProperty Name="POS" ColumnName="POS" />
@@ -12889,7 +12805,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DOCUMENTOMs">
-            <EntityTypeMapping TypeName="TAT001Model.DOCUMENTOM">
+            <EntityTypeMapping TypeName="TAT004Model.DOCUMENTOM">
               <MappingFragment StoreEntitySet="DOCUMENTOM">
                 <ScalarProperty Name="NUM_DOC" ColumnName="NUM_DOC" />
                 <ScalarProperty Name="POS_ID" ColumnName="POS_ID" />
@@ -12905,7 +12821,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DOCUMENTONs">
-            <EntityTypeMapping TypeName="TAT001Model.DOCUMENTON">
+            <EntityTypeMapping TypeName="TAT004Model.DOCUMENTON">
               <MappingFragment StoreEntitySet="DOCUMENTON">
                 <ScalarProperty Name="NUM_DOC" ColumnName="NUM_DOC" />
                 <ScalarProperty Name="POS" ColumnName="POS" />
@@ -12916,7 +12832,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DOCUMENTOPs">
-            <EntityTypeMapping TypeName="TAT001Model.DOCUMENTOP">
+            <EntityTypeMapping TypeName="TAT004Model.DOCUMENTOP">
               <MappingFragment StoreEntitySet="DOCUMENTOP">
                 <ScalarProperty Name="NUM_DOC" ColumnName="NUM_DOC" />
                 <ScalarProperty Name="POS" ColumnName="POS" />
@@ -12937,7 +12853,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DOCUMENTORs">
-            <EntityTypeMapping TypeName="TAT001Model.DOCUMENTOR">
+            <EntityTypeMapping TypeName="TAT004Model.DOCUMENTOR">
               <MappingFragment StoreEntitySet="DOCUMENTOR">
                 <ScalarProperty Name="NUM_DOC" ColumnName="NUM_DOC" />
                 <ScalarProperty Name="TREVERSA_ID" ColumnName="TREVERSA_ID" />
@@ -12948,7 +12864,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DOCUMENTORANs">
-            <EntityTypeMapping TypeName="TAT001Model.DOCUMENTORAN">
+            <EntityTypeMapping TypeName="TAT004Model.DOCUMENTORAN">
               <MappingFragment StoreEntitySet="DOCUMENTORAN">
                 <ScalarProperty Name="NUM_DOC" ColumnName="NUM_DOC" />
                 <ScalarProperty Name="POS" ColumnName="POS" />
@@ -12959,7 +12875,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DOCUMENTORECs">
-            <EntityTypeMapping TypeName="TAT001Model.DOCUMENTOREC">
+            <EntityTypeMapping TypeName="TAT004Model.DOCUMENTOREC">
               <MappingFragment StoreEntitySet="DOCUMENTOREC">
                 <ScalarProperty Name="NUM_DOC" ColumnName="NUM_DOC" />
                 <ScalarProperty Name="POS" ColumnName="POS" />
@@ -12978,7 +12894,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DOCUMENTOSAPs">
-            <EntityTypeMapping TypeName="TAT001Model.DOCUMENTOSAP">
+            <EntityTypeMapping TypeName="TAT004Model.DOCUMENTOSAP">
               <MappingFragment StoreEntitySet="DOCUMENTOSAP">
                 <ScalarProperty Name="NUM_DOC" ColumnName="NUM_DOC" />
                 <ScalarProperty Name="BUKRS" ColumnName="BUKRS" />
@@ -12999,7 +12915,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DOCUMENTOTS">
-            <EntityTypeMapping TypeName="TAT001Model.DOCUMENTOT">
+            <EntityTypeMapping TypeName="TAT004Model.DOCUMENTOT">
               <MappingFragment StoreEntitySet="DOCUMENTOTS">
                 <ScalarProperty Name="NUM_DOC" ColumnName="NUM_DOC" />
                 <ScalarProperty Name="TSFORM_ID" ColumnName="TSFORM_ID" />
@@ -13008,7 +12924,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="FACTURASCONFs">
-            <EntityTypeMapping TypeName="TAT001Model.FACTURASCONF">
+            <EntityTypeMapping TypeName="TAT004Model.FACTURASCONF">
               <MappingFragment StoreEntitySet="FACTURASCONF">
                 <ScalarProperty Name="SOCIEDAD_ID" ColumnName="SOCIEDAD_ID" />
                 <ScalarProperty Name="PAIS_ID" ColumnName="PAIS_ID" />
@@ -13031,7 +12947,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="FLUJNEGOes">
-            <EntityTypeMapping TypeName="TAT001Model.FLUJNEGO">
+            <EntityTypeMapping TypeName="TAT004Model.FLUJNEGO">
               <MappingFragment StoreEntitySet="FLUJNEGO">
                 <ScalarProperty Name="NUM_DOC" ColumnName="NUM_DOC" />
                 <ScalarProperty Name="POS" ColumnName="POS" />
@@ -13043,7 +12959,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="FLUJOes">
-            <EntityTypeMapping TypeName="TAT001Model.FLUJO">
+            <EntityTypeMapping TypeName="TAT004Model.FLUJO">
               <MappingFragment StoreEntitySet="FLUJO">
                 <ScalarProperty Name="WORKF_ID" ColumnName="WORKF_ID" />
                 <ScalarProperty Name="WF_VERSION" ColumnName="WF_VERSION" />
@@ -13064,7 +12980,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="GALLs">
-            <EntityTypeMapping TypeName="TAT001Model.GALL">
+            <EntityTypeMapping TypeName="TAT004Model.GALL">
               <MappingFragment StoreEntitySet="GALL">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
@@ -13074,7 +12990,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="GALLTs">
-            <EntityTypeMapping TypeName="TAT001Model.GALLT">
+            <EntityTypeMapping TypeName="TAT004Model.GALLT">
               <MappingFragment StoreEntitySet="GALLT">
                 <ScalarProperty Name="SPRAS_ID" ColumnName="SPRAS_ID" />
                 <ScalarProperty Name="GALL_ID" ColumnName="GALL_ID" />
@@ -13083,7 +12999,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="GAUTORIZACIONs">
-            <EntityTypeMapping TypeName="TAT001Model.GAUTORIZACION">
+            <EntityTypeMapping TypeName="TAT004Model.GAUTORIZACION">
               <MappingFragment StoreEntitySet="GAUTORIZACION">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="CLAVE" ColumnName="CLAVE" />
@@ -13094,7 +13010,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="IIMPUESTOes">
-            <EntityTypeMapping TypeName="TAT001Model.IIMPUESTO">
+            <EntityTypeMapping TypeName="TAT004Model.IIMPUESTO">
               <MappingFragment StoreEntitySet="IIMPUESTO">
                 <ScalarProperty Name="LAND" ColumnName="LAND" />
                 <ScalarProperty Name="MWSKZ" ColumnName="MWSKZ" />
@@ -13105,7 +13021,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="IMPUESTOes">
-            <EntityTypeMapping TypeName="TAT001Model.IMPUESTO">
+            <EntityTypeMapping TypeName="TAT004Model.IMPUESTO">
               <MappingFragment StoreEntitySet="IMPUESTO">
                 <ScalarProperty Name="MWSKZ" ColumnName="MWSKZ" />
                 <ScalarProperty Name="ACTIVO" ColumnName="ACTIVO" />
@@ -13113,7 +13029,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="LEYENDAs">
-            <EntityTypeMapping TypeName="TAT001Model.LEYENDA">
+            <EntityTypeMapping TypeName="TAT004Model.LEYENDA">
               <MappingFragment StoreEntitySet="LEYENDA">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="PAIS_ID" ColumnName="PAIS_ID" />
@@ -13125,7 +13041,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="MATERIALs">
-            <EntityTypeMapping TypeName="TAT001Model.MATERIAL">
+            <EntityTypeMapping TypeName="TAT004Model.MATERIAL">
               <MappingFragment StoreEntitySet="MATERIAL">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="MTART" ColumnName="MTART" />
@@ -13142,7 +13058,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="MATERIALGPs">
-            <EntityTypeMapping TypeName="TAT001Model.MATERIALGP">
+            <EntityTypeMapping TypeName="TAT004Model.MATERIALGP">
               <MappingFragment StoreEntitySet="MATERIALGP">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
@@ -13153,7 +13069,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="MATERIALGPTs">
-            <EntityTypeMapping TypeName="TAT001Model.MATERIALGPT">
+            <EntityTypeMapping TypeName="TAT004Model.MATERIALGPT">
               <MappingFragment StoreEntitySet="MATERIALGPT">
                 <ScalarProperty Name="SPRAS_ID" ColumnName="SPRAS_ID" />
                 <ScalarProperty Name="MATERIALGP_ID" ColumnName="MATERIALGP_ID" />
@@ -13162,7 +13078,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="MATERIALTs">
-            <EntityTypeMapping TypeName="TAT001Model.MATERIALT">
+            <EntityTypeMapping TypeName="TAT004Model.MATERIALT">
               <MappingFragment StoreEntitySet="MATERIALT">
                 <ScalarProperty Name="SPRAS" ColumnName="SPRAS" />
                 <ScalarProperty Name="MATERIAL_ID" ColumnName="MATERIAL_ID" />
@@ -13172,7 +13088,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="MATERIALVKEs">
-            <EntityTypeMapping TypeName="TAT001Model.MATERIALVKE">
+            <EntityTypeMapping TypeName="TAT004Model.MATERIALVKE">
               <MappingFragment StoreEntitySet="MATERIALVKE">
                 <ScalarProperty Name="MATERIAL_ID" ColumnName="MATERIAL_ID" />
                 <ScalarProperty Name="VKORG" ColumnName="VKORG" />
@@ -13182,7 +13098,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="MENSAJES">
-            <EntityTypeMapping TypeName="TAT001Model.MENSAJE">
+            <EntityTypeMapping TypeName="TAT004Model.MENSAJE">
               <MappingFragment StoreEntitySet="MENSAJES">
                 <ScalarProperty Name="ID_MENSAJE" ColumnName="ID_MENSAJE" />
                 <ScalarProperty Name="SPRAS" ColumnName="SPRAS" />
@@ -13192,7 +13108,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="MIEMBROS">
-            <EntityTypeMapping TypeName="TAT001Model.MIEMBRO">
+            <EntityTypeMapping TypeName="TAT004Model.MIEMBRO">
               <MappingFragment StoreEntitySet="MIEMBROS">
                 <ScalarProperty Name="USUARIO_ID" ColumnName="USUARIO_ID" />
                 <ScalarProperty Name="ROL_ID" ColumnName="ROL_ID" />
@@ -13201,7 +13117,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="MONEDAs">
-            <EntityTypeMapping TypeName="TAT001Model.MONEDA">
+            <EntityTypeMapping TypeName="TAT004Model.MONEDA">
               <MappingFragment StoreEntitySet="MONEDA">
                 <ScalarProperty Name="WAERS" ColumnName="WAERS" />
                 <ScalarProperty Name="ISOCD" ColumnName="ISOCD" />
@@ -13213,7 +13129,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="NEGOCIACIONs">
-            <EntityTypeMapping TypeName="TAT001Model.NEGOCIACION">
+            <EntityTypeMapping TypeName="TAT004Model.NEGOCIACION">
               <MappingFragment StoreEntitySet="NEGOCIACION">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="FECHAI" ColumnName="FECHAI" />
@@ -13224,7 +13140,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="NOTICIAs">
-            <EntityTypeMapping TypeName="TAT001Model.NOTICIA">
+            <EntityTypeMapping TypeName="TAT004Model.NOTICIA">
               <MappingFragment StoreEntitySet="NOTICIA">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="FECHAI" ColumnName="FECHAI" />
@@ -13237,7 +13153,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PAGINAs">
-            <EntityTypeMapping TypeName="TAT001Model.PAGINA">
+            <EntityTypeMapping TypeName="TAT004Model.PAGINA">
               <MappingFragment StoreEntitySet="PAGINA">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="URL" ColumnName="URL" />
@@ -13250,7 +13166,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PAGINATs">
-            <EntityTypeMapping TypeName="TAT001Model.PAGINAT">
+            <EntityTypeMapping TypeName="TAT004Model.PAGINAT">
               <MappingFragment StoreEntitySet="PAGINAT">
                 <ScalarProperty Name="SPRAS_ID" ColumnName="SPRAS_ID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
@@ -13259,7 +13175,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PAIS">
-            <EntityTypeMapping TypeName="TAT001Model.PAI">
+            <EntityTypeMapping TypeName="TAT004Model.PAI">
               <MappingFragment StoreEntitySet="PAIS">
                 <ScalarProperty Name="LAND" ColumnName="LAND" />
                 <ScalarProperty Name="SPRAS" ColumnName="SPRAS" />
@@ -13274,7 +13190,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PERIODOes">
-            <EntityTypeMapping TypeName="TAT001Model.PERIODO">
+            <EntityTypeMapping TypeName="TAT004Model.PERIODO">
               <MappingFragment StoreEntitySet="PERIODO">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
@@ -13283,7 +13199,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PERIODO445">
-            <EntityTypeMapping TypeName="TAT001Model.PERIODO445">
+            <EntityTypeMapping TypeName="TAT004Model.PERIODO445">
               <MappingFragment StoreEntitySet="PERIODO445">
                 <ScalarProperty Name="EJERCICIO" ColumnName="EJERCICIO" />
                 <ScalarProperty Name="MES_NATURAL" ColumnName="MES_NATURAL" />
@@ -13295,7 +13211,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PERIODOTs">
-            <EntityTypeMapping TypeName="TAT001Model.PERIODOT">
+            <EntityTypeMapping TypeName="TAT004Model.PERIODOT">
               <MappingFragment StoreEntitySet="PERIODOT">
                 <ScalarProperty Name="SPRAS_ID" ColumnName="SPRAS_ID" />
                 <ScalarProperty Name="PERIODO_ID" ColumnName="PERIODO_ID" />
@@ -13306,7 +13222,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PERMISO_PAGINA">
-            <EntityTypeMapping TypeName="TAT001Model.PERMISO_PAGINA">
+            <EntityTypeMapping TypeName="TAT004Model.PERMISO_PAGINA">
               <MappingFragment StoreEntitySet="PERMISO_PAGINA">
                 <ScalarProperty Name="PAGINA_ID" ColumnName="PAGINA_ID" />
                 <ScalarProperty Name="ROL_ID" ColumnName="ROL_ID" />
@@ -13315,7 +13231,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="POSICIONs">
-            <EntityTypeMapping TypeName="TAT001Model.POSICION">
+            <EntityTypeMapping TypeName="TAT004Model.POSICION">
               <MappingFragment StoreEntitySet="POSICION">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
@@ -13323,7 +13239,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PRESUPSAPHs">
-            <EntityTypeMapping TypeName="TAT001Model.PRESUPSAPH">
+            <EntityTypeMapping TypeName="TAT004Model.PRESUPSAPH">
               <MappingFragment StoreEntitySet="PRESUPSAPH">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="ANIO" ColumnName="ANIO" />
@@ -13333,7 +13249,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PRESUPSAPPs">
-            <EntityTypeMapping TypeName="TAT001Model.PRESUPSAPP">
+            <EntityTypeMapping TypeName="TAT004Model.PRESUPSAPP">
               <MappingFragment StoreEntitySet="PRESUPSAPP">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="ANIO" ColumnName="ANIO" />
@@ -13378,7 +13294,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PRESUPUESTOHs">
-            <EntityTypeMapping TypeName="TAT001Model.PRESUPUESTOH">
+            <EntityTypeMapping TypeName="TAT004Model.PRESUPUESTOH">
               <MappingFragment StoreEntitySet="PRESUPUESTOH">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="ANIO" ColumnName="ANIO" />
@@ -13388,7 +13304,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PRESUPUESTOPs">
-            <EntityTypeMapping TypeName="TAT001Model.PRESUPUESTOP">
+            <EntityTypeMapping TypeName="TAT004Model.PRESUPUESTOP">
               <MappingFragment StoreEntitySet="PRESUPUESTOP">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="ANIO" ColumnName="ANIO" />
@@ -13426,7 +13342,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PROVEEDORs">
-            <EntityTypeMapping TypeName="TAT001Model.PROVEEDOR">
+            <EntityTypeMapping TypeName="TAT004Model.PROVEEDOR">
               <MappingFragment StoreEntitySet="PROVEEDOR">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
@@ -13437,7 +13353,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PUESTOes">
-            <EntityTypeMapping TypeName="TAT001Model.PUESTO">
+            <EntityTypeMapping TypeName="TAT004Model.PUESTO">
               <MappingFragment StoreEntitySet="PUESTO">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="ACTIVO" ColumnName="ACTIVO" />
@@ -13445,7 +13361,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PUESTOTs">
-            <EntityTypeMapping TypeName="TAT001Model.PUESTOT">
+            <EntityTypeMapping TypeName="TAT004Model.PUESTOT">
               <MappingFragment StoreEntitySet="PUESTOT">
                 <ScalarProperty Name="SPRAS_ID" ColumnName="SPRAS_ID" />
                 <ScalarProperty Name="PUESTO_ID" ColumnName="PUESTO_ID" />
@@ -13454,7 +13370,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="RANGOes">
-            <EntityTypeMapping TypeName="TAT001Model.RANGO">
+            <EntityTypeMapping TypeName="TAT004Model.RANGO">
               <MappingFragment StoreEntitySet="RANGO">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="INICIO" ColumnName="INICIO" />
@@ -13465,7 +13381,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="REGIONs">
-            <EntityTypeMapping TypeName="TAT001Model.REGION">
+            <EntityTypeMapping TypeName="TAT004Model.REGION">
               <MappingFragment StoreEntitySet="REGION">
                 <ScalarProperty Name="REGION1" ColumnName="REGION" />
                 <ScalarProperty Name="SOCIEDAD" ColumnName="SOCIEDAD" />
@@ -13473,7 +13389,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="RETENCIONs">
-            <EntityTypeMapping TypeName="TAT001Model.RETENCION">
+            <EntityTypeMapping TypeName="TAT004Model.RETENCION">
               <MappingFragment StoreEntitySet="RETENCION">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="DESCRIPCIÓN" ColumnName="DESCRIPCIÓN" />
@@ -13483,7 +13399,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="RETENCIONTs">
-            <EntityTypeMapping TypeName="TAT001Model.RETENCIONT">
+            <EntityTypeMapping TypeName="TAT004Model.RETENCIONT">
               <MappingFragment StoreEntitySet="RETENCIONT">
                 <ScalarProperty Name="SPRAS_ID" ColumnName="SPRAS_ID" />
                 <ScalarProperty Name="RETENCION_ID" ColumnName="RETENCION_ID" />
@@ -13492,7 +13408,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="ROLs">
-            <EntityTypeMapping TypeName="TAT001Model.ROL">
+            <EntityTypeMapping TypeName="TAT004Model.ROL">
               <MappingFragment StoreEntitySet="ROL">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="CLAVE" ColumnName="CLAVE" />
@@ -13502,7 +13418,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="ROLTs">
-            <EntityTypeMapping TypeName="TAT001Model.ROLT">
+            <EntityTypeMapping TypeName="TAT004Model.ROLT">
               <MappingFragment StoreEntitySet="ROLT">
                 <ScalarProperty Name="SPRAS_ID" ColumnName="SPRAS_ID" />
                 <ScalarProperty Name="ROL_ID" ColumnName="ROL_ID" />
@@ -13511,7 +13427,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="SOCIEDADs">
-            <EntityTypeMapping TypeName="TAT001Model.SOCIEDAD">
+            <EntityTypeMapping TypeName="TAT004Model.SOCIEDAD">
               <MappingFragment StoreEntitySet="SOCIEDAD">
                 <ScalarProperty Name="BUKRS" ColumnName="BUKRS" />
                 <ScalarProperty Name="BUTXT" ColumnName="BUTXT" />
@@ -13528,7 +13444,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="SPRAS">
-            <EntityTypeMapping TypeName="TAT001Model.SPRA">
+            <EntityTypeMapping TypeName="TAT004Model.SPRA">
               <MappingFragment StoreEntitySet="SPRAS">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
@@ -13536,7 +13452,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="STATES">
-            <EntityTypeMapping TypeName="TAT001Model.STATE">
+            <EntityTypeMapping TypeName="TAT004Model.STATE">
               <MappingFragment StoreEntitySet="STATES">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="NAME" ColumnName="NAME" />
@@ -13545,7 +13461,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="sysdiagrams">
-            <EntityTypeMapping TypeName="TAT001Model.sysdiagram">
+            <EntityTypeMapping TypeName="TAT004Model.sysdiagram">
               <MappingFragment StoreEntitySet="sysdiagrams">
                 <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="principal_id" ColumnName="principal_id" />
@@ -13556,7 +13472,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TABs">
-            <EntityTypeMapping TypeName="TAT001Model.TAB">
+            <EntityTypeMapping TypeName="TAT004Model.TAB">
               <MappingFragment StoreEntitySet="TAB">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="CONTAINER" ColumnName="CONTAINER" />
@@ -13566,7 +13482,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TALLs">
-            <EntityTypeMapping TypeName="TAT001Model.TALL">
+            <EntityTypeMapping TypeName="TAT004Model.TALL">
               <MappingFragment StoreEntitySet="TALL">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
@@ -13578,7 +13494,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TALLTs">
-            <EntityTypeMapping TypeName="TAT001Model.TALLT">
+            <EntityTypeMapping TypeName="TAT004Model.TALLT">
               <MappingFragment StoreEntitySet="TALLT">
                 <ScalarProperty Name="SPRAS_ID" ColumnName="SPRAS_ID" />
                 <ScalarProperty Name="TALL_ID" ColumnName="TALL_ID" />
@@ -13587,7 +13503,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TAX_LAND">
-            <EntityTypeMapping TypeName="TAT001Model.TAX_LAND">
+            <EntityTypeMapping TypeName="TAT004Model.TAX_LAND">
               <MappingFragment StoreEntitySet="TAX_LAND">
                 <ScalarProperty Name="SOCIEDAD_ID" ColumnName="SOCIEDAD_ID" />
                 <ScalarProperty Name="PAIS_ID" ColumnName="PAIS_ID" />
@@ -13596,7 +13512,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TAXEOHs">
-            <EntityTypeMapping TypeName="TAT001Model.TAXEOH">
+            <EntityTypeMapping TypeName="TAT004Model.TAXEOH">
               <MappingFragment StoreEntitySet="TAXEOH">
                 <ScalarProperty Name="SOCIEDAD_ID" ColumnName="SOCIEDAD_ID" />
                 <ScalarProperty Name="PAIS_ID" ColumnName="PAIS_ID" />
@@ -13618,7 +13534,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TAXEOPs">
-            <EntityTypeMapping TypeName="TAT001Model.TAXEOP">
+            <EntityTypeMapping TypeName="TAT004Model.TAXEOP">
               <MappingFragment StoreEntitySet="TAXEOP">
                 <ScalarProperty Name="SOCIEDAD_ID" ColumnName="SOCIEDAD_ID" />
                 <ScalarProperty Name="PAIS_ID" ColumnName="PAIS_ID" />
@@ -13636,7 +13552,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TCAMBIOs">
-            <EntityTypeMapping TypeName="TAT001Model.TCAMBIO">
+            <EntityTypeMapping TypeName="TAT004Model.TCAMBIO">
               <MappingFragment StoreEntitySet="TCAMBIO">
                 <ScalarProperty Name="KURST" ColumnName="KURST" />
                 <ScalarProperty Name="FCURR" ColumnName="FCURR" />
@@ -13647,7 +13563,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TCLIENTEs">
-            <EntityTypeMapping TypeName="TAT001Model.TCLIENTE">
+            <EntityTypeMapping TypeName="TAT004Model.TCLIENTE">
               <MappingFragment StoreEntitySet="TCLIENTE">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="ACTIVO" ColumnName="ACTIVO" />
@@ -13655,7 +13571,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TCLIENTETs">
-            <EntityTypeMapping TypeName="TAT001Model.TCLIENTET">
+            <EntityTypeMapping TypeName="TAT004Model.TCLIENTET">
               <MappingFragment StoreEntitySet="TCLIENTET">
                 <ScalarProperty Name="SPRAS" ColumnName="SPRAS" />
                 <ScalarProperty Name="PARVW_ID" ColumnName="PARVW_ID" />
@@ -13664,7 +13580,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TEXTOes">
-            <EntityTypeMapping TypeName="TAT001Model.TEXTO">
+            <EntityTypeMapping TypeName="TAT004Model.TEXTO">
               <MappingFragment StoreEntitySet="TEXTO">
                 <ScalarProperty Name="PAGINA_ID" ColumnName="PAGINA_ID" />
                 <ScalarProperty Name="CAMPO_ID" ColumnName="CAMPO_ID" />
@@ -13675,7 +13591,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TEXTOCVs">
-            <EntityTypeMapping TypeName="TAT001Model.TEXTOCV">
+            <EntityTypeMapping TypeName="TAT004Model.TEXTOCV">
               <MappingFragment StoreEntitySet="TEXTOCV">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="SPRAS_ID" ColumnName="SPRAS_ID" />
@@ -13685,7 +13601,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TRETENCIONs">
-            <EntityTypeMapping TypeName="TAT001Model.TRETENCION">
+            <EntityTypeMapping TypeName="TAT004Model.TRETENCION">
               <MappingFragment StoreEntitySet="TRETENCION">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
@@ -13694,7 +13610,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TRETENCIONTs">
-            <EntityTypeMapping TypeName="TAT001Model.TRETENCIONT">
+            <EntityTypeMapping TypeName="TAT004Model.TRETENCIONT">
               <MappingFragment StoreEntitySet="TRETENCIONT">
                 <ScalarProperty Name="SPRAS_ID" ColumnName="SPRAS_ID" />
                 <ScalarProperty Name="TRETENCION_ID" ColumnName="TRETENCION_ID" />
@@ -13703,7 +13619,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TREVERSAs">
-            <EntityTypeMapping TypeName="TAT001Model.TREVERSA">
+            <EntityTypeMapping TypeName="TAT004Model.TREVERSA">
               <MappingFragment StoreEntitySet="TREVERSA">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
@@ -13714,7 +13630,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TREVERSATs">
-            <EntityTypeMapping TypeName="TAT001Model.TREVERSAT">
+            <EntityTypeMapping TypeName="TAT004Model.TREVERSAT">
               <MappingFragment StoreEntitySet="TREVERSAT">
                 <ScalarProperty Name="SPRAS_ID" ColumnName="SPRAS_ID" />
                 <ScalarProperty Name="TREVERSA_ID" ColumnName="TREVERSA_ID" />
@@ -13723,7 +13639,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TS_CAMPO">
-            <EntityTypeMapping TypeName="TAT001Model.TS_CAMPO">
+            <EntityTypeMapping TypeName="TAT004Model.TS_CAMPO">
               <MappingFragment StoreEntitySet="TS_CAMPO">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="ACTIVO" ColumnName="ACTIVO" />
@@ -13731,7 +13647,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TS_FORM">
-            <EntityTypeMapping TypeName="TAT001Model.TS_FORM">
+            <EntityTypeMapping TypeName="TAT004Model.TS_FORM">
               <MappingFragment StoreEntitySet="TS_FORM">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="BUKRS_ID" ColumnName="BUKRS_ID" />
@@ -13742,7 +13658,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TS_FORMT">
-            <EntityTypeMapping TypeName="TAT001Model.TS_FORMT">
+            <EntityTypeMapping TypeName="TAT004Model.TS_FORMT">
               <MappingFragment StoreEntitySet="TS_FORMT">
                 <ScalarProperty Name="SPRAS_ID" ColumnName="SPRAS_ID" />
                 <ScalarProperty Name="TSFORM_ID" ColumnName="TSFORM_ID" />
@@ -13751,7 +13667,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TSOLs">
-            <EntityTypeMapping TypeName="TAT001Model.TSOL">
+            <EntityTypeMapping TypeName="TAT004Model.TSOL">
               <MappingFragment StoreEntitySet="TSOL">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
@@ -13771,7 +13687,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TSOLTs">
-            <EntityTypeMapping TypeName="TAT001Model.TSOLT">
+            <EntityTypeMapping TypeName="TAT004Model.TSOLT">
               <MappingFragment StoreEntitySet="TSOLT">
                 <ScalarProperty Name="SPRAS_ID" ColumnName="SPRAS_ID" />
                 <ScalarProperty Name="TSOL_ID" ColumnName="TSOL_ID" />
@@ -13782,7 +13698,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TSOPORTEs">
-            <EntityTypeMapping TypeName="TAT001Model.TSOPORTE">
+            <EntityTypeMapping TypeName="TAT004Model.TSOPORTE">
               <MappingFragment StoreEntitySet="TSOPORTE">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
@@ -13791,7 +13707,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TSOPORTETs">
-            <EntityTypeMapping TypeName="TAT001Model.TSOPORTET">
+            <EntityTypeMapping TypeName="TAT004Model.TSOPORTET">
               <MappingFragment StoreEntitySet="TSOPORTET">
                 <ScalarProperty Name="SPRAS_ID" ColumnName="SPRAS_ID" />
                 <ScalarProperty Name="TSOPORTE_ID" ColumnName="TSOPORTE_ID" />
@@ -13800,7 +13716,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TX_CONCEPTO">
-            <EntityTypeMapping TypeName="TAT001Model.TX_CONCEPTO">
+            <EntityTypeMapping TypeName="TAT004Model.TX_CONCEPTO">
               <MappingFragment StoreEntitySet="TX_CONCEPTO">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
@@ -13809,7 +13725,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TX_CONCEPTOT">
-            <EntityTypeMapping TypeName="TAT001Model.TX_CONCEPTOT">
+            <EntityTypeMapping TypeName="TAT004Model.TX_CONCEPTOT">
               <MappingFragment StoreEntitySet="TX_CONCEPTOT">
                 <ScalarProperty Name="SPRAS_ID" ColumnName="SPRAS_ID" />
                 <ScalarProperty Name="CONCEPTO_ID" ColumnName="CONCEPTO_ID" />
@@ -13818,7 +13734,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TX_NOTAT">
-            <EntityTypeMapping TypeName="TAT001Model.TX_NOTAT">
+            <EntityTypeMapping TypeName="TAT004Model.TX_NOTAT">
               <MappingFragment StoreEntitySet="TX_NOTAT">
                 <ScalarProperty Name="SPRAS_ID" ColumnName="SPRAS_ID" />
                 <ScalarProperty Name="TNOTA_ID" ColumnName="TNOTA_ID" />
@@ -13827,7 +13743,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TX_TNOTA">
-            <EntityTypeMapping TypeName="TAT001Model.TX_TNOTA">
+            <EntityTypeMapping TypeName="TAT004Model.TX_TNOTA">
               <MappingFragment StoreEntitySet="TX_TNOTA">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
@@ -13836,7 +13752,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="UMEDIDAs">
-            <EntityTypeMapping TypeName="TAT001Model.UMEDIDA">
+            <EntityTypeMapping TypeName="TAT004Model.UMEDIDA">
               <MappingFragment StoreEntitySet="UMEDIDA">
                 <ScalarProperty Name="MSEHI" ColumnName="MSEHI" />
                 <ScalarProperty Name="ACTIVO" ColumnName="ACTIVO" />
@@ -13844,7 +13760,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="UMEDIDATs">
-            <EntityTypeMapping TypeName="TAT001Model.UMEDIDAT">
+            <EntityTypeMapping TypeName="TAT004Model.UMEDIDAT">
               <MappingFragment StoreEntitySet="UMEDIDAT">
                 <ScalarProperty Name="SPRAS_ID" ColumnName="SPRAS_ID" />
                 <ScalarProperty Name="MSEHI" ColumnName="MSEHI" />
@@ -13856,7 +13772,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="USUARIOs">
-            <EntityTypeMapping TypeName="TAT001Model.USUARIO">
+            <EntityTypeMapping TypeName="TAT004Model.USUARIO">
               <MappingFragment StoreEntitySet="USUARIO">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="PASS" ColumnName="PASS" />
@@ -13874,7 +13790,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="USUARIOFs">
-            <EntityTypeMapping TypeName="TAT001Model.USUARIOF">
+            <EntityTypeMapping TypeName="TAT004Model.USUARIOF">
               <MappingFragment StoreEntitySet="USUARIOF">
                 <ScalarProperty Name="USUARIO_ID" ColumnName="USUARIO_ID" />
                 <ScalarProperty Name="VKORG" ColumnName="VKORG" />
@@ -13890,7 +13806,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="USUARIOSAPs">
-            <EntityTypeMapping TypeName="TAT001Model.USUARIOSAP">
+            <EntityTypeMapping TypeName="TAT004Model.USUARIOSAP">
               <MappingFragment StoreEntitySet="USUARIOSAP">
                 <ScalarProperty Name="IDUSUARIO" ColumnName="IDUSUARIO" />
                 <ScalarProperty Name="AUTOMATICO" ColumnName="AUTOMATICO" />
@@ -13898,7 +13814,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="WARNINGs">
-            <EntityTypeMapping TypeName="TAT001Model.WARNING">
+            <EntityTypeMapping TypeName="TAT004Model.WARNING">
               <MappingFragment StoreEntitySet="WARNING">
                 <ScalarProperty Name="PAGINA_ID" ColumnName="PAGINA_ID" />
                 <ScalarProperty Name="CAMPO_ID" ColumnName="CAMPO_ID" />
@@ -13910,7 +13826,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="WARNING_COND">
-            <EntityTypeMapping TypeName="TAT001Model.WARNING_COND">
+            <EntityTypeMapping TypeName="TAT004Model.WARNING_COND">
               <MappingFragment StoreEntitySet="WARNING_COND">
                 <ScalarProperty Name="TAB_ID" ColumnName="TAB_ID" />
                 <ScalarProperty Name="WARNING_ID" ColumnName="WARNING_ID" />
@@ -13924,7 +13840,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="WARNINGPs">
-            <EntityTypeMapping TypeName="TAT001Model.WARNINGP">
+            <EntityTypeMapping TypeName="TAT004Model.WARNINGP">
               <MappingFragment StoreEntitySet="WARNINGP">
                 <ScalarProperty Name="TAB_ID" ColumnName="TAB_ID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
@@ -13940,7 +13856,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="WARNINGPTs">
-            <EntityTypeMapping TypeName="TAT001Model.WARNINGPT">
+            <EntityTypeMapping TypeName="TAT004Model.WARNINGPT">
               <MappingFragment StoreEntitySet="WARNINGPT">
                 <ScalarProperty Name="SPRAS_ID" ColumnName="SPRAS_ID" />
                 <ScalarProperty Name="TAB_ID" ColumnName="TAB_ID" />
@@ -13950,7 +13866,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="WORKFHs">
-            <EntityTypeMapping TypeName="TAT001Model.WORKFH">
+            <EntityTypeMapping TypeName="TAT004Model.WORKFH">
               <MappingFragment StoreEntitySet="WORKFH">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
@@ -13964,7 +13880,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="WORKFPs">
-            <EntityTypeMapping TypeName="TAT001Model.WORKFP">
+            <EntityTypeMapping TypeName="TAT004Model.WORKFP">
               <MappingFragment StoreEntitySet="WORKFP">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="VERSION" ColumnName="VERSION" />
@@ -13985,7 +13901,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="WORKFTs">
-            <EntityTypeMapping TypeName="TAT001Model.WORKFT">
+            <EntityTypeMapping TypeName="TAT004Model.WORKFT">
               <MappingFragment StoreEntitySet="WORKFT">
                 <ScalarProperty Name="SPRAS_ID" ColumnName="SPRAS_ID" />
                 <ScalarProperty Name="WF_ID" ColumnName="WF_ID" />
@@ -13996,7 +13912,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="WORKFVs">
-            <EntityTypeMapping TypeName="TAT001Model.WORKFV">
+            <EntityTypeMapping TypeName="TAT004Model.WORKFV">
               <MappingFragment StoreEntitySet="WORKFV">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="VERSION" ColumnName="VERSION" />
@@ -14010,7 +13926,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="ZBRANDs">
-            <EntityTypeMapping TypeName="TAT001Model.ZBRAND">
+            <EntityTypeMapping TypeName="TAT004Model.ZBRAND">
               <MappingFragment StoreEntitySet="ZBRAND">
                 <ScalarProperty Name="ID_ZB" ColumnName="ID_ZB" />
                 <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
@@ -14018,7 +13934,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="ZCTGRs">
-            <EntityTypeMapping TypeName="TAT001Model.ZCTGR">
+            <EntityTypeMapping TypeName="TAT004Model.ZCTGR">
               <MappingFragment StoreEntitySet="ZCTGR">
                 <ScalarProperty Name="ID_ZC" ColumnName="ID_ZC" />
                 <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
@@ -14026,7 +13942,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CARPETAVs">
-            <EntityTypeMapping TypeName="TAT001Model.CARPETAV">
+            <EntityTypeMapping TypeName="TAT004Model.CARPETAV">
               <MappingFragment StoreEntitySet="CARPETAV">
                 <ScalarProperty Name="USUARIO_ID" ColumnName="USUARIO_ID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
@@ -14037,7 +13953,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CREADORs">
-            <EntityTypeMapping TypeName="TAT001Model.CREADOR">
+            <EntityTypeMapping TypeName="TAT004Model.CREADOR">
               <MappingFragment StoreEntitySet="CREADOR">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="PUESTOC_ID" ColumnName="PUESTOC_ID" />
@@ -14050,7 +13966,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CREADOR2">
-            <EntityTypeMapping TypeName="TAT001Model.CREADOR2">
+            <EntityTypeMapping TypeName="TAT004Model.CREADOR2">
               <MappingFragment StoreEntitySet="CREADOR2">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="PUESTOC_ID" ColumnName="PUESTOC_ID" />
@@ -14063,7 +13979,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DET_APROBV">
-            <EntityTypeMapping TypeName="TAT001Model.DET_APROBV">
+            <EntityTypeMapping TypeName="TAT004Model.DET_APROBV">
               <MappingFragment StoreEntitySet="DET_APROBV">
                 <ScalarProperty Name="BUKRS" ColumnName="BUKRS" />
                 <ScalarProperty Name="PUESTOC_ID" ColumnName="PUESTOC_ID" />
@@ -14073,7 +13989,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DOCUMENTOVs">
-            <EntityTypeMapping TypeName="TAT001Model.DOCUMENTOV">
+            <EntityTypeMapping TypeName="TAT004Model.DOCUMENTOV">
               <MappingFragment StoreEntitySet="DOCUMENTOV">
                 <ScalarProperty Name="POS" ColumnName="POS" />
                 <ScalarProperty Name="NUM_DOC" ColumnName="NUM_DOC" />
@@ -14147,7 +14063,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PAGINAVs">
-            <EntityTypeMapping TypeName="TAT001Model.PAGINAV">
+            <EntityTypeMapping TypeName="TAT004Model.PAGINAV">
               <MappingFragment StoreEntitySet="PAGINAV">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="PAGINA_ID" ColumnName="PAGINA_ID" />
@@ -14163,7 +14079,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="WARNINGVs">
-            <EntityTypeMapping TypeName="TAT001Model.WARNINGV">
+            <EntityTypeMapping TypeName="TAT004Model.WARNINGV">
               <MappingFragment StoreEntitySet="WARNINGV">
                 <ScalarProperty Name="PAGINA_ID" ColumnName="PAGINA_ID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
@@ -14176,7 +14092,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="USUARIOGA" TypeName="TAT001Model.USUARIOGA" StoreEntitySet="USUARIOGA">
+          <AssociationSetMapping Name="USUARIOGA" TypeName="TAT004Model.USUARIOGA" StoreEntitySet="USUARIOGA">
             <EndProperty Name="GAUTORIZACION">
               <ScalarProperty Name="ID" ColumnName="AGROUP_ID" />
             </EndProperty>
@@ -14184,17 +14100,17 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
               <ScalarProperty Name="ID" ColumnName="USUARIO_ID" />
             </EndProperty>
           </AssociationSetMapping>
-          <FunctionImportMapping FunctionName="TAT001Model.Store.split" FunctionImportName="split">
+          <FunctionImportMapping FunctionName="TAT004Model.Store.split" FunctionImportName="split">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="TAT001Model.split_Result">
+              <ComplexTypeMapping TypeName="TAT004Model.split_Result">
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="val" ColumnName="val" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="CPS_LISTA_CLI_PRO" FunctionName="TAT001Model.Store.CPS_LISTA_CLI_PRO">
+          <FunctionImportMapping FunctionImportName="CPS_LISTA_CLI_PRO" FunctionName="TAT004Model.Store.CPS_LISTA_CLI_PRO">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="TAT001Model.CPS_LISTA_CLI_PRO_Result">
+              <ComplexTypeMapping TypeName="TAT004Model.CPS_LISTA_CLI_PRO_Result">
                 <ScalarProperty Name="KUNNR" ColumnName="KUNNR" />
                 <ScalarProperty Name="NAME1" ColumnName="NAME1" />
                 <ScalarProperty Name="PROVEEDOR_ID" ColumnName="PROVEEDOR_ID" />
@@ -14207,18 +14123,18 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="CSP_BANNERSINCANAL" FunctionName="TAT001Model.Store.CSP_BANNERSINCANAL" />
-          <FunctionImportMapping FunctionImportName="CSP_CAMBIO" FunctionName="TAT001Model.Store.CSP_CAMBIO">
+          <FunctionImportMapping FunctionImportName="CSP_BANNERSINCANAL" FunctionName="TAT004Model.Store.CSP_BANNERSINCANAL" />
+          <FunctionImportMapping FunctionImportName="CSP_CAMBIO" FunctionName="TAT004Model.Store.CSP_CAMBIO">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="TAT001Model.CSP_CAMBIO_Result">
+              <ComplexTypeMapping TypeName="TAT004Model.CSP_CAMBIO_Result">
                 <ScalarProperty Name="FCURR" ColumnName="FCURR" />
                 <ScalarProperty Name="TCURR" ColumnName="TCURR" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="CSP_CARPETA" FunctionName="TAT001Model.Store.CSP_CARPETA">
+          <FunctionImportMapping FunctionImportName="CSP_CARPETA" FunctionName="TAT004Model.Store.CSP_CARPETA">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="TAT001Model.CSP_CARPETA_Result">
+              <ComplexTypeMapping TypeName="TAT004Model.CSP_CARPETA_Result">
                 <ScalarProperty Name="CAR_ID" ColumnName="CAR_ID" />
                 <ScalarProperty Name="CAR_URL" ColumnName="CAR_URL" />
                 <ScalarProperty Name="CAR_TIT" ColumnName="CAR_TIT" />
@@ -14226,9 +14142,9 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="CSP_CONSULTARPRESUPUESTO" FunctionName="TAT001Model.Store.CSP_CONSULTARPRESUPUESTO">
+          <FunctionImportMapping FunctionImportName="CSP_CONSULTARPRESUPUESTO" FunctionName="TAT004Model.Store.CSP_CONSULTARPRESUPUESTO">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="TAT001Model.CSP_CONSULTARPRESUPUESTO_Result">
+              <ComplexTypeMapping TypeName="TAT004Model.CSP_CONSULTARPRESUPUESTO_Result">
                 <ScalarProperty Name="CANAL" ColumnName="CANAL" />
                 <ScalarProperty Name="CDESCRIPCION" ColumnName="CDESCRIPCION" />
                 <ScalarProperty Name="PPTOC" ColumnName="PPTOC" />
@@ -14257,9 +14173,9 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="CSP_DOCUMENTOSXUSER" FunctionName="TAT001Model.Store.CSP_DOCUMENTOSXUSER">
+          <FunctionImportMapping FunctionImportName="CSP_DOCUMENTOSXUSER" FunctionName="TAT004Model.Store.CSP_DOCUMENTOSXUSER">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="TAT001Model.CSP_DOCUMENTOSXUSER_Result">
+              <ComplexTypeMapping TypeName="TAT004Model.CSP_DOCUMENTOSXUSER_Result">
                 <ScalarProperty Name="NUM_DOC" ColumnName="NUM_DOC" />
                 <ScalarProperty Name="PADRE" ColumnName="PADRE" />
                 <ScalarProperty Name="REVERSO" ColumnName="REVERSO" />
@@ -14293,9 +14209,9 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="CSP_PERMISO" FunctionName="TAT001Model.Store.CSP_PERMISO">
+          <FunctionImportMapping FunctionImportName="CSP_PERMISO" FunctionName="TAT004Model.Store.CSP_PERMISO">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="TAT001Model.CSP_PERMISO_Result">
+              <ComplexTypeMapping TypeName="TAT004Model.CSP_PERMISO_Result">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="ID_PAG" ColumnName="ID_PAG" />
                 <ScalarProperty Name="URL" ColumnName="URL" />
@@ -14306,18 +14222,18 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="CSP_PRESU_CLIENT" FunctionName="TAT001Model.Store.CSP_PRESU_CLIENT">
+          <FunctionImportMapping FunctionImportName="CSP_PRESU_CLIENT" FunctionName="TAT004Model.Store.CSP_PRESU_CLIENT">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="TAT001Model.CSP_PRESU_CLIENT_Result">
+              <ComplexTypeMapping TypeName="TAT004Model.CSP_PRESU_CLIENT_Result">
                 <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
                 <ScalarProperty Name="VALOR" ColumnName="VALOR" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="CSP_PRESUPUESTO_ADD" FunctionName="TAT001Model.Store.CSP_PRESUPUESTO_ADD" />
-          <FunctionImportMapping FunctionImportName="CSP_PRESUPUESTO_ADDP" FunctionName="TAT001Model.Store.CSP_PRESUPUESTO_ADDP">
+          <FunctionImportMapping FunctionImportName="CSP_PRESUPUESTO_ADD" FunctionName="TAT004Model.Store.CSP_PRESUPUESTO_ADD" />
+          <FunctionImportMapping FunctionImportName="CSP_PRESUPUESTO_ADDP" FunctionName="TAT004Model.Store.CSP_PRESUPUESTO_ADDP">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="TAT001Model.CSP_PRESUPUESTO_ADDP_Result">
+              <ComplexTypeMapping TypeName="TAT004Model.CSP_PRESUPUESTO_ADDP_Result">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="ANIO" ColumnName="ANIO" />
                 <ScalarProperty Name="POS" ColumnName="POS" />
@@ -14353,9 +14269,9 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="CSP_USUARIO" FunctionName="TAT001Model.Store.CSP_USUARIO">
+          <FunctionImportMapping FunctionImportName="CSP_USUARIO" FunctionName="TAT004Model.Store.CSP_USUARIO">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="TAT001Model.CSP_USUARIO_Result">
+              <ComplexTypeMapping TypeName="TAT004Model.CSP_USUARIO_Result">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="PASS" ColumnName="PASS" />
                 <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
@@ -14369,20 +14285,20 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="TAT001Model.Store.sp_alterdiagram" />
-          <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="TAT001Model.Store.sp_creatediagram" />
-          <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="TAT001Model.Store.sp_dropdiagram" />
-          <FunctionImportMapping FunctionImportName="sp_helpdiagramdefinition" FunctionName="TAT001Model.Store.sp_helpdiagramdefinition">
+          <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="TAT004Model.Store.sp_alterdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="TAT004Model.Store.sp_creatediagram" />
+          <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="TAT004Model.Store.sp_dropdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_helpdiagramdefinition" FunctionName="TAT004Model.Store.sp_helpdiagramdefinition">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="TAT001Model.sp_helpdiagramdefinition_Result">
+              <ComplexTypeMapping TypeName="TAT004Model.sp_helpdiagramdefinition_Result">
                 <ScalarProperty Name="version" ColumnName="version" />
                 <ScalarProperty Name="definition" ColumnName="definition" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="sp_helpdiagrams" FunctionName="TAT001Model.Store.sp_helpdiagrams">
+          <FunctionImportMapping FunctionImportName="sp_helpdiagrams" FunctionName="TAT004Model.Store.sp_helpdiagrams">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="TAT001Model.sp_helpdiagrams_Result">
+              <ComplexTypeMapping TypeName="TAT004Model.sp_helpdiagrams_Result">
                 <ScalarProperty Name="Database" ColumnName="Database" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
@@ -14391,7 +14307,6 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-<<<<<<< HEAD
           <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="TAT004Model.Store.sp_renamediagram" />
           <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="TAT004Model.Store.sp_upgraddiagrams" />
           <EntitySetMapping Name="CALENDARIO_EX">
@@ -14412,10 +14327,6 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-=======
-          <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="TAT001Model.Store.sp_renamediagram" />
-          <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="TAT001Model.Store.sp_upgraddiagrams" />
->>>>>>> c8237191da525483c9bf44b4688659b8524538ea
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

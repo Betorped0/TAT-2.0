@@ -618,9 +618,6 @@
     <Compile Include="Entities\TAB.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\TAB_CAMPO.cs">
-      <DependentUpon>TAT001.tt</DependentUpon>
-    </Compile>
     <Compile Include="Entities\TALL.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
