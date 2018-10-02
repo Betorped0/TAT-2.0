@@ -81,13 +81,6 @@
         fechaFSelectM.options.onSelect = function (val) {
             if (fechaFMinM) { fechaFMinM.options.minDate = val; }
             if (fechaFMaxM) { fechaFMaxM.options.maxDate = val; }
-            if (fechaFMax.val()) {
-                var date = moment(fechaFMax.val(), 'DD/MM/YYYY');
-                    if (val > date) {
-                        fechaFMax.val(null);
-                        fechaFMaxM.date = null;
-                    }
-                }
             };
         
           
