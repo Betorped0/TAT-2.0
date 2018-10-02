@@ -154,19 +154,43 @@
                     <div class='collapsible-body'>
                         <ul>
                             @foreach (TAT001.Entities.PAGINAV p in ViewBag.permisos)
-                        {
-                            if (c.ID.Equals(p.CARPETA_ID))
                             {
-                                if (ViewBag.pagina_r.Equals(p.PAGINA_ID))
+                                if (c.ID.Equals(p.CARPETA_ID))
                                 {
-                                    <li class="active"><a href='@Url.Action(p.PAGINA_URL,c.URL)'>@p.TXT50</a></li>
-                            }
-                            else
-                            {
-                                <li><a href="@Url.Action(p.PAGINA_URL,c.URL)">@p.TXT50</a></li>
-                        }
-                    }
-                }
+                                    if (ViewBag.pagina_r.Equals(p.PAGINA_ID))
+                                    {
+                                        ////////DRS 26.09.18//////
+                                        <li class="active">
+                                            <a style="color: rgba(0, 0, 0, 0.87);
+                                                font-family: Tahoma;
+                                                text-transform: uppercase;
+                                                display: block;
+                                                font-size: 10px;
+                                                font-weight: 500;
+                                                height: 48px;
+                                                line-height: 48px;
+                                                padding: 0 32px;
+                                                text-indent: 1cm;" href='@Url.Action(p.PAGINA_URL,c.URL)'>@p.TXT50</a>
+                                            </li>
+                                        }
+                                        else
+                                        {
+                                            ////////DRS 26.09.18//////
+                                            <li>
+                                                <a style="color: rgba(0, 0, 0, 0.87);
+                                                font-family: Tahoma;
+                                                text-transform: uppercase;
+                                                display: block;
+                                                font-size: 10px;
+                                                font-weight: 500;
+                                                height: 48px;
+                                                line-height: 48px;
+                                                padding: 0 32px;
+                                                text-indent: 1cm;" href="@Url.Action(p.PAGINA_URL,c.URL)">@p.TXT50</a>
+                                            </li>
+                                        }
+                                    }
+                                }
                         </ul>
                     </div>
                 </li>
@@ -179,11 +203,23 @@
                 <div class='collapsible-body'>
                     <ul class="collapsible" data-collapsible="accordion">
                         @foreach (TAT001.Entities.PAGINAV p in ViewBag.permisos)
-                    {
-                        if (c.ID.Equals(p.CARPETA_ID))
                         {
-                            <li><a href="@Url.Action(p.PAGINA_URL, c.URL)">@p.TXT50</a></li>
-                            @*<li class="bold">
+                            if (c.ID.Equals(p.CARPETA_ID))
+                            {
+                                ////////DRS 26.09.18//////
+                                <li>
+                                    <a style="color: rgba(0, 0, 0, 0.87);
+                                                font-family: Tahoma;
+                                                text-transform: uppercase;
+                                                display: block;
+                                                font-size: 10px;
+                                                font-weight: 500;
+                                                height: 48px;
+                                                line-height: 48px;
+                                                padding: 0 32px;
+                                                text-indent: 1cm;" href="@Url.Action(p.PAGINA_URL, c.URL)">@p.TXT50</a>
+                                            </li>
+                                            @*<li class="bold">
                                 <a class="collapsible-header">
                                     <span class="nav-text">Second level child</span>
                                     <i class="material-icons">keyboard_arrow_right</i>
@@ -195,8 +231,8 @@
                                     </ul>
                                 </div>
                             </li>*@
-                    }
-                }
+                                        }
+                                    }
                     </ul>
                 </div>
             </li>

@@ -427,39 +427,15 @@ $(document).ready(function () {
                         }
                     }
 
-                } else if (dis == "M") {
-                    //Distribución por material                     
-
-                    //var addedRow = addRowMat(t, "", "", "", "", "", "", "", "", "", "", "", relacionada, reversa, ddate, adate, "");
-                    var addedRow = addRowMat(t, "", "", "", "", "", "", "", "", "", "", "", relacionada, relacionadaed, reversa, ddate, adate, "", "");//Add MGC B20180705 2018.07.05 ne no eliminar //Add MGC B20180705 2018.07.05 relacionadaed editar el material en los nuevos renglones
-
-                    //t.row.add([
-                    //    "",
-                    //    "",
-                    //    "",
-                    //    "<input class=\"" + relacionada + " input_oper format_date input_fe\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
-                    //    "<input class=\"" + relacionada + " input_oper format_date input_fe\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
-                    //    "<input class=\"" + relacionada + " input_oper input_material number\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
-                    //    "",
-                    //    "",
-                    //    "<input class=\"" + reversa + " input_oper numberd input_dc\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
-                    //    "<input class=\"" + reversa + " input_oper numberd input_dc\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
-                    //    "<input class=\"" + reversa + " input_oper numberd\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
-                    //    "",
-                    //    "<input class=\"" + reversa + " input_oper numberd input_dc\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
-                    //    "<input class=\"" + reversa + " input_oper numberd input_dc\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
-                    //    "<input class=\"" + reversa + " input_oper numberd input_dc total\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
-                    //]).draw(false);
-
-                    $('#table_dis').css("font-size", "12px");
-                    $('#table_dis').css("display", "table");
-                    //$('#tfoot_dis').css("display", "table-footer-group");
-
-                    //if ($('#select_dis').val() == "M") {
-
-                    t.column(0).visible(false);
-                    t.column(1).visible(false);
-                    //}
+                } else if (dis == "M") {//falta validar
+                    var classtd = $("#table_dis tbody tr:first td").attr("class");
+                    indext = getIndex();
+                    //Distribución por material 
+                        var addedRow = addRowMat(t, "", "", "", "", "", "", "", "", "", "", "", relacionada, relacionadaed, reversa, ddate, adate, "", "");//Add MGC B20180705 2018.07.05 ne no eliminar //Add MGC B20180705 2018.07.05 relacionadaed editar el material en los nuevos renglones
+                        $('#table_dis').css("font-size", "12px");
+                        $('#table_dis').css("display", "table");
+                        t.column(0).visible(false);
+                        t.column(1).visible(false);
                 }
                 updateFooter();
 
@@ -1746,29 +1722,30 @@ function _ff() {
     var datei = $("#fechai_vig").val().split(" ")[0];
     var _anoi = datei.split('/')[2];
     if (datei != "") {
-    $.ajax({
-        type: "POST",
-        url: 'getPeriodo',
-        dataType: "json",
-        data: { "fecha": datei },
-        success: function (data) {
-            var _xd = data;
-            var pp = parseInt(data);
-            if (pp != 0) {
-                $("#periodoi_id").val(pp);
-                document.getElementById("btn-peri").checked = true;
-                $("#btn-peri").trigger("change");
-                $("#anioi_id").val(_anoi);
-            } else {
-                document.getElementById("btn-date").checked = true;
-                $("#btn-date").trigger("change");
-            }
-        },
-        error: function (xhr, httpStatusMessage, customErrorMessage) {
-            M.toast({ html: httpStatusMessage });
-        },
-        async: true
-    });}
+        $.ajax({
+            type: "POST",
+            url: 'getPeriodo',
+            dataType: "json",
+            data: { "fecha": datei },
+            success: function (data) {
+                var _xd = data;
+                var pp = parseInt(data);
+                if (pp != 0) {
+                    $("#periodoi_id").val(pp);
+                    document.getElementById("btn-peri").checked = true;
+                    $("#btn-peri").trigger("change");
+                    $("#anioi_id").val(_anoi);
+                } else {
+                    document.getElementById("btn-date").checked = true;
+                    $("#btn-date").trigger("change");
+                }
+            },
+            error: function (xhr, httpStatusMessage, customErrorMessage) {
+                M.toast({ html: httpStatusMessage });
+            },
+            async: true
+        });
+    }
     var datef = $("#fechaf_vig").val().split(" ")[0];
     var _anof = datef.split('/')[2];
     if (datef != "") {
@@ -1907,7 +1884,7 @@ function guardarBorrador(asyncv) {
         url: 'Borrador',
         dataType: "json",
         data: form.serialize() + "&notas_soporte = " + notas_soporte + "&unafact = " + unafact + "&select_neg = " + select_neg + "&select_dis = " + select_dis +
-        "&select_negi = " + select_negi + "&select_disi = " + select_disi + "&bmonto_apoyo = " + bmonto_apoyo + "&monedadis = " + monedadis,
+            "&select_negi = " + select_negi + "&select_disi = " + select_disi + "&bmonto_apoyo = " + bmonto_apoyo + "&monedadis = " + monedadis,
         //data: {
         //    object: form.serialize(), "notas_soporte": notas_soporte, "unafact": unafact, "select_neg": select_neg, "select_dis": select_dis,
         //    "select_negi": select_negi, "select_disi": select_disi, "bmonto_apoyo": bmonto_apoyo, "monedadis": monedadis},
@@ -4882,12 +4859,18 @@ function evaluarDisTable() {
 
     //La tabla debe de contener como mínimo un registro
     var lengthT = $("table#table_dis tbody tr[role='row']").length;
+    var arrayClass = new Array();
     if (lengthT > 0) {
 
         $("#table_dis > tbody  > tr[role='row']").each(function () {
 
             //Distribución por material
             if (dis == "M") {
+                //if ($(this).attr("class") == "odd" || $(this).attr("class") == "even") {
+                //    arrayClass.push("false");
+                //} else {
+                //    arrayClass.push($(this).attr("class"));
+                //}
                 var val = $(this).find("td:eq(" + (5 + indext) + ") input").val();
                 //Validar material
                 if (val == "") {
