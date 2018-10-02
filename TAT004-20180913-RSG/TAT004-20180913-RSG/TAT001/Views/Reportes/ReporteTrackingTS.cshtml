@@ -1,0 +1,444 @@
+﻿@model IEnumerable<TAT001.Entities.DOCUMENTO>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.pagina_r = 1100;
+    ViewBag.carpeta_r = 1107;
+    List<Tuple<decimal, decimal>> negAmount = new List<Tuple<decimal, decimal>>();
+}
+@if (!ViewBag.Display)
+{
+    <script>
+        $(document).ready(function () {
+            $('FormSelect.select_all').siblings('ul').prepend("<li id=sm_select_all><span id='filters_all'>Todas las Opciones</span></li>");
+            $('li#sm_select_all').on('click', function () {
+                var jq_elem = $(this),
+                    jq_elem_span = jq_elem.find('span'),
+                    select_all = jq_elem_span.text() == 'Todas las Opciones',
+                    set_text = select_all ? 'Borrar Selección' : 'Todas las Opciones';
+                jq_elem_span.text(set_text);
+                jq_elem.siblings('li').filter(function () {
+                    return $(this).find('input').prop('checked') != select_all;
+                }).click();
+            });
+            $(document).ready(function () {
+                $("#sendbtn").click(function () {
+                    $("#excelBtn").prop("disabled", "false");
+                });
+            });
+        });
+    </script>
+}
+
+@using (Html.BeginForm("ReporteTrackingTS", "Reportes", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    System.Globalization.TextInfo myTI = new System.Globalization.CultureInfo("en-US", false).TextInfo;
+    System.Globalization.DateTimeFormatInfo formatoFecha = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat;
+    DateTime newDate = DateTime.Now;
+    int yeard = newDate.Year;
+    int year1 = yeard + 1;
+    int year2 = yeard + 2;
+    int yearback = yeard - 1;
+    int yearback2 = yeard - 2;
+    <div class="row">
+        @if (ViewBag.Display)
+        {
+            <div class="input-field col s1 m1 l1 offset-l7 offset-m7 offset-s7" id="senddiv">
+                <button class="btn waves-effect waves-light" type="submit" name="action" id="sendbtn">
+                    Consultar
+                </button>
+            </div>
+            <div class="input-field col s3 m3 l3 offset-l1 offset-m1 offset-s1">
+                <a class="waves-effect waves-light btn" id="excelBtn" onclick="tableToExcel('table', 'Reporte Tracking TS')">Generar Excel</a>
+            </div>
+        }
+        else
+        {
+            <div class="input-field col s1 m1 l1 offset-l10 offset-m10 offset-s10" id="senddiv">
+                <button class="btn waves-effect waves-light" type="submit" name="action" id="sendbtn">
+                    Consultar
+                </button>
+            </div>
+        }
+    </div>
+    @* FILTROS *@
+    <div class="card-panel">
+        <div class="row">
+            <div class="row" style="margin-bottom:0;">
+                @* FILTRO CO. CODE *@
+                @* OPCIONAL *@
+                <div class="input-field col s2 m2 l2">
+                    <select multiple name="selectcocode" id="selectcocode" class="comcode select_all">
+                        @try
+                        {
+                            foreach (var item in ViewBag.sociedad)
+                            {
+                                <option value="@item.BUKRS">@item.BUKRS</option>
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            <option value="" id="no_opt">No hay opciones</option>
+                        }
+                    </select>
+                    <label id="label_cocode">Co. Code</label>
+                </div>
+                @* FILTRO PERIODO *@
+                @* OBLIGATORIO *@
+                <div class="input-field col s2 m2 l2">
+                    <select name="selectperiod" id="selectperiod" required="">
+                        @try
+                        {
+                            foreach (var periodo in ViewBag.periodo)
+                            {
+                                var concat = "P";
+                                if (Int32.Parse(periodo.ACTIVO) == 1)
+                                {
+                                    Console.Write(periodo.ACTIVO);
+                                    <option value="@periodo.ID">@(concat + periodo.ID)</option>
+
+                                }
+                                else { }
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            <option value="" id="no_optper">No hay opciones</option>
+                        }
+                    </select>
+                    <label id="label_period">Periodo *</label>
+                </div>
+                @* FILTRO AÑO *@
+                @* OBLIGATORIO *@
+                <div class="input-field col s2 m2 l2">
+                    <select name="selectyear" id="selectyear" required="">
+                        @if (yeard == DateTime.Now.Year)
+                        {
+                            <option value="@yeard">@yeard</option>
+                            <option value="@year1">@year1</option>
+                            <option value="@year2">@year2</option>
+                        }
+                        else
+                        {
+                            <option value="@yearback2">@yearback2</option>
+                            <option value="@yearback">@yearback</option>
+                            <option value="@yeard">@yeard</option>
+                        }
+                    </select>
+                    <label id="label_yr">Año *</label>
+                </div>
+                @* FILTRO USUARIO *@
+                @* OPCIONAL *@
+                <div class="input-field col s2 m2 l2">
+                    <select name="selectUsuarioF" id="selectUsuarioF">
+                        <option value=""></option>
+                        @try
+                        {
+                            foreach (var id in ViewBag.UsuarioF)
+                            {
+                                <option value="@id.ID">@(id.ID)</option>
+                            }
+
+                        }
+                        catch (Exception)
+                        {
+                            <option value="" id="no_optper">No hay opciones</option>
+                        }
+                    </select>
+                    <label id="label_period">Usuario</label>
+                </div>
+                @* FILTRO CLIENTE *@
+                @* OPCIONAL *@
+                <div class="input-field col s2 m2 l2">
+                    <select name="selectCliente" id="selectCliente">
+                        <option value=""></option>
+                        @try
+                        {
+                            foreach (var id in ViewBag.Cliente)
+                            {
+                                <option value="@id">@(id)</option>
+                            }
+
+                        }
+                        catch (Exception)
+                        {
+                            <option value="" id="no_optper">No hay opciones</option>
+                        }
+                    </select>
+                    <label id="label_period">Cliente</label>
+                </div>
+                @* FILTRO TIPO DE SOLICITUD *@
+                @* OPCIONAL *@
+                <div class="input-field col s2 m2 l2">
+                    <select name="selectTipoSolicitud" id="selectTipoSolicitud">
+                        <option value=""></option>
+                        @try
+                        {
+                            foreach (var solicitud in ViewBag.Tds)
+                            {
+                                <option value="@solicitud.ID">@(solicitud.DESCRIPCION)</option>
+                            }
+
+                        }
+                        catch (Exception)
+                        {
+                            <option value="" id="no_optper">No hay opciones</option>
+                        }
+                    </select>
+                    <label id="label_period">Tipo de solicitud</label>
+                </div>
+            </div>
+        </div>
+        <script>
+            var elem = document.querySelectorAll('select');
+            var options = [];
+            var instance = M.FormSelect.init(elem, options);
+        </script>
+        <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="//code.jquery.com/jquery-2.0.3.min.js"></script>
+        <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+        <script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
+        <link href="~/Content/dataTable.css" rel="stylesheet" />
+        <link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
+        <link href="~/Content/subfilters/jquery.tablesorter.pager.css" rel="stylesheet" />
+        <script src="~/Scripts/subfilters/jquery.tablesorter.js"></script>
+        <script src="~/Scripts/subfilters/jquery.tablesorter.pager.js"></script>
+        <script src="~/Scripts/subfilters/widget-filter.js"></script>
+        <script src="~/Scripts/tablesort/tableToExcel.js"></script>
+        <script>
+            var elem = document.querySelector('select');
+            var options = [];
+            var instance = M.FormSelect.init(elem, options);
+        </script>
+    </div>
+    @* FIN FILTROS *@
+    if (ViewBag.display)
+    {
+        <script>
+            $(document).ready(function () {
+                $(".grid thead td").click(function () {
+                    showFilterOption(this);
+                });
+                $("#excelBtn").click(function () {
+                    $("#table").tableExport();
+                });
+                $('FormSelect.select_all').siblings('ul').prepend('<li id=sm_select_all id="filters_all"><span>Todas Las Opciones</span></li>');
+                $('li#sm_select_all').on('click', function () {
+                    var jq_elem = $(this),
+                        jq_elem_span = jq_elem.find('span'),
+                        select_all = jq_elem_span.text() == 'Todas Las Opciones',
+                        set_text = select_all ? 'Borrar Selección' : 'Todas Las Opciones';
+                    jq_elem_span.text(set_text);
+                    jq_elem.siblings('li').filter(function () {
+                        return $(this).find('input').prop('checked') != select_all;
+                    }).click();
+                });
+            });
+            $(function () {
+                $("table").tablesorter({
+                        theme: "materialize",
+                        widthFixed: true,
+                        // widget code contained in the jquery.tablesorter.widgets.js file
+                        // use the zebra stripe widget if you plan on hiding any rows (filter widget)
+                        widgets: ["filter", "zebra"],
+                        widgetOptions: {
+                            // using the default zebra striping class name, so it actually isn't included in the theme variable above
+                            // this is ONLY needed for materialize theming if you are using the filter widget, because rows are hidden
+                            zebra: ["even", "odd"],
+                            // reset filters button
+                            filter_reset: ".reset",
+                            // extra css class name (string or array) added to the filter element (input or select)
+                            // select needs a "browser-default" class or it gets hidden
+                            filter_cssFilter: ["", "", "browser-default"]
+                        }
+                    })
+                    .tablesorterPager({
+                        // target the pager markup - see the HTML block below
+                        container: $(".ts-pager"),
+                        // target the pager page select dropdown - choose a page
+                        cssGoto: ".pagenum",
+                        // remove rows from the table to speed up the sort of large tables.
+                        // setting this to false, only hides the non-visible rows; needed if you plan to add/remove rows with the pager enabled.
+                        removeRows: true,
+                        // output string - default is '{page}/{totalPages}';
+                        // possible variables: {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
+                        output: '{startRow} - {endRow} / {filteredRows} ({totalRows})'
+                    });
+            });
+        </script>
+        <div style="width:100%;height:50vh;overflow:scroll;">
+            <table class="table mdl-data-table striped grid centered table" id="table" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_code">Co. Code</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_pais">País</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_num_solicitud">Num solicitud</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_num_cliente">Num cliente</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_cliente">Cliente</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_tipo_solicitud">Tipo Solicitud</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_status">Status</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_fecha">Fecha</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_hora">Hora</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_tiempo">Tiempo Transcurrido</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_semana">Semana</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_periodo">Periodo</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_ano">Año</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_usuario">Usuario</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_rol">Rol</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_comentario">Comentario</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_correcciones">Número correcciones Solicitud</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_code">Co. Code</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_pais">País</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_num_solicitud">Num solicitud</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_num_cliente">Num cliente</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_cliente">Cliente</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_tipo_solicitud">Tipo Solicitud</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_status">Status</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_fecha">Fecha</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_hora">Hora</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_tiempo">Tiempo Transcurrido</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_semana">Semana</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_periodo">Periodo</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_ano">Año</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_usuario">Usuario</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_rol">Rol</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_comentario">Comentario</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_correcciones">Número correcciones Solicitud</th>
+                    </tr>
+                    <!-- include "tablesorter-ignoreRow" class for pager rows in thead -->
+                    <tr class="tablesorter-ignoreRow">
+                        <th colspan="2" class="ts-pager form-horizontal">
+                            <button type="button" class="btn first"><i class="small material-icons">first_page</i></button>
+                            <button type="button" class="btn prev"><i class="small material-icons">navigate_before</i></button>
+                            <span class="pagedisplay"></span>
+                            <!-- this can be any element, including an input -->
+                            <button type="button" class="btn next"><i class="small material-icons">navigate_next</i></button>
+                            <button type="button" class="btn last"><i class="small material-icons">last_page</i></button>
+                            <div style="padding:0 78% 0 0;">
+                                <label class="btn_length" id="por_pag">Ver por página</label>
+                                <select class="pagesize" id="selecc" title="Select page size">
+                                    <option selected="selected" value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                    <option value="40">40</option>
+                                </select>
+                                <label class="label_pag">Ir a Página</label>
+                                <select class="pagenum browser-default" title="Select page number"></select>
+                            </div>
+                        </th>
+                        <th colspan="12"></th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    @foreach (var itemvar in ViewBag.tabla_reporte)
+                    {
+                        TAT001.Models.ReportesModel.TrackingTS item = itemvar.GetType().GetProperty("tracking").GetValue(itemvar, null);
+                        <tr>
+                            <td>
+                                @* CAMPO CO CODE *@
+                                @item.CO_CODE
+                            </td>
+                            <td>
+                                @* CAMPO PAIS *@
+                                @item.PAIS
+                            </td>
+                            <td>
+                                @* CAMPO NUM SOLICITUD *@
+                                @item.NUMERO_SOLICITUD
+                            </td>
+                            <td>
+                                @* CAMPO NUM CLIENTE *@
+                                @item.NUMERO_CLIENTE
+                            </td>
+                            <td>
+                                @* CAMPO CLIENTE *@
+                                @item.CLIENTE
+                            </td>
+                            <td>
+                                @* CAMPO TIPO SOLICITUD *@
+                                @item.TIPO_SOLICITUD
+                            </td>
+                            <td>
+                                @* CAMPO STATUS *@
+                                @item.STATUS_STRING
+                            </td>
+                            <td>
+                                @* CAMPO FECHA *@
+                                @item.FECHA_STRING
+                            </td>
+                            <td>
+                                @* CAMPO HORA *@
+                                @item.HORA_STRING
+                            </td>
+                            <td>
+                                @* CAMPO TIEMPO TRANSCURRIDO *@
+                                @item.TIEMPO_TRANSCURRIDO_STRING
+                            </td>
+                            <td>
+                                @* CAMPO SEMANA *@
+                                @item.SEMANA
+                            </td>
+                            <td>
+                                @* CAMPO PERIODO *@
+                                @item.PERIODO
+                            </td>
+                            <td>
+                                @* CAMPO AÑO *@
+                                @item.ANIO
+                            </td>
+                            <td>
+                                @* CAMPO USUARIO *@
+                                @item.USUARIO
+                            </td>
+                            <td>
+                                @* CAMPO ROL *@
+                                @item.ROL
+                            </td>
+                            <td>
+                                @* CAMPO COMENTARIO *@
+                                @item.COMENTARIO
+                            </td>
+                            <td>
+                                @* CAMPO NÚMERO CORRECCIONES SOLICITUD *@
+                                @(item.NUMERO_CORRECCIONES - 1 == 0 ? "" : (item.NUMERO_CORRECCIONES -1).ToString())
+                            </td>
+                        </tr>
+                     }
+                </tbody>
+            </table>
+        </div>
+    }
+    else { }
+    <style>
+        .dataTables_length {
+            display: none;
+        }
+        .dataTables_filter {
+            display: none;
+        }
+        .dataTables_scrollHeadInner, .mdl-data-table {
+            width: 100%;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        .btn {
+            font-size: .8em;
+        }
+        /* not sure why this is needed... */
+        .material-icons {
+            vertical-align: bottom;
+        }
+        select {
+            display: block !important;
+        }
+        th {
+            text-align: center !important;
+        }
+    </style>
+}

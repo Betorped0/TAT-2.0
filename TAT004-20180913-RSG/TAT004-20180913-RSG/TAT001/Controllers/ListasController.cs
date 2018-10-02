@@ -480,7 +480,8 @@ namespace TAT001.Controllers
                      & C.PAIS_ID == land
                      & C.TALL_ID == gall
                      & C.EJERCICIO == ejer
-                     select new { C.ABONO, C.CARGO, C.CLEARING, C.LIMITE }).FirstOrDefault();
+                     //-----DRS 1.10.2018-----
+                     select new { C.ABONO, NOMBREA = C.CUENTAGL.NOMBRE, C.CARGO, NOMBREC = C.CUENTAGL1.NOMBRE, C.CLEARING, C.LIMITE }).FirstOrDefault();
 
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
             return cc;

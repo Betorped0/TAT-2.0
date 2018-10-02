@@ -53,7 +53,7 @@ namespace TAT001.Controllers.Catalogos
                     ViewBag.mnjError = ObtenerTextoMnj(pagina_id, "lbl_mnjExisteExcepcion");
                     throw new Exception();
                 }
-                db.CALENDARIO_EX.Add(modelView.calendarioEx445);
+                db.CALENDARIO_EX.Add(calendarioEx);
                 db.SaveChanges();
 
                 return RedirectToAction("Index",new { ejercicio = calendarioEx.EJERCICIO, periodo = calendarioEx.PERIODO, sociedad_id = calendarioEx.SOCIEDAD_ID, tsol_id = calendarioEx.TSOL_ID });

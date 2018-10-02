@@ -8,6 +8,12 @@
     .text-center th {
         text-align: center !important;
     }
+    .text-left th {
+        text-align: left !important;
+    }
+    .text-left td {
+        text-align: left !important;
+    }
     .dataTables_length {
         display: none;
     }
@@ -60,7 +66,7 @@
                                 <th colspan="4"  class="lbl_precierre"></th>
                                 <th colspan="4"  class="lbl_cierre"></th>
                             </tr>
-                            <tr>
+                            <tr class="text-left">
                                 <th class="lbl_coCode"></th>
                                 <th class="lbl_periodo"></th>
                                 <th class="lbl_tipoSolicitud"></th>
@@ -78,7 +84,7 @@
                         <tbody>
                             @foreach (var item in Model.calendarios445)
                         {
-                                <tr>
+                                <tr class="text-left">
                                     <td>
                                         @Html.DisplayFor(modelItem => item.SOCIEDAD_ID)
                                     </td>
@@ -114,7 +120,7 @@
                                     </td>
                                     <td>
                                         <a href="@Url.Action("Edit", "Calendario445", new { ejercicio=item.EJERCICIO,  periodo= item.PERIODO,  sociedad_id= item.SOCIEDAD_ID,  tsol_id= item.TSOL_ID })"><i class='material-icons green-text'>edit</i></a>
-                                        <a href="@Url.Action("Index", "CalendarioEx445", new { ejercicio = item.EJERCICIO, periodo = item.PERIODO, sociedad_id = item.SOCIEDAD_ID, tsol_id = item.TSOL_ID })"><i class='material-icons blue-text'>announcement</i></a>
+                                        <a href="@Url.Action("Index", "CalendarioEx445", new { ejercicio = item.EJERCICIO, periodo = item.PERIODO, sociedad_id = item.SOCIEDAD_ID, tsol_id = item.TSOL_ID })"><i class='material-icons blue-text'>assignment_late</i></a>
                                     </td>
                                 </tr>
                         }
@@ -150,11 +156,11 @@
                                     <th colspan="4"></th>
                                     <th colspan="4" class="lbl_precierre"></th>
                                 </tr>
-                                <tr>
+                                <tr class="text-left">
                                     <th class="lbl_coCode"></th>
                                     <th class="lbl_periodo"></th>
                                     <th class="lbl_tipoSolicitud"></th>
-                                    <th class="lbl_usuario"></th>
+                                    <th class="lbl_usuario" style="min-width: 250px;"></th>
                                     <th class="lbl_desdeDia"></th>
                                     <th class="lbl_desdeHora"></th>
                                     <th class="lbl_hastaDia"></th>
@@ -165,7 +171,7 @@
                             <tbody>
                                 @foreach (var item in Model.calendariosEx445)
                                 {
-                                    <tr>
+                                    <tr class="text-left">
                                         <td>
                                             @Html.DisplayFor(modelItem => item.SOCIEDAD_ID)
                                         </td>

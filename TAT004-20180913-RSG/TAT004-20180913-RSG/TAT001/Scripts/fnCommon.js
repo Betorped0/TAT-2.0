@@ -1,13 +1,13 @@
 ﻿var fnCommon = {
 
-    materializeInit: function (component,type) {
+    materializeInit: function (component, type) {
         switch (type) {
             case 'select':
                 var options = {};
                 var selects = document.querySelectorAll('select');
                 M.FormSelect.init(selects, options);
                 break;
-            case 'datepicker':           
+            case 'datepicker':
                 var options = { format: 'dd/mm/yyyy' };
                 var datepickers = document.querySelectorAll('.datepicker');
                 M.Datepicker.init(datepickers, options);
@@ -33,9 +33,9 @@
                 break;
             default:
                 break;
-        } 
+        }
     },
-    selectRequired:function () {
+    selectRequired: function () {
         var combos = document.querySelectorAll('.select-dropdown.dropdown-trigger');
         var i = 0;
         combos.forEach(function (combo) {
@@ -44,7 +44,7 @@
             i++;
         });
     },
-    formValidation:function (idForm) {
+    formValidation: function (idForm) {
         $.validator.setDefaults({
             errorClass: 'invalid',
             validClass: 'valid'
@@ -58,26 +58,38 @@
         );
         $('#' + idForm).validate();
     },
-    dateRangeValidation: function (idFechaIni, idFechaFin) {
-            var inicio = $('#' + idFechaIni),
-                inicioM = M.Datepicker.getInstance(inicio),
-                final = $('#' + idFechaFin),
-                finalM = M.Datepicker.getInstance(final);
+   
+    dateRangeValidation: function (idFechaIni, idFechaFin,_idFechaIni, _idFechaFin) {
 
-            if (inicio.val()) {
-                var date = moment(inicio.val(),'DD/MM/YYYY');
-                finalM.options.minDate = new Date(date);
-            }
-            if (final.val()) {
-                var date = moment(final.val(),'DD/MM/YYYY');
-                inicioM.options.maxDate = new Date(date);
-            }
-            inicioM.options.onSelect = function (val) {
-                finalM.options.minDate = val;
+        fnCommon.setDateRange(idFechaIni, idFechaFin, null);
+        fnCommon.setDateRange(idFechaFin, _idFechaIni, idFechaIni);
+        if (_idFechaIni && _idFechaFin) { fnCommon.setDateRange(_idFechaIni, _idFechaFin, idFechaFin); }
+        if (_idFechaFin && _idFechaFin) { fnCommon.setDateRange(_idFechaFin, null, _idFechaIni); }
+
+       
+    },
+    setDateRange: function (idFechaFSelect, idFechaFMin, idFechaFMax) {
+        var fechaFSelect = $('#' + idFechaFSelect),
+            fechaFSelectM = M.Datepicker.getInstance(fechaFSelect),
+
+            fechaFMin = idFechaFMin ? $('#' + idFechaFMin) : null,
+            fechaFMinM = fechaFMin ? M.Datepicker.getInstance(fechaFMin) : null,
+
+            fechaFMax = idFechaFMax ? $('#' + idFechaFMax) : null,
+            fechaFMaxM = fechaFMax ? M.Datepicker.getInstance(fechaFMax) : null;
+        
+        fechaFSelectM.options.onSelect = function (val) {
+            if (fechaFMinM) { fechaFMinM.options.minDate = val; }
+            if (fechaFMaxM) { fechaFMaxM.options.maxDate = val; }
             };
-            finalM.options.onSelect = function (val) {
-                inicioM.options.maxDate = val;
-            };
+        
+          
+
+        if (fechaFSelect.val()) {
+            var date = moment(fechaFSelect.val(), 'DD/MM/YYYY');
+            if (fechaFMinM) { fechaFMinM.options.minDate = date; }
+            if (fechaFMaxM) { fechaFMaxM.options.maxDate = date; }
+        }
     },
     configurarTable: function (idTable, scrollY, scrollX, language,idSelectPag,idGFilter) {
         var table =  $('#'+idTable).DataTable({
@@ -88,7 +100,7 @@
                 url: language
             },
             columnDefs: [{
-                targets: [0, 1, 2],
+                targets: [0, 1, 2,4,5,6],
                 className: 'mdl-data-table__cell--non-numeric'
             }]
         });

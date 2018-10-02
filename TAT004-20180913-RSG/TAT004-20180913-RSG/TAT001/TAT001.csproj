@@ -204,6 +204,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CartaDController.cs" />
     <Compile Include="Controllers\CartaVController.cs" />
+    <Compile Include="Controllers\Catalogos\AlertasController.cs" />
     <Compile Include="Controllers\Catalogos\Calendario445Controller.cs" />
     <Compile Include="Controllers\Catalogos\CalendarioEx445Controller.cs" />
     <Compile Include="Controllers\Catalogos\GALLController.cs" />
@@ -617,6 +618,9 @@
     <Compile Include="Entities\TAB.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\TAB_CAMPO.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\TALL.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
@@ -755,6 +759,7 @@
     <Compile Include="Entities\ZCTGR.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\AlertaViewModel.cs" />
     <Compile Include="Models\Calendario445ViewModel.cs" />
     <Compile Include="Models\CargaMasivaModels.cs" />
     <Compile Include="Models\CartaD.cs" />
@@ -772,6 +777,7 @@
     <Compile Include="Models\Masiva\Encabezado.cs" />
     <Compile Include="Models\Masiva\Multiple.cs" />
     <Compile Include="Models\Masiva\Relacionada.cs" />
+    <Compile Include="Models\ReportesModel.cs" />
     <Compile Include="Models\SOLICITUD_MOD.cs" />
     <Compile Include="Models\Flujos.cs" />
     <Compile Include="Models\TALLT_MOD.cs" />
@@ -801,7 +807,9 @@
     <Compile Include="Models\ArchivoContable.cs" />
     <Compile Include="Models\ProveedorVal.cs" />
     <Compile Include="Models\TSOLT_MOD.cs" />
+    <Compile Include="Models\ClienteF.cs" />
     <Compile Include="Models\UsuarioF.cs" />
+    <Compile Include="Models\Clientes.cs" />
     <Compile Include="Models\Usuarios.cs" />
     <Compile Include="Models\UsuariosNuevo.cs" />
     <Compile Include="Models\DocumentoFlujo.cs" />
@@ -913,6 +921,7 @@
     <Content Include="Content\dataTable.css" />
     <Content Include="Content\dataTables1.material.min.css" />
     <Content Include="Content\dataTables.material.min.css" />
+    <Content Include="Content\formatos.css" />
     <Content Include="Content\g-materialize.css" />
     <Content Include="Content\material.min.css" />
     <Content Include="Content\materialize.clockpicker.css" />
@@ -1281,6 +1290,7 @@
     <Content Include="obj\Release\TempPE\Entities.TAT001.cs.dll" />
     <Content Include="obj\Release\TempPE\Entities.TAT001.Designer.cs.dll" />-->
     <Content Include="images\Simple-wallpapers-HD-for-desktop.png" />
+    <Content Include="Properties\PublishProfiles\FolderProfile.pubxml.user" />
     <!--<Content Include="obj\Debug\TAT001.csproj.FileListAbsolute.txt" />
     <Content Include="obj\Debug\TAT001.dll" />
     <Content Include="obj\Debug\TAT001.pdb" />-->
@@ -1291,7 +1301,6 @@
     </EntityDeploy>
     <Content Include="Entities\TAT001.edmx.diagram">
       <DependentUpon>TAT001.edmx</DependentUpon>
-      <SubType>Designer</SubType>
     </Content>
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\fnCommon.js" />
@@ -1352,7 +1361,6 @@
     <Content Include="bin\roslyn\Microsoft.VisualBasic.Core.targets" />
     <Content Include="bin\roslyn\VBCSCompiler.exe.config" />
     <Content Include="bin\TAT001.dll.config" />-->
-    <Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
     <!--<Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
     <Content Include="obj\Debug\edmxResourcesToEmbed\Entities\TAT001.csdl" />
     <Content Include="obj\Debug\edmxResourcesToEmbed\Entities\TAT001.msl" />
@@ -1364,7 +1372,6 @@
     <Content Include="PdfTemp\Doc29\05\2018.xlsx" />
     <Content Include="PdfTemp\DocPr04\06\2018.xlsx" />
     <Content Include="PdfTemp\20180913_200852.pdf" />-->
-    <None Include="obj\Release\AspnetCompileMerge\Source\packages.config" />
     <!--<Content Include="obj\Release\AspnetCompileMerge\Source\Scripts\jquery-3.0.0.min.map" />
     <Content Include="obj\Release\AspnetCompileMerge\Source\Scripts\jquery-3.0.0.slim.min.map" />
     <Content Include="obj\Release\AspnetCompileMerge\Source\Views\Account\ConfirmEmail.cshtml" />
@@ -1830,6 +1837,10 @@
     <Content Include="Views\Calendario445\Index.cshtml" />
     <Content Include="Views\CalendarioEx445\Edit.cshtml" />
     <Content Include="Views\CalendarioEx445\Index.cshtml" />
+    <Content Include="Views\Alertas\Index.cshtml" />
+    <Content Include="Views\Alertas\Create.cshtml" />
+    <Content Include="Views\Reportes\ReporteTrackingTS.cshtml" />
+    <Content Include="Views\Alertas\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->
@@ -1913,7 +1924,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>64497</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:60621/</IISUrl>
+          <IISUrl>http://localhost:64497/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

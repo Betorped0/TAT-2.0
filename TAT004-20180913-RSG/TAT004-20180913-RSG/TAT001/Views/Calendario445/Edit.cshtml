@@ -259,16 +259,14 @@
     //----  Se agrega validaciones al formulario----
     fnCommon.selectRequired();
     fnCommon.formValidation('calendario445Form');
-    fnCommon.dateRangeValidation('calendario445_PRE_FROMF', 'calendario445_PRE_TOF');
-    fnCommon.dateRangeValidation('calendario445_PRE_TOF', 'calendario445_CIE_FROMF');
-    fnCommon.dateRangeValidation('calendario445_CIE_FROMF', 'calendario445_CIE_TOF');
+    fnCommon.dateRangeValidation('calendario445_PRE_FROMF', 'calendario445_PRE_TOF','calendario445_CIE_FROMF', 'calendario445_CIE_TOF');
 
     // Valida si ocurrio un error al intentar crear el periodo y otro.
     var mnjError = '@ViewBag.mnjError';
     if (mnjError){
         M.toast({ html: mnjError });
     }
-            </script>
+ </script>
 
 
 

@@ -1623,6 +1623,16 @@
           <Property Name="DESCR" Type="nvarchar" MaxLength="50" />
           <Property Name="ACTIVO" Type="bit" Nullable="false" />
         </EntityType>
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'TAT001.dbo.TAB_CAMPO' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <EntityType Name="TAB_CAMPO">
+          <Key>
+            <PropertyRef Name="TAB_ID" />
+            <PropertyRef Name="CAMPO_ID" />
+          </Key>
+          <Property Name="TAB_ID" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CAMPO_ID" Type="nvarchar" MaxLength="25" Nullable="false" />
+        </EntityType>
         <EntityType Name="TALL">
           <Key>
             <PropertyRef Name="ID" />
@@ -3905,6 +3915,18 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_TAB_CAMPO_TAB">
+          <End Role="TAB" Type="Self.TAB" Multiplicity="1" />
+          <End Role="TAB_CAMPO" Type="Self.TAB_CAMPO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TAB">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TAB_CAMPO">
+              <PropertyRef Name="TAB_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_TALL_GALL">
           <End Role="GALL" Type="Self.GALL" Multiplicity="0..1" />
           <End Role="TALL" Type="Self.TALL" Multiplicity="*" />
@@ -4874,6 +4896,12 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
           <EntitySet Name="WORKFV" EntityType="Self.WORKFV" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ZBRAND" EntityType="Self.ZBRAND" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ZCTGR" EntityType="Self.ZCTGR" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TAB_CAMPO" EntityType="Self.TAB_CAMPO" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [TAB_CAMPO].[TAB_ID] AS [TAB_ID], 
+    [TAB_CAMPO].[CAMPO_ID] AS [CAMPO_ID]
+    FROM [dbo].[TAB_CAMPO] AS [TAB_CAMPO]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="CARPETAV" EntityType="Self.CARPETAV" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [CARPETAV].[USUARIO_ID] AS [USUARIO_ID], 
@@ -5535,6 +5563,10 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             <End Role="COUNTRIES" EntitySet="COUNTRIES" />
             <End Role="STATES" EntitySet="STATES" />
           </AssociationSet>
+          <AssociationSet Name="FK_TAB_CAMPO_TAB" Association="Self.FK_TAB_CAMPO_TAB">
+            <End Role="TAB" EntitySet="TAB" />
+            <End Role="TAB_CAMPO" EntitySet="TAB_CAMPO" />
+          </AssociationSet>
           <AssociationSet Name="FK_TALL_GALL" Association="Self.FK_TALL_GALL">
             <End Role="GALL" EntitySet="GALL" />
             <End Role="TALL" EntitySet="TALL" />
@@ -5768,7 +5800,8 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             <End Role="WORKFV" EntitySet="WORKFV" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="TAT001Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -7660,6 +7693,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
           <Property Name="CONTAINER" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="DESCR" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="ACTIVO" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="TAB_CAMPO" Relationship="Self.FK_TAB_CAMPO_TAB" FromRole="TAB" ToRole="TAB_CAMPO" />
           <NavigationProperty Name="WARNINGPs" Relationship="Self.FK_WARNINGP_TAB" FromRole="TAB" ToRole="WARNINGP" />
         </EntityType>
         <EntityType Name="TALL">
@@ -8234,6 +8268,15 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
           <Property Name="ID_ZC" Type="String" MaxLength="5" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="DESCRIPCION" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="MATERIALs" Relationship="Self.FK_MATERIAL_CTGR" FromRole="ZCTGR" ToRole="MATERIAL" />
+        </EntityType>
+        <EntityType Name="TAB_CAMPO">
+          <Key>
+            <PropertyRef Name="TAB_ID" />
+            <PropertyRef Name="CAMPO_ID" />
+          </Key>
+          <Property Name="TAB_ID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CAMPO_ID" Type="String" MaxLength="25" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="TAB" Relationship="Self.FK_TAB_CAMPO_TAB" FromRole="TAB_CAMPO" ToRole="TAB" />
         </EntityType>
         <EntityType Name="CARPETAV">
           <Key>
@@ -10466,6 +10509,18 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_TAB_CAMPO_TAB">
+          <End Role="TAB" Type="Self.TAB" Multiplicity="1" />
+          <End Role="TAB_CAMPO" Type="Self.TAB_CAMPO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TAB">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TAB_CAMPO">
+              <PropertyRef Name="TAB_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_WARNINGP_TAB">
           <End Role="TAB" Type="Self.TAB" Multiplicity="1" />
           <End Role="WARNINGP" Type="Self.WARNINGP" Multiplicity="*" />
@@ -10882,6 +10937,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
           <EntitySet Name="WORKFVs" EntityType="Self.WORKFV" />
           <EntitySet Name="ZBRANDs" EntityType="Self.ZBRAND" />
           <EntitySet Name="ZCTGRs" EntityType="Self.ZCTGR" />
+          <EntitySet Name="TAB_CAMPO" EntityType="Self.TAB_CAMPO" />
           <EntitySet Name="CARPETAVs" EntityType="Self.CARPETAV" />
           <EntitySet Name="CREADORs" EntityType="Self.CREADOR" />
           <EntitySet Name="CREADOR2" EntityType="Self.CREADOR2" />
@@ -11552,6 +11608,10 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
           <AssociationSet Name="FK_WORKFT_SPRAS" Association="Self.FK_WORKFT_SPRAS">
             <End Role="SPRAS" EntitySet="SPRAS" />
             <End Role="WORKFT" EntitySet="WORKFTs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TAB_CAMPO_TAB" Association="Self.FK_TAB_CAMPO_TAB">
+            <End Role="TAB" EntitySet="TABs" />
+            <End Role="TAB_CAMPO" EntitySet="TAB_CAMPO" />
           </AssociationSet>
           <AssociationSet Name="FK_WARNINGP_TAB" Association="Self.FK_WARNINGP_TAB">
             <End Role="TAB" EntitySet="TABs" />
@@ -13941,6 +14001,14 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
               <MappingFragment StoreEntitySet="ZCTGR">
                 <ScalarProperty Name="ID_ZC" ColumnName="ID_ZC" />
                 <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TAB_CAMPO">
+            <EntityTypeMapping TypeName="TAT001Model.TAB_CAMPO">
+              <MappingFragment StoreEntitySet="TAB_CAMPO">
+                <ScalarProperty Name="TAB_ID" ColumnName="TAB_ID" />
+                <ScalarProperty Name="CAMPO_ID" ColumnName="CAMPO_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -170,6 +170,7 @@ namespace TAT001.Entities
         public virtual DbSet<WORKFV> WORKFVs { get; set; }
         public virtual DbSet<ZBRAND> ZBRANDs { get; set; }
         public virtual DbSet<ZCTGR> ZCTGRs { get; set; }
+        public virtual DbSet<TAB_CAMPO> TAB_CAMPO { get; set; }
         public virtual DbSet<CARPETAV> CARPETAVs { get; set; }
         public virtual DbSet<CREADOR> CREADORs { get; set; }
         public virtual DbSet<CREADOR2> CREADOR2 { get; set; }
