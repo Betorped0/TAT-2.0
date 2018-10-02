@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using TAT001.Entities;
 using TAT001.Models;
 using TAT001.Services;
+using static TAT001.Models.ReportesModel;
 
 namespace TAT001.Controllers.Reportes
 {
@@ -395,5 +396,148 @@ namespace TAT001.Controllers.Reportes
             }
             base.Dispose(disposing);
         }
+
+        // REPORTE 6 - TRACKING TS
+        public ActionResult ReporteTrackingTS()
+        {
+            int pagina = 1107; // ID EN BASE DE DATOS
+            string u = User.Identity.Name;
+            var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+            ViewBag.display = false;
+            ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
+            ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
+            ViewBag.usuario = user;
+            ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            ViewBag.sociedad = db.SOCIEDADs.ToList();
+            ViewBag.periodo = db.PERIODOes.ToList();
+            ViewBag.UsuarioF = db.USUARIOs.ToList();
+            ViewBag.Cliente = db.CLIENTEs.Select(x => x.KUNNR).ToList();
+            ViewBag.Tds = db.TSOLs.ToList();
+            try
+            {
+                string p = Session["pais"].ToString();
+                ViewBag.pais = p + ".svg";
+            }
+            catch
+            {
+            }
+            Session["spras"] = user.SPRAS_ID;
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ReporteTrackingTS(string Form)
+        {
+            int pagina = 1107; // ID EN BASE DE DATOS
+            string u = User.Identity.Name;
+            var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+            ViewBag.display = true;
+            ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
+            ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
+            ViewBag.usuario = user;
+            ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            ViewBag.sociedad = db.SOCIEDADs.ToList();
+            ViewBag.periodo = db.PERIODOes.ToList();
+            ViewBag.UsuarioF = db.USUARIOs.ToList();
+            ViewBag.Cliente = db.CLIENTEs.Select(x => x.KUNNR).ToList();
+            ViewBag.Tds = db.TSOLs.ToList();
+            try
+            {
+                string p = Session["pais"].ToString();
+                ViewBag.pais = p + ".svg";
+            }
+            catch
+            {
+            }
+            Session["spras"] = user.SPRAS_ID;
+            // EVALUAR FILTROS
+            string[] comcodessplit = new string[] { };
+            string comcode = Request["selectcocode"] as string;
+            if (!string.IsNullOrEmpty(comcode))
+            {
+                comcodessplit = comcode.Split(',');
+                if (comcodessplit.Count() == 0)
+                    comcodessplit[0] = comcode;
+            }
+            int period = Int32.Parse(Request["selectperiod"]);
+            string year = Request["selectyear"];
+            string usuarioF = (string)Request["selectUsuarioF"];
+            string clienteF = (string)Request["selectCliente"];
+            string solicitudF = (string)Request["selectTipoSolicitud"];
+            //ViewBag.Calendario = cal;
+            //ViewBag.cuentagl = db.CUENTAGLs.ToList();
+            //ViewBag.cuenta = db.CUENTAs.ToList();
+            //ViewBag.Consulta = "";
+
+            var queryP = (from d in db.DOCUMENTOes
+                          join f in db.FLUJOes on d.NUM_DOC equals f.NUM_DOC
+                          join p in db.PAIS on d.PAIS_ID equals p.LAND
+                          join c in db.CLIENTEs on new { d.VKORG, d.VTWEG, d.SPART, d.PAYER_ID } equals new { c.VKORG, c.VTWEG, c.SPART, PAYER_ID = c.KUNNR }
+                          join ts in db.TSOLs on d.TSOL_ID equals ts.ID
+                          join us in db.USUARIOs on f.USUARIOA_ID equals us.ID
+                          join tst in db.TSOLTs on new { TSOL_ID = ts.ID, us.SPRAS_ID } equals new { tst.TSOL_ID, tst.SPRAS_ID }
+                          join pt in db.PUESTOTs on new { us.SPRAS_ID, PUESTO_ID = (int)(us.PUESTO_ID) } equals new { pt.SPRAS_ID, pt.PUESTO_ID }
+                          join wfp in db.WORKFPs on new { f.WORKF_ID, f.WF_VERSION, f.WF_POS } equals new { WORKF_ID = wfp.ID, WF_VERSION = wfp.VERSION, WF_POS = wfp.POS }
+                          join ac in db.ACCIONs on wfp.ACCION_ID equals ac.ID
+                          orderby d.FECHAC descending // , d.NUM_DOC ascending, f.WF_POS ascending
+                          where d.PERIODO == period
+                              && d.EJERCICIO == year
+                              && (!string.IsNullOrEmpty(usuarioF) ? d.USUARIOC_ID == usuarioF : true)
+                              && (!string.IsNullOrEmpty(solicitudF) ? d.TSOL_ID == solicitudF : true)
+                              && (!string.IsNullOrEmpty(clienteF) ? d.PAYER_ID == clienteF : true)
+                              && (!string.IsNullOrEmpty(comcode) ? comcodessplit.Contains(d.SOCIEDAD_ID) : true)
+                          select new TrackingTS
+                          {
+                              WF_POS = f.WF_POS,
+                              NUMERO_SOLICITUD = d.NUM_DOC,
+                              CO_CODE = d.SOCIEDAD_ID,
+                              PAIS = p.LANDX,
+                              NUMERO_CLIENTE = d.PAYER_ID,
+                              CLIENTE = c.NAME1,
+                              TIPO_SOLICITUD = tst.TXT50,
+                              ESTATUS = f.ESTATUS,
+                              ESTATUS_C = d.ESTATUS_C,
+                              ESTATUS_SAP = d.ESTATUS_SAP,
+                              ESTATUS_WF = d.ESTATUS_WF,
+                              TIPO = ac.TIPO,
+                              PADRE = ts.PADRE,
+                              FECHA = (DateTime)f.FECHAC,
+                              PERIODO = (Int32)d.PERIODO,
+                              ANIO = d.EJERCICIO,
+                              USUARIO = f.USUARIOA_ID,
+                              COMENTARIO = f.COMENTARIO,
+                              ROL = pt.TXT50
+                              //, STATUS_STRING = statusToString(f.ESTATUS, d.ESTATUS_C, d.ESTATUS_SAP, d.ESTATUS_WF, ac.TIPO, ts.PADRE)
+                          }).ToList();
+
+            ViewBag.tabla_reporte = queryP.GroupBy(registro => new { registro.NUMERO_SOLICITUD, registro.WF_POS })
+                .Select(grupo => new
+                {
+                    trackings = grupo.OrderBy(x => x.FECHA)
+                })
+                .Select(grupo_ordenado => new
+                {
+                    tracking = calcularValoresGrupo(grupo_ordenado.trackings)
+                }).ToList();
+            return View();
+        }
+
+        private TrackingTS calcularValoresGrupo(IOrderedEnumerable<TrackingTS> grupo)
+        {
+            TrackingTS ultimo = grupo.Last();
+            TrackingTS primero = grupo.First();
+            ultimo.NUMERO_CORRECCIONES = grupo.Count();
+            ultimo.TIEMPO_TRANSCURRIDO = (ultimo.FECHA - primero.FECHA).TotalHours; // ToDo: Restar sábados, domingos y días feriados
+            ultimo.SEMANA = System.Globalization.CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(primero.FECHA, System.Globalization.CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+            return ultimo;
+        }
+        // FIN REPORTE 6 - TRACKING TS
     }
 }
