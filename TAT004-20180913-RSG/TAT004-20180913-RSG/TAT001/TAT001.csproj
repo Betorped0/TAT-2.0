@@ -204,6 +204,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CartaDController.cs" />
     <Compile Include="Controllers\CartaVController.cs" />
+    <Compile Include="Controllers\Catalogos\AlertasController.cs" />
     <Compile Include="Controllers\Catalogos\Calendario445Controller.cs" />
     <Compile Include="Controllers\Catalogos\CalendarioEx445Controller.cs" />
     <Compile Include="Controllers\Catalogos\GALLController.cs" />
@@ -611,8 +612,10 @@
     <Compile Include="Entities\STATE.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\sysdiagram.cs" />
     <Compile Include="Entities\TAB.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\TAB_CAMPO.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\TALL.cs">
@@ -753,6 +756,7 @@
     <Compile Include="Entities\ZCTGR.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\AlertaViewModel.cs" />
     <Compile Include="Models\Calendario445ViewModel.cs" />
     <Compile Include="Models\CargaMasivaModels.cs" />
     <Compile Include="Models\CartaD.cs" />
@@ -1829,11 +1833,13 @@
     <Content Include="Views\Calendario445\Index.cshtml" />
     <Content Include="Views\CalendarioEx445\Edit.cshtml" />
     <Content Include="Views\CalendarioEx445\Index.cshtml" />
+    <Content Include="Views\Alertas\Index.cshtml" />
+    <Content Include="Views\Alertas\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!-->>>>>>> 3496b924103c90400a700be44a001da3c07dedd4-->
-    <Folder Include="App_Data\" />
     <!--<Folder Include="obj\Debug\TempPE\" />-->
+    <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -1913,7 +1919,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>64497</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:60621/</IISUrl>
+          <IISUrl>http://localhost:64497/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

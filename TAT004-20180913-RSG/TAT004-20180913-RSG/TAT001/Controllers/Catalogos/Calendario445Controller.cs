@@ -57,10 +57,10 @@ namespace TAT001.Controllers.Catalogos
                 calendarioAc.ACTIVO = true;
                 calendarioAc.USUARIOC_ID = user.ID;
                 calendarioAc.FECHAC = fechaActual;
-                if (db.CALENDARIO_AC.Any(x => x.SOCIEDAD_ID == calendarioAc.SOCIEDAD_ID && x.PERIODO == calendarioAc.PERIODO && x.EJERCICIO == calendarioAc.EJERCICIO && x.TSOL_ID == calendarioAc.TSOL_ID))
+               
+                if (!ValidarPeriodoExistente(calendarioAc) ||!ValidarFechas(calendarioAc))
                 {
-                    ViewBag.mnjError = ObtenerTextoMnj(pagina_id, "lbl_mnjExistePeriodo");
-                    throw new Exception();
+                     throw new Exception();
                 }
                 db.CALENDARIO_AC.Add(modelView.calendario445);
                 db.SaveChanges();
@@ -97,6 +97,11 @@ namespace TAT001.Controllers.Catalogos
                 calendarioAc.USUARIOM_ID = user.ID;
                 calendarioAc.FECHAM = fechaActual;
 
+                if (!ValidarFechas(calendarioAc))
+                {
+                    throw new Exception();
+                }
+
                 db.Entry(calendarioAc).State = EntityState.Modified;
                 db.SaveChanges();
 
@@ -109,28 +114,42 @@ namespace TAT001.Controllers.Catalogos
                 return View(modelView);
             }
         }
-        
-        // GET: Calendario445/Delete/5
-        public ActionResult Delete(string ejercicio, string periodo, string sociedad_id, string tsol_id)
+        bool ValidarPeriodoExistente(CALENDARIO_AC calendarioAc)
         {
-            return View();
+            int pagina_id = 530;
+            if (db.CALENDARIO_AC.Any(x => x.SOCIEDAD_ID == calendarioAc.SOCIEDAD_ID 
+                && x.PERIODO == calendarioAc.PERIODO
+                && x.EJERCICIO == calendarioAc.EJERCICIO
+                && x.TSOL_ID == calendarioAc.TSOL_ID))
+            {
+                ViewBag.mnjError = ObtenerTextoMnj(pagina_id, "lbl_mnjExistePeriodo");
+                return false;
+            }
+            return true;
         }
-
-        // POST: Calendario445/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        bool ValidarFechas(CALENDARIO_AC calendarioAc )
         {
-            try
-            {
-                // TODO: Add delete logic here
+            int pagina_id = 530;
 
-                return RedirectToAction("Index");
-            }
-            catch
+            if (calendarioAc.PRE_FROMF > calendarioAc.PRE_TOF
+                || calendarioAc.CIE_FROMF > calendarioAc.CIE_TOF
+                || calendarioAc.PRE_TOF > calendarioAc.CIE_FROMF)
             {
-                return View();
+                ViewBag.mnjError = ObtenerTextoMnj(pagina_id, "lbl_mnjErrorRangoFechas");
+                return  false;
             }
-        }
+            CALENDARIO_AC calendarioAux = db.CALENDARIO_AC.Where(x => x.SOCIEDAD_ID == calendarioAc.SOCIEDAD_ID
+                && x.EJERCICIO == calendarioAc.EJERCICIO
+                && x.TSOL_ID == calendarioAc.TSOL_ID
+                && x.PERIODO != calendarioAc.PERIODO
+                && (x.PRE_FROMF>calendarioAc.PRE_FROMF   &&   x.CIE_TOF<calendarioAc.CIE_TOF)).FirstOrDefault();
+            if (calendarioAux!=null)
+            {       
+                ViewBag.mnjError = String.Format(ObtenerTextoMnj(pagina_id, "lbl_mnjTraslapeEnPeriodo"), calendarioAux.PERIODO);
+                return false;
+            }
+            return true;
+        } 
 
         void ObtenerConfPage(int pagina)//ID EN BASE DE DATOS
         {
