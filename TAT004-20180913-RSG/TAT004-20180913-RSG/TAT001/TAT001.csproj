@@ -795,7 +795,9 @@
     <Compile Include="Models\ArchivoContable.cs" />
     <Compile Include="Models\ProveedorVal.cs" />
     <Compile Include="Models\TSOLT_MOD.cs" />
+    <Compile Include="Models\ClienteF.cs" />
     <Compile Include="Models\UsuarioF.cs" />
+    <Compile Include="Models\Clientes.cs" />
     <Compile Include="Models\Usuarios.cs" />
     <Compile Include="Models\UsuariosNuevo.cs" />
     <Compile Include="Models\DocumentoFlujo.cs" />

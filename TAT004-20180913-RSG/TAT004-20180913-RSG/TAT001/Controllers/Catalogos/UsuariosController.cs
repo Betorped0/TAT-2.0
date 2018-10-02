@@ -1757,7 +1757,7 @@ namespace TAT001.Controllers.Catalogos
             int j = 0;
             for (int i = 0; i < rowst; i++)
             {
-                if (bor.Contains(i.ToString()) == false)
+                if (i != int.Parse(bor[i]))
                 {
                     compara[j, 0] = cli.Split(',')[i];
                     compara[j, 1] = com.Split(',')[i];
@@ -1769,16 +1769,6 @@ namespace TAT001.Controllers.Catalogos
                     compara[j, 7] = ema.Split(',')[i];
                     compara[j, 8] = idi.Split(',')[i];
                     compara[j, 9] = pas.Split(',')[i];
-                    var a = compara[j, 0];
-                    var b = compara[j, 1];
-                    var c = compara[j, 2];
-                    var d = compara[j, 3];
-                    var e = compara[j, 4];
-                    var f = compara[j, 5];
-                    var g = compara[j, 6];
-                    var h = compara[j, 7];
-                    var k = compara[j, 8];
-                    var l = compara[j, 9];
                     j++;
                 }
             }
