@@ -250,9 +250,13 @@
         <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
         <script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
         <link href="~/Content/dataTable.css" rel="stylesheet" />
+        @* ---DRS 24.09.18--- *@
+        <link href="~/Content/formatos.css" rel="stylesheet" />
         @*<link href="~/Content/dataTables.material.min.css" rel="stylesheet" />*@
         <link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
-        <table class="table mdl-data-table striped" id="table" style="width:100%;">
+
+        @* ----DRS 24.09.18---- *@
+        <table class="encabezados table mdl-data-table striped" id="table" style="width:100%;">
             <thead>
                 <tr>
                     <th></th>
@@ -317,8 +321,8 @@
                         @Html.DisplayName("Modificado por")
                     </th>
                     @*<th id="lblNC">
-                            @Html.DisplayName("Número Nota Crédito/Orden de Pago")
-                        </th>*@
+                        @Html.DisplayName("Número Nota Crédito/Orden de Pago")
+                    </th>*@
                     <th id="lblRP">
                         @Html.DisplayName("Núm. Registro Provisión")
                     </th>
@@ -351,7 +355,7 @@
             <tbody>
                 @foreach (var item in Model@*.Where(x=>x.NUM_DOC == 0)*@)
 {
-@*<tr>
+    @*<tr>
         @if (item.TSOL.PADRE)
         {
             if (item.DOCUMENTORECs.Count > 0)
@@ -646,49 +650,49 @@
             <td></td>
         }
     </tr>*@
-<tr>
-    <td class="details-control" style="cursor:pointer"><i class='material-icons'>@item.BUTTON</i></td>
-    @if (item.NUM_DOC_TEXT == "Edit")
-    {
-        <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id_d = item.NUM_DOC })'" style="cursor:pointer">
-            @item.NUM_DOC
-        </td>
-    }
-    else
-    {
-        <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
-            @item.NUM_DOC
-        </td>
-    }
-    <td>@item.SOCIEDAD_ID</td>
-    <td>@item.PAIS_ID</td>
-    <td>@item.FECHAD</td>
-    <td>@item.FECHADD</td>
-    <td>@item.HORAC</td>
-    <td>@item.PERIODO</td>
-    <td><span class="@item.ESTATUS_CLASS" data-badge-caption=" ">@item.ESTATUS</span></td>
-    <td>@item.PAYER_ID</td>
-    <td>@item.CLIENTE</td>
-    <td>@item.CANAL</td>
-    <td>@item.TSOL</td>
-    <td>@item.TALL</td>
-    <td>@item.CUENTAS</td>
-    <td>@item.CONCEPTO</td>
-    <td class="precio">@item.MONTO_DOC_ML</td>
-    <td>@item.FACTURA</td>
-    <td>@item.FACTURAK</td>
-    <td>@item.USUARIOC_ID</td>
-    <td>@item.USUARIOM_ID</td>
-    <td>@item.NUM_PRO</td>
-    <td>@item.NUM_NC</td>
-    <td>@item.NUM_AP</td>
-    <td>@item.NUM_REV</td>
-    <td>@item.BLART</td>
-    <td>@item.NUM_PAYER</td>
-    <td>@item.NUM_CLIENTE</td>
-    <td class="precio">@item.NUM_IMPORTE</td>
-    <td>@item.NUM_CUENTA</td>
-</tr>
+    <tr>
+        <td class="details-control" style="cursor:pointer"><i class='material-icons'>@item.BUTTON</i></td>
+        @if (item.NUM_DOC_TEXT == "Edit")
+        {
+            <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id_d = item.NUM_DOC })'" style="cursor:pointer">
+                @item.NUM_DOC
+            </td>
+        }
+        else
+        {
+            <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
+                @item.NUM_DOC
+            </td>
+        }
+        <td>@item.SOCIEDAD_ID</td>
+        <td>@item.PAIS_ID</td>
+        <td>@item.FECHAD</td>
+        <td>@item.FECHADD</td>
+        <td>@item.HORAC</td>
+        <td>@item.PERIODO</td>
+        <td><span class="@item.ESTATUS_CLASS" data-badge-caption=" ">@item.ESTATUS</span></td>
+        <td>@item.PAYER_ID</td>
+        <td>@item.CLIENTE</td>
+        <td>@item.CANAL</td>
+        <td>@item.TSOL</td>
+        <td>@item.TALL</td>
+        <td>@item.CUENTAS</td>
+        <td>@item.CONCEPTO</td>
+        <td class="precio">@item.MONTO_DOC_ML</td>
+        <td>@item.FACTURA</td>
+        <td>@item.FACTURAK</td>
+        <td>@item.USUARIOC_ID</td>
+        <td>@item.USUARIOM_ID</td>
+        <td>@item.NUM_PRO</td>
+        <td>@item.NUM_NC</td>
+        <td>@item.NUM_AP</td>
+        <td>@item.NUM_REV</td>
+        <td>@item.BLART</td>
+        <td>@item.NUM_PAYER</td>
+        <td>@item.NUM_CLIENTE</td>
+        <td class="precio">@item.NUM_IMPORTE</td>
+        <td>@item.NUM_CUENTA</td>
+    </tr>
 }
             </tbody>
         </table>

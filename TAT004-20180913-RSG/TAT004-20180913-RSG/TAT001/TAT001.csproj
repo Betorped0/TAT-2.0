@@ -913,6 +913,7 @@
     <Content Include="Content\dataTable.css" />
     <Content Include="Content\dataTables1.material.min.css" />
     <Content Include="Content\dataTables.material.min.css" />
+    <Content Include="Content\formatos.css" />
     <Content Include="Content\g-materialize.css" />
     <Content Include="Content\material.min.css" />
     <Content Include="Content\materialize.clockpicker.css" />

@@ -441,12 +441,18 @@ namespace TAT001.Controllers
             ViewBag.miles = DF.D.PAI.MILES;//LEJGG 090718
             ViewBag.dec = DF.D.PAI.DECIMAL;//LEJGG 090718
 
-            /////////DRS 24.09.18/////////
-            var nombrec = from x in db.CUENTAGLs
-                          join c in db.CUENTAs on x.ID equals c.ABONO
-                          where c.ABONO == x.ID
-                          select x.NOMBRE;
-            ViewBag.nombreC = nombrec;
+            /////////DRS 24.09.18/////////          
+            var nombrec = from cuen in db.CUENTAs
+                          join cg in db.CUENTAGLs on cuen.ABONO equals cg.ID
+                          where cuen.TALL_ID == dOCUMENTO.TALL_ID
+                          select cg.NOMBRE;
+            ViewBag.nombreC = nombrec.ToList();
+
+            var nombrec1 = from cuen in db.CUENTAs
+                           join cg in db.CUENTAGLs on cuen.CARGO equals cg.ID
+                           where cuen.TALL_ID == dOCUMENTO.TALL_ID
+                           select cg.NOMBRE;
+            ViewBag.nombreC2 = nombrec1.ToList();
 
             ///////////////////////////////CAMBIOS LGPP INICIO//////////////////////////*@
             if (DF.D.TIPO_TECNICO == "M")
