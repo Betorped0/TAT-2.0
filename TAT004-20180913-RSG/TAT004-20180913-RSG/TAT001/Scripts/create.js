@@ -431,31 +431,11 @@ $(document).ready(function () {
                     var classtd = $("#table_dis tbody tr:first td").attr("class");
                     indext = getIndex();
                     //Distribución por material 
-                    if (classtd == "dataTables_empty" || $('#table_dis').length == 0) {
-                        unica = false;
                         var addedRow = addRowMat(t, "", "", "", "", "", "", "", "", "", "", "", relacionada, relacionadaed, reversa, ddate, adate, "", "");//Add MGC B20180705 2018.07.05 ne no eliminar //Add MGC B20180705 2018.07.05 relacionadaed editar el material en los nuevos renglones
                         $('#table_dis').css("font-size", "12px");
                         $('#table_dis').css("display", "table");
                         t.column(0).visible(false);
                         t.column(1).visible(false);
-                    }
-                    else {
-                        if (unica) {
-                            $(this).find('td').eq((5 + indext)).addClass("errorMaterial");
-                        }
-                        else if (!unica) {
-                            var addedRow = addRowMat(t, "", "", "", "", "", "", "", "", "", "", "", relacionada, relacionadaed, reversa, ddate, adate, "", "");
-                            $('#table_dis').css("font-size", "12px");
-                            $('#table_dis').css("display", "table");
-                            t.column(0).visible(false);
-                            t.column(1).visible(false);
-                        }
-                        else if (unica && $('#table_dis tr').length > 1) {
-                            $(this).find('td').eq((5 + indext)).addClass("errorMaterial");
-                            M.toast({ html: 'Esta categoría no se puede mezclar con otras' });
-                        }
-                    }
-
                 }
                 updateFooter();
 
@@ -4879,12 +4859,18 @@ function evaluarDisTable() {
 
     //La tabla debe de contener como mínimo un registro
     var lengthT = $("table#table_dis tbody tr[role='row']").length;
+    var arrayClass = new Array();
     if (lengthT > 0) {
 
         $("#table_dis > tbody  > tr[role='row']").each(function () {
 
             //Distribución por material
             if (dis == "M") {
+                //if ($(this).attr("class") == "odd" || $(this).attr("class") == "even") {
+                //    arrayClass.push("false");
+                //} else {
+                //    arrayClass.push($(this).attr("class"));
+                //}
                 var val = $(this).find("td:eq(" + (5 + indext) + ") input").val();
                 //Validar material
                 if (val == "") {

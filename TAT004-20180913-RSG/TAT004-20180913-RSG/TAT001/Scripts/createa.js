@@ -6,7 +6,8 @@ $('body').on('keydown.autocomplete', '.input_material', function () {
     var vt = '50';
     vt = document.getElementById("txt_vtweg").value;
     var sp = 'ES';
-    
+    var pastCat;
+    var pastTEXT50;
     sp = document.getElementById("txt_spras").value;
     auto(this).autocomplete({
         source: function (request, response) {
@@ -77,24 +78,41 @@ function selectMaterial(val, desc, tr) {
     var index = getIndex();
     var cat = getCategoria(val);
     console.log(cat);
+    
     desc = $.trim(desc);
     if (index == -2) {
-        if (unica == true && $("#table_dis tbody tr").length > 1) {
-            M.toast({ html: 'Healthy drinks no pueden mezclarse con otras categorías y/o materiales.' });
+        if (unica == true && $("#table_dis tbody tr").length > 1 && cat.CATEGORIA_ID!=pastCat) {
+            var catt = categoriaUnica(cat);
             tr.find('td').eq((5 + index)).addClass("errorMaterial");
-
+            M.toast({ html: pastTEXT50 + ' no pueden mezclarse con otras categorías y/o materiales.' });
         }
         
         tr.find("td:eq(" + (6 + index) + ")").text(cat.TXT50);
         //Descripción
         tr.find("td:eq(" + (7 + index) + ")").text(desc);
-        if (cat.UNICA) {
+        if (cat.UNICA && cat.CATEGORIA_ID == pastCat) {
+            pastCat = cat.CATEGORIA_ID;
+            pastTEXT50 = cat.TXT50;
             unica = true;
+            //tr.find('td').eq((5 + index)).addClass("unica");
         }
-        else if (cat.UNICA == false)
+        if (cat.UNICA && cat.CATEGORIA_ID != pastCat) {
+            pastCat = cat.CATEGORIA_ID;
+            pastTEXT50 = cat.TXT50;
+            unica = true;
+            M.toast({ html: cat.TXT50 + ' no pueden mezclarse con otras categorías y/o materiales.' });
+            tr.remove(); 
+            tr.empty();
+            
+            pastCat = 0;
+            pastTEXT50 = "";
+        }
+        else if (!cat.UNICA)
         {
+            pastCat = cat.CATEGORIA_ID;
+            pastTEXT50 = cat.TXT50;
             unica = false;
-            $(this).find('td').eq((5 + index)).removeClass("errorMaterial");
+            //$(this).find('td').eq((5 + index)).removeClass("errorMaterial");
         }
 
     } else { 
