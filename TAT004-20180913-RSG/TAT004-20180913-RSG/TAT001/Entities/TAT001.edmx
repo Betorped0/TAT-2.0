@@ -261,7 +261,7 @@
           <Property Name="SPART" Type="nchar" MaxLength="2" Nullable="false" />
           <Property Name="KUNNR" Type="nchar" MaxLength="10" Nullable="false" />
           <Property Name="NAME1" Type="nvarchar" MaxLength="100" />
-          <Property Name="STCD1" Type="nvarchar" MaxLength="13" />
+          <Property Name="STCD1" Type="nvarchar" MaxLength="20" />
           <Property Name="STCD2" Type="nvarchar" MaxLength="20" />
           <Property Name="LAND" Type="nchar" MaxLength="2" />
           <Property Name="REGION" Type="nvarchar" MaxLength="50" />
@@ -822,7 +822,7 @@
           <Property Name="OBJQ_PORC" Type="decimal" Precision="13" Scale="5" />
           <Property Name="CUENTAP" Type="numeric" Precision="10" Scale="0" />
           <Property Name="CUENTAPL" Type="numeric" Precision="10" Scale="0" />
-          <Property Name="EXCEDE_PRES" Type="nchar" MaxLength="1" />
+          <Property Name="EXCEDE_PRES" Type="char" MaxLength="1" />
         </EntityType>
         <EntityType Name="DOCUMENTOA">
           <Key>
@@ -1624,7 +1624,11 @@
           <Property Name="ACTIVO" Type="bit" Nullable="false" />
         </EntityType>
         <!--Errores durante la generación:
+<<<<<<< HEAD
 advertencia 6002: La tabla o vista 'TAT001.dbo.TAB_CAMPO' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+=======
+advertencia 6002: La tabla o vista 'TAT004.dbo.TAB_CAMPO' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+>>>>>>> fc3bd757baa56fb5a47ebcd7a4793282a5c73569
         <EntityType Name="TAB_CAMPO">
           <Key>
             <PropertyRef Name="TAB_ID" />
@@ -2107,7 +2111,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.TAB_CAMPO' no tiene definida ning
           <Property Name="DESCRIPCION" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'TAT001.dbo.CARPETAV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+advertencia 6002: La tabla o vista 'TAT004.dbo.CARPETAV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="CARPETAV">
           <Key>
             <PropertyRef Name="USUARIO_ID" />
@@ -2120,7 +2124,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.CARPETAV' no tiene definida ningu
           <Property Name="ICON" Type="nvarchar" MaxLength="20" />
         </EntityType>
         <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'TAT001.dbo.CREADOR' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+advertencia 6002: La tabla o vista 'TAT004.dbo.CREADOR' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="CREADOR">
           <Key>
             <PropertyRef Name="ID" />
@@ -2137,7 +2141,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.CREADOR' no tiene definida ningun
           <Property Name="LAND" Type="nchar" MaxLength="2" />
         </EntityType>
         <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'TAT001.dbo.CREADOR2' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+advertencia 6002: La tabla o vista 'TAT004.dbo.CREADOR2' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="CREADOR2">
           <Key>
             <PropertyRef Name="ID" />
@@ -2155,7 +2159,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.CREADOR2' no tiene definida ningu
           <Property Name="LAND" Type="nchar" MaxLength="2" />
         </EntityType>
         <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'TAT001.dbo.DET_APROBV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+advertencia 6002: La tabla o vista 'TAT004.dbo.DET_APROBV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="DET_APROBV">
           <Key>
             <PropertyRef Name="BUKRS" />
@@ -2168,7 +2172,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.DET_APROBV' no tiene definida nin
           <Property Name="SPRAS_ID" Type="nchar" MaxLength="2" Nullable="false" />
         </EntityType>
         <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'TAT001.dbo.DOCUMENTOV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+advertencia 6002: La tabla o vista 'TAT004.dbo.DOCUMENTOV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="DOCUMENTOV">
           <Key>
             <PropertyRef Name="POS" />
@@ -2244,7 +2248,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.DOCUMENTOV' no tiene definida nin
           <Property Name="ESTADO" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'TAT001.dbo.PAGINAV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+advertencia 6002: La tabla o vista 'TAT004.dbo.PAGINAV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="PAGINAV">
           <Key>
             <PropertyRef Name="ID" />
@@ -2265,7 +2269,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.PAGINAV' no tiene definida ningun
           <Property Name="USUARIO_SPRAS" Type="nchar" MaxLength="2" Nullable="false" />
         </EntityType>
         <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="WARNINGV">
           <Key>
             <PropertyRef Name="PAGINA_ID" />
@@ -6094,7 +6098,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
           <Property Name="SPART" Type="String" MaxLength="2" FixedLength="true" Unicode="true" Nullable="false" />
           <Property Name="KUNNR" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
           <Property Name="NAME1" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="STCD1" Type="String" MaxLength="13" FixedLength="false" Unicode="true" />
+          <Property Name="STCD1" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="STCD2" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="LAND" Type="String" MaxLength="2" FixedLength="true" Unicode="true" />
           <Property Name="REGION" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
@@ -6717,7 +6721,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
           <Property Name="OBJQ_PORC" Type="Decimal" Precision="13" Scale="5" />
           <Property Name="CUENTAP" Type="Decimal" Precision="10" Scale="0" />
           <Property Name="CUENTAPL" Type="Decimal" Precision="10" Scale="0" />
-          <Property Name="EXCEDE_PRES" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+          <Property Name="EXCEDE_PRES" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
           <NavigationProperty Name="CARTAs" Relationship="Self.FK_CARTA_DOCUMENTO" FromRole="DOCUMENTO" ToRole="CARTA" />
           <NavigationProperty Name="CLIENTE" Relationship="Self.FK_DOCUMENTO_CLIENTE" FromRole="DOCUMENTO" ToRole="CLIENTE" />
           <NavigationProperty Name="CUENTAGL" Relationship="Self.FK_DOCUMENTO_CUENTAGL" FromRole="DOCUMENTO" ToRole="CUENTAGL" />
