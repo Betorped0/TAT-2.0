@@ -612,10 +612,10 @@
     <Compile Include="Entities\STATE.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\sysdiagram.cs">
+    <Compile Include="Entities\TAB.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\TAB.cs">
+    <Compile Include="Entities\TAB_CAMPO.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\TALL.cs">
@@ -1355,7 +1355,6 @@
     <Content Include="bin\roslyn\Microsoft.VisualBasic.Core.targets" />
     <Content Include="bin\roslyn\VBCSCompiler.exe.config" />
     <Content Include="bin\TAT001.dll.config" />-->
-    <Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
     <!--<Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
     <Content Include="obj\Debug\edmxResourcesToEmbed\Entities\TAT001.csdl" />
     <Content Include="obj\Debug\edmxResourcesToEmbed\Entities\TAT001.msl" />
@@ -1367,7 +1366,6 @@
     <Content Include="PdfTemp\Doc29\05\2018.xlsx" />
     <Content Include="PdfTemp\DocPr04\06\2018.xlsx" />
     <Content Include="PdfTemp\20180913_200852.pdf" />-->
-    <None Include="obj\Release\AspnetCompileMerge\Source\packages.config" />
     <!--<Content Include="obj\Release\AspnetCompileMerge\Source\Scripts\jquery-3.0.0.min.map" />
     <Content Include="obj\Release\AspnetCompileMerge\Source\Scripts\jquery-3.0.0.slim.min.map" />
     <Content Include="obj\Release\AspnetCompileMerge\Source\Views\Account\ConfirmEmail.cshtml" />
@@ -1835,6 +1833,7 @@
     <Content Include="Views\CalendarioEx445\Index.cshtml" />
     <Content Include="Views\Alertas\Index.cshtml" />
     <Content Include="Views\Alertas\Create.cshtml" />
+    <Content Include="Views\Alertas\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->
@@ -1918,7 +1917,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>64497</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:60621/</IISUrl>
+          <IISUrl>http://localhost:64497/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
