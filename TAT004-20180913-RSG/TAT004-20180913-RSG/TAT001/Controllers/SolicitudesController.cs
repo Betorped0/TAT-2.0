@@ -223,8 +223,9 @@ namespace TAT001.Controllers
                     ld.PERIODO = item.PERIODO + "";
 
                     Estatus e = new Estatus();
-                    ld.ESTATUS = e.getText(item);
-                    ld.ESTATUS_CLASS = e.getClass(item);
+                    ld.ESTATUS = e.getText(item.ESTATUS, ld.NUM_DOC);
+                    ld.ESTATUS_CLASS = e.getClass(item.ESTATUS, ld.NUM_DOC);
+
 
                     ld.PAYER_ID = item.PAYER_ID;
                     if (item.CLIENTE == null)
@@ -8111,7 +8112,9 @@ namespace TAT001.Controllers
                             {
                                 SPRAS_ID = ct.SPRAS_ID.ToString(),
                                 CATEGORIA_ID = ct.MATERIALGP_ID.ToString(),
-                                TXT50 = ct.TXT50.ToString()
+                                TXT50 = ct.TXT50.ToString(),
+                                UNICA = c.UNICA
+
                             })
                         .FirstOrDefault();
             }

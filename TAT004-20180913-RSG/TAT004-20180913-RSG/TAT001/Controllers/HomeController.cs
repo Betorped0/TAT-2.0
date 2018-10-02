@@ -139,8 +139,10 @@ namespace TAT001.Controllers
                         item.ESTATUSS = item.ESTATUSS.Substring(0, 6) + " " + item.ESTATUSS.Substring(6, 1); ;
                     }
                     Estatus e = new Estatus();
-                    ld.ESTATUS = e.getText(item.ESTATUSS);
-                    ld.ESTATUS_CLASS = e.getClass(item.ESTATUSS);
+                    ld.ESTATUS = e.getText(item.ESTATUSS, ld.NUM_DOC);
+                    ld.ESTATUS_CLASS = e.getClass(item.ESTATUSS, ld.NUM_DOC);
+                    //ld.ESTATUS = e.getText(item.ESTATUSS);
+                    //ld.ESTATUS_CLASS = e.getClass(item.ESTATUSS);
 
                     ld.PAYER_ID = item.PAYER_ID;
 
