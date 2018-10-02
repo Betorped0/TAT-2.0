@@ -17,6 +17,7 @@ namespace TAT001.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public TAB()
         {
+            this.TAB_CAMPO = new HashSet<TAB_CAMPO>();
             this.WARNINGPs = new HashSet<WARNINGP>();
         }
     
@@ -25,6 +26,8 @@ namespace TAT001.Entities
         public string DESCR { get; set; }
         public bool ACTIVO { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TAB_CAMPO> TAB_CAMPO { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WARNINGP> WARNINGPs { get; set; }
     }

@@ -618,6 +618,9 @@
     <Compile Include="Entities\TAB_CAMPO.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\TAB_CAMPO.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\TALL.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
@@ -803,7 +806,9 @@
     <Compile Include="Models\ArchivoContable.cs" />
     <Compile Include="Models\ProveedorVal.cs" />
     <Compile Include="Models\TSOLT_MOD.cs" />
+    <Compile Include="Models\ClienteF.cs" />
     <Compile Include="Models\UsuarioF.cs" />
+    <Compile Include="Models\Clientes.cs" />
     <Compile Include="Models\Usuarios.cs" />
     <Compile Include="Models\UsuariosNuevo.cs" />
     <Compile Include="Models\DocumentoFlujo.cs" />
@@ -1284,6 +1289,7 @@
     <Content Include="obj\Release\TempPE\Entities.TAT001.cs.dll" />
     <Content Include="obj\Release\TempPE\Entities.TAT001.Designer.cs.dll" />-->
     <Content Include="images\Simple-wallpapers-HD-for-desktop.png" />
+    <Content Include="Properties\PublishProfiles\FolderProfile.pubxml.user" />
     <!--<Content Include="obj\Debug\TAT001.csproj.FileListAbsolute.txt" />
     <Content Include="obj\Debug\TAT001.dll" />
     <Content Include="obj\Debug\TAT001.pdb" />-->
@@ -1294,7 +1300,6 @@
     </EntityDeploy>
     <Content Include="Entities\TAT001.edmx.diagram">
       <DependentUpon>TAT001.edmx</DependentUpon>
-      <SubType>Designer</SubType>
     </Content>
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\fnCommon.js" />
