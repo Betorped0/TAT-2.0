@@ -27,6 +27,7 @@ namespace TAT001.Entities
             this.DOCUMENTOTS = new HashSet<DOCUMENTOT>();
             this.FLUJOes = new HashSet<FLUJO>();
         }
+
         public List<TAT001.Models.DOCUMENTOP_MOD> DOCUMENTOP { get; set; }
         public List<DOCUMENTOF> DOCUMENTOF { get; set; }
         public List<DOCUMENTOREC> DOCUMENTOREC { get; set; }
@@ -109,11 +110,7 @@ namespace TAT001.Entities
         public Nullable<decimal> CUENTAP { get; set; }
         public Nullable<decimal> CUENTAPL { get; set; }
         public string EXCEDE_PRES { get; set; }
-        public List<TAT001.Models.DOCUMENTOP_MOD> DOCUMENTOP { get; set; }
-        public List<DOCUMENTOF> DOCUMENTOF { get; set; }
-        public List<DOCUMENTOREC> DOCUMENTOREC { get; set; }
-        public List<DOCUMENTORAN> DOCUMENTORAN { get; set; }
-
+    
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CARTA> CARTAs { get; set; }
         public virtual CLIENTE CLIENTE { get; set; }

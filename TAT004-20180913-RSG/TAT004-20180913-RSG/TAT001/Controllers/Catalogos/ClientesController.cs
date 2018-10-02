@@ -937,7 +937,7 @@ namespace TAT001.Controllers.Catalogos
                     cl.KUNNRX = false;
                 else
                 {
-                    //cl.BUKRS=(from x in db.SOCIEDADs join j in (from d in ))
+                    //cl.BUKRS = (from x in db.SOCIEDADs join j in (from d in ))
 
                     //cl.VERSION = int.Parse((from x in db.CLIENTEFs where x.KUNNR.Equals(cl.KUNNR) & x.ACTIVO == true select x.VERSION).ToString()) + 1
                 }

@@ -28,13 +28,9 @@ namespace TAT001.Entities
         public string BELNR { get; set; }
         public Nullable<decimal> IMPORTE_FAC { get; set; }
         public string PAYER { get; set; }
-<<<<<<< HEAD
     
-=======
-        public string SOCIEDAD { get; set; }
-        public string DESCRIPCION { get; set; }
-
->>>>>>> fc3bd757baa56fb5a47ebcd7a4793282a5c73569
         public virtual DOCUMENTO DOCUMENTO { get; set; }
+        public string SOCIEDAD { get; internal set; }
+        public string DESCRIPCION { get; internal set; }
     }
 }
