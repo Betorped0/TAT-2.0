@@ -928,16 +928,17 @@ namespace TAT001.Controllers.Catalogos
 
             var cli = Request["cli"];
             var ni0 = Request["ni0"];
+            cl.KUNNRX = true;
 
             if (cli != null)
             {
                 cl.KUNNR = Completa(cli, 10);
-                CLIENTE k = db.CLIENTEs.Where(x => x.KUNNR.Equals(cl.KUNNR) & x.ACTIVO == true).FirstOrDefault();
+                CLIENTEF k = db.CLIENTEFs.Where(x => x.KUNNR.Equals(cl.KUNNR)).FirstOrDefault();
                 if (k == null)
                     cl.KUNNRX = false;
                 else
                 {
-                    //cl.BUKRS = (from x in db.SOCIEDADs join j in (from d in ))
+                    cl.BUKRS = (from x in db.SOCIEDADs join j in db.CLIENTEs on x.REGION equals j.REGION where j.KUNNR.Equals(cl.KUNNR) select x.BUKRS).ToString();
 
                     //cl.VERSION = int.Parse((from x in db.CLIENTEFs where x.KUNNR.Equals(cl.KUNNR) & x.ACTIVO == true select x.VERSION).ToString()) + 1
                 }

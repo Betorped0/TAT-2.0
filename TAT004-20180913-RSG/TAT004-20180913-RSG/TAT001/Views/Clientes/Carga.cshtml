@@ -516,7 +516,7 @@
         var datos = $('#tabla').serializeArray();
         $.ajax({
             type: "POST",
-            url: 'Agregar',
+            url: 'Actualizar',
             data: datos,
             dataType: "json",
             success: function () {
@@ -526,8 +526,6 @@
                 //alert(request.responseText);
             }
         });
-        M.toast({ html: 'Se agregaron los nuevos registros' });
-        window.location.replace("/Clientes/Index");
     }
 
     function creart(metodo, datos) {
