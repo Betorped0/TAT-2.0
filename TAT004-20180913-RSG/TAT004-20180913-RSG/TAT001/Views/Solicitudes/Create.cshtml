@@ -35,13 +35,15 @@ errorMessage(message);
 <input id="horaServer" type="hidden" value="@ViewBag.horaServer">
 <span class="span_fileload" style="display:none;"></span>
 <span class="lbl_cabono" style="display:none;"></span>
+@*DRS 24.09.18---------------------------------------------*@
+<span class="cuenta_Nombre" style="display:none;"></span>
 <span class="lbl_ccargo" style="display:none;"></span>
 <span class="lbl_cclear" style="display:none;"></span>
 @* ------------------------------------------------------------------------LEJ 09-07-18 *@
 <div class="row" style="margin-bottom:0">
     @{TAT001.Entities.USUARIO us = ViewBag.usuario;
 
-        <div class="col s12 m3 l2">
+        <div class="col s12 m2 l2">
             <div class="row" style="margin-bottom:0">
                 <div class="input-field col s12">
                     @Html.EditorFor(model => model.USUARIOC_ID, "Usuario", new { htmlAttributes = new { @disabled = "disabled", @Value = us.ID, @id = "txt_user" } })
@@ -55,14 +57,18 @@ errorMessage(message);
                     @Html.EditorFor(model => model.USUARIO.BACKUP_ID, "BACKUP", new { htmlAttributes = new { @disabled = "disabled", @Value = us.BACKUP_ID } })
                     @Html.LabelFor(model => model.USUARIO.BACKUP_ID, "Backup", new { @id = "lbl_backup" })
                     </div>*@
+
             </div>
         </div>
-        <div class="col s12 m4 l2">
-            <div class="input-field col s6">
+
+
+        /////////////DRS 25.09.18///////
+        <div class="col s12 m2 12">
+            <div class="input-field col s8">
                 @Html.EditorFor(model => model.USUARIO.BUNIT, "BU", new { htmlAttributes = new { @disabled = "disabled", @Value = us.BUNIT } })
                 @Html.LabelFor(model => model.USUARIO.BUNIT, "BU", new { @id = "lbl_bu" })
             </div>
-            <div class="input-field col s6">
+            <div class="input-field col s4">
                 <input type="text" id="txt_status" value="Nuevo" disabled="disabled" />
                 <label for="txt_status" id="lbl_status">Estatus</label>
             </div>
@@ -317,7 +323,8 @@ errorMessage(message);
                                     </div>
                                 </div>
                                 @{TAT001.Entities.PAI pais = ViewBag.PAIS_ID;
-                                    <div class="col s6">
+                                    ///////DRS 27.09.18/////////
+                                    <div class="col s6" style="margin-top:1.1%">
                                         <div class="form-group hidden">
                                             @Html.LabelFor(model => model.PAIS_ID, "Subregión", htmlAttributes: new { @class = "control-label col-md-2 hidden", @id = "lbl_pais" }) @*B20180801 MGC Textos*@
                                             <div class="col-md-10">
@@ -1209,8 +1216,8 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                             </div>
                         }
                         @{List<TAT001.Entities.DOCUMENTOA>
-                                                                                                                                                                                        archivos = ViewBag.files as List<TAT001.Entities.DOCUMENTOA>
-                                                                                                                                                                                            ;
+                                                                                                                                                                                            archivos = ViewBag.files as List<TAT001.Entities.DOCUMENTOA>
+                                                                                                                                                                                                ;
                             if (ViewBag.relacionadan != "" && archivos.Count > 0)
                             {
                                 string[] nombrefile;
@@ -2142,63 +2149,71 @@ var ejercicio = '@Model.EJERCICIO';
 /**/
 /**/
 /**/
-$.ajax({
-type: "POST",
-url: '../Listas/clearing',
-dataType: "json",
-data: { bukrs: bukrs, land: land, gall: gall, ejercicio: ejercicio },
+    $.ajax({
+        type: "POST",
+        url: '../Listas/clearing',
+        dataType: "json",
+        data: { bukrs: bukrs, land: land, gall: gall, ejercicio: ejercicio },
 
-success: function (data) {
-if (data !== null || data !== "") {
-//RSG 26.04.2018----------------
-clearing.push(data.ABONO);
-clearing.push(data.CARGO);
-clearing.push(data.CLEARING);
-clearing.push(data.LIMITE);
-//RSG 26.04.2018----------------
-}
+        success: function (data) {
+            if (data !== null || data !== "") {
+                //RSG 26.04.2018----------------
+                clearing.push(data.ABONO);
+                //DRS 28.09.2018
+                clearing.push(data.NOMBRE);
+                clearing.push(data.CARGO);
+                clearing.push(data.CLEARING);
+                clearing.push(data.LIMITE);
+                //RSG 26.04.2018----------------
+            }
 
-},
-error: function (xhr, httpStatusMessage, customErrorMessage) {
-//M.toast({ html: httpStatusMessage });
-},
-async: false
-});
+        },
+        error: function (xhr, httpStatusMessage, customErrorMessage) {
+            //M.toast({ html: httpStatusMessage });
+        },
+        async: false
+    });
 
 }
-function formaClearing() {
-var tex_abono = document.querySelector(".lbl_cabono").innerHTML;
-var tex_cargo = document.querySelector(".lbl_ccargo").innerHTML;
-var tex_clearing = document.querySelector(".lbl_cclear").innerHTML;
-getClearing(document.getElementById("tall_id").value);
-$("#div_clearing").empty();
-//var monto = document.getElementById("monto_dis").value;
-var monto = $('#monto_doc_md').val();
-var div = "<ul class='collection'><li class='collection-item'>";
-div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>" + tex_abono + "</div><div class='col s4'>" + clearing[0] + "</div><div class='col s4'>" + monto + "</div></div>";
-div += "</li><li class='collection-item'>";
+                                            function formaClearing() {
+                                                var tex_abono = document.querySelector(".lbl_cabono").innerHTML;
+                                                var tex_cargo = document.querySelector(".lbl_ccargo").innerHTML;
+                                                //DRS 24.09.18---------------------------------------------
+                                                var nombreC = document.querySelector(".cuenta_Nombre").innerHTML;
+                                                var tex_clearing = document.querySelector(".lbl_cclear").innerHTML;
+                                                getClearing(document.getElementById("tall_id").value);
+                                                $("#div_clearing").empty();
+                                                //var monto = document.getElementById("monto_dis").value;
+                                                var monto = $('#monto_doc_md').val();
 
-if (clearing[3] == null) {
-div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>" + tex_cargo + "</div><div class='col s4'>" + clearing[1] + "</div><div class='col s4'>" + monto + "</div></div>";
-} else {
-if (clearing[2] != null) {
-if (monto <= clearing[3]) {
-div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>" + tex_cargo + "</div><div class='col s4'>" + clearing[1] + "</div><div class='col s4'>" + monto + "</div></div>";
-div += "</li><li class='collection-item'>";
-div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>" + tex_clearing + "</div><div class='col s4'>" + clearing[2] + "</div><div class='col s4'>0.00</div></div>";
-div += "</li>";
-} else {
-div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>" + tex_cargo + "</div><div class='col s4'>" + clearing[1] + "</div><div class='col s4'>" + clearing[3] + "</div></div>";
-div += "</li><li class='collection-item'>";
-div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>" + tex_clearing + "</div><div class='col s4'>" + clearing[2] + "</div><div class='col s4'>" + (monto - clearing[3]) + "</div></div>";
-div += "</li>";
-}
-}
-}
-div += "</li>";
-div += "</ul>";
-$("#div_clearing").append(div);
-}
+                                                var div = "<ul class='collection'><li class='collection-item'>";
+                                                //DRS 24.09.18---------------------------------------------+
+                                                div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_abono + "</div><div class='col s3'>" + nombreC + "</div><div class='col s3'>" + clearing[0] + "</div><div class='col s3 right-align'>" + monto + "</div></div>";
+                                                div += "</li><li class='collection-item'>";
+
+                                                if (clearing[3] == null) {
+                                                    //DRS 24.09.18---------------------------------------------
+                                                    div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + nombreC + "</div><div class='col s3'>" + clearing[1] + "</div><div class='col s3 right-align'>" + monto + "</div></div></div>";
+                                                } else {
+                                                    if (clearing[2] != null) {
+                                                        if (monto <= clearing[3]) {
+
+                                                            div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + nombreC + "</div><div class='col s3'>" + clearing[1] + "</div><div class='col s3 right-align'>" + monto + "</div></div>";
+                                                            div += "</li><li class='collection-item'>";
+                                                            div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>" + tex_clearing + "</div><div class='col s4'>" + clearing[2] + "</div><div class='col s4'>0.00</div></div>";
+                                                            div += "</li>";
+                                                        } else {
+                                                            div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + nombreC + "</div><div class='col s3'>" + clearing[1] + "</div><div class='col s3'>" + clearing[3] + "</div></div>";
+                                                            div += "</li><li class='collection-item'>";
+                                                            div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>" + tex_clearing + "</div><div class='col s4'>" + clearing[2] + "</div><div class='col s4'>" + (monto - clearing[3]) + "</div></div>";
+                                                            div += "</li>";
+                                                        }
+                                                    }
+                                                }
+                                                div += "</li>";
+                                                div += "</ul>";
+                                                $("#div_clearing").append(div);
+                                            }
                                 </script>
                             </div>
                             @*<div class="card-panel">

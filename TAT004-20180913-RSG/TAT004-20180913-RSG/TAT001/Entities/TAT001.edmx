@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="TAT004Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="TAT004Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="ACCION">
           <Key>
             <PropertyRef Name="ID" />
@@ -54,6 +54,27 @@
           <Property Name="FECHAC" Type="datetime" Nullable="false" />
           <Property Name="USUARIOM_ID" Type="nvarchar" MaxLength="16" />
           <Property Name="FECHAM" Type="datetime" />
+          <Property Name="ACTIVO" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CALENDARIO_EX">
+          <Key>
+            <PropertyRef Name="EJERCICIO" />
+            <PropertyRef Name="PERIODO" />
+            <PropertyRef Name="SOCIEDAD_ID" />
+            <PropertyRef Name="TSOL_ID" />
+            <PropertyRef Name="USUARIO_ID" />
+          </Key>
+          <Property Name="EJERCICIO" Type="smallint" Nullable="false" />
+          <Property Name="PERIODO" Type="int" Nullable="false" />
+          <Property Name="SOCIEDAD_ID" Type="nchar" MaxLength="4" Nullable="false" />
+          <Property Name="TSOL_ID" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="USUARIO_ID" Type="nvarchar" MaxLength="16" Nullable="false" />
+          <Property Name="EX_FROMF" Type="date" Nullable="false" />
+          <Property Name="EX_FROMH" Type="time" Precision="7" Nullable="false" />
+          <Property Name="EX_TOF" Type="date" Nullable="false" />
+          <Property Name="EX_TOH" Type="time" Precision="7" Nullable="false" />
+          <Property Name="USUARIOC_ID" Type="nvarchar" MaxLength="16" Nullable="false" />
+          <Property Name="FEHAC" Type="datetime" Nullable="false" />
           <Property Name="ACTIVO" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="CAMPOS">
@@ -240,7 +261,7 @@
           <Property Name="SPART" Type="nchar" MaxLength="2" Nullable="false" />
           <Property Name="KUNNR" Type="nchar" MaxLength="10" Nullable="false" />
           <Property Name="NAME1" Type="nvarchar" MaxLength="100" />
-          <Property Name="STCD1" Type="nvarchar" MaxLength="20" />
+          <Property Name="STCD1" Type="nvarchar" MaxLength="13" />
           <Property Name="STCD2" Type="nvarchar" MaxLength="20" />
           <Property Name="LAND" Type="nchar" MaxLength="2" />
           <Property Name="REGION" Type="nvarchar" MaxLength="50" />
@@ -801,7 +822,7 @@
           <Property Name="OBJQ_PORC" Type="decimal" Precision="13" Scale="5" />
           <Property Name="CUENTAP" Type="numeric" Precision="10" Scale="0" />
           <Property Name="CUENTAPL" Type="numeric" Precision="10" Scale="0" />
-          <Property Name="EXCEDE_PRES" Type="char" MaxLength="1" />
+          <Property Name="EXCEDE_PRES" Type="nchar" MaxLength="1" />
         </EntityType>
         <EntityType Name="DOCUMENTOA">
           <Key>
@@ -2076,7 +2097,7 @@
           <Property Name="DESCRIPCION" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'TAT004.dbo.CARPETAV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+advertencia 6002: La tabla o vista 'TAT001.dbo.CARPETAV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="CARPETAV">
           <Key>
             <PropertyRef Name="USUARIO_ID" />
@@ -2089,7 +2110,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.CARPETAV' no tiene definida ningu
           <Property Name="ICON" Type="nvarchar" MaxLength="20" />
         </EntityType>
         <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'TAT004.dbo.CREADOR' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+advertencia 6002: La tabla o vista 'TAT001.dbo.CREADOR' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="CREADOR">
           <Key>
             <PropertyRef Name="ID" />
@@ -2106,7 +2127,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.CREADOR' no tiene definida ningun
           <Property Name="LAND" Type="nchar" MaxLength="2" />
         </EntityType>
         <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'TAT004.dbo.CREADOR2' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+advertencia 6002: La tabla o vista 'TAT001.dbo.CREADOR2' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="CREADOR2">
           <Key>
             <PropertyRef Name="ID" />
@@ -2124,7 +2145,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.CREADOR2' no tiene definida ningu
           <Property Name="LAND" Type="nchar" MaxLength="2" />
         </EntityType>
         <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'TAT004.dbo.DET_APROBV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+advertencia 6002: La tabla o vista 'TAT001.dbo.DET_APROBV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="DET_APROBV">
           <Key>
             <PropertyRef Name="BUKRS" />
@@ -2137,7 +2158,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.DET_APROBV' no tiene definida nin
           <Property Name="SPRAS_ID" Type="nchar" MaxLength="2" Nullable="false" />
         </EntityType>
         <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'TAT004.dbo.DOCUMENTOV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+advertencia 6002: La tabla o vista 'TAT001.dbo.DOCUMENTOV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="DOCUMENTOV">
           <Key>
             <PropertyRef Name="POS" />
@@ -2213,7 +2234,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.DOCUMENTOV' no tiene definida nin
           <Property Name="ESTADO" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'TAT004.dbo.PAGINAV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+advertencia 6002: La tabla o vista 'TAT001.dbo.PAGINAV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="PAGINAV">
           <Key>
             <PropertyRef Name="ID" />
@@ -2234,7 +2255,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.PAGINAV' no tiene definida ningun
           <Property Name="USUARIO_SPRAS" Type="nchar" MaxLength="2" Nullable="false" />
         </EntityType>
         <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="WARNINGV">
           <Key>
             <PropertyRef Name="PAGINA_ID" />
@@ -2307,6 +2328,36 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
             </Principal>
             <Dependent Role="CALENDARIO_AC">
               <PropertyRef Name="TSOL_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CALENDARIO_EX_CALENDARIO_AC">
+          <End Role="CALENDARIO_AC" Type="Self.CALENDARIO_AC" Multiplicity="1" />
+          <End Role="CALENDARIO_EX" Type="Self.CALENDARIO_EX" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CALENDARIO_AC">
+              <PropertyRef Name="EJERCICIO" />
+              <PropertyRef Name="PERIODO" />
+              <PropertyRef Name="SOCIEDAD_ID" />
+              <PropertyRef Name="TSOL_ID" />
+            </Principal>
+            <Dependent Role="CALENDARIO_EX">
+              <PropertyRef Name="EJERCICIO" />
+              <PropertyRef Name="PERIODO" />
+              <PropertyRef Name="SOCIEDAD_ID" />
+              <PropertyRef Name="TSOL_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CALENDARIO_EX_USUARIO">
+          <End Role="USUARIO" Type="Self.USUARIO" Multiplicity="1" />
+          <End Role="CALENDARIO_EX" Type="Self.CALENDARIO_EX" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USUARIO">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CALENDARIO_EX">
+              <PropertyRef Name="USUARIO_ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -4683,6 +4734,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <EntitySet Name="ACCIONT" EntityType="Self.ACCIONT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="APPSETTING" EntityType="Self.APPSETTING" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CALENDARIO_AC" EntityType="Self.CALENDARIO_AC" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CALENDARIO_EX" EntityType="Self.CALENDARIO_EX" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CAMPOS" EntityType="Self.CAMPOS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CAMPOZKE24" EntityType="Self.CAMPOZKE24" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CAMPOZKE24T" EntityType="Self.CAMPOZKE24T" Schema="dbo" store:Type="Tables" />
@@ -4978,6 +5030,14 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <AssociationSet Name="FK_CALENDARIO_AC_TSOL" Association="Self.FK_CALENDARIO_AC_TSOL">
             <End Role="TSOL" EntitySet="TSOL" />
             <End Role="CALENDARIO_AC" EntitySet="CALENDARIO_AC" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CALENDARIO_EX_CALENDARIO_AC" Association="Self.FK_CALENDARIO_EX_CALENDARIO_AC">
+            <End Role="CALENDARIO_AC" EntitySet="CALENDARIO_AC" />
+            <End Role="CALENDARIO_EX" EntitySet="CALENDARIO_EX" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CALENDARIO_EX_USUARIO" Association="Self.FK_CALENDARIO_EX_USUARIO">
+            <End Role="USUARIO" EntitySet="USUARIO" />
+            <End Role="CALENDARIO_EX" EntitySet="CALENDARIO_EX" />
           </AssociationSet>
           <AssociationSet Name="FK_CAMPOS_PAGINA" Association="Self.FK_CAMPOS_PAGINA">
             <End Role="PAGINA" EntitySet="PAGINA" />
@@ -5708,8 +5768,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
             <End Role="WORKFV" EntitySet="WORKFV" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="TAT004Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -5774,6 +5833,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <NavigationProperty Name="PERIODO1" Relationship="Self.FK_CALENDARIO_AC_PERIODO" FromRole="CALENDARIO_AC" ToRole="PERIODO" />
           <NavigationProperty Name="SOCIEDAD" Relationship="Self.FK_CALENDARIO_AC_SOCIEDAD" FromRole="CALENDARIO_AC" ToRole="SOCIEDAD" />
           <NavigationProperty Name="TSOL" Relationship="Self.FK_CALENDARIO_AC_TSOL" FromRole="CALENDARIO_AC" ToRole="TSOL" />
+          <NavigationProperty Name="CALENDARIO_EX" Relationship="TAT004Model.FK_CALENDARIO_EX_CALENDARIO_AC" FromRole="CALENDARIO_AC" ToRole="CALENDARIO_EX" />
         </EntityType>
         <EntityType Name="CAMPOS">
           <Key>
@@ -5978,7 +6038,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Property Name="SPART" Type="String" MaxLength="2" FixedLength="true" Unicode="true" Nullable="false" />
           <Property Name="KUNNR" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
           <Property Name="NAME1" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="STCD1" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="STCD1" Type="String" MaxLength="13" FixedLength="false" Unicode="true" />
           <Property Name="STCD2" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="LAND" Type="String" MaxLength="2" FixedLength="true" Unicode="true" />
           <Property Name="REGION" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
@@ -6601,7 +6661,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Property Name="OBJQ_PORC" Type="Decimal" Precision="13" Scale="5" />
           <Property Name="CUENTAP" Type="Decimal" Precision="10" Scale="0" />
           <Property Name="CUENTAPL" Type="Decimal" Precision="10" Scale="0" />
-          <Property Name="EXCEDE_PRES" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="EXCEDE_PRES" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
           <NavigationProperty Name="CARTAs" Relationship="Self.FK_CARTA_DOCUMENTO" FromRole="DOCUMENTO" ToRole="CARTA" />
           <NavigationProperty Name="CLIENTE" Relationship="Self.FK_DOCUMENTO_CLIENTE" FromRole="DOCUMENTO" ToRole="CLIENTE" />
           <NavigationProperty Name="CUENTAGL" Relationship="Self.FK_DOCUMENTO_CUENTAGL" FromRole="DOCUMENTO" ToRole="CUENTAGL" />
@@ -7975,6 +8035,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <NavigationProperty Name="SPRA" Relationship="Self.FK_USUARIO_SPRAS" FromRole="USUARIO" ToRole="SPRAS" />
           <NavigationProperty Name="USUARIOFs" Relationship="Self.FK_USUARIOF_USUARIO" FromRole="USUARIO" ToRole="USUARIOF" />
           <NavigationProperty Name="GAUTORIZACIONs" Relationship="Self.USUARIOGA" FromRole="USUARIO" ToRole="GAUTORIZACION" />
+          <NavigationProperty Name="CALENDARIO_EX" Relationship="TAT004Model.FK_CALENDARIO_EX_USUARIO" FromRole="USUARIO" ToRole="CALENDARIO_EX" />
         </EntityType>
         <EntityType Name="USUARIOF">
           <Key>
@@ -11525,7 +11586,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <FunctionImport Name="CPS_LISTA_CLI_PRO" ReturnType="Collection(TAT004Model.CPS_LISTA_CLI_PRO_Result)" />
           <FunctionImport Name="CSP_BANNERSINCANAL" ReturnType="Collection(String)" />
           <FunctionImport Name="CSP_CAMBIO" ReturnType="Collection(TAT004Model.CSP_CAMBIO_Result)">
-            <Parameter Name="sociedad" Mode="In" Type="String" />
+          <Parameter Name="sociedad" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="CSP_CARPETA" ReturnType="Collection(TAT004Model.CSP_CARPETA_Result)">
             <Parameter Name="ID" Mode="In" Type="String" />
@@ -11562,7 +11623,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
             <Parameter Name="caso" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="CSP_PRESUPUESTO_ADDP" ReturnType="Collection(TAT004Model.CSP_PRESUPUESTO_ADDP_Result)">
-            <Parameter Name="path" Mode="In" Type="String" />
+          <Parameter Name="path" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="CSP_USUARIO" ReturnType="Collection(TAT004Model.CSP_USUARIO_Result)">
             <Parameter Name="ID" Mode="In" Type="String" />
@@ -11605,6 +11666,15 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
             <Parameter Name="new_diagramname" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="sp_upgraddiagrams" />
+          <EntitySet Name="CALENDARIO_EX" EntityType="TAT004Model.CALENDARIO_EX" />
+          <AssociationSet Name="FK_CALENDARIO_EX_CALENDARIO_AC" Association="TAT004Model.FK_CALENDARIO_EX_CALENDARIO_AC">
+            <End Role="CALENDARIO_AC" EntitySet="CALENDARIO_AC" />
+            <End Role="CALENDARIO_EX" EntitySet="CALENDARIO_EX" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CALENDARIO_EX_USUARIO" Association="TAT004Model.FK_CALENDARIO_EX_USUARIO">
+            <End Role="USUARIO" EntitySet="USUARIOs" />
+            <End Role="CALENDARIO_EX" EntitySet="CALENDARIO_EX" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="CPS_LISTA_CLI_PRO_Result">
           <Property Type="String" Name="KUNNR" Nullable="false" MaxLength="10" />
@@ -11756,6 +11826,59 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
           <Property Type="Int32" Name="OwnerID" Nullable="false" />
         </ComplexType>
+        <EntityType Name="CALENDARIO_EX">
+          <Key>
+            <PropertyRef Name="EJERCICIO" />
+            <PropertyRef Name="PERIODO" />
+            <PropertyRef Name="SOCIEDAD_ID" />
+            <PropertyRef Name="TSOL_ID" />
+            <PropertyRef Name="USUARIO_ID" />
+          </Key>
+          <Property Name="EJERCICIO" Type="Int16" Nullable="false" />
+          <Property Name="PERIODO" Type="Int32" Nullable="false" />
+          <Property Name="SOCIEDAD_ID" Type="String" Nullable="false" MaxLength="4" FixedLength="true" Unicode="true" />
+          <Property Name="TSOL_ID" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="USUARIO_ID" Type="String" Nullable="false" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Name="EX_FROMF" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="EX_FROMH" Type="Time" Nullable="false" Precision="7" />
+          <Property Name="EX_TOF" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="EX_TOH" Type="Time" Nullable="false" Precision="7" />
+          <Property Name="USUARIOC_ID" Type="String" Nullable="false" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Name="FEHAC" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ACTIVO" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="CALENDARIO_AC" Relationship="TAT004Model.FK_CALENDARIO_EX_CALENDARIO_AC" FromRole="CALENDARIO_EX" ToRole="CALENDARIO_AC" />
+          <NavigationProperty Name="USUARIO" Relationship="TAT004Model.FK_CALENDARIO_EX_USUARIO" FromRole="CALENDARIO_EX" ToRole="USUARIO" />
+        </EntityType>
+        <Association Name="FK_CALENDARIO_EX_CALENDARIO_AC">
+          <End Type="TAT004Model.CALENDARIO_AC" Role="CALENDARIO_AC" Multiplicity="1" />
+          <End Type="TAT004Model.CALENDARIO_EX" Role="CALENDARIO_EX" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CALENDARIO_AC">
+              <PropertyRef Name="EJERCICIO" />
+              <PropertyRef Name="PERIODO" />
+              <PropertyRef Name="SOCIEDAD_ID" />
+              <PropertyRef Name="TSOL_ID" />
+            </Principal>
+            <Dependent Role="CALENDARIO_EX">
+              <PropertyRef Name="EJERCICIO" />
+              <PropertyRef Name="PERIODO" />
+              <PropertyRef Name="SOCIEDAD_ID" />
+              <PropertyRef Name="TSOL_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CALENDARIO_EX_USUARIO">
+          <End Type="TAT004Model.USUARIO" Role="USUARIO" Multiplicity="1" />
+          <End Type="TAT004Model.CALENDARIO_EX" Role="CALENDARIO_EX" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USUARIO">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CALENDARIO_EX">
+              <PropertyRef Name="USUARIO_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -14171,6 +14294,24 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="TAT004Model.Store.sp_renamediagram" />
           <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="TAT004Model.Store.sp_upgraddiagrams" />
+          <EntitySetMapping Name="CALENDARIO_EX">
+            <EntityTypeMapping TypeName="TAT004Model.CALENDARIO_EX">
+              <MappingFragment StoreEntitySet="CALENDARIO_EX">
+                <ScalarProperty Name="ACTIVO" ColumnName="ACTIVO" />
+                <ScalarProperty Name="FEHAC" ColumnName="FEHAC" />
+                <ScalarProperty Name="USUARIOC_ID" ColumnName="USUARIOC_ID" />
+                <ScalarProperty Name="EX_TOH" ColumnName="EX_TOH" />
+                <ScalarProperty Name="EX_TOF" ColumnName="EX_TOF" />
+                <ScalarProperty Name="EX_FROMH" ColumnName="EX_FROMH" />
+                <ScalarProperty Name="EX_FROMF" ColumnName="EX_FROMF" />
+                <ScalarProperty Name="USUARIO_ID" ColumnName="USUARIO_ID" />
+                <ScalarProperty Name="TSOL_ID" ColumnName="TSOL_ID" />
+                <ScalarProperty Name="SOCIEDAD_ID" ColumnName="SOCIEDAD_ID" />
+                <ScalarProperty Name="PERIODO" ColumnName="PERIODO" />
+                <ScalarProperty Name="EJERCICIO" ColumnName="EJERCICIO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

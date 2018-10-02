@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="2787c3c3b3144d6c87a00034c974adf5" Name="Diagram1" ZoomLevel="38">
+      <Diagram DiagramId="2787c3c3b3144d6c87a00034c974adf5" Name="Diagram1" ZoomLevel="26">
         <EntityTypeShape EntityType="TAT004Model.ACCION" Width="1.5" PointX="27" PointY="69.125" IsExpanded="true" />
         <EntityTypeShape EntityType="TAT004Model.ACCIONT" Width="1.5" PointX="3" PointY="96" IsExpanded="true" />
         <EntityTypeShape EntityType="TAT004Model.APPSETTING" Width="1.5" PointX="10.75" PointY="3.75" IsExpanded="true" />
@@ -340,6 +340,9 @@
         <AssociationConnector Association="TAT004Model.FK_WORKFP_WORKFV" ManuallyRouted="false" />
         <AssociationConnector Association="TAT004Model.FK_WORKFT_WORKFV" ManuallyRouted="false" />
         <AssociationConnector Association="TAT004Model.USUARIOGA" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="TAT004Model.CALENDARIO_EX" Width="1.5" PointX="37.5" PointY="90.125" />
+        <AssociationConnector Association="TAT004Model.FK_CALENDARIO_EX_CALENDARIO_AC" />
+        <AssociationConnector Association="TAT004Model.FK_CALENDARIO_EX_USUARIO" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

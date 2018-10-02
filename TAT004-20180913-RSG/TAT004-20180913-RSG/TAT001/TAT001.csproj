@@ -611,7 +611,9 @@
     <Compile Include="Entities\STATE.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\sysdiagram.cs" />
+    <Compile Include="Entities\sysdiagram.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\TAB.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
@@ -912,6 +914,7 @@
     <Content Include="Content\dataTable.css" />
     <Content Include="Content\dataTables1.material.min.css" />
     <Content Include="Content\dataTables.material.min.css" />
+    <Content Include="Content\formatos.css" />
     <Content Include="Content\g-materialize.css" />
     <Content Include="Content\material.min.css" />
     <Content Include="Content\materialize.clockpicker.css" />

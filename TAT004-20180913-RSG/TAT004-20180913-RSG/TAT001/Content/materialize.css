@@ -3391,7 +3391,7 @@ span.badge {
 
     span.badge.new {
         font-weight: 300;
-        font-size: 17px;
+        font-size: 15px; /*DRS 24.09.18*/
         color: #fff;
         background-color: #26a69a;
         border-radius: 2px;
@@ -4713,7 +4713,7 @@ h3 {
 h4 {
     font-family: Tahoma;
     /*text-transform: capitalize;*/
-    font-size: 2.6rem;
+    font-size: 2rem;
     /*font-weight: bold;*/
     line-height: 110%;
     margin: 1.52rem 0 0.912rem 0;
@@ -4722,7 +4722,7 @@ h4 {
     /*--DRS 25.09.18--*/
 h5 {
     font-family: Tahoma;
-    font-size: 1.64rem;
+    font-size: 1.4rem;
     line-height: 110%;
     margin: 0 0 0.656rem 0;
     /*text-transform: capitalize;*/
@@ -5259,7 +5259,7 @@ small {
             height: 100%;
             padding: 0 24px;
             /*---DRS 25.09.18----*/
-            font-size: 18px;
+            font-size: 16px;
             text-overflow: ellipsis;
             overflow: hidden;
             -webkit-transition: color .28s ease;
@@ -5678,7 +5678,7 @@ button.btn-floating {
     height: 32.4px;
     line-height: 32.4px;
     font-family: Tahoma;
-    font-size: 15px
+    font-size: 13px
 }
 
     .btn-small i {
@@ -6222,7 +6222,7 @@ button:focus {
 }
 /*------DRS 25.04.18------*/
 label {
-    font-size: 1.1rem;
+    font-size: 16px;
     color: gray;
 }
 
@@ -6271,7 +6271,7 @@ textarea.materialize-textarea {
     height: 3rem;
     width: 100%;
     /*---DRS 25.09.18---*/
-    font-size: 15px;
+    font-size: 13px;
     margin-top: 3%;
     margin: 0 0 8px 0;
     padding: 0;
@@ -6772,7 +6772,7 @@ textarea.materialize-textarea {
         top: 0;
         left: 0;
         /*----DRS 24.09.18----*/
-        font-size: 1.3rem;
+        font-size: 18px;
         cursor: text;
         -webkit-transition: color .2s ease-out, -webkit-transform .2s ease-out;
         transition: color .2s ease-out, -webkit-transform .2s ease-out;
@@ -7827,7 +7827,7 @@ input[type=range] {
             font-family: Tahoma;
             text-transform: uppercase;
             display: block;
-            font-size: 18px;
+            font-size: 12px;
             font-weight: 500;
             height: 48px;
             line-height: 48px;
