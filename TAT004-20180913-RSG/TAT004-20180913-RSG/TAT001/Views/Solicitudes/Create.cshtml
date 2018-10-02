@@ -2164,8 +2164,9 @@ var ejercicio = '@Model.EJERCICIO';
                 //RSG 26.04.2018----------------
                 clearing.push(data.ABONO);
                 //DRS 28.09.2018
-                clearing.push(data.NOMBRE);
-                clearing.push(data.CARGO);
+                                    clearing.push(data.NOMBREA);
+                                    clearing.push(data.CARGO);
+                                    clearing.push(data.NOMBREC);
                 clearing.push(data.CLEARING);
                 clearing.push(data.LIMITE);
                 //RSG 26.04.2018----------------
@@ -2192,24 +2193,24 @@ var ejercicio = '@Model.EJERCICIO';
 
                                                 var div = "<ul class='collection'><li class='collection-item'>";
                                                 //DRS 24.09.18---------------------------------------------+
-                                                div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_abono + "</div><div class='col s3'>" + nombreC + "</div><div class='col s3'>" + clearing[0] + "</div><div class='col s3 right-align'>" + monto + "</div></div>";
+                                                div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_abono + "</div><div class='col s3'>" + clearing[1] + "</div><div class='col s3'>" + clearing[0] + "</div><div class='col s3 right-align'>" + monto + "</div></div>";
                                                 div += "</li><li class='collection-item'>";
 
-                                                if (clearing[3] == null) {
+                                                if (clearing[5] == null) {
                                                     //DRS 24.09.18---------------------------------------------
-                                                    div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + nombreC + "</div><div class='col s3'>" + clearing[1] + "</div><div class='col s3 right-align'>" + monto + "</div></div></div>";
+                                                    div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + clearing[3] + "</div><div class='col s3'>" + clearing[2] + "</div><div class='col s3 right-align'>" + monto + "</div></div></div>";
                                                 } else {
                                                     if (clearing[2] != null) {
                                                         if (monto <= clearing[3]) {
 
-                                                            div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + nombreC + "</div><div class='col s3'>" + clearing[1] + "</div><div class='col s3 right-align'>" + monto + "</div></div>";
+                                                            div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + clearing[3] + "</div><div class='col s3'>" + clearing[2] + "</div><div class='col s3 right-align'>" + monto + "</div></div>";
                                                             div += "</li><li class='collection-item'>";
-                                                            div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>" + tex_clearing + "</div><div class='col s4'>" + clearing[2] + "</div><div class='col s4'>0.00</div></div>";
+                                                            div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>" + tex_clearing + "</div><div class='col s4'>" + clearing[4] + "</div><div class='col s4'>0.00</div></div>";
                                                             div += "</li>";
                                                         } else {
-                                                            div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + nombreC + "</div><div class='col s3'>" + clearing[1] + "</div><div class='col s3'>" + clearing[3] + "</div></div>";
+                                                            div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + clearing[3] + "</div><div class='col s3'>" + clearing[2] + "</div><div class='col s3'>" + clearing[5] + "</div></div>";
                                                             div += "</li><li class='collection-item'>";
-                                                            div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>" + tex_clearing + "</div><div class='col s4'>" + clearing[2] + "</div><div class='col s4'>" + (monto - clearing[3]) + "</div></div>";
+                                                            div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>" + tex_clearing + "</div><div class='col s4'>" + clearing[4] + "</div><div class='col s4'>" + (monto - clearing[5]) + "</div></div>";
                                                             div += "</li>";
                                                         }
                                                     }

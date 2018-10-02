@@ -228,7 +228,7 @@ function cambiaRec() {
     var porc = document.getElementById("bmonto_apoyo").value;//RSG 09.07.2018
 
     if (radio != null) { //B20180625 MGC 2018.06.26 Marcaba error, por validación de null
-        if (radio.checked) {
+        if (radio.checked & !isRelacionada()) {
 
             var pe1 = document.getElementById("periodoi_id").value;
             var pe2 = document.getElementById("periodof_id").value;

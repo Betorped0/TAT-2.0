@@ -1048,7 +1048,7 @@
                                     @*@foreach (var iteem in Model.D.DOCUMENTORs)
                                         {*@
                                     <div class="input-field col s12">
-                                        <input id="txt_trev" type="text" disabled="disabled" value="@Model.D.DOCUMENTOR.TREVERSA.TREVERSATs.Where(a => a.SPRAS_ID.Equals(Session[" spras"].ToString())).FirstOrDefault().TXT100" />
+                                        <input id="txt_trev" type="text" disabled="disabled" value="@Model.D.DOCUMENTOR.TREVERSA.TREVERSATs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT100" />
                                         <label for="txt_trev">Tipo de reversa</label>
                                     </div>
                                     <div class="input-field col s12">

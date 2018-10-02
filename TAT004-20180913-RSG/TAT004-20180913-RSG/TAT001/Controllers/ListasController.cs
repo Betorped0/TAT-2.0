@@ -481,7 +481,7 @@ namespace TAT001.Controllers
                      & C.TALL_ID == gall
                      & C.EJERCICIO == ejer
                      //-----DRS 1.10.2018-----
-                     select new { C.ABONO, C.CUENTAGL.NOMBRE, C.CARGO, C.CLEARING, C.LIMITE }).FirstOrDefault();
+                     select new { C.ABONO, NOMBREA = C.CUENTAGL.NOMBRE, C.CARGO, NOMBREC = C.CUENTAGL1.NOMBRE, C.CLEARING, C.LIMITE }).FirstOrDefault();
 
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
             return cc;
