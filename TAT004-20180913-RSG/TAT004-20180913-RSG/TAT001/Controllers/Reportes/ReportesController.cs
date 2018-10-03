@@ -16,7 +16,7 @@ namespace TAT001.Controllers.Reportes
     [Authorize]
     public class ReportesController : Controller
     {
-        private TAT001Entities db = new TAT001Entities();
+        private TAT004Entities db = new TAT004Entities();
         public TAT001.Services.Calendario445 cal = new TAT001.Services.Calendario445();
         // GET: Reportes
         public ActionResult Index()

@@ -11,7 +11,7 @@ namespace TAT001.Controllers.Catalogos
     public class AlertasController : Controller
     {
 
-        readonly TAT001Entities db = new TAT001Entities();
+        readonly TAT004Entities db = new TAT004Entities();
 
         const string CMB_SOCIEDADES = "SOC";
         const string CMB_TIPOSSOLICITUD = "TSOL";

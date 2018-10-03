@@ -13,13 +13,13 @@ namespace TAT001.Controllers.Catalogos
     [Authorize]
     public class TextosController : Controller
     {
-        private TAT001Entities db = new TAT001Entities();
+        private TAT004Entities db = new TAT004Entities();
 
         // GET: Textos
         public ActionResult Index(string id)
         {
             int pagina = 520; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -61,7 +61,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Details(string spras_id, string campo_id, int pagina_id)
         {
             int pagina = 523; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -99,7 +99,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Create(string id)
         {
             int pagina = 521; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -152,7 +152,7 @@ namespace TAT001.Controllers.Catalogos
                 }
             }
             int pagina = 511; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -185,7 +185,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Edit(string spras_id, string campo_id, int pagina_id)
         {
             int pagina = 522; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -236,7 +236,7 @@ namespace TAT001.Controllers.Catalogos
                 return RedirectToAction("Index", new { id = tEXTO.PAGINA_ID });
             }
             int pagina = 522; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();

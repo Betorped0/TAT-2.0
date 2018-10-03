@@ -13,13 +13,13 @@ namespace TAT001.Controllers.Catalogos
 {
     public class GALLController : Controller
     {
-        private TAT001Entities db = new TAT001Entities();
+        private TAT004Entities db = new TAT004Entities();
 
         // GET: GALL
         public ActionResult Index()
         {
             int pagina = 721; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -53,7 +53,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Details(string id)
         {
             int pagina = 722; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -118,7 +118,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Edit(string id)
         {
             int pagina = 723; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -282,7 +282,7 @@ namespace TAT001.Controllers.Catalogos
                 return RedirectToAction("Index");
             }
             int pagina = 723; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";

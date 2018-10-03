@@ -17,13 +17,13 @@ namespace TAT001.Controllers
     //[Authorize]
     public class HomeController : Controller
     {
-        private TAT001Entities db = new TAT001Entities();
+        private TAT004Entities db = new TAT004Entities();
 
         // GET: Solicitudes
         [Authorize]
         public ActionResult Index(string id)
         {
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 int pagina = 101; //ID EN BASE DE DATOS
                 string u = User.Identity.Name;
@@ -240,7 +240,7 @@ namespace TAT001.Controllers
         [Authorize]
         public ActionResult Pais(string returnUrl)
         {
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 int pagina = 102; //ID EN BASE DE DATOS
                 string u = User.Identity.Name;
@@ -756,7 +756,7 @@ namespace TAT001.Controllers
             if (Prefix == null)
                 Prefix = "";
 
-            TAT001Entities db = new TAT001Entities();
+            TAT004Entities db = new TAT004Entities();
 
             var c = (from N in db.CLIENTEs
                      where N.KUNNR.Contains(Prefix)

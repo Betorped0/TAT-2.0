@@ -14,13 +14,13 @@ namespace TAT001.Controllers.Catalogos
     [Authorize]
     public class UsuariosController2 : Controller
     {
-        private TAT001Entities db = new TAT001Entities();
+        private TAT004Entities db = new TAT004Entities();
 
         // GET: Usuarios
         public ActionResult Index()
         {
             int pagina = 601; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -61,7 +61,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Details(string id)
         {
             int pagina = 603; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -112,7 +112,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Create()
         {
             int pagina = 602; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -197,7 +197,7 @@ namespace TAT001.Controllers.Catalogos
             }
 
             int pagina = 602; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -235,7 +235,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Edit(string id)
         {
             int pagina = 603; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -297,7 +297,7 @@ namespace TAT001.Controllers.Catalogos
                 //return RedirectToAction("Index");
             }
             int pagina = 603; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -362,7 +362,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Pass(string id)
         {
             int pagina = 604; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -429,7 +429,7 @@ namespace TAT001.Controllers.Catalogos
                 ViewBag.message = "Los datos no coinciden";
             }
             int pagina = 604; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -459,7 +459,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult AgregarRol(string id)
         {
             int pagina = 603; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";

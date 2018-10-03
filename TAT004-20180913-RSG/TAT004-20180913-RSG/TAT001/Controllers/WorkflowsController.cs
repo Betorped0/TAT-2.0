@@ -13,13 +13,13 @@ namespace TAT001.Controllers
     [Authorize]
     public class WorkflowsController : Controller
     {
-        private TAT001Entities db = new TAT001Entities();
+        private TAT004Entities db = new TAT004Entities();
 
         // GET: Workflows
         public ActionResult Index()
         {
             int pagina = 103; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -50,7 +50,7 @@ namespace TAT001.Controllers
         public ActionResult Details(string id)
         {
             int pagina = 111; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();

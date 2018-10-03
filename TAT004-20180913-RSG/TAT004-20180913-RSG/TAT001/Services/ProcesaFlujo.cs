@@ -13,7 +13,7 @@ namespace TAT001.Services
         public string procesa(FLUJO f, string recurrente)
         {
             string correcto = String.Empty;
-            TAT001Entities db = new TAT001Entities();
+            TAT004Entities db = new TAT004Entities();
             FLUJO actual = new FLUJO();
             if (f.ESTATUS.Equals("I"))//---------------------------NUEVO REGISTRO
             {
@@ -620,7 +620,7 @@ namespace TAT001.Services
             if (delega != null)
                 user = delega;
             bool fin = false;
-            TAT001Entities db = new TAT001Entities();
+            TAT004Entities db = new TAT004Entities();
             DET_AGENTEC dap = new DET_AGENTEC();
             FLUJO f_actual = db.FLUJOes.Where(a => a.NUM_DOC.Equals(d.NUM_DOC)).FirstOrDefault();
             //DET_AGENTEH dah = db.DET_AGENTEH.Where(a => a.SOCIEDAD_ID.Equals(d.SOCIEDAD_ID) & a.PUESTOC_ID == d.PUESTO_ID &
@@ -755,7 +755,7 @@ namespace TAT001.Services
         {
             FLUJO f = new FLUJO();
             List<DET_APROBP> ddp = new List<DET_APROBP>();
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 DET_APROBH dh = db.DET_APROBH.Where(a => a.SOCIEDAD_ID.Equals(d.SOCIEDAD_ID) & a.ACTIVO).OrderByDescending(a => a.VERSION).FirstOrDefault();// OBTIENE ENCABEZADO FLUJO DE SOCIEDAD
                 if (dh != null)

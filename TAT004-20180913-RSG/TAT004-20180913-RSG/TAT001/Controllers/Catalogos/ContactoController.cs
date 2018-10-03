@@ -14,7 +14,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Index(string vko, string vtw, string kun, string spa)
         {
             int pagina = 641; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -71,7 +71,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Index(string vko, string vtw, string kun, string spa, string aa)
         {
             int pagina = 641; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -111,7 +111,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Details(string vko, string vtw, string kun, string spa, int id)
         {
             int pagina = 642; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -169,7 +169,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Create(string vko, string vtw, string kun, string spa)
         {
             int pagina = 642; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -205,7 +205,7 @@ namespace TAT001.Controllers.Catalogos
         [HttpPost]
         public ActionResult Create2(string vko, string vtw, string kun, string spa, Contactoc conC)
         {
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -240,7 +240,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Edit(string vko, string vtw, string kun, string spa, int id)
         {
             int pagina = 642; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -285,7 +285,7 @@ namespace TAT001.Controllers.Catalogos
         [HttpPost]
         public ActionResult Edit(int id, Contactoc co)
         {
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 try
                 {
@@ -333,7 +333,7 @@ namespace TAT001.Controllers.Catalogos
         // GET: Contacto/Delete/5
         public ActionResult Delete(int id)
         {
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();

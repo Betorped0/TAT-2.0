@@ -16,7 +16,7 @@ namespace TAT001.Controllers
         public ActionResult Index()
         {
             int pagina = 301; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -70,7 +70,7 @@ namespace TAT001.Controllers
             Session["periodoconsu"] = periodoconsu;
             Session["anioconsu"] = anioconsu;
             int pagina = 301; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -115,7 +115,7 @@ namespace TAT001.Controllers
         {
             Models.CargarModel carga = new Models.CargarModel();
             int pagina = 302; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -147,7 +147,7 @@ namespace TAT001.Controllers
         {
             int pagina = 302; //ID EN BASE DE DATOS
             DatosPresupuesto pRESUPUESTOP = new DatosPresupuesto();
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";

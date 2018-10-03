@@ -7,7 +7,7 @@
 }
 
 @using TAT001.Entities;
-@using (TAT001Entities db = new TAT001Entities())
+@using (TAT004Entities db = new TAT004Entities())
             {
                 var con = db.PAIS.Where(x => x.LAND == Model.pais).First();
                 Model.pais = con.LANDX;

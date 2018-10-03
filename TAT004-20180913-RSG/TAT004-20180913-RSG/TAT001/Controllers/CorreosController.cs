@@ -15,7 +15,7 @@ namespace TAT001.Controllers
     [AllowAnonymous]
     public class CorreosController : Controller
     {
-        private TAT001Entities db = new TAT001Entities();
+        private TAT004Entities db = new TAT004Entities();
 
         // GET: Correos
         public ActionResult Index(decimal id, bool? mail) //B20180803 MGC Correos
@@ -306,7 +306,7 @@ namespace TAT001.Controllers
         public CLIENTE_MOD SelectCliente(string kunnr)
         {
 
-            TAT001Entities db = new TAT001Entities();
+            TAT004Entities db = new TAT004Entities();
 
             CLIENTE_MOD id_cl = (from c in db.CLIENTEs
                                  join co in db.CONTACTOCs

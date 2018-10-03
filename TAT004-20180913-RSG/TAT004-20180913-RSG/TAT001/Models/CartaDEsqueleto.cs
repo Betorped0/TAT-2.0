@@ -28,7 +28,7 @@ namespace TAT001.Models
 
         public void crearPDF(CartaD v, string spr, bool aprob)
         {
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 HeaderFooterD hfClass = new HeaderFooterD(v);
                 DateTime fechaCreacion = DateTime.Now;

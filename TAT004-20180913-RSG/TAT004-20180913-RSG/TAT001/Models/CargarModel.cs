@@ -14,11 +14,11 @@ namespace TAT001.Models
 
     public class CargarModel
     {
-        private TAT001Entities db = new TAT001Entities();
+        private TAT004Entities db = new TAT004Entities();
 
         public List<PRESUPUESTOP> cargarPresupuestoCPT(HttpPostedFileBase file, string[] sociedad, string[] periodo, string[] anio, ref string mensaje)
         {
-            TAT001Entities db = new TAT001Entities();
+            TAT004Entities db = new TAT004Entities();
             List<PRESUPUESTOP> pRESUPUESTOPS = new List<PRESUPUESTOP>();
             PRESUPUESTOP pRESUPUESTOP = new PRESUPUESTOP();
             List<string[]> datosPresu = new List<string[]>();
@@ -180,7 +180,7 @@ namespace TAT001.Models
         }
         public List<PRESUPSAPP> cargarPresupuestoSAP(HttpPostedFileBase[] file, string[] sociedad, string[] periodo, string[] anio, ref string mensaje)
         {
-            TAT001Entities db = new TAT001Entities();
+            TAT004Entities db = new TAT004Entities();
             List<PRESUPSAPP> pRESUPUESTOPS = new List<PRESUPSAPP>();
             PRESUPSAPP pRESUPUESTOP = new PRESUPSAPP();
             List<string[]> datosPresu = new List<string[]>();
@@ -339,7 +339,7 @@ namespace TAT001.Models
         }
         public string guardarPresupuesto(ref DatosPresupuesto presupuesto, string[] sociedadcpt, string[] periodocpt, string[] sociedadsap, string[] periodosap, string usuario, string opciong)
         {
-            TAT001Entities db = new TAT001Entities();
+            TAT004Entities db = new TAT004Entities();
             string mensaje = "", soc = "", pre = "";
             int ide = 0;
             string opc = "1";

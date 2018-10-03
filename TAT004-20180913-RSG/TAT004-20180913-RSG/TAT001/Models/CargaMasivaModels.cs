@@ -9,7 +9,7 @@ namespace TAT001.Models
 {
     public class CargaMasivaModels
     {
-        private TAT001Entities db = new TAT001Entities();
+        private TAT004Entities db = new TAT004Entities();
         public void GenerarListaCliPro(string ruta)
         {
             List<CPS_LISTA_CLI_PRO_Result> lista = db.CPS_LISTA_CLI_PRO().ToList();

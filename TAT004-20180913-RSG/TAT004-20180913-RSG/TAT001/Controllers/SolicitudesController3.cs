@@ -21,13 +21,13 @@ namespace TAT001.Controllers
     [Authorize]
     public class SolicitudesController3 : Controller
     {
-        private TAT001Entities db = new TAT001Entities();
+        private TAT004Entities db = new TAT004Entities();
 
         // GET: Solicitudes
         public ActionResult Index(string id)
         {
             int pagina = 201; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -121,7 +121,7 @@ namespace TAT001.Controllers
         public ActionResult Details(decimal id, string pais)
         {
             int pagina = 203; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -524,7 +524,7 @@ namespace TAT001.Controllers
         public ActionResult Reversa(decimal id, decimal resto)
         {
             int pagina = 201; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -593,7 +593,7 @@ namespace TAT001.Controllers
 
             string usuariotextos = "";//B20180801 MGC Textos
 
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string p = "";
                 string u = User.Identity.Name;
@@ -2554,7 +2554,7 @@ namespace TAT001.Controllers
 
 
             int pagina = 202; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 //Obtener datos ocultos o deshabilitados                    
                 try
@@ -3234,7 +3234,7 @@ namespace TAT001.Controllers
         {
             decimal ukurs = 0;
             errorString = string.Empty;
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 try
                 {
@@ -3264,7 +3264,7 @@ namespace TAT001.Controllers
         {
             decimal ukurs = 0;
             errorString = string.Empty;
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 try
                 {
@@ -3292,7 +3292,7 @@ namespace TAT001.Controllers
         public RANGO getRango(string TSOL_ID)
         {
             RANGO rango = new RANGO();
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
 
                 rango = (from r in db.RANGOes
@@ -3327,7 +3327,7 @@ namespace TAT001.Controllers
         {
             STATE state = new STATE();
 
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
 
                 state = (from c in db.CITIES
@@ -3346,7 +3346,7 @@ namespace TAT001.Controllers
         {
             CLIENTE payer = new CLIENTE();
 
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
 
                 payer = db.CLIENTEs.Where(c => c.KUNNR.Equals(PAYER_ID)).FirstOrDefault();
@@ -3396,7 +3396,7 @@ namespace TAT001.Controllers
             string errorString = "";
             int pagina = 202; //ID EN BASE DE DATOS
             String res = "";//B20180611
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string p = "";
                 string u = User.Identity.Name;
@@ -5094,7 +5094,7 @@ namespace TAT001.Controllers
         public ActionResult CreateNew()
         {
 
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -5189,7 +5189,7 @@ namespace TAT001.Controllers
         public JsonResult SelectCity(int id)
         {
 
-            TAT001Entities db = new TAT001Entities();
+            TAT004Entities db = new TAT004Entities();
 
             var id_cl = db.CITIES.Where(city => city.STATE_ID.Equals(id)).Select(c => new { ID = c.ID.ToString(), NAME = c.NAME.ToString() }).ToList();
 
@@ -5203,7 +5203,7 @@ namespace TAT001.Controllers
         public JsonResult SelectTall(string id)
         {
 
-            TAT001Entities db = new TAT001Entities();
+            TAT004Entities db = new TAT004Entities();
 
             string u = User.Identity.Name;
             var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -5229,7 +5229,7 @@ namespace TAT001.Controllers
         public JsonResult SelectCliente(string kunnr)
         {
 
-            TAT001Entities db = new TAT001Entities();
+            TAT004Entities db = new TAT004Entities();
 
             CLIENTE_MOD id_cl = (from c in db.CLIENTEs
                                  join co in db.CONTACTOCs
@@ -5326,7 +5326,7 @@ namespace TAT001.Controllers
             {
             }
 
-            TAT001Entities db = new TAT001Entities();
+            TAT004Entities db = new TAT004Entities();
             try
             {
                 id_bukrs = db.SOCIEDADs.Where(soc => soc.LAND.Equals(p)).FirstOrDefault();
@@ -5368,7 +5368,7 @@ namespace TAT001.Controllers
             {
             }
 
-            TAT001Entities db = new TAT001Entities();
+            TAT004Entities db = new TAT004Entities();
 
             var id_bukrs = db.SOCIEDADs.Where(soc => soc.LAND.Equals(p)).FirstOrDefault();
             try
@@ -5862,7 +5862,7 @@ namespace TAT001.Controllers
 
         public string grupoMaterialesRel(List<DOCUMENTOP> cats, List<DOCUMENTOM> docsrelm)
         {
-            TAT001Entities db = new TAT001Entities();
+            TAT004Entities db = new TAT004Entities();
 
             List<MATERIAL> lmat = new List<MATERIAL>();
             //Obtener la descripción del material
@@ -5924,7 +5924,7 @@ namespace TAT001.Controllers
         [AllowAnonymous]
         public JsonResult grupoMateriales(string vkorg, string spart, string kunnr, string soc_id)//string kunnr, string gid, string soc_id)
         {
-            TAT001Entities db = new TAT001Entities();
+            TAT004Entities db = new TAT004Entities();
             if (kunnr == null)
             {
                 kunnr = "";
@@ -6520,7 +6520,7 @@ namespace TAT001.Controllers
 
         public List<CategoriaMaterial> grupoMaterialesController(List<string> catstabla, string vkorg, string spart, string kunnr, string soc_id, out decimal total)
         {
-            TAT001Entities db = new TAT001Entities();
+            TAT004Entities db = new TAT004Entities();
             if (kunnr == null)
             {
                 kunnr = "";
@@ -7385,7 +7385,7 @@ namespace TAT001.Controllers
             {
             }
 
-            TAT001Entities db = new TAT001Entities();
+            TAT004Entities db = new TAT004Entities();
 
             var id_bukrs = db.SOCIEDADs.Where(soc => soc.LAND.Equals(p)).FirstOrDefault();
             try
@@ -7421,7 +7421,7 @@ namespace TAT001.Controllers
             if (Prefix == null)
                 Prefix = "";
 
-            TAT001Entities db = new TAT001Entities();
+            TAT004Entities db = new TAT004Entities();
 
             var c = (from m in db.MATERIALs
                      where m.ID.Contains(Prefix) && m.ACTIVO == true
@@ -7443,7 +7443,7 @@ namespace TAT001.Controllers
             if (Prefix == null)
                 Prefix = "";
 
-            TAT001Entities db = new TAT001Entities();
+            TAT004Entities db = new TAT004Entities();
 
             var c = (from m in db.PROVEEDORs
                      where m.ID.Contains(Prefix)
@@ -7467,7 +7467,7 @@ namespace TAT001.Controllers
             material = completaMaterial(material);
             //RSG 07.06.2018---------------------------------------------
 
-            TAT001Entities db = new TAT001Entities();
+            TAT004Entities db = new TAT004Entities();
 
             MATERIAL mat = db.MATERIALs.Where(m => m.ID == material).FirstOrDefault();
 
@@ -7568,7 +7568,7 @@ namespace TAT001.Controllers
             material = completaMaterial(material);
             //RSG 07.06.2018---------------------------------------------
 
-            TAT001Entities db = new TAT001Entities();
+            TAT004Entities db = new TAT004Entities();
 
             MATERIAL m = db.MATERIALs.Where(mat => mat.ID.Equals(material)).FirstOrDefault();
             //var cat = new CATEGORIAT();
@@ -7604,7 +7604,7 @@ namespace TAT001.Controllers
             if (cate == null)
                 cate = "";
 
-            TAT001Entities db = new TAT001Entities();
+            TAT004Entities db = new TAT004Entities();
 
             var cat = (dynamic)null;
 
@@ -7643,7 +7643,7 @@ namespace TAT001.Controllers
             if (material == null)
                 material = "";
             material = completaMaterial(material);
-            TAT001Entities db = new TAT001Entities();
+            TAT004Entities db = new TAT004Entities();
 
             MATERIAL m = db.MATERIALs.Where(mat => mat.ID.Equals(material)).FirstOrDefault();
             //CATEGORIAT cat = new CATEGORIAT();

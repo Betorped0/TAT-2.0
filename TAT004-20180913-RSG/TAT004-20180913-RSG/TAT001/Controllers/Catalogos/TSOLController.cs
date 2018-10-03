@@ -13,14 +13,14 @@ namespace TAT001.Controllers.Catalogos
 {
     public class TSOLController : Controller
     {
-        private TAT001Entities db = new TAT001Entities();
+        private TAT004Entities db = new TAT004Entities();
 
         // GET: TSOL
         public ActionResult Index()
         {
             int pagina = 791; //ID EN BASE DE DATOS
             USUARIO user = null;
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -54,7 +54,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Details(string id)
         {
             int pagina = 792; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -123,7 +123,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Edit(string id)
         {
             int pagina = 793; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -303,7 +303,7 @@ namespace TAT001.Controllers.Catalogos
                 return RedirectToAction("Index");
             }
             int pagina = 793; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";

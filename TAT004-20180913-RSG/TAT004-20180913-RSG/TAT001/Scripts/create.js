@@ -4861,23 +4861,60 @@ function evaluarInfoFacturas() {
 
     return res;
 }
-
+function checkUnicas(arrTr)
+{
+    if (arrTr.length > 0) {
+        for (var i = 1; i < arrTr.length; i++) {
+            if (arrTr[i] !== arrTr[0])
+                return false;
+        }
+    }
+    return true;
+}
 //Add MGC B20180705 2018.07.09 Validar que los materiales no existan duplicados en la tabla
 function evaluarDisTable() {
     var res = "";
 
     var dis = $("#select_dis").val();
     var indext = getIndex();
-
+    var arrTr = new Array();
     //La tabla debe de contener como mínimo un registro
     var lengthT = $("table#table_dis tbody tr[role='row']").length;
     var arrayClass = new Array();
+    var soloUnicas = true;
     if (lengthT > 0) {
+        $("#table_dis > tbody  > tr[role='row']").each(function () {
+            if ($(this).hasClass("unica")) {
+                arrTr.push("unica");
+            } else if ($(this).hasClass("nounica")) {
+                arrTr.push("nounica");
+            }
+            if (!checkUnicas(arrTr) && $(this).hasClass("unica")) {
+                $(this).find('td').eq((5 + indext)).addClass("errorMaterial");
+            }
+        });
+  
 
         $("#table_dis > tbody  > tr[role='row']").each(function () {
-
+            
             //Distribución por material
             if (dis == "M") {
+                
+                if (!checkUnicas(arrTr))
+                {
+                    M.toast({ html: 'Las categorías unicas no se pueden mezclar con otras categorias y/o Materiales.' });
+                    res = "Error con el material ";
+                    return false;
+                }
+                //if (!soloUnicas)
+                //{
+                //    M.toast({ html: 'Las categorías unicas no se pueden mezclar con otras categorias y/o Materiales.' });
+                //    if ($(this).hasClass("unica"))
+                //    {
+                //        $(this).find('td').eq((5 + indext)).addClass("errorMaterial");
+                //    }
+                //    return false;
+                //}
                 //if ($(this).attr("class") == "odd" || $(this).attr("class") == "even") {
                 //    arrayClass.push("false");
                 //} else {
@@ -4889,9 +4926,11 @@ function evaluarDisTable() {
                     //Sin material elimina el renglón
                     $(this).addClass('selected');
                 } else {
+                    
                     //Validar que el material exista
                     //Add MGC B20180705 2018.07.09 Validar que los materiales no existan duplicados en la tabla
                     var valp = valMaterial(val, "X");
+                   
                     if (valp.ID == null || valp.ID == "") {
                         $(this).find('td').eq((5 + indext)).addClass("errorMaterial");
                         return false;
@@ -4899,6 +4938,7 @@ function evaluarDisTable() {
 
                         //selectMaterial(val.ID, val.MAKTX, $(this));
                         //Validar registros duplicados
+                        
                         if (evaluarDisTableCount(val, dis) > 1) {
                             res = "Error con el material " + val;
                             if (res != "") {
@@ -4989,7 +5029,8 @@ function evaluarDisTable() {
 
         var t = $('#table_dis').DataTable();
         t.rows('.selected').remove().draw(false);
-    } else {
+    }
+    else {
         res = "Posiciones en tabla de distribución como mínimo un registro";
     }
     updateFooter();//RSG 05.09.2018

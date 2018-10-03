@@ -118,7 +118,7 @@ namespace TAT001.Controllers
             Cryptography c = new Cryptography();
             string pass = c.Encrypt(user.PASS);
 
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 user = db.USUARIOs.Where(a => a.ID.Equals(user.ID) && a.PASS.Equals(pass)).FirstOrDefault();
             }

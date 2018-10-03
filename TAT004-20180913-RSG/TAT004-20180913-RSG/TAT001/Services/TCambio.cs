@@ -34,7 +34,7 @@ namespace TAT001.Services
             decimal ukurs = 0;
             errorString = string.Empty;
             if (waers != moneda_id)
-                using (TAT001Entities db = new TAT001Entities())
+                using (TAT004Entities db = new TAT004Entities())
                 {
                     try
                     {
@@ -67,7 +67,7 @@ namespace TAT001.Services
             decimal ukurs = 0;
             errorString = string.Empty;
             if (waers != waersusd)
-                using (TAT001Entities db = new TAT001Entities())
+                using (TAT004Entities db = new TAT004Entities())
                 {
                     try
                     {

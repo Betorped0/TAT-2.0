@@ -14,7 +14,7 @@ namespace TAT001.Controllers
 {
     public class MailsController : Controller
     {
-        private TAT001Entities db = new TAT001Entities();
+        private TAT004Entities db = new TAT004Entities();
         // GET: Mails
         public ActionResult Index()
         {

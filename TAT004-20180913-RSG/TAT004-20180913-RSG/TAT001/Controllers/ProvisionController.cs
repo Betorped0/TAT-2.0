@@ -12,7 +12,7 @@ namespace TAT001.Controllers
         // GET: Provision
         public ActionResult Index()
         {
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();

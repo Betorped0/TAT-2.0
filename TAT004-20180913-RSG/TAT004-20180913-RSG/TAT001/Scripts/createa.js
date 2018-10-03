@@ -79,75 +79,20 @@ function selectMaterial(val, desc, tr) {
     desc = $.trim(desc);
     if (index == -2) {
         unica1 = false;
-        if (cat.UNICA){
-            catsArr.push(cat.CATEGORIA_ID);
-            console.log(catsArr);
-            uniqueArr.push(true); 
-            unica1 = true;
-            if (catsArr.length > 0) {
-
-                for (var i = 1; i < catsArr.length; i++) {
-                    if (catsArr[i] !== catsArr[0]) {
-                        unica1 = false;
-                    }
-                    else {
-                        unica1 = true;
-                    }
-                }
-                if (unica1) {
-                    tr.find("td:eq(" + (6 + index) + ")").text(cat.TXT50);
-                    //Descripción
-                    tr.find("td:eq(" + (7 + index) + ")").text(desc);
-                }
-                else
-                {
-                    M.toast({ html: cat.TXT50 + ' no puede mezclarse con otras categorías y/o materiales.' });
-                    unica1 = false;
-                    tr.remove();
-                }
-            }
-            else
-            {
-                tr.find("td:eq(" + (6 + index) + ")").text(cat.TXT50);
-                //Descripción
-                tr.find("td:eq(" + (7 + index) + ")").text(desc);
-            }
-            if (unica1) {
-                tr.find("td:eq(" + (6 + index) + ")").text(cat.TXT50);
-                //Descripción
-                tr.find("td:eq(" + (7 + index) + ")").text(desc);
-            } else {
-                M.toast({ html: cat.TXT50 + ' no puede mezclarse con otras categorías y/o materiales.' });
-                tr.remove();
-                unica1 = false;
-            }
-        }
-        
-        else if (!cat.UNICA)
+        if (cat.UNICA)
         {
-            uniqueArr.push(false);
-            if (uniqueArr.length > 0) {
-
-                for (var i = 1; i < uniqueArr.length; i++) {
-                    if (uniqueArr[i] !== uniqueArr[0]) {
-                        unica1 = true;
-                    }
-                    else {
-                        unica1 = false;
-                        
-                    }
-                }
-            }
-            catsArr.push(cat.CATEGORIA_ID);
-            if (unica1) {
-                M.toast({ html: cat.TXT50 + ' no puede mezclarse con la categoría y/o material anterior.' });
-                tr.remove();
-            } else
-            {
-                tr.find("td:eq(" + (6 + index) + ")").text(cat.TXT50);
-                //Descripción
-                tr.find("td:eq(" + (7 + index) + ")").text(desc);
-            }
+            tr.addClass("unica");
+            M.toast({ html: cat.TXT50 + ' Advertencia este material es único' });
+            tr.find("td:eq(" + (6 + index) + ")").text(cat.TXT50);
+            //Descripción
+            tr.find("td:eq(" + (7 + index) + ")").text(desc);
+        }
+        if (!cat.UNICA)
+        {
+            tr.addClass("nounica");
+            tr.find("td:eq(" + (6 + index) + ")").text(cat.TXT50);
+            //Descripción
+            tr.find("td:eq(" + (7 + index) + ")").text(desc);
         }
 
     } else { 

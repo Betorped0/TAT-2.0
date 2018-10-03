@@ -13,14 +13,14 @@ namespace TAT001.Controllers.Catalogos
 {
     public class trvController : Controller
     {
-        private TAT001Entities db = new TAT001Entities();
+        private TAT004Entities db = new TAT004Entities();
 
         // GET: trv
         public ActionResult Index()
         {
             int pagina = 781; //ID EN BASE DE DATOS
             USUARIO user = null;
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -54,7 +54,7 @@ namespace TAT001.Controllers.Catalogos
         {
             int pagina = 782; //ID EN BASE DE DATOS
             USUARIO user = null;
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -97,7 +97,7 @@ namespace TAT001.Controllers.Catalogos
         {
             int pagina = 784; //ID EN BASE DE DATOS
             USUARIO user = null;
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -167,7 +167,7 @@ namespace TAT001.Controllers.Catalogos
         {
             int pagina = 783; //ID EN BASE DE DATOS
             USUARIO user = null;
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -244,7 +244,7 @@ namespace TAT001.Controllers.Catalogos
         {
             int pagina = 783; //ID EN BASE DE DATOS
             USUARIO user = null;
-            using (TAT001Entities db = new TAT001Entities())
+            using (TAT004Entities db = new TAT004Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";

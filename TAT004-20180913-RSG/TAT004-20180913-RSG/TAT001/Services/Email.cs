@@ -14,7 +14,7 @@ namespace TAT001.Services
 {
     public class Email
     {
-        private TAT001Entities db = new TAT001Entities();
+        private TAT004Entities db = new TAT004Entities();
         public void enviaMailC(decimal id, bool ban, string spras, string UrlDirectory, string page, string image)
         {
             //int pagina = 203; //ID EN BASE DE DATOS
