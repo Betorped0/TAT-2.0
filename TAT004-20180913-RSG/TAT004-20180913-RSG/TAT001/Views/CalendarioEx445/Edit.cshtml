@@ -173,7 +173,7 @@
                                     <label class="lbl_desdeDia"></label>
                                     <div class="col-md-10">
                                         @Html.EditorFor(model => model.calendarioEx445.EX_FROMF, new { htmlAttributes = new { @required = "", @class = "datepicker" } })
-                                        *<label class="lbl_minFecha"></label>:
+                                        <label class="lbl_minFecha"></label>:
                                         @Html.EditorFor(model => model.calendario445.PRE_TOF, new { htmlAttributes = new { @disabled = true, @class = "datepicker" } })
                                     </div>
                                 </div>
@@ -191,7 +191,7 @@
                                     <label class="lbl_hastaDia"></label>
                                     <div class="col-md-10">
                                         @Html.EditorFor(model => model.calendarioEx445.EX_TOF, new { htmlAttributes = new { @required = "", @class = "datepicker" } })
-                                        *<label class="lbl_maxFecha"></label>:
+                                        <label class="lbl_maxFecha"></label>:
                                         @Html.EditorFor(model => model.calendario445.CIE_FROMF, new { htmlAttributes = new { @disabled = true, @class = "datepicker" } })
                                     </div>
                                 </div>
@@ -233,16 +233,14 @@
     //----  Se agrega validaciones al formulario----
     fnCommon.selectRequired();
     fnCommon.formValidation('calendarioEx445Form');
-    fnCommon.dateRangeValidation('calendario445_PRE_TOF', 'calendarioEx445_EX_FROMF');
-    fnCommon.dateRangeValidation('calendarioEx445_EX_FROMF', 'calendarioEx445_EX_TOF');
-    fnCommon.dateRangeValidation('calendarioEx445_EX_TOF', 'calendario445_CIE_FROMF');
+    fnCommon.dateRangeValidation('calendario445_PRE_TOF', 'calendarioEx445_EX_FROMF', 'calendarioEx445_EX_TOF', 'calendario445_CIE_FROMF');
 
     
     // Valida si ocurrio un error al intentar crear el periodo y otro.
     var mnjError = '@ViewBag.mnjError';
-            if (mnjError) {
-                M.toast({ html: mnjError });
-            }
+    if (mnjError) {
+        M.toast({ html: mnjError });
+    }
 </script>
 
 

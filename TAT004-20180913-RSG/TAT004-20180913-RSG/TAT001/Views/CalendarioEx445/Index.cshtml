@@ -9,6 +9,13 @@
     .text-center th {
         text-align: center !important;
     }
+    .text-left th {
+        text-align: left !important;
+    }
+
+    .text-left td {
+        text-align: left !important;
+    }
 
     #lbl_precierre {
         font-size: 20px !important;
@@ -104,7 +111,7 @@
                                     <label class="lbl_desdeDia"></label>
                                     <div class="col-md-10">
                                         @Html.EditorFor(model => model.calendarioEx445.EX_FROMF, new { htmlAttributes = new { @required = "", @class = "datepicker" } })
-                                        *<label class="lbl_minFecha"></label>:
+                                        <label class="lbl_minFecha"></label>:
                                         @Html.EditorFor(model => model.calendario445.PRE_TOF, new { htmlAttributes = new { @disabled = true, @class = "datepicker" } })
                                     </div>
                                 </div>
@@ -122,7 +129,7 @@
                                     <label class="lbl_hastaDia"></label>
                                     <div class="col-md-10">
                                         @Html.EditorFor(model => model.calendarioEx445.EX_TOF, new { htmlAttributes = new { @required = "", @class = "datepicker" } })
-                                        *<label class="lbl_maxFecha"></label>:
+                                        <label class="lbl_maxFecha"></label>:
                                         @Html.EditorFor(model => model.calendario445.CIE_FROMF, new { htmlAttributes = new { @disabled = true, @class = "datepicker" } })
                                     </div>
                                 </div>
@@ -137,9 +144,8 @@
                             </div>
                         </div>
                         </div>
-
-                        }
-                    </div>
+            }
+        </div>
     </li>
 </ul>
 <div id="exceptions" class="col s12">
@@ -167,11 +173,11 @@
                             <th colspan="4"></th>
                             <th colspan="4" class="lbl_precierre"></th>
                         </tr>
-                        <tr>
+                        <tr  class="text-left">
                             <th class="lbl_coCode"></th>
                             <th class="lbl_periodo"></th>
                             <th class="lbl_tipoSolicitud"></th>
-                            <th class="lbl_usuario"></th>
+                            <th class="lbl_usuario" style="min-width: 250px;"></th>
                             <th class="lbl_desdeDia"></th>
                             <th class="lbl_desdeHora"></th>
                             <th class="lbl_hastaDia"></th>
@@ -182,7 +188,7 @@
                     <tbody>
                         @foreach (var item in Model.calendariosEx445)
                         {
-                            <tr>
+                            <tr  class="text-left">
                                 <td>
                                     @Html.DisplayFor(modelItem => item.SOCIEDAD_ID)
                                 </td>

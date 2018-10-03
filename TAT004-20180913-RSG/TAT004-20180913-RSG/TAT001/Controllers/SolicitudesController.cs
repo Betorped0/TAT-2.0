@@ -2626,7 +2626,10 @@ namespace TAT001.Controllers
                                 else
                                     drec.FECHAF = cal.getNextLunes((DateTime)drec.FECHAF);
                                 drec.EJERCICIO = drec.FECHAV.Value.Year;
-                                drec.PERIODO = cal.getPeriodoF(drec.FECHAV.Value);
+                                if (dOCUMENTO.TIPO_RECURRENTE == "1")
+                                    drec.PERIODO = cal.getPeriodo(drec.FECHAV.Value);
+                                else
+                                    drec.PERIODO = cal.getPeriodoF(drec.FECHAV.Value);
                                 if (dOCUMENTO.TIPO_RECURRENTE == "1")
                                     drec.PERIODO--;
                                 if (drec.PERIODO == 0) drec.PERIODO = 12;

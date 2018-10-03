@@ -1,0 +1,159 @@
+﻿@model TAT001.Models.AlertaViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.pagina_r = 541;
+    ViewBag.carpeta_r = 500;
+}
+<style>
+    .text-center {
+        text-align: center !important;
+    }
+
+    .select-wrapper input.select-dropdown {
+        z-index: 0 !important;
+    }
+
+    label .invalid {
+        display: none !important;
+    }
+</style>
+<link href="~/Content/materialize.clockpicker.css" rel="stylesheet" />
+<script type="text/javascript" src="~/Scripts/materialize.clockpicker.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
+<script type="text/javascript" src="~/Scripts/moment.min.js"></script>
+@using (Html.BeginForm("Create", "Alertas", FormMethod.Post, new { @id = "alertaForm" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="col s12 l12 right-align">
+        <button type="submit" id="btn_save" class="btn btn-default"></button>
+    </div>
+        <div class="card-panel">
+            <div class="row">
+                <div class="col s3">
+                    <div class="form-group">
+                        <label id="lbl_alerta"></label>
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.alerta.ID,new { @required=true})
+                        </div>
+                    </div>
+                </div>
+                <div class="col s6">
+                    <div class="form-group">
+                        <label id="lbl_descAlerta"></label>
+                        <div class="col-md-10">
+                          @Html.TextBoxFor(model => model.alerta.DESCR, new { @required = true })
+                        </div>
+                    </div>
+                </div>
+                <div class="col s3">
+                    <div class="form-group">
+                        <label id="lbl_alerta_error"></label>
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(model => model.alerta.TIPO, Model.tipos, "")
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s3">
+                    <div class="form-group">
+                        <label id="lbl_bu"></label>
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(model => model.alerta.SOCIEDAD_ID, Model.sociedades, "")
+                        </div>
+                    </div>
+                </div>
+                <div class="col s3">
+                    <div class="form-group">
+                        <label id="lbl_tipo"></label>
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(model => model.alerta.TSOL_ID, Model.tiposSolicitud, "")
+                        </div>
+                    </div>
+                </div>
+                <div class="col s3">
+                    <div class="form-group">
+                        <label id="lbl_tab"></label>
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(model => model.alerta.TAB_ID, Model.tabs, "")
+                        </div>
+                    </div>
+                </div>
+                <div class="col s3">
+                    <div class="form-group">
+                        <label id="lbl_campo"></label>
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(model => model.alerta.CAMPO_ID, Model.campos, "")
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="text-center"><label id="lbl_mensaje"></label></p>
+            <hr>
+            <div class="row">
+                <div class="col s4">
+                    <div class="form-group">
+                        <label>ES</label>
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.alertaMensajes[0].TXT100, new { @required = ""  })
+                        </div>
+                    </div>
+                </div>
+                <div class="col s4">
+                    <div class="form-group">
+                        <label>EN</label>
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.alertaMensajes[1].TXT100, new { @required = "" })                     
+                        </div>
+                    </div>
+                </div>
+                <div class="col s4">
+                    <div class="form-group">
+                        <label>PT</label>
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.alertaMensajes[2].TXT100, new { @required = "" })                
+                        </div>
+                    </div>
+                </div>       
+            </div>
+           
+        </div>
+}
+<div class="col s12">
+    <a id="btn_return" href="@Url.Action("Index")"></a>
+</div>
+<script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
+<script>
+        //---- Inicializador de componentes Materialize----
+        fnCommon.materializeInit('select', 'select');
+
+        //----  Se agrega validaciones al formulario----
+        fnCommon.selectRequired();
+        fnCommon.formValidation('alertaForm');
+
+        $("#alerta_TAB_ID").change(function () {
+            var tab_id = $("#alerta_TAB_ID").val();
+            var root = "@Url.Content("~")";
+            $.ajax({
+                url: root +"Alertas/ObtenerCampos",
+                data: { tab_id: tab_id },
+                cache: false,
+                type: "POST",
+                success: function (selectItems) {
+                    var options = "";
+                    selectItems.forEach(function (selectItem) {
+                        options += "<option value=" + selectItem.Value + ">"+ selectItem.Text + "</option>";
+                    });
+                    if (selectItems.length>0){
+                        $("#alerta_CAMPO_ID").html(options).show();
+                    }
+                }
+            });
+        });
+
+        // Valida si ocurrio un error al intentar crear el periodo y otro.
+        var mnjError = '@ViewBag.mnjError';
+        if (mnjError) {
+            M.toast({ html: mnjError });
+        }
+</script>
