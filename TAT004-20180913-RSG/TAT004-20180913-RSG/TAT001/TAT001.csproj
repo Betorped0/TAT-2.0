@@ -617,6 +617,9 @@
     <Compile Include="Entities\TAB.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\TAB_CAMPO.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\TALL.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
@@ -1292,7 +1295,6 @@
     </EntityDeploy>
     <Content Include="Entities\TAT001.edmx.diagram">
       <DependentUpon>TAT001.edmx</DependentUpon>
-      <SubType>Designer</SubType>
     </Content>
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\fnCommon.js" />
