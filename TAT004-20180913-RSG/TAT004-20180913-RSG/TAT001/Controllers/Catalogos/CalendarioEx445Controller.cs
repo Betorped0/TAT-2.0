@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using TAT001.Entities;
 using TAT001.Models;
@@ -48,9 +46,9 @@ namespace TAT001.Controllers.Catalogos
                 calendarioEx.USUARIOC_ID = user.ID;
                 calendarioEx.FEHAC = fechaActual;
                 calendarioEx.ACTIVO = true;
-                if (db.CALENDARIO_EX.Any(x => x.SOCIEDAD_ID == calendarioEx.SOCIEDAD_ID && x.PERIODO == calendarioEx.PERIODO && x.EJERCICIO == calendarioEx.EJERCICIO && x.TSOL_ID == calendarioEx.TSOL_ID && x.USUARIO_ID == calendarioEx.USUARIO_ID))
+
+                if (!ValidarExcepcionExistente(calendarioEx) || !ValidarFechas(calendarioEx))
                 {
-                    ViewBag.mnjError = ObtenerTextoMnj(pagina_id, "lbl_mnjExisteExcepcion");
                     throw new Exception();
                 }
                 db.CALENDARIO_EX.Add(calendarioEx);
@@ -69,7 +67,7 @@ namespace TAT001.Controllers.Catalogos
             }
         }
         // GET: CalendarioEx445/Edit/5
-        public ActionResult Edit(short ejercicio, int periodo, string sociedad_id, string tsol_id, string usuario_id)
+        public ActionResult Edit(short ejercicio, int periodo, string sociedad_id, string tsol_id, string usuario_id,string paginaIndex)
         {
             int pagina_id = 534;//ID EN BASE DE DATOS
             ObtenerConfPage(pagina_id);
@@ -77,21 +75,32 @@ namespace TAT001.Controllers.Catalogos
             modelView.calendarioEx445= db.CALENDARIO_EX.Where(x => x.EJERCICIO == ejercicio && x.PERIODO == periodo && x.SOCIEDAD_ID == sociedad_id && x.TSOL_ID == tsol_id && x.USUARIO_ID == usuario_id).FirstOrDefault();
             modelView.calendario445 = db.CALENDARIO_AC.Where(x => x.EJERCICIO == ejercicio && x.PERIODO == periodo && x.SOCIEDAD_ID == sociedad_id && x.TSOL_ID == tsol_id).FirstOrDefault();
             CargarSelectList(ref modelView, new string[] { CMB_SOCIEDADES + "," + sociedad_id, CMB_PERIODOS + "," + periodo, CMB_TIPOSSOLICITUD + "," + tsol_id, CMB_USUARIOS+","+ usuario_id });
+            ViewBag.paginaIndex = paginaIndex;
             return View(modelView);
         }
 
         // POST: CalendarioEx445/Edit
         [HttpPost]
-        public ActionResult Edit(Calendario445ViewModel modelView)
+        public ActionResult Edit(Calendario445ViewModel modelView, string paginaIndex)
         {
             int pagina_id = 534;//ID EN BASE DE DATOS
             CALENDARIO_EX calendarioEx = modelView.calendarioEx445;
             try
             {
+                if ( !ValidarFechas(calendarioEx))
+                {
+                    throw new Exception();
+                }
                 db.Entry(calendarioEx).State = EntityState.Modified;
                 db.SaveChanges();
+                if (paginaIndex== "Calendario445") {
+                    return RedirectToAction("Index",paginaIndex);
+                   }
+                else
+                {
+                    return RedirectToAction("Index", new { ejercicio = calendarioEx.EJERCICIO, periodo = calendarioEx.PERIODO, sociedad_id = calendarioEx.SOCIEDAD_ID, tsol_id = calendarioEx.TSOL_ID });
 
-                return RedirectToAction("Index", new { ejercicio = calendarioEx.EJERCICIO, periodo = calendarioEx.PERIODO, sociedad_id = calendarioEx.SOCIEDAD_ID, tsol_id = calendarioEx.TSOL_ID });
+                }
             }
             catch (Exception ex)
             {
@@ -102,7 +111,29 @@ namespace TAT001.Controllers.Catalogos
                 return View(modelView);
             }
         }
-        
+        bool ValidarExcepcionExistente(CALENDARIO_EX calendarioEx)
+        {
+            int pagina_id = 530;
+            if (db.CALENDARIO_EX.Any(x => x.SOCIEDAD_ID == calendarioEx.SOCIEDAD_ID 
+            && x.PERIODO == calendarioEx.PERIODO && x.EJERCICIO == calendarioEx.EJERCICIO
+            && x.TSOL_ID == calendarioEx.TSOL_ID && x.USUARIO_ID == calendarioEx.USUARIO_ID))
+            {
+                ViewBag.mnjError = ObtenerTextoMnj(pagina_id, "lbl_mnjExisteExcepcion");
+                return false;
+            }
+            return true;
+        }
+        bool ValidarFechas(CALENDARIO_EX calendarioEx)
+        {
+            int pagina_id = 530;
+
+            if (calendarioEx.EX_FROMF > calendarioEx.EX_TOF)
+            {
+                ViewBag.mnjError = ObtenerTextoMnj(pagina_id, "lbl_mnjErrorRangoFechas");
+                return false;
+            }
+            return true;
+        }
 
         void ObtenerConfPage(int pagina)//ID EN BASE DE DATOS
         {
@@ -115,7 +146,7 @@ namespace TAT001.Controllers.Catalogos
             ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
             ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
             ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-
+            ViewBag.spras_id = user.SPRAS_ID;
         }
         void CargarSelectList(ref Calendario445ViewModel modelView, string[] combos)
         {

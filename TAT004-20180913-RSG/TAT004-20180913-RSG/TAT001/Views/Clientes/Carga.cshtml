@@ -18,7 +18,7 @@
         <div class="col s12">
             <input type="button" value="Agregar" class="btn btn-small" onclick="Carga();"/>
             <input type="button" value="Borrar" class="btn btn-small" onclick="Borrar()" />
-            <input type="button" value="Actualizar" class="btn btn-small" onclick="Actualizar()"/>
+            @*<input type="button" value="Actualizar" class="btn btn-small" onclick="Actualizar()"/>*@
         </div>
     </div>
     @Html.AntiForgeryToken()
@@ -70,9 +70,9 @@
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td><input class='input_cli' style='font-size:12px;' type='text' id='' name='cli' value=''></td>
+                                    <td><input class='input_cli' style='font-size:12px;' type='text' id='' name='cli' value='' onkeyup='if(event.keyCode == 13) Actualizar()' /></td>
                                     <td></td>
-                                    <td><input class='input_ni0' style='font-size:12px;' type='text' id='' name='ni0' value=''></td>
+                                    <td><input class='input_ni0' style='font-size:12px;' type='text' id='' name='ni0' value='' onkeyup='if(event.keyCode == 13) Actualizar()' /></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
@@ -333,12 +333,18 @@
                         if (ni7.indexOf('?') != -1) {
                             ni7 = ni7.slice(0, -1);
                             var ni7x = true;
-
+                        }
+                        if (ven.indexOf('?') != -1) {
+                            ven = ven.slice(0, -1);
+                            var venx = true;
+                        }
+                        if (can.indexOf('?') != -1) {
+                            can = can.slice(0, -1);
+                            var canx = true;
                         }
                         if (eco.indexOf('?') != -1) {
                             eco = eco.slice(0, -1);
                             var ecox = true;
-
                         }//Termina identificacion
 
                         var addedRow = addRow(table, dataj.POS, bor, coc, pai, cli, noc, ni0, ni1, ni2, ni3, ni4, ni5, ni6, ni7, ven, ban, baa, can, exp, con, eco, mes);
@@ -386,6 +392,14 @@
                         }
                         var cols = addedRow.cells[12];
                         if (ni7x == true) {
+                            $(cols).addClass("red");
+                        }
+                        var cols = addedRow.cells[13];
+                        if (venx == true) {
+                            $(cols).addClass("red");
+                        }
+                        var cols = addedRow.cells[16];
+                        if (canx == true) {
                             $(cols).addClass("red");
                         }
                         var cols = addedRow.cells[19];
@@ -471,12 +485,13 @@
     function Carga() {
         var datos = $('#tabla').serializeArray();
         var message = $('.input_mes').serialize();
+        var cliente = $('.input_cli').serialize();
         var us1 = $('.input_ni1').serialize();
-        var us7 = $('.input_ni7').serialize();
+        var us6 = $('.input_ni6').serialize();
         var doc = sessionStorage.getItem("num");
-        if (doc > 0) {
-            if (message == "" || message == null) {
-                if (us1 != "" && us1 == null && us7 == "" && us7 == null) {
+        if (doc > 0 || cliente != null || cliente!="cli=") {
+            if (message == "" || message == null || message=="mes=") {
+                if (us1 != "" && us1 != "ni1=" && us1 != null && us6 != "" && us6 != "ni6=" && us6 != null) {
                     $.ajax({
                         type: "POST",
                         url: 'Agregar',
@@ -492,6 +507,8 @@
                     M.toast({ html: 'Se agregaron los nuevos registros' });
                     window.location.replace("/Clientes/Index");
                 }
+                else
+                    M.toast({ html: 'Los niveles 1 y 6 no pueden quedar vacios' });
             }
             else
                 M.toast({ html: 'Hay errores por corregir' });
@@ -514,18 +531,7 @@
 
     function Actualizar() {
         var datos = $('#tabla').serializeArray();
-        $.ajax({
-            type: "POST",
-            url: 'Actualizar',
-            data: datos,
-            dataType: "json",
-            success: function () {
-
-            },
-            error: function (request, status, error) {
-                //alert(request.responseText);
-            }
-        });
+        creart('Actualizar', datos);
     }
 
     function creart(metodo, datos) {
@@ -613,7 +619,6 @@
                         if (eco.indexOf('?') != -1) {
                             eco = eco.slice(0, -1);
                             var ecox = true;
-
                         }//Termina identificacion
 
                         var addedRow = addRow(table, dataj.POS, bor, coc, pai, cli, noc, ni0, ni1, ni2, ni3, ni4, ni5, ni6, ni7, ven, ban, baa, can, exp, con, eco, mes);

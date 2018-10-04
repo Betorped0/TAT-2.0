@@ -171,6 +171,7 @@
                             <tbody>
                                 @foreach (var item in Model.calendariosEx445)
                                 {
+                                    string nombreCompleto = item.USUARIO.NOMBRE + " " + item.USUARIO.APELLIDO_P + " " + (item.USUARIO.APELLIDO_M == null ? "" : item.USUARIO.APELLIDO_M);
                                     <tr class="text-left">
                                         <td>
                                             @Html.DisplayFor(modelItem => item.SOCIEDAD_ID)
@@ -182,10 +183,7 @@
                                             @Html.DisplayFor(modelItem => item.TSOL_ID)
                                         </td>
                                         <td>
-                                            @{
-                                                string nombreCompleto = item.USUARIO.NOMBRE + " " + item.USUARIO.APELLIDO_P + " " + (item.USUARIO.APELLIDO_M == null ? "" : item.USUARIO.APELLIDO_M);
-                                                 @nombreCompleto
-                                            }
+                                            @nombreCompleto
                                         </td>
                                         <td>
                                             @Convert.ToDateTime(item.EX_FROMF).ToString("dd/MM/yyyy")
@@ -200,7 +198,7 @@
                                             @Html.DisplayFor(modelItem => item.EX_TOH)
                                         </td>
                                         <td>
-                                            <a href="@Url.Action("Edit", "CalendarioEx445", new { ejercicio=item.EJERCICIO,  periodo= item.PERIODO,  sociedad_id= item.SOCIEDAD_ID,  tsol_id= item.TSOL_ID,usuario_id=item.USUARIO_ID })"><i class='material-icons green-text'>edit</i></a>
+                                            <a href="@Url.Action("Edit", "CalendarioEx445", new { ejercicio=item.EJERCICIO,  periodo= item.PERIODO,  sociedad_id= item.SOCIEDAD_ID,  tsol_id= item.TSOL_ID,usuario_id=item.USUARIO_ID , paginaIndex = "Calendario445"})"><i class='material-icons green-text'>edit</i></a>
                                          </td>
                                     </tr>
                                 }
@@ -220,10 +218,11 @@
 
     //----- Configuracion de Tablas-----
     $(document).ready(function () {
-         var root = "@Url.Content("~")";
-         var lang = root+"/Scripts/lang/@Session["spras"].ToString()" + ".json";
-         fnCommon.configurarTable('tablePeriodo445', '50vh', '50vh', lang, 'cmbPagPeriodo445','gfilterPeriodo445');
-         fnCommon.configurarTable('tableExcepciones', '40vh', '40vh', lang, 'cmbPagExceptions', 'gfilterExceptions');
+        var root = "@Url.Content("~")",
+            spras_id = "@ViewBag.spras_id",
+            urlLanguage = root + "/Scripts/lang/" + spras_id + ".json";
+        fnCommon.configurarTable('tablePeriodo445', '50vh', '50vh', urlLanguage, 'cmbPagPeriodo445','gfilterPeriodo445');
+        fnCommon.configurarTable('tableExcepciones', '40vh', '40vh', urlLanguage, 'cmbPagExceptions', 'gfilterExceptions');
     });
 
 </script>

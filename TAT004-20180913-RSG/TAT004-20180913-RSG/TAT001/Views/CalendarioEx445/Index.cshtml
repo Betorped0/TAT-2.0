@@ -6,6 +6,9 @@
 
 }
 <style>
+    .text-center {
+        text-align: center !important;
+    }
     .text-center th {
         text-align: center !important;
     }
@@ -111,8 +114,8 @@
                                     <label class="lbl_desdeDia"></label>
                                     <div class="col-md-10">
                                         @Html.EditorFor(model => model.calendarioEx445.EX_FROMF, new { htmlAttributes = new { @required = "", @class = "datepicker" } })
-                                        <label class="lbl_minFecha"></label>:
-                                        @Html.EditorFor(model => model.calendario445.PRE_TOF, new { htmlAttributes = new { @disabled = true, @class = "datepicker" } })
+                                        <label class="lbl_minFecha"></label>
+                                        @Html.EditorFor(model => model.calendario445.PRE_TOF, new { htmlAttributes = new { @disabled = true, @class = "datepicker",@style= "border-bottom: 0px;" } })
                                     </div>
                                 </div>
                             </div>
@@ -129,8 +132,8 @@
                                     <label class="lbl_hastaDia"></label>
                                     <div class="col-md-10">
                                         @Html.EditorFor(model => model.calendarioEx445.EX_TOF, new { htmlAttributes = new { @required = "", @class = "datepicker" } })
-                                        <label class="lbl_maxFecha"></label>:
-                                        @Html.EditorFor(model => model.calendario445.CIE_FROMF, new { htmlAttributes = new { @disabled = true, @class = "datepicker" } })
+                                        <label class="lbl_maxFecha"></label>
+                                        @Html.EditorFor(model => model.calendario445.CIE_FROMF, new { htmlAttributes = new { @disabled = true, @class = "datepicker", @style = "border-bottom: 0px;" } })
                                     </div>
                                 </div>
                             </div>
@@ -188,6 +191,7 @@
                     <tbody>
                         @foreach (var item in Model.calendariosEx445)
                         {
+                            string nombreCompleto = item.USUARIO.NOMBRE + " " + item.USUARIO.APELLIDO_P + " " + (item.USUARIO.APELLIDO_M == null ? "" : item.USUARIO.APELLIDO_M);
                             <tr  class="text-left">
                                 <td>
                                     @Html.DisplayFor(modelItem => item.SOCIEDAD_ID)
@@ -199,10 +203,7 @@
                                     @Html.DisplayFor(modelItem => item.TSOL_ID)
                                 </td>
                                 <td>
-                                    @{
-                                        string nombreCompleto = item.USUARIO.NOMBRE + " " + item.USUARIO.APELLIDO_P + " " + (item.USUARIO.APELLIDO_M == null ? "" : item.USUARIO.APELLIDO_M);
-                                        @nombreCompleto
-                                    }
+                                     @nombreCompleto
                                 </td>
                                 <td>
                                     @Convert.ToDateTime(item.EX_FROMF).ToString("dd/MM/yyyy")
@@ -217,10 +218,10 @@
                                     @Html.DisplayFor(modelItem => item.EX_TOH)
                                 </td>
                                 <td>
-                                    <a href="@Url.Action("Edit", "CalendarioEx445", new { ejercicio=item.EJERCICIO,  periodo= item.PERIODO,  sociedad_id= item.SOCIEDAD_ID,  tsol_id= item.TSOL_ID,usuario_id=item.USUARIO_ID })"><i class='material-icons green-text'>edit</i></a>
+                                    <a href="@Url.Action("Edit", "CalendarioEx445", new { ejercicio=item.EJERCICIO,  periodo= item.PERIODO,  sociedad_id= item.SOCIEDAD_ID,  tsol_id= item.TSOL_ID,usuario_id=item.USUARIO_ID, paginaIndex = "CalendarioEx445" })"><i class='material-icons green-text'>edit</i></a>
                                 </td>
                             </tr>
-                                        }
+                           }
                     </tbody>
                 </table>
             </div>
@@ -235,8 +236,9 @@
 </div>
 <script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
 <script>
+    var spras_id = "@ViewBag.spras_id";
     //---- Inicializador de componentes Materialize----
-    fnCommon.materializeInit('.datepicker', 'datepicker');
+    fnCommon.materializeInit('.datepicker', 'datepicker', spras_id);
     fnCommon.materializeInit('.timepicker', 'timepicker');
     fnCommon.materializeInit('select', 'select');
     fnCommon.materializeInit('.collapsible', 'collapsible');
@@ -254,23 +256,21 @@
     //----  Se agrega validaciones al formulario----
     fnCommon.selectRequired();
     fnCommon.formValidation('calendarioEx445Form');
-    fnCommon.dateRangeValidation('calendario445_PRE_TOF', 'calendarioEx445_EX_FROMF');
-    fnCommon.dateRangeValidation('calendarioEx445_EX_FROMF', 'calendarioEx445_EX_TOF');
-    fnCommon.dateRangeValidation('calendarioEx445_EX_TOF', 'calendario445_CIE_FROMF');
+    fnCommon.dateRangeValidation('calendario445_PRE_TOF', 'calendarioEx445_EX_FROMF', 'calendarioEx445_EX_TOF', 'calendario445_CIE_FROMF');
 
     //----- Configuracion de Tablas-----
     $(document).ready(function () {
-        var root = "@Url.Content("~")";
-        var lang = root+"/Scripts/lang/@Session["spras"].ToString()" + ".json";
-        fnCommon.configurarTable('tableExcepciones', '40vh', '40vh', lang, 'cmbPagExceptions', 'gfilterExceptions');
+        var root = "@Url.Content("~")",
+            urlLanguage = root + "/Scripts/lang/" + spras_id + ".json";
+        fnCommon.configurarTable('tableExcepciones', '40vh', '40vh', urlLanguage, 'cmbPagExceptions', 'gfilterExceptions');
     });
 
 
     // Valida si ocurrio un error al intentar crear el periodo y otro.
     var mnjError = '@ViewBag.mnjError';
-            if (mnjError) {
-                M.toast({ html: mnjError });
-            }
+    if (mnjError) {
+        M.toast({ html: mnjError });
+    }
 </script>
 
 

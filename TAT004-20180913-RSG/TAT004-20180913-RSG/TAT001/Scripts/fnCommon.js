@@ -1,6 +1,6 @@
 ﻿var fnCommon = {
 
-    materializeInit: function (component, type) {
+    materializeInit: function (component, type, spras_id) {
         switch (type) {
             case 'select':
                 var options = {};
@@ -9,6 +9,20 @@
                 break;
             case 'datepicker':
                 var options = { format: 'dd/mm/yyyy' };
+                if (spras_id=='ES'){
+                    options.i18n = {
+                        clear: 'Limpiar',
+                        today: 'Hoy',
+                        done: 'Seleccionar',
+                        previousMonth: '‹',
+                        nextMonth: '›',
+                        months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                        monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                        weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+                        weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                        weekdaysAbbrev: ['D', 'L', 'M', 'X', 'J', 'V', 'S']
+                    };
+                }
                 var datepickers = document.querySelectorAll('.datepicker');
                 M.Datepicker.init(datepickers, options);
                 break;
@@ -91,13 +105,13 @@
             if (fechaFMaxM) { fechaFMaxM.options.maxDate = date; }
         }
     },
-    configurarTable: function (idTable, scrollY, scrollX, language,idSelectPag,idGFilter) {
+    configurarTable: function (idTable, scrollY, scrollX, urlLanguage,idSelectPag,idGFilter) {
         var table =  $('#'+idTable).DataTable({
             scrollY: scrollY,
             scrollX: scrollX,
             scrollCollapse: true,
             language: {
-                url: language
+                url: urlLanguage
             },
             columnDefs: [{
                 targets: [0, 1, 2,4,5,6],
