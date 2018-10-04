@@ -210,6 +210,7 @@
     <Compile Include="Controllers\Catalogos\GALLController.cs" />
     <Compile Include="Controllers\Catalogos\IimpuestoController.cs" />
     <Compile Include="Controllers\Catalogos\ImpuestosController.cs" />
+    <Compile Include="Controllers\Catalogos\SociedadesController.cs" />
     <Compile Include="Controllers\Catalogos\UsuariosController2.cs" />
     <Compile Include="Controllers\Configuracion\ccatController.cs" />
     <Compile Include="Controllers\Catalogos\ClienteController.cs" />
@@ -1841,6 +1842,9 @@
     <Content Include="Views\Alertas\Create.cshtml" />
     <Content Include="Views\Reportes\ReporteTrackingTS.cshtml" />
     <Content Include="Views\Alertas\Edit.cshtml" />
+    <Content Include="Views\Sociedades\Details.cshtml" />
+    <Content Include="Views\Sociedades\Edit.cshtml" />
+    <Content Include="Views\Sociedades\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->
