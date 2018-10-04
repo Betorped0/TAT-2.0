@@ -125,43 +125,43 @@
         <li class='no-padding'>
             <ul class='collapsible collapsible-accordion'>
                 @foreach (TAT001.Entities.CARPETAV c in ViewBag.carpetas)
-            {
-                if (c.URL.Equals(""))
                 {
-                    foreach (TAT001.Entities.PAGINAV p in ViewBag.permisos)
+                    if (c.URL.Equals(""))
                     {
-                        if (c.ID.Equals(p.CARPETA_ID))
+                        foreach (TAT001.Entities.PAGINAV p in ViewBag.permisos)
                         {
-                            if (ViewBag.pagina_r.Equals(p.PAGINA_ID))
+                            if (c.ID.Equals(p.CARPETA_ID))
                             {
-                                <li class='bold active'><a href='#'><i class='material-icons'>@p.ICON</i>@p.TXT50</a></li>
-                        }
-                        else
-                        {
-                            string[] uu = p.PAGINA_URL.Split('/');
-                            <li class='bold'><a href='@Url.Action(uu[1], uu[0])'><i class='material-icons'>@p.ICON</i>@p.TXT50</a></li>
-                    }
-                }
-            }
-        }
-        else
-        {
-            if (ViewBag.carpeta_r.Equals(c.ID))
-            {
-
-                <li class='bold active'>
-                    <a class='collapsible-header waves-effect waves-teal'><i class='material-icons'>@c.ICON</i>@c.TXT50</a>
-                    <div class='collapsible-body'>
-                        <ul>
-                            @foreach (TAT001.Entities.PAGINAV p in ViewBag.permisos)
-                            {
-                                if (c.ID.Equals(p.CARPETA_ID))
+                                if (ViewBag.pagina_r.Equals(p.PAGINA_ID))
                                 {
-                                    if (ViewBag.pagina_r.Equals(p.PAGINA_ID))
-                                    {
-                                        ////////DRS 26.09.18//////
-                                        <li class="active">
-                                            <a style="color: rgba(0, 0, 0, 0.87);
+                                    <li class='bold active'><a href='#'><i class='material-icons'>@p.ICON</i>@p.TXT50</a></li>
+                                }
+                                else
+                                {
+                                    string[] uu = p.PAGINA_URL.Split('/');
+                                    <li class='bold'><a href='@Url.Action(uu[1], uu[0])'><i class='material-icons'>@p.ICON</i>@p.TXT50</a></li>
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (ViewBag.carpeta_r.Equals(c.ID))
+                        {
+
+                            <li class='bold active'>
+                                <a class='collapsible-header waves-effect waves-teal'><i class='material-icons'>@c.ICON</i>@c.TXT50</a>
+                                <div class='collapsible-body'>
+                                    <ul>
+                                        @foreach (TAT001.Entities.PAGINAV p in ViewBag.permisos)
+                                        {
+                                            if (c.ID.Equals(p.CARPETA_ID))
+                                            {
+                                                if (ViewBag.pagina_r.Equals(p.PAGINA_ID))
+                                                {
+                                                    ////////DRS 26.09.18//////
+                                                    <li class="active">
+                                                        <a style="color: rgba(0, 0, 0, 0.87);
                                                 font-family: Tahoma;
                                                 text-transform: uppercase;
                                                 display: block;
@@ -191,24 +191,24 @@
                                         }
                                     }
                                 }
-                        </ul>
-                    </div>
-                </li>
-        }
-        else
-        {
-
-            <li class='bold'>
-                <a class='collapsible-header waves-effect waves-teal'><i class='material-icons'>@c.ICON</i>@c.TXT50</a>
-                <div class='collapsible-body'>
-                    <ul class="collapsible" data-collapsible="accordion">
-                        @foreach (TAT001.Entities.PAGINAV p in ViewBag.permisos)
+                                    </ul>
+                                </div>
+                            </li>
+                        }
+                        else
                         {
-                            if (c.ID.Equals(p.CARPETA_ID))
-                            {
-                                ////////DRS 26.09.18//////
-                                <li>
-                                    <a style="color: rgba(0, 0, 0, 0.87);
+
+                            <li class='bold'>
+                                <a class='collapsible-header waves-effect waves-teal'><i class='material-icons'>@c.ICON</i>@c.TXT50</a>
+                                <div class='collapsible-body'>
+                                    <ul class="collapsible" data-collapsible="accordion">
+                                        @foreach (TAT001.Entities.PAGINAV p in ViewBag.permisos)
+                                        {
+                                            if (c.ID.Equals(p.CARPETA_ID))
+                                            {
+                                                ////////DRS 26.09.18//////
+                                                <li>
+                                                    <a style="color: rgba(0, 0, 0, 0.87);
                                                 font-family: Tahoma;
                                                 text-transform: uppercase;
                                                 display: block;
@@ -220,90 +220,90 @@
                                                 text-indent: 1cm;" href="@Url.Action(p.PAGINA_URL, c.URL)">@p.TXT50</a>
                                             </li>
                                             @*<li class="bold">
-                                <a class="collapsible-header">
-                                    <span class="nav-text">Second level child</span>
-                                    <i class="material-icons">keyboard_arrow_right</i>
-                                </a>
-                                <div class="collapsible-body" style="display: block;">
-                                    <ul>
-                                        <li><a href="ui-basic-buttons.html"><i class="material-icons">keyboard_arrow_right</i><span>Third level</span></a></li>
-                                        <li><a href="ui-basic-buttons.html"><i class="material-icons">keyboard_arrow_right</i><span>Third level</span></a></li>
-                                    </ul>
-                                </div>
-                            </li>*@
+                                                    <a class="collapsible-header">
+                                                        <span class="nav-text">Second level child</span>
+                                                        <i class="material-icons">keyboard_arrow_right</i>
+                                                    </a>
+                                                    <div class="collapsible-body" style="display: block;">
+                                                        <ul>
+                                                            <li><a href="ui-basic-buttons.html"><i class="material-icons">keyboard_arrow_right</i><span>Third level</span></a></li>
+                                                            <li><a href="ui-basic-buttons.html"><i class="material-icons">keyboard_arrow_right</i><span>Third level</span></a></li>
+                                                        </ul>
+                                                    </div>
+                                                </li>*@
                                         }
                                     }
-                    </ul>
-                </div>
-            </li>
-    }
-}
-}
+                                    </ul>
+                                </div>
+                            </li>
+                        }
+                    }
+                }
 
 
             </ul>
         </li>
         @*<li class="no-padding">
-            <ul class="collapsible" data-collapsible="accordion">
-                <li class="bold">
-                    <a class="collapsible-header waves-effect waves-cyan">
-                        <i class="material-icons">photo_filter</i>
-                        <span class="nav-text">Menu Levels</span>
-                    </a>
-                    <div class="collapsible-body" style="display: block;">
-                        <ul class="collapsible" data-collapsible="accordion">
-                            <li>
-                                <a href="ui-basic-buttons.html">
-                                    <i class="material-icons">keyboard_arrow_right</i>
-                                    <span>Second level</span>
-                                </a>
-                            </li>
-                            <li class="bold">
-                                <a class="collapsible-header waves-effect waves-cyan">
-                                    <i class="material-icons">keyboard_arrow_right</i>
-                                    <span class="nav-text">Second level child</span>
-                                </a>
-                                <div class="collapsible-body" style="display: block;">
-                                    <ul class="collapsible" data-collapsible="accordion">
-                                        <li>
-                                            <a href="ui-basic-buttons.html">
-                                                <i class="material-icons">keyboard_arrow_right</i>
-                                                <span>Third level</span>
-                                            </a>
-                                        </li>
-                                        <li class="bold">
-                                            <a class="collapsible-header waves-effect waves-cyan">
-                                                <i class="material-icons">keyboard_arrow_right</i>
-                                                <span class="nav-text">Third level child</span>
-                                            </a>
-                                            <div class="collapsible-body" style="display: block;">
-                                                <ul class="collapsible" data-collapsible="accordion">
-                                                    <li>
-                                                        <a href="ui-basic-buttons.html">
-                                                            <i class="material-icons">keyboard_arrow_right</i>
-                                                            <span>Forth level</span>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="ui-extended-buttons.html">
-                                                            <i class="material-icons">keyboard_arrow_right</i>
-                                                            <span>Forth level</span>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-            </ul>
-        </li>*@
+                <ul class="collapsible" data-collapsible="accordion">
+                    <li class="bold">
+                        <a class="collapsible-header waves-effect waves-cyan">
+                            <i class="material-icons">photo_filter</i>
+                            <span class="nav-text">Menu Levels</span>
+                        </a>
+                        <div class="collapsible-body" style="display: block;">
+                            <ul class="collapsible" data-collapsible="accordion">
+                                <li>
+                                    <a href="ui-basic-buttons.html">
+                                        <i class="material-icons">keyboard_arrow_right</i>
+                                        <span>Second level</span>
+                                    </a>
+                                </li>
+                                <li class="bold">
+                                    <a class="collapsible-header waves-effect waves-cyan">
+                                        <i class="material-icons">keyboard_arrow_right</i>
+                                        <span class="nav-text">Second level child</span>
+                                    </a>
+                                    <div class="collapsible-body" style="display: block;">
+                                        <ul class="collapsible" data-collapsible="accordion">
+                                            <li>
+                                                <a href="ui-basic-buttons.html">
+                                                    <i class="material-icons">keyboard_arrow_right</i>
+                                                    <span>Third level</span>
+                                                </a>
+                                            </li>
+                                            <li class="bold">
+                                                <a class="collapsible-header waves-effect waves-cyan">
+                                                    <i class="material-icons">keyboard_arrow_right</i>
+                                                    <span class="nav-text">Third level child</span>
+                                                </a>
+                                                <div class="collapsible-body" style="display: block;">
+                                                    <ul class="collapsible" data-collapsible="accordion">
+                                                        <li>
+                                                            <a href="ui-basic-buttons.html">
+                                                                <i class="material-icons">keyboard_arrow_right</i>
+                                                                <span>Forth level</span>
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="ui-extended-buttons.html">
+                                                                <i class="material-icons">keyboard_arrow_right</i>
+                                                                <span>Forth level</span>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </li>*@
     </ul>
     <script>
-var elems = document.querySelectorAll('.collapsible');
+        var elems = document.querySelectorAll('.collapsible');
         var instances = M.Collapsible.init(elems, []);</script>
     @*@RenderSection("noticia")
 
@@ -360,11 +360,14 @@ var elems = document.querySelectorAll('.collapsible');
         {
             <script>
                 try {
-                    var elem = document.getElementById("@t.CAMPO_ID").innerHTML = "@t.TEXTOS";
+                    var elem = document.getElementById("@t.CAMPO_ID");
+                    if (elem.nodeName != 'INPUT' & elem.nodeName != 'SELECT')
+                    elem.innerHTML = "@t.TEXTOS";
                 } catch (e) {
                     try {
                         var divs = document.getElementsByClassName("@t.CAMPO_ID");
                         [].slice.call(divs).forEach(function (div) {
+                            if (div.nodeName != 'INPUT' & div.nodeName != 'SELECT')
                             div.innerHTML = "@t.TEXTOS";
                         });
                     }
@@ -378,6 +381,6 @@ var elems = document.querySelectorAll('.collapsible');
     @*@Scripts.Render("~/bundles/jquery")
         @Scripts.Render("~/bundles/bootstrap")
         @RenderSection("scripts", required: false)*@
-    
+
 </body>
 </html>
