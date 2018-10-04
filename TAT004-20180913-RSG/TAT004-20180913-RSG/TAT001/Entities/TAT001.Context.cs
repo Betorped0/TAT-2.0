@@ -47,6 +47,7 @@ namespace TAT001.Entities
         public virtual DbSet<CLIENTEF> CLIENTEFs { get; set; }
         public virtual DbSet<CLIENTEI> CLIENTEIs { get; set; }
         public virtual DbSet<CONDICION> CONDICIONs { get; set; }
+        public virtual DbSet<CONDICIONT> CONDICIONTs { get; set; }
         public virtual DbSet<CONFDIST_CAT> CONFDIST_CAT { get; set; }
         public virtual DbSet<CONMAIL> CONMAILs { get; set; }
         public virtual DbSet<CONPOSAPH> CONPOSAPHs { get; set; }

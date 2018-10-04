@@ -261,7 +261,7 @@
           <Property Name="SPART" Type="nchar" MaxLength="2" Nullable="false" />
           <Property Name="KUNNR" Type="nchar" MaxLength="10" Nullable="false" />
           <Property Name="NAME1" Type="nvarchar" MaxLength="100" />
-          <Property Name="STCD1" Type="nvarchar" MaxLength="13" />
+          <Property Name="STCD1" Type="nvarchar" MaxLength="20" />
           <Property Name="STCD2" Type="nvarchar" MaxLength="20" />
           <Property Name="LAND" Type="nchar" MaxLength="2" />
           <Property Name="REGION" Type="nvarchar" MaxLength="50" />
@@ -337,6 +337,15 @@
           <Property Name="DESCR" Type="nvarchar" MaxLength="50" />
           <Property Name="COND" Type="nvarchar" MaxLength="4" />
           <Property Name="ACTIVO" Type="bit" />
+        </EntityType>
+        <EntityType Name="CONDICIONT">
+          <Key>
+            <PropertyRef Name="SPRAS_ID" />
+            <PropertyRef Name="CONDICION_ID" />
+          </Key>
+          <Property Name="SPRAS_ID" Type="nchar" MaxLength="2" Nullable="false" />
+          <Property Name="CONDICION_ID" Type="int" Nullable="false" />
+          <Property Name="TXT050" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="CONFDIST_CAT">
           <Key>
@@ -822,7 +831,7 @@
           <Property Name="OBJQ_PORC" Type="decimal" Precision="13" Scale="5" />
           <Property Name="CUENTAP" Type="numeric" Precision="10" Scale="0" />
           <Property Name="CUENTAPL" Type="numeric" Precision="10" Scale="0" />
-          <Property Name="EXCEDE_PRES" Type="nchar" MaxLength="1" />
+          <Property Name="EXCEDE_PRES" Type="char" MaxLength="1" />
         </EntityType>
         <EntityType Name="DOCUMENTOA">
           <Key>
@@ -1624,7 +1633,7 @@
           <Property Name="ACTIVO" Type="bit" Nullable="false" />
         </EntityType>
         <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'TAT001.dbo.TAB_CAMPO' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+advertencia 6002: La tabla o vista 'TAT004.dbo.TAB_CAMPO' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="TAB_CAMPO">
           <Key>
             <PropertyRef Name="TAB_ID" />
@@ -2107,7 +2116,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.TAB_CAMPO' no tiene definida ning
           <Property Name="DESCRIPCION" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'TAT001.dbo.CARPETAV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+advertencia 6002: La tabla o vista 'TAT004.dbo.CARPETAV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="CARPETAV">
           <Key>
             <PropertyRef Name="USUARIO_ID" />
@@ -2120,7 +2129,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.CARPETAV' no tiene definida ningu
           <Property Name="ICON" Type="nvarchar" MaxLength="20" />
         </EntityType>
         <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'TAT001.dbo.CREADOR' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+advertencia 6002: La tabla o vista 'TAT004.dbo.CREADOR' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="CREADOR">
           <Key>
             <PropertyRef Name="ID" />
@@ -2137,7 +2146,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.CREADOR' no tiene definida ningun
           <Property Name="LAND" Type="nchar" MaxLength="2" />
         </EntityType>
         <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'TAT001.dbo.CREADOR2' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+advertencia 6002: La tabla o vista 'TAT004.dbo.CREADOR2' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="CREADOR2">
           <Key>
             <PropertyRef Name="ID" />
@@ -2155,7 +2164,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.CREADOR2' no tiene definida ningu
           <Property Name="LAND" Type="nchar" MaxLength="2" />
         </EntityType>
         <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'TAT001.dbo.DET_APROBV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+advertencia 6002: La tabla o vista 'TAT004.dbo.DET_APROBV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="DET_APROBV">
           <Key>
             <PropertyRef Name="BUKRS" />
@@ -2168,7 +2177,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.DET_APROBV' no tiene definida nin
           <Property Name="SPRAS_ID" Type="nchar" MaxLength="2" Nullable="false" />
         </EntityType>
         <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'TAT001.dbo.DOCUMENTOV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+advertencia 6002: La tabla o vista 'TAT004.dbo.DOCUMENTOV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="DOCUMENTOV">
           <Key>
             <PropertyRef Name="POS" />
@@ -2244,7 +2253,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.DOCUMENTOV' no tiene definida nin
           <Property Name="ESTADO" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'TAT001.dbo.PAGINAV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+advertencia 6002: La tabla o vista 'TAT004.dbo.PAGINAV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="PAGINAV">
           <Key>
             <PropertyRef Name="ID" />
@@ -2265,7 +2274,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.PAGINAV' no tiene definida ningun
           <Property Name="USUARIO_SPRAS" Type="nchar" MaxLength="2" Nullable="false" />
         </EntityType>
         <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="WARNINGV">
           <Key>
             <PropertyRef Name="PAGINA_ID" />
@@ -2586,6 +2595,30 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </Principal>
             <Dependent Role="CLIENTEI">
               <PropertyRef Name="MWSKZ" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CONDICIONT_CONDICION">
+          <End Role="CONDICION" Type="Self.CONDICION" Multiplicity="1" />
+          <End Role="CONDICIONT" Type="Self.CONDICIONT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CONDICION">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CONDICIONT">
+              <PropertyRef Name="CONDICION_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CONDICIONT_SPRAS">
+          <End Role="SPRAS" Type="Self.SPRAS" Multiplicity="1" />
+          <End Role="CONDICIONT" Type="Self.CONDICIONT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SPRAS">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CONDICIONT">
+              <PropertyRef Name="SPRAS_ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -4772,6 +4805,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
           <EntitySet Name="CLIENTEF" EntityType="Self.CLIENTEF" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CLIENTEI" EntityType="Self.CLIENTEI" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CONDICION" EntityType="Self.CONDICION" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CONDICIONT" EntityType="Self.CONDICIONT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CONFDIST_CAT" EntityType="Self.CONFDIST_CAT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CONMAIL" EntityType="Self.CONMAIL" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CONPOSAPH" EntityType="Self.CONPOSAPH" Schema="dbo" store:Type="Tables" />
@@ -5134,6 +5168,14 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
           <AssociationSet Name="FK_CLIENTEI_IMPUESTO" Association="Self.FK_CLIENTEI_IMPUESTO">
             <End Role="IMPUESTO" EntitySet="IMPUESTO" />
             <End Role="CLIENTEI" EntitySet="CLIENTEI" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CONDICIONT_CONDICION" Association="Self.FK_CONDICIONT_CONDICION">
+            <End Role="CONDICION" EntitySet="CONDICION" />
+            <End Role="CONDICIONT" EntitySet="CONDICIONT" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CONDICIONT_SPRAS" Association="Self.FK_CONDICIONT_SPRAS">
+            <End Role="SPRAS" EntitySet="SPRAS" />
+            <End Role="CONDICIONT" EntitySet="CONDICIONT" />
           </AssociationSet>
           <AssociationSet Name="FK_CONFDIST_CAT_CAMPOZKE24" Association="Self.FK_CONFDIST_CAT_CAMPOZKE24">
             <End Role="CAMPOZKE24" EntitySet="CAMPOZKE24" />
@@ -6094,7 +6136,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
           <Property Name="SPART" Type="String" MaxLength="2" FixedLength="true" Unicode="true" Nullable="false" />
           <Property Name="KUNNR" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
           <Property Name="NAME1" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="STCD1" Type="String" MaxLength="13" FixedLength="false" Unicode="true" />
+          <Property Name="STCD1" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="STCD2" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="LAND" Type="String" MaxLength="2" FixedLength="true" Unicode="true" />
           <Property Name="REGION" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
@@ -6183,7 +6225,19 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
           <Property Name="DESCR" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="COND" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
           <Property Name="ACTIVO" Type="Boolean" />
+          <NavigationProperty Name="CONDICIONTs" Relationship="Self.FK_CONDICIONT_CONDICION" FromRole="CONDICION" ToRole="CONDICIONT" />
           <NavigationProperty Name="WARNING_COND" Relationship="Self.FK_WARNING_COND_CONDICION" FromRole="CONDICION" ToRole="WARNING_COND" />
+        </EntityType>
+        <EntityType Name="CONDICIONT">
+          <Key>
+            <PropertyRef Name="SPRAS_ID" />
+            <PropertyRef Name="CONDICION_ID" />
+          </Key>
+          <Property Name="SPRAS_ID" Type="String" MaxLength="2" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="CONDICION_ID" Type="Int32" Nullable="false" />
+          <Property Name="TXT050" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CONDICION" Relationship="Self.FK_CONDICIONT_CONDICION" FromRole="CONDICIONT" ToRole="CONDICION" />
+          <NavigationProperty Name="SPRA" Relationship="Self.FK_CONDICIONT_SPRAS" FromRole="CONDICIONT" ToRole="SPRAS" />
         </EntityType>
         <EntityType Name="CONFDIST_CAT">
           <Key>
@@ -6717,7 +6771,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
           <Property Name="OBJQ_PORC" Type="Decimal" Precision="13" Scale="5" />
           <Property Name="CUENTAP" Type="Decimal" Precision="10" Scale="0" />
           <Property Name="CUENTAPL" Type="Decimal" Precision="10" Scale="0" />
-          <Property Name="EXCEDE_PRES" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+          <Property Name="EXCEDE_PRES" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
           <NavigationProperty Name="CARTAs" Relationship="Self.FK_CARTA_DOCUMENTO" FromRole="DOCUMENTO" ToRole="CARTA" />
           <NavigationProperty Name="CLIENTE" Relationship="Self.FK_DOCUMENTO_CLIENTE" FromRole="DOCUMENTO" ToRole="CLIENTE" />
           <NavigationProperty Name="CUENTAGL" Relationship="Self.FK_DOCUMENTO_CUENTAGL" FromRole="DOCUMENTO" ToRole="CUENTAGL" />
@@ -7640,6 +7694,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
           <NavigationProperty Name="CAMPOZKE24T" Relationship="Self.FK_CAMPOZKE24T_SPRAS" FromRole="SPRAS" ToRole="CAMPOZKE24T" />
           <NavigationProperty Name="CARPETATs" Relationship="Self.FK_CARPETAT_SPRAS" FromRole="SPRAS" ToRole="CARPETAT" />
           <NavigationProperty Name="CATEGORIATs" Relationship="Self.FK_CATEGORIAT_SPRAS" FromRole="SPRAS" ToRole="CATEGORIAT" />
+          <NavigationProperty Name="CONDICIONTs" Relationship="Self.FK_CONDICIONT_SPRAS" FromRole="SPRAS" ToRole="CONDICIONT" />
           <NavigationProperty Name="GALLTs" Relationship="Self.FK_GALLT_SPRAS" FromRole="SPRAS" ToRole="GALLT" />
           <NavigationProperty Name="MATERIALGPTs" Relationship="Self.FK_MATERIALGPT_SPRAS" FromRole="SPRAS" ToRole="MATERIALGPT" />
           <NavigationProperty Name="MATERIALTs" Relationship="Self.FK_MATERIALT_SPRAS" FromRole="SPRAS" ToRole="MATERIALT" />
@@ -8901,6 +8956,18 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_CONDICIONT_CONDICION">
+          <End Role="CONDICION" Type="Self.CONDICION" Multiplicity="1" />
+          <End Role="CONDICIONT" Type="Self.CONDICIONT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CONDICION">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CONDICIONT">
+              <PropertyRef Name="CONDICION_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_WARNING_COND_CONDICION">
           <End Role="CONDICION" Type="Self.CONDICION" Multiplicity="0..1" />
           <End Role="WARNING_COND" Type="Self.WARNING_COND" Multiplicity="*" />
@@ -8910,6 +8977,18 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             </Principal>
             <Dependent Role="WARNING_COND">
               <PropertyRef Name="CONDICION_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CONDICIONT_SPRAS">
+          <End Role="SPRAS" Type="Self.SPRA" Multiplicity="1" />
+          <End Role="CONDICIONT" Type="Self.CONDICIONT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SPRAS">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CONDICIONT">
+              <PropertyRef Name="SPRAS_ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -10814,6 +10893,7 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
           <EntitySet Name="CLIENTEFs" EntityType="Self.CLIENTEF" />
           <EntitySet Name="CLIENTEIs" EntityType="Self.CLIENTEI" />
           <EntitySet Name="CONDICIONs" EntityType="Self.CONDICION" />
+          <EntitySet Name="CONDICIONTs" EntityType="Self.CONDICIONT" />
           <EntitySet Name="CONFDIST_CAT" EntityType="Self.CONFDIST_CAT" />
           <EntitySet Name="CONMAILs" EntityType="Self.CONMAIL" />
           <EntitySet Name="CONPOSAPHs" EntityType="Self.CONPOSAPH" />
@@ -11081,9 +11161,17 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
             <End Role="IMPUESTO" EntitySet="IMPUESTOes" />
             <End Role="CLIENTEI" EntitySet="CLIENTEIs" />
           </AssociationSet>
+          <AssociationSet Name="FK_CONDICIONT_CONDICION" Association="Self.FK_CONDICIONT_CONDICION">
+            <End Role="CONDICION" EntitySet="CONDICIONs" />
+            <End Role="CONDICIONT" EntitySet="CONDICIONTs" />
+          </AssociationSet>
           <AssociationSet Name="FK_WARNING_COND_CONDICION" Association="Self.FK_WARNING_COND_CONDICION">
             <End Role="CONDICION" EntitySet="CONDICIONs" />
             <End Role="WARNING_COND" EntitySet="WARNING_COND" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CONDICIONT_SPRAS" Association="Self.FK_CONDICIONT_SPRAS">
+            <End Role="SPRAS" EntitySet="SPRAS" />
+            <End Role="CONDICIONT" EntitySet="CONDICIONTs" />
           </AssociationSet>
           <AssociationSet Name="FK_CONFDIST_CAT_SOCIEDAD" Association="Self.FK_CONFDIST_CAT_SOCIEDAD">
             <End Role="SOCIEDAD" EntitySet="SOCIEDADs" />
@@ -12269,6 +12357,15 @@ advertencia 6002: La tabla o vista 'TAT001.dbo.WARNINGV' no tiene definida ningu
                 <ScalarProperty Name="DESCR" ColumnName="DESCR" />
                 <ScalarProperty Name="COND" ColumnName="COND" />
                 <ScalarProperty Name="ACTIVO" ColumnName="ACTIVO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CONDICIONTs">
+            <EntityTypeMapping TypeName="TAT001Model.CONDICIONT">
+              <MappingFragment StoreEntitySet="CONDICIONT">
+                <ScalarProperty Name="SPRAS_ID" ColumnName="SPRAS_ID" />
+                <ScalarProperty Name="CONDICION_ID" ColumnName="CONDICION_ID" />
+                <ScalarProperty Name="TXT050" ColumnName="TXT050" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

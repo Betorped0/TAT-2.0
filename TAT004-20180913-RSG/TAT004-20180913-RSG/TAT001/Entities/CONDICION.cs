@@ -17,6 +17,7 @@ namespace TAT001.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public CONDICION()
         {
+            this.CONDICIONTs = new HashSet<CONDICIONT>();
             this.WARNING_COND = new HashSet<WARNING_COND>();
         }
     
@@ -25,6 +26,8 @@ namespace TAT001.Entities
         public string COND { get; set; }
         public Nullable<bool> ACTIVO { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CONDICIONT> CONDICIONTs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WARNING_COND> WARNING_COND { get; set; }
     }

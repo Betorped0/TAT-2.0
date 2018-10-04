@@ -318,6 +318,9 @@
     <Compile Include="Entities\CONDICION.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\CONDICIONT.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\CONFDIST_CAT.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
@@ -1298,6 +1301,9 @@
     <Content Include="obj\Debug\TAT001.dll" />
     <Content Include="obj\Debug\TAT001.pdb" />-->
     <Content Include="Scripts\copiacreatesolicitud.js" />
+    <Content Include="PdfTemp\Doc06\06\2018.xlsx" />
+    <Content Include="PdfTemp\Doc29\05\2018.xlsx" />
+    <Content Include="PdfTemp\DocPr04\06\2018.xlsx" />
     <EntityDeploy Include="Entities\TAT001.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>TAT001.Designer.cs</LastGenOutput>
@@ -1305,9 +1311,6 @@
     <Content Include="Entities\TAT001.edmx.diagram">
       <DependentUpon>TAT001.edmx</DependentUpon>
     </Content>
-    <Content Include="PdfTemp\Doc06\06\2018.xlsx" />
-    <Content Include="PdfTemp\Doc29\05\2018.xlsx" />
-    <Content Include="PdfTemp\DocPr04\06\2018.xlsx" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\fnCommon.js" />
     <Content Include="Scripts\jquery.validate.js" />

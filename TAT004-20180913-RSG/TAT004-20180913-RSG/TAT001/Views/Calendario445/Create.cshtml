@@ -140,8 +140,9 @@
         </div>
         <script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
         <script>
+            var spras_id ="@ViewBag.spras_id";
         //---- Inicializador de componentes Materialize----
-        fnCommon.materializeInit('.datepicker', 'datepicker');
+            fnCommon.materializeInit('.datepicker', 'datepicker', spras_id);
         fnCommon.materializeInit('.timepicker', 'timepicker');
         fnCommon.materializeInit('select', 'select');
 
@@ -162,9 +163,9 @@
 
         // Valida si ocurrio un error al intentar crear el periodo y otro.
         var mnjError = '@ViewBag.mnjError';
-        if (mnjError){
-            M.toast({ html: mnjError });
-        }
+            if (mnjError) {
+                M.toast({ html: mnjError });
+            }
         </script>
 
 
