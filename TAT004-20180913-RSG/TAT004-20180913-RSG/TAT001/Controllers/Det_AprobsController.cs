@@ -14,13 +14,13 @@ namespace TAT001.Controllers
     [Authorize]
     public class Det_AprobsController : Controller
     {
-        private TAT004Entities db = new TAT004Entities();
+        private TAT001Entities db = new TAT001Entities();
 
         // GET: Det_Aprobs
         public ActionResult Index()
         {
             int pagina = 103; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -66,7 +66,7 @@ namespace TAT001.Controllers
             //return View(dET_APROB);
 
             int pagina = 103; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -99,7 +99,7 @@ namespace TAT001.Controllers
         public ActionResult Create()
         {
             int pagina = 103; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();

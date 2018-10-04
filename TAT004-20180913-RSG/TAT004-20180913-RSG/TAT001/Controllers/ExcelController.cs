@@ -21,7 +21,7 @@ namespace TAT001.Controllers
     [Authorize]
     public class ExcelController : Controller
     {
-        private TAT004Entities db = new TAT004Entities();
+        private TAT001Entities db = new TAT001Entities();
         // GET: Excel
         public ActionResult Index(int? miSop, int? miMas)
         {
@@ -903,7 +903,7 @@ namespace TAT001.Controllers
             List<string> li = new List<string>();
             foreach (DOCUMENTO doc in listD)
             {
-                TAT004Entities db1 = new TAT004Entities();
+                TAT001Entities db1 = new TAT001Entities();
                 if (doc.DOCUMENTOPs.Count() != 0 & doc.DOCUMENTOFs.Count() != 0)
                 {
                     decimal N_DOC = getSolID(doc.TSOL_ID);
@@ -1070,7 +1070,7 @@ namespace TAT001.Controllers
 
         public void updateRango(string TSOL_ID, decimal actual)
         {
-            TAT004Entities db2 = new TAT004Entities();
+            TAT001Entities db2 = new TAT001Entities();
             RANGO rango = getRango(TSOL_ID);
 
             if (rango.ACTUAL > rango.INICIO && rango.ACTUAL < rango.FIN)
@@ -1086,7 +1086,7 @@ namespace TAT001.Controllers
         public RANGO getRango(string TSOL_ID)
         {
             RANGO rango = new RANGO();
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
 
                 rango = (from r in db.RANGOes

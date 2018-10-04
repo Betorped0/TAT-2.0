@@ -17,7 +17,7 @@ namespace TAT001.Controllers
         public ActionResult Index(string ruta, decimal ids)
         {
             int pagina = 230; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -49,7 +49,7 @@ namespace TAT001.Controllers
         public ActionResult Details(string ruta)
         {
             int pagina = 230; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -79,7 +79,7 @@ namespace TAT001.Controllers
         public ActionResult Create(decimal id)
         {
             int pagina = 232; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -629,7 +629,7 @@ namespace TAT001.Controllers
             //B20180726 MGC 2018.07.26
             bool fact = false;
             DOCUMENTO d = new DOCUMENTO();
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 try
                 {
@@ -752,7 +752,7 @@ namespace TAT001.Controllers
             //TEXTOCARTAF f = new TEXTOCARTAF();//B20180720P MGC Guardar Carta
             string u = User.Identity.Name;
             //string recibeRuta = ""; //B20180720P MGC Guardar Carta
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
                 var cartas = db.CARTAs.Where(a => a.NUM_DOC.Equals(ca.NUM_DOC)).ToList();
@@ -770,7 +770,7 @@ namespace TAT001.Controllers
             }
             //bool aprob = false;//B20180720P MGC Guardar Carta
             //B20180720P MGC Guardar Carta
-            //using (TAT004Entities db = new TAT004Entities())
+            //using (TAT001Entities db = new TAT001Entities())
             //{
             //    DOCUMENTO d = db.DOCUMENTOes.Find(c.num_doc);
             //    aprob = (d.ESTATUS_WF.Equals("A"));
@@ -780,7 +780,7 @@ namespace TAT001.Controllers
             //    return RedirectToAction("Details", new { ruta = recibeRuta });
             //}
 
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 d = db.DOCUMENTOes.Find(v.num_doc);
                 //string u = User.Identity.Name; //B20180720P MGC Guardar Carta
@@ -1338,7 +1338,7 @@ namespace TAT001.Controllers
         //public ActionResult Create([Bind(Include = "num_doc, listaCuerpo, DOCUMENTOP")] CartaV v)
         public ActionResult Visualizar(CartaV v, string monto_enviar)
         {
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -1769,7 +1769,7 @@ namespace TAT001.Controllers
         public ActionResult Lista(decimal id, string swf)
         {
             int pagina = 230; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -1807,7 +1807,7 @@ namespace TAT001.Controllers
         {
             //int pagina = 231; //ID EN BASE DE DATOS
             int pagina = 232; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 //    string u = User.Identity.Name;
                 //    var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -1833,7 +1833,7 @@ namespace TAT001.Controllers
                 //    Session["spras"] = user.SPRAS_ID;
                 //}
                 //CARTA c = new CARTA();
-                //using (TAT004Entities db = new TAT004Entities())
+                //using (TAT001Entities db = new TAT001Entities())
                 //{
                 //    c = db.CARTAs.Where(a => a.NUM_DOC.Equals(id) & a.POS.Equals(pos)).First();
                 //}
@@ -2620,7 +2620,7 @@ namespace TAT001.Controllers
 
             //int pagina = 231; //ID EN BASE DE DATOS
             int pagina = 232; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
 
                 string u = User.Identity.Name;

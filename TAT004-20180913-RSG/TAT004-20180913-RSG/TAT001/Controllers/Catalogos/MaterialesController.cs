@@ -12,7 +12,7 @@ namespace TAT001.Controllers.Catalogos
 {
     public class MaterialesController : Controller
     {
-        private TAT004Entities db = new TAT004Entities();
+        private TAT001Entities db = new TAT001Entities();
 
         // GET: Materiales
         public ActionResult Index()

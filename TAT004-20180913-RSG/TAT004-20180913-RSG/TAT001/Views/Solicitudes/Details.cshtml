@@ -477,7 +477,7 @@
                                                         }
                                                     </tr>
                                                 </thead>
-                                                @using (TAT004Entities db = new TAT004Entities())
+                                                @using (TAT001Entities db = new TAT001Entities())
                                                 {
                                                     foreach (var item in Model.D.DOCUMENTOF)
                                                     {
@@ -1114,7 +1114,7 @@
                     <div class="col s12">
                         <br />
                         @*///////////////////////////////CAMBIOS LGPP INICIO//////////////////////////*@
-                        @using (TAT004Entities db = new TAT004Entities())
+                        @using (TAT001Entities db = new TAT001Entities())
                         {
                             <div class="row">
                                 <div class="col s12 m6 l6">
@@ -1209,7 +1209,7 @@
                                                             <td>@item.MATKL</td>
                                                         }
                                                         @{
-                                                            using (TAT001.Entities.TAT004Entities db = new TAT001.Entities.TAT004Entities())
+                                                            using (TAT001.Entities.TAT001Entities db = new TAT001.Entities.TAT001Entities())
                                                             {
                                                                 if (item.MATNR != "")
                                                                 {
@@ -1260,7 +1260,7 @@
                                                             <td></td>
                                                             <td>@mat.MATNR.TrimStart('0')</td>
                                                             @{
-                                                                using (TAT001.Entities.TAT004Entities db = new TAT001.Entities.TAT004Entities())
+                                                                using (TAT001.Entities.TAT001Entities db = new TAT001.Entities.TAT001Entities())
                                                                 {
                                                                     if (mat.MATNR != "")
                                                                     {
@@ -1698,7 +1698,7 @@
                             }
                             </script>
                         </div>
-                        @using (TAT004Entities db = new TAT004Entities())
+                        @using (TAT001Entities db = new TAT001Entities())
                         {
                             List<DOCUMENTO>
                                 inf = new List<DOCUMENTO>
