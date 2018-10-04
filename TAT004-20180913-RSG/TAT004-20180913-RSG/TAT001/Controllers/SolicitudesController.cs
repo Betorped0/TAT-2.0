@@ -1071,6 +1071,8 @@ namespace TAT001.Controllers
                     id_pais = db.PAIS.Where(pais => pais.LAND.Equals(d.PAIS_ID)).FirstOrDefault();//RSG 15.05.2018
                     d.DOCUMENTO_REF = rel;
                     relacionada_neg = d.TIPO_TECNICO;
+                    if (d.DOCUMENTOLs.Count > 0 & !(d.DOCUMENTOPs.First().MATNR != null | d.DOCUMENTOPs.First().MATNR != ""))
+                        relacionada_neg = "M";
                     ViewBag.TSOL_ANT = d.TSOL_ID;
                     ViewBag.LIGADA = d.LIGADA;//RSG 09.07.2018
                     try//RSG 09.07.2018
@@ -2647,7 +2649,44 @@ namespace TAT001.Controllers
                             }
                             db.SaveChanges();
                         }//Guardar registros de recurrencias  RSG 28.05.2018-------------------
+                    //if (dOCUMENTO.DOCUMENTOREC == null & dOCUMENTO.LIGADA == true)
+                    if (dOCUMENTO.LIGADA == true)
+                    {
 
+                        DOCUMENTOREC drec = new DOCUMENTOREC();
+                        drec.NUM_DOC = dOCUMENTO.NUM_DOC;
+                        drec.POS = 1;
+
+                        if (drec.MONTO_BASE == null) //RSG 31.05.2018-------------------
+                            drec.MONTO_BASE = 0;
+                        if (drec.PORC == null) //RSG 31.05.2018-------------------
+                            drec.PORC = 0;
+                        dOCUMENTO.TIPO_RECURRENTE = db.TSOLs.Where(x => x.ID.Equals(dOCUMENTO.TSOL_ID)).FirstOrDefault().TRECU;
+                        if (dOCUMENTO.TIPO_RECURRENTE == "1" & dOCUMENTO.LIGADA == true)
+                            dOCUMENTO.TIPO_RECURRENTE = "2";
+                        if (dOCUMENTO.TIPO_RECURRENTE != "1" & dOCUMENTO.OBJETIVOQ == true)
+                            dOCUMENTO.TIPO_RECURRENTE = "3";
+                        Calendario445 cal = new Calendario445();
+                        drec.FECHAF = cal.getUltimoDia(dOCUMENTO.FECHAF_VIG.Value.Year, cal.getPeriodo(dOCUMENTO.FECHAF_VIG.Value));
+                        drec.FECHAV = drec.FECHAF;
+
+                        drec.FECHAF = cal.getNextLunes((DateTime)drec.FECHAF);
+                        drec.EJERCICIO = drec.FECHAV.Value.Year;
+                        drec.PERIODO = cal.getPeriodoF(drec.FECHAV.Value);
+
+                        if (drec.PERIODO == 0) drec.PERIODO = 12;
+                        if (dOCUMENTO.DOCUMENTORAN != null)
+                            foreach (DOCUMENTORAN dran in dOCUMENTO.DOCUMENTORAN.Where(x => x.POS == drec.POS))
+                            {
+                                dran.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                drec.DOCUMENTORANs.Add(dran);
+                            }
+                        drec.PORC = dOCUMENTO.PORC_APOYO;
+
+                        dOCUMENTO.DOCUMENTORECs.Add(drec);
+
+                        db.SaveChanges();
+                    }
                     //Guardar los documentos cargados en la sección de soporte
                     var res = "";
                     string errorMessage = "";
@@ -5985,14 +6024,14 @@ namespace TAT001.Controllers
                         MATERIAL mat = material(doc.MATNR);
                         if (mat != null & ld.Where(x => x.MATNR.Equals(doc.MATNR)).Count() == 0)//Validar si el material existe
                         {
-                            //doc.MATKL = (string)dt.Rows[i][4]; //Categoría se toma de la bd
-                            ////CATEGORIAT cat = getCategoriaS(material: doc.MATNR); //Categoría
-                            MATERIALGPT cat = getCategoriaS(material: doc.MATNR); //Categoría//RSG 01.08.2018
+                            //MATERIALGPT cat = getCategoriaS(material: doc.MATNR); //Categoría//RSG 01.08.2018
+                            MATERIALGP cat = getCategoriaS(material: doc.MATNR); //Categoría//RSG 03.10.2018
                             try
                             {
-                                doc.MATKL = cat.TXT50.ToString();
-                                //doc.MATKL_ID = cat.CATEGORIA_ID.ToString();
-                                doc.MATKL_ID = cat.MATERIALGP_ID.ToString();//RSG 01.08.2018
+                                //doc.MATKL = cat.TXT50.ToString();
+                                //doc.MATKL_ID = cat.MATERIALGP_ID.ToString();//RSG 01.08.2018
+                                doc.MATKL = cat.DESCRIPCION;//RSG 03.10.2018
+                                doc.MATKL_ID = cat.ID;//RSG 03.10.2018
                             }
                             catch (Exception e)
                             {
@@ -6646,15 +6685,16 @@ namespace TAT001.Controllers
                 //LEJ 18.07.2018-----------------------------------------------------------
                 MATERIALGP vv = db.MATERIALGPs.Where(u => u.ID == cm.ID).FirstOrDefault();
                 cm.UNICA = vv.UNICA;
-                MATERIALGPT vt = vv.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(spras)).FirstOrDefault();
-                if (vt != null)
-                {
-                    cm.DESCRIPCION = vt.TXT50;
-                }
-                else
-                {
-                    cm.DESCRIPCION = vv.DESCRIPCION;
-                }
+                ////MATERIALGPT vt = vv.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(spras)).FirstOrDefault();
+                ////if (vt != null)
+                ////{
+                ////    cm.DESCRIPCION = vt.TXT50;
+                ////}
+                ////else
+                ////{
+                ////    cm.DESCRIPCION = vv.DESCRIPCION;
+                ////}
+                cm.DESCRIPCION = vv.DESCRIPCION;
                 lcatmat.Add(cm);
             }
 
@@ -6664,7 +6704,8 @@ namespace TAT001.Controllers
                 nnn.ID = "000";
                 try//B20180625 MGC 2018.07.02
                 {
-                    nnn.DESCRIPCION = db.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(spras) & a.MATERIALGP_ID.Equals(nnn.ID)).FirstOrDefault().TXT50;
+                    //nnn.DESCRIPCION = db.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(spras) & a.MATERIALGP_ID.Equals(nnn.ID)).FirstOrDefault().TXT50;
+                    nnn.DESCRIPCION = db.MATERIALGPs.Where(a => a.ID.Equals(nnn.ID)).FirstOrDefault().DESCRIPCION;//RSG 03.10.2018
                 }
                 catch (Exception)//B20180625 MGC 2018.07.02
                 {
@@ -7148,7 +7189,8 @@ namespace TAT001.Controllers
                     //kunnr = kunnr.TrimStart('0').Trim();
                     var pres = db.PRESUPSAPPs.Where(a => a.VKORG.Equals(vkorg) & a.SPART.Equals(spart) & a.KUNNR == kunnr & (a.GRSLS != null | a.NETLB != null)).ToList();
                     var spras = Session["spras"].ToString();
-                    var cat = db.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(spras)).ToList();
+                    //var cat = db.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(spras)).ToList();//RSG 03.10.2018
+                    var cat = db.MATERIALGPs.Where(a => a.ACTIVO.Equals(true)).ToList();//RSG 03.10.2018
                     //foreach (var c in cie)
                     //{
                     //    c.KUNNR = c.KUNNR.TrimStart('0').Trim();
@@ -7163,7 +7205,8 @@ namespace TAT001.Controllers
                               join m in matt
                               on ps.MATNR equals m.ID
                               join mk in cat
-                              on m.MATERIALGP_ID equals mk.MATERIALGP_ID
+                              //on m.MATERIALGP_ID equals mk.MATERIALGP_ID//RSG 03.10.2018
+                              on m.MATERIALGP_ID equals mk.ID//RSG 03.10.2018
                               where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) &&
                               (ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART
                               ) && ps.BUKRS == soc_id
@@ -7174,7 +7217,8 @@ namespace TAT001.Controllers
                                   MATNR = ps.MATNR,
                                   //mk.TXT50
                                   VAL = Convert.ToDecimal(ps.GRSLS),
-                                  EXCLUIR = mk.MATERIALGP.EXCLUIR // RSG 09.07.2018 ID 156
+                                  //EXCLUIR = mk.MATERIALGP.EXCLUIR // RSG 09.07.2018 ID 156
+                                  EXCLUIR = mk.EXCLUIR ////RSG 03.10.2018
                               }).ToList();
                     }
                     else
@@ -7185,7 +7229,8 @@ namespace TAT001.Controllers
                               join m in matt
                               on ps.MATNR equals m.ID
                               join mk in cat
-                              on m.MATERIALGP_ID equals mk.MATERIALGP_ID
+                              //on m.MATERIALGP_ID equals mk.MATERIALGP_ID
+                              on m.MATERIALGP_ID equals mk.ID
                               where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) &&
                               (ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART
                               ) && ps.BUKRS == soc_id
@@ -7196,7 +7241,8 @@ namespace TAT001.Controllers
                                   MATNR = ps.MATNR,
                                   //mk.TXT50
                                   VAL = Convert.ToDecimal(ps.NETLB),
-                                  EXCLUIR = mk.MATERIALGP.EXCLUIR // RSG 09.07.2018 ID 156
+                                  //EXCLUIR = mk.MATERIALGP.EXCLUIR // RSG 09.07.2018 ID 156
+                                  EXCLUIR = mk.EXCLUIR // RSG 09.07.2018 ID 156
                               }).ToList();
                     }
                 }
@@ -8106,20 +8152,30 @@ namespace TAT001.Controllers
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
 
-                cat = db.MATERIALGPs.Where(c => c.ID == m.MATERIALGP_ID && c.ACTIVO == true)
-                            .Join(
-                            db.MATERIALGPTs.Where(ct => ct.SPRAS_ID == user.SPRAS_ID),
-                            c => c.ID,
-                            ct => ct.MATERIALGP_ID,
-                            (c, ct) => new
-                            {
-                                SPRAS_ID = ct.SPRAS_ID.ToString(),
-                                CATEGORIA_ID = ct.MATERIALGP_ID.ToString(),
-                                TXT50 = ct.TXT50.ToString(),
-                                UNICA = c.UNICA
+                //cat = db.MATERIALGPs.Where(c => c.ID == m.MATERIALGP_ID && c.ACTIVO == true)
+                //            .Join(
+                //            db.MATERIALGPTs.Where(ct => ct.SPRAS_ID == user.SPRAS_ID),
+                //            c => c.ID,
+                //            ct => ct.MATERIALGP_ID,
+                //            (c, ct) => new
+                //            {
+                //                SPRAS_ID = ct.SPRAS_ID.ToString(),
+                //                CATEGORIA_ID = ct.MATERIALGP_ID.ToString(),
+                //                TXT50 = ct.TXT50.ToString(),
+                //                UNICA = c.UNICA
 
-                            })
-                        .FirstOrDefault();
+                //            })
+                //        .FirstOrDefault();//RSG 03.10.2018
+                cat = (from c in db.MATERIALGPs.Where(c => c.ID == m.MATERIALGP_ID && c.ACTIVO == true)
+                       select new
+                       {
+                           SPRAS_ID = "EN",
+                           CATEGORIA_ID = c.ID.ToString(),
+                           TXT50 = c.DESCRIPCION.ToString(),
+                           UNICA = c.UNICA
+
+                       })
+                        .FirstOrDefault();//RSG 03.10.2018
             }
 
             //var catv = cat;
@@ -8143,18 +8199,26 @@ namespace TAT001.Controllers
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
 
-                cat = db.MATERIALGPs.Where(c => c.ID == cate && c.ACTIVO == true) //Cambiar por materialgp //B20180625 MGC 2018.06.28
-                            .Join(
-                            db.MATERIALGPTs.Where(ct => ct.SPRAS_ID == user.SPRAS_ID),//Cambiar por materialgpt //B20180625 MGC 2018.06.28
-                            c => c.ID,
-                            ct => ct.MATERIALGP_ID,//B20180625 MGC 2018.06.28
-                            (c, ct) => new
-                            {
-                                SPRAS_ID = ct.SPRAS_ID.ToString(),
-                                CATEGORIA_ID = ct.MATERIALGP_ID.ToString(),//B20180625 MGC 2018.06.28
-                                TXT50 = ct.TXT50.ToString()
-                            })
-                        .FirstOrDefault();
+                //cat = db.MATERIALGPs.Where(c => c.ID == cate && c.ACTIVO == true) //Cambiar por materialgp //B20180625 MGC 2018.06.28
+                //            .Join(
+                //            db.MATERIALGPTs.Where(ct => ct.SPRAS_ID == user.SPRAS_ID),//Cambiar por materialgpt //B20180625 MGC 2018.06.28
+                //            c => c.ID,
+                //            ct => ct.MATERIALGP_ID,//B20180625 MGC 2018.06.28
+                //            (c, ct) => new
+                //            {
+                //                SPRAS_ID = ct.SPRAS_ID.ToString(),
+                //                CATEGORIA_ID = ct.MATERIALGP_ID.ToString(),//B20180625 MGC 2018.06.28
+                //                TXT50 = ct.TXT50.ToString()
+                //            })
+                //        .FirstOrDefault();//RSG 03.10.2018
+                cat = (from c in db.MATERIALGPs.Where(c => c.ID == cate && c.ACTIVO == true) //Cambiar por materialgp //B20180625 MGC 2018.06.28
+                       select new
+                       {
+                           SPRAS_ID = "EN",
+                           CATEGORIA_ID = c.ID.ToString(),//B20180625 MGC 2018.06.28
+                           TXT50 = c.DESCRIPCION.ToString()
+                       })
+                        .FirstOrDefault();//RSG 03.10.2018
             }
             catch (Exception)
             {
@@ -8168,7 +8232,8 @@ namespace TAT001.Controllers
 
         [HttpPost]
         //public CATEGORIAT getCategoriaS(string material)
-        public MATERIALGPT getCategoriaS(string material)
+        //public MATERIALGPT getCategoriaS(string material)
+        public MATERIALGP getCategoriaS(string material)
         {
             if (material == null)
                 material = "";
@@ -8177,7 +8242,8 @@ namespace TAT001.Controllers
 
             MATERIAL m = db.MATERIALs.Where(mat => mat.ID.Equals(material)).FirstOrDefault();
             //CATEGORIAT cat = new CATEGORIAT();
-            MATERIALGPT cat = new MATERIALGPT();//RSG 01.08.2018
+            //MATERIALGPT cat = new MATERIALGPT();//RSG 01.08.2018
+            MATERIALGP cat = new MATERIALGP();//RSG 03.10.2018
 
             //if (m != null && m.MATKL_ID != "")
             if (m != null && m.MATERIALGP_ID != "")//RSG 01.08.2018
@@ -8187,12 +8253,12 @@ namespace TAT001.Controllers
 
                 //cat = db.CATEGORIAs.Where(c => c.ID == m.MATKL_ID && c.ACTIVO == true)
                 cat = db.MATERIALGPs.Where(c => c.ID == m.MATERIALGP_ID && c.ACTIVO == true)//RSG 01.08.2018
-                            .Join(
-                            db.MATERIALGPTs.Where(ct => ct.SPRAS_ID == user.SPRAS_ID),
-                            c => c.ID,
-                            //ct => ct.CATEGORIA_ID,
-                            ct => ct.MATERIALGP_ID,//RSG 01.08.2018
-                            (c, ct) => ct)
+                                                                                            //.Join(
+                                                                                            //db.MATERIALGPTs.Where(ct => ct.SPRAS_ID == user.SPRAS_ID),
+                                                                                            //c => c.ID,
+                                                                                            ////ct => ct.CATEGORIA_ID,
+                                                                                            //ct => ct.MATERIALGP_ID,//RSG 01.08.2018
+                                                                                            //(c, ct) => ct)
                         .FirstOrDefault();
             }
             return cat;

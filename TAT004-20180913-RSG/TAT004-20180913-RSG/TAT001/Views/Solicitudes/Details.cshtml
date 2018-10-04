@@ -20,8 +20,8 @@
     <input id="miles" name="miles" type="hidden" value="@ViewBag.miles">//LEJ 09.07.18
     <input id="dec" name="dec" type="hidden" value="@ViewBag.dec">//LEJ 09.07.18
     <div class="row" style="margin-bottom:0">
-        <div class="col s12 m5 l5">
-            <div class="row" style="margin-bottom:0">
+        <div class="col s12 m4">
+           
                 <div class="input-field col s4">
                     @Html.EditorFor(model => model.D.USUARIOC_ID, new { htmlAttributes = new { @disabled = "disabled" } })
                     @Html.LabelFor(model => model.D.USUARIOC_ID, new { @id = "lbl_userid" })
@@ -38,16 +38,18 @@
                     @*<input type="text" id="txt_user" value="@ViewBag.usuario.BACKUP_ID" disabled="disabled" />
                         <label for="txt_user">Backup</label>*@
                 </div>
-            </div>
+            
         </div>
-        <div class="col s12 m2 l2">
-            <div class="input-field col s6">
+        <div class="col s12 m3 8">
+            @*---DRS 3.10.2018--- *@
+            <div class="input-field col s7">
                 @*<input type="text" id="txt_user" value="PRGA" disabled="disabled" />
-                    <label for="txt_user">BU</label>*@
+        <label for="txt_user">BU</label>*@       
                 @Html.EditorFor(model => model.D.USUARIO.BUNIT, new { htmlAttributes = new { @disabled = "disabled" } })
                 @Html.LabelFor(model => model.D.USUARIO.BUNIT, "Sociedad", new { @class = "lbl_bu" })
             </div>
-            <div class="input-field col s6">
+            @*---DRS 3.10.2018--- *@
+            <div class="input-field col s4">
                 @if (Model.D.ESTATUS == "N")
                 {
                     <input type="text" id="txt_status" value="Nuevo" disabled="disabled" />
@@ -55,7 +57,7 @@
                 }
             </div>
         </div>
-        <div class="col s12 m5 l5">
+        <div class="col s12 m5">
             <div class="row right">
                 @if (Model.D.ESTATUS_C != "C")
                 {
@@ -164,7 +166,7 @@
                             }
                         }
                     }
-                    else if ((Model.D.ESTATUS.Equals("A")| Model.D.ESTATUS.Equals("R")) && (Model.D.TSOL.PADRE) /*&& Model.D.DOCUMENTORECs.Count < 1 && Model.D.DOCUMENTOLs.Count < 1*/)//RSG 20181002
+                    else if ((Model.D.ESTATUS.Equals("A") | Model.D.ESTATUS.Equals("R")) && (Model.D.TSOL.PADRE) /*&& Model.D.DOCUMENTORECs.Count < 1 && Model.D.DOCUMENTOLs.Count < 1*/)//RSG 20181002
                     {
                         if (Model.D.USUARIOC_ID == ViewBag.usuario.ID & Model.D.DOCUMENTO_SAP != null)
                         {
@@ -749,10 +751,18 @@
                                                             <td>@iteem.FECHAV.Value.ToShortDateString()</td>
                                                             @if (Model.D.LIGADA == true)
                                                             {
-                                                                foreach (TAT001.Entities.DOCUMENTORAN ran in iteem.DOCUMENTORANs.Where(x => x.LIN == 1))//RSG 20.09.2018
+                                                                if (iteem.DOCUMENTORANs.Count > 0)
                                                                 {
-                                                                    <td class="porcentaje">@ran.PORCENTAJE</td>
-                                                                    <td class="precio">@ran.OBJETIVOI</td>
+                                                                    foreach (TAT001.Entities.DOCUMENTORAN ran in iteem.DOCUMENTORANs.Where(x => x.LIN == 1))//RSG 20.09.2018
+                                                                    {
+                                                                        <td class="porcentaje">@ran.PORCENTAJE</td>
+                                                                        <td class="precio">@ran.OBJETIVOI</td>
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    <td class="porcentaje">@iteem.PORC</td>
+                                                                    <td class="precio">@iteem.MONTO_BASE</td>
                                                                 }
                                                             }
                                                             else
@@ -1077,23 +1087,26 @@
                                             <label for="txt_porc">Porcentaje apoyo</label>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="input-field col s6">
-                                            @*<input type="text" value="0.00" class="precio" disabled="disabled" id="txt_venta" onload="calcValor()" />*@
-                                            <input type="text" value="@Model.D.DOCUMENTOLs.FirstOrDefault().MONTO_VENTA" class="precio" disabled="disabled" id="txt_venta" />
-                                            <label for="txt_porc">Venta del mes</label>
+                                    @if (Model.D.DOCUMENTOLs.Count > 0)
+                                    {
+                                        <div class="row">
+                                            <div class="input-field col s6">
+                                                @*<input type="text" value="0.00" class="precio" disabled="disabled" id="txt_venta" onload="calcValor()" />*@
+                                                <input type="text" value="@Model.D.DOCUMENTOLs.FirstOrDefault().MONTO_VENTA" class="precio" disabled="disabled" id="txt_venta" />
+                                                <label for="txt_porc">Venta del mes</label>
+                                            </div>
+                                            <div class="input-field col s6">
+                                                <input type="text" value="@Model.D.MONTO_DOC_MD" class="precio" disabled="disabled" id="MONTO_DOC_MD" />
+                                                <label for="txt_porc">Monto base</label>
+                                            </div>
+                                            <script>
+                                                //function calcValor() {
+                                                ////var venta = ((document.getElementById("MONTO_DOC_MD").value) / (document.getElementById("PORC_APOYO").value)) * 100;
+                                                ////document.getElementById("txt_venta").value = venta;
+                                                //}
+                                            </script>
                                         </div>
-                                        <div class="input-field col s6">
-                                            <input type="text" value="@Model.D.MONTO_DOC_MD" class="precio" disabled="disabled" id="MONTO_DOC_MD" />
-                                            <label for="txt_porc">Monto base</label>
-                                        </div>
-                                        <script>
-                                            //function calcValor() {
-                                            ////var venta = ((document.getElementById("MONTO_DOC_MD").value) / (document.getElementById("PORC_APOYO").value)) * 100;
-                                            ////document.getElementById("txt_venta").value = venta;
-                                            //}
-                                        </script>
-                                    </div>
+                                    }
                                 </div>
                             </div>
                         }
@@ -1802,107 +1815,117 @@
                             </div>
                         }
                         @*///////////////////////////////L.G.P.P MODIFICACIONES INICIO*@
-                        <div class="card-panel">
-                            <h5><span id="head_analisispre">Análisis Presupuesto</span><p style="font-size:15px"><span id="load_carga">Última fecha de carga</span> @ViewBag.ultMod</p></h5>
-                            <div class="row" style="margin-bottom:0">
-                                <ul class="collection">
-                                    <li class="collection-item">
-                                        <div class="row" style="margin-bottom:0;">
-                                            <div class="col s4">
-                                                Presupuesto canal
-                                            </div>
-                                            <div class="col s5">
-                                                <b id="p_vtweg">
-                                                    aaaa
-                                                </b>
-                                            </div>
-                                            <div class="col s3 right-align">
-                                                <b id="p_canal">
-                                                    1111
-                                                </b>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="collection-item">
-                                        <div class="row" style="margin-bottom:0;">
-                                            <div class="col s4">
-                                                Presupuesto cliente
-                                            </div>
-                                            <div class="col s5">
-                                                <b id="p_kunnr">
-                                                </b>
-                                            </div>
-                                            <div class="col s3 right-align">
-                                                <b id="p_banner">
-                                                </b>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="row">
-                                <ul class="collection">
-                                    <li class="collection-item">
-                                        <div class="row" style="margin-bottom:0;">
-                                            <div class="col s6">
-                                                Registrado en SAP
-                                            </div>
-                                            <div class="col s3 right-align">
-                                                <div id="pc_c">
+                            <div class="card-panel">
+                                @* ----DRS 3.10.2018--- *@
+                                <h5>
+                                    <label id="head_analisispre">Análisis Presupuesto</label>
+                                </h5>
+                                <p style="font-size:15px"><span id="load_carga">Última fecha de carga</span> @ViewBag.ultMod</p>
+                                <div class="row" style="margin-bottom:0">
+                                    <ul class="collection">
+                                        <li class="collection-item">
+                                            <div class="row" style="margin-bottom:0;">
+                                                <div class="col s4">
+                                                    Presupuesto canal
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="collection-item">
-                                        <div class="row" style="margin-bottom:0;">
-                                            <div class="col s6">
-                                                Por registrar en SAP
-                                            </div>
-                                            <div class="col s3 right-align">
-                                                <div id="pc_a">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="collection-item">
-                                        <div class="row" style="margin-bottom:0;">
-                                            <div class="col s6">
-                                                En proceso TAT
-                                            </div>
-                                            <div class="col s3 right-align">
-                                                <u id="pc_p">
-                                                </u>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="collection-item">
-                                        <div class="row" style="margin-bottom:0;">
-                                            <div class="col s6">
-                                                Consumido
-                                            </div>
-                                            <div class="col s6 right-align">
-                                                <u>
-                                                    <b id="pc_t">
+                                                <div class="col s5">
+                                                    @* ----DRS 3.10.2018--- *@
+                                                    <b id="p_vtweg" style="font-size:11px">
+                                                        aaaa
                                                     </b>
-                                                </u>
+                                                </div>
+                                                <div class="col s3 right-align">
+                                                    @* ----DRS 3.10.2018--- *@
+                                                    <b id="p_canal" style="font-size:11px">
+                                                        1111
+                                                    </b>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </li>
-                                    <li class="collection-item">
-                                        <div class="row" style="margin-bottom:0;">
-                                            <div class="col s6">
-                                                Presupuesto disponible
+                                        </li>
+                                        <li class="collection-item">
+                                            <div class="row" style="margin-bottom:0;">
+                                                <div class="col s4">
+                                                    Presupuesto cliente
+                                                </div>
+                                                <div class="col s5">
+                                                    @* ----DRS 3.10.2018--- *@
+                                                    <b id="p_kunnr" style="font-size:10px">
+                                                    </b>
+                                                </div>
+                                                <div class="col s3 right-align">
+                                                    @* ----DRS 3.10.2018--- *@
+                                                    <b id="p_banner" style="font-size:11px">
+                                                    </b>
+                                                </div>
                                             </div>
-                                            <div class="col s6 right-align">
-                                                <b id="consu">
-                                                </b>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="row">
+                                    <ul class="collection">
+                                        <li class="collection-item">
+                                            <div class="row" style="margin-bottom:0;">
+                                                <div class="col s6">
+                                                    Registrado en SAP
+                                                </div>
+                                                <div class="col s3 right-align">
+                                                    <div id="pc_c">
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                                @*</ul>*@
+                                        </li>
+                                        <li class="collection-item">
+                                            <div class="row" style="margin-bottom:0;">
+                                                <div class="col s6">
+                                                    Por registrar en SAP
+                                                </div>
+                                                <div class="col s3 right-align">
+                                                    <div id="pc_a">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="collection-item">
+                                            <div class="row" style="margin-bottom:0;">
+                                                <div class="col s6">
+                                                    En proceso TAT
+                                                </div>
+                                                <div class="col s3 right-align">
+                                                    <u id="pc_p">
+                                                    </u>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="collection-item">
+                                            <div class="row" style="margin-bottom:0;">
+                                                <div class="col s6">
+                                                    Consumido
+                                                </div>
+                                                <div class="col s6 right-align">
+                                                    <u>
+                                                        @* ----DRS 3.10.2018--- *@
+                                                        <b id="pc_t" style="font-size:11px">
+                                                        </b>
+                                                    </u>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="collection-item">
+                                            <div class="row" style="margin-bottom:0;">
+                                                <div class="col s6">
+                                                    Presupuesto disponible
+                                                </div>
+                                                <div class="col s6 right-align">
+                                                    @* ----DRS 3.10.2018--- *@
+                                                    <b id="consu" style="font-size:11px">
+                                                    </b>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    @*</ul>*@
+                                </div>
                             </div>
-                        </div>
                         @*///////////////////////////////L.G.P.P MODIFICACIONES FIN*@
                     </div>
                     @if (Model.D.CONCEPTO_ID != null)
