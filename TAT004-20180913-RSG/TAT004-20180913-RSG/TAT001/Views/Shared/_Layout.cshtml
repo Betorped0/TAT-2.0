@@ -361,13 +361,13 @@
             <script>
                 try {
                     var elem = document.getElementById("@t.CAMPO_ID");
-                    if (elem.nodeName != 'INPUT' & elem.nodeName != 'SELECT')
+                    if (elem.nodeName != 'INPUT' & elem.nodeName != 'SELECT' & elem.nodeName != 'TABLE' & elem.nodeName != 'TEXTAREA')
                     elem.innerHTML = "@t.TEXTOS";
                 } catch (e) {
                     try {
                         var divs = document.getElementsByClassName("@t.CAMPO_ID");
                         [].slice.call(divs).forEach(function (div) {
-                            if (div.nodeName != 'INPUT' & div.nodeName != 'SELECT')
+                            if (div.nodeName != 'INPUT' & div.nodeName != 'SELECT' & div.nodeName != 'TABLE' & div.nodeName != 'TEXTAREA')
                             div.innerHTML = "@t.TEXTOS";
                         });
                     }
