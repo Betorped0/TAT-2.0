@@ -164,7 +164,7 @@
                             }
                         }
                     }
-                    else if ((Model.D.ESTATUS.Equals("A")| Model.D.ESTATUS.Equals("R")) && (Model.D.TSOL.PADRE) /*&& Model.D.DOCUMENTORECs.Count < 1 && Model.D.DOCUMENTOLs.Count < 1*/)//RSG 20181002
+                    else if ((Model.D.ESTATUS.Equals("A") | Model.D.ESTATUS.Equals("R")) && (Model.D.TSOL.PADRE) /*&& Model.D.DOCUMENTORECs.Count < 1 && Model.D.DOCUMENTOLs.Count < 1*/)//RSG 20181002
                     {
                         if (Model.D.USUARIOC_ID == ViewBag.usuario.ID & Model.D.DOCUMENTO_SAP != null)
                         {
@@ -749,10 +749,18 @@
                                                             <td>@iteem.FECHAV.Value.ToShortDateString()</td>
                                                             @if (Model.D.LIGADA == true)
                                                             {
-                                                                foreach (TAT001.Entities.DOCUMENTORAN ran in iteem.DOCUMENTORANs.Where(x => x.LIN == 1))//RSG 20.09.2018
+                                                                if (iteem.DOCUMENTORANs.Count > 0)
                                                                 {
-                                                                    <td class="porcentaje">@ran.PORCENTAJE</td>
-                                                                    <td class="precio">@ran.OBJETIVOI</td>
+                                                                    foreach (TAT001.Entities.DOCUMENTORAN ran in iteem.DOCUMENTORANs.Where(x => x.LIN == 1))//RSG 20.09.2018
+                                                                    {
+                                                                        <td class="porcentaje">@ran.PORCENTAJE</td>
+                                                                        <td class="precio">@ran.OBJETIVOI</td>
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    <td class="porcentaje">@iteem.PORC</td>
+                                                                    <td class="precio">@iteem.MONTO_BASE</td>
                                                                 }
                                                             }
                                                             else
@@ -1077,23 +1085,26 @@
                                             <label for="txt_porc">Porcentaje apoyo</label>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="input-field col s6">
-                                            @*<input type="text" value="0.00" class="precio" disabled="disabled" id="txt_venta" onload="calcValor()" />*@
-                                            <input type="text" value="@Model.D.DOCUMENTOLs.FirstOrDefault().MONTO_VENTA" class="precio" disabled="disabled" id="txt_venta" />
-                                            <label for="txt_porc">Venta del mes</label>
+                                    @if (Model.D.DOCUMENTOLs.Count > 0)
+                                    {
+                                        <div class="row">
+                                            <div class="input-field col s6">
+                                                @*<input type="text" value="0.00" class="precio" disabled="disabled" id="txt_venta" onload="calcValor()" />*@
+                                                <input type="text" value="@Model.D.DOCUMENTOLs.FirstOrDefault().MONTO_VENTA" class="precio" disabled="disabled" id="txt_venta" />
+                                                <label for="txt_porc">Venta del mes</label>
+                                            </div>
+                                            <div class="input-field col s6">
+                                                <input type="text" value="@Model.D.MONTO_DOC_MD" class="precio" disabled="disabled" id="MONTO_DOC_MD" />
+                                                <label for="txt_porc">Monto base</label>
+                                            </div>
+                                            <script>
+                                                //function calcValor() {
+                                                ////var venta = ((document.getElementById("MONTO_DOC_MD").value) / (document.getElementById("PORC_APOYO").value)) * 100;
+                                                ////document.getElementById("txt_venta").value = venta;
+                                                //}
+                                            </script>
                                         </div>
-                                        <div class="input-field col s6">
-                                            <input type="text" value="@Model.D.MONTO_DOC_MD" class="precio" disabled="disabled" id="MONTO_DOC_MD" />
-                                            <label for="txt_porc">Monto base</label>
-                                        </div>
-                                        <script>
-                                            //function calcValor() {
-                                            ////var venta = ((document.getElementById("MONTO_DOC_MD").value) / (document.getElementById("PORC_APOYO").value)) * 100;
-                                            ////document.getElementById("txt_venta").value = venta;
-                                            //}
-                                        </script>
-                                    </div>
+                                    }
                                 </div>
                             </div>
                         }

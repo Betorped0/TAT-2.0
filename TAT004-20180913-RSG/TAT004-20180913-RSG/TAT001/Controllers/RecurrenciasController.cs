@@ -3400,7 +3400,7 @@ namespace TAT001.Controllers
 
 
         [HttpPost]
-        public ActionResult Backorder([Bind(Include ="NUM_DOC")] DOCUMENTO D, string BACKORDER)
+        public ActionResult Backorder([Bind(Include ="NUM_DOC,LIGADA")] DOCUMENTO D, string BACKORDER)
         {
             DOCUMENTOL dl = db.DOCUMENTOLs.Where(x => x.NUM_DOC.Equals(D.NUM_DOC)).OrderByDescending(x => x.POS).FirstOrDefault();
             FormatosC fc = new FormatosC();
@@ -3408,6 +3408,41 @@ namespace TAT001.Controllers
             dl.BACKORDER = decimal.Parse(BACKORDER);
             db.Entry(dl).State = EntityState.Modified;
             db.SaveChanges();
+
+            if (D.LIGADA == true)
+            {
+                //dOCUMENTO.MONTO_DOC_MD = 0;
+                //foreach (CategoriaMaterial catm in listcatm)
+                //{
+                //    foreach (DOCUMENTOM_MOD mats in catm.MATERIALES)
+                //        dOCUMENTO.MONTO_DOC_MD += mats.VAL;
+                //}
+                D.MONTO_DOC_MD = dl.MONTO_VENTA + dl.BACKORDER;
+                DOCUMENTOREC drecs = db.DOCUMENTORECs.Where(a => a.DOC_REF == D.NUM_DOC).FirstOrDefault();
+                DOCUMENTO dOCpADRE = db.DOCUMENTOes.Where(x => x.NUM_DOC == drecs.NUM_DOC).FirstOrDefault();
+                foreach (DOCUMENTORAN dran in dOCpADRE.DOCUMENTORECs.Where(x => x.POS == drecs.POS).FirstOrDefault().DOCUMENTORANs)
+                {
+                    if (D.MONTO_DOC_MD > dran.OBJETIVOI)
+                    {
+                        D.MONTO_DOC_MD = D.MONTO_DOC_MD * dran.PORCENTAJE / 100;
+                        D.PORC_APOYO = dran.PORCENTAJE;
+                        break;
+                    }
+                }
+                DOCUMENTO doc = db.DOCUMENTOes.Find(D.NUM_DOC);
+                doc.MONTO_DOC_MD = D.MONTO_DOC_MD;
+                doc.PORC_APOYO = D.PORC_APOYO;
+                foreach(DOCUMENTOP dp in doc.DOCUMENTOPs)
+                {
+                    if (dp.APOYO_EST > 0)
+                        dp.APOYO_EST = D.MONTO_DOC_MD * dp.PORC_APOYO / 100;
+                    if (dp.APOYO_REAL > 0)
+                        dp.APOYO_REAL = D.MONTO_DOC_MD * dp.PORC_APOYO / 100;
+                }
+
+                db.Entry(doc).State = EntityState.Modified;
+                db.SaveChanges();
+            }
 
             return RedirectToAction("Backorder", new { id_d = D.NUM_DOC});
         }
