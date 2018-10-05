@@ -100,7 +100,7 @@
         </div>
         <p class="text-center"><label id="lbl_condicion_regla"></label></p>
         <hr>
-        @if (Model.alerta.SOCIEDAD_ID != null && Model.alerta.TSOL_ID != null)
+        @if (Model.alerta.SOCIEDAD_ID != null && Model.alerta.TSOL_ID != null && Model.alerta.ID!="concepto1")
         {
 
             <div class="row">
@@ -239,6 +239,9 @@
             if (idAndOr != '') {
             $('#alertaCondiciones_1__CONDICION_ID').val('@Model.alertaCondiciones[1].CONDICION_ID');
             $('#alertaCondiciones_1__VALOR_COMP').val('@Model.alertaCondiciones[1].VALOR_COMP');
+            $('#alertaCondiciones_0__ANDOR').val('(');
+            $('#alertaCondiciones_1__CONDICION_ID').prop('disabled', false);
+            $('#alertaCondiciones_1__VALOR_COMP').prop('disabled', false);
             }
         </script>
    }

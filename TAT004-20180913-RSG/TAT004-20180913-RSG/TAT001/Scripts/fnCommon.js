@@ -4,7 +4,7 @@
         switch (type) {
             case 'select':
                 var options = {};
-                var selects = document.querySelectorAll('select');
+                var selects = document.querySelectorAll(component);
                 M.FormSelect.init(selects, options);
                 break;
             case 'datepicker':
@@ -23,7 +23,7 @@
                         weekdaysAbbrev: ['D', 'L', 'M', 'X', 'J', 'V', 'S']
                     };
                 }
-                var datepickers = document.querySelectorAll('.datepicker');
+                var datepickers = document.querySelectorAll(component);
                 M.Datepicker.init(datepickers, options);
                 break;
             case 'timepicker':
@@ -37,13 +37,18 @@
                 break;
             case 'tabs':
                 var options = {};
-                var tabs = document.querySelectorAll('.tabs');
+                var tabs = document.querySelectorAll(component);
                 M.Tabs.init(tabs, options);
                 break;
             case 'collapsible':
                 var options = {};
-                var collapsibles = document.querySelectorAll('.collapsible');
+                var collapsibles = document.querySelectorAll(component);
                 M.Collapsible.init(collapsibles, options);
+                break;
+            case 'modal':
+                var options = {};
+                var modals = document.querySelectorAll(component);
+                M.Modal.init(modals, options);
                 break;
             default:
                 break;
@@ -165,11 +170,9 @@
                     selectItems.forEach(function (selectItem) {
                         options += '<option value=' + selectItem.Value + '>' + selectItem.Text + '</option>';
                     });
-                    if (selectItems.length > 0) {
-                        $('#' + idSelectToFill).html(options);
-                        fnCommon.materializeInit('select', 'select');
-                        fnCommon.selectRequired();
-                    }
+                    $('#' + idSelectToFill).html(options);
+                    fnCommon.materializeInit('select', 'select');
+                    fnCommon.selectRequired();
                 }
             });
         });

@@ -131,14 +131,14 @@
                     <div class="col s2">
                         <div class="form-group">
                             <div class="col-md-10">
-                                @Html.DropDownListFor(model => model.alertaCondiciones[1].CONDICION_ID, Model.condCampos, "", new { @disabled = true })
+                                @Html.DropDownListFor(model => model.alertaCondiciones[1].CONDICION_ID, Model.condCampos1, "", new { @disabled = true })
                             </div>
                         </div>
                     </div>
                     <div class="col s2">
                         <div class="form-group">
                             <div class="col-md-10">
-                                @Html.DropDownListFor(model => model.alertaCondiciones[1].VALOR_COMP, Model.condValores, "", new { @disabled = true })
+                                @Html.DropDownListFor(model => model.alertaCondiciones[1].VALOR_COMP, Model.condValores1, "", new { @disabled = true })
                                 @Html.HiddenFor(model => model.alertaCondiciones[1].ORAND)
                                 @Html.HiddenFor(model => model.alertaCondiciones[1].POS)
                             </div>
@@ -183,6 +183,23 @@
     <a id="btn_return" href="@Url.Action("Index")"></a>
 </div>
 <script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
+@if (Model.alerta.SOCIEDAD_ID != null && Model.alerta.TSOL_ID != null)
+{
+    <script>
+             // Asignar valor a combos de list
+            var idAndOr = "@Model.alertaCondiciones[1].ANDOR";
+        $('#alertaCondiciones_0__CONDICION_ID').val('@Model.alertaCondiciones[0].CONDICION_ID');
+        $('#alertaCondiciones_0__VALOR_COMP').val('@Model.alertaCondiciones[0].VALOR_COMP');
+            $('#alertaCondiciones_1__ANDOR[value="' + idAndOr + '"]').prop("checked", true);
+            if (idAndOr != '') {
+            $('#alertaCondiciones_1__CONDICION_ID').val('@Model.alertaCondiciones[1].CONDICION_ID');
+            $('#alertaCondiciones_1__VALOR_COMP').val('@Model.alertaCondiciones[1].VALOR_COMP');
+            $('#alertaCondiciones_0__ANDOR').val('(');
+            $('#alertaCondiciones_1__CONDICION_ID').prop('disabled', false);
+            $('#alertaCondiciones_1__VALOR_COMP').prop('disabled', false);
+            }
+    </script>
+}
 <script>
         //---- Inicializador de componentes Materialize----
         fnCommon.materializeInit('select', 'select');
@@ -199,7 +216,7 @@
             if (andor === "&" || andor === "|") {
                 $('#alertaCondiciones_1__CONDICION_ID').prop('disabled', false);
                 $('#alertaCondiciones_1__VALOR_COMP').prop('disabled', false);
-                $('#alertaCondiciones_0__VALOR_ANDOR').val('(');
+                $('#alertaCondiciones_0__ANDOR').val('(');
             } else {
                 $('#alertaCondiciones_1__CONDICION_ID').prop('disabled', true);
                 $('#alertaCondiciones_1__CONDICION_ID').val(null);

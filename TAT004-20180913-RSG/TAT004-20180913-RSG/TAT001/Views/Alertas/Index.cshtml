@@ -24,6 +24,11 @@
     .dataTables_scrollHeadInner, .mdl-data-table {
         width: 100%;
     }
+    .modal {
+        background-color: #B90C46;
+        height: 150px;
+        width: 250px;
+    }
 </style>
 <link href="~/Content/dataTable.css" rel="stylesheet" />
 <link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
@@ -118,8 +123,20 @@
                                     <td>
                                         <a href="@Url.Action("Edit", "Alertas", new { warning_id=item.ID,  tab_id= item.TAB_ID })"><i class='material-icons green-text'>edit</i></a>
                                         <a style="cursor: pointer;" onclick="mostrarAlerta('@item.ID','@item.TIPO','@mensaje')"><i class='material-icons blue-text'>chat</i></a>
-                                        @if ((item.SOCIEDAD_ID != null && item.TSOL_ID != null) && !(item.ID== "concepto1"&& item.TAB_ID== "tab_info")) {
-                                        <a href="@Url.Action("Delete", "Alertas", new { warning_id = item.ID, tab_id = item.TAB_ID })"><i class='material-icons green-text'>delete</i></a>
+                                        @if ((item.SOCIEDAD_ID != null && item.TSOL_ID != null) && !(item.ID == "concepto1" && item.TAB_ID == "tab_info"))
+                                        {
+                                            <a class="modal-trigger" href="#modal1" ><i class='material-icons red-text'>delete</i></a>
+                                            <a id="actionDelete_@item.ID" href="@Url.Action("Delete", "Alertas", new { warning_id = item.ID, tab_id = item.TAB_ID })"></a>
+                                            <!-- Modal Delete -->
+                                            <div id="modal1" class="modal">
+                                                <div class="modal-content">
+                                                    <p style="color: white;font-size: 16px;" class="lbl_eliminar"></p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <a class="modal-close waves-effect  btn-flat"><label class="lbl_eliminarNo"></label></a>
+                                                    <a onclick="eliminarAlerta('actionDelete_@item.ID')" class="modal-close waves-effect  btn-flat"><label class="lbl_eliminarSi"></label></a>
+                                                </div>
+                                            </div>
                                         }
                                     </td>
                                 </tr>                       
@@ -132,12 +149,17 @@
         </div>
     </div>
 </div>
+
 <script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
 <script>
 
     //---- Inicializador de componentes Materialize----
     fnCommon.materializeInit('select', 'select');
+    fnCommon.materializeInit('.modal', 'modal');
 
+    function eliminarAlerta(idLink) {
+        $('#' + idLink).get(0).click().click();
+    }
     function mostrarAlerta(warning_id, tipo, mensaje) {
         var dura = 1000000,
             color = 'yellow',
@@ -153,8 +175,7 @@
                 displayLength: dura,
                 html: '<span style="padding-right:15px;"><i class="material-icons ' + color + '-text">' + icon + '</i></span>  ' + mensaje
                 + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'toast\')">Aceptar</button>'
-            });
-        
+            });   
     }
     function dismiss(classe) {
         var toastElement = document.querySelectorAll('.' + classe);
