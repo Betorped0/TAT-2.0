@@ -12,7 +12,7 @@ namespace TAT001.Services
         public RANGO getRango(string TSOL_ID)
         {
             RANGO rango = new RANGO();
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
 
                 rango = (from r in db.RANGOes
@@ -44,7 +44,7 @@ namespace TAT001.Services
 
         public void updateRango(string TSOL_ID, decimal actual)
         {
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 RANGO rango = getRango(TSOL_ID);
 

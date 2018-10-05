@@ -13,13 +13,13 @@ namespace TAT001.Controllers
 {
     public class ImpuestosController : Controller
     {
-        private TAT004Entities db = new TAT004Entities();
+        private TAT001Entities db = new TAT001Entities();
 
         // GET: Impuestos
         public ActionResult Index()
         {
             int pagina = 741; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -51,7 +51,7 @@ namespace TAT001.Controllers
         public ActionResult Details(string id)
         {
             int pagina = 742; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -87,7 +87,7 @@ namespace TAT001.Controllers
         public ActionResult Create()
         {
             int pagina = 744; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -148,7 +148,7 @@ namespace TAT001.Controllers
                         return RedirectToAction("Index");
                     }
                     if (an.ACTIVO == true) {
-                        using (TAT004Entities db = new TAT004Entities())
+                        using (TAT001Entities db = new TAT001Entities())
                         {
                             string u = User.Identity.Name;
                             //string u = "admin";
@@ -177,7 +177,7 @@ namespace TAT001.Controllers
                     }
                 }
               
-                using (TAT004Entities db = new TAT004Entities())
+                using (TAT001Entities db = new TAT001Entities())
                 {
                     string u = User.Identity.Name;
                     //string u = "admin";
@@ -206,7 +206,7 @@ namespace TAT001.Controllers
             }
             catch (Exception v)
             {
-                using (TAT004Entities db = new TAT004Entities())
+                using (TAT001Entities db = new TAT001Entities())
                 {
                     string u = User.Identity.Name;
                     //string u = "admin";
@@ -239,7 +239,7 @@ namespace TAT001.Controllers
         public ActionResult Edit(string id)
         {
             int pagina = 743; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -291,7 +291,7 @@ namespace TAT001.Controllers
         public ActionResult Delete(string id)
         {
             int pagina = 745; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";

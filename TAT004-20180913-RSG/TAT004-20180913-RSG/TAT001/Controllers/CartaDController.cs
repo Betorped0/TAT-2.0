@@ -17,7 +17,7 @@ namespace TAT001.Controllers
         public ActionResult Index(string ruta, decimal ids)
         {
             int pagina = 230; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -49,7 +49,7 @@ namespace TAT001.Controllers
         public ActionResult Details(string ruta)
         {
             int pagina = 230; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -79,7 +79,7 @@ namespace TAT001.Controllers
         public ActionResult Create(decimal id)
         {
             int pagina = 232; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -420,7 +420,7 @@ namespace TAT001.Controllers
         [HttpPost]
         public ActionResult Create(CartaD v)
         {
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();

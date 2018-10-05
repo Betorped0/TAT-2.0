@@ -11,7 +11,7 @@ namespace TAT001.Controllers.Catalogos
 {
     public class Calendario445Controller : Controller
     {
-        readonly TAT004Entities db = new TAT004Entities();
+        readonly TAT001Entities db = new TAT001Entities();
 
         const string CMB_SOCIEDADES= "SOC";
         const string CMB_TIPOSSOLICITUD = "TSOL";

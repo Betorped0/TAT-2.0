@@ -16,13 +16,13 @@ namespace TAT001.Controllers
     [Authorize]
     public class FlujosController : Controller
     {
-        private TAT004Entities db = new TAT004Entities();
+        private TAT001Entities db = new TAT001Entities();
         #region ocultar
         // GET: Flujos
         public ActionResult Index()
         {
             int pagina = 103; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -89,7 +89,7 @@ namespace TAT001.Controllers
         public ActionResult Create(decimal id)
         {
             int pagina = 103; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -259,7 +259,7 @@ namespace TAT001.Controllers
         public ActionResult Procesa(decimal id, string accion)
         {
             int pagina = 103; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -338,7 +338,7 @@ namespace TAT001.Controllers
             {
                 string res = pf.procesa(flujo, "");
 
-                using (TAT004Entities db1 = new TAT004Entities())
+                using (TAT001Entities db1 = new TAT001Entities())
                 {
                     FLUJO ff = db1.FLUJOes.Where(x => x.NUM_DOC == flujo.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
                     Estatus es = new Estatus();//RSG 18.09.2018
@@ -376,7 +376,7 @@ namespace TAT001.Controllers
             }
 
             int pagina = 103; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -406,7 +406,7 @@ namespace TAT001.Controllers
         public ActionResult Carga()
         {
             int pagina = 601; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";

@@ -12,13 +12,13 @@ namespace TAT001.Controllers.Catalogos
 {
     public class LeyendaController : Controller
     {
-        private TAT004Entities db = new TAT004Entities();
+        private TAT001Entities db = new TAT001Entities();
 
         // GET: Leyenda
         public ActionResult Index()
         {
             int pagina = 751; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -53,7 +53,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Details(string id)
         {
             int pagina = 752; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -97,7 +97,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Create()
         {
             int pagina = 754; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -158,7 +158,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Edit(string id)
         {
             int pagina = 753; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -252,7 +252,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Delete(string id)
         {
             int pagina = 755; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";

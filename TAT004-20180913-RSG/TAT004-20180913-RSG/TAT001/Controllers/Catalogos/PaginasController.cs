@@ -12,14 +12,14 @@ namespace TAT001.Controllers.Catalogos
 {
     public class PaginasController : Controller
     {
-        private TAT004Entities db = new TAT004Entities();
+        private TAT001Entities db = new TAT001Entities();
 
         // GET: Paginas
         [Authorize]
         public ActionResult Index()
         {
             int pagina = 502; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -54,7 +54,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Details(int? id)
         {
             int pagina = 503; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();

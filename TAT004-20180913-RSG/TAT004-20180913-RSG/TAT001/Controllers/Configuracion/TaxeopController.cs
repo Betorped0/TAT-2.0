@@ -13,13 +13,13 @@ namespace TAT001.Controllers.Configuracion
 {
     public class TaxeopController : Controller
     {
-        private TAT004Entities db = new TAT004Entities();
+        private TAT001Entities db = new TAT001Entities();
 
         // GET: Taxeop
         public ActionResult Index(string sc, string ld, string kun, string vk, string vtw, string sp, string con)
         {
             int pagina = 861; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -75,7 +75,7 @@ namespace TAT001.Controllers.Configuracion
         public ActionResult Create(string sc, string ld, string kun, string vk, string vtw, string sp, string con)
         {
             int pagina = 863; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -149,7 +149,7 @@ namespace TAT001.Controllers.Configuracion
             }
 
             int pagina = 863; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -192,7 +192,7 @@ namespace TAT001.Controllers.Configuracion
         public ActionResult Edit(string sc, string ld, string kun, string vk, string vtw, string sp, string con, string pos, string rid)
         {
             int pagina = 862; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -270,7 +270,7 @@ namespace TAT001.Controllers.Configuracion
         public ActionResult Delete(string sc, string ld, string kun, string vk, string vtw, string sp, string con, string pos, string rid)
         {
             int pagina = 864; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";

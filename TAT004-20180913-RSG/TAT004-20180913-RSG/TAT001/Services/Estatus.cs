@@ -11,7 +11,7 @@ namespace TAT001.Services
         
         public string getEstatus(DOCUMENTO d)
         {
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
             decimal doc = decimal.Parse(d.NUM_DOC.ToString());
             string estatus = "";
             bool rev = false;
@@ -55,7 +55,7 @@ namespace TAT001.Services
         }
         public string getHtml(decimal num_doc)
         {
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
 
             DOCUMENTO d = db.DOCUMENTOes.Find(num_doc);
             string estatus = getEstatus(d);
@@ -101,7 +101,7 @@ namespace TAT001.Services
         }
         public string getHtml(DOCUMENTO d)
         {
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
 
             //DOCUMENTO d = db.DOCUMENTOes.Find(num_doc);
             string estatus = getEstatus(d);
@@ -146,7 +146,7 @@ namespace TAT001.Services
         }
         public string getText(DOCUMENTO d)
         {
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
 
             //DOCUMENTO d = db.DOCUMENTOes.Find(num_doc);
             string estatus = getEstatus(d);
@@ -193,7 +193,7 @@ namespace TAT001.Services
         }
         public string getClass(DOCUMENTO d)
         {
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
 
             //DOCUMENTO d = db.DOCUMENTOes.Find(num_doc);
             string estatus = getEstatus(d);
@@ -238,7 +238,7 @@ namespace TAT001.Services
         }
         public string getText(string estatus, decimal num_doc)
         {
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
 
             decimal doc = num_doc;
             bool rev = false;
@@ -293,7 +293,7 @@ namespace TAT001.Services
         }
         public string getClass(string estatus, decimal num_doc)
         {
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
 
             decimal doc = num_doc;
             bool rev = false;

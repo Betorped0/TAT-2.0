@@ -10,7 +10,7 @@ namespace TAT001.Services
     {
         public int getPeriodo(DateTime fecha)
         {
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
             int periodo = 0;
             List<PERIODO445> pp = db.PERIODO445.Where(a => a.EJERCICIO == fecha.Year).ToList();
             //PERIODO445 p = pp.Where(a => a.MES_NATURAL == fecha.Month).FirstOrDefault();
@@ -30,7 +30,7 @@ namespace TAT001.Services
         }
         public int getPeriodoF(DateTime fecha)
         {
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
             int periodo = 0;
             List<PERIODO445> pp = db.PERIODO445.Where(a => a.EJERCICIO == fecha.Year).ToList();
             //PERIODO445 p = pp.Where(a => a.MES_NATURAL == fecha.Month).FirstOrDefault();
@@ -56,7 +56,7 @@ namespace TAT001.Services
 
         public int getEjercicio(DateTime fecha)
         {
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
             int periodo = 0;
             List<PERIODO445> pp = db.PERIODO445.Where(a => a.EJERCICIO == fecha.Year).ToList();
             PERIODO445 p = pp.Where(a => a.MES_NATURAL == fecha.Month && a.DIA_NATURAL >= fecha.Day).OrderBy(a => a.DIA_NATURAL).LastOrDefault();
@@ -78,7 +78,7 @@ namespace TAT001.Services
 
         public DateTime getPrimerDia(int ejercicio, int periodo)
         {
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
             DateTime dia = new DateTime();
             if (periodo == 1)
             {
@@ -102,7 +102,7 @@ namespace TAT001.Services
 
         public DateTime getUltimoDia(int ejercicio, int periodo)
         {
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
             DateTime dia = new DateTime();
             List<PERIODO445> pp = db.PERIODO445.Where(a => a.EJERCICIO == ejercicio).ToList();
             PERIODO445 p = pp.Where(a => a.MES_NATURAL == periodo).FirstOrDefault();
@@ -147,7 +147,7 @@ namespace TAT001.Services
 
         public int getUltimoDiaNum(int ejercicio, int periodo)
         {
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
             DateTime dia = new DateTime();
             List<PERIODO445> pp = db.PERIODO445.Where(a => a.EJERCICIO == ejercicio).ToList();
             PERIODO445 p = pp.Where(a => a.MES_NATURAL == periodo).FirstOrDefault();
