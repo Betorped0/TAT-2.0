@@ -20,41 +20,46 @@
     <input id="miles" name="miles" type="hidden" value="@ViewBag.miles">//LEJ 09.07.18
     <input id="dec" name="dec" type="hidden" value="@ViewBag.dec">//LEJ 09.07.18
     <div class="row" style="margin-bottom:0">
-        <div class="col s12 m5 l5">
+        @* ---DRS 3.10.2018--- *@
+        <div class="col s12 m7">
             <div class="row" style="margin-bottom:0">
-                <div class="input-field col s4">
+                @* ---DRS 3.10.2018--- *@
+                <div class="input-field col s2">
                     @Html.EditorFor(model => model.D.USUARIOC_ID, new { htmlAttributes = new { @disabled = "disabled" } })
                     @Html.LabelFor(model => model.D.USUARIOC_ID, new { @id = "lbl_userid" })
                 </div>
-                <div class="input-field col s4">
+                @* ---DRS 3.10.2018--- *@
+                <div class="input-field col s2">
                     @*<input type="text" id="txt_user" value="@ViewBag.usuario.MANAGER" disabled="disabled" />
-                        <label for="txt_user">Manager</label>*@
+            <label for="txt_user">Manager</label>*@
                     @Html.EditorFor(model => model.D.USUARIO.MANAGER, new { htmlAttributes = new { @disabled = "disabled" } })
                     @Html.LabelFor(model => model.D.USUARIO.MANAGER, new { @id = "lbl_manager" })
                 </div>
-                <div class="input-field col s4">
+                @* ---DRS 3.10.2018--- *@
+                <div class="input-field col s2">
                     @Html.EditorFor(model => model.D.USUARIO.BACKUP_ID, new { htmlAttributes = new { @disabled = "disabled" } })
                     @Html.LabelFor(model => model.D.USUARIO.BACKUP_ID, new { @id = "lbl_backup" })
                     @*<input type="text" id="txt_user" value="@ViewBag.usuario.BACKUP_ID" disabled="disabled" />
-                        <label for="txt_user">Backup</label>*@
+            <label for="txt_user">Backup</label>*@
+                </div>
+                <div class="input-field col s3">
+                    @*<input type="text" id="txt_user" value="PRGA" disabled="disabled" />
+            <label for="txt_user">BU</label>*@
+                    @Html.EditorFor(model => model.D.USUARIO.BUNIT, new { htmlAttributes = new { @disabled = "disabled" } })
+                    @Html.LabelFor(model => model.D.USUARIO.BUNIT, "Sociedad", new { @class = "lbl_bu" })
+                </div>
+                <div class="input-field col s2">
+                    @if (Model.D.ESTATUS == "N")
+                    {
+                        <input type="text" id="txt_status" value="Nuevo" disabled="disabled" />
+                        <label for="txt_status" id="lbl_status">Estatus</label>
+                    }
                 </div>
             </div>
         </div>
-        <div class="col s12 m2 l2">
-            <div class="input-field col s6">
-                @*<input type="text" id="txt_user" value="PRGA" disabled="disabled" />
-                    <label for="txt_user">BU</label>*@
-                @Html.EditorFor(model => model.D.USUARIO.BUNIT, new { htmlAttributes = new { @disabled = "disabled" } })
-                @Html.LabelFor(model => model.D.USUARIO.BUNIT, "Sociedad", new { @class = "lbl_bu" })
-            </div>
-            <div class="input-field col s6">
-                @if (Model.D.ESTATUS == "N")
-                {
-                    <input type="text" id="txt_status" value="Nuevo" disabled="disabled" />
-                    <label for="txt_status" id="lbl_status">Estatus</label>
-                }
-            </div>
-        </div>
+      
+            
+       
         <div class="col s12 m5 l5">
             <div class="row right">
                 @if (Model.D.ESTATUS_C != "C")
@@ -84,7 +89,7 @@
                                 var instance = M.FloatingActionButton.init(elem, options);
                             </script>
                             @*<a id="lbl_wfa" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="A" })">Aprobar</a>
-                                <a id="lbl_wfr" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="R" })">Rechazar</a>*@
+                            <a id="lbl_wfr" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="R" })">Rechazar</a>*@
                             <a class="btn-small modal-trigger" href="#modal1" onclick="aprobar()">Aprobar</a>
                             <a class="btn-small modal-trigger" href="#modal1" onclick="rechazar()">Rechazar</a>
                         }
@@ -164,7 +169,7 @@
                             }
                         }
                     }
-                    else if ((Model.D.ESTATUS.Equals("A")| Model.D.ESTATUS.Equals("R")) && (Model.D.TSOL.PADRE) /*&& Model.D.DOCUMENTORECs.Count < 1 && Model.D.DOCUMENTOLs.Count < 1*/)//RSG 20181002
+                    else if ((Model.D.ESTATUS.Equals("A") | Model.D.ESTATUS.Equals("R")) && (Model.D.TSOL.PADRE) /*&& Model.D.DOCUMENTORECs.Count < 1 && Model.D.DOCUMENTOLs.Count < 1*/)//RSG 20181002
                     {
                         if (Model.D.USUARIOC_ID == ViewBag.usuario.ID & Model.D.DOCUMENTO_SAP != null)
                         {
@@ -178,9 +183,9 @@
                                         foreach (TSOL inte in ViewBag.TSOL_RELA)
                                         {
                                             @*
-                                                <li><a href="@Url.Action("Create", "Solicitudes" , new { id_d=Model.D.NUM_DOC.ToString(), tsol="NC" })" id="lbl_nc">Nota de crédito</a></li>
-                                                <li><a href="@Url.Action("Create", "Solicitudes" , new { id_d=Model.D.NUM_DOC.ToString(), tsol="NCI" })" id="lbl_nc">Nota de crédito Int</a></li>
-                                                <li><a href="@Url.Action("Create", "Solicitudes" , new { id_d=Model.D.NUM_DOC.ToString(), tsol="OP" })" id="lbl_op">Orden de pago</a></li>*@
+                                            <li><a href="@Url.Action("Create", "Solicitudes" , new { id_d=Model.D.NUM_DOC.ToString(), tsol="NC" })" id="lbl_nc">Nota de crédito</a></li>
+                                            <li><a href="@Url.Action("Create", "Solicitudes" , new { id_d=Model.D.NUM_DOC.ToString(), tsol="NCI" })" id="lbl_nc">Nota de crédito Int</a></li>
+                                            <li><a href="@Url.Action("Create", "Solicitudes" , new { id_d=Model.D.NUM_DOC.ToString(), tsol="OP" })" id="lbl_op">Orden de pago</a></li>*@
                                             <li><a href="@Url.Action("Create", "Solicitudes" , new { id_d=Model.D.NUM_DOC.ToString(), tsol=inte.ID })" id="lbl_@inte.ID">@inte.TSOLTs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50 </a></li>
                                         }
                                     }
@@ -225,35 +230,35 @@
                         }
                     }
                     @*//else
-                        //{*@
+                    //{*@
                     if (Model.D.TSOL.CARTA)
                     {
                         <button type="button" class="btn-small  " data-target="list_carta" id="btn_carta">Carta</button>
                         @*<button type="button" class="btn-small  " id="btn_cancel">Cancelar</button>*@
                         <ul id='list_carta' class='dropdown-content'>
                             @*
-                                <li><a href="@Url.Action(" Index", "CartaF" , new { id=Model.D.NUM_DOC })" id="lbl_list">Lista de cartas</a></li>*@ @*//B20180720P MGC Guardar Carta*@
-                                <li><a href="@Url.Action(" Lista", "CartaV" , new { id=Model.D.NUM_DOC, swf=Model.D.ESTATUS_WF })" id="lbl_list">Lista de cartas</a></li> @*//B20180720P MGC Guardar Carta*@
-                                @if (Model.D.ESTATUS_WF.Equals("S"))
-                                {
-                                    <li><a href="@Url.Action("Create", "CartaV" , new { id=Model.D.NUM_DOC })" id="lbl_genc">Generar carta</a></li>
-                                }
-                                else
-                                {
-                                    <li><a href="@Url.Action("Create", "CartaD" , new { id=Model.D.NUM_DOC })" id="lbl_genc">Imprimir draft</a></li>
-                                }
-                            </ul>
-                            <script>
-                                var elem = document.getElementById('btn_carta');
-                                var options = {
-                                    constrainWidth: false
-                                    //,hover: true
-                                };
-                                var instance = M.Dropdown.init(elem, options);
-                            </script>
-                        }
-                        @* } *@
+                            <li><a href="@Url.Action(" Index", "CartaF" , new { id=Model.D.NUM_DOC })" id="lbl_list">Lista de cartas</a></li>*@ @*//B20180720P MGC Guardar Carta*@
+                            <li><a href="@Url.Action(" Lista", "CartaV" , new { id=Model.D.NUM_DOC, swf=Model.D.ESTATUS_WF })" id="lbl_list">Lista de cartas</a></li> @*//B20180720P MGC Guardar Carta*@
+                            @if (Model.D.ESTATUS_WF.Equals("S"))
+                            {
+                                <li><a href="@Url.Action("Create", "CartaV" , new { id=Model.D.NUM_DOC })" id="lbl_genc">Generar carta</a></li>
+                            }
+                            else
+                            {
+                                <li><a href="@Url.Action("Create", "CartaD" , new { id=Model.D.NUM_DOC })" id="lbl_genc">Imprimir draft</a></li>
+                            }
+                        </ul>
+                        <script>
+                            var elem = document.getElementById('btn_carta');
+                            var options = {
+                                constrainWidth: false
+                                //,hover: true
+                            };
+                            var instance = M.Dropdown.init(elem, options);
+                        </script>
                     }
+                    @* } *@
+                }
             </div>
         </div>
     </div>
