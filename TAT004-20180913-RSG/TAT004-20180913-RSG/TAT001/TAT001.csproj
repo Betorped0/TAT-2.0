@@ -1869,6 +1869,8 @@
     <Content Include="Views\Cuenta\Index.cshtml" />
     <Content Include="Views\Error\Error.cshtml" />
     <Content Include="Views\Error\NotFound.cshtml" />
+    <Content Include="Views\Reportes\ReporteConcentrado.cshtml" />
+    <Content Include="Views\Reportes\ReporteMRLTS.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->
