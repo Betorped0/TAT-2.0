@@ -1594,6 +1594,8 @@
     <Content Include="Views\Alertas\Create.cshtml" />
     <Content Include="Views\Reportes\ReporteTrackingTS.cshtml" />
     <Content Include="Views\Alertas\Edit.cshtml" />
+    <Content Include="Views\Reportes\ReporteConcentrado.cshtml" />
+    <Content Include="Views\Reportes\ReporteMRLTS.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->

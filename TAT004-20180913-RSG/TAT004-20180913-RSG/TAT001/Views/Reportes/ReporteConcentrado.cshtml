@@ -1,0 +1,1392 @@
+﻿@model IEnumerable<TAT001.Entities.DOCUMENTO>
+@*@model TAT001.Entities.DOCUMENTO*@
+
+
+@{
+    //ViewBag.Title = "Páginas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.pagina_r = 1100;
+    ViewBag.carpeta_r = 1103;
+    List<Tuple<decimal, decimal>> negAmount = new List<Tuple<decimal, decimal>>();
+}
+@if (!ViewBag.Display)
+{
+    <script>
+
+        $(document).ready(function () {
+
+
+
+            $('select.select_all').siblings('ul').prepend("<li id=sm_select_all><span id='filters_all'>Todas las Opciones</span></li>");
+            $('li#sm_select_all').on('click', function () {
+                var jq_elem = $(this),
+                    jq_elem_span = jq_elem.find('span'),
+                    select_all = jq_elem_span.text() == 'Todas las Opciones',
+                    set_text = select_all ? 'Borrar Selección' : 'Todas las Opciones';
+                jq_elem_span.text(set_text);
+                jq_elem.siblings('li').filter(function () {
+                    return $(this).find('input').prop('checked') != select_all;
+                }).click();
+            });
+            $(document).ready(function () {
+                $("#sendbtn").click(function () {
+                    $("#excelBtn").prop("disabled", "false");
+                });
+            });
+        });
+
+
+
+
+
+    </script>
+}
+
+@using (Html.BeginForm("ReporteConcentrado", "Reportes", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    System.Globalization.TextInfo myTI = new System.Globalization.CultureInfo("en-US", false).TextInfo;
+    System.Globalization.DateTimeFormatInfo formatoFecha = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat;
+    DateTime newDate = DateTime.Now;
+    int yeard = newDate.Year;
+    int year1 = yeard + 1;
+    int year2 = yeard + 2;
+    int yearback = yeard - 1;
+    int yearback2 = yeard - 2;
+    <div class="row">
+
+        @if (ViewBag.Display)
+        {
+            <div class="input-field col s1 m1 l1 offset-l7 offset-m7 offset-s7" id="senddiv">
+                <button class="btn waves-effect waves-light" type="submit" name="action" id="sendbtn">
+                    Consultar
+                </button>
+            </div>
+            <div class="input-field col s3 m3 l3 offset-l1 offset-m1 offset-s1">
+                <a class="waves-effect waves-light btn" id="excelBtn" onclick="tableToExcel('table', 'Reporte Tracking TS')">Generar Excel</a>
+            </div>
+        }
+        else
+        {
+            <div class="input-field col s1 m1 l1 offset-l10 offset-m10 offset-s10" id="senddiv">
+                <button class="btn waves-effect waves-light" type="submit" name="action" id="sendbtn">
+                    Consultar
+                </button>
+            </div>
+        }
+    </div>
+    <div class="card-panel">
+        <div class="row">
+            <div class="row" style="margin-bottom:0;">
+                <div class="input-field col s3 m3 l3">
+                    <select multiple name="selectcocode" id="selectcocode" class="comcode select_all" required="">
+                        @try
+                        {
+                            foreach (var item in ViewBag.sociedad)
+                            {
+                                <option value="@item.BUKRS">@item.BUKRS</option>
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            <option value="" id="no_opt">No hay opciones</option>
+                        }
+
+
+                    </select>
+                    <label id="label_cocode">Co. Code</label>
+                </div>
+                <div class="input-field col s3 m3 l3">
+                    <select multiple name="selectpais" id="selectpais" class="comcode select_all" required="">
+                        @try
+                        {
+                            foreach (TAT001.Entities.PAI pais in ViewBag.paises)
+                            {
+                                if (pais.ACTIVO)
+                                {
+                                    <option value="@pais.LAND">@pais.LANDX</option>
+                                }
+                            }
+
+                        }
+                        catch (Exception)
+                        {
+                            <option value="" id="no_optper">No hay opciones</option>
+                        }
+                    </select>
+                    <label id="label_period">Pais</label>
+                </div>
+                <div class="input-field col s2 m2 l2">
+                    <select multiple name="selectperiod" id="selectperiod" class="comcode select_all" required="">
+
+                        @try
+                        {
+                            foreach (var periodo in ViewBag.periodo)
+                            {
+                                var concat = "P";
+                                if (Int32.Parse(periodo.ACTIVO) == 1)
+                                {
+                                    Console.Write(periodo.ACTIVO);
+                                    <option value="@periodo.ID">@(concat + periodo.ID)</option>
+
+                                }
+                                else { }
+                            }
+
+                        }
+                        catch (Exception)
+                        {
+                            <option value="" id="no_optper">No hay opciones</option>
+                        }
+                    </select>
+                    <label id="label_period">Periodo</label>
+                </div>
+                <div class="input-field col s2 m2 l2">
+                    <select multiple name="selectyear" id="selectyear" class="comcode select_all" required="">
+                        @if (yeard == DateTime.Now.Year)
+                        {
+
+                            <option value="@yeard">@yeard</option>
+                            <option value="@year1">@year1</option>
+                            <option value="@year2">@year2</option>
+                        }
+                        else
+                        {
+                            <option value="@yearback2">@yearback2</option>
+                            <option value="@yearback">@yearback</option>
+                            <option value="@yeard">@yeard</option>
+                        }
+                    </select>
+                    <label id="label_yr">Año</label>
+                </div>
+                <div class="input-field col s2 m2 l2">
+                    <select multiple name="selectcampos" id="selectcampos" class="comcode select_all" required="">
+                        <option value="1">Co. Code</option>
+                        <option value="2">País</option>
+                        <option value="3">Subregión</option>
+                        <option value="4">Estado</option>
+                        <option value="5">Ciudad</option>
+                        <option value="6">Número solicitud</option>
+                        <option value="7">Fecha Solicitud</option>
+                        <option value="8">Hora solicitud</option>
+                        <option value="9">Semana del periodo</option>
+                        <option value="10">Periodo contable</option>
+                        <option value="11">Año</option>
+                        <option value="12">Tipo Solicitud</option>
+                        <option value="13">Tipo Provisión</option>
+                        <option value="14">Tipo NC</option>
+                        <option value="15">Tipo OP</option>
+                        <option value="16">Status</option>
+                        <option value="17">Concepto</option>
+                        <option value="18">Mecánica</option>
+                        <option value="19">De</option>
+                        <option value="20">A</option>
+                        <option value="21">De</option>
+                        <option value="22">A</option>
+                        <option value="23">Clasificación</option>
+                        <option value="24">Cuenta Contable Gasto</option>
+                        <option value="25">Nombre de la cuenta</option>
+                        <option value="26">Cliente</option>
+                        <option value="27">Nombre</option>
+                        <option value="28">Tipo de Cliente</option>
+                        <option value="29">Organización de Ventas</option>
+                        <option value="30">Tax ID</option>
+                        <option value="31">Canal</option>
+                        <option value="32">Descripción</option>
+                        <option value="33">Nombre de Contacto</option>
+                        <option value="34">Email de Contacto</option>
+                        <option value="35">$ Monto Original de Provisión</option>
+                        <option value="36">$ Monto NC/OP</option>
+                        <option value="37">$Monto Aplicado</option>
+                        <option value="38">Saldo Remanente Provisión</option>
+                        <option value="39">$ Monto Reverso Provisión</option>
+                        <option value="40">% Reverso</option>
+                        <option value="41">$ Exceso/(Insuficiencia) Provisión</option>
+                        <option value="42">% Exceso/(Insuficiencia) Provisión</option>
+                        <option value="43">Impactos / Beneficios en el gasto del Periodo</option>
+                        <option value="44">Núm. Registro Provisión</option>
+                        <option value="45">Núm. Registro NC/OP</option>
+                        <option value="46">Núm. Registro Reverso</option>
+                        <option value="47">Fecha Reverso Provisión</option>
+                        <option value="48">Periodo Contable Reverso</option>
+                        <option value="49">Razón Reverso</option>
+                        <option value="50">Comentario Reverso</option>
+                        <option value="51">Usuario</option>
+                        <option value="52">Back Up</option>
+                        <option value="53">Creado Por</option>
+                        <option value="54">Creado Por ID</option>
+                        <option value="55">Solicitado Por</option>
+                        <option value="56">Solicitado Por ID</option>
+                        <option value="57">Modificado Por</option>
+                        <option value="58">Modificado Por ID</option>
+                        <option value="59">Aprobador Nivel 1</option>
+                        <option value="60">Aprobador Nivel 2</option>
+                        <option value="61">Aprobador Nivel 3</option>
+                        <option value="62">Aprobador Nivel 4</option>
+                        <option value="63">Aprobador Nivel 5</option>
+                        <option value="64">Proveedor</option>
+                        <option value="65">Nombre Proveedor</option>
+                        <option value="66">Número Factura Proveedor</option>
+                        <option value="67">Número Factura Kellogg´s</option>
+                        <option value="68">Número NC </option>
+                        <option value="69">Numero Orden de Pago</option>
+                        <option value="70">Expense Recognition en periodo</option>
+                        <option value="71">Expense Recognition Ejercicio</option>
+                        <option value="72">Soporte Incorrecto</option>
+                        <option value="73">Soporte validado con base variable pendiente</option>
+                        <option value="74">Carta</option>
+                        <option value="75">Contrato</option>
+                        <option value="76">JBP</option>
+                        <option value="77">Factura</option>
+                        <option value="78">Otros</option>
+                        <option value="79">Negociación por monto</option>
+                        <option value="80">Negociación por %</option>
+                        <option value="81">Distribución por material</option>
+                        <option value="82">Distribución categoría</option>
+                        <option value="83">Monto Base</option>
+                        <option value="84">Monto %</option>
+                        <option value="85">Recurrente</option>
+                        <option value="86">Recurrente por porcentaje</option>
+                        <option value="87">Recurrente por Monto</option>
+                        <option value="88">Recurrente Cancelada</option>
+                        <option value="89">Objetivo Inicio</option>
+                        <option value="90">Objetivo Límite</option>
+                        <option value="91">Estatus</option>
+                        <option value="92">Venta del Periodo</option>
+                        <option value="93">Monto Provisión</option>
+                        <option value="94">Back Order</option>
+                        <option value="95">Venta Real + BO</option>
+                        <option value="96">NC / OP o Reverso</option>
+                        <option value="97">Monto</option>
+                    </select>
+                    <label id="label_campos">Campos</label>
+                </div>
+            </div>
+        </div>
+        <script>
+            var elem = document.querySelectorAll('select');
+            var options = [];
+            var instance = M.FormSelect.init(elem, options);
+        </script>
+        <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="//code.jquery.com/jquery-2.0.3.min.js"></script>
+        <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+        <script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
+        <link href="~/Content/dataTable.css" rel="stylesheet" />
+        <link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
+        <link href="~/Scripts/subfilters/jquery.tablesorter.pager.css" rel="stylesheet" />
+        <script src="~/Scripts/subfilters/jquery.tablesorter.js"></script>
+        <script src="~/Scripts/subfilters/jquery.tablesorter.pager.js"></script>
+        <script src="~/Scripts/subfilters/widget-filter.js"></script>
+        <script src="~/Scripts/tablesort/tableToExcel.js"></script>
+
+
+        <script>
+            var elem = document.querySelector('select');
+            var options = [];
+            var instance = M.FormSelect.init(elem, options);
+        </script>
+
+    </div>
+    if (ViewBag.display)
+    {
+        <script>
+
+        $(document).ready(function () {
+            $(".grid thead td").click(function () {
+                showFilterOption(this);
+            });
+            $("#excelBtn").click(function () {
+                $("#table").tableExport();
+            });
+
+            $('select.select_all').siblings('ul').prepend('<li id=sm_select_all id="filters_all"><span>Todas Las Opciones</span></li>');
+            $('li#sm_select_all').on('click', function () {
+                var jq_elem = $(this),
+                    jq_elem_span = jq_elem.find('span'),
+                    select_all = jq_elem_span.text() == 'Todas Las Opciones',
+                    set_text = select_all ? 'Borrar Selección' : 'Todas Las Opciones';
+                jq_elem_span.text(set_text);
+                jq_elem.siblings('li').filter(function () {
+                    return $(this).find('input').prop('checked') != select_all;
+                }).click();
+            });
+        });
+
+
+
+        $(function () {
+
+            $("table").tablesorter({
+                theme: "materialize",
+
+                widthFixed: true,
+                // widget code contained in the jquery.tablesorter.widgets.js file
+                // use the zebra stripe widget if you plan on hiding any rows (filter widget)
+                widgets: ["filter", "zebra"],
+
+                widgetOptions: {
+                    // using the default zebra striping class name, so it actually isn't included in the theme variable above
+                    // this is ONLY needed for materialize theming if you are using the filter widget, because rows are hidden
+                    zebra: ["even", "odd"],
+
+                    // reset filters button
+                    filter_reset: ".reset",
+
+                    // extra css class name (string or array) added to the filter element (input or select)
+                    // select needs a "browser-default" class or it gets hidden
+                    filter_cssFilter: ["", "", "browser-default"]
+                }
+            })
+                .tablesorterPager({
+
+                    // target the pager markup - see the HTML block below
+                    container: $(".ts-pager"),
+
+                    // target the pager page select dropdown - choose a page
+                    cssGoto: ".pagenum",
+
+                    // remove rows from the table to speed up the sort of large tables.
+                    // setting this to false, only hides the non-visible rows; needed if you plan to add/remove rows with the pager enabled.
+                    removeRows: true,
+
+                    // output string - default is '{page}/{totalPages}';
+                    // possible variables: {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
+                    output: '{startRow} - {endRow} / {filteredRows} ({totalRows})'
+
+                });
+
+        });
+        </script>
+        <div style="width:100%;height:50vh;overflow:scroll;">
+            <table class="table mdl-data-table striped grid centered table" id="table" style="width:100%;">
+                <thead>
+                    <tr>
+                        @if (Array.IndexOf(ViewBag.campos, "1") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_1">Co. Code</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "2") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_2">País</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "3") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_3">Subregión</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "4") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_4">Estado</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "5") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_5">Ciudad</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "6") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_6">Número solicitud</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "7") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_7">Fecha Solicitud</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "8") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_8">Hora solicitud</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "9") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_9">Semana del periodo</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "10") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_10">Periodo contable</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "11") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_11">Año</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "12") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_12">Tipo Solicitud</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "13") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_13">Tipo Provisión</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "14") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_14">Tipo NC</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "15") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_15">Tipo OP</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "16") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_16">Status</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "17") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_17">Concepto</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "18") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_18">Mecánica</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "19") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_19">De</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "20") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_20">A</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "21") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_21">De</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "22") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_22">A</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "23") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_23">Clasificación</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "24") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_24">Cuenta Contable Gasto</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "25") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_25">Nombre de la cuenta</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "26") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_26">Cliente</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "27") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_27">Nombre</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "28") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_28">Tipo de Cliente</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "29") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_29">Organización de Ventas</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "30") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_30">Tax ID</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "31") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_31">Canal</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "32") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_32">Descripción</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "33") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_33">Nombre de Contacto</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "34") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_34">Email de Contacto</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "35") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_35">$ Monto Original de Provisión</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "36") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_36">$ Monto NC/OP</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "37") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_37">$Monto Aplicado</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "38") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_38">Saldo Remanente Provisión</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "39") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_39">$ Monto Reverso Provisión</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "40") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_40">% Reverso</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "41") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_41">$ Exceso/(Insuficiencia) Provisión</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "42") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_42">% Exceso/(Insuficiencia) Provisión</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "43") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_43">Impactos / Beneficios en el gasto del Periodo</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "44") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_44">Núm. Registro Provisión</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "45") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_45">Núm. Registro NC/OP</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "46") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_46">Núm. Registro Reverso</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "47") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_47">Fecha Reverso Provisión</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "48") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_48">Periodo Contable Reverso</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "49") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_49">Razón Reverso</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "50") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_50">Comentario Reverso</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "51") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_51">Usuario</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "52") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_52">Back Up</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "53") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_53">Creado Por</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "54") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_54">Creado Por ID</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "55") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_55">Solicitado Por</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "56") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_56">Solicitado Por ID</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "57") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_57">Modificado Por</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "58") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_58">Modificado Por ID</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "59") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_59">Aprobador Nivel 1</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "60") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_60">Aprobador Nivel 2</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "61") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_61">Aprobador Nivel 3</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "62") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_62">Aprobador Nivel 4</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "63") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_63">Aprobador Nivel 5</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "64") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_64">Proveedor</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "65") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_65">Nombre Proveedor</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "66") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_66">Número Factura Proveedor</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "67") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_67">Número Factura Kellogg´s</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "68") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_68">Número NC </th>}
+                        @if (Array.IndexOf(ViewBag.campos, "69") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_69">Numero Orden de Pago</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "70") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_70">Expense Recognition en periodo</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "71") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_71">Expense Recognition Ejercicio</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "72") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_72">Soporte Incorrecto</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "73") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_73">Soporte validado con base variable pendiente</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "74") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_74">Carta</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "75") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_75">Contrato</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "76") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_76">JBP</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "77") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_77">Factura</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "78") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_78">Otros</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "79") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_79">Negociación por monto</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "80") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_80">Negociación por %</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "81") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_81">Distribución por material</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "82") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_82">Distribución categoría</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "83") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_83">Monto Base</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "84") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_84">Monto %</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "85") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_85">Recurrente</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "86") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_86">Recurrente por porcentaje</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "87") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_87">Recurrente por Monto</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "88") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_88">Recurrente Cancelada</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "89") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_89">Objetivo Inicio</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "90") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_90">Objetivo Límite</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "91") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_91">Estatus</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "92") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_92">Venta del Periodo</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "93") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_93">Monto Provisión</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "94") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_94">Back Order</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "95") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_95">Venta Real + BO</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "96") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_96">NC / OP o Reverso</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "97") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_97">Monto</th>}
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        @if (Array.IndexOf(ViewBag.campos, "1") >= 0)
+                        {
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_1">Co. Code</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "2") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_2">País</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "3") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_3">Subregión</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "4") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_4">Estado</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "5") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_5">Ciudad</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "6") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_6">Número solicitud</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "7") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_7">Fecha Solicitud</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "8") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_8">Hora solicitud</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "9") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_9">Semana del periodo</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "10") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_10">Periodo contable</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "11") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_11">Año</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "12") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_12">Tipo Solicitud</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "13") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_13">Tipo Provisión</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "14") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_14">Tipo NC</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "15") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_15">Tipo OP</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "16") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_16">Status</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "17") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_17">Concepto</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "18") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_18">Mecánica</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "19") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_19">De</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "20") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_20">A</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "21") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_21">De</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "22") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_22">A</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "23") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_23">Clasificación</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "24") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_24">Cuenta Contable Gasto</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "25") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_25">Nombre de la cuenta</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "26") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_26">Cliente</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "27") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_27">Nombre</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "28") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_28">Tipo de Cliente</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "29") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_29">Organización de Ventas</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "30") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_30">Tax ID</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "31") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_31">Canal</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "32") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_32">Descripción</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "33") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_33">Nombre de Contacto</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "34") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_34">Email de Contacto</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "35") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_35">$ Monto Original de Provisión</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "36") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_36">$ Monto NC/OP</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "37") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_37">$Monto Aplicado</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "38") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_38">Saldo Remanente Provisión</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "39") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_39">$ Monto Reverso Provisión</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "40") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_40">% Reverso</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "41") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_41">$ Exceso/(Insuficiencia) Provisión</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "42") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_42">% Exceso/(Insuficiencia) Provisión</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "43") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_43">Impactos / Beneficios en el gasto del Periodo</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "44") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_44">Núm. Registro Provisión</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "45") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_45">Núm. Registro NC/OP</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "46") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_46">Núm. Registro Reverso</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "47") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_47">Fecha Reverso Provisión</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "48") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_48">Periodo Contable Reverso</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "49") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_49">Razón Reverso</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "50") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_50">Comentario Reverso</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "51") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_51">Usuario</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "52") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_52">Back Up</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "53") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_53">Creado Por</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "54") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_54">Creado Por ID</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "55") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_55">Solicitado Por</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "56") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_56">Solicitado Por ID</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "57") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_57">Modificado Por</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "58") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_58">Modificado Por ID</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "59") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_59">Aprobador Nivel 1</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "60") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_60">Aprobador Nivel 2</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "61") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_61">Aprobador Nivel 3</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "62") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_62">Aprobador Nivel 4</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "63") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_63">Aprobador Nivel 5</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "64") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_64">Proveedor</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "65") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_65">Nombre Proveedor</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "66") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_66">Número Factura Proveedor</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "67") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_67">Número Factura Kellogg´s</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "68") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_68">Número NC </th>}
+                        @if (Array.IndexOf(ViewBag.campos, "69") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_69">Numero Orden de Pago</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "70") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_70">Expense Recognition en periodo</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "71") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_71">Expense Recognition Ejercicio</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "72") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_72">Soporte Incorrecto</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "73") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_73">Soporte validado con base variable pendiente</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "74") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_74">Carta</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "75") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_75">Contrato</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "76") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_76">JBP</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "77") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_77">Factura</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "78") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_78">Otros</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "79") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_79">Negociación por monto</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "80") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_80">Negociación por %</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "81") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_81">Distribución por material</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "82") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_82">Distribución categoría</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "83") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_83">Monto Base</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "84") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_84">Monto %</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "85") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_85">Recurrente</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "86") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_86">Recurrente por porcentaje</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "87") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_87">Recurrente por Monto</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "88") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_88">Recurrente Cancelada</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "89") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_89">Objetivo Inicio</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "90") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_90">Objetivo Límite</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "91") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_91">Estatus</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "92") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_92">Venta del Periodo</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "93") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_93">Monto Provisión</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "94") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_94">Back Order</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "95") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_95">Venta Real + BO</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "96") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_96">NC / OP o Reverso</th>}
+                        @if (Array.IndexOf(ViewBag.campos, "97") >= 0)
+                        {
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_97">Monto</th>}
+                    </tr>
+                    <!-- include "tablesorter-ignoreRow" class for pager rows in thead -->
+                    <tr class="tablesorter-ignoreRow">
+                        <th colspan="2" class="ts-pager form-horizontal">
+                            <button type="button" class="btn first"><i class="small material-icons">first_page</i></button>
+                            <button type="button" class="btn prev"><i class="small material-icons">navigate_before</i></button>
+                            <span class="pagedisplay"></span>
+                            <!-- this can be any element, including an input -->
+                            <button type="button" class="btn next"><i class="small material-icons">navigate_next</i></button>
+                            <button type="button" class="btn last"><i class="small material-icons">last_page</i></button>
+                            <div style="padding:0 78% 0 0;">
+                                <label class="btn_length" id="por_pag">Ver por página</label>
+                                <select class="pagesize" id="selecc" title="Select page size">
+                                    <option selected="selected" value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                    <option value="40">40</option>
+                                </select>
+                                <label class="label_pag">Ir a Página</label>
+                                <select class="pagenum browser-default" title="Select page number"></select>
+                            </div>
+                        </th>
+                        <th colspan="12">
+                        </th>
+                    </tr>
+                    </tfoot>
+                    <tbody>
+                        @{ 
+                            string camposstring = ViewBag.camposstring.ToString();
+                        }
+                        @foreach (TAT001.Models.ReportesModel.Concentrado item in ViewBag.lista_reporte)
+                        {
+                        <tr>
+                            @if (camposstring.IndexOf("1") >= 0)
+                            {
+                                <td>@(item.documento.SOCIEDAD_ID)</td>}<!--Co. Code-->
+                            @if (camposstring.IndexOf("2") >= 0)
+                            {
+                                <td>@(item.documento.PAIS_ID)</td>}<!--País-->
+                            @if (camposstring.IndexOf("3") >= 0)
+                            {
+                                <td>@(item.documento.CLIENTE.SUBREGION)</td>}<!--Subregión-->
+                            @if (camposstring.IndexOf("4") >= 0)
+                            {
+                                <td>@(item.documento.ESTADO)</td>}<!--Estado-->
+                            @if (camposstring.IndexOf("5") >= 0)
+                            {
+                                <td>@(item.documento.CIUDAD)</td>}<!--Ciudad-->
+                            @if (camposstring.IndexOf("6") >= 0)
+                            {
+                                <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.documento.NUM_DOC })'" style="cursor:pointer">@(item.documento.NUM_DOC)</td>}<!--Número solicitud-->
+                            @if (camposstring.IndexOf("7") >= 0)
+                            {
+                                <td>@(((DateTime)item.documento.FECHAC).ToShortDateString())</td>}<!--Fecha Solicitud-->
+                            @if (camposstring.IndexOf("8") >= 0)
+                            {
+                                <td>@(((DateTime)item.documento.FECHAC).ToShortTimeString())</td>}<!--Hora solicitud-->
+                            @if (camposstring.IndexOf("9") >= 0)
+                            {
+                                <td></td>}<!--Semana del periodo-->
+                            @if (camposstring.IndexOf("10") >= 0)
+                            {
+                                <td>@(item.documento.PERIODO)</td>}<!--Periodo contable-->
+                            @if (camposstring.IndexOf("11") >= 0)
+                            {
+                                <td>@(item.documento.EJERCICIO)</td>}<!--Año-->
+                            @if (camposstring.IndexOf("12") >= 0)
+                            {
+                                <td>@(item.documento.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(item.documento.USUARIO.SPRAS_ID)).FirstOrDefault().TXT020)</td>}<!--Tipo Solicitud-->
+                            @if (camposstring.IndexOf("13") >= 0)
+                            {
+                                <td>
+                                    @if (item.documento.TSOL_ID.StartsWith("PR"))
+                                    {
+                                        @(item.documento.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(item.documento.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50)
+                                    }
+                                </td>}<!--Tipo Provisión-->
+                            @if (camposstring.IndexOf("14") >= 0)
+                            {
+                                <td>
+                                    @if (item.documento.TSOL_ID.StartsWith("NC"))
+                                    {
+                                        @(item.documento.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(item.documento.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50)
+                                    }
+                                </td>}<!--Tipo NC-->
+                            @if (camposstring.IndexOf("15") >= 0)
+                            {
+                                <td>
+                                    @if (item.documento.TSOL_ID.StartsWith("OP"))
+                                    {
+                                        @(item.documento.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(item.documento.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50)
+                                    }
+                                </td>}<!--Tipo OP-->
+                            @if (camposstring.IndexOf("16") >= 0)
+                            {
+                                <td>@(item.documento.ESTATUS)</td>}<!--Status-->
+                            @if (camposstring.IndexOf("17") >= 0)
+                            {
+                                <td>@(item.documento.CONCEPTO)</td>}<!--Concepto-->
+                            @if (camposstring.IndexOf("18") >= 0)
+                            {
+                                <td>@(item.documento.NOTAS)</td>}<!--Mecánica-->
+                            @if (camposstring.IndexOf("19") >= 0)
+                            {
+                                <td>@(item.documento.FECHAI_VIG.Value.ToShortDateString())</td>}<!--De-->
+                            @if (camposstring.IndexOf("20") >= 0)
+                            {
+                                <td>@(item.documento.FECHAF_VIG.Value.ToShortDateString())</td>}<!--A-->
+                            @if (camposstring.IndexOf("21") >= 0)
+                            {
+                                <td></td>}<!--De-->
+                            @if (camposstring.IndexOf("22") >= 0)
+                            {
+                                <td></td>}<!--A-->
+                            @if (camposstring.IndexOf("23") >= 0)
+                            {
+                                <td>@(item.documento.GALL.GALLTs.Where(a => a.SPRAS_ID.Equals(item.documento.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50)</td>}<!--Clasificación-->
+                            @if (camposstring.IndexOf("24") >= 0)
+                            {
+                                <td>@(item.CUENTA_CARGO)</td>}<!--Cuenta Contable Gasto-->
+                            @if (camposstring.IndexOf("25") >= 0)
+                            {
+                                <td>@(item.CUENTA_CARGO_NOMBRE)</td>}<!--Nombre de la cuenta-->
+                            @if (camposstring.IndexOf("26") >= 0)
+                            {
+                                <td>@(item.documento.CLIENTE.KUNNR)</td>}<!--Cliente-->
+                            @if (camposstring.IndexOf("27") >= 0)
+                            {
+                                <td>@(item.documento.CLIENTE.NAME1)</td>}<!--Nombre-->
+                            @if (camposstring.IndexOf("28") >= 0)
+                            {
+                                if (item.documento.SOLD_TO_ID != null)
+                                {
+                                    <td>Sold To</td>
+                                }
+                                else
+                                {
+                                    <td>Payer</td>
+                                }
+                            }<!--Tipo de Cliente-->
+                            @if (camposstring.IndexOf("29") >= 0)
+                            {
+                                <td>@(item.documento.CLIENTE.VKORG)</td>}<!--Organización de Ventas-->
+                            @if (camposstring.IndexOf("30") >= 0)
+                            {
+                                <td>@(item.documento.CLIENTE.STCD1)</td>}<!--Tax ID-->
+                            @if (camposstring.IndexOf("31") >= 0)
+                            {
+                                <td>@(item.documento.CLIENTE.CANAL)</td>}<!--Canal-->
+                            @if (camposstring.IndexOf("32") >= 0)
+                            {
+                                <td>@(item.CANAL.CDESCRIPCION)</td>}<!--Descripción-->
+                            @if (camposstring.IndexOf("33") >= 0)
+                            {
+                                <td>@(item.documento.PAYER_NOMBRE)</td>}<!--Nombre de Contacto-->
+                            @if (camposstring.IndexOf("34") >= 0)
+                            {
+                                <td>@(item.documento.PAYER_EMAIL)</td>}<!--Email de Contacto-->
+                            @if (camposstring.IndexOf("35") >= 0)
+                            {
+                                <td>
+                                    @if (item.documento.TSOL_ID.StartsWith("PR"))
+                                    {
+                                        @(String.Format("{0:C}", item.documento.MONTO_DOC_MD))
+                                    }
+                                </td>}<!--$ Monto Original de Provisión-->
+                            @if (camposstring.IndexOf("36") >= 0)
+                            {
+                                <td>
+                                    @if (item.documento.TSOL_ID.StartsWith("NC") || item.documento.TSOL_ID.StartsWith("OP"))
+                                    {
+                                        @(String.Format("({0:C})", item.documento.MONTO_DOC_MD))
+                                    }
+                                </td>}<!--$ Monto NC/OP-->
+                            @if (camposstring.IndexOf("37") >= 0)
+                            {
+                                <td>@(String.Format("({0:C})", item.PRESUPUESTO.PC_T))</td>}<!--$Monto Aplicado-->
+                            @if (camposstring.IndexOf("38") >= 0)
+                            {
+                                <td>@(String.Format("{0:C}", item.PRESUPUESTO.CONSU))</td>}<!--Saldo Remanente Provisión-->
+                            @if (camposstring.IndexOf("39") >= 0)
+                            {
+                                <td></td>}<!--$ Monto Reverso Provisión-->
+                            @if (camposstring.IndexOf("40") >= 0)
+                            {
+                                <td></td>}<!--% Reverso-->
+                            @if (camposstring.IndexOf("41") >= 0)
+                            {
+                                <td></td>}<!--$ Exceso/(Insuficiencia) Provisión-->
+                            @if (camposstring.IndexOf("42") >= 0)
+                            {
+                                <td></td>}<!--% Exceso/(Insuficiencia) Provisión-->
+                            @if (camposstring.IndexOf("43") >= 0)
+                            {
+                                <td></td>}<!--Impactos / Beneficios en el gasto del Periodo-->
+                            @if (camposstring.IndexOf("44") >= 0)
+                            {
+                                <td>@((item.documento.DOCUMENTOSAP != null)? item.documento.DOCUMENTOSAP.NUM_DOC.ToString(): "")</td>}<!--Núm. Registro Provisión-->
+                            @if (camposstring.IndexOf("45") >= 0)
+                            {
+                                <td></td>}<!--Núm. Registro NC/OP-->
+                            @if (camposstring.IndexOf("46") >= 0)
+                            {
+                                <td></td>}<!--Núm. Registro Reverso-->
+                            @if (camposstring.IndexOf("47") >= 0)
+                            {
+                                <td></td>}<!--Fecha Reverso Provisión-->
+                            @if (camposstring.IndexOf("48") >= 0)
+                            {
+                                <td></td>}<!--Periodo Contable Reverso-->
+                            @if (camposstring.IndexOf("49") >= 0)
+                            {
+                                <td></td>}<!--Razón Reverso-->
+                            @if (camposstring.IndexOf("50") >= 0)
+                            {
+                                <td></td>}<!--Comentario Reverso-->
+                            @if (camposstring.IndexOf("51") >= 0)
+                            {
+                                <td>@(item.documento.USUARIO.NOMBRE + " " + item.documento.USUARIO.APELLIDO_P)</td>}<!--Usuario-->
+                            @if (camposstring.IndexOf("52") >= 0)
+                            {
+                                <td>@(item.documento.USUARIO.BACKUP_ID)</td>}<!--Back Up-->
+                            @if (camposstring.IndexOf("53") >= 0)
+                            {
+                                <td>@(item.documento.USUARIO.NOMBRE + " " + item.documento.USUARIO.APELLIDO_P)</td>}<!--Creado Por-->
+                            @if (camposstring.IndexOf("54") >= 0)
+                            {
+                                <td>@(item.documento.USUARIO.ID)</td>}<!--Creado Por ID-->
+                            @if (camposstring.IndexOf("55") >= 0)
+                            {
+                                <td>@(item.documento.USUARIO.NOMBRE + " " + item.documento.USUARIO.APELLIDO_P)</td>}<!--Solicitado Por-->
+                            @if (camposstring.IndexOf("56") >= 0)
+                            {
+                                <td>@(item.documento.USUARIO.ID)</td>}<!--Solicitado Por ID-->
+                            @if (camposstring.IndexOf("57") >= 0)
+                            {
+                                <td>@(item.documento.USUARIOD_ID)</td>}<!--Modificado Por-->
+                            @if (camposstring.IndexOf("58") >= 0)
+                            {
+                                <td>@(item.documento.USUARIOD_ID)</td>}<!--Modificado Por ID-->
+                            @if (camposstring.IndexOf("59") >= 0)
+                            {
+                                <td>
+                                    @try
+                                    {
+                                        @(item.documento.FLUJOes.Where(u => u.WF_POS == 1).Select(u => u.USUARIO.NOMBRE + " " + u.USUARIO.APELLIDO_P).FirstOrDefault())
+                                    }
+                                    catch { }
+                                </td>}<!--Aprobador Nivel 1-->
+                            @if (camposstring.IndexOf("60") >= 0)
+                            {
+                                <td>
+                                    @try
+                                    {
+                                        @(item.documento.FLUJOes.Where(u => u.WF_POS == 2).Select(u => u.USUARIO.NOMBRE + " " + u.USUARIO.APELLIDO_P).FirstOrDefault())
+                                    }
+                                    catch { }
+                                </td>}<!--Aprobador Nivel 2-->
+                            @if (camposstring.IndexOf("61") >= 0)
+                            {
+                                <td>
+                                    @try
+                                    {
+                                        @(item.documento.FLUJOes.Where(u => u.WF_POS == 3).Select(u => u.USUARIO.NOMBRE + " " + u.USUARIO.APELLIDO_P).FirstOrDefault())
+                                    }
+                                    catch { }
+                                </td>}<!--Aprobador Nivel 3-->
+                            @if (camposstring.IndexOf("62") >= 0)
+                            {
+                                <td>
+                                    @try
+                                    {
+                                        @(item.documento.FLUJOes.Where(u => u.WF_POS == 4).Select(u => u.USUARIO.NOMBRE + " " + u.USUARIO.APELLIDO_P).FirstOrDefault())
+                                    }
+                                    catch { }
+                                    </td>}<!--Aprobador Nivel 4-->
+                            @if (camposstring.IndexOf("63") >= 0)
+                            {
+                                <td>
+                                    @try
+                                    {
+                                        @(item.documento.FLUJOes.Where(u => u.WF_POS == 5).Select(u => u.USUARIO.NOMBRE + " " + u.USUARIO.APELLIDO_P).FirstOrDefault())
+                                    }
+                                    catch { }
+                                    </td>}<!--Aprobador Nivel 5-->
+                            @if (camposstring.IndexOf("64") >= 0)
+                            {
+                                <td>@(item.documento.DOCUMENTOFs.Select(df => df.PROVEEDOR).FirstOrDefault())</td>}<!--Proveedor-->
+                            @if (camposstring.IndexOf("65") >= 0)
+                            {
+                                <td>@(item.PROVEEDOR_NOMBRE)</td>}<!--Nombre Proveedor-->
+                            @if (camposstring.IndexOf("66") >= 0)
+                            {
+                                <td>@(item.documento.DOCUMENTOFs.Select(df => df.BILL_DOC).FirstOrDefault())</td>}<!--Número Factura Proveedor-->
+                            @if (camposstring.IndexOf("67") >= 0)
+                            {
+                                <td>@(item.documento.DOCUMENTOFs.Select(df => df.FACTURAK).FirstOrDefault())</td>}<!--Número Factura Kellogg´s-->
+                            @if (camposstring.IndexOf("68") >= 0)
+                            {
+                                <td></td>}<!--Número NC -->
+                            @if (camposstring.IndexOf("69") >= 0)
+                            {
+                                <td></td>}<!--Numero Orden de Pago-->
+                            @if (camposstring.IndexOf("70") >= 0)
+                            {
+                                <td></td>}<!--Expense Recognition en periodo-->
+                            @if (camposstring.IndexOf("71") >= 0)
+                            {
+                                <td></td>}<!--Expense Recognition Ejercicio-->
+                            @if (camposstring.IndexOf("72") >= 0)
+                            {
+                                <td></td>}<!--Soporte Incorrecto-->
+                            @if (camposstring.IndexOf("73") >= 0)
+                            {
+                                <td></td>}<!--Soporte validado con base variable pendiente-->
+                            @if (camposstring.IndexOf("74") >= 0)
+                            {
+                                <td>@((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("CAR")).Count() > 0)? "X": "")</td>}<!--Carta-->
+                            @if (camposstring.IndexOf("75") >= 0)
+                            {
+                                <td>@((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("CON")).Count() > 0) ? "X" : "")</td>}<!--Contrato-->
+                            @if (camposstring.IndexOf("76") >= 0)
+                            {
+                                <td>@((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("JBP")).Count() > 0) ? "X" : "")</td>}<!--JBP-->
+                            @if (camposstring.IndexOf("77") >= 0)
+                            {
+                                <td>@((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("FAC")).Count() > 0) ? "X" : "")</td>}<!--Factura-->
+                            @if (camposstring.IndexOf("78") >= 0)
+                            {
+                                <td>@((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("OTR")).Count() > 0) ? "X" : "")</td>}<!--Otros-->
+                            @if (camposstring.IndexOf("79") >= 0)
+                            {
+                                <td></td>}<!--Negociación por monto-->
+                            @if (camposstring.IndexOf("80") >= 0)
+                            {
+                                <td></td>}<!--Negociación por %-->
+                            @if (camposstring.IndexOf("81") >= 0)
+                            {
+                                <td></td>}<!--Distribución por material-->
+                            @if (camposstring.IndexOf("82") >= 0)
+                            {
+                                <td></td>}<!--Distribución categoría-->
+                            @if (camposstring.IndexOf("83") >= 0)
+                            {
+                                <td></td>}<!--Monto Base-->
+                            @if (camposstring.IndexOf("84") >= 0)
+                            {
+                                <td></td>}<!--Monto %-->
+                            @if (camposstring.IndexOf("85") >= 0)
+                            {
+                                <td>@((item.documento.TIPO_RECURRENTE != null)?"Si":"No")</td>}<!--Recurrente-->
+                            @if (camposstring.IndexOf("86") >= 0)
+                            {
+                                <td></td>}<!--Recurrente por porcentaje-->
+                            @if (camposstring.IndexOf("87") >= 0)
+                            {
+                                <td></td>}<!--Recurrente por Monto-->
+                            @if (camposstring.IndexOf("88") >= 0)
+                            {
+                                <td></td>}<!--Recurrente Cancelada-->
+                            @if (camposstring.IndexOf("89") >= 0)
+                            {
+                                <td></td>}<!--Objetivo Inicio-->
+                            @if (camposstring.IndexOf("90") >= 0)
+                            {
+                                <td></td>}<!--Objetivo Límite-->
+                            @if (camposstring.IndexOf("91") >= 0)
+                            {
+                                <td></td>}<!--Estatus-->
+                            @if (camposstring.IndexOf("92") >= 0)
+                            {
+                                <td></td>}<!--Venta del Periodo-->
+                            @if (camposstring.IndexOf("93") >= 0)
+                            {
+                                <td></td>}<!--Monto Provisión-->
+                            @if (camposstring.IndexOf("94") >= 0)
+                            {
+                                <td></td>}<!--Back Order-->
+                            @if (camposstring.IndexOf("95") >= 0)
+                            {
+                                <td></td>}<!--Venta Real + BO-->
+                            @if (camposstring.IndexOf("96") >= 0)
+                            {
+                                <td></td>}<!--NC / OP o Reverso-->
+                            @if (camposstring.IndexOf("97") >= 0)
+                            {
+                                <td></td>}<!--Monto-->
+                            @*
+        <td>@(item.documento.MONEDA_ID)</td>
+        <td>@(item.documento.TIPO_CAMBIO)</td>
+        <td>@(item.documento.MONTO_DOC_ML2)</td>
+        <td>@((item.documento.TSOL_ID == "PR") ? item.documento.TSOL_ID : "")</td>
+        <td>@((item.documento.TSOL_ID == "PR") ? item.documento.DOCUMENTO_SAP : "")</td>
+        <td>@((item.documento.TSOL_ID == "PR") ? item.documento.SOCIEDAD_ID : "")</td>
+        <td>@((item.documento.TSOL_ID == "PR") ? item.documento.PERIODO.ToString() : "")</td>
+        <td>@((item.documento.TSOL_ID == "PR") ? item.documento.EJERCICIO : "")</td>
+        <td>@(item.documento.NOTAS)</td>*@
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+        </div>
+    }
+    else { }
+    <style>
+
+
+
+
+        .dataTables_length {
+            display: none;
+        }
+
+        .dataTables_filter {
+            display: none;
+        }
+
+        .dataTables_scrollHeadInner, .mdl-data-table {
+            width: 100%;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        .btn {
+            font-size: .8em;
+        }
+        /* not sure why this is needed... */
+        .material-icons {
+            vertical-align: bottom;
+        }
+
+        select {
+            display: block !important;
+        }
+
+        th {
+            text-align: center !important;
+        }
+    </style>
+}
