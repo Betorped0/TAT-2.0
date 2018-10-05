@@ -207,6 +207,9 @@
     <Compile Include="Controllers\Catalogos\AlertasController.cs" />
     <Compile Include="Controllers\Catalogos\Calendario445Controller.cs" />
     <Compile Include="Controllers\Catalogos\CalendarioEx445Controller.cs" />
+    <Compile Include="Controllers\Catalogos\ConsoporteController.cs" />
+    <Compile Include="Controllers\Catalogos\CuentaController.cs" />
+    <Compile Include="Controllers\Catalogos\CuentasController.cs" />
     <Compile Include="Controllers\Catalogos\GALLController.cs" />
     <Compile Include="Controllers\Catalogos\IimpuestoController.cs" />
     <Compile Include="Controllers\Catalogos\ImpuestosController.cs" />
@@ -228,6 +231,7 @@
     <Compile Include="Controllers\Configuracion\TaxeopController.cs" />
     <Compile Include="Controllers\CorreosController.cs" />
     <Compile Include="Controllers\Det_AprobsController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\ExcelController.cs" />
     <Compile Include="Controllers\FlujosController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -1311,6 +1315,11 @@
     <Content Include="Entities\TAT001.edmx.diagram">
       <DependentUpon>TAT001.edmx</DependentUpon>
     </Content>
+    <Content Include="Views\Consoporte\Create.cshtml" />
+    <Content Include="Views\Consoporte\Delete.cshtml" />
+    <Content Include="Views\Consoporte\Details.cshtml" />
+    <Content Include="Views\Consoporte\Edit.cshtml" />
+    <Content Include="Views\Consoporte\Index.cshtml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\fnCommon.js" />
     <Content Include="Scripts\jquery.validate.js" />
@@ -1596,6 +1605,18 @@
     <Content Include="Views\Alertas\Edit.cshtml" />
     <Content Include="Views\Reportes\ReporteConcentrado.cshtml" />
     <Content Include="Views\Reportes\ReporteMRLTS.cshtml" />
+    <Content Include="Views\Error\Error.cshtml" />
+    <Content Include="Views\Error\NotFound.cshtml" />
+    <Content Include="Views\Cuentas\Create.cshtml" />
+    <Content Include="Views\Cuentas\Delete.cshtml" />
+    <Content Include="Views\Cuentas\Details.cshtml" />
+    <Content Include="Views\Cuentas\Edit.cshtml" />
+    <Content Include="Views\Cuentas\Index.cshtml" />
+    <Content Include="Views\Cuenta\Create.cshtml" />
+    <Content Include="Views\Cuenta\Delete.cshtml" />
+    <Content Include="Views\Cuenta\Details.cshtml" />
+    <Content Include="Views\Cuenta\Edit.cshtml" />
+    <Content Include="Views\Cuenta\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->

@@ -323,19 +323,19 @@ errorMessage(message);
                                     </div>
                                 </div>
                                 @{TAT001.Entities.PAI pais = ViewBag.PAIS_ID;
-                                    ///////DRS 27.09.18/////////
-                                    <div class="col s6" style="margin-top:1.1%">
-                                        <div class="form-group hidden">
-                                            @Html.LabelFor(model => model.PAIS_ID, "Subregión", htmlAttributes: new { @class = "control-label col-md-2 hidden", @id = "lbl_pais" }) @*B20180801 MGC Textos*@
-                                            <div class="col-md-10">
-                                                @Html.EditorFor(model => model.PAIS_ID, new { htmlAttributes = new { @id = "pais_id", @class = "form-control hidden", @disabled = "disabled", @Value = pais.LAND } })
-                                            </div>
-                                        </div>
-                                        <div class="input-field col-md-2">
-                                            <input value="@pais.LANDX" id="pais_txt" type="text" class="" disabled="disabled" />
-                                            <label id="lbl_paiss" for="pais_txt">Subregión</label> @*B20180801 MGC Textos*@
-                                        </div>
+        ///////DRS 27.09.18/////////
+                            <div class="col s6" style="margin-top:1.1%">
+                                <div class="form-group hidden">
+                                    @Html.LabelFor(model => model.PAIS_ID, "Subregión", htmlAttributes: new { @class = "control-label col-md-2 hidden", @id = "lbl_pais" }) @*B20180801 MGC Textos*@
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.PAIS_ID, new { htmlAttributes = new { @id = "pais_id", @class = "form-control hidden", @disabled = "disabled", @Value = pais.LAND } })
                                     </div>
+                                </div>
+                                <div class="input-field col-md-2">
+                                    <input value="@pais.LANDX" id="pais_txt" type="text" class="" disabled="disabled" />
+                                    <label id="lbl_paiss" for="pais_txt">Subregión</label> @*B20180801 MGC Textos*@
+                                </div>
+                            </div>
                                 }
                                 <div>
                                     <div class="input-field col s6">
@@ -347,7 +347,6 @@ errorMessage(message);
                                     @Html.EditorFor(model => model.ESTADO, new { htmlAttributes = new { @id = "state_id", @class = "form-control " + @ViewBag.relacionada } })
                                     @Html.LabelFor(model => model.ESTADO, "Estado", htmlAttributes: new { @for = "state_id", @id = "lbl_estado" }) @*B20180801 MGC Textos*@
                                 </div>
-                                <link href="~/Content/autocomplete.css" rel="stylesheet" />
                                 <script src="~/Scripts/autocomplete1.10.2.js"></script>
                                 <script src="~/Scripts/autocomplete1.11.4.js"></script>
                                 <script>
@@ -385,6 +384,7 @@ if (!(ui.item)) {
 });
 })
                                 </script>
+                                <link href="~/Content/autocomplete.css" rel="stylesheet" />
                                 <script src="~/Scripts/createa.js"></script>
                                 <div class="input-field col s12">
                                     @Html.EditorFor(model => model.CIUDAD, new { htmlAttributes = new { @id = "city_id", @class = "form-control " + @ViewBag.relacionada } })
