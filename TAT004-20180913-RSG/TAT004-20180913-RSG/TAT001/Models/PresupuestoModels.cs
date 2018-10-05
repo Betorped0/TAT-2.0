@@ -12,7 +12,7 @@ namespace TAT001.Models
 {
     public class PresupuestoModels
     {
-        private TAT004Entities db = new TAT004Entities();
+        private TAT001Entities db = new TAT001Entities();
         public DatosPresupuesto consultSociedad(string sociedad)
         {
             DatosPresupuesto sociedades = new DatosPresupuesto();

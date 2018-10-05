@@ -21,6 +21,7 @@ namespace TAT001.Entities
             this.CAMPOZKE24T = new HashSet<CAMPOZKE24T>();
             this.CARPETATs = new HashSet<CARPETAT>();
             this.CATEGORIATs = new HashSet<CATEGORIAT>();
+            this.CONDICIONTs = new HashSet<CONDICIONT>();
             this.GALLTs = new HashSet<GALLT>();
             this.MATERIALGPTs = new HashSet<MATERIALGPT>();
             this.MATERIALTs = new HashSet<MATERIALT>();
@@ -58,6 +59,8 @@ namespace TAT001.Entities
         public virtual ICollection<CARPETAT> CARPETATs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CATEGORIAT> CATEGORIATs { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CONDICIONT> CONDICIONTs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GALLT> GALLTs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

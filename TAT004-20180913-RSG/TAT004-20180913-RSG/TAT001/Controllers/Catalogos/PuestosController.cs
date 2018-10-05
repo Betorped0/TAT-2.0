@@ -13,13 +13,13 @@ namespace TAT001.Controllers.Catalogos
     [Authorize]
     public class PuestosController : Controller
     {
-        private TAT004Entities db = new TAT004Entities();
+        private TAT001Entities db = new TAT001Entities();
 
         // GET: Puestos
         public ActionResult Index()
         {
             int pagina = 621; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -51,7 +51,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Details(int? id)
         {
             int pagina = 621; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -92,7 +92,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Create()
         {
             int pagina = 621; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -147,7 +147,7 @@ namespace TAT001.Controllers.Catalogos
             }
 
             int pagina = 621; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -179,7 +179,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Edit(int? id)
         {
             int pagina = 621; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -245,7 +245,7 @@ namespace TAT001.Controllers.Catalogos
                 return RedirectToAction("Index");
             }
             int pagina = 621; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";

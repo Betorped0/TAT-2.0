@@ -11,7 +11,7 @@ namespace TAT001.Services
     {
         public PRESUPUESTO_MOD getPresupuesto(string kunnr)//RSG 07.06.2018---------------------------------------------
         {
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
             PRESUPUESTO_MOD pm = new PRESUPUESTO_MOD();
             try
             {

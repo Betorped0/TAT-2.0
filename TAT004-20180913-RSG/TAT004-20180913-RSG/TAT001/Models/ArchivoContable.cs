@@ -11,7 +11,7 @@ namespace TAT001.Models
 {
     public class ArchivoContable
     {
-        TAT004Entities db = new TAT004Entities();
+        TAT001Entities db = new TAT001Entities();
         public string generarArchivo(decimal docum, decimal relacion)
         {
 
@@ -291,7 +291,7 @@ namespace TAT001.Models
         private string Detalle(DOCUMENTO doc, ref List<DetalleContab> contas, CONPOSAPH enca, List<DOCUMENTOF> docf, bool hijo)
         {
             contas = new List<DetalleContab>();
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
             List<CONPOSAPP> conp = new List<CONPOSAPP>();
             CLIENTE clien;
             CUENTA cuent;

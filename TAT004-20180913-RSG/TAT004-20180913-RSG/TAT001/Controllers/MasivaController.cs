@@ -20,7 +20,7 @@ namespace TAT001.Controllers
 {
     public class MasivaController : Controller
     {
-        private TAT004Entities db = new TAT004Entities();
+        private TAT001Entities db = new TAT001Entities();
 
         // GET: Masiva
         public ActionResult Index()
@@ -113,7 +113,7 @@ namespace TAT001.Controllers
             if (Prefix == null)
                 Prefix = "";
 
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
 
             var c = (from t in db.TALLs
                      where t.ID.Contains(Prefix) && t.ACTIVO == true
@@ -138,7 +138,7 @@ namespace TAT001.Controllers
             if (Prefix == null)
                 Prefix = "";
 
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
 
             var c = (from m in db.MONEDAs
                      join so in db.SOCIEDADs on m.WAERS equals so.WAERS
@@ -165,7 +165,7 @@ namespace TAT001.Controllers
             if (Prefix == null)
                 Prefix = "";
 
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
 
             var c = (from p in db.PAIS
                      where p.LANDX.Contains(Prefix) && p.ACTIVO == true
@@ -453,7 +453,7 @@ namespace TAT001.Controllers
 //    material = new Cadena().completaMaterial(material);
 //    //RSG 07.06.2018---------------------------------------------
 
-//    TAT004Entities db = new TAT004Entities();
+//    TAT001Entities db = new TAT001Entities();
 
 //    MATERIAL mat = db.MATERIALs.Where(m => m.ID == material).FirstOrDefault();
 
@@ -466,7 +466,7 @@ namespace TAT001.Controllers
 //    if (material == null)
 //        material = "";
 //    material = new Cadena().completaMaterial(material);
-//    TAT004Entities db = new TAT004Entities();
+//    TAT001Entities db = new TAT001Entities();
 
 //    MATERIAL m = db.MATERIALs.Where(mat => mat.ID.Equals(material)).FirstOrDefault();
 //    //CATEGORIAT cat = new CATEGORIAT();

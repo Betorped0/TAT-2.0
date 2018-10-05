@@ -1,0 +1,82 @@
+﻿@model TAT001.Entities.CUENTA
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Details</title>
+</head>
+<body>
+    <div>
+        <h4>CUENTA</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.ABONO)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.ABONO)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.CARGO)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.CARGO)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.CLEARING)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.CLEARING)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.LIMITE)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.LIMITE)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.PAI.SPRAS)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.PAI.SPRAS)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.SOCIEDAD.BUTXT)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.SOCIEDAD.BUTXT)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.TALL.DESCRIPCION)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.TALL.DESCRIPCION)
+            </dd>
+    
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+</body>
+</html>

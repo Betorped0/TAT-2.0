@@ -16,7 +16,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Index(string vko, string vtw, string kun, string spa, string mws)
         {
             int pagina = 641; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -61,7 +61,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Index(string vko, string vtw, string kun, string spa)
         {
             int pagina = 641; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -110,7 +110,7 @@ namespace TAT001.Controllers.Catalogos
         // GET: Impuesto/Create
         public ActionResult Create(string vko, string vtw, string kun, string spa, string mws)
         {
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -129,7 +129,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Create(string vko, string vtw, string kun, string spa)
         {
             int pagina = 641; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -197,7 +197,7 @@ namespace TAT001.Controllers.Catalogos
         // GET: Impuesto/Delete/5
         public ActionResult Delete(string vko, string vtw, string kun, string spa, string mws)
         {
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();

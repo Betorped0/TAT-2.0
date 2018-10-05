@@ -13,13 +13,13 @@ namespace TAT001.Controllers
 {
     public class ccatController : Controller
     {
-        private TAT004Entities db = new TAT004Entities();
+        private TAT001Entities db = new TAT001Entities();
 
         // GET: ccat
         public ActionResult Index()
         {
             int pagina = 871; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -52,7 +52,7 @@ namespace TAT001.Controllers
         public ActionResult Details(string id, string cp, string pr)
         {
             int pagina = 872; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -95,7 +95,7 @@ namespace TAT001.Controllers
         public ActionResult Create()
         {
             int pagina = 874; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -157,7 +157,7 @@ namespace TAT001.Controllers
                 var ex = e.ToString();
             }
             int pagina = 874; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -195,7 +195,7 @@ namespace TAT001.Controllers
         public ActionResult Edit(string id, string cp, string pr)
         {
             int pagina = 873; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -262,7 +262,7 @@ namespace TAT001.Controllers
                 ViewBag.error = e.ToString();
             }
             int pagina = 873; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -299,7 +299,7 @@ namespace TAT001.Controllers
         public ActionResult Delete(string id, string cp, string pr)
         {
             int pagina = 875; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
