@@ -479,8 +479,9 @@
                                         </div>
                                         <form method="post">
                                             @Html.HiddenFor(model => model.D.NUM_DOC)
+                                            @Html.HiddenFor(model => model.D.LIGADA)
                                             <div class="input-field col s6">
-                                                <input type="text" value="0.00" class="precio" id="BACKORDER" name="BACKORDER" onchange="this.value = toShow(this.value);" onfocus="this.select();" />
+                                                <input type="text" value="@Model.D.DOCUMENTOLs.FirstOrDefault().BACKORDER" class="precio" id="BACKORDER" name="BACKORDER" onchange="this.value = toShow(this.value);" onfocus="this.select();" />
                                                 <label for="BACKORDER">BackOrder</label>
                                             </div>
                                             <div class="col s12 m12 right-align">
@@ -688,6 +689,7 @@
                                 {
                                     @Html.AntiForgeryToken()
                                     @Html.HiddenFor(model => model.D.NUM_DOC)
+                                    @Html.HiddenFor(model => model.D.LIGADA)
                                     <div class="card-panel">
                                         <h5>Taxeo</h5>
                                         <div class="row">
