@@ -1,9 +1,10 @@
 ﻿@model IEnumerable<TAT001.Entities.DOCUMENTO>
 
 @{
+    //ViewBag.Title = "Páginas";
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.pagina_r = 1100;
-    ViewBag.carpeta_r = 1107;
+    ViewBag.carpeta_r = 1106;
     List<Tuple<decimal, decimal>> negAmount = new List<Tuple<decimal, decimal>>();
 }
 @if (!ViewBag.Display)
@@ -23,14 +24,14 @@
             });
             $(document).ready(function () {
                 $("#sendbtn").click(function () {
-                    $("#excelBtn").prop("disabled", "false");
+                    $("#excelBtn").prop("disabled","false");
                 });
             });
         });
     </script>
 }
 
-@using (Html.BeginForm("ReporteTrackingTS", "Reportes", FormMethod.Post))
+@using (Html.BeginForm("ReporteMRLTS", "Reportes", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
     System.Globalization.TextInfo myTI = new System.Globalization.CultureInfo("en-US", false).TextInfo;
@@ -62,59 +63,61 @@
             </div>
         }
     </div>
-    @* FILTROS *@
     <div class="card-panel">
         <div class="row">
             <div class="row" style="margin-bottom:0;">
-                @* FILTRO CO. CODE *@
-                @* OPCIONAL *@
-                <div class="input-field col s2 m2 l2">
-                    <select multiple name="selectcocode" id="selectcocode" class="comcode select_all">
+                <div class="input-field col s3 m3 l3">
+                    <select name="selectdperiod" id="selectdperiod" required="">
                         @try
                         {
-                            foreach (var item in ViewBag.sociedad)
-                            {
-                                <option value="@item.BUKRS">@item.BUKRS</option>
-                            }
-                        }
-                        catch (Exception)
-                        {
-                            <option value="" id="no_opt">No hay opciones</option>
-                        }
-                    </select>
-                    <label id="label_cocode">Co. Code</label>
-                </div>
-                @* FILTRO PERIODO *@
-                @* OBLIGATORIO *@
-                <div class="input-field col s2 m2 l2">
-                    <select name="selectperiod" id="selectperiod" required="">
-                        @try
-                        {
-                            foreach (var periodo in ViewBag.periodo)
+                            foreach (var periodo in ViewBag.dperiodo)
                             {
                                 var concat = "P";
                                 if (Int32.Parse(periodo.ACTIVO) == 1)
                                 {
-                                    Console.Write(periodo.ACTIVO);
                                     <option value="@periodo.ID">@(concat + periodo.ID)</option>
 
                                 }
                                 else { }
                             }
+
                         }
                         catch (Exception)
                         {
                             <option value="" id="no_optper">No hay opciones</option>
                         }
                     </select>
-                    <label id="label_period">Periodo *</label>
+                    <label id="label_period">De Periodo *</label>
                 </div>
-                @* FILTRO AÑO *@
-                @* OBLIGATORIO *@
+                <div class="input-field col s3 m3 l3">
+                    <select name="selectaperiod" id="selectdaperiod" required="">
+
+                        @try
+                        {
+                            foreach (var periodo in ViewBag.aperiodo)
+                            {
+                                var concat = "P";
+                                if (Int32.Parse(periodo.ACTIVO) == 1)
+                                {
+                                    <option value="@periodo.ID">@(concat + periodo.ID)</option>
+
+                                }
+                                else { }
+                            }
+
+                        }
+                        catch (Exception)
+                        {
+                            <option value="" id="no_optper">No hay opciones</option>
+                        }
+                    </select>
+                    <label id="label_period">A Periodo *</label>
+                </div>
                 <div class="input-field col s2 m2 l2">
                     <select name="selectyear" id="selectyear" required="">
                         @if (yeard == DateTime.Now.Year)
                         {
+
                             <option value="@yeard">@yeard</option>
                             <option value="@year1">@year1</option>
                             <option value="@year2">@year2</option>
@@ -128,65 +131,21 @@
                     </select>
                     <label id="label_yr">Año *</label>
                 </div>
-                @* FILTRO USUARIO *@
-                @* OPCIONAL *@
-                <div class="input-field col s2 m2 l2">
-                    <select name="selectUsuarioF" id="selectUsuarioF">
-                        <option value=""></option>
+                <div class="input-field col s3 m3 l3">
+                    <select multiple name="selectcocode" id="selectcocode" class="comcode select_all" required="">
                         @try
                         {
-                            foreach (var id in ViewBag.UsuarioF)
+                            foreach (var item in ViewBag.sociedad)
                             {
-                                <option value="@id.ID">@(id.ID)</option>
+                                <option value="@item.BUKRS">@item.BUKRS</option>
                             }
-
                         }
                         catch (Exception)
                         {
-                            <option value="" id="no_optper">No hay opciones</option>
+                            <option value="" id="no_opt">No hay opciones</option>
                         }
                     </select>
-                    <label id="label_period">Usuario</label>
-                </div>
-                @* FILTRO CLIENTE *@
-                @* OPCIONAL *@
-                <div class="input-field col s2 m2 l2">
-                    <select name="selectCliente" id="selectCliente">
-                        <option value=""></option>
-                        @try
-                        {
-                            foreach (var id in ViewBag.Cliente)
-                            {
-                                <option value="@id">@(id)</option>
-                            }
-
-                        }
-                        catch (Exception)
-                        {
-                            <option value="" id="no_optper">No hay opciones</option>
-                        }
-                    </select>
-                    <label id="label_period">Cliente</label>
-                </div>
-                @* FILTRO TIPO DE SOLICITUD *@
-                @* OPCIONAL *@
-                <div class="input-field col s2 m2 l2">
-                    <select name="selectTipoSolicitud" id="selectTipoSolicitud">
-                        <option value=""></option>
-                        @try
-                        {
-                            foreach (var solicitud in ViewBag.Tds)
-                            {
-                                <option value="@solicitud.ID">@(solicitud.DESCRIPCION)</option>
-                            }
-
-                        }
-                        catch (Exception)
-                        {
-                            <option value="" id="no_optper">No hay opciones</option>
-                        }
-                    </select>
-                    <label id="label_period">Tipo de solicitud</label>
+                    <label id="label_cocode">Co. Code *</label>
                 </div>
             </div>
         </div>
@@ -212,7 +171,6 @@
             var instance = M.FormSelect.init(elem, options);
         </script>
     </div>
-    @* FIN FILTROS *@
     if (ViewBag.display)
     {
         <script>
@@ -223,6 +181,7 @@
                 $("#excelBtn").click(function () {
                     $("#table").tableExport();
                 });
+
                 $('select.select_all').siblings('ul').prepend('<li id=sm_select_all id="filters_all"><span>Todas Las Opciones</span></li>');
                 $('li#sm_select_all').on('click', function () {
                     var jq_elem = $(this),
@@ -235,24 +194,25 @@
                     }).click();
                 });
             });
+
             $(function () {
                 $("table").tablesorter({
-                        theme: "materialize",
-                        widthFixed: true,
-                        // widget code contained in the jquery.tablesorter.widgets.js file
-                        // use the zebra stripe widget if you plan on hiding any rows (filter widget)
-                        widgets: ["filter", "zebra"],
-                        widgetOptions: {
-                            // using the default zebra striping class name, so it actually isn't included in the theme variable above
-                            // this is ONLY needed for materialize theming if you are using the filter widget, because rows are hidden
-                            zebra: ["even", "odd"],
-                            // reset filters button
-                            filter_reset: ".reset",
-                            // extra css class name (string or array) added to the filter element (input or select)
-                            // select needs a "browser-default" class or it gets hidden
-                            filter_cssFilter: ["", "", "browser-default"]
-                        }
-                    })
+                    theme: "materialize",
+                    widthFixed: true,
+                    // widget code contained in the jquery.tablesorter.widgets.js file
+                    // use the zebra stripe widget if you plan on hiding any rows (filter widget)
+                    widgets: ["filter", "zebra"],
+                    widgetOptions: {
+                        // using the default zebra striping class name, so it actually isn't included in the theme variable above
+                        // this is ONLY needed for materialize theming if you are using the filter widget, because rows are hidden
+                        zebra: ["even", "odd"],
+                        // reset filters button
+                        filter_reset: ".reset",
+                        // extra css class name (string or array) added to the filter element (input or select)
+                        // select needs a "browser-default" class or it gets hidden
+                        filter_cssFilter: ["", "", "browser-default"]
+                    }
+                })
                     .tablesorterPager({
                         // target the pager markup - see the HTML block below
                         container: $(".ts-pager"),
@@ -273,42 +233,58 @@
                     <tr>
                         <th class="filter-select" data-placeholder="Todas las opciones" id="head_code">Co. Code</th>
                         <th class="filter-select" data-placeholder="Todas las opciones" id="head_pais">País</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_num_solicitud">Num solicitud</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_num_cliente">Num cliente</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_cliente">Cliente</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_num_solicitud">Número de solicitud</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_fecha_solicitud">Fecha solicitud</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_periodo_contable">Periodo Contable</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_no_doc_SAP">Número documento SAP</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_no_rev_SAP">Número reverso SAP</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_fecha_reverso">Fecha Reverso</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_periodo_contable_reverso">Periodo contable reverso</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_comentarios_reverso_provision">Comentarios reverso provisión</th>
                         <th class="filter-select" data-placeholder="Todas las opciones" id="head_tipo_solicitud">Tipo Solicitud</th>
                         <th class="filter-select" data-placeholder="Todas las opciones" id="head_status">Status</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_fecha">Fecha</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_hora">Hora</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_tiempo">Tiempo Transcurrido</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_semana">Semana</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_periodo">Periodo</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_ano">Año</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_usuario">Usuario</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_rol">Rol</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_comentario">Comentario</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_correcciones">Número correcciones Solicitud</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_concepto_solicitud">Concepto Solicitud</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_d">De</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_a">A</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_clasificacion">Clasificación</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_num_cliente">Num Cliente</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_cliente">Cliente</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_monto">$ Monto previsión registrada</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_importe">$ Importe NC/OP</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_reverso">$ Reverso</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_beneficio">Beneficio/ (impacto) - MRL</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_expense">Expense Recognition Años Anteriores</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_monto_USD">Monto Provisión registrada USD</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_importe_USD">$ Importe NC/OP USD</th>
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
                         <th class="filter-select" data-placeholder="Todas las opciones" id="head_code">Co. Code</th>
                         <th class="filter-select" data-placeholder="Todas las opciones" id="head_pais">País</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_num_solicitud">Num solicitud</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_num_cliente">Num cliente</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_cliente">Cliente</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_num_solicitud">Número de solicitud</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_fecha_solicitud">Fecha solicitud</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_periodo_contable">Periodo Contable</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_no_doc_SAP">Número document SAP</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_no_rev_SAP">Número reverso SAP</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_fecha_reverso">Fecha Reverso</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_periodo_contable_reverso">Periodo contable reverso</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_comentarios_reverso_provision">Comentarios reverso provisión</th>
                         <th class="filter-select" data-placeholder="Todas las opciones" id="head_tipo_solicitud">Tipo Solicitud</th>
                         <th class="filter-select" data-placeholder="Todas las opciones" id="head_status">Status</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_fecha">Fecha</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_hora">Hora</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_tiempo">Tiempo Transcurrido</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_semana">Semana</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_periodo">Periodo</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_ano">Año</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_usuario">Usuario</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_rol">Rol</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_comentario">Comentario</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_correcciones">Número correcciones Solicitud</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_concepto_solicitud">Concepto Solicitud</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_d">De</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_a">A</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_clasificacion">Clasificación</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_nunm_cliente">Num Cliente</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_cliente">Cliente</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_monto">$ Monto previsión registrada</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_importe">$ Importe NC/OP</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_reverso">$ Reverso</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_beneficio">Beneficio/ (impacto) - MRL</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_expense">Expense Recognition Años Anteriores</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_monto_USD">Monto Provisión registrada USD</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_importe_USD">$ Importe NC/OP USD</th>
                     </tr>
                     <!-- include "tablesorter-ignoreRow" class for pager rows in thead -->
                     <tr class="tablesorter-ignoreRow">
@@ -331,33 +307,44 @@
                                 <select class="pagenum browser-default" title="Select page number"></select>
                             </div>
                         </th>
-                        <th colspan="12"></th>
+                        <th colspan="12">
+                        </th>
                     </tr>
                 </tfoot>
                 <tbody>
-                    @foreach (var itemvar in ViewBag.tabla_reporte)
+                    @foreach (TAT001.Models.ReportesModel.MRLTS item in ViewBag.tabla_reporte)
                     {
-                        TAT001.Models.ReportesModel.TrackingTS item = itemvar.GetType().GetProperty("tracking").GetValue(itemvar, null);
+                        // TAT001.Models.ReportesModel.MRLTS item = itemvar.GetType().GetProperty("renglon").GetValue(itemvar, null);
                         <tr>
                             <td>@item.CO_CODE </td>
                             <td>@item.PAIS </td>
                             <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUMERO_SOLICITUD })'" style="cursor:pointer">@item.NUMERO_SOLICITUD </td>
+                            <td>@item.FECHA_SOLICITUD </td>
+                            <td>@item.PERIODO_CONTABLE </td>
+                            <td>@item.NUMERO_DOCUMENTO_SAP </td>
+                            <td>@item.NUMERO_REVERSO_SAP </td>
+                            <td>@item.FECHA_REVERSO </td>
+                            <td>@item.PERIODO_CONTABLE_REVERSO </td>
+                            <td>@item.COMENTARIOS_REVERSO_PROVISION </td>
+                            <td>@item.TIPO_SOLICITUD </td>
+                            <td>@item.STATUS </td>
+                            <td>@item.CONCEPTO_SOLICITUD </td>
+                            <td>@item.DE </td>
+                            <td>@item.A </td>
+                            <td>@item.CLASIFICACION </td>
                             <td>@item.NUMERO_CLIENTE </td>
                             <td>@item.CLIENTE </td>
-                            <td>@item.TIPO_SOLICITUD </td>
-                            <td>@item.STATUS_STRING </td>
-                            <td>@item.FECHA_STRING </td>
-                            <td>@item.HORA_STRING </td>
-                            <td>@item.TIEMPO_TRANSCURRIDO_STRING </td>
-                            <td>@item.SEMANA </td>
-                            <td>@item.PERIODO </td>
-                            <td>@item.ANIO </td>
-                            <td>@item.USUARIO </td>
-                            <td>@item.ROL </td>
-                            <td>@item.COMENTARIO </td>
-                            <td>@(item.NUMERO_CORRECCIONES - 1 == 0 ? "" : (item.NUMERO_CORRECCIONES -1).ToString()) </td>
+                            <td>@*item.MONTO_PROVISION_REGISTRADA*@ </td>
+                            <td>@*item.IMPORTE_NCOP*@ </td>
+                            <td>@*item.MONTO_REVERSO*@ </td>
+                            <td>@*item.BENEFICIO_IMPACTO_MRL*@ </td>
+                            <td>@*item.EXPENSE_RECOGNITION*@ </td>
+                            <td>@*item.MONTO_PROVISION_REGISTRADA_USD*@ </td>
+                            <td>@*item.IMPORTE_NCOP_USD*@ </td>
+                            <td>@*item.MONTO_REVERSO_USD*@ </td>
+                            <td>@*item.BENEFICIO_IMPACTO_MRL_USD*@ </td>
                         </tr>
-                     }
+                    }
                 </tbody>
             </table>
         </div>

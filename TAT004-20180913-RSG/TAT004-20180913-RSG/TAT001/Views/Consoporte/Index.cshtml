@@ -1,0 +1,152 @@
+﻿@model IEnumerable<TAT001.Entities.CONSOPORTE>
+
+@{
+    ViewBag.pagina_r = 841;
+    ViewBag.carpeta_r = 500;
+    //ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    var elem = document.querySelector('select');
+    var options = [];
+    var instance = M.Select.init(elem, options);
+</script>
+
+<script src="//code.jquery.com/jquery-1.12.4.js"></script>
+<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
+<link href="~/Content/dataTable.css" rel="stylesheet" />
+<link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="row right">
+            <div class="col l12 m12 right">
+                <a href="@Url.Action("Details", "TSol", new { id = ViewBag.IdTsol })" class="waves-effect waves-light btn">REGRESAR</a>
+                <a href="@Url.Action("Create", "Consoporte", new { tsol = ViewBag.IdTsol })" class="waves-effect waves-light btn">AGREGAR</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="row" style="height:10px;width:100%;">
+            <div class="col l7 pink darken-1" style="height:10px;padding:0;"></div>
+            <div class="col l3 pink darken-4" style="height:10px;padding:0;">
+                <div class="col l3 pink darken-4" style="height:10px;padding: 0;"></div>
+                <div class="col l8 orange" style="height:10px;padding:0;"></div>
+                <div class="col l1 red" style="height:10px;padding:0;"></div>
+            </div>
+            <div class="col l2 yellow" style="height:10px;padding:0;"></div>
+        </div>
+    </div>
+
+    <table class="table mdl-data-table striped" style="text-align:center;">
+        <thead>
+            <tr class="header" style="background-color:#CCCCCC">
+                <th>
+                    @Html.DisplayNameFor(model => model.TSOPORTE.DESCRIPCION)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.OBLIGATORIO)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TSOL.DESCRIPCION)
+                </th>
+                <th>SELECCIÓN</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TSOPORTE.DESCRIPCION)
+                    </td>
+                    @if ((bool)item.OBLIGATORIO == true)
+                    {
+                        <td style="align-items:center"><i class='material-icons green-text'>check</i></td>}
+                    else
+                    {
+                        <td style="align-items:center;"><i class='material-icons red-text'>clear</i></td>}
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TSOL.DESCRIPCION)
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Edit", "Consoporte", new { tsol = item.TSOL_ID, tsopo = item.TSOPORTE_ID })">
+                            <i class='material-icons green-text'>edit</i>
+                        </a>
+                        <a href="@Url.Action("Details", "Consoporte", new { tsol = item.TSOL_ID, tsopo = item.TSOPORTE_ID })">
+                            <i class='material-icons blue-text'>search</i>
+                        </a>
+                        <a data-form-method="post" href="@Url.Action("Delete", "Consoporte", new { tsol = item.TSOL_ID, tsopo = item.TSOPORTE_ID })">
+                            <i class='material-icons red-text'>delete</i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<script>
+    $(document).ready(function () {
+        var i = 0;
+        $('#table tfoot th').each(function () {
+            i++;
+            var title = $(this).text();
+            $(this).html('<input type="text" id="lbl_search' + i + '" />');
+        });
+        var table = $('#table').DataTable({
+            language: {
+                "url": "../Scripts/lang/@Session["spras"].ToString()" + ".json"
+            },
+            columnDefs: [
+                {
+                    targets: [0, 1, 2],
+                    className: 'mdl-data-table__cell--non-numeric'
+                }
+            ]
+        });
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+                }
+            });
+        })
+        var a = $('#selecc').val();
+        table.page.len(a).draw();
+        $('#selecc').on('change', function () {
+            table.page.len(this.value).draw();
+        });
+
+        $('input.global_filter').on('keyup click', function () {
+            filterGlobal();
+        });
+    });
+
+    function filterGlobal() {
+        $('#table').DataTable().search(
+            $('#global_filter').val()).draw();
+    }
+</script>
+<style>
+    .dataTables_length {
+        display: none;
+    }
+
+    .dataTables_filter {
+        display: none;
+    }
+
+    .dataTables_scrollHeadInner, .mdl-data-table {
+        width: 100%;
+    }
+</style>
+

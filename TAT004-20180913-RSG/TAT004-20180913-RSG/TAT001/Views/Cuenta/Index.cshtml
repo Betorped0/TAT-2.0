@@ -1,0 +1,182 @@
+﻿@model IEnumerable<TAT001.Entities.CUENTA>
+@{
+    ViewBag.pagina_r = 691;
+    ViewBag.carpeta_r = 500;
+    //ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    var elem = document.querySelector('select');
+    var options = [];
+    var instance = M.Select.init(elem, options);
+</script>
+
+<script src="//code.jquery.com/jquery-1.12.4.js"></script>
+<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
+<link href="~/Content/dataTable.css" rel="stylesheet" />
+<link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="row right">
+            <div class="col l12 m12 right">
+                <a href="@Url.Action("Create", "Cuenta")" class="waves-effect waves-light btn">AGREGAR</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="height:10px;width:100%;">
+        <div class="col l7 pink darken-1" style="height:10px;padding:0;"></div>
+        <div class="col l3 pink darken-4" style="height:10px;padding:0;">
+            <div class="col l3 pink darken-4" style="height:10px;padding:0;"></div>
+            <div class="col l8 orange" style="height:10px;padding:0;"></div>
+            <div class="col l1 red" style="height:10px;padding:0;"></div>
+        </div>
+        <div class="col l2 yellow" style="height:10px;padding:0;"></div>
+    </div>
+
+    <table class="table mdl-data-table striped" id="table" style="width:100%;">
+        <thead>
+            <tr class="header" style="background-color:#CCCCCC">
+                <th>
+                    @Html.DisplayNameFor(model => model.ABONO)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CARGO)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CLEARING)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LIMITE)
+                </th>
+                @*<th>
+                    @Html.DisplayNameFor(model => model.GALL.DESCRIPCION)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PAI.SPRAS)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SOCIEDAD.BUTXT)
+                </th>*@
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ABONO)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CARGO)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CLEARING)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LIMITE)
+                    </td>
+                    @*<td>
+                        @Html.DisplayFor(modelItem => item.GALL.DESCRIPCION)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PAI.SPRAS)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SOCIEDAD.BUTXT)
+                    </td>*@
+                    <td>
+                        <a href="@Url.Action("Edit", "Cuenta", new { soc = item.SOCIEDAD_ID, pai = item.PAIS_ID, tal = item.TALL_ID, eje = item.EJERCICIO })">
+                            <i class='material-icons green-text'>edit</i>
+                        </a>&nbsp
+                        <a href="@Url.Action("Details", "Cuenta", new { soc = item.SOCIEDAD_ID, pai = item.PAIS_ID, tal = item.TALL_ID, eje = item.EJERCICIO })">
+                            <i class='material-icons blue-text'>search</i>
+                        </a>&nbsp
+                        <a data-form-method="post" href="@Url.Action("Delete", "Cuenta", new { soc = item.SOCIEDAD_ID, pai = item.PAIS_ID, tal = item.TALL_ID, eje = item.EJERCICIO })">
+                            <i class='material-icons red-text'>delete</i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<script type="text/javascript">
+    $("a[data-form-method='post']").click(function (event) {
+        event.preventDefault();
+        var element = $(this);
+        var action = element.attr("href");
+        element.closest("form").each(function () {
+            var form = $(this);
+            form.attr("action", action);
+            form.submit();
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        var i = 0;
+        $('#table tfoot th').each(function () {
+            i++;
+            var title = $(this).text();
+            $(this).html('<input type="text" id="lbl_search' + i + '" />');
+        });
+        var table = $('#table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+            },
+            columnDefs: [
+                {
+                    targets: [0, 1, 2],
+                    className: 'mdl-data-table__cell--non-numeric'
+                }
+            ]
+        });
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+                }
+            });
+        })
+        var a = $('#selecc').val();
+        table.page.len(a).draw();
+        $('#selecc').on('change', function () {
+            table.page.len(this.value).draw();
+        });
+
+        $('input.global_filter').on('keyup click', function () {
+            filterGlobal();
+        });
+    });
+
+    function filterGlobal() {
+        $('#table').DataTable().search(
+            $('#global_filter').val()).draw();
+    }
+</script>
+<style>
+    .dataTables_length {
+        display: none;
+    }
+
+    .dataTables_filter {
+        display: none;
+    }
+
+    .dataTables_scrollHeadInner, .mdl-data-table {
+        width: 100%;
+    }
+</style>
+

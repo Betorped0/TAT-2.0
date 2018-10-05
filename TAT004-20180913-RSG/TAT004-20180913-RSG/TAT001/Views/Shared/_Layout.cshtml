@@ -165,7 +165,7 @@
                                                 font-family: Tahoma;
                                                 text-transform: uppercase;
                                                 display: block;
-                                                font-size: 10px;
+                                               font-size: 11px;
                                                 font-weight: 500;
                                                 height: 48px;
                                                 line-height: 48px;
@@ -181,7 +181,7 @@
                                                 font-family: Tahoma;
                                                 text-transform: uppercase;
                                                 display: block;
-                                                font-size: 10px;
+                                                font-size: 11px;
                                                 font-weight: 500;
                                                 height: 48px;
                                                 line-height: 48px;
@@ -212,7 +212,7 @@
                                                 font-family: Tahoma;
                                                 text-transform: uppercase;
                                                 display: block;
-                                                font-size: 10px;
+                                                font-size: 11px;
                                                 font-weight: 500;
                                                 height: 48px;
                                                 line-height: 48px;
@@ -360,11 +360,14 @@ var elems = document.querySelectorAll('.collapsible');
         {
             <script>
                 try {
-                    var elem = document.getElementById("@t.CAMPO_ID").innerHTML = "@t.TEXTOS";
+                    var elem = document.getElementById("@t.CAMPO_ID");
+                    if (elem.nodeName != 'INPUT' & elem.nodeName != 'SELECT' & elem.nodeName != 'TABLE' & elem.nodeName != 'TEXTAREA')
+                    elem.innerHTML = "@t.TEXTOS";
                 } catch (e) {
                     try {
                         var divs = document.getElementsByClassName("@t.CAMPO_ID");
                         [].slice.call(divs).forEach(function (div) {
+                            if (div.nodeName != 'INPUT' & div.nodeName != 'SELECT' & div.nodeName != 'TABLE' & div.nodeName != 'TEXTAREA')
                             div.innerHTML = "@t.TEXTOS";
                         });
                     }

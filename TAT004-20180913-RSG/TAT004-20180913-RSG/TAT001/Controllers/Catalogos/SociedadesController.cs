@@ -13,7 +13,7 @@ namespace TAT001.Controllers.Catalogos
     [Authorize]
     public class SociedadesController : Controller
     {
-        private TAT004Entities db = new TAT004Entities();
+        private TAT001Entities db = new TAT001Entities();
 
         // GET: Sociedades
         public ActionResult Index()
