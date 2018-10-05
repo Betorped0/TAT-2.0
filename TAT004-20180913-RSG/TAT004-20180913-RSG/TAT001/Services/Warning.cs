@@ -10,7 +10,7 @@ namespace TAT001.Services
     {
         public string listaW(string bukrs, string spras)//RSG 07.06.2018---------------------------------------------
         {
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 List<WARNINGP> lwp = db.WARNINGPs.Where(x => x.SOCIEDAD_ID.Equals(bukrs) | x.SOCIEDAD_ID == null).ToList();
                 List<WARNINGPT> lwpt = db.WARNINGPTs.Where(x => x.SPRAS_ID.Equals(spras)).ToList();

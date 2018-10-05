@@ -16,7 +16,7 @@ namespace TAT001.Controllers
 {
     public class NegociacionesController : Controller
     {
-        private TAT004Entities db = new TAT004Entities();
+        private TAT001Entities db = new TAT001Entities();
 
         // GET: Negociaciones
         public ActionResult Index(string pay, string vkorg, string vtweg, string spart, string correo, string fi, string ff)

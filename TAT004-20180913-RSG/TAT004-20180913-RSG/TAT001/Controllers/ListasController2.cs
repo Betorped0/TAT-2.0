@@ -24,7 +24,7 @@ namespace TAT001.Controllers
         ////    if (Prefix == null)
         ////        Prefix = "";
 
-        ////    TAT004Entities db = new TAT004Entities();
+        ////    TAT001Entities db = new TAT001Entities();
 
         ////    var c = (from N in db.CLIENTEs
         ////             where N.KUNNR.Contains(Prefix)
@@ -46,7 +46,7 @@ namespace TAT001.Controllers
             if (Prefix == null)
                 Prefix = "";
 
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
             if (usuario == "" & pais == "")
             {
                 var c = (from N in db.CLIENTEs
@@ -93,7 +93,7 @@ namespace TAT001.Controllers
             if (Prefix == null)
                 Prefix = "";
 
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
 
             string p = pais.Split('.')[0].ToUpper();
             var c = (from N in db.STATES
@@ -109,7 +109,7 @@ namespace TAT001.Controllers
             if (Prefix == null)
                 Prefix = "";
 
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
 
             var c = (from N in db.CITIES
                      join St in db.STATES
@@ -123,7 +123,7 @@ namespace TAT001.Controllers
         [HttpGet]
         public JsonResult Det_Aprob(string bukrs, string puesto, string spras)
         {
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
             int p = Int16.Parse(puesto);
             var c = (from N in db.DET_APROB
                      join St in db.PUESTOTs
@@ -138,7 +138,7 @@ namespace TAT001.Controllers
         [HttpGet]
         public JsonResult Det_Aprob2(string bukrs, string puesto, string spras)
         {
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
             int p = Int16.Parse(puesto);
             DET_APROBH dh = db.DET_APROBH.Where(a => a.SOCIEDAD_ID.Equals(bukrs) & a.PUESTOC_ID == p).OrderByDescending(a => a.VERSION).FirstOrDefault();
             if (dh != null)
@@ -172,7 +172,7 @@ namespace TAT001.Controllers
         [HttpGet]
         public JsonResult UsuariosPuesto(string puesto, string Prefix)
         {
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
             int p = Int16.Parse(puesto);
             var c = (from N in db.USUARIOs
                      where //N.PUESTO_ID == p & 
@@ -194,7 +194,7 @@ namespace TAT001.Controllers
         //[HttpGet]
         //public JsonResult Grupos(string bukrs, string pais, string user)
         //{
-        //    TAT004Entities db = new TAT004Entities();
+        //    TAT001Entities db = new TAT001Entities();
         //    var c = (from N in db.CREADOR2
         //             where N.BUKRS == bukrs & N.LAND == pais & N.ID.Equals(user)
         //             //where N.BUKRS.Equals(bukrs) 
@@ -205,7 +205,7 @@ namespace TAT001.Controllers
         [HttpGet]
         public JsonResult Grupos(string pais, string user, string vkorg, string vtweg, string spart, string kunnr)
         {
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
             var c = (from N in db.DET_AGENTEC
                      where N.PAIS_ID == pais
                      & N.USUARIOC_ID.Equals(user)
@@ -220,7 +220,7 @@ namespace TAT001.Controllers
         //[HttpPost]
         //public JsonResult getPresupuesto(string kunnr)
         //{
-        //    TAT004Entities db = new TAT004Entities();
+        //    TAT001Entities db = new TAT001Entities();
         //    PRESUPUESTO_MOD pm = new PRESUPUESTO_MOD();
         //    try
         //    {
@@ -267,7 +267,7 @@ namespace TAT001.Controllers
         [HttpGet]
         public JsonResult Relacionados(string num_doc, string spras)
         {
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
             //var c = db.DOCUMENTOes.Where(a => a.DOCUMENTO_REF.Equals(num_doc));
             decimal num = (decimal.Parse(num_doc));
             var c = (from D in db.DOCUMENTOes
@@ -287,7 +287,7 @@ namespace TAT001.Controllers
         [HttpGet]
         public JsonResult Paises(string bukrs)
         {
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
 
             var c = (from D in db.PAIS
                      where D.SOCIEDAD_ID == bukrs
@@ -298,7 +298,7 @@ namespace TAT001.Controllers
         [HttpGet]
         public JsonResult selectTaxeo(string bukrs, string pais, string vkorg, string vtweg, string spart, string kunnr, string spras)
         {
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
 
             var c = (from T in db.TAXEOHs
                      join TX in db.TX_CONCEPTOT
@@ -317,7 +317,7 @@ namespace TAT001.Controllers
         [HttpPost]
         public JsonResult selectConcepto(string bukrs, string pais, string vkorg, string vtweg, string spart, string kunnr, string concepto, string spras)
         {
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
             int co = int.Parse(concepto);
             var c = (from T in db.TAXEOHs
                      join TX in db.TX_NOTAT
@@ -337,7 +337,7 @@ namespace TAT001.Controllers
         [HttpPost]
         public JsonResult selectImpuesto(string bukrs, string pais, string vkorg, string vtweg, string spart, string kunnr, string concepto, string spras)
         {
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
             int co = int.Parse(concepto);
             var c = (from T in db.TAXEOHs
                      where T.SOCIEDAD_ID == bukrs
@@ -370,7 +370,7 @@ namespace TAT001.Controllers
         [HttpPost]
         public JsonResult soportes(string tsol, string spras)
         {
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
 
             var c = (from C in db.CONSOPORTEs
                      join T in db.TSOPORTETs
@@ -385,7 +385,7 @@ namespace TAT001.Controllers
         [HttpPost]
         public JsonResult clearing(string bukrs, string land, string gall, string ejercicio)
         {
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
             decimal ejer = decimal.Parse(ejercicio);
 
             var c = (from C in db.CUENTAs
@@ -402,7 +402,7 @@ namespace TAT001.Controllers
         [AllowAnonymous]
         public JsonResult categoriasCliente(string vkorg, string spart, string kunnr, string soc_id)
         {
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
             if (kunnr == null)
             {
                 kunnr = "";
@@ -615,7 +615,7 @@ namespace TAT001.Controllers
 
         public CONFDIST_CAT getCatConf(string soc)
         {
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
             CONFDIST_CAT conf = new CONFDIST_CAT();
 
             try
@@ -668,7 +668,7 @@ namespace TAT001.Controllers
         public JsonResult SelectCliente(string kunnr)
         {
 
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
 
             CLIENTE_MOD id_cl = (from c in db.CLIENTEs
                                  join co in db.CONTACTOCs

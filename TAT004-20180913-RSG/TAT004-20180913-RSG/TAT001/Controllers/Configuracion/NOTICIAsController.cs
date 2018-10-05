@@ -15,13 +15,13 @@ namespace TAT001.Controllers.Configuracion
 {
     public class NOTICIAsController : Controller
     {
-        private TAT004Entities db = new TAT004Entities();
+        private TAT001Entities db = new TAT001Entities();
 
         // GET: NOTICIAs
         public ActionResult Index()
         {
             int pagina = 911; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -71,7 +71,7 @@ namespace TAT001.Controllers.Configuracion
         public ActionResult Create()
         {
             int pagina = 912; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -128,7 +128,7 @@ namespace TAT001.Controllers.Configuracion
             }
             ViewBag.error = "Ya existe un registro con esos datos";
             int pagina = 912; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -196,7 +196,7 @@ namespace TAT001.Controllers.Configuracion
         public ActionResult Delete(long? id)
         {
             int pagina = 721; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
