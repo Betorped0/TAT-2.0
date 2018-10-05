@@ -1,0 +1,77 @@
+﻿@model IEnumerable<TAT001.Entities.CUENTA>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ABONO)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CARGO)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CLEARING)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LIMITE)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PAI.SPRAS)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SOCIEDAD.BUTXT)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TALL.DESCRIPCION)
+            </th>
+            <th></th>
+        </tr>
+    
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ABONO)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CARGO)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CLEARING)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LIMITE)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PAI.SPRAS)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SOCIEDAD.BUTXT)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TALL.DESCRIPCION)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+    }
+    
+    </table>
+</body>
+</html>
