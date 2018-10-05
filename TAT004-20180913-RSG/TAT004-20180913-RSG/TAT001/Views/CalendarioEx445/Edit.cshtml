@@ -130,6 +130,8 @@
                         @Html.HiddenFor(model => model.calendarioEx445.USUARIO_ID)
                         @Html.HiddenFor(model => model.calendarioEx445.USUARIOC_ID)
                         @Html.HiddenFor(model => model.calendarioEx445.FEHAC)
+
+                        @Html.Hidden("paginaIndex", (object)ViewBag.paginaIndex)
                         <div class="row">
                             <div class="col s4">
                                 <div class="form-group">
@@ -173,9 +175,11 @@
                                     <label class="lbl_desdeDia"></label>
                                     <div class="col-md-10">
                                         @Html.EditorFor(model => model.calendarioEx445.EX_FROMF, new { htmlAttributes = new { @required = "", @class = "datepicker" } })
-                                        <label class="lbl_minFecha"></label>:
-                                        @Html.EditorFor(model => model.calendario445.PRE_TOF, new { htmlAttributes = new { @disabled = true, @class = "datepicker" } })
                                     </div>
+                                    <label class="lbl_minFecha"></label>
+                                    @Html.EditorFor(model => model.calendario445.PRE_TOF, new { htmlAttributes = new { @disabled = true, @class = "datepicker", @style = "border-bottom: 0px;" } })
+
+
                                 </div>
                             </div>
                             <div class="col s3">
@@ -191,9 +195,9 @@
                                     <label class="lbl_hastaDia"></label>
                                     <div class="col-md-10">
                                         @Html.EditorFor(model => model.calendarioEx445.EX_TOF, new { htmlAttributes = new { @required = "", @class = "datepicker" } })
-                                        <label class="lbl_maxFecha"></label>:
-                                        @Html.EditorFor(model => model.calendario445.CIE_FROMF, new { htmlAttributes = new { @disabled = true, @class = "datepicker" } })
                                     </div>
+                                    <label class="lbl_maxFecha"></label>
+                                    @Html.EditorFor(model => model.calendario445.CIE_FROMF, new { htmlAttributes = new { @disabled = true, @class = "datepicker", @style = "border-bottom: 0px;" } })
                                 </div>
                             </div>
                             <div class="col s3">
@@ -213,29 +217,39 @@
                         </div>
                         </div>
 
-                        }
-
-
-<div class="col s12">
-    <a id="btn_return" href="@Url.Action("Index", "Calendario445")"></a>
-</div>
+            }
+            <div class="col s12">
+                @if (ViewBag.paginaIndex == "Calendario445")
+                {
+                    <a id="btn_return" href="@Url.Action("Index", ViewBag.paginaIndex)"></a>
+                }
+                else
+                {
+                    <a id="btn_return" href="@Url.Action("Index", ViewBag.paginaIndex,new { ejercicio=Model.calendarioEx445.EJERCICIO,  periodo= Model.calendarioEx445.PERIODO,  sociedad_id= Model.calendarioEx445.SOCIEDAD_ID,  tsol_id= Model.calendarioEx445.TSOL_ID })"></a>
+                }
+            </div>
 <script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
 <script>
+     var spras_id ="@ViewBag.spras_id";
     //---- Inicializador de componentes Materialize----
-    fnCommon.materializeInit('.datepicker', 'datepicker');
+    fnCommon.materializeInit('.datepicker', 'datepicker', spras_id);
     fnCommon.materializeInit('.timepicker', 'timepicker');
     fnCommon.materializeInit('select', 'select');
 
     //----  Remover Hora de Fecha----
     document.querySelectorAll('.datepicker').forEach(function (datePicker) {
         datePicker.value = datePicker.value.substring(0, 10);
+
+        var dateVal = moment(datePicker.value, 'DD/MM/YYYY');
+        M.Datepicker.getInstance(datePicker).setDate(dateVal._d);
+
     });
     //----  Se agrega validaciones al formulario----
     fnCommon.selectRequired();
     fnCommon.formValidation('calendarioEx445Form');
     fnCommon.dateRangeValidation('calendario445_PRE_TOF', 'calendarioEx445_EX_FROMF', 'calendarioEx445_EX_TOF', 'calendario445_CIE_FROMF');
 
-    
+
     // Valida si ocurrio un error al intentar crear el periodo y otro.
     var mnjError = '@ViewBag.mnjError';
     if (mnjError) {

@@ -302,20 +302,22 @@ namespace TAT001.Controllers.Catalogos
                 ids[7] = da.ID_US7;
                 idsx[7] = true;
                 cl.ID_PROVEEDOR = da.ID_PROVEEDOR;
+                cl.ID_PROVEEDORX = true;
                 cl.BANNER = da.BANNER;
                 cl.BANNERG = da.BANNERG;
                 cl.CANAL = da.CANAL;
+                cl.CANALX = true;
                 cl.EXPORTACION = da.EXPORTACION;
                 cl.CONTACTO = da.CONTACTO;
                 cl.CONTACTOE = da.CONTACTOE;
                 cl.CONTACTOEX = true;
 
                 ////-------------------------------CoCode
-                SOCIEDAD s = db.SOCIEDADs.Where(x => x.BUKRS.Equals(cl.BUKRS) & x.ACTIVO == true).FirstOrDefault();
+                PAI s = db.PAIS.Where(x => x.SOCIEDAD_ID.Equals(cl.BUKRS) & x.ACTIVO == true).FirstOrDefault();
                 if (s == null)
                     cl.BUKRSX = false;
                 else
-                    sociedades.Add(s);
+                    paises.Add(s);
                 if (!cl.BUKRSX)
                 {
                     cl.BUKRS = cl.BUKRS + "?";
@@ -355,18 +357,18 @@ namespace TAT001.Controllers.Catalogos
                     if (ids[i] != null && ids[i] != "")
                     {
                         var usuario = ids[i];
-                        USUARIO u = db.USUARIOs.Where(x => x.ID.Equals(usuario) & x.ACTIVO == true).FirstOrDefault();
-                        if (u != null)
+                        USUARIO u = db.USUARIOs.Where(x => x.ID.Equals(usuario)).FirstOrDefault();
+                        if (u == null)
                             idsx[i] = false;
                         else
                             usuarios.Add(u);
-                        if ((ids[i] == "" && ids[i] == null) && (i == 1 || i == 7))
+                        if ((ids[i] == "" && ids[i] == null) && (i == 1 || i == 6))
                             idsx[i] = false;
                     }
                     if (!idsx[i])
                     {
                         ids[i] = ids[i] + "?";
-                        messa = messa + cont + ". Error en el nivel " + i;
+                        messa = messa + cont + ". Error en el nivel " + i + "<br/>";
                         cont++;
                     }
                 }
@@ -387,10 +389,44 @@ namespace TAT001.Controllers.Catalogos
                 cl.ID_US7 = ids[7];
                 cl.ID_US7X = idsx[7];
 
-                ////-------------------------------EMAIL
-                if (ComprobarEmail(cl.CONTACTOE) == false)
+                ////-------------------------------ID_PROVEEDOR
+                if (cl.ID_PROVEEDOR != null && cl.ID_PROVEEDOR != "")
                 {
-                    cl.CONTACTOEX = false;
+                    PROVEEDOR pr = db.PROVEEDORs.Where(x => x.ID.Equals(cl.ID_PROVEEDOR)).FirstOrDefault();
+                    if (pr == null)
+                    {
+                        cl.ID_PROVEEDORX = false;
+                    }
+                }
+                if (!cl.ID_PROVEEDORX)
+                {
+                    cl.ID_PROVEEDOR = cl.ID_PROVEEDOR + "?";
+                    messa = messa + cont + ". Error en el vendor<br/>";
+                    cont++;
+                }
+                ////-------------------------------CANAL
+                if (cl.CANAL != null && cl.CANAL != "")
+                {
+                    CANAL ca = db.CANALs.Where(x => x.CANAL1.Equals(cl.CANAL)).FirstOrDefault();
+                    if (ca == null)
+                    {
+                        cl.CANALX = false;
+                    }
+                }
+                if (!cl.CANALX)
+                {
+                    cl.CANAL = cl.CANAL + "?";
+                    messa = messa + cont + ". Error en el canal<br/>";
+                    cont++;
+                }
+
+                ////-------------------------------EMAIL
+                if (cl.CONTACTO != null && cl.CONTACTO != "")
+                {
+                    if (ComprobarEmail(cl.CONTACTOE) == false)
+                    {
+                        cl.CONTACTOEX = false;
+                    }
                 }
                 if (!cl.CONTACTOEX)
                 {
@@ -441,22 +477,64 @@ namespace TAT001.Controllers.Catalogos
                 tablas[i, 0] = coc[i];
                 tablas[i, 1] = pai[i];
                 tablas[i, 2] = cli[i];
-                tablas[i, 3] = noc[i];
-                tablas[i, 4] = ni0[i];
+                if (noc[i] == "")
+                { tablas[i, 3] = null; }
+                else
+                { tablas[i, 3] = noc[i]; }
+                if (ni0[i] == "")
+                { tablas[i, 4] = null; }
+                else
+                { tablas[i, 4] = ni0[i]; }
                 tablas[i, 5] = ni1[i];
-                tablas[i, 6] = ni2[i];
-                tablas[i, 7] = ni3[i];
-                tablas[i, 8] = ni4[i];
-                tablas[i, 9] = ni5[i];
+                if (ni2[i] == "")
+                { tablas[i, 6] = null; }
+                else
+                { tablas[i, 6] = ni2[i]; }
+                if (ni3[i] == "")
+                { tablas[i, 7] = null; }
+                else
+                { tablas[i, 7] = ni3[i]; }
+                if (ni3[i] == "")
+                { tablas[i, 8] = null; }
+                else
+                { tablas[i, 8] = ni4[i]; }
+                if (ni5[i] == "")
+                { tablas[i, 9] = null; }
+                else
+                { tablas[i, 9] = ni5[i]; }
                 tablas[i, 10] = ni6[i];
-                tablas[i, 11] = ni7[i];
-                tablas[i, 12] = ven[i];
-                tablas[i, 13] = ban[i];
-                tablas[i, 14] = baa[i];
-                tablas[i, 15] = can[i];
-                tablas[i, 16] = exp[i];
-                tablas[i, 17] = con[i];
-                tablas[i, 18] = eco[i];
+                if (ni7[i] == "")
+                { tablas[i, 11] = null; }
+                else
+                { tablas[i, 11] = ni7[i]; }
+                if (ven[i] == "")
+                { tablas[i, 12] = null; }
+                else
+                { tablas[i, 12] = ven[i]; }
+                if (ban[i] == "")
+                { tablas[i, 13] = null; }
+                else
+                { tablas[i, 13] = ban[i]; }
+                if (baa[i] == "")
+                { tablas[i, 14] = null; }
+                else
+                { tablas[i, 14] = baa[i]; }
+                if (can[i] == "")
+                { tablas[i, 15] = null; }
+                else
+                { tablas[i, 15] = can[i]; }
+                if (exp[i] == "")
+                { tablas[i, 16] = null; }
+                else
+                { tablas[i, 16] = exp[i]; }
+                if (con[i] == "")
+                { tablas[i, 17] = null; }
+                else
+                { tablas[i, 17] = con[i]; }
+                if (eco[i] == "")
+                { tablas[i, 18] = null; }
+                else
+                { tablas[i, 18] = eco[i]; }
                 tablas[i, 19] = mes[i];
             }
 
@@ -470,25 +548,26 @@ namespace TAT001.Controllers.Catalogos
 
                 if (da.MESS == null || da.MESS == "")
                 {
+                    ////Agregar a CLIENTEF
                     cl.VKORG = da.VKORG;
                     cl.VTWEG = da.VTWEG;
                     cl.SPART = da.SPART;
                     cl.KUNNR = da.KUNNR;
-
-                    CLIENTEF s = db.CLIENTEFs.Where(x => x.KUNNR.Equals(cl.KUNNR) & x.ACTIVO == true).FirstOrDefault();
+                    CLIENTEF s = db.CLIENTEFs.Where(x => x.KUNNR.Equals(cl.KUNNR)).FirstOrDefault();
+                    CLIENTE cl1 = db.CLIENTEs.Where(x => x.KUNNR.Equals(cl.KUNNR)).FirstOrDefault();
                     if (s == null)
                     {
                         cl.VERSION = 1;
                         cl.FECHAC = DateTime.Today;
                         cl.FECHAM = null;
-                        cl.ACTIVO = true;
                     }
                     else
                     {
-                        cl.VERSION = int.Parse((from x in db.CLIENTEFs where x.KUNNR.Equals(cl.KUNNR) & x.ACTIVO == true select x.VERSION).ToString())+1;
+                        cl.VERSION = int.Parse((from x in db.CLIENTEFs where x.KUNNR.Equals(cl.KUNNR) & x.ACTIVO == true select x.VERSION).FirstOrDefault().ToString()) + 1;
                         cl.FECHAC = null;
                         cl.FECHAM = DateTime.Today;
                         s.ACTIVO = false;
+                        db.Entry(s).State = EntityState.Modified;
                     }
                     cl.USUARIO0_ID = da.ID_US0;
                     cl.USUARIO1_ID = da.ID_US1;
@@ -498,15 +577,30 @@ namespace TAT001.Controllers.Catalogos
                     cl.USUARIO5_ID = da.ID_US5;
                     cl.USUARIO6_ID = da.ID_US6;
                     cl.USUARIO7_ID = da.ID_US7;
-                    co.NOMBRE = da.CONTACTO;
-                    co.EMAIL = da.CONTACTOE;
-                    co.VKORG = da.VKORG;
-                    co.VTWEG = da.VTWEG;
-                    co.SPART = da.SPART;
-                    co.KUNNR = da.KUNNR;
-
+                    cl.ACTIVO = true;
+                    ////Modificar a CLIENTE
+                    cl1.NAME1 = da.CLIENTE_N;
+                    cl1.PROVEEDOR_ID = da.ID_PROVEEDOR;
+                    cl1.LAND = da.LAND;
+                    cl1.BANNER = da.BANNER;
+                    cl1.BANNERG = da.BANNERG;
+                    cl1.CANAL = da.CANAL;
+                    cl1.EXPORTACION = da.EXPORTACION;
+                    ////Agregar a contacto
+                    if (da.CONTACTO != null)
+                    {
+                        co.NOMBRE = da.CONTACTO;
+                        co.EMAIL = da.CONTACTOE;
+                        co.VKORG = da.VKORG;
+                        co.VTWEG = da.VTWEG;
+                        co.SPART = da.SPART;
+                        co.KUNNR = da.KUNNR;
+                        co.ACTIVO = true;
+                        db.CONTACTOCs.Add(co);
+                    }
+                    ////Guardar cambios en db
+                    db.Entry(cl1).State = EntityState.Modified;
                     db.CLIENTEFs.Add(cl);
-                    db.CONTACTOCs.Add(co);
                     db.SaveChanges();
                     cont++;
                 }
@@ -610,20 +704,22 @@ namespace TAT001.Controllers.Catalogos
                 ids[7] = da.ID_US7;
                 idsx[7] = true;
                 cl.ID_PROVEEDOR = da.ID_PROVEEDOR;
+                cl.ID_PROVEEDORX = true;
                 cl.BANNER = da.BANNER;
                 cl.BANNERG = da.BANNERG;
                 cl.CANAL = da.CANAL;
+                cl.CANALX = true;
                 cl.EXPORTACION = da.EXPORTACION;
                 cl.CONTACTO = da.CONTACTO;
                 cl.CONTACTOE = da.CONTACTOE;
                 cl.CONTACTOEX = true;
 
                 ////-------------------------------CoCode
-                SOCIEDAD s = db.SOCIEDADs.Where(x => x.BUKRS.Equals(cl.BUKRS) & x.ACTIVO == true).FirstOrDefault();
+                PAI s = db.PAIS.Where(x => x.SOCIEDAD_ID.Equals(cl.BUKRS) & x.ACTIVO == true).FirstOrDefault();
                 if (s == null)
                     cl.BUKRSX = false;
                 else
-                    sociedades.Add(s);
+                    paises.Add(s);
                 if (!cl.BUKRSX)
                 {
                     cl.BUKRS = cl.BUKRS + "?";
@@ -663,18 +759,18 @@ namespace TAT001.Controllers.Catalogos
                     if (ids[i] != null && ids[i] != "")
                     {
                         var usuario = ids[i];
-                        USUARIO u = db.USUARIOs.Where(x => x.ID.Equals(usuario) & x.ACTIVO == true).FirstOrDefault();
-                        if (u != null)
+                        USUARIO u = db.USUARIOs.Where(x => x.ID.Equals(usuario)).FirstOrDefault();
+                        if (u == null)
                             idsx[i] = false;
                         else
                             usuarios.Add(u);
-                        if ((ids[i] == "" && ids[i] == null) && (i == 1 || i == 7))
+                        if ((ids[i] == "" && ids[i] == null) && (i == 1 || i == 6))
                             idsx[i] = false;
                     }
                     if (!idsx[i])
                     {
                         ids[i] = ids[i] + "?";
-                        messa = messa + cont + ". Error en el nivel " + i;
+                        messa = messa + cont + ". Error en el nivel " + i + "<br/>";
                         cont++;
                     }
                 }
@@ -695,10 +791,44 @@ namespace TAT001.Controllers.Catalogos
                 cl.ID_US7 = ids[7];
                 cl.ID_US7X = idsx[7];
 
-                ////-------------------------------EMAIL
-                if (ComprobarEmail(cl.CONTACTOE) == false)
+                ////-------------------------------ID_PROVEEDOR
+                if (cl.ID_PROVEEDOR != null && cl.ID_PROVEEDOR != "")
                 {
-                    cl.CONTACTOEX = false;
+                    PROVEEDOR pr = db.PROVEEDORs.Where(x => x.ID.Equals(cl.ID_PROVEEDOR)).FirstOrDefault();
+                    if (pr == null)
+                    {
+                        cl.ID_PROVEEDORX = false;
+                    }
+                }
+                if (!cl.ID_PROVEEDORX)
+                {
+                    cl.ID_PROVEEDOR = cl.ID_PROVEEDOR + "?";
+                    messa = messa + cont + ". Error en el vendor<br/>";
+                    cont++;
+                }
+                ////-------------------------------CANAL
+                if (cl.CANAL != null && cl.CANAL != "")
+                {
+                    CANAL ca = db.CANALs.Where(x => x.CANAL1.Equals(cl.CANAL)).FirstOrDefault();
+                    if (ca == null)
+                    {
+                        cl.CANALX = false;
+                    }
+                }
+                if (!cl.CANALX)
+                {
+                    cl.CANAL = cl.CANAL + "?";
+                    messa = messa + cont + ". Error en el canal<br/>";
+                    cont++;
+                }
+
+                ////-------------------------------EMAIL
+                if (cl.CONTACTO != null && cl.CONTACTO != "")
+                {
+                    if (ComprobarEmail(cl.CONTACTOE) == false)
+                    {
+                        cl.CONTACTOEX = false;
+                    }
                 }
                 if (!cl.CONTACTOEX)
                 {
@@ -814,24 +944,26 @@ namespace TAT001.Controllers.Catalogos
                 ids[7] = da.ID_US7;
                 idsx[7] = true;
                 cl.ID_PROVEEDOR = da.ID_PROVEEDOR;
+                cl.ID_PROVEEDORX = true;
                 cl.BANNER = da.BANNER;
                 cl.BANNERG = da.BANNERG;
                 cl.CANAL = da.CANAL;
+                cl.CANALX = true;
                 cl.EXPORTACION = da.EXPORTACION;
                 cl.CONTACTO = da.CONTACTO;
                 cl.CONTACTOE = da.CONTACTOE;
                 cl.CONTACTOEX = true;
 
                 ////-------------------------------CoCode
-                SOCIEDAD s = db.SOCIEDADs.Where(x => x.BUKRS.Equals(cl.BUKRS) & x.ACTIVO == true).FirstOrDefault();
+                PAI s = db.PAIS.Where(x => x.SOCIEDAD_ID.Equals(cl.BUKRS) & x.ACTIVO == true).FirstOrDefault();
                 if (s == null)
                     cl.BUKRSX = false;
                 else
-                    sociedades.Add(s);
+                    paises.Add(s);
                 if (!cl.BUKRSX)
                 {
                     cl.BUKRS = cl.BUKRS + "?";
-                    messa = cont + ". Error con el CoCode<br/>";
+                    messa = cont + ". El CoCode no coincide con el pais<br/>";
                     cont++;
                 }
 
@@ -867,18 +999,18 @@ namespace TAT001.Controllers.Catalogos
                     if (ids[i] != null && ids[i] != "")
                     {
                         var usuario = ids[i];
-                        USUARIO u = db.USUARIOs.Where(x => x.ID.Equals(usuario) & x.ACTIVO == true).FirstOrDefault();
+                        USUARIO u = db.USUARIOs.Where(x => x.ID.Equals(usuario)).FirstOrDefault();
                         if (u != null)
                             idsx[i] = false;
                         else
                             usuarios.Add(u);
-                        if ((ids[i] == "" && ids[i] == null) && (i == 1 || i == 7))
+                        if ((ids[i] == "" && ids[i] == null) && (i == 1 || i == 6))
                             idsx[i] = false;
                     }
                     if (!idsx[i])
                     {
                         ids[i] = ids[i] + "?";
-                        messa = messa + cont + ". Error en el nivel " + i;
+                        messa = messa + cont + ". Error en el nivel " + i + "<br/>";
                         cont++;
                     }
                 }
@@ -899,10 +1031,43 @@ namespace TAT001.Controllers.Catalogos
                 cl.ID_US7 = ids[7];
                 cl.ID_US7X = idsx[7];
 
-                ////-------------------------------EMAIL
-                if (ComprobarEmail(cl.CONTACTOE) == false)
+                ////-------------------------------ID_PROVEEDOR
+                if (cl.ID_PROVEEDOR != null && cl.ID_PROVEEDOR != "")
                 {
-                    cl.CONTACTOEX = false;
+                    PROVEEDOR pr = db.PROVEEDORs.Where(x => x.ID.Equals(cl.ID_PROVEEDOR)).FirstOrDefault();
+                    if (pr == null)
+                    {
+                        cl.ID_PROVEEDORX = false;
+                    }
+                }
+                if (!cl.ID_PROVEEDORX)
+                {
+                    cl.ID_PROVEEDOR = cl.ID_PROVEEDOR + "?";
+                    messa = messa + cont + ". Error en el vendor<br/>";
+                    cont++;
+                }
+                ////-------------------------------CANAL
+                if (cl.CANAL != null && cl.CANAL != "")
+                {
+                    CANAL ca = db.CANALs.Where(x => x.CANAL1.Equals(cl.CANAL)).FirstOrDefault();
+                    if (ca == null)
+                    {
+                        cl.CANALX = false;
+                    }
+                }
+                if (!cl.CANALX)
+                {
+                    cl.CANAL = cl.CANAL + "?";
+                    messa = messa + cont + ". Error en el canal<br/>";
+                    cont++;
+                }
+                ////-------------------------------EMAIL
+                if (cl.CONTACTO != null && cl.CONTACTO != "")
+                {
+                    if (ComprobarEmail(cl.CONTACTOE) == false)
+                    {
+                        cl.CONTACTOEX = false;
+                    }
                 }
                 if (!cl.CONTACTOEX)
                 {
@@ -923,37 +1088,223 @@ namespace TAT001.Controllers.Catalogos
         public JsonResult Actualizar()
         {
             List<Clientes> cc = new List<Clientes>();
-            Clientes cl = new Clientes();
+            
             CLIENTEF cf = new CLIENTEF();
 
             var cli = Request["cli"];
             var ni0 = Request["ni0"];
-            cl.KUNNRX = true;
+            var ni0x = true;
 
-            if (cli != null)
+            if (cli != null && cli != "")
             {
-                cl.KUNNR = Completa(cli, 10);
-                CLIENTEF k = db.CLIENTEFs.Where(x => x.KUNNR.Equals(cl.KUNNR)).FirstOrDefault();
+                Clientes cl = new Clientes();
+                cli = Completa(cli, 10);
+                CLIENTE k = db.CLIENTEs.Where(x => x.KUNNR.Equals(cli) & x.ACTIVO == true).FirstOrDefault();
+                cl.KUNNRX = true;
+                cl.BUKRS = "";
+                cl.LAND = "";
+                cl.KUNNR = "";
+                cl.CLIENTE_N = "";
+                cl.ID_US0 = "";
+                cl.ID_US1 = "";
+                cl.ID_US2 = "";
+                cl.ID_US3 = "";
+                cl.ID_US4 = "";
+                cl.ID_US5 = "";
+                cl.ID_US6 = "";
+                cl.ID_US7 = "";
+                cl.ID_PROVEEDOR = "";
+                cl.BANNER = "";
+                cl.BANNERG = "";
+                cl.CANAL = "";
+                cl.EXPORTACION = "";
+                cl.CONTACTO = "";
+                cl.CONTACTOE = "";
+                cl.MESS = "";
+
                 if (k == null)
                     cl.KUNNRX = false;
                 else
                 {
-                    cl.BUKRS = (from x in db.SOCIEDADs join j in db.CLIENTEs on x.REGION equals j.REGION where j.KUNNR.Equals(cl.KUNNR) select x.BUKRS).ToString();
-
-                    //cl.VERSION = int.Parse((from x in db.CLIENTEFs where x.KUNNR.Equals(cl.KUNNR) & x.ACTIVO == true select x.VERSION).ToString()) + 1
+                    var com = "";
+                    com = db.CLIENTEs.Where(x => x.KUNNR.Equals(cli)).Select(x => x.LAND).FirstOrDefault();
+                    if (com != null)
+                        cl.LAND = com;
+                    com = (from x in db.PAIS where x.LAND.Equals(cl.LAND) & x.ACTIVO == true select x.SOCIEDAD_ID).FirstOrDefault();
+                    if (com != null)
+                        cl.BUKRS = com;
+                    cl.KUNNR = cli;
+                    com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) select x.NAME1).FirstOrDefault();
+                    if (com != null)
+                        cl.CLIENTE_N = com;
+                    com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) select x.USUARIO0_ID).FirstOrDefault();
+                    if (com != null)
+                        cl.ID_US0 = com;
+                    com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) select x.USUARIO1_ID).FirstOrDefault();
+                    if (com != null)
+                        cl.ID_US1 = com;
+                    com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) select x.USUARIO2_ID).FirstOrDefault();
+                    if (com != null)
+                        cl.ID_US2 = com;
+                    com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) select x.USUARIO3_ID).FirstOrDefault();
+                    if (com != null)
+                        cl.ID_US3 = com;
+                    com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) select x.USUARIO4_ID).FirstOrDefault();
+                    if (com != null)
+                        cl.ID_US4 = com;
+                    com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) select x.USUARIO5_ID).FirstOrDefault();
+                    if (com != null)
+                        cl.ID_US5 = com;
+                    com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) select x.USUARIO6_ID).FirstOrDefault();
+                    if (com != null)
+                        cl.ID_US6 = com;
+                    com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) select x.USUARIO7_ID).FirstOrDefault();
+                    if (com != null)
+                        cl.ID_US7 = com;
+                    com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) select x.PROVEEDOR_ID).FirstOrDefault();
+                    if (com != null)
+                        cl.ID_PROVEEDOR = com;
+                    com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) select x.BANNER).FirstOrDefault();
+                    if (com != null)
+                        cl.BANNER = com;
+                    com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) select x.BANNERG).FirstOrDefault();
+                    if (com != null)
+                        cl.BANNERG = "";
+                    com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) select x.CANAL).FirstOrDefault();
+                    if (com != null)
+                        cl.CANAL = com;
+                    com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) select x.EXPORTACION).FirstOrDefault();
+                    if (com != null)
+                        cl.EXPORTACION = com;
                 }
                 if (!cl.KUNNRX)
                 {
-                    cl.KUNNR = cl.KUNNR + "?";
+                    cl.KUNNR = cli + "?";
                     cl.MESS = "El cliente no existe";
                 }
+                cc.Add(cl);
             }
 
-            else if (ni0 != null)
+            else if (ni0 != null && ni0 != "")
             {
+                USUARIO u = db.USUARIOs.Where(xu => xu.ID.Equals(ni0)).FirstOrDefault();
+                if (u == null)
+                    ni0x = false;
+                else
+                {
+                    var ucl = (from x in db.CLIENTEFs
+                                 where x.USUARIO0_ID.Equals(ni0) | x.USUARIO1_ID.Equals(ni0) | x.USUARIO2_ID.Equals(ni0) | x.USUARIO3_ID.Equals(ni0)
+                                   | x.USUARIO4_ID.Equals(ni0) | x.USUARIO5_ID.Equals(ni0) | x.USUARIO6_ID.Equals(ni0) | x.USUARIO7_ID.Equals(ni0)
+                                 select x.KUNNR).ToArray();
+                    for (int i = 0; i < ucl.Length; i++)
+                    {
+                        Clientes cl = new Clientes();
+                        cl.KUNNRX = true;
+                        cl.BUKRS = "";
+                        cl.LAND = "";
+                        cl.KUNNR = "";
+                        cl.CLIENTE_N = "";
+                        cl.ID_US0 = "";
+                        cl.ID_US1 = "";
+                        cl.ID_US2 = "";
+                        cl.ID_US3 = "";
+                        cl.ID_US4 = "";
+                        cl.ID_US5 = "";
+                        cl.ID_US6 = "";
+                        cl.ID_US7 = "";
+                        cl.ID_PROVEEDOR = "";
+                        cl.BANNER = "";
+                        cl.BANNERG = "";
+                        cl.CANAL = "";
+                        cl.EXPORTACION = "";
+                        cl.CONTACTO = "";
+                        cl.CONTACTOE = "";
+                        cl.MESS = "";
+                        cli = ucl[i];
+                        var com = "";
+                        com = db.CLIENTEs.Where(x => x.KUNNR.Equals(cli)).Select(x => x.LAND).FirstOrDefault();
+                        if (com != null)
+                            cl.LAND = com;
+                        com = (from x in db.SOCIEDADs where x.LAND.Equals(cl.LAND) & x.ACTIVO == true select x.BUKRS).FirstOrDefault();
+                        if (com != null)
+                            cl.BUKRS = com;
+                        cl.KUNNR = cli;
+                        com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) select x.NAME1).FirstOrDefault();
+                        if (com != null)
+                            cl.CLIENTE_N = com;
+                        com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) select x.USUARIO0_ID).FirstOrDefault();
+                        if (com != null)
+                            cl.ID_US0 = com;
+                        com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) select x.USUARIO1_ID).FirstOrDefault();
+                        if (com != null)
+                            cl.ID_US1 = com;
+                        com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) select x.USUARIO2_ID).FirstOrDefault();
+                        if (com != null)
+                            cl.ID_US2 = com;
+                        com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) select x.USUARIO3_ID).FirstOrDefault();
+                        if (com != null)
+                            cl.ID_US3 = com;
+                        com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) select x.USUARIO4_ID).FirstOrDefault();
+                        if (com != null)
+                            cl.ID_US4 = com;
+                        com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) select x.USUARIO5_ID).FirstOrDefault();
+                        if (com != null)
+                            cl.ID_US5 = com;
+                        com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) select x.USUARIO6_ID).FirstOrDefault();
+                        if (com != null)
+                            cl.ID_US6 = com;
+                        com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) select x.USUARIO7_ID).FirstOrDefault();
+                        if (com != null)
+                            cl.ID_US7 = com;
+                        com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) select x.PROVEEDOR_ID).FirstOrDefault();
+                        if (com != null)
+                            cl.ID_PROVEEDOR = com;
+                        com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) select x.BANNER).FirstOrDefault();
+                        if (com != null)
+                            cl.BANNER = com;
+                        com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) select x.BANNERG).FirstOrDefault();
+                        if (com != null)
+                            cl.BANNERG = "";
+                        com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) select x.CANAL).FirstOrDefault();
+                        if (com != null)
+                            cl.CANAL = com;
+                        com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) select x.EXPORTACION).FirstOrDefault();
+                        if (com != null)
+                            cl.EXPORTACION = com;
 
+                        cc.Add(cl);
+                    }
+                }
+                if (!ni0x)
+                {
+                    Clientes cl = new Clientes();
+                    cl.KUNNRX = true;
+                    cl.BUKRS = "";
+                    cl.LAND = "";
+                    cl.KUNNR = "";
+                    cl.CLIENTE_N = "";
+                    cl.ID_US0 = "";
+                    cl.ID_US1 = "";
+                    cl.ID_US2 = "";
+                    cl.ID_US3 = "";
+                    cl.ID_US4 = "";
+                    cl.ID_US5 = "";
+                    cl.ID_US6 = "";
+                    cl.ID_US7 = "";
+                    cl.ID_PROVEEDOR = "";
+                    cl.BANNER = "";
+                    cl.BANNERG = "";
+                    cl.CANAL = "";
+                    cl.EXPORTACION = "";
+                    cl.CONTACTO = "";
+                    cl.CONTACTOE = "";
+                    cl.MESS = "";
+                    cli = "";
+                    cl.ID_US0 = ni0 + "?";
+                    cl.MESS = "El usuario no existe";
+                    cc.Add(cl);
+                }
             }
-
             JsonResult jl = Json(cc, JsonRequestBehavior.AllowGet);
             return jl;
         }
@@ -1349,7 +1700,6 @@ namespace TAT001.Controllers.Catalogos
                 try
                 {
                     doc.BANNER = dt[i, 13];
-                    doc.BANNER = Completa(doc.BANNER, 10);
                 }
                 catch (Exception e)
                 {
@@ -1358,7 +1708,6 @@ namespace TAT001.Controllers.Catalogos
                 try
                 {
                     doc.BANNERG = dt[i, 14];
-                    doc.BANNERG = Completa(doc.BANNERG, 10);
                 }
                 catch (Exception e)
                 {

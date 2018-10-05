@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using TAT001.Entities;
 using TAT001.Models;
@@ -127,7 +125,7 @@ namespace TAT001.Controllers.Catalogos
             }
             return true;
         }
-        bool ValidarFechas(CALENDARIO_AC calendarioAc )
+        bool ValidarFechas(CALENDARIO_AC calendarioAc)
         {
             int pagina_id = 530;
 
@@ -136,20 +134,31 @@ namespace TAT001.Controllers.Catalogos
                 || calendarioAc.PRE_TOF > calendarioAc.CIE_FROMF)
             {
                 ViewBag.mnjError = ObtenerTextoMnj(pagina_id, "lbl_mnjErrorRangoFechas");
-                return  false;
+                return false;
             }
             CALENDARIO_AC calendarioAux = db.CALENDARIO_AC.Where(x => x.SOCIEDAD_ID == calendarioAc.SOCIEDAD_ID
                 && x.EJERCICIO == calendarioAc.EJERCICIO
                 && x.TSOL_ID == calendarioAc.TSOL_ID
                 && x.PERIODO != calendarioAc.PERIODO
-                && (x.PRE_FROMF>calendarioAc.PRE_FROMF   &&   x.CIE_TOF<calendarioAc.CIE_TOF)).FirstOrDefault();
-            if (calendarioAux!=null)
-            {       
+                && ((calendarioAc.PRE_FROMF>=x.PRE_FROMF && calendarioAc.PRE_FROMF<=x.CIE_TOF)
+                || (calendarioAc.CIE_TOF >= x.PRE_FROMF && calendarioAc.CIE_TOF <= x.CIE_TOF))).FirstOrDefault();
+            if (calendarioAux != null)
+            {
                 ViewBag.mnjError = String.Format(ObtenerTextoMnj(pagina_id, "lbl_mnjTraslapeEnPeriodo"), calendarioAux.PERIODO);
                 return false;
             }
+            calendarioAux = db.CALENDARIO_AC.Where(x => x.SOCIEDAD_ID == calendarioAc.SOCIEDAD_ID
+                && x.EJERCICIO == calendarioAc.EJERCICIO
+                && x.TSOL_ID == calendarioAc.TSOL_ID
+                && x.PERIODO < calendarioAc.PERIODO
+                && x.PRE_FROMF > calendarioAc.PRE_FROMF).FirstOrDefault();
+            if (calendarioAux != null)
+            {
+                ViewBag.mnjError = ObtenerTextoMnj(pagina_id, "lbl_mnjMenorAPeriodoAnt");
+                return false;
+            }
             return true;
-        } 
+        }
 
         void ObtenerConfPage(int pagina)//ID EN BASE DE DATOS
         {
@@ -162,7 +171,7 @@ namespace TAT001.Controllers.Catalogos
             ViewBag.Title =db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
             ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
             ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-
+            ViewBag.spras_id = user.SPRAS_ID;
         }
         void CargarSelectList(ref Calendario445ViewModel modelView,string[] combos)
         {
