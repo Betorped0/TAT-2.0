@@ -1071,7 +1071,7 @@ namespace TAT001.Controllers
                     id_pais = db.PAIS.Where(pais => pais.LAND.Equals(d.PAIS_ID)).FirstOrDefault();//RSG 15.05.2018
                     d.DOCUMENTO_REF = rel;
                     relacionada_neg = d.TIPO_TECNICO;
-                    if (d.DOCUMENTOLs.Count > 0 & !(d.DOCUMENTOPs.First().MATNR != null | d.DOCUMENTOPs.First().MATNR != ""))
+                    if (d.DOCUMENTOLs.Count > 0 & (d.DOCUMENTOPs.First().MATNR != null | d.DOCUMENTOPs.First().MATNR != ""))
                         relacionada_neg = "M";
                     ViewBag.TSOL_ANT = d.TSOL_ID;
                     ViewBag.LIGADA = d.LIGADA;//RSG 09.07.2018
@@ -2649,8 +2649,8 @@ namespace TAT001.Controllers
                             }
                             db.SaveChanges();
                         }//Guardar registros de recurrencias  RSG 28.05.2018-------------------
-                    //if (dOCUMENTO.DOCUMENTOREC == null & dOCUMENTO.LIGADA == true)
-                    if (dOCUMENTO.LIGADA == true)
+                    if (dOCUMENTO.DOCUMENTOREC == null & dOCUMENTO.LIGADA == true)
+                    //if (dOCUMENTO.LIGADA == true)
                     {
 
                         DOCUMENTOREC drec = new DOCUMENTOREC();
@@ -2682,6 +2682,8 @@ namespace TAT001.Controllers
                                 drec.DOCUMENTORANs.Add(dran);
                             }
                         drec.PORC = dOCUMENTO.PORC_APOYO;
+                        drec.DOC_REF = 0;
+                        drec.ESTATUS = "";
 
                         dOCUMENTO.DOCUMENTORECs.Add(drec);
 

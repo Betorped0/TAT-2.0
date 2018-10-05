@@ -1293,7 +1293,7 @@ namespace TAT001.Controllers
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
                 ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
                 ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
+                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
                 ViewBag.rol = user.MIEMBROS.FirstOrDefault().ROL.NOMBRE;
                 ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
@@ -1772,7 +1772,7 @@ namespace TAT001.Controllers
                 ViewBag.email = user.EMAIL;
                 ViewBag.rol = user.MIEMBROS.FirstOrDefault().ROL.NOMBRE;
                 ViewBag.returnUrl = Request.UrlReferrer;
-                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
+                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
                 try
                 {
                     string p = Session["pais"].ToString();
@@ -3400,7 +3400,7 @@ namespace TAT001.Controllers
 
 
         [HttpPost]
-        public ActionResult Backorder([Bind(Include ="NUM_DOC,LIGADA")] DOCUMENTO D, string BACKORDER)
+        public ActionResult Backorder([Bind(Include = "NUM_DOC,LIGADA")] DOCUMENTO D, string BACKORDER)
         {
             DOCUMENTOL dl = db.DOCUMENTOLs.Where(x => x.NUM_DOC.Equals(D.NUM_DOC)).OrderByDescending(x => x.POS).FirstOrDefault();
             FormatosC fc = new FormatosC();
@@ -3430,9 +3430,15 @@ namespace TAT001.Controllers
                     }
                 }
                 DOCUMENTO doc = db.DOCUMENTOes.Find(D.NUM_DOC);
+
+                if (dOCpADRE.DOCUMENTORECs.Count == 1)
+                {
+                    D.MONTO_DOC_MD = D.MONTO_DOC_MD * doc.PORC_APOYO / 100;
+                    D.PORC_APOYO = doc.PORC_APOYO;
+                }
                 doc.MONTO_DOC_MD = D.MONTO_DOC_MD;
                 doc.PORC_APOYO = D.PORC_APOYO;
-                foreach(DOCUMENTOP dp in doc.DOCUMENTOPs)
+                foreach (DOCUMENTOP dp in doc.DOCUMENTOPs)
                 {
                     if (dp.APOYO_EST > 0)
                         dp.APOYO_EST = D.MONTO_DOC_MD * dp.PORC_APOYO / 100;
@@ -3440,11 +3446,12 @@ namespace TAT001.Controllers
                         dp.APOYO_REAL = D.MONTO_DOC_MD * dp.PORC_APOYO / 100;
                 }
 
+
                 db.Entry(doc).State = EntityState.Modified;
                 db.SaveChanges();
             }
 
-            return RedirectToAction("Backorder", new { id_d = D.NUM_DOC});
+            return RedirectToAction("Backorder", new { id_d = D.NUM_DOC });
         }
 
 
@@ -3507,8 +3514,8 @@ namespace TAT001.Controllers
                 docRe = db.DOCUMENTORECs.Where(x => x.DOC_REF == id).FirstOrDefault();
                 docRe.ESTATUS = "C";
                 db.Entry(docRe).State = EntityState.Modified;
-                List<DOCUMENTOREC> docRes = db.DOCUMENTORECs.Where(x=>x.NUM_DOC.Equals(docRe.NUM_DOC) & x.POS > docRe.POS).ToList();
-                foreach(DOCUMENTOREC dR in docRes)
+                List<DOCUMENTOREC> docRes = db.DOCUMENTORECs.Where(x => x.NUM_DOC.Equals(docRe.NUM_DOC) & x.POS > docRe.POS).ToList();
+                foreach (DOCUMENTOREC dR in docRes)
                 {
                     dR.ESTATUS = "C";
                     db.Entry(dR).State = EntityState.Modified;

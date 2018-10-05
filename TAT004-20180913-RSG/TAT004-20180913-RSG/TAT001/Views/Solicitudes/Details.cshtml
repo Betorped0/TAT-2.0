@@ -21,30 +21,30 @@
     <input id="dec" name="dec" type="hidden" value="@ViewBag.dec">//LEJ 09.07.18
     <div class="row" style="margin-bottom:0">
         <div class="col s12 m4">
-           
-                <div class="input-field col s4">
-                    @Html.EditorFor(model => model.D.USUARIOC_ID, new { htmlAttributes = new { @disabled = "disabled" } })
-                    @Html.LabelFor(model => model.D.USUARIOC_ID, new { @id = "lbl_userid" })
-                </div>
-                <div class="input-field col s4">
-                    @*<input type="text" id="txt_user" value="@ViewBag.usuario.MANAGER" disabled="disabled" />
-                        <label for="txt_user">Manager</label>*@
-                    @Html.EditorFor(model => model.D.USUARIO.MANAGER, new { htmlAttributes = new { @disabled = "disabled" } })
-                    @Html.LabelFor(model => model.D.USUARIO.MANAGER, new { @id = "lbl_manager" })
-                </div>
-                <div class="input-field col s4">
-                    @Html.EditorFor(model => model.D.USUARIO.BACKUP_ID, new { htmlAttributes = new { @disabled = "disabled" } })
-                    @Html.LabelFor(model => model.D.USUARIO.BACKUP_ID, new { @id = "lbl_backup" })
-                    @*<input type="text" id="txt_user" value="@ViewBag.usuario.BACKUP_ID" disabled="disabled" />
-                        <label for="txt_user">Backup</label>*@
-                </div>
-            
+
+            <div class="input-field col s4">
+                @Html.EditorFor(model => model.D.USUARIOC_ID, new { htmlAttributes = new { @disabled = "disabled" } })
+                @Html.LabelFor(model => model.D.USUARIOC_ID, new { @id = "lbl_userid" })
+            </div>
+            <div class="input-field col s4">
+                @*<input type="text" id="txt_user" value="@ViewBag.usuario.MANAGER" disabled="disabled" />
+                    <label for="txt_user">Manager</label>*@
+                @Html.EditorFor(model => model.D.USUARIO.MANAGER, new { htmlAttributes = new { @disabled = "disabled" } })
+                @Html.LabelFor(model => model.D.USUARIO.MANAGER, new { @id = "lbl_manager" })
+            </div>
+            <div class="input-field col s4">
+                @Html.EditorFor(model => model.D.USUARIO.BACKUP_ID, new { htmlAttributes = new { @disabled = "disabled" } })
+                @Html.LabelFor(model => model.D.USUARIO.BACKUP_ID, new { @id = "lbl_backup" })
+                @*<input type="text" id="txt_user" value="@ViewBag.usuario.BACKUP_ID" disabled="disabled" />
+                    <label for="txt_user">Backup</label>*@
+            </div>
+
         </div>
         <div class="col s12 m3 8">
             @*---DRS 3.10.2018--- *@
             <div class="input-field col s7">
                 @*<input type="text" id="txt_user" value="PRGA" disabled="disabled" />
-        <label for="txt_user">BU</label>*@       
+                    <label for="txt_user">BU</label>*@
                 @Html.EditorFor(model => model.D.USUARIO.BUNIT, new { htmlAttributes = new { @disabled = "disabled" } })
                 @Html.LabelFor(model => model.D.USUARIO.BUNIT, "Sociedad", new { @class = "lbl_bu" })
             </div>
@@ -166,7 +166,7 @@
                             }
                         }
                     }
-                    else if ((Model.D.ESTATUS.Equals("A") | Model.D.ESTATUS.Equals("R")) && (Model.D.TSOL.PADRE) /*&& Model.D.DOCUMENTORECs.Count < 1 && Model.D.DOCUMENTOLs.Count < 1*/)//RSG 20181002
+                    else if ((Model.D.ESTATUS.Equals("A") | Model.D.ESTATUS.Equals("R")) && (Model.D.TSOL.PADRE) && Model.D.DOCUMENTORECs.Count < 1 /*&& Model.D.DOCUMENTOLs.Count < 1*/)//RSG 20181002
                     {
                         if (Model.D.USUARIOC_ID == ViewBag.usuario.ID & Model.D.DOCUMENTO_SAP != null)
                         {
@@ -198,6 +198,12 @@
                                 };
                                 var instance = M.Dropdown.init(elem, options);
                             </script>
+                        }
+                        if (ViewBag.usuario.PUESTO_ID == 8 & Model.D.DOCUMENTOLs.Count > 0)
+                        {
+                            <div id="div_drop">
+                                <a href="@Url.Action("Backorder", "Recurrencias" , new { id_d=Model.D.NUM_DOC.ToString()})" class="btn-small">Backorder</a>
+                            </div>
                         }
                     }
                     else if (!Model.D.ESTATUS.Equals("A"))
@@ -646,77 +652,6 @@
                                         <h5>Recurrencia</h5>
                                     </div>
                                     @{ var caso = Model.D.TIPO_RECURRENTE; }
-                                    @*@if (Convert.ToInt32(caso) != 3)*@
-                                    @*{*@
-                                    @*<table>
-                                            <thead>
-                                                <tr>
-                                                    <th>Pos</th>
-                                                    <th>Periodo</th>
-                                                    <th>Tipo</th>
-                                                    <th>Documento</th>
-                                                    <th>Fecha</th>
-
-                                                    @if (Convert.ToInt32(caso) == 1)
-                                                    {
-                                                    <th>Monto</th>
-                                                    }
-                                                    else if (Convert.ToInt32(caso) == 2)
-                                                    {
-                                                    <th>%</th>
-                                                    <th>Objetivo</th>
-                                                    }
-                                                    <th>Estatus</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach (var iteem in Model.D.DOCUMENTORECs)
-                                                {
-                                                <tr>
-                                                    <td>@iteem.POS/@Model.D.DOCUMENTORECs.Count()</td>
-                                                    @{ string periodo = "P" + iteem.PERIODO + "-" + iteem.EJERCICIO; }
-                                                    <td>@periodo</td>
-                                                    <td>@Model.D.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50</td>
-                                                    @if (iteem.DOC_REF > 0)
-                                                    {
-                                                    <td><a href="@Url.Action("Details", new { id=iteem.DOC_REF })">@iteem.DOC_REF</a></td>
-                                                    }
-                                                    else
-                                                    {
-                                                    <td></td>
-                                                    }
-                                                    <td>@iteem.FECHAF.Value.ToShortDateString()</td>
-
-                                                    @if (Convert.ToInt32(caso) == 1)
-                                                    {
-                                                    <td class="precio">@iteem.MONTO_BASE</td>
-                                                    }
-                                                    else if (Convert.ToInt32(caso) == 2)
-                                                    {
-                                                    <td class="porcentaje">@Math.Round(iteem.PORC.Value, 2)</td>
-                                                    <td class="precio">@iteem.MONTO_BASE</td>
-                                                    }
-
-                                                    @if (iteem.ESTATUS == "P")
-                                                    {
-                                                    <td>Contabilizado</td>
-                                                    }
-                                                    else if (iteem.ESTATUS == "C")
-                                                    {
-
-                                                    <td>Cancelado</td>
-                                                    }
-                                                    else
-                                                    {
-                                                    <td>Pendiente</td>
-                                                    }
-                                                </tr>
-                                                }
-                                            </tbody>
-                                        </table>*@
-                                    @*//}
-                                        //else
-                                        //{*@
                                     <div class="row" style="overflow:auto;">
                                         <div class="col s12">
                                             <table>
@@ -725,9 +660,12 @@
                                                         <th>Pos</th>
                                                         <th>Periodo</th>
                                                         <th>Tipo</th>
-                                                        <th>Documento</th>
+                                                        <th>No solicitud TAT</th>
                                                         <th>Fecha</th>
-                                                        <th>%</th>
+                                                        @if (caso != "1")
+                                                        {
+                                                            <th>%</th>
+                                                        }
                                                         <th>Objetivo</th>
                                                         <th>Estatus</th>
                                                     </tr>
@@ -746,28 +684,42 @@
                                                             }
                                                             else
                                                             {
-                                                                <td></td>
+                                                                <td>No generado</td>
                                                             }
-                                                            <td>@iteem.FECHAV.Value.ToShortDateString()</td>
+                                                            @if (iteem.ESTATUS != "C" & iteem.ESTATUS != "P")
+                                                            {
+                                                                <td>No generado</td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td>@iteem.FECHAV.Value.ToShortDateString()</td>}
+
                                                             @if (Model.D.LIGADA == true)
                                                             {
                                                                 if (iteem.DOCUMENTORANs.Count > 0)
                                                                 {
                                                                     foreach (TAT001.Entities.DOCUMENTORAN ran in iteem.DOCUMENTORANs.Where(x => x.LIN == 1))//RSG 20.09.2018
                                                                     {
-                                                                        <td class="porcentaje">@ran.PORCENTAJE</td>
+                                                                        if (caso != "1")
+                                                                        {
+                                                                            <td class="porcentaje">@ran.PORCENTAJE</td>}
                                                                         <td class="precio">@ran.OBJETIVOI</td>
                                                                     }
                                                                 }
                                                                 else
                                                                 {
-                                                                    <td class="porcentaje">@iteem.PORC</td>
+                                                                    if (caso != "1")
+                                                                    {
+                                                                        <td class="porcentaje">@iteem.PORC</td>}
                                                                     <td class="precio">@iteem.MONTO_BASE</td>
                                                                 }
                                                             }
                                                             else
                                                             {
-                                                                <td class="porcentaje">@Math.Round(iteem.PORC.Value, 2)</td>
+                                                                if (caso != "1")
+                                                                {
+                                                                    <td class="porcentaje">@Math.Round(iteem.PORC.Value, 2)</td>
+                                                                }
                                                                 <td class="precio">@iteem.MONTO_BASE</td>
                                                             }
                                                             @if (iteem.ESTATUS == "P")
@@ -1815,117 +1767,117 @@
                             </div>
                         }
                         @*///////////////////////////////L.G.P.P MODIFICACIONES INICIO*@
-                            <div class="card-panel">
-                                @* ----DRS 3.10.2018--- *@
-                                <h5>
-                                    <label id="head_analisispre">Análisis Presupuesto</label>
-                                </h5>
-                                <p style="font-size:15px"><span id="load_carga">Última fecha de carga</span> @ViewBag.ultMod</p>
-                                <div class="row" style="margin-bottom:0">
-                                    <ul class="collection">
-                                        <li class="collection-item">
-                                            <div class="row" style="margin-bottom:0;">
-                                                <div class="col s4">
-                                                    Presupuesto canal
-                                                </div>
-                                                <div class="col s5">
-                                                    @* ----DRS 3.10.2018--- *@
-                                                    <b id="p_vtweg" style="font-size:11px">
-                                                        aaaa
-                                                    </b>
-                                                </div>
-                                                <div class="col s3 right-align">
-                                                    @* ----DRS 3.10.2018--- *@
-                                                    <b id="p_canal" style="font-size:11px">
-                                                        1111
-                                                    </b>
-                                                </div>
+                        <div class="card-panel">
+                            @* ----DRS 3.10.2018--- *@
+                            <h5>
+                                <label id="head_analisispre">Análisis Presupuesto</label>
+                            </h5>
+                            <p style="font-size:15px"><span id="load_carga">Última fecha de carga</span> @ViewBag.ultMod</p>
+                            <div class="row" style="margin-bottom:0">
+                                <ul class="collection">
+                                    <li class="collection-item">
+                                        <div class="row" style="margin-bottom:0;">
+                                            <div class="col s4">
+                                                Presupuesto canal
                                             </div>
-                                        </li>
-                                        <li class="collection-item">
-                                            <div class="row" style="margin-bottom:0;">
-                                                <div class="col s4">
-                                                    Presupuesto cliente
-                                                </div>
-                                                <div class="col s5">
-                                                    @* ----DRS 3.10.2018--- *@
-                                                    <b id="p_kunnr" style="font-size:10px">
-                                                    </b>
-                                                </div>
-                                                <div class="col s3 right-align">
-                                                    @* ----DRS 3.10.2018--- *@
-                                                    <b id="p_banner" style="font-size:11px">
-                                                    </b>
-                                                </div>
+                                            <div class="col s5">
+                                                @* ----DRS 3.10.2018--- *@
+                                                <b id="p_vtweg" style="font-size:11px">
+                                                    aaaa
+                                                </b>
                                             </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="row">
-                                    <ul class="collection">
-                                        <li class="collection-item">
-                                            <div class="row" style="margin-bottom:0;">
-                                                <div class="col s6">
-                                                    Registrado en SAP
-                                                </div>
-                                                <div class="col s3 right-align">
-                                                    <div id="pc_c">
-                                                    </div>
-                                                </div>
+                                            <div class="col s3 right-align">
+                                                @* ----DRS 3.10.2018--- *@
+                                                <b id="p_canal" style="font-size:11px">
+                                                    1111
+                                                </b>
                                             </div>
-                                        </li>
-                                        <li class="collection-item">
-                                            <div class="row" style="margin-bottom:0;">
-                                                <div class="col s6">
-                                                    Por registrar en SAP
-                                                </div>
-                                                <div class="col s3 right-align">
-                                                    <div id="pc_a">
-                                                    </div>
-                                                </div>
+                                        </div>
+                                    </li>
+                                    <li class="collection-item">
+                                        <div class="row" style="margin-bottom:0;">
+                                            <div class="col s4">
+                                                Presupuesto cliente
                                             </div>
-                                        </li>
-                                        <li class="collection-item">
-                                            <div class="row" style="margin-bottom:0;">
-                                                <div class="col s6">
-                                                    En proceso TAT
-                                                </div>
-                                                <div class="col s3 right-align">
-                                                    <u id="pc_p">
-                                                    </u>
-                                                </div>
+                                            <div class="col s5">
+                                                @* ----DRS 3.10.2018--- *@
+                                                <b id="p_kunnr" style="font-size:10px">
+                                                </b>
                                             </div>
-                                        </li>
-                                        <li class="collection-item">
-                                            <div class="row" style="margin-bottom:0;">
-                                                <div class="col s6">
-                                                    Consumido
-                                                </div>
-                                                <div class="col s6 right-align">
-                                                    <u>
-                                                        @* ----DRS 3.10.2018--- *@
-                                                        <b id="pc_t" style="font-size:11px">
-                                                        </b>
-                                                    </u>
-                                                </div>
+                                            <div class="col s3 right-align">
+                                                @* ----DRS 3.10.2018--- *@
+                                                <b id="p_banner" style="font-size:11px">
+                                                </b>
                                             </div>
-                                        </li>
-                                        <li class="collection-item">
-                                            <div class="row" style="margin-bottom:0;">
-                                                <div class="col s6">
-                                                    Presupuesto disponible
-                                                </div>
-                                                <div class="col s6 right-align">
-                                                    @* ----DRS 3.10.2018--- *@
-                                                    <b id="consu" style="font-size:11px">
-                                                    </b>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                    @*</ul>*@
-                                </div>
+                                        </div>
+                                    </li>
+                                </ul>
                             </div>
+                            <div class="row">
+                                <ul class="collection">
+                                    <li class="collection-item">
+                                        <div class="row" style="margin-bottom:0;">
+                                            <div class="col s6">
+                                                Registrado en SAP
+                                            </div>
+                                            <div class="col s3 right-align">
+                                                <div id="pc_c">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="collection-item">
+                                        <div class="row" style="margin-bottom:0;">
+                                            <div class="col s6">
+                                                Por registrar en SAP
+                                            </div>
+                                            <div class="col s3 right-align">
+                                                <div id="pc_a">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="collection-item">
+                                        <div class="row" style="margin-bottom:0;">
+                                            <div class="col s6">
+                                                En proceso TAT
+                                            </div>
+                                            <div class="col s3 right-align">
+                                                <u id="pc_p">
+                                                </u>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="collection-item">
+                                        <div class="row" style="margin-bottom:0;">
+                                            <div class="col s6">
+                                                Consumido
+                                            </div>
+                                            <div class="col s6 right-align">
+                                                <u>
+                                                    @* ----DRS 3.10.2018--- *@
+                                                    <b id="pc_t" style="font-size:11px">
+                                                    </b>
+                                                </u>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="collection-item">
+                                        <div class="row" style="margin-bottom:0;">
+                                            <div class="col s6">
+                                                Presupuesto disponible
+                                            </div>
+                                            <div class="col s6 right-align">
+                                                @* ----DRS 3.10.2018--- *@
+                                                <b id="consu" style="font-size:11px">
+                                                </b>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                @*</ul>*@
+                            </div>
+                        </div>
                         @*///////////////////////////////L.G.P.P MODIFICACIONES FIN*@
                     </div>
                     @if (Model.D.CONCEPTO_ID != null)
