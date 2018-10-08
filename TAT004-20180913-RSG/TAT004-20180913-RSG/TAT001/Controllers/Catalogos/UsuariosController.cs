@@ -2078,6 +2078,82 @@ namespace TAT001.Controllers.Catalogos
             return jl;
         }
 
+        //// Buscar
+        public JsonResult Usuario(string Prefix)
+        {
+            if (Prefix == null)
+                Prefix = "";
+
+            TAT001Entities db = new TAT001Entities();
+
+            var c = (from x in db.USUARIOs
+                     where x.ID.Contains(Prefix)
+                     select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
+
+            if (c.Count == 0)
+            {
+                var c2 = (from x in db.USUARIOs
+                          where x.NOMBRE.Contains(Prefix)
+                          select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
+                c.AddRange(c2);
+            }
+            else
+            {
+                var c3 = (from x in db.USUARIOs
+                          where x.APELLIDO_P.Contains(Prefix)
+                          select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
+                c.AddRange(c3);
+            }
+
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+
+        public JsonResult Cliente(string Prefix)
+        {
+            if (Prefix == null)
+                Prefix = "";
+
+            TAT001Entities db = new TAT001Entities();
+
+            var c = (from x in db.CLIENTEs
+                     where x.KUNNR.Contains(Prefix)
+                     select new { x.KUNNR, x.NAME1 }).ToList();
+
+            if (c.Count == 0)
+            {
+                var c2 = (from x in db.CLIENTEs
+                          where x.NAME1.Contains(Prefix)
+                          select new { x.KUNNR, x.NAME1 }).ToList();
+                c.AddRange(c2);
+            }
+
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+
+        public JsonResult Idioma(string Prefix)
+        {
+            if (Prefix == null)
+                Prefix = "";
+
+            TAT001Entities db = new TAT001Entities();
+
+            var c = (from x in db.SPRAS
+                     where x.ID.Contains(Prefix)
+                     select new { x.ID, x.DESCRIPCION }).ToList();
+
+            if (c.Count == 0)
+            {
+                var c2 = (from x in db.SPRAS
+                          where x.DESCRIPCION.Contains(Prefix)
+                          select new { x.ID, x.DESCRIPCION }).ToList();
+                c.AddRange(c2);
+            }
+
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
     }
 }
 
