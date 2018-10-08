@@ -357,11 +357,30 @@ function cambiaCheckRec() {
         document.getElementById("btn-date").disabled = true;
         document.getElementById("btn-peri").disabled = true;
         $("#btn-peri").trigger("change");
+
     } else {
         document.getElementById("btn-date").disabled = false;
         document.getElementById("btn-peri").disabled = false;
         $("#tabs_rec").addClass("disabled");
+        
     }
+    //var opt = document.getElementById("select_neg").getElementsByTagName("option");
+    //for (var i = 0; i < opt.length; i++) {
+    //    if (opt[i].value == "P")
+    //        opt[i].disabled = !campo.checked;
+    //}
+    if (campo.checked) {
+        $("#select_neg").val("M");
+        $("#select_negi").val("M");
+        $("#select_neg").prop("disabled", "disabled");
+        $("#select_neg").change();
+    } else {
+        $("#select_neg").prop("disabled", false);
+        $("#select_neg").change();
+    }
+    var elem = document.getElementById('select_neg');
+    var instance = M.FormSelect.init(elem, []);
+
 }
 
 function addRowRec(t, num, date, monto, tipo, porc, periodo, meses) {
