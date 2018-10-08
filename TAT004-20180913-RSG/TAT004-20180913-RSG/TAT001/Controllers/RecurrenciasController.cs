@@ -20,7 +20,7 @@ namespace TAT001.Controllers
     [Authorize]
     public class RecurrenciasController : Controller
     {
-        private TAT004Entities db = new TAT004Entities();
+        private TAT001Entities db = new TAT001Entities();
 
         #region anterior
         [AllowAnonymous]
@@ -62,7 +62,7 @@ namespace TAT001.Controllers
             ////DOCUMENTO d = new DOCUMENTO();
             ////string errorString = "";
             ////int pagina = 202; //ID EN BASE DE DATOS
-            ////using (TAT004Entities db = new TAT004Entities())
+            ////using (TAT001Entities db = new TAT001Entities())
             ////{
             ////    string p = "";
             ////    string u = User.Identity.Name;
@@ -556,8 +556,8 @@ namespace TAT001.Controllers
             //////----------------------------RSG 18.05.2018
 
             ////return View(d);
-            Recurrente rec = new Recurrente();
-            rec.creaRecurrente(id_d, tsol);
+            ////Recurrente rec = new Recurrente();
+            ////rec.creaRecurrente(id_d, tsol);
             return RedirectToAction("Index", "Solicitudes");
         }
 
@@ -1275,7 +1275,7 @@ namespace TAT001.Controllers
 
 
             int pagina = 202; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 //Obtener datos ocultos o deshabilitados                    
                 try
@@ -1293,7 +1293,7 @@ namespace TAT001.Controllers
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
                 ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
                 ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
+                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
                 ViewBag.rol = user.MIEMBROS.FirstOrDefault().ROL.NOMBRE;
                 ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
@@ -1543,7 +1543,7 @@ namespace TAT001.Controllers
         {
             decimal ukurs = 0;
             errorString = string.Empty;
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 try
                 {
@@ -1573,7 +1573,7 @@ namespace TAT001.Controllers
         {
             decimal ukurs = 0;
             errorString = string.Empty;
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 try
                 {
@@ -1601,7 +1601,7 @@ namespace TAT001.Controllers
         public RANGO getRango(string TSOL_ID)
         {
             RANGO rango = new RANGO();
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
 
                 rango = (from r in db.RANGOes
@@ -1636,7 +1636,7 @@ namespace TAT001.Controllers
         {
             STATE state = new STATE();
 
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
 
                 state = (from c in db.CITIES
@@ -1655,7 +1655,7 @@ namespace TAT001.Controllers
         {
             CLIENTE payer = new CLIENTE();
 
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
 
                 payer = db.CLIENTEs.Where(c => c.KUNNR.Equals(PAYER_ID)).FirstOrDefault();
@@ -1762,7 +1762,7 @@ namespace TAT001.Controllers
         public ActionResult CreateNew()
         {
 
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -1772,7 +1772,7 @@ namespace TAT001.Controllers
                 ViewBag.email = user.EMAIL;
                 ViewBag.rol = user.MIEMBROS.FirstOrDefault().ROL.NOMBRE;
                 ViewBag.returnUrl = Request.UrlReferrer;
-                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
+                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
                 try
                 {
                     string p = Session["pais"].ToString();
@@ -1829,7 +1829,7 @@ namespace TAT001.Controllers
         public JsonResult SelectCity(int id)
         {
 
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
 
             var id_cl = db.CITIES.Where(city => city.STATE_ID.Equals(id)).Select(c => new { ID = c.ID.ToString(), NAME = c.NAME.ToString() }).ToList();
 
@@ -1843,7 +1843,7 @@ namespace TAT001.Controllers
         public JsonResult SelectTall(string id)
         {
 
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
 
             string u = User.Identity.Name;
             var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -1869,7 +1869,7 @@ namespace TAT001.Controllers
         public JsonResult SelectCliente(string kunnr)
         {
 
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
 
             CLIENTE_MOD id_cl = (from c in db.CLIENTEs
                                  join co in db.CONTACTOCs
@@ -1964,7 +1964,7 @@ namespace TAT001.Controllers
             {
             }
 
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
             try
             {
                 id_bukrs = db.SOCIEDADs.Where(soc => soc.LAND.Equals(p)).FirstOrDefault();
@@ -2006,7 +2006,7 @@ namespace TAT001.Controllers
             {
             }
 
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
 
             var id_bukrs = db.SOCIEDADs.Where(soc => soc.LAND.Equals(p)).FirstOrDefault();
             try
@@ -3002,7 +3002,7 @@ namespace TAT001.Controllers
             {
             }
 
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
 
             var id_bukrs = db.SOCIEDADs.Where(soc => soc.LAND.Equals(p)).FirstOrDefault();
             try
@@ -3038,7 +3038,7 @@ namespace TAT001.Controllers
             if (Prefix == null)
                 Prefix = "";
 
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
 
             var c = (from m in db.MATERIALs
                      where m.ID.Contains(Prefix) && m.ACTIVO == true
@@ -3060,7 +3060,7 @@ namespace TAT001.Controllers
             if (Prefix == null)
                 Prefix = "";
 
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
 
             var c = (from m in db.PROVEEDORs
                      where m.ID.Contains(Prefix)
@@ -3081,7 +3081,7 @@ namespace TAT001.Controllers
             if (material == null)
                 material = "";
 
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
 
             MATERIAL mat = db.MATERIALs.Where(m => m.ID == material).FirstOrDefault();
 
@@ -3164,7 +3164,7 @@ namespace TAT001.Controllers
             if (material == null)
                 material = "";
 
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
 
             MATERIAL m = db.MATERIALs.Where(mat => mat.ID.Equals(material)).FirstOrDefault();
             //var cat = new CATEGORIAT();
@@ -3200,7 +3200,7 @@ namespace TAT001.Controllers
             if (cate == null)
                 cate = "";
 
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
 
             var cat = (dynamic)null;
 
@@ -3238,7 +3238,7 @@ namespace TAT001.Controllers
             if (material == null)
                 material = "";
 
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
 
             MATERIAL m = db.MATERIALs.Where(mat => mat.ID.Equals(material)).FirstOrDefault();
             CATEGORIAT cat = new CATEGORIAT();
@@ -3303,7 +3303,7 @@ namespace TAT001.Controllers
         public ActionResult Backorder(decimal id_d, string pais)
         {
             int pagina = 203; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -3400,7 +3400,7 @@ namespace TAT001.Controllers
 
 
         [HttpPost]
-        public ActionResult Backorder([Bind(Include ="NUM_DOC")] DOCUMENTO D, string BACKORDER)
+        public ActionResult Backorder([Bind(Include = "NUM_DOC,LIGADA")] DOCUMENTO D, string BACKORDER)
         {
             DOCUMENTOL dl = db.DOCUMENTOLs.Where(x => x.NUM_DOC.Equals(D.NUM_DOC)).OrderByDescending(x => x.POS).FirstOrDefault();
             FormatosC fc = new FormatosC();
@@ -3409,7 +3409,49 @@ namespace TAT001.Controllers
             db.Entry(dl).State = EntityState.Modified;
             db.SaveChanges();
 
-            return RedirectToAction("Backorder", new { id_d = D.NUM_DOC});
+            if (D.LIGADA == true)
+            {
+                //dOCUMENTO.MONTO_DOC_MD = 0;
+                //foreach (CategoriaMaterial catm in listcatm)
+                //{
+                //    foreach (DOCUMENTOM_MOD mats in catm.MATERIALES)
+                //        dOCUMENTO.MONTO_DOC_MD += mats.VAL;
+                //}
+                D.MONTO_DOC_MD = dl.MONTO_VENTA + dl.BACKORDER;
+                DOCUMENTOREC drecs = db.DOCUMENTORECs.Where(a => a.DOC_REF == D.NUM_DOC).FirstOrDefault();
+                DOCUMENTO dOCpADRE = db.DOCUMENTOes.Where(x => x.NUM_DOC == drecs.NUM_DOC).FirstOrDefault();
+                foreach (DOCUMENTORAN dran in dOCpADRE.DOCUMENTORECs.Where(x => x.POS == drecs.POS).FirstOrDefault().DOCUMENTORANs)
+                {
+                    if (D.MONTO_DOC_MD > dran.OBJETIVOI)
+                    {
+                        D.MONTO_DOC_MD = D.MONTO_DOC_MD * dran.PORCENTAJE / 100;
+                        D.PORC_APOYO = dran.PORCENTAJE;
+                        break;
+                    }
+                }
+                DOCUMENTO doc = db.DOCUMENTOes.Find(D.NUM_DOC);
+
+                if (dOCpADRE.DOCUMENTORECs.Count == 1)
+                {
+                    D.MONTO_DOC_MD = D.MONTO_DOC_MD * doc.PORC_APOYO / 100;
+                    D.PORC_APOYO = doc.PORC_APOYO;
+                }
+                doc.MONTO_DOC_MD = D.MONTO_DOC_MD;
+                doc.PORC_APOYO = D.PORC_APOYO;
+                foreach (DOCUMENTOP dp in doc.DOCUMENTOPs)
+                {
+                    if (dp.APOYO_EST > 0)
+                        dp.APOYO_EST = D.MONTO_DOC_MD * dp.PORC_APOYO / 100;
+                    if (dp.APOYO_REAL > 0)
+                        dp.APOYO_REAL = D.MONTO_DOC_MD * dp.PORC_APOYO / 100;
+                }
+
+
+                db.Entry(doc).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+
+            return RedirectToAction("Backorder", new { id_d = D.NUM_DOC });
         }
 
 
@@ -3419,7 +3461,7 @@ namespace TAT001.Controllers
         {
             //ViewBag.TitlePag = id;
             int pagina = 203; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -3472,8 +3514,8 @@ namespace TAT001.Controllers
                 docRe = db.DOCUMENTORECs.Where(x => x.DOC_REF == id).FirstOrDefault();
                 docRe.ESTATUS = "C";
                 db.Entry(docRe).State = EntityState.Modified;
-                List<DOCUMENTOREC> docRes = db.DOCUMENTORECs.Where(x=>x.NUM_DOC.Equals(docRe.NUM_DOC) & x.POS > docRe.POS).ToList();
-                foreach(DOCUMENTOREC dR in docRes)
+                List<DOCUMENTOREC> docRes = db.DOCUMENTORECs.Where(x => x.NUM_DOC.Equals(docRe.NUM_DOC) & x.POS > docRe.POS).ToList();
+                foreach (DOCUMENTOREC dR in docRes)
                 {
                     dR.ESTATUS = "C";
                     db.Entry(dR).State = EntityState.Modified;
@@ -3527,5 +3569,64 @@ namespace TAT001.Controllers
             }
         }
         ///////////////////////////////CAMBIOS LGPP FIN//////////////////////////
+
+        [HttpGet]
+        public ActionResult Ejecutar()
+        {
+            int pagina = 999; //ID EN BASE DE DATOS
+            using (TAT001Entities db = new TAT001Entities())
+            {
+                string u = User.Identity.Name;
+                //string u = "admin";
+                var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
+                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
+                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
+                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+                ViewBag.Title += " ";
+                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+                
+                Session["spras"] = user.SPRAS_ID;
+            }
+            
+            return View();
+        }
+
+
+        [HttpPost]
+        public ActionResult Ejecutar(string fecha)
+        {
+            DateTime hoy = DateTime.Parse(fecha);
+            var docs = db.DOCUMENTOes.Where(a => (a.TIPO_RECURRENTE.Equals("1") | a.TIPO_RECURRENTE.Equals("2") | a.TIPO_RECURRENTE.Equals("3")) & a.ESTATUS.Equals("A") & a.ESTATUS_WF.Equals("A")).ToList();
+            List<DOCUMENTOREC> ddrec = new List<DOCUMENTOREC>();
+            foreach (DOCUMENTO d in docs)
+            {
+                DOCUMENTOREC drec = d.DOCUMENTORECs.Where(a => a.FECHAF == hoy).FirstOrDefault();
+                if (drec != null)
+                    if (drec.DOC_REF == 0)
+                        ddrec.Add(drec);
+            }
+
+            int c = 0;
+            foreach (DOCUMENTOREC drec in ddrec)
+            {
+                drec.ESTATUS = "A";
+                db.Entry(drec).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
+
+                //Mail m = new Mail();
+                //m.enviaMail(drec);
+
+            }
+
+            foreach (DOCUMENTOREC drec in ddrec)
+            {
+                Recurrente r = new Recurrente();
+                r.creaRecurrente(drec.NUM_DOC, drec.DOCUMENTO.TSOL_ID, hoy, drec.POS);
+            }
+            return RedirectToAction("Ejecutar");
+        }
     }
 }

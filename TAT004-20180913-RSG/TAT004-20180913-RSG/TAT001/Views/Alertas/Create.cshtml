@@ -17,10 +17,7 @@
         display: none !important;
     }
 </style>
-<link href="~/Content/materialize.clockpicker.css" rel="stylesheet" />
-<script type="text/javascript" src="~/Scripts/materialize.clockpicker.js"></script>
 <script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
-<script type="text/javascript" src="~/Scripts/moment.min.js"></script>
 @using (Html.BeginForm("Create", "Alertas", FormMethod.Post, new { @id = "alertaForm" }))
 {
     @Html.AntiForgeryToken()
@@ -29,23 +26,23 @@
     </div>
         <div class="card-panel">
             <div class="row">
-                <div class="col s3">
+                <div class="col s2">
                     <div class="form-group">
                         <label id="lbl_alerta"></label>
                         <div class="col-md-10">
-                            @Html.TextBoxFor(model => model.alerta.ID,new { @required=true})
+                            @Html.TextBoxFor(model => model.alerta.ID,new { @required=true, @maxlength =20})
                         </div>
                     </div>
                 </div>
-                <div class="col s6">
+                <div class="col s5">
                     <div class="form-group">
                         <label id="lbl_descAlerta"></label>
                         <div class="col-md-10">
-                          @Html.TextBoxFor(model => model.alerta.DESCR, new { @required = true })
+                          @Html.TextBoxFor(model => model.alerta.DESCR, new { @required = true, @maxlength = 50 })
                         </div>
                     </div>
                 </div>
-                <div class="col s3">
+                <div class="col s2">
                     <div class="form-group">
                         <label id="lbl_alerta_error"></label>
                         <div class="col-md-10">
@@ -54,8 +51,8 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col s3">
+            <div class="row"> 
+                <div class="col s2">
                     <div class="form-group">
                         <label id="lbl_bu"></label>
                         <div class="col-md-10">
@@ -63,15 +60,15 @@
                         </div>
                     </div>
                 </div>
-                <div class="col s3">
+                <div class="col s5">
                     <div class="form-group">
                         <label id="lbl_tipo"></label>
                         <div class="col-md-10">
                             @Html.DropDownListFor(model => model.alerta.TSOL_ID, Model.tiposSolicitud, "")
                         </div>
                     </div>
-                </div>
-                <div class="col s3">
+                </div>         
+                <div class="col s2">
                     <div class="form-group">
                         <label id="lbl_tab"></label>
                         <div class="col-md-10">
@@ -88,41 +85,122 @@
                     </div>
                 </div>
             </div>
-            <p class="text-center"><label id="lbl_mensaje"></label></p>
-            <hr>
-            <div class="row">
-                <div class="col s4">
-                    <div class="form-group">
-                        <label>ES</label>
-                        <div class="col-md-10">
-                            @Html.TextBoxFor(model => model.alertaMensajes[0].TXT100, new { @required = ""  })
+                <p class="text-center"><label id="lbl_condicion_regla"></label></p>
+                <hr>
+                <div class="row">
+                    <div class="col s3">
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                @Html.HiddenFor(model => model.alertaCondiciones[0].POS)
+                                @Html.HiddenFor(model => model.alertaCondiciones[0].ANDOR)
+                                @Html.DropDownListFor(model => model.alertaCondiciones[0].CONDICION_ID, Model.condCampos, "")
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s2">
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                @Html.DropDownListFor(model => model.alertaCondiciones[0].VALOR_COMP, Model.condValores, "")
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s1">
+                        <div class="form-group">
+                            <label>
+                                @Html.RadioButtonFor(model => model.alertaCondiciones[1].ANDOR, "&", new { @onchange = "actualizarCondiciones(this.value)" })
+                                <span id="lbl_and"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col s1">
+                        <div class="form-group">
+                            <label>
+                                @Html.RadioButtonFor(model => model.alertaCondiciones[1].ANDOR, "|", new {@onchange= "actualizarCondiciones(this.value)" })
+                                <span id="lbl_or"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col s1">
+                        <div class="form-group">
+                            <label>
+                                @Html.RadioButtonFor(model => model.alertaCondiciones[1].ANDOR, "", new { @onchange = "actualizarCondiciones(this.value)", @checked = true })
+                                <span></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col s2">
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                @Html.DropDownListFor(model => model.alertaCondiciones[1].CONDICION_ID, Model.condCampos1, "", new { @disabled = true, @onchange = "cargarCondValores()" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s2">
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                @Html.DropDownListFor(model => model.alertaCondiciones[1].VALOR_COMP, Model.condValores1, "", new { @disabled = true })
+                                @Html.HiddenFor(model => model.alertaCondiciones[1].ORAND)
+                                @Html.HiddenFor(model => model.alertaCondiciones[1].POS)
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col s4">
-                    <div class="form-group">
-                        <label>EN</label>
-                        <div class="col-md-10">
-                            @Html.TextBoxFor(model => model.alertaMensajes[1].TXT100, new { @required = "" })                     
+                <p class="text-center"><label id="lbl_mensajes"></label></p>
+                <hr>
+                <div class="row">
+                    <div class="col s4">
+                        <div class="form-group">
+                            <label>ES</label>
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model => model.alertaMensajes[0].TXT100, new { @required = "", @maxlength = 100 })
+                                @Html.HiddenFor(model => model.alertaMensajes[0].SPRAS_ID)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="form-group">
+                            <label>EN</label>
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model => model.alertaMensajes[1].TXT100, new { @required = "", @maxlength = 100 })
+                                @Html.HiddenFor(model => model.alertaMensajes[1].SPRAS_ID)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="form-group">
+                            <label>PT</label>
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model => model.alertaMensajes[2].TXT100, new { @required = "", @maxlength = 100 })
+                                @Html.HiddenFor(model => model.alertaMensajes[2].SPRAS_ID)
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col s4">
-                    <div class="form-group">
-                        <label>PT</label>
-                        <div class="col-md-10">
-                            @Html.TextBoxFor(model => model.alertaMensajes[2].TXT100, new { @required = "" })                
-                        </div>
-                    </div>
-                </div>       
+
             </div>
-           
-        </div>
 }
 <div class="col s12">
     <a id="btn_return" href="@Url.Action("Index")"></a>
 </div>
 <script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
+@if (Model.alerta.SOCIEDAD_ID != null && Model.alerta.TSOL_ID != null)
+{
+    <script>
+    // Asignar valor a combos de list
+    var idAndOr = "@Model.alertaCondiciones[1].ANDOR";
+    if (idAndOr == "&amp;") { idAndOr = "&";}
+    $('#alertaCondiciones_0__CONDICION_ID').val('@Model.alertaCondiciones[0].CONDICION_ID');
+    $('#alertaCondiciones_0__VALOR_COMP').val('@Model.alertaCondiciones[0].VALOR_COMP');
+    $('#alertaCondiciones_1__ANDOR[value="' + idAndOr + '"]').prop("checked", true);
+    if (idAndOr != '') {
+        $('#alertaCondiciones_1__CONDICION_ID').val('@Model.alertaCondiciones[1].CONDICION_ID');
+        $('#alertaCondiciones_1__VALOR_COMP').val('@Model.alertaCondiciones[1].VALOR_COMP');
+        $('#alertaCondiciones_0__ANDOR').val('(');
+        $('#alertaCondiciones_1__CONDICION_ID').prop('disabled', false);
+        $('#alertaCondiciones_1__VALOR_COMP').prop('disabled', false);
+    }
+    </script>
+}
 <script>
         //---- Inicializador de componentes Materialize----
         fnCommon.materializeInit('select', 'select');
@@ -131,25 +209,27 @@
         fnCommon.selectRequired();
         fnCommon.formValidation('alertaForm');
 
-        $("#alerta_TAB_ID").change(function () {
-            var tab_id = $("#alerta_TAB_ID").val();
-            var root = "@Url.Content("~")";
-            $.ajax({
-                url: root +"Alertas/ObtenerCampos",
-                data: { tab_id: tab_id },
-                cache: false,
-                type: "POST",
-                success: function (selectItems) {
-                    var options = "";
-                    selectItems.forEach(function (selectItem) {
-                        options += "<option value=" + selectItem.Value + ">"+ selectItem.Text + "</option>";
-                    });
-                    if (selectItems.length>0){
-                        $("#alerta_CAMPO_ID").html(options).show();
-                    }
-                }
-            });
-        });
+        //----  Se agrega carga de Select Campos----
+        var root = "@Url.Content("~")";
+        fnCommon.fillOptionsInSelect('alerta_TAB_ID', root + 'Alertas/ObtenerCamposPorTabId', 'alerta_CAMPO_ID');
+        fnCommon.fillOptionsInSelect('alertaCondiciones_0__CONDICION_ID', root + 'Alertas/ObtenerCondValores', 'alertaCondiciones_0__VALOR_COMP');
+        fnCommon.fillOptionsInSelect('alertaCondiciones_1__CONDICION_ID', root + 'Alertas/ObtenerCondValores', 'alertaCondiciones_1__VALOR_COMP');
+
+        function actualizarCondiciones(andor) {
+            if (andor === "&" || andor === "|") {
+                $('#alertaCondiciones_1__CONDICION_ID').prop('disabled', false);
+                $('#alertaCondiciones_1__VALOR_COMP').prop('disabled', false);
+                $('#alertaCondiciones_0__ANDOR').val('(');
+            } else {
+                $('#alertaCondiciones_1__CONDICION_ID').prop('disabled', true);
+                $('#alertaCondiciones_1__CONDICION_ID').val(null);
+                $('#alertaCondiciones_1__VALOR_COMP').prop('disabled', true);
+                $('#alertaCondiciones_1__VALOR_COMP').val(null);
+                $('#alertaCondiciones_0__ANDOR').val(null);
+            }
+            fnCommon.materializeInit('select', 'select');
+            fnCommon.selectRequired();
+        }
 
         // Valida si ocurrio un error al intentar crear el periodo y otro.
         var mnjError = '@ViewBag.mnjError';

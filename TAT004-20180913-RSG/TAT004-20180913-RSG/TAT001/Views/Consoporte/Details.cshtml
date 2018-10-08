@@ -1,0 +1,59 @@
+﻿@model TAT001.Entities.CONSOPORTE
+
+@{
+    ViewBag.pagina_r = 843;
+    ViewBag.carpeta_r = 500;
+    //ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    @using (Html.BeginForm())
+    {
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="row">
+                <div class="row" style="height:10px;width:100%;">
+                    <div class="col l7 pink darken-1" style="height:10px;padding:0;"></div>
+                    <div class="col l3 pink darken-4" style="height:10px;padding:0;">
+                        <div class="col l3 pink darken-4" style="height:10px;padding:0;"></div>
+                        <div class="col l8 orange" style="height:10px;padding:0;"></div>
+                        <div class="col l1 red" style="height:10px;padding:0;"></div>
+                    </div>
+                    <div class="col l2 yellow" style="height:10px;padding:0;"></div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s4 m4 l4 col offset-s4 offset-m4 offset-l4">
+                    <div class="col l12 m12 s12">
+                        <div class="input-field col l10 m10" style="margin-bottom:0;">
+                            @Html.EditorFor(model => model.TSOL.DESCRIPCION, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            @Html.LabelFor(model => model.TSOL.DESCRIPCION, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblTipoSol" })
+                        </div>
+                        
+                        <div class="input-field col l10 m10" style="margin-bottom:0;">
+                            @Html.EditorFor(model => model.TSOPORTE.DESCRIPCION, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            @Html.LabelFor(model => model.TSOPORTE.DESCRIPCION, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblTipoSop" })
+                        </div>
+
+                        <div class="input-field col l10 m10" style="margin-bottom:0;">
+                            <label>
+                                <input type="checkbox" name="obligatorio" value="true" disabled="disabled" id="obligatorio" @Html.Raw((Model.OBLIGATORIO) ? "checked=\"checked\"" : "") />
+                                <span style="height:0"></span>
+                            </label>
+                            @Html.LabelFor(model => model.OBLIGATORIO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblObliga" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+    }
+</div>
+
+<p>
+    @Html.ActionLink("Edit", "Edit", new { tsol = Model.TSOL_ID, tsopo = Model.TSOPORTE_ID }) |
+    @Html.ActionLink("Back to List", "Index", new { tsol = Model.TSOL_ID })
+</p>

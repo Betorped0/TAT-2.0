@@ -20,41 +20,46 @@
     <input id="miles" name="miles" type="hidden" value="@ViewBag.miles">//LEJ 09.07.18
     <input id="dec" name="dec" type="hidden" value="@ViewBag.dec">//LEJ 09.07.18
     <div class="row" style="margin-bottom:0">
-        <div class="col s12 m5 l5">
+        @* ---DRS 3.10.2018--- *@
+        <div class="col s12 m7">
             <div class="row" style="margin-bottom:0">
-                <div class="input-field col s4">
+                @* ---DRS 3.10.2018--- *@
+                <div class="input-field col s2">
                     @Html.EditorFor(model => model.D.USUARIOC_ID, new { htmlAttributes = new { @disabled = "disabled" } })
                     @Html.LabelFor(model => model.D.USUARIOC_ID, new { @id = "lbl_userid" })
                 </div>
-                <div class="input-field col s4">
+                @* ---DRS 3.10.2018--- *@
+                <div class="input-field col s2">
                     @*<input type="text" id="txt_user" value="@ViewBag.usuario.MANAGER" disabled="disabled" />
                         <label for="txt_user">Manager</label>*@
                     @Html.EditorFor(model => model.D.USUARIO.MANAGER, new { htmlAttributes = new { @disabled = "disabled" } })
                     @Html.LabelFor(model => model.D.USUARIO.MANAGER, new { @id = "lbl_manager" })
                 </div>
-                <div class="input-field col s4">
+                @* ---DRS 3.10.2018--- *@
+                <div class="input-field col s2">
                     @Html.EditorFor(model => model.D.USUARIO.BACKUP_ID, new { htmlAttributes = new { @disabled = "disabled" } })
                     @Html.LabelFor(model => model.D.USUARIO.BACKUP_ID, new { @id = "lbl_backup" })
                     @*<input type="text" id="txt_user" value="@ViewBag.usuario.BACKUP_ID" disabled="disabled" />
                         <label for="txt_user">Backup</label>*@
                 </div>
+                <div class="input-field col s3">
+                    @*<input type="text" id="txt_user" value="PRGA" disabled="disabled" />
+                        <label for="txt_user">BU</label>*@
+                    @Html.EditorFor(model => model.D.USUARIO.BUNIT, new { htmlAttributes = new { @disabled = "disabled" } })
+                    @Html.LabelFor(model => model.D.USUARIO.BUNIT, "Sociedad", new { @class = "lbl_bu" })
+                </div>
+                <div class="input-field col s2">
+                    @if (Model.D.ESTATUS == "N")
+                    {
+                        <input type="text" id="txt_status" value="Nuevo" disabled="disabled" />
+                        <label for="txt_status" id="lbl_status">Estatus</label>
+                    }
+                </div>
             </div>
         </div>
-        <div class="col s12 m2 l2">
-            <div class="input-field col s6">
-                @*<input type="text" id="txt_user" value="PRGA" disabled="disabled" />
-                    <label for="txt_user">BU</label>*@
-                @Html.EditorFor(model => model.D.USUARIO.BUNIT, new { htmlAttributes = new { @disabled = "disabled" } })
-                @Html.LabelFor(model => model.D.USUARIO.BUNIT, "Sociedad", new { @class = "lbl_bu" })
-            </div>
-            <div class="input-field col s6">
-                @if (Model.D.ESTATUS == "N")
-                {
-                    <input type="text" id="txt_status" value="Nuevo" disabled="disabled" />
-                    <label for="txt_status" id="lbl_status">Estatus</label>
-                }
-            </div>
-        </div>
+
+
+
         <div class="col s12 m5 l5">
             <div class="row right">
                 @if (Model.D.ESTATUS_C != "C")
@@ -164,7 +169,7 @@
                             }
                         }
                     }
-                    else if ((Model.D.ESTATUS.Equals("A")| Model.D.ESTATUS.Equals("R")) && (Model.D.TSOL.PADRE) /*&& Model.D.DOCUMENTORECs.Count < 1 && Model.D.DOCUMENTOLs.Count < 1*/)//RSG 20181002
+                    else if ((Model.D.ESTATUS.Equals("A") | Model.D.ESTATUS.Equals("R")) && (Model.D.TSOL.PADRE) /*&& Model.D.DOCUMENTORECs.Count < 1 && Model.D.DOCUMENTOLs.Count < 1*/)//RSG 20181002
                     {
                         if (Model.D.USUARIOC_ID == ViewBag.usuario.ID & Model.D.DOCUMENTO_SAP != null)
                         {
@@ -196,6 +201,12 @@
                                 };
                                 var instance = M.Dropdown.init(elem, options);
                             </script>
+                        }
+                        if (ViewBag.usuario.PUESTO_ID == 8 & Model.D.DOCUMENTOLs.Count > 0)
+                        {
+                            <div id="div_drop">
+                                <a href="@Url.Action("Backorder", "Recurrencias" , new { id_d=Model.D.NUM_DOC.ToString()})" class="btn-small">Backorder</a>
+                            </div>
                         }
                     }
                     else if (!Model.D.ESTATUS.Equals("A"))
@@ -475,7 +486,7 @@
                                                         }
                                                     </tr>
                                                 </thead>
-                                                @using (TAT004Entities db = new TAT004Entities())
+                                                @using (TAT001Entities db = new TAT001Entities())
                                                 {
                                                     foreach (var item in Model.D.DOCUMENTOF)
                                                     {
@@ -644,77 +655,7 @@
                                         <h5>Recurrencia</h5>
                                     </div>
                                     @{ var caso = Model.D.TIPO_RECURRENTE; }
-                                    @*@if (Convert.ToInt32(caso) != 3)*@
-                                    @*{*@
-                                    @*<table>
-                                            <thead>
-                                                <tr>
-                                                    <th>Pos</th>
-                                                    <th>Periodo</th>
-                                                    <th>Tipo</th>
-                                                    <th>Documento</th>
-                                                    <th>Fecha</th>
 
-                                                    @if (Convert.ToInt32(caso) == 1)
-                                                    {
-                                                    <th>Monto</th>
-                                                    }
-                                                    else if (Convert.ToInt32(caso) == 2)
-                                                    {
-                                                    <th>%</th>
-                                                    <th>Objetivo</th>
-                                                    }
-                                                    <th>Estatus</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach (var iteem in Model.D.DOCUMENTORECs)
-                                                {
-                                                <tr>
-                                                    <td>@iteem.POS/@Model.D.DOCUMENTORECs.Count()</td>
-                                                    @{ string periodo = "P" + iteem.PERIODO + "-" + iteem.EJERCICIO; }
-                                                    <td>@periodo</td>
-                                                    <td>@Model.D.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50</td>
-                                                    @if (iteem.DOC_REF > 0)
-                                                    {
-                                                    <td><a href="@Url.Action("Details", new { id=iteem.DOC_REF })">@iteem.DOC_REF</a></td>
-                                                    }
-                                                    else
-                                                    {
-                                                    <td></td>
-                                                    }
-                                                    <td>@iteem.FECHAF.Value.ToShortDateString()</td>
-
-                                                    @if (Convert.ToInt32(caso) == 1)
-                                                    {
-                                                    <td class="precio">@iteem.MONTO_BASE</td>
-                                                    }
-                                                    else if (Convert.ToInt32(caso) == 2)
-                                                    {
-                                                    <td class="porcentaje">@Math.Round(iteem.PORC.Value, 2)</td>
-                                                    <td class="precio">@iteem.MONTO_BASE</td>
-                                                    }
-
-                                                    @if (iteem.ESTATUS == "P")
-                                                    {
-                                                    <td>Contabilizado</td>
-                                                    }
-                                                    else if (iteem.ESTATUS == "C")
-                                                    {
-
-                                                    <td>Cancelado</td>
-                                                    }
-                                                    else
-                                                    {
-                                                    <td>Pendiente</td>
-                                                    }
-                                                </tr>
-                                                }
-                                            </tbody>
-                                        </table>*@
-                                    @*//}
-                                        //else
-                                        //{*@
                                     <div class="row" style="overflow:auto;">
                                         <div class="col s12">
                                             <table>
@@ -723,9 +664,12 @@
                                                         <th>Pos</th>
                                                         <th>Periodo</th>
                                                         <th>Tipo</th>
-                                                        <th>Documento</th>
+                                                        <th>No solicitud TAT</th>
                                                         <th>Fecha</th>
-                                                        <th>%</th>
+                                                        @if (caso != "1")
+                                                        {
+                                                            <th>%</th>
+                                                        }
                                                         <th>Objetivo</th>
                                                         <th>Estatus</th>
                                                     </tr>
@@ -744,20 +688,42 @@
                                                             }
                                                             else
                                                             {
-                                                                <td></td>
+                                                                <td>No generado</td>
                                                             }
-                                                            <td>@iteem.FECHAV.Value.ToShortDateString()</td>
+                                                            @if (iteem.ESTATUS != "C" & iteem.ESTATUS != "P")
+                                                            {
+                                                                <td>No generado</td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td>@iteem.FECHAV.Value.ToShortDateString()</td>}
+
                                                             @if (Model.D.LIGADA == true)
                                                             {
-                                                                foreach (TAT001.Entities.DOCUMENTORAN ran in iteem.DOCUMENTORANs.Where(x => x.LIN == 1))//RSG 20.09.2018
+                                                                if (iteem.DOCUMENTORANs.Count > 0)
                                                                 {
-                                                                    <td class="porcentaje">@ran.PORCENTAJE</td>
-                                                                    <td class="precio">@ran.OBJETIVOI</td>
+                                                                    foreach (TAT001.Entities.DOCUMENTORAN ran in iteem.DOCUMENTORANs.Where(x => x.LIN == 1))//RSG 20.09.2018
+                                                                    {
+                                                                        if (caso != "1")
+                                                                        {
+                                                                            <td class="porcentaje">@ran.PORCENTAJE</td>}
+                                                                        <td class="precio">@ran.OBJETIVOI</td>
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    if (caso != "1")
+                                                                    {
+                                                                        <td class="porcentaje">@iteem.PORC</td>}
+                                                                    <td class="precio">@iteem.MONTO_BASE</td>
                                                                 }
                                                             }
                                                             else
                                                             {
-                                                                <td class="porcentaje">@Math.Round(iteem.PORC.Value, 2)</td>
+                                                                if (caso != "1")
+                                                                {
+                                                                    <td class="porcentaje">@Math.Round(iteem.PORC.Value, 2)</td>
+                                                                }
                                                                 <td class="precio">@iteem.MONTO_BASE</td>
                                                             }
                                                             @if (iteem.ESTATUS == "P")
@@ -1077,23 +1043,26 @@
                                             <label for="txt_porc">Porcentaje apoyo</label>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="input-field col s6">
-                                            @*<input type="text" value="0.00" class="precio" disabled="disabled" id="txt_venta" onload="calcValor()" />*@
-                                            <input type="text" value="@Model.D.DOCUMENTOLs.FirstOrDefault().MONTO_VENTA" class="precio" disabled="disabled" id="txt_venta" />
-                                            <label for="txt_porc">Venta del mes</label>
+                                    @if (Model.D.DOCUMENTOLs.Count > 0)
+                                    {
+                                        <div class="row">
+                                            <div class="input-field col s6">
+                                                @*<input type="text" value="0.00" class="precio" disabled="disabled" id="txt_venta" onload="calcValor()" />*@
+                                                <input type="text" value="@Model.D.DOCUMENTOLs.FirstOrDefault().MONTO_VENTA" class="precio" disabled="disabled" id="txt_venta" />
+                                                <label for="txt_porc">Venta del mes</label>
+                                            </div>
+                                            <div class="input-field col s6">
+                                                <input type="text" value="@Model.D.MONTO_DOC_MD" class="precio" disabled="disabled" id="MONTO_DOC_MD" />
+                                                <label for="txt_porc">Monto base</label>
+                                            </div>
+                                            <script>
+                                                //function calcValor() {
+                                                ////var venta = ((document.getElementById("MONTO_DOC_MD").value) / (document.getElementById("PORC_APOYO").value)) * 100;
+                                                ////document.getElementById("txt_venta").value = venta;
+                                                //}
+                                            </script>
                                         </div>
-                                        <div class="input-field col s6">
-                                            <input type="text" value="@Model.D.MONTO_DOC_MD" class="precio" disabled="disabled" id="MONTO_DOC_MD" />
-                                            <label for="txt_porc">Monto base</label>
-                                        </div>
-                                        <script>
-                                            //function calcValor() {
-                                            ////var venta = ((document.getElementById("MONTO_DOC_MD").value) / (document.getElementById("PORC_APOYO").value)) * 100;
-                                            ////document.getElementById("txt_venta").value = venta;
-                                            //}
-                                        </script>
-                                    </div>
+                                    }
                                 </div>
                             </div>
                         }
@@ -1101,7 +1070,7 @@
                     <div class="col s12">
                         <br />
                         @*///////////////////////////////CAMBIOS LGPP INICIO//////////////////////////*@
-                        @using (TAT004Entities db = new TAT004Entities())
+                        @using (TAT001Entities db = new TAT001Entities())
                         {
                             <div class="row">
                                 <div class="col s12 m6 l6">
@@ -1196,7 +1165,7 @@
                                                             <td>@item.MATKL</td>
                                                         }
                                                         @{
-                                                            using (TAT001.Entities.TAT004Entities db = new TAT001.Entities.TAT004Entities())
+                                                            using (TAT001.Entities.TAT001Entities db = new TAT001.Entities.TAT001Entities())
                                                             {
                                                                 if (item.MATNR != "")
                                                                 {
@@ -1247,7 +1216,7 @@
                                                             <td></td>
                                                             <td>@mat.MATNR.TrimStart('0')</td>
                                                             @{
-                                                                using (TAT001.Entities.TAT004Entities db = new TAT001.Entities.TAT004Entities())
+                                                                using (TAT001.Entities.TAT001Entities db = new TAT001.Entities.TAT001Entities())
                                                                 {
                                                                     if (mat.MATNR != "")
                                                                     {
@@ -1685,7 +1654,7 @@
                             }
                             </script>
                         </div>
-                        @using (TAT004Entities db = new TAT004Entities())
+                        @using (TAT001Entities db = new TAT001Entities())
                         {
                             List<DOCUMENTO>
                                 inf = new List<DOCUMENTO>
@@ -1812,12 +1781,14 @@
                                                 Presupuesto canal
                                             </div>
                                             <div class="col s5">
-                                                <b id="p_vtweg">
+                                                @* ----DRS 3.10.2018--- *@
+                                                <b id="p_vtweg" style="font-size:11px">
                                                     aaaa
                                                 </b>
                                             </div>
                                             <div class="col s3 right-align">
-                                                <b id="p_canal">
+                                                @* ----DRS 3.10.2018--- *@
+                                                <b id="p_canal" style="font-size:11px">
                                                     1111
                                                 </b>
                                             </div>
@@ -1829,15 +1800,17 @@
                                                 Presupuesto cliente
                                             </div>
                                             <div class="col s5">
-                                                <b id="p_kunnr">
+                                                @* ----DRS 3.10.2018--- *@
+                                                <b id="p_kunnr" style="font-size:10px">
                                                 </b>
                                             </div>
                                             <div class="col s3 right-align">
-                                                <b id="p_banner">
+                                                @* ----DRS 3.10.2018--- *@
+                                                <b id="p_banner" style="font-size:11px">
                                                 </b>
                                             </div>
                                         </div>
-                                    </li>
+</li>
                                 </ul>
                             </div>
                             <div class="row">
@@ -1882,6 +1855,7 @@
                                             </div>
                                             <div class="col s6 right-align">
                                                 <u>
+
                                                     <b id="pc_t">
                                                     </b>
                                                 </u>
@@ -1894,6 +1868,7 @@
                                                 Presupuesto disponible
                                             </div>
                                             <div class="col s6 right-align">
+
                                                 <b id="consu">
                                                 </b>
                                             </div>

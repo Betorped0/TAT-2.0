@@ -42,37 +42,37 @@ errorMessage(message);
 @* ------------------------------------------------------------------------LEJ 09-07-18 *@
 <div class="row" style="margin-bottom:0">
     @{TAT001.Entities.USUARIO us = ViewBag.usuario;
-
-        <div class="col s12 m2 l2">
-            <div class="row" style="margin-bottom:0">
-                <div class="input-field col s12">
-                    @Html.EditorFor(model => model.USUARIOC_ID, "Usuario", new { htmlAttributes = new { @disabled = "disabled", @Value = us.ID, @id = "txt_user" } })
-                    @Html.LabelFor(model => model.USUARIOC_ID, "Usuario", new { @id = "lbl_userid" })
-                </div>
-                @*<div class="input-field col s4">
-                    @Html.EditorFor(model => model.USUARIO.MANAGER, new { htmlAttributes = new { @disabled = "disabled", @Value = us.MANAGER } })
-                    @Html.LabelFor(model => model.USUARIO.MANAGER, "Manager", new { @id = "lbl_manager" })
-                    </div>
-                    <div class="input-field col s4">
-                    @Html.EditorFor(model => model.USUARIO.BACKUP_ID, "BACKUP", new { htmlAttributes = new { @disabled = "disabled", @Value = us.BACKUP_ID } })
-                    @Html.LabelFor(model => model.USUARIO.BACKUP_ID, "Backup", new { @id = "lbl_backup" })
-                    </div>*@
-
+        @* ---DRS 3.10.2018--- *@
+        <div class="col s12 m6">
+            @* ---DRS 3.10.2018--- *@
+            <div class="input-field col s2">
+                @Html.EditorFor(model => model.USUARIOC_ID, "Usuario", new { htmlAttributes = new { @disabled = "disabled", @Value = us.ID, @id = "txt_user" } })
+                @Html.LabelFor(model => model.USUARIOC_ID, "Usuario", new { @id = "lbl_userid" })
             </div>
-        </div>
+            @* ---DRS 3.10.2018--- *@
+            <div class="input-field col s2">
+                @Html.EditorFor(model => model.USUARIO.MANAGER, new { htmlAttributes = new { @disabled = "disabled", @Value = us.MANAGER } })
+                @Html.LabelFor(model => model.USUARIO.MANAGER, "Manager", new { @id = "lbl_manager" })
+            </div>
+            @* ---DRS 3.10.2018--- *@
+            <div class="input-field col s2">
+                @Html.EditorFor(model => model.USUARIO.BACKUP_ID, "BACKUP", new { htmlAttributes = new { @disabled = "disabled", @Value = us.BACKUP_ID } })
+                @Html.LabelFor(model => model.USUARIO.BACKUP_ID, "Backup", new { @id = "lbl_backup" })
+            </div>
 
-
-        /////////////DRS 25.09.18///////
-        <div class="col s12 m2 12">
-            <div class="input-field col s8">
+            @* ---DRS 3.10.2018--- *@
+            <div class="input-field col s3">
                 @Html.EditorFor(model => model.USUARIO.BUNIT, "BU", new { htmlAttributes = new { @disabled = "disabled", @Value = us.BUNIT } })
                 @Html.LabelFor(model => model.USUARIO.BUNIT, "BU", new { @id = "lbl_bu" })
             </div>
-            <div class="input-field col s4">
+            @* ---DRS 3.10.2018--- *@
+            <div class="input-field col s2">
                 <input type="text" id="txt_status" value="Nuevo" disabled="disabled" />
                 <label for="txt_status" id="lbl_status">Estatus</label>
             </div>
         </div>
+
+
         if (ViewBag.relacionadan != "")
         {
             <div class="input-field col s2">
@@ -82,8 +82,6 @@ errorMessage(message);
         }
     }
     <style>
-
-
 
 
         .div_left {
@@ -157,7 +155,8 @@ errorMessage(message);
     }
     else
     {
-        classa = "s8";
+        @* ---DRS 3.10.2018--- *@
+        classa = "s6";
     }
     <div class="col @classa right-align">
         @*//B20180625 MGC 2018.06.26*@
@@ -324,7 +323,7 @@ errorMessage(message);
                                 </div>
                                 @{TAT001.Entities.PAI pais = ViewBag.PAIS_ID;
                                     ///////DRS 27.09.18/////////
-                                    <div class="col s6" style="margin-top:1.1%">
+                                    <div class="col s6" style="margin-top:1.9%">
                                         <div class="form-group hidden">
                                             @Html.LabelFor(model => model.PAIS_ID, "Subregión", htmlAttributes: new { @class = "control-label col-md-2 hidden", @id = "lbl_pais" }) @*B20180801 MGC Textos*@
                                             <div class="col-md-10">
@@ -847,7 +846,7 @@ selectCliente(value);
                                 </div>
                                 <div class="table_sop" id="" style="display:none">
                                 </div>
-                                <table class="table_sop" id="table_sop" class="display" cellspacing="0" style="width:100%;display:none">
+                                <table class="table_sop display" id="table_sop" cellspacing="0" style="width:100%;display:none">
                                     <thead>
                                         <tr>
                                             <th id="thead_pos">Pos</th> @*B20180801 MGC Textos*@
@@ -1196,7 +1195,8 @@ selectCliente(value);
 
                             <div class="card-panel">
                                 <h5 id="head_docssoporter">Documentos de Soporte2</h5> @*B20180801 MGC Textos*@
-                                <label id="lbl_camposobl">* Campos obligatorios</label> @*B20180801 MGC Textos*@
+                                @* ----DRS 3.10.2018--- *@
+                                <label id="lbl_camposobl" style="font-size:10px; color:dimgray">* Campos Obligatorios</label> @*B20180801 MGC Textos*@
                                 <div class="row" style="margin-bottom:0">
                                     <div class="col s12">
                                         <form action="#">
@@ -1218,8 +1218,8 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                             </div>
                         }
                         @{List<TAT001.Entities.DOCUMENTOA>
-                                                                                                                                                                                              archivos = ViewBag.files as List<TAT001.Entities.DOCUMENTOA>
-                                                                                                                                                                                                  ;
+                                                                                                                                                                                                  archivos = ViewBag.files as List<TAT001.Entities.DOCUMENTOA>
+                                                                                                                                                                                                      ;
                             if (ViewBag.relacionadan != "" && archivos.Count > 0)
                             {
                                 string[] nombrefile;
@@ -1339,7 +1339,7 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
             <div id="Recurrente_cont" class="row">
                 <div class="col s12 l8 offset-l2">
                     <div class="card horizontal green white-text">
-                        <div class="col s12" style="margin-bottom0;">
+                        <div class="col s12" style="margin-bottom:0;display:none">
                             <p id="p_recurr">
                                 @*B20180801 MGC Textos*@
                                 Esta pestaña se debe llenar solamente si necesitas que tu solicitud se genere automáticamente durante los periodos seleccionados
@@ -1360,9 +1360,12 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                                         <th id="thead_rnumero">NO</th>@*B20180801 MGC Textos*@
                                         <th id="thead_rperiodo">Periodo</th>@*B20180801 MGC Textos*@
                                         <th id="thead_rtiposol">Solicitud</th>@*B20180801 MGC Textos*@
+                                        <th id="thead_rtiposol">No solicitud TAT</th>@*B20180801 MGC Textos*@
+                                        @*<th id="">FECHA</th>*@@*B20180801 MGC Textos*@
                                         <th id="thead_rfecha">FECHA</th>@*B20180801 MGC Textos*@
                                         <th id="thead_rmonto">Monto</th>@*B20180801 MGC Textos*@
                                         <th id="thead_rporc">Porcentaje</th>@*B20180801 MGC Textos*@
+                                        <th id="thead_rporc">Estatus</th>@*B20180801 MGC Textos*@
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -1798,7 +1801,9 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                                     <div class="input-field col s6">
                                         <input type="text" id="moneda_dis" name="monedadis" value="@ViewBag.moneda_dis" disabled="disabled" hidden /> @*//B20180625 MGC 2018.06.28*@
                                         @Html.DropDownList("MONEDA", null, htmlAttributes: new { @id = "monedadis_id", @class = "form-control" })
-                                        @Html.LabelFor(model => model.MONEDA_ID, "Moneda", htmlAttributes: new { @for = "monedadis_id", @id = "lbl_monedadis" })@*B20180801 MGC Textos*@
+                                        @* ---DRS 5.10.2018--- *@
+                                        @*@Html.LabelFor(model => model.MONEDA_ID, "Moneda", htmlAttributes: new { @for = "monedadis_id", @id = "lbl_monedadis" })@*B20180801 MGC Textos*@
+                                        <label id="lbl_monedadis" for="monedadis_id" style="font-size:17px; margin-top:11%;">Moneda</label>@*B20180801 MGC Textos*@
                                     </div>
                                 }
                             </div>
@@ -2022,8 +2027,11 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                             </div>
                         </div>
                         <div class="card-panel">
+                            @* ----DRS 3.10.2018--- *@
                             <h5 id="head_analisispre">Análisis Presupuesto</h5>@*B20180801 MGC Textos*@
-                            <p style="font-size:15px"><span id="load_carga">Última fecha de carga</span> @ViewBag.ultMod</p>
+                            <p style="font-size:15px">
+                                <span id="load_carga">Última fecha de carga</span> @ViewBag.ultMod
+                            </p>
                             <div class="row" style="margin-bottom:0">
                                 <ul class="collection">
                                     <li class="collection-item">
@@ -2032,10 +2040,12 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                                                 <div id="lbl_presupuestocanal">Presupuesto canal</div>@*B20180801 MGC Textos*@
                                             </div>
                                             <dic class="col s6">
-                                                <b id="p_vtweg"></b>
+                                                @* ----DRS 3.10.2018--- *@
+                                                <b id="p_vtweg" style="font-size:11px"></b>
                                             </dic>
                                             <div class="col s3 right-align">
-                                                <b id="p_canal"></b>
+                                                @* ----DRS 3.10.2018--- *@
+                                                <b id="p_canal" style="font-size:11px"></b>
                                             </div>
                                         </div>
                                     </li>
@@ -2045,10 +2055,12 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                                                 <div id="lbl_presupuestocliente">Presupuesto cliente</div>@*B20180801 MGC Textos*@
                                             </div>
                                             <div class="col s6">
-                                                <b id="p_kunnr"></b>
+                                                @* ----DRS 3.10.2018--- *@
+                                                <b id="p_kunnr" style="font-size:10px"></b>
                                             </div>
                                             <div class="col s3 right-align">
-                                                <b id="p_banner"></b>
+                                                @* ----DRS 3.10.2018--- *@
+                                                <b id="p_banner" style="font-size:11px"></b>
                                             </div>
                                         </div>
                                     </li>
@@ -2092,7 +2104,8 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                                                 <div id="lbl_consumido">Consumido</div>@*B20180801 MGC Textos*@
                                             </div>
                                             <div class="col s6 right-align">
-                                                <u><b id="pc_t"></b></u>
+                                                @* ----DRS 3.10.2018--- *@
+                                                <u><b id="pc_t" style="font-size:11px"></b></u>
                                             </div>
                                         </div>
                                     </li>
@@ -2102,7 +2115,8 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                                                 <div id="lbl_presudisponible">Presupuesto disponible</div>@*B20180801 MGC Textos*@
                                             </div>
                                             <div class="col s6 right-align">
-                                                <b id="consu"></b>
+                                                @* ----DRS 3.10.2018--- *@
+                                                <b id="consu" style="font-size:11px"></b>
                                             </div>
                                         </div>
                                     </li>
@@ -2164,9 +2178,9 @@ var ejercicio = '@Model.EJERCICIO';
                 //RSG 26.04.2018----------------
                 clearing.push(data.ABONO);
                 //DRS 28.09.2018
-                                    clearing.push(data.NOMBREA);
-                                    clearing.push(data.CARGO);
-                                    clearing.push(data.NOMBREC);
+                clearing.push(data.NOMBREA);
+                clearing.push(data.CARGO);
+                clearing.push(data.NOMBREC);
                 clearing.push(data.CLEARING);
                 clearing.push(data.LIMITE);
                 //RSG 26.04.2018----------------
@@ -2452,3 +2466,20 @@ var ejercicio = '@Model.EJERCICIO';
         </script>
         <script src="~/Scripts/warning.js"></script>
     </div>
+    @if (ViewBag.error != "")
+    {
+        <script>
+            $(document).ready(function () {
+            function errorMessage(msg) {
+                M.toast({
+                    html: msg,
+                    displayLength: 10000, });
+            }
+            var message = '@ViewBag.error';
+
+            if (message != "") {
+            errorMessage(message);
+            }
+            });
+        </script>
+    }

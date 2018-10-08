@@ -18,13 +18,13 @@ namespace TAT001.Controllers.Catalogos
     [Authorize]
     public class UsuariosController : Controller
     {
-        private TAT004Entities db = new TAT004Entities();
+        private TAT001Entities db = new TAT001Entities();
 
         // GET: Usuarios
         public ActionResult Index()
         {
             int pagina = 601; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -65,7 +65,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Details(string id)
         {
             int pagina = 603; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -116,7 +116,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Create()
         {
             int pagina = 602; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -201,7 +201,7 @@ namespace TAT001.Controllers.Catalogos
             }
 
             int pagina = 602; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -239,7 +239,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Edit(string id)
         {
             int pagina = 603; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -301,7 +301,7 @@ namespace TAT001.Controllers.Catalogos
                 //return RedirectToAction("Index");
             }
             int pagina = 603; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -365,7 +365,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Pass(string id)
         {
             int pagina = 604; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -432,7 +432,7 @@ namespace TAT001.Controllers.Catalogos
                 ViewBag.message = "Los datos no coinciden";
             }
             int pagina = 604; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -462,7 +462,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult AgregarRol(string id)
         {
             int pagina = 603; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -714,7 +714,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Carga()
         {
             int pagina = 601;
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -2078,6 +2078,82 @@ namespace TAT001.Controllers.Catalogos
             return jl;
         }
 
+        //// Buscar
+        public JsonResult Usuario(string Prefix)
+        {
+            if (Prefix == null)
+                Prefix = "";
+
+            TAT001Entities db = new TAT001Entities();
+
+            var c = (from x in db.USUARIOs
+                     where x.ID.Contains(Prefix)
+                     select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
+
+            if (c.Count == 0)
+            {
+                var c2 = (from x in db.USUARIOs
+                          where x.NOMBRE.Contains(Prefix)
+                          select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
+                c.AddRange(c2);
+            }
+            else
+            {
+                var c3 = (from x in db.USUARIOs
+                          where x.APELLIDO_P.Contains(Prefix)
+                          select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
+                c.AddRange(c3);
+            }
+
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+
+        public JsonResult Cliente(string Prefix)
+        {
+            if (Prefix == null)
+                Prefix = "";
+
+            TAT001Entities db = new TAT001Entities();
+
+            var c = (from x in db.CLIENTEs
+                     where x.KUNNR.Contains(Prefix)
+                     select new { x.KUNNR, x.NAME1 }).ToList();
+
+            if (c.Count == 0)
+            {
+                var c2 = (from x in db.CLIENTEs
+                          where x.NAME1.Contains(Prefix)
+                          select new { x.KUNNR, x.NAME1 }).ToList();
+                c.AddRange(c2);
+            }
+
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+
+        public JsonResult Idioma(string Prefix)
+        {
+            if (Prefix == null)
+                Prefix = "";
+
+            TAT001Entities db = new TAT001Entities();
+
+            var c = (from x in db.SPRAS
+                     where x.ID.Contains(Prefix)
+                     select new { x.ID, x.DESCRIPCION }).ToList();
+
+            if (c.Count == 0)
+            {
+                var c2 = (from x in db.SPRAS
+                          where x.DESCRIPCION.Contains(Prefix)
+                          select new { x.ID, x.DESCRIPCION }).ToList();
+                c.AddRange(c2);
+            }
+
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
     }
 }
 

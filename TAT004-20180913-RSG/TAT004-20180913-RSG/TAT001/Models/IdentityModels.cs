@@ -22,7 +22,7 @@ namespace TAT001.Models
     {
         public ApplicationDbContext()
             //: base("DefaultConnection", throwIfV1Schema: false)
-            : base("TAT004Entities", throwIfV1Schema: false)
+            : base("TAT001Entities", throwIfV1Schema: false)
         {
         }
 

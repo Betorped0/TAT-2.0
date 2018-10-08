@@ -1,0 +1,124 @@
+﻿@model TAT001.Entities.CUENTA
+@{
+    ViewBag.pagina_r = 693;
+    ViewBag.carpeta_r = 500;
+    //ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="row right">
+            <div class="col l12 m12 right">
+                <input type="submit" value="Agregar" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="row">
+            <div class="row" style="height:10px;width:100%;">
+                <div class="col l7 pink darken-1" style="height:10px;padding:0;"></div>
+                <div class="col l3 pink darken-4" style="height:10px;padding:0;">
+                    <div class="col l3 pink darken-4" style="height:10px;padding:0;"></div>
+                    <div class="col l8 orange" style="height:10px;padding:0;"></div>
+                    <div class="col l1 red" style="height:10px;padding:0;"></div>
+                </div>
+                <div class="col l2 yellow" style="height:10px;padding:0;"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s6 m6 l6 col offset-s3 offset-m3 offset-l3">
+                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                    @Html.DropDownList("SOCIEDAD_ID", null, htmlAttributes: new { @class = "form-control", @id = "sel-soc" })
+                    @Html.LabelFor(model => model.SOCIEDAD_ID, "SOCIEDAD_ID", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_sociedad" })
+                    @Html.ValidationMessageFor(model => model.SOCIEDAD_ID, "", new { @class = "text-danger" })
+                </div>
+                <script>
+                    var elem = document.getElementById('sel-soc');
+                    var options = [];
+                    var instance = M.Select.init(elem, options);
+                </script>
+
+                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                    @Html.DropDownList("PAIS_ID", null, htmlAttributes: new { @class = "form-control", @id = "sel-pai" })
+                    @Html.LabelFor(model => model.PAIS_ID, "PAIS_ID", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_pais" })
+                    @Html.ValidationMessageFor(model => model.PAIS_ID, "", new { @class = "text-danger" })
+                </div>
+                <script>
+                    var elem = document.getElementById('sel-pai');
+                    var options = [];
+                    var instance = M.Select.init(elem, options);
+                </script>
+
+                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                    @Html.DropDownList("EJERCICIO", new SelectList(Enumerable.Range(DateTime.Now.Year, 10).ToList()), htmlAttributes: new { @class = "form-control", @id = "sel-ano" })
+                    @Html.LabelFor(model => model.EJERCICIO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_ejercicio" })
+                </div>
+                <script>
+                    var elem = document.getElementById('sel-ano');
+                    var options = [];
+                    var instance = M.Select.init(elem, options);
+                </script>
+
+                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                    @Html.EditorFor(model => model.ABONO, new { htmlAttributes = new { @class = "form-control", @onblur = "ponerCeros(this)", @maxlength = 10, onKeyPress = "return soloNumeros(event)" } })
+                    @Html.LabelFor(model => model.ABONO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_abono" })
+                    @Html.ValidationMessageFor(model => model.ABONO, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                    @Html.EditorFor(model => model.CARGO, new { htmlAttributes = new { @class = "form-control", @onblur = "ponerCeros(this)", @maxlength = 10, onKeyPress = "return soloNumeros(event)" } })
+                    @Html.LabelFor(model => model.CARGO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_cargo" })
+                    @Html.ValidationMessageFor(model => model.CARGO, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                    @Html.EditorFor(model => model.CLEARING, new { htmlAttributes = new { @class = "form-control", @onblur = "ponerCeros(this)", @maxlength = 10, onKeyPress = "return soloNumeros(event)" } })
+                    @Html.LabelFor(model => model.CLEARING, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_cargofv" })
+                    @Html.ValidationMessageFor(model => model.CLEARING, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                    @Html.DropDownList("TALL_ID", null, htmlAttributes: new { @class = "form-control", @id = "sel-tal" })
+                    @Html.LabelFor(model => model.TALL_ID, "TALL_ID", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_gal" })
+                    @Html.ValidationMessageFor(model => model.TALL_ID, "", new { @class = "text-danger" })
+                </div>
+                <script>
+                    var elem = document.getElementById('sel-tal');
+                    var options = [];
+                    var instance = M.Select.init(elem, options);
+                </script>
+
+                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                    @Html.EditorFor(model => model.LIMITE, new { htmlAttributes = new { @class = "form-control", @onblur = "ponerCeros(this)", @maxlength = 10, onKeyPress = "return soloNumeros(event)" } })
+                    @Html.LabelFor(model => model.LIMITE, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_limite" })
+                    @Html.ValidationMessageFor(model => model.LIMITE, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+<script type="text/javascript">
+    function ponerCeros(num) {
+        while (num.value.length < 10)
+            num.value = '0' + num.value;
+    }
+</script>
+
+<script type="text/javascript">
+    function soloNumeros(e) {
+        var key = window.Event ? e.which : e.keyCode
+        return (key >= 48 && key <= 57)
+    }
+</script>

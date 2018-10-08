@@ -13,13 +13,13 @@ namespace TAT001.Controllers.Catalogos
 {
     public class TCambioController : Controller
     {
-        private TAT004Entities db = new TAT004Entities();
+        private TAT001Entities db = new TAT001Entities();
 
         // GET: TCambio
         public ActionResult Index()
         {
             int pagina = 831; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -50,14 +50,14 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Details(string fcur, string tcur, string gd)
         {
             int pagina = 832; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
                 ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
                 ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
                 ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
-                ViewBag.rol = user.MIEMBROS.FirstOrDefault().ROL.NOMBRE;
+                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
                 ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(831) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
@@ -92,7 +92,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Create()
         {
             int pagina = 834; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -146,7 +146,7 @@ namespace TAT001.Controllers.Catalogos
                 ViewBag.FCURR = new SelectList(db.MONEDAs, "WAERS", "WAERS", tCAMBIO.FCURR);
                 //Como se genera la lista se borra y se ocupa regenerar
                 int pagina = 834; //ID EN BASE DE DATOS
-                using (TAT004Entities db = new TAT004Entities())
+                using (TAT001Entities db = new TAT001Entities())
                 {
                     string u = User.Identity.Name;
                     //string u = "admin";
@@ -180,7 +180,7 @@ namespace TAT001.Controllers.Catalogos
                 ViewBag.FCURR = new SelectList(db.MONEDAs, "WAERS", "WAERS", tCAMBIO.FCURR);
                 //Como se genera la lista se borra y se ocupa regenerar
                 int pagina = 834; //ID EN BASE DE DATOS
-                using (TAT004Entities db = new TAT004Entities())
+                using (TAT001Entities db = new TAT001Entities())
                 {
                     string u = User.Identity.Name;
                     //string u = "admin";
@@ -214,14 +214,14 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Edit(string fcur, string tcur, string gd)
         {
             int pagina = 833; //ID EN BASE DE DATOS
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
                 ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
                 ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
                 ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
-                ViewBag.rol = user.MIEMBROS.FirstOrDefault().ROL.NOMBRE;
+                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
                 ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(831) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
