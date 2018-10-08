@@ -1562,7 +1562,7 @@ namespace TAT001.Controllers.Catalogos
             if (Prefix == null)
                 Prefix = "";
 
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
 
             var c = (from x in db.PROVEEDORs
                      where x.ID.Contains(Prefix) && x.ACTIVO == true
@@ -1585,7 +1585,7 @@ namespace TAT001.Controllers.Catalogos
             if (Prefix == null)
                 Prefix = "";
 
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
 
             var c = (from x in db.CANALs
                      where x.CANAL1.Contains(Prefix)
@@ -1608,7 +1608,7 @@ namespace TAT001.Controllers.Catalogos
             if (Prefix == null)
                 Prefix = "";
 
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
 
             var c = (from x in db.CLIENTEs
                      where x.KUNNR.Contains(Prefix)
@@ -1631,7 +1631,7 @@ namespace TAT001.Controllers.Catalogos
             if (Prefix == null)
                 Prefix = "";
 
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
 
             var c = (from x in db.USUARIOs
                      where x.ID.Contains(Prefix)
