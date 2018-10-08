@@ -1,0 +1,79 @@
+﻿@model TAT001.Entities.CONSOPORTE
+
+@{
+    ViewBag.pagina_r = 843;
+    ViewBag.carpeta_r = 500;
+    //ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @*@Html.HiddenFor(model => model.TSOL_ID)*@
+    <div class="row">
+        <div class="row right">
+            <div class="col l12 m12 right">
+                <a href="@Url.Action("Index", "Consoporte", new { tsol = ViewBag.IdTsol })" class="waves-effect waves-light btn">REGRESAR</a>
+                <input type="submit" value="Agregar" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="row" style="height:10px;width:100%;">
+            <div class="col l7 pink darken-1" style="height:10px;padding:0;"></div>
+            <div class="col l3 pink darken-4" style="height:10px;padding:0;">
+                <div class="col l3 pink darken-4" style="height:10px;padding:0;"></div>
+                <div class="col l8 orange" style="height:10px;padding:0;"></div>
+                <div class="col l1 red" style="height:10px;padding:0;"></div>
+            </div>
+            <div class="col l2 yellow" style="height:10px;padding:0;"></div>
+        </div>
+    </div>
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="row">
+            <div class="col s4 m4 l4 col offset-s4 offset-m4 offset-l4">
+                <div class="col l12 m12 s12">
+                    <div class="input-field col l10 m10" style="margin-bottom:0;">
+                        @Html.DropDownList("TSOL_ID", null, htmlAttributes: new { @class = "form-control", @id = "sel-tsol" })
+                        @Html.LabelFor(model => model.TSOL_ID, "TSOL_ID", htmlAttributes: new { @class = "control-label col-md-2", @id = "lblTipoSol" })
+                        @Html.ValidationMessageFor(model => model.TSOL_ID, "", new { @class = "text-danger" })
+                    </div>
+                    <script>
+                        var elem = document.getElementById('sel-tsol');
+                        var options = [];
+                        var instance = M.Select.init(elem, options);
+                    </script>
+                    
+                    <div class="input-field col l10 m10" style="margin-bottom:0;">
+                        @Html.DropDownList("TSOPORTE_ID", null, htmlAttributes: new { @class = "form-control", @id = "sel-tsop" })
+                        @Html.LabelFor(model => model.TSOPORTE_ID, "TSOPORTE_ID", htmlAttributes: new { @class = "control-label col-md-2", @id = "lblTipoSop" })
+                        @Html.ValidationMessageFor(model => model.TSOPORTE_ID, "", new { @class = "text-danger" })
+                    </div>
+                    <script>
+                        var elem = document.getElementById('sel-tsop');
+                        var options = [];
+                        var instance = M.Select.init(elem, options);
+                    </script>
+
+                    <div class="input-field col l10 m10" style="margin-bottom:0;">
+                        <label>
+                            <input type="checkbox" name="obligatorio" value="true" id="obligatorio" />
+                            <span style="height:0"></span>
+                        </label>
+                        @Html.LabelFor(model => model.OBLIGATORIO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblObliga" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<br />
+<br />
+<div>
+    @Html.ActionLink("Back to List", "Index", new { tsol = ViewBag.IdTsol })
+</div>

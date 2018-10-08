@@ -12,14 +12,14 @@ namespace TAT001.Controllers
 {
     public class NegsController : Controller
     {
-        private TAT004Entities db = new TAT004Entities();
+        private TAT001Entities db = new TAT001Entities();
 
         // GET: Negs
         public ActionResult Index()
         {
             int pagina = 901; //ID EN BASE DE DATOS
             USUARIO user = null;
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -68,7 +68,7 @@ namespace TAT001.Controllers
         {
             int pagina = 903; //ID EN BASE DE DATOS
             USUARIO user = null;
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -138,7 +138,7 @@ namespace TAT001.Controllers
             }
             int pagina = 903; //ID EN BASE DE DATOS
             USUARIO user = null;
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -172,7 +172,7 @@ namespace TAT001.Controllers
         {
             int pagina = 902; //ID EN BASE DE DATOS
             USUARIO user = null;
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -236,7 +236,7 @@ namespace TAT001.Controllers
             }
             int pagina = 902; //ID EN BASE DE DATOS
             USUARIO user = null;
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
@@ -270,7 +270,7 @@ namespace TAT001.Controllers
         {
             int pagina = 904; //ID EN BASE DE DATOS
             USUARIO user = null;
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";

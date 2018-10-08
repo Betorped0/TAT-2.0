@@ -16,7 +16,7 @@ namespace TAT001.Controllers.Catalogos
     [Authorize]
     public class ClientesController : Controller
     {
-        private TAT004Entities db = new TAT004Entities();
+        private TAT001Entities db = new TAT001Entities();
 
         // GET: Clientes
         public ActionResult Index()
@@ -209,7 +209,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Carga()
         {
             int pagina = 601;
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
                 //string u = "admin";

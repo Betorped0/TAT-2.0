@@ -15,10 +15,10 @@ namespace TAT001.Entities
     using System.Data.Entity.Core.Objects;
     using System.Linq;
     
-    public partial class TAT004Entities : DbContext
+    public partial class TAT001Entities : DbContext
     {
-        public TAT004Entities()
-            : base("name=TAT004Entities")
+        public TAT001Entities()
+            : base("name=TAT001Entities")
         {
         }
     
@@ -47,6 +47,7 @@ namespace TAT001.Entities
         public virtual DbSet<CLIENTEF> CLIENTEFs { get; set; }
         public virtual DbSet<CLIENTEI> CLIENTEIs { get; set; }
         public virtual DbSet<CONDICION> CONDICIONs { get; set; }
+        public virtual DbSet<CONDICIONT> CONDICIONTs { get; set; }
         public virtual DbSet<CONFDIST_CAT> CONFDIST_CAT { get; set; }
         public virtual DbSet<CONMAIL> CONMAILs { get; set; }
         public virtual DbSet<CONPOSAPH> CONPOSAPHs { get; set; }
@@ -179,7 +180,7 @@ namespace TAT001.Entities
         public virtual DbSet<PAGINAV> PAGINAVs { get; set; }
         public virtual DbSet<WARNINGV> WARNINGVs { get; set; }
     
-        [DbFunction("TAT004Entities", "split")]
+        [DbFunction("TAT001Entities", "split")]
         public virtual IQueryable<split_Result> split(string delimited, string delimiter)
         {
             var delimitedParameter = delimited != null ?
@@ -190,7 +191,7 @@ namespace TAT001.Entities
                 new ObjectParameter("delimiter", delimiter) :
                 new ObjectParameter("delimiter", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<split_Result>("[TAT004Entities].[split](@delimited, @delimiter)", delimitedParameter, delimiterParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<split_Result>("[TAT001Entities].[split](@delimited, @delimiter)", delimitedParameter, delimiterParameter);
         }
     
         public virtual ObjectResult<CPS_LISTA_CLI_PRO_Result> CPS_LISTA_CLI_PRO()

@@ -24,7 +24,7 @@ namespace TAT001.Services
             DOCUMENTO dOCUMENTO = new DOCUMENTO();
             DOCUMENTO dOCpADRE = new DOCUMENTO();
             string errorString = "";
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
 
 
             string p = "";
@@ -512,7 +512,7 @@ namespace TAT001.Services
         public RANGO getRango(string TSOL_ID)
         {
             RANGO rango = new RANGO();
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
 
                 rango = (from r in db.RANGOes
@@ -568,7 +568,7 @@ namespace TAT001.Services
         {
             decimal ukurs = 0;
             errorString = string.Empty;
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 try
                 {
@@ -598,7 +598,7 @@ namespace TAT001.Services
         {
             decimal ukurs = 0;
             errorString = string.Empty;
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
                 try
                 {
@@ -626,7 +626,7 @@ namespace TAT001.Services
         {
             CLIENTE payer = new CLIENTE();
 
-            using (TAT004Entities db = new TAT004Entities())
+            using (TAT001Entities db = new TAT001Entities())
             {
 
                 payer = db.CLIENTEs.Where(c => c.KUNNR.Equals(PAYER_ID)).FirstOrDefault();
@@ -639,7 +639,7 @@ namespace TAT001.Services
 
         public void updateRango(string TSOL_ID, decimal actual)
         {
-            TAT004Entities db = new TAT004Entities();
+            TAT001Entities db = new TAT001Entities();
             RANGO rango = getRango(TSOL_ID);
 
             if (rango.ACTUAL > rango.INICIO && rango.ACTUAL < rango.FIN)

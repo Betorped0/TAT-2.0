@@ -68,8 +68,12 @@ $(document).ready(function () {
                 "className": 'TSOL'
             },
             {
-                "name": 'FECHA',
-                "className": 'FECHA'
+                "name": 'NUM_DOC',
+                "className": 'NUM_DOC'
+            },
+            {
+                "name": 'FECHAV',
+                "className": 'FECHAV'
             },
             {
                 "name": 'MONTO',
@@ -78,6 +82,10 @@ $(document).ready(function () {
             {
                 "name": 'PORCENTAJE',
                 "className": 'PORCENTAJE'
+            },
+            {
+                "name": 'ESTATUS',
+                "className": 'ESTATUS'
             }
         ]
     });
@@ -427,9 +435,11 @@ function addRowRecl(t, pos, tsol, fecha, monto, porc, periodo) {
         pos
         , periodo
         , tsol
-        , fecha
+        , "No generado"
+        , "<span style='display:none;'>"+fecha+"</span>"+"No generado"
         , monto
         , porc
+        , "Pendiente"
     ]).draw(false);
 }
 
@@ -461,7 +471,7 @@ function enviaRec(borrador) { //B20180625 MGC 2018.07.03
 
             var pos = $(this).find("td.POS").text().split("/")[0];
             var tsol = $(this).find("td.TSOL").text();
-            var fecha = $(this).find("td.FECHA").text();
+            var fecha = $(this).find("td.FECHAV span").text();
             var monto = "";
             if (tipo === "P") {
                 if (ligada()) {
@@ -557,7 +567,7 @@ function copiarTableVistaRec() {
 
             //var pos = $(this).find("td.POS").text();
             var pos = $(this).find("td:eq(1)").text();
-            //var fecha = $(this).find("td.FECHA").text();
+            //var fecha = $(this).find("td.FECHAV").text();
             var fecha = $(this).find("td:eq(2)").text().trim();
 
             var ffecha = fecha.split(' ');
@@ -571,7 +581,7 @@ function copiarTableVistaRec() {
             //if ($("#check_factura").is(':checked')) {
 
             //    factura = "<input class=\"FACTURA input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + factura + "\">";
-            //    ffecha[0] = "<input class=\"FECHA input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + ffecha[0] + "\">";
+            //    ffecha[0] = "<input class=\"FECHAV input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + ffecha[0] + "\">";
             //    prov = "<input class=\"PROVEEDOR input_sop_f input_proveedor\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + prov + "\">";
             //    control = "<input class=\"CONTROL input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + control + "\">";
             //    autorizacion = "<input class=\"AUTORIZACION input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + autorizacion + "\">";
