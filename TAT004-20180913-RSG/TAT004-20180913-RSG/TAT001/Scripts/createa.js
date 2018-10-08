@@ -83,14 +83,14 @@ function selectMaterial(val, desc, tr) {
         {
             tr.addClass("unica");
             M.toast({ html: cat.TXT50 + ' Advertencia este material es único' });
-            tr.find("td:eq(" + (6 + index) + ")").text(cat.TXT50);
+            tr.find("td:eq(" + (6 + index) + ")").text(cat.DESCRIPCION);
             //Descripción
             tr.find("td:eq(" + (7 + index) + ")").text(desc);
         }
         if (!cat.UNICA)
         {
             tr.addClass("nounica");
-            tr.find("td:eq(" + (6 + index) + ")").text(cat.TXT50);
+            tr.find("td:eq(" + (6 + index) + ")").text(cat.DESCRIPCION);
             //Descripción
             tr.find("td:eq(" + (7 + index) + ")").text(desc);
         }
@@ -102,7 +102,7 @@ function selectMaterial(val, desc, tr) {
     //Categoría
     var cat = getCategoria(val);
 
-    tr.find("td:eq(" + (6 + index) + ")").text(cat.TXT50);
+    tr.find("td:eq(" + (6 + index) + ")").text(cat.DESCRIPCION);
     //Descripción
     tr.find("td:eq(" + (7 + index) + ")").text(desc);
 

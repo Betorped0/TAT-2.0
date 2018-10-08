@@ -8,7 +8,7 @@ using TAT001.Models;
 
 namespace TAT001.Services
 {
-    public class ProcesaFlujo
+    public class ProcesaFlujo4
     {
         public string procesa(FLUJO f, string recurrente)
         {
@@ -26,16 +26,14 @@ namespace TAT001.Services
                 actual.LOOP = f.LOOP;
                 actual.NUM_DOC = f.NUM_DOC;
                 actual.POS = f.POS;
-
-                DET_APROBH dah = db.DET_APROBH.Where(a => a.SOCIEDAD_ID == d.SOCIEDAD_ID & a.PUESTOC_ID == d.PUESTO_ID & a.ACTIVO == true)
-                                    .OrderByDescending(a => a.VERSION).FirstOrDefault();
-                if (dah == null)
-                    return "1";
-                CLIENTEF cf = db.CLIENTEFs.Where(a => a.VKORG.Equals(d.VKORG) & a.VTWEG.Equals(d.VTWEG) & a.SPART.Equals(d.SPART) & a.KUNNR.Equals(d.PAYER_ID) & a.ACTIVO == true
+                //DET_AGENTEC dah = db.DET_AGENTEC.Where(a => a.USUARIOC_ID.Equals(d.USUARIOD_ID) & a.PAIS_ID == d.PAIS_ID &
+                //                    a.VKORG.Equals(d.VKORG) & a.VTWEG.Equals(d.VTWEG) & a.SPART.Equals(d.SPART) & a.KUNNR.Equals(d.PAYER_ID))
+                //                    .OrderByDescending(a => a.VERSION).FirstOrDefault();
+                CLIENTEF cf = db.CLIENTEFs.Where(a => a.VKORG.Equals(d.VKORG) & a.VTWEG.Equals(d.VTWEG) & a.SPART.Equals(d.SPART) & a.KUNNR.Equals(d.PAYER_ID)
                                ).OrderByDescending(a => a.VERSION).FirstOrDefault();
 
                 actual.DETPOS = 1;
-                actual.DETVER = dah.VERSION;
+                actual.DETVER = cf.VERSION;
                 actual.USUARIOA_ID = f.USUARIOA_ID;
                 actual.USUARIOD_ID = f.USUARIOD_ID;
                 actual.WF_POS = f.WF_POS;
@@ -617,6 +615,134 @@ namespace TAT001.Services
             return correcto;
         }
 
+        public FLUJO determinaAgente1(DOCUMENTO d, string user, string delega, int pos, int? loop, int sop)
+        {
+            if (delega != null)
+                user = delega;
+            bool fin = false;
+            TAT001Entities db = new TAT001Entities();
+            DET_AGENTEC dap = new DET_AGENTEC();
+            FLUJO f_actual = db.FLUJOes.Where(a => a.NUM_DOC.Equals(d.NUM_DOC)).FirstOrDefault();
+            //DET_AGENTEH dah = db.DET_AGENTEH.Where(a => a.SOCIEDAD_ID.Equals(d.SOCIEDAD_ID) & a.PUESTOC_ID == d.PUESTO_ID &
+            //                    a.USUARIOC_ID.Equals(d.USUARIOC_ID) & a.VERSION == f_actual.DETVER).FirstOrDefault();
+            List<DET_AGENTEC> dah = db.DET_AGENTEC.Where(a => a.USUARIOC_ID.Equals(d.USUARIOD_ID) & a.PAIS_ID == d.PAIS_ID &
+                                a.VKORG.Equals(d.VKORG) & a.VTWEG.Equals(d.VTWEG) & a.SPART.Equals(d.SPART) & a.KUNNR.Equals(d.PAYER_ID))
+                                .OrderByDescending(a => a.VERSION).ToList();
+
+            USUARIO u = db.USUARIOs.Find(d.USUARIOC_ID);
+            //long gaa = db.CREADOR2.Where(a => a.ID.Equals(u.ID) & a.BUKRS.Equals(d.SOCIEDAD_ID) & a.LAND.Equals(d.PAIS_ID) & a.PUESTOC_ID == d.PUESTO_ID & a.ACTIVO == true).FirstOrDefault().AGROUP_ID;
+            int ppos = 0;
+
+            if (pos.Equals(0))
+            {
+                if (loop == null)
+                {
+                    //dap = db.DET_AGENTEP.Where(a => a.SOCIEDAD_ID.Equals(dah.SOCIEDAD_ID) & a.PUESTOC_ID == dah.PUESTOC_ID &
+                    //                    a.VERSION == dah.VERSION & a.AGROUP_ID == dah.AGROUP_ID & a.POS == 1).FirstOrDefault();
+                    dap = dah.Where(a => a.POS == 1).FirstOrDefault();
+                    dap.POS = dap.POS - 1;
+                }
+                else
+                {
+                    FLUJO ffl = db.FLUJOes.Where(a => a.NUM_DOC.Equals(d.NUM_DOC) & a.ESTATUS.Equals("R")).OrderByDescending(a => a.POS).FirstOrDefault();
+                    if (ffl.DETPOS == 99)
+                        ppos = 1;
+                    ffl.DETPOS = ffl.DETPOS - 1;
+                    fin = true;
+                    ffl.POS = ppos;
+
+                    return ffl;
+                }
+            }
+            else if (pos.Equals(98))
+            {
+                dap = dah.Where(a => a.POS == (pos + 1)).FirstOrDefault();
+            }
+            else
+            {
+                //DET_AGENTE actual = db.DET_AGENTE.Where(a => a.PUESTOC_ID == d.PUESTO_ID & a.AGROUP_ID == gaa & a.POS == (pos)).FirstOrDefault();
+                DET_AGENTEC actual = dah.Where(a => a.POS == (pos)).FirstOrDefault();
+                if (actual.POS == 99)
+                {
+                    fin = true;
+                }
+                else if (actual.POS == 98)
+                {
+                    //da = db.DET_AGENTE.Where(a => a.PUESTOC_ID == d.PUESTO_ID & a.AGROUP_ID == gaa & a.POS == (pos + 1)).FirstOrDefault();
+                    dap = dah.Where(a => a.POS == (pos)).FirstOrDefault();
+                }
+                else
+                {
+                    if (actual.MONTO != null)
+                        if (d.MONTO_DOC_ML2 > actual.MONTO)
+                        {
+                            dap = dah.Where(a => a.POS == (pos + 1)).FirstOrDefault();
+                            ppos = -1;
+                        }
+                    //if (actual.PRESUPUESTO != null)
+                    if ((bool)actual.PRESUPUESTO)
+                        if (d.MONTO_DOC_MD > 100000)
+                        {
+                            //da = db.DET_AGENTE.Where(a => a.PUESTOC_ID == d.PUESTO_ID & a.AGROUP_ID == gaa & a.POS == (pos + 1)).FirstOrDefault();
+                            dap = dah.Where(a => a.POS == (pos + 1)).FirstOrDefault();
+                            ppos = -1;
+                        }
+                }
+            }
+
+            string agente = "";
+            FLUJO f = new FLUJO();
+            f.DETPOS = 0;
+            if (!fin)
+            {
+                if (dap != null)
+                {
+                    if (dap.USUARIOA_ID != null)
+                    {
+                        //agente = db.GAUTORIZACIONs.Where(a => a.ID == da.AGROUP_ID).FirstOrDefault().USUARIOs.Where(a => a.PUESTO_ID == da.PUESTOA_ID).First().ID;
+                        agente = dap.USUARIOA_ID;
+                        f.DETPOS = dap.POS;
+                    }
+                    else
+                    {
+                        dap = dah.Where(a => a.POS == (sop)).FirstOrDefault();
+                        if (dap == null)
+                        {
+                            agente = d.USUARIOD_ID;
+                            f.DETPOS = 98;
+                        }
+                        else
+                        {
+                            //agente = db.GAUTORIZACIONs.Where(a => a.ID == da.AGROUP_ID).FirstOrDefault().USUARIOs.Where(a => a.PUESTO_ID == da.PUESTOA_ID).First().ID;
+                            agente = dap.USUARIOA_ID;
+                            f.DETPOS = dap.POS;
+                        }
+                    }
+                }
+                else
+                {
+                    dap = dah.Where(a => a.POS == (sop)).FirstOrDefault();
+                    if (dap == null)
+                    {
+                        agente = d.USUARIOD_ID;
+                        f.DETPOS = 98;
+                    }
+                    else
+                    {
+                        //agente = db.GAUTORIZACIONs.Where(a => a.ID == da.AGROUP_ID).FirstOrDefault().USUARIOs.Where(a => a.PUESTO_ID == da.PUESTOA_ID).First().ID;
+                        agente = dap.USUARIOA_ID;
+                        f.DETPOS = dap.POS;
+                    }
+                }
+            }
+            f.POS = ppos;
+            if (agente != "")
+                f.USUARIOA_ID = agente;
+            else
+                f.USUARIOA_ID = null;
+            return f;
+        }
+
         public FLUJO determinaAgenteI(CLIENTEF dah)
         {
             FLUJO f = new FLUJO();
@@ -631,8 +757,7 @@ namespace TAT001.Services
             List<DET_APROBP> ddp = new List<DET_APROBP>();
             using (TAT001Entities db = new TAT001Entities())
             {
-                DET_APROBH dh = db.DET_APROBH.Where(a => a.SOCIEDAD_ID == d.SOCIEDAD_ID & a.PUESTOC_ID == d.PUESTO_ID & a.ACTIVO == true)
-                                    .OrderByDescending(a => a.VERSION).FirstOrDefault();
+                DET_APROBH dh = db.DET_APROBH.Where(a => a.SOCIEDAD_ID.Equals(d.SOCIEDAD_ID) & a.ACTIVO).OrderByDescending(a => a.VERSION).FirstOrDefault();// OBTIENE ENCABEZADO FLUJO DE SOCIEDAD
                 if (dh != null)
                     ddp = db.DET_APROBP.Where(a => a.SOCIEDAD_ID.Equals(dh.SOCIEDAD_ID) & a.PUESTOC_ID == dh.PUESTOC_ID & a.VERSION == dh.VERSION & a.ACTIVO).ToList();//oBTIENE TABLA DE FLUJO
 
