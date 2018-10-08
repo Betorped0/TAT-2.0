@@ -87,7 +87,7 @@ namespace TAT001.Services
                     {
                         if (recurrente != "X")
                         {
-                            FLUJO detA = determinaAgenteI(cf);
+                            FLUJO detA = determinaAgenteI(cf, dah);
                             nuevo.USUARIOA_ID = detA.USUARIOA_ID;
                             nuevo.USUARIOD_ID = nuevo.USUARIOA_ID;
 
@@ -617,11 +617,33 @@ namespace TAT001.Services
             return correcto;
         }
 
-        public FLUJO determinaAgenteI(CLIENTEF dah)
+        public FLUJO determinaAgenteI(CLIENTEF cf, DET_APROBH dah)
         {
             FLUJO f = new FLUJO();
             f.DETPOS = 1;
-            f.USUARIOA_ID = dah.USUARIO1_ID;
+
+            DET_APROBP ddp = dah.DET_APROBP.OrderBy(x => x.POS).FirstOrDefault();//oBTIENE TABLA DE FLUJO
+            if ((ddp.PUESTOA_ID - 1) == 0)
+            {
+                f.USUARIOA_ID = cf.USUARIO1_ID;
+            }
+            if ((ddp.PUESTOA_ID - 1) == 1)
+            {
+                f.USUARIOA_ID = cf.USUARIO2_ID;
+            }
+            if ((ddp.PUESTOA_ID - 1) == 2)
+            {
+                f.USUARIOA_ID = cf.USUARIO3_ID;
+            }
+            if ((ddp.PUESTOA_ID - 1) == 3)
+            {
+                f.USUARIOA_ID = cf.USUARIO4_ID;
+            }
+            if ((ddp.PUESTOA_ID - 1) == 4)
+            {
+                f.USUARIOA_ID = cf.USUARIO5_ID;
+            }
+            
             return f;
         }
 
@@ -647,6 +669,7 @@ namespace TAT001.Services
             if (dp != null)//----Si existe posición
             {
                 int detp = 0;
+                int detpu = 0;
                 if (tipo != "B" & tipo != "M")//---Si no es notificación ni modificación por rechazo de TS
                 {
                     if (dp.MONTO != null)
@@ -654,6 +677,7 @@ namespace TAT001.Services
                         {
                             ppos--;
                             detp = dp.N_MONTO == null ? (pos + 1) : (int)dp.N_MONTO;
+                            detpu = (int)ddp.Where(a => a.POS == detp).FirstOrDefault().PUESTOA_ID;
                         }
                     if (ppos == 0)
                         if (dp.PRESUPUESTO != null & d.EXCEDE_PRES != null)
@@ -661,6 +685,7 @@ namespace TAT001.Services
                             {
                                 ppos--;
                                 detp = dp.N_PRESUP == null ? (pos + 1) : (int)dp.N_PRESUP;
+                                detpu = (int)ddp.Where(a => a.POS == detp).FirstOrDefault().PUESTOA_ID;
                             }
                 }
                 else
@@ -685,7 +710,7 @@ namespace TAT001.Services
                 }
                 else
                 {
-                    if ((detp - 1) == 1)
+                    if ((detpu - 1) == 1)
                     {
                         f.USUARIOA_ID = cf.USUARIO2_ID;
                         if (cf.USUARIO2_ID != null)
@@ -700,7 +725,7 @@ namespace TAT001.Services
                                 f.USUARIOA_ID = d.USUARIOD_ID;
                         }
                     }
-                    if ((detp - 1) == 2)
+                    if ((detpu - 1) == 2)
                     {
                         f.USUARIOA_ID = cf.USUARIO3_ID;
                         if (cf.USUARIO3_ID != null)
@@ -715,7 +740,7 @@ namespace TAT001.Services
                                 f.USUARIOA_ID = d.USUARIOD_ID;
                         }
                     }
-                    if ((detp - 1) == 3)
+                    if ((detpu - 1) == 3)
                     {
                         f.USUARIOA_ID = cf.USUARIO4_ID;
                         if (cf.USUARIO4_ID != null)
@@ -730,7 +755,7 @@ namespace TAT001.Services
                                 f.USUARIOA_ID = d.USUARIOD_ID;
                         }
                     }
-                    if ((detp - 1) == 4)
+                    if ((detpu - 1) == 4)
                     {
                         f.USUARIOA_ID = cf.USUARIO5_ID;
                         if (cf.USUARIO5_ID != null)
