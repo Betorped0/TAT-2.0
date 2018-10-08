@@ -170,12 +170,18 @@
         }
         else
         {
+            string spras_id = ViewBag.spras_id;
             string condicion = "";
             Model.alertaCondiciones.ForEach(x =>
             {
-                string condicionT = x.CONDICION.CONDICIONTs.Where(y => y.SPRAS_ID == @ViewBag.spras_id).First().TXT050;
-                string condicionValorT = Model.condValores.Any(y => y.Value == x.VALOR_COMP) ? Model.condValores.Where(y => y.Value == x.VALOR_COMP).First().Text : x.VALOR_COMP;
-                condicion = condicion + x.ANDOR + " " + condicionT + " " + condicionValorT + " " + x.ORAND + " ";
+                string condTexto = x.CONDICION.CONDICIONTs.Where(y => y.SPRAS_ID == spras_id).First().TXT050;
+                string valComp = x.VALOR_COMP == "" ? "v" : x.VALOR_COMP;
+                string condValorTexto = x.VALOR_COMP;
+                if (Model.condValores.Any(y => y.Value == valComp))
+                {
+                    condValorTexto = Model.condValores.Where(y => y.Value == valComp).First().Text;
+                }
+                condicion = condicion + x.ANDOR + " " + condTexto + " " + condValorTexto + " " + x.ORAND + " ";
             });
             <div class="row">
                 <div class="col s12 text-center">
@@ -228,11 +234,12 @@
         <a id="btn_return" href="@Url.Action("Index")"></a>
     </div>
     <script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
-   @if (Model.alerta.SOCIEDAD_ID != null && Model.alerta.TSOL_ID != null)
-    {
+   @if (Model.alerta.SOCIEDAD_ID != null && Model.alerta.TSOL_ID != null && Model.alerta.ID!= "concepto1")
+   {
     <script>
              // Asignar valor a combos de list
             var idAndOr = "@Model.alertaCondiciones[1].ANDOR";
+            if (idAndOr == "&amp;") { idAndOr = "&";}
             $('#alertaCondiciones_0__CONDICION_ID').val('@Model.alertaCondiciones[0].CONDICION_ID');
             $('#alertaCondiciones_0__VALOR_COMP').val('@Model.alertaCondiciones[0].VALOR_COMP');
             $('#alertaCondiciones_1__ANDOR[value="' + idAndOr + '"]').prop("checked", true);
@@ -243,6 +250,11 @@
             $('#alertaCondiciones_1__CONDICION_ID').prop('disabled', false);
             $('#alertaCondiciones_1__VALOR_COMP').prop('disabled', false);
             }
+
+            //----  Se agrega carga de Select Campos----
+        var root = "@Url.Content("~")";
+        fnCommon.fillOptionsInSelect('alertaCondiciones_0__CONDICION_ID', root + 'Alertas/ObtenerCondValores', 'alertaCondiciones_0__VALOR_COMP');
+        fnCommon.fillOptionsInSelect('alertaCondiciones_1__CONDICION_ID', root + 'Alertas/ObtenerCondValores', 'alertaCondiciones_1__VALOR_COMP');
         </script>
    }
         <script>
@@ -252,6 +264,7 @@
          //----  Se agrega validaciones al formulario----
          fnCommon.selectRequired();
          fnCommon.formValidation('alertaForm');
+
 
          function actualizarCondiciones(andor) {
              if (andor === "&" || andor === "|") {
@@ -270,12 +283,10 @@
 
          }
 
-
-
          // Valida si ocurrio un error al intentar crear el periodo y otro.
          var mnjError = '@ViewBag.mnjError';
-         if (mnjError) {
-             M.toast({ html: mnjError });
-         }
+            if (mnjError) {
+                M.toast({ html: mnjError });
+            }
       </script>
 

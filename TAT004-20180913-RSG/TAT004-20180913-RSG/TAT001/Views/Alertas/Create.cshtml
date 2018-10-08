@@ -123,7 +123,7 @@
                     <div class="col s1">
                         <div class="form-group">
                             <label>
-                                @Html.RadioButtonFor(model => model.alertaCondiciones[1].ANDOR, "", new { @checked = true, @onchange = "actualizarCondiciones(this.value)" })
+                                @Html.RadioButtonFor(model => model.alertaCondiciones[1].ANDOR, "", new { @onchange = "actualizarCondiciones(this.value)", @checked = true })
                                 <span></span>
                             </label>
                         </div>
@@ -131,7 +131,7 @@
                     <div class="col s2">
                         <div class="form-group">
                             <div class="col-md-10">
-                                @Html.DropDownListFor(model => model.alertaCondiciones[1].CONDICION_ID, Model.condCampos1, "", new { @disabled = true })
+                                @Html.DropDownListFor(model => model.alertaCondiciones[1].CONDICION_ID, Model.condCampos1, "", new { @disabled = true, @onchange = "cargarCondValores()" })
                             </div>
                         </div>
                     </div>
@@ -186,18 +186,19 @@
 @if (Model.alerta.SOCIEDAD_ID != null && Model.alerta.TSOL_ID != null)
 {
     <script>
-             // Asignar valor a combos de list
-            var idAndOr = "@Model.alertaCondiciones[1].ANDOR";
-        $('#alertaCondiciones_0__CONDICION_ID').val('@Model.alertaCondiciones[0].CONDICION_ID');
-        $('#alertaCondiciones_0__VALOR_COMP').val('@Model.alertaCondiciones[0].VALOR_COMP');
-            $('#alertaCondiciones_1__ANDOR[value="' + idAndOr + '"]').prop("checked", true);
-            if (idAndOr != '') {
-            $('#alertaCondiciones_1__CONDICION_ID').val('@Model.alertaCondiciones[1].CONDICION_ID');
-            $('#alertaCondiciones_1__VALOR_COMP').val('@Model.alertaCondiciones[1].VALOR_COMP');
-            $('#alertaCondiciones_0__ANDOR').val('(');
-            $('#alertaCondiciones_1__CONDICION_ID').prop('disabled', false);
-            $('#alertaCondiciones_1__VALOR_COMP').prop('disabled', false);
-            }
+    // Asignar valor a combos de list
+    var idAndOr = "@Model.alertaCondiciones[1].ANDOR";
+    if (idAndOr == "&amp;") { idAndOr = "&";}
+    $('#alertaCondiciones_0__CONDICION_ID').val('@Model.alertaCondiciones[0].CONDICION_ID');
+    $('#alertaCondiciones_0__VALOR_COMP').val('@Model.alertaCondiciones[0].VALOR_COMP');
+    $('#alertaCondiciones_1__ANDOR[value="' + idAndOr + '"]').prop("checked", true);
+    if (idAndOr != '') {
+        $('#alertaCondiciones_1__CONDICION_ID').val('@Model.alertaCondiciones[1].CONDICION_ID');
+        $('#alertaCondiciones_1__VALOR_COMP').val('@Model.alertaCondiciones[1].VALOR_COMP');
+        $('#alertaCondiciones_0__ANDOR').val('(');
+        $('#alertaCondiciones_1__CONDICION_ID').prop('disabled', false);
+        $('#alertaCondiciones_1__VALOR_COMP').prop('disabled', false);
+    }
     </script>
 }
 <script>
@@ -210,7 +211,9 @@
 
         //----  Se agrega carga de Select Campos----
         var root = "@Url.Content("~")";
-        fnCommon.fillOptionsInSelect('alerta_TAB_ID', root + 'Alertas/ObtenerCampos', 'alerta_CAMPO_ID');
+        fnCommon.fillOptionsInSelect('alerta_TAB_ID', root + 'Alertas/ObtenerCamposPorTabId', 'alerta_CAMPO_ID');
+        fnCommon.fillOptionsInSelect('alertaCondiciones_0__CONDICION_ID', root + 'Alertas/ObtenerCondValores', 'alertaCondiciones_0__VALOR_COMP');
+        fnCommon.fillOptionsInSelect('alertaCondiciones_1__CONDICION_ID', root + 'Alertas/ObtenerCondValores', 'alertaCondiciones_1__VALOR_COMP');
 
         function actualizarCondiciones(andor) {
             if (andor === "&" || andor === "|") {
@@ -222,7 +225,7 @@
                 $('#alertaCondiciones_1__CONDICION_ID').val(null);
                 $('#alertaCondiciones_1__VALOR_COMP').prop('disabled', true);
                 $('#alertaCondiciones_1__VALOR_COMP').val(null);
-                $('#alertaCondiciones_0__VALOR_ANDOR').val(null);
+                $('#alertaCondiciones_0__ANDOR').val(null);
             }
             fnCommon.materializeInit('select', 'select');
             fnCommon.selectRequired();

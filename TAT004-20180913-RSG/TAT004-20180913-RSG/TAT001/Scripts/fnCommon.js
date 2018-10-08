@@ -156,25 +156,34 @@
         var filterVal = $('#' + idGFilter).val();
         $('#' + idTable).DataTable().search(filterVal).draw();
     },
-    fillOptionsInSelect: function (idSelect, url, idSelectToFill) {
+    fillOptionsInSelect: function (idSelect, url, idSelectToFill,callBack) {
         $('#' + idSelect).change(function () {
-            var id = $('#' + idSelect).val();
-
-            $.ajax({
-                url: url ,
-                data: { id: id },
-                cache: false,
-                type: 'POST',
-                success: function (selectItems) {
-                    var options = '<option value=""></option>';
-                    selectItems.forEach(function (selectItem) {
-                        options += '<option value=' + selectItem.Value + '>' + selectItem.Text + '</option>';
-                    });
-                    $('#' + idSelectToFill).html(options);
-                    fnCommon.materializeInit('select', 'select');
-                    fnCommon.selectRequired();
-                }
-            });
+            var val = $('#' + idSelect).val();
+            if (val == "") {
+                var options = '<option value></option>';
+                $('#' + idSelectToFill).html(options);
+                fnCommon.materializeInit('select', 'select');
+                fnCommon.selectRequired();
+            } else {
+                $.ajax({
+                    url: url,
+                    data: { val: val },
+                    cache: false,
+                    type: 'POST',
+                    success: function (selectItems) {
+                        var options = '<option value></option>';
+                        selectItems.forEach(function (selectItem) {
+                            options += '<option value=' + selectItem.Value  + '>' + selectItem.Text + '</option>';
+                        });
+                        $('#' + idSelectToFill).html(options);
+                        fnCommon.materializeInit('select', 'select');
+                        fnCommon.selectRequired();
+                        if (callBack) {
+                            callBack();
+                        }
+                    }
+                });
+            }
         });
     }
 

@@ -30,11 +30,15 @@ namespace TAT001.Controllers.Catalogos
             int pagina_id = 540;//ID EN BASE DE DATOS
             ObtenerConfPage(pagina_id);
 
+            string spras_id = ViewBag.spras_id;
             AlertaViewModel modelView = new AlertaViewModel();
             modelView.alertas = db.WARNINGPs.ToList();
-            modelView.alertaMensajes = db.WARNINGPTs.ToList();
+            modelView.alertaMensajes = db.WARNINGPTs.Where(x => x.SPRAS_ID == spras_id).ToList();
             modelView.alertaCondiciones = db.WARNING_COND.ToList();
-            CargarSelectList(ref modelView, new string[] { CMB_CONDVALORES });
+            modelView.tabCampos = db.TAB_CAMPO
+                            .Join(db.TEXTOes, tc => tc.CAMPO_ID, te => te.CAMPO_ID, (ta, te) => te)
+                            .Where(x => x.SPRAS_ID == spras_id && x.PAGINA_ID == 202).ToList();
+            CargarSelectList(ref modelView, new string[] { CMB_TABS, CMB_CONDVALORES });
             return View(modelView);
         }
 
@@ -45,9 +49,12 @@ namespace TAT001.Controllers.Catalogos
             ObtenerConfPage(pagina_id);
 
             AlertaViewModel modelView = new AlertaViewModel();
+            //Mensajes
             modelView.alertaMensajes = new List<WARNINGPT> { new WARNINGPT { SPRAS_ID = "ES" }, new WARNINGPT { SPRAS_ID = "EN" }, new WARNINGPT { SPRAS_ID = "PT" } };
-            modelView.alertaCondiciones = new List<WARNING_COND> { new WARNING_COND {POS=1 },  new WARNING_COND { POS=2, ORAND=")"} };
-            CargarSelectList(ref modelView, new string[] { CMB_SOCIEDADES, CMB_TIPOSSOLICITUD, CMB_TABS,CMB_TIPOS, CMB_CONDCAMPOS, CMB_CONDVALORES });
+            //Condiciones
+            modelView.alertaCondiciones = new List<WARNING_COND> { new WARNING_COND { POS = 1 }, new WARNING_COND { POS = 2, ORAND = ")" } };
+            //Combos
+            CargarSelectList(ref modelView, new string[] { CMB_TIPOS,CMB_SOCIEDADES, CMB_TIPOSSOLICITUD, CMB_TABS , CMB_CONDCAMPOS });
             return View(modelView);
         }
 
@@ -58,34 +65,42 @@ namespace TAT001.Controllers.Catalogos
             int pagina_id = 541;//ID EN BASE DE DATOS
             try
             {
-                WARNINGP warningP= modelView.alerta;
+                WARNINGP warningP = modelView.alerta;
                 List<WARNINGPT> warningts = modelView.alertaMensajes;
                 List<WARNING_COND> warningconds = modelView.alertaCondiciones;
 
-                warningP.ID = warningP.ID.Replace(" ","_");
+                warningP.ID = warningP.ID.Replace(" ", "_");
                 warningP.ACCION = "focusout";
                 warningP.CAMPOVAL_ID = warningP.CAMPO_ID;
 
-                if (!ValidarAlertaExistente(warningP, warningconds))
+                if (!ValidarAlertaExistente(warningP) || !ValidarCondExistente(warningP, warningconds))
                 {
                     throw new Exception();
                 }
+
                 //Guardar Alerta
                 db.WARNINGPs.Add(warningP);
-                //Guardar Mensajes de la Alerta
-                warningts.ForEach(x=>
+
+                //Guardar Mensajes
+                warningts.ForEach(x =>
                 {
                     x.TAB_ID = warningP.TAB_ID;
                     x.WARNING_ID = warningP.ID;
                     db.WARNINGPTs.Add(x);
                 });
-                //Guardar Condiciones de la Alerta
+
+                //Guardar Condiciones
                 warningconds.ForEach(x =>
                 {
-                    if (x.CONDICION_ID!=null && x.VALOR_COMP!=null) {
+                    if (x.CONDICION_ID != null && x.VALOR_COMP != null)
+                    {
                         x.TAB_ID = warningP.TAB_ID;
                         x.WARNING_ID = warningP.ID;
                         x.ACTIVO = true;
+                        if (x.VALOR_COMP == "v")
+                        {
+                            x.VALOR_COMP = "";
+                        }
                         db.WARNING_COND.Add(x);
                     }
                 });
@@ -96,7 +111,17 @@ namespace TAT001.Controllers.Catalogos
             catch (Exception ex)
             {
                 ObtenerConfPage(pagina_id);
-                CargarSelectList(ref modelView, new string[] { CMB_SOCIEDADES, CMB_TIPOSSOLICITUD, CMB_TABS, CMB_TIPOS,CMB_CAMPOS,CMB_CONDCAMPOS, CMB_CONDVALORES  }, modelView.alerta.TAB_ID);
+                CargarSelectList(ref modelView, new string[] {
+                    CMB_SOCIEDADES,
+                    CMB_TIPOSSOLICITUD,
+                    CMB_TABS,
+                    CMB_TIPOS,
+                    CMB_CAMPOS,
+                    CMB_CONDCAMPOS,
+                    CMB_CONDVALORES  },
+                    modelView.alerta.TAB_ID,
+                    modelView.alertaCondiciones[0].CONDICION_ID,
+                    modelView.alertaCondiciones[1].CONDICION_ID);
                 return View(modelView);
             }
         }
@@ -108,28 +133,37 @@ namespace TAT001.Controllers.Catalogos
             ObtenerConfPage(pagina_id);
 
             AlertaViewModel modelView = new AlertaViewModel();
-            modelView.alerta = db.WARNINGPs.Where(x=>x.ID== warning_id && x.TAB_ID== tab_id).FirstOrDefault();
-            if (modelView.alerta==null){ return RedirectToAction("Index");}
+            //Alerta
+            modelView.alerta = db.WARNINGPs.Where(x => x.ID == warning_id && x.TAB_ID == tab_id).FirstOrDefault();
+            if (modelView.alerta == null) { return RedirectToAction("Index"); }
 
-            modelView.alertaMensajes = new List<WARNINGPT>();         
+            //Mensajes
+            modelView.alertaMensajes = new List<WARNINGPT>();
             modelView.alertaMensajes.Add(ObtenerWarningT("ES", warning_id, tab_id));
             modelView.alertaMensajes.Add(ObtenerWarningT("EN", warning_id, tab_id));
             modelView.alertaMensajes.Add(ObtenerWarningT("PT", warning_id, tab_id));
 
-            modelView.alertaCondiciones = db.WARNING_COND.Where(x=>x.WARNING_ID== warning_id && x.TAB_ID == tab_id).ToList();
-            if (modelView.alerta.SOCIEDAD_ID!=null && modelView.alerta.TSOL_ID!=null && modelView.alerta.ID!= WARNING_ID_EX && modelView.alertaCondiciones.Count()==1)
+            //Condiciones  
+            bool esAlertaGral = (modelView.alerta.SOCIEDAD_ID == null || modelView.alerta.TSOL_ID == null || modelView.alerta.ID == WARNING_ID_EX);
+            modelView.alertaCondiciones = db.WARNING_COND.Where(x => x.WARNING_ID == warning_id && x.TAB_ID == tab_id).ToList();
+            modelView.alertaCondiciones.Where(x => x.VALOR_COMP == "").ToList().ForEach(x => { x.VALOR_COMP = (x.VALOR_COMP == "" ? "v" : x.VALOR_COMP); });
+            if (!esAlertaGral && modelView.alertaCondiciones.Count() == 1)
             {
-                modelView.alertaCondiciones.Add( new WARNING_COND { POS = 2, ORAND = ")" } );
+                modelView.alertaCondiciones.Add(new WARNING_COND { POS = 2, ORAND = ")" });
             }
 
+            //Combos
             CargarSelectList(ref modelView, new string[] {
+                CMB_TIPOS,
                 CMB_SOCIEDADES + "," + modelView.alerta.SOCIEDAD_ID,
                 CMB_TIPOSSOLICITUD + "," + modelView.alerta.TSOL_ID,
                 CMB_TABS + "," + modelView.alerta.TAB_ID,
-                CMB_TIPOS,
                 CMB_CAMPOS + "," + modelView.alerta.CAMPO_ID,
                 CMB_CONDCAMPOS,
-                CMB_CONDVALORES }, modelView.alerta.TAB_ID);
+                CMB_CONDVALORES },
+                modelView.alerta.TAB_ID,
+                (esAlertaGral ? null : modelView.alertaCondiciones[0].CONDICION_ID),
+                (esAlertaGral ? null : modelView.alertaCondiciones[1].CONDICION_ID));
             return View(modelView);
         }
 
@@ -137,19 +171,26 @@ namespace TAT001.Controllers.Catalogos
         [HttpPost]
         public ActionResult Edit(AlertaViewModel modelView)
         {
-            int pagina_id = 542;//ID EN BASE DE DATOS          
+            int pagina_id = 542;//ID EN BASE DE DATOS
+            bool esAlertaGral = false;
             try
             {
                 WARNINGP warningP = modelView.alerta;
                 List<WARNINGPT> warningts = modelView.alertaMensajes;
                 List<WARNING_COND> warningconds = modelView.alertaCondiciones;
 
+                esAlertaGral = (modelView.alerta.SOCIEDAD_ID == null || modelView.alerta.TSOL_ID == null || modelView.alerta.ID == WARNING_ID_EX);
+                if (!esAlertaGral && !ValidarCondExistente(warningP, warningconds))
+                {
+                    throw new Exception();
+                }
                 //Guardar Alerta
                 db.Entry(warningP).State = EntityState.Modified;
-                //Guardar Mensajes de la Alerta
+
+                //Guardar Mensajes
                 warningts.ForEach(x =>
                 {
-                    if (x.TAB_ID==null && x.WARNING_ID ==null )
+                    if (x.TAB_ID == null && x.WARNING_ID == null)
                     {
                         x.TAB_ID = warningP.TAB_ID;
                         x.WARNING_ID = warningP.ID;
@@ -157,23 +198,24 @@ namespace TAT001.Controllers.Catalogos
                     }
                     else
                     {
-                        db.Entry(x).State = EntityState.Modified;                     
-                    }              
+                        db.Entry(x).State = EntityState.Modified;
+                    }
                 });
-                if (warningP.SOCIEDAD_ID!=null && warningP.TSOL_ID!=null && warningP.ID!= WARNING_ID_EX) {
-                    //Guardar Condiciones de la Alerta
+                if (!esAlertaGral)
+                {
+                    // Eliminar Condiciones
+                    db.WARNING_COND.RemoveRange(db.WARNING_COND.Where(x => x.WARNING_ID == warningP.ID && x.TAB_ID == warningP.TAB_ID));
+                    db.SaveChanges();
+                    //Guardar  Condiciones
                     warningconds.ForEach(x =>
                     {
-                        if (x.TAB_ID == null && x.WARNING_ID == null && x.CONDICION_ID != null && x.VALOR_COMP != null)
+                        if (x.VALOR_COMP == "v") {  x.VALOR_COMP = "";}
+                        if ( x.CONDICION_ID != null && x.VALOR_COMP != null)
                         {
                             x.TAB_ID = warningP.TAB_ID;
                             x.WARNING_ID = warningP.ID;
                             x.ACTIVO = true;
                             db.WARNING_COND.Add(x);
-                        }
-                        else if (x.CONDICION_ID != null && x.VALOR_COMP != null)
-                        {
-                            db.Entry(x).State = EntityState.Modified;
                         }
 
                     });
@@ -181,11 +223,19 @@ namespace TAT001.Controllers.Catalogos
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            catch
+            catch(Exception ex)
             {
                 ObtenerConfPage(pagina_id);
-                CargarSelectList(ref modelView, new string[] { CMB_SOCIEDADES + "," + modelView.alerta.SOCIEDAD_ID, CMB_TIPOSSOLICITUD + "," + modelView.alerta.TSOL_ID,
-                    CMB_TABS + "," + modelView.alerta.TAB_ID, CMB_TIPOS, CMB_CAMPOS + "," + modelView.alerta.CAMPO_ID, CMB_CONDCAMPOS, CMB_CONDVALORES }, modelView.alerta.TAB_ID);
+                CargarSelectList(ref modelView, new string[] {
+                    CMB_TIPOS,
+                    CMB_SOCIEDADES + "," + modelView.alerta.SOCIEDAD_ID,
+                    CMB_TIPOSSOLICITUD + "," + modelView.alerta.TSOL_ID,
+                    CMB_TABS + "," + modelView.alerta.TAB_ID,
+                    CMB_CAMPOS + "," + modelView.alerta.CAMPO_ID,
+                    CMB_CONDCAMPOS, CMB_CONDVALORES },
+                    modelView.alerta.TAB_ID,
+                    (esAlertaGral ? null : modelView.alertaCondiciones[0].CONDICION_ID),
+                    (esAlertaGral ? null : modelView.alertaCondiciones[1].CONDICION_ID));
                 return View(modelView);
             }
         }
@@ -193,10 +243,10 @@ namespace TAT001.Controllers.Catalogos
         // GET: Alertas/Delete
         public ActionResult Delete(string warning_id, string tab_id)
         {
-            WARNINGP warningP= db.WARNINGPs.Where(x => x.ID == warning_id && x.TAB_ID == tab_id).FirstOrDefault();
+            WARNINGP warningP = db.WARNINGPs.Where(x => x.ID == warning_id && x.TAB_ID == tab_id).FirstOrDefault();
             if (warningP == null) { return RedirectToAction("Index"); }
             List<WARNINGPT> warningts = db.WARNINGPTs.Where(x => x.WARNING_ID == warning_id && x.TAB_ID == tab_id).ToList();
-            List<WARNING_COND> warningconds= db.WARNING_COND.Where(x => x.WARNING_ID == warning_id && x.TAB_ID == tab_id).ToList();
+            List<WARNING_COND> warningconds = db.WARNING_COND.Where(x => x.WARNING_ID == warning_id && x.TAB_ID == tab_id).ToList();
 
             db.WARNING_COND.RemoveRange(warningconds);
             db.WARNINGPTs.RemoveRange(warningts);
@@ -205,43 +255,59 @@ namespace TAT001.Controllers.Catalogos
 
             return RedirectToAction("Index");
         }
-        
+
 
         [HttpPost]
-        public ActionResult ObtenerCampos(string id)
+        public ActionResult ObtenerCamposPorTabId(string val)
         {
             AlertaViewModel modelView = new AlertaViewModel();
-            CargarSelectList(ref modelView, new string[] { CMB_CAMPOS }, id);
+            CargarSelectList(ref modelView, new string[] { CMB_CAMPOS }, val);
             return Json(modelView.campos);
         }
-
-        WARNINGPT ObtenerWarningT(string spras_id, string warning_id,string tab_id)
+        [HttpPost]
+        public ActionResult ObtenerCondValores(int val)
         {
-            WARNINGPT mensaje = db.WARNINGPTs.Where(x => x.WARNING_ID == warning_id && x.TAB_ID== tab_id && x.SPRAS_ID == spras_id).FirstOrDefault();
+            AlertaViewModel modelView = new AlertaViewModel();
+            CargarSelectList(ref modelView, new string[] { CMB_CONDVALORES });
+            return Json(ObtenerCondValores(modelView.condValores, val));
+        }
+
+        WARNINGPT ObtenerWarningT(string spras_id, string warning_id, string tab_id)
+        {
+            WARNINGPT mensaje = db.WARNINGPTs.Where(x => x.WARNING_ID == warning_id && x.TAB_ID == tab_id && x.SPRAS_ID == spras_id).FirstOrDefault();
             return (mensaje == null ? new WARNINGPT { SPRAS_ID = spras_id } : mensaje);
         }
-        bool ValidarAlertaExistente(WARNINGP warningP,List<WARNING_COND> warningConds)
+        bool ValidarAlertaExistente(WARNINGP warningP)
         {
             int pagina_id = 540;
-            if (db.WARNINGPs.Any(x=>x.ID== warningP.ID && x.TAB_ID==warningP.TAB_ID))
+            if (db.WARNINGPs.Any(x => x.ID == warningP.ID && x.TAB_ID == warningP.TAB_ID))
             {
                 ViewBag.mnjError = ObtenerTextoMnj(pagina_id, "lbl_mnjExisteAlerta");
                 return false;
             }
+            return true;
+        }
+        bool ValidarCondExistente(WARNINGP warningP, List<WARNING_COND> warningConds)
+        {
+            int pagina_id = 540;
 
             bool existeCondParaTabCampo = false;
-            List<WARNING_COND> warningPs=db.WARNINGPs
-                .Where(x=>x.CAMPO_ID== warningP.CAMPO_ID && x.TAB_ID== warningP.TAB_ID && x.ID != warningP.ID)
+            List<WARNING_COND> warningPs = db.WARNINGPs
+                .Where(x => x.CAMPO_ID == warningP.CAMPO_ID && x.TAB_ID == warningP.TAB_ID && x.ID != warningP.ID)
                 .Join(db.WARNING_COND, w => w.ID, wc => wc.WARNING_ID, (w, wc) => wc)
                 .ToList();
             warningPs.ForEach(x =>
             {
-                
-                if (warningConds.Any(y=>y.VALOR_COMP==x.VALOR_COMP && y.CONDICION_ID==x.CONDICION_ID))
+                if (warningConds.Any(y => y.VALOR_COMP == x.VALOR_COMP && y.CONDICION_ID == x.CONDICION_ID))
                 {
-                    existeCondParaTabCampo = true;                 
+                    existeCondParaTabCampo = true;
                 }
             });
+            if (warningConds.Count() == 2 && warningConds[0].VALOR_COMP == warningConds[1].VALOR_COMP && warningConds[0].CONDICION_ID == warningConds[1].CONDICION_ID)
+            {
+                existeCondParaTabCampo = true;
+            }
+
             if (existeCondParaTabCampo)
             {
                 ViewBag.mnjError = ObtenerTextoMnj(pagina_id, "lbl_mnjExisteCondAlerta");
@@ -263,9 +329,9 @@ namespace TAT001.Controllers.Catalogos
             ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
             ViewBag.spras_id = user.SPRAS_ID;
         }
-        
 
-        void CargarSelectList(ref AlertaViewModel modelView, string[] combos, string tab_id=null)
+
+        void CargarSelectList(ref AlertaViewModel modelView, string[] combos, string tab_id = null, int? cond_id = null, int? cond_id1 = null)
         {
             USUARIO user = ObtenerUsuario();
             string spras_id = user.SPRAS_ID;
@@ -300,7 +366,7 @@ namespace TAT001.Controllers.Catalogos
                     case CMB_TABS:
                         modelView.tabs = db.TABs
                             .Join(db.TEXTOes, ta => ta.ID, te => te.CAMPO_ID, (ta, te) => te)
-                            .Where(x => x.SPRAS_ID == spras_id && x.PAGINA_ID == 202  && (x.CAMPO_ID == id || id == null))
+                            .Where(x => x.SPRAS_ID == spras_id && x.PAGINA_ID == 202 && (x.CAMPO_ID == id || id == null))
                             .Select(x => new SelectListItem
                             {
                                 Value = x.CAMPO_ID,
@@ -309,7 +375,7 @@ namespace TAT001.Controllers.Catalogos
                         break;
                     case CMB_CAMPOS:
                         modelView.campos = db.TAB_CAMPO
-                            .Where(x=>x.TAB_ID== tab_id)
+                            .Where(x => x.TAB_ID == tab_id)
                             .Join(db.TEXTOes, tc => tc.CAMPO_ID, te => te.CAMPO_ID, (ta, te) => te)
                             .Where(x => x.SPRAS_ID == spras_id && x.PAGINA_ID == 202 && (x.CAMPO_ID == id || id == null))
                             .Select(x => new SelectListItem
@@ -328,17 +394,8 @@ namespace TAT001.Controllers.Catalogos
                         };
                         break;
                     case CMB_CONDCAMPOS:
-                         idAux = (id == null ? null : (int?)int.Parse(id));
-                        modelView.condCampos = db.CONDICIONs 
-                            .Where(x=>x.ACTIVO==true && (x.COND== "=" || x.COND == "!=" || x.COND == ">" || x.COND == "<"))
-                            .Join(db.CONDICIONTs, c => c.ID, ct => ct.CONDICION_ID, (c, ct) => ct)
-                            .Where(x => x.SPRAS_ID == spras_id && (x.CONDICION_ID == idAux || idAux == null))
-                            .Select(x => new SelectListItem
-                             {
-                                 Value = x.CONDICION_ID.ToString(),
-                                 Text = x.TXT050
-                             }).ToList();
-                        modelView.condCampos1= db.CONDICIONs
+                        idAux = (id == null ? null : (int?)int.Parse(id));
+                        modelView.condCampos = db.CONDICIONs
                             .Where(x => x.ACTIVO == true && (x.COND == "=" || x.COND == "!=" || x.COND == ">" || x.COND == "<"))
                             .Join(db.CONDICIONTs, c => c.ID, ct => ct.CONDICION_ID, (c, ct) => ct)
                             .Where(x => x.SPRAS_ID == spras_id && (x.CONDICION_ID == idAux || idAux == null))
@@ -347,34 +404,53 @@ namespace TAT001.Controllers.Catalogos
                                 Value = x.CONDICION_ID.ToString(),
                                 Text = x.TXT050
                             }).ToList();
+                        modelView.condCampos1 = modelView.condCampos
+                            .Select(x => new SelectListItem
+                            {
+                                Value = x.Value,
+                                Text = x.Text
+                            }).ToList();
                         break;
                     case CMB_CONDVALORES:
-                         idAux = (id == null ? null : (int?)int.Parse(id));
-                        modelView.condValores = db.CONDICIONs
+                        idAux = (id == null ? null : (int?)int.Parse(id));
+                        List<SelectListItem> condValoresAux = db.CONDICIONs
                             .Where(x => x.ACTIVO == true && (x.COND == "e" || x.COND == "dec" || x.COND == "0" || x.COND == "n" || x.COND == "c" || x.COND == ""))
                             .Join(db.CONDICIONTs, c => c.ID, ct => ct.CONDICION_ID, (c, ct) => ct)
                             .Where(x => x.SPRAS_ID == spras_id && (x.CONDICION_ID == idAux || idAux == null))
                             .Select(x => new SelectListItem
                             {
-                                Value = x.CONDICION.COND,
+                                Value = (x.CONDICION.COND == "" ? "v" : x.CONDICION.COND),
                                 Text = x.TXT050
                             }).ToList();
-                        modelView.condValores1= db.CONDICIONs
-                            .Where(x => x.ACTIVO == true && (x.COND == "e" || x.COND == "dec" || x.COND == "0" || x.COND == "n" || x.COND == "c" || x.COND == ""))
-                            .Join(db.CONDICIONTs, c => c.ID, ct => ct.CONDICION_ID, (c, ct) => ct)
-                            .Where(x => x.SPRAS_ID == spras_id && (x.CONDICION_ID == idAux || idAux == null))
-                            .Select(x => new SelectListItem
-                            {
-                                Value = x.CONDICION.COND,
-                                Text = x.TXT050
-                            }).ToList();
+
+                        modelView.condValores = ObtenerCondValores(condValoresAux, cond_id);
+
+                        if (cond_id1 != null)
+                        {
+                            modelView.condValores1 = ObtenerCondValores(condValoresAux, cond_id1);
+                        }
+
                         break;
                     default:
                         break;
                 }
             }
         }
-        
+        public List<SelectListItem> ObtenerCondValores(List<SelectListItem> condValores, int? cond_id)
+        {
+            if (cond_id == null)
+            {
+                return condValores;
+            }
+            CONDICION cond = db.CONDICIONs.Where(x => x.ID == cond_id).First();
+            List<SelectListItem> condValoresAux = new List<SelectListItem>();
+            if (cond.COND.Equals(">") || cond.COND.Equals("<"))
+            {
+                condValoresAux = condValores.Where(x => x.Value.Equals("0")).ToList();
+                return condValoresAux;
+            }
+            return condValores;
+        }
         USUARIO ObtenerUsuario()
         {
             string u = User.Identity.Name;

@@ -26,6 +26,8 @@ namespace TAT001.Models
             condCampos1 = new List<SelectListItem>();
             condValores1 = new List<SelectListItem>();
 
+            tabCampos = new List<TEXTO>();
+
         }
         public List<WARNINGP> alertas { get; set; }
         public WARNINGP alerta { get; set; }
@@ -41,5 +43,7 @@ namespace TAT001.Models
         public List<SelectListItem> condValores { get; set; }
         public List<SelectListItem> condCampos1 { get; set; }
         public List<SelectListItem> condValores1 { get; set; }
+
+        public List<TEXTO> tabCampos { get; set; }
     }
 }
