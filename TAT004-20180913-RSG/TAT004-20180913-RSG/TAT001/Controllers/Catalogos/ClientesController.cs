@@ -206,7 +206,6 @@ namespace TAT001.Controllers.Catalogos
             base.Dispose(disposing);
         }
 
-
         public ActionResult Carga()
         {
             int pagina = 601;
@@ -822,245 +821,6 @@ namespace TAT001.Controllers.Catalogos
                     cont++;
                 }
 
-                ////-------------------------------EMAIL
-                if (cl.CONTACTO != null && cl.CONTACTO != "")
-                {
-                    if (ComprobarEmail(cl.CONTACTOE) == false)
-                    {
-                        cl.CONTACTOEX = false;
-                    }
-                }
-                if (!cl.CONTACTOEX)
-                {
-                    cl.CONTACTOE = cl.CONTACTOE + "?";
-                    messa = messa + cont + ". Error en el correo<br/>";
-                    cont++;
-                }
-
-                da.MESS = messa;
-                cl.MESS = da.MESS;
-
-                cc.Add(cl);
-            }
-            JsonResult jl = Json(cc, JsonRequestBehavior.AllowGet);
-            return jl;
-        }
-        [HttpPost]
-        public JsonResult Borrar()
-        {
-            List<DET_AGENTE1> ld = new List<DET_AGENTE1>();
-
-            var bor = Request["bor"].Split(',');
-            var coc = Request["coc"].Split(',');
-            var pai = Request["pai"].Split(',');
-            var cli = Request["cli"].Split(',');
-            var noc = Request["noc"].Split(',');
-            var ni0 = Request["ni0"].Split(',');
-            var ni1 = Request["ni1"].Split(',');
-            var ni2 = Request["ni2"].Split(',');
-            var ni3 = Request["ni3"].Split(',');
-            var ni4 = Request["ni4"].Split(',');
-            var ni5 = Request["ni5"].Split(',');
-            var ni6 = Request["ni6"].Split(',');
-            var ni7 = Request["ni7"].Split(',');
-            var ven = Request["ven"].Split(',');
-            var ban = Request["ban"].Split(',');
-            var baa = Request["baa"].Split(',');
-            var can = Request["can"].Split(',');
-            var exp = Request["exp"].Split(',');
-            var con = Request["con"].Split(',');
-            var eco = Request["eco"].Split(',');
-
-            var rows = coc.Length - bor.Length;
-            string[,] tablas = new string[rows, 19];
-
-            for (int i = 0; i < coc.Length; i++)
-            {
-                if (i != int.Parse(bor[i]))
-                {
-                    tablas[i, 0] = coc[i];
-                    tablas[i, 1] = pai[i];
-                    tablas[i, 2] = cli[i];
-                    tablas[i, 3] = noc[i];
-                    tablas[i, 4] = ni0[i];
-                    tablas[i, 5] = ni1[i];
-                    tablas[i, 6] = ni2[i];
-                    tablas[i, 7] = ni3[i];
-                    tablas[i, 8] = ni4[i];
-                    tablas[i, 9] = ni5[i];
-                    tablas[i, 10] = ni6[i];
-                    tablas[i, 11] = ni7[i];
-                    tablas[i, 12] = ven[i];
-                    tablas[i, 13] = ban[i];
-                    tablas[i, 14] = baa[i];
-                    tablas[i, 15] = can[i];
-                    tablas[i, 16] = exp[i];
-                    tablas[i, 17] = con[i];
-                    tablas[i, 18] = eco[i];
-                }
-            }
-
-            ld = ObjAList2(tablas, rows);
-
-            List<Clientes> cc = new List<Clientes>();
-            List<USUARIO> usuarios = new List<USUARIO>();
-            List<CLIENTE> clientes = new List<CLIENTE>();
-            List<SOCIEDAD> sociedades = new List<SOCIEDAD>();
-            List<PAI> paises = new List<PAI>();
-            List<PROVEEDOR> proveedores = new List<PROVEEDOR>();
-            List<CANAL> canales = new List<CANAL>();
-            List<CONTACTOC> contactos = new List<CONTACTOC>();
-
-            foreach (DET_AGENTE1 da in ld)
-            {
-                int cont = 1;
-                string messa = "";
-                Clientes cl = new Clientes();
-                Cryptography c = new Cryptography();
-                string[] ids = new string[8];
-                bool[] idsx = new bool[8];
-
-                cl.BUKRS = da.BUKRS;
-                cl.BUKRSX = true;
-                cl.LAND = da.LAND;
-                cl.LANDX = true;
-                cl.KUNNR = da.KUNNR;
-                cl.KUNNRX = true;
-                cl.CLIENTE_N = da.CLIENTE_N;
-                ids[0] = da.ID_US0;
-                idsx[0] = true;
-                ids[1] = da.ID_US1;
-                idsx[1] = true;
-                ids[2] = da.ID_US2;
-                idsx[2] = true;
-                ids[3] = da.ID_US3;
-                idsx[3] = true;
-                ids[4] = da.ID_US4;
-                idsx[4] = true;
-                ids[5] = da.ID_US5;
-                idsx[5] = true;
-                ids[6] = da.ID_US6;
-                idsx[6] = true;
-                ids[7] = da.ID_US7;
-                idsx[7] = true;
-                cl.ID_PROVEEDOR = da.ID_PROVEEDOR;
-                cl.ID_PROVEEDORX = true;
-                cl.BANNER = da.BANNER;
-                cl.BANNERG = da.BANNERG;
-                cl.CANAL = da.CANAL;
-                cl.CANALX = true;
-                cl.EXPORTACION = da.EXPORTACION;
-                cl.CONTACTO = da.CONTACTO;
-                cl.CONTACTOE = da.CONTACTOE;
-                cl.CONTACTOEX = true;
-
-                ////-------------------------------CoCode
-                PAI s = db.PAIS.Where(x => x.SOCIEDAD_ID.Equals(cl.BUKRS) & x.ACTIVO == true).FirstOrDefault();
-                if (s == null)
-                    cl.BUKRSX = false;
-                else
-                    paises.Add(s);
-                if (!cl.BUKRSX)
-                {
-                    cl.BUKRS = cl.BUKRS + "?";
-                    messa = cont + ". El CoCode no coincide con el pais<br/>";
-                    cont++;
-                }
-
-                ////-------------------------------Pais
-                PAI p = db.PAIS.Where(x => x.LAND.Equals(cl.LAND)).FirstOrDefault();
-                if (p == null)
-                    cl.LANDX = false;
-                else
-                    paises.Add(p);
-                if (!cl.LANDX)
-                {
-                    cl.LAND = cl.LAND + "?";
-                    messa = cont + ". Error con el Pais<br/>";
-                    cont++;
-                }
-
-                ////-------------------------------CLIENTE
-                CLIENTE k = db.CLIENTEs.Where(x => x.KUNNR.Equals(cl.KUNNR) & x.ACTIVO == true).FirstOrDefault();
-                if (k == null)
-                    cl.KUNNRX = false;
-                else
-                    clientes.Add(k);
-                if (!cl.KUNNRX)
-                {
-                    cl.KUNNR = cl.KUNNR + "?";
-                    messa = cont + ". Error con el Cliente<br/>";
-                    cont++;
-                }
-
-                ////-------------------------------Niveles
-                for (int i = 0; i < 8; i++)
-                {
-                    if (ids[i] != null && ids[i] != "")
-                    {
-                        var usuario = ids[i];
-                        USUARIO u = db.USUARIOs.Where(x => x.ID.Equals(usuario)).FirstOrDefault();
-                        if (u != null)
-                            idsx[i] = false;
-                        else
-                            usuarios.Add(u);
-                        if ((ids[i] == "" && ids[i] == null) && (i == 1 || i == 6))
-                            idsx[i] = false;
-                    }
-                    if (!idsx[i])
-                    {
-                        ids[i] = ids[i] + "?";
-                        messa = messa + cont + ". Error en el nivel " + i + "<br/>";
-                        cont++;
-                    }
-                }
-                cl.ID_US0 = ids[0];
-                cl.ID_US0X = idsx[0];
-                cl.ID_US1 = ids[1];
-                cl.ID_US1X = idsx[1];
-                cl.ID_US2 = ids[2];
-                cl.ID_US2X = idsx[2];
-                cl.ID_US3 = ids[3];
-                cl.ID_US3X = idsx[3];
-                cl.ID_US4 = ids[4];
-                cl.ID_US4X = idsx[4];
-                cl.ID_US5 = ids[5];
-                cl.ID_US5X = idsx[5];
-                cl.ID_US6 = ids[6];
-                cl.ID_US6X = idsx[6];
-                cl.ID_US7 = ids[7];
-                cl.ID_US7X = idsx[7];
-
-                ////-------------------------------ID_PROVEEDOR
-                if (cl.ID_PROVEEDOR != null && cl.ID_PROVEEDOR != "")
-                {
-                    PROVEEDOR pr = db.PROVEEDORs.Where(x => x.ID.Equals(cl.ID_PROVEEDOR)).FirstOrDefault();
-                    if (pr == null)
-                    {
-                        cl.ID_PROVEEDORX = false;
-                    }
-                }
-                if (!cl.ID_PROVEEDORX)
-                {
-                    cl.ID_PROVEEDOR = cl.ID_PROVEEDOR + "?";
-                    messa = messa + cont + ". Error en el vendor<br/>";
-                    cont++;
-                }
-                ////-------------------------------CANAL
-                if (cl.CANAL != null && cl.CANAL != "")
-                {
-                    CANAL ca = db.CANALs.Where(x => x.CANAL1.Equals(cl.CANAL)).FirstOrDefault();
-                    if (ca == null)
-                    {
-                        cl.CANALX = false;
-                    }
-                }
-                if (!cl.CANALX)
-                {
-                    cl.CANAL = cl.CANAL + "?";
-                    messa = messa + cont + ". Error en el canal<br/>";
-                    cont++;
-                }
                 ////-------------------------------EMAIL
                 if (cl.CONTACTO != null && cl.CONTACTO != "")
                 {
@@ -1796,5 +1556,104 @@ namespace TAT001.Controllers.Catalogos
             }
         }
 
+        ////Metodos de autocompletar 
+        public JsonResult Vendor(string Prefix)
+        {
+            if (Prefix == null)
+                Prefix = "";
+
+            TAT004Entities db = new TAT004Entities();
+
+            var c = (from x in db.PROVEEDORs
+                     where x.ID.Contains(Prefix) && x.ACTIVO == true
+                     select new { x.ID, x.NOMBRE }).ToList();
+
+            if (c.Count == 0)
+            {
+                var c2 = (from x in db.PROVEEDORs
+                         where x.NOMBRE.Contains(Prefix) && x.ACTIVO == true
+                         select new { x.ID, x.NOMBRE }).ToList();
+                c.AddRange(c2);
+            }
+            
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+
+        public JsonResult Canal(string Prefix)
+        {
+            if (Prefix == null)
+                Prefix = "";
+
+            TAT004Entities db = new TAT004Entities();
+
+            var c = (from x in db.CANALs
+                     where x.CANAL1.Contains(Prefix)
+                     select new { x.CANAL1, x.CDESCRIPCION }).ToList();
+
+            if (c.Count == 0)
+            {
+                var c2 = (from x in db.CANALs
+                         where x.CDESCRIPCION.Contains(Prefix)
+                         select new { x.CANAL1, x.CDESCRIPCION }).ToList();
+                c.AddRange(c2);
+            }
+            
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+
+        public JsonResult Cliente(string Prefix)
+        {
+            if (Prefix == null)
+                Prefix = "";
+
+            TAT004Entities db = new TAT004Entities();
+
+            var c = (from x in db.CLIENTEs
+                     where x.KUNNR.Contains(Prefix)
+                     select new { x.KUNNR, x.NAME1 }).ToList();
+
+            if (c.Count == 0)
+            {
+                var c2 = (from x in db.CLIENTEs
+                         where x.NAME1.Contains(Prefix)
+                         select new { x.KUNNR, x.NAME1 }).ToList();
+                c.AddRange(c2);
+            }
+            
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+
+        public JsonResult Usuario(string Prefix)
+        {
+            if (Prefix == null)
+                Prefix = "";
+
+            TAT004Entities db = new TAT004Entities();
+
+            var c = (from x in db.USUARIOs
+                     where x.ID.Contains(Prefix)
+                     select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
+
+            if (c.Count == 0)
+            {
+                var c2 = (from x in db.USUARIOs
+                          where x.NOMBRE.Contains(Prefix)
+                          select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
+                c.AddRange(c2);
+            }
+            else
+            {
+                var c3 = (from x in db.USUARIOs
+                          where x.APELLIDO_P.Contains(Prefix)
+                          select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
+                c.AddRange(c3);
+            }
+
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
     }
 }
