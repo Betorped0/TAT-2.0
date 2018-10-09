@@ -57,7 +57,7 @@ namespace TAT001.Controllers.Catalogos
                 ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
                 ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
                 ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
-                ViewBag.rol = user.MIEMBROS.FirstOrDefault().ROL.NOMBRE;
+                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
                 ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(831) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
@@ -89,126 +89,126 @@ namespace TAT001.Controllers.Catalogos
             }
         }
         // GET: TCambio/Create
-        public ActionResult Create()
-        {
-            int pagina = 834; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
-            {
-                string u = User.Identity.Name;
-                //string u = "admin";
-                var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
-                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(831) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+        //public ActionResult Create()
+        //{
+        //    int pagina = 834; //ID EN BASE DE DATOS
+        //    using (TAT001Entities db = new TAT001Entities())
+        //    {
+        //        string u = User.Identity.Name;
+        //        //string u = "admin";
+        //        var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+        //        ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
+        //        ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
+        //        ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
+        //        ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+        //        ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+        //        ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+        //        ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(831) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
 
-                try
-                {
-                    string p = Session["pais"].ToString();
-                    ViewBag.pais = p + ".svg";
-                }
-                catch
-                {
-                    //ViewBag.pais = "mx.svg";
-                    //return RedirectToAction("Pais", "Home");
-                }
-                Session["spras"] = user.SPRAS_ID;
-            }
-            ViewBag.TCURR = new SelectList(db.MONEDAs, "WAERS", "WAERS");
-            ViewBag.FCURR = new SelectList(db.MONEDAs, "WAERS", "WAERS");
-            return View();
-        }
+        //        try
+        //        {
+        //            string p = Session["pais"].ToString();
+        //            ViewBag.pais = p + ".svg";
+        //        }
+        //        catch
+        //        {
+        //            //ViewBag.pais = "mx.svg";
+        //            //return RedirectToAction("Pais", "Home");
+        //        }
+        //        Session["spras"] = user.SPRAS_ID;
+        //    }
+        //    ViewBag.TCURR = new SelectList(db.MONEDAs, "WAERS", "WAERS");
+        //    ViewBag.FCURR = new SelectList(db.MONEDAs, "WAERS", "WAERS");
+        //    return View();
+        //}
 
         // POST: TCambio/Create
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "KURST,FCURR,TCURR,GDATU,UKURS")] TCAMBIO tCAMBIO)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    if (tCAMBIO.UKURS != 0 && tCAMBIO.UKURS != null)
-                    {
-                        tCAMBIO.KURST = "C";
-                        db.TCAMBIOs.Add(tCAMBIO);
-                        db.SaveChanges();
-                        return RedirectToAction("Index");
-                    }
-                }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Create([Bind(Include = "KURST,FCURR,TCURR,GDATU,UKURS")] TCAMBIO tCAMBIO)
+        //{
+        //    try
+        //    {
+        //        if (ModelState.IsValid)
+        //        {
+        //            if (tCAMBIO.UKURS != 0 && tCAMBIO.UKURS != null)
+        //            {
+        //                tCAMBIO.KURST = "C";
+        //                db.TCAMBIOs.Add(tCAMBIO);
+        //                db.SaveChanges();
+        //                return RedirectToAction("Index");
+        //            }
+        //        }
 
-                ViewBag.TCURR = new SelectList(db.MONEDAs, "WAERS", "WAERS", tCAMBIO.TCURR);
-                ViewBag.FCURR = new SelectList(db.MONEDAs, "WAERS", "WAERS", tCAMBIO.FCURR);
-                //Como se genera la lista se borra y se ocupa regenerar
-                int pagina = 834; //ID EN BASE DE DATOS
-                using (TAT001Entities db = new TAT001Entities())
-                {
-                    string u = User.Identity.Name;
-                    //string u = "admin";
-                    var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-                    ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-                    ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                    ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
-                    ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                    ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                    ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                    ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(831) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                    ViewBag.error = "Campo Nulo o Valor Incorrecto";
-                    try
-                    {
-                        string p = Session["pais"].ToString();
-                        ViewBag.pais = p + ".svg";
-                    }
-                    catch
-                    {
-                        //ViewBag.pais = "mx.svg";
-                        //return RedirectToAction("Pais", "Home");
-                    }
-                    Session["spras"] = user.SPRAS_ID;
-                }
+        //        ViewBag.TCURR = new SelectList(db.MONEDAs, "WAERS", "WAERS", tCAMBIO.TCURR);
+        //        ViewBag.FCURR = new SelectList(db.MONEDAs, "WAERS", "WAERS", tCAMBIO.FCURR);
+        //        //Como se genera la lista se borra y se ocupa regenerar
+        //        int pagina = 834; //ID EN BASE DE DATOS
+        //        using (TAT001Entities db = new TAT001Entities())
+        //        {
+        //            string u = User.Identity.Name;
+        //            //string u = "admin";
+        //            var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+        //            ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
+        //            ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
+        //            ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
+        //            ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+        //            ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+        //            ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+        //            ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(831) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+        //            ViewBag.error = "Campo Nulo o Valor Incorrecto";
+        //            try
+        //            {
+        //                string p = Session["pais"].ToString();
+        //                ViewBag.pais = p + ".svg";
+        //            }
+        //            catch
+        //            {
+        //                //ViewBag.pais = "mx.svg";
+        //                //return RedirectToAction("Pais", "Home");
+        //            }
+        //            Session["spras"] = user.SPRAS_ID;
+        //        }
 
-                return View(tCAMBIO);
-            }
-            catch (Exception e)
-            {
-                ViewBag.TCURR = new SelectList(db.MONEDAs, "WAERS", "WAERS", tCAMBIO.TCURR);
-                ViewBag.FCURR = new SelectList(db.MONEDAs, "WAERS", "WAERS", tCAMBIO.FCURR);
-                //Como se genera la lista se borra y se ocupa regenerar
-                int pagina = 834; //ID EN BASE DE DATOS
-                using (TAT001Entities db = new TAT001Entities())
-                {
-                    string u = User.Identity.Name;
-                    //string u = "admin";
-                    var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-                    ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-                    ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                    ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
-                    ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                    ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                    ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                    ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(831) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                    ViewBag.error = e.Message.ToString();
-                    try
-                    {
-                        string p = Session["pais"].ToString();
-                        ViewBag.pais = p + ".svg";
-                    }
-                    catch
-                    {
-                        //ViewBag.pais = "mx.svg";
-                        //return RedirectToAction("Pais", "Home");
-                    }
-                    Session["spras"] = user.SPRAS_ID;
-                }
-                return View(tCAMBIO);
-            }
+        //        return View(tCAMBIO);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        ViewBag.TCURR = new SelectList(db.MONEDAs, "WAERS", "WAERS", tCAMBIO.TCURR);
+        //        ViewBag.FCURR = new SelectList(db.MONEDAs, "WAERS", "WAERS", tCAMBIO.FCURR);
+        //        //Como se genera la lista se borra y se ocupa regenerar
+        //        int pagina = 834; //ID EN BASE DE DATOS
+        //        using (TAT001Entities db = new TAT001Entities())
+        //        {
+        //            string u = User.Identity.Name;
+        //            //string u = "admin";
+        //            var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+        //            ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
+        //            ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
+        //            ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
+        //            ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+        //            ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+        //            ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+        //            ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(831) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+        //            ViewBag.error = e.Message.ToString();
+        //            try
+        //            {
+        //                string p = Session["pais"].ToString();
+        //                ViewBag.pais = p + ".svg";
+        //            }
+        //            catch
+        //            {
+        //                //ViewBag.pais = "mx.svg";
+        //                //return RedirectToAction("Pais", "Home");
+        //            }
+        //            Session["spras"] = user.SPRAS_ID;
+        //        }
+        //        return View(tCAMBIO);
+        //    }
 
-        }
+        //}
 
         // GET: TCambio/Edit/5
         public ActionResult Edit(string fcur, string tcur, string gd)
@@ -221,7 +221,7 @@ namespace TAT001.Controllers.Catalogos
                 ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
                 ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
                 ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
-                ViewBag.rol = user.MIEMBROS.FirstOrDefault().ROL.NOMBRE;
+                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
                 ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(831) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
@@ -260,7 +260,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Edit([Bind(Include = "KURST,FCURR,TCURR,GDATU,UKURS")] TCAMBIO tCAMBIO)
         {
             //Codigo incrustado
-            tCAMBIO.KURST = "C";
+            //tCAMBIO.KURST = "C";
             if (ModelState.IsValid)
             {
 
@@ -268,8 +268,6 @@ namespace TAT001.Controllers.Catalogos
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.TCURR = new SelectList(db.MONEDAs, "WAERS", "ISOCD", tCAMBIO.TCURR);
-            ViewBag.FCURR = new SelectList(db.MONEDAs, "WAERS", "ISOCD", tCAMBIO.FCURR);
             return View(tCAMBIO);
         }
 

@@ -1279,7 +1279,8 @@ namespace TAT001.Controllers
 
                     id_pais = db.PAIS.Where(pais => pais.LAND.Equals(p)).FirstOrDefault();//RSG 15.05.2018 //MGC B20180625 MGC 
                     id_bukrs = db.SOCIEDADs.Where(soc => soc.BUKRS.Equals(id_pais.SOCIEDAD_ID) && soc.ACTIVO == true).FirstOrDefault();//RSG 15.05.2018 //MGC B20180625 MGC 
-
+                    DET_APROBH dah = id_bukrs.DET_APROBH.Where(x => x.PUESTOC_ID == user.PUESTO_ID & x.ACTIVO == true).FirstOrDefault();
+                    if (dah == null) { Session["error"] = "Verifique el flujo de la sociedad: " + id_pais.SOCIEDAD_ID; Session["pais"] = null; return RedirectToAction("Index", "Home"); }
                     if (docb != null)
                     {
                         //Hay borrador 
@@ -8106,16 +8107,16 @@ namespace TAT001.Controllers
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
 
-                cat = db.MATERIALGPs.Where(c => c.ID == m.MATERIALGP_ID && c.ACTIVO == true)
-                            .Join(
-                            db.MATERIALGPTs.Where(ct => ct.SPRAS_ID == user.SPRAS_ID),
-                            c => c.ID,
-                            ct => ct.MATERIALGP_ID,
-                            (c, ct) => new
+                cat = (from c in db.MATERIALGPs.Where(c => c.ID == m.MATERIALGP_ID && c.ACTIVO == true)
+                            //.Join(
+                            //db.MATERIALGPTs.Where(ct => ct.SPRAS_ID == user.SPRAS_ID),
+                            //c => c.ID,
+                            //ct => ct.MATERIALGP_ID,
+                            //(c, ct) => 
+                            select new
                             {
-                                SPRAS_ID = ct.SPRAS_ID.ToString(),
-                                CATEGORIA_ID = ct.MATERIALGP_ID.ToString(),
-                                TXT50 = ct.TXT50.ToString(),
+                                CATEGORIA_ID = c.ID.ToString(),
+                                DESCRIPCION = c.DESCRIPCION.ToString(),
                                 UNICA = c.UNICA
 
                             })

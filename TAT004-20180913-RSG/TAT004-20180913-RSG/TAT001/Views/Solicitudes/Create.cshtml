@@ -323,18 +323,18 @@ errorMessage(message);
                                 </div>
                                 @{TAT001.Entities.PAI pais = ViewBag.PAIS_ID;
                                     ///////DRS 27.09.18/////////
-                                <div class="col s6" style="margin-top:1.9%">
-                                    <div class="form-group hidden">
-                                        @Html.LabelFor(model => model.PAIS_ID, "Subregión", htmlAttributes: new { @class = "control-label col-md-2 hidden", @id = "lbl_pais" }) @*B20180801 MGC Textos*@
-                                        <div class="col-md-10">
-                                            @Html.EditorFor(model => model.PAIS_ID, new { htmlAttributes = new { @id = "pais_id", @class = "form-control hidden", @disabled = "disabled", @Value = pais.LAND } })
+                                    <div class="col s6" style="margin-top:1.9%">
+                                        <div class="form-group hidden">
+                                            @Html.LabelFor(model => model.PAIS_ID, "Subregión", htmlAttributes: new { @class = "control-label col-md-2 hidden", @id = "lbl_pais" }) @*B20180801 MGC Textos*@
+                                            <div class="col-md-10">
+                                                @Html.EditorFor(model => model.PAIS_ID, new { htmlAttributes = new { @id = "pais_id", @class = "form-control hidden", @disabled = "disabled", @Value = pais.LAND } })
+                                            </div>
+                                        </div>
+                                        <div class="input-field col-md-2">
+                                            <input value="@pais.LANDX" id="pais_txt" type="text" class="" disabled="disabled" />
+                                            <label id="lbl_paiss" for="pais_txt">Subregión</label> @*B20180801 MGC Textos*@
                                         </div>
                                     </div>
-                                    <div class="input-field col-md-2">
-                                        <input value="@pais.LANDX" id="pais_txt" type="text" class="" disabled="disabled" />
-                                        <label id="lbl_paiss" for="pais_txt">Subregión</label> @*B20180801 MGC Textos*@
-                                    </div>
-                                </div>
                                 }
                                 <div>
                                     <div class="input-field col s6">
@@ -1193,17 +1193,17 @@ selectCliente(value);
                         @if (ViewBag.reversan != "X")
                         {
 
-                        <div class="card-panel">
-                            <h5 id="head_docssoporter">Documentos de Soporte2</h5> @*B20180801 MGC Textos*@
-                            @* ----DRS 3.10.2018--- *@
-                            <label id="lbl_camposobl" style="font-size:10px; color:dimgray">* Campos Obligatorios</label> @*B20180801 MGC Textos*@
-                            <div class="row" style="margin-bottom:0">
-                                <div class="col s12">
-                                    <form action="#">
-                                        <div class="row" id="div_soportes">
-                                        </div>
-                                        <!--RSG 23.05.2018-->
-                                        <script>
+                            <div class="card-panel">
+                                <h5 id="head_docssoporter">Documentos de Soporte2</h5> @*B20180801 MGC Textos*@
+                                @* ----DRS 3.10.2018--- *@
+                                <label id="lbl_camposobl" style="font-size:10px; color:dimgray">* Campos Obligatorios</label> @*B20180801 MGC Textos*@
+                                <div class="row" style="margin-bottom:0">
+                                    <div class="col s12">
+                                        <form action="#">
+                                            <div class="row" id="div_soportes">
+                                            </div>
+                                            <!--RSG 23.05.2018-->
+                                            <script>
 /**/
 /**/
 /**/
@@ -1211,15 +1211,15 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
 /**/
 /**/
 /**/
-                                        </script>
-                                    </form>
+                                            </script>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         }
                         @{List<TAT001.Entities.DOCUMENTOA>
-                                                                                                                                                                                              archivos = ViewBag.files as List<TAT001.Entities.DOCUMENTOA>
-                                                                                                                                                                                                  ;
+                                                                                                                                                                                                  archivos = ViewBag.files as List<TAT001.Entities.DOCUMENTOA>
+                                                                                                                                                                                                      ;
                             if (ViewBag.relacionadan != "" && archivos.Count > 0)
                             {
                                 string[] nombrefile;
@@ -1339,7 +1339,7 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
             <div id="Recurrente_cont" class="row">
                 <div class="col s12 l8 offset-l2">
                     <div class="card horizontal green white-text">
-                        <div class="col s12" style="margin-bottom0;">
+                        <div class="col s12" style="margin-bottom:0;display:none">
                             <p id="p_recurr">
                                 @*B20180801 MGC Textos*@
                                 Esta pestaña se debe llenar solamente si necesitas que tu solicitud se genere automáticamente durante los periodos seleccionados
@@ -1701,12 +1701,14 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                                                     //    $("#select_dis").change();
                                                     $("#div_objq").addClass("hide");
                                                     $("#txt_ligada").val("");
+                                                    cambiaCheckRec();
                                                 }
 
                                                 var elem = document.getElementById('select_neg');
                                                 var instance = M.FormSelect.init(elem, []);
                                                 //elem = document.getElementById('select_dis');
                                                 //instance = M.FormSelect.init(elem, []);
+                                                //cambiaCheckRec();
                                             }
                                         </script>
                                     </div>
@@ -2031,7 +2033,7 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                             <h5 id="head_analisispre">Análisis Presupuesto</h5>@*B20180801 MGC Textos*@
                             <p style="font-size:15px">
                                 <span id="load_carga">Última fecha de carga</span> @ViewBag.ultMod
-                            </p> 
+                            </p>
                             <div class="row" style="margin-bottom:0">
                                 <ul class="collection">
                                     <li class="collection-item">
