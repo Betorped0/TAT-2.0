@@ -2552,15 +2552,29 @@ catch (Exception ee)
 <script>
     $(document).ready(function () {
         $('.collapsible').collapsible();
+        //OCG
+        var cliente = $("#payer_id").val;
+        var con = 0;
+        for (var i = 0; i < 10; i++) {
+            if (cliente.split("")[i] == 0) {
+                cont++;
+            }
+            else {
+                i = 10;
+            }
+        }
+        $("#payer_id").value = cliente.substring(cont + 1, 10);
+
     });
 
     function ligada() {
         /**/
         /**/
         var a = '@Model.D.LIGADA';
-    /**/
-    /**/
+        /**/
+        /**/
 
-    return (a == "True");
-}
+        return (a == "True");
+    }
+
 </script>
