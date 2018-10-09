@@ -709,7 +709,7 @@ $(document).ready(function () {
         if (res) {
 
             //Activar el botón de guardar
-            $("#btn_guardarh").removeClass("disabled");
+            //$("#btn_guardarh").removeClass("disabled");
 
             //Copiar el monto de distribución de la tabla footer al monto financiera
             //LEJ 09.07.18-------------------------------------------------------------Inicia

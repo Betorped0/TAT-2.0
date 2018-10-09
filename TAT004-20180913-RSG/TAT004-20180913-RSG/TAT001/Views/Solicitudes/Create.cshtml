@@ -1701,12 +1701,14 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                                                     //    $("#select_dis").change();
                                                     $("#div_objq").addClass("hide");
                                                     $("#txt_ligada").val("");
+                                                    cambiaCheckRec();
                                                 }
 
                                                 var elem = document.getElementById('select_neg');
                                                 var instance = M.FormSelect.init(elem, []);
                                                 //elem = document.getElementById('select_dis');
                                                 //instance = M.FormSelect.init(elem, []);
+                                                //cambiaCheckRec();
                                             }
                                         </script>
                                     </div>
@@ -2466,20 +2468,3 @@ var ejercicio = '@Model.EJERCICIO';
         </script>
         <script src="~/Scripts/warning.js"></script>
     </div>
-    @if (ViewBag.error != "")
-    {
-        <script>
-            $(document).ready(function () {
-            function errorMessage(msg) {
-                M.toast({
-                    html: msg,
-                    displayLength: 10000, });
-            }
-            var message = '@ViewBag.error';
-
-            if (message != "") {
-            errorMessage(message);
-            }
-            });
-        </script>
-    }
