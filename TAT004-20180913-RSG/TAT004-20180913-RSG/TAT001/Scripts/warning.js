@@ -38,7 +38,7 @@ app += "$('#tab_fin').on('click', function (e) { var ban = validarTab(e, 'tab_in
     " if(ban){ ban = validarTab(e, 'tab_soporte', 'Soporte_cont');} " +
     " if(ban){ ban = validarTab(e, 'tab_dis', 'Distribucion_cont');} " +
     " if(isRecurrente()){ " +
-    " if(ban){ ban = validarTab(e, 'tab_rec', 'Recurrente_cont');}} }); ";
+    " if(ban){ ban = validarTab(e, 'tab_rec', 'Recurrente_cont');}}if(ban){activaSubmit('Financiera_cont')} }); ";
 
 app += "function validarTab(e, tabid, div) {";
 app += "var ban = true;";

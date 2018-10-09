@@ -473,6 +473,13 @@ namespace TAT001.Controllers
                     ViewBag.mat = db.TEXTOes.Where(x => x.PAGINA_ID == 201 & x.CAMPO_ID == "lbl_categoria" & x.SPRAS_ID == uu).FirstOrDefault().TEXTOS;
                 }
             ///////////////////////////////CAMBIOS LGPP FIN//////////////////////////*@
+
+            List<DOCUMENTO> recs = (from D in DF.D.DOCUMENTORECs
+                                    join N in db.DOCUMENTOes.Where(x => x.USUARIOC_ID == DF.D.USUARIOC_ID).ToList()
+                                    on D.DOC_REF equals N.NUM_DOC
+                                    select N
+                                    ).ToList();
+            ViewBag.recs = recs;
             return View(DF);
         }
         [HttpPost]
