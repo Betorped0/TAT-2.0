@@ -82,7 +82,6 @@ function selectMaterial(val, desc, tr) {
         if (cat.UNICA)
         {
             tr.addClass("unica");
-            M.toast({ html: cat.TXT50 + ' Advertencia este material es único' });
             tr.find("td:eq(" + (6 + index) + ")").text(cat.DESCRIPCION);
             //Descripción
             tr.find("td:eq(" + (7 + index) + ")").text(desc);
