@@ -52,9 +52,9 @@ namespace TAT001.Controllers.Catalogos
             {
                 return HttpNotFound();
             }
-            if (sOCIEDAD.REGION != null)
-                sOCIEDAD.REGION= sOCIEDAD.REGION.TrimEnd();
-            ViewBag.REGION = new SelectList(db.REGIONs.Where(x=>x.SOCIEDAD==id).ToList(), "REGION1", "REGION1", sOCIEDAD.REGION!=null?sOCIEDAD.REGION.TrimEnd():"");
+            //if (sOCIEDAD.REGION != null)
+              //  sOCIEDAD.REGION= sOCIEDAD.REGION.TrimEnd();
+            //ViewBag.REGION = new SelectList(db.REGIONs.Where(x=>x.SOCIEDAD==id).ToList(), "REGION1", "REGION1", sOCIEDAD.REGION!=null?sOCIEDAD.REGION.TrimEnd():"");
 
             return View(sOCIEDAD);
         }
@@ -73,9 +73,9 @@ namespace TAT001.Controllers.Catalogos
                 return RedirectToAction("Index");
             }
             ObtenerConfPage(922);
-            if (sOCIEDAD.REGION != null)
-                sOCIEDAD.REGION = sOCIEDAD.REGION.TrimEnd();
-            ViewBag.REGION = new SelectList(db.REGIONs.Where(x => x.SOCIEDAD == sOCIEDAD.BUKRS).ToList(), "REGION1", "REGION1", sOCIEDAD.REGION != null ? sOCIEDAD.REGION.TrimEnd() : "");
+            //if (sOCIEDAD.REGION != null)
+            //    sOCIEDAD.REGION = sOCIEDAD.REGION.TrimEnd();
+            //ViewBag.REGION = new SelectList(db.REGIONs.Where(x => x.SOCIEDAD == sOCIEDAD.BUKRS).ToList(), "REGION1", "REGION1", sOCIEDAD.REGION != null ? sOCIEDAD.REGION.TrimEnd() : "");
             return View(sOCIEDAD);
         }
 

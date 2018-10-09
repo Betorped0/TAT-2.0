@@ -232,9 +232,9 @@
 <script>
      var spras_id ="@ViewBag.spras_id";
     //---- Inicializador de componentes Materialize----
-    fnCommon.materializeInit('.datepicker', 'datepicker', spras_id);
-    fnCommon.materializeInit('.timepicker', 'timepicker');
-    fnCommon.materializeInit('select', 'select');
+    fnCommon.materializeInit( 'datepicker', spras_id);
+    fnCommon.materializeInit('timepicker');
+    fnCommon.materializeInit( 'select');
 
     //----  Remover Hora de Fecha----
     document.querySelectorAll('.datepicker').forEach(function (datePicker) {

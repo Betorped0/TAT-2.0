@@ -201,12 +201,16 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Common\FnCommon.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CartaDController.cs" />
     <Compile Include="Controllers\CartaVController.cs" />
     <Compile Include="Controllers\Catalogos\AlertasController.cs" />
     <Compile Include="Controllers\Catalogos\Calendario445Controller.cs" />
     <Compile Include="Controllers\Catalogos\CalendarioEx445Controller.cs" />
+    <Compile Include="Controllers\Catalogos\ConsoporteController.cs" />
+    <Compile Include="Controllers\Catalogos\CuentaController.cs" />
+    <Compile Include="Controllers\Catalogos\CuentasController.cs" />
     <Compile Include="Controllers\Catalogos\GALLController.cs" />
     <Compile Include="Controllers\Catalogos\IimpuestoController.cs" />
     <Compile Include="Controllers\Catalogos\ImpuestosController.cs" />
@@ -229,6 +233,7 @@
     <Compile Include="Controllers\Configuracion\TaxeopController.cs" />
     <Compile Include="Controllers\CorreosController.cs" />
     <Compile Include="Controllers\Det_AprobsController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\ExcelController.cs" />
     <Compile Include="Controllers\FlujosController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -688,6 +693,12 @@
     <Compile Include="Entities\TSOLT.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\TSOL_GROUP.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\TSOL_TREE.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\TSOPORTE.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
@@ -782,6 +793,7 @@
     <Compile Include="Models\Masiva\Multiple.cs" />
     <Compile Include="Models\Masiva\Relacionada.cs" />
     <Compile Include="Models\ReportesModel.cs" />
+    <Compile Include="Models\SelectTreeItem.cs" />
     <Compile Include="Models\SOLICITUD_MOD.cs" />
     <Compile Include="Models\Flujos.cs" />
     <Compile Include="Models\TALLT_MOD.cs" />
@@ -831,6 +843,7 @@
     <Compile Include="obj\Release\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
     <Compile Include="obj\Release\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />-->
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ProcesaFlujo4.cs" />
     <Compile Include="Services\ProcesaFlujo3.cs" />
     <Compile Include="Services\Warning.cs" />
     <Compile Include="Services\Presupuesto.cs" />
@@ -925,6 +938,7 @@
     <Content Include="Content\dataTable.css" />
     <Content Include="Content\dataTables1.material.min.css" />
     <Content Include="Content\dataTables.material.min.css" />
+    <Content Include="Content\dropdowntree.css" />
     <Content Include="Content\formatos.css" />
     <Content Include="Content\g-materialize.css" />
     <Content Include="Content\material.min.css" />
@@ -1295,6 +1309,8 @@
     <Content Include="obj\Release\TempPE\Entities.TAT001.Designer.cs.dll" />-->
     <Content Include="images\Simple-wallpapers-HD-for-desktop.png" />
     <Content Include="Properties\PublishProfiles\FolderProfile.pubxml.user" />
+    <Content Include="Scripts\CargaUsuarios.js" />
+    <Content Include="Scripts\CargaClientes.js" />
     <!--<Content Include="obj\Debug\TAT001.csproj.FileListAbsolute.txt" />
     <Content Include="obj\Debug\TAT001.dll" />
     <Content Include="obj\Debug\TAT001.pdb" />-->
@@ -1307,6 +1323,7 @@
       <DependentUpon>TAT001.edmx</DependentUpon>
     </Content>
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\dropdowntree.js" />
     <Content Include="Scripts\fnCommon.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -1848,6 +1865,26 @@
     <Content Include="Views\Sociedades\Details.cshtml" />
     <Content Include="Views\Sociedades\Edit.cshtml" />
     <Content Include="Views\Sociedades\Index.cshtml" />
+    <Content Include="Views\Consoporte\Create.cshtml" />
+    <Content Include="Views\Consoporte\Delete.cshtml" />
+    <Content Include="Views\Consoporte\Details.cshtml" />
+    <Content Include="Views\Consoporte\Edit.cshtml" />
+    <Content Include="Views\Consoporte\Index.cshtml" />
+    <Content Include="Views\Cuentas\Create.cshtml" />
+    <Content Include="Views\Cuentas\Delete.cshtml" />
+    <Content Include="Views\Cuentas\Details.cshtml" />
+    <Content Include="Views\Cuentas\Edit.cshtml" />
+    <Content Include="Views\Cuentas\Index.cshtml" />
+    <Content Include="Views\Cuenta\Create.cshtml" />
+    <Content Include="Views\Cuenta\Delete.cshtml" />
+    <Content Include="Views\Cuenta\Details.cshtml" />
+    <Content Include="Views\Cuenta\Edit.cshtml" />
+    <Content Include="Views\Cuenta\Index.cshtml" />
+    <Content Include="Views\Error\Error.cshtml" />
+    <Content Include="Views\Error\NotFound.cshtml" />
+    <Content Include="Views\Reportes\ReporteConcentrado.cshtml" />
+    <Content Include="Views\Reportes\ReporteMRLTS.cshtml" />
+    <Content Include="Views\Recurrencias\Ejecutar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->

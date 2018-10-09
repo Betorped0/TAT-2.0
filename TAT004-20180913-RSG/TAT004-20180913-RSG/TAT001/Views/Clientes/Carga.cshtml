@@ -11,696 +11,108 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedcolumns/3.2.6/css/fixedColumns.dataTables.min.css" />
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/3.2.6/js/dataTables.fixedColumns.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jeditable.js/2.0.6/jquery.jeditable.js"></script>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.16/datatables.min.css" />
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.16/datatables.min.js"></script>
+<script src="//code.jquery.com/jquery-1.12.4.js"></script>
+<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
+<link href="~/Content/dataTable.css" rel="stylesheet" />
+<link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
 
 
-    <div class="row right-align">
-        <div class="col s12">
-            <input type="button" value="Agregar" class="btn btn-small" onclick="Carga();"/>
-            <input type="button" value="Borrar" class="btn btn-small" onclick="Borrar()" />
-            @*<input type="button" value="Actualizar" class="btn btn-small" onclick="Actualizar()"/>*@
-        </div>
+
+<div class="row right-align">
+    <div class="col s12">
+        <input type="button" value="Agregar" class="btn btn-small" onclick="Carga();" />
+        <input type="button" value="Borrar" class="btn btn-small" onclick="Borrar()" />
     </div>
-    @Html.AntiForgeryToken()
-    <div class="card-panel">
-        <div class="row">
-            <div class="file-field input-field col s12 m12 l6">
-                <div class="btn-small" style="float:left;">
-                    <span>File</span>
-                    <input type="file" id="files" name="files" onchange="subeExcel();">
-                </div>
-                <div class="file-path-wrapper">
-                    <input class="file-path validate" type="text">
-                </div>
+</div>
+@Html.AntiForgeryToken()
+<div class="card-panel">
+    <div class="row">
+        <div class="file-field input-field col s12 m12 l6">
+            <div class="btn-small" style="float:left;">
+                <span>File</span>
+                <input type="file" id="files" name="files">
+            </div>
+            <div class="file-path-wrapper">
+                <input class="file-path validate" type="text">
             </div>
         </div>
-        <div class="row">
-            @using (Html.BeginForm("Carga", "Clientes", FormMethod.Post, new { enctype = "multipart/form-data", id = "tabla" }))
-            {
-                <div class="col s12 ">
-                    <form id="tabla" action="" method="post">
-                        <table class="table mdl-data-table striped" id="table" style="width:100%;">
-                            <thead>
-                                <tr>
-                                    <th><label><input class='input_bor' type='checkbox' id='borrar' name='borrar' onclick="check();" /><span></span></label></th>
-                                    <th id="thead_cocode">CoCode</th>
-                                    <th id="thead_pais">País</th>
-                                    <th id="thead_cliente">Cliente</th>
-                                    <th id="thead_nombre_cliente">Nombre cliente</th>
-                                    <th id="thead_nivel0">Nivel 0</th>
-                                    <th id="thead_nivel1">Nivel 1</th>
-                                    <th id="thead_nivel2">Nivel 2</th>
-                                    <th id="thead_nivel3">Nivel 3</th>
-                                    <th id="thead_nivel4">Nivel 4</th>
-                                    <th id="thead_nivel5">Nivel 5</th>
-                                    <th id="thead_nivel6">Nivel 6</th>
-                                    <th id="thead_nivel7">Nivel 7</th>
-                                    <th id="thead_vendor">Vendor</th>
-                                    <th id="thead_banner">Banner</th>
-                                    <th id="thead_banner_agrupador">Banner Agrupador</th>
-                                    <th id="thead_canal">Canal</th>
-                                    <th id="thead_exportador">Exportacion</th>
-                                    <th id="thead_contacto">Contacto</th>
-                                    <th id="thead_email_contacto">Email Contacto</th>
-                                    <th id="thead_mensaje">Mensaje</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td><input class='input_cli' style='font-size:12px;' type='text' id='' name='cli' value='' onkeyup='if(event.keyCode == 13) Actualizar()' /></td>
-                                    <td></td>
-                                    <td><input class='input_ni0' style='font-size:12px;' type='text' id='' name='ni0' value='' onkeyup='if(event.keyCode == 13) Actualizar()' /></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </form>
-                </div>
-            }
-        </div>
     </div>
+    <div class="row">
+        @using (Html.BeginForm("Carga", "Clientes", FormMethod.Post, new { enctype = "multipart/form-data", id = "tabla" }))
+        {
+            <div class="col s12 ">
+                <form id="tabla" action="" method="post">
+                    <table class="table mdl-data-table striped" id="table" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th><label><input class='input_bor' type='checkbox' id='borrar' name='borrar' onclick="check();" /><span></span></label></th>
+                                <th id="thead_cocode">CoCode</th>
+                                <th id="thead_pais">País</th>
+                                <th id="thead_cliente">Cliente</th>
+                                <th id="thead_nombre_cliente">Nombre cliente</th>
+                                <th id="thead_nivel0">Nivel 0</th>
+                                <th id="thead_nivel1">Nivel 1</th>
+                                <th id="thead_nivel2">Nivel 2</th>
+                                <th id="thead_nivel3">Nivel 3</th>
+                                <th id="thead_nivel4">Nivel 4</th>
+                                <th id="thead_nivel5">Nivel 5</th>
+                                <th id="thead_nivel6">Nivel 6</th>
+                                <th id="thead_nivel7">Nivel 7</th>
+                                <th id="thead_vendor">Vendor</th>
+                                <th id="thead_banner">Banner</th>
+                                <th id="thead_banner_agrupador">Banner Agrupador</th>
+                                <th id="thead_canal">Canal</th>
+                                <th id="thead_exportador">Exportacion</th>
+                                <th id="thead_contacto">Contacto</th>
+                                <th id="thead_email_contacto">Email Contacto</th>
+                                <th id="thead_mensaje">Mensaje</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><input class='input_cli' style='font-size:12px;' type='text' id='' name='cli' value='' onkeyup='if(event.keyCode == 13) Actualizar()' /></td>
+                                <td></td>
+                                <td><input class='input_ni0' style='font-size:12px;' type='text' id='' name='ni0' value='' onkeyup='if(event.keyCode == 13) Actualizar()' /></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        }
+    </div>
+</div>
 
+<script src="~/Scripts/autocomplete1.10.2.js"></script>
+<script src="~/Scripts/autocomplete1.11.4.js"></script>
+<script src="~/Scripts/CargaClientes.js"></script>
+<link href="~/Content/autocomplete.css" rel="stylesheet" />
 
 <script>
-
-    $(document).ready(function () {
-        $('#table').DataTable({
-            //scrollY: "true",
-            scrollY: "200",
-            scrollX: "true",
-            scrollCollapse: true,
-            order: [],
-            language: {
-                //"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
-                "url": "../Scripts/lang/@Session["spras"].ToString()" + ".json"
-            },
-            "paging": false,
-            //        "ordering": false,
-            "info": false,
-            "searching": false,
-            //fixedColumns: {
-            //    leftColumns: 0
-            //},
-
-            "columns": [
-                {
-                    "name": 'Borrar',
-                    "className": 'Borrar'
-                },
-                {
-                    "name": 'CoCode',
-                    "className": 'CoCode'
-                },
-                {
-                    "name": 'Pais',
-                    "className": 'Pais'
-                },
-                {
-                    "name": 'Cliente',
-                    "className": 'Cliente'
-                },
-                {
-                    "name": 'Nombre_cliente',
-                    "className": 'Nombre_cliente',
-                },
-                {
-                    "name": 'Nivel_0',
-                    "className": 'Nivel_0'
-                },
-                {
-                    "name": 'Nivel_1',
-                    "className": 'Nivel_1'
-                },
-                {
-                    "name": 'Nivel_2',
-                    "className": 'Nivel_2'
-                },
-                {
-                    "name": 'Nivel_3',
-                    "className": 'Nivel_3'
-                },
-                {
-                    "name": 'Nivel_4',
-                    "className": 'Nivel_4'
-                },
-                {
-                    "name": 'Nivel_5',
-                    "className": 'Nivel_5'
-                },
-                {
-                    "name": 'Nivel_6',
-                    "className": 'Nivel_6'
-                },
-                {
-                    "name": 'Nivel_7',
-                    "className": 'Nivel_7'
-                },
-                {
-                    "name": 'Vendor',
-                    "className": 'Vendor'
-                },
-                {
-                    "name": 'Banner',
-                    "className": 'Banner'
-                },
-                {
-                    "name": 'Banner_Agrupador',
-                    "className": 'Banner_Agrupador'
-                },
-                {
-                    "name": 'Canal',
-                    "className": 'Canal'
-                },
-                {
-                    "name": 'Exportacion',
-                    "className": 'Exportacion'
-                },
-                {
-                    "name": 'Contacto',
-                    "className": 'Contacto'
-                },
-                {
-                    "name": 'Email_Contacto',
-                    "className": 'Email_Contacto'
-                },
-                {
-                    "name": 'Mensaje',
-                    "className": 'Mensaje'
-                },
-            ]
-        });
-    });
-
-    function subeExcel() {
-        var filenum = $('#files').get(0).files.length;
-        if (filenum > 0) {
-            var file = document.getElementById("files").files[0];
-            var filename = file.name;
-            if (evaluarExt(filename)) {
-                M.toast({ html: 'Cargando ' + filename });
-                loadExcelDis(file);
-                onclick = checkoff();
-            } else {
-                document.getElementById("files").value = "";
-                M.toast({ html: 'Tipo de archivo incorrecto: ' + filename });
-            }
-        } else {
-            M.toast({ html: 'Seleccione un archivo' });
-            var table = $('#table').DataTable();
-            table.clear().draw();
-        }
-        sessionStorage.setItem("num", filenum);
-    }
-
-    function evaluarExt(filename) {
-
-        var exts = ['xls', 'xlsx'];
-        // split file name at dot
-        var get_ext = filename.split('.');
-        // reverse name to check extension
-        get_ext = get_ext.reverse();
-        // check file type is valid as given in 'exts' array
-        if ($.inArray(get_ext[0].toLowerCase(), exts) > -1) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    function loadExcelDis(file) {
-
-        document.getElementById("loader").style.display = "initial";
-        var formData = new FormData();
-
-        formData.append("FileUpload", file);
-
-        var table = $('#table').DataTable();
-        table.clear().draw();
-        $.ajax({
-            type: "POST",
-            url: 'LoadExcel',
-            data: formData,
-            dataType: "json",
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function (data) {
-
-                if (data !== null || data !== "") {
-
-                    $.each(data, function (i, dataj) {
-
-                        var bor = i;
-                        var coc = dataj.BUKRS;
-                        var pai = dataj.LAND;
-                        var cli = dataj.KUNNR;
-                        var noc = dataj.CLIENTE_N;
-                        var ni0 = dataj.ID_US0;
-                        var ni1 = dataj.ID_US1;
-                        var ni2 = dataj.ID_US2;
-                        var ni3 = dataj.ID_US3;
-                        var ni4 = dataj.ID_US4;
-                        var ni5 = dataj.ID_US5;
-                        var ni6 = dataj.ID_US6;
-                        var ni7 = dataj.ID_US7;
-                        var ven = dataj.ID_PROVEEDOR;
-                        var ban = dataj.BANNER;
-                        var baa = dataj.BANNERG;
-                        var can = dataj.CANAL;
-                        var exp = dataj.EXPORTACION;
-                        var con = dataj.CONTACTO;
-                        var eco = dataj.CONTACTOE;
-                        var mes = dataj.MESS;
-
-                        //identificacion de error
-                        if (coc.indexOf('?') != -1) {
-                            coc = coc.slice(0, -1);
-                            var cocx = true;
-                        }
-                        if (pai.indexOf('?') != -1) {
-                            pai = pai.slice(0, -1);
-                            var paix = true;
-                        }
-                        if (cli.indexOf('?') != -1) {
-                            cli = cli.slice(0, -1);
-                            var clix = true;
-                        }
-                        if (ni0.indexOf('?') != -1) {
-                            ni0 = ni0.slice(0, -1);
-                            var ni0x = true;
-                        }
-                        if (ni1.indexOf('?') != -1) {
-                            ni1 = ni1.slice(0, -1);
-                            var ni1x = true;
-                        }
-                        if (ni2.indexOf('?') != -1) {
-                            ni2 = ni2.slice(0, -1);
-                            var ni2x = true;
-                        }
-                        if (ni3.indexOf('?') != -1) {
-                            ni3 = ni3.slice(0, -1);
-                            var ni3x = true;
-                        }
-                        if (ni4.indexOf('?') != -1) {
-                            ni4 = ni4.slice(0, -1);
-                            var ni4x = true;
-                        }
-                        if (ni5.indexOf('?') != -1) {
-                            ni5 = ni5.slice(0, -1);
-                            var ni5x = true;
-                        }
-                        if (ni6.indexOf('?') != -1) {
-                            ni6 = ni6.slice(0, -1);
-                            var ni6x = true;
-                        }
-                        if (ni7.indexOf('?') != -1) {
-                            ni7 = ni7.slice(0, -1);
-                            var ni7x = true;
-                        }
-                        if (ven.indexOf('?') != -1) {
-                            ven = ven.slice(0, -1);
-                            var venx = true;
-                        }
-                        if (can.indexOf('?') != -1) {
-                            can = can.slice(0, -1);
-                            var canx = true;
-                        }
-                        if (eco.indexOf('?') != -1) {
-                            eco = eco.slice(0, -1);
-                            var ecox = true;
-                        }//Termina identificacion
-
-                        var addedRow = addRow(table, dataj.POS, bor, coc, pai, cli, noc, ni0, ni1, ni2, ni3, ni4, ni5, ni6, ni7, ven, ban, baa, can, exp, con, eco, mes);
-
-                        //Pintar de rojo las celdas
-                        var cols = addedRow.cells[1];
-                        if (cocx == true) {
-                            $(cols).addClass("red");
-                        }
-                        var cols = addedRow.cells[2];
-                        if (paix == true) {
-                            $(cols).addClass("red");
-                        }
-                        var cols = addedRow.cells[3];
-                        if (clix == true) {
-                            $(cols).addClass("red");
-                        }
-                        var cols = addedRow.cells[5];
-                        if (ni0x == true) {
-                            $(cols).addClass("red");
-                        }
-                        var cols = addedRow.cells[6];
-                        if (ni1x == true) {
-                            $(cols).addClass("red");
-                        }
-                        var cols = addedRow.cells[7];
-                        if (ni2x == true) {
-                            $(cols).addClass("red");
-                        }
-                        var cols = addedRow.cells[8];
-                        if (ni3x == true) {
-                            $(cols).addClass("red");
-                        }
-                        var cols = addedRow.cells[9];
-                        if (ni4x == true) {
-                            $(cols).addClass("red");
-                        }
-                        var cols = addedRow.cells[10];
-                        if (ni5x == true) {
-                            $(cols).addClass("red");
-                        }
-                        var cols = addedRow.cells[11];
-                        if (ni6x == true) {
-                            $(cols).addClass("red");
-                        }
-                        var cols = addedRow.cells[12];
-                        if (ni7x == true) {
-                            $(cols).addClass("red");
-                        }
-                        var cols = addedRow.cells[13];
-                        if (venx == true) {
-                            $(cols).addClass("red");
-                        }
-                        var cols = addedRow.cells[16];
-                        if (canx == true) {
-                            $(cols).addClass("red");
-                        }
-                        var cols = addedRow.cells[19];
-                        if (ecox == true) {
-                            $(cols).addClass("red");
-                        }
-                    });
-                    $('#table_dis').css("font-size", "12px");
-                    $('#table_dis').css("display", "table");
-                    $('#tfoot_dis').css("display", "table-footer-group");
-                    document.getElementById("loader").style.display = "none";
-                }
-            },
-            error: function (xhr, httpStatusMessage, customErrorMessage) {
-                M.toast({
-                    html: "Request couldn't be processed. Please try again later. the reason        " + xhr.status + " : " + httpStatusMessage + ": " + customErrorMessage
-                });
-                document.getElementById("loader").style.display = "none";
-            },
-            async: true
-        });
-        $("#table > tbody  > tr[role='row']").each(function () {
-            alert("as");
-        });
-    }
-
-    function addRow(t, POS, br, cc, p, c, nc, n0, n1, n2, n3, n4, n5, n6, n7, v, b, ba, ca, ex, co, ec, me) {
-        var r = addRowl(
-            t,
-            POS,
-            "<label><input class='input_bor' type='checkbox' id='' name='bor' onclick='checkoff();' value='" + br + "'><span></span></label>",
-            "<input class='input_coc' style='font-size:12px;' type='text' id='' name='coc' value='" +cc + "' onchange='Comprobar()'>",
-            "<input class='input_pai' style='font-size:12px;' type='text' id='' name='pai' value='" + p + "' onchange='Comprobar()'>",
-            "<input class='input_cli' style='font-size:12px;' type='text' id='' name='cli' value='" + c + "' onchange='Comprobar()'>",
-            "<input class='input_noc' style='font-size:12px;' type='text' id='' name='noc' value='" + nc + "' onchange='Comprobar()'>",
-            "<input class='input_ni0' style='font-size:12px;' type='text' id='' name='ni0' value='" + n0 + "' onchange='Comprobar()'>",
-            "<input class='input_ni1' style='font-size:12px;' type='text' id='' name='ni1' value='" + n1 + "' onchange='Comprobar()'>",
-            "<input class='input_ni2' style='font-size:12px;' type='text' id='' name='ni2' value='" + n2 + "' onchange='Comprobar()'>",
-            "<input class='input_ni3' style='font-size:12px;' type='text' id='' name='ni3' value='" + n3+ "' onchange='Comprobar()'>",
-            "<input class='input_ni4' style='font-size:12px;' type='text' id='' name='ni4' value='" + n4 + "' onchange='Comprobar()'>",
-            "<input class='input_ni5' style='font-size:12px;' type='text' id='' name='ni5' value='" + n5 + "' onchange='Comprobar()'>",
-            "<input class='input_ni6' style='font-size:12px;' type='text' id='' name='ni6' value='" + n6 + "' onchange='Comprobar()'>",
-            "<input class='input_ni7' style='font-size:12px;' type='text' id='' name='ni7' value='" + n7 + "' onchange='Comprobar()'>",
-            "<input class='input_ven' style='font-size:12px;' type='text' id='' name='ven' value='" + v + "' onchange='Comprobar()'>",
-            "<input class='input_ban' style='font-size:12px;' type='text' id='' name='ban' value='" + b + "' onchange='Comprobar()'>",
-            "<input class='input_baa' style='font-size:12px;' type='text' id='' name='baa' value='" + ba + "' onchange='Comprobar()'>",
-            "<input class='input_can' style='font-size:12px;' type='text' id='' name='can' value='" + ca + "' onchange='Comprobar()'>",
-            "<input class='input_exp' style='font-size:12px;' type='text' id='' name='exp' value='" + ex + "' onchange='Comprobar()'>",
-            "<input class='input_con' style='font-size:12px;' type='text' id='' name='con' value='" + co + "' onchange='Comprobar()'>",
-            "<input class='input_eco' style='font-size:12px;' type='text' id='' name='eco' value='" + ec + "' onchange='Comprobar()'>",
-            "<input class='input_mes' type='hidden' name='mes' value='" + me + "'><span class='input_mes' style='font-size:12px;'>" + me + "</span>"
-        );
-        return r;
-    }
-
-    function addRowl(t, pos, br, cc, p, c, nc, n0, n1, n2, n3, n4, n5, n6, n7, v, b, ba, ca, ex, co, ec, me) {
-        var r = t.row.add([
-            br,
-            cc,
-            p,
-            c,
-            nc,
-            n0,
-            n1,
-            n2,
-            n3,
-            n4,
-            n5,
-            n6,
-            n7,
-            v,
-            b,
-            ba,
-            ca,
-            ex,
-            co,
-            ec,
-            me
-        ]).draw(false).node();
-        return r;
-    }
-
-    function Carga() {
-        var datos = $('#tabla').serializeArray();
-        var message = $('.input_mes').serialize();
-        var cliente = $('.input_cli').serialize();
-        var us1 = $('.input_ni1').serialize();
-        var us6 = $('.input_ni6').serialize();
-        var doc = sessionStorage.getItem("num");
-        if (doc > 0 || cliente != null || cliente!="cli=") {
-            if (message == "" || message == null || message=="mes=") {
-                if (us1 != "" && us1 != "ni1=" && us1 != null && us6 != "" && us6 != "ni6=" && us6 != null) {
-                    $.ajax({
-                        type: "POST",
-                        url: 'Agregar',
-                        data: datos,
-                        dataType: "json",
-                        success: function () {
-
-                        },
-                        error: function (request, status, error) {
-                            //alert(request.responseText);
-                        }
-                    });
-                    M.toast({ html: 'Se agregaron los nuevos registros' });
-                    window.location.replace("/Clientes/Index");
-                }
-                else
-                    M.toast({ html: 'Los niveles 1 y 6 no pueden quedar vacios' });
-            }
-            else
-                M.toast({ html: 'Hay errores por corregir' });
-        }
-        else
-            M.toast({ html: 'Seleccione un archivo' });
-    }
-
-    function Comprobar() {
-        var datos = $('#tabla').serializeArray();
-        creart('Comprobar', datos);
-        M.toast({ html: 'Registro modificado' });
-    }
-
-    function Borrar() {
-        var datos = $('#tabla').serializeArray();
-        creart('Borrar', datos);
-        M.toast({ html: 'Registros borrados' });
-    }
-
-    function Actualizar() {
-        var datos = $('#tabla').serializeArray();
-        creart('Actualizar', datos);
-    }
-
-    function creart(metodo, datos) {
-        var table = $('#table').DataTable();
-        $.ajax({
-            type: "POST",
-            url: metodo,
-            dataType: "json",
-            data: datos,
-            success: function (data) {
-                if (data !== null || data !== "") {
-
-                    table.clear().draw();
-
-                    $.each(data, function (i, dataj) {
-
-                        var bor = i;
-                        var coc = dataj.BUKRS;
-                        var pai = dataj.LAND;
-                        var cli = dataj.KUNNR;
-                        var noc = dataj.CLIENTE_N;
-                        var ni0 = dataj.ID_US0;
-                        var ni1 = dataj.ID_US1;
-                        var ni2 = dataj.ID_US2;
-                        var ni3 = dataj.ID_US3;
-                        var ni4 = dataj.ID_US4;
-                        var ni5 = dataj.ID_US5;
-                        var ni6 = dataj.ID_US6;
-                        var ni7 = dataj.ID_US7;
-                        var ven = dataj.ID_PROVEEDOR;
-                        var ban = dataj.BANNER;
-                        var baa = dataj.BANNERG;
-                        var can = dataj.CANAL;
-                        var exp = dataj.EXPORTACION;
-                        var con = dataj.CONTACTO;
-                        var eco = dataj.CONTACTOE;
-                        var mes = dataj.MESS;
-
-                        //identificacion de error
-                        if (coc.indexOf('?') != -1) {
-                            coc = coc.slice(0, -1);
-                            var cocx = true;
-                        }
-                        if (pai.indexOf('?') != -1) {
-                            pai = pai.slice(0, -1);
-                            var paix = true;
-                        }
-                        if (cli.indexOf('?') != -1) {
-                            cli = cli.slice(0, -1);
-                            var clix = true;
-                        }
-                        if (ni0.indexOf('?') != -1) {
-                            ni0 = ni0.slice(0, -1);
-                            var ni0x = true;
-                        }
-                        if (ni1.indexOf('?') != -1) {
-                            ni1 = ni1.slice(0, -1);
-                            var ni1x = true;
-                        }
-                        if (ni2.indexOf('?') != -1) {
-                            ni2 = ni2.slice(0, -1);
-                            var ni2x = true;
-                        }
-                        if (ni3.indexOf('?') != -1) {
-                            ni3 = ni3.slice(0, -1);
-                            var ni3x = true;
-                        }
-                        if (ni4.indexOf('?') != -1) {
-                            ni4 = ni4.slice(0, -1);
-                            var ni4x = true;
-                        }
-                        if (ni5.indexOf('?') != -1) {
-                            ni5 = ni5.slice(0, -1);
-                            var ni5x = true;
-                        }
-                        if (ni6.indexOf('?') != -1) {
-                            ni6 = ni6.slice(0, -1);
-                            var ni6x = true;
-                        }
-                        if (ni7.indexOf('?') != -1) {
-                            ni7 = ni7.slice(0, -1);
-                            var ni7x = true;
-
-                        }
-                        if (eco.indexOf('?') != -1) {
-                            eco = eco.slice(0, -1);
-                            var ecox = true;
-                        }//Termina identificacion
-
-                        var addedRow = addRow(table, dataj.POS, bor, coc, pai, cli, noc, ni0, ni1, ni2, ni3, ni4, ni5, ni6, ni7, ven, ban, baa, can, exp, con, eco, mes);
-
-                        //Pintar de rojo las celdas
-                        var cols = addedRow.cells[1];
-                        if (cocx == true) {
-                            $(cols).addClass("red");
-                        }
-                        var cols = addedRow.cells[2];
-                        if (paix == true) {
-                            $(cols).addClass("red");
-                        }
-                        var cols = addedRow.cells[3];
-                        if (clix == true) {
-                            $(cols).addClass("red");
-                        }
-                        var cols = addedRow.cells[5];
-                        if (ni0x == true) {
-                            $(cols).addClass("red");
-                        }
-                        var cols = addedRow.cells[6];
-                        if (ni1x == true) {
-                            $(cols).addClass("red");
-                        }
-                        var cols = addedRow.cells[7];
-                        if (ni2x == true) {
-                            $(cols).addClass("red");
-                        }
-                        var cols = addedRow.cells[8];
-                        if (ni3x == true) {
-                            $(cols).addClass("red");
-                        }
-                        var cols = addedRow.cells[9];
-                        if (ni4x == true) {
-                            $(cols).addClass("red");
-                        }
-                        var cols = addedRow.cells[10];
-                        if (ni5x == true) {
-                            $(cols).addClass("red");
-                        }
-                        var cols = addedRow.cells[11];
-                        if (ni6x == true) {
-                            $(cols).addClass("red");
-                        }
-                        var cols = addedRow.cells[12];
-                        if (ni7x == true) {
-                            $(cols).addClass("red");
-                        }
-                        var cols = addedRow.cells[19];
-                        if (ecox == true) {
-                            $(cols).addClass("red");
-                        }
-                    });
-                    $('#table_dis').css("font-size", "12px");
-                    $('#table_dis').css("display", "table");
-                    $('#tfoot_dis').css("display", "table-footer-group");
-                    document.getElementById("loader").style.display = "none";
-                }
-            },
-            error: function (xhr, httpStatusMessage, customErrorMessage) {
-                M.toast({
-                    html: "Request couldn't be processed. Please try again later. the reason        " + xhr.status + " : " + httpStatusMessage + ": " + customErrorMessage
-                });
-                document.getElementById("loader").style.display = "none";
-            },
-            async: true
-        });
-    }
-
-    function check() {
-        if ($("#borrar").prop('checked'))
-            $(".input_bor").prop('checked', true);
-        else
-            $(".input_bor").prop('checked', false);
-    }
-
-    function checkoff() {
-        $("#borrar").prop('checked', false);
-    }
-
+    var auto = $.noConflict();
 </script>
+
 <style>
     .dataTables_length {
         display: none;

@@ -1,6 +1,6 @@
 ﻿var fnCommon = {
 
-    materializeInit: function (component, type, spras_id) {
+    materializeInit: function ( type, spras_id) {
         switch (type) {
             case 'select':
                 var options = {};
@@ -27,7 +27,7 @@
                 M.Datepicker.init(datepickers, options);
                 break;
             case 'timepicker':
-                $(component).pickatime({
+                $('.timepicker').pickatime({
                     twelvehour: false,
                     donetext: 'OK',
                     cleartext: '',
@@ -44,6 +44,11 @@
                 var options = {};
                 var collapsibles = document.querySelectorAll('.collapsible');
                 M.Collapsible.init(collapsibles, options);
+                break;
+            case 'modal':
+                var options = {};
+                var modals = document.querySelectorAll('.modal');
+                M.Modal.init(modals, options);
                 break;
             default:
                 break;
@@ -150,6 +155,36 @@
     filterGlobal: function (idTable, idGFilter) {
         var filterVal = $('#' + idGFilter).val();
         $('#' + idTable).DataTable().search(filterVal).draw();
+    },
+    fillOptionsInSelect: function (idSelect, url, idSelectToFill,callBack) {
+        $('#' + idSelect).change(function () {
+            var val = $('#' + idSelect).val();
+            if (val == "") {
+                var options = '<option value></option>';
+                $('#' + idSelectToFill).html(options);
+                fnCommon.materializeInit( 'select');
+                fnCommon.selectRequired();
+            } else {
+                $.ajax({
+                    url: url,
+                    data: { val: val },
+                    cache: false,
+                    type: 'POST',
+                    success: function (selectItems) {
+                        var options = '<option value></option>';
+                        selectItems.forEach(function (selectItem) {
+                            options += '<option value=' + selectItem.Value  + '>' + selectItem.Text + '</option>';
+                        });
+                        $('#' + idSelectToFill).html(options);
+                        fnCommon.materializeInit( 'select');
+                        fnCommon.selectRequired();
+                        if (callBack) {
+                            callBack();
+                        }
+                    }
+                });
+            }
+        });
     }
 
 

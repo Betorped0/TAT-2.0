@@ -396,6 +396,648 @@ namespace TAT001.Controllers.Reportes
             }
             base.Dispose(disposing);
         }
+        // REPORTE 1 - CONCENTRADO
+        public ActionResult ReporteConcentrado()
+        {
+            int pagina = 1101;
+            string u = User.Identity.Name;
+            var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+            ViewBag.display = false;
+            ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
+            ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
+            ViewBag.usuario = user;
+            ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            ViewBag.sociedad = db.SOCIEDADs.ToList();
+            ViewBag.periodo = db.PERIODOes.ToList();
+            ViewBag.paises = db.PAIS.ToList();
+            ViewBag.anios = string.Empty;//TODO: Reserch which it's the anio value
+            try
+            {
+                string p = Session["pais"].ToString();
+                ViewBag.pais = p + ".svg";
+            }
+            catch
+            {
+                //SWALLOW
+            }
+            Session["spras"] = user.SPRAS_ID;
+            var dOCUMENTOes = db.DOCUMENTOes.Include(d => d.CLIENTE).Include(d => d.CUENTAGL).Include(d => d.CUENTAGL1).Include(d => d.GALL).Include(d => d.PAI).Include(d => d.SOCIEDAD).Include(d => d.TALL).Include(d => d.TSOL).Include(d => d.USUARIO).Include(d => d.DOCUMENTOSAP);
+            return View(dOCUMENTOes);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ReporteConcentrado(string Form)
+        {
+            string[] comcodessplit = { };
+            string[] yearsplit = { };
+            string[] periodsplit = { };
+            string[] paissplit = { };
+            string[] campossplit;
+            int pagina = 1101;
+            string u = User.Identity.Name;
+            var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+            string comcode = Request["selectcocode"] as string;
+
+            //Co. Code
+            if (!string.IsNullOrEmpty(comcode))
+            {
+                comcodessplit = comcode.Split(',');
+            }
+
+            //Quarter
+            string year = Request["selectyear"] as string;
+            if (!string.IsNullOrEmpty(comcode))
+            {
+                yearsplit = year.Split(',');
+            }
+
+            //Period
+            string period = Request["selectperiod"] as string;
+            if (!string.IsNullOrEmpty(comcode))
+            {
+                periodsplit = period.Split(',');
+            }
+
+            //Pais
+            string pais = Request["selectpais"] as string;
+            if (!string.IsNullOrEmpty(comcode))
+            {
+                paissplit = pais.Split(',');
+            }
+
+            //Campos
+            string campos = Request["selectcampos"] as string;
+            campossplit = null;
+            if (!string.IsNullOrEmpty(campos))
+            {
+                campossplit = campos.Split(',');
+            }
+            ViewBag.campos = campossplit;
+            ViewBag.camposstring = campos;
+
+            ViewBag.display = true;
+            ViewBag.Calendario = cal;
+            ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
+            ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
+            ViewBag.usuario = user;
+            ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            ViewBag.sociedad = db.SOCIEDADs.ToList();
+            ViewBag.cuentagl = db.CUENTAGLs.ToList();
+            ViewBag.periodo = db.PERIODOes.ToList();
+            ViewBag.cuenta = db.CUENTAs.ToList();
+            ViewBag.paises = db.PAIS.ToList();
+            ViewBag.anios = string.Empty;//TODO: Reserch which it's the anio value
+
+            List<ReportesModel.Concentrado> reporte = new List<Concentrado>();
+            List<DOCUMENTO> documentos = db.DOCUMENTOes
+                .Where(d => comcodessplit.Contains(d.SOCIEDAD_ID) && periodsplit.Contains(d.PERIODO.ToString()) && yearsplit.Contains(d.EJERCICIO))
+                .Include(d => d.CLIENTE)
+                .Where(d => paissplit.Contains(d.CLIENTE.LAND))
+                .Include(d => d.CARTAs)
+                .Include(d => d.CUENTAGL)
+                .Include(d => d.CUENTAGL1)
+                .Include(d => d.GALL)
+                .Include(d => d.PAI)
+                .Include(d => d.SOCIEDAD)
+                .Include(d => d.TALL)
+                .Include(d => d.TSOL)
+                .Include(d => d.USUARIO)
+                .Include(d => d.DOCUMENTOAs)
+                .Include(d => d.DOCUMENTOFs)
+                .Include(d => d.DOCUMENTOLs)
+                .Include(d => d.DOCUMENTONs)
+                .Include(d => d.DOCUMENTOPs)
+                .Include(d => d.DOCUMENTORECs)
+                .Include(d => d.DOCUMENTOTS)
+                .Include(d => d.FLUJOes).ToList();
+            foreach (DOCUMENTO dOCUMENTO in documentos)
+            {
+                Concentrado r1 = new Concentrado();
+                if (dOCUMENTO.PAYER_ID == null) continue;
+                //dOCUMENTO.CLIENTE = db.CLIENTEs.Where(a => a.VKORG.Equals(dOCUMENTO.VKORG)
+                //                                        & a.VTWEG.Equals(dOCUMENTO.VTWEG)
+                //                                        & a.SPART.Equals(dOCUMENTO.SPART)
+                //                                        & a.KUNNR.Equals(dOCUMENTO.PAYER_ID)).First();
+                r1.CANAL = db.CANALs.Where(a => a.CANAL1.Equals(dOCUMENTO.CLIENTE.CANAL)).FirstOrDefault();
+                var cuentas = (from C in db.CUENTAs
+                               join cgl in db.CUENTAGLs on C.CARGO equals cgl.ID
+                               where C.SOCIEDAD_ID == dOCUMENTO.SOCIEDAD_ID
+                               & C.PAIS_ID == dOCUMENTO.PAIS_ID
+                               & C.TALL_ID == dOCUMENTO.TALL_ID
+                               & C.EJERCICIO.ToString() == dOCUMENTO.EJERCICIO
+                               select new { C.ABONO, C.CARGO, C.CLEARING, C.LIMITE, cgl.NOMBRE }).FirstOrDefault();
+                if (cuentas != null)
+                {
+                    r1.CUENTA_ABONO = Convert.ToDecimal(cuentas.GetType().GetProperty("ABONO").GetValue(cuentas, null)); // Convertir a decimal por si es null
+                    r1.CUENTA_CARGO = Convert.ToDecimal(cuentas.GetType().GetProperty("CARGO").GetValue(cuentas, null));
+                    r1.CUENTA_CLEARING = Convert.ToDecimal(cuentas.GetType().GetProperty("CLEARING").GetValue(cuentas, null));
+                    r1.CUENTA_LIMITE = Convert.ToDecimal(cuentas.GetType().GetProperty("LIMITE").GetValue(cuentas, null));
+                    r1.CUENTA_CARGO_NOMBRE = cuentas.GetType().GetProperty("NOMBRE").GetValue(cuentas, null).ToString();
+                }
+                Presupuesto pres = new Presupuesto();
+                r1.PRESUPUESTO = pres.getPresupuesto(dOCUMENTO.CLIENTE.KUNNR);
+                var proveedor = dOCUMENTO.DOCUMENTOFs.Select(df => df.PROVEEDOR).FirstOrDefault();
+                r1.PROVEEDOR_NOMBRE = db.PROVEEDORs.Where(x => x.ID.Equals(proveedor)).Select(p => p.NOMBRE).FirstOrDefault();
+                //dOCUMENTO.DOCUMENTOF = db.DOCUMENTOFs.Where(a => a.NUM_DOC.Equals(dOCUMENTO.NUM_DOC)).ToList();
+                //var vbFl = db.FLUJOes.Where(a => a.NUM_DOC.Equals(dOCUMENTO.NUM_DOC)).OrderBy(a => a.POS).ToList();
+                //FLUJO fvbfl = new FLUJO();
+                //var flng = db.FLUJNEGOes.Where(a => a.NUM_DOC.Equals(dOCUMENTO.NUM_DOC)).ToList();
+                //if (flng.Count > 0)
+                //{
+                //    for (int i = 0; i < flng.Count; i++)
+                //    {
+                //        var kn = flng[i].KUNNR;
+                //        var clName = db.CLIENTEs.Where(c => c.KUNNR == kn).Select(s => s.NAME1).FirstOrDefault();
+                //        fvbfl = new FLUJO();
+                //        fvbfl.NUM_DOC = flng[i].NUM_DOC;
+                //        fvbfl.FECHAC = flng[i].FECHAC;
+                //        fvbfl.FECHAM = flng[i].FECHAM;
+                //        fvbfl.USUARIOA_ID = clName;// + "(Cliente)";
+                //        fvbfl.COMENTARIO = flng[i].COMENTARIO;
+                //        vbFl.Add(fvbfl);
+                //    }
+                //}
+                //r1.workflow = vbFl;
+                //string usuariodel = "";
+                //DateTime fecha = DateTime.Now.Date;
+                //List<TAT001.Entities.DELEGAR> del = db.DELEGARs.Where(a => a.USUARIOD_ID.Equals(User.Identity.Name) & a.FECHAI <= fecha & a.FECHAF >= fecha & a.ACTIVO == true).ToList();
+                //FLUJO f = db.FLUJOes.Where(a => a.NUM_DOC.Equals(dOCUMENTO.NUM_DOC) & a.ESTATUS.Equals("P")).FirstOrDefault();
+                //r1.acciones = f;
+                //List<DOCUMENTOA> archivos = db.DOCUMENTOAs.Where(x => x.NUM_DOC.Equals(dOCUMENTO.NUM_DOC) & x.ACTIVO == true).ToList();//RSG 15.05.2018
+                //r1.files = archivos;
+                //if (f != null)
+                //    if (f.USUARIOA_ID != null)
+                //    {
+                //        if (del.Count > 0)
+                //        {
+                //            DELEGAR dell = del.Where(a => a.USUARIO_ID.Equals(f.USUARIOA_ID)).FirstOrDefault();
+                //            if (dell != null)
+                //                usuariodel = dell.USUARIO_ID;
+                //            else
+                //                usuariodel = User.Identity.Name;
+                //        }
+                //        else
+                //            usuariodel = User.Identity.Name;
+
+                //        if (f.USUARIOA_ID.Equals(usuariodel))
+                //            ViewBag.accion = db.WORKFPs.Where(a => a.ID.Equals(f.WORKF_ID) & a.POS.Equals(f.WF_POS) & a.VERSION.Equals(f.WF_VERSION)).FirstOrDefault().ACCION.TIPO;
+                //    }
+                //    else
+                //    {
+                //        ViewBag.accion = db.WORKFPs.Where(a => a.ID.Equals(f.WORKF_ID) & a.POS.Equals(f.WF_POS) & a.VERSION.Equals(f.WF_VERSION)).FirstOrDefault().ACCION.TIPO;
+                //    }
+                r1.documento = dOCUMENTO;
+                //r1.pais = dOCUMENTO.PAIS_ID + ".png"; //RSG 29.09.2018
+                //r1.flujo = db.FLUJOes.Where(a => a.NUM_DOC.Equals(dOCUMENTO.NUM_DOC)).OrderByDescending(a => a.POS).FirstOrDefault();
+                //r1.ts = db.TS_FORM.Where(a => a.BUKRS_ID.Equals(r1.documento.SOCIEDAD_ID) & a.LAND_ID.Equals(r1.documento.PAIS_ID)).ToList();
+                //r1.tts = db.DOCUMENTOTS.Where(a => a.NUM_DOC.Equals(r1.documento.NUM_DOC)).ToList();
+
+                //if (r1.documento.DOCUMENTO_REF != null)
+                //    r1.Title += r1.documento.DOCUMENTO_REF + "-";
+                //r1.Title += dOCUMENTO.NUM_DOC;
+
+                //r1.cartap = db.CARTAPs.Where(i => i.NUM_DOC == dOCUMENTO.NUM_DOC).ToList();
+
+                //Models.PresupuestoModels carga = new Models.PresupuestoModels();
+                //r1.ultMod = carga.consultarUCarga();
+
+                //r1.TSOL_RELA = db.TSOLs.Where(a => a.ESTATUS == "M" & a.PADRE == false).ToList();
+                //r1.miles = r1.documento.PAI.MILES;//LEJGG 090718
+                //r1.dec = r1.documento.PAI.DECIMAL;//LEJGG 090718
+                reporte.Add(r1);
+            }
+            ViewBag.lista_reporte = reporte;
+            try
+            {
+                string p = Session["pais"].ToString();
+                ViewBag.pais = p + ".svg";
+            }
+            catch
+            {
+                //SWALLOW
+            }
+            Session["spras"] = user.SPRAS_ID;
+            return View();
+        }
+
+        //public PRESUPUESTO_MOD getPresupuesto(string kunnr)
+        //{
+        //    PRESUPUESTO_MOD pm = new PRESUPUESTO_MOD();
+        //    try
+        //    {
+        //        if (kunnr == null)
+        //            kunnr = "";
+
+        //        //Obtener presupuesto
+        //        string mes = DateTime.Now.Month.ToString();
+        //        var presupuesto = db.CSP_PRESU_CLIENT(cLIENTE: kunnr, pERIODO: mes).Select(p => new { DESC = p.DESCRIPCION.ToString(), VAL = p.VALOR.ToString() }).ToList();
+        //        string clien = db.CLIENTEs.Where(x => x.KUNNR == kunnr).Select(x => x.BANNERG).First();
+        //        if (presupuesto != null)
+        //        {
+        //            if (String.IsNullOrEmpty(clien))
+        //            {
+        //                pm.P_CANAL = presupuesto[0].VAL;
+        //                pm.P_BANNER = presupuesto[1].VAL;
+        //                pm.PC_C = (float.Parse(presupuesto[4].VAL) + float.Parse(presupuesto[5].VAL) + float.Parse(presupuesto[6].VAL)).ToString();
+        //                pm.PC_A = presupuesto[8].VAL;
+        //                pm.PC_P = presupuesto[9].VAL;
+        //                pm.PC_T = presupuesto[10].VAL;
+        //                pm.CONSU = (float.Parse(presupuesto[1].VAL) - float.Parse(presupuesto[10].VAL)).ToString();
+        //            }
+        //            else
+        //            {
+        //                pm.P_CANAL = presupuesto[0].VAL;
+        //                pm.P_BANNER = presupuesto[0].VAL;
+        //                pm.PC_C = (float.Parse(presupuesto[4].VAL) + float.Parse(presupuesto[5].VAL) + float.Parse(presupuesto[6].VAL)).ToString();
+        //                pm.PC_A = presupuesto[8].VAL;
+        //                pm.PC_P = presupuesto[9].VAL;
+        //                pm.PC_T = presupuesto[10].VAL;
+        //                pm.CONSU = (float.Parse(presupuesto[0].VAL) - float.Parse(presupuesto[10].VAL)).ToString();
+        //            }
+        //        }
+        //    }
+        //    catch
+        //    {
+
+        //    }
+
+        //    return pm;
+        //}
+
+        // FIN REPORTE 1 - CONCENTRADO
+
+        // REPORTE 4.1 - ALLOWANCESPL
+        public ActionResult ReporteAllowancesPL()
+        {
+            int pagina = 1104;
+            string u = User.Identity.Name;
+            var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+            ViewBag.display = false;
+            ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
+            ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
+            ViewBag.usuario = user;
+            ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            ViewBag.sociedad = db.SOCIEDADs.ToList();
+            ViewBag.periodo = db.PERIODOes.ToList();
+            ViewBag.canales = db.CANALs.ToList();
+            ViewBag.payers = string.Empty; //TODO: Research which it's the payers value
+            ViewBag.categories = string.Empty; //TODO: Research which it's the categories value
+            ViewBag.quarter = string.Empty;//TODO: Research which it's the q value
+            try
+            {
+                string p = Session["pais"].ToString();
+                ViewBag.pais = p + ".svg";
+            }
+            catch
+            {
+                //SWALLOW
+            }
+            Session["spras"] = user.SPRAS_ID;
+            var dOCUMENTOes = db.DOCUMENTOes.Include(d => d.CLIENTE).Include(d => d.CUENTAGL).Include(d => d.CUENTAGL1).Include(d => d.GALL).Include(d => d.PAI).Include(d => d.SOCIEDAD).Include(d => d.TALL).Include(d => d.TSOL).Include(d => d.USUARIO).Include(d => d.DOCUMENTOSAP);
+            return View(dOCUMENTOes);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ReporteAllowancesPL(string Form)
+        {
+            int pagina = 1104;
+            string u = User.Identity.Name;
+            var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+
+            //Co. Codes
+            string[] comcodessplit;
+            string comcode = Request["selectcocode"] as string;
+            if (!string.IsNullOrEmpty(comcode))
+            {
+                comcodessplit = comcode.Split(',');
+            }
+
+            //Quarters
+            string[] quartersplit;
+            string quarter = Request["selectq"] as string;
+            if (!string.IsNullOrEmpty(comcode))
+            {
+                quartersplit = quarter.Split(',');
+            }
+
+            //Periods
+            string[] periodsplit;
+            string period = Request["selectperiod"] as string;
+            if (!string.IsNullOrEmpty(comcode))
+            {
+                periodsplit = period.Split(',');
+            }
+
+            //Payers
+            string[] payersplit;
+            string payer = Request["selectpayer"] as string;
+            if (!string.IsNullOrEmpty(comcode))
+            {
+                payersplit = payer.Split(',');
+            }
+
+            //Categories
+            string[] categorysplit;
+            string category = Request["selectcategory"] as string;
+            if (!string.IsNullOrEmpty(comcode))
+            {
+                categorysplit = category.Split(',');
+            }
+
+            string year = Request["selectyear"];
+            string canal = Request["selectcanal"];
+
+            ViewBag.display = true;
+            ViewBag.Calendario = cal;
+            ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
+            ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
+            ViewBag.usuario = user;
+            ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            ViewBag.sociedad = db.SOCIEDADs.ToList();
+            ViewBag.cuentagl = db.CUENTAGLs.ToList();
+            ViewBag.periodo = db.PERIODOes.ToList();
+            ViewBag.canales = db.CANALs.ToList();
+            ViewBag.payers = string.Empty; //TODO: Research which it's the payers value
+            ViewBag.categories = string.Empty; //TODO: Research which it's the categories value
+            ViewBag.quarter = string.Empty;//TODO: Research which it's the q value
+
+            List<object> queryList = new List<object>();
+            List<object> provitions = new List<object>();
+
+            /*
+             AQUI VA EL QUERY
+             */
+
+            ViewBag.Consulta2 = queryList;
+            ViewBag.MontoNeg = provitions;
+
+            try
+            {
+                string p = Session["pais"].ToString();
+                ViewBag.pais = p + ".svg";
+            }
+            catch
+            {
+                //SWALLOW
+            }
+            Session["spras"] = user.SPRAS_ID;
+            return View();
+        }
+        // FIN REPORTE 4.1 - ALLOWANCESPL
+
+        // REPORTE 4.2 - ALLOWANCESB
+        public ActionResult ReporteAllowancesB()
+        {
+            int pagina = 1105;
+            string u = User.Identity.Name;
+            var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+            ViewBag.display = false;
+            ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
+            ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
+            ViewBag.usuario = user;
+            ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            ViewBag.sociedad = db.SOCIEDADs.ToList();
+            ViewBag.periodo = db.PERIODOes.ToList();
+            ViewBag.quarteruarter = string.Empty;//TODO: Reserch which it's the q value
+            try
+            {
+                string p = Session["pais"].ToString();
+                ViewBag.pais = p + ".svg";
+            }
+            catch
+            {
+                //SWALLOW
+            }
+            Session["spras"] = user.SPRAS_ID;
+            var dOCUMENTOes = db.DOCUMENTOes.Include(d => d.CLIENTE).Include(d => d.CUENTAGL).Include(d => d.CUENTAGL1).Include(d => d.GALL).Include(d => d.PAI).Include(d => d.SOCIEDAD).Include(d => d.TALL).Include(d => d.TSOL).Include(d => d.USUARIO).Include(d => d.DOCUMENTOSAP);
+            return View(dOCUMENTOes);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ReporteAllowancesB(string Form)
+        {
+            string[] comcodessplit;
+            string[] quartersplit;
+            string[] periodsplit;
+            int pagina = 1105;
+            string u = User.Identity.Name;
+            var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+            string comcode = Request["selectcocode"] as string;
+
+            //Co. Code
+            if (!string.IsNullOrEmpty(comcode))
+            {
+                comcodessplit = comcode.Split(',');
+            }
+
+            //Quarter
+            string quarter = Request["selectquarter"] as string;
+            if (!string.IsNullOrEmpty(comcode))
+            {
+                quartersplit = quarter.Split(',');
+            }
+
+            //Period
+            string period = Request["selectperiod"] as string;
+            if (!string.IsNullOrEmpty(comcode))
+            {
+                periodsplit = period.Split(',');
+            }
+
+            string year = Request["selectyear"];
+            ViewBag.display = true;
+            ViewBag.Calendario = cal;
+            ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
+            ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
+            ViewBag.usuario = user;
+            ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            ViewBag.sociedad = db.SOCIEDADs.ToList();
+            ViewBag.cuentagl = db.CUENTAGLs.ToList();
+            ViewBag.periodo = db.PERIODOes.ToList();
+            ViewBag.cuenta = db.CUENTAs.ToList();
+            ViewBag.quarter = string.Empty;//TODO: Reserch which it's the q value
+
+            List<object> queryList = new List<object>();
+            List<object> provitions = new List<object>();
+
+
+            /*
+             AQUI VA EL QUERY
+             */
+
+            ViewBag.Consulta2 = queryList;
+            ViewBag.MontoNeg = provitions;
+
+            try
+            {
+                string p = Session["pais"].ToString();
+                ViewBag.pais = p + ".svg";
+            }
+            catch
+            {
+                //SWALLOW
+            }
+            Session["spras"] = user.SPRAS_ID;
+            return View();
+        }
+        // FIN REPORTE 4.2 - ALLOWANCESB
+
+        // REPORTE 5 - MRLTS
+        public ActionResult ReporteMRLTS()
+        {
+            int pagina = 1106;
+            string u = User.Identity.Name;
+            var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+            ViewBag.display = false;
+            ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
+            ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
+            ViewBag.usuario = user;
+            ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            ViewBag.sociedad = db.SOCIEDADs.ToList();
+            ViewBag.dperiodo = db.PERIODOes.ToList();
+            ViewBag.aperiodo = db.PERIODOes.ToList();
+
+            try
+            {
+                string p = Session["pais"].ToString();
+                ViewBag.pais = p + ".svg";
+            }
+            catch
+            {
+            }
+            Session["spras"] = user.SPRAS_ID;
+            var dOCUMENTOes = db.DOCUMENTOes.Include(d => d.CLIENTE).Include(d => d.CUENTAGL).Include(d => d.CUENTAGL1).Include(d => d.GALL).Include(d => d.PAI).Include(d => d.SOCIEDAD).Include(d => d.TALL).Include(d => d.TSOL).Include(d => d.USUARIO).Include(d => d.DOCUMENTOSAP);
+            return View(dOCUMENTOes);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ReporteMRLTS(string Form)
+        {
+            int pagina = 1106;
+            string u = User.Identity.Name;
+            var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+            ViewBag.display = true;
+            ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
+            ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
+            ViewBag.usuario = user;
+            ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            ViewBag.sociedad = db.SOCIEDADs.ToList();
+            ViewBag.cuentagl = db.CUENTAGLs.ToList();
+            ViewBag.cuenta = db.CUENTAs.ToList();
+            try
+            {
+                string p = Session["pais"].ToString();
+                ViewBag.pais = p + ".svg";
+            }
+            catch
+            {
+            }
+            Session["spras"] = user.SPRAS_ID;
+            // ViewBag.Calendario = cal;
+            // ViewBag.Consulta = "";
+            // EVALUAR FILTROS
+            string[] comcodessplit = new string[] { };
+            string comcode = Request["selectcocode"] as string;
+            if (!string.IsNullOrEmpty(comcode))
+            {
+                comcodessplit = comcode.Split(',');
+            }
+            int dperiod = Int32.Parse(Request["selectdperiod"]);
+            int aperiod = Int32.Parse(Request["selectaperiod"]);
+            string year = Request["selectyear"];
+            ViewBag.dperiodo = db.PERIODOes.ToList();
+            ViewBag.aperiodo = db.PERIODOes.ToList();
+
+            //SELECT d.SOCIEDAD_ID, p.LANDX, d.NUM_DOC, d.FECHAC, d.PERIODO, d.EJERCICIO, d.DOCUMENTO_SAP, tst.TXT020 AS TSOLT_TXT020, d.ESTATUS_SAP, d.CONCEPTO
+            //, d.FECHAI_VIG, d.FECHAF_VIG, d.PAYER_ID, c.NAME1, d.TSOL_ID, MONTO_DOC_MD, MONEDA_ID, TIPO_CAMBIO, d.*
+            //FROM DOCUMENTO d
+            //INNER JOIN DOCUMENTOSAP ds ON d.NUM_DOC = ds.NUM_DOC
+            //INNER JOIN PAIS p ON d.PAIS_ID = p.LAND
+            //INNER JOIN CLIENTE c ON d.PAYER_ID = c.KUNNR
+            //INNER JOIN TSOL ts ON d.TSOL_ID = ts.ID
+            //INNER JOIN USUARIO u ON d.USUARIOC_ID = u.ID
+            //INNER JOIN TSOLT tst ON ts.ID = tst.TSOL_ID AND u.SPRAS_ID = tst.SPRAS_ID
+            //WHERE d.EJERCICIO = 2018 AND d.PERIODO BETWEEN 4 AND 7 AND d.SOCIEDAD_ID IN('KCMX')
+
+            var queryP = (from d in db.DOCUMENTOes
+                          join ds in db.DOCUMENTOSAPs on d.NUM_DOC equals ds.NUM_DOC
+                          join p in db.PAIS on d.PAIS_ID equals p.LAND
+                          join c in db.CLIENTEs on new { d.VKORG, d.VTWEG, d.SPART, d.PAYER_ID } equals new { c.VKORG, c.VTWEG, c.SPART, PAYER_ID = c.KUNNR }
+                          join ts in db.TSOLs on d.TSOL_ID equals ts.ID
+                          join us in db.USUARIOs on d.USUARIOC_ID equals us.ID
+                          join tst in db.TSOLTs on new { TSOL_ID = ts.ID, us.SPRAS_ID } equals new { tst.TSOL_ID, tst.SPRAS_ID }
+                          join pt in db.PUESTOTs on new { us.SPRAS_ID, PUESTO_ID = (int)(us.PUESTO_ID) } equals new { pt.SPRAS_ID, pt.PUESTO_ID }
+                          orderby d.FECHAC descending // , d.NUM_DOC ascending, f.WF_POS ascending
+                          where ((d.PERIODO >= dperiod && d.PERIODO <= aperiod) || (d.PERIODO >= aperiod && d.PERIODO <= dperiod))
+                              && d.EJERCICIO == year
+                              && (!string.IsNullOrEmpty(comcode) ? comcodessplit.Contains(d.SOCIEDAD_ID) : true)
+                          select new MRLTS
+                          {
+                              CO_CODE = d.SOCIEDAD_ID,
+                              PAIS = p.LANDX,
+                              NUMERO_SOLICITUD = d.NUM_DOC,
+                              FECHA_SOLICITUD = (DateTime)d.FECHAC,
+                              PERIODO_CONTABLE = (Int32)d.PERIODO,
+                              NUMERO_DOCUMENTO_SAP = d.DOCUMENTO_SAP,
+                              //NUMERO_REVERSO_SAP =
+                              //FECHA_REVERSO =
+                              //PERIODO_CONTABLE_REVERSO =
+                              //COMENTARIOS_REVERSO_PROVISION =
+                              TIPO_SOLICITUD = tst.TXT020,
+                              STATUS = d.ESTATUS_SAP,
+                              CONCEPTO_SOLICITUD = d.CONCEPTO,
+                              DE = (DateTime)d.FECHAI_VIG,
+                              A = (DateTime)d.FECHAF_VIG,
+                              //CLASIFICACION = 
+                              NUMERO_CLIENTE = d.PAYER_ID,
+                              CLIENTE = c.NAME1,
+                              MONTO = (decimal)d.MONTO_DOC_MD,
+                              MONEDA = d.MONEDA_ID,
+                              TIPO_CAMBIO = (decimal)d.TIPO_CAMBIO
+                          }).ToList();
+
+            ViewBag.tabla_reporte = queryP;
+
+            //ViewBag.tabla_reporte = queryP.GroupBy(registro => new { registro.NUMERO_SOLICITUD, registro.WF_POS })
+            //    .Select(grupo => new
+            //    {
+            //        trackings = grupo.OrderBy(x => x.FECHA)
+            //    })
+            //    .Select(grupo_ordenado => new
+            //    {
+            //        tracking = calcularValoresGrupo(grupo_ordenado.trackings)
+            //    }).ToList();
+            return View();
+        }
+        // FIN REPORTE 5 - MRLTS
 
         // REPORTE 6 - TRACKING TS
         public ActionResult ReporteTrackingTS()
@@ -457,24 +1099,22 @@ namespace TAT001.Controllers.Reportes
             {
             }
             Session["spras"] = user.SPRAS_ID;
+            //ViewBag.Calendario = cal;
+            //ViewBag.cuentagl = db.CUENTAGLs.ToList();
+            //ViewBag.cuenta = db.CUENTAs.ToList();
+            //ViewBag.Consulta = "";
             // EVALUAR FILTROS
             string[] comcodessplit = new string[] { };
             string comcode = Request["selectcocode"] as string;
             if (!string.IsNullOrEmpty(comcode))
             {
                 comcodessplit = comcode.Split(',');
-                if (comcodessplit.Count() == 0)
-                    comcodessplit[0] = comcode;
             }
             int period = Int32.Parse(Request["selectperiod"]);
             string year = Request["selectyear"];
             string usuarioF = (string)Request["selectUsuarioF"];
             string clienteF = (string)Request["selectCliente"];
             string solicitudF = (string)Request["selectTipoSolicitud"];
-            //ViewBag.Calendario = cal;
-            //ViewBag.cuentagl = db.CUENTAGLs.ToList();
-            //ViewBag.cuenta = db.CUENTAs.ToList();
-            //ViewBag.Consulta = "";
 
             var queryP = (from d in db.DOCUMENTOes
                           join f in db.FLUJOes on d.NUM_DOC equals f.NUM_DOC
@@ -539,5 +1179,6 @@ namespace TAT001.Controllers.Reportes
             return ultimo;
         }
         // FIN REPORTE 6 - TRACKING TS
+
     }
 }

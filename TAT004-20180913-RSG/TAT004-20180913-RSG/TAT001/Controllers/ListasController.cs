@@ -605,7 +605,8 @@ namespace TAT001.Controllers
                     var matt = matl.ToList();
                     //kunnr = kunnr.TrimStart('0').Trim();
                     var pres = db.PRESUPSAPPs.Where(a => a.VKORG.Equals(vkorg) & a.SPART.Equals(spart) & a.KUNNR == kunnr & (a.GRSLS != null | a.NETLB != null)).ToList();
-                    var cat = db.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(spras)).ToList();
+                    //var cat = db.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(spras)).ToList();
+                    var cat = db.MATERIALGPs.Where(a => a.ACTIVO == true).ToList();//RSG 03.10.2018
                     //foreach (var c in cie)
                     //{
                     //    c.KUNNR = c.KUNNR.TrimStart('0').Trim();
@@ -621,7 +622,8 @@ namespace TAT001.Controllers
                                   join m in matt
                                   on ps.MATNR equals m.ID
                                   join mk in cat
-                                  on m.MATERIALGP_ID equals mk.MATERIALGP_ID
+                                  //on m.MATERIALGP_ID equals mk.MATERIALGP_ID
+                                  on m.MATERIALGP_ID equals mk.ID//RSG 03.10.2018
                                   where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) &&
                                   (ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART //&& ps.VKBUR == cl.VKBUR &&
                                                                                                         //ps.VKGRP == cl.VKGRP && ps.BZIRK == cl.BZIRK
@@ -630,7 +632,8 @@ namespace TAT001.Controllers
                                   select new
                                   {
                                       m.MATERIALGP_ID,
-                                      mk.TXT50
+                                      //mk.TXT50//RSG 03.10.2018
+                                      TXT50 = mk.DESCRIPCION//RSG 03.10.2018
                                   }).ToList();
                         }
                         else
@@ -641,7 +644,8 @@ namespace TAT001.Controllers
                                   join m in matt
                                   on ps.MATNR equals m.ID
                                   join mk in cat
-                                  on m.MATERIALGP_ID equals mk.MATERIALGP_ID
+                                  //on m.MATERIALGP_ID equals mk.MATERIALGP_ID
+                                  on m.MATERIALGP_ID equals mk.ID//RSG 03.10.2018
                                   where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) &&
                                   (ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART //&& ps.VKBUR == cl.VKBUR &&
                                                                                                         //ps.VKGRP == cl.VKGRP && ps.BZIRK == cl.BZIRK
@@ -650,29 +654,28 @@ namespace TAT001.Controllers
                                   select new
                                   {
                                       m.MATERIALGP_ID,
-                                      mk.TXT50
+                                      //mk.TXT50//RSG 03.10.2018
+                                      TXT50 = mk.DESCRIPCION//RSG 03.10.2018
                                   }).ToList();
                         }
                 }
             }
 
-            //var jll = db.PRESUPSAPPs.Select(psl => new { MATNR = psl.MATNR.ToString() }).Take(7).ToList();
             var list = new List<MATERIALGPT>();
             if (jd.Count > 0)
             {
                 //MATERIALGPT c = db.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(spras) & a.MATERIALGP_ID.Equals("000")).FirstOrDefault();
-                //MATERIALGPT cc = new MATERIALGPT();
-                //cc.SPRAS_ID = c.SPRAS_ID;
-                //cc.MATERIALGP_ID = c.MATERIALGP_ID;
-                //cc.TXT50 = c.TXT50;
-                //list.Add(cc);
-                MATERIALGPT c = db.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(spras) & a.MATERIALGP_ID.Equals("000")).FirstOrDefault();
+                MATERIALGP c = db.MATERIALGPs.Where(a => a.ID.Equals("000")).FirstOrDefault();
+                //MATERIALGPT cc = new MATERIALGPT();//B20180625 MGC 2018.07.02
                 MATERIALGPT cc = new MATERIALGPT();//B20180625 MGC 2018.07.02
                 if (c != null)//B20180625 MGC 2018.07.02
                 {
+                    //cc.MATERIALGP_ID = "000";
+                    //cc.SPRAS_ID = c.SPRAS_ID;
+                    //cc.TXT50 = c.TXT50;
                     cc.MATERIALGP_ID = "000";
-                    cc.SPRAS_ID = c.SPRAS_ID;
-                    cc.TXT50 = c.TXT50;
+                    cc.SPRAS_ID = "EN";
+                    cc.TXT50 = c.DESCRIPCION;
 
                 }
                 else
@@ -901,7 +904,7 @@ namespace TAT001.Controllers
                 ids.AddRange(ids2);
             }
 
-            List<MATERIAL> mats = (from m in db.MATERIALs.Where(a=>a.ACTIVO==true).ToList()
+            List<MATERIAL> mats = (from m in db.MATERIALs.Where(a => a.ACTIVO == true).ToList()
                                    join i in ids
                                    on m.ID equals i.ID
                                    select m).ToList();
@@ -909,11 +912,11 @@ namespace TAT001.Controllers
             List<MATERIALT> matts = (from m in db.MATERIALTs.Where(a => a.SPRAS == spras).ToList()
                                      join i in ids
                                    on m.MATERIAL_ID equals i.ID
-                                   where m.SPRAS == spras
-                                   select m).ToList();
-            foreach(MATERIAL m in mats)
+                                     where m.SPRAS == spras
+                                     select m).ToList();
+            foreach (MATERIAL m in mats)
             {
-                foreach(MATERIALT mt in matts.Where(x=>x.MATERIAL_ID==m.ID))
+                foreach (MATERIALT mt in matts.Where(x => x.MATERIAL_ID == m.ID))
                 {
                     m.MAKTX = mt.MAKTX;
                 }

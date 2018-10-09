@@ -328,7 +328,8 @@ namespace TAT001.Controllers
                                                     y.ID,
                                                     x.MONTO,
                                                     x.PORC_APOYO,
-                                                    y.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(d.CLIENTE.SPRAS)).FirstOrDefault().TXT50,
+                                                    //y.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(d.CLIENTE.SPRAS)).FirstOrDefault().TXT50,//RSG 03.10.2018
+                                                    TXT50 = y.DESCRIPCION,//RSG 03.10.2018
                                                     x.MONTO_APOYO,
                                                     resta = (x.MONTO - x.MONTO_APOYO),
                                                     x.PRECIO_SUG,
@@ -1079,9 +1080,11 @@ namespace TAT001.Controllers
                                         armadoCuerpoTab.Add("");
                                         armadoCuerpoTab.Add(item2.MATKL);
                                         //armadoCuerpoTab.Add(item2.TXT50);
-                                        MATERIALGPT mt = db.MATERIALGPTs.Where(x => x.MATERIALGP_ID == item2.MATKL & x.SPRAS_ID == d.CLIENTE.SPRAS).FirstOrDefault();
+                                        //MATERIALGPT mt = db.MATERIALGPTs.Where(x => x.MATERIALGP_ID == item2.MATKL & x.SPRAS_ID == d.CLIENTE.SPRAS).FirstOrDefault();
+                                        MATERIALGP mt = db.MATERIALGPs.Where(x => x.ID == item2.MATKL).FirstOrDefault();//RSG 03.10.2018
                                         if (mt != null)
-                                            armadoCuerpoTab.Add(mt.TXT50);
+                                            //armadoCuerpoTab.Add(mt.TXT50);
+                                            armadoCuerpoTab.Add(mt.DESCRIPCION);//RSG 03.10.2018
                                         else
                                             armadoCuerpoTab.Add("");
 
@@ -1517,7 +1520,8 @@ namespace TAT001.Controllers
                         {
                             var con3 = db.DOCUMENTOPs
                                                 .Where(x => x.NUM_DOC.Equals(v.num_doc) & x.VIGENCIA_DE == a1 && x.VIGENCIA_AL == a2)
-                                                .Join(db.MATERIALGPs, x => x.MATKL, y => y.ID, (x, y) => new { x.NUM_DOC, x.MATNR, x.MATKL, y.ID, x.MONTO, x.PORC_APOYO, y.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(d.CLIENTE.SPRAS)).FirstOrDefault().TXT50, x.MONTO_APOYO, resta = (x.MONTO - x.MONTO_APOYO), x.PRECIO_SUG, x.APOYO_EST, x.APOYO_REAL })
+                                                //.Join(db.MATERIALGPs, x => x.MATKL, y => y.ID, (x, y) => new { x.NUM_DOC, x.MATNR, x.MATKL, y.ID, x.MONTO, x.PORC_APOYO, y.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(d.CLIENTE.SPRAS)).FirstOrDefault().TXT50, x.MONTO_APOYO, resta = (x.MONTO - x.MONTO_APOYO), x.PRECIO_SUG, x.APOYO_EST, x.APOYO_REAL })
+                                                .Join(db.MATERIALGPs, x => x.MATKL, y => y.ID, (x, y) => new { x.NUM_DOC, x.MATNR, x.MATKL, y.ID, x.MONTO, x.PORC_APOYO, TXT50 = y.DESCRIPCION, x.MONTO_APOYO, resta = (x.MONTO - x.MONTO_APOYO), x.PRECIO_SUG, x.APOYO_EST, x.APOYO_REAL })//RSG 03.10.2018
                                                 .ToList();
 
                             foreach (var item2 in con3)
@@ -2165,7 +2169,8 @@ namespace TAT001.Controllers
                                                 y.ID,
                                                 x.MONTO,
                                                 x.PORC_APOYO,
-                                                y.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(d.CLIENTE.SPRAS)).FirstOrDefault().TXT50,
+                                                //y.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(d.CLIENTE.SPRAS)).FirstOrDefault().TXT50,
+                                                TXT50 = y.DESCRIPCION,//RSG 03.10.2018
                                                 x.MONTO_APOYO,
                                                 resta = (x.MONTO - x.MONTO_APOYO),
                                                 x.PRECIO_SUG,
@@ -2903,7 +2908,8 @@ namespace TAT001.Controllers
                                                 y.ID,
                                                 x.MONTO,
                                                 x.PORC_APOYO,
-                                                y.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(d.CLIENTE.SPRAS)).FirstOrDefault().TXT50,
+                                                //y.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(d.CLIENTE.SPRAS)).FirstOrDefault().TXT50,//RSG 03.10.2018
+                                                TXT50 = y.DESCRIPCION,//RSG 03.10.2018
                                                 x.MONTO_APOYO,
                                                 resta = (x.MONTO - x.MONTO_APOYO),
                                                 x.PRECIO_SUG,

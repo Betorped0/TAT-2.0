@@ -1,0 +1,80 @@
+﻿@model TAT001.Entities.CUENTA
+
+@{
+    ViewBag.pagina_r = 693;
+    ViewBag.carpeta_r = 500;
+    //ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        <div class="row" style="height:10px;width:100%;">
+            <div class="col l7 pink darken-1" style="height:10px;padding:0;"></div>
+            <div class="col l3 pink darken-4" style="height:10px;padding:0;">
+                <div class="col l3 pink darken-4" style="height:10px;padding:0;"></div>
+                <div class="col l8 orange" style="height:10px;padding:0;"></div>
+                <div class="col l1 red" style="height:10px;padding:0;"></div>
+            </div>
+            <div class="col l2 yellow" style="height:10px;padding:0;"></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col s6 m6 l6">
+            <div class="col l12 m12 s12">
+                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                    @Html.EditorFor(model => model.ABONO, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                    @Html.LabelFor(model => model.ABONO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_abono" })
+                </div>
+
+                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                    @Html.EditorFor(model => model.CARGO, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                    @Html.LabelFor(model => model.CARGO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_cargo" })
+                </div>
+
+                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                    @Html.EditorFor(model => model.CLEARING, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                    @Html.LabelFor(model => model.CLEARING, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_cargofv" })
+                </div>
+
+                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                    @Html.EditorFor(model => model.LIMITE, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                    @Html.LabelFor(model => model.LIMITE, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_limite" })
+                </div>
+            </div>
+        </div>
+
+        <div class="col s6 m6 l6">
+            <div class="col l12 m12 s12">
+                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                    @Html.EditorFor(model => model.TALL.DESCRIPCION, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                    @Html.LabelFor(model => model.TALL.DESCRIPCION, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_gal" })
+                </div>
+
+                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                    @Html.EditorFor(model => model.PAI.SPRAS, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                    @Html.LabelFor(model => model.PAI.SPRAS, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_pais" })
+                </div>
+
+                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                    @Html.EditorFor(model => model.SOCIEDAD.BUTXT, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                    @Html.LabelFor(model => model.SOCIEDAD.BUTXT, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_sociedad" })
+                </div>
+
+                <div class="input-field col l10 m10" style="margin-bottom:0;">
+                    @Html.EditorFor(model => model.EJERCICIO, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                    @Html.LabelFor(model => model.EJERCICIO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_ejercicio" })
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<p>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+

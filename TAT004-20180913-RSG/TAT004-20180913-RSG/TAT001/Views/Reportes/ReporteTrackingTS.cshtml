@@ -10,7 +10,7 @@
 {
     <script>
         $(document).ready(function () {
-            $('FormSelect.select_all').siblings('ul').prepend("<li id=sm_select_all><span id='filters_all'>Todas las Opciones</span></li>");
+            $('select.select_all').siblings('ul').prepend("<li id=sm_select_all><span id='filters_all'>Todas las Opciones</span></li>");
             $('li#sm_select_all').on('click', function () {
                 var jq_elem = $(this),
                     jq_elem_span = jq_elem.find('span'),
@@ -201,7 +201,7 @@
         <script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
         <link href="~/Content/dataTable.css" rel="stylesheet" />
         <link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
-        <link href="~/Content/subfilters/jquery.tablesorter.pager.css" rel="stylesheet" />
+        <link href="~/Scripts/subfilters/jquery.tablesorter.pager.css" rel="stylesheet" />
         <script src="~/Scripts/subfilters/jquery.tablesorter.js"></script>
         <script src="~/Scripts/subfilters/jquery.tablesorter.pager.js"></script>
         <script src="~/Scripts/subfilters/widget-filter.js"></script>
@@ -223,7 +223,7 @@
                 $("#excelBtn").click(function () {
                     $("#table").tableExport();
                 });
-                $('FormSelect.select_all').siblings('ul').prepend('<li id=sm_select_all id="filters_all"><span>Todas Las Opciones</span></li>');
+                $('select.select_all').siblings('ul').prepend('<li id=sm_select_all id="filters_all"><span>Todas Las Opciones</span></li>');
                 $('li#sm_select_all').on('click', function () {
                     var jq_elem = $(this),
                         jq_elem_span = jq_elem.find('span'),
@@ -339,74 +339,23 @@
                     {
                         TAT001.Models.ReportesModel.TrackingTS item = itemvar.GetType().GetProperty("tracking").GetValue(itemvar, null);
                         <tr>
-                            <td>
-                                @* CAMPO CO CODE *@
-                                @item.CO_CODE
-                            </td>
-                            <td>
-                                @* CAMPO PAIS *@
-                                @item.PAIS
-                            </td>
-                            <td>
-                                @* CAMPO NUM SOLICITUD *@
-                                @item.NUMERO_SOLICITUD
-                            </td>
-                            <td>
-                                @* CAMPO NUM CLIENTE *@
-                                @item.NUMERO_CLIENTE
-                            </td>
-                            <td>
-                                @* CAMPO CLIENTE *@
-                                @item.CLIENTE
-                            </td>
-                            <td>
-                                @* CAMPO TIPO SOLICITUD *@
-                                @item.TIPO_SOLICITUD
-                            </td>
-                            <td>
-                                @* CAMPO STATUS *@
-                                @item.STATUS_STRING
-                            </td>
-                            <td>
-                                @* CAMPO FECHA *@
-                                @item.FECHA_STRING
-                            </td>
-                            <td>
-                                @* CAMPO HORA *@
-                                @item.HORA_STRING
-                            </td>
-                            <td>
-                                @* CAMPO TIEMPO TRANSCURRIDO *@
-                                @item.TIEMPO_TRANSCURRIDO_STRING
-                            </td>
-                            <td>
-                                @* CAMPO SEMANA *@
-                                @item.SEMANA
-                            </td>
-                            <td>
-                                @* CAMPO PERIODO *@
-                                @item.PERIODO
-                            </td>
-                            <td>
-                                @* CAMPO AÑO *@
-                                @item.ANIO
-                            </td>
-                            <td>
-                                @* CAMPO USUARIO *@
-                                @item.USUARIO
-                            </td>
-                            <td>
-                                @* CAMPO ROL *@
-                                @item.ROL
-                            </td>
-                            <td>
-                                @* CAMPO COMENTARIO *@
-                                @item.COMENTARIO
-                            </td>
-                            <td>
-                                @* CAMPO NÚMERO CORRECCIONES SOLICITUD *@
-                                @(item.NUMERO_CORRECCIONES - 1 == 0 ? "" : (item.NUMERO_CORRECCIONES -1).ToString())
-                            </td>
+                            <td>@item.CO_CODE </td>
+                            <td>@item.PAIS </td>
+                            <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUMERO_SOLICITUD })'" style="cursor:pointer">@item.NUMERO_SOLICITUD </td>
+                            <td>@item.NUMERO_CLIENTE </td>
+                            <td>@item.CLIENTE </td>
+                            <td>@item.TIPO_SOLICITUD </td>
+                            <td>@item.STATUS_STRING </td>
+                            <td>@item.FECHA_STRING </td>
+                            <td>@item.HORA_STRING </td>
+                            <td>@item.TIEMPO_TRANSCURRIDO_STRING </td>
+                            <td>@item.SEMANA </td>
+                            <td>@item.PERIODO </td>
+                            <td>@item.ANIO </td>
+                            <td>@item.USUARIO </td>
+                            <td>@item.ROL </td>
+                            <td>@item.COMENTARIO </td>
+                            <td>@(item.NUMERO_CORRECCIONES - 1 == 0 ? "" : (item.NUMERO_CORRECCIONES -1).ToString()) </td>
                         </tr>
                      }
                 </tbody>

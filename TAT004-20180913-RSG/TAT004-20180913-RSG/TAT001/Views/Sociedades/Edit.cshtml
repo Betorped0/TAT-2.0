@@ -195,7 +195,8 @@
                 <div class="form-group">
                     <label id="lbl_Region"></label>
                     <div class="col-md-10">
-                        @Html.DropDownListFor(model=>model.REGION, null,"")
+                        @Html.EditorFor(model => model.REGION, new { htmlAttributes = new { @class = "form-control", @maxlength="10" } })
+                        @*@Html.DropDownListFor(model=>model.REGION, null,"")*@
                     </div>
                 </div>
             </div>
