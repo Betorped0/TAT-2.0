@@ -348,6 +348,8 @@
         <AssociationConnector Association="TAT001Model.FK_WORKFP_WORKFV" ManuallyRouted="false" />
         <AssociationConnector Association="TAT001Model.FK_WORKFT_WORKFV" ManuallyRouted="false" />
         <AssociationConnector Association="TAT001Model.USUARIOGA" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="TAT001Model.TSOL_GROUP" Width="1.5" PointX="14.375" PointY="18.75" />
+        <EntityTypeShape EntityType="TAT001Model.TSOL_TREE" Width="1.5" PointX="18.375" PointY="16.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

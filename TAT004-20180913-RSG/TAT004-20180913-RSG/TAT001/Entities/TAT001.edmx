@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="TAT001Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="TAT001Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="ACCION">
           <Key>
             <PropertyRef Name="ID" />
@@ -1852,6 +1852,27 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.TAB_CAMPO' no tiene definida ning
           <Property Name="NEGO" Type="bit" Nullable="false" />
           <Property Name="CARTA" Type="bit" Nullable="false" />
           <Property Name="REVERSO" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TSOL_GROUP">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="TIPO" />
+          </Key>
+          <Property Name="ID" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="TIPO" Type="nvarchar" MaxLength="5" Nullable="false" />
+          <Property Name="DESCRIPCION" Type="nvarchar" MaxLength="60" Nullable="false" />
+          <Property Name="ID_PADRE" Type="nvarchar" MaxLength="10" />
+          <Property Name="TIPO_PADRE" Type="nvarchar" MaxLength="5" />
+        </EntityType>
+        <EntityType Name="TSOL_TREE">
+          <Key>
+            <PropertyRef Name="TSOL_GROUP_ID" />
+            <PropertyRef Name="TSOL_GROUP_TIPO" />
+            <PropertyRef Name="TSOL_ID" />
+          </Key>
+          <Property Name="TSOL_GROUP_ID" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="TSOL_GROUP_TIPO" Type="nvarchar" MaxLength="5" Nullable="false" />
+          <Property Name="TSOL_ID" Type="nvarchar" MaxLength="10" Nullable="false" />
         </EntityType>
         <EntityType Name="TSOLT">
           <Key>
@@ -4907,6 +4928,8 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <EntitySet Name="TS_FORM" EntityType="Self.TS_FORM" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TS_FORMT" EntityType="Self.TS_FORMT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TSOL" EntityType="Self.TSOL" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TSOL_GROUP" EntityType="Self.TSOL_GROUP" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TSOL_TREE" EntityType="Self.TSOL_TREE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TSOLT" EntityType="Self.TSOLT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TSOPORTE" EntityType="Self.TSOPORTE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TSOPORTET" EntityType="Self.TSOPORTET" Schema="dbo" store:Type="Tables" />
@@ -5842,8 +5865,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
             <End Role="WORKFV" EntitySet="WORKFV" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="TAT001Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -11796,7 +11818,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <FunctionImport Name="CPS_LISTA_CLI_PRO" ReturnType="Collection(TAT001Model.CPS_LISTA_CLI_PRO_Result)" />
           <FunctionImport Name="CSP_BANNERSINCANAL" ReturnType="Collection(String)" />
           <FunctionImport Name="CSP_CAMBIO" ReturnType="Collection(TAT001Model.CSP_CAMBIO_Result)">
-            <Parameter Name="sociedad" Mode="In" Type="String" />
+          <Parameter Name="sociedad" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="CSP_CARPETA" ReturnType="Collection(TAT001Model.CSP_CARPETA_Result)">
             <Parameter Name="ID" Mode="In" Type="String" />
@@ -11833,7 +11855,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
             <Parameter Name="caso" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="CSP_PRESUPUESTO_ADDP" ReturnType="Collection(TAT001Model.CSP_PRESUPUESTO_ADDP_Result)">
-            <Parameter Name="path" Mode="In" Type="String" />
+          <Parameter Name="path" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="CSP_USUARIO" ReturnType="Collection(TAT001Model.CSP_USUARIO_Result)">
             <Parameter Name="ID" Mode="In" Type="String" />
@@ -11876,6 +11898,8 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
             <Parameter Name="new_diagramname" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="sp_upgraddiagrams" />
+          <EntitySet Name="TSOL_GROUP" EntityType="TAT001Model.TSOL_GROUP" />
+          <EntitySet Name="TSOL_TREE" EntityType="TAT001Model.TSOL_TREE" />
         </EntityContainer>
         <ComplexType Name="CPS_LISTA_CLI_PRO_Result">
           <Property Type="String" Name="KUNNR" Nullable="false" MaxLength="10" />
@@ -12027,6 +12051,27 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
           <Property Type="Int32" Name="OwnerID" Nullable="false" />
         </ComplexType>
+        <EntityType Name="TSOL_GROUP">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="TIPO" />
+          </Key>
+          <Property Name="ID" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="TIPO" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="DESCRIPCION" Type="String" Nullable="false" MaxLength="60" FixedLength="false" Unicode="true" />
+          <Property Name="ID_PADRE" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="TIPO_PADRE" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="TSOL_TREE">
+          <Key>
+            <PropertyRef Name="TSOL_GROUP_ID" />
+            <PropertyRef Name="TSOL_GROUP_TIPO" />
+            <PropertyRef Name="TSOL_ID" />
+          </Key>
+          <Property Name="TSOL_GROUP_ID" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="TSOL_GROUP_TIPO" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="TSOL_ID" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -14477,6 +14522,26 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="TAT001Model.Store.sp_renamediagram" />
           <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="TAT001Model.Store.sp_upgraddiagrams" />
+          <EntitySetMapping Name="TSOL_GROUP">
+            <EntityTypeMapping TypeName="TAT001Model.TSOL_GROUP">
+              <MappingFragment StoreEntitySet="TSOL_GROUP">
+                <ScalarProperty Name="TIPO_PADRE" ColumnName="TIPO_PADRE" />
+                <ScalarProperty Name="ID_PADRE" ColumnName="ID_PADRE" />
+                <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
+                <ScalarProperty Name="TIPO" ColumnName="TIPO" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TSOL_TREE">
+            <EntityTypeMapping TypeName="TAT001Model.TSOL_TREE">
+              <MappingFragment StoreEntitySet="TSOL_TREE">
+                <ScalarProperty Name="TSOL_ID" ColumnName="TSOL_ID" />
+                <ScalarProperty Name="TSOL_GROUP_TIPO" ColumnName="TSOL_GROUP_TIPO" />
+                <ScalarProperty Name="TSOL_GROUP_ID" ColumnName="TSOL_GROUP_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

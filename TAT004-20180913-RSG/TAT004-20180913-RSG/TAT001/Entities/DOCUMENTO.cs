@@ -27,7 +27,10 @@ namespace TAT001.Entities
             this.DOCUMENTOTS = new HashSet<DOCUMENTOT>();
             this.FLUJOes = new HashSet<FLUJO>();
         }
-    
+        public List<TAT001.Models.DOCUMENTOP_MOD> DOCUMENTOP { get; set; }
+        public List<DOCUMENTOF> DOCUMENTOF { get; set; }
+        public List<DOCUMENTOREC> DOCUMENTOREC { get; set; }
+        public List<DOCUMENTORAN> DOCUMENTORAN { get; set; }
         public decimal NUM_DOC { get; set; }
         public string TSOL_ID { get; set; }
         public string TALL_ID { get; set; }
@@ -96,10 +99,6 @@ namespace TAT001.Entities
         public string SPART { get; set; }
         public Nullable<int> PUESTO_ID { get; set; }
         public string GALL_ID { get; set; }
-        public List<TAT001.Models.DOCUMENTOP_MOD> DOCUMENTOP { get; set; }
-        public List<DOCUMENTOF> DOCUMENTOF { get; set; }
-        public List<DOCUMENTOREC> DOCUMENTOREC { get; set; }
-        public List<DOCUMENTORAN> DOCUMENTORAN { get; set; }
         public Nullable<int> CONCEPTO_ID { get; set; }
         public string DOCUMENTO_SAP { get; set; }
         public Nullable<decimal> PORC_APOYO { get; set; }
