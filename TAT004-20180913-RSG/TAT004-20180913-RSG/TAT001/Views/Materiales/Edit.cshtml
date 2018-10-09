@@ -61,15 +61,15 @@
             <div class="col s6 m6 l6">
                 <div class="col l12 m12 s12">
                     <div class="input-field col l10 m10" style="margin-bottom:0;">
-                        @Html.Editor("EN", new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.Editor("EN", new { htmlAttributes = new { @class = "form-control", @maxlength = "50" } })
                         @Html.LabelFor(model => model.MAKTX, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_DscEN" })
                     </div>
                     <div class="input-field col l10 m10" style="margin-bottom:0;">
-                        @Html.Editor("ES", new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.Editor("ES", new { htmlAttributes = new { @class = "form-control", @maxlength = "50" } })
                         @Html.LabelFor(model => model.MAKTX, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_DscES" })
                     </div>
                     <div class="input-field col l10 m10" style="margin-bottom:0;">
-                        @Html.Editor("PT", new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.Editor("PT", new { htmlAttributes = new { @class = "form-control", @maxlength = "50" } })
                         @Html.LabelFor(model => model.MAKTX, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_DscPT" })
                     </div>
                 </div>
