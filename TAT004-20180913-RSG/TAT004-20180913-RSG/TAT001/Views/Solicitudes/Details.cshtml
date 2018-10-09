@@ -101,7 +101,7 @@
                                 </a>
                                 <ul>
                                     <li>@*<a id="lbl_wfn" class="btn-floating yellow darken-1 modal-trigger" href="#modal1" onclick="siguiente()"><i class="material-icons">play_arrow</i></a>*@</li>
-                                    <li><a id="lbl_wfn" class="btn-floating yellow darken-1 modal-trigger" href="@Url.Action(" Edit","Solicitudes", new { id_d=Model.D.NUM_DOC})"><i class="material-icons">edit</i></a></li>
+                                    <li><a data-form-method="post" id="lbl_wfn" class="btn-floating yellow darken-1 @*modal-trigger*@" href="@Url.Action("Edit","Solicitudes", new { id_d=Model.D.NUM_DOC})"><i class="material-icons">edit</i></a></li>
                                 </ul>
                             </div>
                             <script>
@@ -116,7 +116,7 @@
                             </script>
                             @*<a id="lbl_wfn" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="N" })">Siguiente</a>*@
                             @*<a id="lbl_wfn" class="btn-small modal-trigger" href="#modal1" onclick="siguiente()">Siguiente</a>*@
-                            <a id="lbl_wfn" class="btn-small modal-trigger" href="@Url.Action(" Edit","Solicitudes", new { id_d=Model.D.NUM_DOC})">Editar</a>
+                            <a data-form-method="post" id="lbl_wfn" class="btn-small " href="@Url.Action("Edit","Solicitudes", new { id_d=Model.D.NUM_DOC})">Editar</a> @*OCG 09-10-18 Se corrige error en la ruta*@
                         }
                         else if (ViewBag.accion == "P")
                         {
@@ -126,7 +126,7 @@
                                     <i class="large material-icons">work</i>
                                 </a>
                                 <ul>
-                                    <li><a id="lbl_wfn" class="btn-floating yellow darken-1 modal-trigger" href="#modal1" onclick="contabilizar()"><i class="material-icons">send</i></a></li>
+                                    <li><a id="lbl_wfn" class="btn-floating yellow darken-1 " href="#modal1" onclick="contabilizar()"><i class="material-icons">send</i></a></li> @*OCG 09-10-18 Se corrige error en la ruta*@
                                 </ul>
                             </div>
                             <script>

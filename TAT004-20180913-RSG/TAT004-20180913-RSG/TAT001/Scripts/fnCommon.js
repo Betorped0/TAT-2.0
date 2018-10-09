@@ -1,10 +1,10 @@
 ﻿var fnCommon = {
 
-    materializeInit: function (component, type, spras_id) {
+    materializeInit: function ( type, spras_id) {
         switch (type) {
             case 'select':
                 var options = {};
-                var selects = document.querySelectorAll(component);
+                var selects = document.querySelectorAll('select');
                 M.FormSelect.init(selects, options);
                 break;
             case 'datepicker':
@@ -23,11 +23,11 @@
                         weekdaysAbbrev: ['D', 'L', 'M', 'X', 'J', 'V', 'S']
                     };
                 }
-                var datepickers = document.querySelectorAll(component);
+                var datepickers = document.querySelectorAll('.datepicker');
                 M.Datepicker.init(datepickers, options);
                 break;
             case 'timepicker':
-                $(component).pickatime({
+                $('.timepicker').pickatime({
                     twelvehour: false,
                     donetext: 'OK',
                     cleartext: '',
@@ -37,17 +37,17 @@
                 break;
             case 'tabs':
                 var options = {};
-                var tabs = document.querySelectorAll(component);
+                var tabs = document.querySelectorAll('.tabs');
                 M.Tabs.init(tabs, options);
                 break;
             case 'collapsible':
                 var options = {};
-                var collapsibles = document.querySelectorAll(component);
+                var collapsibles = document.querySelectorAll('.collapsible');
                 M.Collapsible.init(collapsibles, options);
                 break;
             case 'modal':
                 var options = {};
-                var modals = document.querySelectorAll(component);
+                var modals = document.querySelectorAll('.modal');
                 M.Modal.init(modals, options);
                 break;
             default:
@@ -162,7 +162,7 @@
             if (val == "") {
                 var options = '<option value></option>';
                 $('#' + idSelectToFill).html(options);
-                fnCommon.materializeInit('select', 'select');
+                fnCommon.materializeInit( 'select');
                 fnCommon.selectRequired();
             } else {
                 $.ajax({
@@ -176,7 +176,7 @@
                             options += '<option value=' + selectItem.Value  + '>' + selectItem.Text + '</option>';
                         });
                         $('#' + idSelectToFill).html(options);
-                        fnCommon.materializeInit('select', 'select');
+                        fnCommon.materializeInit( 'select');
                         fnCommon.selectRequired();
                         if (callBack) {
                             callBack();

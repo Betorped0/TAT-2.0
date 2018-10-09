@@ -19,6 +19,8 @@ namespace TAT001.Models
             periodos = new List<SelectListItem>();
             tipoSolicitudes = new List<SelectListItem>();
             usuarios = new List<SelectListItem>();
+
+            tiposSolicitud = new List<SelectTreeItem>();
         }
         public CALENDARIO_AC calendario445 { get; set; }
         public CALENDARIO_EX calendarioEx445 { get; set; }
@@ -28,8 +30,10 @@ namespace TAT001.Models
         public List<SelectListItem> periodos { get; set; }
         public List<SelectListItem> tipoSolicitudes { get; set; }
         public List<SelectListItem> usuarios { get; set; }
-        
-        
+
+        public List<SelectTreeItem> tiposSolicitud { get; set; }
+
+
 
     }
 }
