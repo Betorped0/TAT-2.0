@@ -939,7 +939,10 @@ $(document).ready(function () {
                 }
             }
             else {  // Allow: backspace, delete, tab, escape, enter and .
-                if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+                if (e.keyCode === 13) {
+                    $("#tipo_cambio").focusout();  //OCG Se agrega para quitar el focus y no redireccionar a la pestaña de informacioin
+                }
+                if ($.inArray(e.keyCode, [46, 8, 9, 27, /*13,*/ 110, 190]) !== -1 ||
                     // Allow: Ctrl+A, Command+A
                     (e.keyCode === 65 && (e.ctrlKey === true || e.metaKey === true)) ||
                     // Allow: home, end, left, right, down, up
@@ -962,7 +965,10 @@ $(document).ready(function () {
                 }
             }
             else {  // Allow: backspace, delete, tab, escape, enter and ','
-                if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 188]) !== -1 ||
+                if (e.keyCode === 13) {
+                    $("#tipo_cambio").focusout(); //OCG Se agrega para quitar el focus y no redireccionar a la pestaña de informacioin
+                }
+                if ($.inArray(e.keyCode, [46, 8, 9, 27, /*13,*/ 188]) !== -1 ||
                     // Allow: Ctrl+A, Command+A
                     (e.keyCode === 65 && (e.ctrlKey === true || e.metaKey === true)) ||
                     // Allow: home, end, left, right, down, up
