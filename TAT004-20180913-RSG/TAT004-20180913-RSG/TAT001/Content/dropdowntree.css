@@ -1,0 +1,253 @@
+﻿span.k-dropdowntree {
+    background-image: none;
+}
+.k-dropdowntree {
+    white-space: nowrap;
+    position: relative;
+    display: inline-block;
+    width: 12.4em;
+    overflow: visible;
+    border-width: 0;
+    vertical-align: middle;
+}
+.k-widget {
+    box-sizing: content-box;
+    outline: 0;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    border-style: solid;
+    -webkit-appearance: none;
+    color: #2e2e2e;
+    border-color: #d5d5d5;
+    background-color: #fff;
+    box-sizing: content-box;
+}
+.k-dropdown-wrap {
+    background-repeat: repeat;
+    border-radius: 4px;
+}
+ .k-dropdowntree .k-dropdown-wrap {
+    cursor: pointer;
+}
+.k-dropdown-wrap > .k-i-close {
+    right: 2.4em;
+}
+
+.k-dropdown-wrap > .k-i-close {
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+.k-dropdown-wrap > .k-i-close {
+    font-size: 100%;
+    display: none;
+    position: absolute;
+    cursor: pointer;
+}
+
+.k-icon {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    width: 1em;
+    height: 1em;
+    text-align: center;
+    vertical-align: middle;
+    background-image: none;
+    font: 16px/1 WebComponentsIcons;
+    speak: none;
+    font-variant: normal;
+    text-transform: none;
+    text-indent: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: inherit;
+}
+.k-dropdown-wrap .k-select {
+    line-height: 2em;
+    vertical-align: middle;
+    -moz-box-sizing: border-box;
+    text-align: center;
+    width: 2em;
+    height: 100%;
+}
+
+.k-dropdown-wrap .k-select {
+    overflow: hidden;
+    border: 0;
+    text-decoration: none;
+    color: inherit;
+}
+
+.k-dropdown-wrap .k-select{
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: inline-block;
+    vertical-align: top;
+    text-decoration: none;
+}
+
+.k-state-default > .k-select {
+    border-color: #c5c5c5;
+}
+
+ .k-dropdown-wrap .k-select {
+    border-radius: 0 4px 4px 0;
+}
+
+.k-state-default .k-select{
+border-color: #d5d5d5;
+}
+
+.k-treeview span.k-in {
+    cursor: default;
+}
+
+.k-treeview .k-in {
+    margin: 1px 0 1px .16666em;
+    padding: 1px .3333em 1px .25em;
+    line-height: 1.3333em;
+    text-decoration: none;
+    border-style: solid;
+    border-width: 1px;
+    display: inline-block;
+    border-color: transparent;
+    border-radius: 4px;
+}
+
+.k-treeview .k-i-collapse {
+    margin-top: -4px;
+    margin-left: -16px;
+    cursor: pointer;
+}
+
+
+.k-treeview .k-icon {
+    vertical-align: middle;
+    display: inline-block;
+    vertical-align: top;
+    background-color: #d81b60;
+    border-radius: 4px;
+}
+.k-icon {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    width: 1em;
+    height: 1em;
+    text-align: center;
+    vertical-align: middle;
+    background-image: none;
+    font: 16px/1 WebComponentsIcons;
+    speak: none;
+    font-variant: normal;
+    text-transform: none;
+    text-indent: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: inherit;
+}
+.k-popup .k-item.k-first {
+    position: relative;
+}
+
+ .k-popup .k-item {
+    cursor: default;
+}
+
+.k-treeview .k-item {
+    display: block;
+    border-width: 0;
+    margin: 0;
+    padding: 0 0 0 16px;
+}
+   .k-treeview > .k-group {
+        margin: 0;
+        padding: 0;
+        background: 0 0;
+        list-style-type: none;
+        position: relative;
+    }
+.k-list-container.k-popup-dropdowntree .k-treeview {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 10px;
+}
+
+div.k-treeview {
+    border-width: 0;
+    background: 0 0;
+    overflow: auto;
+    white-space: nowrap;
+}
+.k-list-container.k-popup-dropdowntree {
+    padding: 0;
+}
+
+.k-popup.k-list-container {
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    padding: 2px;
+    border-width: 1px;
+    border-style: solid;
+}
+
+.k-list-container.k-state-border-up {
+    border-radius: 0 0 4px 4px;
+    border-color: #9e9e9e;
+}
+.k-list-container, .k-animation-container * {
+    border-radius: 0 0 4px 4px;
+}
+.k-reset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    text-decoration: none;
+    font-size: 100%;
+    list-style: none;
+}
+
+.k-list-container {
+    color: #2e2e2e;
+}
+.k-popup{
+    -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,.3); 
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,.3);
+}
+.k-dropdown-wrap .k-input {
+    position: relative;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid #9e9e9e;
+    outline: none;
+    height: 3rem;
+    line-height: 3rem;
+    width: 100%;
+    font-size: 12px;
+    margin: 0 0 8px 0;
+    padding: 0;
+    display: block;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    z-index: 1;
+}
+.k-animation-container{
+    background-color:white;
+}
+.k-input :after {
+    content: "arrow_drop_down";
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto 0;
+    z-index: 0;
+    fill: rgba(0, 0, 0, 0.87);
+}

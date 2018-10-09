@@ -238,15 +238,15 @@
 <script>
     var spras_id = "@ViewBag.spras_id";
     //---- Inicializador de componentes Materialize----
-    fnCommon.materializeInit('.datepicker', 'datepicker', spras_id);
-    fnCommon.materializeInit('.timepicker', 'timepicker');
-    fnCommon.materializeInit('select', 'select');
-    fnCommon.materializeInit('.collapsible', 'collapsible');
+    fnCommon.materializeInit( 'datepicker', spras_id);
+    fnCommon.materializeInit( 'timepicker');
+    fnCommon.materializeInit('select');
+    fnCommon.materializeInit( 'collapsible');
 
     //----  Remover  Fecha y Hora----
-    var sinFecha = "01/01/0001 12:00:00 a. m.";
+    var sinFecha = "01/01/0001";
     document.querySelectorAll('.datepicker').forEach(function (datePicker) {
-        if (datePicker.value === sinFecha) { datePicker.value = ''; }
+        if (datePicker.value.indexOf( sinFecha)>-1) { datePicker.value = ''; }
         else { datePicker.value = datePicker.value.substring(0, 10); }
     });
     var sinHora = "00:00";
