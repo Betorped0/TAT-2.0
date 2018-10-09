@@ -2423,9 +2423,21 @@ catch (Exception ee)
 @* LEJ 09.07.18 *@
 <script src="~/Scripts/ValidarFormatosDec.js"></script>
 <script>
-            $(document).ready(function () {
-                $('.collapsible').collapsible();
-            });
+    $(document).ready(function () {
+        $('.collapsible').collapsible();
+        //OCG
+        var cliente = $("#payer_id").val;
+        var con = 0;
+        for (var i = 0; i < 10; i++) {
+            if (cliente.split("")[i] == 0) {
+                cont++;
+            }
+            else {
+                i = 10;
+            }
+        }
+        $("#payer_id").value = cliente.substring(cont + 1, 10);
+    });
 
             function ligada() {
                 /**/
@@ -2433,5 +2445,6 @@ catch (Exception ee)
             /**/
 
             return (a == "True");
-        }
+    }
+
 </script>
