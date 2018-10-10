@@ -473,13 +473,24 @@ namespace TAT001.Controllers
                     ViewBag.mat = db.TEXTOes.Where(x => x.PAGINA_ID == 201 & x.CAMPO_ID == "lbl_categoria" & x.SPRAS_ID == uu).FirstOrDefault().TEXTOS;
                 }
             ///////////////////////////////CAMBIOS LGPP FIN//////////////////////////*@
-
+            if (DF.D.DOCUMENTORECs.Count == 0)
+            {
+                DOCUMENTOREC dr = db.DOCUMENTORECs.Where(x => x.DOC_REF == DF.D.NUM_DOC).FirstOrDefault();
+                if (dr != null)
+                    DF.D.DOCUMENTORECs = db.DOCUMENTORECs.Where(x => x.NUM_DOC == dr.NUM_DOC).ToList();
+            }
             List<DOCUMENTO> recs = (from D in DF.D.DOCUMENTORECs
                                     join N in db.DOCUMENTOes.Where(x => x.USUARIOC_ID == DF.D.USUARIOC_ID).ToList()
                                     on D.DOC_REF equals N.NUM_DOC
                                     select N
                                     ).ToList();
+            List<DOCUMENTO> recls = (from D in recs
+                                    join N in db.DOCUMENTOes.Where(x => x.USUARIOC_ID == DF.D.USUARIOC_ID).ToList()
+                                    on D.NUM_DOC equals N.DOCUMENTO_REF
+                                    select N
+                                    ).ToList();
             ViewBag.recs = recs;
+            ViewBag.recls = recls;
             return View(DF);
         }
         [HttpPost]
@@ -1078,6 +1089,8 @@ namespace TAT001.Controllers
                     id_pais = db.PAIS.Where(pais => pais.LAND.Equals(d.PAIS_ID)).FirstOrDefault();//RSG 15.05.2018
                     d.DOCUMENTO_REF = rel;
                     relacionada_neg = d.TIPO_TECNICO;
+                    if (d.DOCUMENTOLs.Count > 0 & (d.DOCUMENTOPs.First().MATNR != null | d.DOCUMENTOPs.First().MATNR != ""))
+                        relacionada_neg = "M";
                     ViewBag.TSOL_ANT = d.TSOL_ID;
                     ViewBag.LIGADA = d.LIGADA;//RSG 09.07.2018
                     try//RSG 09.07.2018

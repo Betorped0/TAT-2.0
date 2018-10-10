@@ -3436,15 +3436,15 @@ namespace TAT001.Controllers
                     D.MONTO_DOC_MD = D.MONTO_DOC_MD * doc.PORC_APOYO / 100;
                     D.PORC_APOYO = doc.PORC_APOYO;
                 }
-                doc.MONTO_DOC_MD = D.MONTO_DOC_MD;
+                //doc.MONTO_DOC_MD = D.MONTO_DOC_MD;
                 doc.PORC_APOYO = D.PORC_APOYO;
-                foreach (DOCUMENTOP dp in doc.DOCUMENTOPs)
-                {
-                    if (dp.APOYO_EST > 0)
-                        dp.APOYO_EST = D.MONTO_DOC_MD * dp.PORC_APOYO / 100;
-                    if (dp.APOYO_REAL > 0)
-                        dp.APOYO_REAL = D.MONTO_DOC_MD * dp.PORC_APOYO / 100;
-                }
+                //foreach (DOCUMENTOP dp in doc.DOCUMENTOPs)
+                //{
+                //    if (dp.APOYO_EST > 0)
+                //        dp.APOYO_EST = D.MONTO_DOC_MD * dp.PORC_APOYO / 100;
+                //    if (dp.APOYO_REAL > 0)
+                //        dp.APOYO_REAL = D.MONTO_DOC_MD * dp.PORC_APOYO / 100;
+                //}
 
 
                 db.Entry(doc).State = EntityState.Modified;
