@@ -47,18 +47,27 @@
 
             <div class="col s6 m6 l6">
                 <div class="col l12 m12 s12">
-                    @{
-                        foreach (var e in Model.MATERIALTs)
+                    @{if (Model.MATERIALTs.Count > 0)
                         {
-                            if (e.MAKTX != "")
+                            foreach (var e in Model.MATERIALTs)
                             {
-                    <div class="input-field col l10 m10" style="margin-bottom:0;">
-                        @Html.Editor(e.MAKTX, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @Value = e.MAKTX } })
-                        @Html.LabelFor(model => model.MAKTX, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_Dsc" + e.SPRAS })
-                    </div>
+                                if (e.MAKTX != "")
+                                {
+                                    <div class="input-field col l10 m10" style="margin-bottom:0;">
+                                        @Html.Editor(e.MAKTX, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @Value = e.MAKTX } })
+                                        @Html.LabelFor(model => model.MAKTX, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_Dsc" + e.SPRAS })
+                                    </div>
                                 }
                             }
                         }
+                        else
+                        {
+                            <div class="input-field col l10 m10" style="margin-bottom:0;">
+                                @Html.EditorFor(model=>model.MAKTX, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                @Html.LabelFor(model => model.MAKTX, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_DscEN" })
+                            </div>
+                        }
+                    }
                 </div>
             </div>
         </div>
