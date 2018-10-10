@@ -16,7 +16,7 @@
     -webkit-tap-highlight-color: rgba(0,0,0,0);
     border-style: solid;
     -webkit-appearance: none;
-    color: #2e2e2e;
+    color: #26a69a;
     border-color: #d5d5d5;
     background-color: #fff;
     box-sizing: content-box;
@@ -40,30 +40,12 @@
 }
 
 .k-dropdown-wrap > .k-i-close {
-    font-size: 100%;
+    font-size: 14px;
     display: none;
     position: absolute;
     cursor: pointer;
 }
 
-.k-icon {
-    position: relative;
-    display: inline-block;
-    overflow: hidden;
-    width: 1em;
-    height: 1em;
-    text-align: center;
-    vertical-align: middle;
-    background-image: none;
-    font: 16px/1 WebComponentsIcons;
-    speak: none;
-    font-variant: normal;
-    text-transform: none;
-    text-indent: 0;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: inherit;
-}
 .k-dropdown-wrap .k-select {
     line-height: 2em;
     vertical-align: middle;
@@ -108,7 +90,7 @@ border-color: #d5d5d5;
 .k-treeview .k-in {
     margin: 1px 0 1px .16666em;
     padding: 1px .3333em 1px .25em;
-    line-height: 1.3333em;
+    line-height: 21px;
     text-decoration: none;
     border-style: solid;
     border-width: 1px;
@@ -119,57 +101,40 @@ border-color: #d5d5d5;
 
 .k-treeview .k-i-collapse {
     margin-top: -4px;
-    margin-left: -16px;
     cursor: pointer;
 }
 
 
-.k-treeview .k-icon {
+.k-treeview .material-icons {
     vertical-align: middle;
     display: inline-block;
-    vertical-align: top;
-    background-color: #d81b60;
-    border-radius: 4px;
 }
-.k-icon {
-    position: relative;
-    display: inline-block;
-    overflow: hidden;
-    width: 1em;
-    height: 1em;
-    text-align: center;
-    vertical-align: middle;
-    background-image: none;
-    font: 16px/1 WebComponentsIcons;
-    speak: none;
-    font-variant: normal;
-    text-transform: none;
-    text-indent: 0;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: inherit;
+i.k-i-collapse:before {
+    content: "keyboard_arrow_down";
+}
+i.k-i-expand:before {
+    content: "keyboard_arrow_right";
 }
 .k-popup .k-item.k-first {
     position: relative;
 }
-
  .k-popup .k-item {
     cursor: default;
-}
 
+}
 .k-treeview .k-item {
     display: block;
     border-width: 0;
     margin: 0;
-    padding: 0 0 0 16px;
+    padding: 0 0 0 15px;
 }
-   .k-treeview > .k-group {
-        margin: 0;
-        padding: 0;
-        background: 0 0;
-        list-style-type: none;
-        position: relative;
-    }
+.k-treeview > .k-group {
+    margin: 0;
+    padding: 0;
+    background: 0 0;
+    list-style-type: none;
+    position: relative;
+}
 .k-list-container.k-popup-dropdowntree .k-treeview {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -207,7 +172,7 @@ div.k-treeview {
     border: 0;
     outline: 0;
     text-decoration: none;
-    font-size: 100%;
+    font-size: 14px;
     list-style: none;
 }
 
@@ -228,7 +193,7 @@ div.k-treeview {
     height: 3rem;
     line-height: 3rem;
     width: 100%;
-    font-size: 12px;
+    font-size: 14px;
     margin: 0 0 8px 0;
     padding: 0;
     display: block;
@@ -241,13 +206,8 @@ div.k-treeview {
 .k-animation-container{
     background-color:white;
 }
-.k-input :after {
-    content: "arrow_drop_down";
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    margin: auto 0;
-    z-index: 0;
-    fill: rgba(0, 0, 0, 0.87);
+.dropdowntree {
+    width: 100%;
+    font-size: 14px;
+    
 }

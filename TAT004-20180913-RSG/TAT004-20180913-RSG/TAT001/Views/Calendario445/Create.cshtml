@@ -24,9 +24,9 @@
     }
 </style>
 <link href="~/Content/materialize.clockpicker.css" rel="stylesheet" />
-@*<link href="~/Content/dropdowntree.css" rel="stylesheet" />*@
+<link href="~/Content/dropdowntree.css" rel="stylesheet" />
 <script type="text/javascript" src="~/Scripts/materialize.clockpicker.js"></script>
-@*<script type="text/javascript" src="~/Scripts/dropdowntree.js"></script>*@
+<script type="text/javascript" src="~/Scripts/dropdowntree.js"></script>
 <script type="text/javascript"  src="~/Scripts/jquery.validate.min.js"></script>
 <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
 @using (Html.BeginForm("Create", "Calendario445", FormMethod.Post,new { @id="calendario445Form"}))
@@ -57,8 +57,7 @@
                     <div class="form-group">
                         <label id="lbl_tipoSolicitud"></label>
                         <div class="col-md-10">
-                            @*  <input id="dropdowntree" style="width: 100%;" />*@
-                            @Html.DropDownListFor(model => model.calendario445.TSOL_ID, Model.tipoSolicitudes, "")
+                            @Html.EditorFor(model=>model.calendario445.TSOL_ID, new { htmlAttributes = new { @class = "dropdowntree" } })
                         </div>
                     </div>
 
@@ -149,6 +148,12 @@
         fnCommon.materializeInit( 'timepicker');
         fnCommon.materializeInit( 'select');
 
+            $("#calendario445_TSOL_ID").kendoDropDownTree({
+                placeholder: "",
+                idValid: "calendario445_TSOL_ID_VALID",
+                dataSource:@Html.Raw(Json.Encode(Model.treeTiposSolicitud))
+        });
+
         // Remover Fecha y Hora
         var sinFecha = "01/01/0001";
         document.querySelectorAll('.datepicker').forEach(function (datePicker) {
@@ -170,11 +175,7 @@
             M.toast({ html: mnjError });
         }
 
-            @*$("#dropdowntree").kendoDropDownTree({
-                placeholder: "",
-                height: "auto",
-                dataSource:@Html.Raw(Json.Encode(Model.tiposSolicitud))
-            });*@
+
         </script>
 
 

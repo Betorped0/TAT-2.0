@@ -198,7 +198,7 @@ namespace TAT001.Controllers.Catalogos
                         modelView.usuarios = FnCommon.ObtenerCmbUsuario(db, id);
                         break;
                     case CMB_TIPOSSOLICITUD:
-                        modelView.tipoSolicitudes = FnCommon.ObtenerCmbTiposSolicitud(db, spras_id, id);
+                        modelView.cmbTiposSolicitud = FnCommon.ObtenerCmbTiposSolicitud(db, spras_id, id);
                         break;
                     default:
                         break;

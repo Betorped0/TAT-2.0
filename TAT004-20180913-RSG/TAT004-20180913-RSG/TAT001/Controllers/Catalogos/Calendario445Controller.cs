@@ -14,6 +14,7 @@ namespace TAT001.Controllers.Catalogos
 
         const string CMB_SOCIEDADES= "SOC";
         const string CMB_TIPOSSOLICITUD = "TSOL";
+        const string CMBTREE_TIPOSSOLICITUD = "TREE_TSOL";
         const string CMB_PERIODOS = "PER";
         const string CMB_USUARIOS = "USU";
 
@@ -37,7 +38,7 @@ namespace TAT001.Controllers.Catalogos
             FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
 
             Calendario445ViewModel modelView = new Calendario445ViewModel();
-            CargarSelectList(ref modelView,new string[] { CMB_SOCIEDADES, CMB_PERIODOS, CMB_TIPOSSOLICITUD });
+            CargarSelectList(ref modelView,new string[] { CMB_SOCIEDADES, CMB_PERIODOS, CMBTREE_TIPOSSOLICITUD });
             return View(modelView);
         }
 
@@ -68,7 +69,7 @@ namespace TAT001.Controllers.Catalogos
             catch (Exception ex)
             {
                 FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
-                CargarSelectList(ref modelView, new string[] { CMB_SOCIEDADES, CMB_PERIODOS, CMB_TIPOSSOLICITUD });
+                CargarSelectList(ref modelView, new string[] { CMB_SOCIEDADES, CMB_PERIODOS, CMBTREE_TIPOSSOLICITUD });
                 return View(modelView);
             }
         }
@@ -191,9 +192,10 @@ namespace TAT001.Controllers.Catalogos
                         modelView.usuarios = FnCommon.ObtenerCmbUsuario(db, id);
                         break;
                     case CMB_TIPOSSOLICITUD:
-                      //  modelView.tiposSolicitud = FnCommon.ObtenerTreeTiposSolicitud(db, spras_id,id);
-
-                        modelView.tipoSolicitudes = FnCommon.ObtenerCmbTiposSolicitud(db, spras_id, id);
+                        modelView.cmbTiposSolicitud = FnCommon.ObtenerCmbTiposSolicitud(db, spras_id, id);
+                        break;
+                    case CMBTREE_TIPOSSOLICITUD:
+                        modelView.treeTiposSolicitud = FnCommon.ObtenerTreeTiposSolicitud(db, spras_id);
                         break;
                     default:
                         break;

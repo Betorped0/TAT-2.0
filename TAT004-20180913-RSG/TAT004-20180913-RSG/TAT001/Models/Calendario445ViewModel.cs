@@ -17,10 +17,10 @@ namespace TAT001.Models
             calendariosEx445 = new List<CALENDARIO_EX>();
             sociedades = new List<SelectListItem>();
             periodos = new List<SelectListItem>();
-            tipoSolicitudes = new List<SelectListItem>();
+            cmbTiposSolicitud = new List<SelectListItem>();
             usuarios = new List<SelectListItem>();
 
-            tiposSolicitud = new List<SelectTreeItem>();
+            treeTiposSolicitud = new List<SelectTreeItem>();
         }
         public CALENDARIO_AC calendario445 { get; set; }
         public CALENDARIO_EX calendarioEx445 { get; set; }
@@ -28,10 +28,10 @@ namespace TAT001.Models
         public List<CALENDARIO_EX> calendariosEx445 { get; set; }
         public List<SelectListItem> sociedades { get; set; }
         public List<SelectListItem> periodos { get; set; }
-        public List<SelectListItem> tipoSolicitudes { get; set; }
+        public List<SelectListItem> cmbTiposSolicitud { get; set; }
         public List<SelectListItem> usuarios { get; set; }
 
-        public List<SelectTreeItem> tiposSolicitud { get; set; }
+        public List<SelectTreeItem> treeTiposSolicitud { get; set; }
 
 
 

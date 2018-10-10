@@ -30,7 +30,7 @@ namespace TAT001.Common
         }
         public static void ObtenerConfPage(TAT001Entities db, int pagina_id, string user_id, ControllerBase controller)
         {
-            var user = FnCommon.ObtenerUsuario(db, user_id);
+            var user = ObtenerUsuario(db, user_id);
             controller.ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
             controller.ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
             controller.ViewBag.usuario = user;
@@ -39,17 +39,6 @@ namespace TAT001.Common
             controller.ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina_id) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
             controller.ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina_id) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
             controller.ViewBag.spras_id = user.SPRAS_ID;
-        }
-        public static List<SelectListItem> ObtenerCmbTiposSolicitud(TAT001Entities db, string spras_id, string id)
-        {
-          return   db.TSOLs
-                    .Join(db.TSOLTs, s => s.ID, st => st.TSOL_ID, (s, st) => st)
-                    .Where(x => x.SPRAS_ID == spras_id && (x.TSOL_ID == id || id == null))
-                    .Select(x => new SelectListItem
-                    {
-                        Value = x.TSOL_ID,
-                        Text = (x.TSOL_ID + "-" + x.TXT50)
-                    }).ToList();
         }
         public static List<SelectListItem> ObtenerCmbSociedades(TAT001Entities db, string id)
         {
@@ -105,56 +94,84 @@ namespace TAT001.Common
                         Text = x.TEXTOS
                     }).ToList();
         }
-        public static List<SelectTreeItem> ObtenerTreeTiposSolicitud(TAT001Entities db, string spras_id, string id)
+        public static List<SelectListItem> ObtenerCmbTiposSolicitud(TAT001Entities db, string spras_id, string id, string tipo = null)
         {
+            // tipo
+            // SD = Solicitud directa
+            // SR = Solicitud relacionada
+            return db.TSOLs
+                .Join(db.TSOL_TREE, s => s.ID, tst => tst.TSOL_ID, (s, tst) => tst)
+                .Where(x => x.TSOL_GROUP_TIPO == tipo || tipo == null)
+                .Join(db.TSOLTs, tst => tst.TSOL_ID, st => st.TSOL_ID, (s, st) => st)
+                .Where(x => x.SPRAS_ID == spras_id && (x.TSOL_ID == id || id == null))
+                .Select(x => new SelectListItem
+                {
+                    Value = x.TSOL_ID,
+                    Text = (x.TSOL_ID + " - " + x.TXT50)
+                }).ToList();
+        }
+        public static List<SelectTreeItem> ObtenerTreeTiposSolicitud(TAT001Entities db, string spras_id, string tipo = null)
+        {
+            // tipo
+            // SD = Solicitud directa
+            // SR = Solicitud relacionada
             List<SelectTreeItem> tree = new List<SelectTreeItem>();
             db.TSOL_GROUP
-            .Where(x => x.ID_PADRE == null && x.TIPO_PADRE == null)
-            .ToList().ForEach(x =>
-            {
-                tree.Add(new SelectTreeItem
+                .Where(x => x.ID_PADRE == null && x.TIPO_PADRE == null && (tipo == x.TIPO || tipo == null))
+                .Join(db.TSOL_GROUPT, tg => new { ID = tg.ID, TIPO = tg.TIPO }, tgt => new { ID = tgt.TSOL_GROUP_ID, TIPO = tgt.TSOL_GROUP_TIPO }, (tg, tgt) => tgt)
+                .Where(x => x.SPRAS_ID == spras_id)
+                .ToList().ForEach(x =>
                 {
-                    value = x.ID + "_" + x.TIPO,
-                    text = x.DESCRIPCION,
-                    expanded = true,
-                    items = ObtenerItemsSelectTree(db, x.ID, x.TIPO, spras_id, id)
+                    tree.Add(new SelectTreeItem
+                    {
+                        text = x.TXT50,
+                        expanded = false,
+                        items = ObtenerItemsSelectTree(db, x.TSOL_GROUP_ID, x.TSOL_GROUP_TIPO, spras_id)
+                    });
                 });
-            });
             return tree;
         }
 
-       static List<SelectTreeItem> ObtenerItemsSelectTree(TAT001Entities db, string id_padre, string tipo_padre, string spras_id, string id)
+        static List<SelectTreeItem> ObtenerItemsSelectTree(TAT001Entities db, string id_padre, string tipo_padre, string spras_id)
         {
-            List<SelectTreeItem> tree = new List<SelectTreeItem>();
+            List<SelectTreeItem> items = new List<SelectTreeItem>();
             db.TSOL_GROUP
                 .Where(x => x.ID_PADRE == id_padre && x.TIPO_PADRE == tipo_padre)
                 .ToList().ForEach(x =>
                 {
                     SelectTreeItem item = new SelectTreeItem();
-                    item.value = x.ID + "_" + x.TIPO;
                     item.text = x.DESCRIPCION;
                     item.expanded = true;
-                    item.items = ObtenerItemsSelectTree(db, x.ID, x.TIPO, spras_id,id);
-                    if (item.items.Count()==0)
+                    item.items = ObtenerItemsSelectTree(db, x.ID, x.TIPO, spras_id);
+                    if (item.items.Count() == 0)
                     {
-                        db.TSOL_TREE
-                        .Where(y => y.TSOL_GROUP_ID == x.ID && y.TSOL_GROUP_TIPO == x.TIPO)
-                        .Join(db.TSOLTs, tst => tst.TSOL_ID, st => st.TSOL_ID, (tst, st) => st)
-                        .Where(y => y.SPRAS_ID == spras_id && (y.TSOL_ID == id || id == null))
-                        .ToList().ForEach(y =>
-                        {
-                            item.items.Add(new SelectTreeItem
-                            {
-                                value = y.TSOL_ID,
-                                text = y.TXT50,
-                                expanded = true
-                            });
-                        });
+                        item.items=ObtenerItemsTSOLT(db, x.ID, x.TIPO, spras_id);
                     }
-                    tree.Add(item);
+                    items.Add(item);
                 });
-            return tree;
+            if (items.Count() == 0)
+            {
+               items = ObtenerItemsTSOLT(db, id_padre, tipo_padre, spras_id);
+            }
+            return items;
         }
-
+        static List<SelectTreeItem> ObtenerItemsTSOLT(TAT001Entities db, string id_padre, string tipo_padre, string spras_id)
+        {
+            List<SelectTreeItem> items = new List<SelectTreeItem>();
+            db.TSOL_TREE
+                       .Where(y => y.TSOL_GROUP_ID == id_padre && y.TSOL_GROUP_TIPO == tipo_padre)
+                       .Join(db.TSOLTs, tst => tst.TSOL_ID, st => st.TSOL_ID, (tst, st) => st)
+                       .Where(y => y.SPRAS_ID == spras_id)
+                       .ToList().ForEach(y =>
+                       {
+                           items.Add(new SelectTreeItem
+                           {
+                               value = y.TSOL_ID,
+                               text = (y.TSOL_ID + " - " + y.TXT50),
+                               expanded = true
+                           });
+                       });
+            return items;
+        }
     }
 }

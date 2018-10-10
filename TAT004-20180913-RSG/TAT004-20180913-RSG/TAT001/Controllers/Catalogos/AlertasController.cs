@@ -16,6 +16,7 @@ namespace TAT001.Controllers.Catalogos
 
         const string CMB_SOCIEDADES = "SOC";
         const string CMB_TIPOSSOLICITUD = "TSOL";
+        const string CMBTREE_TIPOSSOLICITUD = "TREE_TSOL";
         const string CMB_TABS = "TAB";
         const string CMB_CAMPOS = "CAMP";
         const string CMB_TIPOS = "TIP";
@@ -55,7 +56,7 @@ namespace TAT001.Controllers.Catalogos
             //Condiciones
             modelView.alertaCondiciones = new List<WARNING_COND> { new WARNING_COND { POS = 1 }, new WARNING_COND { POS = 2, ORAND = ")" } };
             //Combos
-            CargarSelectList(ref modelView, new string[] { CMB_TIPOS,CMB_SOCIEDADES, CMB_TIPOSSOLICITUD, CMB_TABS , CMB_CONDCAMPOS });
+            CargarSelectList(ref modelView, new string[] { CMB_TIPOS,CMB_SOCIEDADES, CMBTREE_TIPOSSOLICITUD, CMB_TABS , CMB_CONDCAMPOS });
             return View(modelView);
         }
 
@@ -114,7 +115,7 @@ namespace TAT001.Controllers.Catalogos
                 FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
                 CargarSelectList(ref modelView, new string[] {
                     CMB_SOCIEDADES,
-                    CMB_TIPOSSOLICITUD,
+                    CMBTREE_TIPOSSOLICITUD,
                     CMB_TABS,
                     CMB_TIPOS,
                     CMB_CAMPOS,
@@ -334,8 +335,11 @@ namespace TAT001.Controllers.Catalogos
                     case CMB_SOCIEDADES:
                         modelView.sociedades = FnCommon.ObtenerCmbSociedades(db, id);
                         break;
+                    case CMBTREE_TIPOSSOLICITUD:
+                        modelView.treeTiposSolicitud = FnCommon.ObtenerTreeTiposSolicitud(db, spras_id);
+                        break;
                     case CMB_TIPOSSOLICITUD:
-                        modelView.tiposSolicitud = FnCommon.ObtenerCmbTiposSolicitud(db, spras_id, id);
+                        modelView.cmbTiposSolicitud = FnCommon.ObtenerCmbTiposSolicitud(db, spras_id, id);
                         break;
                     case CMB_TABS:
                         modelView.tabs = FnCommon.ObtenerCmbTabs(db,spras_id,id);

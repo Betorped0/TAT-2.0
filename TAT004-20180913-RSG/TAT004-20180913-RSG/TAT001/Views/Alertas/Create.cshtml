@@ -17,6 +17,8 @@
         display: none !important;
     }
 </style>
+<link href="~/Content/dropdowntree.css" rel="stylesheet" />
+<script type="text/javascript" src="~/Scripts/dropdowntree.js"></script>
 <script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
 @using (Html.BeginForm("Create", "Alertas", FormMethod.Post, new { @id = "alertaForm" }))
 {
@@ -64,7 +66,7 @@
                     <div class="form-group">
                         <label id="lbl_tipo"></label>
                         <div class="col-md-10">
-                            @Html.DropDownListFor(model => model.alerta.TSOL_ID, Model.tiposSolicitud, "")
+                            @Html.EditorFor(model => model.alerta.TSOL_ID, new { htmlAttributes = new { @class = "dropdowntree" } })
                         </div>
                     </div>
                 </div>         
@@ -205,6 +207,11 @@
         //---- Inicializador de componentes Materialize----
         fnCommon.materializeInit('select');
 
+        $("#alerta_TSOL_ID").kendoDropDownTree({
+                placeholder: "",
+                idValid: "alerta_TSOL_ID_VALID",
+                dataSource:@Html.Raw(Json.Encode(Model.treeTiposSolicitud))
+        });
         //----  Se agrega validaciones al formulario----
         fnCommon.selectRequired();
         fnCommon.formValidation('alertaForm');
