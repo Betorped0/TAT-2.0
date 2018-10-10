@@ -215,6 +215,7 @@
     <Compile Include="Controllers\Catalogos\IimpuestoController.cs" />
     <Compile Include="Controllers\Catalogos\ImpuestosController.cs" />
     <Compile Include="Controllers\Catalogos\SociedadesController.cs" />
+    <Compile Include="Controllers\Catalogos\TALLsController.cs" />
     <Compile Include="Controllers\Catalogos\UsuariosController2.cs" />
     <Compile Include="Controllers\Configuracion\ccatController.cs" />
     <Compile Include="Controllers\Catalogos\ClienteController.cs" />
@@ -694,6 +695,9 @@
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\TSOL_GROUP.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\TSOL_GROUPT.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\TSOL_TREE.cs">
@@ -1885,6 +1889,11 @@
     <Content Include="Views\Reportes\ReporteConcentrado.cshtml" />
     <Content Include="Views\Reportes\ReporteMRLTS.cshtml" />
     <Content Include="Views\Recurrencias\Ejecutar.cshtml" />
+    <Content Include="Views\TALLs\Index.cshtml" />
+    <Content Include="Views\TALLs\Create.cshtml" />
+    <Content Include="Views\TALLs\Delete.cshtml" />
+    <Content Include="Views\TALLs\Details.cshtml" />
+    <Content Include="Views\TALLs\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->

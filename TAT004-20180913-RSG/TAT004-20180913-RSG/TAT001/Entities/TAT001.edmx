@@ -1864,6 +1864,17 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.TAB_CAMPO' no tiene definida ning
           <Property Name="ID_PADRE" Type="nvarchar" MaxLength="10" />
           <Property Name="TIPO_PADRE" Type="nvarchar" MaxLength="5" />
         </EntityType>
+        <EntityType Name="TSOL_GROUPT">
+          <Key>
+            <PropertyRef Name="SPRAS_ID" />
+            <PropertyRef Name="TSOL_GROUP_ID" />
+            <PropertyRef Name="TSOL_GROUP_TIPO" />
+          </Key>
+          <Property Name="SPRAS_ID" Type="nchar" MaxLength="2" Nullable="false" />
+          <Property Name="TSOL_GROUP_ID" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="TSOL_GROUP_TIPO" Type="nvarchar" MaxLength="5" Nullable="false" />
+          <Property Name="TXT50" Type="nvarchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="TSOL_TREE">
           <Key>
             <PropertyRef Name="TSOL_GROUP_ID" />
@@ -4929,6 +4940,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <EntitySet Name="TS_FORMT" EntityType="Self.TS_FORMT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TSOL" EntityType="Self.TSOL" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TSOL_GROUP" EntityType="Self.TSOL_GROUP" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TSOL_GROUPT" EntityType="Self.TSOL_GROUPT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TSOL_TREE" EntityType="Self.TSOL_TREE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TSOLT" EntityType="Self.TSOLT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TSOPORTE" EntityType="Self.TSOPORTE" Schema="dbo" store:Type="Tables" />
@@ -11900,6 +11912,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <FunctionImport Name="sp_upgraddiagrams" />
           <EntitySet Name="TSOL_GROUP" EntityType="TAT001Model.TSOL_GROUP" />
           <EntitySet Name="TSOL_TREE" EntityType="TAT001Model.TSOL_TREE" />
+          <EntitySet Name="TSOL_GROUPT" EntityType="TAT001Model.TSOL_GROUPT" />
         </EntityContainer>
         <ComplexType Name="CPS_LISTA_CLI_PRO_Result">
           <Property Type="String" Name="KUNNR" Nullable="false" MaxLength="10" />
@@ -12071,6 +12084,17 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Property Name="TSOL_GROUP_ID" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="TSOL_GROUP_TIPO" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="true" />
           <Property Name="TSOL_ID" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="TSOL_GROUPT">
+          <Key>
+            <PropertyRef Name="SPRAS_ID" />
+            <PropertyRef Name="TSOL_GROUP_ID" />
+            <PropertyRef Name="TSOL_GROUP_TIPO" />
+          </Key>
+          <Property Name="SPRAS_ID" Type="String" Nullable="false" MaxLength="2" FixedLength="true" Unicode="true" />
+          <Property Name="TSOL_GROUP_ID" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="TSOL_GROUP_TIPO" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="TXT50" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -14539,6 +14563,16 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
                 <ScalarProperty Name="TSOL_ID" ColumnName="TSOL_ID" />
                 <ScalarProperty Name="TSOL_GROUP_TIPO" ColumnName="TSOL_GROUP_TIPO" />
                 <ScalarProperty Name="TSOL_GROUP_ID" ColumnName="TSOL_GROUP_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TSOL_GROUPT">
+            <EntityTypeMapping TypeName="TAT001Model.TSOL_GROUPT">
+              <MappingFragment StoreEntitySet="TSOL_GROUPT">
+                <ScalarProperty Name="TXT50" ColumnName="TXT50" />
+                <ScalarProperty Name="TSOL_GROUP_TIPO" ColumnName="TSOL_GROUP_TIPO" />
+                <ScalarProperty Name="TSOL_GROUP_ID" ColumnName="TSOL_GROUP_ID" />
+                <ScalarProperty Name="SPRAS_ID" ColumnName="SPRAS_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
