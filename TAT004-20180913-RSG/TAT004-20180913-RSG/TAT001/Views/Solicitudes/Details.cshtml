@@ -2644,18 +2644,22 @@ catch (Exception ee)
 <script>
     $(document).ready(function () {
         $('.collapsible').collapsible();
-        //OCG
-        var cliente = $("#payer_id").val;
+
+
+        //OCG 11/10/18
+        var cliente = $("#payer_id").val();
+        var cli = cliente.split("");
         var con = 0;
         for (var i = 0; i < 10; i++) {
-            if (cliente.split("")[i] == 0) {
-                cont++;
+            if (cli[i] == 0) {
+                con++;
             }
             else {
                 i = 10;
             }
         }
-        $("#payer_id").value = cliente.substring(cont + 1, 10);
+        var clien = cliente.substring(con, 10);
+        $("#payer_id").attr("value", clien);
 
     });
 
@@ -2668,5 +2672,4 @@ catch (Exception ee)
 
         return (a == "True");
     }
-
 </script>
