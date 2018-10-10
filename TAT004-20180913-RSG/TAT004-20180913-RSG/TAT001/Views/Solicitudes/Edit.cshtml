@@ -357,33 +357,33 @@
                                     @Html.LabelFor(model => model.CIUDAD, "Ciudad", htmlAttributes: new { @for = "city_id" })
                                 </div>
                                 <script>
-                                                                        auto(document).ready(function () {
-                                                                            auto("#city_id").autocomplete({
-                                                                                source: function (request, response) {
-                                                                                    var estado = $("#state_id").val();
-                                                                                    auto.ajax({
-                                                                                        url: "../Listas/Ciudades",
-                                                                                        type: "GET",
-                                                                                        dataType: "json",
-                                                                                        data: { estado: estado, Prefix: request.term },
-                                                                                        success: function (data) {
-                                                                                            response(auto.map(data, function (item) {
-                                                                                                return { label: item.NAME, value: item.NAME };
-                                                                                            }))
-                                                                                        }
-                                                                                    })
-                                                                                },
-                                                                                messages: {
-                                                                                    noResults: '',
-                                                                                    results: function (resultsCount) { }
-                                                                                },
-                                                                                change: function (e, ui) {
-                                                                                    if (!(ui.item)) {
+                                    auto(document).ready(function () {
+                                        auto("#city_id").autocomplete({
+                                            source: function (request, response) {
+                                                var estado = $("#state_id").val();
+                                                auto.ajax({
+                                                    url: "../Listas/Ciudades",
+                                                    type: "GET",
+                                                    dataType: "json",
+                                                    data: { estado: estado, Prefix: request.term },
+                                                    success: function (data) {
+                                                        response(auto.map(data, function (item) {
+                                                            return { label: item.NAME, value: item.NAME };
+                                                        }))
+                                                    }
+                                                })
+                                            },
+                                            messages: {
+                                                noResults: '',
+                                                results: function (resultsCount) { }
+                                            },
+                                            change: function (e, ui) {
+                                                if (!(ui.item)) {
 
-                                                                                    }
-                                                                                }
-                                                                            });
-                                                                        })
+                                                }
+                                            }
+                                        });
+                                    })
                                 </script>
                             </div>
                         </div>
@@ -403,29 +403,29 @@
                                     <label for="periodo">Periodo</label>
                                 </div>
                                 <script>
-                                                                        var elemdp = document.querySelector('#fechad');
-                                                                        var optionsdp = {
-                                                                            format: 'dd/mm/yyyy',
-                                                                            onClose: function (e) {
-                                                                                var date = $('#fechad').val();
-                                                                                var periodo = date.split("/");
+                                    var elemdp = document.querySelector('#fechad');
+                                    var optionsdp = {
+                                        format: 'dd/mm/yyyy',
+                                        onClose: function (e) {
+                                            var date = $('#fechad').val();
+                                            var periodo = date.split("/");
 
-                                                                                $('#periodo').val(periodo[1]);
-                                                                            },
-                                                                            i18n: {
-                                                                                clear: 'Limpiar',
-                                                                                today: 'Hoy',
-                                                                                done: 'Seleccionar',
-                                                                                previousMonth: '‹',
-                                                                                nextMonth: '›',
-                                                                                months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-                                                                                monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-                                                                                weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
-                                                                                weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-                                                                                weekdaysAbbrev: ['D', 'L', 'M', 'X', 'J', 'V', 'S']
-                                                                            }
-                                                                        };
-                                                                        var instancedp = M.Datepicker.init(elemdp, optionsdp);
+                                            $('#periodo').val(periodo[1]);
+                                        },
+                                        i18n: {
+                                            clear: 'Limpiar',
+                                            today: 'Hoy',
+                                            done: 'Seleccionar',
+                                            previousMonth: '‹',
+                                            nextMonth: '›',
+                                            months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                                            monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                                            weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+                                            weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                                            weekdaysAbbrev: ['D', 'L', 'M', 'X', 'J', 'V', 'S']
+                                        }
+                                    };
+                                    var instancedp = M.Datepicker.init(elemdp, optionsdp);
 
                                 </script>
                                 <div class="input-field col s6">
@@ -456,16 +456,16 @@
                                     @Html.LabelFor(model => model.NOTAS, "Mecánica de negociación", htmlAttributes: new { @class = "active", @for = "notas_txt" })
                                 </div>
                                 <script>
-                                                                        function maxchar(w) {
-                                                                            var maxLength = 255;
-                                                                            var text = $('#notas_txt').val();
-                                                                            var textLength = text.length;
-                                                                            if (textLength > (maxLength)) {
-                                                                                $('#notas_txt').val(text.substring(0, ((maxLength))));
-                                                                                var msg = 'Número máximo para la negociación es ' + maxLength;
-                                                                                M.toast({ html: msg });
-                                                                            }
-                                                                        }
+                                    function maxchar(w) {
+                                        var maxLength = 255;
+                                        var text = $('#notas_txt').val();
+                                        var textLength = text.length;
+                                        if (textLength > (maxLength)) {
+                                            $('#notas_txt').val(text.substring(0, ((maxLength))));
+                                            var msg = 'Número máximo para la negociación es ' + maxLength;
+                                            M.toast({ html: msg });
+                                        }
+                                    }
                                 </script>
                             </div>
                         </div>
@@ -480,39 +480,53 @@
                                     @Html.LabelFor(model => model.PAYER_ID, "Cliente", htmlAttributes: new { @for = "payer_id" })
                                 </div>
                                 <script>
-                                                                        auto(document).ready(function () {
-                                                                            auto("#payer_id").autocomplete({
-                                                                                source: function (request, response) {
-                                                                                    auto.ajax({
-                                                                                        url: "../Listas/Clientes",
-                                                                                        type: "GET",
-                                                                                        dataType: "json",
-                                                                                        data: { Prefix: request.term },
-                                                                                        success: function (data) {
-                                                                                            response(auto.map(data, function (item) {
-                                                                                                return { label: item.KUNNR + " - " + item.NAME1, value: item.KUNNR };
-                                                                                            }))
-                                                                                        }
-                                                                                    })
-                                                                                },
-                                                                                messages: {
-                                                                                    noResults: '',
-                                                                                    results: function (resultsCount) { }
-                                                                                },
-                                                                                change: function (e, ui) {
-                                                                                    if (!(ui.item)) {
-                                                                                        e.target.value = "";
-                                                                                    }
-                                                                                },
+                                    auto(document).ready(function () {
+                                        auto("#payer_id").autocomplete({
+                                            source: function (request, response) {
+                                                auto.ajax({
+                                                    url: "../Listas/Clientes",
+                                                    type: "GET",
+                                                    dataType: "json",
+                                                    data: { Prefix: request.term },
+                                                    success: function (data) {
+                                                        response(auto.map(data, function (item) {
+                                                            return { label: item.KUNNR + " - " + item.NAME1, value: item.KUNNR };
+                                                        }))
+                                                    }
+                                                })
+                                            },
+                                            messages: {
+                                                noResults: '',
+                                                results: function (resultsCount) { }
+                                            },
+                                            change: function (e, ui) {
+                                                if (!(ui.item)) {
+                                                    e.target.value = "";
+                                                }
+                                            },
 
-                                                                                select: function (event, ui) {
+                                            select: function (event, ui) {
 
-                                                                                    var label = ui.item.label;
-                                                                                    var value = ui.item.value;
-                                                                                    selectCliente(value);
-                                                                                }
-                                                                            });
-                                                                        })
+                                                var label = ui.item.label;
+                                                var value = ui.item.value;
+                                                selectCliente(value);
+                                            }
+                                        });
+                                        ////OCG 11/10/18
+                                        //var cliente = auto("#payer_id").val();
+                                        //var cli = cliente.split("");
+                                        //var con = 0;
+                                        //for (var i = 0; i < 10; i++) {
+                                        //    if (cli[i] == 0) {
+                                        //        con++;
+                                        //    }
+                                        //    else {
+                                        //        i = 9;
+                                        //    }
+                                        //}
+                                        //var clien = cliente.substring(con, i);
+                                        //auto("#payer_id").attr("value", clien);
+                                    })
                                 </script>
                                 <input type="hidden" id="txt_vkorg" />
                                 <input type="hidden" id="txt_vtweg" />
@@ -583,31 +597,31 @@
                                         </label>
                                     </div>
                                     <script>
-                                                                                function cambiaTemp(id) {
-                                                                                    var tipo = id.split('-')[1];
-                                                                                    if (tipo == "date") {
-                                                                                        document.getElementById("periodoi_id").setAttribute("disabled", "disabled");
-                                                                                        document.getElementById("anioi_id").setAttribute("disabled", "disabled");
-                                                                                        document.getElementById("periodof_id").setAttribute("disabled", "disabled");
-                                                                                        document.getElementById("aniof_id").setAttribute("disabled", "disabled");
+                                        function cambiaTemp(id) {
+                                            var tipo = id.split('-')[1];
+                                            if (tipo == "date") {
+                                                document.getElementById("periodoi_id").setAttribute("disabled", "disabled");
+                                                document.getElementById("anioi_id").setAttribute("disabled", "disabled");
+                                                document.getElementById("periodof_id").setAttribute("disabled", "disabled");
+                                                document.getElementById("aniof_id").setAttribute("disabled", "disabled");
 
-                                                                                        document.getElementById("fechai_vig2").removeAttribute("disabled");
-                                                                                        document.getElementById("fechaf_vig2").removeAttribute("disabled");
-                                                                                    } else {
-                                                                                        document.getElementById("periodoi_id").removeAttribute("disabled");
-                                                                                        document.getElementById("anioi_id").removeAttribute("disabled");
-                                                                                        document.getElementById("periodof_id").removeAttribute("disabled");
-                                                                                        document.getElementById("aniof_id").removeAttribute("disabled");
+                                                document.getElementById("fechai_vig2").removeAttribute("disabled");
+                                                document.getElementById("fechaf_vig2").removeAttribute("disabled");
+                                            } else {
+                                                document.getElementById("periodoi_id").removeAttribute("disabled");
+                                                document.getElementById("anioi_id").removeAttribute("disabled");
+                                                document.getElementById("periodof_id").removeAttribute("disabled");
+                                                document.getElementById("aniof_id").removeAttribute("disabled");
 
-                                                                                        document.getElementById("fechai_vig2").setAttribute("disabled", "disabled");
-                                                                                        document.getElementById("fechaf_vig2").setAttribute("disabled", "disabled");
+                                                document.getElementById("fechai_vig2").setAttribute("disabled", "disabled");
+                                                document.getElementById("fechaf_vig2").setAttribute("disabled", "disabled");
 
-                                                                                    }
-                                                                                    setDates(tipo);
-                                                                                    var elem = document.querySelectorAll('select');
-                                                                                    var instance = M.FormSelect.init(elem, []);
-                                                                                    pickerFecha2(".format_date");
-                                                                                }
+                                            }
+                                            setDates(tipo);
+                                            var elem = document.querySelectorAll('select');
+                                            var instance = M.FormSelect.init(elem, []);
+                                            pickerFecha2(".format_date");
+                                        }
                                     </script>
                                     <div class="col s6">
                                         <div class="input-field col s12">
@@ -626,20 +640,20 @@
                                         </div>
                                     </div>
                                     <script>
-                                                                                asignaFechasInit();
-                                                                                function asignaFechasInit() {
-                                                                                    var datei = document.getElementById("fechai_vig").value.split(" ")[0];
-                                                                                    var datef = document.getElementById("fechaf_vig").value.split(" ")[0];
-                                                                                    //var datei = document.getElementById("fechai_vig").value;
-                                                                                    //var datef = document.getElementById("fechaf_vig").value;
+                                        asignaFechasInit();
+                                        function asignaFechasInit() {
+                                            var datei = document.getElementById("fechai_vig").value.split(" ")[0];
+                                            var datef = document.getElementById("fechaf_vig").value.split(" ")[0];
+                                            //var datei = document.getElementById("fechai_vig").value;
+                                            //var datef = document.getElementById("fechaf_vig").value;
 
-                                                                                    if (datei != "") {
-                                                                                        document.getElementById("fechai_vig2").value = datei;
-                                                                                    }
-                                                                                    if (datef != "") {
-                                                                                        document.getElementById("fechaf_vig2").value = datef;
-                                                                                    }
-                                                                                }
+                                            if (datei != "") {
+                                                document.getElementById("fechai_vig2").value = datei;
+                                            }
+                                            if (datef != "") {
+                                                document.getElementById("fechaf_vig2").value = datef;
+                                            }
+                                        }
                                     </script>
                                     <div class="col s6">
                                         <div class="col s12">
@@ -661,61 +675,61 @@
                                         </div>
                                     </div>
                                     <script>
-                                                                                var datei = document.getElementById("fechai_vig").value;
-                                                                                var datef = document.getElementById("fechaf_vig").value;
-                                                                                var elemth = document.querySelector('#fechai_vig2');
-                                                                                var optionsth = {
-                                                                                    defaultDate: new Date(datei.split('/')[2], datei.split('/')[1] - 1, datei.split('/')[0]),
-                                                                                    format: 'dd/mm/yyyy',
-                                                                                    i18n: {
-                                                                                        clear: 'Limpiar',
-                                                                                        today: 'Hoy',
-                                                                                        done: 'Seleccionar',
-                                                                                        previousMonth: '‹',
-                                                                                        nextMonth: '›',
-                                                                                        months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-                                                                                        monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-                                                                                        weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
-                                                                                        weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-                                                                                        weekdaysAbbrev: ['D', 'L', 'M', 'X', 'J', 'V', 'S']
-                                                                                    }
-                                                                                };
-                                                                                var instanceth = M.Datepicker.init(elemth, optionsth);
+                                        var datei = document.getElementById("fechai_vig").value;
+                                        var datef = document.getElementById("fechaf_vig").value;
+                                        var elemth = document.querySelector('#fechai_vig2');
+                                        var optionsth = {
+                                            defaultDate: new Date(datei.split('/')[2], datei.split('/')[1] - 1, datei.split('/')[0]),
+                                            format: 'dd/mm/yyyy',
+                                            i18n: {
+                                                clear: 'Limpiar',
+                                                today: 'Hoy',
+                                                done: 'Seleccionar',
+                                                previousMonth: '‹',
+                                                nextMonth: '›',
+                                                months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                                                monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                                                weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+                                                weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                                                weekdaysAbbrev: ['D', 'L', 'M', 'X', 'J', 'V', 'S']
+                                            }
+                                        };
+                                        var instanceth = M.Datepicker.init(elemth, optionsth);
 
-                                                                                var elemtd = document.querySelector('#fechaf_vig2');
-                                                                                var optionstd = {
-                                                                                    defaultDate: new Date(datef.split('/')[2], datef.split('/')[1] - 1, datef.split('/')[0]),
-                                                                                    format: 'dd/mm/yyyy',
-                                                                                    onClose: function (e) {
-                                                                                        var datei = $('#fechai_vig2').val();
-                                                                                        var datef = $('#fechaf_vig2').val();
-                                                                                        var res = validar_fechas(datei, datef);
+                                        var elemtd = document.querySelector('#fechaf_vig2');
+                                        var optionstd = {
+                                            defaultDate: new Date(datef.split('/')[2], datef.split('/')[1] - 1, datef.split('/')[0]),
+                                            format: 'dd/mm/yyyy',
+                                            onClose: function (e) {
+                                                var datei = $('#fechai_vig2').val();
+                                                var datef = $('#fechaf_vig2').val();
+                                                var res = validar_fechas(datei, datef);
 
-                                                                                        if (!res) {
-                                                                                            $('#fechaf_vig2').val("");
-                                                                                            M.toast({ html: 'Las fechas no tienen un secuencia correcta' });
-                                                                                        }
-                                                                                    },
-                                                                                    i18n: {
-                                                                                        clear: 'Limpiar',
-                                                                                        today: 'Hoy',
-                                                                                        done: 'Seleccionar',
-                                                                                        previousMonth: '‹',
-                                                                                        nextMonth: '›',
-                                                                                        months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-                                                                                        monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-                                                                                        weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
-                                                                                        weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-                                                                                        weekdaysAbbrev: ['D', 'L', 'M', 'X', 'J', 'V', 'S']
-                                                                                    }
-                                                                                };
-                                                                                var instancetd = M.Datepicker.init(elemtd, optionstd);
+                                                if (!res) {
+                                                    $('#fechaf_vig2').val("");
+                                                    M.toast({ html: 'Las fechas no tienen un secuencia correcta' });
+                                                }
+                                            },
+                                            i18n: {
+                                                clear: 'Limpiar',
+                                                today: 'Hoy',
+                                                done: 'Seleccionar',
+                                                previousMonth: '‹',
+                                                nextMonth: '›',
+                                                months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                                                monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                                                weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+                                                weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                                                weekdaysAbbrev: ['D', 'L', 'M', 'X', 'J', 'V', 'S']
+                                            }
+                                        };
+                                        var instancetd = M.Datepicker.init(elemtd, optionstd);
 
-                                                                                function borrar(field) {
-                                                                                    field.value = "";
-                                                                                }
-                                                                                //LEJ 30.07.2018
-                                                                                _ff();
+                                        function borrar(field) {
+                                            field.value = "";
+                                        }
+                                        //LEJ 30.07.2018
+                                        _ff();
                                     </script>
                                 }
                                 else
@@ -961,47 +975,47 @@
                                     <span id="span_objq">Objetivo Q</span> @*B20180801 MGC Textos*@
                                 </label>
                                 <script>
-                                                                        function objetivoQ(ban) {
-                                                                            if (ban) {
-                                                                                var lengthT = $("table#table_rec tbody tr[role='row']").length;
-                                                                                if (lengthT > 0) {
-                                                                                    document.getElementById('table_objQ').classList.remove("hide");
-                                                                                    var total = 0;
-                                                                                    var porc = 0;
-                                                                                    var fecha = "";
-                                                                                    var tsol = "";
-                                                                                    $("#table_rec > tbody  > tr[role='row']").each(function () {
-                                                                                        total += parseFloat(toNum($(this).find("td.MONTO input").val()));
-                                                                                        //porc = toNum($(this).find("td.PORCENTAJE").text());
-                                                                                        fecha = ($(this).find("td.FECHA").text());
-                                                                                        tsol = $(this).find("td.TSOL").text();
-                                                                                    });
-                                                                                    document.getElementById("obqTSOL").innerText = tsol;
-                                                                                    document.getElementById("obqFECHA").innerText = fecha;
-                                                                                    document.getElementById("obqMONTO").innerText = toShow(total);
-                                                                                    //document.getElementById("obqPORC").innerText = toShowPorc(porc);
-                                                                                }
-                                                                            }
-                                                                            else {
-                                                                                document.getElementById('table_objQ').classList.add("hide");
-                                                                            }
-                                                                        }
-                                                                        function updateObjQ() {
-                                                                            var lengthT = $("table#table_rec tbody tr[role='row']").length;
-                                                                            if (lengthT > 0) {
-                                                                                var total = 0;
-                                                                                $("#table_rec > tbody  > tr[role='row']").each(function () {
-                                                                                    total += parseFloat(toNum($(this).find("td.MONTO input").val()));
-                                                                                });
-                                                                                document.getElementById("obqMONTO").innerText = toShow(total);
-                                                                            }
+                                    function objetivoQ(ban) {
+                                        if (ban) {
+                                            var lengthT = $("table#table_rec tbody tr[role='row']").length;
+                                            if (lengthT > 0) {
+                                                document.getElementById('table_objQ').classList.remove("hide");
+                                                var total = 0;
+                                                var porc = 0;
+                                                var fecha = "";
+                                                var tsol = "";
+                                                $("#table_rec > tbody  > tr[role='row']").each(function () {
+                                                    total += parseFloat(toNum($(this).find("td.MONTO input").val()));
+                                                    //porc = toNum($(this).find("td.PORCENTAJE").text());
+                                                    fecha = ($(this).find("td.FECHA").text());
+                                                    tsol = $(this).find("td.TSOL").text();
+                                                });
+                                                document.getElementById("obqTSOL").innerText = tsol;
+                                                document.getElementById("obqFECHA").innerText = fecha;
+                                                document.getElementById("obqMONTO").innerText = toShow(total);
+                                                //document.getElementById("obqPORC").innerText = toShowPorc(porc);
+                                            }
+                                        }
+                                        else {
+                                            document.getElementById('table_objQ').classList.add("hide");
+                                        }
+                                    }
+                                    function updateObjQ() {
+                                        var lengthT = $("table#table_rec tbody tr[role='row']").length;
+                                        if (lengthT > 0) {
+                                            var total = 0;
+                                            $("#table_rec > tbody  > tr[role='row']").each(function () {
+                                                total += parseFloat(toNum($(this).find("td.MONTO input").val()));
+                                            });
+                                            document.getElementById("obqMONTO").innerText = toShow(total);
+                                        }
 
-                                                                        }
+                                    }
                                 </script>
                                 @if (Model.OBJETIVOQ == true)
                                 {
                                     <script>
-                                                                                document.getElementById("check_objetivoq").checked = true;
+                                        document.getElementById("check_objetivoq").checked = true;
 
                                     </script>
                                 }
@@ -1240,16 +1254,16 @@
                                         </div>
                                     </div>
                                     <script>
-                                                                                function maxchar_notas() {
-                                                                                    var maxLength = 500;
-                                                                                    var text = $('#notas_soporte').val();
-                                                                                    var textLength = text.length;
-                                                                                    if (textLength > (maxLength)) {
-                                                                                        $('#notas_soporte').val(text.substring(0, ((maxLength))));
-                                                                                        var msg = 'Número máximo para la nota es ' + maxLength;
-                                                                                        M.toast({ html: msg });
-                                                                                    }
-                                                                                }
+                                        function maxchar_notas() {
+                                            var maxLength = 500;
+                                            var text = $('#notas_soporte').val();
+                                            var textLength = text.length;
+                                            if (textLength > (maxLength)) {
+                                                $('#notas_soporte').val(text.substring(0, ((maxLength))));
+                                                var msg = 'Número máximo para la nota es ' + maxLength;
+                                                M.toast({ html: msg });
+                                            }
+                                        }
                                     </script>
                                     <div class="form-group col s12">
                                         @Html.Label("TREVERSA", "Tipo de reverso", htmlAttributes: new { @class = "control-label col-md-2" })
@@ -1304,49 +1318,49 @@
                                     @if (Model.DOCUMENTO_REF == null)
                                     {
                                         <script>
-                                                                                        function cambiaLigada(campo) {
-                                                                                            if (campo.checked) {
-                                                                                                $("#select_neg").val("P");
-                                                                                                $("#select_dis").val("C");
-                                                                                                $("#select_negi").val("P");
-                                                                                                $("#select_disi").val("C");
-                                                                                                $("#select_neg").prop("disabled", "disabled");
-                                                                                                $("#select_dis").prop("disabled", "disabled");
-                                                                                                $("#select_neg").change();
-                                                                                                $("#select_dis").change();
-                                                                                                $("#div_objq").removeClass("hide");
-                                                                                                $("#txt_ligada").val("X");
-                                                                                            } else {
-                                                                                                $("#select_neg").prop("disabled", false);
-                                                                                                $("#select_dis").prop("disabled", false);
-                                                                                                $("#select_neg").change();
-                                                                                                $("#select_dis").change();
-                                                                                                $("#div_objq").addClass("hide");
-                                                                                                $("#txt_ligada").val("");
-                                                                                            }
-                                                                                        }
-                                                                                        var elem = document.getElementById('select_neg');
-                                                                                        var instance = M.FormSelect.init(elem, []);
-                                                                                        elem = document.getElementById('select_dis');
-                                                                                        instance = M.FormSelect.init(elem, []);
+                                            function cambiaLigada(campo) {
+                                                if (campo.checked) {
+                                                    $("#select_neg").val("P");
+                                                    $("#select_dis").val("C");
+                                                    $("#select_negi").val("P");
+                                                    $("#select_disi").val("C");
+                                                    $("#select_neg").prop("disabled", "disabled");
+                                                    $("#select_dis").prop("disabled", "disabled");
+                                                    $("#select_neg").change();
+                                                    $("#select_dis").change();
+                                                    $("#div_objq").removeClass("hide");
+                                                    $("#txt_ligada").val("X");
+                                                } else {
+                                                    $("#select_neg").prop("disabled", false);
+                                                    $("#select_dis").prop("disabled", false);
+                                                    $("#select_neg").change();
+                                                    $("#select_dis").change();
+                                                    $("#div_objq").addClass("hide");
+                                                    $("#txt_ligada").val("");
+                                                }
+                                            }
+                                            var elem = document.getElementById('select_neg');
+                                            var instance = M.FormSelect.init(elem, []);
+                                            elem = document.getElementById('select_dis');
+                                            instance = M.FormSelect.init(elem, []);
                                         </script>
                                     }
                                     else
                                     {
                                         <script>
-                                                                                        function cambiaLigada(campo) {
-                                                                                            if (campo.checked) {
-                                                                                                $("#select_neg").val("P");
-                                                                                                $("#select_dis").val("C");
-                                                                                                $("#select_negi").val("P");
-                                                                                                $("#select_disi").val("C");
-                                                                                                $("#div_objq").removeClass("hide");
-                                                                                                $("#txt_ligada").val("X");
-                                                                                            } else {
-                                                                                                $("#div_objq").addClass("hide");
-                                                                                                $("#txt_ligada").val("");
-                                                                                            }
-                                                                                        }
+                                            function cambiaLigada(campo) {
+                                                if (campo.checked) {
+                                                    $("#select_neg").val("P");
+                                                    $("#select_dis").val("C");
+                                                    $("#select_negi").val("P");
+                                                    $("#select_disi").val("C");
+                                                    $("#div_objq").removeClass("hide");
+                                                    $("#txt_ligada").val("X");
+                                                } else {
+                                                    $("#div_objq").addClass("hide");
+                                                    $("#txt_ligada").val("");
+                                                }
+                                            }
                                         </script>
                                     }
                                 </div>
@@ -1377,14 +1391,14 @@
                                 @if (Model.DOCUMENTO_REF != null)
                                 {
                                     <script>
-                                                                                $("#select_neg").prop("disabled", "disabled");
-                                                                                $("#select_dis").prop("disabled", "disabled");
-                                                                                //$("#select_dis").change();
+                                        $("#select_neg").prop("disabled", "disabled");
+                                        $("#select_dis").prop("disabled", "disabled");
+                                        //$("#select_dis").change();
 
-                                                                                var elem = document.getElementById('select_neg');
-                                                                                var instance = M.FormSelect.init(elem, []);
-                                                                                elem = document.getElementById('select_dis');
-                                                                                instance = M.FormSelect.init(elem, []);
+                                        var elem = document.getElementById('select_neg');
+                                        var instance = M.FormSelect.init(elem, []);
+                                        elem = document.getElementById('select_dis');
+                                        instance = M.FormSelect.init(elem, []);
                                     </script>
                                 }
                             </div>
@@ -1576,7 +1590,7 @@
                                     <div class="input-field col s6">
                                         @*<div class="form-group">*@
                                         @*<div class="col-md-10">*@
-                                        @Html.DropDownList("MONEDA", null, htmlAttributes: new { @id = "moneda_id", @class = "form-control " + @ViewBag.relacionada, onchange = @"selectMoneda(this.value)" })
+                                        @Html.DropDownList("MONEDA", null, htmlAttributes: new { @id = "moneda_id", @class = "form-control " + @ViewBag.relacionada, @disabled = "disabled" @*onchange = @"selectMoneda(this.value)"*@}) @*OCG 09/10/2018 Se modifica para evitar el cambiode la moneda*@
                                         @Html.LabelFor(model => model.MONEDA_ID, "Moneda", htmlAttributes: new { @for = "moneda_id" })
                                         @*</div>
                                             </div>*@
@@ -1591,11 +1605,11 @@
                                         <div class="col-md-10">
                                             @*@Html.EditorFor(model => model.TIPO_CAMBIO, new { htmlAttributes = new { @id = "tipo_cambio", @class = "form-control " + @ViewBag.relacionada, @Value = ViewBag.tcambio } })*@
                                             @*@Html.EditorFor(model => model.TIPO_CAMBIO, new { htmlAttributes = new { @id = "tipo_cambio", @class = "form-control " + @ViewBag.relacionada } })*@
-                                            <input type="text" disabled="disabled" id="tipo_cambio" value="@Model.TIPO_CAMBIO" />
+                                            <input type="text" id="tipo_cambio" value="@Model.TIPO_CAMBIO" />
                                         </div>
                                     </div>
                                     <script>
-                                                                                var aa = $("#tipo_cambio").val();
+                                        var aa = $("#tipo_cambio").val();
                                     </script>
                                     <div class=" input-field col s6">
                                         <input value="" id="montos_doc_ml2" type="text" class="" disabled="disabled" />
@@ -1999,7 +2013,6 @@
             </div>
         </div>
     </div>
-
 }
 
 @*@if (ViewBag.original == null)
@@ -2076,6 +2089,27 @@
         </div>
     }
 }
+
+@*<script>
+    auto(document).ready(function () {
+
+        //OCG 11/10/18
+        var cliente = auto("#payer_id").val();
+        var cli = cliente.split("");
+        var con = 0;
+        for (var i = 0; i < 10; i++) {
+            if (cli[i] == 0) {
+                con++;
+            }
+            else {
+                i = 9;
+            }
+        }
+        var clien = cliente.substring(con, i);
+        auto("#payer_id").attr("value", clien);
+
+    });
+</script>*@
 
 <div id="validaciones">
     <script>

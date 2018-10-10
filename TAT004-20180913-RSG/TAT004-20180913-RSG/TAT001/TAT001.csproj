@@ -697,6 +697,9 @@
     <Compile Include="Entities\TSOL_GROUP.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\TSOL_GROUPT.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\TSOL_TREE.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>

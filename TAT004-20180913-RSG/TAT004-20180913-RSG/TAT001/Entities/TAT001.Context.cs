@@ -181,6 +181,7 @@ namespace TAT001.Entities
         public virtual DbSet<WARNINGV> WARNINGVs { get; set; }
         public virtual DbSet<TSOL_GROUP> TSOL_GROUP { get; set; }
         public virtual DbSet<TSOL_TREE> TSOL_TREE { get; set; }
+        public virtual DbSet<TSOL_GROUPT> TSOL_GROUPT { get; set; }
     
         [DbFunction("TAT001Entities", "split")]
         public virtual IQueryable<split_Result> split(string delimited, string delimiter)
