@@ -201,6 +201,7 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Common\FnCommon.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CartaDController.cs" />
     <Compile Include="Controllers\CartaVController.cs" />
@@ -692,6 +693,12 @@
     <Compile Include="Entities\TSOLT.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\TSOL_GROUP.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\TSOL_TREE.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\TSOPORTE.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
@@ -786,6 +793,7 @@
     <Compile Include="Models\Masiva\Multiple.cs" />
     <Compile Include="Models\Masiva\Relacionada.cs" />
     <Compile Include="Models\ReportesModel.cs" />
+    <Compile Include="Models\SelectTreeItem.cs" />
     <Compile Include="Models\SOLICITUD_MOD.cs" />
     <Compile Include="Models\Flujos.cs" />
     <Compile Include="Models\TALLT_MOD.cs" />
@@ -930,6 +938,7 @@
     <Content Include="Content\dataTable.css" />
     <Content Include="Content\dataTables1.material.min.css" />
     <Content Include="Content\dataTables.material.min.css" />
+    <Content Include="Content\dropdowntree.css" />
     <Content Include="Content\formatos.css" />
     <Content Include="Content\g-materialize.css" />
     <Content Include="Content\material.min.css" />
@@ -1314,6 +1323,7 @@
       <DependentUpon>TAT001.edmx</DependentUpon>
     </Content>
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\dropdowntree.js" />
     <Content Include="Scripts\fnCommon.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />

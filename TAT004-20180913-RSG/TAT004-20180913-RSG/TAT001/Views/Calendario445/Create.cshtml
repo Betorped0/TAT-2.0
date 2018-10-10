@@ -24,7 +24,9 @@
     }
 </style>
 <link href="~/Content/materialize.clockpicker.css" rel="stylesheet" />
+@*<link href="~/Content/dropdowntree.css" rel="stylesheet" />*@
 <script type="text/javascript" src="~/Scripts/materialize.clockpicker.js"></script>
+@*<script type="text/javascript" src="~/Scripts/dropdowntree.js"></script>*@
 <script type="text/javascript"  src="~/Scripts/jquery.validate.min.js"></script>
 <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
 @using (Html.BeginForm("Create", "Calendario445", FormMethod.Post,new { @id="calendario445Form"}))
@@ -55,6 +57,7 @@
                     <div class="form-group">
                         <label id="lbl_tipoSolicitud"></label>
                         <div class="col-md-10">
+                            @*  <input id="dropdowntree" style="width: 100%;" />*@
                             @Html.DropDownListFor(model => model.calendario445.TSOL_ID, Model.tipoSolicitudes, "")
                         </div>
                     </div>
@@ -142,14 +145,14 @@
         <script>
             var spras_id ="@ViewBag.spras_id";
         //---- Inicializador de componentes Materialize----
-            fnCommon.materializeInit('.datepicker', 'datepicker', spras_id);
-        fnCommon.materializeInit('.timepicker', 'timepicker');
-        fnCommon.materializeInit('select', 'select');
+        fnCommon.materializeInit('datepicker', spras_id);
+        fnCommon.materializeInit( 'timepicker');
+        fnCommon.materializeInit( 'select');
 
         // Remover Fecha y Hora
-        var sinFecha = "01/01/0001 12:00:00 a. m.";
+        var sinFecha = "01/01/0001";
         document.querySelectorAll('.datepicker').forEach(function (datePicker) {
-            if (datePicker.value === sinFecha) { datePicker.value = ''; }
+            if (datePicker.value.indexOf(sinFecha)>-1) { datePicker.value = ''; }
         });
         var sinHora = "00:00";
         document.querySelectorAll('.timepicker').forEach(function (timepicker) {
@@ -163,9 +166,15 @@
 
         // Valida si ocurrio un error al intentar crear el periodo y otro.
         var mnjError = '@ViewBag.mnjError';
-            if (mnjError) {
-                M.toast({ html: mnjError });
-            }
+        if (mnjError) {
+            M.toast({ html: mnjError });
+        }
+
+            @*$("#dropdowntree").kendoDropDownTree({
+                placeholder: "",
+                height: "auto",
+                dataSource:@Html.Raw(Json.Encode(Model.tiposSolicitud))
+            });*@
         </script>
 
 

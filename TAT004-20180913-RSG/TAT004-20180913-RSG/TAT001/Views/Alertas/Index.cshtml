@@ -168,42 +168,42 @@
 <script>
 
     //---- Inicializador de componentes Materialize----
-    fnCommon.materializeInit('select', 'select');
-    fnCommon.materializeInit('.modal', 'modal');
+    fnCommon.materializeInit('select');
+    fnCommon.materializeInit( 'modal');
 
     function eliminarAlerta(idLink) {
         $('#' + idLink).get(0).click().click();
-                            }
-                            function mostrarAlerta(warning_id, tipo, mensaje) {
-                                var dura = 1000000,
-                                    color = 'yellow',
-                                    icon = 'info',
-                                    classe = 'toast';
-                                if (tipo == "E") {
-                                    color = 'red';
-                                    icon = 'error';
-                                }
-                                dismiss(classe)
-                                    M.toast({
-                                    classes: classe,
-                displayLength: dura,
-                html: '<span style="padding-right:15px;"><i class="material-icons ' + color + '-text">' + icon + '</i></span>  ' + mensaje
-                + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'toast\')">Aceptar</button>'
-            });
-                            }
-                            function dismiss(classe) {
-                                var toastElement = document.querySelectorAll('.' + classe);
-                                for (var i = 0; i < toastElement.length; i++) {
-                                    var toastInstance = M.Toast.getInstance(toastElement[i]);
-                                    toastInstance.dismiss();
-                                }
-                            }
+    }
+    function mostrarAlerta(warning_id, tipo, mensaje) {
+        var dura = 1000000,
+            color = 'yellow',
+            icon = 'info',
+            classe = 'toast';
+        if (tipo == "E") {
+            color = 'red';
+            icon = 'error';
+        }
+        dismiss(classe)
+            M.toast({
+            classes: classe,
+            displayLength: dura,
+            html: '<span style="padding-right:15px;"><i class="material-icons ' + color + '-text">' + icon + '</i></span>  ' + mensaje
+            + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'toast\')">Aceptar</button>'
+        });
+      }
+    function dismiss(classe) {
+        var toastElement = document.querySelectorAll('.' + classe);
+        for (var i = 0; i < toastElement.length; i++) {
+            var toastInstance = M.Toast.getInstance(toastElement[i]);
+            toastInstance.dismiss();
+        }
+    }
     //----- Configuracion de Tablas-----
     $(document).ready(function () {
-                                var root = "@Url.Content("~")",
-            spras_id = "@ViewBag.spras_id",
-            urlLanguage = root + "/Scripts/lang/" + spras_id + ".json";
-                                fnCommon.configurarTable('tablePeriodo445', '50vh', '50vh', urlLanguage, 'cmbPagAlertas','gfilterAlertas');
-                            });
+        var root = "@Url.Content("~")",
+        spras_id = "@ViewBag.spras_id",
+        urlLanguage = root + "/Scripts/lang/" + spras_id + ".json";
+        fnCommon.configurarTable('tablePeriodo445', '50vh', '50vh', urlLanguage, 'cmbPagAlertas','gfilterAlertas');
+     });
 
 </script>

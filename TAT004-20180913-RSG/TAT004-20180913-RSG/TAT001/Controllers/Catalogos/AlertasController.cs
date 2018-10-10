@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
+using TAT001.Common;
 using TAT001.Entities;
 using TAT001.Models;
 
@@ -28,7 +29,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Index()
         {
             int pagina_id = 540;//ID EN BASE DE DATOS
-            ObtenerConfPage(pagina_id);
+            FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
 
             string spras_id = ViewBag.spras_id;
             AlertaViewModel modelView = new AlertaViewModel();
@@ -46,7 +47,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Create()
         {
             int pagina_id = 541;//ID EN BASE DE DATOS
-            ObtenerConfPage(pagina_id);
+            FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
 
             AlertaViewModel modelView = new AlertaViewModel();
             //Mensajes
@@ -110,7 +111,7 @@ namespace TAT001.Controllers.Catalogos
             }
             catch (Exception ex)
             {
-                ObtenerConfPage(pagina_id);
+                FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
                 CargarSelectList(ref modelView, new string[] {
                     CMB_SOCIEDADES,
                     CMB_TIPOSSOLICITUD,
@@ -130,7 +131,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Edit(string warning_id, string tab_id)
         {
             int pagina_id = 542;//ID EN BASE DE DATOS
-            ObtenerConfPage(pagina_id);
+            FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
 
             AlertaViewModel modelView = new AlertaViewModel();
             //Alerta
@@ -225,7 +226,7 @@ namespace TAT001.Controllers.Catalogos
             }
             catch(Exception ex)
             {
-                ObtenerConfPage(pagina_id);
+                FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
                 CargarSelectList(ref modelView, new string[] {
                     CMB_TIPOS,
                     CMB_SOCIEDADES + "," + modelView.alerta.SOCIEDAD_ID,
@@ -282,7 +283,7 @@ namespace TAT001.Controllers.Catalogos
             int pagina_id = 540;
             if (db.WARNINGPs.Any(x => x.ID == warningP.ID && x.TAB_ID == warningP.TAB_ID))
             {
-                ViewBag.mnjError = ObtenerTextoMnj(pagina_id, "lbl_mnjExisteAlerta");
+                ViewBag.mnjError = FnCommon.ObtenerTextoMnj(db,pagina_id, "lbl_mnjExisteAlerta",User.Identity.Name);
                 return false;
             }
             return true;
@@ -310,31 +311,17 @@ namespace TAT001.Controllers.Catalogos
 
             if (existeCondParaTabCampo)
             {
-                ViewBag.mnjError = ObtenerTextoMnj(pagina_id, "lbl_mnjExisteCondAlerta");
+                ViewBag.mnjError = FnCommon.ObtenerTextoMnj(db, pagina_id, "lbl_mnjExisteCondAlerta",User.Identity.Name);
                 return false;
             }
 
             return true;
         }
-        void ObtenerConfPage(int pagina)//ID EN BASE DE DATOS
-        {
-            var user = ObtenerUsuario();
-            ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-            ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-            ViewBag.usuario = user;
-            ViewBag.returnUrl = Request.Url.PathAndQuery; ;
-            ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-            ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-            ViewBag.spras_id = user.SPRAS_ID;
-        }
-
+       
 
         void CargarSelectList(ref AlertaViewModel modelView, string[] combos, string tab_id = null, int? cond_id = null, int? cond_id1 = null)
         {
-            USUARIO user = ObtenerUsuario();
-            string spras_id = user.SPRAS_ID;
+            string spras_id = FnCommon.ObtenerSprasId(db, User.Identity.Name);
 
             for (int i = 0; i < combos.Length; i++)
             {
@@ -345,49 +332,21 @@ namespace TAT001.Controllers.Catalogos
                 switch (combo)
                 {
                     case CMB_SOCIEDADES:
-                        modelView.sociedades = db.SOCIEDADs
-                            .Where(x => x.BUKRS == id || id == null)
-                            .Select(x => new SelectListItem
-                            {
-                                Value = x.BUKRS,
-                                Text = x.BUKRS
-                            }).ToList();
+                        modelView.sociedades = FnCommon.ObtenerCmbSociedades(db, id);
                         break;
                     case CMB_TIPOSSOLICITUD:
-                        modelView.tiposSolicitud = db.TSOLs
-                            .Join(db.TSOLTs, s => s.ID, st => st.TSOL_ID, (s, st) => st)
-                            .Where(x => x.SPRAS_ID == spras_id && (x.TSOL_ID == id || id == null))
-                            .Select(x => new SelectListItem
-                            {
-                                Value = x.TSOL_ID,
-                                Text = (x.TSOL_ID + "-" + x.TXT50)
-                            }).ToList();
+                        modelView.tiposSolicitud = FnCommon.ObtenerCmbTiposSolicitud(db, spras_id, id);
                         break;
                     case CMB_TABS:
-                        modelView.tabs = db.TABs
-                            .Join(db.TEXTOes, ta => ta.ID, te => te.CAMPO_ID, (ta, te) => te)
-                            .Where(x => x.SPRAS_ID == spras_id && x.PAGINA_ID == 202 && (x.CAMPO_ID == id || id == null))
-                            .Select(x => new SelectListItem
-                            {
-                                Value = x.CAMPO_ID,
-                                Text = x.TEXTOS
-                            }).ToList();
+                        modelView.tabs = FnCommon.ObtenerCmbTabs(db,spras_id,id);
                         break;
                     case CMB_CAMPOS:
-                        modelView.campos = db.TAB_CAMPO
-                            .Where(x => x.TAB_ID == tab_id)
-                            .Join(db.TEXTOes, tc => tc.CAMPO_ID, te => te.CAMPO_ID, (ta, te) => te)
-                            .Where(x => x.SPRAS_ID == spras_id && x.PAGINA_ID == 202 && (x.CAMPO_ID == id || id == null))
-                            .Select(x => new SelectListItem
-                            {
-                                Value = x.CAMPO_ID,
-                                Text = x.TEXTOS
-                            }).ToList();
+                        modelView.campos = FnCommon.ObtenerCmbCamposPoTabId(db,spras_id,tab_id,id);
                         break;
                     case CMB_TIPOS:
                         int pagina_id = 540;//ID EN BASE DE DATOS
-                        string error = ObtenerTextoMnj(pagina_id, "lbl_error");
-                        string alerta = ObtenerTextoMnj(pagina_id, "lbl_alerta");
+                        string error = FnCommon.ObtenerTextoMnj(db, pagina_id, "lbl_error",User.Identity.Name);
+                        string alerta = FnCommon.ObtenerTextoMnj(db, pagina_id, "lbl_alerta",User.Identity.Name);
                         modelView.tipos = new List<SelectListItem> {
                             new SelectListItem{ Value = "A", Text = "A - "+alerta},
                             new SelectListItem {Value = "E",Text = "E - "+error}
@@ -451,16 +410,7 @@ namespace TAT001.Controllers.Catalogos
             }
             return condValores;
         }
-        USUARIO ObtenerUsuario()
-        {
-            string u = User.Identity.Name;
-            return db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-        }
-        string ObtenerTextoMnj(int pagina_id, string campo_id)
-        {
-            USUARIO usuario = ObtenerUsuario();
-            string texto = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina_id) && a.SPRAS_ID.Equals(usuario.SPRAS_ID) && a.CAMPO_ID.Equals(campo_id))).FirstOrDefault().TEXTOS;
-            return texto;
-        }
+        
+        
     }
 }
