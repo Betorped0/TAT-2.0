@@ -663,7 +663,7 @@ $('body').on('keydown.autocomplete', '.input_can', function () {
                 data: { "Prefix": request.term },
                 success: function (data) {
                     response(auto.map(data, function (item) {
-                        return { label: item.CANAL1 + " " + item.CDESCRIPCION, value: item.CANAL1 };
+                        return { label: item.CANAL1 + " | " + item.CDESCRIPCION, value: item.CANAL1 };
                     }))
                 }
             })
@@ -697,6 +697,39 @@ $('body').on('keydown.autocomplete', '.input_cli', function () {
                 success: function (data) {
                     response(auto.map(data, function (item) {
                         return { label: item.KUNNR + " | " + item.NAME1, value: item.KUNNR };
+                    }))
+                }
+            })
+        },
+
+        messages: {
+            noResults: '',
+            results: function (resultsCount) { }
+        },
+
+        change: function (e, ui) {
+            if (!(ui.item)) {
+                e.target.value = "";
+            }
+        },
+
+        select: function (event, ui) {
+        }
+    });
+});
+
+$('body').on('keydown.autocomplete', '.input_coc', function () {
+
+    auto(this).autocomplete({
+        source: function (request, response) {
+            auto.ajax({
+                type: "POST",
+                url: 'Company',
+                dataType: "json",
+                data: { "Prefix": request.term },
+                success: function (data) {
+                    response(auto.map(data, function (item) {
+                        return { label: item.BUKRS + " | " + item.NAME1, value: item.BUKRS };
                     }))
                 }
             })

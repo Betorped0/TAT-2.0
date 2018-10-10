@@ -1655,5 +1655,28 @@ namespace TAT001.Controllers.Catalogos
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
             return cc;
         }
+
+
+        public JsonResult Company(string Prefix)
+        {
+            if (Prefix == null)
+                Prefix = "";
+
+            TAT001Entities db = new TAT001Entities();
+
+            var c = (from x in db.SOCIEDADs
+                     where x.BUKRS.Contains(Prefix)
+                     select new { x.BUKRS, x.NAME1 }).ToList();
+
+            if (c.Count == 0)
+            {
+                var c2 = (from x in db.SOCIEDADs
+                          where x.NAME1.Contains(Prefix)
+                          select new { x.BUKRS, x.NAME1 }).ToList();
+                c.AddRange(c2);
+            }
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
     }
 }

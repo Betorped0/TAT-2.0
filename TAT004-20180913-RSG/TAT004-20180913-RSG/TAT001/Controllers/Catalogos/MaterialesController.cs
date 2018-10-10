@@ -168,14 +168,18 @@ namespace TAT001.Controllers.Catalogos
             {
                 return HttpNotFound();
             }
-            foreach(var e in mATERIAL.MATERIALTs) {
-                if (e.SPRAS == "EN")
-                    ViewBag.EN = e.MAKTX;
-                if(e.SPRAS=="ES")
-                    ViewBag.ES = e.MAKTX;
-                if (e.SPRAS == "PT")
-                    ViewBag.PT = e.MAKTX;
-            }
+            if (mATERIAL.MATERIALTs.Count > 0)
+                foreach (var e in mATERIAL.MATERIALTs)
+                {
+                    if (e.SPRAS == "EN")
+                        ViewBag.EN = e.MAKTX;
+                    if (e.SPRAS == "ES")
+                        ViewBag.ES = e.MAKTX;
+                    if (e.SPRAS == "PT")
+                        ViewBag.PT = e.MAKTX;
+                }
+            else
+                ViewBag.EN = mATERIAL.MAKTX;
             return View(mATERIAL);
         }
 
@@ -194,20 +198,23 @@ namespace TAT001.Controllers.Catalogos
                 List<MATERIALT> ListmATERIALTs = new List<MATERIALT>();
                 if (collection.AllKeys.Contains("EN"))
                 {
-                    MATERIALT m = new MATERIALT { SPRAS = "EN", MATERIAL_ID = mATERIAL.ID, MAKTX = mATERIAL1.MAKTX, MAKTG = mATERIAL1.MAKTG };
-                    ListmATERIALTs.Add(m);
-                    if (mATERIAL1.MAKTX != collection["EN"])
+                    if (!String.IsNullOrEmpty(collection["EN"]))
                     {
-                        mATERIAL1.MAKTX = collection["EN"];
-                        mATERIAL1.MAKTG = Convert.ToString(collection["EN"]).ToUpper();
+                        MATERIALT m = new MATERIALT { SPRAS = "EN", MATERIAL_ID = mATERIAL.ID, MAKTX = collection["EN"], MAKTG = collection["EN"].ToUpper() };
+                        ListmATERIALTs.Add(m);
                     }
+                        if (mATERIAL1.MAKTX != collection["EN"])
+                        {
+                            mATERIAL1.MAKTX = collection["EN"];
+                            mATERIAL1.MAKTG = Convert.ToString(collection["EN"]).ToUpper();
+                        }
                 }
-                if (collection.AllKeys.Contains("ES"))
+                if (collection.AllKeys.Contains("ES")&& !String.IsNullOrEmpty(collection["ES"]))
                     {
                         MATERIALT m = new MATERIALT { SPRAS = "ES", MATERIAL_ID = mATERIAL.ID, MAKTX = collection["ES"], MAKTG = Convert.ToString(collection["ES"]).ToUpper() };
                         ListmATERIALTs.Add(m);
                     }
-                if (collection.AllKeys.Contains("PT"))
+                if (collection.AllKeys.Contains("PT") && !String.IsNullOrEmpty(collection["PT"]))
                 {
                     MATERIALT m = new MATERIALT { SPRAS = "PT", MATERIAL_ID = mATERIAL.ID, MAKTX = collection["PT"], MAKTG = Convert.ToString(collection["PT"]).ToUpper() };
                     ListmATERIALTs.Add(m);
