@@ -16,6 +16,7 @@ namespace TAT001.Controllers.Reportes
     [Authorize]
     public class ReportesController : Controller
     {
+        #region SF
         private TAT001Entities db = new TAT001Entities();
         public TAT001.Services.Calendario445 cal = new TAT001.Services.Calendario445();
         // GET: Reportes
@@ -396,6 +397,9 @@ namespace TAT001.Controllers.Reportes
             }
             base.Dispose(disposing);
         }
+
+        #endregion SF
+
         // REPORTE 1 - CONCENTRADO
         public ActionResult ReporteConcentrado()
         {
@@ -541,8 +545,8 @@ namespace TAT001.Controllers.Reportes
                     r1.CUENTA_LIMITE = Convert.ToDecimal(cuentas.GetType().GetProperty("LIMITE").GetValue(cuentas, null));
                     r1.CUENTA_CARGO_NOMBRE = cuentas.GetType().GetProperty("NOMBRE").GetValue(cuentas, null).ToString();
                 }
-                Presupuesto pres = new Presupuesto();
-                r1.PRESUPUESTO = pres.getPresupuesto(dOCUMENTO.CLIENTE.KUNNR);
+                Presupuesto pr = new Presupuesto();
+                r1.PRESUPUESTO = pr.getPresupuesto(dOCUMENTO.CLIENTE.KUNNR);
                 var proveedor = dOCUMENTO.DOCUMENTOFs.Select(df => df.PROVEEDOR).FirstOrDefault();
                 r1.PROVEEDOR_NOMBRE = db.PROVEEDORs.Where(x => x.ID.Equals(proveedor)).Select(p => p.NOMBRE).FirstOrDefault();
                 //dOCUMENTO.DOCUMENTOF = db.DOCUMENTOFs.Where(a => a.NUM_DOC.Equals(dOCUMENTO.NUM_DOC)).ToList();
@@ -626,50 +630,7 @@ namespace TAT001.Controllers.Reportes
             Session["spras"] = user.SPRAS_ID;
             return View();
         }
-
-        //public PRESUPUESTO_MOD getPresupuesto(string kunnr)
-        //{
-        //    PRESUPUESTO_MOD pm = new PRESUPUESTO_MOD();
-        //    try
-        //    {
-        //        if (kunnr == null)
-        //            kunnr = "";
-
-        //        //Obtener presupuesto
-        //        string mes = DateTime.Now.Month.ToString();
-        //        var presupuesto = db.CSP_PRESU_CLIENT(cLIENTE: kunnr, pERIODO: mes).Select(p => new { DESC = p.DESCRIPCION.ToString(), VAL = p.VALOR.ToString() }).ToList();
-        //        string clien = db.CLIENTEs.Where(x => x.KUNNR == kunnr).Select(x => x.BANNERG).First();
-        //        if (presupuesto != null)
-        //        {
-        //            if (String.IsNullOrEmpty(clien))
-        //            {
-        //                pm.P_CANAL = presupuesto[0].VAL;
-        //                pm.P_BANNER = presupuesto[1].VAL;
-        //                pm.PC_C = (float.Parse(presupuesto[4].VAL) + float.Parse(presupuesto[5].VAL) + float.Parse(presupuesto[6].VAL)).ToString();
-        //                pm.PC_A = presupuesto[8].VAL;
-        //                pm.PC_P = presupuesto[9].VAL;
-        //                pm.PC_T = presupuesto[10].VAL;
-        //                pm.CONSU = (float.Parse(presupuesto[1].VAL) - float.Parse(presupuesto[10].VAL)).ToString();
-        //            }
-        //            else
-        //            {
-        //                pm.P_CANAL = presupuesto[0].VAL;
-        //                pm.P_BANNER = presupuesto[0].VAL;
-        //                pm.PC_C = (float.Parse(presupuesto[4].VAL) + float.Parse(presupuesto[5].VAL) + float.Parse(presupuesto[6].VAL)).ToString();
-        //                pm.PC_A = presupuesto[8].VAL;
-        //                pm.PC_P = presupuesto[9].VAL;
-        //                pm.PC_T = presupuesto[10].VAL;
-        //                pm.CONSU = (float.Parse(presupuesto[0].VAL) - float.Parse(presupuesto[10].VAL)).ToString();
-        //            }
-        //        }
-        //    }
-        //    catch
-        //    {
-
-        //    }
-
-        //    return pm;
-        //}
+        
 
         // FIN REPORTE 1 - CONCENTRADO
 
@@ -690,9 +651,8 @@ namespace TAT001.Controllers.Reportes
             ViewBag.sociedad = db.SOCIEDADs.ToList();
             ViewBag.periodo = db.PERIODOes.ToList();
             ViewBag.canales = db.CANALs.ToList();
-            ViewBag.payers = string.Empty; //TODO: Research which it's the payers value
-            ViewBag.categories = string.Empty; //TODO: Research which it's the categories value
-            ViewBag.quarter = string.Empty;//TODO: Research which it's the q value
+            ViewBag.payers = db.CLIENTEs.Select(x => x.KUNNR).ToList();
+            ViewBag.categories = db.MATERIALGPTs.Where(x => !string.IsNullOrEmpty(x.TXT50)).Select(x => x.TXT50).Distinct().ToList();
             try
             {
                 string p = Session["pais"].ToString();
@@ -716,7 +676,7 @@ namespace TAT001.Controllers.Reportes
             var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
 
             //Co. Codes
-            string[] comcodessplit;
+            string[] comcodessplit = { };
             string comcode = Request["selectcocode"] as string;
             if (!string.IsNullOrEmpty(comcode))
             {
@@ -724,33 +684,33 @@ namespace TAT001.Controllers.Reportes
             }
 
             //Quarters
-            string[] quartersplit;
+            string[] quartersplit = { };
             string quarter = Request["selectq"] as string;
-            if (!string.IsNullOrEmpty(comcode))
+            if (!string.IsNullOrEmpty(quarter))
             {
                 quartersplit = quarter.Split(',');
             }
 
             //Periods
-            string[] periodsplit;
+            string[] periodsplit = { };
             string period = Request["selectperiod"] as string;
-            if (!string.IsNullOrEmpty(comcode))
+            if (!string.IsNullOrEmpty(period))
             {
                 periodsplit = period.Split(',');
             }
 
             //Payers
-            string[] payersplit;
+            string[] payersplit = { };
             string payer = Request["selectpayer"] as string;
-            if (!string.IsNullOrEmpty(comcode))
+            if (!string.IsNullOrEmpty(payer))
             {
                 payersplit = payer.Split(',');
             }
 
             //Categories
-            string[] categorysplit;
+            string[] categorysplit = { };
             string category = Request["selectcategory"] as string;
-            if (!string.IsNullOrEmpty(comcode))
+            if (!string.IsNullOrEmpty(category))
             {
                 categorysplit = category.Split(',');
             }
@@ -771,20 +731,8 @@ namespace TAT001.Controllers.Reportes
             ViewBag.cuentagl = db.CUENTAGLs.ToList();
             ViewBag.periodo = db.PERIODOes.ToList();
             ViewBag.canales = db.CANALs.ToList();
-            ViewBag.payers = string.Empty; //TODO: Research which it's the payers value
-            ViewBag.categories = string.Empty; //TODO: Research which it's the categories value
-            ViewBag.quarter = string.Empty;//TODO: Research which it's the q value
-
-            List<object> queryList = new List<object>();
-            List<object> provitions = new List<object>();
-
-            /*
-             AQUI VA EL QUERY
-             */
-
-            ViewBag.Consulta2 = queryList;
-            ViewBag.MontoNeg = provitions;
-
+            ViewBag.payers = db.CLIENTEs.Select(x => x.KUNNR).Distinct().ToList();
+            ViewBag.categories = db.MATERIALGPTs.Where(x => !string.IsNullOrEmpty(x.TXT50)).Select(x => x.TXT50).Distinct().ToList();
             try
             {
                 string p = Session["pais"].ToString();
@@ -794,9 +742,305 @@ namespace TAT001.Controllers.Reportes
             {
                 //SWALLOW
             }
+
+            var queryDocs = (from d in db.DOCUMENTOes
+                             join c in db.CLIENTEs on new { d.VKORG, d.VTWEG, d.SPART, d.PAYER_ID } equals new { c.VKORG, c.VTWEG, c.SPART, PAYER_ID = c.KUNNR }
+                             join ca in db.CANALs on c.CANAL equals ca.CANAL1
+                             join ts in db.TSOLs on d.TSOL_ID equals ts.ID
+                             join f in db.FLUJOes on d.NUM_DOC equals f.NUM_DOC
+                             join wfp in db.WORKFPs on new { f.WORKF_ID, f.WF_POS, f.WF_VERSION } equals new { WORKF_ID = wfp.ID, WF_POS = wfp.POS, WF_VERSION = wfp.VERSION }
+                             join ac in db.ACCIONs on wfp.ACCION_ID equals ac.ID
+                             join dp in db.DOCUMENTOPs on d.NUM_DOC equals dp.NUM_DOC
+                             join m in db.MATERIALs on dp.MATNR equals m.ID
+                             join mgpt in db.MATERIALGPTs on m.MATERIALGP_ID equals mgpt.MATERIALGP_ID
+                             where mgpt.SPRAS_ID == user.SPRAS_ID
+                                 && d.EJERCICIO == year
+                                 && (!string.IsNullOrEmpty(canal) ? c.CANAL == canal : true)
+                                 && (!string.IsNullOrEmpty(comcode) ? comcodessplit.Contains(d.SOCIEDAD_ID) : true)
+                                 && (!string.IsNullOrEmpty(period) ? periodsplit.Contains(d.PERIODO.ToString()) : true)
+                                 && (!string.IsNullOrEmpty(payer) ? payersplit.Contains(d.PAYER_ID) : true)
+                                 && (!string.IsNullOrEmpty(category) ? categorysplit.Contains(mgpt.TXT50) : true)
+                             select new { d.PERIODO, d.EJERCICIO, d.SOCIEDAD_ID, d.PAYER_ID, c.CANAL, ca.CDESCRIPCION, mgpt.TXT50, d.TALL_ID, f.ESTATUS, d.ESTATUS_C, d.ESTATUS_SAP, d.ESTATUS_WF, ac.TIPO, ts.PADRE })
+                             .ToList()
+                             .Select(s => new { s.PERIODO, s.EJERCICIO, s.SOCIEDAD_ID, s.PAYER_ID, s.CANAL, s.CDESCRIPCION, s.TXT50, s.TALL_ID, STATUS_ALLOWANCE = statusAllowance(s.ESTATUS, s.ESTATUS_C, s.ESTATUS_SAP, s.ESTATUS_WF, s.TIPO, s.PADRE) })
+                             .GroupBy(x => new { x.PERIODO, x.EJERCICIO, x.SOCIEDAD_ID, x.PAYER_ID, x.CANAL, x.CDESCRIPCION, x.TXT50 })
+                             .ToList();
+
+            List<AllowancesPL> alls = new List<AllowancesPL>();
+            foreach (var doc in queryDocs)
+            {
+                AllowancesPL all = new AllowancesPL();
+                all.PERIODO = doc.First().PERIODO.ToString();
+                all.YEAR = doc.First().EJERCICIO;
+                all.BU = doc.First().SOCIEDAD_ID;
+                all.CANAL = doc.First().CANAL + " " + doc.First().CDESCRIPCION;
+                all.PAYER = doc.First().PAYER_ID;
+                all.CATEGORIA = doc.First().TXT50;
+                foreach (var doc2 in doc)
+                {
+                    switch (doc2.TALL_ID)
+                    {
+                        case "1000000008": // Cash Discounts
+                            switch (doc2.STATUS_ALLOWANCE)
+                            {
+                                case "En Proceso TAT":
+                                    all.CD_EN_PROCESO++;
+                                    break;
+                                case "Allowance TAT":
+                                    all.CD_ALLOWANCE_TAT++;
+                                    break;
+                            }
+                            break;
+                        case "1000000017": // Clearance
+                            switch (doc2.STATUS_ALLOWANCE)
+                            {
+                                case "En Proceso TAT":
+                                    all.C_EN_PROCESO++;
+                                    break;
+                                case "Allowance TAT":
+                                    all.C_ALLOWANCE_TAT++;
+                                    break;
+                            }
+                            break;
+                        case "1000000013": // Consumer Data
+                            switch (doc2.STATUS_ALLOWANCE)
+                            {
+                                case "En Proceso TAT":
+                                    all.COD_EN_PROCESO++;
+                                    break;
+                                case "Allowance TAT":
+                                    all.COD_ALLOWANCE_TAT++;
+                                    break;
+                            }
+                            break;
+                        case "1000000005": // Direct Plant Ship & Customer Pickup Allowance
+                        case "1000000006":
+                            switch (doc2.STATUS_ALLOWANCE)
+                            {
+                                case "En Proceso TAT":
+                                    all.DPS_EN_PROCESO++;
+                                    break;
+                                case "Allowance TAT":
+                                    all.DPS_ALLOWANCE_TAT++;
+                                    break;
+                            }
+                            break;
+                        case "1000000010": // Distribution Comission
+                            switch (doc2.STATUS_ALLOWANCE)
+                            {
+                                case "En Proceso TAT":
+                                    all.DC_EN_PROCESO++;
+                                    break;
+                                case "Allowance TAT":
+                                    all.DC_ALLOWANCE_TAT++;
+                                    break;
+                            }
+                            break;
+                        case "1000000003": // Everyday Low Price
+                            switch (doc2.STATUS_ALLOWANCE)
+                            {
+                                case "En Proceso TAT":
+                                    all.ELP_EN_PROCESO++;
+                                    break;
+                                case "Allowance TAT":
+                                    all.ELP_ALLOWANCE_TAT++;
+                                    break;
+                            }
+                            break;
+                        case "1000000011": // Free Goods
+                            switch (doc2.STATUS_ALLOWANCE)
+                            {
+                                case "En Proceso TAT":
+                                    all.FG_EN_PROCESO++;
+                                    break;
+                                case "Allowance TAT":
+                                    all.FG_ALLOWANCE_TAT++;
+                                    break;
+                            }
+                            break;
+                        case "": // Government Discounts
+                            switch (doc2.STATUS_ALLOWANCE)
+                            {
+                                case "En Proceso TAT":
+                                    all.GD_EN_PROCESO++;
+                                    break;
+                                case "Allowance TAT":
+                                    all.GD_ALLOWANCE_TAT++;
+                                    break;
+                            }
+                            break;
+                        case "1000000012": // Growth Program
+                            switch (doc2.STATUS_ALLOWANCE)
+                            {
+                                case "En Proceso TAT":
+                                    all.GP_EN_PROCESO++;
+                                    break;
+                                case "Allowance TAT":
+                                    all.GP_ALLOWANCE_TAT++;
+                                    break;
+                            }
+                            break;
+                        case "1000000009": // Logistic Discount
+                            switch (doc2.STATUS_ALLOWANCE)
+                            {
+                                case "En Proceso TAT":
+                                    all.LD_EN_PROCESO++;
+                                    break;
+                                case "Allowance TAT":
+                                    all.LD_ALLOWANCE_TAT++;
+                                    break;
+                            }
+                            break;
+                        case " ": // Margin Support
+                            switch (doc2.STATUS_ALLOWANCE)
+                            {
+                                case "En Proceso TAT":
+                                    all.MS_EN_PROCESO++;
+                                    break;
+                                case "Allowance TAT":
+                                    all.MS_ALLOWANCE_TAT++;
+                                    break;
+                            }
+                            break;
+                        case "1000000016": // Rollbacks
+                            switch (doc2.STATUS_ALLOWANCE)
+                            {
+                                case "En Proceso TAT":
+                                    all.R_EN_PROCESO++;
+                                    break;
+                                case "Allowance TAT":
+                                    all.R_ALLOWANCE_TAT++;
+                                    break;
+                            }
+                            break;
+                        case "  ": // Trade Promotion – Non-Kellogg Coupons
+                            switch (doc2.STATUS_ALLOWANCE)
+                            {
+                                case "En Proceso TAT":
+                                    all.TP_EN_PROCESO++;
+                                    break;
+                                case "Allowance TAT":
+                                    all.TP_ALLOWANCE_TAT++;
+                                    break;
+                            }
+                            break;
+                        case "1000000004": // Sponsorship / In-Store adv (before: Booklets)
+                            switch (doc2.STATUS_ALLOWANCE)
+                            {
+                                case "En Proceso TAT":
+                                    all.SIS_EN_PROCESO++;
+                                    break;
+                                case "Allowance TAT":
+                                    all.SIS_ALLOWANCE_TAT++;
+                                    break;
+                            }
+                            break;
+                        case "1000000014": // Store Openings
+                            switch (doc2.STATUS_ALLOWANCE)
+                            {
+                                case "En Proceso TAT":
+                                    all.SO_EN_PROCESO++;
+                                    break;
+                                case "Allowance TAT":
+                                    all.SO_ALLOWANCE_TAT++;
+                                    break;
+                            }
+                            break;
+                        case "1000000002": // Trade Promotion – In-Store sampling Demostration cost
+                            switch (doc2.STATUS_ALLOWANCE)
+                            {
+                                case "En Proceso TAT":
+                                    all.TPIS_EN_PROCESO++;
+                                    break;
+                                case "Allowance TAT":
+                                    all.TPIS_ALLOWANCE_TAT++;
+                                    break;
+                            }
+                            break;
+                        case "1000000001": // Trade Promotion - Other
+                            switch (doc2.STATUS_ALLOWANCE)
+                            {
+                                case "En Proceso TAT":
+                                    all.TPO_EN_PROCESO++;
+                                    break;
+                                case "Allowance TAT":
+                                    all.TPO_ALLOWANCE_TAT++;
+                                    break;
+                            }
+                            break;
+                        case "1000000015": // Unsaleables
+                            switch (doc2.STATUS_ALLOWANCE)
+                            {
+                                case "En Proceso TAT":
+                                    all.U_EN_PROCESO++;
+                                    break;
+                                case "Allowance TAT":
+                                    all.U_ALLOWANCE_TAT++;
+                                    break;
+                            }
+                            break;
+                        case "1000000007": // Warehouse Allowances (“DxD”)
+                            switch (doc2.STATUS_ALLOWANCE)
+                            {
+                                case "En Proceso TAT":
+                                    all.WA_EN_PROCESO++;
+                                    break;
+                                case "Allowance TAT":
+                                    all.WA_ALLOWANCE_TAT++;
+                                    break;
+                            }
+                            break;
+                    }
+                }
+                alls.Add(all);
+            }
+
+            ViewBag.reporte = alls.ToList();
+
+            //ViewBag.tabla_reporte = queryDocs.GroupBy(registro => new { registro.PERIODO, registro.EJERCICIO, registro.SOCIEDAD_ID, registro.PAYER_ID })
+            //    .Select(grupo => new
+            //    {
+            //        trackings = grupo.OrderBy(x => x.FECHA)
+            //    })
+            //    .Select(grupo_ordenado => new
+            //    {
+            //        tracking = calcularValoresGrupo(grupo_ordenado.trackings)
+            //    }).ToList();
+
             Session["spras"] = user.SPRAS_ID;
             return View();
         }
+
+        private string statusAllowance(string ESTATUS, string ESTATUS_C, string ESTATUS_SAP, string ESTATUS_WF, string TIPO, bool PADRE)
+        {
+            string estatus = "";
+
+            // FORMAR LA CADENA DE STATUS PARA IDENTIFICAR EL MENSAJE A DESPLEGAR
+            if (ESTATUS != null) { estatus += ESTATUS; } else { estatus += " "; }
+            if (ESTATUS_C != null) { estatus += ESTATUS_C; } else { estatus += " "; }
+            if (ESTATUS_SAP != null) { estatus += ESTATUS_SAP; } else { estatus += " "; }
+            if (ESTATUS_WF != null) { estatus += ESTATUS_WF; } else { estatus += " "; }
+            if (TIPO != null) { estatus += TIPO; } else { estatus += " "; }
+            if (PADRE) { estatus += "P"; } else { estatus += " "; }
+
+            // ESTABLECER EL MENSAJE DE STATUS QUE SE MOSTRARÁ
+            if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "^.[C]")) { return ""; } // "Cancelada"; }
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[P][R].")) { return "En Proceso TAT"; } //"Pendiente validación TS"; }
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[P][A].")) { return "En Proceso TAT"; } // "Pendiente aprobador"; }
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[C]..[A]..")) { return "En Proceso TAT"; } //"Por gen .txt"; }
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[P]..[A]..")) { return "En Proceso TAT"; } // "Por contabilizar"; }
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[N]..[A]..")) { return "En Proceso TAT"; } // "Por gen .txt"; }
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[P][A]..")) { return "En Proceso TAT"; } // "Por contabilizar"; }
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[X][A]..")) { return ""; } // "Error en contabilización"; }
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A].[P]")) { return "En Proceso TAT"; } // "Abierta"; }
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A]..")) { return "Allowance TAT"; }
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[R]..")) { return "En Proceso TAT"; } // "Pendiente corrección usuario"; }
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[R][S].")) { return "En Proceso TAT"; } // "Pendiente corrección usuario TS"; }
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[S]..")) { return "En Proceso TAT"; } // "Pendiente firma"; }
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[T]..")) { return "En Proceso TAT"; } // "Pendiente tax"; }
+            else { return ""; }
+        }
+
         // FIN REPORTE 4.1 - ALLOWANCESPL
 
         // REPORTE 4.2 - ALLOWANCESB
@@ -834,9 +1078,9 @@ namespace TAT001.Controllers.Reportes
         [ValidateAntiForgeryToken]
         public ActionResult ReporteAllowancesB(string Form)
         {
-            string[] comcodessplit;
-            string[] quartersplit;
-            string[] periodsplit;
+            string[] comcodessplit = { };
+            string[] quartersplit = { };
+            string[] periodsplit = { };
             int pagina = 1105;
             string u = User.Identity.Name;
             var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -850,14 +1094,14 @@ namespace TAT001.Controllers.Reportes
 
             //Quarter
             string quarter = Request["selectquarter"] as string;
-            if (!string.IsNullOrEmpty(comcode))
+            if (!string.IsNullOrEmpty(quarter))
             {
                 quartersplit = quarter.Split(',');
             }
 
             //Period
             string period = Request["selectperiod"] as string;
-            if (!string.IsNullOrEmpty(comcode))
+            if (!string.IsNullOrEmpty(period))
             {
                 periodsplit = period.Split(',');
             }
@@ -877,18 +1121,6 @@ namespace TAT001.Controllers.Reportes
             ViewBag.periodo = db.PERIODOes.ToList();
             ViewBag.cuenta = db.CUENTAs.ToList();
             ViewBag.quarter = string.Empty;//TODO: Reserch which it's the q value
-
-            List<object> queryList = new List<object>();
-            List<object> provitions = new List<object>();
-
-
-            /*
-             AQUI VA EL QUERY
-             */
-
-            ViewBag.Consulta2 = queryList;
-            ViewBag.MontoNeg = provitions;
-
             try
             {
                 string p = Session["pais"].ToString();
@@ -899,6 +1131,85 @@ namespace TAT001.Controllers.Reportes
                 //SWALLOW
             }
             Session["spras"] = user.SPRAS_ID;
+
+            //            select d.CUENTAP, cgl.NOMBRE, d.SOCIEDAD_ID, f.ESTATUS, d.ESTATUS_C, d.ESTATUS_SAP, d.ESTATUS_WF, ac.TIPO, ts.PADRE
+            // from DOCUMENTO d
+            //join CUENTAGL cgl on cgl.ID = d.CUENTAP
+            //join TSOL ts on d.TSOL_ID = ts.ID
+            //join FLUJO f on d.NUM_DOC = f.NUM_DOC
+            //join WORKFP wfp on f.WORKF_ID = wfp.ID and f.WF_POS = wfp.POS and f.WF_VERSION = wfp.VERSION
+            //join ACCION ac on wfp.ACCION_ID = ac.ID
+
+            var queryDocs = (from d in db.DOCUMENTOes
+                             join cgl in db.CUENTAGLs on d.CUENTAP equals cgl.ID
+                             join ts in db.TSOLs on d.TSOL_ID equals ts.ID
+                             join f in db.FLUJOes on d.NUM_DOC equals f.NUM_DOC
+                             join wfp in db.WORKFPs on new { f.WORKF_ID, f.WF_POS, f.WF_VERSION } equals new { WORKF_ID = wfp.ID, WF_POS = wfp.POS, WF_VERSION = wfp.VERSION }
+                             join ac in db.ACCIONs on wfp.ACCION_ID equals ac.ID
+                             where d.EJERCICIO == year
+                                 && (!string.IsNullOrEmpty(comcode) ? comcodessplit.Contains(d.SOCIEDAD_ID) : true)
+                                 && (!string.IsNullOrEmpty(period) ? periodsplit.Contains(d.PERIODO.ToString()) : true)
+                             select new { d.CUENTAP, cgl.NOMBRE, d.SOCIEDAD_ID, f.ESTATUS, d.ESTATUS_C, d.ESTATUS_SAP, d.ESTATUS_WF, ac.TIPO, ts.PADRE }
+                             )
+                             .ToList()
+                             .Select(s => new { s.CUENTAP, s.NOMBRE, s.SOCIEDAD_ID, STATUS_ALLOWANCE = statusAllowance(s.ESTATUS, s.ESTATUS_C, s.ESTATUS_SAP, s.ESTATUS_WF, s.TIPO, s.PADRE) })
+                             .GroupBy(x => new { x.CUENTAP, x.NOMBRE, x.STATUS_ALLOWANCE })
+                             .ToList();
+
+            List<AllowancesB> alls = new List<AllowancesB>();
+            foreach (var doc in queryDocs)
+            {
+                AllowancesB all = new AllowancesB();
+                all.CUENTA_DE_BALANCE = doc.First().CUENTAP.ToString();
+                all.DESCRIPCION = doc.First().NOMBRE;
+                all.FUENTE = doc.First().STATUS_ALLOWANCE;
+                foreach (var doc2 in doc)
+                {
+                    switch (doc2.SOCIEDAD_ID)
+                    {
+                        case "KCMX":
+                            all.KCMX++;
+                            break;
+                        case "KLCA":
+                            all.KLCA++;
+                            break;
+                        case "LCCR":
+                            all.LCCR++;
+                            break;
+                        case "LPKP":
+                            all.LPKP++;
+                            break;
+                        case "KLSV":
+                            all.KLSV++;
+                            break;
+                        case "KCAR":
+                            all.KCAR++;
+                            break;
+                        case "KPRS":
+                            all.KPRS++;
+                            break;
+                        case "KLCO":
+                            all.KLCO++;
+                            break;
+                        case "LEKE":
+                            all.LEKE++;
+                            break;
+                        case "LAGA":
+                            all.LAGA++;
+                            break;
+                        case "KLCH":
+                            all.KLCH++;
+                            break;
+                    }
+                }
+                if (!String.IsNullOrEmpty(all.FUENTE))
+                {
+                    alls.Add(all);
+                }
+            }
+
+            ViewBag.reporte = alls.ToList();
+
             return View();
         }
         // FIN REPORTE 4.2 - ALLOWANCESB
@@ -976,25 +1287,17 @@ namespace TAT001.Controllers.Reportes
             ViewBag.dperiodo = db.PERIODOes.ToList();
             ViewBag.aperiodo = db.PERIODOes.ToList();
 
-            //SELECT d.SOCIEDAD_ID, p.LANDX, d.NUM_DOC, d.FECHAC, d.PERIODO, d.EJERCICIO, d.DOCUMENTO_SAP, tst.TXT020 AS TSOLT_TXT020, d.ESTATUS_SAP, d.CONCEPTO
-            //, d.FECHAI_VIG, d.FECHAF_VIG, d.PAYER_ID, c.NAME1, d.TSOL_ID, MONTO_DOC_MD, MONEDA_ID, TIPO_CAMBIO, d.*
-            //FROM DOCUMENTO d
-            //INNER JOIN DOCUMENTOSAP ds ON d.NUM_DOC = ds.NUM_DOC
-            //INNER JOIN PAIS p ON d.PAIS_ID = p.LAND
-            //INNER JOIN CLIENTE c ON d.PAYER_ID = c.KUNNR
-            //INNER JOIN TSOL ts ON d.TSOL_ID = ts.ID
-            //INNER JOIN USUARIO u ON d.USUARIOC_ID = u.ID
-            //INNER JOIN TSOLT tst ON ts.ID = tst.TSOL_ID AND u.SPRAS_ID = tst.SPRAS_ID
-            //WHERE d.EJERCICIO = 2018 AND d.PERIODO BETWEEN 4 AND 7 AND d.SOCIEDAD_ID IN('KCMX')
-
             var queryP = (from d in db.DOCUMENTOes
                           join ds in db.DOCUMENTOSAPs on d.NUM_DOC equals ds.NUM_DOC
+                          join dr in db.DOCUMENTORs on d.NUM_DOC equals dr.NUM_DOC
                           join p in db.PAIS on d.PAIS_ID equals p.LAND
                           join c in db.CLIENTEs on new { d.VKORG, d.VTWEG, d.SPART, d.PAYER_ID } equals new { c.VKORG, c.VTWEG, c.SPART, PAYER_ID = c.KUNNR }
                           join ts in db.TSOLs on d.TSOL_ID equals ts.ID
                           join us in db.USUARIOs on d.USUARIOC_ID equals us.ID
                           join tst in db.TSOLTs on new { TSOL_ID = ts.ID, us.SPRAS_ID } equals new { tst.TSOL_ID, tst.SPRAS_ID }
                           join pt in db.PUESTOTs on new { us.SPRAS_ID, PUESTO_ID = (int)(us.PUESTO_ID) } equals new { pt.SPRAS_ID, pt.PUESTO_ID }
+                          join g in db.GALLs on d.GALL_ID equals g.ID
+                          join gt in db.GALLTs on new { GALL_ID = g.ID, us.SPRAS_ID } equals new { gt.GALL_ID, gt.SPRAS_ID }
                           orderby d.FECHAC descending // , d.NUM_DOC ascending, f.WF_POS ascending
                           where ((d.PERIODO >= dperiod && d.PERIODO <= aperiod) || (d.PERIODO >= aperiod && d.PERIODO <= dperiod))
                               && d.EJERCICIO == year
@@ -1008,15 +1311,16 @@ namespace TAT001.Controllers.Reportes
                               PERIODO_CONTABLE = (Int32)d.PERIODO,
                               NUMERO_DOCUMENTO_SAP = d.DOCUMENTO_SAP,
                               //NUMERO_REVERSO_SAP =
-                              //FECHA_REVERSO =
+                              FECHA_REVERSO = (DateTime)dr.FECHAC,
                               //PERIODO_CONTABLE_REVERSO =
-                              //COMENTARIOS_REVERSO_PROVISION =
+                              COMENTARIOS_REVERSO_PROVISION = dr.COMENTARIO,
                               TIPO_SOLICITUD = tst.TXT020,
-                              STATUS = d.ESTATUS_SAP,
+                              TIPO_SOLICITUD_ID = d.TSOL_ID,
+                              STATUS = d.ESTATUS,
                               CONCEPTO_SOLICITUD = d.CONCEPTO,
                               DE = (DateTime)d.FECHAI_VIG,
                               A = (DateTime)d.FECHAF_VIG,
-                              //CLASIFICACION = 
+                              CLASIFICACION = gt.TXT50,
                               NUMERO_CLIENTE = d.PAYER_ID,
                               CLIENTE = c.NAME1,
                               MONTO = (decimal)d.MONTO_DOC_MD,
@@ -1179,6 +1483,5 @@ namespace TAT001.Controllers.Reportes
             return ultimo;
         }
         // FIN REPORTE 6 - TRACKING TS
-
     }
 }

@@ -111,6 +111,7 @@ namespace TAT001.Models
             public decimal MONTO { get; set; }
             public string MONEDA { get; set; }
             public decimal TIPO_CAMBIO { get; set; }
+            public string TIPO_SOLICITUD_ID { get; internal set; }
         }
 
         public class AllowancesB
@@ -134,113 +135,113 @@ namespace TAT001.Models
 
         public class AllowancesPL
         {
-            public string PERIDO { get; set; }
-            public int YEAR { get; set; }
+            public string PERIODO { get; set; }
+            public string YEAR { get; set; }
             public string BU { get; set; }
-            public int PAYER { get; set; }
+            public string PAYER { get; set; }
             public string CLIENTE { get; set; }
             public string CANAL { get; set; }
             public string CATEGORIA { get; set; }
-            public string CD_EN_PROCESO { get; set; }
-            public string CD_ALLOWANCE_TAT { get; set; }
-            public string CD_ALLOWANCE_FACT { get; set; }
-            public string CD_AJUSTES { get; set; }
-            public string CD_TOTALES { get; set; }
-            public string C_EN_PROCESO { get; set; }
-            public string C_ALLOWANCE_TAT { get; set; }
-            public string C_ALLOWANCE_FACT { get; set; }
-            public string C_AJUSTES { get; set; }
-            public string C_TOTALES { get; set; }
-            public string COD_EN_PROCESO { get; set; }
-            public string COD_ALLOWANCE_TAT { get; set; }
-            public string COD_ALLOWANCE_FACT { get; set; }
-            public string COD_AJUSTES { get; set; }
-            public string COD_TOTALES { get; set; }
-            public string DPS_EN_PROCESO { get; set; }
-            public string DPS_ALLOWANCE_TAT { get; set; }
-            public string DPS_ALLOWANCE_FACT { get; set; }
-            public string DPS_AJUSTES { get; set; }
-            public string DPS_TOTALES { get; set; }
-            public string DC_EN_PROCESO { get; set; }
-            public string DC_ALLOWANCE_TAT { get; set; }
-            public string DC_ALLOWANCE_FACT { get; set; }
-            public string DC_AJUSTES { get; set; }
-            public string DC_TOTALES { get; set; }
-            public string ELP_EN_PROCESO { get; set; }
-            public string ELP_ALLOWANCE_TAT { get; set; }
-            public string ELP_ALLOWANCE_FACT { get; set; }
-            public string ELP_AJUSTES { get; set; }
-            public string ELP_TOTALES { get; set; }
-            public string FG_EN_PROCESO { get; set; }
-            public string FG_ALLOWANCE_TAT { get; set; }
-            public string FG_ALLOWANCE_FACT { get; set; }
-            public string FG_AJUSTES { get; set; }
-            public string FG_TOTALES { get; set; }
-            public string GD_EN_PROCESO { get; set; }
-            public string GD_ALLOWANCE_TAT { get; set; }
-            public string GD_ALLOWANCE_FACT { get; set; }
-            public string GD_AJUSTES { get; set; }
-            public string GD_TOTALES { get; set; }
-            public string GP_EN_PROCESO { get; set; }
-            public string GP_ALLOWANCE_TAT { get; set; }
-            public string GP_ALLOWANCE_FACT { get; set; }
-            public string GP_AJUSTES { get; set; }
-            public string GP_TOTALES { get; set; }
-            public string LD_EN_PROCESO { get; set; }
-            public string LD_ALLOWANCE_TAT { get; set; }
-            public string LD_ALLOWANCE_FACT { get; set; }
-            public string LD_AJUSTES { get; set; }
-            public string LD_TOTALES { get; set; }
-            public string MS_EN_PROCESO { get; set; }
-            public string MS_ALLOWANCE_TAT { get; set; }
-            public string MS_ALLOWANCE_FACT { get; set; }
-            public string MS_AJUSTES { get; set; }
-            public string MS_TOTALES { get; set; }
-            public string R_EN_PROCESO { get; set; }
-            public string R_ALLOWANCE_TAT { get; set; }
-            public string R_ALLOWANCE_FACT { get; set; }
-            public string R_AJUSTES { get; set; }
-            public string R_TOTALES { get; set; }
-            public string TP_EN_PROCESO { get; set; }
-            public string TP_ALLOWANCE_TAT { get; set; }
-            public string TP_ALLOWANCE_FACT { get; set; }
-            public string TP_AJUSTES { get; set; }
-            public string TP_TOTALES { get; set; }
-            public string SIS_EN_PROCESO { get; set; }
-            public string SIS_ALLOWANCE_TAT { get; set; }
-            public string SIS_ALLOWANCE_FACT { get; set; }
-            public string SIS_AJUSTES { get; set; }
-            public string SIS_TOTALES { get; set; }
-            public string SO_EN_PROCESO { get; set; }
-            public string SO_ALLOWANCE_TAT { get; set; }
-            public string SO_ALLOWANCE_FACT { get; set; }
-            public string SO_AJUSTES { get; set; }
-            public string SO_TOTALES { get; set; }
-            public string TPIS_EN_PROCESO { get; set; }
-            public string TPIS_ALLOWANCE_TAT { get; set; }
-            public string TPIS_ALLOWANCE_FACT { get; set; }
-            public string TPIS_AJUSTES { get; set; }
-            public string TPIS_TOTALES { get; set; }
-            public string TPO_EN_PROCESO { get; set; }
-            public string TPO_ALLOWANCE_TAT { get; set; }
-            public string TPO_ALLOWANCE_FACT { get; set; }
-            public string TPO_AJUSTES { get; set; }
-            public string TPO_TOTALES { get; set; }
-            public string U_EN_PROCESO { get; set; }
-            public string U_ALLOWANCE_TAT { get; set; }
-            public string U_ALLOWANCE_FACT { get; set; }
-            public string U_AJUSTES { get; set; }
-            public string U_TOTALES { get; set; }
-            public string WA_EN_PROCESO { get; set; }
-            public string WA_ALLOWANCE_TAT { get; set; }
-            public string WA_ALLOWANCE_FACT { get; set; }
-            public string WA_AJUSTES { get; set; }
-            public string WA_TOTALES { get; set; }
-            public int PROCESO_TAT_TOTAL { get; set; }
-            public int ALLOWANCE_TAT_TOTAL { get; set; }
-            public int ALLOWANCE_FACT_TOTAL { get; set; }
-            public int AJUSTES { get; set; }
-            public int ALLOWANCE_TOTALES { get; set; }
+            public int CD_EN_PROCESO { get; set; }
+            public int CD_ALLOWANCE_TAT { get; set; }
+            public int CD_ALLOWANCE_FACT { get; set; }
+            public int CD_AJUSTES { get; set; }
+            public int CD_TOTALES { get { return CD_EN_PROCESO + CD_ALLOWANCE_TAT + CD_ALLOWANCE_FACT + CD_AJUSTES; } }
+            public int C_EN_PROCESO { get; set; }
+            public int C_ALLOWANCE_TAT { get; set; }
+            public int C_ALLOWANCE_FACT { get; set; }
+            public int C_AJUSTES { get; set; }
+            public int C_TOTALES { get { return C_EN_PROCESO + C_ALLOWANCE_TAT + C_ALLOWANCE_FACT + C_AJUSTES; } }
+            public int COD_EN_PROCESO { get; set; }
+            public int COD_ALLOWANCE_TAT { get; set; }
+            public int COD_ALLOWANCE_FACT { get; set; }
+            public int COD_AJUSTES { get; set; }
+            public int COD_TOTALES { get { return COD_EN_PROCESO + COD_ALLOWANCE_TAT + COD_ALLOWANCE_FACT + COD_AJUSTES; } }
+            public int DPS_EN_PROCESO { get; set; }
+            public int DPS_ALLOWANCE_TAT { get; set; }
+            public int DPS_ALLOWANCE_FACT { get; set; }
+            public int DPS_AJUSTES { get; set; }
+            public int DPS_TOTALES { get { return DPS_EN_PROCESO + DPS_ALLOWANCE_TAT + DPS_ALLOWANCE_FACT + DPS_AJUSTES; } }
+            public int DC_EN_PROCESO { get; set; }
+            public int DC_ALLOWANCE_TAT { get; set; }
+            public int DC_ALLOWANCE_FACT { get; set; }
+            public int DC_AJUSTES { get; set; }
+            public int DC_TOTALES { get { return DC_EN_PROCESO + DC_ALLOWANCE_TAT + DC_ALLOWANCE_FACT + DC_AJUSTES; } }
+            public int ELP_EN_PROCESO { get; set; }
+            public int ELP_ALLOWANCE_TAT { get; set; }
+            public int ELP_ALLOWANCE_FACT { get; set; }
+            public int ELP_AJUSTES { get; set; }
+            public int ELP_TOTALES { get { return ELP_EN_PROCESO + ELP_ALLOWANCE_TAT + ELP_ALLOWANCE_FACT + ELP_AJUSTES; } }
+            public int FG_EN_PROCESO { get; set; }
+            public int FG_ALLOWANCE_TAT { get; set; }
+            public int FG_ALLOWANCE_FACT { get; set; }
+            public int FG_AJUSTES { get; set; }
+            public int FG_TOTALES { get { return FG_EN_PROCESO + FG_ALLOWANCE_TAT + FG_ALLOWANCE_FACT + FG_AJUSTES; } }
+            public int GD_EN_PROCESO { get; set; }
+            public int GD_ALLOWANCE_TAT { get; set; }
+            public int GD_ALLOWANCE_FACT { get; set; }
+            public int GD_AJUSTES { get; set; }
+            public int GD_TOTALES { get { return GD_EN_PROCESO + GD_ALLOWANCE_TAT + GD_ALLOWANCE_FACT + GD_AJUSTES; } }
+            public int GP_EN_PROCESO { get; set; }
+            public int GP_ALLOWANCE_TAT { get; set; }
+            public int GP_ALLOWANCE_FACT { get; set; }
+            public int GP_AJUSTES { get; set; }
+            public int GP_TOTALES { get { return GP_EN_PROCESO + GP_ALLOWANCE_TAT + GP_ALLOWANCE_FACT + GP_AJUSTES; } }
+            public int LD_EN_PROCESO { get; set; }
+            public int LD_ALLOWANCE_TAT { get; set; }
+            public int LD_ALLOWANCE_FACT { get; set; }
+            public int LD_AJUSTES { get; set; }
+            public int LD_TOTALES { get { return LD_EN_PROCESO + LD_ALLOWANCE_TAT + LD_ALLOWANCE_FACT + LD_AJUSTES; } }
+            public int MS_EN_PROCESO { get; set; }
+            public int MS_ALLOWANCE_TAT { get; set; }
+            public int MS_ALLOWANCE_FACT { get; set; }
+            public int MS_AJUSTES { get; set; }
+            public int MS_TOTALES { get { return MS_EN_PROCESO + MS_ALLOWANCE_TAT + MS_ALLOWANCE_FACT + MS_AJUSTES; } }
+            public int R_EN_PROCESO { get; set; }
+            public int R_ALLOWANCE_TAT { get; set; }
+            public int R_ALLOWANCE_FACT { get; set; }
+            public int R_AJUSTES { get; set; }
+            public int R_TOTALES { get { return R_EN_PROCESO + R_ALLOWANCE_TAT + R_ALLOWANCE_FACT + R_AJUSTES; } }
+            public int TP_EN_PROCESO { get; set; }
+            public int TP_ALLOWANCE_TAT { get; set; }
+            public int TP_ALLOWANCE_FACT { get; set; }
+            public int TP_AJUSTES { get; set; }
+            public int TP_TOTALES { get { return TP_EN_PROCESO + TP_ALLOWANCE_TAT + TP_ALLOWANCE_FACT + TP_AJUSTES; } }
+            public int SIS_EN_PROCESO { get; set; }
+            public int SIS_ALLOWANCE_TAT { get; set; }
+            public int SIS_ALLOWANCE_FACT { get; set; }
+            public int SIS_AJUSTES { get; set; }
+            public int SIS_TOTALES { get { return SIS_EN_PROCESO + SIS_ALLOWANCE_TAT + SIS_ALLOWANCE_FACT + SIS_AJUSTES; } }
+            public int SO_EN_PROCESO { get; set; }
+            public int SO_ALLOWANCE_TAT { get; set; }
+            public int SO_ALLOWANCE_FACT { get; set; }
+            public int SO_AJUSTES { get; set; }
+            public int SO_TOTALES { get { return SO_EN_PROCESO + SO_ALLOWANCE_TAT + SO_ALLOWANCE_FACT + SO_AJUSTES; } }
+            public int TPIS_EN_PROCESO { get; set; }
+            public int TPIS_ALLOWANCE_TAT { get; set; }
+            public int TPIS_ALLOWANCE_FACT { get; set; }
+            public int TPIS_AJUSTES { get; set; }
+            public int TPIS_TOTALES { get { return TPIS_EN_PROCESO + TPIS_ALLOWANCE_TAT + TPIS_ALLOWANCE_FACT + TPIS_AJUSTES; } }
+            public int TPO_EN_PROCESO { get; set; }
+            public int TPO_ALLOWANCE_TAT { get; set; }
+            public int TPO_ALLOWANCE_FACT { get; set; }
+            public int TPO_AJUSTES { get; set; }
+            public int TPO_TOTALES { get { return TPO_EN_PROCESO + TPO_ALLOWANCE_TAT + TPO_ALLOWANCE_FACT + TPO_AJUSTES; } }
+            public int U_EN_PROCESO { get; set; }
+            public int U_ALLOWANCE_TAT { get; set; }
+            public int U_ALLOWANCE_FACT { get; set; }
+            public int U_AJUSTES { get; set; }
+            public int U_TOTALES { get { return U_EN_PROCESO + U_ALLOWANCE_TAT + U_ALLOWANCE_FACT + U_AJUSTES; } }
+            public int WA_EN_PROCESO { get; set; }
+            public int WA_ALLOWANCE_TAT { get; set; }
+            public int WA_ALLOWANCE_FACT { get; set; }
+            public int WA_AJUSTES { get; set; }
+            public int WA_TOTALES { get { return WA_EN_PROCESO + WA_ALLOWANCE_TAT + WA_ALLOWANCE_FACT + WA_AJUSTES; } }
+            public int PROCESO_TAT_TOTAL { get { return CD_EN_PROCESO + C_EN_PROCESO + COD_EN_PROCESO + DPS_EN_PROCESO + DC_EN_PROCESO + ELP_EN_PROCESO + FG_EN_PROCESO + GD_EN_PROCESO + GP_EN_PROCESO + LD_EN_PROCESO + MS_EN_PROCESO + R_EN_PROCESO + TP_EN_PROCESO + SIS_EN_PROCESO + SO_EN_PROCESO + TPIS_EN_PROCESO + TPO_EN_PROCESO + U_EN_PROCESO; } }
+            public int ALLOWANCE_TAT_TOTAL { get { return CD_ALLOWANCE_TAT + C_ALLOWANCE_TAT + COD_ALLOWANCE_TAT + DPS_ALLOWANCE_TAT + DC_ALLOWANCE_TAT + ELP_ALLOWANCE_TAT + FG_ALLOWANCE_TAT + GD_ALLOWANCE_TAT + GP_ALLOWANCE_TAT + LD_ALLOWANCE_TAT + MS_ALLOWANCE_TAT + R_ALLOWANCE_TAT + TP_ALLOWANCE_TAT + SIS_ALLOWANCE_TAT + SO_ALLOWANCE_TAT + TPIS_ALLOWANCE_TAT + TPO_ALLOWANCE_TAT + U_ALLOWANCE_TAT; } }
+            public int ALLOWANCE_FACT_TOTAL { get { return CD_ALLOWANCE_FACT + C_ALLOWANCE_FACT + COD_ALLOWANCE_FACT + DPS_ALLOWANCE_FACT + DC_ALLOWANCE_FACT + ELP_ALLOWANCE_FACT + FG_ALLOWANCE_FACT + GD_ALLOWANCE_FACT + GP_ALLOWANCE_FACT + LD_ALLOWANCE_FACT + MS_ALLOWANCE_FACT + R_ALLOWANCE_FACT + TP_ALLOWANCE_FACT + SIS_ALLOWANCE_FACT + SO_ALLOWANCE_FACT + TPIS_ALLOWANCE_FACT + TPO_ALLOWANCE_FACT + U_ALLOWANCE_FACT; } }
+            public int AJUSTES { get { return CD_AJUSTES + C_AJUSTES + COD_AJUSTES + DPS_AJUSTES + DC_AJUSTES + ELP_AJUSTES + FG_AJUSTES + GD_AJUSTES + GP_AJUSTES + LD_AJUSTES + MS_AJUSTES + R_AJUSTES + TP_AJUSTES + SIS_AJUSTES + SO_AJUSTES + TPIS_AJUSTES + TPO_AJUSTES + U_AJUSTES; } }
+            public int ALLOWANCE_TOTALES { get { return PROCESO_TAT_TOTAL + ALLOWANCE_TAT_TOTAL + ALLOWANCE_FACT_TOTAL + AJUSTES; } }
         }
 
         public class Concentrado

@@ -315,35 +315,35 @@
                     @foreach (TAT001.Models.ReportesModel.MRLTS item in ViewBag.tabla_reporte)
                     {
                         // TAT001.Models.ReportesModel.MRLTS item = itemvar.GetType().GetProperty("renglon").GetValue(itemvar, null);
-                        <tr>
-                            <td>@item.CO_CODE </td>
-                            <td>@item.PAIS </td>
-                            <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUMERO_SOLICITUD })'" style="cursor:pointer">@item.NUMERO_SOLICITUD </td>
-                            <td>@item.FECHA_SOLICITUD </td>
-                            <td>@item.PERIODO_CONTABLE </td>
-                            <td>@item.NUMERO_DOCUMENTO_SAP </td>
-                            <td>@item.NUMERO_REVERSO_SAP </td>
-                            <td>@item.FECHA_REVERSO </td>
-                            <td>@item.PERIODO_CONTABLE_REVERSO </td>
-                            <td>@item.COMENTARIOS_REVERSO_PROVISION </td>
-                            <td>@item.TIPO_SOLICITUD </td>
-                            <td>@item.STATUS </td>
-                            <td>@item.CONCEPTO_SOLICITUD </td>
-                            <td>@item.DE </td>
-                            <td>@item.A </td>
-                            <td>@item.CLASIFICACION </td>
-                            <td>@item.NUMERO_CLIENTE </td>
-                            <td>@item.CLIENTE </td>
-                            <td>@*item.MONTO_PROVISION_REGISTRADA*@ </td>
-                            <td>@*item.IMPORTE_NCOP*@ </td>
-                            <td>@*item.MONTO_REVERSO*@ </td>
-                            <td>@*item.BENEFICIO_IMPACTO_MRL*@ </td>
-                            <td>@*item.EXPENSE_RECOGNITION*@ </td>
-                            <td>@*item.MONTO_PROVISION_REGISTRADA_USD*@ </td>
-                            <td>@*item.IMPORTE_NCOP_USD*@ </td>
-                            <td>@*item.MONTO_REVERSO_USD*@ </td>
-                            <td>@*item.BENEFICIO_IMPACTO_MRL_USD*@ </td>
-                        </tr>
+                    <tr>
+                        <td>@item.CO_CODE </td>
+                        <td>@item.PAIS </td>
+                        <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUMERO_SOLICITUD })'" style="cursor:pointer">@item.NUMERO_SOLICITUD </td>
+                        <td>@item.FECHA_SOLICITUD.ToShortDateString() </td>
+                        <td>@item.PERIODO_CONTABLE </td>
+                        <td>@item.NUMERO_DOCUMENTO_SAP </td>
+                        <td>@item.NUMERO_REVERSO_SAP </td>
+                        <td>@item.FECHA_REVERSO.ToShortDateString() </td>
+                        <td>@item.PERIODO_CONTABLE_REVERSO </td>
+                        <td>@item.COMENTARIOS_REVERSO_PROVISION </td>
+                        <td>@item.TIPO_SOLICITUD </td>
+                        <td>@item.STATUS </td>
+                        <td>@item.CONCEPTO_SOLICITUD </td>
+                        <td>@item.DE.ToShortDateString() </td>
+                        <td>@item.A.ToShortDateString() </td>
+                        <td>@item.CLASIFICACION </td>
+                        <td>@item.NUMERO_CLIENTE </td>
+                        <td>@item.CLIENTE </td>
+                        <td>@((item.MONEDA != "USD") && ((item.TIPO_SOLICITUD_ID.StartsWith("PR"))) ? String.Format("{0:C}", item.MONTO) : "") </td>
+                        <td>@((item.MONEDA != "USD") && ((item.TIPO_SOLICITUD_ID.StartsWith("NC") || item.TIPO_SOLICITUD_ID.StartsWith("OP"))) ? String.Format("{0:C}", item.MONTO) : "") </td>
+                        <td>@((item.MONEDA != "USD") && ((item.TIPO_SOLICITUD_ID.StartsWith("RP"))) ? String.Format("{0:C}", item.MONTO) : "") </td>
+                        <td>@*item.BENEFICIO_IMPACTO_MRL*@ </td>
+                        <td>@*item.EXPENSE_RECOGNITION*@ </td>
+                        <td>@((item.MONEDA == "USD") && ((item.TIPO_SOLICITUD_ID.StartsWith("PR"))) ? String.Format("{0:C}", item.MONTO) : "") </td>
+                        <td>@((item.MONEDA == "USD") && ((item.TIPO_SOLICITUD_ID.StartsWith("NC") || item.TIPO_SOLICITUD_ID.StartsWith("OP"))) ? String.Format("{0:C}", item.MONTO) : "") </td>
+                        <td>@((item.MONEDA == "USD") && ((item.TIPO_SOLICITUD_ID.StartsWith("RP"))) ? String.Format("{0:C}", item.MONTO) : "") </td>
+                        <td>@*item.BENEFICIO_IMPACTO_MRL_USD*@ </td>
+                    </tr>
                     }
                 </tbody>
             </table>

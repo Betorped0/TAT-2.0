@@ -1894,6 +1894,8 @@
     <Content Include="Views\TALLs\Delete.cshtml" />
     <Content Include="Views\TALLs\Details.cshtml" />
     <Content Include="Views\TALLs\Edit.cshtml" />
+    <Content Include="Views\Reportes\ReporteAllowancesB.cshtml" />
+    <Content Include="Views\Reportes\ReporteAllowancesPL.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->
