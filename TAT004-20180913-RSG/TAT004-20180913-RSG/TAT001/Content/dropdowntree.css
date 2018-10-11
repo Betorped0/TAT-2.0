@@ -48,36 +48,27 @@
 
 .k-dropdown-wrap .k-select {
     line-height: 2em;
-    vertical-align: middle;
     -moz-box-sizing: border-box;
     text-align: center;
     width: 2em;
     height: 100%;
-}
-
-.k-dropdown-wrap .k-select {
     overflow: hidden;
     border: 0;
     text-decoration: none;
-    color: inherit;
-}
-
-.k-dropdown-wrap .k-select{
+    color: #0c0c0c;
     position: absolute;
     top: 0;
     right: 0;
     display: inline-block;
     vertical-align: top;
     text-decoration: none;
+    border-radius: 0 4px 4px 0;
 }
 
 .k-state-default > .k-select {
     border-color: #c5c5c5;
 }
 
- .k-dropdown-wrap .k-select {
-    border-radius: 0 4px 4px 0;
-}
 
 .k-state-default .k-select{
 border-color: #d5d5d5;
@@ -143,7 +134,7 @@ i.k-i-expand:before {
 
 div.k-treeview {
     border-width: 0;
-    background: 0 0;
+    background-color: #fff;
     overflow: auto;
     white-space: nowrap;
 }
@@ -208,6 +199,22 @@ div.k-treeview {
 }
 .dropdowntree {
     width: 100%;
-    font-size: 14px;
-    
+    font-size: 14px;   
+}
+
+div.dropdowntree {
+    position: absolute;
+    background-color: #fff;
+    display: none;
+    z-index: 2;
+    font-size: 12px;
+}
+.dropdown-trigger {
+   text-align:center;
+}
+.dropdown-trigger:hover + div.dropdowntree {
+    display: block;
+}
+div.dropdowntree:hover {
+    display: block;
 }

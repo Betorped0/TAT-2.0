@@ -210,3 +210,52 @@ function delRango() {
 
     t.rows('.selected').remove().draw(false);
 }
+
+
+function updateObjQ() {
+    $(".objqT").remove();
+    var lengthT = $("table#table_rec tbody tr[role='row']").length;
+    if (lengthT > 0) {
+        var total = 0;
+        var porc = 0;
+        var fecha = "";
+        var tsol = "";
+        $("#table_rec > tbody  > tr[role='row']").each(function () {
+            //total += parseFloat(toNum($(this).find("td.MONTO input").val()));
+            //porc = toNum($(this).find("td.PORCENTAJE").text());
+            fecha = ($(this).find("td.FECHA").text());
+            tsol = $(this).find("td.TSOL").text();
+
+
+            var pos = $(this).find("td.POS").text().split("/")[0];
+            if (pos != "1") {
+                var tr = "";
+                tr += "<tr class='objqT'>"
+                tr += "<td>Q " + pos + "</td>"
+                tr += "<td>" + tsol + "</td>";
+                tr += "<td>" + fecha + "</td>";
+                total = 0;
+                for (var i = 0; i < listaRangos.length; i++) {
+                    var poss = listaRangos[i].LIN;
+                    if (poss == 1 & pos == listaRangos[i].POS)
+                        total += parseFloat(toNum(listaRangos[i].OBJ1));
+                }
+                tr += "<td>" + toShow(total) + "</td>";
+                tr += "<td>" + toShowPorc($('#objPORC').val()) + "</td>";
+                tr += "</tr>"
+                $("#table_objQ tbody").append(tr);
+            } else {
+                total = 0;
+                for (var i = 0; i < listaRangos.length; i++) {
+                    var poss = listaRangos[i].LIN;
+                    if (poss == 1 & pos == listaRangos[i].POS)
+                        total += parseFloat(toNum(listaRangos[i].OBJ1));
+                }
+                document.getElementById("obqTSOL").innerText = tsol;
+                document.getElementById("obqFECHA").innerText = fecha;
+                document.getElementById("obqMONTO").innerText = toShow(total);
+            }
+        });
+    }
+    $("#table_objQ").DataTable();
+}

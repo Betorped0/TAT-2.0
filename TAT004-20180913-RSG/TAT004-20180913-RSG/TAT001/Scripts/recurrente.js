@@ -180,6 +180,11 @@ $(document).ready(function () {
     //    }
     //});
     cambiaCheckRec();
+
+    $('body').on('focusout', '#objPORC', function () {
+        updateObjQ();
+    });
+
 });
 //LEJ 31.07.2018---------------------
 function showPrTable() {
@@ -344,6 +349,11 @@ function cambiaRec() {
         $(".table_rec").css("display", "none");
     }
 
+    if (!ligada()) {
+        $(".PORCENTAJE").css("display", "none");
+    } else {
+        $(".PORCENTAJE").css("display", "table-cell");
+    }
 
 }
 
@@ -362,7 +372,7 @@ function cambiaCheckRec() {
         document.getElementById("btn-date").disabled = false;
         document.getElementById("btn-peri").disabled = false;
         $("#tabs_rec").addClass("disabled");
-        
+
     }
     //var opt = document.getElementById("select_neg").getElementsByTagName("option");
     //for (var i = 0; i < opt.length; i++) {
@@ -455,7 +465,7 @@ function addRowRecl(t, pos, tsol, fecha, monto, porc, periodo) {
         , periodo
         , tsol
         , "No generado"
-        , "<span style='display:none;'>"+fecha+"</span>"+"No generado"
+        , "<span style='display:none;'>" + fecha + "</span>" + "No generado"
         , monto
         , porc
         , "Pendiente"

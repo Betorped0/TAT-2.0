@@ -5440,105 +5440,6 @@ function(e, define) {
 }, "function" == typeof define && define.amd ? define : function(e, t, n) {
     (n || t)()
 }),
-
-
-function(e, define) {
-    define("kendo.treeview.draganddrop.min", ["kendo.data.min", "kendo.draganddrop.min"], e)
-}(function() {
-    return function(e, t) {
-        var n = window.kendo,
-            i = n.ui,
-            o = e.proxy,
-            r = e.extend,
-            s = "visibility",
-            a = "k-state-hover",
-            l = "input,a:not(.k-in),textarea,.k-multiselect-wrap,select,button,a.k-button>.k-icon,button.k-button>.k-icon,span.k-icon.k-i-arrow-60-right,span.k-icon.k-i-arrow-45-down-right";
-        i.HierarchicalDragAndDrop = n.Class.extend({
-            init: function(t, s) {
-                this.element = t, this.hovered = t, this.options = r({
-                    dragstart: e.noop,
-                    drag: e.noop,
-                    drop: e.noop,
-                    dragend: e.noop
-                }, s), this._draggable = new i.Draggable(t, {
-                    ignore: l,
-                    filter: s.filter,
-                    autoScroll: s.autoScroll,
-                    cursorOffset: {
-                        left: 10,
-                        top: n.support.mobileOS ? -40 / n.support.zoomLevel() : 10
-                    },
-                    hint: o(this._hint, this),
-                    dragstart: o(this.dragstart, this),
-                    dragcancel: o(this.dragcancel, this),
-                    drag: o(this.drag, this),
-                    dragend: o(this.dragend, this),
-                    $angular: s.$angular
-                })
-            },
-            _hint: function(e) {
-                return "<div class='k-header k-drag-clue'><span class='k-icon k-drag-status' />" + this.options.hintText(e) + "</div>"
-            },
-            _removeTouchHover: function() {
-                n.support.touch && this.hovered && (this.hovered.find("." + a).removeClass(a), this.hovered = !1)
-            },
-            _hintStatus: function(n) {
-                var i = this._draggable.hint.find(".k-drag-status")[0];
-                return n ? (i.className = "k-icon k-drag-status " + n, t) : e.trim(i.className.replace(/(p|k)-(icon|drag-status)/g, ""))
-            },
-            dragstart: function(t) {
-                this.source = t.currentTarget.closest(this.options.itemSelector), this.options.dragstart(this.source) && t.preventDefault(), this.dropHint = this.options.reorderable ? e("<div class='k-i-drag-and-drop' />").css(s, "hidden").appendTo(this.element) : e()
-            },
-            drag: function(t) {
-                var i, o, r, l, c, d, u, h, p, f, m, g = this.options,
-                    v = this.source,
-                    _ = this.dropTarget = e(n.eventTarget(t)),
-                    b = _.closest(g.allowedContainers);
-                b.length ? v[0] == _[0] || g.contains(v[0], _[0]) ? m = "k-i-cancel" : (m = "k-i-insert-middle", p = g.itemFromTarget(_), i = p.item, i.length ? (this._removeTouchHover(), o = n._outerHeight(i), l = p.content, g.reorderable ? (c = o / (l.length > 0 ? 4 : 2), r = n.getOffset(i).top, d = t.y.location < r + c, u = r + o - c < t.y.location, h = l.length && !d && !u) : (h = !0, d = !1, u = !1), this.hovered = !!h && b, this.dropHint.css(s, h ? "hidden" : "visible"), this._lastHover && this._lastHover[0] != l[0] && this._lastHover.removeClass(a), this._lastHover = l.toggleClass(a, h), h ? m = "k-i-plus" : (f = i.position(), f.top += d ? 0 : o, this.dropHint.css(f)[d ? "prependTo" : "appendTo"](g.dropHintContainer(i)), d && p.first && (m = "k-i-insert-up"), u && p.last && (m = "k-i-insert-down"))) : _[0] != this.dropHint[0] && (this._lastHover && this._lastHover.removeClass(a), m = e.contains(this.element[0], b[0]) ? "k-i-cancel" : "k-i-plus")) : (m = "k-i-cancel", this._removeTouchHover()), this.options.drag({
-                    originalEvent: t.originalEvent,
-                    source: v,
-                    target: _,
-                    pageY: t.y.location,
-                    pageX: t.x.location,
-                    status: m.substring(2),
-                    setStatus: function(e) {
-                        m = e
-                    }
-                }), 0 !== m.indexOf("k-i-insert") && this.dropHint.css(s, "hidden"), this._hintStatus(m)
-            },
-            dragcancel: function() {
-                this.dropHint.remove()
-            },
-            dragend: function(e) {
-                var n, i, o, r = "over",
-                    l = this.source,
-                    c = this.dropHint,
-                    d = this.dropTarget;
-                return "visible" == c.css(s) ? (r = this.options.dropPositionFrom(c), n = c.closest(this.options.itemSelector)) : d && (n = d.closest(this.options.itemSelector), n.length || (n = d.closest(this.options.allowedContainers))), i = {
-                    originalEvent: e.originalEvent,
-                    source: l[0],
-                    destination: n[0],
-                    valid: "k-i-cancel" != this._hintStatus(),
-                    setValid: function(e) {
-                        this.valid = e
-                    },
-                    dropTarget: d[0],
-                    position: r
-                }, o = this.options.drop(i), c.remove(), this._removeTouchHover(), this._lastHover && this._lastHover.removeClass(a), !i.valid || o ? (this._draggable.dropped = i.valid, t) : (this._draggable.dropped = !0, this.options.dragend({
-                    originalEvent: e.originalEvent,
-                    source: l,
-                    destination: n,
-                    position: r
-                }), t)
-            },
-            destroy: function() {
-                this._lastHover = this.hovered = null, this._draggable.destroy()
-            }
-        })
-    }(window.kendo.jQuery), window.kendo
-}, "function" == typeof define && define.amd ? define : function(e, t, n) {
-    (n || t)()
-}),
 function(e, define) {
     define("kendo.treeview.min", ["kendo.data.min", "kendo.treeview.draganddrop.min"], e)
 }(function() {
@@ -5627,12 +5528,14 @@ function(e, define) {
                 spriteCssClass: "dataSpriteCssClassField",
                 imageUrl: "dataImageUrlField"
             },
-            X = function(e) {
+            X = function (e) {
                 return e instanceof p.jQuery || e instanceof window.jQuery
             },
-            Z = function(e) {
+            Z = function (e) {
                 return "object" == typeof HTMLElement ? e instanceof HTMLElement : e && "object" == typeof e && 1 === e.nodeType && typeof e.nodeName === j
-            };
+            },
+            link = null;
+          
         c = n(".k-group"), d = n(".k-group,.k-content"), u = function(e) {
             return e.children("div").children(".k-icon")
         }, h = /k-sprite/, l = p.ui.DataBoundWidget.extend({
@@ -5640,6 +5543,7 @@ function(e, define) {
                 var n, i = this,
                     o = !1,
                     r = t && !!t.dataSource;
+                link = (t && t.link ? t.link : link);
                 _(t) && (t = {
                     dataSource: t
                 }), t && typeof t.loadOnDemand == O && _(t.dataSource) && (t.loadOnDemand = !1), b.prototype.init.call(i, e, t), e = i.element, t = i.options, n = e.is("ul") && e || e.hasClass(W) && e.children("ul"), o = !r && n.length, o && (t.dataSource.list = n), i._animation(), i._accessors(), i._templates(), e.hasClass(W) ? (i.wrapper = e, i.root = e.children("ul").eq(0)) : (i._wrapper(), n && (i.root = e, i._group(i.wrapper))), i._tabindex(), i.root.attr("role", "tree"), i._dataSource(o), i._attachEvents(), i._dragging(), o ? i._syncHtmlAndDataSource() : t.autoBind && (i._progress(!0), i.dataSource.fetch()), t.checkboxes && t.checkboxes.checkChildren && i.updateIndeterminate(), i.element[0].id && (i._ariaId = p.format("{0}_tv_active", i.element[0].id)), p.notify(i)
@@ -6258,13 +6162,21 @@ function(e, define) {
                     s = i._ariaId;
                 return arguments.length > 0 && n && n.length ? (o && (o[0].id === s && o.removeAttr("id"), o.find(".k-in:first").removeClass("k-state-focused")), o = i._current = e(n, r).closest(q), o.find(".k-in:first").addClass("k-state-focused"), s = o[0].id || s, s && (i.wrapper.removeAttr("aria-activedescendant"), o.attr("id", s), i.wrapper.attr("aria-activedescendant", s)), t) : (o || (o = i._nextVisible(e())), o)
             },
-            select: function(n) {
+            select: function (n) { 
                 var i = this,
                     o = i.element;
-                return arguments.length ? (n = e(n, o).closest(q), o.find(".k-state-selected").each(function() {
+                var v = (arguments.length ? (n = e(n, o).closest(q), o.find(".k-state-selected").each(function () {
                     var t = i.dataItem(this);
                     t ? (t.set("selected", !1), delete t.selected) : e(this).removeClass("k-state-selected")
-                }), n.length && (i.dataItem(n).set("selected", !0), i._clickTarget = n), i.trigger(E), t) : o.find(".k-state-selected").closest(q)
+                }), n.length && (i.dataItem(n).set("selected", !0), i._clickTarget = n), i.trigger(E), t) : o.find(".k-state-selected").closest(q));
+                
+                var dataItem = i.dataItem(v);
+                if (dataItem && dataItem.value && link){
+                    console.log(dataItem.value);
+                    link = link.replace("{val}", dataItem.value);
+                    window.location = link;
+                }
+                return v;
             },
             _toggle: function(e, t, n) {
                 var i, o = this.options,
@@ -7259,7 +7171,7 @@ function(e, define) {
     }(window.kendo.jQuery), window.kendo
 }, "function" == typeof define && define.amd ? define : function(e, t, n) {
     (n || t)()
-}),
+        }),
 function(e, define) {
     define("kendo.listview.min", ["kendo.data.min", "kendo.editable.min", "kendo.selectable.min"], e)
 }(function() {
@@ -8370,14 +8282,7 @@ function(e, define) {
     (n || t)()
 }),
 function(e, define) {
-    define("kendo.editor.min", ["kendo.combobox.min", "kendo.dropdownlist.min",  "kendo.window.min"], e)
-}(function() {
-    return window.kendo
-}, "function" == typeof define && define.amd ? define : function(e, t, n) {
-    (n || t)()
-}),
-function(e, define) {
-    define("kendo.web.min", [ "kendo.data.min",  "kendo.popup.min",  "kendo.list.min",  "kendo.dropdownlist.min", "kendo.dropdowntree.min", "kendo.combobox.min", "kendo.multiselect.min", "kendo.multicolumncombobox.min", , "kendo.grid.min", "kendo.listview.min", "kendo.listbox.min", "kendo.editor.min", "kendo.editable.min", "kendo.treeview.min"], e)
+    define("kendo.web.min", ["kendo.data.min", "kendo.popup.min", "kendo.list.min", "kendo.dropdownlist.min", "kendo.dropdowntree.min","kendo.buttontree.min", "kendo.combobox.min", "kendo.multiselect.min", "kendo.multicolumncombobox.min", , "kendo.grid.min", "kendo.listview.min", "kendo.listbox.min", "kendo.editor.min", "kendo.editable.min", "kendo.treeview.min"], e)
 }(function() {
     "bundle all";
     return window.kendo

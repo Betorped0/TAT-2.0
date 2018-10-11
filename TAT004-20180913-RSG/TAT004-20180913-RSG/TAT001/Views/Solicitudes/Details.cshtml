@@ -15,6 +15,9 @@
 }
 @try
 {
+
+    <link t href="~/Content/dropdowntree.css" rel="stylesheet" />
+    <script src="~/Scripts/dropdowntree.js"></script>
     <script src="~/Scripts/formatos.js"></script>
     <script src="~/Scripts/materialize2.js"></script>
     <input id="miles" name="miles" type="hidden" value="@ViewBag.miles">//LEJ 09.07.18
@@ -175,32 +178,17 @@
                         {
                             <div id="div_drop">
                                 <a href="@Url.Action("Create", "Solicitudes" , new { id_d=Model.D.NUM_DOC.ToString(), tsol="CPR" })" class="btn-small">Reversar</a>
-                                <button type="button" class="btn-small dropdown-trigger" data-target="list_rela" id="btn_rela">Crear solicitud relacionada</button>
                                 @*<button type="button" class="btn-small  " id="btn_cancel">Cancelar</button>*@
-                                <ul id='list_rela' class='dropdown-content'>
-                                    @if (ViewBag.TSOL_RELA != null)
-                                    {
-                                        foreach (TSOL inte in ViewBag.TSOL_RELA)
-                                        {
-                                            @*
-                                                <li><a href="@Url.Action("Create", "Solicitudes" , new { id_d=Model.D.NUM_DOC.ToString(), tsol="NC" })" id="lbl_nc">Nota de crédito</a></li>
-                                                <li><a href="@Url.Action("Create", "Solicitudes" , new { id_d=Model.D.NUM_DOC.ToString(), tsol="NCI" })" id="lbl_nc">Nota de crédito Int</a></li>
-                                                <li><a href="@Url.Action("Create", "Solicitudes" , new { id_d=Model.D.NUM_DOC.ToString(), tsol="OP" })" id="lbl_op">Orden de pago</a></li>*@
-                                            <li><a href="@Url.Action("Create", "Solicitudes" , new { id_d=Model.D.NUM_DOC.ToString(), tsol=inte.ID })" id="lbl_@inte.ID">@inte.TSOLTs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50 </a></li>
-                                        }
-                                    }
-                                </ul>
+                                <button type="button" class="btn-small dropdown-trigger">Crear solicitud relacionada</button>
+                                <div id="list_rela" class="dropdowntree"></div>
                             </div>
                             <script>
-                                //var elem = document.getElementById('btn_rela');
-                                var elem = document.querySelectorAll('.dropdown-trigger');
-                                var options = {
-                                    hover: true,
-                                    //constrainWidth: false,
-                                    //coverTrigger: true
-                                };
-                                var instance = M.Dropdown.init(elem, options);
+                                 $('#list_rela').kendoTreeView({
+                                     link: '@Url.Content("~")Solicitudes/Create?id_d=@Model.D.NUM_DOC.ToString()&tsol={val}',
+                                    dataSource:@Html.Raw(Json.Encode(ViewBag.TSOL_RELA))
+                                  });
                             </script>
+                            
                         }
                         if (ViewBag.usuario.PUESTO_ID == 8 & Model.D.DOCUMENTOLs.Count > 0)
                         {
