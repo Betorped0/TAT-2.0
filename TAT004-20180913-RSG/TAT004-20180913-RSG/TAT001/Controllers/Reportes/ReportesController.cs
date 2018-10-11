@@ -545,7 +545,8 @@ namespace TAT001.Controllers.Reportes
                     r1.CUENTA_LIMITE = Convert.ToDecimal(cuentas.GetType().GetProperty("LIMITE").GetValue(cuentas, null));
                     r1.CUENTA_CARGO_NOMBRE = cuentas.GetType().GetProperty("NOMBRE").GetValue(cuentas, null).ToString();
                 }
-                r1.PRESUPUESTO = getPresupuesto(dOCUMENTO.CLIENTE.KUNNR);
+                Presupuesto pr = new Presupuesto();
+                r1.PRESUPUESTO = pr.getPresupuesto(dOCUMENTO.CLIENTE.KUNNR);
                 var proveedor = dOCUMENTO.DOCUMENTOFs.Select(df => df.PROVEEDOR).FirstOrDefault();
                 r1.PROVEEDOR_NOMBRE = db.PROVEEDORs.Where(x => x.ID.Equals(proveedor)).Select(p => p.NOMBRE).FirstOrDefault();
                 //dOCUMENTO.DOCUMENTOF = db.DOCUMENTOFs.Where(a => a.NUM_DOC.Equals(dOCUMENTO.NUM_DOC)).ToList();
@@ -629,50 +630,7 @@ namespace TAT001.Controllers.Reportes
             Session["spras"] = user.SPRAS_ID;
             return View();
         }
-
-        public PRESUPUESTO_MOD getPresupuesto(string kunnr)
-        {
-            PRESUPUESTO_MOD pm = new PRESUPUESTO_MOD();
-            try
-            {
-                if (kunnr == null)
-                    kunnr = "";
-
-                //Obtener presupuesto
-                string mes = DateTime.Now.Month.ToString();
-                var presupuesto = db.CSP_PRESU_CLIENT(cLIENTE: kunnr, pERIODO: mes).Select(p => new { DESC = p.DESCRIPCION.ToString(), VAL = p.VALOR.ToString() }).ToList();
-                string clien = db.CLIENTEs.Where(x => x.KUNNR == kunnr).Select(x => x.BANNERG).First();
-                if (presupuesto != null)
-                {
-                    if (String.IsNullOrEmpty(clien))
-                    {
-                        pm.P_CANAL = presupuesto[0].VAL;
-                        pm.P_BANNER = presupuesto[1].VAL;
-                        pm.PC_C = (float.Parse(presupuesto[4].VAL) + float.Parse(presupuesto[5].VAL) + float.Parse(presupuesto[6].VAL)).ToString();
-                        pm.PC_A = presupuesto[8].VAL;
-                        pm.PC_P = presupuesto[9].VAL;
-                        pm.PC_T = presupuesto[10].VAL;
-                        pm.CONSU = (float.Parse(presupuesto[1].VAL) - float.Parse(presupuesto[10].VAL)).ToString();
-                    }
-                    else
-                    {
-                        pm.P_CANAL = presupuesto[0].VAL;
-                        pm.P_BANNER = presupuesto[0].VAL;
-                        pm.PC_C = (float.Parse(presupuesto[4].VAL) + float.Parse(presupuesto[5].VAL) + float.Parse(presupuesto[6].VAL)).ToString();
-                        pm.PC_A = presupuesto[8].VAL;
-                        pm.PC_P = presupuesto[9].VAL;
-                        pm.PC_T = presupuesto[10].VAL;
-                        pm.CONSU = (float.Parse(presupuesto[0].VAL) - float.Parse(presupuesto[10].VAL)).ToString();
-                    }
-                }
-            }
-            catch
-            {
-
-            }
-
-            return pm;
-        }
+        
 
         // FIN REPORTE 1 - CONCENTRADO
 
