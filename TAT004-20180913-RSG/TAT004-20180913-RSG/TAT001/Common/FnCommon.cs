@@ -125,7 +125,7 @@ namespace TAT001.Common
                     tree.Add(new SelectTreeItem
                     {
                         text = x.TXT50,
-                        expanded = false,
+                        expanded = !(tipo==null),
                         items = ObtenerItemsSelectTree(db, x.TSOL_GROUP_ID, x.TSOL_GROUP_TIPO, spras_id)
                     });
                 });
