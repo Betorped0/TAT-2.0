@@ -55,7 +55,7 @@ namespace TAT001.Controllers.Catalogos
             ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION");
             ViewBag.BUNIT = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS");
 
-            var uSUARIOs = db.USUARIOs.Include(u => u.PUESTO).Include(u => u.SPRA);
+            var uSUARIOs = db.USUARIOs.Where(u => u.ACTIVO == true).Include(u => u.PUESTO).Include(u => u.SPRA);
             UsuarioNuevo un = new UsuarioNuevo();
             un.L = uSUARIOs;
             return View(un);
@@ -165,32 +165,40 @@ namespace TAT001.Controllers.Catalogos
                     {
                         if (uSUARIO.PASS == uSUARIO.MANAGER)
                         {
-                            Cryptography c = new Cryptography();
-                            uSUARIO.PASS = c.Encrypt(uSUARIO.PASS);
-                            USUARIO u = new USUARIO();
-                            var ppd = u.GetType().GetProperties();
-                            var ppv = uSUARIO.GetType().GetProperties();
-                            foreach (var pv in ppv)
+                            if (ComprobarEmail(uSUARIO.EMAIL) != false & uSUARIO.EMAIL != null & uSUARIO.EMAIL != "")
                             {
-                                foreach (var pd in ppd)
+                                Cryptography c = new Cryptography();
+                                uSUARIO.PASS = c.Encrypt(uSUARIO.PASS);
+                                USUARIO u = new USUARIO();
+                                var ppd = u.GetType().GetProperties();
+                                var ppv = uSUARIO.GetType().GetProperties();
+                                foreach (var pv in ppv)
                                 {
-                                    if (pd.Name == pv.Name)
+                                    foreach (var pd in ppd)
                                     {
-                                        pd.SetValue(u, pv.GetValue(uSUARIO));
-                                        break;
+                                        if (pd.Name == pv.Name)
+                                        {
+                                            pd.SetValue(u, pv.GetValue(uSUARIO));
+                                            break;
+                                        }
                                     }
                                 }
+                                u.ACTIVO = true;
+                                db.USUARIOs.Add(u);
+
+                                ////MIEMBRO m = new MIEMBRO();
+                                ////m.ROL_ID = int.Parse(Request.Form["ROLs"].ToString());
+                                ////m.USUARIO_ID = uSUARIO.ID;
+                                ////m.ACTIVO = true;
+                                ////db.MIEMBROS.Add(m);
+
+                                db.SaveChanges();
+                                return RedirectToAction("Index");
                             }
-                            db.USUARIOs.Add(u);
-
-                            ////MIEMBRO m = new MIEMBRO();
-                            ////m.ROL_ID = int.Parse(Request.Form["ROLs"].ToString());
-                            ////m.USUARIO_ID = uSUARIO.ID;
-                            ////m.ACTIVO = true;
-                            ////db.MIEMBROS.Add(m);
-
-                            db.SaveChanges();
-                            return RedirectToAction("Index");
+                            else
+                            {
+                                ViewBag.Error = "El correo no es correcto";
+                            }
                         }
                         else
                         {
@@ -295,10 +303,18 @@ namespace TAT001.Controllers.Catalogos
         {
             if (ModelState.IsValid)
             {
-                db.Entry(uSUARIO).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Details", new { id = uSUARIO.ID });
-                //return RedirectToAction("Index");
+                if (ComprobarEmail(uSUARIO.EMAIL) != false & uSUARIO.EMAIL != null & uSUARIO.EMAIL != "")
+                {
+                    uSUARIO.ACTIVO = true;
+                    db.Entry(uSUARIO).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Details", new { id = uSUARIO.ID });
+                    //return RedirectToAction("Index");
+                }
+                else
+                {
+                    ViewBag.Error = "El correo no es correcto";
+                }
             }
             int pagina = 603; //ID EN BASE DE DATOS
             using (TAT001Entities db = new TAT001Entities())
@@ -338,6 +354,33 @@ namespace TAT001.Controllers.Catalogos
         // GET: Usuarios/Delete/5
         public ActionResult Delete(string id)
         {
+            //int pagina = 603; //ID EN BASE DE DATOS
+            //using (TAT001Entities db = new TAT001Entities())
+            //{
+            //    string u = User.Identity.Name;
+            //    //string u = "admin";
+            //    var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+            //    ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
+            //    ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
+            //    ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
+            //    ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            //    ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            //    ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            //    pagina = pagina - 1;
+            //    ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+
+            //    try
+            //    {
+            //        string p = Session["pais"].ToString();
+            //        ViewBag.pais = p + ".png";
+            //    }
+            //    catch
+            //    {
+            //        //ViewBag.pais = "mx.png";
+            //        //return RedirectToAction("Pais", "Home");
+            //    }
+            //    Session["spras"] = user.SPRAS_ID;
+            //}
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -351,12 +394,13 @@ namespace TAT001.Controllers.Catalogos
         }
 
         // POST: Usuarios/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
             USUARIO uSUARIO = db.USUARIOs.Find(id);
-            db.USUARIOs.Remove(uSUARIO);
+            uSUARIO.ACTIVO = false;
+            db.Entry(uSUARIO).State = EntityState.Modified;
             db.SaveChanges();
             return RedirectToAction("Index");
         }

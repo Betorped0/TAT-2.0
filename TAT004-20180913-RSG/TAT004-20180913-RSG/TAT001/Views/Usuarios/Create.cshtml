@@ -24,19 +24,19 @@
                 <div class="row">
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     <div class="input-field col s12">
-                        @Html.EditorFor(model => model.ID, new { htmlAttributes = new { @aria_required = "true", @required = "required", @class = "validate", @onchange="valorID(this);" } })
+                        @Html.EditorFor(model => model.ID, new { htmlAttributes = new { @aria_required = "true", @required = "required", @class = "validate", @onchange = "valorID(this);" } })
                         @Html.LabelFor(model => model.ID, htmlAttributes: new { @id = "lbl_id" })
                         <span class="helper-text" id="hlp_id" data-error="Id repetido" data-success="Correcto"></span>
                     </div>
 
                     <div class="input-field col s12">
-                        @Html.PasswordFor(model => model.PASS, new { @class = "form-control", @id="txt_pass" })
+                        @Html.PasswordFor(model => model.PASS, new { @class = "form-control", @id = "txt_pass" })
                         @Html.LabelFor(model => model.PASS, htmlAttributes: new { @id = "lbl_pass" })
                         @Html.ValidationMessageFor(model => model.PASS, "", new { @class = "text-danger" })
                     </div>
 
                     <div class="input-field col s12">
-                        @Html.PasswordFor(model => model.MANAGER,new { @class = "validate", @onchange = "valorPass(this);", @id="txt_pass2"  })
+                        @Html.PasswordFor(model => model.MANAGER, new { @class = "validate", @onchange = "valorPass(this);", @id = "txt_pass2" })
                         @Html.LabelFor(model => model.MANAGER, "Confirmar contraseña", htmlAttributes: new { @id = "lbl_conf" })
                         @Html.ValidationMessageFor(model => model.MANAGER, "", new { @class = "text-danger" })
                         @*<span class="helper-text" id="hlp_pass" data-error="No coinciden" data-success=""></span>*@
@@ -70,7 +70,7 @@
                         //    } else {
                         //        document.getElementById(campo.id).className = "validate valid";
                         //    }
-                           
+
                         //}
                     }
                 </script>
@@ -98,7 +98,7 @@
                     </div>
 
                     <div class="input-field col s12">
-                        @Html.EditorFor(model => model.EMAIL, new { htmlAttributes = new { @class = "validate", @type = "email" } })
+                        @Html.EditorFor(model => model.EMAIL, new { htmlAttributes = new { @type = "email" } })
                         @Html.LabelFor(model => model.EMAIL, htmlAttributes: new { @id = "lbl_email" })
                         @Html.ValidationMessageFor(model => model.EMAIL, "", new { @class = "text-danger" })
                     </div>
@@ -154,10 +154,10 @@
                     </div>
 
                     @*<div class="input-field col s12">
-                        @Html.DropDownList("ROLs", null, htmlAttributes: new { @class = "form-control" })
-                        @Html.LabelFor(model => model.ROL, "ROL", htmlAttributes: new { @id = "lbl_rol" })
-                        @Html.ValidationMessageFor(model => model.ROL, "", new { @class = "text-danger" })
-                    </div>*@
+                            @Html.DropDownList("ROLs", null, htmlAttributes: new { @class = "form-control" })
+                            @Html.LabelFor(model => model.ROL, "ROL", htmlAttributes: new { @id = "lbl_rol" })
+                            @Html.ValidationMessageFor(model => model.ROL, "", new { @class = "text-danger" })
+                        </div>*@
                     <script>
 
                         var elem = document.querySelectorAll('select');
@@ -167,6 +167,26 @@
             </div>
         </div>
     </div>
+    //OCG 11/10/18 Validacion de email
+    <script>
+
+        $('#EMAIL').on("focusout", function () {
+            var email = $('#EMAIL').val();
+            $('#EMAIL').removeClass("valid");
+            $('#EMAIL').removeClass("invalid");
+            if (validateEmail(email) == true) {
+                $('#EMAIL').addClass("valid");
+            }
+            else {
+                $('#EMAIL').addClass("invalid");
+            }
+        });
+
+        function validateEmail(email) {
+            var re = /^(([^<>()\[\]\\.,;:\s@@"]+(\.[^<>()\[\]\\.,;:\s@@"]+)*)|(".+"))@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(String(email).toLowerCase());
+        }
+    </script>
 }
 <div>
     @Html.ActionLink("Back to List", "Index")

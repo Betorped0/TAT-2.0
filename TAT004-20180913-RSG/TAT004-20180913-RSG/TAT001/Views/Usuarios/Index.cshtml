@@ -13,11 +13,11 @@
         <a class="btn-small" href="@Url.Action("Create")">Nuevo</a>
         @*<a class="waves-effect waves-light btn modal-trigger" href="#modal1">Nuevo</a>*@
         <a class="btn-small" href="@Url.Action("Carga")">Cargar Usuarios</a>
-        <a class="btn-small" href="@Url.Action("Carga", "Flujos")">Cargar flujo</a>
+        @*<a class="btn-small" href="@Url.Action("Carga", "Flujos")">Cargar flujo</a>*@
     </div>
 </div>
 <div class="card-panel">
-    <div class="row">
+    @*<div class="row">*@
         <div class="row" style="margin-bottom:0;">
             <div class="input-field col s3 m3 l3">
                 <select id="selecc">
@@ -41,7 +41,6 @@
         <script src="//code.jquery.com/jquery-1.12.4.js"></script>
         <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
         <script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
-        @*<link href="//cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.1.0/material.min.css" rel="stylesheet" />*@
         <link href="~/Content/dataTable.css" rel="stylesheet" />
         <link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
         <div style="width:100%;">
@@ -100,18 +99,36 @@
                                     @Html.DisplayFor(modelItem => item.PUESTO.PUESTOTs.FirstOrDefault().)
                                 </td>*@
                             <td>
-                                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
-
-                                @*@Html.ActionLink("Details", "Details", new { id = item.ID }) |*@
-                                @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                                <a href="@Url.Action("Edit", "Usuarios", new { id = item.ID })">
+                                    <i class='material-icons green-text'>edit</i>
+                                </a>
+                                <a href="" onclick="DELETE('@item.ID')">
+                                    <span id="borrar" hidden>
+                                        @item.ID
+                                    </span>
+                                    <i class='material-icons red-text'>delete</i>
+                                </a>
                             </td>
                         </tr>
                     }
                 </tbody>
             </table>
         </div>
-    </div>
+    @*</div>*@
 </div>
+
+<script type="text/javascript">
+    $("a[data-form-method='post']").click(function (event) {
+        event.preventDefault();
+        var element = $(this);
+        var action = element.attr("href");
+        element.closest("form").each(function () {
+            var form = $(this);
+            form.attr("action", action);
+            form.submit();
+        });
+    });
+</script>
 
 <script>
     $(document).ready(function () {
@@ -161,6 +178,12 @@
         //    table.page.len(this.value).draw();
         //});
 
+        var a = $('#selecc').val();
+        table.page.len(a).draw();
+        $('#selecc').on('change', function () {
+            table.page.len(this.value).draw();
+        });
+
         $('input.global_filter').on('keyup click', function () {
             filterGlobal();
         });
@@ -170,6 +193,31 @@
         $('#table').DataTable().search(
             $('#global_filter').val()).draw();
     }
+
+</script>
+<script type="text/javascript">
+
+    function DELETE(id) {
+        //var id = $('#borrar').text();
+        var mensaje = confirm("Confirma borrar el usuario " + id);
+        console.log(id);
+        if (mensaje) {
+            $.ajax({
+                type: "POST",
+                url: 'DeleteConfirmed',
+                data: { id: id },
+                dataType: "json",
+                success: function () {
+
+                },
+                error: function (request, status, error) {
+                    //alert(request.responseText);
+                }
+            });
+            M.toast({ html: 'Se elimino el usuario' });
+        }
+    }
+
 </script>
 <style>
     .dataTables_length {

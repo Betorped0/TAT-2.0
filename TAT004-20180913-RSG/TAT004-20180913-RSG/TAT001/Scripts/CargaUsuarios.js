@@ -249,7 +249,7 @@ function Carga() {
     var message = $('.input_mes').serialize();
     var doc = sessionStorage.getItem("num");
     if (doc > 0) {
-        if (message == "" || message == null) {
+        if (message.indexOf('1.') < 0) {
             $.ajax({
                 type: "POST",
                 url: 'Agregar',
@@ -276,7 +276,7 @@ function Carga() {
 function Comprobar() {
     var datos = $('#tabla').serializeArray();
     creart('Comprobar', datos);
-    M.toast({ html: 'Registro modificado' });
+    M.toast({ html: 'Registro Actualizado' });
 }
 
 function Borrar() {

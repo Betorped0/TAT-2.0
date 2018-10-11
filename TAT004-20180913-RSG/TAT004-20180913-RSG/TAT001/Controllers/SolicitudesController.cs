@@ -12,6 +12,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using TAT001.Common;
 using TAT001.Entities;
 using TAT001.Models;
 using TAT001.Services;
@@ -1750,6 +1751,15 @@ namespace TAT001.Controllers
 
             Warning w = new Warning();
             ViewBag.listaValid = w.listaW(d.SOCIEDAD_ID, usuariotextos);
+            if (id_d == null || id_d == "")
+            {
+                //directa SD
+            }
+            else
+            {
+                //relacionada SR
+            }
+            ViewBag.listtreetsol = FnCommon.ObtenerTreeTiposSolicitud(db, spras, "SD");
 
             return View(d);
         }
