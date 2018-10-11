@@ -134,10 +134,9 @@ i.k-i-expand:before {
 
 div.k-treeview {
     border-width: 0;
-    background: 0 0;
+    background-color: #fff;
     overflow: auto;
     white-space: nowrap;
-    z-index: 2;
 }
 .k-list-container.k-popup-dropdowntree {
     padding: 0;
