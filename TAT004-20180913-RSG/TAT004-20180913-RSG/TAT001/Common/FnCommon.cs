@@ -1,6 +1,6 @@
-﻿
-
+﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
 using TAT001.Entities;
@@ -131,7 +131,7 @@ namespace TAT001.Common
                 });
             return tree;
         }
-
+        
         static List<SelectTreeItem> ObtenerItemsSelectTree(TAT001Entities db, string id_padre, string tipo_padre, string spras_id)
         {
             List<SelectTreeItem> items = new List<SelectTreeItem>();
@@ -172,6 +172,52 @@ namespace TAT001.Common
                            });
                        });
             return items;
+        }
+
+        public static bool  ValidarPeriodoEnCalendario445(TAT001Entities db,string sociedad_id, string tsol_id,int periodo_id,string tipo, string usuario_id=null)
+        {
+            //tipo
+            //PRE = PreCierre
+            //CI =  Cierre
+            bool esPeriodoAbierto=false;
+            DateTime fechaActual = DateTime.Now;
+            short ejercicio = short.Parse(fechaActual.Year.ToString());
+
+            switch (tipo)
+            {
+                case "PRE":
+                    esPeriodoAbierto = db.CALENDARIO_AC.Any(x =>
+                    x.ACTIVO == true &&
+                    x.SOCIEDAD_ID == sociedad_id && 
+                    x.TSOL_ID == tsol_id && 
+                    x.PERIODO==periodo_id &&
+                    (fechaActual>= DbFunctions.CreateDateTime(x.PRE_FROMF.Year, x.PRE_FROMF.Month, x.PRE_FROMF.Day, x.PRE_FROMH.Hours, x.PRE_FROMH.Minutes, x.PRE_FROMH.Seconds) && 
+                     fechaActual<= DbFunctions.CreateDateTime(x.PRE_TOF.Year, x.PRE_TOF.Month, x.PRE_TOF.Day, x.PRE_TOH.Hours, x.PRE_TOH.Minutes, x.PRE_TOH.Seconds)));
+                    if (!esPeriodoAbierto && usuario_id != null)
+                    {
+                        esPeriodoAbierto = db.CALENDARIO_EX.Any(x =>
+                          x.ACTIVO == true &&
+                          x.SOCIEDAD_ID == sociedad_id &&
+                          x.TSOL_ID == tsol_id &&
+                          x.PERIODO == periodo_id &&
+                          x.USUARIO_ID==usuario_id &&
+                          (fechaActual >= DbFunctions.CreateDateTime(x.EX_FROMF.Year, x.EX_FROMF.Month, x.EX_FROMF.Day, x.EX_FROMH.Hours, x.EX_FROMH.Minutes,x.EX_FROMH.Seconds) &&
+                          fechaActual <= DbFunctions.CreateDateTime(x.EX_TOF.Year, x.EX_TOF.Month, x.EX_TOF.Day, x.EX_TOH.Hours, x.EX_TOH.Minutes, x.EX_TOH.Seconds)));
+                    }
+                    break;
+                case "CI":
+                    esPeriodoAbierto = db.CALENDARIO_AC.Any(x=>
+                        x.ACTIVO == true &&
+                        x.SOCIEDAD_ID == sociedad_id &&
+                        x.TSOL_ID == tsol_id &&
+                        x.PERIODO == periodo_id &&
+                        (fechaActual >= DbFunctions.CreateDateTime(x.CIE_FROMF.Year, x.CIE_FROMF.Month, x.CIE_FROMF.Day, x.CIE_FROMH.Hours, x.CIE_FROMH.Minutes, x.CIE_FROMH.Seconds) && 
+                        fechaActual <= DbFunctions.CreateDateTime(x.CIE_TOF.Year, x.CIE_TOF.Month, x.CIE_TOF.Day, x.CIE_TOH.Hours, x.CIE_TOH.Minutes, x.CIE_TOH.Seconds)));
+                    break;
+                default:
+                    break;
+            }
+            return esPeriodoAbierto;
         }
     }
 }
