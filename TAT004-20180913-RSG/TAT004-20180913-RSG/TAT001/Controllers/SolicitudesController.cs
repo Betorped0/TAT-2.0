@@ -1748,9 +1748,21 @@ namespace TAT001.Controllers
             }
             //-----------------------------------------------------------------LEJ 09.07.18
             ViewBag.horaServer = DateTime.Now.Date.ToString().Split(new[] { ' ' }, 2)[1];//RSG 01.08.2018
+            string tipS;
+            if (id_d == null || id_d == "")
+            {
+                tipS = "SD";
+                //directa SD
+            }
+            else
+            {
+                tipS = "SR";
+                //relacionada SR
+            }
 
             Warning w = new Warning();
             ViewBag.listaValid = w.listaW(d.SOCIEDAD_ID, usuariotextos);
+            ViewBag.listtreetsol = FnCommon.ObtenerTreeTiposSolicitud(db, spras, tipS);
 
             return View(d);
         }

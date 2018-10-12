@@ -249,7 +249,7 @@ function Carga() {
     var message = $('.input_mes').serialize();
     var doc = sessionStorage.getItem("num");
     if (doc > 0) {
-        if (message == "" || message == null) {
+        if (message.indexOf('1.') < 0) {
             $.ajax({
                 type: "POST",
                 url: 'Agregar',
@@ -276,7 +276,7 @@ function Carga() {
 function Comprobar() {
     var datos = $('#tabla').serializeArray();
     creart('Comprobar', datos);
-    M.toast({ html: 'Registro modificado' });
+    M.toast({ html: 'Registro Actualizado' });
 }
 
 function Borrar() {
@@ -497,6 +497,39 @@ $('body').on('keydown.autocomplete', '.input_idi', function () {
                 success: function (data) {
                     response(auto.map(data, function (item) {
                         return { label: item.ID + " | " + item.DESCRIPCION, value: item.ID };
+                    }))
+                }
+            })
+        },
+
+        messages: {
+            noResults: '',
+            results: function (resultsCount) { }
+        },
+
+        change: function (e, ui) {
+            if (!(ui.item)) {
+                e.target.value = "";
+            }
+        },
+
+        select: function (event, ui) {
+        }
+    });
+});
+
+$('body').on('keydown.autocomplete', '.input_niv', function () {
+
+    auto(this).autocomplete({
+        source: function (request, response) {
+            auto.ajax({
+                type: "POST",
+                url: 'Nivel',
+                dataType: "json",
+                data: { "Prefix": request.term },
+                success: function (data) {
+                    response(auto.map(data, function (item) {
+                        return { label: item.PUESTO_ID + " | " + item.TXT50, value: item.PUESTO_ID };
                     }))
                 }
             })

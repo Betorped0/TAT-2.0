@@ -245,20 +245,34 @@ errorMessage(message);
                                     @*@Html.LabelFor(model => model.TSOL_ID, "TSOL_ID", htmlAttributes: new { @class = "control-label col-md-2" })*@
                                     @Html.LabelFor(model => model.TSOL_ID, "Tipo de solicitud", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_tiposol" }) @*B20180801 MGC Textos*@
                                     <div class="col-md-10">
-                                        @if (ViewBag.relacionada == "")
-                                        {
-                                            @Html.DropDownList("TSOL_ID", null, "", htmlAttributes: new { @id = "tsol_id", @class = "form-control", onchange = @"selectTsol(this.value);soportes(this.value, '" + Session["spras"].ToString() + "'); M.Toast.dismissAll();" })
-                                        }
+                                        @*@if (ViewBag.relacionada == "")
+        {
+            @Html.DropDownList("TSOL_ID", null, "", htmlAttributes: new { @id = "tsol_id", @class = "form-control", onchange = @"selectTsol(this.value);soportes(this.value, '" + Session["spras"].ToString() + "'); M.Toast.dismissAll();" })
+        }
+        else if (ViewBag.ligada)
+        {
+            @Html.DropDownList("TSOL_ID", null, "", htmlAttributes: new { @id = "tsol_id", @class = "form-control", onchange = @"selectTsol(this.value);soportes(this.value, '" + Session["spras"].ToString() + "'); M.Toast.dismissAll();" })
+        }
+        else
+        {
+            @Html.HiddenFor(model => model.TSOL_ID, new { @id = "tsol_id", @onchange = "selectTsol(this.value)" })
+            <input type="text" value="@ViewBag.TSOL_IDI" disabled="disabled" />
+            <input type="text" id="tsolant_id" value="@ViewBag.TSOL_ANT" disabled="disabled" hidden />
+        }*@
+                                        @*if (ViewBag.relacionada == "")
+                                        {*@
+                                        @Html.EditorFor(model => model.TSOL_ID, new { htmlAttributes = new { @class = "dropdowntree" } })
+                                        @*}
                                         else if (ViewBag.ligada)
                                         {
-                                            @Html.DropDownList("TSOL_ID", null, "", htmlAttributes: new { @id = "tsol_id", @class = "form-control", onchange = @"selectTsol(this.value);soportes(this.value, '" + Session["spras"].ToString() + "'); M.Toast.dismissAll();" })
+                                        @Html.EditorFor(model => model.TSOL_ID, new { htmlAttributes = new { @class = "dropdowntree" } })
                                         }
                                         else
                                         {
-                                            @Html.HiddenFor(model => model.TSOL_ID, new { @id = "tsol_id", @onchange = "selectTsol(this.value)" })
-                                            <input type="text" value="@ViewBag.TSOL_IDI" disabled="disabled" />
-                                            <input type="text" id="tsolant_id" value="@ViewBag.TSOL_ANT" disabled="disabled" hidden />
-                                        }
+                                        @Html.HiddenFor(model => model.TSOL_ID, new { @id = "tsol_id", @onchange = "selectTsol(this.value)" })
+                                        <input type="text" value="@ViewBag.TSOL_IDI" disabled="disabled" />
+                                        <input type="text" id="tsolant_id" value="@ViewBag.TSOL_ANT" disabled="disabled" hidden />
+                                        }*@
                                     </div>
                                     @Html.HiddenFor(model => model.DOCUMENTO_REF)
                                     @{string jval = ViewBag.TSOL_VALUES;
@@ -322,19 +336,19 @@ errorMessage(message);
                                     </div>
                                 </div>
                                 @{TAT001.Entities.PAI pais = ViewBag.PAIS_ID;
-                                    ///////DRS 27.09.18/////////
-                                    <div class="col s6" style="margin-top:1.9%">
-                                        <div class="form-group hidden">
-                                            @Html.LabelFor(model => model.PAIS_ID, "Subregión", htmlAttributes: new { @class = "control-label col-md-2 hidden", @id = "lbl_pais" }) @*B20180801 MGC Textos*@
-                                            <div class="col-md-10">
-                                                @Html.EditorFor(model => model.PAIS_ID, new { htmlAttributes = new { @id = "pais_id", @class = "form-control hidden", @disabled = "disabled", @Value = pais.LAND } })
-                                            </div>
-                                        </div>
-                                        <div class="input-field col-md-2">
-                                            <input value="@pais.LANDX" id="pais_txt" type="text" class="" disabled="disabled" />
-                                            <label id="lbl_paiss" for="pais_txt">Subregión</label> @*B20180801 MGC Textos*@
-                                        </div>
+        ///////DRS 27.09.18/////////
+                            <div class="col s6" style="margin-top:1.9%">
+                                <div class="form-group hidden">
+                                    @Html.LabelFor(model => model.PAIS_ID, "Subregión", htmlAttributes: new { @class = "control-label col-md-2 hidden", @id = "lbl_pais" }) @*B20180801 MGC Textos*@
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.PAIS_ID, new { htmlAttributes = new { @id = "pais_id", @class = "form-control hidden", @disabled = "disabled", @Value = pais.LAND } })
                                     </div>
+                                </div>
+                                <div class="input-field col-md-2">
+                                    <input value="@pais.LANDX" id="pais_txt" type="text" class="" disabled="disabled" />
+                                    <label id="lbl_paiss" for="pais_txt">Subregión</label> @*B20180801 MGC Textos*@
+                                </div>
+                            </div>
                                 }
                                 <div>
                                     <div class="input-field col s6">
@@ -347,9 +361,28 @@ errorMessage(message);
                                     @Html.LabelFor(model => model.ESTADO, "Estado", htmlAttributes: new { @for = "state_id", @id = "lbl_estado" }) @*B20180801 MGC Textos*@
                                 </div>
                                 <link href="~/Content/autocomplete.css" rel="stylesheet" />
+                                <link href="~/Content/dropdowntree.css" rel="stylesheet" />
                                 <script src="~/Scripts/autocomplete1.10.2.js"></script>
                                 <script src="~/Scripts/autocomplete1.11.4.js"></script>
+                                <script src="~/Scripts/dropdowntree.js"></script>
+
+                                @Html.HiddenFor(model => model.TSOL_ID, new { @id = "tsol_id", @onchange = "selectTsol(this.value);soportes(this.value, '" + Session["spras"].ToString() + "'); M.Toast.dismissAll();" })
                                 <script>
+
+                                    $("#TSOL_ID").kendoDropDownTree({
+                                        placeholder: "",
+                                        //idValid: "TSOL_ID_VALID",
+                                        idValid: "TSOL_ID_VALID",
+                                        dataSource:@Html.Raw(Json.Encode(ViewBag.listtreetsol)),
+                                        change: function(e) {
+                                            $("#tsol_id").val(e.sender._values[0]);
+                                            $('#tsol_id').trigger('change');
+                                            //soportes(e.sender._values[0], '@Session["spras"].ToString()'); M.Toast.dismissAll();
+                                        },
+                                    });
+
+                                    
+
 var auto = $.noConflict(true);
 auto(document).ready(function () {
 /**/
@@ -1992,7 +2025,7 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                                         *@
                                         @*<div class="col-md-10">
                                         *@
-                                        @Html.DropDownList("MONEDA", null, htmlAttributes: new { @id = "moneda_id", @class = "form-control " + @ViewBag.relacionada, @disabled = "disabled" @*onchange = @"selectMoneda(this.value)"*@ }) @*OCG 09/10/2018 Se modifica para evitar el cambiode la moneda*@
+                                        @Html.DropDownList("MONEDA", null, htmlAttributes: new { @id = "moneda_id", @class = "form-control " + @ViewBag.relacionada, @disabled = "disabled", @onchange = @"selectMoneda(this.value)" }) @*OCG 09/10/2018 Se modifica para evitar el cambiode la moneda*@
                                         @Html.LabelFor(model => model.MONEDA_ID, "Moneda", htmlAttributes: new { @for = "moneda_id", @id = "lbl_monedafin" })@*B20180801 MGC Textos*@
                                         @*
                                             </div>

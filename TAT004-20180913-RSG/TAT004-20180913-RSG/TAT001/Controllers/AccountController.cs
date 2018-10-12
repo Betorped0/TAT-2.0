@@ -120,7 +120,7 @@ namespace TAT001.Controllers
 
             using (TAT001Entities db = new TAT001Entities())
             {
-                user = db.USUARIOs.Where(a => a.ID.Equals(user.ID) && a.PASS.Equals(pass)).FirstOrDefault();
+                user = db.USUARIOs.Where(a => a.ID.Equals(user.ID) && a.PASS.Equals(pass) & a.ACTIVO == true).FirstOrDefault();
             }
             //user =  Repository.GetUserDetails(user);
 

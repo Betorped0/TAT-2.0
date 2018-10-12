@@ -152,20 +152,20 @@
                 @* OPCIONAL *@
                 <div class="input-field col s2 m2 l2">
                     <select name="selectCliente" id="selectCliente">
-                        <option value=""></option>
-                        @try
-                        {
-                            foreach (var id in ViewBag.Cliente)
+                            <option value=""></option>
+                            @try
                             {
-                                <option value="@id">@(id)</option>
-                            }
+                                foreach (var id in ViewBag.Cliente)
+                                {
+                                    <option value="@(id.GetType().GetProperty("KUNNR").GetValue(id, null))">@(id.GetType().GetProperty("KUNNR").GetValue(id, null))</option>
+                                }
 
-                        }
-                        catch (Exception)
-                        {
-                            <option value="" id="no_optper">No hay opciones</option>
-                        }
-                    </select>
+                            }
+                            catch (Exception)
+                            {
+                                <option value="" id="no_optper">No hay opciones</option>
+                            }
+                        </select>
                     <label id="label_period">Cliente</label>
                 </div>
                 @* FILTRO TIPO DE SOLICITUD *@
@@ -237,22 +237,22 @@
             });
             $(function () {
                 $("table").tablesorter({
-                        theme: "materialize",
-                        widthFixed: true,
-                        // widget code contained in the jquery.tablesorter.widgets.js file
-                        // use the zebra stripe widget if you plan on hiding any rows (filter widget)
-                        widgets: ["filter", "zebra"],
-                        widgetOptions: {
-                            // using the default zebra striping class name, so it actually isn't included in the theme variable above
-                            // this is ONLY needed for materialize theming if you are using the filter widget, because rows are hidden
-                            zebra: ["even", "odd"],
-                            // reset filters button
-                            filter_reset: ".reset",
-                            // extra css class name (string or array) added to the filter element (input or select)
-                            // select needs a "browser-default" class or it gets hidden
-                            filter_cssFilter: ["", "", "browser-default"]
-                        }
-                    })
+                    theme: "materialize",
+                    widthFixed: true,
+                    // widget code contained in the jquery.tablesorter.widgets.js file
+                    // use the zebra stripe widget if you plan on hiding any rows (filter widget)
+                    widgets: ["filter", "zebra"],
+                    widgetOptions: {
+                        // using the default zebra striping class name, so it actually isn't included in the theme variable above
+                        // this is ONLY needed for materialize theming if you are using the filter widget, because rows are hidden
+                        zebra: ["even", "odd"],
+                        // reset filters button
+                        filter_reset: ".reset",
+                        // extra css class name (string or array) added to the filter element (input or select)
+                        // select needs a "browser-default" class or it gets hidden
+                        filter_cssFilter: ["", "", "browser-default"]
+                    }
+                })
                     .tablesorterPager({
                         // target the pager markup - see the HTML block below
                         container: $(".ts-pager"),
@@ -345,7 +345,7 @@
                             <td>@item.NUMERO_CLIENTE </td>
                             <td>@item.CLIENTE </td>
                             <td>@item.TIPO_SOLICITUD </td>
-                            <td>@item.STATUS_STRING </td>
+                            <td>@*item.STATUS_STRING*@ </td>
                             <td>@item.FECHA_STRING </td>
                             <td>@item.HORA_STRING </td>
                             <td>@item.TIEMPO_TRANSCURRIDO_STRING </td>
@@ -355,9 +355,9 @@
                             <td>@item.USUARIO </td>
                             <td>@item.ROL </td>
                             <td>@item.COMENTARIO </td>
-                            <td>@(item.NUMERO_CORRECCIONES - 1 == 0 ? "" : (item.NUMERO_CORRECCIONES -1).ToString()) </td>
+                            <td>@(item.NUMERO_CORRECCIONES - 1 == 0 ? "" : (item.NUMERO_CORRECCIONES - 1).ToString()) </td>
                         </tr>
-                     }
+                    }
                 </tbody>
             </table>
         </div>
@@ -367,15 +367,19 @@
         .dataTables_length {
             display: none;
         }
+
         .dataTables_filter {
             display: none;
         }
+
         .dataTables_scrollHeadInner, .mdl-data-table {
             width: 100%;
         }
+
         ul {
             padding-left: 20px;
         }
+
         .btn {
             font-size: .8em;
         }
@@ -383,9 +387,11 @@
         .material-icons {
             vertical-align: bottom;
         }
+
         select {
             display: block !important;
         }
+
         th {
             text-align: center !important;
         }
