@@ -484,6 +484,7 @@
           <Property Name="CARGO" Type="numeric" Precision="10" Scale="0" />
           <Property Name="CLEARING" Type="numeric" Precision="10" Scale="0" />
           <Property Name="LIMITE" Type="decimal" Precision="13" Scale="5" />
+          <Property Name="IMPUESTO" Type="nchar" MaxLength="2" />
         </EntityType>
         <EntityType Name="CUENTAGL">
           <Key>
@@ -1638,9 +1639,11 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.TAB_CAMPO' no tiene definida ning
           <Key>
             <PropertyRef Name="TAB_ID" />
             <PropertyRef Name="CAMPO_ID" />
+            <PropertyRef Name="ACTIVO" />
           </Key>
           <Property Name="TAB_ID" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="CAMPO_ID" Type="nvarchar" MaxLength="25" Nullable="false" />
+          <Property Name="ACTIVO" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="TALL">
           <Key>
@@ -1812,7 +1815,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.TAB_CAMPO' no tiene definida ning
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ACTIVO" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="TS_FORM">
@@ -2016,6 +2019,14 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.TAB_CAMPO' no tiene definida ning
           </Key>
           <Property Name="IDUSUARIO" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="AUTOMATICO" Type="bit" />
+        </EntityType>
+        <EntityType Name="USUARIOSOC">
+          <Key>
+            <PropertyRef Name="USUARIO_ID" />
+            <PropertyRef Name="SOCIEDAD_ID" />
+          </Key>
+          <Property Name="USUARIO_ID" Type="nvarchar" MaxLength="16" Nullable="false" />
+          <Property Name="SOCIEDAD_ID" Type="nchar" MaxLength="4" Nullable="false" />
         </EntityType>
         <EntityType Name="WARNING">
           <Key>
@@ -4582,6 +4593,30 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_USUARIOSOC_SOCIEDAD">
+          <End Role="SOCIEDAD" Type="Self.SOCIEDAD" Multiplicity="1" />
+          <End Role="USUARIOSOC" Type="Self.USUARIOSOC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SOCIEDAD">
+              <PropertyRef Name="BUKRS" />
+            </Principal>
+            <Dependent Role="USUARIOSOC">
+              <PropertyRef Name="SOCIEDAD_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_USUARIOSOC_USUARIO">
+          <End Role="USUARIO" Type="Self.USUARIO" Multiplicity="1" />
+          <End Role="USUARIOSOC" Type="Self.USUARIOSOC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USUARIO">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="USUARIOSOC">
+              <PropertyRef Name="USUARIO_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_WARNING_CAMPOS">
           <End Role="CAMPOS" Type="Self.CAMPOS" Multiplicity="1" />
           <End Role="WARNING" Type="Self.WARNING" Multiplicity="*" />
@@ -4955,6 +4990,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <EntitySet Name="USUARIOF" EntityType="Self.USUARIOF" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="USUARIOGA" EntityType="Self.USUARIOGA" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="USUARIOSAP" EntityType="Self.USUARIOSAP" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="USUARIOSOC" EntityType="Self.USUARIOSOC" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="WARNING" EntityType="Self.WARNING" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="WARNING_COND" EntityType="Self.WARNING_COND" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="WARNINGP" EntityType="Self.WARNINGP" Schema="dbo" store:Type="Tables" />
@@ -4968,7 +5004,8 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <EntitySet Name="TAB_CAMPO" EntityType="Self.TAB_CAMPO" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [TAB_CAMPO].[TAB_ID] AS [TAB_ID], 
-    [TAB_CAMPO].[CAMPO_ID] AS [CAMPO_ID]
+    [TAB_CAMPO].[CAMPO_ID] AS [CAMPO_ID], 
+    [TAB_CAMPO].[ACTIVO] AS [ACTIVO]
     FROM [dbo].[TAB_CAMPO] AS [TAB_CAMPO]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="CARPETAV" EntityType="Self.CARPETAV" store:Type="Views" store:Schema="dbo">
@@ -5832,6 +5869,14 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
             <End Role="USUARIO" EntitySet="USUARIO" />
             <End Role="USUARIOGA" EntitySet="USUARIOGA" />
           </AssociationSet>
+          <AssociationSet Name="FK_USUARIOSOC_SOCIEDAD" Association="Self.FK_USUARIOSOC_SOCIEDAD">
+            <End Role="SOCIEDAD" EntitySet="SOCIEDAD" />
+            <End Role="USUARIOSOC" EntitySet="USUARIOSOC" />
+          </AssociationSet>
+          <AssociationSet Name="FK_USUARIOSOC_USUARIO" Association="Self.FK_USUARIOSOC_USUARIO">
+            <End Role="USUARIO" EntitySet="USUARIO" />
+            <End Role="USUARIOSOC" EntitySet="USUARIOSOC" />
+          </AssociationSet>
           <AssociationSet Name="FK_WARNING_CAMPOS" Association="Self.FK_WARNING_CAMPOS">
             <End Role="CAMPOS" EntitySet="CAMPOS" />
             <End Role="WARNING" EntitySet="WARNING" />
@@ -6423,6 +6468,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <NavigationProperty Name="PAI" Relationship="Self.FK_CUENTA_PAIS" FromRole="CUENTA" ToRole="PAIS" />
           <NavigationProperty Name="SOCIEDAD" Relationship="Self.FK_CUENTA_SOCIEDAD" FromRole="CUENTA" ToRole="SOCIEDAD" />
           <NavigationProperty Name="TALL" Relationship="Self.FK_CUENTA_TALL" FromRole="CUENTA" ToRole="TALL" />
+          <Property Name="IMPUESTO" Type="String" MaxLength="2" FixedLength="true" Unicode="true" />
         </EntityType>
         <EntityType Name="CUENTAGL">
           <Key>
@@ -7717,6 +7763,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <NavigationProperty Name="TAXEOHs" Relationship="Self.FK_TAXEOH_SOCIEDAD" FromRole="SOCIEDAD" ToRole="TAXEOH" />
           <NavigationProperty Name="TS_FORM" Relationship="Self.FK_TS_FORM_SOCIEDAD" FromRole="SOCIEDAD" ToRole="TS_FORM" />
           <NavigationProperty Name="USUARIOs" Relationship="Self.FK_USUARIO_SOCIEDAD" FromRole="SOCIEDAD" ToRole="USUARIO" />
+          <NavigationProperty Name="USUARIOs1" Relationship="TAT001Model.USUARIOSOC" FromRole="SOCIEDAD" ToRole="USUARIO" />
         </EntityType>
         <EntityType Name="SPRA">
           <Key>
@@ -8182,6 +8229,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <NavigationProperty Name="SPRA" Relationship="Self.FK_USUARIO_SPRAS" FromRole="USUARIO" ToRole="SPRAS" />
           <NavigationProperty Name="USUARIOFs" Relationship="Self.FK_USUARIOF_USUARIO" FromRole="USUARIO" ToRole="USUARIOF" />
           <NavigationProperty Name="GAUTORIZACIONs" Relationship="Self.USUARIOGA" FromRole="USUARIO" ToRole="GAUTORIZACION" />
+          <NavigationProperty Name="SOCIEDADs" Relationship="TAT001Model.USUARIOSOC" FromRole="USUARIO" ToRole="SOCIEDAD" />
         </EntityType>
         <EntityType Name="USUARIOF">
           <Key>
@@ -8362,10 +8410,12 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Key>
             <PropertyRef Name="TAB_ID" />
             <PropertyRef Name="CAMPO_ID" />
+            <PropertyRef Name="ACTIVO" />
           </Key>
           <Property Name="TAB_ID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="CAMPO_ID" Type="String" MaxLength="25" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="TAB" Relationship="Self.FK_TAB_CAMPO_TAB" FromRole="TAB_CAMPO" ToRole="TAB" />
+          <Property Name="ACTIVO" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="CARPETAV">
           <Key>
@@ -11913,6 +11963,10 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <EntitySet Name="TSOL_GROUP" EntityType="TAT001Model.TSOL_GROUP" />
           <EntitySet Name="TSOL_TREE" EntityType="TAT001Model.TSOL_TREE" />
           <EntitySet Name="TSOL_GROUPT" EntityType="TAT001Model.TSOL_GROUPT" />
+          <AssociationSet Name="USUARIOSOC" Association="TAT001Model.USUARIOSOC">
+            <End Role="SOCIEDAD" EntitySet="SOCIEDADs" />
+            <End Role="USUARIO" EntitySet="USUARIOs" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="CPS_LISTA_CLI_PRO_Result">
           <Property Type="String" Name="KUNNR" Nullable="false" MaxLength="10" />
@@ -12096,6 +12150,10 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Property Name="TSOL_GROUP_TIPO" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="true" />
           <Property Name="TXT50" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
+        <Association Name="USUARIOSOC">
+          <End Type="TAT001Model.SOCIEDAD" Role="SOCIEDAD" Multiplicity="*" />
+          <End Type="TAT001Model.USUARIO" Role="USUARIO" Multiplicity="*" />
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -12565,6 +12623,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <EntitySetMapping Name="CUENTAs">
             <EntityTypeMapping TypeName="TAT001Model.CUENTA">
               <MappingFragment StoreEntitySet="CUENTA">
+                <ScalarProperty Name="IMPUESTO" ColumnName="IMPUESTO" />
                 <ScalarProperty Name="SOCIEDAD_ID" ColumnName="SOCIEDAD_ID" />
                 <ScalarProperty Name="PAIS_ID" ColumnName="PAIS_ID" />
                 <ScalarProperty Name="TALL_ID" ColumnName="TALL_ID" />
@@ -14173,6 +14232,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <EntitySetMapping Name="TAB_CAMPO">
             <EntityTypeMapping TypeName="TAT001Model.TAB_CAMPO">
               <MappingFragment StoreEntitySet="TAB_CAMPO">
+                <ScalarProperty Name="ACTIVO" ColumnName="ACTIVO" />
                 <ScalarProperty Name="TAB_ID" ColumnName="TAB_ID" />
                 <ScalarProperty Name="CAMPO_ID" ColumnName="CAMPO_ID" />
               </MappingFragment>
@@ -14576,6 +14636,14 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <AssociationSetMapping Name="USUARIOSOC" TypeName="TAT001Model.USUARIOSOC" StoreEntitySet="USUARIOSOC">
+            <EndProperty Name="USUARIO">
+              <ScalarProperty Name="ID" ColumnName="USUARIO_ID" />
+            </EndProperty>
+            <EndProperty Name="SOCIEDAD">
+              <ScalarProperty Name="BUKRS" ColumnName="SOCIEDAD_ID" />
+            </EndProperty>
+          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

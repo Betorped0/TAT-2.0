@@ -16,6 +16,7 @@ namespace TAT001.Entities
     {
         public string TAB_ID { get; set; }
         public string CAMPO_ID { get; set; }
+        public bool ACTIVO { get; set; }
     
         public virtual TAB TAB { get; set; }
     }
