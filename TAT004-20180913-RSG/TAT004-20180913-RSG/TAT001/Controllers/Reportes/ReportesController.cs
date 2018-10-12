@@ -400,6 +400,7 @@ namespace TAT001.Controllers.Reportes
 
         #endregion SF
 
+
         // REPORTE 1 - CONCENTRADO
         public ActionResult ReporteConcentrado()
         {
@@ -545,8 +546,8 @@ namespace TAT001.Controllers.Reportes
                     r1.CUENTA_LIMITE = Convert.ToDecimal(cuentas.GetType().GetProperty("LIMITE").GetValue(cuentas, null));
                     r1.CUENTA_CARGO_NOMBRE = cuentas.GetType().GetProperty("NOMBRE").GetValue(cuentas, null).ToString();
                 }
-                Presupuesto pr = new Presupuesto();
-                r1.PRESUPUESTO = pr.getPresupuesto(dOCUMENTO.CLIENTE.KUNNR);
+                Presupuesto pres = new Presupuesto();
+                r1.PRESUPUESTO = pres.getPresupuesto(dOCUMENTO.CLIENTE.KUNNR);
                 var proveedor = dOCUMENTO.DOCUMENTOFs.Select(df => df.PROVEEDOR).FirstOrDefault();
                 r1.PROVEEDOR_NOMBRE = db.PROVEEDORs.Where(x => x.ID.Equals(proveedor)).Select(p => p.NOMBRE).FirstOrDefault();
                 //dOCUMENTO.DOCUMENTOF = db.DOCUMENTOFs.Where(a => a.NUM_DOC.Equals(dOCUMENTO.NUM_DOC)).ToList();
@@ -630,7 +631,6 @@ namespace TAT001.Controllers.Reportes
             Session["spras"] = user.SPRAS_ID;
             return View();
         }
-        
 
         // FIN REPORTE 1 - CONCENTRADO
 
@@ -760,9 +760,9 @@ namespace TAT001.Controllers.Reportes
                                  && (!string.IsNullOrEmpty(period) ? periodsplit.Contains(d.PERIODO.ToString()) : true)
                                  && (!string.IsNullOrEmpty(payer) ? payersplit.Contains(d.PAYER_ID) : true)
                                  && (!string.IsNullOrEmpty(category) ? categorysplit.Contains(mgpt.TXT50) : true)
-                             select new { d.PERIODO, d.EJERCICIO, d.SOCIEDAD_ID, d.PAYER_ID, c.CANAL, ca.CDESCRIPCION, mgpt.TXT50, d.TALL_ID, f.ESTATUS, d.ESTATUS_C, d.ESTATUS_SAP, d.ESTATUS_WF, ac.TIPO, ts.PADRE })
+                             select new { d.PERIODO, d.EJERCICIO, d.SOCIEDAD_ID, d.PAYER_ID, c.CANAL, ca.CDESCRIPCION, mgpt.TXT50, d.TALL_ID, f.ESTATUS, d.ESTATUS_C, d.ESTATUS_SAP, d.ESTATUS_WF, ac.TIPO, ts.PADRE, d.MONTO_DOC_ML })
                              .ToList()
-                             .Select(s => new { s.PERIODO, s.EJERCICIO, s.SOCIEDAD_ID, s.PAYER_ID, s.CANAL, s.CDESCRIPCION, s.TXT50, s.TALL_ID, STATUS_ALLOWANCE = statusAllowance(s.ESTATUS, s.ESTATUS_C, s.ESTATUS_SAP, s.ESTATUS_WF, s.TIPO, s.PADRE) })
+                             .Select(s => new { s.PERIODO, s.EJERCICIO, s.SOCIEDAD_ID, s.PAYER_ID, s.CANAL, s.CDESCRIPCION, s.TXT50, s.TALL_ID, STATUS_ALLOWANCE = statusAllowance(s.ESTATUS, s.ESTATUS_C, s.ESTATUS_SAP, s.ESTATUS_WF, s.TIPO, s.PADRE), s.MONTO_DOC_ML })
                              .GroupBy(x => new { x.PERIODO, x.EJERCICIO, x.SOCIEDAD_ID, x.PAYER_ID, x.CANAL, x.CDESCRIPCION, x.TXT50 })
                              .ToList();
 
@@ -784,10 +784,10 @@ namespace TAT001.Controllers.Reportes
                             switch (doc2.STATUS_ALLOWANCE)
                             {
                                 case "En Proceso TAT":
-                                    all.CD_EN_PROCESO++;
+                                    all.CD_EN_PROCESO += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                                 case "Allowance TAT":
-                                    all.CD_ALLOWANCE_TAT++;
+                                    all.CD_ALLOWANCE_TAT += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                             }
                             break;
@@ -795,10 +795,10 @@ namespace TAT001.Controllers.Reportes
                             switch (doc2.STATUS_ALLOWANCE)
                             {
                                 case "En Proceso TAT":
-                                    all.C_EN_PROCESO++;
+                                    all.C_EN_PROCESO += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                                 case "Allowance TAT":
-                                    all.C_ALLOWANCE_TAT++;
+                                    all.C_ALLOWANCE_TAT += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                             }
                             break;
@@ -806,10 +806,10 @@ namespace TAT001.Controllers.Reportes
                             switch (doc2.STATUS_ALLOWANCE)
                             {
                                 case "En Proceso TAT":
-                                    all.COD_EN_PROCESO++;
+                                    all.COD_EN_PROCESO += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                                 case "Allowance TAT":
-                                    all.COD_ALLOWANCE_TAT++;
+                                    all.COD_ALLOWANCE_TAT += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                             }
                             break;
@@ -818,10 +818,10 @@ namespace TAT001.Controllers.Reportes
                             switch (doc2.STATUS_ALLOWANCE)
                             {
                                 case "En Proceso TAT":
-                                    all.DPS_EN_PROCESO++;
+                                    all.DPS_EN_PROCESO += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                                 case "Allowance TAT":
-                                    all.DPS_ALLOWANCE_TAT++;
+                                    all.DPS_ALLOWANCE_TAT += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                             }
                             break;
@@ -829,10 +829,10 @@ namespace TAT001.Controllers.Reportes
                             switch (doc2.STATUS_ALLOWANCE)
                             {
                                 case "En Proceso TAT":
-                                    all.DC_EN_PROCESO++;
+                                    all.DC_EN_PROCESO += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                                 case "Allowance TAT":
-                                    all.DC_ALLOWANCE_TAT++;
+                                    all.DC_ALLOWANCE_TAT += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                             }
                             break;
@@ -840,10 +840,10 @@ namespace TAT001.Controllers.Reportes
                             switch (doc2.STATUS_ALLOWANCE)
                             {
                                 case "En Proceso TAT":
-                                    all.ELP_EN_PROCESO++;
+                                    all.ELP_EN_PROCESO += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                                 case "Allowance TAT":
-                                    all.ELP_ALLOWANCE_TAT++;
+                                    all.ELP_ALLOWANCE_TAT += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                             }
                             break;
@@ -851,10 +851,10 @@ namespace TAT001.Controllers.Reportes
                             switch (doc2.STATUS_ALLOWANCE)
                             {
                                 case "En Proceso TAT":
-                                    all.FG_EN_PROCESO++;
+                                    all.FG_EN_PROCESO += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                                 case "Allowance TAT":
-                                    all.FG_ALLOWANCE_TAT++;
+                                    all.FG_ALLOWANCE_TAT += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                             }
                             break;
@@ -862,10 +862,10 @@ namespace TAT001.Controllers.Reportes
                             switch (doc2.STATUS_ALLOWANCE)
                             {
                                 case "En Proceso TAT":
-                                    all.GD_EN_PROCESO++;
+                                    all.GD_EN_PROCESO += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                                 case "Allowance TAT":
-                                    all.GD_ALLOWANCE_TAT++;
+                                    all.GD_ALLOWANCE_TAT += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                             }
                             break;
@@ -873,10 +873,10 @@ namespace TAT001.Controllers.Reportes
                             switch (doc2.STATUS_ALLOWANCE)
                             {
                                 case "En Proceso TAT":
-                                    all.GP_EN_PROCESO++;
+                                    all.GP_EN_PROCESO += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                                 case "Allowance TAT":
-                                    all.GP_ALLOWANCE_TAT++;
+                                    all.GP_ALLOWANCE_TAT += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                             }
                             break;
@@ -884,10 +884,10 @@ namespace TAT001.Controllers.Reportes
                             switch (doc2.STATUS_ALLOWANCE)
                             {
                                 case "En Proceso TAT":
-                                    all.LD_EN_PROCESO++;
+                                    all.LD_EN_PROCESO += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                                 case "Allowance TAT":
-                                    all.LD_ALLOWANCE_TAT++;
+                                    all.LD_ALLOWANCE_TAT += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                             }
                             break;
@@ -895,10 +895,10 @@ namespace TAT001.Controllers.Reportes
                             switch (doc2.STATUS_ALLOWANCE)
                             {
                                 case "En Proceso TAT":
-                                    all.MS_EN_PROCESO++;
+                                    all.MS_EN_PROCESO += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                                 case "Allowance TAT":
-                                    all.MS_ALLOWANCE_TAT++;
+                                    all.MS_ALLOWANCE_TAT += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                             }
                             break;
@@ -906,10 +906,10 @@ namespace TAT001.Controllers.Reportes
                             switch (doc2.STATUS_ALLOWANCE)
                             {
                                 case "En Proceso TAT":
-                                    all.R_EN_PROCESO++;
+                                    all.R_EN_PROCESO += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                                 case "Allowance TAT":
-                                    all.R_ALLOWANCE_TAT++;
+                                    all.R_ALLOWANCE_TAT += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                             }
                             break;
@@ -917,10 +917,10 @@ namespace TAT001.Controllers.Reportes
                             switch (doc2.STATUS_ALLOWANCE)
                             {
                                 case "En Proceso TAT":
-                                    all.TP_EN_PROCESO++;
+                                    all.TP_EN_PROCESO += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                                 case "Allowance TAT":
-                                    all.TP_ALLOWANCE_TAT++;
+                                    all.TP_ALLOWANCE_TAT += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                             }
                             break;
@@ -928,10 +928,10 @@ namespace TAT001.Controllers.Reportes
                             switch (doc2.STATUS_ALLOWANCE)
                             {
                                 case "En Proceso TAT":
-                                    all.SIS_EN_PROCESO++;
+                                    all.SIS_EN_PROCESO += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                                 case "Allowance TAT":
-                                    all.SIS_ALLOWANCE_TAT++;
+                                    all.SIS_ALLOWANCE_TAT += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                             }
                             break;
@@ -939,10 +939,10 @@ namespace TAT001.Controllers.Reportes
                             switch (doc2.STATUS_ALLOWANCE)
                             {
                                 case "En Proceso TAT":
-                                    all.SO_EN_PROCESO++;
+                                    all.SO_EN_PROCESO += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                                 case "Allowance TAT":
-                                    all.SO_ALLOWANCE_TAT++;
+                                    all.SO_ALLOWANCE_TAT += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                             }
                             break;
@@ -950,10 +950,10 @@ namespace TAT001.Controllers.Reportes
                             switch (doc2.STATUS_ALLOWANCE)
                             {
                                 case "En Proceso TAT":
-                                    all.TPIS_EN_PROCESO++;
+                                    all.TPIS_EN_PROCESO += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                                 case "Allowance TAT":
-                                    all.TPIS_ALLOWANCE_TAT++;
+                                    all.TPIS_ALLOWANCE_TAT += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                             }
                             break;
@@ -961,10 +961,10 @@ namespace TAT001.Controllers.Reportes
                             switch (doc2.STATUS_ALLOWANCE)
                             {
                                 case "En Proceso TAT":
-                                    all.TPO_EN_PROCESO++;
+                                    all.TPO_EN_PROCESO += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                                 case "Allowance TAT":
-                                    all.TPO_ALLOWANCE_TAT++;
+                                    all.TPO_ALLOWANCE_TAT += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                             }
                             break;
@@ -972,10 +972,10 @@ namespace TAT001.Controllers.Reportes
                             switch (doc2.STATUS_ALLOWANCE)
                             {
                                 case "En Proceso TAT":
-                                    all.U_EN_PROCESO++;
+                                    all.U_EN_PROCESO += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                                 case "Allowance TAT":
-                                    all.U_ALLOWANCE_TAT++;
+                                    all.U_ALLOWANCE_TAT += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                             }
                             break;
@@ -983,15 +983,75 @@ namespace TAT001.Controllers.Reportes
                             switch (doc2.STATUS_ALLOWANCE)
                             {
                                 case "En Proceso TAT":
-                                    all.WA_EN_PROCESO++;
+                                    all.WA_EN_PROCESO += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                                 case "Allowance TAT":
-                                    all.WA_ALLOWANCE_TAT++;
+                                    all.WA_ALLOWANCE_TAT += (Decimal)doc2.MONTO_DOC_ML;
                                     break;
                             }
                             break;
                     }
                 }
+                //var queryPresup = (from p in db.PRESUPSAPPs
+                //                   join m in db.MATERIALs on p.MATNR equals m.ID
+                //                   join mgpt in db.MATERIALGPTs on m.MATERIALGP_ID equals mgpt.MATERIALGP_ID
+                //                   //where mgpt.SPRAS_ID == user.SPRAS_ID
+                //                   //&& mgpt.TXT50 == all.CATEGORIA
+                //                   //&& p.PERIOD.ToString() == all.PERIODO
+                //                   //&& p.ANIO.ToString() == all.YEAR
+                //                   //&& p.BUKRS == all.BU
+                //                   //&& p.BANNER == all.PAYER
+                //                   select new { p.TYPE, p.VVX17, p.CSHDC, p.RECUN, p.DSTRB, p.OTHTA, p.ADVER, p.CORPM, p.POP, p.OTHER, p.CONPR, p.OHV, p.FREEG, p.RSRDV, p.SPA, p.PMVAR, p.GRSLS, p.NETLB })
+                //                   .GroupBy(x => new { x.TYPE })
+                //                   .ToList();
+                //                   //.ToList();
+                //foreach(var presup in queryPresup)
+                //{
+                //    switch(presup.First().TYPE)
+                //    {
+                //        case "F":
+                //            all.CD_ALLOWANCE_FACT += (Decimal)presup.Sum(x => x.CSHDC); // Cash Discount
+                //            all.C_ALLOWANCE_FACT += (Decimal)presup.Sum(x => x.CSHDC); // Clearance
+                //            all.COD_ALLOWANCE_FACT += (Decimal)presup.Sum(x => x.CONPR); // Consumer Data
+                //            all.DPS_ALLOWANCE_FACT += (Decimal)presup.Sum(x => x.CSHDC); // Direct Plant Ship & Customer Pickup Allowance
+                //            all.DC_ALLOWANCE_FACT += (Decimal)presup.Sum(x => x.DSTRB); // Distribution Comission
+                //            all.ELP_ALLOWANCE_FACT += (Decimal)presup.Sum(x => x.CSHDC); // Everyday Low Price
+                //            all.FG_ALLOWANCE_FACT += (Decimal)presup.Sum(x => x.CSHDC); // Free Goods
+                //            all.GD_ALLOWANCE_FACT += (Decimal)presup.Sum(x => x.CSHDC); // Government Discounts
+                //            all.GP_ALLOWANCE_FACT += (Decimal)presup.Sum(x => x.CSHDC); // Growth Program
+                //            all.LD_ALLOWANCE_FACT += (Decimal)presup.Sum(x => x.CSHDC); // Logistic Discount
+                //            all.MS_ALLOWANCE_FACT += (Decimal)presup.Sum(x => x.CSHDC); // Margin Support
+                //            all.R_ALLOWANCE_FACT += (Decimal)presup.Sum(x => x.CSHDC); // Rollbacks
+                //            all.TP_ALLOWANCE_FACT += (Decimal)presup.Sum(x => x.CSHDC); // Trade Promotion – Non-Kellogg Coupons
+                //            all.SIS_ALLOWANCE_FACT += (Decimal)presup.Sum(x => x.CSHDC); // Sponsorship / In-Store adv (before: Booklets)
+                //            all.SO_ALLOWANCE_FACT += (Decimal)presup.Sum(x => x.CSHDC); // Store Openings
+                //            all.TPIS_ALLOWANCE_FACT += (Decimal)presup.Sum(x => x.CSHDC); // Trade Promotion – In-Store sampling Demostration cost
+                //            all.TPO_ALLOWANCE_FACT += (Decimal)presup.Sum(x => x.CSHDC); // Trade Promotion - Other
+                //            all.U_ALLOWANCE_FACT += (Decimal)presup.Sum(x => x.CSHDC); // Unsaleables
+                //            all.WA_ALLOWANCE_FACT += (Decimal)presup.Sum(x => x.CSHDC); // Warehouse Allowances (“DxD”)
+                //            break;
+                //        case "B":
+                //            break;
+                //    }
+                //}
+                //all.CD_ALLOWANCE_FACT += 
+                /*
+                  ,[VVX17]
+                  ,[RECUN]
+                  ,[OTHTA]
+                  ,[ADVER]
+                  ,[CORPM]
+                  ,[POP]
+                  ,[OTHER]
+                  ,[CONPR]
+                  ,[OHV]
+                  ,[FREEG]
+                  ,[RSRDV]
+                  ,[SPA]
+                  ,[PMVAR]
+                  ,[GRSLS]
+                  ,[NETLB]
+                 */
                 alls.Add(all);
             }
 
@@ -1149,10 +1209,10 @@ namespace TAT001.Controllers.Reportes
                              where d.EJERCICIO == year
                                  && (!string.IsNullOrEmpty(comcode) ? comcodessplit.Contains(d.SOCIEDAD_ID) : true)
                                  && (!string.IsNullOrEmpty(period) ? periodsplit.Contains(d.PERIODO.ToString()) : true)
-                             select new { d.CUENTAP, cgl.NOMBRE, d.SOCIEDAD_ID, f.ESTATUS, d.ESTATUS_C, d.ESTATUS_SAP, d.ESTATUS_WF, ac.TIPO, ts.PADRE }
+                             select new { d.CUENTAP, cgl.NOMBRE, d.SOCIEDAD_ID, d.MONTO_DOC_ML, f.ESTATUS, d.ESTATUS_C, d.ESTATUS_SAP, d.ESTATUS_WF, ac.TIPO, ts.PADRE }
                              )
                              .ToList()
-                             .Select(s => new { s.CUENTAP, s.NOMBRE, s.SOCIEDAD_ID, STATUS_ALLOWANCE = statusAllowance(s.ESTATUS, s.ESTATUS_C, s.ESTATUS_SAP, s.ESTATUS_WF, s.TIPO, s.PADRE) })
+                             .Select(s => new { s.CUENTAP, s.NOMBRE, s.SOCIEDAD_ID, s.MONTO_DOC_ML, STATUS_ALLOWANCE = statusAllowance(s.ESTATUS, s.ESTATUS_C, s.ESTATUS_SAP, s.ESTATUS_WF, s.TIPO, s.PADRE) })
                              .GroupBy(x => new { x.CUENTAP, x.NOMBRE, x.STATUS_ALLOWANCE })
                              .ToList();
 
@@ -1165,40 +1225,41 @@ namespace TAT001.Controllers.Reportes
                 all.FUENTE = doc.First().STATUS_ALLOWANCE;
                 foreach (var doc2 in doc)
                 {
+                    decimal monto = ((doc2.MONTO_DOC_ML == null) ? 0 : (Decimal)doc2.MONTO_DOC_ML);
                     switch (doc2.SOCIEDAD_ID)
                     {
                         case "KCMX":
-                            all.KCMX++;
+                            all.KCMX += monto;
                             break;
                         case "KLCA":
-                            all.KLCA++;
+                            all.KLCA += monto;
                             break;
                         case "LCCR":
-                            all.LCCR++;
+                            all.LCCR += monto;
                             break;
                         case "LPKP":
-                            all.LPKP++;
+                            all.LPKP += monto;
                             break;
                         case "KLSV":
-                            all.KLSV++;
+                            all.KLSV += monto;
                             break;
                         case "KCAR":
-                            all.KCAR++;
+                            all.KCAR += monto;
                             break;
                         case "KPRS":
-                            all.KPRS++;
+                            all.KPRS += monto;
                             break;
                         case "KLCO":
-                            all.KLCO++;
+                            all.KLCO += monto;
                             break;
                         case "LEKE":
-                            all.LEKE++;
+                            all.LEKE += monto;
                             break;
                         case "LAGA":
-                            all.LAGA++;
+                            all.LAGA += monto;
                             break;
                         case "KLCH":
-                            all.KLCH++;
+                            all.KLCH += monto;
                             break;
                     }
                 }
@@ -1288,8 +1349,7 @@ namespace TAT001.Controllers.Reportes
             ViewBag.aperiodo = db.PERIODOes.ToList();
 
             var queryP = (from d in db.DOCUMENTOes
-                          join ds in db.DOCUMENTOSAPs on d.NUM_DOC equals ds.NUM_DOC
-                          join dr in db.DOCUMENTORs on d.NUM_DOC equals dr.NUM_DOC
+                              //join dr in db.DOCUMENTORs on d.NUM_DOC equals dr.NUM_DOC
                           join p in db.PAIS on d.PAIS_ID equals p.LAND
                           join c in db.CLIENTEs on new { d.VKORG, d.VTWEG, d.SPART, d.PAYER_ID } equals new { c.VKORG, c.VTWEG, c.SPART, PAYER_ID = c.KUNNR }
                           join ts in db.TSOLs on d.TSOL_ID equals ts.ID
@@ -1311,9 +1371,9 @@ namespace TAT001.Controllers.Reportes
                               PERIODO_CONTABLE = (Int32)d.PERIODO,
                               NUMERO_DOCUMENTO_SAP = d.DOCUMENTO_SAP,
                               //NUMERO_REVERSO_SAP =
-                              FECHA_REVERSO = (DateTime)dr.FECHAC,
+                              //FECHA_REVERSO = (DateTime)dr.FECHAC,
                               //PERIODO_CONTABLE_REVERSO =
-                              COMENTARIOS_REVERSO_PROVISION = dr.COMENTARIO,
+                              //COMENTARIOS_REVERSO_PROVISION = dr.COMENTARIO,
                               TIPO_SOLICITUD = tst.TXT020,
                               TIPO_SOLICITUD_ID = d.TSOL_ID,
                               STATUS = d.ESTATUS,
@@ -1325,7 +1385,7 @@ namespace TAT001.Controllers.Reportes
                               CLIENTE = c.NAME1,
                               MONTO = (decimal)d.MONTO_DOC_MD,
                               MONEDA = d.MONEDA_ID,
-                              TIPO_CAMBIO = (decimal)d.TIPO_CAMBIO
+                              //TIPO_CAMBIO = (decimal)d.TIPO_CAMBIO
                           }).ToList();
 
             ViewBag.tabla_reporte = queryP;
@@ -1360,7 +1420,7 @@ namespace TAT001.Controllers.Reportes
             ViewBag.sociedad = db.SOCIEDADs.ToList();
             ViewBag.periodo = db.PERIODOes.ToList();
             ViewBag.UsuarioF = db.USUARIOs.ToList();
-            ViewBag.Cliente = db.CLIENTEs.Select(x => x.KUNNR).ToList();
+            ViewBag.Cliente = db.CLIENTEs.Select(x => new { x.KUNNR, x.NAME1 }).ToList();
             ViewBag.Tds = db.TSOLs.ToList();
             try
             {
@@ -1392,7 +1452,7 @@ namespace TAT001.Controllers.Reportes
             ViewBag.sociedad = db.SOCIEDADs.ToList();
             ViewBag.periodo = db.PERIODOes.ToList();
             ViewBag.UsuarioF = db.USUARIOs.ToList();
-            ViewBag.Cliente = db.CLIENTEs.Select(x => x.KUNNR).ToList();
+            ViewBag.Cliente = db.CLIENTEs.Select(x => new { x.KUNNR, x.NAME1 }).ToList();
             ViewBag.Tds = db.TSOLs.ToList();
             try
             {

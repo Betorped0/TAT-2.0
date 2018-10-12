@@ -80,21 +80,10 @@
             <div class="row" style="margin-bottom:0;">
                 <div class="input-field col s3 m3 l3">
                     <select multiple name="selectquarter" id="selectquarter" class="comcode select_all">
-                        @try
-                        {
-                            foreach (var quarter in ViewBag.quarter)
-                            {
-                                <option value="1">Q1</option>
-                                <option value="2">Q2</option>
-                                <option value="3">Q3</option>
-                                <option value="4">Q4</option>
-                            }
-
-                        }
-                        catch (Exception)
-                        {
-                            <option value="" id="no_optper">No hay opciones</option>
-                        }
+                        <option value="1">Q1</option>
+                        <option value="2">Q2</option>
+                        <option value="3">Q3</option>
+                        <option value="4">Q4</option>
                     </select>
                     <label id="label_period">Quarter</label>
                 </div>
@@ -335,37 +324,37 @@
                             @item.FUENTE
                         </td>
                         <td>
-                            @((item.KCMX == 0) ? "-" : item.KCMX.ToString())
+                            @((item.KCMX == 0) ? "-" : String.Format("{0:C}", (item.KCMX)))
                         </td>
                         <td>
-                            @((item.KLCA == 0) ? "-" : item.KLCA.ToString())
+                            @((item.KLCA == 0) ? "-" : String.Format("{0:C}", (item.KLCA)))
                         </td>
                         <td>
-                            @((item.LCCR == 0) ? "-" : item.LCCR.ToString())
+                            @((item.LCCR == 0) ? "-" : String.Format("{0:C}", (item.LCCR)))
                         </td>
                         <td>
-                            @((item.LPKP == 0) ? "-" : item.LPKP.ToString())
+                            @((item.LPKP == 0) ? "-" : String.Format("{0:C}", (item.LPKP)))
                         </td>
                         <td>
-                            @((item.KLSV == 0) ? "-" : item.KLSV.ToString())
+                            @((item.KLSV == 0) ? "-" : String.Format("{0:C}", (item.KLSV)))
                         </td>
                         <td>
-                            @((item.KCAR == 0) ? "-" : item.KCAR.ToString())
+                            @((item.KCAR == 0) ? "-" : String.Format("{0:C}", (item.KCAR)))
                         </td>
                         <td>
-                            @((item.KPRS == 0) ? "-" : item.KPRS.ToString())
+                            @((item.KPRS == 0) ? "-" : String.Format("{0:C}", (item.KPRS)))
                         </td>
                         <td>
-                            @((item.KLCO == 0) ? "-" : item.KLCO.ToString())
+                            @((item.KLCO == 0) ? "-" : String.Format("{0:C}", (item.KLCO)))
                         </td>
                         <td>
-                            @((item.LEKE == 0) ? "-" : item.LEKE.ToString())
+                            @((item.LEKE == 0) ? "-" : String.Format("{0:C}", (item.LEKE)))
                         </td>
                         <td>
-                            @((item.LAGA == 0) ? "-" : item.LAGA.ToString())
+                            @((item.LAGA == 0) ? "-" : String.Format("{0:C}", (item.LAGA)))
                         </td>
                         <td>
-                            @((item.KLCH == 0) ? "-" : item.KLCH.ToString())
+                            @((item.KLCH == 0) ? "-" : String.Format("{0:C}", (item.KLCH)))
                         </td>
                     </tr>
                     }
