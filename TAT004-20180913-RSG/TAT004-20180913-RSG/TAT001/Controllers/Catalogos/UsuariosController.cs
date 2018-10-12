@@ -2198,6 +2198,31 @@ namespace TAT001.Controllers.Catalogos
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
             return cc;
         }
+
+        public JsonResult Nivel(string Prefix)
+        {
+            if (Prefix == null)
+                Prefix = "";
+            string p = Session["spras"].ToString();
+            TAT001Entities db = new TAT001Entities();
+            //if(Prefix)
+            var c = (from x in db.PUESTOTs
+                     join a in db.PUESTOes on true equals a.ACTIVO
+                     where x.PUESTO_ID == int.Parse(Prefix) & x.SPRAS_ID.Equals(p)
+                     select new { x.PUESTO_ID, x.TXT50 }).ToList();
+
+            if (c.Count == 0)
+            {
+                var c2 = (from x in db.PUESTOTs
+                          join a in db.PUESTOes on true equals a.ACTIVO
+                          where x.TXT50.Contains(Prefix) & x.SPRAS_ID.Equals(p)
+                          select new { x.PUESTO_ID, x.TXT50 }).ToList();
+                c.AddRange(c2);
+            }
+
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
     }
 }
 
