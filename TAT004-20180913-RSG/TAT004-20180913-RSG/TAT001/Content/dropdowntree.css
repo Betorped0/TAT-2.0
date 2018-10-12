@@ -77,10 +77,12 @@ border-color: #d5d5d5;
 .k-treeview span.k-in {
     cursor: default;
 }
-
+i + span.k-in {
+    font-weight: bold;
+    padding-left: 0px !important;
+}
 .k-treeview .k-in {
     margin: 1px 0 1px .16666em;
-    padding: 1px .3333em 1px .25em;
     line-height: 21px;
     text-decoration: none;
     border-style: solid;
@@ -88,6 +90,7 @@ border-color: #d5d5d5;
     display: inline-block;
     border-color: transparent;
     border-radius: 4px;
+    padding-left: 20px;
 }
 
 .k-treeview .k-i-collapse {
@@ -210,7 +213,6 @@ div.dropdowntree {
     font-size: 12px;
 }
 .dropdown-trigger {
-   text-align:center;
 }
 .dropdown-trigger:hover + div.dropdowntree {
     display: block;

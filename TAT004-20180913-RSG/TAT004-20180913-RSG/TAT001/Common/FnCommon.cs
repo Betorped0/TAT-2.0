@@ -119,13 +119,13 @@ namespace TAT001.Common
             db.TSOL_GROUP
                 .Where(x => x.ID_PADRE == null && x.TIPO_PADRE == null && (tipo == x.TIPO || tipo == null))
                 .Join(db.TSOL_GROUPT, tg => new { ID = tg.ID, TIPO = tg.TIPO }, tgt => new { ID = tgt.TSOL_GROUP_ID, TIPO = tgt.TSOL_GROUP_TIPO }, (tg, tgt) => tgt)
-                .Where(x => x.SPRAS_ID == spras_id)
+                .Where(x => x.SPRAS_ID == spras_id).OrderBy(x=>x.TSOL_GROUP_ID )
                 .ToList().ForEach(x =>
                 {
                     tree.Add(new SelectTreeItem
                     {
                         text = x.TXT50,
-                        expanded = !(tipo==null),
+                        expanded =  false,
                         items = ObtenerItemsSelectTree(db, x.TSOL_GROUP_ID, x.TSOL_GROUP_TIPO, spras_id)
                     });
                 });
@@ -141,7 +141,7 @@ namespace TAT001.Common
                 {
                     SelectTreeItem item = new SelectTreeItem();
                     item.text = x.DESCRIPCION;
-                    item.expanded = true;
+                    item.expanded = false;
                     item.items = ObtenerItemsSelectTree(db, x.ID, x.TIPO, spras_id);
                     if (item.items.Count() == 0)
                     {
