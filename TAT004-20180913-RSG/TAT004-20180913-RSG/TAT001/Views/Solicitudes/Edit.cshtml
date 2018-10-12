@@ -1590,7 +1590,7 @@
                                     <div class="input-field col s6">
                                         @*<div class="form-group">*@
                                         @*<div class="col-md-10">*@
-                                        @Html.DropDownList("MONEDA", null, htmlAttributes: new { @id = "moneda_id", @class = "form-control " + @ViewBag.relacionada, @disabled = "disabled" onchange = @"selectMoneda(this.value)"}) @*OCG 09/10/2018 Se modifica para evitar el cambiode la moneda*@
+                                        @Html.DropDownList("MONEDA", null, htmlAttributes: new { @id = "moneda_id", @class = "form-control " + @ViewBag.relacionada, @disabled = "disabled", @onchange = @"selectMoneda(this.value)"}) @*OCG 09/10/2018 Se modifica para evitar el cambiode la moneda*@
                                         @Html.LabelFor(model => model.MONEDA_ID, "Moneda", htmlAttributes: new { @for = "moneda_id" })
                                         @*</div>
                                             </div>*@
