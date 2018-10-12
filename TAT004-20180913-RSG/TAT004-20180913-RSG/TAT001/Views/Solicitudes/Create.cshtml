@@ -336,19 +336,19 @@ errorMessage(message);
                                     </div>
                                 </div>
                                 @{TAT001.Entities.PAI pais = ViewBag.PAIS_ID;
-                                    ///////DRS 27.09.18/////////
-                                    <div class="col s6" style="margin-top:1.9%">
-                                        <div class="form-group hidden">
-                                            @Html.LabelFor(model => model.PAIS_ID, "Subregión", htmlAttributes: new { @class = "control-label col-md-2 hidden", @id = "lbl_pais" }) @*B20180801 MGC Textos*@
-                                            <div class="col-md-10">
-                                                @Html.EditorFor(model => model.PAIS_ID, new { htmlAttributes = new { @id = "pais_id", @class = "form-control hidden", @disabled = "disabled", @Value = pais.LAND } })
-                                            </div>
-                                        </div>
-                                        <div class="input-field col-md-2">
-                                            <input value="@pais.LANDX" id="pais_txt" type="text" class="" disabled="disabled" />
-                                            <label id="lbl_paiss" for="pais_txt">Subregión</label> @*B20180801 MGC Textos*@
-                                        </div>
+        ///////DRS 27.09.18/////////
+                            <div class="col s6" style="margin-top:1.9%">
+                                <div class="form-group hidden">
+                                    @Html.LabelFor(model => model.PAIS_ID, "Subregión", htmlAttributes: new { @class = "control-label col-md-2 hidden", @id = "lbl_pais" }) @*B20180801 MGC Textos*@
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.PAIS_ID, new { htmlAttributes = new { @id = "pais_id", @class = "form-control hidden", @disabled = "disabled", @Value = pais.LAND } })
                                     </div>
+                                </div>
+                                <div class="input-field col-md-2">
+                                    <input value="@pais.LANDX" id="pais_txt" type="text" class="" disabled="disabled" />
+                                    <label id="lbl_paiss" for="pais_txt">Subregión</label> @*B20180801 MGC Textos*@
+                                </div>
+                            </div>
                                 }
                                 <div>
                                     <div class="input-field col s6">
@@ -365,13 +365,23 @@ errorMessage(message);
                                 <script src="~/Scripts/autocomplete1.10.2.js"></script>
                                 <script src="~/Scripts/autocomplete1.11.4.js"></script>
                                 <script src="~/Scripts/dropdowntree.js"></script>
+
+                                @Html.HiddenFor(model => model.TSOL_ID, new { @id = "tsol_id", @onchange = "selectTsol(this.value);soportes(this.value, '" + Session["spras"].ToString() + "'); M.Toast.dismissAll();" })
                                 <script>
 
                                     $("#TSOL_ID").kendoDropDownTree({
                                         placeholder: "",
+                                        //idValid: "TSOL_ID_VALID",
                                         idValid: "TSOL_ID_VALID",
-                                        dataSource:@Html.Raw(Json.Encode(ViewBag.listtreetsol))
+                                        dataSource:@Html.Raw(Json.Encode(ViewBag.listtreetsol)),
+                                        change: function(e) {
+                                            $("#tsol_id").val(e.sender._values[0]);
+                                            $('#tsol_id').trigger('change');
+                                            //soportes(e.sender._values[0], '@Session["spras"].ToString()'); M.Toast.dismissAll();
+                                        },
                                     });
+
+                                    
 
 var auto = $.noConflict(true);
 auto(document).ready(function () {
