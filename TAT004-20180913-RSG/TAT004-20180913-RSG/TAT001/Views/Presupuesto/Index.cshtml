@@ -89,16 +89,28 @@
                     }
                     @try
                     {
-                        for (int i = 0; i < Model.sociedad.Count; i++)
+                        @*for (int i = 0; i < Model.sociedad.Count; i++)
+            {
+                if (defaul == Model.sociedad[i].BUKRS)
+                {
+                    <option value="@Model.sociedad[i].BUKRS" selected="selected">@Model.sociedad[i].BUKRS</option>
+                }
+                else
+                {
+                    <option value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
+                }
+            }*@
+                        foreach (var sociedad in ViewBag.usrScts)
                         {
-                            if (defaul == Model.sociedad[i].BUKRS)
+                            if (defaul == sociedad.BUKRS)
                             {
-                                <option value="@Model.sociedad[i].BUKRS" selected="selected">@Model.sociedad[i].BUKRS</option>
+                                <option value="@sociedad.BUKRS" selected="selected">@sociedad.BUKRS</option>
                             }
                             else
                             {
-                                <option value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
+                                <option value="@sociedad.BUKRS">@sociedad.BUKRS</option>
                             }
+                            
                         }
                     }
                     catch (Exception)

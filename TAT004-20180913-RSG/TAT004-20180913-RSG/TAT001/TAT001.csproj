@@ -385,6 +385,9 @@
     <Compile Include="Entities\CUENTA.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\CUENTAA.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\CUENTAGL.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
