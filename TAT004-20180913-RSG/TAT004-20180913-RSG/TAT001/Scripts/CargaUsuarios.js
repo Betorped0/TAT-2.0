@@ -140,7 +140,7 @@ function loadExcelDis(file) {
                         var clix = true;
                     }
                     if (com.indexOf('?') != -1) {
-                        com = niv.slice(0, -1);
+                        com = com.slice(0, -1);
                         var comx = true;
                     }
                     if (niv.indexOf('?') != -1) {
@@ -280,9 +280,17 @@ function Comprobar() {
 }
 
 function Borrar() {
-    var datos = $('#tabla').serializeArray();
-    creart('Borrar', datos);
-    M.toast({ html: 'Registros borrados' });
+    //var datos = $('#tabla').serializeArray();
+    //creart('Comprobar', datos);
+    //M.toast({ html: 'Registros borrados' });
+
+    var table = $('#table').DataTable();
+    var rows = $('.input_bor').serializeArray();
+    for (var i = rows.length; i > 0; i--) {
+        var num = rows[i - 1].value;
+        table.row(num).remove().draw();
+    }
+    Comprobar();
 }
 
 function Actualizar() {
@@ -340,7 +348,7 @@ function creart(metodo, datos) {
                         var clix = true;
                     }
                     if (com.indexOf('?') != -1) {
-                        com = niv.slice(0, -1);
+                        com = com.slice(0, -1);
                         var comx = true;
                     }
                     if (niv.indexOf('?') != -1) {
@@ -416,7 +424,7 @@ function checkoff() {
 
 function Agregar() {
     var datos = $('#tabla').serializeArray();
-    creart('Agregar', datos);
+    creart('AgregarT', datos);
 }
 
 $('body').on('keydown.autocomplete', '.input_cli', function () {
