@@ -310,7 +310,7 @@ $(document).ready(function () {
     $('#addRowB').on('click', function () {
 
         var relacionada = "";
-        if ($('#table_dis > tbody > tr').length == 1 && $('table_dis').find(' tbody tr:eq(0)').attr('class')!="row") {
+        if ($('#table_dis > tbody > tr').length == 1 && $('table_dis').find(' tbody tr:eq(0)').attr('class') != "row") {
             catsArr = new Array();
             uniqueArr = new Array();
             unica1 = false;
@@ -441,13 +441,13 @@ $(document).ready(function () {
                 } else if (dis == "M") {//falta validar
                     var classtd = $("#table_dis tbody tr:first td").attr("class");
                     indext = getIndex();
-                    
+
                     //Distribución por material 
-                        var addedRow = addRowMat(t, "", "", "", "", "", "", "", "", "", "", "", relacionada, relacionadaed, reversa, ddate, adate, "", "");//Add MGC B20180705 2018.07.05 ne no eliminar //Add MGC B20180705 2018.07.05 relacionadaed editar el material en los nuevos renglones
-                        $('#table_dis').css("font-size", "12px");
-                        $('#table_dis').css("display", "table");
-                        t.column(0).visible(false);
-                        t.column(1).visible(false);
+                    var addedRow = addRowMat(t, "", "", "", "", "", "", "", "", "", "", "", relacionada, relacionadaed, reversa, ddate, adate, "", "");//Add MGC B20180705 2018.07.05 ne no eliminar //Add MGC B20180705 2018.07.05 relacionadaed editar el material en los nuevos renglones
+                    $('#table_dis').css("font-size", "12px");
+                    $('#table_dis').css("display", "table");
+                    t.column(0).visible(false);
+                    t.column(1).visible(false);
                 }
                 updateFooter();
 
@@ -1902,7 +1902,7 @@ function guardarBorrador(asyncv) {
         url: 'Borrador',
         dataType: "json",
         data: form.serialize() + "&notas_soporte = " + notas_soporte + "&unafact = " + unafact + "&select_neg = " + select_neg + "&select_dis = " + select_dis +
-            "&select_negi = " + select_negi + "&select_disi = " + select_disi + "&bmonto_apoyo = " + bmonto_apoyo + "&monedadis = " + monedadis,
+        "&select_negi = " + select_negi + "&select_disi = " + select_disi + "&bmonto_apoyo = " + bmonto_apoyo + "&monedadis = " + monedadis,
         //data: {
         //    object: form.serialize(), "notas_soporte": notas_soporte, "unafact": unafact, "select_neg": select_neg, "select_dis": select_dis,
         //    "select_negi": select_negi, "select_disi": select_disi, "bmonto_apoyo": bmonto_apoyo, "monedadis": monedadis},
@@ -2164,6 +2164,9 @@ function copiarTableVista(update, borr, ne) { //Add MGC B20180705 2018.07.05 Cam
                         vol = toShowNum("0");
                         total = toShow("0");
                     }
+                } else {//ADD RSG 12.10.2018
+                    vol = volumen_est;
+                    total = apoyo_est;
                 }
                 //ADD RSG 20.08.2018--------------------END
             }
@@ -4889,8 +4892,7 @@ function evaluarInfoFacturas() {
 
     return res;
 }
-function checkUnicas(arrTr)
-{
+function checkUnicas(arrTr) {
     if (arrTr.length > 0) {
         for (var i = 1; i < arrTr.length; i++) {
             if (arrTr[i] !== arrTr[0])
@@ -4921,15 +4923,14 @@ function evaluarDisTable() {
                 $(this).find('td').eq((5 + indext)).addClass("errorMaterial");
             }
         });
-  
+
 
         $("#table_dis > tbody  > tr[role='row']").each(function () {
-            
+
             //Distribución por material
             if (dis == "M") {
-                
-                if (!checkUnicas(arrTr))
-                {
+
+                if (!checkUnicas(arrTr)) {
                     M.toast({ html: 'Las categorías unicas no se pueden mezclar con otras categorias y/o Materiales.' });
                     res = "Error con el material ";
                     return false;
@@ -4954,11 +4955,11 @@ function evaluarDisTable() {
                     //Sin material elimina el renglón
                     $(this).addClass('selected');
                 } else {
-                    
+
                     //Validar que el material exista
                     //Add MGC B20180705 2018.07.09 Validar que los materiales no existan duplicados en la tabla
                     var valp = valMaterial(val, "X");
-                   
+
                     if (valp.ID == null || valp.ID == "") {
                         $(this).find('td').eq((5 + indext)).addClass("errorMaterial");
                         return false;
@@ -4966,7 +4967,7 @@ function evaluarDisTable() {
 
                         //selectMaterial(val.ID, val.MAKTX, $(this));
                         //Validar registros duplicados
-                        
+
                         if (evaluarDisTableCount(val, dis) > 1) {
                             res = "Error con el material " + val;
                             if (res != "") {

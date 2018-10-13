@@ -22,6 +22,7 @@ namespace TAT001.Entities
         public Nullable<decimal> CARGO { get; set; }
         public Nullable<decimal> CLEARING { get; set; }
         public Nullable<decimal> LIMITE { get; set; }
+        public string IMPUESTO { get; set; }
     
         public virtual CUENTAGL CUENTAGL { get; set; }
         public virtual CUENTAGL CUENTAGL1 { get; set; }

@@ -12,12 +12,13 @@ namespace TAT001.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class TAB_CAMPO
+    public partial class CUENTAA
     {
-        public string TAB_ID { get; set; }
-        public string CAMPO_ID { get; set; }
-        public bool ACTIVO { get; set; }
-    
-        public virtual TAB TAB { get; set; }
+        public string SOCIEDAD_ID { get; set; }
+        public string CLAVE { get; set; }
+        public string CUENTA_ID { get; set; }
+        public string NOMBRE1 { get; set; }
+        public string NOMBRE2 { get; set; }
+        public Nullable<bool> ACTIVO { get; set; }
     }
 }

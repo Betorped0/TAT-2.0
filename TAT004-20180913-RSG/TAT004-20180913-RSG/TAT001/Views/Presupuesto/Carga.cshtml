@@ -147,27 +147,34 @@
                                     {
                                         defaul = new string[1];
                                     }
-                                    for (int i = 0; i < Model.sociedad.Count; i++)
+                                    @*for (int i = 0; i < Model.sociedad.Count; i++)
+            {
+                if (ViewBag.sociedadcpt != null)
+                {
+                    if (defaul[j] == Model.sociedad[i].BUKRS)
+                    {
+                        <option value="@Model.sociedad[i].BUKRS" selected="selected">@Model.sociedad[i].BUKRS</option>
+                        if (j < (defaul.Length - 1))
+                        {
+                            j++;
+                        }
+                    }
+                    else
+                    {
+                        <option value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
+                    }
+                }
+                else
+                {
+                    <option value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
+                }
+            }*@
+                                    foreach (var sociedad in ViewBag.usrScts)
                                     {
-                                        if (ViewBag.sociedadcpt != null)
-                                        {
-                                            if (defaul[j] == Model.sociedad[i].BUKRS)
-                                            {
-                                                <option value="@Model.sociedad[i].BUKRS" selected="selected">@Model.sociedad[i].BUKRS</option>
-                                                if (j < (defaul.Length - 1))
-                                                {
-                                                    j++;
-                                                }
-                                            }
-                                            else
-                                            {
-                                                <option value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
-                                            }
-                                        }
-                                        else
-                                        {
-                                            <option value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
-                                        }
+                                        
+                                            <option value="@sociedad.BUKRS">@sociedad.BUKRS</option>
+                                        
+
                                     }
                                 }
                                 catch (Exception)
@@ -296,34 +303,41 @@
                                         defaul = new string[1];
                                         @*<option value="" disabled selected></option>*@
                                     }
-                                    for (int i = 0; i < Model.sociedad.Count; i++)
+                                    @*for (int i = 0; i < Model.sociedad.Count; i++)
+            {
+                if (defaul[0] == "")
+                {
+                    if (i == 0)
+                    {
+                        <option selected value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
+                    }
+                    else
+                    {
+                        <option value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
+                    }
+                }
+                else
+                {
+                    if (defaul[j] == Model.sociedad[i].BUKRS)
+                    {
+                        <option value="@Model.sociedad[i].BUKRS" selected="selected">@Model.sociedad[i].BUKRS</option>
+                        if (j < (defaul.Length - 1))
+                        {
+                            j++;
+                        }
+                    }
+                    else
+                    {
+                        <option value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
+                    }
+                }
+
+            }*@
+                                    foreach (var sociedad in ViewBag.usrScts)
                                     {
-                                        if (defaul[0] == "")
-                                        {
-                                            if (i == 0)
-                                            {
-                                                <option selected value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
-                                            }
-                                            else
-                                            {
-                                                <option value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if (defaul[j] == Model.sociedad[i].BUKRS)
-                                            {
-                                                <option value="@Model.sociedad[i].BUKRS" selected="selected">@Model.sociedad[i].BUKRS</option>
-                                                if (j < (defaul.Length - 1))
-                                                {
-                                                    j++;
-                                                }
-                                            }
-                                            else
-                                            {
-                                                <option value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
-                                            }
-                                        }
+
+                                        <option value="@sociedad.BUKRS">@sociedad.BUKRS</option>
+
 
                                     }
                                 }

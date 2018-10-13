@@ -35,6 +35,7 @@ namespace TAT001.Entities
             this.PRESUPUESTOHs = new HashSet<PRESUPUESTOH>();
             this.USUARIOFs = new HashSet<USUARIOF>();
             this.GAUTORIZACIONs = new HashSet<GAUTORIZACION>();
+            this.SOCIEDADs = new HashSet<SOCIEDAD>();
         }
     
         public string ID { get; set; }
@@ -89,5 +90,7 @@ namespace TAT001.Entities
         public virtual ICollection<USUARIOF> USUARIOFs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GAUTORIZACION> GAUTORIZACIONs { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SOCIEDAD> SOCIEDADs { get; set; }
     }
 }
