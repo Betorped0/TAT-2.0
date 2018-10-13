@@ -259,20 +259,8 @@ errorMessage(message);
             <input type="text" value="@ViewBag.TSOL_IDI" disabled="disabled" />
             <input type="text" id="tsolant_id" value="@ViewBag.TSOL_ANT" disabled="disabled" hidden />
         }*@
-                                        @*if (ViewBag.relacionada == "")
-                                        {*@
+
                                         @Html.EditorFor(model => model.TSOL_ID, new { htmlAttributes = new { @class = "dropdowntree" } })
-                                        @*}
-                                        else if (ViewBag.ligada)
-                                        {
-                                        @Html.EditorFor(model => model.TSOL_ID, new { htmlAttributes = new { @class = "dropdowntree" } })
-                                        }
-                                        else
-                                        {
-                                        @Html.HiddenFor(model => model.TSOL_ID, new { @id = "tsol_id", @onchange = "selectTsol(this.value)" })
-                                        <input type="text" value="@ViewBag.TSOL_IDI" disabled="disabled" />
-                                        <input type="text" id="tsolant_id" value="@ViewBag.TSOL_ANT" disabled="disabled" hidden />
-                                        }*@
                                     </div>
                                     @Html.HiddenFor(model => model.DOCUMENTO_REF)
                                     @{string jval = ViewBag.TSOL_VALUES;
@@ -375,9 +363,9 @@ errorMessage(message);
                                         idValid: "TSOL_ID_VALID",
                                         dataSource:@Html.Raw(Json.Encode(ViewBag.listtreetsol)),
                                         change: function(e) {
-                                            $("#tsol_id").val(e.sender._values[0]);
-                                            $('#tsol_id').trigger('change');
-                                            //soportes(e.sender._values[0], '@Session["spras"].ToString()'); M.Toast.dismissAll();
+                                            //$("#tsol_id").val(e.sender._values[0]);
+                                            //$('#tsol_id').trigger('change');
+                                            soportes(e.sender._values[0], '@Session["spras"].ToString()'); M.Toast.dismissAll();
                                         },
                                     });
 

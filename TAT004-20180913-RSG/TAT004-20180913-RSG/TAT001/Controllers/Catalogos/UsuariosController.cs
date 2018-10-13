@@ -2205,27 +2205,40 @@ namespace TAT001.Controllers.Catalogos
                 Prefix = "";
             string p = Session["spras"].ToString();
             TAT001Entities db = new TAT001Entities();
-            int num;
-            bool res = int.TryParse(Prefix, out num);
+            //int num;
+            //bool res = int.TryParse(Prefix, out num);
             JsonResult cc;
-            if (res == true)
-            {
-                var c = (from x in db.PUESTOTs
-                         join a in db.PUESTOes on true equals a.ACTIVO
-                         where x.PUESTO_ID == num & x.SPRAS_ID.Equals(p)
-                         select new { x.PUESTO_ID, x.TXT50 }).ToList();
+            //if (res == true)
+            //{
+            //    var c = (from x in db.PUESTOTs
+            //             join a in db.PUESTOes on true equals a.ACTIVO
+            //             where x.PUESTO_ID == num & x.SPRAS_ID.Equals(p)
+            //             group x by new { x.PUESTO_ID, x.TXT50 } into g
+            //             select new { ID = g.Key.PUESTO_ID, TEXTO = g.Key.TXT50 }).ToList();
+
+
+            //    //var c = (from x in db.PUESTOTs
+            //    //        join j in
+            //    //        (from d in db.PUESTOes
+            //    //         join f in db.PUESTOTs on d.ID equals f.PUESTO_ID
+            //    //         where f.PUESTO_ID == num & f.SPRAS_ID.Equals(p)
+            //    //         group f by d.ID into g
+            //    //         select new { ID = g.Key})
+            //    //         on new { x.PUESTO_ID} equals new { j.ID }
+            //    //        select new { x.PUESTO_ID, x.TXT50 }).ToList();
+
+            //    cc = Json(c, JsonRequestBehavior.AllowGet);
+            //}
+            //else
+            //{
+            var c = (from x in db.PUESTOTs
+                     join a in db.PUESTOes on x.PUESTO_ID equals a.ID
+                     where x.TXT50.Contains(Prefix) & x.SPRAS_ID.Equals(p) & a.ACTIVO == true
+                     group x by new { x.PUESTO_ID, x.TXT50 } into g
+                     select new { ID = g.Key.PUESTO_ID, TEXTO = g.Key.TXT50 }).ToList();
 
                 cc = Json(c, JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
-                var c = (from x in db.PUESTOTs
-                          join a in db.PUESTOes on true equals a.ACTIVO
-                          where x.TXT50.Contains(Prefix) & x.SPRAS_ID.Equals(p)
-                          select new { x.PUESTO_ID, x.TXT50 }).ToList();
-
-                cc = Json(c, JsonRequestBehavior.AllowGet);
-            }
+            //}
 
             return cc;
         }

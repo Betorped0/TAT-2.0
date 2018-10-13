@@ -529,7 +529,7 @@ $('body').on('keydown.autocomplete', '.input_niv', function () {
                 data: { "Prefix": request.term },
                 success: function (data) {
                     response(auto.map(data, function (item) {
-                        return { label: item.PUESTO_ID + " | " + item.TXT50, value: item.PUESTO_ID };
+                        return { label: item.ID + " | " + item.TEXTO, value: item.ID };
                     }))
                 }
             })
