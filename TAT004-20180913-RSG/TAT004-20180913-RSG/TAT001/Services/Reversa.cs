@@ -445,7 +445,7 @@ namespace TAT001.Services
             //db.SaveChanges();
 
             USUARIO user = db.USUARIOs.Where(a => a.ID.Equals(d.USUARIOC_ID)).FirstOrDefault();
-            int rol = user.MIEMBROS.FirstOrDefault().ROL_ID;
+            //int rol = user.MIEMBROS.FirstOrDefault().ROL_ID;
             try
             {
                 //WORKFV wf = db.WORKFHs.Where(a => a.BUKRS.Equals(dOCUMENTO.SOCIEDAD_ID) & a.ROL_ID == rol).FirstOrDefault().WORKFVs.OrderByDescending(a => a.VERSION).FirstOrDefault();
