@@ -541,6 +541,14 @@ $(document).ready(function () {
             M.toast({ html: 'Seleccione negociación' });
         }
 
+        //Set val a DatePicker
+        document.querySelectorAll('.input_fe').forEach(function (datePicker) {
+            if (datePicker.value){
+                var dateVal = moment(datePicker.value, 'DD/MM/YYYY');
+                M.Datepicker.getInstance(datePicker).setDate(dateVal._d);
+            }
+        });
+
         event.returnValue = false;
         event.cancel = true;
 
@@ -3983,6 +3991,15 @@ function loadExcelDis(file) {
 
                 document.getElementById("loader").style.display = "none";//RSG 24.05.2018
             }
+        },
+        complete: function () {//activar change RMG
+            $(document).ready(function () {
+                $("#table_dis > tbody > tr").each(function () {
+                    $(this).children().eq(3).children().trigger("click");
+                    $(this).children().eq(3).children().blur();
+                });
+            });
+            
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             alert("Request couldn't be processed. Please try again later. the reason        " + xhr.status + " : " + httpStatusMessage + " : " + customErrorMessage);
