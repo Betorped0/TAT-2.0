@@ -56,7 +56,7 @@ namespace TAT001.Controllers.Catalogos
             //Condiciones
             modelView.alertaCondiciones = new List<WARNING_COND> { new WARNING_COND { POS = 1 }, new WARNING_COND { POS = 2, ORAND = ")" } };
             //Combos
-            CargarSelectList(ref modelView, new string[] { CMB_TIPOS,CMB_SOCIEDADES, CMBTREE_TIPOSSOLICITUD, CMB_TABS , CMB_CONDCAMPOS });
+            CargarSelectList(ref modelView, new string[] { CMB_TIPOS,CMB_SOCIEDADES, CMBTREE_TIPOSSOLICITUD, CMB_TABS , CMB_CONDCAMPOS },null,true);
             return View(modelView);
         }
 
@@ -122,6 +122,7 @@ namespace TAT001.Controllers.Catalogos
                     CMB_CONDCAMPOS,
                     CMB_CONDVALORES  },
                     modelView.alerta.TAB_ID,
+                    true,
                     modelView.alertaCondiciones[0].CONDICION_ID,
                     modelView.alertaCondiciones[1].CONDICION_ID);
                 return View(modelView);
@@ -164,6 +165,7 @@ namespace TAT001.Controllers.Catalogos
                 CMB_CONDCAMPOS,
                 CMB_CONDVALORES },
                 modelView.alerta.TAB_ID,
+                (esAlertaGral ? null : (bool?)true),
                 (esAlertaGral ? null : modelView.alertaCondiciones[0].CONDICION_ID),
                 (esAlertaGral ? null : modelView.alertaCondiciones[1].CONDICION_ID));
             return View(modelView);
@@ -236,6 +238,7 @@ namespace TAT001.Controllers.Catalogos
                     CMB_CAMPOS + "," + modelView.alerta.CAMPO_ID,
                     CMB_CONDCAMPOS, CMB_CONDVALORES },
                     modelView.alerta.TAB_ID,
+                    (esAlertaGral ? null : (bool?)true),
                     (esAlertaGral ? null : modelView.alertaCondiciones[0].CONDICION_ID),
                     (esAlertaGral ? null : modelView.alertaCondiciones[1].CONDICION_ID));
                 return View(modelView);
@@ -263,7 +266,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult ObtenerCamposPorTabId(string val)
         {
             AlertaViewModel modelView = new AlertaViewModel();
-            CargarSelectList(ref modelView, new string[] { CMB_CAMPOS }, val);
+            CargarSelectList(ref modelView, new string[] { CMB_CAMPOS }, val,true);
             return Json(modelView.campos);
         }
         [HttpPost]
@@ -320,7 +323,7 @@ namespace TAT001.Controllers.Catalogos
         }
        
 
-        void CargarSelectList(ref AlertaViewModel modelView, string[] combos, string tab_id = null, int? cond_id = null, int? cond_id1 = null)
+        void CargarSelectList(ref AlertaViewModel modelView, string[] combos, string tab_id = null,bool? activo = null, int? cond_id = null, int? cond_id1 = null)
         {
             string spras_id = FnCommon.ObtenerSprasId(db, User.Identity.Name);
 
@@ -342,10 +345,10 @@ namespace TAT001.Controllers.Catalogos
                         modelView.cmbTiposSolicitud = FnCommon.ObtenerCmbTiposSolicitud(db, spras_id, id);
                         break;
                     case CMB_TABS:
-                        modelView.tabs = FnCommon.ObtenerCmbTabs(db,spras_id,id);
+                        modelView.tabs = FnCommon.ObtenerCmbTabs(db,spras_id, activo, id);
                         break;
                     case CMB_CAMPOS:
-                        modelView.campos = FnCommon.ObtenerCmbCamposPoTabId(db,spras_id,tab_id,id);
+                        modelView.campos = FnCommon.ObtenerCmbCamposPoTabId(db,spras_id,tab_id, activo,id);
                         break;
                     case CMB_TIPOS:
                         int pagina_id = 540;//ID EN BASE DE DATOS
