@@ -3984,6 +3984,15 @@ function loadExcelDis(file) {
                 document.getElementById("loader").style.display = "none";//RSG 24.05.2018
             }
         },
+        complete: function () {//activar change RMG
+            $(document).ready(function () {
+                $("#table_dis > tbody > tr").each(function () {
+                    $(this).children().eq(3).children().trigger("click");
+                    $(this).children().eq(3).children().blur();
+                });
+            });
+            
+        },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             alert("Request couldn't be processed. Please try again later. the reason        " + xhr.status + " : " + httpStatusMessage + " : " + customErrorMessage);
             document.getElementById("loader").style.display = "none";//RSG 24.05.2018
