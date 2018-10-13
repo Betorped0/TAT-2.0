@@ -306,6 +306,7 @@
                             </div>
                         }
                         <div class="card-panel">
+                            <h5 id="head_solclas">Tipo de solicitud y Clasificación</h5>
                             <div class="row" style="margin-bottom:0">
                                 <div class="input-field col s12">
                                     @Html.EditorFor(model => model.D.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(model.D.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50, new { htmlAttributes = new { @disabled = "disabled" } })
@@ -557,7 +558,7 @@
                     <div class="col s12 m6 l6">
                         <div class="row" style="margin-bottom:0">
                             <div class="card-panel">
-                                <h5>@*@Html.DisplayFor(model => model.D.CLIENTE.KUNNR)*@</h5>
+                                <h5 id="head_infocli">Información del cliente</h5>
                                 <div class="row" style="margin-bottom:0">
                                     <div class="input-field col s12">
                                         @Html.EditorFor(model => model.D.CLIENTE.KUNNR, new { htmlAttributes = new { @disabled = "disabled", @id = "payer_id" } })
