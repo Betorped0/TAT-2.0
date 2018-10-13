@@ -541,6 +541,14 @@ $(document).ready(function () {
             M.toast({ html: 'Seleccione negociación' });
         }
 
+        //Set val a DatePicker
+        document.querySelectorAll('.input_fe').forEach(function (datePicker) {
+            if (datePicker.value){
+                var dateVal = moment(datePicker.value, 'DD/MM/YYYY');
+                M.Datepicker.getInstance(datePicker).setDate(dateVal._d);
+            }
+        });
+
         event.returnValue = false;
         event.cancel = true;
 
