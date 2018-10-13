@@ -10,6 +10,7 @@ namespace TAT001.Models
     {
         public class TrackingTS
         {
+            public FLUJO f { get; set; }
             public int WF_POS { get; set; }
             public decimal NUMERO_SOLICITUD { get; set; }
             public string CO_CODE { get; set; }
@@ -76,7 +77,7 @@ namespace TAT001.Models
             {
                 get
                 {
-                    return FECHA.ToString("HH:mm");
+                    return FECHA.ToString("HH:mm:ss");
                 }
             }
             public int TIEMPO_TRANSCURRIDO_STRING
@@ -86,6 +87,9 @@ namespace TAT001.Models
                     return Convert.ToInt32(TIEMPO_TRANSCURRIDO);
                 }
             }
+
+            public int POS { get; internal set; }
+            public DateTime? FECHA_SOLICITUD { get; internal set; }
         }
 
         public class MRLTS

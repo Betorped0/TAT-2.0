@@ -546,8 +546,7 @@ namespace TAT001.Controllers.Reportes
                     r1.CUENTA_LIMITE = Convert.ToDecimal(cuentas.GetType().GetProperty("LIMITE").GetValue(cuentas, null));
                     r1.CUENTA_CARGO_NOMBRE = cuentas.GetType().GetProperty("NOMBRE").GetValue(cuentas, null).ToString();
                 }
-                Presupuesto pres = new Presupuesto();
-                r1.PRESUPUESTO = pres.getPresupuesto(dOCUMENTO.CLIENTE.KUNNR);
+                r1.PRESUPUESTO = getPresupuesto(dOCUMENTO.CLIENTE.KUNNR);
                 var proveedor = dOCUMENTO.DOCUMENTOFs.Select(df => df.PROVEEDOR).FirstOrDefault();
                 r1.PROVEEDOR_NOMBRE = db.PROVEEDORs.Where(x => x.ID.Equals(proveedor)).Select(p => p.NOMBRE).FirstOrDefault();
                 //dOCUMENTO.DOCUMENTOF = db.DOCUMENTOFs.Where(a => a.NUM_DOC.Equals(dOCUMENTO.NUM_DOC)).ToList();
@@ -630,6 +629,50 @@ namespace TAT001.Controllers.Reportes
             }
             Session["spras"] = user.SPRAS_ID;
             return View();
+        }
+
+        public PRESUPUESTO_MOD getPresupuesto(string kunnr)
+        {
+            PRESUPUESTO_MOD pm = new PRESUPUESTO_MOD();
+            //try
+            //{
+            //    if (kunnr == null)
+            //        kunnr = "";
+
+            //    //Obtener presupuesto
+            //    string mes = DateTime.Now.Month.ToString();
+            //    var presupuesto = db.CSP_PRESU_CLIENT(cLIENTE: kunnr, pERIODO: mes).Select(p => new { DESC = p.DESCRIPCION.ToString(), VAL = p.VALOR.ToString() }).ToList();
+            //    string clien = db.CLIENTEs.Where(x => x.KUNNR == kunnr).Select(x => x.BANNERG).First();
+            //    if (presupuesto != null)
+            //    {
+            //        if (String.IsNullOrEmpty(clien))
+            //        {
+            //            pm.P_CANAL = presupuesto[0].VAL;
+            //            pm.P_BANNER = presupuesto[1].VAL;
+            //            pm.PC_C = (float.Parse(presupuesto[4].VAL) + float.Parse(presupuesto[5].VAL) + float.Parse(presupuesto[6].VAL)).ToString();
+            //            pm.PC_A = presupuesto[8].VAL;
+            //            pm.PC_P = presupuesto[9].VAL;
+            //            pm.PC_T = presupuesto[10].VAL;
+            //            pm.CONSU = (float.Parse(presupuesto[1].VAL) - float.Parse(presupuesto[10].VAL)).ToString();
+            //        }
+            //        else
+            //        {
+            //            pm.P_CANAL = presupuesto[0].VAL;
+            //            pm.P_BANNER = presupuesto[0].VAL;
+            //            pm.PC_C = (float.Parse(presupuesto[4].VAL) + float.Parse(presupuesto[5].VAL) + float.Parse(presupuesto[6].VAL)).ToString();
+            //            pm.PC_A = presupuesto[8].VAL;
+            //            pm.PC_P = presupuesto[9].VAL;
+            //            pm.PC_T = presupuesto[10].VAL;
+            //            pm.CONSU = (float.Parse(presupuesto[0].VAL) - float.Parse(presupuesto[10].VAL)).ToString();
+            //        }
+            //    }
+            //}
+            //catch
+            //{
+
+            //}
+
+            return pm;
         }
 
         // FIN REPORTE 1 - CONCENTRADO
@@ -1490,7 +1533,7 @@ namespace TAT001.Controllers.Reportes
                           join pt in db.PUESTOTs on new { us.SPRAS_ID, PUESTO_ID = (int)(us.PUESTO_ID) } equals new { pt.SPRAS_ID, pt.PUESTO_ID }
                           join wfp in db.WORKFPs on new { f.WORKF_ID, f.WF_VERSION, f.WF_POS } equals new { WORKF_ID = wfp.ID, WF_VERSION = wfp.VERSION, WF_POS = wfp.POS }
                           join ac in db.ACCIONs on wfp.ACCION_ID equals ac.ID
-                          orderby d.FECHAC descending // , d.NUM_DOC ascending, f.WF_POS ascending
+                          orderby d.FECHAC descending, d.NUM_DOC ascending, f.WF_POS ascending, f.POS ascending
                           where d.PERIODO == period
                               && d.EJERCICIO == year
                               && (!string.IsNullOrEmpty(usuarioF) ? d.USUARIOC_ID == usuarioF : true)
@@ -1500,7 +1543,9 @@ namespace TAT001.Controllers.Reportes
                           select new TrackingTS
                           {
                               WF_POS = f.WF_POS,
+                              POS = f.POS,
                               NUMERO_SOLICITUD = d.NUM_DOC,
+                              FECHA_SOLICITUD = d.FECHAC,
                               CO_CODE = d.SOCIEDAD_ID,
                               PAIS = p.LANDX,
                               NUMERO_CLIENTE = d.PAYER_ID,
@@ -1521,7 +1566,13 @@ namespace TAT001.Controllers.Reportes
                               //, STATUS_STRING = statusToString(f.ESTATUS, d.ESTATUS_C, d.ESTATUS_SAP, d.ESTATUS_WF, ac.TIPO, ts.PADRE)
                           }).ToList();
 
-            ViewBag.tabla_reporte = queryP.GroupBy(registro => new { registro.NUMERO_SOLICITUD, registro.WF_POS })
+
+            foreach (TrackingTS renglon in queryP)
+            {
+                renglon.f = db.FLUJOes.Where(a => (a.NUM_DOC.Equals(renglon.NUMERO_SOLICITUD) && a.POS.Equals(renglon.POS))).OrderByDescending(x => x.FECHAC).FirstOrDefault();
+            }
+
+            ViewBag.tabla_reporte = queryP.GroupBy(registro => new { registro.NUMERO_SOLICITUD, registro.POS })
                 .Select(grupo => new
                 {
                     trackings = grupo.OrderBy(x => x.FECHA)
@@ -1543,5 +1594,6 @@ namespace TAT001.Controllers.Reportes
             return ultimo;
         }
         // FIN REPORTE 6 - TRACKING TS
+
     }
 }

@@ -1,4 +1,5 @@
-﻿@model IEnumerable<TAT001.Entities.DOCUMENTO>
+﻿@model TAT001.Models.DocumentoFlujo
+@using TAT001.Entities
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -151,7 +152,8 @@
                 @* FILTRO CLIENTE *@
                 @* OPCIONAL *@
                 <div class="input-field col s2 m2 l2">
-                    <select name="selectCliente" id="selectCliente">
+                    <input class="form-control  text-box single-line ui-autocomplete-input" id="selectCliente" name="selectCliente" type="text" value="" autocomplete="off" style="">
+                    @*<select name="selectCliente" id="selectCliente">
                             <option value=""></option>
                             @try
                             {
@@ -165,27 +167,109 @@
                             {
                                 <option value="" id="no_optper">No hay opciones</option>
                             }
-                        </select>
+                        </select>*@
                     <label id="label_period">Cliente</label>
+                    <link href="~/Content/autocomplete.css" rel="stylesheet" />
+                    <script src="~/Scripts/autocomplete1.10.2.js"></script>
+                    <script src="~/Scripts/autocomplete1.11.4.js"></script>
+                    <script>
+                        var auto = $.noConflict(true);
+                        auto(document).ready(function () {
+                            auto("#selectCliente").autocomplete({
+                                source: function (request, response) {
+                                    var userC = document.getElementById("USUARIOD_ID");
+                                    if (userC == undefined)
+                                        var user = '@ViewBag.usuario.ID';
+                                    else
+                                        var user = userC.value;
+                                    auto.ajax({
+                                        url: "../Listas/Clientes",
+                                        type: "GET",
+                                        dataType: "json",
+                                        data: { Prefix: request.term, usuario: null, pais: null },
+                                        success: function (data) {
+                                            response(auto.map(data, function (item) {
+                                                return { label: item.KUNNR + " - " + item.NAME1, value: item.KUNNR };
+                                            }))
+                                        },
+                                        //error: function (data) {
+                                        //    alert('error');
+                                        //}
+                                    })
+                                },
+                                messages: {
+                                    noResults: '',
+                                    results: function (resultsCount) { }
+                                },
+                                change: function (e, ui) {
+                                    if (!(ui.item)) {
+                                        e.target.value = "";
+                                    }
+                                },
+                                select: function (event, ui) {
+                                    var label = ui.item.label;
+                                    var value = ui.item.value;
+                                    //selectCliente(value);
+                                }
+                            });
+                        })
+                    </script>
                 </div>
                 @* FILTRO TIPO DE SOLICITUD *@
                 @* OPCIONAL *@
                 <div class="input-field col s2 m2 l2">
-                    <select name="selectTipoSolicitud" id="selectTipoSolicitud">
-                        <option value=""></option>
-                        @try
-                        {
-                            foreach (var solicitud in ViewBag.Tds)
+                    <input class="form-control  text-box single-line ui-autocomplete-input" id="selectTipoSolicitud" name="selectTipoSolicitud" type="text" value="" autocomplete="off" style="">
+                    @*<select name="selectTipoSolicitud" id="selectTipoSolicitud">
+                            <option value=""></option>
+                            @try
                             {
-                                <option value="@solicitud.ID">@(solicitud.DESCRIPCION)</option>
-                            }
+                                foreach (var solicitud in ViewBag.Tds)
+                                {
+                                    <option value="@solicitud.ID">@(solicitud.DESCRIPCION)</option>
+                                }
 
-                        }
-                        catch (Exception)
-                        {
-                            <option value="" id="no_optper">No hay opciones</option>
-                        }
-                    </select>
+                            }
+                            catch (Exception)
+                            {
+                                <option value="" id="no_optper">No hay opciones</option>
+                            }
+                        </select>*@
+                    <script>
+                        auto(document).ready(function () {
+                            auto("#selectTipoSolicitud").autocomplete({
+                                source: function (request, response) {
+                                    auto.ajax({
+                                        url: "../Listas/TiposSolicitud",
+                                        type: "GET",
+                                        dataType: "json",
+                                        data: { spras_id: 'ES' },
+                                        success: function (data) {
+                                            response(auto.map(data, function (item) {
+                                                return { label: item.TSOL_ID + " - " + item.TXT50, value: item.TSOL_ID };
+                                            }))
+                                        },
+                                        //error: function (data) {
+                                        //    alert('error');
+                                        //}
+                                    })
+                                },
+                                messages: {
+                                    noResults: '',
+                                    results: function (resultsCount) { }
+                                },
+                                change: function (e, ui) {
+                                    if (!(ui.item)) {
+                                        e.target.value = "";
+                                    }
+                                },
+                                select: function (event, ui) {
+                                    var label = ui.item.label;
+                                    var value = ui.item.value;
+                                    //selectCliente(value);
+                                }
+                            });
+                        })
+                    </script>
                     <label id="label_period">Tipo de solicitud</label>
                 </div>
             </div>
@@ -345,7 +429,15 @@
                             <td>@item.NUMERO_CLIENTE </td>
                             <td>@item.CLIENTE </td>
                             <td>@item.TIPO_SOLICITUD </td>
-                            <td>@*item.STATUS_STRING*@ </td>
+                            <td>
+                                @{
+                                    string est = (Html.DisplayFor(modelItem => item.f.STATUS)).ToString();
+
+                                    TAT001.Services.Estatus c = new TAT001.Services.Estatus();
+                                    c.getText(est, item.NUMERO_SOLICITUD);
+                                }
+                                @c.getText(est, item.NUMERO_SOLICITUD)
+                            </td>
                             <td>@item.FECHA_STRING </td>
                             <td>@item.HORA_STRING </td>
                             <td>@item.TIEMPO_TRANSCURRIDO_STRING </td>
