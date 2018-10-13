@@ -71,9 +71,10 @@ namespace TAT001.Common
                     Text = (x.NOMBRE + " " + x.APELLIDO_P + " " + (x.APELLIDO_M == null ? "" : x.APELLIDO_M))
                 }).ToList();
         }
-        public static List<SelectListItem> ObtenerCmbTabs(TAT001Entities db, string spras_id, string id)
+        public static List<SelectListItem> ObtenerCmbTabs(TAT001Entities db, string spras_id,bool? activo, string id)
         {
-            return db.TABs
+            return db.TABs.Where(x=>x.TAB_CAMPO.Any(y=>y.ACTIVO == activo.Value || activo == null))
+                .Where(x=>(x.ACTIVO==activo.Value || activo==null))
                 .Join(db.TEXTOes, ta => ta.ID, te => te.CAMPO_ID, (ta, te) => te)
                 .Where(x => x.SPRAS_ID == spras_id && x.PAGINA_ID == 202 && (x.CAMPO_ID == id || id == null))
                 .Select(x => new SelectListItem
@@ -82,10 +83,10 @@ namespace TAT001.Common
                     Text = x.TEXTOS
                 }).ToList();
         }
-        public static List<SelectListItem> ObtenerCmbCamposPoTabId(TAT001Entities db, string spras_id, string tab_id, string id)
+        public static List<SelectListItem> ObtenerCmbCamposPoTabId(TAT001Entities db, string spras_id, string tab_id,bool? activo, string id)
         {
             return db.TAB_CAMPO
-                    .Where(x => x.TAB_ID == tab_id)
+                    .Where(x => x.TAB_ID == tab_id && (x.ACTIVO == activo.Value || activo == null))
                     .Join(db.TEXTOes, tc => tc.CAMPO_ID, te => te.CAMPO_ID, (ta, te) => te)
                     .Where(x => x.SPRAS_ID == spras_id && x.PAGINA_ID == 202 && (x.CAMPO_ID == id || id == null))
                     .Select(x => new SelectListItem
