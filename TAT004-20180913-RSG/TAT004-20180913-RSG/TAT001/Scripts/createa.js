@@ -21,6 +21,9 @@ $('body').on('keydown.autocomplete', '.input_material', function () {
                         //return { label: item.ID + " - " + item.MAKTX, value: item.ID };
                         return { label: trimStart('0', item.ID) + " - " + item.MAKTX, value: trimStart('0', item.ID) };//RSG 07.06.2018
                     }))
+                },
+                complete: function () {
+                    
                 }
             })
         },
