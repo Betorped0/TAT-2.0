@@ -37,21 +37,22 @@
                 </div>
                 @* ---DRS 3.10.2018--- *@
                 <div class="input-field col s2">
-                    @*<input type="text" id="txt_user" value="@ViewBag.usuario.MANAGER" disabled="disabled" />
-                        <label for="txt_user">Manager</label>*@
-                    @Html.EditorFor(model => model.D.USUARIO.MANAGER, new { htmlAttributes = new { @disabled = "disabled" } })
-                    @Html.LabelFor(model => model.D.USUARIO.MANAGER, new { @id = "lbl_manager" })
+                    @{
+                        string manager = "";
+                        if (Model.D.CLIENTE.CLIENTEFs.Any())
+                        {
+                            manager = Model.D.CLIENTE.CLIENTEFs.First().USUARIO1_ID;
+                        }
+                        @Html.EditorFor(model => model.D.USUARIO.MANAGER, new { htmlAttributes = new { @disabled = "disabled", @Value = manager } })
+                        @Html.LabelFor(model => model.D.USUARIO.MANAGER, "Manager", new { @id = "lbl_manager" })
+                    }
                 </div>
                 @* ---DRS 3.10.2018--- *@
                 <div class="input-field col s2">
                     @Html.EditorFor(model => model.D.USUARIO.BACKUP_ID, new { htmlAttributes = new { @disabled = "disabled" } })
-                    @Html.LabelFor(model => model.D.USUARIO.BACKUP_ID, new { @id = "lbl_backup" })
-                    @*<input type="text" id="txt_user" value="@ViewBag.usuario.BACKUP_ID" disabled="disabled" />
-                        <label for="txt_user">Backup</label>*@
+                    @Html.LabelFor(model => model.D.USUARIO.BACKUP_ID, "Backup", new { @id = "lbl_backup" })
                 </div>
                 <div class="input-field col s3">
-                    @*<input type="text" id="txt_user" value="PRGA" disabled="disabled" />
-                        <label for="txt_user">BU</label>*@
                     @Html.EditorFor(model => model.D.USUARIO.BUNIT, new { htmlAttributes = new { @disabled = "disabled" } })
                     @Html.LabelFor(model => model.D.USUARIO.BUNIT, "Sociedad", new { @class = "lbl_bu" })
                 </div>
