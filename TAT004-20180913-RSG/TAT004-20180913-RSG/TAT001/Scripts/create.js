@@ -5696,6 +5696,8 @@ function selectCliente(valu) {
             success: function (data) {
 
                 if (data !== null || data !== "") {
+                    $("label[for='USUARIO_MANAGER']").addClass("active");
+                    $('#USUARIO_MANAGER').val(data.MANAGER);
                     $('#cli_name').val(data.NAME1);
                     $("label[for='cli_name']").addClass("active");
                     $('#vkorg').val(data.VKORG).focus();
@@ -5725,6 +5727,8 @@ function selectCliente(valu) {
                     }
                     //RSG 28.05.2018------------------------------------------
                 } else {
+                    $("label[for='USUARIO_MANAGER']").removeClass("active");
+                    $('#USUARIO_MANAGER').val("");
                     $('#cli_name').val("");
                     $("label[for='cli_name']").removeClass("active");
                     $('#vkorg').val("").focus();
