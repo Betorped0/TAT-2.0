@@ -358,6 +358,9 @@
     <Compile Include="Entities\CREADOR2.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\CSP_BANNERSINCANAL_Result.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\CSP_CAMBIO_Result.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
@@ -383,9 +386,6 @@
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\CUENTA.cs">
-      <DependentUpon>TAT001.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\CUENTAA.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\CUENTAGL.cs">

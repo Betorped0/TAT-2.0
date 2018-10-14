@@ -4756,7 +4756,9 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           </ReferentialConstraint>
         </Association>
         <Function Name="CPS_LISTA_CLI_PRO" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
-        <Function Name="CSP_BANNERSINCANAL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="CSP_BANNERSINCANAL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="sociedad" Type="nvarchar(max)" Mode="In" />
+        </Function>
         <Function Name="CSP_CAMBIO" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="sociedad" Type="nvarchar" Mode="In" />
         </Function>
@@ -4765,7 +4767,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Parameter Name="ACCION" Type="int" Mode="In" />
         </Function>
         <Function Name="CSP_CONSULTARPRESUPUESTO" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="SOCIEDAD" Type="nvarchar" Mode="In" />
+          <Parameter Name="SOCIEDAD" Type="nvarchar(max)" Mode="In" />
           <Parameter Name="ANIOC" Type="nvarchar" Mode="In" />
           <Parameter Name="ANIOS" Type="nvarchar" Mode="In" />
           <Parameter Name="PERIODOC" Type="nvarchar" Mode="In" />
@@ -11878,7 +11880,9 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
             <Parameter Name="delimiter" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="CPS_LISTA_CLI_PRO" ReturnType="Collection(TAT001Model.CPS_LISTA_CLI_PRO_Result)" />
-          <FunctionImport Name="CSP_BANNERSINCANAL" ReturnType="Collection(String)" />
+          <FunctionImport Name="CSP_BANNERSINCANAL" ReturnType="Collection(TAT001Model.CSP_BANNERSINCANAL_Result)" >
+          <Parameter Name="sociedad" Mode="In" Type="String" />
+          </FunctionImport>
           <FunctionImport Name="CSP_CAMBIO" ReturnType="Collection(TAT001Model.CSP_CAMBIO_Result)">
           <Parameter Name="sociedad" Mode="In" Type="String" />
           </FunctionImport>
@@ -12154,6 +12158,10 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <End Type="TAT001Model.SOCIEDAD" Role="SOCIEDAD" Multiplicity="*" />
           <End Type="TAT001Model.USUARIO" Role="USUARIO" Multiplicity="*" />
         </Association>
+        <ComplexType Name="CSP_BANNERSINCANAL_Result">
+          <Property Type="String" Name="BANNER" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="SOCIEDAD" Nullable="true" MaxLength="4" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -14420,7 +14428,14 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="CSP_BANNERSINCANAL" FunctionName="TAT001Model.Store.CSP_BANNERSINCANAL" />
+          <FunctionImportMapping FunctionImportName="CSP_BANNERSINCANAL" FunctionName="TAT001Model.Store.CSP_BANNERSINCANAL" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="TAT001Model.CSP_BANNERSINCANAL_Result">
+                <ScalarProperty Name="BANNER" ColumnName="BANNER" />
+                <ScalarProperty Name="SOCIEDAD" ColumnName="SOCIEDAD" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="CSP_CAMBIO" FunctionName="TAT001Model.Store.CSP_CAMBIO">
             <ResultMapping>
               <ComplexTypeMapping TypeName="TAT001Model.CSP_CAMBIO_Result">

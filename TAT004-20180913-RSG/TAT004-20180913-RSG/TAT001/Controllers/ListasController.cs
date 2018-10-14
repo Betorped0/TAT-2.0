@@ -981,5 +981,22 @@ namespace TAT001.Controllers
             return cc;
         }
 
+
+        [HttpGet]
+        public JsonResult TiposSolicitud(string spras_id)
+        {
+            if (!string.IsNullOrEmpty(spras_id))
+            {
+                TAT001Entities db = new TAT001Entities();
+                var tsr = (from ts in db.TSOLTs
+                           where spras_id == ts.SPRAS_ID
+                           select new { ts.TSOL_ID, ts.TXT50 }).ToList();
+                JsonResult jr = Json(tsr, JsonRequestBehavior.AllowGet);
+                return jr;
+            }
+            return Json(string.Empty, JsonRequestBehavior.AllowGet);
+        }
+
+
     }
 }

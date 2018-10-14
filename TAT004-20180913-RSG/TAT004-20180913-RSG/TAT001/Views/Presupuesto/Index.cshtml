@@ -77,8 +77,8 @@
         int j = 0;
 
         <div class="row">
-            <div class="input-field col s2">
-                <select name="select" id="selec">
+            <div class="input-field col s2 g" name="sociedad">
+                <select name="select" id="selec" multiple>
                     @try
                     {
                         defaul = Session["sociedad"].ToString();
@@ -89,28 +89,16 @@
                     }
                     @try
                     {
-                        @*for (int i = 0; i < Model.sociedad.Count; i++)
-            {
-                if (defaul == Model.sociedad[i].BUKRS)
-                {
-                    <option value="@Model.sociedad[i].BUKRS" selected="selected">@Model.sociedad[i].BUKRS</option>
-                }
-                else
-                {
-                    <option value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
-                }
-            }*@
-                        foreach (var sociedad in ViewBag.usrScts)
+                        for (int i = 0; i < Model.sociedad.Count; i++)
                         {
-                            if (defaul == sociedad.BUKRS)
+                            if (defaul == Model.sociedad[i].BUKRS)
                             {
-                                <option value="@sociedad.BUKRS" selected="selected">@sociedad.BUKRS</option>
+                                <option value="@Model.sociedad[i].BUKRS" selected="selected">@Model.sociedad[i].BUKRS</option>
                             }
                             else
                             {
-                                <option value="@sociedad.BUKRS">@sociedad.BUKRS</option>
+                                <option value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
                             }
-                            
                         }
                     }
                     catch (Exception)
