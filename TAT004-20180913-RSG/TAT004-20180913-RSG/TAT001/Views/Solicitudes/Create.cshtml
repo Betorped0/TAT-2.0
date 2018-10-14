@@ -1,5 +1,7 @@
 @model TAT001.Entities.DOCUMENTO
 @{
+    /**/
+
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.pagina_r = 202;
     ViewBag.carpeta_r = 200;
@@ -13,6 +15,7 @@
 <script src="~/Scripts/rangos.js"></script><!--RSG 27.05.2018-->
 <script src="~/Scripts/analisis.js"></script><!--RSG 13.06.2018-->
 <script src="~/Scripts/ValidarNumero.js"></script><!--LEJ 09.07.2018-->
+<script type="text/javascript" src="~/Scripts/moment.min.js"></script>
 @if (ViewBag.error != "")
 {
     <script>
@@ -246,6 +249,7 @@ errorMessage(message);
                                     @Html.LabelFor(model => model.TSOL_ID, "Tipo de solicitud", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_tiposol" }) @*B20180801 MGC Textos*@
                                     <div class="col-md-10">
                                         @*@if (ViewBag.relacionada == "")
+<<<<<<< HEAD
         {
             @Html.DropDownList("TSOL_ID", null, "", htmlAttributes: new { @id = "tsol_id", @class = "form-control", onchange = @"selectTsol(this.value);soportes(this.value, '" + Session["spras"].ToString() + "'); M.Toast.dismissAll();" })
         }
@@ -261,6 +265,35 @@ errorMessage(message);
         }*@
 
                                         @Html.EditorFor(model => model.TSOL_ID, new { htmlAttributes = new { @class = "dropdowntree" } })
+=======
+                                            {
+                                                @Html.DropDownList("TSOL_ID", null, "", htmlAttributes: new { @id = "tsol_id", @class = "form-control", onchange = @"selectTsol(this.value);soportes(this.value, '" + Session["spras"].ToString() + "'); M.Toast.dismissAll();" })
+                                            }
+                                            else if (ViewBag.ligada)
+                                            {
+                                                @Html.DropDownList("TSOL_ID", null, "", htmlAttributes: new { @id = "tsol_id", @class = "form-control", onchange = @"selectTsol(this.value);soportes(this.value, '" + Session["spras"].ToString() + "'); M.Toast.dismissAll();" })
+                                            }
+                                            else
+                                            {
+                                                @Html.HiddenFor(model => model.TSOL_ID, new { @id = "tsol_id", @onchange = "selectTsol(this.value)" })
+                                                <input type="text" value="@ViewBag.TSOL_IDI" disabled="disabled" />
+                                                <input type="text" id="tsolant_id" value="@ViewBag.TSOL_ANT" disabled="disabled" hidden />
+                                            }*@
+                                        @*if (ViewBag.relacionada == "")
+                                            {*@
+                                        @Html.EditorFor(model => model.TSOL_ID, new { htmlAttributes = new { @class = "dropdowntree" } })
+                                        @*}
+                                            else if (ViewBag.ligada)
+                                            {
+                                            @Html.EditorFor(model => model.TSOL_ID, new { htmlAttributes = new { @class = "dropdowntree" } })
+                                            }
+                                            else
+                                            {
+                                            @Html.HiddenFor(model => model.TSOL_ID, new { @id = "tsol_id", @onchange = "selectTsol(this.value)" })
+                                            <input type="text" value="@ViewBag.TSOL_IDI" disabled="disabled" />
+                                            <input type="text" id="tsolant_id" value="@ViewBag.TSOL_ANT" disabled="disabled" hidden />
+                                            }*@
+>>>>>>> ebea1250127e59f0c22968d25525fc125ada8fd6
                                     </div>
                                     @Html.HiddenFor(model => model.DOCUMENTO_REF)
                                     @{string jval = ViewBag.TSOL_VALUES;
@@ -324,19 +357,19 @@ errorMessage(message);
                                     </div>
                                 </div>
                                 @{TAT001.Entities.PAI pais = ViewBag.PAIS_ID;
-        ///////DRS 27.09.18/////////
-                            <div class="col s6" style="margin-top:1.9%">
-                                <div class="form-group hidden">
-                                    @Html.LabelFor(model => model.PAIS_ID, "Subregión", htmlAttributes: new { @class = "control-label col-md-2 hidden", @id = "lbl_pais" }) @*B20180801 MGC Textos*@
-                                    <div class="col-md-10">
-                                        @Html.EditorFor(model => model.PAIS_ID, new { htmlAttributes = new { @id = "pais_id", @class = "form-control hidden", @disabled = "disabled", @Value = pais.LAND } })
+                                    ///////DRS 27.09.18/////////
+                                    <div class="col s6" style="margin-top:1.9%">
+                                        <div class="form-group hidden">
+                                            @Html.LabelFor(model => model.PAIS_ID, "Subregión", htmlAttributes: new { @class = "control-label col-md-2 hidden", @id = "lbl_pais" }) @*B20180801 MGC Textos*@
+                                            <div class="col-md-10">
+                                                @Html.EditorFor(model => model.PAIS_ID, new { htmlAttributes = new { @id = "pais_id", @class = "form-control hidden", @disabled = "disabled", @Value = pais.LAND } })
+                                            </div>
+                                        </div>
+                                        <div class="input-field col-md-2">
+                                            <input value="@pais.LANDX" id="pais_txt" type="text" class="" disabled="disabled" />
+                                            <label id="lbl_paiss" for="pais_txt">Subregión</label> @*B20180801 MGC Textos*@
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="input-field col-md-2">
-                                    <input value="@pais.LANDX" id="pais_txt" type="text" class="" disabled="disabled" />
-                                    <label id="lbl_paiss" for="pais_txt">Subregión</label> @*B20180801 MGC Textos*@
-                                </div>
-                            </div>
                                 }
                                 <div>
                                     <div class="input-field col s6">
@@ -369,41 +402,34 @@ errorMessage(message);
                                         },
                                     });
 
-                                    
+                                    var auto = $.noConflict(true);
+                                    auto(document).ready(function () {
+                                        var pais = '@ViewBag.pais';
+                                        auto("#state_id").autocomplete({
+                                            source: function (request, response) {
+                                                auto.ajax({
+                                                url: "../Listas/Estados",
+                                                type: "GET",
+                                                dataType: "json",
+                                                data: { pais: pais, Prefix: request.term },
+                                                success: function (data) {
+                                                response($.map(data, function (item) {
+                                                        return { label: item.NAME, value: item.NAME };
+                                                        }))
+                                                    }
+                                                })
+                                            },
+                                    messages: {
+                                        noResults: '',
+                                        results: function (resultsCount) { }
+                                            },
 
-var auto = $.noConflict(true);
-auto(document).ready(function () {
-/**/
-/**/
-/**/
-var pais = '@ViewBag.pais';
-/**/
-/**/
-/**/
-auto("#state_id").autocomplete({
-source: function (request, response) {
-auto.ajax({
-url: "../Listas/Estados",
-type: "GET",
-dataType: "json",
-data: { pais: pais, Prefix: request.term },
-success: function (data) {
-response($.map(data, function (item) {
-return { label: item.NAME, value: item.NAME };
-}))
-}
-})
-},
-messages: {
-noResults: '',
-results: function (resultsCount) { }
-},
-change: function (e, ui) {
-if (!(ui.item)) {
-}
-}
-});
-})
+                                    change: function (e, ui) {
+                                    if (!(ui.item)) {
+                                                }
+                                            }
+                                        });
+                                        })
                                 </script>
                                 <script src="~/Scripts/createa.js"></script>
                                 <div class="input-field col s12">
@@ -520,6 +546,7 @@ if (!(ui.item)) {
                                     @Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @id = "payer_id", @class = "form-control " + @ViewBag.relacionada, @onchange = @"selectCliente(this.value)" } })
                                     @Html.LabelFor(model => model.PAYER_ID, "Cliente", htmlAttributes: new { @for = "payer_id", @id = "lbl_payer" })@*B20180801 MGC Textos*@
                                 </div>
+
                                 <script>
 auto(document).ready(function () {
 auto("#payer_id").autocomplete({
@@ -567,6 +594,7 @@ selectCliente(value);
 });
 })
                                 </script>
+
                                 <input type="hidden" id="txt_vkorg" />
                                 <input type="hidden" id="txt_vtweg" />
                                 <input type="hidden" id="txt_spras" value="@Session["spras"].ToString()" />
@@ -602,6 +630,7 @@ selectCliente(value);
                                     @Html.EditorFor(model => model.PAYER_EMAIL, new { htmlAttributes = new { @id = "payer_email", @class = " " + @ViewBag.relacionada, @type = "email" } })
                                     @Html.LabelFor(model => model.PAYER_EMAIL, "Email de contacto", htmlAttributes: new { @class = "control-label col-md-2", @for = "payer_email", @id = "lbl_payeremail" }) @*B20180801 MGC Textos*@
                                 </div>
+
                                 <script>
                                     auto(document).ready(function () {
                                         auto("#payer_nombre").autocomplete({
@@ -644,6 +673,7 @@ selectCliente(value);
                                         });
                                     })
                                 </script>
+
                             </div>
                         </div>
                     </div>
@@ -685,6 +715,7 @@ selectCliente(value);
                                             <span id="span_pperiodo">Por periodo</span> @*B20180801 MGC Textos*@
                                         </label>
                                     </div>
+
                                     <script>
                                         function cambiaTemp(id) {
                                             var tipo = id.split('-')[1];
@@ -716,6 +747,7 @@ selectCliente(value);
                                             //cambiaRec();
                                         }
                                     </script>
+
                                     <div class="col s6">
                                         <div class="input-field col s12">
                                             <i class="material-icons prefix">date_range</i>
@@ -730,6 +762,7 @@ selectCliente(value);
                                             @Html.LabelFor(model => model.FECHAF_VIG, "Hasta", htmlAttributes: new { @class = "active", @for = "fechaf_vig2", @id = "lbl_fechahasta" }) @*B20180801 MGC Textos*@
                                         </div>
                                     </div>
+
                                     <script>
                                         asignaFechasInit();
                                         function asignaFechasInit() {
@@ -746,6 +779,7 @@ selectCliente(value);
                                             }
                                         }
                                     </script>
+
                                     <div class="col s6">
                                         <div class="col s12">
                                             <div class="input-field col s8">
@@ -765,6 +799,7 @@ selectCliente(value);
                                             </div>
                                         </div>
                                     </div>
+
                                     <script>
                                         var datei = document.getElementById("fechai_vig").value;
                                         var datef = document.getElementById("fechaf_vig").value;
@@ -821,6 +856,7 @@ selectCliente(value);
                                         }
 
                                     </script>
+
                                 }
                                 else
                                 {
@@ -1239,8 +1275,8 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                             </div>
                         }
                         @{List<TAT001.Entities.DOCUMENTOA>
-                                                                                                                                                                                                  archivos = ViewBag.files as List<TAT001.Entities.DOCUMENTOA>
-                                                                                                                                                                                                      ;
+                                                                                                                                                                                                                        archivos = ViewBag.files as List<TAT001.Entities.DOCUMENTOA>
+                                                                                                                                                                                                                            ;
                             if (ViewBag.relacionadan != "" && archivos.Count > 0)
                             {
                                 string[] nombrefile;
@@ -2489,3 +2525,8 @@ var ejercicio = '@Model.EJERCICIO';
         </script>
         <script src="~/Scripts/warning.js"></script>
     </div>
+
+    <script>
+        var el = document.querySelector(".tabs");
+        var instance = M.Tabs.init(el, []);
+    </script>

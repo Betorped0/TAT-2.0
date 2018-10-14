@@ -88,7 +88,10 @@
 
                                 Model.alertaCondiciones.Where(x=>x.WARNING_ID==item.ID).ToList().ForEach(x =>
                                 {
-                                    string condTexto = x.CONDICION.CONDICIONTs.Where(y => y.SPRAS_ID == spras_id).First().TXT050;
+                                    string condTexto = x.CONDICION.DESCR;
+                                    if (x.CONDICION.CONDICIONTs.Any(y => y.SPRAS_ID == spras_id)) {
+                                        condTexto=x.CONDICION.CONDICIONTs.Where(y => y.SPRAS_ID == spras_id).First().TXT050;
+                                    }
                                     string valComp= x.VALOR_COMP == "" ? "v" : x.VALOR_COMP;
                                     string condValorTexto = x.VALOR_COMP;
                                     if (Model.condValores.Any(y => y.Value == valComp)) {
