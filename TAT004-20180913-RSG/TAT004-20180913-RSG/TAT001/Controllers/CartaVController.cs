@@ -190,26 +190,51 @@ namespace TAT001.Controllers
                         DateTime a2 = DateTime.Parse(lista[i].Remove(0, lista[i].Length / 2));
 
                         var con2 = db.DOCUMENTOPs
-                                              .Where(x => x.NUM_DOC.Equals(id) & x.VIGENCIA_DE == a1 && x.VIGENCIA_AL == a2)
-                                              .Join(db.MATERIALs, x => x.MATNR, y => y.ID, (x, y) => new
-                                              {
-                                                  x.NUM_DOC,
-                                                  x.MATNR,
-                                                  x.MATKL,
-                                                  y.MAKTX,
-                                                  x.MONTO,
-                                                  y.PUNIT,
-                                                  x.PORC_APOYO,
-                                                  x.MONTO_APOYO,
-                                                  resta = (x.MONTO - x.MONTO_APOYO),
-                                                  x.PRECIO_SUG,
-                                                  x.APOYO_EST,
-                                                  x.APOYO_REAL
-                                              ,
-                                                  x.VOLUMEN_EST,
-                                                  x.VOLUMEN_REAL
-                                              }) //B20180710 MGC 2018.07.10 Se agregó x.VOLUMEN_EST, x.VOLUMEN_REAL
-                                              .ToList();
+                                                .Join(db.MATERIALs, x => x.MATNR, y => y.ID, (x, y) => new { x, y })
+                                                .Join(db.MATERIALTs, t => t.x.MATNR, z => z.MATERIAL_ID, (t, z) => new { t, z })
+                                                .Where(xy => xy.t.x.NUM_DOC.Equals(id) & xy.t.x.VIGENCIA_DE == a1 && xy.t.x.VIGENCIA_AL == a2 & xy.z.SPRAS == d.CLIENTE.SPRAS)
+                                                .Select(xyz => new
+                                                {
+                                                    xyz.t.x.NUM_DOC,
+                                                    xyz.t.x.MATNR,
+                                                    //xyz.t.x.MATKL,
+                                                    //db.MATERIALGPs.Where(x => x.ID == xyz.t.x.MATKL).FirstOrDefault().DESCRIPCION,
+                                                    xyz.t.y.MATERIALGP.DESCRIPCION,//.Where(x => x.ID == xyz.t.x.MATKL).FirstOrDefault().DESCRIPCION,
+                                                    //y.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(d.CLIENTE.SPRAS)).FirstOrDefault().TXT50,//RSG 03.10.2018
+                                                    xyz.z.MAKTG,
+                                                    xyz.t.x.MONTO,
+                                                    xyz.t.y.PUNIT,
+                                                    xyz.t.x.PORC_APOYO,
+                                                    xyz.t.x.MONTO_APOYO,
+                                                    resta = (xyz.t.x.MONTO - xyz.t.x.MONTO_APOYO),
+                                                    xyz.t.x.PRECIO_SUG,
+                                                    xyz.t.x.APOYO_EST,
+                                                    xyz.t.x.APOYO_REAL,
+                                                    xyz.t.x.VOLUMEN_EST,
+                                                    xyz.t.x.VOLUMEN_REAL,
+                                                }).ToList();
+
+                        ////var con2 = db.DOCUMENTOPs
+                        ////                      .Where(x => x.NUM_DOC.Equals(id) & x.VIGENCIA_DE == a1 && x.VIGENCIA_AL == a2)
+                        ////                      .Join(db.MATERIALs, x => x.MATNR, y => y.ID, (x, y) => new
+                        ////                      {
+                        ////                          x.NUM_DOC,
+                        ////                          x.MATNR,
+                        ////                          x.MATKL,
+                        ////                          y.MAKTX,
+                        ////                          x.MONTO,
+                        ////                          y.PUNIT,
+                        ////                          x.PORC_APOYO,
+                        ////                          x.MONTO_APOYO,
+                        ////                          resta = (x.MONTO - x.MONTO_APOYO),
+                        ////                          x.PRECIO_SUG,
+                        ////                          x.APOYO_EST,
+                        ////                          x.APOYO_REAL
+                        ////                      ,
+                        ////                          x.VOLUMEN_EST,
+                        ////                          x.VOLUMEN_REAL
+                        ////                      }) //B20180710 MGC 2018.07.10 Se agregó x.VOLUMEN_EST, x.VOLUMEN_REAL
+                        ////                      .ToList();
 
                         //Definición si la distribución es monto o porcentaje
                         string porclass = "";//B20180710 MGC 2018.07.18 total es input o text
@@ -237,12 +262,12 @@ namespace TAT001.Controllers
                                 armadoCuerpoTab.Add(lc1);
 
                                 listacuerpoc lc2 = new listacuerpoc();
-                                lc2.val = item2.MATKL;
+                                lc2.val = item2.DESCRIPCION;
                                 lc2.clase = "ni";
                                 armadoCuerpoTab.Add(lc2);
 
                                 listacuerpoc lc3 = new listacuerpoc();
-                                lc3.val = item2.MAKTX;
+                                lc3.val = item2.MAKTG;
                                 lc3.clase = "ni";
                                 armadoCuerpoTab.Add(lc3);
 
@@ -864,11 +889,34 @@ namespace TAT001.Controllers
                         DateTime a1 = DateTime.Parse(encabezadoFech[i].Remove(encabezadoFech[i].Length / 2));
                         DateTime a2 = DateTime.Parse(encabezadoFech[i].Remove(0, encabezadoFech[i].Length / 2));
 
-                        var con2 = db.DOCUMENTOPs
-                                          .Where(x => x.NUM_DOC.Equals(v.num_doc) & x.VIGENCIA_DE == a1 && x.VIGENCIA_AL == a2)
-                                          .Join(db.MATERIALs, x => x.MATNR, y => y.ID, (x, y) => new { x.MATNR, x.MATKL, y.MAKTX, x.MONTO, y.PUNIT, x.PORC_APOYO, x.MONTO_APOYO, resta = (x.MONTO - x.MONTO_APOYO), x.PRECIO_SUG, x.APOYO_EST, x.APOYO_REAL, x.VIGENCIA_DE, x.VIGENCIA_AL }) //B20180710 MGC 2018.07.19
-                                          .ToList();
+                        //var con2 = db.DOCUMENTOPs
+                        //                  .Where(x => x.NUM_DOC.Equals(v.num_doc) & x.VIGENCIA_DE == a1 && x.VIGENCIA_AL == a2)
+                        //                  .Join(db.MATERIALs, x => x.MATNR, y => y.ID, (x, y) => new { x.MATNR, x.MATKL, y.MAKTX, x.MONTO, y.PUNIT, x.PORC_APOYO, x.MONTO_APOYO, resta = (x.MONTO - x.MONTO_APOYO), x.PRECIO_SUG, x.APOYO_EST, x.APOYO_REAL, x.VIGENCIA_DE, x.VIGENCIA_AL }) //B20180710 MGC 2018.07.19
+                        //                  .ToList();
 
+                        var con2 = db.DOCUMENTOPs
+                                                .Join(db.MATERIALs, x => x.MATNR, y => y.ID, (x, y) => new { x, y })
+                                                .Join(db.MATERIALTs, t => t.x.MATNR, z => z.MATERIAL_ID, (t, z) => new { t, z })
+                                                .Where(xy => xy.t.x.NUM_DOC.Equals(v.num_doc) & xy.t.x.VIGENCIA_DE == a1 && xy.t.x.VIGENCIA_AL == a2 & xy.z.SPRAS == d.CLIENTE.SPRAS)
+                                                .Select(xyz => new
+                                                {
+                                                    xyz.t.x.NUM_DOC,
+                                                    xyz.t.x.MATNR,
+                                                    xyz.t.y.MATERIALGP.DESCRIPCION,//.Where(x => x.ID == xyz.t.x.MATKL).FirstOrDefault().DESCRIPCION,
+                                                    xyz.z.MAKTG,
+                                                    xyz.t.x.MONTO,
+                                                    xyz.t.y.PUNIT,
+                                                    xyz.t.x.PORC_APOYO,
+                                                    xyz.t.x.MONTO_APOYO,
+                                                    resta = (xyz.t.x.MONTO - xyz.t.x.MONTO_APOYO),
+                                                    xyz.t.x.PRECIO_SUG,
+                                                    xyz.t.x.APOYO_EST,
+                                                    xyz.t.x.APOYO_REAL,
+                                                    xyz.t.x.VOLUMEN_EST,
+                                                    xyz.t.x.VOLUMEN_REAL,
+                                                    xyz.t.x.VIGENCIA_DE,
+                                                    xyz.t.x.VIGENCIA_AL
+                                                }).ToList();
 
                         if (con2.Count > 0)
                         {
@@ -895,8 +943,8 @@ namespace TAT001.Controllers
                                     if (docmod != null)
                                     {
                                         armadoCuerpoTab.Add(item2.MATNR.TrimStart('0'));
-                                        armadoCuerpoTab.Add(item2.MATKL);
-                                        armadoCuerpoTab.Add(item2.MAKTX);
+                                        armadoCuerpoTab.Add(item2.DESCRIPCION);
+                                        armadoCuerpoTab.Add(item2.MAKTG);
 
                                         if (v.costoun_x == true)
                                         {
@@ -979,7 +1027,7 @@ namespace TAT001.Controllers
                                             carp.POS = indexp;
                                             //carp.MATNR = item2.MATNR.TrimStart('0');
                                             carp.MATNR = item2.MATNR;
-                                            carp.MATKL = item2.MATKL;
+                                            carp.MATKL = item2.DESCRIPCION;
                                             carp.CANTIDAD = 1;
                                             //B20180726 MGC 2018.07.26
                                             //if (v.costoun_x == true) { carp.MONTO = docmod.MONTO; }
@@ -1415,10 +1463,35 @@ namespace TAT001.Controllers
                         DateTime a1 = DateTime.Parse(encabezadoFech[i].Remove(encabezadoFech[i].Length / 2));
                         DateTime a2 = DateTime.Parse(encabezadoFech[i].Remove(0, encabezadoFech[i].Length / 2));
 
+                        //var con2 = db.DOCUMENTOPs
+                        //                  .Where(x => x.NUM_DOC.Equals(v.num_doc) & x.VIGENCIA_DE == a1 && x.VIGENCIA_AL == a2)
+                        //                  .Join(db.MATERIALs, x => x.MATNR, y => y.ID, (x, y) => new { x.MATNR, x.MATKL, y.MAKTX, x.MONTO, y.PUNIT, x.PORC_APOYO, x.MONTO_APOYO, resta = (x.MONTO - x.MONTO_APOYO), x.PRECIO_SUG, x.APOYO_EST, x.APOYO_REAL })
+                        //                  .ToList();
+
                         var con2 = db.DOCUMENTOPs
-                                          .Where(x => x.NUM_DOC.Equals(v.num_doc) & x.VIGENCIA_DE == a1 && x.VIGENCIA_AL == a2)
-                                          .Join(db.MATERIALs, x => x.MATNR, y => y.ID, (x, y) => new { x.MATNR, x.MATKL, y.MAKTX, x.MONTO, y.PUNIT, x.PORC_APOYO, x.MONTO_APOYO, resta = (x.MONTO - x.MONTO_APOYO), x.PRECIO_SUG, x.APOYO_EST, x.APOYO_REAL })
-                                          .ToList();
+                                                .Join(db.MATERIALs, x => x.MATNR, y => y.ID, (x, y) => new { x, y })
+                                                .Join(db.MATERIALTs, t => t.x.MATNR, z => z.MATERIAL_ID, (t, z) => new { t, z })
+                                                .Where(xy => xy.t.x.NUM_DOC.Equals(v.num_doc) & xy.t.x.VIGENCIA_DE == a1 && xy.t.x.VIGENCIA_AL == a2 & xy.z.SPRAS == d.CLIENTE.SPRAS)
+                                                .Select(xyz => new
+                                                {
+                                                    xyz.t.x.NUM_DOC,
+                                                    xyz.t.x.MATNR,
+                                                    //xyz.t.x.MATKL,
+                                                    //db.MATERIALGPs.Where(x => x.ID == xyz.t.x.MATKL).FirstOrDefault().DESCRIPCION,
+                                                    xyz.t.y.MATERIALGP.DESCRIPCION,//.Where(x => x.ID == xyz.t.x.MATKL).FirstOrDefault().DESCRIPCION,
+                                                    //y.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(d.CLIENTE.SPRAS)).FirstOrDefault().TXT50,//RSG 03.10.2018
+                                                    xyz.z.MAKTG,
+                                                    xyz.t.x.MONTO,
+                                                    xyz.t.y.PUNIT,
+                                                    xyz.t.x.PORC_APOYO,
+                                                    xyz.t.x.MONTO_APOYO,
+                                                    resta = (xyz.t.x.MONTO - xyz.t.x.MONTO_APOYO),
+                                                    xyz.t.x.PRECIO_SUG,
+                                                    xyz.t.x.APOYO_EST,
+                                                    xyz.t.x.APOYO_REAL,
+                                                    xyz.t.x.VOLUMEN_EST,
+                                                    xyz.t.x.VOLUMEN_REAL,
+                                                }).ToList();
 
 
                         if (con2.Count > 0)
@@ -1446,8 +1519,8 @@ namespace TAT001.Controllers
                                     if (docmod != null)
                                     {
                                         armadoCuerpoTab.Add(item2.MATNR.TrimStart('0'));
-                                        armadoCuerpoTab.Add(item2.MATKL);
-                                        armadoCuerpoTab.Add(item2.MAKTX);
+                                        armadoCuerpoTab.Add(item2.DESCRIPCION);
+                                        armadoCuerpoTab.Add(item2.MAKTG);
 
                                         if (v.costoun_x == true)
                                         {
