@@ -94,10 +94,10 @@
 
 
                     </select>
-                    <label id="label_cocode">Co. Code</label>
+                    <label id="label_cocode">Co. Code *</label>
                 </div>
                 <div class="input-field col s3 m3 l3">
-                    <select multiple name="selectpais" id="selectpais" class="comcode select_all" required="">
+                    <select multiple name="selectpais" id="selectpais" class="comcode select_all">
                         @try
                         {
                             foreach (TAT001.Entities.PAI pais in ViewBag.paises)
@@ -139,7 +139,7 @@
                             <option value="" id="no_optper">No hay opciones</option>
                         }
                     </select>
-                    <label id="label_period">Periodo</label>
+                    <label id="label_period">Periodo *</label>
                 </div>
                 <div class="input-field col s2 m2 l2">
                     <select multiple name="selectyear" id="selectyear" class="comcode select_all" required="">
@@ -157,7 +157,7 @@
                             <option value="@yeard">@yeard</option>
                         }
                     </select>
-                    <label id="label_yr">Año</label>
+                    <label id="label_yr">Año *</label>
                 </div>
                 <div class="input-field col s2 m2 l2">
                     <select multiple name="selectcampos" id="selectcampos" class="comcode select_all" required="">
@@ -259,7 +259,7 @@
                         <option value="96">NC / OP o Reverso</option>
                         <option value="97">Monto</option>
                     </select>
-                    <label id="label_campos">Campos</label>
+                    <label id="label_campos">Campos *</label>
                 </div>
             </div>
         </div>
@@ -989,7 +989,7 @@
                                 <td>@(item.documento.PAIS_ID)</td>}<!--País-->
                             @if (camposstring.IndexOf("3") >= 0)
                             {
-                                <td>@(item.documento.CLIENTE.SUBREGION)</td>}<!--Subregión-->
+                                <td>@(item.documento.CLIENTE.REGION)</td>}<!--Subregión-->
                             @if (camposstring.IndexOf("4") >= 0)
                             {
                                 <td>@(item.documento.ESTADO)</td>}<!--Estado-->
@@ -1004,10 +1004,10 @@
                                 <td>@(((DateTime)item.documento.FECHAC).ToShortDateString())</td>}<!--Fecha Solicitud-->
                             @if (camposstring.IndexOf("8") >= 0)
                             {
-                                <td>@(((DateTime)item.documento.FECHAC).ToShortTimeString())</td>}<!--Hora solicitud-->
+                                <td>@(((DateTime)item.documento.FECHAC).ToString("HH:mm:ss"))</td>}<!--Hora solicitud-->
                             @if (camposstring.IndexOf("9") >= 0)
                             {
-                                <td></td>}<!--Semana del periodo-->
+                                <td>@(item.SEMANA)</td>}<!--Semana del periodo-->
                             @if (camposstring.IndexOf("10") >= 0)
                             {
                                 <td>@(item.documento.PERIODO)</td>}<!--Periodo contable-->
@@ -1043,7 +1043,7 @@
                                 </td>}<!--Tipo OP-->
                             @if (camposstring.IndexOf("16") >= 0)
                             {
-                                <td>@(item.documento.ESTATUS)</td>}<!--Status-->
+                                <td>@(item.ESTATUS_STRING)</td>}<!--Status-->
                             @if (camposstring.IndexOf("17") >= 0)
                             {
                                 <td>@(item.documento.CONCEPTO)</td>}<!--Concepto-->
@@ -1124,16 +1124,16 @@
                                 </td>}<!--$ Monto NC/OP-->
                             @if (camposstring.IndexOf("37") >= 0)
                             {
-                                <td>@(String.Format("({0:C})", item.PRESUPUESTO.PC_T))</td>}<!--$Monto Aplicado-->
+                                <td>@((item.PRESUPUESTO.PC_T == 0)? string.Empty: String.Format("({0:C})", item.PRESUPUESTO.PC_T))</td>}<!--$Monto Aplicado-->
                             @if (camposstring.IndexOf("38") >= 0)
                             {
-                                <td>@(String.Format("{0:C}", item.PRESUPUESTO.CONSU))</td>}<!--Saldo Remanente Provisión-->
+                                <td>@((item.PRESUPUESTO.CONSU == 0)? string.Empty: String.Format("{0:C}", item.PRESUPUESTO.CONSU))</td>}<!--Saldo Remanente Provisión-->
                             @if (camposstring.IndexOf("39") >= 0)
                             {
-                                <td></td>}<!--$ Monto Reverso Provisión-->
+                                <td>@((item.documento.DOCUMENTOR == null)? string.Empty: String.Format("{0:C}", item.documento.DOCUMENTOR.DOCUMENTO.MONTO_DOC_MD))</td>}<!--$ Monto Reverso Provisión-->
                             @if (camposstring.IndexOf("40") >= 0)
                             {
-                                <td></td>}<!--% Reverso-->
+                                <td>@((item.documento.DOCUMENTOR == null)? string.Empty: Convert.ToInt16((item.documento.DOCUMENTOR.DOCUMENTO.MONTO_DOC_MD * 100) /item.documento.MONTO_DOC_MD).ToString() + "%")</td>}<!--% Reverso-->
                             @if (camposstring.IndexOf("41") >= 0)
                             {
                                 <td></td>}<!--$ Exceso/(Insuficiencia) Provisión-->
@@ -1148,22 +1148,53 @@
                                 <td>@((item.documento.DOCUMENTOSAP != null)? item.documento.DOCUMENTOSAP.NUM_DOC.ToString(): "")</td>}<!--Núm. Registro Provisión-->
                             @if (camposstring.IndexOf("45") >= 0)
                             {
-                                <td></td>}<!--Núm. Registro NC/OP-->
+                                <td>
+                                    @if (item.documento.TSOL_ID.StartsWith("NC") || item.documento.TSOL_ID.StartsWith("OP"))
+                                    {
+                                        @(item.documento.NUM_DOC)
+                                    }
+                                </td>}<!--Núm. Registro NC/OP-->
                             @if (camposstring.IndexOf("46") >= 0)
                             {
-                                <td></td>}<!--Núm. Registro Reverso-->
+                                <td>
+                                    @if (item.documento.TSOL.REVERSO)
+                                    {
+                                        @(item.documento.NUM_DOC)
+                                    }
+                                </td>}<!--Núm. Registro Reverso-->
                             @if (camposstring.IndexOf("47") >= 0)
                             {
-                                <td></td>}<!--Fecha Reverso Provisión-->
+                                <td>
+                                    @if (item.documento.TSOL.REVERSO && item.documento.DOCUMENTOR != null)
+                                    {
+                                        @(((DateTime)item.documento.DOCUMENTOR.FECHAC).ToString("dd/MM/yyyy"))
+                                    }
+                                </td>}<!--Fecha Reverso Provisión-->
                             @if (camposstring.IndexOf("48") >= 0)
                             {
-                                <td></td>}<!--Periodo Contable Reverso-->
+                                <td>
+                                    @if (item.documento.TSOL.REVERSO && item.documento.DOCUMENTOR != null)
+                                    {
+                                        TAT001.Services.Calendario445 calendario = new TAT001.Services.Calendario445();
+                                        @(calendario.getPeriodo((DateTime)item.documento.DOCUMENTOR.FECHAC))
+                                    }
+                                </td>}<!--Periodo Contable Reverso-->
                             @if (camposstring.IndexOf("49") >= 0)
                             {
-                                <td></td>}<!--Razón Reverso-->
+                                <td>
+                                    @if (item.documento.TSOL.REVERSO && item.documento.DOCUMENTOR != null)
+                                    {
+                                        @(item.documento.DOCUMENTOR.TREVERSA.DESCRIPCION)
+                                    }
+                                </td>}<!--Razón Reverso-->
                             @if (camposstring.IndexOf("50") >= 0)
                             {
-                                <td></td>}<!--Comentario Reverso-->
+                                <td>
+                                    @if (item.documento.TSOL.REVERSO && item.documento.DOCUMENTOR != null)
+                                    {
+                                        @(item.documento.DOCUMENTOR.COMENTARIO)
+                                    }
+                                </td>}<!--Comentario Reverso-->
                             @if (camposstring.IndexOf("51") >= 0)
                             {
                                 <td>@(item.documento.USUARIO.NOMBRE + " " + item.documento.USUARIO.APELLIDO_P)</td>}<!--Usuario-->
