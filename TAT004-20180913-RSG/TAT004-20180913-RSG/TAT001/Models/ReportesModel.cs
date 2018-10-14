@@ -10,6 +10,7 @@ namespace TAT001.Models
     {
         public class TrackingTS
         {
+            public FLUJO f { get; set; }
             public int WF_POS { get; set; }
             public decimal NUMERO_SOLICITUD { get; set; }
             public string CO_CODE { get; set; }
@@ -76,7 +77,7 @@ namespace TAT001.Models
             {
                 get
                 {
-                    return FECHA.ToString("HH:mm");
+                    return FECHA.ToString("HH:mm:ss");
                 }
             }
             public int TIEMPO_TRANSCURRIDO_STRING
@@ -86,10 +87,15 @@ namespace TAT001.Models
                     return Convert.ToInt32(TIEMPO_TRANSCURRIDO);
                 }
             }
+
+            public int POS { get; internal set; }
+            public DateTime? FECHA_SOLICITUD { get; internal set; }
         }
 
         public class MRLTS
         {
+            public DOCUMENTO d;
+
             public string CO_CODE { get; set; }
             public string PAIS { get; set; }
             public decimal NUMERO_SOLICITUD { get; set; }
@@ -112,6 +118,16 @@ namespace TAT001.Models
             public string MONEDA { get; set; }
             public decimal TIPO_CAMBIO { get; set; }
             public string TIPO_SOLICITUD_ID { get; internal set; }
+            public string TIPO_SOLICITUD_CODE { get; internal set; }
+            public string STATUSS1 { get; internal set; }
+            public string STATUSS2 { get; internal set; }
+            public string STATUSS3 { get; internal set; }
+            public string STATUSS4 { get; internal set; }
+            public string STATUSS { get; internal set; }
+            public string ESTATUS_STRING { get; internal set; }
+            public decimal MONTO_2 { get; internal set; }
+            public string EXPENSE_RECOGNITION { get; internal set; }
+            public bool ES_REVERSO { get; internal set; }
         }
 
         public class AllowancesB
@@ -269,6 +285,14 @@ namespace TAT001.Models
             public string CUENTA_CARGO_NOMBRE { get; set; }
             public PRESUPUESTO_MOD PRESUPUESTO { get; set; }
             public string PROVEEDOR_NOMBRE { get; set; }
+            public string ESTATUS_STRING { get; set; }
+            public string STATUS { get; internal set; }
+            public string STATUSS1 { get; internal set; }
+            public string STATUSS3 { get; internal set; }
+            public string STATUSS2 { get; internal set; }
+            public string STATUSS4 { get; internal set; }
+            public string STATUSS { get; internal set; }
+            public int SEMANA { get; internal set; }
         }
     }
 }

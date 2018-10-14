@@ -391,6 +391,54 @@ function jsConsulta(idioma) {
             //$('[name="filtro"]').trigger('change');
         }
     );
+    $(".g > .select-wrapper > .select-dropdown").prepend(
+        '<li style="display:none" class="toggle selectnone"><span><label></label>Select none</span></li>'
+    );
+    $(".g > .select-wrapper > .select-dropdown").prepend(
+        '<li  class="toggle selectall"><span><label></label>Select all</span></li>'
+    );
+    $(".g > .select-wrapper > .select-dropdown .selectall").on(
+        "click",
+        function () {
+            var id = '[name=' + $(this).parent().parent().parent().attr('name') + ']';
+            $(id + ' option:not(:disabled)')
+                .not(':selected')
+                .prop('selected', true);
+
+            $(id + ' .dropdown-content.multiple-select-dropdown input[type="checkbox"]:not(:checked)'
+            )
+                .not(':disabled')
+                .prop('checked', 'checked');
+            //$('.dropdown-content.multiple-select-dropdown input[type='checkbox']:not(:checked)').not(':disabled').trigger('click');
+            var values = $(id + ' .dropdown-content.multiple-select-dropdown input[type="checkbox"]:checked')
+                .not(':disabled')
+                .parent()
+                .map(function () {
+                    return $(this).text();
+                })
+                .get();
+            $(id + ' input.select-dropdown').val(values.join(', '));
+            $(id + '> .select-wrapper > .select-dropdown .toggle').toggle();
+        }
+    );
+    $(".g > .select-wrapper > .select-dropdown .selectnone").on(
+        "click",
+        function () {
+            var id = '[name=' + $(this).parent().parent().parent().attr('name') + ']';
+            $(id + ' option:selected')
+                .not(':disabled')
+                .prop('selected', false);
+            $(id + ' .dropdown-content.multiple-select-dropdown input[type="checkbox"]:checked')
+                .not(':disabled')
+                .prop('checked', '');
+            //$('.dropdown-content.multiple-select-dropdown input[type='checkbox']:checked').not(':disabled').trigger('click');
+            var values = $(id + ' .dropdown-content.multiple-select-dropdown input[type="checkbox"]:disabled')
+                .parent()
+                .text();
+            $(id + ' input.select-dropdown').val(values);
+            $(id + ' > .select-wrapper > .select-dropdown .toggle').toggle();
+        }
+    );
     $('th').css({
         'text-align': 'center',
     });

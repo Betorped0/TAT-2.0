@@ -305,6 +305,7 @@
                             </div>
                         }
                         <div class="card-panel">
+                            <h5 id="head_solclas">Tipo de solicitud y Clasificación</h5>
                             <div class="row" style="margin-bottom:0">
                                 <div class="input-field col s12">
                                     @Html.EditorFor(model => model.D.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(model.D.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50, new { htmlAttributes = new { @disabled = "disabled" } })
@@ -556,7 +557,7 @@
                     <div class="col s12 m6 l6">
                         <div class="row" style="margin-bottom:0">
                             <div class="card-panel">
-                                <h5>@*@Html.DisplayFor(model => model.D.CLIENTE.KUNNR)*@</h5>
+                                <h5 id="head_infocli">Información del cliente</h5>
                                 <div class="row" style="margin-bottom:0">
                                     <div class="input-field col s12">
                                         @Html.EditorFor(model => model.D.CLIENTE.KUNNR, new { htmlAttributes = new { @disabled = "disabled", @id = "payer_id" } })
@@ -1074,7 +1075,7 @@
                                     <div class="row" style="margin-bottom:0">
                                         <div class="card-panel cpC">
                                             <div class="row">
-                                                <h5 id="lbl_selDisDetails">Seleccionar distribucio</h5>
+                                                <h5 id="head_selectdis">Seleccionar distribución</h5>
                                                 <ul class="collapsible">
                                                     @for (int i = 0; i < pos.Count; i++)
                                                     {
@@ -1963,7 +1964,7 @@
                                     <li class="collection-item">
                                         <div class="row" style="margin-bottom:0;">
                                             <div class="col s4">
-                                                Presupuesto canal
+                                                <div id="lbl_presupuestocanal">Presupuesto canal</div>
                                             </div>
                                             <div class="col s5">
                                                 @* ----DRS 3.10.2018--- *@
@@ -1982,7 +1983,7 @@
                                     <li class="collection-item">
                                         <div class="row" style="margin-bottom:0;">
                                             <div class="col s4">
-                                                Presupuesto cliente
+                                                <div id="lbl_presupuestocliente">Presupuesto cliente</div>
                                             </div>
                                             <div class="col s5">
                                                 @* ----DRS 3.10.2018--- *@
@@ -2003,7 +2004,7 @@
                                     <li class="collection-item">
                                         <div class="row" style="margin-bottom:0;">
                                             <div class="col s6">
-                                                Registrado en SAP
+                                                <div id="lbl_regsap">Registrado en SAP</div>
                                             </div>
                                             <div class="col s3 right-align">
                                                 <div id="pc_c">
@@ -2014,7 +2015,7 @@
                                     <li class="collection-item">
                                         <div class="row" style="margin-bottom:0;">
                                             <div class="col s6">
-                                                Por registrar en SAP
+                                                <div id="lbl_regsapp">Por registrar en SAP</div>
                                             </div>
                                             <div class="col s3 right-align">
                                                 <div id="pc_a">
@@ -2025,7 +2026,7 @@
                                     <li class="collection-item">
                                         <div class="row" style="margin-bottom:0;">
                                             <div class="col s6">
-                                                En proceso TAT
+                                                <div id="lbl_procesotat">En proceso TAT</div>
                                             </div>
                                             <div class="col s3 right-align">
                                                 <u id="pc_p">
@@ -2036,7 +2037,7 @@
                                     <li class="collection-item">
                                         <div class="row" style="margin-bottom:0;">
                                             <div class="col s6">
-                                                Consumido
+                                                <div id="lbl_consumido">Consumido</div>
                                             </div>
                                             <div class="col s6 right-align">
                                                 <u>
@@ -2050,7 +2051,7 @@
                                     <li class="collection-item">
                                         <div class="row" style="margin-bottom:0;">
                                             <div class="col s6">
-                                                Presupuesto disponible
+                                                <div id="lbl_presudisponible">Presupuesto disponible</div>
                                             </div>
                                             <div class="col s6 right-align">
 
