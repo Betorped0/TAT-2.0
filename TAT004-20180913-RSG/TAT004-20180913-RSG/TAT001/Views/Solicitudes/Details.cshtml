@@ -8,8 +8,7 @@
     ViewBag.pagina_r = 201;
     ViewBag.carpeta_r = 200;
     List<TAT001.Entities.CARTAP>
-    lstCarta = ViewBag.cartap as List<TAT001.Entities.CARTAP>
-        ;
+    lstCarta = ViewBag.cartap as List<TAT001.Entities.CARTAP>;
     var pos = lstCarta.GroupBy(c => c.POS_ID).Select(g => g.First()).ToList();
     int idn = 0;//LEJ 12.07.18
 }
@@ -1320,10 +1319,10 @@
                                                             {
                                                                 if (item.MATNR != "")
                                                                 {
-                                                                    var matnr = db.MATERIALs.Find(item.MATNR);
+                                                                    var matnr = db.MATERIALTs.Where(x => x.MATERIAL_ID == item.MATNR).FirstOrDefault();
                                                                     if (matnr != null)
                                                                     {
-                                                                        <td>@matnr.MAKTX</td>}
+                                                                        <td>@matnr.MAKTG</td>}
                                                                     else
                                                                     {
                                                                         <td></td>
