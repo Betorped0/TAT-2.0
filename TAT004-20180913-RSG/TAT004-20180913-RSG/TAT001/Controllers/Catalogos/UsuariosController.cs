@@ -1908,16 +1908,17 @@ namespace TAT001.Controllers.Catalogos
                         ul.EMAIL = "";
                         ul.SPRAS_ID = "";
                         ul.PASS = "";
+                        ul.mess = "";
                         var us = clin[i];
                         var com = "";
 
-                        com = (from x in db.USUARIOFs where x.USUARIO_ID.Equals(us) & x.ACTIVO == true select x.KUNNR).FirstOrDefault();
+                        com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.KUNNR).FirstOrDefault();
                         if (com != null)
                             ul.KUNNR = com;
-                        com = (from x in db.SOCIEDADs join a in db.CLIENTEs on x.LAND equals a.LAND where x.ACTIVO == true & a.KUNNR.Equals(ul.KUNNR) select x.BUKRS).FirstOrDefault();
+                        com = (from x in db.PAIS join a in db.CLIENTEs on x.LAND equals a.LAND where x.ACTIVO == true & a.KUNNR.Equals(ul.KUNNR) select x.SOCIEDAD_ID).FirstOrDefault();
                         if (com != null)
                             ul.BUNIT = com;
-                        com = (from x in db.USUARIOFs where x.USUARIO_ID.Equals(us) & x.ACTIVO == true select x.USUARIO_ID).FirstOrDefault();
+                        com = (from x in db.USUARIOFs where x.USUARIO_ID.Equals(us) & x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO_ID).FirstOrDefault();
                         if (com != null)
                             ul.ID = com;
                         com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.PUESTO_ID).FirstOrDefault().ToString();
@@ -1945,7 +1946,7 @@ namespace TAT001.Controllers.Catalogos
                 if (!uscx)
                 {
                     Usuarios ul = new Usuarios();
-                    ul.KUNNR = "";
+                    ul.KUNNR = cli + "?";
                     ul.BUNIT = "";
                     ul.PUESTO_ID = "";
                     ul.ID = "";
@@ -1955,12 +1956,13 @@ namespace TAT001.Controllers.Catalogos
                     ul.EMAIL = "";
                     ul.SPRAS_ID = "";
                     ul.PASS = "";
+                    ul.mess = "El cliente no existe";
                 }
             }
             else if (usc != null && usc != "")
             {
-                CLIENTE c = db.CLIENTEs.Where(xc => xc.KUNNR.Equals(cli)).FirstOrDefault();
-                if (c == null)
+                USUARIO u = db.USUARIOs.Where(xu => xu.ID.Equals(usc)).FirstOrDefault();
+                if (u == null)
                     uscx = false;
                 else
                 {
@@ -1980,16 +1982,17 @@ namespace TAT001.Controllers.Catalogos
                         ul.EMAIL = "";
                         ul.SPRAS_ID = "";
                         ul.PASS = "";
+                        ul.mess = "";
                         var us = clin[i];
                         var com = "";
 
-                        com = (from x in db.USUARIOFs where x.KUNNR.Equals(us) & x.ACTIVO == true select x.KUNNR).FirstOrDefault();
+                        com = (from x in db.USUARIOFs where x.KUNNR.Equals(us) & x.USUARIO_ID.Equals(usc) & x.ACTIVO == true select x.KUNNR).FirstOrDefault();
                         if (com != null)
                             ul.KUNNR = com;
-                        com = (from x in db.SOCIEDADs join a in db.CLIENTEs on x.LAND equals a.LAND where x.ACTIVO == true & a.KUNNR.Equals(ul.KUNNR) select x.BUKRS).FirstOrDefault();
+                        com = (from x in db.PAIS join a in db.CLIENTEs on x.LAND equals a.LAND where x.ACTIVO == true & a.KUNNR.Equals(ul.KUNNR) select x.SOCIEDAD_ID).FirstOrDefault();
                         if (com != null)
                             ul.BUNIT = com;
-                        com = (from x in db.USUARIOFs where x.KUNNR.Equals(us) & x.ACTIVO == true select x.USUARIO_ID).FirstOrDefault();
+                        com = (from x in db.USUARIOs where x.ID.Equals(usc) & x.ACTIVO == true select x.ID).FirstOrDefault();
                         if (com != null)
                             ul.ID = com;
                         com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.PUESTO_ID).FirstOrDefault().ToString();
@@ -2020,13 +2023,14 @@ namespace TAT001.Controllers.Catalogos
                     ul.KUNNR = "";
                     ul.BUNIT = "";
                     ul.PUESTO_ID = "";
-                    ul.ID = "";
+                    ul.ID = usc + "?";
                     ul.NOMBRE = "";
                     ul.APELLIDO_P = "";
                     ul.APELLIDO_M = "";
                     ul.EMAIL = "";
                     ul.SPRAS_ID = "";
                     ul.PASS = "";
+                    ul.mess = "El usuario no existe";
                 }
             }
 
