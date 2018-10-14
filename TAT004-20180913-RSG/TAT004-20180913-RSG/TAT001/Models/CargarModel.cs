@@ -185,7 +185,8 @@ namespace TAT001.Models
             PRESUPSAPP pRESUPUESTOP = new PRESUPSAPP();
             List<string[]> datosPresu = new List<string[]>();
             StreamReader strem;
-            List<REGION> sociedades = db.REGIONs.Where(x => sociedad.Contains(x.SOCIEDAD)).ToList();
+            string soc2 = sociedad[0];
+            List<REGION> sociedades = db.REGIONs.Where(x => x.SOCIEDAD == soc2).ToList();
             string[] lines;
             bool prilinea = false;
             int i = 1;

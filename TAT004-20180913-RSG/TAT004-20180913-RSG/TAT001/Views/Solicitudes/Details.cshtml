@@ -21,6 +21,11 @@
     <script src="~/Scripts/materialize2.js"></script>
     <input id="miles" name="miles" type="hidden" value="@ViewBag.miles">//LEJ 09.07.18
     <input id="dec" name="dec" type="hidden" value="@ViewBag.dec">//LEJ 09.07.18
+    <style>
+        #lbl_sap {
+            font-size: 12px !important;
+        }
+    </style>
     <div class="row" style="margin-bottom:0">
         @* ---DRS 3.10.2018--- *@
         <div class="col s12 m7">
@@ -187,7 +192,7 @@
                                     dataSource:@Html.Raw(Json.Encode(ViewBag.TSOL_RELA))
                                   });
                             </script>
-                            
+
                         }
                         if (ViewBag.usuario.PUESTO_ID == 8 & Model.D.DOCUMENTOLs.Count > 0)
                         {
@@ -2662,3 +2667,4 @@ catch (Exception ee)
         return (a == "True");
     }
 </script>
+

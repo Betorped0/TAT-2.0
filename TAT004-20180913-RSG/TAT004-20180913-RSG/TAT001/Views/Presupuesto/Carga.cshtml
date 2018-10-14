@@ -115,6 +115,7 @@
     </div>
 
     string[] defaul = new string[1];
+    string defaul2 = "";
     System.Globalization.TextInfo myTI = new System.Globalization.CultureInfo("en-US", false).TextInfo;
     System.Globalization.DateTimeFormatInfo formatoFecha = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat;
     DateTime anio = DateTime.Today; int j = 0;
@@ -281,47 +282,27 @@
                                 }
                                 @try
                                 {
-                                    j = 0;
                                     if (defaul == null)
                                     {
-                                        defaul = new string[1];
-                                        @*<option value="" disabled selected></option>*@
+                                        <option value="" disabled selected></option>
                                     }
-                                    @*for (int i = 0; i < Model.sociedad.Count; i++)
+                                    for (int i = 0; i < Model.sociedad.Count; i++)
+                                    {
+                                        if (defaul != null)
                                         {
-                                            if (defaul[0] == "")
+                                            if (defaul.Contains(Model.sociedad[i].BUKRS))
                                             {
-                                                if (i == 0)
-                                                {
-                                                    <option selected value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
-                                                }
-                                                else
-                                                {
-                                                    <option value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
-                                                }
+                                                <option selected value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
                                             }
                                             else
                                             {
-                                                if (defaul[j] == Model.sociedad[i].BUKRS)
-                                                {
-                                                    <option value="@Model.sociedad[i].BUKRS" selected="selected">@Model.sociedad[i].BUKRS</option>
-                                                    if (j < (defaul.Length - 1))
-                                                    {
-                                                        j++;
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    <option value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
-                                                }
+                                                <option value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
                                             }
-
-                                        }*@
-                                    foreach (var sociedad in ViewBag.usrScts)
-                                    {
-
-                                        <option value="@sociedad.BUKRS">@sociedad.BUKRS</option>
-
+                                        }
+                                        else
+                                        {
+                                            <option value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
+                                        }
 
                                     }
                                 }
@@ -560,13 +541,15 @@ catch (Exception)
             <thead>
                 <tr>
                     <th>Banners sin asignar</th>
+                    <th>Sociedad</th>
                 </tr>
             </thead>
             <tbody>
                 @for (int i = 0; i < Model.bannerscanal.Count; i++)
                 {
                     <tr>
-                        <td>@Model.bannerscanal[i]</td>
+                        <td>@Model.bannerscanal[i].BANNER</td>
+                        <td>@Model.bannerscanal[i].SOCIEDAD</td>
                     </tr>
                 }
             </tbody>
