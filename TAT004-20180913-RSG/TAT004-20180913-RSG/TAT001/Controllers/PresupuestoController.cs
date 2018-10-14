@@ -201,7 +201,7 @@ namespace TAT001.Controllers
                             Session["Periodocpt"] = periodocpt;
                             ViewBag.sociedadcpt = 1;
                         }
-                        if (fileSAP != null)
+                        if (fileSAP[0] != null)
                         {
                             pRESUPUESTOP.presupuestoSAP = carga.cargarPresupuestoSAP(fileSAP, sociedadsap, periodosap, aniosap, ref mensajeS);
                             Session["Presupuesto"] = pRESUPUESTOP;
@@ -253,7 +253,7 @@ namespace TAT001.Controllers
                     Session["Presupuesto"] = null;
                     Session["Sociedadsap"] = null;
                     Session["Periodosap"] = null;
-                    Session["Sociedadcpt"] = null;
+                    //Session["Sociedadcpt"] = null;
                     Session["Periodocpt"] = null;
                     Session["Aniocpt"] = null;
                     Session["Aniosap"] = null;
