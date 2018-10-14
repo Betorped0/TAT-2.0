@@ -31,5 +31,7 @@ namespace TAT001.Models
         public string CANAL { get; set; }
         public string PAYER_NOMBRE { get; set; }
         public string PAYER_EMAIL { get; set; }
+
+        public string MANAGER { get; set; }
     }
 }

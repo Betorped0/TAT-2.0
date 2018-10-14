@@ -11,7 +11,7 @@
     List<TAT001.Entities.DOCUMENTOF> lstD = ViewBag.DOCF as List<TAT001.Entities.DOCUMENTOF>;
     //ViewBag.BORRADOR = "Mensaje de creación";
 }
-
+<meta http-equiv="refresh" content="0; URL='/Home/Index'" />
 
 @*//jemo inicio 4/07/2018*@
 @if (ViewBag.imgnoticia != null)
@@ -95,12 +95,12 @@
         @*@Html.ActionLink("Enviar Negociaciones", "Edit", "Negociaciones", null, new { @class = "btn-small red", @onclick = "document.getElementById('loader').style.display = 'initial';" })*@
     </div>
     <div class="col s12 right-align" style="margin-top:5px;">
-
     </div>
 </div>
 <!--MENSAJES-->
 <div>
     <style>
+
 
         /*#toast-container {*/
         /*.toast {
@@ -197,7 +197,6 @@
         TempData["docs_masiva"] = null;
     }
     @*///////////////////////////////L.G.P.P MODIFICACIONES FIN*@
-
     @if (Session["error"] != null)
     {
         if (Session["error"].ToString() != "")
@@ -692,7 +691,6 @@
 }
             </tbody>
         </table>
-
         <input id="miles" name="miles" type="hidden" value="@ViewBag.miles">
         <input id="dec" name="dec" type="hidden" value="@ViewBag.dec">
         <script src="~/Scripts/formatos.js"></script><!--RSG 01.08.2018-->
@@ -853,6 +851,7 @@
     }
         </script>
         <style>
+
 
             .dataTables_length {
                 display: none;

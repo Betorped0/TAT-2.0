@@ -8,8 +8,7 @@
     ViewBag.pagina_r = 201;
     ViewBag.carpeta_r = 200;
     List<TAT001.Entities.CARTAP>
-    lstCarta = ViewBag.cartap as List<TAT001.Entities.CARTAP>
-        ;
+    lstCarta = ViewBag.cartap as List<TAT001.Entities.CARTAP>;
     var pos = lstCarta.GroupBy(c => c.POS_ID).Select(g => g.First()).ToList();
     int idn = 0;//LEJ 12.07.18
 }
@@ -22,6 +21,11 @@
     <script src="~/Scripts/materialize2.js"></script>
     <input id="miles" name="miles" type="hidden" value="@ViewBag.miles">//LEJ 09.07.18
     <input id="dec" name="dec" type="hidden" value="@ViewBag.dec">//LEJ 09.07.18
+    <style>
+        #lbl_sap {
+            font-size: 12px !important;
+        }
+    </style>
     <div class="row" style="margin-bottom:0">
         @* ---DRS 3.10.2018--- *@
         <div class="col s12 m7">
@@ -188,7 +192,7 @@
                                     dataSource:@Html.Raw(Json.Encode(ViewBag.TSOL_RELA))
                                   });
                             </script>
-                            
+
                         }
                         if (ViewBag.usuario.PUESTO_ID == 8 & Model.D.DOCUMENTOLs.Count > 0)
                         {
@@ -1320,10 +1324,11 @@
                                                             {
                                                                 if (item.MATNR != "")
                                                                 {
-                                                                    var matnr = db.MATERIALs.Find(item.MATNR);
+                                                                    string spras = ViewBag.spras_id;
+                                                                    var matnr = db.MATERIALTs.Where(x => x.MATERIAL_ID == item.MATNR & x.SPRAS == spras).FirstOrDefault();
                                                                     if (matnr != null)
                                                                     {
-                                                                        <td>@matnr.MAKTX</td>}
+                                                                        <td>@matnr.MAKTG</td>}
                                                                     else
                                                                     {
                                                                         <td></td>
@@ -2662,3 +2667,4 @@ catch (Exception ee)
         return (a == "True");
     }
 </script>
+

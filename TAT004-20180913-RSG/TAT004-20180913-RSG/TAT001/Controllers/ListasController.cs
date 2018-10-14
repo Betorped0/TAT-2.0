@@ -868,7 +868,11 @@ namespace TAT001.Controllers
                 }
 
             }
-
+            List<CLIENTEF> clientesf = db.CLIENTEFs.Where(x => x.KUNNR == id_cl.KUNNR).ToList();
+            if (id_cl != null && clientesf.Any())
+            {
+                id_cl.MANAGER = clientesf.First().USUARIO1_ID;
+            }
             JsonResult jc = Json(id_cl, JsonRequestBehavior.AllowGet);
             return jc;
         }
