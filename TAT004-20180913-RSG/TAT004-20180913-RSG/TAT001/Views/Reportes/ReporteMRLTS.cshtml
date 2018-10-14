@@ -249,7 +249,7 @@
                         <th class="filter-select" data-placeholder="Todas las opciones" id="head_clasificacion">Clasificación</th>
                         <th class="filter-select" data-placeholder="Todas las opciones" id="head_num_cliente">Num Cliente</th>
                         <th class="filter-select" data-placeholder="Todas las opciones" id="head_cliente">Cliente</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_monto">$ Monto previsión registrada</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_monto">$ Monto provisión registrada</th>
                         <th class="filter-select" data-placeholder="Todas las opciones" id="head_importe">$ Importe NC/OP</th>
                         <th class="filter-select" data-placeholder="Todas las opciones" id="head_reverso">$ Reverso</th>
                         <th class="filter-select" data-placeholder="Todas las opciones" id="head_beneficio">Beneficio/ (impacto) - MRL</th>
@@ -278,7 +278,7 @@
                         <th class="filter-select" data-placeholder="Todas las opciones" id="head_clasificacion">Clasificación</th>
                         <th class="filter-select" data-placeholder="Todas las opciones" id="head_nunm_cliente">Num Cliente</th>
                         <th class="filter-select" data-placeholder="Todas las opciones" id="head_cliente">Cliente</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_monto">$ Monto previsión registrada</th>
+                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_monto">$ Monto provisión registrada</th>
                         <th class="filter-select" data-placeholder="Todas las opciones" id="head_importe">$ Importe NC/OP</th>
                         <th class="filter-select" data-placeholder="Todas las opciones" id="head_reverso">$ Reverso</th>
                         <th class="filter-select" data-placeholder="Todas las opciones" id="head_beneficio">Beneficio/ (impacto) - MRL</th>
@@ -322,27 +322,25 @@
                         <td>@item.FECHA_SOLICITUD.ToShortDateString() </td>
                         <td>@item.PERIODO_CONTABLE </td>
                         <td>@item.NUMERO_DOCUMENTO_SAP </td>
-                        <td>@item.NUMERO_REVERSO_SAP </td>
-                        <td>@item.FECHA_REVERSO.ToShortDateString() </td>
-                        <td>@item.PERIODO_CONTABLE_REVERSO </td>
-                        <td>@item.COMENTARIOS_REVERSO_PROVISION </td>
+                        <td>@*item.NUMERO_REVERSO_SAP*@ </td>
+                        <td>@((item.ES_REVERSO) ? item.FECHA_REVERSO.ToShortDateString() : "") </td>
+                        <td>@*item.PERIODO_CONTABLE_REVERSO*@ </td>
+                        <td>@((item.ES_REVERSO) ? item.COMENTARIOS_REVERSO_PROVISION : "") </td>
                         <td>@item.TIPO_SOLICITUD </td>
-                        <td>@item.STATUS </td>
+                        <td>@item.ESTATUS_STRING </td>
                         <td>@item.CONCEPTO_SOLICITUD </td>
                         <td>@item.DE.ToShortDateString() </td>
                         <td>@item.A.ToShortDateString() </td>
                         <td>@item.CLASIFICACION </td>
                         <td>@item.NUMERO_CLIENTE </td>
                         <td>@item.CLIENTE </td>
-                        <td>@((item.MONEDA != "USD") && ((item.TIPO_SOLICITUD_ID.StartsWith("PR"))) ? String.Format("{0:C}", item.MONTO) : "") </td>
-                        <td>@((item.MONEDA != "USD") && ((item.TIPO_SOLICITUD_ID.StartsWith("NC") || item.TIPO_SOLICITUD_ID.StartsWith("OP"))) ? String.Format("{0:C}", item.MONTO) : "") </td>
-                        <td>@((item.MONEDA != "USD") && ((item.TIPO_SOLICITUD_ID.StartsWith("RP"))) ? String.Format("{0:C}", item.MONTO) : "") </td>
+                        <td>@(((item.TIPO_SOLICITUD_ID.StartsWith("PR"))) ? String.Format("{0:C}", item.MONTO) : "") </td>
+                        <td>@(((item.TIPO_SOLICITUD_ID.StartsWith("NC") || item.TIPO_SOLICITUD_ID.StartsWith("OP"))) ? String.Format("{0:C}", item.MONTO) : "") </td>
+                        <td>@(((item.TIPO_SOLICITUD_ID.StartsWith("RP"))) ? String.Format("{0:C}", item.MONTO) : "") </td>
                         <td>@*item.BENEFICIO_IMPACTO_MRL*@ </td>
-                        <td>@*item.EXPENSE_RECOGNITION*@ </td>
-                        <td>@((item.MONEDA == "USD") && ((item.TIPO_SOLICITUD_ID.StartsWith("PR"))) ? String.Format("{0:C}", item.MONTO) : "") </td>
-                        <td>@((item.MONEDA == "USD") && ((item.TIPO_SOLICITUD_ID.StartsWith("NC") || item.TIPO_SOLICITUD_ID.StartsWith("OP"))) ? String.Format("{0:C}", item.MONTO) : "") </td>
-                        <td>@((item.MONEDA == "USD") && ((item.TIPO_SOLICITUD_ID.StartsWith("RP"))) ? String.Format("{0:C}", item.MONTO) : "") </td>
-                        <td>@*item.BENEFICIO_IMPACTO_MRL_USD*@ </td>
+                        <td>@item.EXPENSE_RECOGNITION </td>
+                        <td>@(((item.TIPO_SOLICITUD_ID.StartsWith("PR"))) ? String.Format("{0:C}", item.MONTO_2) : "") </td>
+                        <td>@(((item.TIPO_SOLICITUD_ID.StartsWith("NC") || item.TIPO_SOLICITUD_ID.StartsWith("OP"))) ? String.Format("{0:C}", item.MONTO_2) : "") </td>
                     </tr>
                     }
                 </tbody>

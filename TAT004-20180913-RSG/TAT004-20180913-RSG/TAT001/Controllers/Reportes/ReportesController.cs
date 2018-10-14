@@ -455,21 +455,21 @@ namespace TAT001.Controllers.Reportes
 
             //Quarter
             string year = Request["selectyear"] as string;
-            if (!string.IsNullOrEmpty(comcode))
+            if (!string.IsNullOrEmpty(year))
             {
                 yearsplit = year.Split(',');
             }
 
             //Period
             string period = Request["selectperiod"] as string;
-            if (!string.IsNullOrEmpty(comcode))
+            if (!string.IsNullOrEmpty(period))
             {
                 periodsplit = period.Split(',');
             }
 
             //Pais
             string pais = Request["selectpais"] as string;
-            if (!string.IsNullOrEmpty(comcode))
+            if (!string.IsNullOrEmpty(pais))
             {
                 paissplit = pais.Split(',');
             }
@@ -1392,7 +1392,6 @@ namespace TAT001.Controllers.Reportes
             ViewBag.aperiodo = db.PERIODOes.ToList();
 
             var queryP = (from d in db.DOCUMENTOes
-                              //join dr in db.DOCUMENTORs on d.NUM_DOC equals dr.NUM_DOC
                           join p in db.PAIS on d.PAIS_ID equals p.LAND
                           join c in db.CLIENTEs on new { d.VKORG, d.VTWEG, d.SPART, d.PAYER_ID } equals new { c.VKORG, c.VTWEG, c.SPART, PAYER_ID = c.KUNNR }
                           join ts in db.TSOLs on d.TSOL_ID equals ts.ID
@@ -1417,9 +1416,15 @@ namespace TAT001.Controllers.Reportes
                               //FECHA_REVERSO = (DateTime)dr.FECHAC,
                               //PERIODO_CONTABLE_REVERSO =
                               //COMENTARIOS_REVERSO_PROVISION = dr.COMENTARIO,
+                              TIPO_SOLICITUD_CODE = tst.TXT010,
                               TIPO_SOLICITUD = tst.TXT020,
                               TIPO_SOLICITUD_ID = d.TSOL_ID,
-                              STATUS = d.ESTATUS,
+                              STATUS = d.ESTATUS_WF,
+                              STATUSS1 = (d.ESTATUS ?? " ") + (d.ESTATUS_C ?? " ") + (d.ESTATUS_SAP ?? " ") + (d.ESTATUS_WF ?? " "),
+                              STATUSS3 = (ts.PADRE ? "P" : " "),
+     //                         ISNULL(D.ESTATUS, ' ') + ISNULL(D.ESTATUS_C, ' ') + ISNULL(D.ESTATUS_SAP, ' ')
+     //+ ISNULL(D.ESTATUS_WF, ' ') + ISNULL(F.TIPO, ' ') + (CASE WHEN TS.PADRE = 1 THEN 'P' ELSE ' ' END )
+     //+ (CASE WHEN COUNT(R.NUM_DOC)> 0 THEN 'R' ELSE ' ' END),
                               CONCEPTO_SOLICITUD = d.CONCEPTO,
                               DE = (DateTime)d.FECHAI_VIG,
                               A = (DateTime)d.FECHAF_VIG,
@@ -1428,20 +1433,62 @@ namespace TAT001.Controllers.Reportes
                               CLIENTE = c.NAME1,
                               MONTO = (decimal)d.MONTO_DOC_MD,
                               MONEDA = d.MONEDA_ID,
-                              //TIPO_CAMBIO = (decimal)d.TIPO_CAMBIO
+                              TIPO_CAMBIO = (decimal)d.TIPO_CAMBIO,
+                              MONTO_2 = (decimal)d.MONTO_DOC_ML2
                           }).ToList();
 
-            ViewBag.tabla_reporte = queryP;
+            foreach(MRLTS renglon in queryP)
+            {
+                renglon.EXPENSE_RECOGNITION = ((from dts in db.DOCUMENTOTS
+                                                where dts.NUM_DOC == renglon.NUMERO_SOLICITUD && dts.TSFORM_ID == 2
+                                                select dts.NUM_DOC
+                                                ).ToList().Count > 0 ? "X" : string.Empty);
 
-            //ViewBag.tabla_reporte = queryP.GroupBy(registro => new { registro.NUMERO_SOLICITUD, registro.WF_POS })
-            //    .Select(grupo => new
-            //    {
-            //        trackings = grupo.OrderBy(x => x.FECHA)
-            //    })
-            //    .Select(grupo_ordenado => new
-            //    {
-            //        tracking = calcularValoresGrupo(grupo_ordenado.trackings)
-            //    }).ToList();
+                var queryReverso = (from drs in db.DOCUMENTORs
+                                    where drs.NUM_DOC == renglon.NUMERO_SOLICITUD
+                                    select new { drs.COMENTARIO, drs.NUM_DOC, drs.FECHAC }
+                                    ).FirstOrDefault();
+                if (queryReverso == null)
+                {
+                    renglon.ES_REVERSO = false;
+                }
+                else
+                {
+                    renglon.ES_REVERSO = true;
+                    renglon.FECHA_REVERSO = (DateTime)queryReverso.FECHAC;
+                    renglon.COMENTARIOS_REVERSO_PROVISION = queryReverso.COMENTARIO;
+                }
+
+                var queryFlujo = (from f in db.FLUJOes
+                                  join wfp in db.WORKFPs on new { f.WORKF_ID, f.WF_VERSION, f.WF_POS } equals new { WORKF_ID = wfp.ID, WF_VERSION = wfp.VERSION, WF_POS = wfp.POS }
+                                  join ac in db.ACCIONs on wfp.ACCION_ID equals ac.ID
+                                  orderby f.POS descending
+                                  where f.NUM_DOC == renglon.NUMERO_SOLICITUD
+                                  select ac.TIPO
+                                  ).FirstOrDefault();
+                renglon.STATUSS2 = ((queryFlujo == null) ? " " : queryFlujo.ToString());
+                renglon.STATUSS4 = ((from dr in db.DOCUMENTORECs
+                                   where dr.NUM_DOC == renglon.NUMERO_SOLICITUD
+                                   select dr.NUM_DOC
+                                  ).ToList().Count > 0 ? "R" : " ");
+
+                string estatuss = renglon.STATUSS1 + renglon.STATUSS2 + renglon.STATUSS3 + renglon.STATUSS4;
+                if (renglon.STATUS == "R")
+                {
+                    renglon.STATUSS = estatuss.Substring(0, 6) +
+                                    db.FLUJOes.Where(x => x.NUM_DOC == renglon.NUMERO_SOLICITUD & x.ESTATUS == "R").OrderByDescending(a => a.POS).FirstOrDefault().USUARIO.PUESTO_ID +
+                                    estatuss.Substring(6, 1);
+                }
+                else
+                {
+                    renglon.STATUSS = estatuss.Substring(0, 6) + " " + estatuss.Substring(6, 1); ;
+                }
+                Estatus e = new Estatus();
+                renglon.ESTATUS_STRING = e.getText(estatuss, renglon.NUMERO_SOLICITUD);
+                renglon.d = db.DOCUMENTOes.Find(renglon.NUMERO_SOLICITUD);
+            }
+
+            ViewBag.tabla_reporte = queryP;
             return View();
         }
         // FIN REPORTE 5 - MRLTS
