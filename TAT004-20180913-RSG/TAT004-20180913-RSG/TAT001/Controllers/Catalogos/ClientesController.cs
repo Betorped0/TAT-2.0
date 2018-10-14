@@ -1,4 +1,5 @@
 ﻿using ExcelDataReader;
+using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -8,6 +9,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
+using TAT001.Common;
 using TAT001.Entities;
 using TAT001.Models;
 
@@ -18,6 +20,95 @@ namespace TAT001.Controllers.Catalogos
     {
         private TAT001Entities db = new TAT001Entities();
 
+        // GET: Clientes       
+        public ActionResult Index_(string colOrden,string ordenActual, int? numRegistros = 10, int? pagina=1, string buscar = "")
+        {
+            int pagina_id = 631; //ID EN BASE DE DATOS
+            int pageIndex = pagina.Value;
+            FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
+            try
+            {
+                string p = Session["pais"].ToString();
+                ViewBag.pais = p + ".png";
+            }
+            catch
+            {
+                //return RedirectToAction("Pais", "Home");
+            }
+
+            Session["spras"] = FnCommon.ObtenerSprasId(db, User.Identity.Name);
+
+            ClienteViewModel viewModel = new ClienteViewModel();
+            List<CLIENTE> clientes = db.CLIENTEs.Include(c => c.PAI).Include(c => c.TCLIENTE).ToList();
+            viewModel.ordenActual = ordenActual;
+            viewModel.pageSizes= FnCommon.ObtenerCmbPageSize();
+            viewModel.numRegistros = numRegistros.Value;
+            viewModel.buscar = buscar;
+
+            if (!String.IsNullOrEmpty(buscar)) {
+                clientes = clientes.Where(x=> 
+                String.Concat(x.KUNNR, x.NAME1, (x.SUBREGION == null ? "" : x.SUBREGION), x.LAND, x.PARVW, x.PAYER, (x.CANAL == null ? "" : x.CANAL))
+                .ToLower().Contains(buscar.ToLower()))
+                .ToList();
+            }
+            switch (colOrden)
+            {
+                case "KUNNR":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.clientes = clientes.OrderByDescending(m => m.KUNNR).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.clientes = clientes.OrderBy(m => m.KUNNR).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+                case "NAME1":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.clientes = clientes.OrderByDescending(m => m.NAME1).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.clientes = clientes.OrderBy(m => m.NAME1).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+
+                case "SUBREGION":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.clientes = clientes.OrderByDescending(m => m.SUBREGION).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.clientes = clientes.OrderBy(m => m.SUBREGION).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+
+                case "LAND":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.clientes = clientes.OrderByDescending(m => m.LAND).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.clientes = clientes.OrderBy(m => m.LAND).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+
+                case "PARVW":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.clientes = clientes.OrderByDescending(m => m.PARVW).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.clientes = clientes.OrderBy(m => m.PARVW).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+
+                case "PAYER":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.clientes = clientes.OrderByDescending(m => m.PAYER).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.clientes = clientes.OrderBy(m => m.PAYER).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+
+                case "CANAL":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.clientes = clientes.OrderByDescending(m => m.CANAL).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.clientes = clientes.OrderBy(m => m.CANAL).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+
+                 default:
+                    viewModel.clientes = clientes.OrderBy(m => m.KUNNR).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+            }
+            
+            return View(viewModel);
+        }
+
         // GET: Clientes
         public ActionResult Index()
         {
@@ -26,8 +117,7 @@ namespace TAT001.Controllers.Catalogos
             var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
             ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
             ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-            ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
-            //ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
             ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
             ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
             ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
