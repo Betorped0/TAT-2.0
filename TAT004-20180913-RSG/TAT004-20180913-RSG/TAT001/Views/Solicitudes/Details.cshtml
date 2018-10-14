@@ -1319,7 +1319,8 @@
                                                             {
                                                                 if (item.MATNR != "")
                                                                 {
-                                                                    var matnr = db.MATERIALTs.Where(x => x.MATERIAL_ID == item.MATNR).FirstOrDefault();
+                                                                    string spras = ViewBag.spras_id;
+                                                                    var matnr = db.MATERIALTs.Where(x => x.MATERIAL_ID == item.MATNR & x.SPRAS == spras).FirstOrDefault();
                                                                     if (matnr != null)
                                                                     {
                                                                         <td>@matnr.MAKTG</td>}
