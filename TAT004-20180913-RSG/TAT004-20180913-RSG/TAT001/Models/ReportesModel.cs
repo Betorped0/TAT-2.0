@@ -286,6 +286,13 @@ namespace TAT001.Models
             public PRESUPUESTO_MOD PRESUPUESTO { get; set; }
             public string PROVEEDOR_NOMBRE { get; set; }
             public string ESTATUS_STRING { get; set; }
+            public string STATUS { get; internal set; }
+            public string STATUSS1 { get; internal set; }
+            public string STATUSS3 { get; internal set; }
+            public string STATUSS2 { get; internal set; }
+            public string STATUSS4 { get; internal set; }
+            public string STATUSS { get; internal set; }
+            public int SEMANA { get; internal set; }
         }
     }
 }
