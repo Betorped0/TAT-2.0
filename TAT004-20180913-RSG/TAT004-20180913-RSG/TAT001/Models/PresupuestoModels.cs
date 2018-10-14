@@ -13,42 +13,43 @@ namespace TAT001.Models
     public class PresupuestoModels
     {
         private TAT001Entities db = new TAT001Entities();
-        public DatosPresupuesto consultSociedad(string sociedad, string usuario)
+        public void consultSociedad(ref DatosPresupuesto sociedades, string sociedad, string usuario)
         {
-            DatosPresupuesto sociedades = new DatosPresupuesto();
             sociedades.sociedad = db.USUARIOs.Where(a => a.ID.Equals(usuario)).FirstOrDefault().SOCIEDADs.ToList();
             if (String.IsNullOrEmpty(sociedad) == false)
             {
                 sociedades.cambio = db.CSP_CAMBIO(sociedad).ToList();
             }
-            return sociedades;
         }
-        public DatosPresupuesto consultarDatos(string sociedad, string anio, string periodo, string cambio, string cpt, string excel, string ruta, string usuario)
+        public DatosPresupuesto consultarDatos(string[] sociedad, string anio, string periodo, string cambio, string cpt, string excel, string ruta, string usuario)
         {
             DatosPresupuesto sociedades = new DatosPresupuesto();
             string anioc = "";// periodoc = "";
             string chkcpt = "";
-            sociedades = consultSociedad(sociedad, usuario);
-            if (String.IsNullOrEmpty(anio) == false)
+            for (int i = 0; i < sociedad.Length; i++)
             {
-                anioc = anio.Substring(2, 2);
-            }
-            //if (String.IsNullOrEmpty(periodo) == false)
-            //{
-            //    periodoc = periodo;
-            //}
-            if (String.IsNullOrEmpty(cpt) == false)
-            {
-                chkcpt = "X";
-            }
-            if (String.IsNullOrEmpty(cambio) == false && sociedades.cambio.Count > 0)
-            {
-                string[] moneda = cambio.Split('-');
-                sociedades.presupuesto = db.CSP_CONSULTARPRESUPUESTO(sociedad, anioc, anio, periodo, periodo, sociedades.cambio[0].FCURR, moneda[1], chkcpt).ToList();
-            }
-            else
-            {
-                sociedades.presupuesto = db.CSP_CONSULTARPRESUPUESTO(sociedad, anioc, anio, periodo, periodo, "", "", chkcpt).ToList();
+                consultSociedad(ref sociedades, sociedad[i], usuario);
+                if (String.IsNullOrEmpty(anio) == false)
+                {
+                    anioc = anio.Substring(2, 2);
+                }
+                //if (String.IsNullOrEmpty(periodo) == false)
+                //{
+                //    periodoc = periodo;
+                //}
+                if (String.IsNullOrEmpty(cpt) == false)
+                {
+                    chkcpt = "X";
+                }
+                if (String.IsNullOrEmpty(cambio) == false && sociedades.cambio.Count > 0)
+                {
+                    string[] moneda = cambio.Split('-');
+                    sociedades.presupuesto.AddRange(db.CSP_CONSULTARPRESUPUESTO(sociedad[i], anioc, anio, periodo, periodo, sociedades.cambio[0].FCURR, moneda[1], chkcpt).ToList());
+                }
+                else
+                {
+                    sociedades.presupuesto.AddRange(db.CSP_CONSULTARPRESUPUESTO(sociedad[i], anioc, anio, periodo, periodo, "", "", chkcpt).ToList());
+                }
             }
             if (excel != null)
             {
@@ -117,12 +118,18 @@ namespace TAT001.Models
             }
             return ms;
         }
-        public void generarRepPresuExcel(List<CSP_CONSULTARPRESUPUESTO_Result> resultado, string sociedad, string moneda, string fecha, string ruta, string cpt)
+        public void generarRepPresuExcel(List<CSP_CONSULTARPRESUPUESTO_Result> resultado, string[] sociedad, string moneda, string fecha, string ruta, string cpt)
         {
             var workbook = new XLWorkbook();
             var worksheet = workbook.Worksheets.Add("Sheet 1");
             int contador = 3;
+            string sociedades = "";
             string index;
+            for (int i = 0; i < sociedad.Length; i++)
+            {
+                sociedades += sociedad[i] + ", ";
+            }
+            sociedades = sociedades.Substring(0, (sociedades.Length - 2));
             if (String.IsNullOrEmpty(moneda))
             {
                 moneda = "LC";
@@ -133,7 +140,7 @@ namespace TAT001.Models
                 {
                     new
                     {
-                        SOCIEDAD = "Sociedad: " + sociedad,
+                        SOCIEDAD = "Sociedad/es: " + sociedades,
                         MONEDA = "Moneda: " + moneda,
                         FECHA = "Ultima carga: " + fecha,
                     }

@@ -46,10 +46,12 @@ namespace TAT001.Controllers
             Models.PresupuestoModels carga = new Models.PresupuestoModels();
             ViewBag.ultMod = carga.consultarUCarga();
             ViewBag.anio = "20" + carga.consultaAnio();
-            return View(carga.consultSociedad("", User.Identity.Name));
+            DatosPresupuesto sociedades = new DatosPresupuesto();
+            carga.consultSociedad(ref sociedades, "", User.Identity.Name);
+            return View(sociedades);
         }
         [HttpPost]
-        public ActionResult Index(string cpt, string excel, string select, string anioconsu, string periodoconsu, string cambio)
+        public ActionResult Index(string cpt, string excel, string[] select, string anioconsu, string periodoconsu, string cambio)
         {
             //try
             //{
