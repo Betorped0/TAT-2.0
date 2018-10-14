@@ -139,7 +139,7 @@ $(document).ready(function () {
             }
         ]
     });
-
+    
     $('#matcat').click(function (e) {
 
         var kunnr = $('#payer_id').val();
@@ -2410,7 +2410,7 @@ function copiarTableVistaSop() {
                 bill_doc = "<input class=\"BILL_DOC input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + bill_doc + "\">";
                 imp_fact = "<input class=\"IMPORTE_FAC input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + imp_fact + "\">"//jemo 18-07-2018
                 belnr = "<input class=\"BELNR input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + belnr + "\">"
-
+                
             } else {
 
                 //B20180625 MGC 2018.06.27
@@ -4169,7 +4169,7 @@ function addRowSop(t) {
         "<input class=\"CONTROL input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
         "<input class=\"AUTORIZACION input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
         "<input class=\"VENCIMIENTO input_sop_f fv\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
-        "<input class=\"FACTURAK input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
+        "<input class=\"FACTURAK input_sop_f checkLeke\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
         "<input class=\"PEJERCICIOK input_sop_f prv\" maxlength=\"4\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
         "<input class=\"PAYER input_sop_f prv\" maxlength=\"4\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
         "<input class=\"DESCRIPCION input_sop_f prv\" maxlength=\"4\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
@@ -4177,8 +4177,15 @@ function addRowSop(t) {
         "<input class=\"IMPORTE_FAC input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
         "<input class=\"BELNR input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">"//B20180625 MGC 2018.06.27    
     );
+    
 }
-
+$(document).on("change", ".checkLeke", function () {
+    if ($("#sociedad_id").val() === "LEKE") {
+        str = $(".checkLeke").val();
+        str = str.substring(0, 3) + "-" + str.substring(3, 6) + "-" + str.substring(6, str.length);
+        $(".checkLeke").val(str);
+    }
+});
 function addRowSopl(t, pos, fac, bukrs, fecha, prov, provt, control, aut, ven, fack, eje, pay, des, bill, impf, belnr) {
     //var t = $('#table_sop').DataTable();
 
@@ -6261,3 +6268,4 @@ function categoriaUnica(cat) {
 
     return res;
 }
+
