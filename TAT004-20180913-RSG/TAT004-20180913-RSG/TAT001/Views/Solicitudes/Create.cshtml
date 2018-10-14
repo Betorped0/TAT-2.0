@@ -248,7 +248,8 @@ errorMessage(message);
                                     @*@Html.LabelFor(model => model.TSOL_ID, "TSOL_ID", htmlAttributes: new { @class = "control-label col-md-2" })*@
                                     @Html.LabelFor(model => model.TSOL_ID, "Tipo de solicitud", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_tiposol" }) @*B20180801 MGC Textos*@
                                     <div class="col-md-10">
-                                        @*@if (ViewBag.relacionada == "")
+                                        @* Combo Anterior Tipos Solicitudes
+                                            @if (ViewBag.relacionada == "")
                                             {
                                                 @Html.DropDownList("TSOL_ID", null, "", htmlAttributes: new { @id = "tsol_id", @class = "form-control", onchange = @"selectTsol(this.value);soportes(this.value, '" + Session["spras"].ToString() + "'); M.Toast.dismissAll();" })
                                             }
@@ -262,20 +263,8 @@ errorMessage(message);
                                                 <input type="text" value="@ViewBag.TSOL_IDI" disabled="disabled" />
                                                 <input type="text" id="tsolant_id" value="@ViewBag.TSOL_ANT" disabled="disabled" hidden />
                                             }*@
-                                        @*if (ViewBag.relacionada == "")
-                                            {*@
+
                                         @Html.EditorFor(model => model.TSOL_ID, new { htmlAttributes = new { @class = "dropdowntree" } })
-                                        @*}
-                                            else if (ViewBag.ligada)
-                                            {
-                                            @Html.EditorFor(model => model.TSOL_ID, new { htmlAttributes = new { @class = "dropdowntree" } })
-                                            }
-                                            else
-                                            {
-                                            @Html.HiddenFor(model => model.TSOL_ID, new { @id = "tsol_id", @onchange = "selectTsol(this.value)" })
-                                            <input type="text" value="@ViewBag.TSOL_IDI" disabled="disabled" />
-                                            <input type="text" id="tsolant_id" value="@ViewBag.TSOL_ANT" disabled="disabled" hidden />
-                                            }*@
                                     </div>
                                     @Html.HiddenFor(model => model.DOCUMENTO_REF)
                                     @{string jval = ViewBag.TSOL_VALUES;
@@ -368,7 +357,6 @@ errorMessage(message);
                                 <script src="~/Scripts/autocomplete1.10.2.js"></script>
                                 <script src="~/Scripts/autocomplete1.11.4.js"></script>
                                 <script src="~/Scripts/dropdowntree.js"></script>
-
                                 @Html.HiddenFor(model => model.TSOL_ID, new { @id = "tsol_id", @onchange = "selectTsol(this.value);soportes(this.value, '" + Session["spras"].ToString() + "'); M.Toast.dismissAll();" })
                                 <script>
 

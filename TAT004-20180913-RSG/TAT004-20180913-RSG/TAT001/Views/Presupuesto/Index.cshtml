@@ -71,6 +71,7 @@
     @using (Html.BeginForm("Index", "Presupuesto", FormMethod.Post))
     {
         string[] defaulS = new string[1];
+        string[] defaul2 = new string[1];
         string defaul = "";
         System.Globalization.TextInfo myTI = new System.Globalization.CultureInfo("en-US", false).TextInfo;
         System.Globalization.DateTimeFormatInfo formatoFecha = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat;
@@ -81,7 +82,7 @@
                 <select name="select" id="selec" multiple>
                     @try
                     {
-                        defaul = Session["sociedad"].ToString();
+                        defaul2 = Session["sociedad"] as string[];
                     }
                     catch (Exception)
                     {
@@ -91,9 +92,16 @@
                     {
                         for (int i = 0; i < Model.sociedad.Count; i++)
                         {
-                            if (defaul == Model.sociedad[i].BUKRS)
+                            if (defaul2 != null)
                             {
-                                <option value="@Model.sociedad[i].BUKRS" selected="selected">@Model.sociedad[i].BUKRS</option>
+                                if (defaul2.Contains( Model.sociedad[i].BUKRS))
+                                {
+                                    <option value="@Model.sociedad[i].BUKRS" selected="selected">@Model.sociedad[i].BUKRS</option>
+                                }
+                                else
+                                {
+                                    <option value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
+                                }
                             }
                             else
                             {

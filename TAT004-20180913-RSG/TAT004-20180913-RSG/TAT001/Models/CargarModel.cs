@@ -77,7 +77,7 @@ namespace TAT001.Models
                                     REGION = pRESUPUESTOP.REGION,
                                     MONEDA = pRESUPUESTOP.MONEDA,
                                     MATERIAL = pRESUPUESTOP.MATERIAL,
-                                    BANNER = pRESUPUESTOP.BANNER,
+                                    BANNER = pRESUPUESTOP.BANNER.PadLeft(10, '0'),
                                     NETLB = pRESUPUESTOP.NETLB,
                                     TOTCS = pRESUPUESTOP.TOTCS,
                                     ADVER = pRESUPUESTOP.ADVER,
@@ -141,7 +141,7 @@ namespace TAT001.Models
                         REGION = pRESUPUESTOP.REGION,
                         MONEDA = pRESUPUESTOP.MONEDA,
                         MATERIAL = pRESUPUESTOP.MATERIAL,
-                        BANNER = pRESUPUESTOP.BANNER,
+                        BANNER = pRESUPUESTOP.BANNER.PadLeft(10, '0'),
                         NETLB = pRESUPUESTOP.NETLB,
                         TOTCS = pRESUPUESTOP.TOTCS,
                         ADVER = pRESUPUESTOP.ADVER,
@@ -630,10 +630,10 @@ namespace TAT001.Models
                 }
             }
         }
-        public DatosPresupuesto consultSociedad()
+        public DatosPresupuesto consultSociedad(string user)
         {
             DatosPresupuesto sociedades = new DatosPresupuesto();
-            sociedades.sociedad = db.SOCIEDADs.Where(x => x.ACTIVO == true).ToList();
+            sociedades.sociedad = db.USUARIOs.Where(a => a.ID.Equals(user)).FirstOrDefault().SOCIEDADs.ToList();
             return sociedades;
         }
         public string bannres(string ruta, string[] sociedadcpt)

@@ -34,7 +34,7 @@
                 $('#Button3 ').trigger('click');
             });
             $('#footer').on('click', '#agreg', function () {
-                acept = true;                
+                acept = true;
                 $('#opciong').prop('checked', false);
                 document.getElementById('loader').style.display = 'initial'
                 $('#Button3 ').trigger('click');
@@ -69,7 +69,7 @@
             //    var elem = document.getElementsByName("periodocpt")
             //    instance = M.Select.init(elem, []);
             //});
-            
+
             $('.modal').modal();
             sessionStorage.setItem("spras", "@Session["spras"].ToString()");
         });
@@ -142,39 +142,23 @@
                                 { }
                                 @try
                                 {
-                                    j = 0;
-                                    if (defaul == null)
+                                    for (int i = 0; i < Model.sociedad.Count; i++)
                                     {
-                                        defaul = new string[1];
-                                    }
-                                    @*for (int i = 0; i < Model.sociedad.Count; i++)
-            {
-                if (ViewBag.sociedadcpt != null)
-                {
-                    if (defaul[j] == Model.sociedad[i].BUKRS)
-                    {
-                        <option value="@Model.sociedad[i].BUKRS" selected="selected">@Model.sociedad[i].BUKRS</option>
-                        if (j < (defaul.Length - 1))
-                        {
-                            j++;
-                        }
-                    }
-                    else
-                    {
-                        <option value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
-                    }
-                }
-                else
-                {
-                    <option value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
-                }
-            }*@
-                                    foreach (var sociedad in ViewBag.usrScts)
-                                    {
-                                        
-                                            <option value="@sociedad.BUKRS">@sociedad.BUKRS</option>
-                                        
-
+                                        if (defaul != null)
+                                        {
+                                            if (defaul.Contains(Model.sociedad[i].BUKRS))
+                                            {
+                                                <option value="@Model.sociedad[i].BUKRS" selected="selected">@Model.sociedad[i].BUKRS</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <option value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
+                                        }
                                     }
                                 }
                                 catch (Exception)
@@ -304,35 +288,35 @@
                                         @*<option value="" disabled selected></option>*@
                                     }
                                     @*for (int i = 0; i < Model.sociedad.Count; i++)
-            {
-                if (defaul[0] == "")
-                {
-                    if (i == 0)
-                    {
-                        <option selected value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
-                    }
-                    else
-                    {
-                        <option value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
-                    }
-                }
-                else
-                {
-                    if (defaul[j] == Model.sociedad[i].BUKRS)
-                    {
-                        <option value="@Model.sociedad[i].BUKRS" selected="selected">@Model.sociedad[i].BUKRS</option>
-                        if (j < (defaul.Length - 1))
-                        {
-                            j++;
-                        }
-                    }
-                    else
-                    {
-                        <option value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
-                    }
-                }
+                                        {
+                                            if (defaul[0] == "")
+                                            {
+                                                if (i == 0)
+                                                {
+                                                    <option selected value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (defaul[j] == Model.sociedad[i].BUKRS)
+                                                {
+                                                    <option value="@Model.sociedad[i].BUKRS" selected="selected">@Model.sociedad[i].BUKRS</option>
+                                                    if (j < (defaul.Length - 1))
+                                                    {
+                                                        j++;
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <option value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
+                                                }
+                                            }
 
-            }*@
+                                        }*@
                                     foreach (var sociedad in ViewBag.usrScts)
                                     {
 
@@ -439,7 +423,7 @@
                 </div>
             </div>
         </div>
-    </div>    
+    </div>
 }
 @try
 {
@@ -462,7 +446,7 @@
                         }*@
                     <input id="Button1" class="btn-small blue-grey" type="submit" value="Cancelar" name="cancelar" />
                 </div>
-                <input id="opciong" type="checkbox" hidden name="opciong"/>
+                <input id="opciong" type="checkbox" hidden name="opciong" />
             }
             <div class="row" style="margin-bottom:0;">
                 <div class="input-field col s3 m3 l3">
@@ -479,7 +463,7 @@
                     <label for="global_filter">Buscar</label>
                 </div>
             </div>
-            
+
             <script>
                 var elem = document.querySelector('#selecc');
                 var options = [];
@@ -607,7 +591,7 @@ catch (Exception)
                         }*@
                     <input id="Button1" class="btn-small blue-grey" type="submit" value="Cancelar" name="cancelar" />
                 </div>
-                <input id="opciong" type="checkbox" hidden name="opciong"/>
+                <input id="opciong" type="checkbox" hidden name="opciong" />
             }
             <div class="row" style="margin-bottom:0;">
                 <div class="input-field col s3 m3 l3">
@@ -628,7 +612,7 @@ catch (Exception)
                 var elem = document.querySelector('#selecc2');
                 var options = [];
                 var instance = M.FormSelect.init(elem, options);
-            </script>            
+            </script>
             <table id="table2" class="table mdl-data-table table-striped">
                 <thead>
                     <tr>

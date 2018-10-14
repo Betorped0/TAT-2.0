@@ -46,10 +46,12 @@ namespace TAT001.Controllers
             Models.PresupuestoModels carga = new Models.PresupuestoModels();
             ViewBag.ultMod = carga.consultarUCarga();
             ViewBag.anio = "20" + carga.consultaAnio();
-            return View(carga.consultSociedad("", User.Identity.Name));
+            DatosPresupuesto sociedades = new DatosPresupuesto();
+            carga.consultSociedad(ref sociedades, "", User.Identity.Name);
+            return View(sociedades);
         }
         [HttpPost]
-        public ActionResult Index(string cpt, string excel, string select, string anioconsu, string periodoconsu, string cambio)
+        public ActionResult Index(string cpt, string excel, string[] select, string anioconsu, string periodoconsu, string cambio)
         {
             //try
             //{
@@ -145,7 +147,9 @@ namespace TAT001.Controllers
                 }
                 Session["spras"] = user.SPRAS_ID;
             }
-            return View(carga.consultSociedad());
+            Session["Sociedadcpt"] = null;
+            Session["Periodocpt"] = null;
+            return View(carga.consultSociedad(User.Identity.Name));
         }
         [HttpPost]
         public ActionResult Carga(string enviar, string guardar, HttpPostedFileBase fileCPT, HttpPostedFileBase[] fileSAP, string[] sociedadsap, string[] periodocpt, string[] sociedadcpt, string[] periodosap, string[] aniocpt, string[] aniosap, string opciong)
@@ -161,7 +165,7 @@ namespace TAT001.Controllers
                 ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
                 ViewBag.usuario = user;
                 ViewBag.returnUrl = Request.Url.PathAndQuery;
-                ViewBag.usrScts = user.SOCIEDADs.ToList();
+                //ViewBag.usrScts = user.SOCIEDADs.ToList();
                 ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
@@ -180,7 +184,7 @@ namespace TAT001.Controllers
                 Session["spras"] = user.SPRAS_ID;
             }
             Models.CargarModel carga = new Models.CargarModel();
-            pRESUPUESTOP = carga.consultSociedad();
+            pRESUPUESTOP = carga.consultSociedad(User.Identity.Name);
             if (String.IsNullOrEmpty(enviar) == false || String.IsNullOrEmpty(guardar) == false)
             {
                 if (fileCPT != null || fileSAP != null)
