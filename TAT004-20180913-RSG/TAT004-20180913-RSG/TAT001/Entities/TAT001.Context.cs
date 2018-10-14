@@ -202,9 +202,13 @@ namespace TAT001.Entities
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CPS_LISTA_CLI_PRO_Result>("CPS_LISTA_CLI_PRO");
         }
     
-        public virtual ObjectResult<string> CSP_BANNERSINCANAL()
+        public virtual ObjectResult<CSP_BANNERSINCANAL_Result> CSP_BANNERSINCANAL(string sociedad)
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("CSP_BANNERSINCANAL");
+            var sociedadParameter = sociedad != null ?
+                new ObjectParameter("sociedad", sociedad) :
+                new ObjectParameter("sociedad", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CSP_BANNERSINCANAL_Result>("CSP_BANNERSINCANAL", sociedadParameter);
         }
     
         public virtual ObjectResult<CSP_CAMBIO_Result> CSP_CAMBIO(string sociedad)

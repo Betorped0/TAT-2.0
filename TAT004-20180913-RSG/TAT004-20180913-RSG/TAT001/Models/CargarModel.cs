@@ -343,6 +343,7 @@ namespace TAT001.Models
             string mensaje = "", soc = "", pre = "";
             int ide = 0;
             string opc = "1";
+            string sociedad = "";
             if (opciong !="on")
             {
                 opc = "2";
@@ -362,7 +363,11 @@ namespace TAT001.Models
                             presupuesto.presupuestoCPT[i].ID = ide;
                         }
                         db.BulkInsert(presupuesto.presupuestoCPT);
-                        presupuesto.bannerscanal = db.CSP_BANNERSINCANAL().ToList();
+                        for (int i = 0; i < sociedadcpt.Length; i++)
+                        {
+                            sociedad += sociedadcpt[i] + ",";
+                        }
+                        presupuesto.bannerscanal = db.CSP_BANNERSINCANAL(sociedad).ToList();
                         mensaje = mensajes(15); //"Guardado Correctamente CPT.";
                     }
                     else
@@ -631,10 +636,15 @@ namespace TAT001.Models
             sociedades.sociedad = db.SOCIEDADs.Where(x => x.ACTIVO == true).ToList();
             return sociedades;
         }
-        public string bannres(string ruta)
+        public string bannres(string ruta, string[] sociedadcpt)
         {
 
-            List<string> bannerscanal = db.CSP_BANNERSINCANAL().ToList();
+            string sociedad = "";
+            for (int i = 0; i < sociedadcpt.Length; i++)
+            {
+                sociedad += sociedadcpt[i] + ",";
+            }
+            List<CSP_BANNERSINCANAL_Result> bannerscanal = db.CSP_BANNERSINCANAL(sociedad).ToList();
             if (bannerscanal.Count > 0)
             {
                 generarExcelBanner(bannerscanal, ruta);
@@ -645,7 +655,7 @@ namespace TAT001.Models
                 return mensajes(14); //"No se pudo obtener los banners sin canal";
             }
         }
-        public void generarExcelBanner(List<string> banners, string ruta)
+        public void generarExcelBanner(List<CSP_BANNERSINCANAL_Result> banners, string ruta)
         {
             var workbook = new XLWorkbook();
             var worksheet = workbook.Worksheets.Add("Sheet 1");
@@ -656,22 +666,24 @@ namespace TAT001.Models
                 worksheet.Cell("A1").Value = new[]
                  {
                   new {
-                      BANNER = "Banner"
+                       BANNER = "Banner",
+                      SOCIEDAD = "Sociedad"
                       },
                     };
-                foreach (string row in banners)
+                foreach (CSP_BANNERSINCANAL_Result row in banners)
                 {
                     index = "A";
                     index = index + contador;
                     worksheet.Cell(index).Value = new[]
                  {
                   new {
-                      BANNER       = row
+                      BANNER       = row.BANNER,
+                      SOCIEDAD       = row.SOCIEDAD
                       },
                     };
                     contador++;
                 }
-                worksheet.Range("A1:A1").Style.Font.SetFontColor(XLColor.White).Fill.SetBackgroundColor(XLColor.FromHtml("#0B2161")).Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center).Font.SetBold(true);
+                worksheet.Range("A1:B1").Style.Font.SetFontColor(XLColor.White).Fill.SetBackgroundColor(XLColor.FromHtml("#0B2161")).Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center).Font.SetBold(true);
                 for (int i = 1; i < 22; i++)
                 {
                     worksheet.Column(i).AdjustToContents();
@@ -696,7 +708,8 @@ namespace TAT001.Models
         public List<SOCIEDAD> sociedad = new List<SOCIEDAD>();
         public List<CSP_CAMBIO_Result> cambio = new List<CSP_CAMBIO_Result>();
         public List<CSP_CONSULTARPRESUPUESTO_Result> presupuesto = new List<CSP_CONSULTARPRESUPUESTO_Result>();
-        public List<string> bannerscanal = new List<string>();
+        //public List<string> bannerscanal = new List<string>();
+        public List<CSP_BANNERSINCANAL_Result> bannerscanal = new List<CSP_BANNERSINCANAL_Result>();
         //public DatosPresupuesto(List<PRESUPUESTOP> PresupuestoSAP, List<PRESUPSAPP> PresupuestoCPT)
         //{
         //    this.presupuestoSAP = PresupuestoSAP;

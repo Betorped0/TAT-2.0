@@ -13,22 +13,22 @@ namespace TAT001.Models
     public class PresupuestoModels
     {
         private TAT001Entities db = new TAT001Entities();
-        public DatosPresupuesto consultSociedad(string sociedad)
+        public DatosPresupuesto consultSociedad(string sociedad, string usuario)
         {
             DatosPresupuesto sociedades = new DatosPresupuesto();
-            sociedades.sociedad = db.SOCIEDADs.Where(x => x.ACTIVO == true).ToList();
+            sociedades.sociedad = db.USUARIOs.Where(a => a.ID.Equals(usuario)).FirstOrDefault().SOCIEDADs.ToList();
             if (String.IsNullOrEmpty(sociedad) == false)
             {
                 sociedades.cambio = db.CSP_CAMBIO(sociedad).ToList();
             }
             return sociedades;
         }
-        public DatosPresupuesto consultarDatos(string sociedad, string anio, string periodo, string cambio, string cpt, string excel, string ruta)
+        public DatosPresupuesto consultarDatos(string sociedad, string anio, string periodo, string cambio, string cpt, string excel, string ruta, string usuario)
         {
             DatosPresupuesto sociedades = new DatosPresupuesto();
             string anioc = "";// periodoc = "";
             string chkcpt = "";
-            sociedades = consultSociedad(sociedad);
+            sociedades = consultSociedad(sociedad, usuario);
             if (String.IsNullOrEmpty(anio) == false)
             {
                 anioc = anio.Substring(2, 2);
@@ -41,10 +41,10 @@ namespace TAT001.Models
             {
                 chkcpt = "X";
             }
-            if (String.IsNullOrEmpty(cambio) == false)
+            if (String.IsNullOrEmpty(cambio) == false && sociedades.cambio.Count > 0)
             {
                 string[] moneda = cambio.Split('-');
-                sociedades.presupuesto = db.CSP_CONSULTARPRESUPUESTO(sociedad, anioc, anio, periodo, periodo, moneda[0], moneda[1], chkcpt).ToList();
+                sociedades.presupuesto = db.CSP_CONSULTARPRESUPUESTO(sociedad, anioc, anio, periodo, periodo, sociedades.cambio[0].FCURR, moneda[1], chkcpt).ToList();
             }
             else
             {

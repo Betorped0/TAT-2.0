@@ -46,27 +46,27 @@ namespace TAT001.Controllers
             Models.PresupuestoModels carga = new Models.PresupuestoModels();
             ViewBag.ultMod = carga.consultarUCarga();
             ViewBag.anio = "20" + carga.consultaAnio();
-            return View(carga.consultSociedad(""));
+            return View(carga.consultSociedad("", User.Identity.Name));
         }
         [HttpPost]
         public ActionResult Index(string cpt, string excel, string select, string anioconsu, string periodoconsu, string cambio)
         {
-            try
-            {
-                if (Session["sociedad"].ToString() != select)
-                {
-                    cambio = null;
-                    periodoconsu = null;
-                    anioconsu = null;
-                }
-                if (periodoconsu == "")
-                {
-                    periodoconsu = null;
-                }
-            }
-            catch (Exception)
-            {
-            }
+            //try
+            //{
+            //    if (Session["sociedad"].ToString() != select)
+            //    {
+            //        cambio = null;
+            //        periodoconsu = null;
+            //        anioconsu = null;
+            //    }
+            //    if (periodoconsu == "")
+            //    {
+            //        periodoconsu = null;
+            //    }
+            //}
+            //catch (Exception)
+            //{
+            //}
             Session["sociedad"] = select;
             Session["cambio"] = cambio;
             Session["periodoconsu"] = periodoconsu;
@@ -103,7 +103,7 @@ namespace TAT001.Controllers
             ViewBag.ultMod = carga.consultarUCarga();
             ViewBag.anio = "20" + carga.consultaAnio();
             ViewBag.chkcpt = cpt;
-            presu = carga.consultarDatos(select, anioconsu, periodoconsu, cambio, cpt, excel, Server.MapPath("~/pdfTemp/"));
+            presu = carga.consultarDatos(select, anioconsu, periodoconsu, cambio, cpt, excel, Server.MapPath("~/pdfTemp/"), User.Identity.Name);
             if (excel != null)
             {
                 return File(Server.MapPath("~/pdfTemp/Presupuesto.xlsx"), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Presupuesto.xlsx");
@@ -277,7 +277,8 @@ namespace TAT001.Controllers
         public FileResult Descargar(string excel)
         {
             Models.CargarModel carga = new Models.CargarModel();
-            carga.bannres(Server.MapPath("~/pdfTemp/"));
+            string[] defaul = Session["Sociedadcpt"] as string[];
+            carga.bannres(Server.MapPath("~/pdfTemp/"), defaul);
             return File(Server.MapPath("~/pdfTemp/Banners sin canal.xlsx"), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Banners sin canal.xlsx");
         }
     }
