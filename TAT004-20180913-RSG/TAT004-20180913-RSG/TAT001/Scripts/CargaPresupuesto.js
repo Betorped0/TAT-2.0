@@ -254,4 +254,5 @@ $(document).ready(function () {
             $(id + ' > .select-wrapper > .select-dropdown .toggle').toggle();
         }
     );
+
 });

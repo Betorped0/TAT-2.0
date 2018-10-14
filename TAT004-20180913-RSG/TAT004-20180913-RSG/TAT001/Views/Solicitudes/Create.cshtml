@@ -249,6 +249,23 @@ errorMessage(message);
                                     @Html.LabelFor(model => model.TSOL_ID, "Tipo de solicitud", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_tiposol" }) @*B20180801 MGC Textos*@
                                     <div class="col-md-10">
                                         @*@if (ViewBag.relacionada == "")
+<<<<<<< HEAD
+        {
+            @Html.DropDownList("TSOL_ID", null, "", htmlAttributes: new { @id = "tsol_id", @class = "form-control", onchange = @"selectTsol(this.value);soportes(this.value, '" + Session["spras"].ToString() + "'); M.Toast.dismissAll();" })
+        }
+        else if (ViewBag.ligada)
+        {
+            @Html.DropDownList("TSOL_ID", null, "", htmlAttributes: new { @id = "tsol_id", @class = "form-control", onchange = @"selectTsol(this.value);soportes(this.value, '" + Session["spras"].ToString() + "'); M.Toast.dismissAll();" })
+        }
+        else
+        {
+            @Html.HiddenFor(model => model.TSOL_ID, new { @id = "tsol_id", @onchange = "selectTsol(this.value)" })
+            <input type="text" value="@ViewBag.TSOL_IDI" disabled="disabled" />
+            <input type="text" id="tsolant_id" value="@ViewBag.TSOL_ANT" disabled="disabled" hidden />
+        }*@
+
+                                        @Html.EditorFor(model => model.TSOL_ID, new { htmlAttributes = new { @class = "dropdowntree" } })
+=======
                                             {
                                                 @Html.DropDownList("TSOL_ID", null, "", htmlAttributes: new { @id = "tsol_id", @class = "form-control", onchange = @"selectTsol(this.value);soportes(this.value, '" + Session["spras"].ToString() + "'); M.Toast.dismissAll();" })
                                             }
@@ -276,6 +293,7 @@ errorMessage(message);
                                             <input type="text" value="@ViewBag.TSOL_IDI" disabled="disabled" />
                                             <input type="text" id="tsolant_id" value="@ViewBag.TSOL_ANT" disabled="disabled" hidden />
                                             }*@
+>>>>>>> ebea1250127e59f0c22968d25525fc125ada8fd6
                                     </div>
                                     @Html.HiddenFor(model => model.DOCUMENTO_REF)
                                     @{string jval = ViewBag.TSOL_VALUES;
@@ -378,9 +396,9 @@ errorMessage(message);
                                         idValid: "TSOL_ID_VALID",
                                         dataSource:@Html.Raw(Json.Encode(ViewBag.listtreetsol)),
                                         change: function(e) {
-                                            $("#tsol_id").val(e.sender._values[0]);
-                                            $('#tsol_id').trigger('change');
-                                            //soportes(e.sender._values[0], '@Session["spras"].ToString()'); M.Toast.dismissAll();
+                                            //$("#tsol_id").val(e.sender._values[0]);
+                                            //$('#tsol_id').trigger('change');
+                                            soportes(e.sender._values[0], '@Session["spras"].ToString()'); M.Toast.dismissAll();
                                         },
                                     });
 
