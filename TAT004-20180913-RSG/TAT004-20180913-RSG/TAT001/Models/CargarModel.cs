@@ -77,7 +77,7 @@ namespace TAT001.Models
                                     REGION = pRESUPUESTOP.REGION,
                                     MONEDA = pRESUPUESTOP.MONEDA,
                                     MATERIAL = pRESUPUESTOP.MATERIAL,
-                                    BANNER = pRESUPUESTOP.BANNER,
+                                    BANNER = pRESUPUESTOP.BANNER.PadLeft(10, '0'),
                                     NETLB = pRESUPUESTOP.NETLB,
                                     TOTCS = pRESUPUESTOP.TOTCS,
                                     ADVER = pRESUPUESTOP.ADVER,
@@ -141,7 +141,7 @@ namespace TAT001.Models
                         REGION = pRESUPUESTOP.REGION,
                         MONEDA = pRESUPUESTOP.MONEDA,
                         MATERIAL = pRESUPUESTOP.MATERIAL,
-                        BANNER = pRESUPUESTOP.BANNER,
+                        BANNER = pRESUPUESTOP.BANNER.PadLeft(10, '0'),
                         NETLB = pRESUPUESTOP.NETLB,
                         TOTCS = pRESUPUESTOP.TOTCS,
                         ADVER = pRESUPUESTOP.ADVER,
@@ -185,7 +185,8 @@ namespace TAT001.Models
             PRESUPSAPP pRESUPUESTOP = new PRESUPSAPP();
             List<string[]> datosPresu = new List<string[]>();
             StreamReader strem;
-            List<REGION> sociedades = db.REGIONs.Where(x => sociedad.Contains(x.SOCIEDAD)).ToList();
+            string soc2 = sociedad[0];
+            List<REGION> sociedades = db.REGIONs.Where(x => x.SOCIEDAD == soc2).ToList();
             string[] lines;
             bool prilinea = false;
             int i = 1;
@@ -630,10 +631,10 @@ namespace TAT001.Models
                 }
             }
         }
-        public DatosPresupuesto consultSociedad()
+        public DatosPresupuesto consultSociedad(string user)
         {
             DatosPresupuesto sociedades = new DatosPresupuesto();
-            sociedades.sociedad = db.SOCIEDADs.Where(x => x.ACTIVO == true).ToList();
+            sociedades.sociedad = db.USUARIOs.Where(a => a.ID.Equals(user)).FirstOrDefault().SOCIEDADs.ToList();
             return sociedades;
         }
         public string bannres(string ruta, string[] sociedadcpt)

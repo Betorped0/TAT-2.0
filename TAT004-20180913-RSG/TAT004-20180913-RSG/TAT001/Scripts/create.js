@@ -139,7 +139,7 @@ $(document).ready(function () {
             }
         ]
     });
-
+    
     $('#matcat').click(function (e) {
 
         var kunnr = $('#payer_id').val();
@@ -2396,7 +2396,7 @@ function copiarTableVistaSop() {
 
             if ($("#check_factura").is(':checked') === false) {
 
-                factura = "<input class=\"FACTURA input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + factura + "\">";
+                factura = "<input class=\"FACTURA checkLeke input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + factura + "\">";
                 bukrs = "<input class=\"SOCIEDAD input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + bukrs + "\">";
                 ffecha[0] = "<input class=\"FECHA input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + ffecha[0] + "\">";
                 prov = "<input class=\"PROVEEDOR input_sop_f input_proveedor\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + prov + "\">";
@@ -2410,7 +2410,7 @@ function copiarTableVistaSop() {
                 bill_doc = "<input class=\"BILL_DOC input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + bill_doc + "\">";
                 imp_fact = "<input class=\"IMPORTE_FAC input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + imp_fact + "\">"//jemo 18-07-2018
                 belnr = "<input class=\"BELNR input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + belnr + "\">"
-
+                
             } else {
 
                 //B20180625 MGC 2018.06.27
@@ -4161,7 +4161,7 @@ function addRowSop(t) {
     addRowSopl(
         t,
         "1", //POS
-        "<input class=\"FACTURA input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
+        "<input class=\"FACTURA input_sop_f checkLeke\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
         "<input class=\"SOCIEDAD input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
         "<input class=\"FECHA input_sop_f fv\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
         "<input class=\"PROVEEDOR input_sop_f input_proveedor prv\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
@@ -4177,8 +4177,15 @@ function addRowSop(t) {
         "<input class=\"IMPORTE_FAC input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
         "<input class=\"BELNR input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">"//B20180625 MGC 2018.06.27    
     );
+    
 }
-
+$(document).on("change", ".checkLeke", function () {
+    if ($("#sociedad_id").val() === "LEKE") {
+        str = $(".checkLeke").val();
+        str = str.substring(0, 3) + "-" + str.substring(3, 6) + "-" + str.substring(6, str.length);
+        $(".checkLeke").val(str);
+    }
+});
 function addRowSopl(t, pos, fac, bukrs, fecha, prov, provt, control, aut, ven, fack, eje, pay, des, bill, impf, belnr) {
     //var t = $('#table_sop').DataTable();
 
@@ -5696,6 +5703,8 @@ function selectCliente(valu) {
             success: function (data) {
 
                 if (data !== null || data !== "") {
+                    $("label[for='USUARIO_MANAGER']").addClass("active");
+                    $('#USUARIO_MANAGER').val(data.MANAGER);
                     $('#cli_name').val(data.NAME1);
                     $("label[for='cli_name']").addClass("active");
                     $('#vkorg').val(data.VKORG).focus();
@@ -5725,6 +5734,8 @@ function selectCliente(valu) {
                     }
                     //RSG 28.05.2018------------------------------------------
                 } else {
+                    $("label[for='USUARIO_MANAGER']").removeClass("active");
+                    $('#USUARIO_MANAGER').val("");
                     $('#cli_name').val("");
                     $("label[for='cli_name']").removeClass("active");
                     $('#vkorg').val("").focus();
@@ -6261,3 +6272,4 @@ function categoriaUnica(cat) {
 
     return res;
 }
+
