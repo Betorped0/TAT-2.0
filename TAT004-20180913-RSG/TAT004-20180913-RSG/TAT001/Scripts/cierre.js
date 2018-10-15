@@ -1,0 +1,3 @@
+﻿function cierre() {
+    return false;
+}
