@@ -1500,15 +1500,19 @@ namespace TAT001.Controllers.Catalogos
 
             //List<DET_AGENTE1> ld1 = new List<DET_AGENTE1>();
             ld1 = ObjAList3();
-            
+            string usuario_id = null;
             foreach (DET_AGENTE1 da in ld1)
             {
+                if (!String.IsNullOrEmpty(da.ID))
+                {
+                    usuario_id = da.ID;
+                }
                 USUARIOF uf = new USUARIOF();
 
                 if (da.mess == null || da.mess == "")
                 {
                     ////---------------------------- USUARIOF
-                    uf.USUARIO_ID = da.ID;
+                    uf.USUARIO_ID = usuario_id;
                     uf.VKORG = da.VKORG;
                     uf.VTWEG = da.VTWEG;
                     uf.SPART = da.SPART;
@@ -1555,12 +1559,12 @@ namespace TAT001.Controllers.Catalogos
 
             ////---------------------------- Co Codes
             ld = ObjAList4();
-            string usuario_id = null;
+            usuario_id = null;
             foreach (DET_AGENTE1 da in ld)
             {
                 if (!String.IsNullOrEmpty(da.ID))
                 {
-                     usuario_id = da.ID;
+                     usuario_id = da.BUNIT;
                 }
                 USUARIO us = db.USUARIOs.Where(x => x.ID == usuario_id).First();
 
