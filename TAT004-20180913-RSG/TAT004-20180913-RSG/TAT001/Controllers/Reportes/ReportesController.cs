@@ -379,7 +379,6 @@ namespace TAT001.Controllers.Reportes
             var consultaAnio = (from a in db.DOCUMENTOes select new { a.EJERCICIO }).Distinct().ToList();
             ViewBag.miconsultaAnio = new SelectList(consultaAnio, "EJERCICIO", "EJERCICIO");
 
-
             ViewBag.documento = db.DOCUMENTOes.ToList();
             ViewBag.sociedad = db.SOCIEDADs.ToList();
             ViewBag.periodo = db.PERIODOes.ToList();
