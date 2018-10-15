@@ -775,7 +775,7 @@ namespace TAT001.Controllers
         // GET: Solicitudes
         public ActionResult Reversa(decimal id, decimal resto)
         {
-            int pagina = 201; //ID EN BASE DE DATOS
+             int pagina = 201; //ID EN BASE DE DATOS
             using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
