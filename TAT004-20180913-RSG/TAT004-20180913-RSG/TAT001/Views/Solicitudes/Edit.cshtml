@@ -476,7 +476,8 @@
                             <h5>Información del cliente</h5>
                             <div class="row" style="margin-bottom:0">
                                 <div class="input-field col s12">
-                                    @Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @id = "payer_id", @disabled = "disabled ", @onchange = @"selectCliente(this.value)" } })
+                                    @Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @id = "payer_id1", @disabled = "disabled "@*, @onchange = @"selectCliente(this.value)"*@}
+                            })
                                     @Html.LabelFor(model => model.PAYER_ID, "Cliente", htmlAttributes: new { @for = "payer_id" })
                                 </div>
                                 <script>
@@ -512,20 +513,20 @@
                                                 selectCliente(value);
                                             }
                                         });
-                                        ////OCG 11/10/18
-                                        //var cliente = auto("#payer_id").val();
-                                        //var cli = cliente.split("");
-                                        //var con = 0;
-                                        //for (var i = 0; i < 10; i++) {
-                                        //    if (cli[i] == 0) {
-                                        //        con++;
-                                        //    }
-                                        //    else {
-                                        //        i = 9;
-                                        //    }
-                                        //}
-                                        //var clien = cliente.substring(con, i);
-                                        //auto("#payer_id").attr("value", clien);
+                                        //OCG 11/10/18
+                                        var cliente = auto("#payer_id1").val();
+                                        var cli = cliente.split("");
+                                        var con = 0;
+                                        for (var i = 0; i < 10; i++) {
+                                            if (cli[i] == 0) {
+                                                con++;
+                                            }
+                                            else {
+                                                i = 9;
+                                            }
+                                        }
+                                        var clien = cliente.substring(con, i);
+                                        auto("#payer_id1").attr("value", clien);
                                     })
                                 </script>
                                 <input type="hidden" id="txt_vkorg" />
@@ -1590,7 +1591,7 @@
                                     <div class="input-field col s6">
                                         @*<div class="form-group">*@
                                         @*<div class="col-md-10">*@
-                                        @Html.DropDownList("MONEDA", null, htmlAttributes: new { @id = "moneda_id", @class = "form-control " + @ViewBag.relacionada, @disabled = "disabled", @onchange = @"selectMoneda(this.value)"}) @*OCG 09/10/2018 Se modifica para evitar el cambiode la moneda*@
+                                        @Html.DropDownList("MONEDA", null, htmlAttributes: new { @id = "moneda_id", @class = "form-control " + @ViewBag.relacionada, @disabled = "disabled", @onchange = @"selectMoneda(this.value)" }) @*OCG 09/10/2018 Se modifica para evitar el cambiode la moneda*@
                                         @Html.LabelFor(model => model.MONEDA_ID, "Moneda", htmlAttributes: new { @for = "moneda_id" })
                                         @*</div>
                                             </div>*@
@@ -2091,25 +2092,25 @@
 }
 
 @*<script>
-    auto(document).ready(function () {
+        auto(document).ready(function () {
 
-        //OCG 11/10/18
-        var cliente = auto("#payer_id").val();
-        var cli = cliente.split("");
-        var con = 0;
-        for (var i = 0; i < 10; i++) {
-            if (cli[i] == 0) {
-                con++;
+            //OCG 11/10/18
+            var cliente = auto("#payer_id").val();
+            var cli = cliente.split("");
+            var con = 0;
+            for (var i = 0; i < 10; i++) {
+                if (cli[i] == 0) {
+                    con++;
+                }
+                else {
+                    i = 9;
+                }
             }
-            else {
-                i = 9;
-            }
-        }
-        var clien = cliente.substring(con, i);
-        auto("#payer_id").attr("value", clien);
+            var clien = cliente.substring(con, i);
+            auto("#payer_id").attr("value", clien);
 
-    });
-</script>*@
+        });
+    </script>*@
 
 <div id="validaciones">
     <script>
@@ -2118,3 +2119,4 @@
     </script>
     <script src="~/Scripts/warning.js"></script>
 </div>
+@Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @id = "payer_id", @disabled = "disabled ", @onchange = @"selectCliente(this.value)", @style = "visibility:hidden" } }) @*OCG 15-10-18 Se inserta aqui para no afectar la vista*@
