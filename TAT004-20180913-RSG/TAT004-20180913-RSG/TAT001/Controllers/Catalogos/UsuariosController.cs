@@ -833,8 +833,8 @@ namespace TAT001.Controllers.Catalogos
             {
                 int cont = 1;
                 string messa = "";
-                bool vus = false;
                 string sel = "";
+                bool vus = false;
                 Usuarios us = new Usuarios();
                 Cryptography c = new Cryptography();
 
@@ -906,20 +906,16 @@ namespace TAT001.Controllers.Catalogos
                     {
                         PAI pa = null;
                         ////-------------------------------CLIENTE
-                        CLIENTE k = clientes.Where(x => x.KUNNR.Equals(us.KUNNR)).FirstOrDefault();
+                        CLIENTE k = db.CLIENTEs.Where(cc => cc.KUNNR.Equals(us.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
                         if (k == null)
+                            us.KUNNRX = false;
+                        else
                         {
-                            k = db.CLIENTEs.Where(cc => cc.KUNNR.Equals(us.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
-                            if (k == null)
-                                us.KUNNRX = false;
-                            else
-                            {
-                                clientes.Add(k);
-                                client[cont2, 0] = us.KUNNR.ToString();
-                                tablas[cont2, 0] = da.KUNNR.ToString();
-                                gua[cont2] = da.KUNNR.ToString();
-                                pa = db.PAIS.Where(x => x.LAND.Equals(k.LAND) & x.SOCIEDAD_ID.Equals(us.BUNIT)).FirstOrDefault();
-                            }
+                            clientes.Add(k);
+                            client[cont2, 0] = us.KUNNR.ToString();
+                            tablas[cont2, 0] = da.KUNNR.ToString();
+                            gua[cont2] = da.KUNNR.ToString();
+                            pa = db.PAIS.Where(x => x.LAND.Equals(k.LAND) & x.SOCIEDAD_ID.Equals(us.BUNIT)).FirstOrDefault();
                         }
                         if (!us.KUNNRX)
                         {
@@ -929,22 +925,17 @@ namespace TAT001.Controllers.Catalogos
                         }
 
                         ////-------------------------------COMPANY CODE
-                        SOCIEDAD b = sociedad.Where(x => x.BUKRS.Equals(us.BUNIT)).FirstOrDefault();
+                        SOCIEDAD b = db.SOCIEDADs.Where(x => x.BUKRS.Equals(us.BUNIT) & x.ACTIVO == true).FirstOrDefault();
 
-
-                        if (b == null)
+                        if (b == null || pa == null)
                         {
-                            b = db.SOCIEDADs.Where(x => x.BUKRS.Equals(us.BUNIT) & x.ACTIVO == true).FirstOrDefault();
-                            if (b == null || pa == null)
-                            {
-                                us.BUNITX = false;
-                            }
-                            else
-                            {
-                                sociedad.Add(b);
-                                tablas[cont2, 1] = da.BUNIT.ToString();
-                                usuariosoc[cont4, 1] = da.BUNIT.ToString();
-                            }
+                            us.BUNITX = false;
+                        }
+                        else
+                        {
+                            sociedad.Add(b);
+                            tablas[cont2, 1] = da.BUNIT.ToString();
+                            usuariosoc[cont4, 1] = da.BUNIT.ToString();
                         }
                         if (!us.BUNITX)
                         {
@@ -955,19 +946,14 @@ namespace TAT001.Controllers.Catalogos
 
                         ////-------------------------------NIVEL
 
-                        PUESTO pi = puesto.Where(x => x.ID == pues & x.ACTIVO == true).FirstOrDefault();
-
+                        PUESTO pi = db.PUESTOes.Where(x => x.ID == pues & x.ACTIVO == true).FirstOrDefault();
                         if (pi == null)
+                            us.PUESTO_IDX = false;
+                        else
                         {
-                            pi = db.PUESTOes.Where(x => x.ID == pues & x.ACTIVO == true).FirstOrDefault();
-                            if (pi == null)
-                                us.PUESTO_IDX = false;
-                            else
-                            {
-                                puesto.Add(pi);
-                                tablas[cont2, 2] = da.PUESTO_ID.ToString();
+                            puesto.Add(pi);
+                            tablas[cont2, 2] = da.PUESTO_ID.ToString();
 
-                            }
                         }
                         if (!us.PUESTO_IDX)
                         {
@@ -1059,18 +1045,14 @@ namespace TAT001.Controllers.Catalogos
                     //Asignacion de mas clientes
                     else if (vus == true)
                     {
-                        CLIENTE k = clientes.Where(x => x.KUNNR.Equals(us.KUNNR)).FirstOrDefault();
+                        CLIENTE k = db.CLIENTEs.Where(cc => cc.KUNNR.Equals(us.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
                         if (k == null)
+                            us.KUNNRX = false;
+                        else
                         {
-                            k = db.CLIENTEs.Where(cc => cc.KUNNR.Equals(us.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
-                            if (k == null)
-                                us.KUNNRX = false;
-                            else
-                            {
-                                clientes.Add(k);
-                                client[cont2, 0] = us.KUNNR.ToString();
-                                
-                            }
+                            clientes.Add(k);
+                            client[cont2, 0] = us.KUNNR.ToString();
+
                         }
                         for (int x = cont4; x > 1; x--)
                         {
@@ -1109,23 +1091,18 @@ namespace TAT001.Controllers.Catalogos
                         }
 
                         ////-------------------------------COMPANY CODE
-                        SOCIEDAD b = sociedad.Where(x => x.BUKRS.Equals(us.BUNIT)).FirstOrDefault();
-
+                        SOCIEDAD b = db.SOCIEDADs.Where(x => x.BUKRS.Equals(us.BUNIT) & x.ACTIVO == true).FirstOrDefault();
                         if (b == null)
                         {
-                            b = db.SOCIEDADs.Where(x => x.BUKRS.Equals(us.BUNIT) & x.ACTIVO == true).FirstOrDefault();
-                            if (b == null)
-                            {
-                                us.BUNITX = false;
-                            }
-                            else
-                            {
-                                sociedad.Add(b);
-                                admins[cont, 0] = da.BUNIT.ToString();
-                                tabla1[cont3, 1] = da.BUNIT.ToString();
-                                gua1[cont3] = da.BUNIT.ToString();
-                                usuariosoc[cont4, 0] = da.BUNIT.ToString();
-                            }
+                            us.BUNITX = false;
+                        }
+                        else
+                        {
+                            sociedad.Add(b);
+                            admins[cont, 0] = da.BUNIT.ToString();
+                            tabla1[cont3, 1] = da.BUNIT.ToString();
+                            gua1[cont3] = da.BUNIT.ToString();
+                            usuariosoc[cont4, 0] = da.BUNIT.ToString();
                         }
                         if (!us.BUNITX)
                         {
@@ -1136,18 +1113,13 @@ namespace TAT001.Controllers.Catalogos
 
                         ////-------------------------------NIVEL
 
-                        PUESTO pi = puesto.Where(x => x.ID == pues & x.ACTIVO == true).FirstOrDefault();
-
+                        PUESTO pi = db.PUESTOes.Where(x => x.ID == pues & x.ACTIVO == true).FirstOrDefault();
                         if (pi == null)
+                            us.PUESTO_IDX = false;
+                        else
                         {
-                            pi = db.PUESTOes.Where(x => x.ID == pues & x.ACTIVO == true).FirstOrDefault();
-                            if (pi == null)
-                                us.PUESTO_IDX = false;
-                            else
-                            {
-                                puesto.Add(pi);
-                                tabla1[cont3, 2] = da.PUESTO_ID.ToString();
-                            }
+                            puesto.Add(pi);
+                            tabla1[cont3, 2] = da.PUESTO_ID.ToString();
                         }
                         if (!us.PUESTO_IDX)
                         {
@@ -1239,22 +1211,18 @@ namespace TAT001.Controllers.Catalogos
                     //Asignacion de mas Co Codes
                     else if (vus == true)
                     {
-                        SOCIEDAD b = sociedad.Where(x => x.BUKRS.Equals(us.BUNIT)).FirstOrDefault();
+                        SOCIEDAD b = db.SOCIEDADs.Where(x => x.BUKRS.Equals(us.BUNIT) & x.ACTIVO == true).FirstOrDefault();
                         if (b == null)
+                            us.BUNITX = false;
+                        else
                         {
-                            b = db.SOCIEDADs.Where(x => x.BUKRS.Equals(us.BUNIT) & x.ACTIVO == true).FirstOrDefault();
-                            if (b == null)
-                                us.BUNITX = false;
-                            else
-                            {
-                                sociedad.Add(b);
-                                admins[cont3, 0] = da.BUNIT.ToString();
-                                usuariosoc[cont4, 0] = da.BUNIT.ToString();
-                            }
+                            sociedad.Add(b);
+                            admins[cont3, 0] = da.BUNIT.ToString();
+                            usuariosoc[cont4, 0] = da.BUNIT.ToString();
                         }
-                        for (int x= cont4; x> 1;x--)
+                        for (int x = cont4; x > 1; x--)
                         {
-                            if (IDs[x]!=null)
+                            if (IDs[x] != null)
                             {
                                 da.ID = IDs[x];
                                 x = 0;
@@ -2002,22 +1970,17 @@ namespace TAT001.Controllers.Catalogos
                         }
 
                         ////-------------------------------COMPANY CODE
-                        SOCIEDAD b = sociedad.Where(x => x.BUKRS.Equals(us.BUNIT)).FirstOrDefault();
+                        SOCIEDAD b = db.SOCIEDADs.Where(x => x.BUKRS.Equals(us.BUNIT) & x.ACTIVO == true).FirstOrDefault();
 
-
-                        if (b == null)
+                        if (b == null || pa == null)
                         {
-                            b = db.SOCIEDADs.Where(x => x.BUKRS.Equals(us.BUNIT) & x.ACTIVO == true).FirstOrDefault();
-                            if (b == null || pa == null)
-                            {
-                                us.BUNITX = false;
-                            }
-                            else
-                            {
-                                sociedad.Add(b);
-                                tablas[cont2, 1] = da.BUNIT.ToString();
-                                usuariosoc[cont4, 1] = da.BUNIT.ToString();
-                            }
+                            us.BUNITX = false;
+                        }
+                        else
+                        {
+                            sociedad.Add(b);
+                            tablas[cont2, 1] = da.BUNIT.ToString();
+                            usuariosoc[cont4, 1] = da.BUNIT.ToString();
                         }
                         if (!us.BUNITX)
                         {
@@ -2028,19 +1991,14 @@ namespace TAT001.Controllers.Catalogos
 
                         ////-------------------------------NIVEL
 
-                        PUESTO pi = puesto.Where(x => x.ID == pues & x.ACTIVO == true).FirstOrDefault();
-
+                        PUESTO pi = db.PUESTOes.Where(x => x.ID == pues & x.ACTIVO == true).FirstOrDefault();
                         if (pi == null)
+                            us.PUESTO_IDX = false;
+                        else
                         {
-                            pi = db.PUESTOes.Where(x => x.ID == pues & x.ACTIVO == true).FirstOrDefault();
-                            if (pi == null)
-                                us.PUESTO_IDX = false;
-                            else
-                            {
-                                puesto.Add(pi);
-                                tablas[cont2, 2] = da.PUESTO_ID.ToString();
+                            puesto.Add(pi);
+                            tablas[cont2, 2] = da.PUESTO_ID.ToString();
 
-                            }
                         }
                         if (!us.PUESTO_IDX)
                         {
@@ -2132,18 +2090,14 @@ namespace TAT001.Controllers.Catalogos
                     //Asignacion de mas clientes
                     else if (vus == true)
                     {
-                        CLIENTE k = clientes.Where(x => x.KUNNR.Equals(us.KUNNR)).FirstOrDefault();
+                        CLIENTE k = db.CLIENTEs.Where(cc => cc.KUNNR.Equals(us.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
                         if (k == null)
+                            us.KUNNRX = false;
+                        else
                         {
-                            k = db.CLIENTEs.Where(cc => cc.KUNNR.Equals(us.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
-                            if (k == null)
-                                us.KUNNRX = false;
-                            else
-                            {
-                                clientes.Add(k);
-                                client[cont2, 0] = us.KUNNR.ToString();
+                            clientes.Add(k);
+                            client[cont2, 0] = us.KUNNR.ToString();
 
-                            }
                         }
                         for (int x = cont4; x > 1; x--)
                         {
@@ -2182,23 +2136,18 @@ namespace TAT001.Controllers.Catalogos
                         }
 
                         ////-------------------------------COMPANY CODE
-                        SOCIEDAD b = sociedad.Where(x => x.BUKRS.Equals(us.BUNIT)).FirstOrDefault();
-
+                        SOCIEDAD b = db.SOCIEDADs.Where(x => x.BUKRS.Equals(us.BUNIT) & x.ACTIVO == true).FirstOrDefault();
                         if (b == null)
                         {
-                            b = db.SOCIEDADs.Where(x => x.BUKRS.Equals(us.BUNIT) & x.ACTIVO == true).FirstOrDefault();
-                            if (b == null)
-                            {
-                                us.BUNITX = false;
-                            }
-                            else
-                            {
-                                sociedad.Add(b);
-                                admins[cont, 0] = da.BUNIT.ToString();
-                                tabla1[cont3, 1] = da.BUNIT.ToString();
-                                gua1[cont3] = da.BUNIT.ToString();
-                                usuariosoc[cont4, 0] = da.BUNIT.ToString();
-                            }
+                            us.BUNITX = false;
+                        }
+                        else
+                        {
+                            sociedad.Add(b);
+                            admins[cont, 0] = da.BUNIT.ToString();
+                            tabla1[cont3, 1] = da.BUNIT.ToString();
+                            gua1[cont3] = da.BUNIT.ToString();
+                            usuariosoc[cont4, 0] = da.BUNIT.ToString();
                         }
                         if (!us.BUNITX)
                         {
@@ -2209,18 +2158,13 @@ namespace TAT001.Controllers.Catalogos
 
                         ////-------------------------------NIVEL
 
-                        PUESTO pi = puesto.Where(x => x.ID == pues & x.ACTIVO == true).FirstOrDefault();
-
+                        PUESTO pi = db.PUESTOes.Where(x => x.ID == pues & x.ACTIVO == true).FirstOrDefault();
                         if (pi == null)
+                            us.PUESTO_IDX = false;
+                        else
                         {
-                            pi = db.PUESTOes.Where(x => x.ID == pues & x.ACTIVO == true).FirstOrDefault();
-                            if (pi == null)
-                                us.PUESTO_IDX = false;
-                            else
-                            {
-                                puesto.Add(pi);
-                                tabla1[cont3, 2] = da.PUESTO_ID.ToString();
-                            }
+                            puesto.Add(pi);
+                            tabla1[cont3, 2] = da.PUESTO_ID.ToString();
                         }
                         if (!us.PUESTO_IDX)
                         {
@@ -2312,18 +2256,14 @@ namespace TAT001.Controllers.Catalogos
                     //Asignacion de mas Co Codes
                     else if (vus == true)
                     {
-                        SOCIEDAD b = sociedad.Where(x => x.BUKRS.Equals(us.BUNIT)).FirstOrDefault();
+                        SOCIEDAD b = db.SOCIEDADs.Where(x => x.BUKRS.Equals(us.BUNIT) & x.ACTIVO == true).FirstOrDefault();
                         if (b == null)
+                            us.BUNITX = false;
+                        else
                         {
-                            b = db.SOCIEDADs.Where(x => x.BUKRS.Equals(us.BUNIT) & x.ACTIVO == true).FirstOrDefault();
-                            if (b == null)
-                                us.BUNITX = false;
-                            else
-                            {
-                                sociedad.Add(b);
-                                admins[cont3, 0] = da.BUNIT.ToString();
-                                usuariosoc[cont4, 0] = da.BUNIT.ToString();
-                            }
+                            sociedad.Add(b);
+                            admins[cont3, 0] = da.BUNIT.ToString();
+                            usuariosoc[cont4, 0] = da.BUNIT.ToString();
                         }
                         for (int x = cont4; x > 1; x--)
                         {
@@ -2575,52 +2515,105 @@ namespace TAT001.Controllers.Catalogos
                     var clin = (from x in db.USUARIOFs
                                 where x.USUARIO_ID.Equals(usc) & x.ACTIVO == true
                                 select x.KUNNR).ToArray();
-                    for (int i = 0; i < clin.Length; i++)
+                    if (clin != null)
                     {
-                        Usuarios ul = new Usuarios();
-                        ul.KUNNR = "";
-                        ul.BUNIT = "";
-                        ul.PUESTO_ID = "";
-                        ul.ID = "";
-                        ul.NOMBRE = "";
-                        ul.APELLIDO_P = "";
-                        ul.APELLIDO_M = "";
-                        ul.EMAIL = "";
-                        ul.SPRAS_ID = "";
-                        ul.PASS = "";
-                        ul.mess = "";
-                        var us = clin[i];
-                        var com = "";
+                        for (int i = 0; i < clin.Length; i++)
+                        {
+                            Usuarios ul = new Usuarios();
+                            ul.KUNNR = "";
+                            ul.BUNIT = "";
+                            ul.PUESTO_ID = "";
+                            ul.ID = "";
+                            ul.NOMBRE = "";
+                            ul.APELLIDO_P = "";
+                            ul.APELLIDO_M = "";
+                            ul.EMAIL = "";
+                            ul.SPRAS_ID = "";
+                            ul.PASS = "";
+                            ul.mess = "";
+                            var us = clin[i];
+                            var com = "";
 
-                        com = (from x in db.USUARIOFs where x.KUNNR.Equals(us) & x.USUARIO_ID.Equals(usc) & x.ACTIVO == true select x.KUNNR).FirstOrDefault();
-                        if (com != null)
-                            ul.KUNNR = com;
-                        com = (from x in db.PAIS join a in db.CLIENTEs on x.LAND equals a.LAND where x.ACTIVO == true & a.KUNNR.Equals(ul.KUNNR) select x.SOCIEDAD_ID).FirstOrDefault();
-                        if (com != null)
-                            ul.BUNIT = com;
-                        com = (from x in db.USUARIOs where x.ID.Equals(usc) & x.ACTIVO == true select x.ID).FirstOrDefault();
-                        if (com != null)
-                            ul.ID = com;
-                        com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.PUESTO_ID).FirstOrDefault().ToString();
-                        if (com != null)
-                            ul.PUESTO_ID = com;
-                        com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.NOMBRE).FirstOrDefault();
-                        if (com != null)
-                            ul.NOMBRE = com;
-                        com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.APELLIDO_P).FirstOrDefault();
-                        if (com != null)
-                            ul.APELLIDO_P = com;
-                        com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.APELLIDO_M).FirstOrDefault();
-                        if (com != null)
-                            ul.APELLIDO_M = com;
-                        com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.EMAIL).FirstOrDefault();
-                        if (com != null)
-                            ul.EMAIL = com;
-                        com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.SPRAS_ID).FirstOrDefault();
-                        if (com != null)
-                            ul.SPRAS_ID = com;
+                            com = (from x in db.USUARIOFs where x.KUNNR.Equals(us) & x.USUARIO_ID.Equals(usc) & x.ACTIVO == true select x.KUNNR).FirstOrDefault();
+                            if (com != null)
+                                ul.KUNNR = com;
+                            com = (from x in db.PAIS join a in db.CLIENTEs on x.LAND equals a.LAND where x.ACTIVO == true & a.KUNNR.Equals(ul.KUNNR) select x.SOCIEDAD_ID).FirstOrDefault();
+                            if (com != null)
+                                ul.BUNIT = com;
+                            com = (from x in db.USUARIOs where x.ID.Equals(usc) & x.ACTIVO == true select x.ID).FirstOrDefault();
+                            if (com != null)
+                                ul.ID = com;
+                            com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.PUESTO_ID).FirstOrDefault().ToString();
+                            if (com != null)
+                                ul.PUESTO_ID = com;
+                            com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.NOMBRE).FirstOrDefault();
+                            if (com != null)
+                                ul.NOMBRE = com;
+                            com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.APELLIDO_P).FirstOrDefault();
+                            if (com != null)
+                                ul.APELLIDO_P = com;
+                            com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.APELLIDO_M).FirstOrDefault();
+                            if (com != null)
+                                ul.APELLIDO_M = com;
+                            com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.EMAIL).FirstOrDefault();
+                            if (com != null)
+                                ul.EMAIL = com;
+                            com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.SPRAS_ID).FirstOrDefault();
+                            if (com != null)
+                                ul.SPRAS_ID = com;
 
-                        cc.Add(ul);
+                            cc.Add(ul);
+                        }
+                    }
+                    else
+                    {
+                        clin = (from x in db.SOCIEDADs
+                                where x.USUARIOs.Equals(usc) & x.ACTIVO == true
+                                select x.BUKRS).ToArray();
+                        for (int i = 0; i < clin.Length; i++)
+                        {
+                            Usuarios ul = new Usuarios();
+                            ul.KUNNR = "";
+                            ul.BUNIT = "";
+                            ul.PUESTO_ID = "";
+                            ul.ID = "";
+                            ul.NOMBRE = "";
+                            ul.APELLIDO_P = "";
+                            ul.APELLIDO_M = "";
+                            ul.EMAIL = "";
+                            ul.SPRAS_ID = "";
+                            ul.PASS = "";
+                            ul.mess = "";
+                            var us = clin[i];
+                            var com = "";
+
+                            com = (from x in db.PAIS join a in db.CLIENTEs on x.LAND equals a.LAND where x.ACTIVO == true & a.KUNNR.Equals(ul.KUNNR) select x.SOCIEDAD_ID).FirstOrDefault();
+                            if (com != null)
+                                ul.BUNIT = com;
+                            com = (from x in db.USUARIOs where x.ID.Equals(usc) & x.ACTIVO == true select x.ID).FirstOrDefault();
+                            if (com != null)
+                                ul.ID = com;
+                            com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.PUESTO_ID).FirstOrDefault().ToString();
+                            if (com != null)
+                                ul.PUESTO_ID = com;
+                            com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.NOMBRE).FirstOrDefault();
+                            if (com != null)
+                                ul.NOMBRE = com;
+                            com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.APELLIDO_P).FirstOrDefault();
+                            if (com != null)
+                                ul.APELLIDO_P = com;
+                            com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.APELLIDO_M).FirstOrDefault();
+                            if (com != null)
+                                ul.APELLIDO_M = com;
+                            com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.EMAIL).FirstOrDefault();
+                            if (com != null)
+                                ul.EMAIL = com;
+                            com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.SPRAS_ID).FirstOrDefault();
+                            if (com != null)
+                                ul.SPRAS_ID = com;
+
+                            cc.Add(ul);
+                        }
                     }
                 }
                 if (!uscx)
