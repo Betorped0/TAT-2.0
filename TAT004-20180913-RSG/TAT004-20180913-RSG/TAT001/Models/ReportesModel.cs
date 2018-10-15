@@ -126,7 +126,7 @@ namespace TAT001.Models
             public string STATUSS { get; internal set; }
             public string ESTATUS_STRING { get; internal set; }
             public decimal MONTO_2 { get; internal set; }
-            public string EXPENSE_RECOGNITION { get; internal set; }
+            public decimal EXPENSE_RECOGNITION { get; internal set; }
             public bool ES_REVERSO { get; internal set; }
         }
 

@@ -207,7 +207,7 @@
                     {
                         if (Model.D.USUARIOC_ID == ViewBag.usuario.ID)
                         {
-                            <a class="btn-small modal-trigger" id="btn_cancel" href="#modal2">Cancelar</a>
+                            <a class="col btn-small modal-trigger" id="btn_cancel" href="#modal2">Cancelar</a>
                             <div id="modal2" class="modal">
                                 <div class="modal-content">
                                     <div class="row">
@@ -234,8 +234,8 @@
                     if (Model.D.TSOL.CARTA)
                     {
                         @* ---DRS 13.10.2018--- *@
-                        <div>
-                            <button type="button" class="btn-small" data-target="list_carta" style="margin-top:3%;width:100%;" id="btn_carta">Carta</button>
+                        <div class="col">
+                            <button type="button" class="btn-small" data-target="list_carta" style="width:100%;" id="btn_carta">Carta</button>
                         </div>
                         @*<button type="button" class="btn-small  " id="btn_cancel">Cancelar</button>*@
                         <ul id='list_carta' class='dropdown-content'>
@@ -419,7 +419,7 @@
                             if (Model.D.DOCUMENTOF.Count > 0)
                             {
                                 <div class="card-panel">
-                                    <h5>Facturas</h5>
+                                    <h5 id="head_reffact">Facturas</h5>
                                     <div class="row" style="margin-bottom:0">
                                         <div class="col s12">
                                             <table>
@@ -427,61 +427,61 @@
                                                     <tr>
                                                         @if (Model.D.DOCUMENTOF[0].FACTURA != "0")
                                                         {
-                                                            <th>Factura</th>
+                                                            <th id="thead_fact">No. Factura Fiscal</th> @*B20180801 MGC Textos*@
                                                         }
                                                         @if (Model.D.DOCUMENTOF[0].FECHA != null)
                                                         {
-                                                            <th>Fecha</th>
+                                                            <th id="thead_fecha">Fecha Factura</th> @*B20180801 MGC Textos*@
                                                         }
                                                         @if (Model.D.DOCUMENTOF[0].PROVEEDOR != "0         ")
                                                         {
-                                                            <th>Proveedor</th>
+                                                            <th id="thead_provdesc">Proveedor Desc</th> @*B20180801 MGC Textos*@
                                                         }
                                                         @if (Model.D.DOCUMENTOF[0].CONTROL != "0")
                                                         {
-                                                            <th>Control</th>
+                                                            <th id="thead_control">Control</th> @*B20180801 MGC Textos*@
                                                         }
                                                         @if (Model.D.DOCUMENTOF[0].AUTORIZACION != "0")
                                                         {
-                                                            <th>Autorización</th>
+                                                            <th id="thead_aut">Autorización</th> @*B20180801 MGC Textos*@
                                                         }
                                                         @if (Model.D.DOCUMENTOF[0].VENCIMIENTO != null)
                                                         {
-                                                            <th>Vencimiento</th>
+                                                            <th id="thead_ven">Vencimiento</th> @*B20180801 MGC Textos*@
                                                         }
                                                         @if (Model.D.DOCUMENTOF[0].FACTURAK != "0")
                                                         {
-                                                            <th>Factura k</th>
+                                                            <th id="thead_factk">Factura k</th> @*B20180801 MGC Textos*@
                                                         }
                                                         @if (Model.D.DOCUMENTOF[0].EJERCICIOK != "0")
                                                         {
-                                                            <th>Ejercicio</th>
+                                                            <th id="thead_ejercicio">Año</th> @*B20180801 MGC Textos*@
                                                         }
                                                         @if (Model.D.DOCUMENTOF[0].BILL_DOC != null)
                                                         {
                                                             if (Model.D.DOCUMENTOF[0].BILL_DOC.Trim() != "0")
                                                             {
-                                                                <th>No fact</th>
+                                                                <th id="thead_fact">No. Factura Fiscal</th> @*B20180801 MGC Textos*@
                                                             }
                                                         }
                                                         @if (Model.D.DOCUMENTOF[0].BELNR.Trim() != "0")
                                                         {
-                                                            <th>No documento</th>
+                                                            <th id="thead_belnr">Folio</th> @*B20180801 MGC Textos*@
                                                         }
                                                         @if (Model.D.DOCUMENTOF[0].PAYER != null)
                                                         {
                                                             if (Model.D.DOCUMENTOF[0].PAYER.Trim() != "0")
                                                             {
-                                                                <th>Payer</th>
+                                                                <th id="thead_payer">Payer</th> @*B20180801 MGC Textos*@@*@18-07-2018 jemo *@
                                                             }
                                                             if (Model.D.DOCUMENTOF[0].PAYER.Trim() != "0")
                                                             {
-                                                                <th>Nombre</th>
+                                                                <th id="thead_desc">Customer</th> @*B20180801 MGC Textos*@@*@18-07-2018 jemo *@
                                                             }
                                                         }
                                                         @if (Model.D.DOCUMENTOF[0].IMPORTE_FAC != null & Model.D.DOCUMENTOF[0].IMPORTE_FAC > 0)
                                                         {
-                                                            <th>Importe Fac</th>
+                                                            <th id="thead_importe">Importe por Factura</th> @*B20180801 MGC Textos*@@*@18-07-2018 jemo *@
                                                         }
                                                     </tr>
                                                 </thead>
@@ -1045,7 +1045,7 @@
                             <div class="col s12 m12 l6">
                                 <div class="card-panel">
                                     <div class="row">
-                                        <h5>Carta</h5>
+                                        <h5>Carta</h5>@*FALTA TEXTO DE LA CARTA*@
                                     </div>
                                     <div class="row">
                                         @using (Html.BeginForm("Details", "Solicitudes", FormMethod.Post, new { enctype = "multipart/form-data" }))
@@ -1169,7 +1169,7 @@
                         <div class="col s12 m12 l6">
                             <div class="card-panel">
                                 <div class="row">
-                                    <h5>Reversa</h5>
+                                    <h5 id="head_soprev">Reversa</h5>
                                 </div>
                                 <div class="row">
                                     @*@foreach (var iteem in Model.D.DOCUMENTORs)

@@ -504,7 +504,6 @@ namespace TAT001.Controllers.Reportes
             List<DOCUMENTO> documentos = db.DOCUMENTOes
                 .Where(d => comcodessplit.Contains(d.SOCIEDAD_ID) && periodsplit.Contains(d.PERIODO.ToString()) && yearsplit.Contains(d.EJERCICIO))
                 .Include(d => d.CLIENTE)
-                //.Where(d => ((!string.IsNullOrEmpty(pais))? true : paissplit.Contains(d.CLIENTE.LAND) )),
                 .Include(d => d.CARTAs)
                 .Include(d => d.CUENTAGL)
                 .Include(d => d.CUENTAGL1)
@@ -522,6 +521,11 @@ namespace TAT001.Controllers.Reportes
                 .Include(d => d.DOCUMENTORECs)
                 .Include(d => d.DOCUMENTOTS)
                 .Include(d => d.FLUJOes).ToList();
+
+            if (!string.IsNullOrEmpty(pais)) {
+                documentos = documentos.Where(d => paissplit.Contains(d.CLIENTE.LAND)).ToList();
+            }
+
             foreach (DOCUMENTO dOCUMENTO in documentos)
             {
                 Concentrado r1 = new Concentrado();
@@ -581,7 +585,7 @@ namespace TAT001.Controllers.Reportes
                     r1.STATUSS = estatuss.Substring(0, 6) + " " + estatuss.Substring(6, 1); ;
                 }
                 Estatus e = new Estatus();
-                r1.ESTATUS_STRING = e.getText(estatuss, dOCUMENTO.NUM_DOC);
+                r1.ESTATUS_STRING = e.getText(r1.STATUSS, dOCUMENTO.NUM_DOC);
 
 
                 //dOCUMENTO.DOCUMENTOF = db.DOCUMENTOFs.Where(a => a.NUM_DOC.Equals(dOCUMENTO.NUM_DOC)).ToList();
@@ -830,7 +834,7 @@ namespace TAT001.Controllers.Reportes
                              join dp in db.DOCUMENTOPs on d.NUM_DOC equals dp.NUM_DOC
                              join m in db.MATERIALs on dp.MATNR equals m.ID
                              join mgpt in db.MATERIALGPTs on m.MATERIALGP_ID equals mgpt.MATERIALGP_ID
-                             where mgpt.SPRAS_ID == user.SPRAS_ID
+                             where mgpt.SPRAS_ID == "EN" //user.SPRAS_ID
                                  && d.EJERCICIO == year
                                  && (!string.IsNullOrEmpty(canal) ? c.CANAL == canal : true)
                                  && (!string.IsNullOrEmpty(comcode) ? comcodessplit.Contains(d.SOCIEDAD_ID) : true)
@@ -1161,21 +1165,53 @@ namespace TAT001.Controllers.Reportes
             if (PADRE) { estatus += "P"; } else { estatus += " "; }
 
             // ESTABLECER EL MENSAJE DE STATUS QUE SE MOSTRARÁ
-            if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "^.[C]")) { return ""; } // "Cancelada"; }
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[P][R].")) { return "En Proceso TAT"; } //"Pendiente validación TS"; }
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[P][A].")) { return "En Proceso TAT"; } // "Pendiente aprobador"; }
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[C]..[A]..")) { return "En Proceso TAT"; } //"Por gen .txt"; }
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[P]..[A]..")) { return "En Proceso TAT"; } // "Por contabilizar"; }
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[N]..[A]..")) { return "En Proceso TAT"; } // "Por gen .txt"; }
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[P][A]..")) { return "En Proceso TAT"; } // "Por contabilizar"; }
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[X][A]..")) { return ""; } // "Error en contabilización"; }
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A].[P]")) { return "En Proceso TAT"; } // "Abierta"; }
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A]..")) { return "Allowance TAT"; }
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[R]..")) { return "En Proceso TAT"; } // "Pendiente corrección usuario"; }
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[R][S].")) { return "En Proceso TAT"; } // "Pendiente corrección usuario TS"; }
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[S]..")) { return "En Proceso TAT"; } // "Pendiente firma"; }
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[T]..")) { return "En Proceso TAT"; } // "Pendiente tax"; }
-            else { return ""; }
+            //if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "^.[C]")) { return ""; } // "Cancelada"; }
+            //else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[P][R].")) { return "En Proceso TAT"; } //"Pendiente validación TS"; }
+            //else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[P][A].")) { return "En Proceso TAT"; } // "Pendiente aprobador"; }
+            //else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[C]..[A]..")) { return "En Proceso TAT"; } //"Por gen .txt"; }
+            //else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[P]..[A]..")) { return "En Proceso TAT"; } // "Por contabilizar"; }
+            //else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[N]..[A]..")) { return "En Proceso TAT"; } // "Por gen .txt"; }
+            //else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[P][A]..")) { return "En Proceso TAT"; } // "Por contabilizar"; }
+            //else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[X][A]..")) { return ""; } // "Error en contabilización"; }
+            //else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A].[P]")) { return "En Proceso TAT"; } // "Abierta"; }
+            //else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A]..")) { return "Allowance TAT"; }
+            //else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[R]..")) { return "En Proceso TAT"; } // "Pendiente corrección usuario"; }
+            //else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[R][S].")) { return "En Proceso TAT"; } // "Pendiente corrección usuario TS"; }
+            //else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[S]..")) { return "En Proceso TAT"; } // "Pendiente firma"; }
+            //else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[T]..")) { return "En Proceso TAT"; } // "Pendiente tax"; }
+            //else { return ""; }
+
+            string ret = "";
+            if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "^.[C]"))
+                ret = "";
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[P][R]."))
+                ret = "En Proceso TAT";
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[P][A]."))
+                ret = "En Proceso TAT";
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[N]..[A].."))
+                ret = "En Proceso TAT";
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[C]..[A].."))
+                ret = "Allowance TAT";
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[P]..[A].."))
+                ret = "En Proceso TAT";
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[P][A].."))
+                ret = "En Proceso TAT";
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[E][A].."))
+                ret = "";
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A].[P]"))
+                ret = "Allowance TAT";
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A].."))
+                ret = "Allowance TAT";
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[R].."))
+                ret = "En Proceso TAT";
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[R].."))
+                ret = "En Proceso TAT";
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[S].."))
+                ret = "En Proceso TAT";
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[T].."))
+                ret = "En Proceso TAT";
+
+            return ret;
         }
 
         // FIN REPORTE 4.1 - ALLOWANCESPL
@@ -1278,7 +1314,8 @@ namespace TAT001.Controllers.Reportes
             //join ACCION ac on wfp.ACCION_ID = ac.ID
 
             var queryDocs = (from d in db.DOCUMENTOes
-                             join cgl in db.CUENTAGLs on d.CUENTAP equals cgl.ID
+                             join ds in db.DOCUMENTOSAPs on d.NUM_DOC equals ds.NUM_DOC
+                             join cgl in db.CUENTAGLs on ds.CUENTA_A equals cgl.ID.ToString()
                              join ts in db.TSOLs on d.TSOL_ID equals ts.ID
                              join f in db.FLUJOes on d.NUM_DOC equals f.NUM_DOC
                              join wfp in db.WORKFPs on new { f.WORKF_ID, f.WF_POS, f.WF_VERSION } equals new { WORKF_ID = wfp.ID, WF_POS = wfp.POS, WF_VERSION = wfp.VERSION }
@@ -1286,18 +1323,18 @@ namespace TAT001.Controllers.Reportes
                              where d.EJERCICIO == year
                                  && (!string.IsNullOrEmpty(comcode) ? comcodessplit.Contains(d.SOCIEDAD_ID) : true)
                                  && (!string.IsNullOrEmpty(period) ? periodsplit.Contains(d.PERIODO.ToString()) : true)
-                             select new { d.CUENTAP, cgl.NOMBRE, d.SOCIEDAD_ID, d.MONTO_DOC_ML, f.ESTATUS, d.ESTATUS_C, d.ESTATUS_SAP, d.ESTATUS_WF, ac.TIPO, ts.PADRE }
+                             select new { ds.CUENTA_A, cgl.NOMBRE, d.SOCIEDAD_ID, d.MONTO_DOC_ML, f.ESTATUS, d.ESTATUS_C, d.ESTATUS_SAP, d.ESTATUS_WF, ac.TIPO, ts.PADRE }
                              )
                              .ToList()
-                             .Select(s => new { s.CUENTAP, s.NOMBRE, s.SOCIEDAD_ID, s.MONTO_DOC_ML, STATUS_ALLOWANCE = statusAllowance(s.ESTATUS, s.ESTATUS_C, s.ESTATUS_SAP, s.ESTATUS_WF, s.TIPO, s.PADRE) })
-                             .GroupBy(x => new { x.CUENTAP, x.NOMBRE, x.STATUS_ALLOWANCE })
+                             .Select(s => new { s.CUENTA_A, s.NOMBRE, s.SOCIEDAD_ID, s.MONTO_DOC_ML, STATUS_ALLOWANCE = statusAllowance(s.ESTATUS, s.ESTATUS_C, s.ESTATUS_SAP, s.ESTATUS_WF, s.TIPO, s.PADRE) })
+                             .GroupBy(x => new { x.CUENTA_A, x.NOMBRE, x.STATUS_ALLOWANCE })
                              .ToList();
 
             List<AllowancesB> alls = new List<AllowancesB>();
             foreach (var doc in queryDocs)
             {
                 AllowancesB all = new AllowancesB();
-                all.CUENTA_DE_BALANCE = doc.First().CUENTAP.ToString();
+                all.CUENTA_DE_BALANCE = doc.First().CUENTA_A.ToString();
                 all.DESCRIPCION = doc.First().NOMBRE;
                 all.FUENTE = doc.First().STATUS_ALLOWANCE;
                 foreach (var doc2 in doc)
@@ -1456,9 +1493,6 @@ namespace TAT001.Controllers.Reportes
                               STATUS = d.ESTATUS_WF,
                               STATUSS1 = (d.ESTATUS ?? " ") + (d.ESTATUS_C ?? " ") + (d.ESTATUS_SAP ?? " ") + (d.ESTATUS_WF ?? " "),
                               STATUSS3 = (ts.PADRE ? "P" : " "),
-     //                         ISNULL(D.ESTATUS, ' ') + ISNULL(D.ESTATUS_C, ' ') + ISNULL(D.ESTATUS_SAP, ' ')
-     //+ ISNULL(D.ESTATUS_WF, ' ') + ISNULL(F.TIPO, ' ') + (CASE WHEN TS.PADRE = 1 THEN 'P' ELSE ' ' END )
-     //+ (CASE WHEN COUNT(R.NUM_DOC)> 0 THEN 'R' ELSE ' ' END),
                               CONCEPTO_SOLICITUD = d.CONCEPTO,
                               DE = (DateTime)d.FECHAI_VIG,
                               A = (DateTime)d.FECHAF_VIG,
@@ -1474,9 +1508,9 @@ namespace TAT001.Controllers.Reportes
             foreach(MRLTS renglon in queryP)
             {
                 renglon.EXPENSE_RECOGNITION = ((from dts in db.DOCUMENTOTS
-                                                where dts.NUM_DOC == renglon.NUMERO_SOLICITUD && dts.TSFORM_ID == 2
+                                                where dts.NUM_DOC == renglon.NUMERO_SOLICITUD && (dts.TSFORM_ID == 1 || dts.TSFORM_ID == 2 || dts.TSFORM_ID == 5 || dts.TSFORM_ID == 7 || dts.TSFORM_ID == 9 || dts.TSFORM_ID == 10 ) && ((bool)dts.CHECKS)
                                                 select dts.NUM_DOC
-                                                ).ToList().Count > 0 ? "X" : string.Empty);
+                                                ).ToList().Count > 0 ? renglon.MONTO : 0);
 
                 var queryReverso = (from drs in db.DOCUMENTORs
                                     where drs.NUM_DOC == renglon.NUMERO_SOLICITUD
@@ -1518,7 +1552,7 @@ namespace TAT001.Controllers.Reportes
                     renglon.STATUSS = estatuss.Substring(0, 6) + " " + estatuss.Substring(6, 1); ;
                 }
                 Estatus e = new Estatus();
-                renglon.ESTATUS_STRING = e.getText(estatuss, renglon.NUMERO_SOLICITUD);
+                renglon.ESTATUS_STRING = e.getText(renglon.STATUSS, renglon.NUMERO_SOLICITUD);
                 renglon.d = db.DOCUMENTOes.Find(renglon.NUMERO_SOLICITUD);
             }
 

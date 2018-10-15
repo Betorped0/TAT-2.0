@@ -462,7 +462,7 @@
                             <tr>
                                 <td>@Model.presupuesto[i].CANAL<br>@Model.presupuesto[i].CDESCRIPCION</td>
                                 <td>$@String.Format("{0:0,0}", Model.presupuesto[i].PPTOC)</td>
-                                <td>@Model.presupuesto[i].BANNER<br>@Model.presupuesto[i].BDESCRIPCION</td>
+                                <td>@Model.presupuesto[i].BANNER.TrimStart('0')<br>@Model.presupuesto[i].BDESCRIPCION</td>
                                 <td>$@String.Format("{0:0,0}", Model.presupuesto[i].PPTO)</td>
                                 <td>@Model.presupuesto[i].PERIODO.Trim().PadLeft(2, '0')</td>
                                 @*<td>$@String.Format("{0:0,0.000}", Model.presupuesto[i].GRSLS)</td>*@
