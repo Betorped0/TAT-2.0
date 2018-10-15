@@ -46,43 +46,41 @@ errorMessage(message);
 <div class="row" style="margin-bottom:0">
     @{TAT001.Entities.USUARIO us = ViewBag.usuario;
         @* ---DRS 3.10.2018--- *@
-        <div class="col s12 m6">
-            @* ---DRS 3.10.2018--- *@
-            <div class="input-field col s2">
-                @Html.EditorFor(model => model.USUARIOC_ID, "Usuario", new { htmlAttributes = new { @disabled = "disabled", @Value = us.ID, @id = "txt_user" } })
-                @Html.LabelFor(model => model.USUARIOC_ID, "Usuario", new { @id = "lbl_userid" })
-            </div>
-            @* ---DRS 3.10.2018--- *@
-            <div class="input-field col s2">
-                @Html.EditorFor(model => model.USUARIO.MANAGER, new { htmlAttributes = new { @disabled = "disabled", @Value = us.MANAGER } })
-                @Html.LabelFor(model => model.USUARIO.MANAGER, "Manager", new { @id = "lbl_manager" })
-            </div>
-            @* ---DRS 3.10.2018--- *@
-            <div class="input-field col s2">
-                @Html.EditorFor(model => model.USUARIO.BACKUP_ID, "BACKUP", new { htmlAttributes = new { @disabled = "disabled", @Value = us.BACKUP_ID } })
-                @Html.LabelFor(model => model.USUARIO.BACKUP_ID, "Backup", new { @id = "lbl_backup" })
-            </div>
-
-            @* ---DRS 3.10.2018--- *@
-            <div class="input-field col s3">
-                @Html.EditorFor(model => model.USUARIO.BUNIT, "BU", new { htmlAttributes = new { @disabled = "disabled", @Value = us.BUNIT } })
-                @Html.LabelFor(model => model.USUARIO.BUNIT, "BU", new { @id = "lbl_bu" })
-            </div>
-            @* ---DRS 3.10.2018--- *@
-            <div class="input-field col s2">
-                <input type="text" id="txt_status" value="Nuevo" disabled="disabled" />
-                <label for="txt_status" id="lbl_status">Estatus</label>
-            </div>
+    <div class="col s12 m6">
+        @* ---DRS 3.10.2018--- *@
+        <div class="input-field col s2">
+            @Html.EditorFor(model => model.USUARIOC_ID, "Usuario", new { htmlAttributes = new { @disabled = "disabled", @Value = us.ID, @id = "txt_user" } })
+            @Html.LabelFor(model => model.USUARIOC_ID, "Usuario", new { @id = "lbl_userid" })
+        </div>
+        @* ---DRS 3.10.2018--- *@
+        <div class="input-field col s2">
+            @Html.EditorFor(model => model.USUARIO.MANAGER, new { htmlAttributes = new { @disabled = "disabled", @Value = us.MANAGER } })
+            @Html.LabelFor(model => model.USUARIO.MANAGER, "Manager", new { @id = "lbl_manager" })
+        </div>
+        @* ---DRS 3.10.2018--- *@
+        <div class="input-field col s2">
+            @Html.EditorFor(model => model.USUARIO.BACKUP_ID, "BACKUP", new { htmlAttributes = new { @disabled = "disabled", @Value = us.BACKUP_ID } })
+            @Html.LabelFor(model => model.USUARIO.BACKUP_ID, "Backup", new { @id = "lbl_backup" })
         </div>
 
-
-        if (ViewBag.relacionadan != "")
+        @* ---DRS 3.10.2018--- *@
+        <div class="input-field col s2">
+            @Html.EditorFor(model => model.USUARIO.BUNIT, "BU", new { htmlAttributes = new { @disabled = "disabled", @Value = us.BUNIT } })
+            @Html.LabelFor(model => model.USUARIO.BUNIT, "BU", new { @id = "lbl_bu" })
+        </div>
+        @* ---DRS 3.10.2018--- *@
+        <div class="input-field col s2">
+            <input type="text" id="txt_status" value="Nuevo" disabled="disabled" />
+            <label for="txt_status" id="lbl_status">Estatus</label>
+        </div>
+        @if (ViewBag.relacionadan != "")
         {
-            <div class="input-field col s2">
-                <input type="text" id="txt_rel" name="txt_rel" value="@ViewBag.relacionadan" disabled="disabled" />
-                <label for="txt_rel" id="lbl_relt">Relacionada</label>
-            </div>
+        <div class="input-field col s2">
+            <input type="text" id="txt_rel" name="txt_rel" value="@ViewBag.relacionadan" disabled="disabled" />
+            <label for="txt_rel" id="lbl_relt">Relacionada</label>
+        </div>
         }
+    </div>
     }
     <style>
 

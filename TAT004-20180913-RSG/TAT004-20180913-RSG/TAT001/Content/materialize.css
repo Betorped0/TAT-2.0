@@ -5349,7 +5349,8 @@ small {
     display: inline-block;
     height: 36px;
     line-height: 36px;
-    padding: 0 2rem;
+    /*----DRS 13.10.2018---*/
+    padding: 0 0.8rem;
     text-transform: uppercase;
     vertical-align: middle;
     -webkit-tap-highlight-color: transparent;
@@ -5682,7 +5683,7 @@ button.btn-floating {
     height: 32.4px;
     line-height: 32.4px;
     font-family: Tahoma;
-    font-size: 8px;
+    font-size: 9px;
 }
 
     .btn-small i {
