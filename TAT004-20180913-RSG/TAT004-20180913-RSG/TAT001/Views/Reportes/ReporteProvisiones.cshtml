@@ -12,12 +12,19 @@
 }
 
 
+
 @*<div class="col s2 right-align">
-    <button id="id_excel" name="excel" class="btn-small" type="submit" onclick="tableToExcel('table', 'Reporte Provisiones Abiertas TS')" value="Export to Excel">Generar Excel</button>
-</div>*@
+        <button id="id_excel" name="excel" class="btn-small" type="submit" onclick="tableToExcel('table', 'Reporte Provisiones Abiertas TS')" value="Export to Excel">Generar Excel</button>
+    </div>*@
 @using (Html.BeginForm("ReporteProvisiones", "Reportes", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
+    DateTime newDate = DateTime.Now;
+    int yeard = newDate.Year;
+    int year1 = yeard + 1;
+    int year2 = yeard + 2;
+    int yearback = yeard - 1;
+    int yearback2 = yeard - 2;
     <div class="row">
         @*<div class="col s2 right-align">
                 <button id="id_excel" name="excel" class="btn-small" type="submit" onclick="tableToExcel('table', 'Reporte Provisiones Abiertas TS')" value="Export to Excel">Generar Excel</button>
@@ -27,21 +34,15 @@
         <div class="col s12 right-align">
 
             <button class="btn-small" id="btnConsultar" type="submit" name="action" @*style="display:none"*@>Consultar</button>
-            <input class="btn-small" id="id_excel" type="button"  onclick="tableToExcel('table', 'Reporte Provisiones Abiertas TS')" value="Generar Excel" name="action" />
+            <input class="btn-small" id="id_excel" type="button" onclick="tableToExcel('table', 'Reporte Provisiones Abiertas TS')" value="Generar Excel" name="action" />
         </div>
-
-
     </div>
     <div class="card-panel" id="todo">
         <div class=" row">
             <div class="row" style="margin-bottom:0;">
                 <div class="input-field col s2 m2 l2">
 
-                    <label id="btn_length1">Co.Code</label>
-                    <br>
-
                     <select name="filtroCode" multiple class="select_all" id="filtroCode">
-
                         @for (int i = 0; i < ViewBag.sociedad.Count; i++)
                         {
                             if (cadena == ViewBag.sociedad[i].BUKRS)
@@ -54,11 +55,9 @@
                             }
                         }
                     </select>
+                    <label id="btn_length1">Co.Code</label>
                 </div>
                 <div class="input-field col s2 m2 l2">
-                    <label id="btn_length2">Periódo*</label>
-                    <br>
-
                     <select name="filtroPeriodo" id="filtroPeriodo">
                         @for (int i = 0; i < ViewBag.periodo.Count; i++)
                         {
@@ -81,16 +80,36 @@
                             }
                         }
                     </select>
+                    <label id="btn_length2">Periódo*</label>
                 </div>
 
                 <div class="input-field col s2 m2 l2">
-                    <label id="btn_length3">Año</label>
-                    <br>
-                    <div>
+                    <select multiple name="selectyear" id="selectyear" class="comcode select_all" required="">
+                        @if (yeard == DateTime.Now.Year)
+                        {
 
-                        @Html.DropDownList("miconsultaAnio", null, "", htmlAttributes: new { @id = "filtroAnio", @name = "filtroAnio", @class = "form-control" })
-                    </div>
+                            <option value="@yeard">@yeard</option>
+                            <option value="@year1">@year1</option>
+                            <option value="@year2">@year2</option>
+                        }
+                        else
+                        {
+                            <option value="@yearback2">@yearback2</option>
+                            <option value="@yearback">@yearback</option>
+                            <option value="@yeard">@yeard</option>
+                        }
+                    </select>
+                    <label id="btn_length3">Año*</label>
                 </div>
+
+                @*<div class="input-field col s2 m2 l2">
+                        <label id="btn_length3">Año</label>
+                        <br />
+                        <br />
+                        <div>
+                            @Html.DropDownList("miconsultaAnio", null, "", htmlAttributes: new { @id = "filtroAnio", @name = "filtroAnio", @class = "form-control" })
+                        </div>
+                    </div>*@
             </div>
         </div>
         <script>
@@ -107,8 +126,6 @@
         <link href="~/Content/subfilters/jquery.tablesorter.pager.css" rel="stylesheet" />
         <script src="~/Scripts/subfilters/jquery.tablesorter.pager.js"></script>
         <script src="~/Scripts/subfilters/widget-filter.js"></script>
-       
-
         <script>
             var elem = document.querySelectorAll('select');
             var options = [];
@@ -122,8 +139,6 @@
                 $(".grid thead td").click(function () {
                     showFilterOption(this);
                 });
-
-             
                 $('select').formSelect;
                 $('select.select_all').siblings('ul').prepend('<li id=sm_select_all><span>Seleccionar Todo</span></li>');
                 $('li#sm_select_all').on('click', function () {
@@ -138,7 +153,6 @@
                 });
             });
 
-            
 
             $(function () {
 
@@ -180,7 +194,7 @@
                         output: '{startRow} - {endRow} / {filteredRows} ({totalRows})'
 
                     });
-                
+
             });
             var tableToExcel = (function () {
                 var uri = 'data:application/vnd.ms-excel;base64,'
@@ -193,17 +207,16 @@
                     window.location.href = uri + base64(format(template, ctx))
                 }
             })()
-          
-
         </script>
 
-        <br>
-        <strong id="titulo2" style="color:deeppink; font-size:15px;">REPORTE DE PROVISIONES ABIERTAS 2.0</strong>
-        <br>
-        <br>
-
+        <br />
+        <span id="titulo2" style="color:deeppink; font-family:Tahoma; font-size:15px;">REPORTE DE PROVISIONES ABIERTAS 2.0</span>
+        <label style="color:deeppink; font-size:15px;">
+            @System.DateTime.Now.ToString("dd/MM/yyyy")
+        </label>
+        <br />
+        <br />
         <div style="width:100%;height:50vh;overflow:scroll;">
-
             <table class="table mdl-data-table striped grid centered table" id="table" style="width:100%;">
                 <thead>
                     <tr>
@@ -261,7 +274,7 @@
                     </tr>
                 </thead>
                 <tfoot>
-                    
+
                     <tr class="tablesorter-ignoreRow">
                         <th colspan="51" class="ts-pager form-horizontal">
                             <button type="button" class="btn first"><i class="small material-icons">first_page</i></button>
@@ -318,31 +331,31 @@
                             var numdoc = consulta.GetType().GetProperty("NUM_DOC").GetValue(consulta, null);
 
                             @*foreach (var docamnt in ViewBag.peri)
-                {
+                                {
 
-                    foreach (var amount in docamnt)
-                    {
+                                    foreach (var amount in docamnt)
+                                    {
 
-                        if (consulta.GetType().GetProperty("NUM_DOC").GetValue(consulta, null) == amount.GetType().GetProperty("DOCUMENTO_REF").GetValue(amount, null))
-                        {
-                            amountParent2 = amountParent2 - amount.GetType().GetProperty("MONTO_DOC_MD").GetValue(amount, null);
-                        }
+                                        if (consulta.GetType().GetProperty("NUM_DOC").GetValue(consulta, null) == amount.GetType().GetProperty("DOCUMENTO_REF").GetValue(amount, null))
+                                        {
+                                            amountParent2 = amountParent2 - amount.GetType().GetProperty("MONTO_DOC_MD").GetValue(amount, null);
+                                        }
 
-                    }
-                }
+                                    }
+                                }
 
 
-                if (amountParent2 < 0)
-                {
-                    amountParent2 = amountParent2 * -1;
-                    string showamnt2 = "($" + amountParent2 + ")";
-                    @showamnt2;
-                }
-                else
-                {
-                    string showamnt2 = "$" + amountParent2;
-                    @showamnt2;
-                }*@
+                                if (amountParent2 < 0)
+                                {
+                                    amountParent2 = amountParent2 * -1;
+                                    string showamnt2 = "($" + amountParent2 + ")";
+                                    @showamnt2;
+                                }
+                                else
+                                {
+                                    string showamnt2 = "$" + amountParent2;
+                                    @showamnt2;
+                                }*@
 
                             /////////////////////////////REMANENTE EN DOLARES///////////////////////////
                             var amountParent3 = consulta.GetType().GetProperty("MONTO_DOC_ML2").GetValue(consulta, null);
@@ -849,9 +862,9 @@
     }
 
 
-        <script>
-           
-        </script>
+    <script>
+
+    </script>
     <style>
 
         .dataTables_length {
