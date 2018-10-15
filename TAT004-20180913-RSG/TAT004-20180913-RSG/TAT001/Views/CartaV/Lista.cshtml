@@ -74,7 +74,8 @@
 
     @foreach (var item in Model)
     {
-        <tr onclick="document.location = '@Url.Action("DetailsPos", new { id = item.NUM_DOC, pos = item.POS })'" style="cursor:pointer">
+        ////////DRS 14.10.2018//////
+        <tr onclick="document.location = '@Url.Action("DetailsPos", new { id = item.NUM_DOC, pos = item.POS, swf=TempData["ESTATUS_WF"] })'" style="cursor:pointer">
             <td>
                 @Html.DisplayFor(modelItem => item.FECHAC)
             </td>

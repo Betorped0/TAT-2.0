@@ -1876,7 +1876,8 @@ namespace TAT001.Controllers
 
         //B20180720P MGC 2018.07.23
         // GET: CartaF/Create
-        public ActionResult DetailsPos(decimal id, int pos)
+        ////DRS 14.10.2018 Se agrego la variable de swf///
+        public ActionResult DetailsPos(decimal id, int pos, string swf)
         {
             //int pagina = 231; //ID EN BASE DE DATOS
             int pagina = 232; //ID EN BASE DE DATOS
@@ -2678,6 +2679,9 @@ namespace TAT001.Controllers
                 }
 
                 cv.monto = format.toShow(montod, decimales);
+
+                ////DRS 14.10.2018///
+                TempData["ESTATUS_WF"] = swf;
 
                 return View(cv);
             }
