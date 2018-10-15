@@ -156,8 +156,12 @@ function dismiss(clase) {
 function selectTab(tab, e) {
     e.preventDefault();
     e.stopPropagation();
-    if (tab == "Financiera_cont")
-        $("#btn_guardarh").removeClass("disabled");
+    if (tab == "Financiera_cont") {
+        if (!cierre())
+            $("#btn_guardarh").removeClass("disabled");
+        else
+            $("#btn_guardarh").addClass("disabled");
+    }
     else
         $("#btn_guardarh").addClass("disabled");
     var ell = document.getElementById("tabs");
@@ -165,8 +169,12 @@ function selectTab(tab, e) {
     instances.select(tab);
 }
 function activaSubmit(tab) {
-    if (tab == "Financiera_cont")
-        $("#btn_guardarh").removeClass("disabled");
+    if (tab == "Financiera_cont") {
+        if (!cierre())
+            $("#btn_guardarh").removeClass("disabled");
+        else
+            $("#btn_guardarh").addClass("disabled");
+    }
     else
         $("#btn_guardarh").addClass("disabled");
 }
