@@ -1054,12 +1054,12 @@ namespace TAT001.Controllers.Catalogos
                             client[cont2, 0] = us.KUNNR.ToString();
 
                         }
-                        for (int x = cont4; x > 1; x--)
+                        for (int x = cont4; x >= 0; x--)
                         {
                             if (IDs[x] != null)
                             {
                                 da.ID = IDs[x];
-                                x = 0;
+                                x = -1;
                             }
 
                         }
@@ -1220,12 +1220,12 @@ namespace TAT001.Controllers.Catalogos
                             admins[cont3, 0] = da.BUNIT.ToString();
                             usuariosoc[cont4, 0] = da.BUNIT.ToString();
                         }
-                        for (int x = cont4; x > 1; x--)
+                        for (int x = cont4; x >= 0; x--)
                         {
                             if (IDs[x] != null)
                             {
                                 da.ID = IDs[x];
-                                x = 0;
+                                x = -1;
                             }
 
                         }
@@ -2099,12 +2099,12 @@ namespace TAT001.Controllers.Catalogos
                             client[cont2, 0] = us.KUNNR.ToString();
 
                         }
-                        for (int x = cont4; x > 1; x--)
+                        for (int x = cont4; x >= 0; x--)
                         {
                             if (IDs[x] != null)
                             {
                                 da.ID = IDs[x];
-                                x = 0;
+                                x = -1;
                             }
 
                         }
@@ -2265,12 +2265,12 @@ namespace TAT001.Controllers.Catalogos
                             admins[cont3, 0] = da.BUNIT.ToString();
                             usuariosoc[cont4, 0] = da.BUNIT.ToString();
                         }
-                        for (int x = cont4; x > 1; x--)
+                        for (int x = cont4; x >= 0; x--)
                         {
                             if (IDs[x] != null)
                             {
                                 da.ID = IDs[x];
-                                x = 0;
+                                x = -1;
                             }
 
                         }

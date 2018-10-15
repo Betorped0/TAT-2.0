@@ -482,7 +482,7 @@ errorMessage(message);
                                     <label id="lbl_ejercicio" for="ejercicio">Ejercicio</label>@*B20180801 MGC Textos*@
                                 </div>
                                 <div class="input-field col s12">
-                                    @Html.EditorFor(model => model.CONCEPTO, new { htmlAttributes = new { @id = "concepto", @class = "form-control " + @ViewBag.relacionada } })
+                                    @Html.EditorFor(model => model.CONCEPTO, new { htmlAttributes = new { @id = "concepto", @class = "form-control " + @ViewBag.relacionada, @onchange = @"selectCliente(this.value)" } })
                                     <label id="lbl_concepto" for="concepto">Concepto*</label> @*B20180801 MGC Textos*@
                                 </div>
                                 <div class="input-field col s12">
@@ -510,7 +510,7 @@ errorMessage(message);
                             <h5 id="head_infocli">Información del cliente</h5>@*B20180801 MGC Textos*@
                             <div class="row" style="margin-bottom:0">
                                 <div class="input-field col s12">
-                                    @Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @id = "payer_id1", @class = "form-control " + @ViewBag.relacionada } })
+                                    @Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @id = "payer_id", @class = "form-control " + @ViewBag.relacionada, @onchange = @"selectCliente(this.value)" } }) @*OCG 15-10-18 Se inserta aqui para no afectar la vista*@
                                     @Html.LabelFor(model => model.PAYER_ID, "Cliente", htmlAttributes: new { @for = "payer_id", @id = "lbl_payer" })@*B20180801 MGC Textos*@
                                 </div>
 
@@ -560,7 +560,7 @@ selectCliente(value);
 }
     });
     //OCG 11/10/18
-    var cliente = auto("#payer_id1").val();
+    var cliente = auto("#payer_id").val();
     var cli = cliente.split("");
     var con = 0;
     for (var i = 0; i < 10; i++) {
@@ -572,7 +572,7 @@ selectCliente(value);
         }
     }
     var clien = cliente.substring(con, i);
-    auto("#payer_id1").attr("value", clien);
+    auto("#payer_id").attr("value", clien);
 })
                                 </script>
 
@@ -2511,4 +2511,3 @@ var ejercicio = '@Model.EJERCICIO';
         var el = document.querySelector(".tabs");
         var instance = M.Tabs.init(el, []);
     </script>
-    @Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @id = "payer_id", @class = "form-control " + @ViewBag.relacionada, @onchange = @"selectCliente(this.value)", @style = "visibility:hidden" } }) @*OCG 15-10-18 Se inserta aqui para no afectar la vista*@
