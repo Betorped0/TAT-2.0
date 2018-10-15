@@ -140,7 +140,7 @@ function loadExcelDis(file) {
                         var clix = true;
                     }
                     if (com.indexOf('?') != -1) {
-                        com = niv.slice(0, -1);
+                        com = com.slice(0, -1);
                         var comx = true;
                     }
                     if (niv.indexOf('?') != -1) {
@@ -262,27 +262,36 @@ function Carga() {
                     //alert(request.responseText);
                 }
             });
-            M.toast({ html: 'Se agregaron los nuevos usuarios' });
+            mostrarAlerta("info", "A", "Se agregaron los nuevos usuarios" );
+            //M.toast({ html: 'Se agregaron los nuevos usuarios' });
             window.location.replace("/Usuarios/Index");
         }
         else
-            M.toast({ html: 'Hay errores por corregir' });
+            mostrarAlerta("info", "E", "Hay errores por corregir");
+            //M.toast({ html: 'Hay errores por corregir' });
     }
     else
-        M.toast({ html: 'Seleccione un archivo' });
+        mostrarAlerta("info", "E", "Seleccione un archivo");
+        //M.toast({ html: 'Seleccione un archivo' });
 
 }
 
 function Comprobar() {
     var datos = $('#tabla').serializeArray();
     creart('Comprobar', datos);
-    M.toast({ html: 'Registro Actualizado' });
+    //M.toast({ html: 'Registro Actualizado' });
+
+    mostrarAlerta("info", "A", "Registro Actualizado");
 }
 
 function Borrar() {
-    var datos = $('#tabla').serializeArray();
-    creart('Borrar', datos);
-    M.toast({ html: 'Registros borrados' });
+    var table = $('#table').DataTable();
+    var rows = $('.input_bor').serializeArray();
+    for (var i = rows.length; i > 0; i--) {
+        var num = rows[i - 1].value;
+        table.row(num).remove().draw();
+    }
+    Comprobar();
 }
 
 function Actualizar() {
@@ -302,14 +311,17 @@ function Actualizar() {
                     //alert(request.responseText);
                 }
             });
-            M.toast({ html: 'Se actualizaron los usuarios' });
+            mostrarAlerta("info", "A", "Se actualizaron los usuarios")
+            //M.toast({ html: 'Se actualizaron los usuarios' });
             window.location.replace("/Usuarios/Index");
         }
         else
-            M.toast({ html: 'No hay usuarios por actualizar' });
+            mostrarAlerta("info", "E", "No hay usuarios por actualizar")
+            //M.toast({ html: 'No hay usuarios por actualizar' });
     }
     else
-        M.toast({ html: 'Seleccione un archivo' });
+        mostrarAlerta("info", "E", "Seleccione un archivo")
+        //M.toast({ html: 'Seleccione un archivo' });
 }
 
 function creart(metodo, datos) {
@@ -333,6 +345,7 @@ function creart(metodo, datos) {
                     var spr = dataj.SPRAS_ID;
                     var ema = dataj.EMAIL;
                     var bor = i;
+                    var clix = false;
 
                     //identificacion de error
                     if (cli.indexOf('?') != -1) {
@@ -340,7 +353,7 @@ function creart(metodo, datos) {
                         var clix = true;
                     }
                     if (com.indexOf('?') != -1) {
-                        com = niv.slice(0, -1);
+                        com = com.slice(0, -1);
                         var comx = true;
                     }
                     if (niv.indexOf('?') != -1) {
@@ -416,7 +429,33 @@ function checkoff() {
 
 function Agregar() {
     var datos = $('#tabla').serializeArray();
-    creart('Agregar', datos);
+    creart('AgregarT', datos);
+}
+
+function mostrarAlerta(warning_id, tipo, mensaje) {
+    var dura = 1000000,
+        color = 'yellow',
+        icon = 'info',
+        classe = 'toast';
+    if (tipo == "E") {
+        color = 'red';
+        icon = 'error';
+    }
+    dismiss(classe)
+    M.toast({
+        classes: classe,
+        displayLength: dura,
+        html: '<span style="padding-right:15px;"><i class="material-icons ' + color + '-text">' + icon + '</i></span>  ' + mensaje
+            + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'toast\')">Aceptar</button>'
+    });
+}
+
+function dismiss(classe) {
+    var toastElement = document.querySelectorAll('.' + classe);
+    for (var i = 0; i < toastElement.length; i++) {
+        var toastInstance = M.Toast.getInstance(toastElement[i]);
+        toastInstance.dismiss();
+    }
 }
 
 $('body').on('keydown.autocomplete', '.input_cli', function () {
@@ -529,7 +568,7 @@ $('body').on('keydown.autocomplete', '.input_niv', function () {
                 data: { "Prefix": request.term },
                 success: function (data) {
                     response(auto.map(data, function (item) {
-                        return { label: item.PUESTO_ID + " | " + item.TXT50, value: item.PUESTO_ID };
+                        return { label: item.ID + " | " + item.TEXTO, value: item.ID };
                     }))
                 }
             })

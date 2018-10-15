@@ -483,7 +483,11 @@ namespace TAT001.Controllers
                      //-----DRS 1.10.2018-----
                      select new { C.ABONO, NOMBREA = C.CUENTAGL.NOMBRE, C.CARGO, NOMBREC = C.CUENTAGL1.NOMBRE, C.CLEARING, C.LIMITE }).FirstOrDefault();
 
-            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            JsonResult cc = Json("", JsonRequestBehavior.AllowGet);
+            if (c!=null)
+            {
+                cc = Json(c, JsonRequestBehavior.AllowGet);
+            }
             return cc;
         }
         [HttpPost]
@@ -868,7 +872,11 @@ namespace TAT001.Controllers
                 }
 
             }
-
+            List<CLIENTEF> clientesf = db.CLIENTEFs.Where(x => x.KUNNR == id_cl.KUNNR).ToList();
+            if (id_cl != null && clientesf.Any())
+            {
+                id_cl.MANAGER = clientesf.First().USUARIO1_ID;
+            }
             JsonResult jc = Json(id_cl, JsonRequestBehavior.AllowGet);
             return jc;
         }

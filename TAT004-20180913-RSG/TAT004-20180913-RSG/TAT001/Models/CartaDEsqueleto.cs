@@ -60,6 +60,8 @@ namespace TAT001.Models
                     if (!aprob)
                     {
                         float fontSize = 250;
+                        if (spr == "ES")
+                            fontSize = 165;
                         float xPosition = 300;
                         float yPosition = 400;
                         float angle = 45;

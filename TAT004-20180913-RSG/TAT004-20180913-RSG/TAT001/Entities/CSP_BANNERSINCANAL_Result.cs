@@ -10,15 +10,10 @@
 namespace TAT001.Entities
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class CUENTAA
+    public partial class CSP_BANNERSINCANAL_Result
     {
-        public string SOCIEDAD_ID { get; set; }
-        public string CLAVE { get; set; }
-        public string CUENTA_ID { get; set; }
-        public string NOMBRE1 { get; set; }
-        public string NOMBRE2 { get; set; }
-        public Nullable<bool> ACTIVO { get; set; }
+        public string BANNER { get; set; }
+        public string SOCIEDAD { get; set; }
     }
 }

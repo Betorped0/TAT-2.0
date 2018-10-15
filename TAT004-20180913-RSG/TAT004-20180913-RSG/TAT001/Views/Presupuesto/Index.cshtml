@@ -71,17 +71,18 @@
     @using (Html.BeginForm("Index", "Presupuesto", FormMethod.Post))
     {
         string[] defaulS = new string[1];
+        string[] defaul2 = new string[1];
         string defaul = "";
         System.Globalization.TextInfo myTI = new System.Globalization.CultureInfo("en-US", false).TextInfo;
         System.Globalization.DateTimeFormatInfo formatoFecha = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat;
         int j = 0;
 
         <div class="row">
-            <div class="input-field col s2">
-                <select name="select" id="selec">
+            <div class="input-field col s2 g" name="sociedad">
+                <select name="select" id="selec" multiple>
                     @try
                     {
-                        defaul = Session["sociedad"].ToString();
+                        defaul2 = Session["sociedad"] as string[];
                     }
                     catch (Exception)
                     {
@@ -89,28 +90,23 @@
                     }
                     @try
                     {
-                        @*for (int i = 0; i < Model.sociedad.Count; i++)
-            {
-                if (defaul == Model.sociedad[i].BUKRS)
-                {
-                    <option value="@Model.sociedad[i].BUKRS" selected="selected">@Model.sociedad[i].BUKRS</option>
-                }
-                else
-                {
-                    <option value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
-                }
-            }*@
-                        foreach (var sociedad in ViewBag.usrScts)
+                        for (int i = 0; i < Model.sociedad.Count; i++)
                         {
-                            if (defaul == sociedad.BUKRS)
+                            if (defaul2 != null)
                             {
-                                <option value="@sociedad.BUKRS" selected="selected">@sociedad.BUKRS</option>
+                                if (defaul2.Contains( Model.sociedad[i].BUKRS))
+                                {
+                                    <option value="@Model.sociedad[i].BUKRS" selected="selected">@Model.sociedad[i].BUKRS</option>
+                                }
+                                else
+                                {
+                                    <option value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
+                                }
                             }
                             else
                             {
-                                <option value="@sociedad.BUKRS">@sociedad.BUKRS</option>
+                                <option value="@Model.sociedad[i].BUKRS">@Model.sociedad[i].BUKRS</option>
                             }
-                            
                         }
                     }
                     catch (Exception)
@@ -466,7 +462,7 @@
                             <tr>
                                 <td>@Model.presupuesto[i].CANAL<br>@Model.presupuesto[i].CDESCRIPCION</td>
                                 <td>$@String.Format("{0:0,0}", Model.presupuesto[i].PPTOC)</td>
-                                <td>@Model.presupuesto[i].BANNER<br>@Model.presupuesto[i].BDESCRIPCION</td>
+                                <td>@Model.presupuesto[i].BANNER.TrimStart('0')<br>@Model.presupuesto[i].BDESCRIPCION</td>
                                 <td>$@String.Format("{0:0,0}", Model.presupuesto[i].PPTO)</td>
                                 <td>@Model.presupuesto[i].PERIODO.Trim().PadLeft(2, '0')</td>
                                 @*<td>$@String.Format("{0:0,0.000}", Model.presupuesto[i].GRSLS)</td>*@

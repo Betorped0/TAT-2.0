@@ -91,9 +91,10 @@ namespace TAT001.Controllers.Reportes
             decimal docrefs = 0 ;
 
             
-                foreach (string account in accntssplit)
-                {
+                
                 foreach (string companyCode in comcodessplit)
+                {
+                foreach (string account in accntssplit)
                 {
                     decimal numDoc;
                     decimal montoDoc;

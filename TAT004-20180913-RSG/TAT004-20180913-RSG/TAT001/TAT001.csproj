@@ -77,6 +77,12 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="SimpleImpersonation, Version=2.0.1.27158, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SimpleImpersonation.2.0.1\lib\net40-Client\SimpleImpersonation.dll</HintPath>
     </Reference>
@@ -358,6 +364,9 @@
     <Compile Include="Entities\CREADOR2.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\CSP_BANNERSINCANAL_Result.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\CSP_CAMBIO_Result.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
@@ -383,9 +392,6 @@
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\CUENTA.cs">
-      <DependentUpon>TAT001.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\CUENTAA.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\CUENTAGL.cs">
@@ -787,6 +793,7 @@
     <Compile Include="Models\CartaD.cs" />
     <Compile Include="Models\CartaDEsqueleto.cs" />
     <Compile Include="Models\CategoriaMaterial.cs" />
+    <Compile Include="Models\ClienteViewModel.cs" />
     <Compile Include="Models\Comentarios.cs" />
     <Compile Include="Models\dby.cs" />
     <Compile Include="Models\Documento.cs" />
@@ -951,6 +958,7 @@
     <Content Include="Content\material.min.css" />
     <Content Include="Content\materialize.clockpicker.css" />
     <Content Include="Content\materialize.css" />
+    <Content Include="Content\PagedList.css" />
     <Content Include="Content\sideMenu.css" />
     <Content Include="Content\subfilters\jquery.tablesorter.pager.css" />
     <Content Include="Entities\TAT001.Context.tt">
@@ -1648,6 +1656,7 @@
     <Content Include="Scripts\ValidarNumero.js" />
     <Content Include="Scripts\ValidarProv.js" />
     <Content Include="Scripts\ValidarTCambio.js" />
+    <None Include="Views\Clientes\Index_.cshtml" />
     <Content Include="Views\Mails\logo_kellogg.png" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
