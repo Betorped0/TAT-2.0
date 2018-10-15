@@ -17,7 +17,7 @@
         <div class="row right-align">Monto a reversar: <span class="text-accent-1 precio">@ViewBag.resto</span></div>
     </div>
     <div class="modal-footer">
-        <a class="btn-flat" id="btn_si">NO</a>
+        <a href="#!" class="modal-action modal-close btn-flat" id="btn_no">NO</a>
         @*<a href="@Url.Action("Index")" class="btn-flat">SI</a>*@
         <a href="@Url.Action("Reversar",new { id = Model.NUM_DOC, tsol=Model.TSOL.TSOLR})" class="btn-flat">SI</a>
     </div>
@@ -49,6 +49,12 @@
             instances2.open();
             $('modal2').show();
         });
+        $('#btn_no').click(function () {
+            var elems2 = document.getElementById('modal2');
+            var instances2 = M.Modal.init(elems2, { dismissible: false });
+            instances2.open();
+            $('modal2').show();
+        });
 
         $('#btn_guardar').click(function () {
             var text = $('#txt_comentario').val();
@@ -65,8 +71,8 @@
                     }
                 },
                 error: function (xhr, httpStatusMessage, customErrorMessage) {
-                    M.toast({ html: httpStatusMessage });
-                    console.log(xhr.responseText);
+                    //M.toast({ html: httpStatusMessage }); FALTA CREAR METODO GUARDAR COMENTARIO!!!!!
+                    //console.log(xhr.responseText);
                 },
                 async: false
             });
