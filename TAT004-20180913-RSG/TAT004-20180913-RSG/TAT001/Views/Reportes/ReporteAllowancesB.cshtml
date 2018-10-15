@@ -54,24 +54,17 @@
     int yearback = yeard - 1;
     int yearback2 = yeard - 2;
     <div class="row">
-
         @if (ViewBag.Display)
         {
-            <div class="input-field col s1 m1 l1 offset-l7 offset-m7 offset-s7" id="senddiv">
-                <button class="btn waves-effect waves-light" type="submit" name="action" id="sendbtn">
-                    Consultar
-                </button>
-            </div>
-            <div class="input-field col s3 m3 l3 offset-l1 offset-m1 offset-s1">
-                <a class="waves-effect waves-light btn" id="excelBtn" onclick="tableToExcel('table', 'Reporte Tracking TS')">Generar Excel</a>
+            <div class="col s12 right-align">
+                <button class="btn-small" id="sendbtn" type="submit" name="action">Consultar</button>
+                <input class="btn-small" id="id_excel" type="button" onclick="tableToExcel('table', 'Reporte Allowances Balance')" value="Generar Excel" name="action" />
             </div>
         }
         else
         {
-            <div class="input-field col s1 m1 l1 offset-l10 offset-m10 offset-s10" id="senddiv">
-                <button class="btn waves-effect waves-light" type="submit" name="action" id="sendbtn">
-                    Consultar
-                </button>
+            <div class="col s12 right-align">
+                <button class="btn-small" id="sendbtn" type="submit" name="action">Consultar</button>
             </div>
         }
     </div>
@@ -110,7 +103,7 @@
                             <option value="" id="no_optper">No hay opciones</option>
                         }
                     </select>
-                    <label id="label_period">Periodo</label>
+                    <label id="label_period">Periodo *</label>
                 </div>
                 <div class="input-field col s2 m2 l2">
                     <select name="selectyear" id="selectyear" required="">
@@ -128,7 +121,7 @@
                             <option value="@yeard">@yeard</option>
                         }
                     </select>
-                    <label id="label_yr">Año</label>
+                    <label id="label_yr">Año *</label>
                 </div>
                 <div class="input-field col s3 m3 l3">
                     <select multiple name="selectcocode" id="selectcocode" class="comcode select_all" required="">
@@ -146,7 +139,7 @@
 
 
                     </select>
-                    <label id="label_cocode">Co. Code</label>
+                    <label id="label_cocode">Co. Code *</label>
                 </div>
             </div>
         </div>
@@ -154,6 +147,19 @@
             var elem = document.querySelectorAll('select');
             var options = [];
             var instance = M.FormSelect.init(elem, options);
+
+            var tableToExcel = (function () {
+                var uri = 'data:application/vnd.ms-excel;base64,'
+                    , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+                    , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+                    , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+                return function (table, name) {
+                    if (!table.nodeType) table = document.getElementById(table)
+                    var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
+                    window.location.href = uri + base64(format(template, ctx))
+                }
+            })()
+
         </script>
         <script src="//code.jquery.com/jquery-1.12.4.js"></script>
         <script src="//code.jquery.com/jquery-2.0.3.min.js"></script>
@@ -179,71 +185,71 @@
     {
         <script>
 
-        $(document).ready(function () {
-            $(".grid thead td").click(function () {
-                showFilterOption(this);
-            });
-            $("#excelBtn").click(function () {
-                $("#table").tableExport();
-            });
-
-            $('select.select_all').siblings('ul').prepend('<li id=sm_select_all id="filters_all"><span>Todas Las Opciones</span></li>');
-            $('li#sm_select_all').on('click', function () {
-                var jq_elem = $(this),
-                    jq_elem_span = jq_elem.find('span'),
-                    select_all = jq_elem_span.text() == 'Todas Las Opciones',
-                    set_text = select_all ? 'Borrar Selección' : 'Todas Las Opciones';
-                jq_elem_span.text(set_text);
-                jq_elem.siblings('li').filter(function () {
-                    return $(this).find('input').prop('checked') != select_all;
-                }).click();
-            });
-        });
-
-
-
-        $(function () {
-
-            $("table").tablesorter({
-                theme: "materialize",
-
-                widthFixed: true,
-                // widget code contained in the jquery.tablesorter.widgets.js file
-                // use the zebra stripe widget if you plan on hiding any rows (filter widget)
-                widgets: ["filter", "zebra"],
-
-                widgetOptions: {
-                    // using the default zebra striping class name, so it actually isn't included in the theme variable above
-                    // this is ONLY needed for materialize theming if you are using the filter widget, because rows are hidden
-                    zebra: ["even", "odd"],
-
-                    // reset filters button
-                    filter_reset: ".reset",
-
-                    // extra css class name (string or array) added to the filter element (input or select)
-                    // select needs a "browser-default" class or it gets hidden
-                    filter_cssFilter: ["", "", "browser-default"]
-                }
-            })
-                .tablesorterPager({
-
-                    // target the pager markup - see the HTML block below
-                    container: $(".ts-pager"),
-
-                    // target the pager page select dropdown - choose a page
-                    cssGoto: ".pagenum",
-
-                    // remove rows from the table to speed up the sort of large tables.
-                    // setting this to false, only hides the non-visible rows; needed if you plan to add/remove rows with the pager enabled.
-                    removeRows: true,
-
-                    // output string - default is '{page}/{totalPages}';
-                    // possible variables: {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
-                    output: '{startRow} - {endRow} / {filteredRows} ({totalRows})'
-
+            $(document).ready(function () {
+                $(".grid thead td").click(function () {
+                    showFilterOption(this);
+                });
+                $("#excelBtn").click(function () {
+                    $("#table").tableExport();
                 });
 
-        });
+                $('select.select_all').siblings('ul').prepend('<li id=sm_select_all id="filters_all"><span>Todas Las Opciones</span></li>');
+                $('li#sm_select_all').on('click', function () {
+                    var jq_elem = $(this),
+                        jq_elem_span = jq_elem.find('span'),
+                        select_all = jq_elem_span.text() == 'Todas Las Opciones',
+                        set_text = select_all ? 'Borrar Selección' : 'Todas Las Opciones';
+                    jq_elem_span.text(set_text);
+                    jq_elem.siblings('li').filter(function () {
+                        return $(this).find('input').prop('checked') != select_all;
+                    }).click();
+                });
+            });
+
+
+
+            $(function () {
+
+                $("table").tablesorter({
+                    theme: "materialize",
+
+                    widthFixed: true,
+                    // widget code contained in the jquery.tablesorter.widgets.js file
+                    // use the zebra stripe widget if you plan on hiding any rows (filter widget)
+                    widgets: ["filter", "zebra"],
+
+                    widgetOptions: {
+                        // using the default zebra striping class name, so it actually isn't included in the theme variable above
+                        // this is ONLY needed for materialize theming if you are using the filter widget, because rows are hidden
+                        zebra: ["even", "odd"],
+
+                        // reset filters button
+                        filter_reset: ".reset",
+
+                        // extra css class name (string or array) added to the filter element (input or select)
+                        // select needs a "browser-default" class or it gets hidden
+                        filter_cssFilter: ["", "", "browser-default"]
+                    }
+                })
+                    .tablesorterPager({
+
+                        // target the pager markup - see the HTML block below
+                        container: $(".ts-pager"),
+
+                        // target the pager page select dropdown - choose a page
+                        cssGoto: ".pagenum",
+
+                        // remove rows from the table to speed up the sort of large tables.
+                        // setting this to false, only hides the non-visible rows; needed if you plan to add/remove rows with the pager enabled.
+                        removeRows: true,
+
+                        // output string - default is '{page}/{totalPages}';
+                        // possible variables: {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
+                        output: '{startRow} - {endRow} / {filteredRows} ({totalRows})'
+
+                    });
+
+            });
         </script>
         <div style="width:100%;height:50vh;overflow:scroll;">
             <table class="table mdl-data-table striped grid centered table" id="table" style="width:100%;">
@@ -313,50 +319,50 @@
                 <tbody>
                     @foreach (TAT001.Models.ReportesModel.AllowancesB item in ViewBag.reporte)
                     {
-                    <tr>
-                        <td>
-                            @item.CUENTA_DE_BALANCE
-                        </td>
-                        <td>
-                            @item.DESCRIPCION
-                        </td>
-                        <td>
-                            @item.FUENTE
-                        </td>
-                        <td>
-                            @((item.KCMX == 0) ? "-" : String.Format("{0:C}", (item.KCMX)))
-                        </td>
-                        <td>
-                            @((item.KLCA == 0) ? "-" : String.Format("{0:C}", (item.KLCA)))
-                        </td>
-                        <td>
-                            @((item.LCCR == 0) ? "-" : String.Format("{0:C}", (item.LCCR)))
-                        </td>
-                        <td>
-                            @((item.LPKP == 0) ? "-" : String.Format("{0:C}", (item.LPKP)))
-                        </td>
-                        <td>
-                            @((item.KLSV == 0) ? "-" : String.Format("{0:C}", (item.KLSV)))
-                        </td>
-                        <td>
-                            @((item.KCAR == 0) ? "-" : String.Format("{0:C}", (item.KCAR)))
-                        </td>
-                        <td>
-                            @((item.KPRS == 0) ? "-" : String.Format("{0:C}", (item.KPRS)))
-                        </td>
-                        <td>
-                            @((item.KLCO == 0) ? "-" : String.Format("{0:C}", (item.KLCO)))
-                        </td>
-                        <td>
-                            @((item.LEKE == 0) ? "-" : String.Format("{0:C}", (item.LEKE)))
-                        </td>
-                        <td>
-                            @((item.LAGA == 0) ? "-" : String.Format("{0:C}", (item.LAGA)))
-                        </td>
-                        <td>
-                            @((item.KLCH == 0) ? "-" : String.Format("{0:C}", (item.KLCH)))
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>
+                                @item.CUENTA_DE_BALANCE
+                            </td>
+                            <td>
+                                @item.DESCRIPCION
+                            </td>
+                            <td>
+                                @item.FUENTE
+                            </td>
+                            <td>
+                                @((item.KCMX == 0) ? "-" : String.Format("{0:C}", (item.KCMX)))
+                            </td>
+                            <td>
+                                @((item.KLCA == 0) ? "-" : String.Format("{0:C}", (item.KLCA)))
+                            </td>
+                            <td>
+                                @((item.LCCR == 0) ? "-" : String.Format("{0:C}", (item.LCCR)))
+                            </td>
+                            <td>
+                                @((item.LPKP == 0) ? "-" : String.Format("{0:C}", (item.LPKP)))
+                            </td>
+                            <td>
+                                @((item.KLSV == 0) ? "-" : String.Format("{0:C}", (item.KLSV)))
+                            </td>
+                            <td>
+                                @((item.KCAR == 0) ? "-" : String.Format("{0:C}", (item.KCAR)))
+                            </td>
+                            <td>
+                                @((item.KPRS == 0) ? "-" : String.Format("{0:C}", (item.KPRS)))
+                            </td>
+                            <td>
+                                @((item.KLCO == 0) ? "-" : String.Format("{0:C}", (item.KLCO)))
+                            </td>
+                            <td>
+                                @((item.LEKE == 0) ? "-" : String.Format("{0:C}", (item.LEKE)))
+                            </td>
+                            <td>
+                                @((item.LAGA == 0) ? "-" : String.Format("{0:C}", (item.LAGA)))
+                            </td>
+                            <td>
+                                @((item.KLCH == 0) ? "-" : String.Format("{0:C}", (item.KLCH)))
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>

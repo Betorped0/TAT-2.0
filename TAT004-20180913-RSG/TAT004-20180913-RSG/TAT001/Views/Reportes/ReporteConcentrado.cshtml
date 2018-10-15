@@ -54,24 +54,17 @@
     int yearback = yeard - 1;
     int yearback2 = yeard - 2;
     <div class="row">
-
         @if (ViewBag.Display)
         {
-            <div class="input-field col s1 m1 l1 offset-l7 offset-m7 offset-s7" id="senddiv">
-                <button class="btn waves-effect waves-light" type="submit" name="action" id="sendbtn">
-                    Consultar
-                </button>
-            </div>
-            <div class="input-field col s3 m3 l3 offset-l1 offset-m1 offset-s1">
-                <a class="waves-effect waves-light btn" id="excelBtn" onclick="tableToExcel('table', 'Reporte Tracking TS')">Generar Excel</a>
+            <div class="col s12 right-align">
+                <button class="btn-small" id="sendbtn" type="submit" name="action">Consultar</button>
+                <input class="btn-small" id="id_excel" type="button" onclick="tableToExcel('table', 'Reporte Concentrado')" value="Generar Excel" name="action" />
             </div>
         }
         else
         {
-            <div class="input-field col s1 m1 l1 offset-l10 offset-m10 offset-s10" id="senddiv">
-                <button class="btn waves-effect waves-light" type="submit" name="action" id="sendbtn">
-                    Consultar
-                </button>
+            <div class="col s12 right-align">
+                <button class="btn-small" id="sendbtn" type="submit" name="action">Consultar</button>
             </div>
         }
     </div>
@@ -285,6 +278,18 @@
             var elem = document.querySelector('select');
             var options = [];
             var instance = M.FormSelect.init(elem, options);
+
+            var tableToExcel = (function () {
+                var uri = 'data:application/vnd.ms-excel;base64,'
+                    , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+                    , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+                    , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+                return function (table, name) {
+                    if (!table.nodeType) table = document.getElementById(table)
+                    var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
+                    window.location.href = uri + base64(format(template, ctx))
+                }
+            })()
         </script>
 
     </div>
@@ -292,71 +297,71 @@
     {
         <script>
 
-        $(document).ready(function () {
-            $(".grid thead td").click(function () {
-                showFilterOption(this);
-            });
-            $("#excelBtn").click(function () {
-                $("#table").tableExport();
-            });
-
-            $('select.select_all').siblings('ul').prepend('<li id=sm_select_all id="filters_all"><span>Todas Las Opciones</span></li>');
-            $('li#sm_select_all').on('click', function () {
-                var jq_elem = $(this),
-                    jq_elem_span = jq_elem.find('span'),
-                    select_all = jq_elem_span.text() == 'Todas Las Opciones',
-                    set_text = select_all ? 'Borrar Selección' : 'Todas Las Opciones';
-                jq_elem_span.text(set_text);
-                jq_elem.siblings('li').filter(function () {
-                    return $(this).find('input').prop('checked') != select_all;
-                }).click();
-            });
-        });
-
-
-
-        $(function () {
-
-            $("table").tablesorter({
-                theme: "materialize",
-
-                widthFixed: true,
-                // widget code contained in the jquery.tablesorter.widgets.js file
-                // use the zebra stripe widget if you plan on hiding any rows (filter widget)
-                widgets: ["filter", "zebra"],
-
-                widgetOptions: {
-                    // using the default zebra striping class name, so it actually isn't included in the theme variable above
-                    // this is ONLY needed for materialize theming if you are using the filter widget, because rows are hidden
-                    zebra: ["even", "odd"],
-
-                    // reset filters button
-                    filter_reset: ".reset",
-
-                    // extra css class name (string or array) added to the filter element (input or select)
-                    // select needs a "browser-default" class or it gets hidden
-                    filter_cssFilter: ["", "", "browser-default"]
-                }
-            })
-                .tablesorterPager({
-
-                    // target the pager markup - see the HTML block below
-                    container: $(".ts-pager"),
-
-                    // target the pager page select dropdown - choose a page
-                    cssGoto: ".pagenum",
-
-                    // remove rows from the table to speed up the sort of large tables.
-                    // setting this to false, only hides the non-visible rows; needed if you plan to add/remove rows with the pager enabled.
-                    removeRows: true,
-
-                    // output string - default is '{page}/{totalPages}';
-                    // possible variables: {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
-                    output: '{startRow} - {endRow} / {filteredRows} ({totalRows})'
-
+            $(document).ready(function () {
+                $(".grid thead td").click(function () {
+                    showFilterOption(this);
+                });
+                $("#excelBtn").click(function () {
+                    $("#table").tableExport();
                 });
 
-        });
+                $('select.select_all').siblings('ul').prepend('<li id=sm_select_all id="filters_all"><span>Todas Las Opciones</span></li>');
+                $('li#sm_select_all').on('click', function () {
+                    var jq_elem = $(this),
+                        jq_elem_span = jq_elem.find('span'),
+                        select_all = jq_elem_span.text() == 'Todas Las Opciones',
+                        set_text = select_all ? 'Borrar Selección' : 'Todas Las Opciones';
+                    jq_elem_span.text(set_text);
+                    jq_elem.siblings('li').filter(function () {
+                        return $(this).find('input').prop('checked') != select_all;
+                    }).click();
+                });
+            });
+
+
+
+            $(function () {
+
+                $("table").tablesorter({
+                    theme: "materialize",
+
+                    widthFixed: true,
+                    // widget code contained in the jquery.tablesorter.widgets.js file
+                    // use the zebra stripe widget if you plan on hiding any rows (filter widget)
+                    widgets: ["filter", "zebra"],
+
+                    widgetOptions: {
+                        // using the default zebra striping class name, so it actually isn't included in the theme variable above
+                        // this is ONLY needed for materialize theming if you are using the filter widget, because rows are hidden
+                        zebra: ["even", "odd"],
+
+                        // reset filters button
+                        filter_reset: ".reset",
+
+                        // extra css class name (string or array) added to the filter element (input or select)
+                        // select needs a "browser-default" class or it gets hidden
+                        filter_cssFilter: ["", "", "browser-default"]
+                    }
+                })
+                    .tablesorterPager({
+
+                        // target the pager markup - see the HTML block below
+                        container: $(".ts-pager"),
+
+                        // target the pager page select dropdown - choose a page
+                        cssGoto: ".pagenum",
+
+                        // remove rows from the table to speed up the sort of large tables.
+                        // setting this to false, only hides the non-visible rows; needed if you plan to add/remove rows with the pager enabled.
+                        removeRows: true,
+
+                        // output string - default is '{page}/{totalPages}';
+                        // possible variables: {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
+                        output: '{startRow} - {endRow} / {filteredRows} ({totalRows})'
+
+                    });
+
+            });
         </script>
         <div style="width:100%;height:50vh;overflow:scroll;">
             <table class="table mdl-data-table striped grid centered table" id="table" style="width:100%;">
@@ -659,7 +664,7 @@
                     <tr>
                         @if (Array.IndexOf(ViewBag.campos, "1") >= 0)
                         {
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_1">Co. Code</th>}
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_1">Co. Code</th>}
                         @if (Array.IndexOf(ViewBag.campos, "2") >= 0)
                         {
                             <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_2">País</th>}
@@ -973,13 +978,13 @@
                         <th colspan="12">
                         </th>
                     </tr>
-                    </tfoot>
-                    <tbody>
-                        @{ 
-                            string camposstring = ViewBag.camposstring.ToString();
-                        }
-                        @foreach (TAT001.Models.ReportesModel.Concentrado item in ViewBag.lista_reporte)
-                        {
+                </tfoot>
+                <tbody>
+                    @{
+                        string camposstring = ViewBag.camposstring.ToString();
+                    }
+                    @foreach (TAT001.Models.ReportesModel.Concentrado item in ViewBag.lista_reporte)
+                    {
                         <tr>
                             @if (camposstring.IndexOf("1") >= 0)
                             {
@@ -1124,16 +1129,16 @@
                                 </td>}<!--$ Monto NC/OP-->
                             @if (camposstring.IndexOf("37") >= 0)
                             {
-                                <td>@((item.PRESUPUESTO.PC_T == 0)? string.Empty: String.Format("({0:C})", item.PRESUPUESTO.PC_T))</td>}<!--$Monto Aplicado-->
+                                <td>@((item.PRESUPUESTO.PC_T == 0) ? string.Empty : String.Format("({0:C})", item.PRESUPUESTO.PC_T))</td>}<!--$Monto Aplicado-->
                             @if (camposstring.IndexOf("38") >= 0)
                             {
-                                <td>@((item.PRESUPUESTO.CONSU == 0)? string.Empty: String.Format("{0:C}", item.PRESUPUESTO.CONSU))</td>}<!--Saldo Remanente Provisión-->
+                                <td>@((item.PRESUPUESTO.CONSU == 0) ? string.Empty : String.Format("{0:C}", item.PRESUPUESTO.CONSU))</td>}<!--Saldo Remanente Provisión-->
                             @if (camposstring.IndexOf("39") >= 0)
                             {
-                                <td>@((item.documento.DOCUMENTOR == null)? string.Empty: String.Format("{0:C}", item.documento.DOCUMENTOR.DOCUMENTO.MONTO_DOC_MD))</td>}<!--$ Monto Reverso Provisión-->
+                                <td>@((item.documento.DOCUMENTOR == null) ? string.Empty : String.Format("{0:C}", item.documento.DOCUMENTOR.DOCUMENTO.MONTO_DOC_MD))</td>}<!--$ Monto Reverso Provisión-->
                             @if (camposstring.IndexOf("40") >= 0)
                             {
-                                <td>@((item.documento.DOCUMENTOR == null)? string.Empty: Convert.ToInt16((item.documento.DOCUMENTOR.DOCUMENTO.MONTO_DOC_MD * 100) /item.documento.MONTO_DOC_MD).ToString() + "%")</td>}<!--% Reverso-->
+                                <td>@((item.documento.DOCUMENTOR == null) ? string.Empty : Convert.ToInt16((item.documento.DOCUMENTOR.DOCUMENTO.MONTO_DOC_MD * 100) / item.documento.MONTO_DOC_MD).ToString() + "%")</td>}<!--% Reverso-->
                             @if (camposstring.IndexOf("41") >= 0)
                             {
                                 <td></td>}<!--$ Exceso/(Insuficiencia) Provisión-->
@@ -1145,7 +1150,7 @@
                                 <td></td>}<!--Impactos / Beneficios en el gasto del Periodo-->
                             @if (camposstring.IndexOf("44") >= 0)
                             {
-                                <td>@((item.documento.DOCUMENTOSAP != null)? item.documento.DOCUMENTOSAP.NUM_DOC.ToString(): "")</td>}<!--Núm. Registro Provisión-->
+                                <td>@((item.documento.DOCUMENTOSAP != null) ? item.documento.DOCUMENTOSAP.NUM_DOC.ToString() : "")</td>}<!--Núm. Registro Provisión-->
                             @if (camposstring.IndexOf("45") >= 0)
                             {
                                 <td>
@@ -1254,7 +1259,7 @@
                                         @(item.documento.FLUJOes.Where(u => u.WF_POS == 4).Select(u => u.USUARIO.NOMBRE + " " + u.USUARIO.APELLIDO_P).FirstOrDefault())
                                     }
                                     catch { }
-                                    </td>}<!--Aprobador Nivel 4-->
+                                </td>}<!--Aprobador Nivel 4-->
                             @if (camposstring.IndexOf("63") >= 0)
                             {
                                 <td>
@@ -1263,7 +1268,7 @@
                                         @(item.documento.FLUJOes.Where(u => u.WF_POS == 5).Select(u => u.USUARIO.NOMBRE + " " + u.USUARIO.APELLIDO_P).FirstOrDefault())
                                     }
                                     catch { }
-                                    </td>}<!--Aprobador Nivel 5-->
+                                </td>}<!--Aprobador Nivel 5-->
                             @if (camposstring.IndexOf("64") >= 0)
                             {
                                 <td>@(item.documento.DOCUMENTOFs.Select(df => df.PROVEEDOR).FirstOrDefault())</td>}<!--Proveedor-->
@@ -1284,19 +1289,19 @@
                                 <td></td>}<!--Numero Orden de Pago-->
                             @if (camposstring.IndexOf("70") >= 0)
                             {
-                                <td></td>}<!--Expense Recognition en periodo-->
+                                <td>@((item.documento.DOCUMENTOTS.Where(x => x.TSFORM_ID == 1 && (bool)x.CHECKS).Count() > 0) ? "X" : "") </td>}<!--Expense Recognition en periodo-->
                             @if (camposstring.IndexOf("71") >= 0)
                             {
-                                <td></td>}<!--Expense Recognition Ejercicio-->
+                                <td>@((item.documento.DOCUMENTOTS.Where(x => x.TSFORM_ID == 2 && (bool)x.CHECKS).Count() > 0) ? "X" : "")</td>}<!--Expense Recognition Ejercicio-->
                             @if (camposstring.IndexOf("72") >= 0)
                             {
-                                <td></td>}<!--Soporte Incorrecto-->
+                                <td>@((item.documento.DOCUMENTOTS.Where(x => x.TSFORM_ID == 3 && (bool)x.CHECKS).Count() > 0) ? "X" : "")</td>}<!--Soporte Incorrecto-->
                             @if (camposstring.IndexOf("73") >= 0)
                             {
-                                <td></td>}<!--Soporte validado con base variable pendiente-->
+                                <td>@((item.documento.DOCUMENTOTS.Where(x => x.TSFORM_ID == 4 && (bool)x.CHECKS).Count() > 0) ? "X" : "")</td>}<!--Soporte validado con base variable pendiente-->
                             @if (camposstring.IndexOf("74") >= 0)
                             {
-                                <td>@((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("CAR")).Count() > 0)? "X": "")</td>}<!--Carta-->
+                                <td>@((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("CAR")).Count() > 0) ? "X" : "")</td>}<!--Carta-->
                             @if (camposstring.IndexOf("75") >= 0)
                             {
                                 <td>@((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("CON")).Count() > 0) ? "X" : "")</td>}<!--Contrato-->
@@ -1329,7 +1334,7 @@
                                 <td></td>}<!--Monto %-->
                             @if (camposstring.IndexOf("85") >= 0)
                             {
-                                <td>@((item.documento.TIPO_RECURRENTE != null)?"Si":"No")</td>}<!--Recurrente-->
+                                <td>@((item.documento.TIPO_RECURRENTE != null) ? "Si" : "No")</td>}<!--Recurrente-->
                             @if (camposstring.IndexOf("86") >= 0)
                             {
                                 <td></td>}<!--Recurrente por porcentaje-->
@@ -1367,9 +1372,9 @@
                             {
                                 <td></td>}<!--Monto-->
                         </tr>
-                        }
-                    </tbody>
-                </table>
+                    }
+                </tbody>
+            </table>
         </div>
     }
     else { }

@@ -504,7 +504,6 @@ namespace TAT001.Controllers.Reportes
             List<DOCUMENTO> documentos = db.DOCUMENTOes
                 .Where(d => comcodessplit.Contains(d.SOCIEDAD_ID) && periodsplit.Contains(d.PERIODO.ToString()) && yearsplit.Contains(d.EJERCICIO))
                 .Include(d => d.CLIENTE)
-                //.Where(d => ((!string.IsNullOrEmpty(pais))? true : paissplit.Contains(d.CLIENTE.LAND) )),
                 .Include(d => d.CARTAs)
                 .Include(d => d.CUENTAGL)
                 .Include(d => d.CUENTAGL1)
@@ -522,6 +521,11 @@ namespace TAT001.Controllers.Reportes
                 .Include(d => d.DOCUMENTORECs)
                 .Include(d => d.DOCUMENTOTS)
                 .Include(d => d.FLUJOes).ToList();
+
+            if (!string.IsNullOrEmpty(pais)) {
+                documentos = documentos.Where(d => paissplit.Contains(d.CLIENTE.LAND)).ToList();
+            }
+
             foreach (DOCUMENTO dOCUMENTO in documentos)
             {
                 Concentrado r1 = new Concentrado();
@@ -581,7 +585,7 @@ namespace TAT001.Controllers.Reportes
                     r1.STATUSS = estatuss.Substring(0, 6) + " " + estatuss.Substring(6, 1); ;
                 }
                 Estatus e = new Estatus();
-                r1.ESTATUS_STRING = e.getText(estatuss, dOCUMENTO.NUM_DOC);
+                r1.ESTATUS_STRING = e.getText(r1.STATUSS, dOCUMENTO.NUM_DOC);
 
 
                 //dOCUMENTO.DOCUMENTOF = db.DOCUMENTOFs.Where(a => a.NUM_DOC.Equals(dOCUMENTO.NUM_DOC)).ToList();
@@ -1278,6 +1282,7 @@ namespace TAT001.Controllers.Reportes
             //join ACCION ac on wfp.ACCION_ID = ac.ID
 
             var queryDocs = (from d in db.DOCUMENTOes
+                             join ds in db.DOCUMENTOSAPs on d.NUM_DOC equals ds.NUM_DOC
                              join cgl in db.CUENTAGLs on d.CUENTAP equals cgl.ID
                              join ts in db.TSOLs on d.TSOL_ID equals ts.ID
                              join f in db.FLUJOes on d.NUM_DOC equals f.NUM_DOC
@@ -1456,9 +1461,6 @@ namespace TAT001.Controllers.Reportes
                               STATUS = d.ESTATUS_WF,
                               STATUSS1 = (d.ESTATUS ?? " ") + (d.ESTATUS_C ?? " ") + (d.ESTATUS_SAP ?? " ") + (d.ESTATUS_WF ?? " "),
                               STATUSS3 = (ts.PADRE ? "P" : " "),
-     //                         ISNULL(D.ESTATUS, ' ') + ISNULL(D.ESTATUS_C, ' ') + ISNULL(D.ESTATUS_SAP, ' ')
-     //+ ISNULL(D.ESTATUS_WF, ' ') + ISNULL(F.TIPO, ' ') + (CASE WHEN TS.PADRE = 1 THEN 'P' ELSE ' ' END )
-     //+ (CASE WHEN COUNT(R.NUM_DOC)> 0 THEN 'R' ELSE ' ' END),
                               CONCEPTO_SOLICITUD = d.CONCEPTO,
                               DE = (DateTime)d.FECHAI_VIG,
                               A = (DateTime)d.FECHAF_VIG,
@@ -1474,9 +1476,9 @@ namespace TAT001.Controllers.Reportes
             foreach(MRLTS renglon in queryP)
             {
                 renglon.EXPENSE_RECOGNITION = ((from dts in db.DOCUMENTOTS
-                                                where dts.NUM_DOC == renglon.NUMERO_SOLICITUD && dts.TSFORM_ID == 2
+                                                where dts.NUM_DOC == renglon.NUMERO_SOLICITUD && (dts.TSFORM_ID == 1 || dts.TSFORM_ID == 2 || dts.TSFORM_ID == 5 || dts.TSFORM_ID == 7 || dts.TSFORM_ID == 9 || dts.TSFORM_ID == 10 ) && ((bool)dts.CHECKS)
                                                 select dts.NUM_DOC
-                                                ).ToList().Count > 0 ? "X" : string.Empty);
+                                                ).ToList().Count > 0 ? renglon.MONTO : 0);
 
                 var queryReverso = (from drs in db.DOCUMENTORs
                                     where drs.NUM_DOC == renglon.NUMERO_SOLICITUD
@@ -1518,7 +1520,7 @@ namespace TAT001.Controllers.Reportes
                     renglon.STATUSS = estatuss.Substring(0, 6) + " " + estatuss.Substring(6, 1); ;
                 }
                 Estatus e = new Estatus();
-                renglon.ESTATUS_STRING = e.getText(estatuss, renglon.NUMERO_SOLICITUD);
+                renglon.ESTATUS_STRING = e.getText(renglon.STATUSS, renglon.NUMERO_SOLICITUD);
                 renglon.d = db.DOCUMENTOes.Find(renglon.NUMERO_SOLICITUD);
             }
 

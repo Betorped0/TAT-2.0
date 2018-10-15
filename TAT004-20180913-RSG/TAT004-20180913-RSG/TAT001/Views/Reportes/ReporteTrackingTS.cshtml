@@ -45,21 +45,15 @@
     <div class="row">
         @if (ViewBag.Display)
         {
-            <div class="input-field col s1 m1 l1 offset-l7 offset-m7 offset-s7" id="senddiv">
-                <button class="btn waves-effect waves-light" type="submit" name="action" id="sendbtn">
-                    Consultar
-                </button>
-            </div>
-            <div class="input-field col s3 m3 l3 offset-l1 offset-m1 offset-s1">
-                <a class="waves-effect waves-light btn" id="excelBtn" onclick="tableToExcel('table', 'Reporte Tracking TS')">Generar Excel</a>
+            <div class="col s12 right-align">
+                <button class="btn-small" id="sendbtn" type="submit" name="action">Consultar</button>
+                <input class="btn-small" id="id_excel" type="button" onclick="tableToExcel('table', 'Reporte Tracking TS')" value="Generar Excel" name="action" />
             </div>
         }
         else
         {
-            <div class="input-field col s1 m1 l1 offset-l10 offset-m10 offset-s10" id="senddiv">
-                <button class="btn waves-effect waves-light" type="submit" name="action" id="sendbtn">
-                    Consultar
-                </button>
+            <div class="col s12 right-align">
+                <button class="btn-small" id="sendbtn" type="submit" name="action">Consultar</button>
             </div>
         }
     </div>
@@ -212,7 +206,7 @@
                                     //selectCliente(value);
                                 }
                             });
-                        })
+                        });
                     </script>
                 </div>
                 @* FILTRO TIPO DE SOLICITUD *@
@@ -278,6 +272,18 @@
             var elem = document.querySelectorAll('select');
             var options = [];
             var instance = M.FormSelect.init(elem, options);
+
+            var tableToExcel = (function () {
+                var uri = 'data:application/vnd.ms-excel;base64,'
+                    , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+                    , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+                    , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+                return function (table, name) {
+                    if (!table.nodeType) table = document.getElementById(table)
+                    var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
+                    window.location.href = uri + base64(format(template, ctx))
+                }
+            })()
         </script>
         <script src="//code.jquery.com/jquery-1.12.4.js"></script>
         <script src="//code.jquery.com/jquery-2.0.3.min.js"></script>
