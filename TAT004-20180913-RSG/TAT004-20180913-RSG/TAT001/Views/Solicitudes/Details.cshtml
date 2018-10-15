@@ -182,7 +182,7 @@
                     {
                         if (Model.D.USUARIOC_ID == ViewBag.usuario.ID & Model.D.DOCUMENTO_SAP != null)
                         {
-                            <div id="div_drop">
+                            <div id="div_drop" class="col">
                                 <a href="@Url.Action("Create", "Solicitudes" , new { id_d=Model.D.NUM_DOC.ToString(), tsol="CPR" })" class="btn-small">Reversar</a>
                                 @*<button type="button" class="btn-small  " id="btn_cancel">Cancelar</button>*@
                                 <button type="button" class="btn-small dropdown-trigger">Crear solicitud relacionada</button>
@@ -198,7 +198,7 @@
                         }
                         if (ViewBag.usuario.PUESTO_ID == 8 & Model.D.DOCUMENTOLs.Count > 0)
                         {
-                            <div id="div_drop">
+                            <div id="div_drop" class="col">
                                 <a href="@Url.Action("Backorder", "Recurrencias" , new { id_d=Model.D.NUM_DOC.ToString()})" class="btn-small">Backorder</a>
                             </div>
                         }
