@@ -16,6 +16,7 @@
 <script src="~/Scripts/analisis.js"></script><!--RSG 13.06.2018-->
 <script src="~/Scripts/ValidarNumero.js"></script><!--LEJ 09.07.2018-->
 <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
+<script src="~/Scripts/cierre.js"></script>
 @if (ViewBag.error != "")
 {
     <script>
@@ -1256,8 +1257,8 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                             </div>
                         }
                         @{List<TAT001.Entities.DOCUMENTOA>
-                                                                                                                                                                                                                              archivos = ViewBag.files as List<TAT001.Entities.DOCUMENTOA>
-                                                                                                                                                                                                                                  ;
+                                                                                                                                                                                                                                archivos = ViewBag.files as List<TAT001.Entities.DOCUMENTOA>
+                                                                                                                                                                                                                                    ;
                             if (ViewBag.relacionadan != "" && archivos.Count > 0)
                             {
                                 string[] nombrefile;

@@ -159,6 +159,8 @@ function selectTab(tab, e) {
     if (tab == "Financiera_cont") {
         if (!cierre())
             $("#btn_guardarh").removeClass("disabled");
+        else
+            $("#btn_guardarh").addClass("disabled");
     }
     else
         $("#btn_guardarh").addClass("disabled");
@@ -170,6 +172,8 @@ function activaSubmit(tab) {
     if (tab == "Financiera_cont") {
         if (!cierre())
             $("#btn_guardarh").removeClass("disabled");
+        else
+            $("#btn_guardarh").addClass("disabled");
     }
     else
         $("#btn_guardarh").addClass("disabled");
