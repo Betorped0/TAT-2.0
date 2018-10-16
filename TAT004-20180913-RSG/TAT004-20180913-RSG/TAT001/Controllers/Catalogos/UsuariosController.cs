@@ -2423,6 +2423,7 @@ namespace TAT001.Controllers.Catalogos
             var usc = Request["usc"];
             var uscx = true;
 
+            //Busqueda de clientes
             if (cli != null && cli != "")
             {
                 CLIENTE c = db.CLIENTEs.Where(xc => xc.KUNNR.Equals(cli)).FirstOrDefault();
@@ -2507,7 +2508,8 @@ namespace TAT001.Controllers.Catalogos
                     var clin = (from x in db.USUARIOFs
                                 where x.USUARIO_ID.Equals(usc) & x.ACTIVO == true
                                 select x.KUNNR).ToArray();
-                    if (clin != null)
+                    //Busqueda de usuarios con clientes
+                    if (clin.Length > 0)
                     {
                         for (int i = 0; i < clin.Length; i++)
                         {
@@ -2557,12 +2559,12 @@ namespace TAT001.Controllers.Catalogos
                             cc.Add(ul);
                         }
                     }
+                    //Busqueda de usuarios por Co Code
                     else
                     {
-                        clin = (from x in db.SOCIEDADs
-                                where x.USUARIOs.Equals(usc) & x.ACTIVO == true
-                                select x.BUKRS).ToArray();
-                        for (int i = 0; i < clin.Length; i++)
+                        List<SOCIEDAD> clin1 = db.USUARIOs.Where(a => a.ID.Equals(usc)).FirstOrDefault().SOCIEDADs.ToList();
+
+                        for (int i = 0; i < clin1.Count(); i++)
                         {
                             Usuarios ul = new Usuarios();
                             ul.KUNNR = "";
@@ -2576,10 +2578,10 @@ namespace TAT001.Controllers.Catalogos
                             ul.SPRAS_ID = "";
                             ul.PASS = "";
                             ul.mess = "";
-                            var us = clin[i];
+                            var us = clin1[i].BUKRS;
                             var com = "";
 
-                            com = (from x in db.PAIS join a in db.CLIENTEs on x.LAND equals a.LAND where x.ACTIVO == true & a.KUNNR.Equals(ul.KUNNR) select x.SOCIEDAD_ID).FirstOrDefault();
+                            com = (from x in db.SOCIEDADs where x.BUKRS.Equals(us) select x.BUKRS).FirstOrDefault();
                             if (com != null)
                                 ul.BUNIT = com;
                             com = (from x in db.USUARIOs where x.ID.Equals(usc) & x.ACTIVO == true select x.ID).FirstOrDefault();
@@ -2606,7 +2608,7 @@ namespace TAT001.Controllers.Catalogos
 
                             cc.Add(ul);
                         }
-                    }
+                    } 
                 }
                 if (!uscx)
                 {
