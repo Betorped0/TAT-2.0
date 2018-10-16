@@ -264,7 +264,7 @@ function Carga() {
             });
             mostrarAlerta("info", "A", "Se agregaron los nuevos usuarios" );
             //M.toast({ html: 'Se agregaron los nuevos usuarios' });
-            window.location.replace("/Usuarios/Index");
+            window.location = root+"Usuarios/Index";
         }
         else
             mostrarAlerta("info", "E", "Hay errores por corregir");
@@ -313,7 +313,7 @@ function Actualizar() {
             });
             mostrarAlerta("info", "A", "Se actualizaron los usuarios")
             //M.toast({ html: 'Se actualizaron los usuarios' });
-            window.location.replace("/Usuarios/Index");
+            window.location = root + "Usuarios/Index";
         }
         else
             mostrarAlerta("info", "E", "No hay usuarios por actualizar")

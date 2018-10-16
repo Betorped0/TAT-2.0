@@ -16,6 +16,7 @@
 <script src="~/Scripts/analisis.js"></script><!--RSG 13.06.2018-->
 <script src="~/Scripts/ValidarNumero.js"></script><!--LEJ 09.07.2018-->
 <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
+<script src="~/Scripts/cierre.js"></script>
 @if (ViewBag.error != "")
 {
     <script>
@@ -46,41 +47,41 @@ errorMessage(message);
 <div class="row" style="margin-bottom:0">
     @{TAT001.Entities.USUARIO us = ViewBag.usuario;
         @* ---DRS 3.10.2018--- *@
-    <div class="col s12 m6">
-        @* ---DRS 3.10.2018--- *@
-        <div class="input-field col s2">
-            @Html.EditorFor(model => model.USUARIOC_ID, "Usuario", new { htmlAttributes = new { @disabled = "disabled", @Value = us.ID, @id = "txt_user" } })
-            @Html.LabelFor(model => model.USUARIOC_ID, "Usuario", new { @id = "lbl_userid" })
-        </div>
-        @* ---DRS 3.10.2018--- *@
-        <div class="input-field col s2">
-            @Html.EditorFor(model => model.USUARIO.MANAGER, new { htmlAttributes = new { @disabled = "disabled", @Value = us.MANAGER } })
-            @Html.LabelFor(model => model.USUARIO.MANAGER, "Manager", new { @id = "lbl_manager" })
-        </div>
-        @* ---DRS 3.10.2018--- *@
-        <div class="input-field col s2">
-            @Html.EditorFor(model => model.USUARIO.BACKUP_ID, "BACKUP", new { htmlAttributes = new { @disabled = "disabled", @Value = us.BACKUP_ID } })
-            @Html.LabelFor(model => model.USUARIO.BACKUP_ID, "Backup", new { @id = "lbl_backup" })
-        </div>
+        <div class="col s12 m6">
+            @* ---DRS 3.10.2018--- *@
+            <div class="input-field col s2">
+                @Html.EditorFor(model => model.USUARIOC_ID, "Usuario", new { htmlAttributes = new { @disabled = "disabled", @Value = us.ID, @id = "txt_user" } })
+                @Html.LabelFor(model => model.USUARIOC_ID, "Usuario", new { @id = "lbl_userid" })
+            </div>
+            @* ---DRS 3.10.2018--- *@
+            <div class="input-field col s2">
+                @Html.EditorFor(model => model.USUARIO.MANAGER, new { htmlAttributes = new { @disabled = "disabled" } })
+                @Html.LabelFor(model => model.USUARIO.MANAGER, "Manager", new { @id = "lbl_manager" })
+            </div>
+            @* ---DRS 3.10.2018--- *@
+            <div class="input-field col s2">
+                @Html.EditorFor(model => model.USUARIO.BACKUP_ID, "BACKUP", new { htmlAttributes = new { @disabled = "disabled", @Value = us.BACKUP_ID } })
+                @Html.LabelFor(model => model.USUARIO.BACKUP_ID, "Backup", new { @id = "lbl_backup" })
+            </div>
 
-        @* ---DRS 3.10.2018--- *@
-        <div class="input-field col s2">
-            @Html.EditorFor(model => model.USUARIO.BUNIT, "BU", new { htmlAttributes = new { @disabled = "disabled", @Value = us.BUNIT } })
-            @Html.LabelFor(model => model.USUARIO.BUNIT, "BU", new { @id = "lbl_bu" })
+            @* ---DRS 3.10.2018--- *@
+            <div class="input-field col s2">
+                @Html.EditorFor(model => model.USUARIO.BUNIT, "BU", new { htmlAttributes = new { @disabled = "disabled", @Value = us.BUNIT } })
+                @Html.LabelFor(model => model.USUARIO.BUNIT, "BU", new { @id = "lbl_bu" })
+            </div>
+            @* ---DRS 3.10.2018--- *@
+            <div class="input-field col s2">
+                <input type="text" id="txt_status" value="Nuevo" disabled="disabled" />
+                <label for="txt_status" id="lbl_status">Estatus</label>
+            </div>
+            @if (ViewBag.relacionadan != "")
+            {
+                <div class="input-field col s2">
+                    <input type="text" id="txt_rel" name="txt_rel" value="@ViewBag.relacionadan" disabled="disabled" />
+                    <label for="txt_rel" id="lbl_relt">Relacionada</label>
+                </div>
+            }
         </div>
-        @* ---DRS 3.10.2018--- *@
-        <div class="input-field col s2">
-            <input type="text" id="txt_status" value="Nuevo" disabled="disabled" />
-            <label for="txt_status" id="lbl_status">Estatus</label>
-        </div>
-        @if (ViewBag.relacionadan != "")
-        {
-        <div class="input-field col s2">
-            <input type="text" id="txt_rel" name="txt_rel" value="@ViewBag.relacionadan" disabled="disabled" />
-            <label for="txt_rel" id="lbl_relt">Relacionada</label>
-        </div>
-        }
-    </div>
     }
     <style>
 
@@ -482,7 +483,7 @@ errorMessage(message);
                                     <label id="lbl_ejercicio" for="ejercicio">Ejercicio</label>@*B20180801 MGC Textos*@
                                 </div>
                                 <div class="input-field col s12">
-                                    @Html.EditorFor(model => model.CONCEPTO, new { htmlAttributes = new { @id = "concepto", @class = "form-control " + @ViewBag.relacionada } })
+                                    @Html.EditorFor(model => model.CONCEPTO, new { htmlAttributes = new { @id = "concepto", @class = "form-control " + @ViewBag.relacionada, @onchange = @"selectCliente(this.value)" } })
                                     <label id="lbl_concepto" for="concepto">Concepto*</label> @*B20180801 MGC Textos*@
                                 </div>
                                 <div class="input-field col s12">
@@ -510,8 +511,7 @@ errorMessage(message);
                             <h5 id="head_infocli">Información del cliente</h5>@*B20180801 MGC Textos*@
                             <div class="row" style="margin-bottom:0">
                                 <div class="input-field col s12">
-                                    @*@Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @id = "payer_id", @class = "form-control " + @ViewBag.relacionada, @onchange = @"selectCliente(this.value)" } })*@
-                                    @Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @id = "payer_id", @class = "form-control " + @ViewBag.relacionada, @onchange = @"selectCliente(this.value)" } })
+                                    @Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @id = "payer_id", @class = "form-control " + @ViewBag.relacionada, @onchange = @"selectCliente(this.value)" } }) @*OCG 15-10-18 Se inserta aqui para no afectar la vista*@
                                     @Html.LabelFor(model => model.PAYER_ID, "Cliente", htmlAttributes: new { @for = "payer_id", @id = "lbl_payer" })@*B20180801 MGC Textos*@
                                 </div>
 
@@ -559,7 +559,21 @@ var label = ui.item.label;
 var value = ui.item.value;
 selectCliente(value);
 }
-});
+    });
+    //OCG 11/10/18
+    var cliente = auto("#payer_id").val();
+    var cli = cliente.split("");
+    var con = 0;
+    for (var i = 0; i < 10; i++) {
+        if (cli[i] == 0) {
+            con++;
+        }
+        else {
+            i = 9;
+        }
+    }
+    var clien = cliente.substring(con, i);
+    auto("#payer_id").attr("value", clien);
 })
                                 </script>
 
@@ -1243,8 +1257,8 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                             </div>
                         }
                         @{List<TAT001.Entities.DOCUMENTOA>
-                                                                                                                                                                                                                        archivos = ViewBag.files as List<TAT001.Entities.DOCUMENTOA>
-                                                                                                                                                                                                                            ;
+                                                                                                                                                                                                                                archivos = ViewBag.files as List<TAT001.Entities.DOCUMENTOA>
+                                                                                                                                                                                                                                    ;
                             if (ViewBag.relacionadan != "" && archivos.Count > 0)
                             {
                                 string[] nombrefile;

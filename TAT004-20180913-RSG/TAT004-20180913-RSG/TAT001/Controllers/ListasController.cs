@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using TAT001.Common;
 using TAT001.Entities;
 using TAT001.Models;
 using TAT001.Services;
@@ -514,7 +515,7 @@ namespace TAT001.Controllers
                      select new { C.ABONO, NOMBREA = C.CUENTAGL.NOMBRE, C.CARGO, NOMBREC = C.CUENTAGL1.NOMBRE, C.CLEARING, C.LIMITE }).FirstOrDefault();
 
             JsonResult cc = Json("", JsonRequestBehavior.AllowGet);
-            if (c!=null)
+            if (c != null)
             {
                 cc = Json(c, JsonRequestBehavior.AllowGet);
             }
@@ -1033,6 +1034,17 @@ namespace TAT001.Controllers
                 return jr;
             }
             return Json(string.Empty, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public string cierre(string sociedad_id, string tsol_id, string periodo_id, string usuario_id)
+        {
+            TAT001Entities db = new TAT001Entities();
+            int periodo = int.Parse(periodo_id);
+            bool a = FnCommon.ValidarPeriodoEnCalendario445(db, sociedad_id, tsol_id, periodo, "PRE", usuario_id);
+            if (a)
+                return "X";
+            else
+                return "";
         }
 
 

@@ -37,24 +37,20 @@
                 </div>
                 @* ---DRS 3.10.2018--- *@
                 <div class="input-field col s2">
-                    @*<input type="text" id="txt_user" value="@ViewBag.usuario.MANAGER" disabled="disabled" />
-                    <label for="txt_user">Manager</label>*@
-                    @Html.EditorFor(model => model.D.USUARIO.MANAGER, new { htmlAttributes = new { @disabled = "disabled" } })
-                    @Html.LabelFor(model => model.D.USUARIO.MANAGER, new { @id = "lbl_manager" })
+                    @{ string manager = Model.D.CLIENTE.CLIENTEFs.Any() ? Model.D.CLIENTE.CLIENTEFs.First().USUARIO1_ID : "";
+                        @Html.EditorFor(model => model.D.USUARIO.MANAGER, new { htmlAttributes = new { @disabled = "disabled", @Value = manager } })
+                        @Html.LabelFor(model => model.D.USUARIO.MANAGER, "Manager", new { @id = "lbl_manager" })
+                    }
                 </div>
                 @* ---DRS 3.10.2018--- *@
                 <div class="input-field col s2">
-                    @Html.EditorFor(model => model.D.USUARIO.BACKUP_ID, new { htmlAttributes = new { @disabled = "disabled" } })
-                    @Html.LabelFor(model => model.D.USUARIO.BACKUP_ID, new { @id = "lbl_backup" })
-                    @*<input type="text" id="txt_user" value="@ViewBag.usuario.BACKUP_ID" disabled="disabled" />
-                    <label for="txt_user">Backup</label>*@
+                    @Html.EditorFor(model => model.D.USUARIO.BACKUP_ID, "BACKUP", new { htmlAttributes = new { @disabled = "disabled" } })
+                    @Html.LabelFor(model => model.D.USUARIO.BACKUP_ID, "Backup", new { @id = "lbl_backup" })                   
                 </div>
                 @* ---DRS 3.10.2018--- *@
                 <div class="input-field col s2">
-                    @*<input type="text" id="txt_user" value="PRGA" disabled="disabled" />
-                    <label for="txt_user">BU</label>*@
-                    @Html.EditorFor(model => model.D.USUARIO.BUNIT, new { htmlAttributes = new { @disabled = "disabled" } })
-                    @Html.LabelFor(model => model.D.USUARIO.BUNIT, "Sociedad", new { @class = "lbl_bu" })
+                    @Html.EditorFor(model => model.D.USUARIO.BUNIT,"BU", new { htmlAttributes = new { @disabled = "disabled" } })
+                    @Html.LabelFor(model => model.D.USUARIO.BUNIT,"BU", new { @class = "lbl_bu" })
                 </div>
                 @* ---DRS 3.10.2018--- *@
                 <div class="input-field col s2">
@@ -155,7 +151,7 @@
                         {
                             if (Model.D.USUARIOC_ID == ViewBag.usuario.ID)
                             {
-                                <a class="btn-small modal-trigger" id="btn_cancel" href="#modal2"></a>
+                                <a class="col btn-small modal-trigger" id="btn_cancel" href="#modal2"></a>
                                 <div id="modal2" class="modal">
                                     <div class="modal-content">
                                         <div class="row">
@@ -182,7 +178,7 @@
                     {
                         if (Model.D.USUARIOC_ID == ViewBag.usuario.ID & Model.D.DOCUMENTO_SAP != null)
                         {
-                            <div id="div_drop">
+                            <div id="div_drop" class="col">
                                 <a href="@Url.Action("Create", "Solicitudes" , new { id_d=Model.D.NUM_DOC.ToString(), tsol="CPR" })" class="btn-small">Reversar</a>
                                 @*<button type="button" class="btn-small  " id="btn_cancel">Cancelar</button>*@
                                 <button type="button" class="btn-small dropdown-trigger">Crear solicitud relacionada</button>
@@ -198,7 +194,7 @@
                         }
                         if (ViewBag.usuario.PUESTO_ID == 8 & Model.D.DOCUMENTOLs.Count > 0)
                         {
-                            <div id="div_drop">
+                            <div id="div_drop" class="col">
                                 <a href="@Url.Action("Backorder", "Recurrencias" , new { id_d=Model.D.NUM_DOC.ToString()})" class="btn-small">Backorder</a>
                             </div>
                         }
@@ -207,7 +203,7 @@
                     {
                         if (Model.D.USUARIOC_ID == ViewBag.usuario.ID)
                         {
-                            <a class="btn-small modal-trigger" id="btn_cancel" href="#modal2">Cancelar</a>
+                            <a class="col btn-small modal-trigger" id="btn_cancel" href="#modal2">Cancelar</a>
                             <div id="modal2" class="modal">
                                 <div class="modal-content">
                                     <div class="row">
@@ -234,8 +230,8 @@
                     if (Model.D.TSOL.CARTA)
                     {
                         @* ---DRS 13.10.2018--- *@
-                        <div>
-                            <button type="button" class="btn-small" data-target="list_carta" style="margin-top:3%;width:100%;" id="btn_carta">Carta</button>
+                        <div class="col">
+                            <button type="button" class="btn-small" data-target="list_carta" style="width:100%;" id="btn_carta">Carta</button>
                         </div>
                         @*<button type="button" class="btn-small  " id="btn_cancel">Cancelar</button>*@
                         <ul id='list_carta' class='dropdown-content'>
@@ -246,6 +242,10 @@
                     @if (Model.D.ESTATUS_WF.Equals("S"))
                     {
                         <li><a href="@Url.Action("Create", "CartaV" , new { id=Model.D.NUM_DOC })" id="lbl_genc">Generar carta</a></li>
+                    }
+                    else if (Model.D.ESTATUS_WF.Equals("F") || Model.D.ESTATUS_WF.Equals("S") || Model.D.ESTATUS_WF.Equals("R"))
+                    {
+                        <li><a href="@Url.Action("Create", "CartaD" , new { id=Model.D.NUM_DOC })" id="lbl_genc">Imprimir</a></li>
                     }
                     else
                     {
