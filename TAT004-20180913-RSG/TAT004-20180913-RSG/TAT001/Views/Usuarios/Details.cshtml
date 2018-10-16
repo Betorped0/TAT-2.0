@@ -95,7 +95,7 @@
         var options = [];
         var instance = M.FormSelect.init(elem, options);
     </script>
-    <div class="col l6 s12">
+    @*<div class="col l6 s12">
         <div class="card-panel">
             <div class="row">
                 <h5>Flujos</h5>
@@ -129,14 +129,11 @@
                                                 <h4>Modificar flujo</h4>
                                                 <div class="row">
                                                     @Html.HiddenFor(model => model.ID)
-                                                    @*@Html.HiddenFor(model => model.PUESTO_ID, new { @id = item.BUKRS + "-" + item.LAND + "-txt_puestoid" })*@
-                                                    @*@Html.HiddenFor(itemm => item.PAIS_ID, new { @id = item.BUKRS + "-" + item.LAND + "-txt_soc" })*@
                                                     @Html.HiddenFor(itemm => item.PAIS_ID, new { @id = item.PAIS_ID + "-" + item.KUNNR + "-txt_pai" })
                                                     @Html.HiddenFor(itemm => item.VKORG, new { @id = item.PAIS_ID + "-" + item.KUNNR + "-txt_vko" })
                                                     @Html.HiddenFor(itemm => item.VTWEG, new { @id = item.PAIS_ID + "-" + item.KUNNR + "-txt_vtw" })
                                                     @Html.HiddenFor(itemm => item.SPART, new { @id = item.PAIS_ID + "-" + item.KUNNR + "-txt_spa" })
                                                     @Html.HiddenFor(itemm => item.KUNNR, new { @id = item.PAIS_ID + "-" + item.KUNNR + "-txt_kun" })
-                                                    @*<input type="hidden" value="@dah.AGROUP_ID" name="txt_agroup" />*@
                                                     <div class="input-field col s6 hide">
                                                         <select id="@item.PAIS_ID-@item.KUNNR-txt_rol" name="@item.PAIS_ID-@item.KUNNR-txt_rol" required="required">
                                                             @foreach (var itemm in ViewBag.ROLES)
@@ -265,7 +262,7 @@
                                                                             document.getElementById("@item.PAIS_ID-@item.KUNNR-btn_submit2").className = "modal-action modal-close btn-flat disabled";
                                                                         }
 
-                                                                        for (var i = 1; i <= 2 @*@input.PUESTOA_ID*@; i++) {
+                                                                        for (var i = 1; i <= 2; i++) {
                                                     try {
                                                         var value = document.getElementById("@item.PAIS_ID-@item.KUNNR-" + i).value;
                                                 if (value != "") {
@@ -299,59 +296,7 @@
                                                                 }
                                                             }
 
-                                                            @*@if (dta != null)
-                                                                                    {
-                                                                                        <div class="input-field col s6">
-                                                                                            <input type="text" value="@dta.USUARIOA_ID" name="@item.BUKRS-@item.LAND-@dta.PUESTOA_ID" id="@item.BUKRS-@item.LAND-@dta.PUESTOA_ID" />
-                                                                                            <label for="@item.BUKRS-@item.LAND-@dta.PUESTOA_ID">@dta.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50</label>
-                                                                                        </div>
-                                                                                        <script>
-                                                                auto("#" + "@item.BUKRS-@item.LAND-@dta.PUESTOA_ID").autocomplete({
-                                                                    source: function (request, response) {
-                                                                        auto.ajax({
-                                                                            url: "../../Listas/UsuariosPuesto",
-                                                                            type: "GET",
-                                                                            dataType: "json",
-                                                                            data: { puesto: '@dta.PUESTOA_ID', Prefix: request.term },
-                                                                            success: function (data) {
-                                                                                response($.map(data, function (item) {
-                                                                                    return { label: item.ID, value: item.ID };
-                                                                                }))
-                                                                            },
-                                                                            error: function (data) {
-                                                                                alert("error");
-                                                                            }
-                                                                        })
-                                                                    },
-                                                                    messages: {
-                                                                        noResults: '',
-                                                                        results: function (resultsCount) { }
-                                                                    },
-                                                                    change: function (e, ui) {
-                                                                        if (!(ui.item)) {
-                                                                            e.target.value = "";
-                                                                               document.getElementById("@item.BUKRS-@item.LAND-btn_submit2").className = "modal-action modal-close btn-flat disabled";
-                                                                        }
-
-                                                                            for (var i = 1; i <= @dta.PUESTOA_ID; i++) {
-                                                                                try {
-                                                                                    var value = document.getElementById("@item.BUKRS-@item.LAND-" + i).value;
-                                                                            if (value != "") {
-                                                                                document.getElementById("@item.BUKRS-@item.LAND-btn_submit2").className = "modal-action modal-close btn-flat";
-                                                                            } else {
-                                                                                document.getElementById("@item.BUKRS-@item.LAND-btn_submit2").className = "modal-action modal-close btn-flat disabled";
-                                                                                break;
-                                                                                    }
-                                                                                } catch
-                                                                                { }
-                                                                        }
-                                                                    },
-                                                                    autoFocus: true,
-                                                                    minLength: 1
-                                                                });
-
-                                                                                        </script>
-                                                                                    }*@
+                                                           
                                                         </div>
                                                     </div>
                                                 </div>
@@ -373,7 +318,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>*@
 </div>
 
 @using (Html.BeginForm("AgregarRol", "Usuarios"))
