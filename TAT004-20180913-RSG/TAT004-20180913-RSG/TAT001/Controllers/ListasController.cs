@@ -42,6 +42,36 @@ namespace TAT001.Controllers
         ////}
 
         [HttpGet]
+        public JsonResult ReportesFiltroCliente(string Prefix, string cocodes)
+        {
+            if (Prefix == null)
+                Prefix = "";
+            string[] comcodessplit = { };
+            string cocode = cocodes.ToString();
+            if (!string.IsNullOrEmpty(cocode))
+            {
+                comcodessplit = cocode.Split(',');
+            }
+
+
+            TAT001Entities db = new TAT001Entities();
+            var c = (from cl in db.CLIENTEs
+                     join p in db.PAIS on cl.LAND equals p.LAND
+                        where cl.KUNNR.Contains(Prefix) && comcodessplit.Contains(p.SOCIEDAD_ID)
+                        select new { cl.KUNNR, cl.NAME1 }).ToList();
+            if (c.Count == 0)
+            {
+                var c2 = (from cl in db.CLIENTEs
+                          join p in db.PAIS on cl.LAND equals p.LAND
+                          where cl.NAME1.Contains(Prefix) && comcodessplit.Contains(p.SOCIEDAD_ID)
+                          select new { cl.KUNNR, cl.NAME1 }).ToList();
+                c.AddRange(c2);
+            }
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+
+        [HttpGet]
         public JsonResult Clientes(string Prefix, string usuario, string pais)
         {
             //usuario = "";//Anterior
