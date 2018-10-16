@@ -935,7 +935,7 @@ namespace TAT001.Controllers.Catalogos
                         {
                             sociedad.Add(b);
                             tablas[cont2, 1] = da.BUNIT.ToString();
-                            usuariosoc[cont4, 1] = da.BUNIT.ToString();
+                            usuariosoc[cont4, 1] = da.ID.ToString();
                         }
                         if (!us.BUNITX)
                         {
@@ -990,7 +990,7 @@ namespace TAT001.Controllers.Catalogos
                                 tablas[cont2, 4] = da.NOMBRE.ToString();
                                 tablas[cont2, 5] = da.APELLIDO_P.ToString();
                                 tablas[cont2, 6] = da.APELLIDO_M.ToString();
-                                usuariosoc[cont4, 0] = da.ID.ToString();
+                                usuariosoc[cont4, 0] = da.BUNIT.ToString();
                             }
                         }
 
@@ -1791,35 +1791,23 @@ namespace TAT001.Controllers.Catalogos
             List<DET_AGENTE1> ld = new List<DET_AGENTE1>();
 
             var dt = (string[,])Session["usuariosoc"];
-            var rowsc = (int)Session["rows1"];
-            var rows = 0;
             var pos = 1;
 
-            for (int i = rows; i < rowsc; i++)
+            for (int i = 0; i < (dt.Length / dt.Rank); i++)
             {
                 DET_AGENTE1 doc = new DET_AGENTE1();
-
+                string id = dt[i, 1];
                 string a = Convert.ToString(pos);
 
-                doc.POS = Convert.ToInt32(a);
-                try
+
+                if (!String.IsNullOrEmpty(id))
                 {
-                    doc.ID = dt[i, 1];
-                }
-                catch (Exception e)
-                {
-                    doc.ID = null;
-                }
-                try
-                {
+                    doc.ID = id;
                     doc.BUNIT = dt[i, 0];
+                    doc.POS = Convert.ToInt32(a);
+                    ld.Add(doc);
+                    pos++;
                 }
-                catch (Exception e)
-                {
-                    doc.BUNIT = null;
-                }
-                ld.Add(doc);
-                pos++;
             }
             return ld;
         }
@@ -1984,7 +1972,7 @@ namespace TAT001.Controllers.Catalogos
                         {
                             sociedad.Add(b);
                             tablas[cont2, 1] = da.BUNIT.ToString();
-                            usuariosoc[cont4, 1] = da.BUNIT.ToString();
+                            usuariosoc[cont4, 1] = da.ID.ToString();
                         }
                         if (!us.BUNITX)
                         {
@@ -2039,7 +2027,7 @@ namespace TAT001.Controllers.Catalogos
                                 tablas[cont2, 4] = da.NOMBRE.ToString();
                                 tablas[cont2, 5] = da.APELLIDO_P.ToString();
                                 tablas[cont2, 6] = da.APELLIDO_M.ToString();
-                                usuariosoc[cont4, 0] = da.ID.ToString();
+                                usuariosoc[cont4, 0] = da.BUNIT.ToString();
                             }
                         }
 
@@ -2205,7 +2193,7 @@ namespace TAT001.Controllers.Catalogos
                                 tabla1[cont3, 4] = da.NOMBRE.ToString();
                                 tabla1[cont3, 5] = da.APELLIDO_P.ToString();
                                 tabla1[cont3, 6] = da.APELLIDO_M.ToString();
-                                usuariosoc[cont4, 1] = da.ID.ToString();
+                                usuariosoc[cont4, 0] = da.BUNIT.ToString();
                             }
                         }
 
