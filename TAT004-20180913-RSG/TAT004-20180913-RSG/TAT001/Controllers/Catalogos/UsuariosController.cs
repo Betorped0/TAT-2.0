@@ -1564,7 +1564,7 @@ namespace TAT001.Controllers.Catalogos
             {
                 if (!String.IsNullOrEmpty(da.ID))
                 {
-                     usuario_id = da.BUNIT;
+                     usuario_id = da.ID;
                 }
                 USUARIO us = db.USUARIOs.Where(x => x.ID == usuario_id).First();
 
