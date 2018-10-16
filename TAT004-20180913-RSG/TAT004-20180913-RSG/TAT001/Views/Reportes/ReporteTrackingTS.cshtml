@@ -77,6 +77,18 @@
                             <option value="" id="no_opt">No hay opciones</option>
                         }
                     </select>
+                    <script>
+                        $(document).on('change', '#selectcocode', function () {
+                            $("#selectCliente").val("");
+                            //if ($("#selectcocode").val() != null) {
+                            //    if ($("#selectcocode").val().length > 0) {
+                            //        $("#selectCliente").removeAttr("disabled");
+                            //    } else {
+                            //        $("#selectCliente").attr("disabled", "disabled");
+                            //    }
+                            //}
+                        });
+                    </script>
                     <label id="label_cocode">Co. Code</label>
                 </div>
                 @* FILTRO PERIODO *@
@@ -147,21 +159,6 @@
                 @* OPCIONAL *@
                 <div class="input-field col s2 m2 l2">
                     <input class="form-control  text-box single-line ui-autocomplete-input" id="selectCliente" name="selectCliente" type="text" value="" autocomplete="off" style="">
-                    @*<select name="selectCliente" id="selectCliente">
-                            <option value=""></option>
-                            @try
-                            {
-                                foreach (var id in ViewBag.Cliente)
-                                {
-                                    <option value="@(id.GetType().GetProperty("KUNNR").GetValue(id, null))">@(id.GetType().GetProperty("KUNNR").GetValue(id, null))</option>
-                                }
-
-                            }
-                            catch (Exception)
-                            {
-                                <option value="" id="no_optper">No hay opciones</option>
-                            }
-                        </select>*@
                     <label id="label_period">Cliente</label>
                     <link href="~/Content/autocomplete.css" rel="stylesheet" />
                     <script src="~/Scripts/autocomplete1.10.2.js"></script>
@@ -171,24 +168,20 @@
                         auto(document).ready(function () {
                             auto("#selectCliente").autocomplete({
                                 source: function (request, response) {
-                                    var userC = document.getElementById("USUARIOD_ID");
-                                    if (userC == undefined)
-                                        var user = '@ViewBag.usuario.ID';
-                                    else
-                                        var user = userC.value;
+                                    var vcocode = $("#selectcocode").val();
+                                    if (vcocode != null) {
+                                        vcocode = vcocode.join(',');
+                                    }
                                     auto.ajax({
-                                        url: "../Listas/Clientes",
+                                        url: "../Listas/ReportesFiltroCliente",
                                         type: "GET",
                                         dataType: "json",
-                                        data: { Prefix: request.term, usuario: null, pais: null },
+                                        data: { Prefix: request.term, cocodes: vcocode },
                                         success: function (data) {
                                             response(auto.map(data, function (item) {
                                                 return { label: item.KUNNR + " - " + item.NAME1, value: item.KUNNR };
                                             }))
                                         },
-                                        //error: function (data) {
-                                        //    alert('error');
-                                        //}
                                     })
                                 },
                                 messages: {
@@ -213,21 +206,6 @@
                 @* OPCIONAL *@
                 <div class="input-field col s2 m2 l2">
                     <input class="form-control  text-box single-line ui-autocomplete-input" id="selectTipoSolicitud" name="selectTipoSolicitud" type="text" value="" autocomplete="off" style="">
-                    @*<select name="selectTipoSolicitud" id="selectTipoSolicitud">
-                            <option value=""></option>
-                            @try
-                            {
-                                foreach (var solicitud in ViewBag.Tds)
-                                {
-                                    <option value="@solicitud.ID">@(solicitud.DESCRIPCION)</option>
-                                }
-
-                            }
-                            catch (Exception)
-                            {
-                                <option value="" id="no_optper">No hay opciones</option>
-                            }
-                        </select>*@
                     <script>
                         auto(document).ready(function () {
                             auto("#selectTipoSolicitud").autocomplete({
