@@ -106,7 +106,9 @@ $(document).ready(function () {
         $("#txt_ligada").val("");
     }
     //LEJ 31.07.2018---------------------
-
+    //$("#tsol_id").change(function (e) {
+        //if ($("#check_recurrente").prop('checked')) { $('#check_recurrente').prop('checked', false); }
+    //});
     var tableR = $('#table_rangos').DataTable({
         "language": {
             "zerorecords": "no hay registros",
@@ -395,7 +397,7 @@ function cambiaCheckRec() {
 
 function addRowRec(t, num, date, monto, tipo, porc, periodo, meses) {
     var el = document.getElementById("tsol_id");
-    var tsoll = el.options[el.selectedIndex].innerHTML;
+    var tsoll = el.defaultValue;
     if (tipo !== "2") {
         if (!ligada()) {
             addRowRecl(
