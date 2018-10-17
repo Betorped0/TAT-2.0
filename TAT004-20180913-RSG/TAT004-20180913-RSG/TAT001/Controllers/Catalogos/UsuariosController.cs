@@ -935,7 +935,7 @@ namespace TAT001.Controllers.Catalogos
                         {
                             sociedad.Add(b);
                             tablas[cont2, 1] = da.BUNIT.ToString();
-                            usuariosoc[cont4, 1] = da.BUNIT.ToString();
+                            usuariosoc[cont4, 1] = da.ID.ToString();
                         }
                         if (!us.BUNITX)
                         {
@@ -990,7 +990,7 @@ namespace TAT001.Controllers.Catalogos
                                 tablas[cont2, 4] = da.NOMBRE.ToString();
                                 tablas[cont2, 5] = da.APELLIDO_P.ToString();
                                 tablas[cont2, 6] = da.APELLIDO_M.ToString();
-                                usuariosoc[cont4, 0] = da.ID.ToString();
+                                usuariosoc[cont4, 0] = da.BUNIT.ToString();
                             }
                         }
 
@@ -1791,35 +1791,23 @@ namespace TAT001.Controllers.Catalogos
             List<DET_AGENTE1> ld = new List<DET_AGENTE1>();
 
             var dt = (string[,])Session["usuariosoc"];
-            var rowsc = (int)Session["rows1"];
-            var rows = 0;
             var pos = 1;
 
-            for (int i = rows; i < rowsc; i++)
+            for (int i = 0; i < (dt.Length / dt.Rank); i++)
             {
                 DET_AGENTE1 doc = new DET_AGENTE1();
-
+                string id = dt[i, 1];
                 string a = Convert.ToString(pos);
 
-                doc.POS = Convert.ToInt32(a);
-                try
+
+                if (!String.IsNullOrEmpty(id))
                 {
-                    doc.ID = dt[i, 1];
-                }
-                catch (Exception e)
-                {
-                    doc.ID = null;
-                }
-                try
-                {
+                    doc.ID = id;
                     doc.BUNIT = dt[i, 0];
+                    doc.POS = Convert.ToInt32(a);
+                    ld.Add(doc);
+                    pos++;
                 }
-                catch (Exception e)
-                {
-                    doc.BUNIT = null;
-                }
-                ld.Add(doc);
-                pos++;
             }
             return ld;
         }
@@ -1984,7 +1972,7 @@ namespace TAT001.Controllers.Catalogos
                         {
                             sociedad.Add(b);
                             tablas[cont2, 1] = da.BUNIT.ToString();
-                            usuariosoc[cont4, 1] = da.BUNIT.ToString();
+                            usuariosoc[cont4, 1] = da.ID.ToString();
                         }
                         if (!us.BUNITX)
                         {
@@ -2039,7 +2027,7 @@ namespace TAT001.Controllers.Catalogos
                                 tablas[cont2, 4] = da.NOMBRE.ToString();
                                 tablas[cont2, 5] = da.APELLIDO_P.ToString();
                                 tablas[cont2, 6] = da.APELLIDO_M.ToString();
-                                usuariosoc[cont4, 0] = da.ID.ToString();
+                                usuariosoc[cont4, 0] = da.BUNIT.ToString();
                             }
                         }
 
@@ -2205,7 +2193,7 @@ namespace TAT001.Controllers.Catalogos
                                 tabla1[cont3, 4] = da.NOMBRE.ToString();
                                 tabla1[cont3, 5] = da.APELLIDO_P.ToString();
                                 tabla1[cont3, 6] = da.APELLIDO_M.ToString();
-                                usuariosoc[cont4, 1] = da.ID.ToString();
+                                usuariosoc[cont4, 0] = da.BUNIT.ToString();
                             }
                         }
 
@@ -2435,6 +2423,7 @@ namespace TAT001.Controllers.Catalogos
             var usc = Request["usc"];
             var uscx = true;
 
+            //Busqueda de clientes
             if (cli != null && cli != "")
             {
                 CLIENTE c = db.CLIENTEs.Where(xc => xc.KUNNR.Equals(cli)).FirstOrDefault();
@@ -2519,7 +2508,8 @@ namespace TAT001.Controllers.Catalogos
                     var clin = (from x in db.USUARIOFs
                                 where x.USUARIO_ID.Equals(usc) & x.ACTIVO == true
                                 select x.KUNNR).ToArray();
-                    if (clin != null)
+                    //Busqueda de usuarios con clientes
+                    if (clin.Length > 0)
                     {
                         for (int i = 0; i < clin.Length; i++)
                         {
@@ -2569,12 +2559,12 @@ namespace TAT001.Controllers.Catalogos
                             cc.Add(ul);
                         }
                     }
+                    //Busqueda de usuarios por Co Code
                     else
                     {
-                        clin = (from x in db.SOCIEDADs
-                                where x.USUARIOs.Equals(usc) & x.ACTIVO == true
-                                select x.BUKRS).ToArray();
-                        for (int i = 0; i < clin.Length; i++)
+                        List<SOCIEDAD> clin1 = db.USUARIOs.Where(a => a.ID.Equals(usc)).FirstOrDefault().SOCIEDADs.ToList();
+
+                        for (int i = 0; i < clin1.Count(); i++)
                         {
                             Usuarios ul = new Usuarios();
                             ul.KUNNR = "";
@@ -2588,10 +2578,10 @@ namespace TAT001.Controllers.Catalogos
                             ul.SPRAS_ID = "";
                             ul.PASS = "";
                             ul.mess = "";
-                            var us = clin[i];
+                            var us = clin1[i].BUKRS;
                             var com = "";
 
-                            com = (from x in db.PAIS join a in db.CLIENTEs on x.LAND equals a.LAND where x.ACTIVO == true & a.KUNNR.Equals(ul.KUNNR) select x.SOCIEDAD_ID).FirstOrDefault();
+                            com = (from x in db.SOCIEDADs where x.BUKRS.Equals(us) select x.BUKRS).FirstOrDefault();
                             if (com != null)
                                 ul.BUNIT = com;
                             com = (from x in db.USUARIOs where x.ID.Equals(usc) & x.ACTIVO == true select x.ID).FirstOrDefault();
@@ -2618,7 +2608,7 @@ namespace TAT001.Controllers.Catalogos
 
                             cc.Add(ul);
                         }
-                    }
+                    } 
                 }
                 if (!uscx)
                 {

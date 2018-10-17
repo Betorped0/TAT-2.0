@@ -1842,10 +1842,8 @@ soportes(document.getElementById("tsol_id").value, '@Session["spras"].ToString()
                                     <div class="input-field col s6">
                                         <input type="text" id="moneda_dis" name="monedadis" value="@ViewBag.moneda_dis" disabled="disabled" hidden /> @*//B20180625 MGC 2018.06.28*@
                                         @Html.DropDownList("MONEDA", null, htmlAttributes: new { @id = "monedadis_id", @class = "form-control" })
-                                        @* ---DRS 5.10.2018--- *@
-                                        @*@Html.LabelFor(model => model.MONEDA_ID, "Moneda", htmlAttributes: new { @for = "monedadis_id", @id = "lbl_monedadis" })@*B20180801 MGC Textos*@
-                                        <label id="lbl_monedadis" for="monedadis_id" style="font-size:17px; margin-top:11%;">Moneda</label>@*B20180801 MGC Textos*@
-                                    </div>
+                                        @Html.LabelFor(model => model.MONEDA_ID, "Moneda", htmlAttributes: new { @for = "monedadis_id", @id = "lbl_monedadis" })@*B20180801 MGC Textos*@
+                                   </div>
                                 }
                             </div>
                         </div>
