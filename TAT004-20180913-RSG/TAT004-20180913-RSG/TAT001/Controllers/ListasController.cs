@@ -53,7 +53,6 @@ namespace TAT001.Controllers
                 comcodessplit = cocode.Split(',');
             }
 
-
             TAT001Entities db = new TAT001Entities();
             var c = (from cl in db.CLIENTEs
                      join p in db.PAIS on cl.LAND equals p.LAND
@@ -67,6 +66,43 @@ namespace TAT001.Controllers
                           select new { cl.KUNNR, cl.NAME1 }).ToList();
                 c.AddRange(c2);
             }
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+        [HttpGet]
+        public JsonResult ReportesFiltroPaises(string cocodes)
+        {
+            string[] comcodessplit = { };
+            string cocode = cocodes.ToString();
+            if (!string.IsNullOrEmpty(cocode))
+            {
+                comcodessplit = cocode.Split(',');
+            }
+
+            TAT001Entities db = new TAT001Entities();
+
+            var c = (from D in db.PAIS
+                     where comcodessplit.Contains(D.SOCIEDAD_ID)
+                     select new { D.LAND, D.LANDX });
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+        [HttpGet]
+        public JsonResult ReportesFiltroPayer(string cocodes)
+        {
+            string[] comcodessplit = { };
+            string cocode = cocodes.ToString();
+            if (!string.IsNullOrEmpty(cocode))
+            {
+                comcodessplit = cocode.Split(',');
+            }
+
+            TAT001Entities db = new TAT001Entities();
+
+            var c = (from cl in db.CLIENTEs
+                     join p in db.PAIS on cl.LAND equals p.LAND
+                     where comcodessplit.Contains(p.SOCIEDAD_ID)
+                     select new { cl.KUNNR, cl.NAME1 });
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
             return cc;
         }
