@@ -7,12 +7,13 @@
     var bool = false
     $.ajax({
         type: "POST",
-        url: '../../Listas/cierre',
+        //url: '../../Listas/cierre',
+        url: '../Listas/cierre',
         dataType: "text",
         data: { sociedad_id: soc, tsol_id: tsol, periodo_id: periodo, usuario_id: user },
 
         success: function (data) {
-            if (data == "X") {
+            if (data !== "X") {
                 M.toast({ html: "Periodo cerrado" });
                 bool = true;
             } else {

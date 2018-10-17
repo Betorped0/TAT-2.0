@@ -1076,7 +1076,8 @@ namespace TAT001.Controllers
         {
             TAT001Entities db = new TAT001Entities();
             int periodo = int.Parse(periodo_id);
-            bool a = FnCommon.ValidarPeriodoEnCalendario445(db, sociedad_id, tsol_id, periodo, "PRE", usuario_id);
+            bool a = FnCommon.ValidarPeriodoEnCalendario445(db, sociedad_id, tsol_id, periodo, "PRE", usuario_id) |
+                FnCommon.ValidarPeriodoEnCalendario445(db, sociedad_id, tsol_id, periodo, "CI", usuario_id);
             if (a)
                 return "X";
             else
