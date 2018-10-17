@@ -6662,7 +6662,8 @@ namespace TAT001.Controllers
                         dcll.MATNR = d.MATNR;
 
                         //Obtener la descripción del material
-                        dcll.DESC = db.MATERIALs.Where(w => w.ID == d.MATNR).FirstOrDefault().MAKTG.ToString();
+                        string maktg = db.MATERIALTs.Where(w => w.MATERIAL_ID == d.MATNR && w.SPRAS==spras).FirstOrDefault().MAKTG;
+                        dcll.DESC = (maktg == null ? "" : maktg);
                         dcll.VAL = val;
 
                         dm.Add(dcll);
