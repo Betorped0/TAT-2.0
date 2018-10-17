@@ -443,6 +443,14 @@ namespace TAT001.Controllers.Catalogos
                     cont++;
                 }
 
+                ////-------------------------------NOMBRE DEL CLIENTE
+                if (cl.CLIENTE_N == null || cl.CLIENTE_N == "")
+                {
+                    cl.CLIENTE_N = cl.CLIENTE_N + "?";
+                    messa = cont + ". Error con el Nombre del Cliente<br/>";
+                    cont++;
+                }
+
                 ////-------------------------------Niveles
                 for (int i = 0; i < 8; i++)
                 {
@@ -837,11 +845,33 @@ namespace TAT001.Controllers.Catalogos
                 if (k == null)
                     cl.KUNNRX = false;
                 else
+                {
                     clientes.Add(k);
+                    if (cl.CLIENTE_N == "" || cl.CLIENTE_N == null)
+                    {
+                        var ncli = (from x in db.CLIENTEs where x.KUNNR.Equals(cl.KUNNR) select x.NAME1).FirstOrDefault();
+                        if (ncli == null || ncli == "")
+                        {
+                            cl.CLIENTE_N = "";
+                        }
+                        else
+                        {
+                            cl.CLIENTE_N = ncli;
+                        }
+                    }
+                }
                 if (!cl.KUNNRX)
                 {
                     cl.KUNNR = cl.KUNNR + "?";
                     messa = cont + ". Error con el Cliente<br/>";
+                    cont++;
+                }
+
+                ////-------------------------------NOMBRE DEL CLIENTE
+                if (cl.CLIENTE_N == null || cl.CLIENTE_N == "")
+                {
+                    cl.CLIENTE_N = cl.CLIENTE_N + "?";
+                    messa = cont + ". Error con el Nombre del Cliente<br/>";
                     cont++;
                 }
 
@@ -1271,7 +1301,15 @@ namespace TAT001.Controllers.Catalogos
                 } //Cliente
                 try
                 {
-                    doc.CLIENTE_N = dt.Rows[i][3].ToString();
+                    var ncli = (from x in db.CLIENTEs where x.KUNNR.Equals(doc.KUNNR) select x.NAME1).FirstOrDefault();
+                    if (ncli == null)
+                    {
+                        doc.CLIENTE_N = "";
+                    }
+                    else
+                    {
+                        doc.CLIENTE_N = ncli;
+                    }
                 }
                 catch (Exception e)
                 {

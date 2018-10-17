@@ -197,6 +197,10 @@ function loadExcelDis(file) {
                         cli = cli.slice(0, -1);
                         var clix = true;
                     }
+                    if (noc.indexOf('?') != -1) {
+                        noc = noc.slice(0, -1);
+                        var nocx = true;
+                    }
                     if (ni0.indexOf('?') != -1) {
                         ni0 = ni0.slice(0, -1);
                         var ni0x = true;
@@ -305,6 +309,10 @@ function loadExcelDis(file) {
                     }
                     var cols = addedRow.cells[3];
                     if (clix == true) {
+                        $(cols).addClass("red");
+                    }
+                    var cols = addedRow.cells[4];
+                    if (nocx == true) {
                         $(cols).addClass("red");
                     }
                     var cols = addedRow.cells[5];
@@ -535,6 +543,10 @@ function creart(metodo, datos) {
                         cli = cli.slice(0, -1);
                         var clix = true;
                     }
+                    if (noc.indexOf('?') != -1) {
+                        noc = noc.slice(0, -1);
+                        var nocx = true;
+                    }
                     if (ni0.indexOf('?') != -1) {
                         ni0 = ni0.slice(0, -1);
                         var ni0x = true;
@@ -643,6 +655,10 @@ function creart(metodo, datos) {
                     }
                     var cols = addedRow.cells[3];
                     if (clix == true) {
+                        $(cols).addClass("red");
+                    }
+                    var cols = addedRow.cells[4];
+                    if (nocx == true) {
                         $(cols).addClass("red");
                     }
                     var cols = addedRow.cells[5];
