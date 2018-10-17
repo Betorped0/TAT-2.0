@@ -1113,6 +1113,7 @@
           <Property Name="PAYER" Type="bit" Nullable="false" />
           <Property Name="DESCRIPCION" Type="bit" Nullable="false" />
           <Property Name="SOCIEDAD" Type="bit" Nullable="false" />
+          <Property Name="ACTIVO" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="FLUJNEGO">
           <Key>
@@ -1855,6 +1856,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.TAB_CAMPO' no tiene definida ning
           <Property Name="NEGO" Type="bit" Nullable="false" />
           <Property Name="CARTA" Type="bit" Nullable="false" />
           <Property Name="REVERSO" Type="bit" Nullable="false" />
+          <Property Name="ACTIVO" Type="bit" />
         </EntityType>
         <EntityType Name="TSOL_GROUP">
           <Key>
@@ -7176,6 +7178,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Property Name="PAYER" Type="Boolean" Nullable="false" />
           <Property Name="DESCRIPCION" Type="Boolean" Nullable="false" />
           <Property Name="SOCIEDAD" Type="Boolean" Nullable="false" />
+          <Property Name="ACTIVO" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="FLUJNEGO">
           <Key>
@@ -8093,6 +8096,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <NavigationProperty Name="TSOL1" Relationship="Self.FK_TSOL_TSOL" FromRole="TSOL" ToRole="TSOL1" />
           <NavigationProperty Name="TSOL2" Relationship="Self.FK_TSOL_TSOL" FromRole="TSOL1" ToRole="TSOL" />
           <NavigationProperty Name="TSOLTs" Relationship="Self.FK_TSOLT_TSOL" FromRole="TSOL" ToRole="TSOLT" />
+          <Property Name="ACTIVO" Type="Boolean" />
         </EntityType>
         <EntityType Name="TSOLT">
           <Key>
@@ -13222,6 +13226,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <EntitySetMapping Name="FACTURASCONFs">
             <EntityTypeMapping TypeName="TAT001Model.FACTURASCONF">
               <MappingFragment StoreEntitySet="FACTURASCONF">
+                <ScalarProperty Name="ACTIVO" ColumnName="ACTIVO" />
                 <ScalarProperty Name="SOCIEDAD_ID" ColumnName="SOCIEDAD_ID" />
                 <ScalarProperty Name="PAIS_ID" ColumnName="PAIS_ID" />
                 <ScalarProperty Name="TSOL" ColumnName="TSOL" />
@@ -13965,6 +13970,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <EntitySetMapping Name="TSOLs">
             <EntityTypeMapping TypeName="TAT001Model.TSOL">
               <MappingFragment StoreEntitySet="TSOL">
+                <ScalarProperty Name="ACTIVO" ColumnName="ACTIVO" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
                 <ScalarProperty Name="TSOLR" ColumnName="TSOLR" />
