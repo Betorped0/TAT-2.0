@@ -242,6 +242,56 @@ function loadExcelDis(file) {
                         var ecox = true;
                     }//Termina identificacion
 
+                    //Quitar Ceros
+                    var cam = cli.split("");
+                    var con = 0;
+                    for (var i = 0; i < 10; i++) {
+                        if (cam[i] == 0) {
+                            con++;
+                        }
+                        else {
+                            i = 9;
+                        }
+                    }
+                    cli = cli.substring(con, i);
+
+                    var cam = ban.split("");
+                    var con = 0;
+                    for (var i = 0; i < 10; i++) {
+                        if (cam[i] == 0) {
+                            con++;
+                        }
+                        else {
+                            i = 9;
+                        }
+                    }
+                    ban = ban.substring(con, i);
+
+                    var cam = baa.split("");
+                    var con = 0;
+                    for (var i = 0; i < 10; i++) {
+                        if (cam[i] == 0) {
+                            con++;
+                        }
+                        else {
+                            i = 9;
+                        }
+                    }
+                    baa = baa.substring(con, i);
+
+                    var cam = ven.split("");
+                    var con = 0;
+                    for (var i = 0; i < 10; i++) {
+                        if (cam[i] == 0) {
+                            con++;
+                        }
+                        else {
+                            i = 9;
+                        }
+                    }
+                    ven = ven.substring(con, i);
+                    //Termina quitar ceros
+
                     var addedRow = addRow(table, dataj.POS, bor, coc, pai, cli, noc, ni0, ni1, ni2, ni3, ni4, ni5, ni6, ni7, ven, ban, baa, can, exp, con, eco, mes);
 
                     //Pintar de rojo las celdas
@@ -529,6 +579,56 @@ function creart(metodo, datos) {
                         eco = eco.slice(0, -1);
                         var ecox = true;
                     }//Termina identificacion
+
+                    //Quitar Ceros
+                    var cam = cli.split("");
+                    var con = 0;
+                    for (var i = 0; i < 10; i++) {
+                        if (cam[i] == 0) {
+                            con++;
+                        }
+                        else {
+                            i = 9;
+                        }
+                    }
+                    cli = cli.substring(con, i);
+
+                    var cam = ban.split("");
+                    var con = 0;
+                    for (var i = 0; i < 10; i++) {
+                        if (cam[i] == 0) {
+                            con++;
+                        }
+                        else {
+                            i = 9;
+                        }
+                    }
+                    ban = ban.substring(con, i);
+
+                    var cam = baa.split("");
+                    var con = 0;
+                    for (var i = 0; i < 10; i++) {
+                        if (cam[i] == 0) {
+                            con++;
+                        }
+                        else {
+                            i = 9;
+                        }
+                    }
+                    baa = baa.substring(con, i);
+
+                    var cam = ven.split("");
+                    var con = 0;
+                    for (var i = 0; i < 10; i++) {
+                        if (cam[i] == 0) {
+                            con++;
+                        }
+                        else {
+                            i = 9;
+                        }
+                    }
+                    ven = ven.substring(con, i);
+                    //Termina quitar ceros
 
                     var addedRow = addRow(table, dataj.POS, bor, coc, pai, cli, noc, ni0, ni1, ni2, ni3, ni4, ni5, ni6, ni7, ven, ban, baa, can, exp, con, eco, mes);
 

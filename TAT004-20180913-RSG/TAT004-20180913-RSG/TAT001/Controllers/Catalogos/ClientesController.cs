@@ -1353,6 +1353,7 @@ namespace TAT001.Controllers.Catalogos
                 try
                 {
                     doc.BANNER = dt.Rows[i][13].ToString();
+                    doc.BANNER = Completa(doc.BANNER, 10);
                 }
                 catch (Exception e)
                 {
@@ -1361,6 +1362,7 @@ namespace TAT001.Controllers.Catalogos
                 try
                 {
                     doc.BANNERG = dt.Rows[i][14].ToString();
+                    doc.BANNERG = Completa(doc.BANNERG, 10);
                 }
                 catch (Exception e)
                 {
@@ -1553,6 +1555,7 @@ namespace TAT001.Controllers.Catalogos
                 try
                 {
                     doc.BANNER = dt[i, 13];
+                    doc.BANNER = Completa(doc.BANNER, 10);
                 }
                 catch (Exception e)
                 {
@@ -1561,6 +1564,7 @@ namespace TAT001.Controllers.Catalogos
                 try
                 {
                     doc.BANNERG = dt[i, 14];
+                    doc.BANNERG = Completa(doc.BANNERG, 10);
                 }
                 catch (Exception e)
                 {
@@ -1748,7 +1752,6 @@ namespace TAT001.Controllers.Catalogos
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
             return cc;
         }
-
 
         public JsonResult Company(string Prefix)
         {
