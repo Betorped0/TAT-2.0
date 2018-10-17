@@ -185,6 +185,13 @@
                 });
             }
         });
+    },
+    showProcess: function (show) {
+        if (show){
+            document.getElementById("loader").style.display = "flex";
+        } else {
+            document.getElementById("loader").style.display = "none";
+        }
     }
 
 

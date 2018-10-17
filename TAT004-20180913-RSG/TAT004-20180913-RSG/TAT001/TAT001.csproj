@@ -1909,6 +1909,7 @@
     <Content Include="Views\TALLs\Edit.cshtml" />
     <Content Include="Views\Reportes\ReporteAllowancesB.cshtml" />
     <Content Include="Views\Reportes\ReporteAllowancesPL.cshtml" />
+    <Content Include="Views\Clientes\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->

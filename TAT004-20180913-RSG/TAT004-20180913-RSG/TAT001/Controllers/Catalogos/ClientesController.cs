@@ -21,32 +21,38 @@ namespace TAT001.Controllers.Catalogos
         private TAT001Entities db = new TAT001Entities();
 
         // GET: Clientes       
-        public ActionResult Index_(string colOrden,string ordenActual, int? numRegistros = 10, int? pagina=1, string buscar = "")
+        public ActionResult Index_()
         {
             int pagina_id = 631; //ID EN BASE DE DATOS
-            int pageIndex = pagina.Value;
             FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
-            try
-            {
-                string p = Session["pais"].ToString();
-                ViewBag.pais = p + ".png";
-            }
-            catch
-            {
-                //return RedirectToAction("Pais", "Home");
-            }
+            ViewBag.pais = Session["pais"]!=null? Session["pais"].ToString() + ".png" :null;
 
-            Session["spras"] = FnCommon.ObtenerSprasId(db, User.Identity.Name);
 
             ClienteViewModel viewModel = new ClienteViewModel();
+            viewModel.pageSizes = FnCommon.ObtenerCmbPageSize();
+            ObtenerListado(ref viewModel);
+
+            return View(viewModel);
+        }
+
+        public ActionResult List(string colOrden, string ordenActual, int? numRegistros = 10, int? pagina = 1, string buscar = "")
+        {
+            ClienteViewModel viewModel = new ClienteViewModel();
+            ObtenerListado(ref viewModel,colOrden,ordenActual,numRegistros,pagina,buscar);
+
+            return View(viewModel);
+        }
+        public void ObtenerListado(ref ClienteViewModel viewModel, string colOrden="", string ordenActual="", int? numRegistros = 10, int? pagina = 1, string buscar = "")
+        {
+            int pageIndex = pagina.Value;
             List<CLIENTE> clientes = db.CLIENTEs.Include(c => c.PAI).Include(c => c.TCLIENTE).ToList();
             viewModel.ordenActual = ordenActual;
-            viewModel.pageSizes= FnCommon.ObtenerCmbPageSize();
             viewModel.numRegistros = numRegistros.Value;
             viewModel.buscar = buscar;
 
-            if (!String.IsNullOrEmpty(buscar)) {
-                clientes = clientes.Where(x=> 
+            if (!String.IsNullOrEmpty(buscar))
+            {
+                clientes = clientes.Where(x =>
                 String.Concat(x.KUNNR, x.NAME1, (x.SUBREGION == null ? "" : x.SUBREGION), x.LAND, x.PARVW, x.PAYER, (x.CANAL == null ? "" : x.CANAL))
                 .ToLower().Contains(buscar.ToLower()))
                 .ToList();
@@ -101,14 +107,11 @@ namespace TAT001.Controllers.Catalogos
                         viewModel.clientes = clientes.OrderBy(m => m.CANAL).ToPagedList(pageIndex, viewModel.numRegistros);
                     break;
 
-                 default:
+                default:
                     viewModel.clientes = clientes.OrderBy(m => m.KUNNR).ToPagedList(pageIndex, viewModel.numRegistros);
                     break;
             }
-            
-            return View(viewModel);
         }
-
         // GET: Clientes
         public ActionResult Index()
         {
