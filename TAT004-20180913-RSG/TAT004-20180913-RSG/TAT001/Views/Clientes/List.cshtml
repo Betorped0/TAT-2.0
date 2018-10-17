@@ -1,0 +1,79 @@
+﻿@using PagedList.Mvc
+@model TAT001.Models.ClienteViewModel
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+<table class="table mdl-data-table striped" id="table" style="width:100%;">
+    <thead>
+        <tr class="header">
+            <th>
+                @Html.Display("KUNNR", new { htmlAttributes = new { @click= "ActualizarOrden('KUNNR','"+Model.ordenActual+"','"+Model.numRegistros+"')" } })
+            </th>
+            <th>
+                @Html.ActionLink("NAME1", "List", new { sortOrder = "NAME1", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
+            </th>
+            <th>
+                @Html.ActionLink("SUBREGION", "List", new { sortOrder = "SUBREGION", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
+            </th>
+            <th>
+                @Html.ActionLink("LAND", "List", new { sortOrder = "LAND", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
+            </th>
+            <th>
+                @Html.ActionLink("PARVW", "List", new { sortOrder = "PARVW", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
+            </th>
+            <th>
+                @Html.ActionLink("PAYER", "List", new { sortOrder = "PAYER", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
+            </th>
+            <th>
+                @Html.ActionLink("CANAL", "List", new { sortOrder = "CANAL", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.clientes)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.KUNNR)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NAME1)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SUBREGION)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PAI.LANDX)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PARVW)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PAYER)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CANAL)
+                </td>
+                <td>
+                    <a href="@Url.Action(" Edit", "Clientes", new { vko = item.VKORG, vtw = item.VTWEG, spa = item.SPART, kun = item.KUNNR })">
+                        <i class='material-icons green-text'>edit</i>
+                    </a>
+                    <a href="@Url.Action(" Details", "Clientes", new { vko = item.VKORG, vtw = item.VTWEG, spa = item.SPART, kun = item.KUNNR })">
+                        <i class='material-icons blue-text'>search</i>
+                    </a>
+                    <a data-form-method="post" href="@Url.Action(" Index", "Contacto", new { vko = item.VKORG, vtw = item.VTWEG, kun = item.KUNNR, spa = item.SPART })">
+                        <i class='material-icons orange-text'>contacts</i>
+                    </a>
+                    <a data-form-method="post" href="@Url.Action(" Index", "Iimpuesto", new { vko = item.VKORG, vtw = item.VTWEG, kun = item.KUNNR, spa = item.SPART })">
+                        <i class='material-icons yellow-text'>monetization_on</i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div id='Paging' style="text-align: center">
+    Page @(Model.clientes.PageCount < Model.clientes.PageNumber ? 0 : Model.clientes.PageNumber)
+    of @Model.clientes.PageCount
+
+    @Html.PagedListPager(Model.clientes, page => Url.Action("Index", new { page = page, numRegistros = Model.numRegistros }))
+</div>
