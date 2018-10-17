@@ -143,6 +143,33 @@
                             <option value="" id="no_opt">No hay opciones</option>
                         }
                     </select>
+                    <script>
+                        $(document).on('change', '#selectcocode', function () {
+                            var vcocode = $("#selectcocode").val();
+                            if (vcocode != null) {
+                                vcocode = vcocode.join(',');
+                            }
+                            $.ajax({
+                                url: "../Listas/ReportesFiltroPayer",
+                                type: "GET",
+                                dataType: "json",
+                                data: { cocodes: vcocode },//cocode: $(this).val() },
+                                success: function (data) {
+                                    $('#selectpayer').find('option').remove();
+                                    var opciones = 0;
+                                    for (var i in data) {
+                                        $('#selectpayer').append($('<option>', { value: data[i].KUNNR }).text(data[i].KUNNR)); // + " - " + data[i].NAME1
+                                        var elem = document.querySelector('#selectpayer');
+                                        var options = [];
+                                        var instance = M.FormSelect.init(elem, options);
+                                    }
+                                },
+                                //error: function (data) {
+                                //    alert('error');
+                                //}
+                            })
+                        });
+                    </script>
                     <label id="label_cocode">Co. Code *</label>
                 </div>
                 <div class="input-field col s2 m2 l2">
@@ -163,7 +190,7 @@
                 </div>
                 <div class="input-field col s2 m2 l2">
                     <select multiple name="selectpayer" id="selectpayer" required="" class="comcode select_all">
-                        @try
+                        @*@try
                         {
                             foreach (var item in ViewBag.payers)
                             {
@@ -173,9 +200,7 @@
                         catch (Exception)
                         {
                             <option value="" id="no_opt">No hay opciones</option>
-                        }
-
-
+                        }*@
                     </select>
                     <label id="label_cocode">Payer *</label>
                 </div>

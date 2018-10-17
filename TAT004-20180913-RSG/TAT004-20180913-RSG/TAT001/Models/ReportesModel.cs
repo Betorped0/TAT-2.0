@@ -262,16 +262,17 @@ namespace TAT001.Models
 
         public class Concentrado
         {
-            internal List<FLUJO> workflow;
-            internal FLUJO acciones;
-            internal List<DOCUMENTOA> files;
-            internal string pais;
-            internal List<TS_FORM> ts;
-            internal List<DOCUMENTOT> tts;
-            internal List<CARTAP> cartap;
-            internal string ultMod;
-            internal string miles;
-            internal string dec;
+            public List<FLUJO> workflow;
+            public FLUJO acciones;
+            public List<DOCUMENTOA> files;
+            public string pais;
+            public List<TS_FORM> ts;
+            public List<DOCUMENTOT> tts;
+            public List<CARTAP> cartap;
+            public string ultMod;
+            public string miles;
+            public string dec;
+            public object DOCSREFREVERSOS;
 
             public DOCUMENTO documento { set; get; }
             public FLUJO flujo { set; get; }

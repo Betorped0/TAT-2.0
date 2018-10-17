@@ -517,6 +517,7 @@ namespace TAT001.Controllers.Reportes
                 .Include(d => d.DOCUMENTOFs)
                 .Include(d => d.DOCUMENTOLs)
                 .Include(d => d.DOCUMENTONs)
+                .Include(d => d.DOCUMENTOR)
                 .Include(d => d.DOCUMENTOPs)
                 .Include(d => d.DOCUMENTORECs)
                 .Include(d => d.DOCUMENTOTS)
@@ -587,72 +588,13 @@ namespace TAT001.Controllers.Reportes
                 Estatus e = new Estatus();
                 r1.ESTATUS_STRING = e.getText(r1.STATUSS, dOCUMENTO.NUM_DOC);
 
-
-                //dOCUMENTO.DOCUMENTOF = db.DOCUMENTOFs.Where(a => a.NUM_DOC.Equals(dOCUMENTO.NUM_DOC)).ToList();
-                //var vbFl = db.FLUJOes.Where(a => a.NUM_DOC.Equals(dOCUMENTO.NUM_DOC)).OrderBy(a => a.POS).ToList();
-                //FLUJO fvbfl = new FLUJO();
-                //var flng = db.FLUJNEGOes.Where(a => a.NUM_DOC.Equals(dOCUMENTO.NUM_DOC)).ToList();
-                //if (flng.Count > 0)
-                //{
-                //    for (int i = 0; i < flng.Count; i++)
-                //    {
-                //        var kn = flng[i].KUNNR;
-                //        var clName = db.CLIENTEs.Where(c => c.KUNNR == kn).Select(s => s.NAME1).FirstOrDefault();
-                //        fvbfl = new FLUJO();
-                //        fvbfl.NUM_DOC = flng[i].NUM_DOC;
-                //        fvbfl.FECHAC = flng[i].FECHAC;
-                //        fvbfl.FECHAM = flng[i].FECHAM;
-                //        fvbfl.USUARIOA_ID = clName;// + "(Cliente)";
-                //        fvbfl.COMENTARIO = flng[i].COMENTARIO;
-                //        vbFl.Add(fvbfl);
-                //    }
-                //}
-                //r1.workflow = vbFl;
-                //string usuariodel = "";
-                //DateTime fecha = DateTime.Now.Date;
-                //List<TAT001.Entities.DELEGAR> del = db.DELEGARs.Where(a => a.USUARIOD_ID.Equals(User.Identity.Name) & a.FECHAI <= fecha & a.FECHAF >= fecha & a.ACTIVO == true).ToList();
-                //FLUJO f = db.FLUJOes.Where(a => a.NUM_DOC.Equals(dOCUMENTO.NUM_DOC) & a.ESTATUS.Equals("P")).FirstOrDefault();
-                //r1.acciones = f;
-                //List<DOCUMENTOA> archivos = db.DOCUMENTOAs.Where(x => x.NUM_DOC.Equals(dOCUMENTO.NUM_DOC) & x.ACTIVO == true).ToList();//RSG 15.05.2018
-                //r1.files = archivos;
-                //if (f != null)
-                //    if (f.USUARIOA_ID != null)
-                //    {
-                //        if (del.Count > 0)
-                //        {
-                //            DELEGAR dell = del.Where(a => a.USUARIO_ID.Equals(f.USUARIOA_ID)).FirstOrDefault();
-                //            if (dell != null)
-                //                usuariodel = dell.USUARIO_ID;
-                //            else
-                //                usuariodel = User.Identity.Name;
-                //        }
-                //        else
-                //            usuariodel = User.Identity.Name;
-
-                //        if (f.USUARIOA_ID.Equals(usuariodel))
-                //            ViewBag.accion = db.WORKFPs.Where(a => a.ID.Equals(f.WORKF_ID) & a.POS.Equals(f.WF_POS) & a.VERSION.Equals(f.WF_VERSION)).FirstOrDefault().ACCION.TIPO;
-                //    }
-                //    else
-                //    {
-                //        ViewBag.accion = db.WORKFPs.Where(a => a.ID.Equals(f.WORKF_ID) & a.POS.Equals(f.WF_POS) & a.VERSION.Equals(f.WF_VERSION)).FirstOrDefault().ACCION.TIPO;
-                //    }
-                //r1.pais = dOCUMENTO.PAIS_ID + ".png"; //RSG 29.09.2018
-                //r1.flujo = db.FLUJOes.Where(a => a.NUM_DOC.Equals(dOCUMENTO.NUM_DOC)).OrderByDescending(a => a.POS).FirstOrDefault();
-                //r1.ts = db.TS_FORM.Where(a => a.BUKRS_ID.Equals(r1.documento.SOCIEDAD_ID) & a.LAND_ID.Equals(r1.documento.PAIS_ID)).ToList();
-                //r1.tts = db.DOCUMENTOTS.Where(a => a.NUM_DOC.Equals(r1.documento.NUM_DOC)).ToList();
-
-                //if (r1.documento.DOCUMENTO_REF != null)
-                //    r1.Title += r1.documento.DOCUMENTO_REF + "-";
-                //r1.Title += dOCUMENTO.NUM_DOC;
-
-                //r1.cartap = db.CARTAPs.Where(i => i.NUM_DOC == dOCUMENTO.NUM_DOC).ToList();
-
-                //Models.PresupuestoModels carga = new Models.PresupuestoModels();
-                //r1.ultMod = carga.consultarUCarga();
-
-                //r1.TSOL_RELA = db.TSOLs.Where(a => a.ESTATUS == "M" & a.PADRE == false).ToList();
-                //r1.miles = r1.documento.PAI.MILES;//LEJGG 090718
-                //r1.dec = r1.documento.PAI.DECIMAL;//LEJGG 090718
+                r1.DOCSREFREVERSOS = (from d in db.DOCUMENTOes
+                                     join dr in db.DOCUMENTORs on d.NUM_DOC equals dr.NUM_DOC
+                                     join tr in db.TREVERSATs on dr.TREVERSA_ID equals tr.TREVERSA_ID
+                                     where tr.SPRAS_ID == user.SPRAS_ID
+                                      where d.DOCUMENTO_REF == r1.documento.NUM_DOC
+                                     select new { d, dr, tr }).FirstOrDefault();
+                
                 reporte.Add(r1);
             }
             ViewBag.lista_reporte = reporte;

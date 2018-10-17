@@ -387,7 +387,8 @@ function Carga() {
     var us6 = $('.input_ni6').serialize();
     var doc = sessionStorage.getItem("num");
     if (doc > 0 || cliente != null || cliente != "cli=") {
-        if (message == "" || message == null || message == "mes=") {
+        //Conn endsWith se valida que el final de la cadena sea mes= ya que con contains podrian pasar errores
+        if (message == "" || message == null || message.endsWith('mes=')) {
             if (us1 != "" && us1 != "ni1=" && us1 != null && us6 != "" && us6 != "ni6=" && us6 != null) {
                 $.ajax({
                     type: "POST",
@@ -398,7 +399,7 @@ function Carga() {
 
                     },
                     error: function (request, status, error) {
-                        //alert(request.responseText);
+                        console.log(request.responseText);
                     }
                 });
                 M.toast({ html: 'Se agregaron los nuevos registros' });
