@@ -38,6 +38,7 @@ namespace TAT001.Entities
         public bool NEGO { get; set; }
         public bool CARTA { get; set; }
         public bool REVERSO { get; set; }
+        public Nullable<bool> ACTIVO { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CALENDARIO_AC> CALENDARIO_AC { get; set; }
