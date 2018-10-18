@@ -563,33 +563,19 @@ namespace TAT001.Controllers
         {
             TAT001Entities db = new TAT001Entities();
             Cadena cad = new Cadena();
+            var spras = Session["spras"].ToString();
             kunnr = cad.completaCliente(kunnr);
             if (kunnr == null)
             {
                 kunnr = "";
             }
-
-            //if (catid == null)
-            //{
-            //    catid = "";
-            //}
-
             var jd = (dynamic)null;
 
             //Obtener los materiales
-            IEnumerable<MATERIAL> matl = Enumerable.Empty<MATERIAL>();
-            try
-            {
-                matl = db.MATERIALs.Where(m => m.ACTIVO == true);//.Select(m => m.ID).ToList();
-            }
-            catch (Exception e)
-            {
+            IEnumerable<MATERIAL> matl =  db.MATERIALs.Where(m => m.ACTIVO == true);
 
-            }
-
-            var spras = Session["spras"].ToString();
             //Validar si hay materiales
-            if (matl != null)
+            if (matl.Any())
             {
 
                 CLIENTE cli = new CLIENTE();
@@ -598,14 +584,12 @@ namespace TAT001.Controllers
                 try
                 {
                     cli = db.CLIENTEs.Where(c => c.KUNNR == kunnr & c.VKORG == vkorg & c.SPART == spart).FirstOrDefault();
-
                     //Saber si el cliente es sold to, payer o un grupo
                     if (cli != null)
                     {
                         //Es un soldto
                         if (cli.KUNNR != cli.PAYER && cli.KUNNR != cli.BANNER)
                         {
-                            //cli.VKORG = cli.VKORG+" ";
                             clil.Add(cli);
                         }
                     }
@@ -674,14 +658,9 @@ namespace TAT001.Controllers
                 {
                     //Obtener el historial de compras de los clientesd
                     var matt = matl.ToList();
-                    //kunnr = kunnr.TrimStart('0').Trim();
                     var pres = db.PRESUPSAPPs.Where(a => a.VKORG.Equals(vkorg) & a.SPART.Equals(spart) & a.KUNNR == kunnr & (a.GRSLS != null | a.NETLB != null)).ToList();
-                    //var cat = db.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(spras)).ToList();
                     var cat = db.MATERIALGPs.Where(a => a.ACTIVO == true).ToList();//RSG 03.10.2018
-                    //foreach (var c in cie)
-                    //{
-                    //    c.KUNNR = c.KUNNR.TrimStart('0').Trim();
-                    //}
+                  
 
                     CONFDIST_CAT conf = getCatConf(soc_id);
                     if (conf != null)
@@ -735,15 +714,10 @@ namespace TAT001.Controllers
             var list = new List<MATERIALGPT>();
             if (jd.Count > 0)
             {
-                //MATERIALGPT c = db.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(spras) & a.MATERIALGP_ID.Equals("000")).FirstOrDefault();
-                MATERIALGP c = db.MATERIALGPs.Where(a => a.ID.Equals("000")).FirstOrDefault();
-                //MATERIALGPT cc = new MATERIALGPT();//B20180625 MGC 2018.07.02
+                 MATERIALGP c = db.MATERIALGPs.Where(a => a.ID.Equals("000")).FirstOrDefault();
                 MATERIALGPT cc = new MATERIALGPT();//B20180625 MGC 2018.07.02
                 if (c != null)//B20180625 MGC 2018.07.02
                 {
-                    //cc.MATERIALGP_ID = "000";
-                    //cc.SPRAS_ID = c.SPRAS_ID;
-                    //cc.TXT50 = c.TXT50;
                     cc.MATERIALGP_ID = "000";
                     cc.SPRAS_ID = "EN";
                     cc.TXT50 = c.DESCRIPCION;
@@ -1041,14 +1015,14 @@ namespace TAT001.Controllers
             var c = (from m in db.CONTACTOCs
                      where m.NOMBRE.Contains(Prefix) && m.ACTIVO == true
                          && m.VKORG == vkorg && m.VTWEG == vtweg
-                         /*&& m.SPART == spart*/ && m.KUNNR == kunnr
+                         && m.KUNNR == kunnr
                      select new { m.NOMBRE, m.EMAIL }).ToList();
             if (c.Count == 0)
             {
                 var c2 = (from m in db.CONTACTOCs
                           where m.EMAIL.Contains(Prefix) && m.ACTIVO == true
                               && m.VKORG == vkorg && m.VTWEG == vtweg
-                              /*&& m.SPART == spart*/ && m.KUNNR == kunnr
+                              && m.KUNNR == kunnr
                           select new { m.NOMBRE, m.EMAIL }).ToList();
                 c.AddRange(c2);
             }

@@ -12,13 +12,11 @@ $('body').on('keydown.autocomplete', '.input_material', function () {
         source: function (request, response) {
             auto.ajax({
                 type: "POST",
-                //url: 'materiales',//Anterior
-                url: '../Listas/materiales',
+                url: root+'Listas/materiales',
                 dataType: "json",
                 data: { "Prefix": request.term, vkorg: vk, vtweg: vt, spras: sp },
                 success: function (data) {
                     response(auto.map(data, function (item) {
-                        //return { label: item.ID + " - " + item.MAKTX, value: item.ID };
                         return { label: trimStart('0', item.ID) + " - " + item.MAKTX, value: trimStart('0', item.ID) };//RSG 07.06.2018
                     }))
                 },

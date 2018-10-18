@@ -2783,7 +2783,7 @@ $('body').on('click', '.pc', function () {
 });
 
 //B20180801 MGC Textos
-$('body').on('keydown', '.input_oper', function (e) {
+$('body').on('keydown', '.input_oper.numberd', function (e) {
     var t = $('#table_dis').DataTable();
     var tr = $(this).closest('tr'); //Obtener el row 
     //alert("press");
@@ -2861,55 +2861,18 @@ $('body').on('focusout', '.input_oper', function () {
                 M.toast({ html: 'El monto debe de ser mayor a 0' });
                 return false;
             }
-        } else {//if(neg == "C") {
-            //if ($(this).hasClass("total")) {
+        } else {
             var total_val = $(this).val();
-            //Agregar los valores a 0 y agregar el total
-            //updateTotalRow(t, tr, "", "X", total_val);
-            //} 
             updateTotalRow(t, tr, "", "", 0);
         }
 
-        ////Se dispara el evento desde el porcentaje de apoyo
-        //if ($(this).hasClass("pm")) {
-        //    //Saber si el cálculo se hace desde tabla
-        //    //Obtener el costo unitario
-        //    //Si costo unitario mayor a cero, entonces se hace cálculo desde la tabla
-        //    var index = getIndex();
-        //    var c_unitario = tr.find("td:eq(" + (8 + index) + ") input").val();
-        //    c_unitario = parseFloat(c_unitario);
-        //    if (c_unitario > 0) {
-        //        //Calculo desde la tabla
-        //        updateTotalRow(t, tr, "", "", 0);
-        //    } else {
-        //        //Calculo con el monto base
-        //        //Se obtiene el valor del monto base
-        //        var monto_base = $('#monto_dis').val();
-        //        monto_base = parseFloat(monto_base);
-
-        //        //Se obtiene el valor del input que genero el evento
-        //        var porcentaje = $(this).val();
-        //        if (monto_base > 0) {
-        //            if (porcentaje > 0) {
-        //                var total_val2 = (porcentaje * monto_base) / 100;
-        //                //Agregar los valores a 0 y agregar el total
-        //                updateTotalRow(t, tr, "X", "X", total_val2);
-        //            } else {
-        //                M.toast({ html: 'El porcentaje de apoyo debe de ser mayor a cero' });
-        //                return false;
-        //            }
-        //        } else {
-        //            M.toast({ html: 'El monto base debe de ser mayor a cero' });
-        //            return false;
-        //        }
-        //    }
-        //} else {
-        //    updateTotalRow(t, tr, "", "", 0);
-        //}
     }
 
     //Validar si el focusout fue en la columna de material
     if ($(this).hasClass("input_material")) {
+        if (!this.value || this.className.indexOf('ui-autocomplete-loading') > -1) {
+            return;
+        }
         //Validar el material
         var mat = $(this).val();
         var val = valMaterial(mat, "X");

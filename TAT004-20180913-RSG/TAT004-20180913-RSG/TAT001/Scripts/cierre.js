@@ -1,14 +1,13 @@
 ﻿function cierre() {
     //string sociedad_id, string tsol_id, int periodo_id, string usuario_id = null
     var soc = $("#sociedad_id").val();
-    var tsol = $("#tsol_id").val();
+    var tsol = $("#TSOL_ID").val();
     var periodo = $("#periodo").val();
     var user = $("#USUARIOD_ID").val();
     var bool = false
     $.ajax({
         type: "POST",
-        //url: '../../Listas/cierre',
-        url: '../Listas/cierre',
+        url: root+'Listas/cierre',
         dataType: "text",
         data: { sociedad_id: soc, tsol_id: tsol, periodo_id: periodo, usuario_id: user },
 
