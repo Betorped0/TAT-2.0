@@ -21,7 +21,7 @@ namespace TAT001.Controllers.Catalogos
         private TAT001Entities db = new TAT001Entities();
 
         // GET: Clientes       
-        public ActionResult Index_()
+        public ActionResult Index()
         {
             int pagina_id = 631; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
@@ -46,7 +46,7 @@ namespace TAT001.Controllers.Catalogos
         {
             int pageIndex = pagina.Value;
             List<CLIENTE> clientes = db.CLIENTEs.Include(c => c.PAI).Include(c => c.TCLIENTE).ToList();
-            viewModel.ordenActual = ordenActual;
+            viewModel.ordenActual = colOrden;
             viewModel.numRegistros = numRegistros.Value;
             viewModel.buscar = buscar;
 
@@ -113,7 +113,7 @@ namespace TAT001.Controllers.Catalogos
             }
         }
         // GET: Clientes
-        public ActionResult Index()
+        public ActionResult Index_()
         {
             int pagina = 631; //ID EN BASE DE DATOS
             string u = User.Identity.Name;

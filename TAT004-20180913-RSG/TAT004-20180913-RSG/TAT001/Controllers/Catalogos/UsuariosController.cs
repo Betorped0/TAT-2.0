@@ -1478,7 +1478,7 @@ namespace TAT001.Controllers.Catalogos
                     if (da.ID != null)
                     {
                         ////---------------------------- USUARIO
-                        us.ID = da.ID;
+                        us.ID = da.ID.Trim();
                         us.PASS = da.PASS;
                         us.NOMBRE = da.NOMBRE;
                         us.APELLIDO_P = da.APELLIDO_P;
@@ -1537,7 +1537,7 @@ namespace TAT001.Controllers.Catalogos
                 {
                     if (da.ID != null && !db.USUARIOs.Any(x=>x.ID==da.ID))
                     {
-                        us.ID = da.ID;
+                        us.ID = da.ID.Trim();
                         us.PASS = da.PASS;
                         us.NOMBRE = da.NOMBRE;
                         us.APELLIDO_P = da.APELLIDO_P;
