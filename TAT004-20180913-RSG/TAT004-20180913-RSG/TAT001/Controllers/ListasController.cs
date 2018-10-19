@@ -907,20 +907,19 @@ namespace TAT001.Controllers
 
             }
             //Si es borrador asignar datos de contacto a cliente
-            //if (id_cl != null && esBorrador != null && esBorrador.Value)
-            //{
-            //    DOCUMENTBORR doc = db.DOCUMENTBORRs.Where(x => x.USUARIOC_ID == User.Identity.Name && int.Parse(x.PAYER_ID).ToString() == kunnr).FirstOrDefault();
-            //    if (doc!=null) {
-            //        id_cl.CONT_EMAIL = doc.PAYER_EMAIL;
-            //        id_cl.CONTAC = doc.PAYER_NOMBRE;
-            //    }
-
-            //}
-            //Asignar Manager
-            List<CLIENTEF> clientesf = db.CLIENTEFs.Where(x => x.KUNNR == id_cl.KUNNR).ToList();
-            if (id_cl != null && clientesf.Any())
+            if (id_cl != null && esBorrador != null && esBorrador.Value)
             {
-                id_cl.MANAGER = clientesf.First().USUARIO1_ID;
+                DOCUMENTBORR doc = db.DOCUMENTBORRs.Where(x => x.USUARIOC_ID== User.Identity.Name && x.PAYER_ID== kunnr).FirstOrDefault();
+                if (doc != null)
+                {
+                    id_cl.PAYER_EMAIL = doc.PAYER_EMAIL;
+                    id_cl.PAYER_NOMBRE = doc.PAYER_NOMBRE;
+                }
+            }
+            //Asignar Manager
+            if (id_cl != null && db.CLIENTEFs.Any(x => x.KUNNR == id_cl.KUNNR))
+            {
+                id_cl.MANAGER = db.CLIENTEFs.Where(x => x.KUNNR == id_cl.KUNNR).First().USUARIO1_ID;
             }
             JsonResult jc = Json(id_cl, JsonRequestBehavior.AllowGet);
             return jc;
