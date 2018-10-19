@@ -180,7 +180,7 @@ function loadExcelDis(file) {
                     var baa = dataj.BANNERG;
                     var can = dataj.CANAL;
                     var exp = dataj.EXPORTACION;
-                    var con = dataj.CONTACTO;
+                    var contac = dataj.CONTACTO;
                     var eco = dataj.CONTACTOE;
                     var mes = dataj.MESS;
 
@@ -296,7 +296,7 @@ function loadExcelDis(file) {
                     ven = ven.substring(con, i);
                     //Termina quitar ceros
 
-                    var addedRow = addRow(table, dataj.POS, bor, coc, pai, cli, noc, ni0, ni1, ni2, ni3, ni4, ni5, ni6, ni7, ven, ban, baa, can, exp, con, eco, mes);
+                    var addedRow = addRow(table, dataj.POS, bor, coc, pai, cli, noc, ni0, ni1, ni2, ni3, ni4, ni5, ni6, ni7, ven, ban, baa, can, exp, contac, eco, mes);
 
                     //Pintar de rojo las celdas
                     var cols = addedRow.cells[1];
@@ -402,7 +402,7 @@ function addRow(t, POS, br, cc, p, c, nc, n0, n1, n2, n3, n4, n5, n6, n7, v, b, 
         "<input class='input_can' style='font-size:12px;' type='text' id='' name='can' value='" + ca + "' onchange='Comprobar()'><span  style='display: none;'>" + ca+ "</span>",
         "<input class='input_exp' style='font-size:12px;' type='text' id='' name='exp' value='" + ex + "' onchange='Comprobar()'><span  style='display: none;'>" + ex + "</span>",
         "<input class='input_con' style='font-size:12px;' type='text' id='' name='con' value='" + co + "' onchange='Comprobar()'><span  style='display: none;'>" + co + "</span>",
-        "<input class='input_eco' style='font-size:12px;' type='text' id='' name='eco' value='" + ec + "' onchange='Comprobar()'><span  style='display: none;'>" + ec + "</span>",
+        "<input class='input_eco' type='email' style='font-size:12px;' type='text' id='' name='eco' value='" + ec + "' onchange='Comprobar()'><span  style='display: none;'>" + ec + "</span>",
         "<input class='input_mes' type='hidden' name='mes' value='" + me + "'><span class='input_mes' style='font-size:12px;'>" + me + "</span>"
     );
     return r;
@@ -454,14 +454,14 @@ function Carga() {
                     data: datos,
                     dataType: "json",
                     success: function () {
-
+                        console.log(datos);
                     },
                     error: function (request, status, error) {
                         console.log(request.responseText);
                     }
                 });
                 M.toast({ html: 'Se agregaron los nuevos registros' });
-                window.location.replace("/Clientes/Index");
+                //window.location.replace("/Clientes/Index");
             }
             else
                 M.toast({ html: 'Los niveles 1 y 6 no pueden quedar vacios' });
@@ -526,7 +526,7 @@ function creart(metodo, datos) {
                     var baa = dataj.BANNERG;
                     var can = dataj.CANAL;
                     var exp = dataj.EXPORTACION;
-                    var con = dataj.CONTACTO;
+                    var cont = dataj.CONTACTO;
                     var eco = dataj.CONTACTOE;
                     var mes = dataj.MESS;
 
@@ -642,7 +642,7 @@ function creart(metodo, datos) {
                     ven = ven.substring(con, i);
                     //Termina quitar ceros
 
-                    var addedRow = addRow(table, dataj.POS, bor, coc, pai, cli, noc, ni0, ni1, ni2, ni3, ni4, ni5, ni6, ni7, ven, ban, baa, can, exp, con, eco, mes);
+                    var addedRow = addRow(table, dataj.POS, bor, coc, pai, cli, noc, ni0, ni1, ni2, ni3, ni4, ni5, ni6, ni7, ven, ban, baa, can, exp, cont, eco, mes);
 
                     //Pintar de rojo las celdas
                     var cols = addedRow.cells[1];
@@ -757,7 +757,7 @@ $('body').on('keydown.autocomplete', '.input_ven', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item)) {
+            if (!(ui.item) && $(".input_ven").val() === "") {
                 e.target.value = "";
             }
         },
@@ -792,7 +792,7 @@ $('body').on('keydown.autocomplete', '.input_can', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item)) {
+            if (!(ui.item) && $(".input_").val() === "") {
                 e.target.value = "";
             }
         },
@@ -825,7 +825,7 @@ $('body').on('keydown.autocomplete', '.input_cli', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item)) {
+            if (!(ui.item) && $(".input_cli").val()==="") {
                 e.target.value = "";
             }
         },
@@ -858,7 +858,7 @@ $('body').on('keydown.autocomplete', '.input_coc', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item)) {
+            if (!(ui.item) && (".input_coc").val()==="") {
                 e.target.value = "";
             }
         },
@@ -924,7 +924,7 @@ $('body').on('keydown.autocomplete', '.input_ni1', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item)) {
+            if (!(ui.item) && $(".input_ni1").val()==="") {
                 e.target.value = "";
             }
         },
@@ -957,7 +957,7 @@ $('body').on('keydown.autocomplete', '.input_ni2', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item)) {
+            if (!(ui.item) && $(".input_ni2").val() === "") {
                 e.target.value = "";
             }
         },
@@ -990,7 +990,7 @@ $('body').on('keydown.autocomplete', '.input_ni3', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item)) {
+            if (!(ui.item) && $(".input_ni3").val() === "") {
                 e.target.value = "";
             }
         },
@@ -1023,7 +1023,7 @@ $('body').on('keydown.autocomplete', '.input_ni4', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item)) {
+            if (!(ui.item) && $(".input_ni4").val() === "") {
                 e.target.value = "";
             }
         },
@@ -1056,7 +1056,7 @@ $('body').on('keydown.autocomplete', '.input_ni5', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item)) {
+            if (!(ui.item) && $(".input_ni5").val() === "") {
                 e.target.value = "";
             }
         },
@@ -1089,7 +1089,7 @@ $('body').on('keydown.autocomplete', '.input_ni6', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item)) {
+            if (!(ui.item) && $(".input_ni6").val() === "") {
                 e.target.value = "";
             }
         },
@@ -1122,7 +1122,7 @@ $('body').on('keydown.autocomplete', '.input_ni7', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item)) {
+            if (!(ui.item) && $(".input_ni7").val() === "") {
                 e.target.value = "";
             }
         },
