@@ -227,6 +227,15 @@ namespace TAT001.Common
             }
             return esPeriodoAbierto;
         }
+        public static List<SelectListItem> ObtenerCmbEjercicio()
+        {
+            DateTime fechaActual = DateTime.Now;
+            int anio = fechaActual.Year;
+            return new List<SelectListItem> {
+                    new SelectListItem{Text=(anio).ToString(),Value=(anio).ToString()},
+                    new SelectListItem{Text=(anio+1).ToString(),Value=(anio+1).ToString()},
+            };
+        }
         public static List<SelectListItem> ObtenerCmbPageSize()
         {
             return new List<SelectListItem> {

@@ -312,7 +312,7 @@ $(document).ready(function () {
                                     </div>
                                 </div>
                                 <div class="input-field col s12">
-                                    @Html.EditorFor(model => model.ESTADO, new { htmlAttributes = new { @id = "state_id", @class = "form-control " + @ViewBag.relacionada } })
+                                    @Html.EditorFor(model => model.ESTADO, new { htmlAttributes = new { @id = "state_id", @class = "form-control " + @ViewBag.relacionada, @maxlength = 50 } })
                                     @Html.LabelFor(model => model.ESTADO, "Estado", htmlAttributes: new { @for = "state_id", @id = "lbl_estado" }) @*B20180801 MGC Textos*@
                                 </div>
                                 <link href="~/Content/autocomplete.css" rel="stylesheet" />
@@ -364,8 +364,8 @@ $(document).ready(function () {
                                 </script>
                                 <script src="~/Scripts/createa.js"></script>
                                 <div class="input-field col s12">
-                                    @Html.EditorFor(model => model.CIUDAD, new { htmlAttributes = new { @id = "city_id", @class = "form-control " + @ViewBag.relacionada } })
-                                    @Html.LabelFor(model => model.CIUDAD, "Ciudad", htmlAttributes: new { @for = "city_id", @id = "lbl_ciudad" }) @*B20180801 MGC Textos*@
+                                    @Html.EditorFor(model => model.CIUDAD, new { htmlAttributes = new { @id = "city_id", @class = "form-control " + @ViewBag.relacionada, @maxlength = 50 } })
+                                    @Html.LabelFor(model => model.CIUDAD, "Ciudad", htmlAttributes: new { @for = "city_id", @id = "lbl_ciudad"}) @*B20180801 MGC Textos*@
                                 </div>
                                 <script>
                                     auto(document).ready(function () {
@@ -445,11 +445,11 @@ $(document).ready(function () {
                                     <label id="lbl_ejercicio" for="ejercicio">Ejercicio</label>@*B20180801 MGC Textos*@
                                 </div>
                                 <div class="input-field col s12">
-                                    @Html.EditorFor(model => model.CONCEPTO, new { htmlAttributes = new { @id = "concepto", @class = "form-control " + @ViewBag.relacionada} })
+                                    @Html.EditorFor(model => model.CONCEPTO, new { htmlAttributes = new { @id = "concepto", @class = "form-control " + @ViewBag.relacionada, @maxlength = 100 } })
                                     <label id="lbl_concepto" for="concepto">Concepto*</label> @*B20180801 MGC Textos*@
                                 </div>
                                 <div class="input-field col s12">
-                                    @Html.TextAreaFor(model => model.NOTAS, new { @class = "materialize-textarea " + @ViewBag.relacionada, @id = "notas_txt", onkeyup = "maxchar();" })
+                                    @Html.TextAreaFor(model => model.NOTAS, new { @class = "materialize-textarea " + @ViewBag.relacionada, @id = "notas_txt", onkeyup = "maxchar();", @maxlength = 255 })
                                     @Html.LabelFor(model => model.NOTAS, "Mecánica de negociación", htmlAttributes: new { @class = "active", @for = "notas_txt", @id = "lbl_notas" })@*B20180801 MGC Textos*@
                                 </div>
                                 <script>
@@ -473,7 +473,7 @@ $(document).ready(function () {
                             <h5 id="head_infocli">Información del cliente</h5>@*B20180801 MGC Textos*@
                             <div class="row" style="margin-bottom:0">
                                 <div class="input-field col s12">
-                                    @Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @id = "payer_id", @class = "form-control " + @ViewBag.relacionada, @onchange = @"selectCliente(this.value)" } }) @*OCG 15-10-18 Se inserta aqui para no afectar la vista*@
+                                    @Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @id = "payer_id", @class = "form-control " + @ViewBag.relacionada, @onchange = @"selectCliente(this.value)", @maxlength = 10 } }) @*OCG 15-10-18 Se inserta aqui para no afectar la vista*@
                                     @Html.LabelFor(model => model.PAYER_ID, "Cliente", htmlAttributes: new { @for = "payer_id", @id = "lbl_payer" })@*B20180801 MGC Textos*@
                                 </div>
                                 <script>
@@ -556,11 +556,11 @@ $(document).ready(function () {
                                     </div>
                                 </div>
                                 <div class="input-field col s12">
-                                    @Html.EditorFor(model => model.PAYER_NOMBRE, new { htmlAttributes = new { @id = "payer_nombre", @class = "form-control " + @ViewBag.relacionada } })
+                                    @Html.EditorFor(model => model.PAYER_NOMBRE, new { htmlAttributes = new { @id = "payer_nombre", @class = "form-control " + @ViewBag.relacionada, @maxlength = 150 } })
                                     @Html.LabelFor(model => model.PAYER_NOMBRE, "Nombre del contacto", htmlAttributes: new { @class = "control-label col-md-2", @for = "payer_nombre", @id = "lbl_payernom" }) @*B20180801 MGC Textos*@
                                 </div>
                                 <div class="input-field col s12">
-                                    @Html.EditorFor(model => model.PAYER_EMAIL, new { htmlAttributes = new { @id = "payer_email", @class = " " + @ViewBag.relacionada, @type = "email" } })
+                                    @Html.EditorFor(model => model.PAYER_EMAIL, new { htmlAttributes = new { @id = "payer_email", @class = " " + @ViewBag.relacionada, @type = "email", @maxlength = 250 } })
                                     @Html.LabelFor(model => model.PAYER_EMAIL, "Email de contacto", htmlAttributes: new { @class = "control-label col-md-2", @for = "payer_email", @id = "lbl_payeremail" }) @*B20180801 MGC Textos*@
                                 </div>
 

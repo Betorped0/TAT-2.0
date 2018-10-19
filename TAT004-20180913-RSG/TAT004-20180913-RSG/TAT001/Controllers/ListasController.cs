@@ -833,7 +833,7 @@ namespace TAT001.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public JsonResult SelectCliente(string kunnr)
+        public JsonResult SelectCliente(string kunnr,bool? esBorrador)
         {
 
             TAT001Entities db = new TAT001Entities();
@@ -885,15 +885,8 @@ namespace TAT001.Controllers
             if (id_cl != null)
             {
                 //Obtener el cliente
-                //CANAL canal = db.CANALs.Where(ca => ca.BANNER == id_cl.BANNER && ca.KUNNR == kunnr).FirstOrDefault();
                 CANAL canal = db.CANALs.Where(ca => ca.CANAL1 == id_cl.CANAL).FirstOrDefault();
                 id_cl.VTWEG = "";
-                //if (canal == null)
-                //{
-                //    string kunnrwz = kunnr.TrimStart('0');
-                //    string bannerwz = id_cl.BANNER.TrimStart('0');
-                //    canal = db.CANALs.Where(ca => ca.BANNER == bannerwz && ca.KUNNR == kunnrwz).FirstOrDefault();
-                //}
 
                 if (canal != null)
                 {
@@ -913,6 +906,17 @@ namespace TAT001.Controllers
                 }
 
             }
+            //Si es borrador asignar datos de contacto a cliente
+            //if (id_cl != null && esBorrador != null && esBorrador.Value)
+            //{
+            //    DOCUMENTBORR doc = db.DOCUMENTBORRs.Where(x => x.USUARIOC_ID == User.Identity.Name && int.Parse(x.PAYER_ID).ToString() == kunnr).FirstOrDefault();
+            //    if (doc!=null) {
+            //        id_cl.CONT_EMAIL = doc.PAYER_EMAIL;
+            //        id_cl.CONTAC = doc.PAYER_NOMBRE;
+            //    }
+
+            //}
+            //Asignar Manager
             List<CLIENTEF> clientesf = db.CLIENTEFs.Where(x => x.KUNNR == id_cl.KUNNR).ToList();
             if (id_cl != null && clientesf.Any())
             {

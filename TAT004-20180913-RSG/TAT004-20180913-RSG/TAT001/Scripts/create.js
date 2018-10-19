@@ -5583,10 +5583,12 @@ function asignCity(valu) {
 function selectCliente(valu) {
     if (valu != "") {
         document.getElementById("loader").style.display = "flex";//RSG 03.07.2018
+        var esBorrador = $('#borradore').val() == "true";
+
         $.ajax({
             type: "POST",
             url: root+'Listas/SelectCliente',
-            data: { "kunnr": valu },
+            data: { "kunnr": valu,esBorrador:esBorrador },
             success: function (data) {
 
                 if (data !== null || data !== "") {

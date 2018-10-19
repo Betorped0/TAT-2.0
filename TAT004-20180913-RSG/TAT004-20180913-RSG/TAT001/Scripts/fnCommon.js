@@ -29,9 +29,9 @@
             case 'timepicker':
                 $('.timepicker').pickatime({
                     twelvehour: false,
+                    showClearBtn:false,
                     donetext: 'OK',
-                    cleartext: '',
-                    autoclose: false,
+                    autoclose: true,
                     value: ''
                 });
                 break;

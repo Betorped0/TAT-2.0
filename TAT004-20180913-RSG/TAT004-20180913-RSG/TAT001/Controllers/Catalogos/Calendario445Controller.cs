@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
@@ -17,6 +18,7 @@ namespace TAT001.Controllers.Catalogos
         const string CMBTREE_TIPOSSOLICITUD = "TREE_TSOL";
         const string CMB_PERIODOS = "PER";
         const string CMB_USUARIOS = "USU";
+        const string CMB_EJERCICIO = "EJE";
 
         // GET: Calendario445
         public ActionResult Index()
@@ -38,7 +40,7 @@ namespace TAT001.Controllers.Catalogos
             FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
 
             Calendario445ViewModel modelView = new Calendario445ViewModel();
-            CargarSelectList(ref modelView,new string[] { CMB_SOCIEDADES, CMB_PERIODOS, CMBTREE_TIPOSSOLICITUD });
+            CargarSelectList(ref modelView,new string[] { CMB_SOCIEDADES, CMB_PERIODOS, CMBTREE_TIPOSSOLICITUD, CMB_EJERCICIO });
             return View(modelView);
         }
 
@@ -50,18 +52,29 @@ namespace TAT001.Controllers.Catalogos
             try
             {
                 CALENDARIO_AC calendarioAc = modelView.calendario445;
-                DateTime fechaActual = DateTime.Now;
-
-                calendarioAc.EJERCICIO = short.Parse(fechaActual.Year.ToString());
                 calendarioAc.ACTIVO = true;
                 calendarioAc.USUARIOC_ID = User.Identity.Name;
-                calendarioAc.FECHAC = fechaActual;
-               
+                calendarioAc.FECHAC = DateTime.Now;
+
                 if (!ValidarPeriodoExistente(calendarioAc) ||!ValidarFechas(calendarioAc))
                 {
                      throw new Exception();
                 }
-                db.CALENDARIO_AC.Add(calendarioAc);
+
+                string spras_id = FnCommon.ObtenerSprasId(db, User.Identity.Name);
+                FnCommon.ObtenerCmbSociedades(db,null).ForEach(x=>
+                {
+                    FnCommon.ObtenerCmbTiposSolicitud(db, spras_id,null).ForEach(z =>
+                    {
+                        calendarioAc.SOCIEDAD_ID = x.Value;
+                        calendarioAc.TSOL_ID = x.Value;
+                        if (!db.CALENDARIO_AC.Any(y => y.EJERCICIO == calendarioAc.EJERCICIO && y.PERIODO == calendarioAc.PERIODO && y.SOCIEDAD_ID == calendarioAc.SOCIEDAD_ID && y.TSOL_ID == calendarioAc.TSOL_ID))
+                        {
+                            db.CALENDARIO_AC.Add(calendarioAc);
+                        }
+                    });
+                });
+              
                 db.SaveChanges();
 
                 return RedirectToAction("Index");
@@ -69,7 +82,7 @@ namespace TAT001.Controllers.Catalogos
             catch (Exception ex)
             {
                 FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
-                CargarSelectList(ref modelView, new string[] { CMB_SOCIEDADES, CMB_PERIODOS, CMBTREE_TIPOSSOLICITUD });
+                CargarSelectList(ref modelView, new string[] { CMB_SOCIEDADES, CMB_PERIODOS, CMBTREE_TIPOSSOLICITUD , CMB_EJERCICIO });
                 return View(modelView);
             }
         }
@@ -125,10 +138,21 @@ namespace TAT001.Controllers.Catalogos
         bool ValidarPeriodoExistente(CALENDARIO_AC calendarioAc)
         {
             int pagina_id = 530;
-            if (db.CALENDARIO_AC.Any(x => x.SOCIEDAD_ID == calendarioAc.SOCIEDAD_ID 
-                && x.PERIODO == calendarioAc.PERIODO
-                && x.EJERCICIO == calendarioAc.EJERCICIO
-                && x.TSOL_ID == calendarioAc.TSOL_ID))
+            string spras_id = FnCommon.ObtenerSprasId(db, User.Identity.Name);
+            int noExiste = 0;
+            FnCommon.ObtenerCmbSociedades(db, null).ForEach(x =>
+            {
+                FnCommon.ObtenerCmbTiposSolicitud(db, spras_id, null).ForEach(z =>
+                {
+                    calendarioAc.SOCIEDAD_ID = x.Value;
+                    calendarioAc.TSOL_ID = x.Value;
+                    if (!db.CALENDARIO_AC.Any(y => y.EJERCICIO == calendarioAc.EJERCICIO && y.PERIODO == calendarioAc.PERIODO && y.SOCIEDAD_ID == calendarioAc.SOCIEDAD_ID && y.TSOL_ID == calendarioAc.TSOL_ID))
+                    {
+                        noExiste++;
+                    }
+                });
+            });
+            if (noExiste==0)
             {
                 ViewBag.mnjError = FnCommon.ObtenerTextoMnj(db,pagina_id, "lbl_mnjExistePeriodo",User.Identity.Name);
                 return false;
@@ -196,6 +220,9 @@ namespace TAT001.Controllers.Catalogos
                         break;
                     case CMBTREE_TIPOSSOLICITUD:
                         modelView.treeTiposSolicitud = FnCommon.ObtenerTreeTiposSolicitud(db, spras_id);
+                        break;
+                    case CMB_EJERCICIO:
+                        modelView.ejercicio = FnCommon.ObtenerCmbEjercicio();
                         break;
                     default:
                         break;
