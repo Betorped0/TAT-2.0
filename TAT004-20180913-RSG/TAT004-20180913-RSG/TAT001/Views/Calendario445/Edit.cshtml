@@ -118,8 +118,6 @@
     }
  
 </style>
-<link href="~/Content/materialize.clockpicker.css" rel="stylesheet" />
-<script type="text/javascript" src="~/Scripts/materialize.clockpicker.js"></script>
 <script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
 <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
 @using (Html.BeginForm("Edit", "Calendario445", FormMethod.Post, new { @id = "calendario445Form" }))
@@ -177,7 +175,7 @@
                     <div class="form-group">
                         <label class="lbl_desdeHora"></label>
                         <div class="col-md-10">
-                            @Html.EditorFor(model => model.calendario445.PRE_FROMH, new { htmlAttributes = new { @required = "", @class = "timepicker", @type = "time" } })
+                            @Html.EditorFor(model => model.calendario445.PRE_FROMH, new { htmlAttributes = new { @required = "", @class = "timepicker" } })
                         </div>
                     </div>
                 </div>
@@ -193,7 +191,7 @@
                     <div class="form-group">
                         <label class="lbl_hastaHora"></label>
                         <div class="col-md-10">
-                            @Html.EditorFor(model => model.calendario445.PRE_TOH, new { htmlAttributes = new { @required = "", @class = "timepicker", @type = "time" } })
+                            @Html.EditorFor(model => model.calendario445.PRE_TOH, new { htmlAttributes = new { @required = "", @class = "timepicker" } })
                         </div>
                     </div>
                 </div>
@@ -213,7 +211,7 @@
                     <div class="form-group">
                         <label class="lbl_desdeHora"></label>
                         <div class="col-md-10">
-                            @Html.EditorFor(model => model.calendario445.CIE_FROMH, new { htmlAttributes = new { @required = "", @class = "timepicker", @type = "time" } })
+                            @Html.EditorFor(model => model.calendario445.CIE_FROMH, new { htmlAttributes = new { @required = "", @class = "timepicker" } })
                         </div>
                     </div>
                 </div>
@@ -229,7 +227,7 @@
                     <div class="form-group">
                         <label class="lbl_hastaHora"></label>
                         <div class="col-md-10">
-                            @Html.EditorFor(model => model.calendario445.CIE_TOH, new { htmlAttributes = new { @required = "", @class = "timepicker", @type = "time" } })
+                            @Html.EditorFor(model => model.calendario445.CIE_TOH, new { htmlAttributes = new { @required = "", @class = "timepicker" } })
                         </div>
                     </div>
                 </div>

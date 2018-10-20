@@ -246,8 +246,17 @@ $(document).ready(function () {
                                 <div class="form-group col s12">
                                     @Html.LabelFor(model => model.TSOL_ID, "Tipo de solicitud", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_tiposol" }) @*B20180801 MGC Textos*@
                                     <div class="col-md-10">
-                                      @Html.EditorFor(model => model.TSOL_ID, new { htmlAttributes = new { @class = "dropdowntree" } })
+                                        @if (ViewBag.reversan == "X")
+                                        {
+                                            @Html.EditorFor(model => model.TSOL_ID, new { htmlAttributes = new { @class = "dropdowntree", @disabled = true } })
+
+                                        }
+                                        else
+                                        {
+                                            @Html.EditorFor(model => model.TSOL_ID, new { htmlAttributes = new { @class = "dropdowntree" } })
+                                        }
                                     </div>
+
                                     @Html.HiddenFor(model => model.DOCUMENTO_REF)
                                     @{string jval = ViewBag.TSOL_VALUES;
                                         @Html.Hidden("TSOL_VALUES", jval)
@@ -273,7 +282,7 @@ $(document).ready(function () {
                                             @*//MGC B20180611 se elimina clasificación*@
                                             <input type="hidden" value="@Model.TALL_ID" id="tall_id" /><!--RSG 23.05.2018-->
                                             <input type="text" value="@ViewBag.TALL_IDI" disabled="disabled" />
-                                           }
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -312,7 +321,7 @@ $(document).ready(function () {
                                     </div>
                                 </div>
                                 <div class="input-field col s12">
-                                    @Html.EditorFor(model => model.ESTADO, new { htmlAttributes = new { @id = "state_id", @class = "form-control " + @ViewBag.relacionada } })
+                                    @Html.EditorFor(model => model.ESTADO, new { htmlAttributes = new { @id = "state_id", @class = "form-control " + @ViewBag.relacionada, @maxlength = 50 } })
                                     @Html.LabelFor(model => model.ESTADO, "Estado", htmlAttributes: new { @for = "state_id", @id = "lbl_estado" }) @*B20180801 MGC Textos*@
                                 </div>
                                 <link href="~/Content/autocomplete.css" rel="stylesheet" />
@@ -322,50 +331,54 @@ $(document).ready(function () {
                                 <script src="~/Scripts/dropdowntree.js"></script>
                                 <script>
                                     $("#TSOL_ID").kendoDropDownTree({
-                                        placeholder: "",
+                                            placeholder: "",
                                         idValid: "tsol_id",
                                         dataSource:@Html.Raw(Json.Encode(ViewBag.listtreetsol)),
                                         change: function (e) {
-                                            var val = e.sender.value();
-                                            selectTsol(val);
-                                            soportes(val, '@Session["spras"].ToString()');
-                                            M.Toast.dismissAll();
-                                        }
-                                    });
+                                                var val = e.sender.value();
+                                                selectTsol(val);
+                                                soportes(val, '@Session["spras"].ToString()');
+                                                M.Toast.dismissAll();
+                                            }
+                                        });
 
-                                    var auto = $.noConflict(true);
-                                    auto(document).ready(function () {
-                                        var pais = '@ViewBag.pais';
-                                        auto("#state_id").autocomplete({
-                                            source: function (request, response) {
-                                                auto.ajax({
-                                                url: root+"Listas/Estados",
+                                    var reversan = "@ViewBag.reversan";
+                                    if (reversan == "X") {
+                                        $("#tsol_id").attr('disabled', '');
+                                    }
+                                        var auto = $.noConflict(true);
+                                        auto(document).ready(function () {
+                                            var pais = '@ViewBag.pais';
+                                            auto("#state_id").autocomplete({
+                                                source: function (request, response) {
+                                                    auto.ajax({
+                                                        url: root+"Listas/Estados",
                                                 type: "GET",
                                                 dataType: "json",
                                                 data: { pais: pais, Prefix: request.term },
                                                 success: function (data) {
-                                                response($.map(data, function (item) {
-                                                        return { label: item.NAME, value: item.NAME };
-                                                        }))
+                                                            response($.map(data, function (item) {
+                                                                return { label: item.NAME, value: item.NAME };
+                                                            }))
                                                     }
-                                                })
+                                                    })
                                             },
                                     messages: {
-                                        noResults: '',
+                                                    noResults: '',
                                         results: function (resultsCount) { }
-                                            },
+                                                },
 
                                     change: function (e, ui) {
-                                    if (!(ui.item)) {
+                                                    if (!(ui.item)) {
+                                                    }
                                                 }
-                                            }
-                                        });
+                                            });
                                         })
                                 </script>
                                 <script src="~/Scripts/createa.js"></script>
                                 <div class="input-field col s12">
-                                    @Html.EditorFor(model => model.CIUDAD, new { htmlAttributes = new { @id = "city_id", @class = "form-control " + @ViewBag.relacionada } })
-                                    @Html.LabelFor(model => model.CIUDAD, "Ciudad", htmlAttributes: new { @for = "city_id", @id = "lbl_ciudad" }) @*B20180801 MGC Textos*@
+                                    @Html.EditorFor(model => model.CIUDAD, new { htmlAttributes = new { @id = "city_id", @class = "form-control " + @ViewBag.relacionada, @maxlength = 50 } })
+                                    @Html.LabelFor(model => model.CIUDAD, "Ciudad", htmlAttributes: new { @for = "city_id", @id = "lbl_ciudad"}) @*B20180801 MGC Textos*@
                                 </div>
                                 <script>
                                     auto(document).ready(function () {
@@ -445,11 +458,11 @@ $(document).ready(function () {
                                     <label id="lbl_ejercicio" for="ejercicio">Ejercicio</label>@*B20180801 MGC Textos*@
                                 </div>
                                 <div class="input-field col s12">
-                                    @Html.EditorFor(model => model.CONCEPTO, new { htmlAttributes = new { @id = "concepto", @class = "form-control " + @ViewBag.relacionada} })
+                                    @Html.EditorFor(model => model.CONCEPTO, new { htmlAttributes = new { @id = "concepto", @class = "form-control " + @ViewBag.relacionada, @maxlength = 100 } })
                                     <label id="lbl_concepto" for="concepto">Concepto*</label> @*B20180801 MGC Textos*@
                                 </div>
                                 <div class="input-field col s12">
-                                    @Html.TextAreaFor(model => model.NOTAS, new { @class = "materialize-textarea " + @ViewBag.relacionada, @id = "notas_txt", onkeyup = "maxchar();" })
+                                    @Html.TextAreaFor(model => model.NOTAS, new { @class = "materialize-textarea " + @ViewBag.relacionada, @id = "notas_txt", onkeyup = "maxchar();", @maxlength = 255 })
                                     @Html.LabelFor(model => model.NOTAS, "Mecánica de negociación", htmlAttributes: new { @class = "active", @for = "notas_txt", @id = "lbl_notas" })@*B20180801 MGC Textos*@
                                 </div>
                                 <script>
@@ -473,7 +486,7 @@ $(document).ready(function () {
                             <h5 id="head_infocli">Información del cliente</h5>@*B20180801 MGC Textos*@
                             <div class="row" style="margin-bottom:0">
                                 <div class="input-field col s12">
-                                    @Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @id = "payer_id", @class = "form-control " + @ViewBag.relacionada, @onchange = @"selectCliente(this.value)" } }) @*OCG 15-10-18 Se inserta aqui para no afectar la vista*@
+                                    @Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @id = "payer_id", @class = "form-control " + @ViewBag.relacionada, @onchange = @"selectCliente(this.value)", @maxlength = 10 } }) @*OCG 15-10-18 Se inserta aqui para no afectar la vista*@
                                     @Html.LabelFor(model => model.PAYER_ID, "Cliente", htmlAttributes: new { @for = "payer_id", @id = "lbl_payer" })@*B20180801 MGC Textos*@
                                 </div>
                                 <script>
@@ -556,11 +569,11 @@ $(document).ready(function () {
                                     </div>
                                 </div>
                                 <div class="input-field col s12">
-                                    @Html.EditorFor(model => model.PAYER_NOMBRE, new { htmlAttributes = new { @id = "payer_nombre", @class = "form-control " + @ViewBag.relacionada } })
+                                    @Html.EditorFor(model => model.PAYER_NOMBRE, new { htmlAttributes = new { @id = "payer_nombre", @class = "form-control " + @ViewBag.relacionada, @maxlength = 150 } })
                                     @Html.LabelFor(model => model.PAYER_NOMBRE, "Nombre del contacto", htmlAttributes: new { @class = "control-label col-md-2", @for = "payer_nombre", @id = "lbl_payernom" }) @*B20180801 MGC Textos*@
                                 </div>
                                 <div class="input-field col s12">
-                                    @Html.EditorFor(model => model.PAYER_EMAIL, new { htmlAttributes = new { @id = "payer_email", @class = " " + @ViewBag.relacionada, @type = "email" } })
+                                    @Html.EditorFor(model => model.PAYER_EMAIL, new { htmlAttributes = new { @id = "payer_email", @class = " " + @ViewBag.relacionada, @type = "email", @maxlength = 250 } })
                                     @Html.LabelFor(model => model.PAYER_EMAIL, "Email de contacto", htmlAttributes: new { @class = "control-label col-md-2", @for = "payer_email", @id = "lbl_payeremail" }) @*B20180801 MGC Textos*@
                                 </div>
 
@@ -865,8 +878,8 @@ $(document).ready(function () {
                                         @if (Model.DOCUMENTOF != null)
                                         {
                                             @*//B20180625 MGC 2018.06.27*@
-                                            for (var i = 0; i < Model.DOCUMENTOF.Count; i++)
-                                            {
+                                        for (var i = 0; i < Model.DOCUMENTOF.Count; i++)
+                                        {
                                                 <tr>
                                                     <td>
                                                         @Html.EditorFor(m => m.DOCUMENTOF[i].POS)@*//B20180625 MGC 2018.06.27*@
@@ -950,8 +963,8 @@ $(document).ready(function () {
                             </div>
                         }
                         @{List<TAT001.Entities.DOCUMENTOA>
-                                                                                                                                                                                                                                archivos = ViewBag.files as List<TAT001.Entities.DOCUMENTOA>
-                                                                                                                                                                                                                                    ;
+                                                                                                                                                                                                        archivos = ViewBag.files as List<TAT001.Entities.DOCUMENTOA>
+                                                                                                                                                                                                            ;
                             if (ViewBag.relacionadan != "" && archivos.Count > 0)
                             {
                                 string[] nombrefile;
@@ -1427,7 +1440,14 @@ $(document).ready(function () {
                                 <div class="input-field col s6">
                                     <select id="select_neg" name="select_neg" onchange="selectDis(this.value)">
                                         <option id="opt_negm" value="M">Monto</option>@*B20180801 MGC Textos*@
-                                        <option id="opt_negp" value="P">Porcentaje</option>@*B20180801 MGC Textos*@
+                                        @{if (ViewBag.SEL_NEG=="P")
+                                            {
+                                                <option id="opt_negp" value="P" selected>Porcentaje</option>@*B20180801 MGC Textos*@
+                                            }
+                                            else
+                                            {
+                                                <option id="opt_negp" value="P">Porcentaje</option>@*B20180801 MGC Textos*@
+                                            } }
                                     </select>
                                     <label id="lbl_tiponeg">Tipo de negociación</label>
                                 </div>
@@ -1598,7 +1618,6 @@ $(document).ready(function () {
                                                 @Html.EditorFor(m => m.DOCUMENTOP[i].MONTO)
                                             </td>
                                             <td>
-                                                @*@Html.EditorFor(m => m.DOCUMENTOP[i].PORC_APOYO)*@
                                                 <input type="text" name="DOCUMENTOP[@i].PORC_APOYO" value="@Model.DOCUMENTOP[i].PORC_APOYO.ToString("N6")" />
                                             </td>
                                             <td>

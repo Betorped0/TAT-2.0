@@ -9,6 +9,7 @@ using TAT001.Models;
 
 namespace TAT001.Controllers.Catalogos
 {
+    [Authorize]
     public class AlertasController : Controller
     {
 

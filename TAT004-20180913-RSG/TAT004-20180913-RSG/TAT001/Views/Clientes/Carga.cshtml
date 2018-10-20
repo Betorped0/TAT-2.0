@@ -26,6 +26,7 @@
     <div class="col s12">
         <input type="button" value="Agregar" class="btn btn-small" onclick="Carga();" />
         <input type="button" value="Borrar" class="btn btn-small" onclick="Borrar()" />
+        @*<input type="button" value="Habilitar" class="btn btn-small" onclick="habilitar()" />*@
     </div>
 </div>
 @Html.AntiForgeryToken()
@@ -103,7 +104,6 @@
         }
     </div>
 </div>
-
 <script src="~/Scripts/autocomplete1.10.2.js"></script>
 <script src="~/Scripts/autocomplete1.11.4.js"></script>
 <script src="~/Scripts/CargaClientes.js"></script>
@@ -111,6 +111,9 @@
 
 <script>
     var auto = $.noConflict();
+    $("#files").on("click", function () {
+        $("#files").val('');
+    });
 </script>
 
 <style>
