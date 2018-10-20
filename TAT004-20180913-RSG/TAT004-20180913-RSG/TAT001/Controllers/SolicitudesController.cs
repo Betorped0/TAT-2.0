@@ -706,7 +706,7 @@ namespace TAT001.Controllers
                 List<TSOLT_MOD> list_sol = new List<TSOLT_MOD>();
                 //tipo de solicitud
                 string tipS;
-                if (id_d == null || id_d == "" || ViewBag.reversa == "preversa")
+                if (id_d == null || id_d == "")
                 {
                     tipS = "SD";
                     //directa SD
@@ -762,7 +762,6 @@ namespace TAT001.Controllers
                 //MGC B20180611
                 List<TALLT_MOD> id_clas = new List<TALLT_MOD>();
                 //string ch = "Direct Plant ship  (\"DPS\")";
-                //var aa = db.TALLs.Where(a => a.DESCRIPCION == ch).ToList();
                 id_clas = db.TALLs.Where(t => t.ACTIVO == true)
                                 .Join(
                                 db.TALLTs.Where(tallt => tallt.SPRAS_ID == user.SPRAS_ID),
@@ -775,7 +774,6 @@ namespace TAT001.Controllers
                                     TXT50 = tallt == null ? "" : tallt.TXT50
                                 })
                             .ToList();
-                //.ToList().Where(a => a.TXT50 == ).ToList();
                 id_clas = id_clas.OrderBy(x => x.TXT50).ToList();
 
                 List<DOCUMENTOA> archivos = new List<DOCUMENTOA>();
@@ -807,29 +805,21 @@ namespace TAT001.Controllers
                         ViewBag.TSOL_ID = new SelectList(list_sol, "TSOL_ID", "TEXT", selectedValue: d.TSOL_ID);
                         ViewBag.GALL_ID = new SelectList(list_grupo, "GALL_ID", "TEXT", selectedValue: d.GALL_ID);
                         ViewBag.TALL_ID = new SelectList(id_clas, "TALL_ID", "TXT50", selectedValue: d.TALL_ID); //B20180618 v1 MGC 2018.06.18
-                        //TSOLT_MOD tsmod = new TSOLT_MOD();
                         TSOLT tsmod = new TSOLT();//RSG 30.07.2018
                         try
                         {
-                            //tsmod = list_sol.Where(id => id.TSOL_ID.Equals(d.TSOL_ID)).FirstOrDefault();
                             tsmod = db.TSOLTs.Where(x => x.TSOL_ID.Equals(d.TSOL_ID) & x.SPRAS_ID == user.SPRAS_ID).FirstOrDefault();//RSG 30.07.2018
                         }
                         catch
                         {
-                            //tsmod.TEXT = "";//RSG 30.07.2018
                             tsmod.TXT50 = "";
                         }
-                        //ViewBag.TSOL_IDI = tsmod.text.ToString();//RSG 30.07.2018
-                        ViewBag.TSOL_IDI = tsmod.TXT50.ToString();
-                        //TAT001.Models.GALL_MOD gall_mod = list_grupo.Where(id => id.GALL_ID.Equals(d.GALL_ID)).FirstOrDefault();
-                        //ViewBag.GALL_IDI = gall_mod.TEXT;
-                        //ViewBag.GALL_IDI_VAL = gall_mod.GALL_ID;
-                        ViewBag.TALL_IDI = id_clas.Where(c => c.TALL_ID == d.TALL_ID).FirstOrDefault().TXT50; //B20180618 v1 MGC 2018.06.18
+                         ViewBag.TSOL_IDI = tsmod.TXT50.ToString();
+                         ViewBag.TALL_IDI = id_clas.Where(c => c.TALL_ID == d.TALL_ID).FirstOrDefault().TXT50; //B20180618 v1 MGC 2018.06.18
                         archivos = db.DOCUMENTOAs.Where(x => x.NUM_DOC.Equals(d.NUM_DOC)).ToList();
 
                         List<DOCUMENTOP> docpl = db.DOCUMENTOPs.Where(docp => docp.NUM_DOC == d.NUM_DOC).ToList();//Documentos que se obtienen de la provisión
-                        //List<DOCUMENTOP> docsrelp = new List<DOCUMENTOP>();//MGC B20180611
-
+                        
                         List<DOCUMENTOM> docml = new List<DOCUMENTOM>();//MGC B20180611----------------------------
                         decimal totalcatrel = 0;//MGC B20180611
                         if (docpl.Count > 0)
@@ -1134,9 +1124,7 @@ namespace TAT001.Controllers
                         ViewBag.TALL_ID = new SelectList(id_clas, "TALL_ID", "TXT50"); //B20180618 v1 MGC 2018.06.18
                                                                                        //id_bukrs = db.SOCIEDADs.Where(soc => soc.LAND.Equals(p) && soc.ACTIVO == true).FirstOrDefault();//RSG 15.05.2018                      
                     }
-                    //id_pais = db.PAIS.Where(pais => pais.LAND.Equals(p)).FirstOrDefault();//RSG 15.05.2018 //MGC B20180625 MGC 
-                    //id_bukrs = db.SOCIEDADs.Where(soc => soc.BUKRS.Equals(id_pais.SOCIEDAD_ID) && soc.ACTIVO == true).FirstOrDefault();//RSG 15.05.2018 //MGC B20180625 MGC 
-
+                   
                     ViewBag.TSOL_ANT = "";
                     ViewBag.TSOL_IDI = "";
                     ViewBag.GALL_IDI = "";
@@ -1144,21 +1132,6 @@ namespace TAT001.Controllers
                 }
 
                 ViewBag.files = archivos;
-
-                //Select clasificación
-                //var id_clas = db.TALLs.Where(t => t.ACTIVO == true)
-                //                .Join(
-                //                db.TALLTs.Where(tallt => tallt.SPRAS_ID == user.SPRAS_ID),
-                //                tall => tall.ID,
-                //                tallt => tallt.TALL_ID,
-                //                (tall, tallt) => tallt)
-                //            .ToList();
-
-                //List<TAT001.Entities.GALL> id_clas = new List<TAT001.Entities.GALL>();//MGC B20180611
-                //ViewBag.TALL_ID = new SelectList(id_clas, "TALL_ID", "TXT50"); //B20180618 v1 MGC 2018.06.18
-
-                //Datos del país
-                //var id_pais = db.PAIS.Where(pais => pais.LAND.Equals(id_bukrs.LAND)).FirstOrDefault();//RSG 15.05.2018
 
                 var id_waers = db.MONEDAs.Where(m => m.ACTIVO == true & (m.WAERS.Equals(id_bukrs.WAERS) | m.WAERS.Equals("USD"))).ToList();//RSG 01.08.2018
                 var id_states = (from st in db.STATES
@@ -1180,8 +1153,7 @@ namespace TAT001.Controllers
                 ViewBag.PAIS_ID = id_pais;
                 ViewBag.STATE_ID = "";// new SelectList(id_states, "ID", dataTextField: "NAME");
                 ViewBag.CITY_ID = "";// new SelectList(id_city, "ID", dataTextField: "NAME");
-                //ViewBag.MONEDA = new SelectList(id_waers, "WAERS", dataTextField: "WAERS", selectedValue: id_bukrs.WAERS); //Duda si cambia en la relacionada //B20180625 MGC 2018.06.28
-                ViewBag.MONEDA = new SelectList(id_waers, "WAERS", dataTextField: "WAERS", selectedValue: id_waersf); //Duda si cambia en la relacionada //B20180625 MGC 2018.06.28
+                 ViewBag.MONEDA = new SelectList(id_waers, "WAERS", dataTextField: "WAERS", selectedValue: id_waersf); //Duda si cambia en la relacionada //B20180625 MGC 2018.06.28
 
                 //Información del cliente
                 var id_clientes = db.CLIENTEs.Where(c => c.LAND.Equals(p) && c.ACTIVO == true).ToList();
@@ -1207,19 +1179,14 @@ namespace TAT001.Controllers
 
                 d.SOCIEDAD_ID = id_bukrs.BUKRS;
                 d.PAIS_ID = id_pais.LAND;//RSG 18.05.2018
-                //d.MONEDA_ID = id_bukrs.WAERS; //B20180625 MGC 2018.07.02
                 d.MONEDA_ID = id_waersf; //B20180625 MGC 2018.07.02
                 var date = DateTime.Now.Date;
-                //TAT001.Entities.TCAMBIO tcambio = new TAT001.Entities.TCAMBIO(); //MGC B20180625 MGC
                 try
                 {
-                    //tcambio = db.TCAMBIOs.Where(t => t.FCURR.Equals(id_bukrs.WAERS) && t.TCURR.Equals("USD") && t.GDATU.Equals(date)).FirstOrDefault();//B20180625 MGC 2018.07.02
                     tcambio = db.TCAMBIOs.Where(t => t.FCURR.Equals(id_waersf) && t.TCURR.Equals("USD") && t.GDATU.Equals(date)).FirstOrDefault();//B20180625 MGC 2018.07.02
                     if (tcambio == null)
                     {
-                        //var max = db.TCAMBIOs.Where(t => t.FCURR.Equals(id_bukrs.WAERS) && t.TCURR.Equals("USD")).Max(a => a.GDATU);//B20180625 MGC 2018.07.02
                         var max = db.TCAMBIOs.Where(t => t.FCURR.Equals(id_waersf) && t.TCURR.Equals("USD")).Max(a => a.GDATU);//B20180625 MGC 2018.07.02
-                        //tcambio = db.TCAMBIOs.Where(t => t.FCURR.Equals(id_bukrs.WAERS) && t.TCURR.Equals("USD") && t.GDATU.Equals(max)).FirstOrDefault();//B20180625 MGC 2018.07.02
                         tcambio = db.TCAMBIOs.Where(t => t.FCURR.Equals(id_waersf) && t.TCURR.Equals("USD") && t.GDATU.Equals(max)).FirstOrDefault();//B20180625 MGC 2018.07.02
                     }
                     decimal con = Convert.ToDecimal(tcambio.UKURS);
@@ -1238,13 +1205,10 @@ namespace TAT001.Controllers
 
             }//RSG 13.06.2018
             Calendario445 cal = new Calendario445();
-            //d.PERIODO = Convert.ToInt32(DateTime.Now.ToString("MM"));
-            //d.EJERCICIO = Convert.ToString(DateTime.Now.Year);
             d.PERIODO = cal.getPeriodo(DateTime.Now);
             d.EJERCICIO = cal.getEjercicio(DateTime.Now) + "";
 
             d.FECHAD = theTime;
-            //ViewBag.FECHAD = theTime.ToString("yyyy-MM-dd");
             ViewBag.FECHAD = theTime.ToString("dd/MM/yyyy");
             ViewBag.PERIODO = d.PERIODO;
             ViewBag.EJERCICIO = d.EJERCICIO;
@@ -1258,25 +1222,7 @@ namespace TAT001.Controllers
             ViewBag.tcambio = tipo_cambio;//MGC B20180625 MGC
             d.TIPO_CAMBIO = decimal.Parse(tipo_cambio);//MGC B20180625 MGC
 
-            //Prueba para agregar soporte a la tabla ahora información
-
-            //DOCUMENTOF DF1 = new DOCUMENTOF();
-
-            //DF1.POS = 1;
-            //DF1.FACTURA = "FF1";
-            //DF1.PROVEEDOR = "PP1";
-            //DF1.FACTURAK = "FFK1";
-
-            //DOCUMENTOF DF2 = new DOCUMENTOF();
-
-            //DF2.POS = 2;
-            //DF2.FACTURA = "FF2";
-            //DF2.PROVEEDOR = "1000000001";
-            //DF2.FACTURAK = "FFK2";
-
-            //List<DOCUMENTOF> LD = new List<DOCUMENTOF>() { DF1, DF2 };
-
-            //d.DOCUMENTOF = LD;
+           
 
             ViewBag.SEL_NEG = relacionada_neg;
             ViewBag.SEL_DIS = relacionada_dis;
@@ -1327,12 +1273,6 @@ namespace TAT001.Controllers
             {
 
                 List<Delegados> users = new List<Delegados>();
-                //List<PAI> pp = (from P in db.PAIS
-                //                join C in db.CREADOR2 on P.LAND equals C.LAND
-                //                where P.ACTIVO == true
-                //                & C.ID == User.Identity.Name & C.ACTIVO == true
-                //                select P).ToList();
-
                 List<PAI> pp = (from P in db.PAIS.ToList()
                                 join C in (db.DET_AGENTEC.Where(C => C.USUARIOC_ID == User.Identity.Name & C.ACTIVO == true & C.POS == 1).DistinctBy(a => a.PAIS_ID).ToList())
                                 on P.LAND equals C.PAIS_ID
@@ -1342,11 +1282,6 @@ namespace TAT001.Controllers
                 List<Delegados> delegados = new List<Delegados>();
                 foreach (DELEGAR de in del)
                 {
-                    //var pd = (from P in db.PAIS
-                    //          join C in db.CREADOR2 on P.LAND equals C.LAND
-                    //          where P.ACTIVO == true
-                    //          & C.ID == de.USUARIO_ID & C.ACTIVO == true
-                    //          select P).ToList();
                     var pd = (from P in db.PAIS.ToList()
                               join C in (db.DET_AGENTEC.Where(C => C.USUARIOC_ID == de.USUARIO_ID & C.ACTIVO == true & C.POS == 1).DistinctBy(a => a.PAIS_ID).ToList()) on P.LAND equals C.PAIS_ID
                               where P.ACTIVO == true
@@ -1439,7 +1374,6 @@ namespace TAT001.Controllers
             ViewBag.apoyoe = txt_apoyoe;
             ViewBag.volumene = txt_volumene;
             //B20180801 MGC Textos....................................................................................................
-            //var paisMon = Session["pais"].ToString();//------------------------LEJ 09.07.18
             d.PAI = db.PAIS.Where(a => a.LAND.Equals(d.PAIS_ID)).FirstOrDefault();
             if (d.PAI != null)
             {
