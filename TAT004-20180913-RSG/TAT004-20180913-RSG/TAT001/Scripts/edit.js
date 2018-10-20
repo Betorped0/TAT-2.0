@@ -5586,11 +5586,9 @@ function getCatMateriales(vkorg, vtweg, spart, kunnr) {
             if (data !== null || data !== "") {
                 $('#catmat').val(JSON.stringify(data));
             }
-            //document.getElementById("loader").style.display = "none";
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             M.toast({ html: httpStatusMessage });
-            //document.getElementById("loader").style.display = "none";
         },
         async: true
     });

@@ -27,13 +27,12 @@
                 M.Datepicker.init(datepickers, options);
                 break;
             case 'timepicker':
-                $('.timepicker').pickatime({
-                    twelvehour: false,
-                    showClearBtn:false,
-                    donetext: 'OK',
-                    autoclose: true,
-                    value: ''
-                });
+                var options = {
+                    twelveHour: false,
+                    autoClose: true
+                };
+                var timepickers = document.querySelectorAll('.timepicker');
+                var instances = M.Timepicker.init(timepickers, options);
                 break;
             case 'tabs':
                 var options = {};

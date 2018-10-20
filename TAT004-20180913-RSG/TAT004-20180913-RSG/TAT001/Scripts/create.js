@@ -1155,9 +1155,6 @@ $(document).ready(function () {
     $('#btn_guardarh').on("click", function (e) {
         var _miles = $("#miles").val(); //LEJ 09.07.18
         var _decimales = $("#dec").val(); //LEJ 09.07.18
-        //M.toast({ html: "Guardando" })
-        //document.getElementById("loader").style.display = "flex";//RSG 26.04.2018
-        //sleep(5000);
         var msg = 'Verificar valores en los campos de ';
         var res = true;
         //Evaluar TabInfo values
@@ -1296,7 +1293,12 @@ $(document).ready(function () {
             //Termina provisional
             $('#btn_guardar').click();
         } else {
-            M.toast({ html: msg })
+            M.toast({
+                classes: "guardarWarnning",
+                displayLength: 1000000,
+                html: '<span style="padding-right:15px;"><i class="material-icons yellow-text">info</i></span>  ' + msg
+                + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'guardarWarnning\')">Aceptar</button>'
+            });
             document.getElementById("loader").style.display = "none";//RSG 26.04.2018
         }
 
@@ -5620,9 +5622,9 @@ function selectCliente(valu) {
                     if (!isRelacionada()) {
                         llenaCat(data.VKORG, data.VTWEG, data.SPART, valu);
                         getCatMateriales(data.VKORG, data.VTWEG, data.SPART, valu);
-                    } else {
-                        document.getElementById("loader").style.display = "none";//RSG 03.07.2018
-                    }
+                    } 
+                    document.getElementById("loader").style.display = "none";//RSG 03.07.2018
+                    
                     //RSG 28.05.2018------------------------------------------
                 } else {
                     limpiarCliente();
