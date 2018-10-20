@@ -114,10 +114,12 @@ $("#files").on('change', function() {
             onclick = checkoff();
         } else {
             document.getElementById("files").value = "";
-            M.toast({ html: 'Tipo de archivo incorrecto: ' + filename });
+            mostrarAlerta("info", "E", 'Tipo de archivo incorrecto: ' + filename );
+            //M.toast({ html: 'Tipo de archivo incorrecto: ' + filename });
         }
     } else {
-        M.toast({ html: 'Seleccione un archivo' });
+        mostrarAlerta("info", "E", 'Seleccione un archivo');
+        //M.toast({ html: 'Seleccione un archivo' });
         var table = $('#table').DataTable();
         table.clear().draw();
     }
@@ -460,23 +462,28 @@ function Carga() {
                         console.log(request.responseText);
                     }
                 });
-                M.toast({ html: 'Se agregaron los nuevos registros' });
+                mostrarAlerta("info", "A", "Se agregaron los nuevos registros");
+                //M.toast({ html: 'Se agregaron los nuevos registros' });
                 //window.location.replace("/Clientes/Index");
             }
             else
-                M.toast({ html: 'Los niveles 1 y 6 no pueden quedar vacios' });
+                mostrarAlerta("info", "E", "Los niveles 1 y 6 no pueden quedar vacios");
+                //M.toast({ html: 'Los niveles 1 y 6 no pueden quedar vacios' });
         }
         else
-            M.toast({ html: 'Hay errores por corregir' });
+            mostrarAlerta("info", "E", "Hay errores por corregir");
+            //M.toast({ html: 'Hay errores por corregir' });
     }
     else
-        M.toast({ html: 'Seleccione un archivo' });
+        mostrarAlerta("info", "E", "Seleccione un archivo");
+        //M.toast({ html: 'Seleccione un archivo' });
 }
 
 function Comprobar() {
     var datos = $('#tabla').serializeArray();
     creart('Comprobar', datos);
-    M.toast({ html: 'Registros Actualizados' });
+    //M.toast({ html: 'Registros Actualizados' });
+    mostrarAlerta("info", "A", "Registro Actualizado");
 }
 
 function Borrar() {
@@ -731,6 +738,32 @@ function check() {
 
 function checkoff() {
     $("#borrar").prop('checked', false);
+}
+
+function mostrarAlerta(warning_id, tipo, mensaje) {
+    var dura = 1000000,
+        color = 'yellow',
+        icon = 'info',
+        classe = 'toast';
+    if (tipo == "E") {
+        color = 'red';
+        icon = 'error';
+    }
+    dismiss(classe)
+    M.toast({
+        classes: classe,
+        displayLength: dura,
+        html: '<span style="padding-right:15px;"><i class="material-icons ' + color + '-text">' + icon + '</i></span>  ' + mensaje
+            + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'toast\')">Aceptar</button>'
+    });
+}
+
+function dismiss(classe) {
+    var toastElement = document.querySelectorAll('.' + classe);
+    for (var i = 0; i < toastElement.length; i++) {
+        var toastInstance = M.Toast.getInstance(toastElement[i]);
+        toastInstance.dismiss();
+    }
 }
 
 $('body').on('keydown.autocomplete', '.input_ven', function () {
