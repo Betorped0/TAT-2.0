@@ -438,6 +438,7 @@ function addRowl(t, pos, br, cc, p, c, nc, n0, n1, n2, n3, n4, n5, n6, n7, v, b,
 }
 
 function Carga() {
+    habilitar();
     var datos = $('#tabla').serializeArray();
     var message = $('.input_mes').serialize();
     var cliente = $('.input_cli').serialize();
@@ -457,33 +458,26 @@ function Carga() {
                     dataType: "json",
                     success: function () {
                         console.log(datos);
-                        $('#table > tbody > tr').each(function () {
-                            $(this).children().children().val("");
-                        });
+                        location.reload();
+                        mostrarAlerta("info", "A", "Se agregaron los nuevos registros");
                     },
                     error: function (request, status, error) {
                         console.log(request.responseText);
                     }
                 });
-                mostrarAlerta("info", "A", "Se agregaron los nuevos registros");
-                //M.toast({ html: 'Se agregaron los nuevos registros' });
-                //window.location.replace("/Clientes/Index");
-                
             }
             else
                 mostrarAlerta("info", "E", "Los niveles 1 y 6 no pueden quedar vacios");
-                //M.toast({ html: 'Los niveles 1 y 6 no pueden quedar vacios' });
         }
         else
             mostrarAlerta("info", "E", "Hay errores por corregir");
-            //M.toast({ html: 'Hay errores por corregir' });
     }
     else
         mostrarAlerta("info", "E", "Seleccione un archivo");
-        //M.toast({ html: 'Seleccione un archivo' });
 }
 
 function Comprobar() {
+    habilitar();
     var datos = $('#tabla').serializeArray();
     creart('Comprobar', datos);
     //M.toast({ html: 'Registros Actualizados' });
@@ -501,6 +495,7 @@ function Borrar() {
 }
 
 function Actualizar() {
+    habilitar();
     var datos = $('#tabla').serializeArray();
     creart('Actualizar', datos);
 }

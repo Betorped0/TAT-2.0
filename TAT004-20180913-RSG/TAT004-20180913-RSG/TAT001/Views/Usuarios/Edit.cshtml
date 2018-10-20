@@ -33,12 +33,12 @@
             <div class="card-panel">
                 <div class="row">
                     <div class="input-field col s12">
-                        @Html.EditorFor(model => model.NOMBRE, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.EditorFor(model => model.NOMBRE, new { htmlAttributes = new { @class = "form-control", required=true } })
                         @Html.LabelFor(model => model.NOMBRE, htmlAttributes: new { @id = "lbl_nombre" })
                         @Html.ValidationMessageFor(model => model.NOMBRE, "", new { @class = "text-danger" })
                     </div>
                     <div class="input-field col s12">
-                        @Html.EditorFor(model => model.APELLIDO_P, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.EditorFor(model => model.APELLIDO_P, new { htmlAttributes = new { @class = "form-control", required = true } })
                         @Html.LabelFor(model => model.APELLIDO_P, htmlAttributes: new { @id = "lbl_appPat" })
                         @Html.ValidationMessageFor(model => model.APELLIDO_P, "", new { @class = "text-danger" })
                     </div>
@@ -48,13 +48,13 @@
                         @Html.ValidationMessageFor(model => model.APELLIDO_M, "", new { @class = "text-danger" })
                     </div>
                     <div class="input-field col s12">
-                        @Html.EditorFor(model => model.EMAIL, new { htmlAttributes = new { @type = "email" } })
+                        @Html.EditorFor(model => model.EMAIL, new { htmlAttributes = new { @type = "email", required = true } })
                         @*@Html.EditorFor(model => model.EMAIL, new { htmlAttributes = new { @class = "form-control" } })*@
                         @Html.LabelFor(model => model.EMAIL, htmlAttributes: new { @id = "lbl_email" })
                         @Html.ValidationMessageFor(model => model.EMAIL, "", new { @class = "text-danger" })
                     </div>
                     <div class="input-field col s6">
-                        @Html.DropDownList("SPRAS_ID", null, htmlAttributes: new { @class = "select" })
+                        @Html.DropDownList("SPRAS_ID", null, htmlAttributes: new { @class = "select", required = true })
                         <label id="lbl_spras">SPRAS</label>
                         @Html.ValidationMessageFor(model => model.SPRAS_ID, "", new { @class = "text-danger" })
                     </div>
@@ -83,7 +83,7 @@
                         </div>*@
 
                     <div class="input-field col s12">
-                        @Html.DropDownList("BUNIT", null, htmlAttributes: new { @class = "select" })
+                        @Html.DropDownList("BUNIT", null, htmlAttributes: new { @class = "select", required = true })
                         @*@Html.EditorFor(model => model.BUNIT, new { htmlAttributes = new { @class = "form-control" } })*@
                         @Html.LabelFor(model => model.BUNIT, htmlAttributes: new { @id = "lbl_bukrs" })
                         @Html.ValidationMessageFor(model => model.BUNIT, "", new { @class = "text-danger" })
@@ -180,7 +180,7 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "Index",null,new { id="lbl_regresar"})
 </div>
 <script>
 </script>

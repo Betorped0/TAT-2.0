@@ -5,17 +5,25 @@
 
     //ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.pagina_r = 601;
+    ViewBag.pagina_r = 602;
     ViewBag.carpeta_r = 500;
 }
-
+<script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
     <div class="row">
         <div class="col s12 right-align">
-            <input type="submit" value="Create" class="btn btn-default" />
+            <button type="submit" id="btn_guardar" class="btn btn-default" />
+        </div>
+    </div>
+        <div class="row">
+        <div class="col s12 left-align">
+            @if (@TempData["MensajeUsuario"] != null)
+            {
+            <label id="lbl_mensajeusuario"></label>
+            }
         </div>
     </div>
     <div class="row right">
@@ -24,22 +32,22 @@
                 <div class="row">
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     <div class="input-field col s12">
-                        @Html.EditorFor(model => model.ID, new { htmlAttributes = new { @aria_required = "true", @required = "required", @class = "validate", @onchange = "valorID(this);" } })
+                        @Html.EditorFor(model => model.ID, new { htmlAttributes = new { @aria_required = "true", @required = "required" } })
                         @Html.LabelFor(model => model.ID, htmlAttributes: new { @id = "lbl_id" })
                         <span class="helper-text" id="hlp_id" data-error="Id repetido" data-success="Correcto"></span>
                     </div>
 
                     <div class="input-field col s12">
-                        @Html.PasswordFor(model => model.PASS, new { @class = "form-control", @id = "txt_pass" })
+                        @Html.PasswordFor(model => model.PASS, new { @class = "form-control", @id = "txt_pass", required=true, @maxlength=16, @minlength=5 })
                         @Html.LabelFor(model => model.PASS, htmlAttributes: new { @id = "lbl_pass" })
                         @Html.ValidationMessageFor(model => model.PASS, "", new { @class = "text-danger" })
                     </div>
 
                     <div class="input-field col s12">
-                        @Html.PasswordFor(model => model.MANAGER, new { @class = "validate", @onchange = "valorPass(this);", @id = "txt_pass2" })
+                        @Html.PasswordFor(model => model.MANAGER, new { @id = "txt_pass2", required = true, @maxlength = 16, @minlength = 5 })
                         @Html.LabelFor(model => model.MANAGER, "Confirmar contraseña", htmlAttributes: new { @id = "lbl_conf" })
                         @Html.ValidationMessageFor(model => model.MANAGER, "", new { @class = "text-danger" })
-                        @*<span class="helper-text" id="hlp_pass" data-error="No coinciden" data-success=""></span>*@
+                        <span class="helper-text" id="lbl_mensajepass" data-error="No coinciden" data-success=""></span>
                     </div>
                 </div>
                 <script>
@@ -80,13 +88,13 @@
             <div class="card-panel">
                 <div class="row">
                     <div class="input-field col s12">
-                        @Html.EditorFor(model => model.NOMBRE, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.EditorFor(model => model.NOMBRE, new { htmlAttributes = new { @class = "form-control", required = true } })
                         @Html.LabelFor(model => model.NOMBRE, htmlAttributes: new { @id = "lbl_nombre" })
                         @Html.ValidationMessageFor(model => model.NOMBRE, "", new { @class = "text-danger" })
                     </div>
 
                     <div class="input-field col s12">
-                        @Html.EditorFor(model => model.APELLIDO_P, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.EditorFor(model => model.APELLIDO_P, new { htmlAttributes = new { @class = "form-control",required=true } })
                         @Html.LabelFor(model => model.APELLIDO_P, htmlAttributes: new { @id = "lbl_appPat" })
                         @Html.ValidationMessageFor(model => model.APELLIDO_P, "", new { @class = "text-danger" })
                     </div>
@@ -98,7 +106,7 @@
                     </div>
 
                     <div class="input-field col s12">
-                        @Html.EditorFor(model => model.EMAIL, new { htmlAttributes = new { @type = "email" } })
+                        @Html.EditorFor(model => model.EMAIL, new { htmlAttributes = new { @type = "email", required = true } })
                         @Html.LabelFor(model => model.EMAIL, htmlAttributes: new { @id = "lbl_email" })
                         @Html.ValidationMessageFor(model => model.EMAIL, "", new { @class = "text-danger" })
                     </div>
@@ -189,7 +197,7 @@
     </script>
 }
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "Index",null,new { id="lbl_regresar"})
 </div>
 @if (ViewBag.Error != null)
 {
