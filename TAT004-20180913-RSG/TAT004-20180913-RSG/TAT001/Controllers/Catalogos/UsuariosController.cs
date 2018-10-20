@@ -2753,6 +2753,123 @@ namespace TAT001.Controllers.Catalogos
 
             return cc;
         }
+
+        public ActionResult AddBackup(string ID)
+        {
+            int pagina = 606; //ID EN BASE DE DATOS
+            FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
+            var usuario = db.USUARIOs.Where(t => t.ID == ID).SingleOrDefault();
+            //Se comenta el filtro de puesto y sociedad, solo buscara los usuarios activos
+            var usuarios = db.USUARIOs.Where(x => x.ACTIVO == true /*&& x.PUESTO_ID == usuario.PUESTO_ID && x.BUNIT == usuario.BUNIT*/).ToList();
+            usuarios.Remove(usuario);
+            var backups = db.DELEGARs.Where(t => t.USUARIO_ID == ID && t.ACTIVO==true).ToList();
+            foreach(var b in backups)
+            {
+                var usr=db.USUARIOs.Where(t => t.ID == b.USUARIOD_ID).SingleOrDefault();
+                usuarios.Remove(usr);
+            }
+            
+            //if (usuarios.Count() > 0)
+                ViewBag.USUARIOD_ID = new SelectList(usuarios.ToList(), "ID", "ID", "");
+            //else
+              //  ViewBag.USUARIOD_ID = new SelectList(new List<string> { "No data" });
+            DELEGAR usuarioback = new DELEGAR();
+            usuarioback.USUARIO_ID = ID;
+            return View(usuarioback);
+        }
+        [HttpPost]
+
+        public ActionResult AddBackup([Bind(Include = "USUARIO_ID,USUARIOD_ID,FECHAI,FECHAF,ACTIVO")]DELEGAR delegar)
+        {
+            if(ModelState.IsValid)
+            {
+                try
+                {
+                    DELEGAR delegado = new DELEGAR { ACTIVO = delegar.ACTIVO, FECHAF = delegar.FECHAF, FECHAI = delegar.FECHAI, USUARIOD_ID = delegar.USUARIOD_ID, USUARIO_ID = delegar.USUARIO_ID };
+                    db.DELEGARs.Add(delegado);
+                    db.SaveChanges();
+                    return RedirectToAction("Details",new { id=delegar.USUARIO_ID});
+                }
+                catch (Exception e)
+                {
+                    return View(delegar);
+                }
+            }
+            else
+            {
+                return View(delegar);
+            }
+        }
+        public ActionResult EditBackup(string id,string idd, string fi, string ff)
+        {
+            int pagina = 607; //ID EN BASE DE DATOS
+            using (TAT001Entities db = new TAT001Entities())
+            {
+                string u = User.Identity.Name;
+                var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
+                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
+                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
+                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(831) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+
+                try
+                {
+                    string p = Session["pais"].ToString();
+                    ViewBag.pais = p + ".svg";
+                }
+                catch
+                {
+                    //return RedirectToAction("Pais", "Home");
+                }
+                Session["spras"] = user.SPRAS_ID;
+            }
+                
+                //Para las version de las fechas
+                var arrF = fi.Split('/');
+                var dtgd = arrF[1] + '/' + arrF[0] + '/' + arrF[2];
+                DateTime dt = DateTime.Parse(dtgd);
+                var arrFf = ff.Split('/');
+                var dtgff = arrFf[1] + '/' + arrFf[0] + '/' + arrFf[2];
+                DateTime dff = DateTime.Parse(dtgff);
+                var deledit = db.DELEGARs
+                          .Where(x => x.USUARIO_ID == id && x.USUARIOD_ID == idd && x.FECHAI == dt&& x.FECHAF==dff).FirstOrDefault();
+            
+            return View(deledit);
+
+        }
+        [HttpPost]
+        public ActionResult EditBackup([Bind(Include = "USUARIO_ID,USUARIOD_ID,FECHAI,FECHAF,ACTIVO")]DELEGAR delegar)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(delegar).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Details", new { id = delegar.USUARIO_ID });
+            }
+            else
+            {
+                return View(delegar);
+            }
+        }
+        public ActionResult DeleteBackup(string id, string idd, string fi, string ff)
+        {
+            //Para las version de las fechas
+            var arrF = fi.Split('/');
+            var dtgd = arrF[1] + '/' + arrF[0] + '/' + arrF[2];
+            DateTime dt = DateTime.Parse(dtgd);
+            var arrFf = ff.Split('/');
+            var dtgff = arrFf[1] + '/' + arrFf[0] + '/' + arrFf[2];
+            DateTime dff = DateTime.Parse(dtgff);
+            var deledit = db.DELEGARs
+                      .Where(x => x.USUARIO_ID == id && x.USUARIOD_ID == idd && x.FECHAI == dt && x.FECHAF == dff).FirstOrDefault();
+            deledit.ACTIVO = false;
+            db.SaveChanges();
+            return RedirectToAction("Details", new { id=id});
+
+        }
     }
 }
 

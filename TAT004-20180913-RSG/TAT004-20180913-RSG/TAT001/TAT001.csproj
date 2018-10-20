@@ -1911,6 +1911,8 @@
     <Content Include="Views\Reportes\ReporteAllowancesB.cshtml" />
     <Content Include="Views\Reportes\ReporteAllowancesPL.cshtml" />
     <Content Include="Views\Clientes\List.cshtml" />
+    <Content Include="Views\Usuarios\AddBackup.cshtml" />
+    <Content Include="Views\Usuarios\EditBackup.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->

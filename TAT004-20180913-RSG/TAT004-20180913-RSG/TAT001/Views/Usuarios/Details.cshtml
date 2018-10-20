@@ -22,8 +22,8 @@
         @Html.AntiForgeryToken()*@
 <div class="row">
     <div class="col s12 l12 right-align">
-        <a class="btn" href="@Url.Action("Pass", new { id = Model.ID})">Cambiar contraseña</a>
-        <a class="btn" href="@Url.Action("Edit", new { id = Model.ID})">Editar</a>
+        <a class="btn" id="btn_changepassword" href="@Url.Action("Pass", new { id = Model.ID})">Cambiar contraseña</a>
+        <a class="btn" id="btn_editar" href="@Url.Action("Edit", new { id = Model.ID})">Editar</a>
     </div>
 </div>
 <div class="row">
@@ -88,6 +88,52 @@
                     @Html.ValidationMessageFor(model => model.BUNIT, "", new { @class = "text-danger" })
                 </div>
             </div>
+        </div>
+    </div>
+    </div>
+<div class="row">
+    <div class="col l6 s12">
+        <div class="card-panel">
+            <div class="row">
+                <div class="col s12 l12 right-align">
+                    <a class="btn" id="btn_agregarbackup" href="@Url.Action("AddBackup", new { id = Model.ID})"></a>
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="lbl_usrbackup">Usuario Backup</th>
+                        <th class="lbl_fechai">Fecha Inicial</th>
+                        <th class="lbl_fechaf">Fecha Final</th>
+                        <th class="lbl_activo">Activo</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var i in Model.DELEGARs.Where(t=>t.ACTIVO==true))
+                    {
+                    <tr>
+                        <td>@i.USUARIOD_ID </td>
+                        <td>@i.FECHAI.ToShortDateString()</td>
+                        <td>@i.FECHAF.ToShortDateString()</td>
+                        @if ((bool)i.ACTIVO == true)
+                        {
+                            <td style="align-items:center"><i class='material-icons green-text'>check</i></td>}
+                        else
+                        {
+                            <td style="align-items:center;"><i class='material-icons red-text'>clear</i></td>}
+                            <td>
+                                @*<a href="@Url.Action("EditBackup", new { id = i.USUARIO_ID, idd=i.USUARIOD_ID, fi=i.FECHAI, ff=i.FECHAF })">
+                                    <i class='material-icons green-text'>edit</i>
+                                </a>&nbsp*@
+                                <a href="@Url.Action("DeleteBackup", new { id = i.USUARIO_ID, idd=i.USUARIOD_ID, fi=i.FECHAI, ff=i.FECHAF })">
+                                    <i class='material-icons red-text'>delete</i>
+                                </a>
+                            </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
     <script>
@@ -296,7 +342,7 @@
                                                                 }
                                                             }
 
-                                                           
+
                                                         </div>
                                                     </div>
                                                 </div>
@@ -318,7 +364,7 @@
                 </div>
             </div>
         </div>
-        </div>*@
+    </div>*@
 </div>
 
 @using (Html.BeginForm("AgregarRol", "Usuarios"))

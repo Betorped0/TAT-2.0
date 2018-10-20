@@ -8,7 +8,7 @@
     ViewBag.pagina_r = 602;
     ViewBag.carpeta_r = 500;
 }
-
+<script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -32,7 +32,7 @@
                 <div class="row">
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     <div class="input-field col s12">
-                        @Html.EditorFor(model => model.ID, new { htmlAttributes = new { @aria_required = "true", @required = "required", @class = "validate", @onchange = "valorID(this);" } })
+                        @Html.EditorFor(model => model.ID, new { htmlAttributes = new { @aria_required = "true", @required = "required" } })
                         @Html.LabelFor(model => model.ID, htmlAttributes: new { @id = "lbl_id" })
                         <span class="helper-text" id="hlp_id" data-error="Id repetido" data-success="Correcto"></span>
                     </div>
@@ -44,7 +44,7 @@
                     </div>
 
                     <div class="input-field col s12">
-                        @Html.PasswordFor(model => model.MANAGER, new { @class = "validate", @onchange = "valorPass(this);", @id = "txt_pass2", required = true, @maxlength = 16, @minlength = 5 })
+                        @Html.PasswordFor(model => model.MANAGER, new { @id = "txt_pass2", required = true, @maxlength = 16, @minlength = 5 })
                         @Html.LabelFor(model => model.MANAGER, "Confirmar contraseña", htmlAttributes: new { @id = "lbl_conf" })
                         @Html.ValidationMessageFor(model => model.MANAGER, "", new { @class = "text-danger" })
                         <span class="helper-text" id="lbl_mensajepass" data-error="No coinciden" data-success=""></span>
