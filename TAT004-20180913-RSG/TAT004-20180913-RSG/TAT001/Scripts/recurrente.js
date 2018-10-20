@@ -1,5 +1,4 @@
 ﻿function llenaCat(vkorg, vtweg, spart, kunnr) {
-    //document.getElementById("loader").style.display = "initial";
     var soc = document.getElementById("sociedad_id").value;
     $("#select_categoria").find('option').remove().end();
     $.ajax({
@@ -19,11 +18,9 @@
             }
             var elem = document.getElementById("select_categoria");
             var instance = M.FormSelect.init(elem, []);
-            document.getElementById("loader").style.display = "none";
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             M.toast({ html: httpStatusMessage });
-            document.getElementById("loader").style.display = "none";
         },
         async: false
     });

@@ -5622,9 +5622,9 @@ function selectCliente(valu) {
                     if (!isRelacionada()) {
                         llenaCat(data.VKORG, data.VTWEG, data.SPART, valu);
                         getCatMateriales(data.VKORG, data.VTWEG, data.SPART, valu);
-                    } else {
-                        document.getElementById("loader").style.display = "none";//RSG 03.07.2018
-                    }
+                    } 
+                    document.getElementById("loader").style.display = "none";//RSG 03.07.2018
+                    
                     //RSG 28.05.2018------------------------------------------
                 } else {
                     limpiarCliente();
