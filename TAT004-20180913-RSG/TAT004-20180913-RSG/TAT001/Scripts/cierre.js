@@ -13,7 +13,12 @@
 
         success: function (data) {
             if (data !== "X") {
-                M.toast({ html: "Periodo cerrado" });
+                M.toast({
+                    classes: "guardarWarnning",
+                    displayLength: 1000000,
+                    html: '<span style="padding-right:15px;"><i class="material-icons yellow-text">info</i></span> Periodo cerrado'
+                    + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'guardarWarnning\')">Aceptar</button>'
+                });
                 bool = true;
             } else {
                 bool = false;

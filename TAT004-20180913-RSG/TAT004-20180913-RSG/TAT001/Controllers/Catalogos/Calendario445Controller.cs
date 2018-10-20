@@ -9,13 +9,13 @@ using TAT001.Models;
 
 namespace TAT001.Controllers.Catalogos
 {
+    [Authorize]
     public class Calendario445Controller : Controller
     {
         readonly TAT001Entities db = new TAT001Entities();
 
         const string CMB_SOCIEDADES= "SOC";
         const string CMB_TIPOSSOLICITUD = "TSOL";
-        const string CMBTREE_TIPOSSOLICITUD = "TREE_TSOL";
         const string CMB_PERIODOS = "PER";
         const string CMB_USUARIOS = "USU";
         const string CMB_EJERCICIO = "EJE";
@@ -40,7 +40,7 @@ namespace TAT001.Controllers.Catalogos
             FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
 
             Calendario445ViewModel modelView = new Calendario445ViewModel();
-            CargarSelectList(ref modelView,new string[] { CMB_SOCIEDADES, CMB_PERIODOS, CMBTREE_TIPOSSOLICITUD, CMB_EJERCICIO });
+            CargarSelectList(ref modelView,new string[] {  CMB_PERIODOS, CMB_EJERCICIO });
             return View(modelView);
         }
 
@@ -62,27 +62,33 @@ namespace TAT001.Controllers.Catalogos
                 }
 
                 string spras_id = FnCommon.ObtenerSprasId(db, User.Identity.Name);
+                List<CALENDARIO_AC> calendariosAc = new List<CALENDARIO_AC>();
                 FnCommon.ObtenerCmbSociedades(db,null).ForEach(x=>
                 {
-                    FnCommon.ObtenerCmbTiposSolicitud(db, spras_id,null).ForEach(z =>
+                    FnCommon.ObtenerCmbTiposSolicitud(db,spras_id, null).ForEach(z =>
                     {
                         calendarioAc.SOCIEDAD_ID = x.Value;
-                        calendarioAc.TSOL_ID = x.Value;
-                        if (!db.CALENDARIO_AC.Any(y => y.EJERCICIO == calendarioAc.EJERCICIO && y.PERIODO == calendarioAc.PERIODO && y.SOCIEDAD_ID == calendarioAc.SOCIEDAD_ID && y.TSOL_ID == calendarioAc.TSOL_ID))
+                        calendarioAc.TSOL_ID = z.Value;
+                        if (!db.CALENDARIO_AC.Any(y =>
+                        y.EJERCICIO == calendarioAc.EJERCICIO
+                        && y.PERIODO == calendarioAc.PERIODO
+                        && y.SOCIEDAD_ID == calendarioAc.SOCIEDAD_ID
+                        && y.TSOL_ID == calendarioAc.TSOL_ID))
                         {
-                            db.CALENDARIO_AC.Add(calendarioAc);
+                            calendariosAc.Add(calendarioAc);
                         }
                     });
                 });
-              
+                db.CALENDARIO_AC.AddRange(calendariosAc);
                 db.SaveChanges();
+
 
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
                 FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
-                CargarSelectList(ref modelView, new string[] { CMB_SOCIEDADES, CMB_PERIODOS, CMBTREE_TIPOSSOLICITUD , CMB_EJERCICIO });
+                CargarSelectList(ref modelView, new string[] {  CMB_PERIODOS, CMB_EJERCICIO  });
                 return View(modelView);
             }
         }
@@ -142,11 +148,12 @@ namespace TAT001.Controllers.Catalogos
             int noExiste = 0;
             FnCommon.ObtenerCmbSociedades(db, null).ForEach(x =>
             {
-                FnCommon.ObtenerCmbTiposSolicitud(db, spras_id, null).ForEach(z =>
+                FnCommon.ObtenerCmbTiposSolicitud(db,spras_id,null).ForEach(z =>
                 {
                     calendarioAc.SOCIEDAD_ID = x.Value;
-                    calendarioAc.TSOL_ID = x.Value;
-                    if (!db.CALENDARIO_AC.Any(y => y.EJERCICIO == calendarioAc.EJERCICIO && y.PERIODO == calendarioAc.PERIODO && y.SOCIEDAD_ID == calendarioAc.SOCIEDAD_ID && y.TSOL_ID == calendarioAc.TSOL_ID))
+                    calendarioAc.TSOL_ID = z.Value;
+                    if (!db.CALENDARIO_AC.Any(y => y.EJERCICIO == calendarioAc.EJERCICIO && y.PERIODO == calendarioAc.PERIODO 
+                    && y.SOCIEDAD_ID == calendarioAc.SOCIEDAD_ID && y.TSOL_ID == calendarioAc.TSOL_ID))
                     {
                         noExiste++;
                     }
@@ -217,9 +224,6 @@ namespace TAT001.Controllers.Catalogos
                         break;
                     case CMB_TIPOSSOLICITUD:
                         modelView.cmbTiposSolicitud = FnCommon.ObtenerCmbTiposSolicitud(db, spras_id, id);
-                        break;
-                    case CMBTREE_TIPOSSOLICITUD:
-                        modelView.treeTiposSolicitud = FnCommon.ObtenerTreeTiposSolicitud(db, spras_id);
                         break;
                     case CMB_EJERCICIO:
                         modelView.ejercicio = FnCommon.ObtenerCmbEjercicio();

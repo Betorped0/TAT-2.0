@@ -659,23 +659,10 @@ namespace TAT001.Controllers
                     {
                         isrn = "X";
                         isr = "preversa";
-                        //freversa = theTime.ToString("yyyy-MM-dd"); ;
                         freversa = theTime.ToString("dd/MM/yyyy");
                         //Obtener los tipos de reversas
                         try
                         {
-                            //ldocr = db.TREVERSAs.Where(t => t.ACTIVO == true)
-                            //    .Join(
-                            //    db.TREVERSATs.Where(tt => tt.SPRAS_ID == user.SPRAS_ID),
-                            //    t => t.ID,
-                            //    tt => tt.TREVERSA_ID,
-                            //    (t, tt) => new TREVERSAT
-                            //    {
-                            //        SPRAS_ID = tt.SPRAS_ID,
-                            //        TREVERSA_ID = tt.TREVERSA_ID,
-                            //        TXT100 = tt.TXT100
-                            //    }).ToList();
-                            //ldocr = db.TREVERSATs.Where(tt => tt.SPRAS_ID == user.SPRAS_ID).ToList();
                             ldocr = db.TREVERSATs.Where(a => a.TREVERSA.ACTIVO == true && a.SPRAS_ID == user.SPRAS_ID).ToList();
                         }
                         catch (Exception e)
@@ -718,39 +705,39 @@ namespace TAT001.Controllers
 
                 List<TSOLT_MOD> list_sol = new List<TSOLT_MOD>();
                 //tipo de solicitud
-                if (ViewBag.reversa == "preversa")
+                string tipS;
+                if (id_d == null || id_d == "" || ViewBag.reversa == "preversa")
                 {
-                    list_sol = tsols_val.Where(sol => sol.TSOLR == null)
-                                        .Join(
-                                        db.TSOLTs.Where(solt => solt.SPRAS_ID == user.SPRAS_ID),
-                                        sol => sol.ID,
-                                        solt => solt.TSOL_ID,
-                                        (sol, solt) => new TSOLT_MOD
-                                        {
-                                            SPRAS_ID = solt.SPRAS_ID,
-                                            TSOL_ID = solt.TSOL_ID,
-                                            TEXT = solt.TSOL_ID + " " + solt.TXT50
-                                        })
-                                    .ToList();
+                    tipS = "SD";
+                    //directa SD
                 }
                 else
                 {
-                    list_sol = tsols_val.Where(sol => sol.ESTATUS != "X" & sol.ADICIONA == false)
-                                        .Join(
-                                        db.TSOLTs.Where(solt => solt.SPRAS_ID == user.SPRAS_ID),
-                                        sol => sol.ID,
-                                        solt => solt.TSOL_ID,
-                                        (sol, solt) => new TSOLT_MOD
-                                        {
-                                            SPRAS_ID = solt.SPRAS_ID,
-                                            TSOL_ID = solt.TSOL_ID,
-                                            TEXT = solt.TSOL_ID + " " + solt.TXT50
-                                        })
-                                    .ToList();
+                    tipS = "SR";
+                    //relacionada SR
                 }
-
-
-
+                if (ViewBag.reversa == "preversa") { 
+               
+                    list_sol = FnCommon.ObtenerCmbTiposSolicitud(db, user.SPRAS_ID, null, true)
+                        .Select(x=>new TSOLT_MOD
+                        {
+                            SPRAS_ID = user.SPRAS_ID,
+                            TSOL_ID = x.Value,
+                            TEXT=x.Text
+                        }).ToList();
+                    ViewBag.listtreetsol = FnCommon.ObtenerTreeTiposSolicitud(db, user.SPRAS_ID, null, true);
+                }
+                else {
+                    list_sol = FnCommon.ObtenerCmbTiposSolicitud(db, user.SPRAS_ID,null)
+                        .Select(x => new TSOLT_MOD
+                        {
+                            SPRAS_ID = user.SPRAS_ID,
+                            TSOL_ID = x.Value,
+                            TEXT = x.Text
+                        }).ToList();
+                    ViewBag.listtreetsol = FnCommon.ObtenerTreeTiposSolicitud(db, user.SPRAS_ID, tipS);
+                }
+                
                 //Obtener los documentos relacionados
                 List<DOCUMENTO> docsrel = new List<DOCUMENTO>();
 
@@ -1461,21 +1448,10 @@ namespace TAT001.Controllers
             }
             //-----------------------------------------------------------------LEJ 09.07.18
             ViewBag.horaServer = DateTime.Now.Date.ToString().Split(new[] { ' ' }, 2)[1];//RSG 01.08.2018
-            string tipS;
-            if (id_d == null || id_d == "")
-            {
-                tipS = "SD";
-                //directa SD
-            }
-            else
-            {
-                tipS = "SR";
-                //relacionada SR
-            }
+           
 
             Warning w = new Warning();
             ViewBag.listaValid = w.listaW(d.SOCIEDAD_ID, usuariotextos);
-            ViewBag.listtreetsol = FnCommon.ObtenerTreeTiposSolicitud(db, spras, tipS);
 
             return View(d);
         }

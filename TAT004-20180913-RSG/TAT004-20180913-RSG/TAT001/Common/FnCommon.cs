@@ -99,41 +99,55 @@ namespace TAT001.Common
                         Text = x.TEXTOS
                     }).ToList();
         }
-        public static List<SelectListItem> ObtenerCmbTiposSolicitud(TAT001Entities db, string spras_id, string id, string tipo = null)
+        public static List<SelectListItem> ObtenerCmbTiposSolicitud(TAT001Entities db, string spras_id, string id,bool? esReversa = false)
         {
-            // tipo
-            // SD = Solicitud directa
-            // SR = Solicitud relacionada
-            return db.TSOLs
-                .Join(db.TSOL_TREE, s => s.ID, tst => tst.TSOL_ID, (s, tst) => tst)
-                .Where(x => x.TSOL_GROUP_TIPO == tipo || tipo == null)
-                .Join(db.TSOLTs, tst => tst.TSOL_ID, st => st.TSOL_ID, (s, st) => st)
-                .Where(x => x.SPRAS_ID == spras_id && (x.TSOL_ID == id || id == null))
+            List<TSOL> tiposSolicitudes = new List<TSOL>();
+            return  db.TSOLs
+                .Where(x => ((esReversa.Value == true && x.TSOLR == null) || esReversa.Value == false) && (id == null || x.ID == id))
+                .Join(db.TSOLTs, s => s.ID, st => st.TSOL_ID, (s, st) => st)
+                .Where(x => x.SPRAS_ID == spras_id)
                 .Select(x => new SelectListItem
                 {
                     Value = x.TSOL_ID,
                     Text = (x.TSOL_ID + " - " + x.TXT50)
                 }).ToList();
         }
-        public static List<SelectTreeItem> ObtenerTreeTiposSolicitud(TAT001Entities db, string spras_id, string tipo = null)
+        public static List<SelectTreeItem> ObtenerTreeTiposSolicitud(TAT001Entities db, string spras_id, string tipo = null,bool? esReversa=false)
         {
             // tipo
             // SD = Solicitud directa
             // SR = Solicitud relacionada
+
             List<SelectTreeItem> tree = new List<SelectTreeItem>();
-            db.TSOL_GROUP
-                .Where(x => x.ID_PADRE == null && x.TIPO_PADRE == null && (tipo == x.TIPO || tipo == null))
-                .Join(db.TSOL_GROUPT, tg => new { ID = tg.ID, TIPO = tg.TIPO }, tgt => new { ID = tgt.TSOL_GROUP_ID, TIPO = tgt.TSOL_GROUP_TIPO }, (tg, tgt) => tgt)
-                .Where(x => x.SPRAS_ID == spras_id).OrderBy(x=>x.TSOL_GROUP_ID )
-                .ToList().ForEach(x =>
+            if (esReversa.Value)
+            {
+                tree.Add(new SelectTreeItem
                 {
-                    tree.Add(new SelectTreeItem
-                    {
-                        text = x.TXT50,
-                        expanded =  false,
-                        items = ObtenerItemsSelectTree(db, x.TSOL_GROUP_ID, x.TSOL_GROUP_TIPO, spras_id)
-                    });
+                    text = "-",
+                    expanded = false,
+                    items = ObtenerItemsTSOLT(db, "", "", spras_id, esReversa)
                 });
+            }
+            else
+            {
+                db.TSOL_GROUP
+                    .Where(x => x.ID_PADRE == null && x.TIPO_PADRE == null && (tipo == x.TIPO || tipo == null))
+                    .Join(db.TSOL_GROUPT, tg => new { ID = tg.ID, TIPO = tg.TIPO }, tgt => new { ID = tgt.TSOL_GROUP_ID, TIPO = tgt.TSOL_GROUP_TIPO }, (tg, tgt) => tgt)
+                    .Where(x => x.SPRAS_ID == spras_id).OrderBy(x => x.TSOL_GROUP_ID)
+                    .ToList().ForEach(x =>
+                    {
+                        SelectTreeItem item = new SelectTreeItem
+                        {
+                            text = x.TXT50,
+                            expanded = false,
+                            items = ObtenerItemsSelectTree(db, x.TSOL_GROUP_ID, x.TSOL_GROUP_TIPO, spras_id)
+                        };
+                        if (item.items.Any())
+                        {
+                            tree.Add(item);
+                        }
+                    });
+            }
             return tree;
         }
         
@@ -160,22 +174,39 @@ namespace TAT001.Common
             }
             return items;
         }
-        static List<SelectTreeItem> ObtenerItemsTSOLT(TAT001Entities db, string id_padre, string tipo_padre, string spras_id)
+        static List<SelectTreeItem> ObtenerItemsTSOLT(TAT001Entities db, string id_padre, string tipo_padre, string spras_id, bool? esReversa = false)
         {
             List<SelectTreeItem> items = new List<SelectTreeItem>();
-            db.TSOL_TREE
-                       .Where(y => y.TSOL_GROUP_ID == id_padre && y.TSOL_GROUP_TIPO == tipo_padre)
-                       .Join(db.TSOLTs, tst => tst.TSOL_ID, st => st.TSOL_ID, (tst, st) => st)
-                       .Where(y => y.SPRAS_ID == spras_id)
-                       .ToList().ForEach(y =>
-                       {
-                           items.Add(new SelectTreeItem
+            if (esReversa.Value)
+            {
+                items = db.TSOLs
+                    .Where(x=>x.TSOLR==null)
+                    .Join(db.TSOLTs, s => s.ID, st => st.TSOL_ID, (s, st) => st)
+                    .Where(x=>x.SPRAS_ID == spras_id)
+                    .Select(x=> new SelectTreeItem
+                    {
+                        value = x.TSOL_ID,
+                        text = (x.TSOL_ID + " - " + x.TXT50),
+                        expanded = true
+                    })
+                    .ToList();
+            }
+            else
+            {
+                db.TSOL_TREE
+                           .Where(y => y.TSOL_GROUP_ID == id_padre && y.TSOL_GROUP_TIPO == tipo_padre)
+                           .Join(db.TSOLTs, tst => tst.TSOL_ID, st => st.TSOL_ID, (tst, st) => st)
+                           .Where(y => y.SPRAS_ID == spras_id )
+                           .ToList().ForEach(y =>
                            {
-                               value = y.TSOL_ID,
-                               text = (y.TSOL_ID + " - " + y.TXT50),
-                               expanded = true
+                               items.Add(new SelectTreeItem
+                               {
+                                   value = y.TSOL_ID,
+                                   text = (y.TSOL_ID + " - " + y.TXT50),
+                                   expanded = true
+                               });
                            });
-                       });
+            }
             return items;
         }
 
