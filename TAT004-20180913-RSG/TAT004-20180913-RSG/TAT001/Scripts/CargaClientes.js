@@ -389,7 +389,7 @@ function addRow(t, POS, br, cc, p, c, nc, n0, n1, n2, n3, n4, n5, n6, n7, v, b, 
         "<input class='input_coc' style='font-size:12px;' type='text' id='' name='coc' value='" + cc + "' onchange='Comprobar()'><span  style='display: none;'>" + cc + "</span>",
         "<input class='input_pai' style='font-size:12px;' type='text' id='' name='pai' value='" + p + "' onchange='Comprobar()'><span  style='display: none;'>" + p + "</span>",
         "<input class='input_cli' disabled='true' style='font-size:12px;' type='text' id='' name='cli' value='" + c + "' onchange='Comprobar()'><span  style='display: none;'>" + c + "</span>",
-        "<input class='input_noc' disabled='true' style='font-size:12px;' type='text' id='' name='noc' value='" + nc + "' onchange='Comprobar()'><span  style='display: none;'>" + nc + "</span>",
+        "<input class='input_noc' style='font-size:12px;' type='text' id='' name='noc' value='" + nc + "' onchange='Comprobar()'><span  style='display: none;'>" + nc + "</span>",
         "<input class='input_ni0' style='font-size:12px;' type='text' id='' name='ni0' value='" + n0 + "' onchange='Comprobar()'><span  style='display: none;'>" + n0 + "</span>",
         "<input class='input_ni1' style='font-size:12px;' type='text' id='' name='ni1' value='" + n1 + "' onchange='Comprobar()'><span  style='display: none;'>" + n1 + "</span>",
         "<input class='input_ni2' style='font-size:12px;' type='text' id='' name='ni2' value='" + n2 + "' onchange='Comprobar()'><span  style='display: none;'>" + n2 + "</span>",
@@ -768,6 +768,13 @@ function dismiss(classe) {
         var toastInstance = M.Toast.getInstance(toastElement[i]);
         toastInstance.dismiss();
     }
+}
+
+function habilitar() {
+    $(".input_cli").prop('disabled', false);
+    $(".input_noc").prop('disabled', false);
+    $(".input_ban").prop('disabled', false);
+    habi = true;
 }
 
 $('body').on('keydown.autocomplete', '.input_ven', function () {
