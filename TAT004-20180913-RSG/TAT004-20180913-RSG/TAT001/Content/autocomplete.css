@@ -1904,3 +1904,9 @@ body .ui-tooltip {
     filter: Alpha(Opacity=30); /* support: IE8 */
     border-radius: 8px;
 }
+.ui-autocomplete-loading {
+    background-image: url(../images/auto_loading.gif);
+    background-size: 16px;
+    background-repeat: no-repeat;
+    background-position: right;
+}

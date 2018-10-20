@@ -5,25 +5,25 @@
     <thead>
         <tr class="header">
             <th>
-                @Html.Display("KUNNR", new { htmlAttributes = new { @click= "ActualizarOrden('KUNNR','"+Model.ordenActual+"','"+Model.numRegistros+"')" } })
+                @Html.ActionLink("KUNNR", "List", new { colOrden = "KUNNR", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
             </th>
             <th>
-                @Html.ActionLink("NAME1", "List", new { sortOrder = "NAME1", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
+                @Html.ActionLink("NAME1", "List", new { colOrden = "NAME1", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
             </th>
             <th>
-                @Html.ActionLink("SUBREGION", "List", new { sortOrder = "SUBREGION", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
+                @Html.ActionLink("SUBREGION", "List", new { colOrden = "SUBREGION", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
             </th>
             <th>
-                @Html.ActionLink("LAND", "List", new { sortOrder = "LAND", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
+                @Html.ActionLink("LAND", "List", new { colOrden = "LAND", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
             </th>
             <th>
-                @Html.ActionLink("PARVW", "List", new { sortOrder = "PARVW", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
+                @Html.ActionLink("PARVW", "List", new { colOrden = "PARVW", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
             </th>
             <th>
-                @Html.ActionLink("PAYER", "List", new { sortOrder = "PAYER", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
+                @Html.ActionLink("PAYER", "List", new { colOrden = "PAYER", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
             </th>
             <th>
-                @Html.ActionLink("CANAL", "List", new { sortOrder = "CANAL", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
+                @Html.ActionLink("CANAL", "List", new { colOrden = "CANAL", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
             </th>
             <th></th>
         </tr>
@@ -54,16 +54,16 @@
                     @Html.DisplayFor(modelItem => item.CANAL)
                 </td>
                 <td>
-                    <a href="@Url.Action(" Edit", "Clientes", new { vko = item.VKORG, vtw = item.VTWEG, spa = item.SPART, kun = item.KUNNR })">
+                    <a href="@Url.Action("Edit", "Clientes", new { vko = item.VKORG, vtw = item.VTWEG, spa = item.SPART, kun = item.KUNNR })">
                         <i class='material-icons green-text'>edit</i>
                     </a>
-                    <a href="@Url.Action(" Details", "Clientes", new { vko = item.VKORG, vtw = item.VTWEG, spa = item.SPART, kun = item.KUNNR })">
+                    <a href="@Url.Action("Details", "Clientes", new { vko = item.VKORG, vtw = item.VTWEG, spa = item.SPART, kun = item.KUNNR })">
                         <i class='material-icons blue-text'>search</i>
                     </a>
-                    <a data-form-method="post" href="@Url.Action(" Index", "Contacto", new { vko = item.VKORG, vtw = item.VTWEG, kun = item.KUNNR, spa = item.SPART })">
+                    <a data-form-method="post" href="@Url.Action("Index", "Contacto", new { vko = item.VKORG, vtw = item.VTWEG, kun = item.KUNNR, spa = item.SPART })">
                         <i class='material-icons orange-text'>contacts</i>
                     </a>
-                    <a data-form-method="post" href="@Url.Action(" Index", "Iimpuesto", new { vko = item.VKORG, vtw = item.VTWEG, kun = item.KUNNR, spa = item.SPART })">
+                    <a data-form-method="post" href="@Url.Action("Index", "Iimpuesto", new { vko = item.VKORG, vtw = item.VTWEG, kun = item.KUNNR, spa = item.SPART })">
                         <i class='material-icons yellow-text'>monetization_on</i>
                     </a>
                 </td>
@@ -72,8 +72,35 @@
     </tbody>
 </table>
 <div id='Paging' style="text-align: center">
-    Page @(Model.clientes.PageCount < Model.clientes.PageNumber ? 0 : Model.clientes.PageNumber)
-    of @Model.clientes.PageCount
+     @(Model.clientes.PageCount < Model.clientes.PageNumber ? 0 : Model.clientes.PageNumber)
+    - @Model.clientes.PageCount
 
-    @Html.PagedListPager(Model.clientes, page => Url.Action("Index", new { page = page, numRegistros = Model.numRegistros }))
+    @Html.PagedListPager(Model.clientes, page => Url.Action("List", new { pagina = page, numRegistros = Model.numRegistros }))
 </div>
+<script>
+    //-----Sort
+    function sort() {
+        var sortLink = $('.header>th>a');
+        for (var i = 0; i < sortLink.length; i++) {
+            var url = sortLink.get(i).getAttribute("href");
+            var id = 'link_h' + i;
+            if (url) {
+                sortLink.get(i).setAttribute("id", id);
+                sortLink.get(i).setAttribute("url", url);
+                $('#' + id).click(function (me) {
+                    fnCommon.showProcess(true);
+                    $.ajax({
+                        url: me.toElement.getAttribute('url'),
+                        success: function (resultView) {
+                            fnCommon.showProcess(false);
+                            $('#list').html(resultView);
+                            sort();
+                        }
+                    });
+                });
+            }
+            sortLink.get(i).removeAttribute("href");
+        }
+    }
+    sort();
+</script>

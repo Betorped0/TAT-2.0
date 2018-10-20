@@ -140,10 +140,8 @@ namespace TAT001.Controllers
                 var c = (from N in db.CLIENTEs.Where(x => x.LAND == pais).ToList()
                          join D in det
                          on new { N.VKORG, N.VTWEG, N.SPART, N.KUNNR } equals new { D.VKORG, D.VTWEG, D.SPART, D.KUNNR }
-                         join C in db.CLIENTEFs.ToList()
-                         on new { N.VKORG, N.VTWEG, N.SPART, N.KUNNR } equals new { C.VKORG, C.VTWEG, C.SPART, C.KUNNR }
                          where N.KUNNR.Contains(Prefix)
-                            & C.USUARIO1_ID != null
+                            & db.CLIENTEFs.Any(x=>x.KUNNR==N.KUNNR && x.VKORG==N.VKORG && x.VTWEG==N.VTWEG&& x.SPART==N.SPART && x.USUARIO1_ID!=null && x.ACTIVO)
                          select new { N.KUNNR, N.NAME1 }).ToList();
 
                 if (c.Count == 0)
@@ -151,10 +149,8 @@ namespace TAT001.Controllers
                     var c2 = (from N in db.CLIENTEs.Where(x => x.LAND == pais).ToList()
                               join D in det
                               on new { N.VKORG, N.VTWEG, N.SPART, N.KUNNR } equals new { D.VKORG, D.VTWEG, D.SPART, D.KUNNR }
-                              join C in db.CLIENTEFs.ToList()
-                              on new { N.VKORG, N.VTWEG, N.SPART, N.KUNNR } equals new { C.VKORG, C.VTWEG, C.SPART, C.KUNNR }
                               where CultureInfo.CurrentCulture.CompareInfo.IndexOf(N.NAME1, Prefix, CompareOptions.IgnoreCase) >= 0
-                                & C.USUARIO1_ID != null
+                                 & db.CLIENTEFs.Any(x => x.KUNNR == N.KUNNR && x.VKORG == N.VKORG && x.VTWEG == N.VTWEG && x.SPART == N.SPART && x.USUARIO1_ID != null && x.ACTIVO)
                               select new { N.KUNNR, N.NAME1 }).ToList();
                     c.AddRange(c2);
                 }
@@ -563,33 +559,19 @@ namespace TAT001.Controllers
         {
             TAT001Entities db = new TAT001Entities();
             Cadena cad = new Cadena();
+            var spras = Session["spras"].ToString();
             kunnr = cad.completaCliente(kunnr);
             if (kunnr == null)
             {
                 kunnr = "";
             }
-
-            //if (catid == null)
-            //{
-            //    catid = "";
-            //}
-
             var jd = (dynamic)null;
 
             //Obtener los materiales
-            IEnumerable<MATERIAL> matl = Enumerable.Empty<MATERIAL>();
-            try
-            {
-                matl = db.MATERIALs.Where(m => m.ACTIVO == true);//.Select(m => m.ID).ToList();
-            }
-            catch (Exception e)
-            {
+            IEnumerable<MATERIAL> matl =  db.MATERIALs.Where(m => m.ACTIVO == true);
 
-            }
-
-            var spras = Session["spras"].ToString();
             //Validar si hay materiales
-            if (matl != null)
+            if (matl.Any())
             {
 
                 CLIENTE cli = new CLIENTE();
@@ -598,14 +580,12 @@ namespace TAT001.Controllers
                 try
                 {
                     cli = db.CLIENTEs.Where(c => c.KUNNR == kunnr & c.VKORG == vkorg & c.SPART == spart).FirstOrDefault();
-
                     //Saber si el cliente es sold to, payer o un grupo
                     if (cli != null)
                     {
                         //Es un soldto
                         if (cli.KUNNR != cli.PAYER && cli.KUNNR != cli.BANNER)
                         {
-                            //cli.VKORG = cli.VKORG+" ";
                             clil.Add(cli);
                         }
                     }
@@ -674,14 +654,9 @@ namespace TAT001.Controllers
                 {
                     //Obtener el historial de compras de los clientesd
                     var matt = matl.ToList();
-                    //kunnr = kunnr.TrimStart('0').Trim();
                     var pres = db.PRESUPSAPPs.Where(a => a.VKORG.Equals(vkorg) & a.SPART.Equals(spart) & a.KUNNR == kunnr & (a.GRSLS != null | a.NETLB != null)).ToList();
-                    //var cat = db.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(spras)).ToList();
                     var cat = db.MATERIALGPs.Where(a => a.ACTIVO == true).ToList();//RSG 03.10.2018
-                    //foreach (var c in cie)
-                    //{
-                    //    c.KUNNR = c.KUNNR.TrimStart('0').Trim();
-                    //}
+                  
 
                     CONFDIST_CAT conf = getCatConf(soc_id);
                     if (conf != null)
@@ -735,15 +710,10 @@ namespace TAT001.Controllers
             var list = new List<MATERIALGPT>();
             if (jd.Count > 0)
             {
-                //MATERIALGPT c = db.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(spras) & a.MATERIALGP_ID.Equals("000")).FirstOrDefault();
-                MATERIALGP c = db.MATERIALGPs.Where(a => a.ID.Equals("000")).FirstOrDefault();
-                //MATERIALGPT cc = new MATERIALGPT();//B20180625 MGC 2018.07.02
+                 MATERIALGP c = db.MATERIALGPs.Where(a => a.ID.Equals("000")).FirstOrDefault();
                 MATERIALGPT cc = new MATERIALGPT();//B20180625 MGC 2018.07.02
                 if (c != null)//B20180625 MGC 2018.07.02
                 {
-                    //cc.MATERIALGP_ID = "000";
-                    //cc.SPRAS_ID = c.SPRAS_ID;
-                    //cc.TXT50 = c.TXT50;
                     cc.MATERIALGP_ID = "000";
                     cc.SPRAS_ID = "EN";
                     cc.TXT50 = c.DESCRIPCION;
@@ -859,7 +829,7 @@ namespace TAT001.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public JsonResult SelectCliente(string kunnr)
+        public JsonResult SelectCliente(string kunnr,bool? esBorrador)
         {
 
             TAT001Entities db = new TAT001Entities();
@@ -911,15 +881,8 @@ namespace TAT001.Controllers
             if (id_cl != null)
             {
                 //Obtener el cliente
-                //CANAL canal = db.CANALs.Where(ca => ca.BANNER == id_cl.BANNER && ca.KUNNR == kunnr).FirstOrDefault();
                 CANAL canal = db.CANALs.Where(ca => ca.CANAL1 == id_cl.CANAL).FirstOrDefault();
                 id_cl.VTWEG = "";
-                //if (canal == null)
-                //{
-                //    string kunnrwz = kunnr.TrimStart('0');
-                //    string bannerwz = id_cl.BANNER.TrimStart('0');
-                //    canal = db.CANALs.Where(ca => ca.BANNER == bannerwz && ca.KUNNR == kunnrwz).FirstOrDefault();
-                //}
 
                 if (canal != null)
                 {
@@ -939,10 +902,20 @@ namespace TAT001.Controllers
                 }
 
             }
-            List<CLIENTEF> clientesf = db.CLIENTEFs.Where(x => x.KUNNR == id_cl.KUNNR).ToList();
-            if (id_cl != null && clientesf.Any())
+            //Si es borrador asignar datos de contacto a cliente
+            if (id_cl != null && esBorrador != null && esBorrador.Value)
             {
-                id_cl.MANAGER = clientesf.First().USUARIO1_ID;
+                DOCUMENTBORR doc = db.DOCUMENTBORRs.Where(x => x.USUARIOC_ID== User.Identity.Name && x.PAYER_ID== kunnr).FirstOrDefault();
+                if (doc != null)
+                {
+                    id_cl.PAYER_EMAIL = doc.PAYER_EMAIL;
+                    id_cl.PAYER_NOMBRE = doc.PAYER_NOMBRE;
+                }
+            }
+            //Asignar Manager
+            if (id_cl != null && db.CLIENTEFs.Any(x => x.KUNNR == id_cl.KUNNR))
+            {
+                id_cl.MANAGER = db.CLIENTEFs.Where(x => x.KUNNR == id_cl.KUNNR).First().USUARIO1_ID;
             }
             JsonResult jc = Json(id_cl, JsonRequestBehavior.AllowGet);
             return jc;
@@ -1041,14 +1014,14 @@ namespace TAT001.Controllers
             var c = (from m in db.CONTACTOCs
                      where m.NOMBRE.Contains(Prefix) && m.ACTIVO == true
                          && m.VKORG == vkorg && m.VTWEG == vtweg
-                         /*&& m.SPART == spart*/ && m.KUNNR == kunnr
+                         && m.KUNNR == kunnr
                      select new { m.NOMBRE, m.EMAIL }).ToList();
             if (c.Count == 0)
             {
                 var c2 = (from m in db.CONTACTOCs
                           where m.EMAIL.Contains(Prefix) && m.ACTIVO == true
                               && m.VKORG == vkorg && m.VTWEG == vtweg
-                              /*&& m.SPART == spart*/ && m.KUNNR == kunnr
+                              && m.KUNNR == kunnr
                           select new { m.NOMBRE, m.EMAIL }).ToList();
                 c.AddRange(c2);
             }
@@ -1076,7 +1049,8 @@ namespace TAT001.Controllers
         {
             TAT001Entities db = new TAT001Entities();
             int periodo = int.Parse(periodo_id);
-            bool a = FnCommon.ValidarPeriodoEnCalendario445(db, sociedad_id, tsol_id, periodo, "PRE", usuario_id);
+            bool a = FnCommon.ValidarPeriodoEnCalendario445(db, sociedad_id, tsol_id, periodo, "PRE", usuario_id) |
+                FnCommon.ValidarPeriodoEnCalendario445(db, sociedad_id, tsol_id, periodo, "CI", usuario_id);
             if (a)
                 return "X";
             else

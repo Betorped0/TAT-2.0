@@ -112,8 +112,6 @@
     }
  
 </style>
-<link href="~/Content/materialize.clockpicker.css" rel="stylesheet" />
-<script type="text/javascript" src="~/Scripts/materialize.clockpicker.js"></script>
 <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
 <script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
             @using (Html.BeginForm("Edit", "CalendarioEx445", FormMethod.Post, new { @id = "calendarioEx445Form" }))
@@ -186,7 +184,7 @@
                                 <div class="form-group">
                                     <label class="lbl_desdeHora"></label>
                                     <div class="col-md-10">
-                                        @Html.EditorFor(model => model.calendarioEx445.EX_FROMH, new { htmlAttributes = new { @required = "", @class = "timepicker", @type = "time" } })
+                                        @Html.EditorFor(model => model.calendarioEx445.EX_FROMH, new { htmlAttributes = new { @required = "", @class = "timepicker" } })
                                     </div>
                                 </div>
                             </div>
@@ -204,7 +202,7 @@
                                 <div class="form-group">
                                     <label class="lbl_hastaHora"></label>
                                     <div class="col-md-10">
-                                        @Html.EditorFor(model => model.calendarioEx445.EX_TOH, new { htmlAttributes = new { @required = "", @class = "timepicker", @type = "time" } })
+                                        @Html.EditorFor(model => model.calendarioEx445.EX_TOH, new { htmlAttributes = new { @required = "", @class = "timepicker" } })
                                     </div>
                                 </div>
                             </div>

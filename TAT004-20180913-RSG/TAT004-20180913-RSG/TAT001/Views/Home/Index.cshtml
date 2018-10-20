@@ -11,7 +11,9 @@
     List<TAT001.Entities.DOCUMENTOF> lstD = ViewBag.DOCF as List<TAT001.Entities.DOCUMENTOF>;
     //ViewBag.BORRADOR = "Mensaje de creación";
 }
-
+<script>
+    var root = "@Url.Content("~")";
+</script>
 
 @*//jemo inicio 4/07/2018*@
 @if (ViewBag.imgnoticia != null)
@@ -802,8 +804,7 @@
     }
     function format(d, row, tr) {
         $.ajax({
-            //url: "../../WF002/Listas/Relacionados",
-            url: "../../Listas/Relacionados",
+            url: root+"Listas/Relacionados",
             type: "GET",
             async: false,
             timeout: 30000,

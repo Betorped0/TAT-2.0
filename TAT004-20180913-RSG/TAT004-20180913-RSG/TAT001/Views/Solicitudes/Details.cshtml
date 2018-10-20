@@ -2327,7 +2327,7 @@
                                 @Html.HiddenFor(model => model.F.ESTATUS, new { @id = "wf_estatus" })
                                 @*@Html.LabelFor(model => model.F.ESTATUS, new { @id = "lbl_userid" })*@
                                 <div class="input-field col s10 offset-s1">
-                                    @Html.TextAreaFor(model => model.F.COMENTARIO, new { @class = "materialize-textarea", @id = "txt_comentario" })
+                                    @Html.TextAreaFor(model => model.F.COMENTARIO, new { @class = "materialize-textarea", @id = "txt_comentario", @maxlength = 255 })
                                     @Html.LabelFor(model => model.F.COMENTARIO, new { @id = "lbl_userid" })
                                 </div>
                             </div>

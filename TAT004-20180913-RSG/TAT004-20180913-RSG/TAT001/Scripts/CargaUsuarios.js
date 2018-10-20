@@ -78,10 +78,12 @@ function subeExcel() {
             onclick = checkoff();
         } else {
             document.getElementById("files").value = "";
-            M.toast({ html: 'Tipo de archivo incorrecto: ' + filename });
+            mostrarAlerta("info", "E", 'Tipo de archivo incorrecto: ' + filename)
+            //M.toast({ html: 'Tipo de archivo incorrecto: ' + filename });
         }
     } else {
-        M.toast({ html: 'Seleccione un archivo' });
+        mostrarAlerta("info", "A", 'Seleccione un archivo')
+        //M.toast({ html: 'Seleccione un archivo' });
         var table = $('#table').DataTable();
         table.clear().draw();
     }

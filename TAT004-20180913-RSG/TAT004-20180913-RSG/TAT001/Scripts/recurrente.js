@@ -1,10 +1,9 @@
 ﻿function llenaCat(vkorg, vtweg, spart, kunnr) {
-    //document.getElementById("loader").style.display = "initial";
     var soc = document.getElementById("sociedad_id").value;
     $("#select_categoria").find('option').remove().end();
     $.ajax({
         type: "POST",
-        url: '../Listas/categoriasCliente',
+        url: root+'Listas/categoriasCliente',
         dataType: "json",
         data: { vkorg: vkorg, spart: spart, kunnr: kunnr, soc_id: soc },
         success: function (data) {
@@ -19,11 +18,9 @@
             }
             var elem = document.getElementById("select_categoria");
             var instance = M.FormSelect.init(elem, []);
-            document.getElementById("loader").style.display = "none";
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             M.toast({ html: httpStatusMessage });
-            document.getElementById("loader").style.display = "none";
         },
         async: false
     });
@@ -47,7 +44,6 @@ $(document).ready(function () {
             "thousands": ","
         },
         "paging": false,
-        //        "ordering": false,
         "info": false,
         "searching": false,
         "columns": [
@@ -106,9 +102,6 @@ $(document).ready(function () {
         $("#txt_ligada").val("");
     }
     //LEJ 31.07.2018---------------------
-    //$("#tsol_id").change(function (e) {
-        //if ($("#check_recurrente").prop('checked')) { $('#check_recurrente').prop('checked', false); }
-    //});
     var tableR = $('#table_rangos').DataTable({
         "language": {
             "zerorecords": "no hay registros",
@@ -122,10 +115,6 @@ $(document).ready(function () {
         "info": false,
         "searching": false,
         "columns": [
-            //{
-            //    "name": 'SEL',
-            //    "className": 'select_row',
-            //},
             {
                 "name": 'POS',
                 "className": 'POS',
@@ -138,10 +127,6 @@ $(document).ready(function () {
                 "name": 'OBJETIVO',
                 "className": 'OBJETIVO'
             },
-            //{
-            //    "name": 'LIMITES',
-            //    "className": 'LIMITES'
-            //},
             {
                 "name": 'PORCENTAJE',
                 "className": 'PORCENTAJE'
@@ -173,14 +158,7 @@ $(document).ready(function () {
             showRangos(tableR, $(this));
         }
     });
-
-    //$('#table_rangos tbody').on('click', 'td.select_row', function () {
-    //    var tr = $(this).closest('tr');
-    //    var lin = tr.find('.LIN').text();
-    //    if (lin != "1") {
-    //        $(tr).toggleClass('selected');
-    //    }
-    //});
+    
     cambiaCheckRec();
 
     $('body').on('focusout', '#objPORC', function () {
@@ -219,7 +197,7 @@ function showPrTable() {
 //LEJ 31.07.2018---------------------
 function fillTable(t, no, fecha, mt, porc) {
     t.row.add([
-        no, $("#tsol_id").val(), fecha,
+        no, $("#TSOL_ID").val(), fecha,
         // mt,
         "<input class=\"numberd input_dc\" style=\"font-size:12px;height:2rem;\" type=\"text\" id=\"\" name=\"\" value=\"" + mt + "\" onchange='updateObjQ()'>",//LEJ 03.08.2018
         porc
@@ -237,7 +215,6 @@ function cambiaRec() {
     var table = $('#table_rec').DataTable();
     table.clear().draw(true);
     var tipo = document.getElementById("select_neg").value + document.getElementById("select_dis").value;
-    //var montoo = document.getElementById("monto_dis").value;//RSG 09.07.2018
     var montoo = toNum(document.getElementById("monto_dis").value);
     var tipoR = document.getElementById("txt_trec").value;//RSG 09.07.2018
     var porc = document.getElementById("bmonto_apoyo").value;//RSG 09.07.2018
@@ -396,20 +373,16 @@ function cambiaCheckRec() {
 }
 
 function addRowRec(t, num, date, monto, tipo, porc, periodo, meses) {
-    var el = document.getElementById("tsol_id");
-    var tsoll = el.defaultValue;
+    var tsoll = $("#TSOL_ID").val();
     if (tipo !== "2") {
         if (!ligada()) {
             addRowRecl(
                 t,
-                //num, //POS
                 num + "/" + meses, //POS
-                //document.getElementById("tsol_id").value,
                 tsoll,
                 date,
                 toShow(monto),
                 toShowPorc(0.00)
-                //"<input class=\"PORCENTAJE input_rec numberd input_dc \" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">"
                 , periodo
             );
         } else {
@@ -418,7 +391,6 @@ function addRowRec(t, num, date, monto, tipo, porc, periodo, meses) {
                 num + "/" + meses, //POS
                 tsoll,
                 date,
-                //"<input class=\"MONTO input_rec numberd input_dc monto \" style=\"font-size:12px;height:2rem;\" type=\"text\" id=\"\" name=\"\" value=\"" + toShow(monto) + "\" onchange='updateObjQ()'>",
                 toShow(monto),
                 toShowPorc(porc)
                 , periodo
@@ -430,11 +402,9 @@ function addRowRec(t, num, date, monto, tipo, porc, periodo, meses) {
                 t,
                 //num, //POS
                 num + "/" + meses, //POS
-                //document.getElementById("tsol_id").value,
                 tsoll,
                 date,
                 "<input class=\"MONTO input_rec numberd input_dc monto \" style=\"font-size:12px;height:2rem;\" type=\"text\" id=\"\" name=\"\" value=\"" + toShow(monto) + "\" onchange='updateObjQ()'>",
-                //"<input class=\"PORCENTAJE input_rec numberd input_dc\" style=\"font-size:12px;height:2rem;\" type=\"text\" id=\"\" name=\"\" value=\"\">"//RSG 09.07.2018
                 toShowPorc(porc)
                 , periodo
             );
@@ -443,15 +413,10 @@ function addRowRec(t, num, date, monto, tipo, porc, periodo, meses) {
                 t,
                 //num, //POS
                 num + "/" + meses, //POS
-                //document.getElementById("tsol_id").value,
                 tsoll,
                 date,
-                //monto,//RSG 09.07.2018
                 "<input class=\"MONTO input_rec numberd input_dc monto \" style=\"font-size:12px;height:2rem;\" type=\"text\" id=\"\" name=\"\" value=\"" + toShow(monto) + "\" onchange='updateObjQ()'>",
-                //0.00
-                //"<input class=\"MONTO input_rec numberd input_dc monto \" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + monto + "\">",
-                //"<input class=\"PORCENTAJE input_rec numberd input_dc\" style=\"font-size:12px;height:2rem;\" type=\"text\" id=\"\" name=\"\" value=\"\">"//RSG 09.07.2018
-                toShowPorc(porc)
+               toShowPorc(porc)
                 , periodo
             );
         }
@@ -487,7 +452,7 @@ function enviaRec(borrador) { //B20180625 MGC 2018.07.03
         jsonObjDocs = [];
         var i = 1;
         var vol = "";
-        var sol = $("#tsol_id").val();
+        var sol = $("#TSOL_ID").val();
         var mostrar = isFactura(sol);
         //if (sol == "NC" | sol == "NCI" | sol == "OP") {
         if (mostrar) {
@@ -591,7 +556,7 @@ function copiarTableVistaRec() {
         var rowsn = 0;
 
         var tsol = "";
-        var sol = $("#tsol_id").val();
+        var sol = $("#TSOL_ID").val();
 
         var i = 1;
         $('#table_rech > tbody  > tr').each(function () {
@@ -649,10 +614,7 @@ function copiarTableVistaRec() {
         //ocultarColumnasTablaSoporteDatos();
         //$('.input_sop_f').trigger('focusout');
     }
-
-    //var sol = $("#tsol_id").val();
-
-    //selectTsol(sol);
+    
 }
 
 //function primerDiaT(t, num, date, monto, tipo) {

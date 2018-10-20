@@ -959,7 +959,6 @@
     <Content Include="Content\formatos.css" />
     <Content Include="Content\g-materialize.css" />
     <Content Include="Content\material.min.css" />
-    <Content Include="Content\materialize.clockpicker.css" />
     <Content Include="Content\materialize.css" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\sideMenu.css" />
@@ -989,6 +988,7 @@
     <Content Include="fonts\roboto\Roboto-Thin.woff" />
     <Content Include="fonts\roboto\Roboto-Thin.woff2" />
     <Content Include="images\6792532.jpg" />
+    <Content Include="images\auto_loading.gif" />
     <Content Include="images\expandl.png" />
     <Content Include="images\expandm.png" />
     <Content Include="images\flags\1x1\ad.png" />
@@ -1346,7 +1346,6 @@
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\Masiva\create.js" />
-    <Content Include="Scripts\materialize.clockpicker.js" />
     <Content Include="Scripts\moment-with-locales.js" />
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.js" />
@@ -1925,6 +1924,8 @@
     <Content Include="Views\Soporte\Details.cshtml" />
     <Content Include="Views\Soporte\Edit.cshtml" />
     <Content Include="Views\Soporte\Index.cshtml" />
+    <Content Include="Views\Usuarios\AddBackup.cshtml" />
+    <Content Include="Views\Usuarios\EditBackup.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->
