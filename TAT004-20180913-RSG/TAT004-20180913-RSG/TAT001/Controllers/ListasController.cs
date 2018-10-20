@@ -140,10 +140,8 @@ namespace TAT001.Controllers
                 var c = (from N in db.CLIENTEs.Where(x => x.LAND == pais).ToList()
                          join D in det
                          on new { N.VKORG, N.VTWEG, N.SPART, N.KUNNR } equals new { D.VKORG, D.VTWEG, D.SPART, D.KUNNR }
-                         join C in db.CLIENTEFs.ToList()
-                         on new { N.VKORG, N.VTWEG, N.SPART, N.KUNNR } equals new { C.VKORG, C.VTWEG, C.SPART, C.KUNNR }
                          where N.KUNNR.Contains(Prefix)
-                            & C.USUARIO1_ID != null
+                            & db.CLIENTEFs.Any(x=>x.KUNNR==N.KUNNR && x.VKORG==N.VKORG && x.VTWEG==N.VTWEG&& x.SPART==N.SPART && x.USUARIO1_ID!=null && x.ACTIVO)
                          select new { N.KUNNR, N.NAME1 }).ToList();
 
                 if (c.Count == 0)
@@ -151,10 +149,8 @@ namespace TAT001.Controllers
                     var c2 = (from N in db.CLIENTEs.Where(x => x.LAND == pais).ToList()
                               join D in det
                               on new { N.VKORG, N.VTWEG, N.SPART, N.KUNNR } equals new { D.VKORG, D.VTWEG, D.SPART, D.KUNNR }
-                              join C in db.CLIENTEFs.ToList()
-                              on new { N.VKORG, N.VTWEG, N.SPART, N.KUNNR } equals new { C.VKORG, C.VTWEG, C.SPART, C.KUNNR }
                               where CultureInfo.CurrentCulture.CompareInfo.IndexOf(N.NAME1, Prefix, CompareOptions.IgnoreCase) >= 0
-                                & C.USUARIO1_ID != null
+                                 & db.CLIENTEFs.Any(x => x.KUNNR == N.KUNNR && x.VKORG == N.VKORG && x.VTWEG == N.VTWEG && x.SPART == N.SPART && x.USUARIO1_ID != null && x.ACTIVO)
                               select new { N.KUNNR, N.NAME1 }).ToList();
                     c.AddRange(c2);
                 }
