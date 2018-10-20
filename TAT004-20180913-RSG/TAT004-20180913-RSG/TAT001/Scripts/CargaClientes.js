@@ -458,9 +458,7 @@ function Carga() {
                     dataType: "json",
                     success: function () {
                         console.log(datos);
-                        $('#table > tbody > tr').each(function () {
-                            $(this).children().children().val("");
-                        });
+                        location.reload();
                         mostrarAlerta("info", "A", "Se agregaron los nuevos registros");
                     },
                     error: function (request, status, error) {
