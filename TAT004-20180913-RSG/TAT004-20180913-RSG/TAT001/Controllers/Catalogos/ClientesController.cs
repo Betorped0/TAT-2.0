@@ -653,7 +653,7 @@ namespace TAT001.Controllers.Catalogos
                     cl.VTWEG = da.VTWEG;
                     cl.SPART = da.SPART;
                     cl.KUNNR = da.KUNNR;
-                    CLIENTEF s = db.CLIENTEFs.Where(x => x.KUNNR.Equals(cl.KUNNR)).FirstOrDefault();
+                    CLIENTEF s = db.CLIENTEFs.Where(x => x.KUNNR.Equals(cl.KUNNR) & x.ACTIVO == true).FirstOrDefault();
                     CLIENTE cl1 = db.CLIENTEs.Where(x => x.KUNNR.Equals(cl.KUNNR)).FirstOrDefault();
                     if (s == null)
                     {
@@ -1017,34 +1017,34 @@ namespace TAT001.Controllers.Catalogos
                     if (com != null)
                         cl.BUKRS = com;
                     cl.KUNNR = cli;
-                    com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) select x.NAME1).FirstOrDefault();
+                    com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.NAME1).FirstOrDefault();
                     if (com != null)
                         cl.CLIENTE_N = com;
-                    com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) select x.USUARIO0_ID).FirstOrDefault();
+                    com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO0_ID).FirstOrDefault();
                     if (com != null)
                         cl.ID_US0 = com;
-                    com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) select x.USUARIO1_ID).FirstOrDefault();
+                    com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO1_ID).FirstOrDefault();
                     if (com != null)
                         cl.ID_US1 = com;
-                    com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) select x.USUARIO2_ID).FirstOrDefault();
+                    com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO2_ID).FirstOrDefault();
                     if (com != null)
                         cl.ID_US2 = com;
-                    com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) select x.USUARIO3_ID).FirstOrDefault();
+                    com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO3_ID).FirstOrDefault();
                     if (com != null)
                         cl.ID_US3 = com;
-                    com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) select x.USUARIO4_ID).FirstOrDefault();
+                    com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO4_ID).FirstOrDefault();
                     if (com != null)
                         cl.ID_US4 = com;
-                    com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) select x.USUARIO5_ID).FirstOrDefault();
+                    com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO5_ID).FirstOrDefault();
                     if (com != null)
                         cl.ID_US5 = com;
-                    com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) select x.USUARIO6_ID).FirstOrDefault();
+                    com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO6_ID).FirstOrDefault();
                     if (com != null)
                         cl.ID_US6 = com;
-                    com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) select x.USUARIO7_ID).FirstOrDefault();
+                    com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO7_ID).FirstOrDefault();
                     if (com != null)
                         cl.ID_US7 = com;
-                    com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) select x.PROVEEDOR_ID).FirstOrDefault();
+                    com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.PROVEEDOR_ID).FirstOrDefault();
                     if (com != null)
                         cl.ID_PROVEEDOR = com;
                     com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) select x.BANNER).FirstOrDefault();
@@ -1115,28 +1115,28 @@ namespace TAT001.Controllers.Catalogos
                         com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) select x.NAME1).FirstOrDefault();
                         if (com != null)
                             cl.CLIENTE_N = com;
-                        com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) select x.USUARIO0_ID).FirstOrDefault();
+                        com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO0_ID).FirstOrDefault();
                         if (com != null)
                             cl.ID_US0 = com;
-                        com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) select x.USUARIO1_ID).FirstOrDefault();
+                        com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO1_ID).FirstOrDefault();
                         if (com != null)
                             cl.ID_US1 = com;
-                        com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) select x.USUARIO2_ID).FirstOrDefault();
+                        com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO2_ID).FirstOrDefault();
                         if (com != null)
                             cl.ID_US2 = com;
-                        com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) select x.USUARIO3_ID).FirstOrDefault();
+                        com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO3_ID).FirstOrDefault();
                         if (com != null)
                             cl.ID_US3 = com;
-                        com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) select x.USUARIO4_ID).FirstOrDefault();
+                        com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO4_ID).FirstOrDefault();
                         if (com != null)
                             cl.ID_US4 = com;
-                        com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) select x.USUARIO5_ID).FirstOrDefault();
+                        com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO5_ID).FirstOrDefault();
                         if (com != null)
                             cl.ID_US5 = com;
-                        com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) select x.USUARIO6_ID).FirstOrDefault();
+                        com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO6_ID).FirstOrDefault();
                         if (com != null)
                             cl.ID_US6 = com;
-                        com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) select x.USUARIO7_ID).FirstOrDefault();
+                        com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO7_ID).FirstOrDefault();
                         if (com != null)
                             cl.ID_US7 = com;
                         com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) select x.PROVEEDOR_ID).FirstOrDefault();

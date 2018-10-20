@@ -114,10 +114,12 @@ $("#files").on('change', function() {
             onclick = checkoff();
         } else {
             document.getElementById("files").value = "";
-            M.toast({ html: 'Tipo de archivo incorrecto: ' + filename });
+            mostrarAlerta("info", "E", 'Tipo de archivo incorrecto: ' + filename );
+            //M.toast({ html: 'Tipo de archivo incorrecto: ' + filename });
         }
     } else {
-        M.toast({ html: 'Seleccione un archivo' });
+        mostrarAlerta("info", "E", 'Seleccione un archivo');
+        //M.toast({ html: 'Seleccione un archivo' });
         var table = $('#table').DataTable();
         table.clear().draw();
     }
@@ -386,7 +388,7 @@ function addRow(t, POS, br, cc, p, c, nc, n0, n1, n2, n3, n4, n5, n6, n7, v, b, 
         "<label><input class='input_bor' type='checkbox' id='' name='bor' onclick='checkoff();' value='" + br + "'><span></span></label>",
         "<input class='input_coc' style='font-size:12px;' type='text' id='' name='coc' value='" + cc + "' onchange='Comprobar()'><span  style='display: none;'>" + cc + "</span>",
         "<input class='input_pai' style='font-size:12px;' type='text' id='' name='pai' value='" + p + "' onchange='Comprobar()'><span  style='display: none;'>" + p + "</span>",
-        "<input class='input_cli' style='font-size:12px;' type='text' id='' name='cli' value='" + c + "' onchange='Comprobar()'><span  style='display: none;'>" + c + "</span>",
+        "<input class='input_cli' disabled='true' style='font-size:12px;' type='text' id='' name='cli' value='" + c + "' onchange='Comprobar()'><span  style='display: none;'>" + c + "</span>",
         "<input class='input_noc' style='font-size:12px;' type='text' id='' name='noc' value='" + nc + "' onchange='Comprobar()'><span  style='display: none;'>" + nc + "</span>",
         "<input class='input_ni0' style='font-size:12px;' type='text' id='' name='ni0' value='" + n0 + "' onchange='Comprobar()'><span  style='display: none;'>" + n0 + "</span>",
         "<input class='input_ni1' style='font-size:12px;' type='text' id='' name='ni1' value='" + n1 + "' onchange='Comprobar()'><span  style='display: none;'>" + n1 + "</span>",
@@ -397,7 +399,7 @@ function addRow(t, POS, br, cc, p, c, nc, n0, n1, n2, n3, n4, n5, n6, n7, v, b, 
         "<input class='input_ni6' style='font-size:12px;' type='text' id='' name='ni6' value='" + n6 + "' onchange='Comprobar()'><span  style='display: none;'>" + n6 + "</span>",
         "<input class='input_ni7' style='font-size:12px;' type='text' id='' name='ni7' value='" + n7 + "' onchange='Comprobar()'><span  style='display: none;'>" + n7 + "</span>",
         "<input class='input_ven' style='font-size:12px;' type='text' id='' name='ven' value='" + v + "' onchange='Comprobar()'><span  style='display: none;'>" + v + "</span>",
-        "<input class='input_ban' style='font-size:12px;' type='text' id='' name='ban' value='" + b + "' onchange='Comprobar()'><span  style='display: none;'>" + b + "</span>",
+        "<input class='input_ban' disabled='true' style='font-size:12px;' type='text' id='' name='ban' value='" + b + "' onchange='Comprobar()'><span  style='display: none;'>" + b + "</span>",
         "<input class='input_baa' style='font-size:12px;' type='text' id='' name='baa' value='" + ba + "' onchange='Comprobar()'><span  style='display: none;'>" + ba + "</span>",
         "<input class='input_can' style='font-size:12px;' type='text' id='' name='can' value='" + ca + "' onchange='Comprobar()'><span  style='display: none;'>" + ca+ "</span>",
         "<input class='input_exp' style='font-size:12px;' type='text' id='' name='exp' value='" + ex + "' onchange='Comprobar()'><span  style='display: none;'>" + ex + "</span>",
@@ -455,28 +457,37 @@ function Carga() {
                     dataType: "json",
                     success: function () {
                         console.log(datos);
+                        $('#table > tbody > tr').each(function () {
+                            $(this).children().children().val("");
+                        });
                     },
                     error: function (request, status, error) {
                         console.log(request.responseText);
                     }
                 });
-                M.toast({ html: 'Se agregaron los nuevos registros' });
+                mostrarAlerta("info", "A", "Se agregaron los nuevos registros");
+                //M.toast({ html: 'Se agregaron los nuevos registros' });
                 //window.location.replace("/Clientes/Index");
+                
             }
             else
-                M.toast({ html: 'Los niveles 1 y 6 no pueden quedar vacios' });
+                mostrarAlerta("info", "E", "Los niveles 1 y 6 no pueden quedar vacios");
+                //M.toast({ html: 'Los niveles 1 y 6 no pueden quedar vacios' });
         }
         else
-            M.toast({ html: 'Hay errores por corregir' });
+            mostrarAlerta("info", "E", "Hay errores por corregir");
+            //M.toast({ html: 'Hay errores por corregir' });
     }
     else
-        M.toast({ html: 'Seleccione un archivo' });
+        mostrarAlerta("info", "E", "Seleccione un archivo");
+        //M.toast({ html: 'Seleccione un archivo' });
 }
 
 function Comprobar() {
     var datos = $('#tabla').serializeArray();
     creart('Comprobar', datos);
-    M.toast({ html: 'Registros Actualizados' });
+    //M.toast({ html: 'Registros Actualizados' });
+    mostrarAlerta("info", "A", "Registro Actualizado");
 }
 
 function Borrar() {
@@ -731,6 +742,39 @@ function check() {
 
 function checkoff() {
     $("#borrar").prop('checked', false);
+}
+
+function mostrarAlerta(warning_id, tipo, mensaje) {
+    var dura = 1000000,
+        color = 'yellow',
+        icon = 'info',
+        classe = 'toast';
+    if (tipo == "E") {
+        color = 'red';
+        icon = 'error';
+    }
+    dismiss(classe)
+    M.toast({
+        classes: classe,
+        displayLength: dura,
+        html: '<span style="padding-right:15px;"><i class="material-icons ' + color + '-text">' + icon + '</i></span>  ' + mensaje
+            + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'toast\')">Aceptar</button>'
+    });
+}
+
+function dismiss(classe) {
+    var toastElement = document.querySelectorAll('.' + classe);
+    for (var i = 0; i < toastElement.length; i++) {
+        var toastInstance = M.Toast.getInstance(toastElement[i]);
+        toastInstance.dismiss();
+    }
+}
+
+function habilitar() {
+    $(".input_cli").prop('disabled', false);
+    $(".input_noc").prop('disabled', false);
+    $(".input_ban").prop('disabled', false);
+    habi = true;
 }
 
 $('body').on('keydown.autocomplete', '.input_ven', function () {
