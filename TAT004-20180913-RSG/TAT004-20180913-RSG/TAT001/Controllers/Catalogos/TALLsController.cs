@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using TAT001.Entities;
 
+
 namespace TAT001.Controllers.Catalogos
 {
     [Authorize]
@@ -120,7 +121,6 @@ namespace TAT001.Controllers.Catalogos
                 Session["spras"] = user.SPRAS_ID;
                 ViewBag.lan = user.SPRAS_ID;
             }
-
             ViewBag.GALL_ID = new SelectList(db.GALLs, "ID", "DESCRIPCION");
             return View();
         }
@@ -132,9 +132,30 @@ namespace TAT001.Controllers.Catalogos
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,DESCRIPCION,FECHAI,FECHAF,GALL_ID,ACTIVO")] TALL tALL)
         {
+            //if (ModelState.IsValid)
+            //{
+            //    db.TALLs.Add(tALL);
+            //    db.SaveChanges();
+            //    return RedirectToAction("Index");
+            //}
             if (ModelState.IsValid)
             {
+                //TSOPORTE TS = new TSOPORTE();
+                tALL.ACTIVO = true;
+                tALL.FECHAI = DateTime.Today;
+                tALL.FECHAF = DateTime.MaxValue;
                 db.TALLs.Add(tALL);
+                db.SaveChanges();
+                List<SPRA> ss = db.SPRAS.ToList();
+
+                foreach (SPRA s in ss)
+                {
+                    TALLT pt = new TALLT();
+                    pt.TALL_ID = tALL.ID;
+                    pt.SPRAS_ID = s.ID;
+                    pt.TXT50 = tALL.DESCRIPCION;
+                    db.TALLTs.Add(pt);
+                }
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

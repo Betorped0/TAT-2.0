@@ -65,6 +65,19 @@
                         </div>
                     }
                 </div>
+                <div class="input-field col l6 m6" style="margin-bottom:0;">
+
+                    @Html.LabelFor(model => model.ACTIVO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblObliga" })
+
+
+                    @if ((bool)Model.ACTIVO == true)
+                    {
+                        <i class='material-icons green-text'>check</i>}
+                    else
+                    {
+                        <i class='material-icons red-text'>clear</i>}
+
+                </div>
             </div>
         </div>
         <div class="col s6 ">

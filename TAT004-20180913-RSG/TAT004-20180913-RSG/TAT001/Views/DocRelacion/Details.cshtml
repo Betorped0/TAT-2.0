@@ -1,0 +1,161 @@
+﻿@model TAT001.Entities.FACTURASCONF
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.pagina_r = 1212;
+    ViewBag.carpeta_r = 500;
+}
+<div class="col s12 right-align">
+    <a href="@Url.Action("Index", "DocRelacion")" class="btn-small">Lista</a>
+</div>
+<div class="row">
+    <div class="card-panel">
+        <div class="row">
+            <div class="row">
+                <div class="input-field col l6 m6" style="margin-bottom:0;">
+                    @Html.EditorFor(model => model.SOCIEDAD_ID, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                    @Html.LabelFor(model => model.SOCIEDAD_ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblId" })
+                </div>
+                <div class="input-field col l6 m6" style="margin-bottom:0;">
+                    @Html.EditorFor(model => model.PAIS_ID, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                    @Html.LabelFor(model => model.PAIS_ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblNombre" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col l6 m6" style="margin-bottom:0;">
+                    @Html.EditorFor(model => model.TSOL, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                    @Html.LabelFor(model => model.TSOL, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblSociedadId" })
+                </div>
+
+                <div class="input-field col l6 m6" style="margin-bottom:0;">
+                    @*@Html.EditorFor(model => model.FACTURA, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })*@
+                    @Html.LabelFor(model => model.FACTURA, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblPais" })
+                    @if ((bool)Model.FACTURA == true)
+                    {
+                        <i class='material-icons green-text'>check</i>}
+                    else
+                    {
+                        <i class='material-icons red-text'>clear</i>}
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col l6 m6" style="margin-bottom:0;">
+                    @*@Html.EditorFor(model => model.FECHA, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })*@
+                    @Html.LabelFor(model => model.FECHA, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblSociedadId" })
+                    @if ((bool)Model.FECHA == true)
+                    {
+                        <i class='material-icons green-text'>check</i>}
+                    else
+                    {
+                        <i class='material-icons red-text'>clear</i>}
+                </div>
+                <div class="input-field col l6 m6" style="margin-bottom:0;">
+                    @*@Html.EditorFor(model => model.PROVEEDOR, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })*@
+                    @Html.LabelFor(model => model.PROVEEDOR, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblPais" })
+                    @if ((bool)Model.PROVEEDOR == true)
+                    {
+                        <i class='material-icons green-text'>check</i>}
+                    else
+                    {
+                        <i class='material-icons red-text'>clear</i>}
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col l6 m6" style="margin-bottom:0;">
+                    @*@Html.EditorFor(model => model.CONTROL, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })*@
+                    @Html.LabelFor(model => model.CONTROL, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblSociedadId" })
+                    @if ((bool)Model.CONTROL == true)
+                    {
+                        <i class='material-icons green-text'>check</i>}
+                    else
+                    {
+                        <i class='material-icons red-text'>clear</i>}
+                </div>
+                <div class="input-field col l6 m6" style="margin-bottom:0;">
+                    @*@Html.EditorFor(model => model.AUTORIZACION, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })*@
+                    @Html.LabelFor(model => model.AUTORIZACION, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblPais" })
+                    @if ((bool)Model.AUTORIZACION == true)
+                    {
+                        <i class='material-icons green-text'>check</i>}
+                    else
+                    {
+                        <i class='material-icons red-text'>clear</i>}
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col l6 m6" style="margin-bottom:0;">
+                    @*@Html.EditorFor(model => model.VENCIMIENTO, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })*@
+                    @Html.LabelFor(model => model.VENCIMIENTO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblSociedadId" })
+                    @if ((bool)Model.VENCIMIENTO == true)
+                    {
+                        <i class='material-icons green-text'>check</i>}
+                    else
+                    {
+                        <i class='material-icons red-text'>clear</i>}
+                </div>
+                <div class="input-field col l6 m6" style="margin-bottom:0;">
+                    @*@Html.EditorFor(model => model.FACTURAK, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })*@
+                    @Html.LabelFor(model => model.FACTURAK, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblPais" })
+                    @if ((bool)Model.FACTURAK == true)
+                    {
+                        <i class='material-icons green-text'>check</i>}
+                    else
+                    {
+                        <i class='material-icons red-text'>clear</i>}
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col l6 m6" style="margin-bottom:0;">
+                    @*@Html.EditorFor(model => model.EJERCICIOK, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })*@
+                    @Html.LabelFor(model => model.EJERCICIOK, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblSociedadId" })
+                    @if ((bool)Model.EJERCICIOK == true)
+                    {
+                        <i class='material-icons green-text'>check</i>}
+                    else
+                    {
+                        <i class='material-icons red-text'>clear</i>}
+                </div>
+                <div class="input-field col l6 m6" style="margin-bottom:0;">
+                    @*@Html.EditorFor(model => model.BILL_DOC, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })*@
+                    @Html.LabelFor(model => model.BILL_DOC, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblPais" })
+                    @if ((bool)Model.BILL_DOC == true)
+                    {
+                        <i class='material-icons green-text'>check</i>}
+                    else
+                    {
+                        <i class='material-icons red-text'>clear</i>}
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col l6 m6" style="margin-bottom:0;">
+                    @*@Html.EditorFor(model => model.BELNR, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })*@
+                    @Html.LabelFor(model => model.BELNR, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblSociedadId" })
+                    @if ((bool)Model.BELNR == true)
+                    {
+                        <i class='material-icons green-text'>check</i>}
+                    else
+                    {
+                        <i class='material-icons red-text'>clear</i>}
+                </div>
+                <div class="input-field col l6 m6" style="margin-bottom:0;">
+
+                    @Html.LabelFor(model => model.ACTIVO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblObliga" })
+
+
+                    @if ((bool)Model.ACTIVO == true)
+                    {
+                        <i class='material-icons green-text'>check</i>}
+                    else
+                    {
+                        <i class='material-icons red-text'>clear</i>}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.SOCIEDAD_ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
