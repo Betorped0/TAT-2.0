@@ -5126,7 +5126,6 @@ function evaluarDisTab() {
             }
             //Validar el porcentaje apoyo monto
         } else if (select_neg == "P") {
-            //if (select_dis == "C") {//RSG 09.07.2018
             if (select_dis == "C" & ligada() == false) {
                 var monedadis_id = $('#monedadis_id').val();
                 var monto_dis = $('#monto_dis').val();
@@ -5455,15 +5454,17 @@ function selectMonto(val, message) {
     var ta = $('#table_dis').DataTable();
     ta.clear().draw();
 
-    //Reset los valores
-    $('#monto_dis').val("0");
-    $('#bmonto_apoyo').val("0");
+   
 
     //Obtener la negociación
     var select_neg = $('#select_neg').val();
 
     //Desactivar el panel de monto
     if (val == "" || select_neg == "") {
+        //Reset los valores
+        $('#monto_dis').val("0");
+        $('#bmonto_apoyo').val("0");
+
         $('#div_montobase').css("display", "none");
         $('#div_apoyobase').css("display", "none");
         $('#cargar_excel').css("display", "none");
@@ -5475,13 +5476,14 @@ function selectMonto(val, message) {
         ta.column(1).visible(false);
     } else {
         //Activar el panel de monto dependiendo del tipo de negociación
-        //$('#div_montobase').css("display", "inherit");
         $('#div_btns_row').css("display", "inherit");
 
         if (select_neg == "M") {//Monto
+            $('#bmonto_apoyo').val("0");
             $('#div_apoyobase').css("display", "none");
             $('#div_montobase').css("display", "inherit");
         } else if (select_neg == "P") {//Porcentaje
+            $('#monto_dis').val("0");
             if (message == "X") {
                 if (disdistribucion != true) { //B20180625 MGC 2018.06.29 Evitar Mensaje al cargar página
                     M.toast({ html: '¿Desea realizar esta solicitud por porcentaje?' });//Add
@@ -5500,6 +5502,10 @@ function selectMonto(val, message) {
             }
             ////RSG 09.07.2018------------------------------------
         } else {
+            //Reset los valores
+            $('#monto_dis').val("0");
+            $('#bmonto_apoyo').val("0");
+
             $('#div_montobase').css("display", "none");
             $('#div_apoyobase').css("display", "none");
         }
