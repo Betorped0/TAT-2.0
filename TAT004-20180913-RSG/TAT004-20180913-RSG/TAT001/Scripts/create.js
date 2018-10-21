@@ -308,7 +308,9 @@ $(document).ready(function () {
     });
 
     $('#addRowB').on('click', function () {
-
+        if ($("#catmat").val()==""){
+            return;
+        }
         var relacionada = "";
         if ($('#table_dis > tbody > tr').length == 1 && $('table_dis').find(' tbody tr:eq(0)').attr('class') != "row") {
             catsArr = new Array();
@@ -1136,13 +1138,7 @@ $(document).ready(function () {
         $("label[for='montos_doc_ml2']").addClass("active");
     }
 
-
-
-
-    $('#btn_getmat').on("click", function (e) {
-
-        formatCat();
-    });
+    
 
     /**
        * Delay for a number of milliseconds
@@ -3669,28 +3665,6 @@ function useReturnData(data) {
     detail = data;
 };
 
-function formatCat() {
-
-
-    $('#catmat').val("");
-
-    $.ajax({
-        type: "POST",
-        url: 'grupoMateriales',
-        data: {},
-        success: function (data) {
-            if (data !== null || data !== "") {
-                $('#catmat').val(JSON.stringify(data));
-            }
-
-        },
-        error: function (xhr, httpStatusMessage, customErrorMessage) {
-            M.toast({ html: msg });
-        },
-        async: false
-    });
-
-}
 
 function evaluarExt(filename) {
 
@@ -5599,9 +5573,12 @@ function selectCliente(valu) {
             data: { "kunnr": valu,esBorrador:esBorrador },
             success: function (data) {
 
+                document.getElementById("loader").style.display = "none";//RSG 03.07.2018
                 if (data !== null || data !== "") {
-                    $("label[for='USUARIO_MANAGER']").addClass("active");
-                    $('#USUARIO_MANAGER').val(data.MANAGER);
+                    if (data.MANAGER != null) {
+                        $("label[for='USUARIO_MANAGER']").addClass("active");
+                        $('#USUARIO_MANAGER').val(data.MANAGER);
+                    }
                     $('#cli_name').val(data.NAME1);
                     $("label[for='cli_name']").addClass("active");
                     $('#vkorg').val(data.VKORG).focus();
@@ -5629,7 +5606,6 @@ function selectCliente(valu) {
                         llenaCat(data.VKORG, data.VTWEG, data.SPART, valu);
                         getCatMateriales(data.VKORG, data.VTWEG, data.SPART, valu);
                     } 
-                    document.getElementById("loader").style.display = "none";//RSG 03.07.2018
                     
                     //RSG 28.05.2018------------------------------------------
                 } else {

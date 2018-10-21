@@ -72,7 +72,7 @@ namespace TAT001.Common
                 .Select(x => new SelectListItem
                 {
                     Value = x.ID,
-                    Text = (x.NOMBRE + " " + x.APELLIDO_P + " " + (x.APELLIDO_M == null ? "" : x.APELLIDO_M))
+                    Text = (x.ID +" - "+x.NOMBRE + " " + x.APELLIDO_P + " " + (x.APELLIDO_M == null ? "" : x.APELLIDO_M))
                 }).ToList();
         }
         public static List<SelectListItem> ObtenerCmbTabs(TAT001Entities db, string spras_id,bool? activo, string id)

@@ -662,7 +662,7 @@
         }
         else
         {
-            <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
+            <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC,pais=item.PAIS_ID })'" style="cursor:pointer">
                 @item.NUM_DOC
             </td>
         }
@@ -705,8 +705,6 @@
         <iframe id="txtArea1" style="display:none"></iframe>
         <script>
     $(document).ready(function () {
-        var root = "@Url.Content("~")";
-            if (root == '/') root = '../';
         var table = $('#table').DataTable({
             //"ajax": 'ViewBag.documentos.Data[0]',
             //paging: false,
@@ -726,7 +724,7 @@
             order: [[4, "desc"], [6, "desc"], [1, "desc"]],
             language: {
                 //"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
-                "url": root + "/Scripts/lang/@Session["spras"].ToString()"+".json"
+                "url": root + "Scripts/lang/@Session["spras"].ToString()"+".json"
             },
             columnDefs: [
                 //{
@@ -817,7 +815,7 @@
                 var ret = "<table class='table mdl-data-table striped'>";
                 for (var i = 0; i < uu.length; i++) {
                     var sum = 0;
-                    ret += "<tr onclick='link(" + uu[i].value.NUM_DOC+")' style='cursor:pointer'><td>" + uu[i].value.NUM_DOC + "</td><td>" + uu[i].value.TSOL_ID + "</td>";
+                    ret += "<tr onclick='link(" + uu[i].value.NUM_DOC + ",'" + uu[i].value.PAIS_ID+"')' style='cursor:pointer'><td>" + uu[i].value.NUM_DOC + "</td><td>" + uu[i].value.TSOL_ID + "</td>";
                     ret += "<td>" + uu[i].value.GALL_ID + "</td>";
                     ret += "<td>" + uu[i].value.ESTADO + "</td>";
                     ret += "<td>" + uu[i].value.CIUDAD.split('.')[0] + "</td>";
@@ -855,8 +853,12 @@
             }
         });
     }
-    function link(num) {
-        document.location = "../Solicitudes/Details/" + num;
+            function link(num, pais_id) {
+                var paramPais = "";
+                if (pais_id != null || pais_id!=""){
+                    paramPais = "?pais=" + pais_id;
+                }
+                document.location = root+"Solicitudes/Details/" + num + paramPais;
     }
         </script>
         <style>

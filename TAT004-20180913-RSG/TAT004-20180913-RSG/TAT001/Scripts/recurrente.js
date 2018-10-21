@@ -1,6 +1,7 @@
 ﻿function llenaCat(vkorg, vtweg, spart, kunnr) {
     var soc = document.getElementById("sociedad_id").value;
     $("#select_categoria").find('option').remove().end();
+    $("#div_categoria").find('.select-dropdown.dropdown-trigger').addClass('ui-autocomplete-loading');
     $.ajax({
         type: "POST",
         url: root+'Listas/categoriasCliente',
@@ -8,7 +9,7 @@
         data: { vkorg: vkorg, spart: spart, kunnr: kunnr, soc_id: soc },
         success: function (data) {
             $("#select_categoria").find('option').remove().end();
-
+            $("#div_categoria").find('.select-dropdown.dropdown-trigger').removeClass('ui-autocomplete-loading');
             for (var i = 0; i < data.length; i++) {
                 var num = data[i].MATERIALGP_ID;
                 var cat = data[i].TXT50;
@@ -22,7 +23,7 @@
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             M.toast({ html: httpStatusMessage });
         },
-        async: false
+        async: true
     });
 }
 
@@ -673,10 +674,15 @@ function ultimoDiaT(t, num, periodo, ejercicio, monto, tipo, porc, meses) {
 }
 
 function setDates(tipo) {
+    var anioi = document.getElementById('anioi_id').value,
+        aniof = document.getElementById('aniof_id').value,
+        periodoi = document.getElementById('periodoi_id').value,
+        periodof = document.getElementById('periodof_id').value;
+
     if (tipo == "date") {
         document.getElementById('fechai_vig').value = document.getElementById('fechai_vig2').value;
         document.getElementById('fechaf_vig').value = document.getElementById('fechaf_vig2').value;
-    } else {
+    } else if (anioi && aniof && periodoi&& periodof) {
         document.getElementById("loader").style.display = "initial";
         var ej1 = document.getElementById('anioi_id').value;
         var pe1 = document.getElementById('periodoi_id').value;
@@ -685,7 +691,7 @@ function setDates(tipo) {
 
         $.ajax({
             type: "POST",
-            url: '../Listas/getPrimerDia',
+            url: root+'Listas/getPrimerDia',
             dataType: "json",
             data: { ejercicio: ej1, periodo: pe1 },
             success: function (data) {
@@ -704,7 +710,7 @@ function setDates(tipo) {
         });
         $.ajax({
             type: "POST",
-            url: '../Listas/getUltimoDia',
+            url: root +'Listas/getUltimoDia',
             dataType: "json",
             data: { ejercicio: ej2, periodo: pe2 },
             success: function (data) {

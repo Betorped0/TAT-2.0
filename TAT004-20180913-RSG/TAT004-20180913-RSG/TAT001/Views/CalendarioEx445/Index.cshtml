@@ -189,8 +189,7 @@
                     <tbody>
                         @foreach (var item in Model.calendariosEx445)
                         {
-                            string nombreCompleto = item.USUARIO.NOMBRE + " " + item.USUARIO.APELLIDO_P + " " + (item.USUARIO.APELLIDO_M == null ? "" : item.USUARIO.APELLIDO_M);
-                            <tr  class="text-left">
+                                <tr  class="text-left">
                                 <td>
                                     @Html.DisplayFor(modelItem => item.SOCIEDAD_ID)
                                 </td>
@@ -201,7 +200,7 @@
                                     @Html.DisplayFor(modelItem => item.TSOL_ID)
                                 </td>
                                 <td>
-                                     @nombreCompleto
+                                    @Html.DisplayFor(modelItem => item.USUARIO.ID)
                                 </td>
                                 <td>
                                     @Convert.ToDateTime(item.EX_FROMF).ToString("dd/MM/yyyy")
@@ -249,7 +248,7 @@
     });
     var sinHora = "00:00";
     document.querySelectorAll('.timepicker').forEach(function (timepicker) {
-        if (timepicker.value === sinHora) { timepicker.value = ''; }
+        if (timepicker.value.indexOf(sinHora)>-1) { timepicker.value = ''; }
     });
     //----  Se agrega validaciones al formulario----
     fnCommon.selectRequired();

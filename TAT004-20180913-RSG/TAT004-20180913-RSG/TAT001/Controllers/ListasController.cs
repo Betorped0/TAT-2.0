@@ -19,27 +19,6 @@ namespace TAT001.Controllers
             return View();
         }
 
-        ////[HttpGet]
-        ////public JsonResult Clientes(string Prefix)
-        ////{
-        ////    if (Prefix == null)
-        ////        Prefix = "";
-
-        ////    TAT001Entities db = new TAT001Entities();
-
-        ////    var c = (from N in db.CLIENTEs
-        ////             where N.KUNNR.Contains(Prefix)
-        ////             select new { N.KUNNR, N.NAME1 }).ToList();
-        ////    if (c.Count == 0)
-        ////    {
-        ////        var c2 = (from N in db.CLIENTEs
-        ////                  where N.NAME1.Contains(Prefix)
-        ////                  select new { N.KUNNR, N.NAME1 }).ToList();
-        ////        c.AddRange(c2);
-        ////    }
-        ////    JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
-        ////    return cc;
-        ////}
 
         [HttpGet]
         public JsonResult ReportesFiltroCliente(string Prefix, string cocodes)
@@ -408,7 +387,6 @@ namespace TAT001.Controllers
                                          where D.DOCUMENTO_REF == num
                                          & T.SPRAS_ID == spras
                                          & G.SPRAS_ID == spras
-                                         //select new { D.NUM_DOC, T.TXT020, TXT500 = G.TXT50, FECHAD = D.FECHAD.Value.Year + "/" + D.FECHAD.Value.Month + "/" + D.FECHAD.Value.Day, HORAC = D.HORAC.Value.ToString(), D.ESTATUS_WF, D.ESTATUS, D.CONCEPTO, D.MONTO_DOC_ML }).ToList();
                                          select new DOCUMENTO_MOD
                                          {
                                              NUM_DOC = D.NUM_DOC,
@@ -559,13 +537,12 @@ namespace TAT001.Controllers
         {
             TAT001Entities db = new TAT001Entities();
             Cadena cad = new Cadena();
-            var spras = Session["spras"].ToString();
             kunnr = cad.completaCliente(kunnr);
             if (kunnr == null)
             {
                 kunnr = "";
             }
-            var jd = (dynamic)null;
+            List<MATERIALGPT> jd = new List<MATERIALGPT>();
 
             //Obtener los materiales
             IEnumerable<MATERIAL> matl =  db.MATERIALs.Where(m => m.ACTIVO == true);
@@ -654,8 +631,9 @@ namespace TAT001.Controllers
                 {
                     //Obtener el historial de compras de los clientesd
                     var matt = matl.ToList();
-                    var pres = db.PRESUPSAPPs.Where(a => a.VKORG.Equals(vkorg) & a.SPART.Equals(spart) & a.KUNNR == kunnr & (a.GRSLS != null | a.NETLB != null)).ToList();
-                    var cat = db.MATERIALGPs.Where(a => a.ACTIVO == true).ToList();//RSG 03.10.2018
+                    List<PRESUPSAPP> pres = db.PRESUPSAPPs.Where(a =>  a.VKORG.Equals(vkorg) & a.SPART.Equals(spart) & a.KUNNR == kunnr 
+                    & (a.GRSLS != null | a.NETLB != null)).ToList();
+                    List<MATERIALGPT> cat = db.MATERIALGPTs.Where(a => a.MATERIALGP.ACTIVO == true && a.SPRAS_ID=="EN").ToList();//RSG 03.10.2018
                   
 
                     CONFDIST_CAT conf = getCatConf(soc_id);
@@ -663,45 +641,40 @@ namespace TAT001.Controllers
                         if (conf.CAMPO == "GRSLS")
                         {
                             jd = (from ps in pres
-                                  join cl in cie
-                                  on ps.KUNNR equals cl.KUNNR
+                                 // join cl in cie
+                                 // on ps.KUNNR equals cl.KUNNR
                                   join m in matt
                                   on ps.MATNR equals m.ID
                                   join mk in cat
-                                  //on m.MATERIALGP_ID equals mk.MATERIALGP_ID
-                                  on m.MATERIALGP_ID equals mk.ID//RSG 03.10.2018
-                                  where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) &&
-                                  (ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART //&& ps.VKBUR == cl.VKBUR &&
-                                                                                                        //ps.VKGRP == cl.VKGRP && ps.BZIRK == cl.BZIRK
-                                  ) && ps.BUKRS == soc_id
-                                  && ps.GRSLS > 0
-                                  select new
+                                  on m.MATERIALGP_ID equals mk.MATERIALGP_ID//RSG 03.10.2018
+                                  where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) 
+                                  //(ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART ) 
+                                  && ps.BUKRS == soc_id && ps.GRSLS > 0
+                                  group mk by new { ID=mk.MATERIALGP_ID, TXT50 = mk.TXT50 } into mgt
+                                  select new MATERIALGPT
                                   {
-                                      m.MATERIALGP_ID,
-                                      //mk.TXT50//RSG 03.10.2018
-                                      TXT50 = mk.DESCRIPCION//RSG 03.10.2018
+                                      MATERIALGP_ID = mgt.First().MATERIALGP_ID,
+                                      TXT50 = mgt.First().TXT50
                                   }).ToList();
                         }
                         else
                         {
                             jd = (from ps in pres
-                                  join cl in cie
-                                  on ps.KUNNR equals cl.KUNNR
+                                 // join cl in cie
+                                 // on ps.KUNNR equals cl.KUNNR
                                   join m in matt
                                   on ps.MATNR equals m.ID
                                   join mk in cat
-                                  //on m.MATERIALGP_ID equals mk.MATERIALGP_ID
-                                  on m.MATERIALGP_ID equals mk.ID//RSG 03.10.2018
-                                  where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) &&
-                                  (ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART //&& ps.VKBUR == cl.VKBUR &&
-                                                                                                        //ps.VKGRP == cl.VKGRP && ps.BZIRK == cl.BZIRK
-                                  ) && ps.BUKRS == soc_id
+                                  on m.MATERIALGP_ID equals mk.MATERIALGP_ID//RSG 03.10.2018
+                                  where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) 
+                                 // (ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART ) 
+                                  && ps.BUKRS == soc_id
                                   && ps.NETLB > 0
-                                  select new
+                                  group mk by new { ID = mk.MATERIALGP_ID, TXT50 = mk.TXT50 } into mgt
+                                  select new MATERIALGPT
                                   {
-                                      m.MATERIALGP_ID,
-                                      //mk.TXT50//RSG 03.10.2018
-                                      TXT50 = mk.DESCRIPCION//RSG 03.10.2018
+                                      MATERIALGP_ID = mgt.First().MATERIALGP_ID,
+                                      TXT50 = mgt.First().TXT50
                                   }).ToList();
                         }
                 }
@@ -710,40 +683,14 @@ namespace TAT001.Controllers
             var list = new List<MATERIALGPT>();
             if (jd.Count > 0)
             {
-                 MATERIALGP c = db.MATERIALGPs.Where(a => a.ID.Equals("000")).FirstOrDefault();
-                MATERIALGPT cc = new MATERIALGPT();//B20180625 MGC 2018.07.02
-                if (c != null)//B20180625 MGC 2018.07.02
+                MATERIALGPT c = db.MATERIALGPTs.Where(x => x.MATERIALGP_ID == "000" && x.SPRAS_ID=="EN").FirstOrDefault();
+                list.Add(new MATERIALGPT
                 {
-                    cc.MATERIALGP_ID = "000";
-                    cc.SPRAS_ID = "EN";
-                    cc.TXT50 = c.DESCRIPCION;
-
-                }
-                else
-                {
-                    cc.MATERIALGP_ID = "000";
-                }
-                list.Add(cc);
+                    MATERIALGP_ID = c.MATERIALGP_ID,
+                    TXT50 = c.TXT50
+                });
             }
-
-            foreach (var line in jd)
-            {
-                bool ban = true;
-                foreach (var line2 in list)
-                {
-                    if (line.MATERIALGP_ID == line2.MATERIALGP_ID)
-                        ban = false;
-
-                }
-                if (ban)
-                {
-
-                    MATERIALGPT c = new MATERIALGPT();
-                    c.MATERIALGP_ID = line.MATERIALGP_ID;
-                    c.TXT50 = line.TXT50;
-                    list.Add(c);
-                }
-            }
+            list.AddRange(jd);
 
             JsonResult jl = Json(list, JsonRequestBehavior.AllowGet);
             return jl;
@@ -913,9 +860,9 @@ namespace TAT001.Controllers
                 }
             }
             //Asignar Manager
-            if (id_cl != null && db.CLIENTEFs.Any(x => x.KUNNR == id_cl.KUNNR))
+            if (id_cl != null && db.CLIENTEFs.Any(x => x.KUNNR == id_cl.KUNNR && x.ACTIVO))
             {
-                id_cl.MANAGER = db.CLIENTEFs.Where(x => x.KUNNR == id_cl.KUNNR).First().USUARIO1_ID;
+                id_cl.MANAGER = db.CLIENTEFs.Where(x => x.KUNNR == id_cl.KUNNR &&  x.ACTIVO).First().USUARIO1_ID;
             }
             JsonResult jc = Json(id_cl, JsonRequestBehavior.AllowGet);
             return jc;

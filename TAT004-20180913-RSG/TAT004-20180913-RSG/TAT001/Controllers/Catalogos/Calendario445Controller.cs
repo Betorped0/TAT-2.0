@@ -75,12 +75,32 @@ namespace TAT001.Controllers.Catalogos
                         && y.SOCIEDAD_ID == calendarioAc.SOCIEDAD_ID
                         && y.TSOL_ID == calendarioAc.TSOL_ID))
                         {
-                            calendariosAc.Add(calendarioAc);
+                            db.CALENDARIO_AC.Add(new CALENDARIO_AC
+                            {
+                                EJERCICIO = calendarioAc.EJERCICIO,
+                                PERIODO = calendarioAc.PERIODO,
+                                SOCIEDAD_ID = calendarioAc.SOCIEDAD_ID,
+                                TSOL_ID = calendarioAc.TSOL_ID,
+                                PRE_FROMF = calendarioAc.PRE_FROMF,
+                                PRE_FROMH = calendarioAc.PRE_FROMH,
+                                PRE_TOF = calendarioAc.PRE_TOF,
+                                PRE_TOH = calendarioAc.PRE_TOH,
+                                CIE_FROMF = calendarioAc.CIE_FROMF,
+                                CIE_FROMH = calendarioAc.CIE_FROMH,
+                                CIE_TOF = calendarioAc.CIE_TOF,
+                                CIE_TOH = calendarioAc.CIE_TOH,
+                                USUARIOC_ID = calendarioAc.USUARIOC_ID,
+                                FECHAC = calendarioAc.FECHAC,
+                                USUARIOM_ID = calendarioAc.USUARIOM_ID,
+                                FECHAM = calendarioAc.FECHAM,
+                                ACTIVO = calendarioAc.ACTIVO
+
+                            });
+                            db.SaveChanges();
                         }
                     });
                 });
-                db.CALENDARIO_AC.AddRange(calendariosAc);
-                db.SaveChanges();
+              
 
 
                 return RedirectToAction("Index");

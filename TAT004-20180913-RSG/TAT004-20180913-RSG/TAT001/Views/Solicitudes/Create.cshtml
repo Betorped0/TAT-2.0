@@ -60,7 +60,7 @@ $(document).ready(function () {
             </div>
             @* ---DRS 3.10.2018--- *@
             <div class="input-field col s2">
-                @Html.EditorFor(model => model.USUARIO.BACKUP_ID, "BACKUP", new { htmlAttributes = new { @disabled = "disabled", @Value = us.BACKUP_ID } })
+                @Html.EditorFor(model=>model.USUARIO.BACKUP_ID, new { htmlAttributes = new { @disabled = "disabled", @Value = ViewBag.USUARIO_BACKUPID } })
                 @Html.LabelFor(model => model.USUARIO.BACKUP_ID, "Backup", new { @id = "lbl_backup" })
             </div>
 
@@ -248,7 +248,7 @@ $(document).ready(function () {
                                     <div class="col-md-10">
                                         @if (ViewBag.reversan == "X")
                                         {
-                                            @Html.EditorFor(model => model.TSOL_ID, new { htmlAttributes = new { @class = "dropdowntree", @disabled = true } })
+                                            @Html.EditorFor(model => model.TSOL_ID, new { htmlAttributes = new { @class = "dropdowntree", @readonly = true } })
 
                                         }
                                         else
@@ -305,7 +305,7 @@ $(document).ready(function () {
                                         <div class="form-group hidden">
                                             @Html.LabelFor(model => model.PAIS_ID, "Subregión", htmlAttributes: new { @class = "control-label col-md-2 hidden", @id = "lbl_pais" }) @*B20180801 MGC Textos*@
                                             <div class="col-md-10">
-                                                @Html.EditorFor(model => model.PAIS_ID, new { htmlAttributes = new { @id = "pais_id", @class = "form-control hidden", @disabled = "disabled", @Value = pais.LAND } })
+                                                @Html.EditorFor(model => model.PAIS_ID, new { htmlAttributes = new { @id = "pais_id", @class = "form-control hidden", @readonly =true , @Value = pais.LAND } })
                                             </div>
                                         </div>
                                         <div class="input-field col-md-2">
@@ -344,7 +344,7 @@ $(document).ready(function () {
 
                                     var reversan = "@ViewBag.reversan";
                                     if (reversan == "X") {
-                                        $("#tsol_id").attr('disabled', '');
+                                        $("#tsol_id").attr('readonly', '');
                                     }
                                         var auto = $.noConflict(true);
                                         auto(document).ready(function () {
@@ -522,7 +522,6 @@ $(document).ready(function () {
                                             select: function (event, ui) {
                                                 var label = ui.item.label;
                                                 var value = ui.item.value;
-                                                selectCliente(value);
                                             }
                                         });
                                         //OCG 11/10/18
@@ -671,6 +670,11 @@ $(document).ready(function () {
                                                 document.getElementById("periodof_id").setAttribute("disabled", "disabled");
                                                 document.getElementById("aniof_id").setAttribute("disabled", "disabled");
 
+                                                //document.getElementById("periodoi_id").value=null;
+                                                //document.getElementById("anioi_id").value = null;
+                                                //document.getElementById("periodof_id").value = null;
+                                                //document.getElementById("aniof_id").value = null;
+
                                                 document.getElementById("fechai_vig2").removeAttribute("disabled");
                                                 document.getElementById("fechaf_vig2").removeAttribute("disabled");
                                             } else {
@@ -681,6 +685,9 @@ $(document).ready(function () {
 
                                                 document.getElementById("fechai_vig2").setAttribute("disabled", "disabled");
                                                 document.getElementById("fechaf_vig2").setAttribute("disabled", "disabled");
+
+                                                //document.getElementById("fechai_vig2").value = null;
+                                                //document.getElementById("fechaf_vig2").value = null;
                                             }
                                             setDates(tipo);
                                             var elem = document.querySelectorAll('select');
@@ -963,9 +970,9 @@ $(document).ready(function () {
                             </div>
                         }
                         @{List<TAT001.Entities.DOCUMENTOA>
-                                                                                                                                                                                                        archivos = ViewBag.files as List<TAT001.Entities.DOCUMENTOA>
-                                                                                                                                                                                                            ;
-                            if (ViewBag.relacionadan != "" && archivos.Count > 0)
+                                                                                                                                                                                                          archivos = ViewBag.files as List<TAT001.Entities.DOCUMENTOA>
+                                                                                                                                                                                                              ;
+                            if (ViewBag.relacionadan != "" && (archivos!=null && archivos.Count > 0))
                             {
                                 string[] nombrefile;
                                 <div class="card-panel">
