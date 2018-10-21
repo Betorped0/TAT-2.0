@@ -49,7 +49,7 @@ namespace TAT001.Controllers
                 }
                 catch
                 {
-                    if (pais != "")
+                    if (!string.IsNullOrEmpty(pais))
                     {
                         ViewBag.pais = pais + ".png";
                         Session["pais"] = pais;
@@ -574,14 +574,8 @@ namespace TAT001.Controllers
                 string p = "";
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
-                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-
+                FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
+               
 
                 usuariotextos = user.SPRAS_ID;//B20180801 MGC Textos
 
@@ -1408,54 +1402,29 @@ namespace TAT001.Controllers
                 string bmonto_apoyo, string catmat, string borrador_param, string monedadis, string chk_ligada, string sel_nn, string check_objetivoq,
                 string lbl_volr, string lbl_apr, string lbl_vole, string lbl_ape, string txtPres) //B20180801 MGC Textos
         {
-            bool prueba = true;
             string errorString = "";
             SOCIEDAD id_bukrs = new SOCIEDAD();
             string p = "";
             string rele = ""; //Add MGC B20180705 2018.07.05 relacionadaed editar el material en los nuevos renglones
             decimal monto_ret = Convert.ToDecimal(dOCUMENTO.MONTO_DOC_MD);
-            if (ModelState.IsValid && prueba == true)
-            //if (ModelState.IsValid)
+            if (ModelState.IsValid )
             {
                 try
                 {
-                    //Obtener datos ocultos o deshabilitados                    
-                    try
-                    {
-                        p = Session["pais"].ToString();
-                        ViewBag.pais = p + ".png";
-                    }
-                    catch
-                    {
-                        ViewBag.pais = "mx.png";
-                        //return RedirectToAction("Pais", "Home");
-                    }
-                    //try
-                    //{
-                    //    decimal refe = Convert.ToDecimal(Session["rel"].ToString());
-                    //    dOCUMENTO.DOCUMENTO_REF = refe;
-                    //    Session["rel"] = null;
-                    //}
-                    //catch (Exception e)
-                    //{
-                    //    dOCUMENTO.DOCUMENTO_REF = null;
+                    
+                    p = dOCUMENTO.PAIS_ID;
+                    ViewBag.pais = p + ".png";
 
                     //B20180618 v1 MGC 2018.06.18
                     //Obtener el GALL_ID
-                    try
-                    {
+                    if (dOCUMENTO.TALL_ID!=null && db.TALLs.Any(t => t.ID == dOCUMENTO.TALL_ID)) {
                         dOCUMENTO.GALL_ID = db.TALLs.Where(t => t.ID == dOCUMENTO.TALL_ID).FirstOrDefault().GALL_ID;
-                    }
-                    catch (Exception)
-                    {
-
                     }
 
                     DOCUMENTO d = new DOCUMENTO();
                     if (dOCUMENTO.DOCUMENTO_REF > 0)
                     {
                         d = db.DOCUMENTOes.Where(doc => doc.NUM_DOC == dOCUMENTO.DOCUMENTO_REF).FirstOrDefault();
-                        //dOCUMENTO.TSOL_ID = d.TSOL_ID;
                         id_bukrs = db.SOCIEDADs.Where(soc => soc.BUKRS == d.SOCIEDAD_ID).FirstOrDefault();
                         dOCUMENTO.ESTADO = d.ESTADO;
                         dOCUMENTO.CIUDAD = d.CIUDAD;
@@ -1723,24 +1692,6 @@ namespace TAT001.Controllers
                     {
                     }
 
-                    if (revn == "")
-                    {
-                        //Guardar las notas
-                        //DELETE RSG 20.08.2018 -------------------------START
-                        //if (notas_soporte != null && notas_soporte != "")
-                        //{
-                        //    DOCUMENTON doc_notas = new DOCUMENTON();
-                        //    doc_notas.NUM_DOC = dOCUMENTO.NUM_DOC;
-                        //    doc_notas.POS = 1;
-                        //    doc_notas.STEP = 1;
-                        //    doc_notas.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
-                        //    doc_notas.TEXTO = notas_soporte.ToString();
-
-                        //    db.DOCUMENTONs.Add(doc_notas);
-                        //    db.SaveChanges();
-                        //}
-                        //DELETE RSG 20.08.2018 -------------------------END
-                    }
                     //B20180618 v1 MGC 2018.06.18
                     if (select_neg == "" || select_neg == null)
                     {
@@ -2455,17 +2406,7 @@ namespace TAT001.Controllers
                                 if (conta.WORKFP.ACCION.TIPO == "B")
                                 {
                                     WORKFP wpos = db.WORKFPs.Where(x => x.ID == conta.WORKF_ID & x.VERSION == conta.WF_VERSION & x.POS == conta.WF_POS).FirstOrDefault();
-                                    //FLUJO f1 = new FLUJO();
-                                    //f1.WORKF_ID = conta.WORKF_ID;
-                                    //f1.WF_VERSION = conta.WF_VERSION;
-                                    //f1.WF_POS = (int)wpos.NEXT_STEP;
-                                    //f1.NUM_DOC = dOCUMENTO.NUM_DOC;
-                                    //f1.POS = conta.POS + 1;
-                                    //f1.LOOP = 1;
-                                    ////f1.USUARIOA_ID = dOCUMENTO.USUARIOC_ID;
-                                    ////f1.USUARIOD_ID = dOCUMENTO.USUARIOD_ID;
                                     conta.ESTATUS = "A";
-                                    //f1.FECHAC = DateTime.Now;
                                     conta.FECHAM = DateTime.Now;
                                     c = pf.procesa(conta, "");
                                     conta = db.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
@@ -2558,28 +2499,11 @@ namespace TAT001.Controllers
             int pagina = 202; //ID EN BASE DE DATOS
             using (TAT001Entities db = new TAT001Entities())
             {
-                //Obtener datos ocultos o deshabilitados                    
-                try
-                {
-                    p = Session["pais"].ToString();
-                    ViewBag.pais = p + ".png";
-                }
-                catch
-                {
-                    ViewBag.pais = "mx.png";
-                    //return RedirectToAction("Pais", "Home");
-                }
+               
                 string u = User.Identity.Name;
                 //string u = "admin";
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
-                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-
+                FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
                 //tipo de solicitud
                 var id_sol = db.TSOLs.Where(sol => sol.ESTATUS != "X")
                                     .Join(
@@ -5338,7 +5262,35 @@ namespace TAT001.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+        public ActionResult GuardarComentario(decimal num_docu,string comentario)
+        {
+            DOCUMENTO d = db.DOCUMENTOes.Find(num_docu);
+            FLUJO actual = db.FLUJOes.Where(a => a.NUM_DOC == num_docu).OrderByDescending(a => a.POS).FirstOrDefault();
+            db.Entry(d).State = EntityState.Modified;
 
+            if (actual != null)
+            {
+                FLUJO nuevo = new FLUJO();
+                    nuevo.COMENTARIO = comentario;
+                    nuevo.DETPOS = actual.DETPOS;
+                    nuevo.DETVER = actual.DETVER;
+                    nuevo.ESTATUS = actual.ESTATUS;
+                    nuevo.FECHAC = DateTime.Now;
+                    nuevo.FECHAM = nuevo.FECHAC;
+                    nuevo.LOOP = 0;
+                    nuevo.NUM_DOC = actual.NUM_DOC;
+                    nuevo.POS = actual.POS + 1;
+                    nuevo.USUARIOA_ID = User.Identity.Name;
+                    nuevo.WF_POS = actual.WF_POS+1;
+                    nuevo.WF_VERSION = actual.WF_VERSION;
+                    nuevo.WORKF_ID = actual.WORKF_ID;
+                    db.FLUJOes.Add(nuevo);
+                
+            }
+            db.SaveChanges();
+
+            return RedirectToAction("Index", "Home");
+        }
         [HttpPost]
         [AllowAnonymous]
         public JsonResult SelectCity(int id)
@@ -6117,7 +6069,7 @@ namespace TAT001.Controllers
 
             }
 
-            var spras = Session["spras"].ToString();//RSG 08.06.2018
+            var spras = FnCommon.ObtenerSprasId(db,User.Identity.Name);
             //Validar si hay materiales
             if (matl != null)
             {
@@ -6205,7 +6157,6 @@ namespace TAT001.Controllers
                     var matt = matl.ToList();
                     var pres = db.PRESUPSAPPs.Where(a => a.VKORG.Equals(vkorg) & a.SPART.Equals(spart) & a.KUNNR == kunnr & (a.GRSLS != null | a.NETLB != null)).ToList();
 
-                    //var cat = db.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(spras)).ToList();
                     var cat = db.MATERIALGPs.Where(a => a.ACTIVO == true).ToList();
 
 
@@ -6304,7 +6255,7 @@ namespace TAT001.Controllers
                 //LEJ 18.07.2018-----------------------------------------------------------
                 MATERIALGP vv = db.MATERIALGPs.Where(u => u.ID == cm.ID).FirstOrDefault();
                 cm.UNICA = vv.UNICA;
-                MATERIALGPT vt = vv.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(spras)).FirstOrDefault();
+                MATERIALGPT vt = vv.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals("EN")).FirstOrDefault();
                 if (vt != null)
                 {
                     cm.DESCRIPCION = vt.TXT50;
@@ -6322,7 +6273,7 @@ namespace TAT001.Controllers
                 nnn.ID = "000";
                 try//B20180625 MGC 2018.07.02
                 {
-                    nnn.DESCRIPCION = db.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(spras) & a.MATERIALGP_ID.Equals(nnn.ID)).FirstOrDefault().TXT50;
+                    nnn.DESCRIPCION = db.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals("EN") & a.MATERIALGP_ID.Equals(nnn.ID)).FirstOrDefault().TXT50;
                 }
                 catch (Exception)//B20180625 MGC 2018.07.02
                 {
@@ -6465,8 +6416,7 @@ namespace TAT001.Controllers
                     var matt = matl.ToList();
                     //kunnr = kunnr.TrimStart('0').Trim();
                     var pres = db.PRESUPSAPPs.Where(a => a.VKORG.Equals(vkorg) & a.SPART.Equals(spart) & a.KUNNR == kunnr & (a.GRSLS != null | a.NETLB != null)).ToList();
-                    var spras = Session["spras"].ToString();
-                    var cat = db.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(spras)).ToList();
+                    var cat = db.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals("EN")).ToList();
                     //foreach (var c in cie)
                     //{
                     //    c.KUNNR = c.KUNNR.TrimStart('0').Trim();
@@ -7425,12 +7375,7 @@ namespace TAT001.Controllers
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
 
                 cat = (from c in db.MATERIALGPs.Where(c => c.ID == m.MATERIALGP_ID && c.ACTIVO == true)
-                            //.Join(
-                            //db.MATERIALGPTs.Where(ct => ct.SPRAS_ID == user.SPRAS_ID),
-                            //c => c.ID,
-                            //ct => ct.MATERIALGP_ID,
-                            //(c, ct) => 
-                            select new
+                              select new
                             {
                                 CATEGORIA_ID = c.ID.ToString(),
                                 DESCRIPCION = c.DESCRIPCION.ToString(),
@@ -7463,7 +7408,7 @@ namespace TAT001.Controllers
 
                 cat = db.MATERIALGPs.Where(c => c.ID == cate && c.ACTIVO == true) //Cambiar por materialgp //B20180625 MGC 2018.06.28
                             .Join(
-                            db.MATERIALGPTs.Where(ct => ct.SPRAS_ID == user.SPRAS_ID),//Cambiar por materialgpt //B20180625 MGC 2018.06.28
+                            db.MATERIALGPTs.Where(ct => ct.SPRAS_ID == "EN"),//Cambiar por materialgpt //B20180625 MGC 2018.06.28
                             c => c.ID,
                             ct => ct.MATERIALGP_ID,//B20180625 MGC 2018.06.28
                             (c, ct) => new
@@ -7506,7 +7451,7 @@ namespace TAT001.Controllers
                 //cat = db.CATEGORIAs.Where(c => c.ID == m.MATKL_ID && c.ACTIVO == true)
                 cat = db.MATERIALGPs.Where(c => c.ID == m.MATERIALGP_ID && c.ACTIVO == true)//RSG 01.08.2018
                             .Join(
-                            db.MATERIALGPTs.Where(ct => ct.SPRAS_ID == user.SPRAS_ID),
+                            db.MATERIALGPTs.Where(ct => ct.SPRAS_ID == "EN"),
                             c => c.ID,
                             //ct => ct.CATEGORIA_ID,
                             ct => ct.MATERIALGP_ID,//RSG 01.08.2018
