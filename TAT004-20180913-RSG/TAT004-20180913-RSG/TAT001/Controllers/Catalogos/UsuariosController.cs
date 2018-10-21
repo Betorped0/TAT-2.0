@@ -936,7 +936,6 @@ namespace TAT001.Controllers.Catalogos
                             client[cont2, 0] = us.KUNNR.ToString();
                             tablas[cont2, 0] = da.KUNNR.ToString();
                             gua[cont2] = da.KUNNR.ToString();
-                            pa = db.PAIS.Where(x => x.LAND.Equals(k.LAND) & x.SOCIEDAD_ID.Equals(us.BUNIT)).FirstOrDefault();
                         }
                         if (!us.KUNNRX)
                         {
@@ -948,7 +947,7 @@ namespace TAT001.Controllers.Catalogos
                         ////-------------------------------COMPANY CODE
                         SOCIEDAD b = db.SOCIEDADs.Where(x => x.BUKRS.Equals(us.BUNIT) & x.ACTIVO == true).FirstOrDefault();
 
-                        if (b == null || pa == null)
+                        if (b == null)
                         {
                             us.BUNITX = false;
                         }
@@ -961,7 +960,7 @@ namespace TAT001.Controllers.Catalogos
                         if (!us.BUNITX)
                         {
                             us.BUNIT = us.BUNIT + "?";
-                            messa = messa + cont + ". La sociedad no correspponde con el pais del cliente<br/>";
+                            messa = messa + cont + ". Error en la sociedad<br/>";
                             cont++;
                         }
 
