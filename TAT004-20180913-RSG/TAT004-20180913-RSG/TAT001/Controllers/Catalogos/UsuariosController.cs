@@ -2768,7 +2768,8 @@ namespace TAT001.Controllers.Catalogos
                 var usr=db.USUARIOs.Where(t => t.ID == b.USUARIOD_ID).SingleOrDefault();
                 usuarios.Remove(usr);
             }
-            
+            if(backups.Count>0)
+            ViewBag.ultimoback = Convert.ToDateTime(backups.OrderByDescending(t => t.FECHAF).First().FECHAF).AddDays(1).ToString("dd/MM/yyyy");
             //if (usuarios.Count() > 0)
                 ViewBag.USUARIOD_ID = new SelectList(usuarios.ToList(), "ID", "ID", "");
             //else
@@ -2781,18 +2782,66 @@ namespace TAT001.Controllers.Catalogos
 
         public ActionResult AddBackup([Bind(Include = "USUARIO_ID,USUARIOD_ID,FECHAI,FECHAF,ACTIVO")]DELEGAR delegar)
         {
-            if(ModelState.IsValid)
+            int pagina = 606; //ID EN BASE DE DATOS
+            FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
+            var usuario = db.USUARIOs.Where(t => t.ID == delegar.USUARIO_ID).SingleOrDefault();
+            //Se comenta el filtro de puesto y sociedad, solo buscara los usuarios activos
+            var usuarios = db.USUARIOs.Where(x => x.ACTIVO == true /*&& x.PUESTO_ID == usuario.PUESTO_ID && x.BUNIT == usuario.BUNIT*/).ToList();
+            usuarios.Remove(usuario);
+            var backups = db.DELEGARs.Where(t => t.USUARIO_ID == delegar.USUARIO_ID && t.ACTIVO == true).ToList();
+            foreach (var b in backups)
             {
-                try
+                var usr = db.USUARIOs.Where(t => t.ID == b.USUARIOD_ID).SingleOrDefault();
+                usuarios.Remove(usr);
+            }
+            if(backups.Count>0)
+            ViewBag.ultimoback = Convert.ToDateTime(backups.OrderByDescending(t => t.FECHAF).First().FECHAF).AddDays(1).ToString("dd/MM/yyyy");
+            //if (usuarios.Count() > 0)
+            ViewBag.USUARIOD_ID = new SelectList(usuarios.ToList(), "ID", "ID", "");
+            if (ModelState.IsValid)
+            {
+                var ultdelegados = db.DELEGARs.Where(t => t.USUARIO_ID == delegar.USUARIO_ID && t.ACTIVO==true).OrderByDescending(t => t.FECHAF).FirstOrDefault();
+                if (ultdelegados != null)
+                {
+                    if (ultdelegados.FECHAF < delegar.FECHAI)
+                    {
+                        try
+                        {
+                            DELEGAR delegado = new DELEGAR { ACTIVO = delegar.ACTIVO, FECHAF = delegar.FECHAF, FECHAI = delegar.FECHAI, USUARIOD_ID = delegar.USUARIOD_ID, USUARIO_ID = delegar.USUARIO_ID };
+                            var delegadosanteriores = db.DELEGARs.Where(t => t.USUARIO_ID == delegar.USUARIO_ID).ToList();
+                            foreach (var de in delegadosanteriores)
+                            {
+                                if (de.FECHAF < DateTime.Now)
+                                    de.ACTIVO = false;
+                            }
+                            db.DELEGARs.Add(delegado);
+                            db.SaveChanges();
+                            return RedirectToAction("Details", new { id = delegar.USUARIO_ID });
+                        }
+                        catch (Exception e)
+                        {
+                            TempData["MessageBackupRepetido"] = "Mensaje";
+                            return View(delegar);
+                        }
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("MessageFechaBackup", "La fecha del backup se mezcla con otro backrup activo");
+                        return View(delegar);
+                    }
+                }
+                else
                 {
                     DELEGAR delegado = new DELEGAR { ACTIVO = delegar.ACTIVO, FECHAF = delegar.FECHAF, FECHAI = delegar.FECHAI, USUARIOD_ID = delegar.USUARIOD_ID, USUARIO_ID = delegar.USUARIO_ID };
+                    var delegadosanteriores = db.DELEGARs.Where(t => t.USUARIO_ID == delegar.USUARIO_ID).ToList();
+                    foreach (var de in delegadosanteriores)
+                    {
+                        if (de.FECHAF < DateTime.Now)
+                            de.ACTIVO = false;
+                    }
                     db.DELEGARs.Add(delegado);
                     db.SaveChanges();
-                    return RedirectToAction("Details",new { id=delegar.USUARIO_ID});
-                }
-                catch (Exception e)
-                {
-                    return View(delegar);
+                    return RedirectToAction("Details", new { id = delegar.USUARIO_ID });
                 }
             }
             else
