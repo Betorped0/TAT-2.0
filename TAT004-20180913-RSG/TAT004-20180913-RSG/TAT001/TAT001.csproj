@@ -217,10 +217,13 @@
     <Compile Include="Controllers\Catalogos\ConsoporteController.cs" />
     <Compile Include="Controllers\Catalogos\CuentaController.cs" />
     <Compile Include="Controllers\Catalogos\CuentasController.cs" />
+    <Compile Include="Controllers\Catalogos\DesviacionesTSController.cs" />
+    <Compile Include="Controllers\Catalogos\DocRelacionController.cs" />
     <Compile Include="Controllers\Catalogos\GALLController.cs" />
     <Compile Include="Controllers\Catalogos\IimpuestoController.cs" />
     <Compile Include="Controllers\Catalogos\ImpuestosController.cs" />
     <Compile Include="Controllers\Catalogos\SociedadesController.cs" />
+    <Compile Include="Controllers\Catalogos\SoporteController.cs" />
     <Compile Include="Controllers\Catalogos\TALLsController.cs" />
     <Compile Include="Controllers\Catalogos\UsuariosController2.cs" />
     <Compile Include="Controllers\Configuracion\ccatController.cs" />
@@ -1329,7 +1332,6 @@
     <!--<Content Include="obj\Debug\TAT001.csproj.FileListAbsolute.txt" />
     <Content Include="obj\Debug\TAT001.dll" />
     <Content Include="obj\Debug\TAT001.pdb" />-->
-    <Content Include="Scripts\copiacreatesolicitud.js" />
     <EntityDeploy Include="Entities\TAT001.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>TAT001.Designer.cs</LastGenOutput>
@@ -1909,6 +1911,18 @@
     <Content Include="Views\Reportes\ReporteAllowancesB.cshtml" />
     <Content Include="Views\Reportes\ReporteAllowancesPL.cshtml" />
     <Content Include="Views\Clientes\List.cshtml" />
+    <Content Include="Views\DesviacionesTS\Create.cshtml" />
+    <Content Include="Views\DesviacionesTS\Details.cshtml" />
+    <Content Include="Views\DesviacionesTS\Edit.cshtml" />
+    <Content Include="Views\DesviacionesTS\Index.cshtml" />
+    <Content Include="Views\DocRelacion\Create.cshtml" />
+    <Content Include="Views\DocRelacion\Details.cshtml" />
+    <Content Include="Views\DocRelacion\Edit.cshtml" />
+    <Content Include="Views\DocRelacion\Index.cshtml" />
+    <Content Include="Views\Soporte\Create.cshtml" />
+    <Content Include="Views\Soporte\Details.cshtml" />
+    <Content Include="Views\Soporte\Edit.cshtml" />
+    <Content Include="Views\Soporte\Index.cshtml" />
     <Content Include="Views\Usuarios\AddBackup.cshtml" />
     <Content Include="Views\Usuarios\EditBackup.cshtml" />
   </ItemGroup>

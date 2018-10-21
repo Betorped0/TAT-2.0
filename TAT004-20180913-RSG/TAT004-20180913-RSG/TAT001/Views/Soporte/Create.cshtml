@@ -1,0 +1,72 @@
+﻿@model TAT001.Entities.TSOPORTE
+
+@{
+    ViewBag.pagina_r = 502;
+    ViewBag.carpeta_r = 500;
+    //ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @*@Html.HiddenFor(model => model.TSOL_ID)*@
+    <div class="row">
+        <div class="row right">
+            <div class="col l12 m12 right">
+                <a href="@Url.Action("Index", "Soporte", new { tsol = ViewBag.IdTsol })" class="waves-effect waves-light btn">REGRESAR</a>
+                <input type="submit" value="Agregar" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="row">
+            <div class="col s4 m4 l4 col offset-s4 offset-m4 offset-l4">
+                <div class="col l12 m12 s12">
+                    @Html.LabelFor(model => model.ID, "ID", htmlAttributes: new { @class = "control-label col-md-2", @id = "lblTipo" })
+                    @Html.EditorFor(model => model.ID, new { htmlAttributes = new { @class = "form-control txtIDP" } })
+                    @Html.ValidationMessageFor(model => model.ID, "", new { @class = "text-danger" })
+                </div>
+
+                @*@Html.EditorFor(model => model.TSOPORTETs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50, new { htmlAttributes = new { @disabled = "disabled" } })
+                    @Html.LabelFor(model => model.TSOPORTETs.FirstOrDefault().TXT50)*@
+                @*<div class="input-field col l10 m10" style="margin-bottom:0;">
+
+                        @Html.LabelFor(model => model.ID, "ID", htmlAttributes: new { @class = "control-label col-md-2", @id = "lblTipoSol" })
+                        @Html.EditorFor(model => model.ID, new { htmlAttributes = new { @class = "form-control txtIDP" } })
+                        @Html.ValidationMessageFor(model => model.ID, "", new { @class = "text-danger" })
+                    </div>*@
+                @*<script>
+                        var elem = document.getElementById('sel-tsol');
+                        var options = [];
+                        var instance = M.Select.init(elem, options);
+                    </script>*@
+
+                <div class="col l12 m12 s12">
+                    @Html.LabelFor(model => model.DESCRIPCION, "DESCRIPCION", htmlAttributes: new { @class = "control-label col-md-2", @id = "lblTipoop" })
+                    @Html.EditorFor(model => model.DESCRIPCION, new { htmlAttributes = new { @class = "form-control txtIDP" } })
+                    @Html.ValidationMessageFor(model => model.DESCRIPCION, "", new { @class = "text-danger" })
+                </div>
+
+
+                @*<div class="input-field col l10 m10" style="margin-bottom:0;">*@
+                @*<label>
+                        <input type="checkbox" name="obligatorio" value="true" id="obligatorio" />
+                        <span style="height:0"></span>
+                    </label>*@
+                @*@Html.LabelFor(model => model.ACTIVO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblObliga" })
+                    </div>*@
+
+            </div>
+        </div>
+    </div>
+
+}
+@*<br />
+    <br />*@
+<div>
+    @Html.ActionLink("Back to List", "Index", new { tsol = ViewBag.IdTsol })
+</div>

@@ -1,0 +1,70 @@
+﻿@model TAT001.Entities.TS_FORMT
+
+@{
+    //ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.pagina_r = 1312;
+    ViewBag.carpeta_r = 500;
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @*<div class="form-group">
+            <div class="row right">
+                <input type="submit" value="Crear" class="btn btn-default" style=""/>
+            </div>
+        </div>*@
+
+    <div class="row">
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button id="btnGC" type="submit" value="Create" style="float:right;" class="btn btn-default">Crear</button>
+            </div>
+        </div>
+    </div>
+    <div class="col 12 s12 ">
+        <div class="card-panel">
+            <div class="row">
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @*<div class="form-group">
+                            @Html.LabelFor(model => model.SPRAS_ID, "SPRAS_ID", htmlAttributes: new { @class = "control-label col-md-2 active" })
+                            @Html.DropDownList("SPRAS_ID", null, htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.SPRAS_ID, "", new { @class = "text-danger" })
+                        </div>*@
+                    @*<div class="form-group">
+                            @Html.LabelFor(model => model.SPRAS_ID, "SPRAS_ID", htmlAttributes: new { @class = "control-label col-md-2 active", @id = "lblPais" })
+                            @Html.DropDownList("SPRAS_ID", null, htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.SPRAS_ID, "", new { @class = "text-danger" })
+                        </div>*@
+
+                    @*<div class="form-group">
+                            @Html.LabelFor(model => model.SPRAS_ID, "SPRAS_ID", htmlAttributes: new { @class = "control-label col-md-2 active", @id = "lblPais" })
+                            @Html.DropDownList("SPRAS_ID", null, htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.SPRAS_ID, "", new { @class = "text-danger" })
+                        </div>
+                        <br />
+                        <br />
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.TSFORM_ID, "TSFORM_ID", htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.DropDownList("TSFORM_ID", null, htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.TSFORM_ID, "", new { @class = "text-danger" })
+                        </div>
+                        <br />
+                        <br />*@
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.TXT100, htmlAttributes: new { @class = "control-label col-md-2" })
+                        @Html.EditorFor(model => model.TXT100, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.TXT100, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
