@@ -1285,28 +1285,33 @@ namespace TAT001.Controllers
                     delegado.usuario = de.USUARIO_ID;
                     delegado.nombre = de.USUARIO_ID + " - " + de.USUARIO.NOMBRE + " " + de.USUARIO.APELLIDO_P + " " + de.USUARIO.APELLIDO_M;
                     delegado.LISTA = pd;
-                    if (delegado.LISTA.Count > 0)
-                        delegados.Add(delegado);
+                    //if (delegado.LISTA.Count > 0)
+                    delegados.Add(delegado);
                 }
                 PAI pq = pp.Where(a => a.LAND == d.PAIS_ID).FirstOrDefault();
-                if (pq != null)
+                //if (pq != null)
+                //{
+                Delegados del1 = new Delegados();
+                del1.usuario = User.Identity.Name;
+                USUARIO uu = db.USUARIOs.Find(User.Identity.Name);
+                del1.nombre = User.Identity.Name + " - " + uu.NOMBRE + " " + uu.APELLIDO_P + " " + uu.APELLIDO_M;
+                del1.LISTA = new List<PAI>();
+                //de.LISTA.Add(pq);
+                users.Add(del1);
+                //}
+                foreach (Delegados dele in delegados)
                 {
-                    Delegados de = new Delegados();
-                    de.usuario = User.Identity.Name;
-                    USUARIO uu = db.USUARIOs.Find(User.Identity.Name);
-                    de.nombre = User.Identity.Name + " - " + uu.NOMBRE + " " + uu.APELLIDO_P + " " + uu.APELLIDO_M;
-                    de.LISTA = new List<PAI>();
-                    de.LISTA.Add(pq);
-                    users.Add(de);
-                }
-                foreach (Delegados de in delegados)
-                {
-                    PAI pqq = de.LISTA.Where(a => a.LAND == d.PAIS_ID).FirstOrDefault();
-                    if (pqq != null)
-                        users.Add(de);
+                    PAI pqq = dele.LISTA.Where(a => a.LAND == d.PAIS_ID).FirstOrDefault();
+                    //if (pqq != null)
+                    users.Add(dele);
                 }
 
                 ViewBag.USUARIOD_ID = new SelectList(users, "usuario", "nombre", users[0].usuario);
+            }
+            List<TAT001.Entities.DELEGAR> backup = db.DELEGARs.Where(a => a.USUARIO_ID.Equals(User.Identity.Name) & a.FECHAI <= fecha & a.FECHAF >= fecha & a.ACTIVO == true).ToList();
+            if (backup.Count > 0)
+            {
+                ViewBag.USUARIO_BACKUPID = backup.First().USUARIOD_ID;
             }
 
             var tsols_valbdjs = JsonConvert.SerializeObject(tsols_valbd, Formatting.Indented);
