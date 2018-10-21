@@ -60,7 +60,7 @@ $(document).ready(function () {
             </div>
             @* ---DRS 3.10.2018--- *@
             <div class="input-field col s2">
-                @Html.EditorFor(model => model.USUARIO.BACKUP_ID, "BACKUP", new { htmlAttributes = new { @disabled = "disabled", @Value = us.BACKUP_ID } })
+                @Html.EditorFor(model=>model.USUARIO.BACKUP_ID, new { htmlAttributes = new { @disabled = "disabled", @Value = ViewBag.USUARIO_BACKUPID } })
                 @Html.LabelFor(model => model.USUARIO.BACKUP_ID, "Backup", new { @id = "lbl_backup" })
             </div>
 
