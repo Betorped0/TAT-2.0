@@ -1,7 +1,7 @@
 ﻿@model TAT001.Entities.TSOPORTE
 
 @{
-    ViewBag.pagina_r = 843;
+    ViewBag.pagina_r = 1317;
     ViewBag.carpeta_r = 500;
     //ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -37,13 +37,22 @@
                         @Html.LabelFor(model => model.DESCRIPCION)
                     </div>
                     <div class="input-field col l10 m10" style="margin-bottom:0;">
+                        @Html.EditorFor(model => model.ACTIVO, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idact" } })
+
                         @if ((bool)Model.ACTIVO == true)
                         {
-                            <i class='material-icons green-text'>check</i>}
+                            <label>
+                                <input type="checkbox" name="selectedCustomers" value="true" id="act" onclick="check()" checked />
+                                <span style="height:0"></span>
+                            </label>
+                        }
                         else
                         {
-                            <i class='material-icons red-text'>clear</i>}
-                        @Html.LabelFor(model => model.ACTIVO, htmlAttributes: new { @class = "control-label col-md-2 active", @id = "lbl_Activo" })
+                            <label>
+                                <input type="checkbox" name="selectedCustomers" value="true" id="act" onclick="check()" />
+                                <span style="height:0"></span>
+                            </label>
+                        }
                     </div>
                 </div>
             </div>
@@ -72,17 +81,25 @@
                             @Html.LabelFor(model => model.DESCRIPCION, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_DscPT" })
                         </div>
 
-                        <div class="row right">
+                        @*<div class="row right">
                             <div class="col s12">
                                 <input type="submit" value="Guardar" class="btn btn-default" />
                             </div>
-                        </div>
+                        </div>*@
                     </div>
                 </div>
             </div>
         </div>
     }
 </div>
+
+<script>
+    function check() {
+        if ($("#act").prop('checked'))
+            $("#idact").prop('checked', true);
+        else
+            $("#idact").prop('checked', false);
+</script>
 
 <div>
     @Html.ActionLink("Back to List", "Index", new { tsol = Model.ID, tsopo = Model.DESCRIPCION })

@@ -130,7 +130,7 @@ namespace TAT001.Controllers.Catalogos
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,DESCRIPCION,FECHAI,FECHAF,GALL_ID,ACTIVO")] TALL tALL)
+        public ActionResult Create([Bind(Include = "ID,DESCRIPCION,FECHAI,FECHAF,GALL_ID,ACTIVO,GRUPO_ALL")] TALL tALL)
         {
             //if (ModelState.IsValid)
             //{
@@ -154,11 +154,25 @@ namespace TAT001.Controllers.Catalogos
                     pt.TALL_ID = tALL.ID;
                     pt.SPRAS_ID = s.ID;
                     pt.TXT50 = tALL.DESCRIPCION;
-                    db.TALLTs.Add(pt);
+                    db.TALLTs.Add(pt);                  
                 }
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+        
+            //List<SPRA> ss = db.SPRAS.ToList();
+
+            //foreach (SPRA s in ss)
+            //{
+            //    TALLT pt = new TALLT();
+            //    pt.TALL_ID = tALL.ID;
+            //    pt.SPRAS_ID = s.ID;
+            //    pt.TXT50 = tALL.DESCRIPCION;
+            //    db.TALLTs.Add(pt);
+
+            //db.SaveChanges();
+            //    return RedirectToAction("Index");
+            
             int pagina = 723; //ID EN BASE DE DATOS
             using (TAT001Entities db = new TAT001Entities())
             {
@@ -186,8 +200,7 @@ namespace TAT001.Controllers.Catalogos
                 Session["spras"] = user.SPRAS_ID;
                 ViewBag.lan = user.SPRAS_ID;
             }
-
-            ViewBag.GALL_ID = new SelectList(db.GALLs, "ID", "DESCRIPCION", tALL.GALL_ID);
+            ViewBag.GALL_ID = new SelectList(db.GALLs, "ID", "DESCRIPCION");
             return View(tALL);
         }
 

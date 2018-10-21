@@ -136,7 +136,7 @@ namespace TAT001.Controllers
             if (ModelState.IsValid)
             {
                 //TSOPORTE TS = new TSOPORTE();
-                tSOPORTE.ACTIVO = true;
+                //tSOPORTE.ACTIVO = true;
                 db.TSOPORTEs.Add(tSOPORTE);
                 db.SaveChanges();
                 List<SPRA> ss = db.SPRAS.ToList();
@@ -152,51 +152,7 @@ namespace TAT001.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            //if (ModelState.IsValid)
-            //{
-            //    TSOPORTE ts = new TSOPORTE();
-            //    ts.ACTIVO = true;
-            //    db.TSOPORTEs.Add(ts);
-            //    db.SaveChanges();
-            //    List<SPRA> ss = db.SPRAS.ToList();
-            //    foreach (SPRA s in ss)
-            //    {
-            //        TSOPORTET tsopor = new TSOPORTET();
-            //        tsopor.SPRAS_ID = s.ID;
-            //        tsopor.TSOPORTE_ID = ts.ID;
-            //        tsopor.TXT50 = tSOPORTET.TXT50;
-            //        db.TSOPORTETs.Add(tsopor);
-            //    }
-            //    db.SaveChanges();
-            //    return RedirectToAction("Index");
-            //}
-
-            //if (ModelState.IsValid)
-            //{
-            //    TSOPORTE ts = new TSOPORTE();
-            //    ts.ACTIVO = true;
-            //    db.TSOPORTEs.Add(ts);
-            //    db.SaveChanges();
-            //    List<SPRA> ss = db.SPRAS.ToList();
-            //    foreach (SPRA s in ss)
-            //    {
-            //        TSOPORTET tsopor = new TSOPORTET();
-            //        tsopor.SPRAS_ID = s.ID;
-            //        tsopor.TSOPORTE_ID = ts.ID;
-            //        tsopor.TXT50 = tSOPORTET.TXT50;
-            //        db.TSOPORTETs.Add(tsopor);
-            //    }
-            //    db.SaveChanges();
-            //    return RedirectToAction("Index");
-            //}
-
-
-            //if (ModelState.IsValid)
-            //{
-            //    db.TSOPORTETs.Add(tSOPORTET);
-            //    db.SaveChanges();
-            //    return RedirectToAction("Index");
-            //}
+           
 
             int pagina = 843; //ID EN BASE DE DATOS
             string u = User.Identity.Name;
@@ -295,6 +251,9 @@ namespace TAT001.Controllers
 
             if (ModelState.IsValid)
             {
+                db.Entry(tSOPORTE).State = EntityState.Modified;
+                db.SaveChanges();
+
                 TSOPORTE mATERIAL1 = db.TSOPORTEs.Find(tSOPORTE.ID);
                 var materialtextos = db.TSOPORTETs.Where(t => t.TSOPORTE_ID == tSOPORTE.ID).ToList();
                 db.TSOPORTETs.RemoveRange(materialtextos);

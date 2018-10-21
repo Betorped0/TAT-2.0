@@ -6,7 +6,7 @@
     ViewBag.pagina_r = 1313;
     ViewBag.carpeta_r = 500;
 }
-
+<script src="~/Scripts/ValidarProv.js"></script>
 <div class="row">
     <div class="col s12 right-align">
         <a href="@Url.Action("Index", "DesviacionesTS")" class="btn-small">Lista</a>
@@ -29,22 +29,22 @@
                         @Html.LabelFor(model => Model.TS_FORMT.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT100)
                     </div>
                     <div class="input-field col l10 m10" style="margin-bottom:0;">
-                       
+
                         @Html.LabelFor(model => model.ACTIVO, "ACTIVO", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblPais" })
                         @Html.ValidationMessageFor(model => model.ACTIVO, "", new { @class = "text-danger" })
-                        @Html.EditorFor(model => model.ACTIVO, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idact" } })
+                        @Html.EditorFor(model => model.ACTIVO, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idactivo" } })
 
                         @if ((bool)Model.ACTIVO == true)
                         {
                             <label>
-                                <input type="checkbox" name="selectedCustomers" value="true" id="act" onclick="check()" checked />
+                                <input type="checkbox" name="selectedCustomers" value="true" id="activo" onclick="check()" checked />
                                 <span style="height:0"></span>
                             </label>
                         }
                         else
                         {
                             <label>
-                                <input type="checkbox" name="selectedCustomers" value="true" id="act" onclick="check()" />
+                                <input type="checkbox" name="selectedCustomers" value="true" id="activo" onclick="check()" />
                                 <span style="height:0"></span>
                             </label>
                         }
@@ -85,21 +85,20 @@
                             <input type="submit" value="Guardar" class="btn btn-default" />
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
-
-
     }
 </div>
 
 <script>
     function check() {
-        if ($("#act").prop('checked'))
-            $("#idact").prop('checked', true);
+       
+        if ($("#activo").prop('checked'))
+            $("#idactivo").prop('checked', true);
         else
-            $("#idact").prop('checked', false);
+            $("#idactivo").prop('checked', false);
+    }
 </script>
 
 <div style="color:black">
