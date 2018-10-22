@@ -2481,6 +2481,7 @@ namespace TAT001.Controllers
                 }
                 catch (Exception e)
                 {
+                    Log.ErrorLogApp(e,"Solicitudes","Create");
                     if (errorString == "")
                     {
                         errorString = e.Message.ToString();
@@ -2701,7 +2702,7 @@ namespace TAT001.Controllers
             ViewBag.MONTO_DIS = monto_ret;
 
             //----------------------------RSG 18.05.2018
-            string spras = Session["spras"].ToString();
+            string spras = FnCommon.ObtenerSprasId(db,User.Identity.Name);
             ViewBag.PERIODOS = new SelectList(db.PERIODOTs.Where(a => a.SPRAS_ID == spras).ToList(), "PERIODO_ID", "TXT50", DateTime.Now.Month);
             List<string> anios = new List<string>();
             int mas = 10;
