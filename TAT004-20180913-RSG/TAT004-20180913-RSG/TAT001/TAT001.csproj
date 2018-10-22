@@ -222,6 +222,7 @@
     <Compile Include="Controllers\Catalogos\GALLController.cs" />
     <Compile Include="Controllers\Catalogos\IimpuestoController.cs" />
     <Compile Include="Controllers\Catalogos\ImpuestosController.cs" />
+    <Compile Include="Controllers\Catalogos\MonedaController.cs" />
     <Compile Include="Controllers\Catalogos\SociedadesController.cs" />
     <Compile Include="Controllers\Catalogos\SoporteController.cs" />
     <Compile Include="Controllers\Catalogos\TALLsController.cs" />
@@ -1925,6 +1926,12 @@
     <Content Include="Views\Soporte\Index.cshtml" />
     <Content Include="Views\Usuarios\AddBackup.cshtml" />
     <Content Include="Views\Usuarios\EditBackup.cshtml" />
+    <Content Include="Views\TSOL\Create.cshtml" />
+    <Content Include="Views\Moneda\Create.cshtml" />
+    <Content Include="Views\Moneda\Delete.cshtml" />
+    <Content Include="Views\Moneda\Details.cshtml" />
+    <Content Include="Views\Moneda\Edit.cshtml" />
+    <Content Include="Views\Moneda\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->
