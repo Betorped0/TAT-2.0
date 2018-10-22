@@ -81,24 +81,52 @@
                     </div>
                 }
                 @*<div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <button id="btnGEdit" type="submit" value="Submit" class="btn btn-default"></button>
-                    </div>
-                </div>*@
+            <div class="col-md-offset-2 col-md-10">
+                <button id="btnGEdit" type="submit" value="Submit" class="btn btn-default"></button>
+            </div>
+        </div>*@
+
+                <div class="input-field col l6 m6" style="margin-bottom:0;">
+                    @Html.LabelFor(model => model.ACTIVO, "ACTIVO", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblPais" })
+                    @Html.ValidationMessageFor(model => model.ACTIVO, "", new { @class = "text-danger" })
+                    @Html.EditorFor(model => model.ACTIVO, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idact" } })
+
+                    @if ((bool)Model.ACTIVO == true)
+                    {
+                        <label>
+                            <input type="checkbox" name="selectedCustomers" value="true" id="act" onclick="check()" checked />
+                            <span style="height:0"></span>
+                        </label>
+                    }
+                    else
+                    {
+                        <label>
+                            <input type="checkbox" name="selectedCustomers" value="true" id="act" onclick="check()" />
+                            <span style="height:0"></span>
+                        </label>
+                    }
+                </div>
             </div>
         </div>
     </div>
 </div>
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
+
 <script>
+    function check() {
+    if ($("#act").prop('checked'))
+        $("#idact").prop('checked', true);
+    else
+        $("#idact").prop('checked', false);
+    }
+
     var elem = document.querySelectorAll('select');
     var m = M.FormSelect.init(elem, []);
 </script>
-
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
 @*@section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }*@

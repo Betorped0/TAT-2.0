@@ -1410,6 +1410,12 @@ namespace TAT001.Controllers
                         dOCUMENTO.GALL_ID = db.TALLs.Where(t => t.ID == dOCUMENTO.TALL_ID).FirstOrDefault().GALL_ID;
                     }
 
+                    //OCG 21/10/18
+                    CUENTA cu = db.CUENTAs.Where(x => x.TALL_ID == dOCUMENTO.TALL_ID & x.SOCIEDAD_ID == dOCUMENTO.SOCIEDAD_ID).FirstOrDefault();
+                    dOCUMENTO.CUENTAP = cu.ABONO;
+                    dOCUMENTO.CUENTAPL = cu.CARGO;
+                    //OCG 21/10/18
+
                     DOCUMENTO d = new DOCUMENTO();
                     if (dOCUMENTO.DOCUMENTO_REF > 0)
                     {

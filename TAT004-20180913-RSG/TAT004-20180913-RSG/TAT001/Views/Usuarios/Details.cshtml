@@ -62,7 +62,7 @@
                     @Html.ValidationMessageFor(model => model.EMAIL, "", new { @class = "text-danger" })
                 </div>
                 <div class="input-field col s6">
-                    @Html.EditorFor(model => model.SPRAS_ID, null, new { htmlAttributes = new { @disabled = "disabled" } })
+                    @Html.EditorFor(model => model.SPRA.DESCRIPCION, null, new { htmlAttributes = new { @disabled = "disabled" } })
                     <label id="lbl_spras">SPRAS</label>
                     @Html.ValidationMessageFor(model => model.SPRAS_ID, "", new { @class = "text-danger" })
                 </div>
@@ -110,7 +110,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var i in Model.DELEGARs.Where(t=>t.ACTIVO==true))
+                    @foreach (var i in Model.DELEGARs.OrderByDescending(t=>t.FECHAF))
                     {
                     <tr>
                         <td>@i.USUARIOD_ID </td>
@@ -126,9 +126,11 @@
                                 @*<a href="@Url.Action("EditBackup", new { id = i.USUARIO_ID, idd=i.USUARIOD_ID, fi=i.FECHAI, ff=i.FECHAF })">
                                     <i class='material-icons green-text'>edit</i>
                                 </a>&nbsp*@
-                                <a href="@Url.Action("DeleteBackup", new { id = i.USUARIO_ID, idd=i.USUARIOD_ID, fi=i.FECHAI, ff=i.FECHAF })">
+                                @if (i.ACTIVO)
+                                {
+                                <a href="@Url.Action("DeleteBackup", new { id = i.USUARIO_ID, idd = i.USUARIOD_ID, fi = i.FECHAI, ff = i.FECHAF })">
                                     <i class='material-icons red-text'>delete</i>
-                                </a>
+                                </a>}
                             </td>
                     </tr>
                     }

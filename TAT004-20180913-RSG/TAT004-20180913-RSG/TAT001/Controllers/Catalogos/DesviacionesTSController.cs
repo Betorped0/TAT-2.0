@@ -141,7 +141,7 @@ namespace TAT001.Controllers.Catalogos
             if (ModelState.IsValid)
             {
                 TS_CAMPO TS = new TS_CAMPO();
-                TS.ACTIVO = true;
+                //TS.ACTIVO = true;
                 db.TS_CAMPO.Add(TS);
                 db.SaveChanges();
                 List<SPRA> ss = db.SPRAS.ToList();
@@ -249,8 +249,7 @@ namespace TAT001.Controllers.Catalogos
             { }
             //ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION", tS_FORMT.SPRAS_ID);
             //ViewBag.TSFORM_ID = new SelectList(db.TS_CAMPO, "ID", "ID", tS_FORMT.TSFORM_ID);
-            ViewBag.SPRAS = db.SPRAS.ToList();
-           
+            ViewBag.SPRAS = db.SPRAS.ToList();          
             ViewBag.des = db.TSOLTs.ToList();
             return View(tSOPORTE);
         }
@@ -264,6 +263,10 @@ namespace TAT001.Controllers.Catalogos
         {
             if (ModelState.IsValid)
             {
+                tc.ACTIVO = tc.ACTIVO;
+                db.Entry(tc).State = EntityState.Modified;
+                db.SaveChanges();
+
                 TS_CAMPO mATERIAL1 = db.TS_CAMPO.Find(tc.ID);
                 var materialtextos = db.TS_FORMT.Where(t => t.TSFORM_ID == tc.ID).ToList();
                 db.TS_FORMT.RemoveRange(materialtextos);
