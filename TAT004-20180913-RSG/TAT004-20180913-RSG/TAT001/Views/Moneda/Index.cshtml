@@ -1,7 +1,7 @@
-﻿@model IEnumerable<TAT001.Entities.PAI>
+﻿@model IEnumerable<TAT001.Entities.MONEDA>
 
 @{
-    ViewBag.pagina_r = 651;
+    ViewBag.pagina_r = 930;
     ViewBag.carpeta_r = 500;
     //ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -13,20 +13,6 @@
 <link href="~/Content/dataTable.css" rel="stylesheet" />
 <link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
 
-@*<div class="row">
-    <div class="row" style="height:10px;width:100%;">
-        <div class="col l7 pink darken-1" style="height:10px;padding:0;"></div>
-        <div class="col l3 pink darken-4" style="height:10px;padding:0;">
-            <div class="col l3 pink darken-4" style="height:10px;padding:0;"></div>
-            <div class="col l8 orange" style="height:10px;padding:0;"></div>
-            <div class="col l1 red" style="height:10px;padding:0;"></div>
-        </div>
-        <div class="col l2 yellow" style="height:10px;padding:0;"></div>
-    </div>
-</div>*@
-@*<p>
-    @Html.ActionLink("Nuevo registro", "Create")
-</p>*@
 <div class="row">
     <div class="card-panel">
         <div class="row" style="margin-bottom:0;">
@@ -52,21 +38,27 @@
         <table class="table mdl-data-table striped" id="table" style="width:100%;">
             <thead>
                 <tr>
-                    <th class="lbl_spras">
-                        @Html.DisplayNameFor(model => model.SPRAS)
+                    <th class="lbl_waers">
+                        @Html.DisplayNameFor(model => model.WAERS)
                     </th>
-                    <th class="lbl_land">
-                        @Html.DisplayNameFor(model => model.LANDX)
+                    <th class="lbl_isocd">
+                        @Html.DisplayNameFor(model => model.ISOCD)
                     </th>
-                    <th class="lbl_sociedad">
-                        @Html.DisplayNameFor(model => model.SOCIEDAD_ID)
+                    <th class="lbl_altwr">
+                        @Html.DisplayNameFor(model => model.ALTWR)
+                    </th>
+                    <th class="lbl_ltext">
+                        @Html.DisplayNameFor(model => model.LTEXT)
+                    </th>
+                    <th class="lbl_ktext">
+                        @Html.DisplayNameFor(model => model.KTEXT)
                     </th>
                     <th class="lbl_activo">
                         @Html.DisplayNameFor(model => model.ACTIVO)
                     </th>
                     @*<th class="lbl_actions">
-                        SELECCIÓN
-                    </th>*@
+            SELECCIÓN
+        </th>*@
                 </tr>
             </thead>
             <tbody>
@@ -76,13 +68,19 @@
                     {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.SPRAS)
+                        @Html.DisplayFor(modelItem => item.WAERS)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.LANDX)
+                        @Html.DisplayFor(modelItem => item.ISOCD)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.SOCIEDAD_ID)
+                        @Html.DisplayFor(modelItem => item.ALTWR)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LTEXT)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.KTEXT)
                     </td>
                     @if ((bool)item.ACTIVO == true)
                     {
@@ -90,17 +88,6 @@
                     else
                     {
                         <td style="align-items:center;"><i class='material-icons red-text'>clear</i></td>}
-                    @*<td>
-            <a href="@Url.Action("Edit", "Pais", new { id = item.LAND })">
-                <i class='material-icons green-text'>edit</i>
-            </a>&nbsp
-            <a href="@Url.Action("Details", "Pais", new { id = item.LAND })">
-                <i class='material-icons blue-text'>search</i>
-            </a>&nbsp
-            <a data-form-method="post" href="@Url.Action("Delete", "Pais", new { id = item.LAND })">
-                <i class='material-icons red-text'>delete</i>
-            </a>
-        </td>*@
                 </tr>
                     }
                 }
