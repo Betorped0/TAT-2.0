@@ -74,9 +74,9 @@
                         }
                         catch (Exception)
                         {
-                            <option value="" id="no_opt">No hay opciones</option>
                         }
                     </select>
+                    <label id="lbl_cocode">Co. Code</label>
                     <script>
                         $(document).on('change', '#selectcocode', function () {
                             $("#selectCliente").val("");
@@ -89,7 +89,6 @@
                             //}
                         });
                     </script>
-                    <label id="label_cocode">Co. Code</label>
                 </div>
                 @* FILTRO PERIODO *@
                 @* OBLIGATORIO *@
@@ -111,10 +110,9 @@
                         }
                         catch (Exception)
                         {
-                            <option value="" id="no_optper">No hay opciones</option>
                         }
                     </select>
-                    <label id="label_period">Periodo *</label>
+                    <label id="lbl_periodo">Periodo *</label>
                 </div>
                 @* FILTRO AÑO *@
                 @* OBLIGATORIO *@
@@ -133,7 +131,7 @@
                             <option value="@yeard">@yeard</option>
                         }
                     </select>
-                    <label id="label_yr">Año *</label>
+                    <label id="lbl_anio">Año *</label>
                 </div>
                 @* FILTRO USUARIO *@
                 @* OPCIONAL *@
@@ -150,10 +148,9 @@
                         }
                         catch (Exception)
                         {
-                            <option value="" id="no_optper">No hay opciones</option>
                         }
                     </select>
-                    <label id="label_period">Usuario</label>
+                    <label id="lbl_usuario">Usuario</label>
                 </div>
                 @* FILTRO CLIENTE *@
                 @* OPCIONAL *@

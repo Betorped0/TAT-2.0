@@ -85,7 +85,7 @@
                         <option value="3">Q3</option>
                         <option value="4">Q4</option>
                     </select>
-                    <label id="label_period">Quarter</label>
+                    <label id="lbl_quarter">Quarter</label>
                 </div>
                 <div class="input-field col s2 m2 l2">
                     <select multiple name="selectperiod" id="selectperiod" class="comcode select_all" required="">
@@ -106,10 +106,9 @@
                         }
                         catch (Exception)
                         {
-                            <option value="" id="no_optper">No hay opciones</option>
                         }
                     </select>
-                    <label id="label_period">Periodo *</label>
+                    <label id="lbl_periodo">Periodo *</label>
                 </div>
                 <div class="input-field col s2 m2 l2">
                     <select name="selectyear" id="selectyear" required="">
@@ -127,7 +126,7 @@
                             <option value="@yeard">@yeard</option>
                         }
                     </select>
-                    <label id="label_yr">Año *</label>
+                    <label id="lbl_anio">Año *</label>
                 </div>
                 <div class="input-field col s2 m2 l2">
                     <select multiple name="selectcocode" id="selectcocode" class="comcode select_all" required="">
@@ -140,9 +139,9 @@
                         }
                         catch (Exception)
                         {
-                            <option value="" id="no_opt">No hay opciones</option>
                         }
                     </select>
+                    <label id="lbl_cocode">Co. Code *</label>
                     <script>
                         $(document).on('change', '#selectcocode', function () {
                             var vcocode = $("#selectcocode").val();
@@ -170,7 +169,6 @@
                             })
                         });
                     </script>
-                    <label id="label_cocode">Co. Code *</label>
                 </div>
                 <div class="input-field col s2 m2 l2">
                     <select name="selectcanal" id="selectcanal">
@@ -183,10 +181,9 @@
                         }
                         catch (Exception)
                         {
-                            <option value="" id="no_opt">No hay opciones</option>
                         }
                     </select>
-                    <label id="label_period">Canal</label>
+                    <label id="lbl_canal">Canal</label>
                 </div>
                 <div class="input-field col s2 m2 l2">
                     <select multiple name="selectpayer" id="selectpayer" required="" class="comcode select_all">
@@ -202,7 +199,7 @@
                             <option value="" id="no_opt">No hay opciones</option>
                         }*@
                     </select>
-                    <label id="label_cocode">Payer *</label>
+                    <label id="lbl_payer">Payer *</label>
                 </div>
                 <div class="input-field col s2 m2 l2">
                     <select multiple name="selectcategory" id="selectcategory" class="comcode select_all">
@@ -216,10 +213,9 @@
                         }
                         catch (Exception)
                         {
-                            <option value="" id="no_opt">No hay opciones</option>
                         }
                     </select>
-                    <label id="label_cocode">Categoria</label>
+                    <label id="lbl_categoria">Categoria</label>
                 </div>
             </div>
         </div>
