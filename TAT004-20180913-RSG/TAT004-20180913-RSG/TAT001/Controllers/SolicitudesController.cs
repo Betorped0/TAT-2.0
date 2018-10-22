@@ -123,7 +123,7 @@ namespace TAT001.Controllers
                     else
                         usuariodel = User.Identity.Name;
 
-                    if (f.USUARIOA_ID.Equals(usuariodel))
+                    if (f.USUARIOA_ID.Replace(" ",String.Empty).Equals(usuariodel))
                         ViewBag.accion = db.WORKFPs.Where(a => a.ID.Equals(f.WORKF_ID) & a.POS.Equals(f.WF_POS) & a.VERSION.Equals(f.WF_VERSION)).FirstOrDefault().ACCION.TIPO;
                 }
                 else
