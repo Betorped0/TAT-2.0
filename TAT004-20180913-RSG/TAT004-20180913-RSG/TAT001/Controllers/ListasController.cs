@@ -35,13 +35,15 @@ namespace TAT001.Controllers
             TAT001Entities db = new TAT001Entities();
             var c = (from cl in db.CLIENTEs
                      join p in db.PAIS on cl.LAND equals p.LAND
-                        where cl.KUNNR.Contains(Prefix) && comcodessplit.Contains(p.SOCIEDAD_ID)
+                        where cl.KUNNR.Contains(Prefix) && comcodessplit.Contains(p.SOCIEDAD_ID) && cl.ACTIVO && p.ACTIVO
+                        orderby cl.NAME1
                         select new { cl.KUNNR, cl.NAME1 }).ToList();
             if (c.Count == 0)
             {
                 var c2 = (from cl in db.CLIENTEs
                           join p in db.PAIS on cl.LAND equals p.LAND
-                          where cl.NAME1.Contains(Prefix) && comcodessplit.Contains(p.SOCIEDAD_ID)
+                          where cl.NAME1.Contains(Prefix) && comcodessplit.Contains(p.SOCIEDAD_ID) && cl.ACTIVO && p.ACTIVO
+                          orderby cl.NAME1
                           select new { cl.KUNNR, cl.NAME1 }).ToList();
                 c.AddRange(c2);
             }
@@ -61,7 +63,8 @@ namespace TAT001.Controllers
             TAT001Entities db = new TAT001Entities();
 
             var c = (from D in db.PAIS
-                     where comcodessplit.Contains(D.SOCIEDAD_ID)
+                     where comcodessplit.Contains(D.SOCIEDAD_ID) && D.ACTIVO
+                     orderby D.LANDX
                      select new { D.LAND, D.LANDX });
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
             return cc;
@@ -80,7 +83,8 @@ namespace TAT001.Controllers
 
             var c = (from cl in db.CLIENTEs
                      join p in db.PAIS on cl.LAND equals p.LAND
-                     where comcodessplit.Contains(p.SOCIEDAD_ID)
+                     where comcodessplit.Contains(p.SOCIEDAD_ID) && cl.ACTIVO && p.ACTIVO
+                     orderby cl.NAME1
                      select new { cl.KUNNR, cl.NAME1 });
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
             return cc;

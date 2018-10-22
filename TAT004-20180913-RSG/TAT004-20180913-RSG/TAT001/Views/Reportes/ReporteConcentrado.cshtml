@@ -6,7 +6,7 @@
     //ViewBag.Title = "Páginas";
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.pagina_r = 1100;
-    ViewBag.carpeta_r = 1103;
+    ViewBag.carpeta_r = 1101;
     List<Tuple<decimal, decimal>> negAmount = new List<Tuple<decimal, decimal>>();
 }
 @if (!ViewBag.Display)
@@ -82,9 +82,9 @@
                         }
                         catch (Exception)
                         {
-                            <option value="" id="no_opt">No hay opciones</option>
                         }
                     </select>
+                    <label id="lbl_cocode">Co. Code *</label>
                     <script>
                         $(document).on('change', '#selectcocode', function () {
                             var vcocode = $("#selectcocode").val();
@@ -112,7 +112,6 @@
                             })
                         });
                     </script>
-                    <label id="label_cocode">Co. Code *</label>
                 </div>
                 <div class="input-field col s3 m3 l3">
                     <select multiple name="selectpais" id="selectpais" class="comcode select_all">
@@ -132,7 +131,7 @@
                             <option value="" id="no_optper">No hay opciones</option>
                         }*@
                     </select>
-                    <label id="label_period">Pais</label>
+                    <label id="lbl_pais">Pais</label>
                 </div>
                 <div class="input-field col s2 m2 l2">
                     <select multiple name="selectperiod" id="selectperiod" class="comcode select_all" required="">
@@ -154,10 +153,9 @@
                         }
                         catch (Exception)
                         {
-                            <option value="" id="no_optper">No hay opciones</option>
                         }
                     </select>
-                    <label id="label_period">Periodo *</label>
+                    <label id="lbl_periodo">Periodo *</label>
                 </div>
                 <div class="input-field col s2 m2 l2">
                     <select multiple name="selectyear" id="selectyear" class="comcode select_all" required="">
@@ -175,109 +173,109 @@
                             <option value="@yeard">@yeard</option>
                         }
                     </select>
-                    <label id="label_yr">Año *</label>
+                    <label id="lbl_anio">Año *</label>
                 </div>
                 <div class="input-field col s2 m2 l2">
                     <select multiple name="selectcampos" id="selectcampos" class="comcode select_all" required="">
-                        <option value="1">Co. Code</option>
-                        <option value="2">País</option>
-                        <option value="3">Subregión</option>
-                        <option value="4">Estado</option>
-                        <option value="5">Ciudad</option>
-                        <option value="6">Número solicitud</option>
-                        <option value="7">Fecha Solicitud</option>
-                        <option value="8">Hora solicitud</option>
-                        <option value="9">Semana del periodo</option>
-                        <option value="10">Periodo contable</option>
-                        <option value="11">Año</option>
-                        <option value="12">Tipo Solicitud</option>
-                        <option value="13">Tipo Provisión</option>
-                        <option value="14">Tipo NC</option>
-                        <option value="15">Tipo OP</option>
-                        <option value="16">Status</option>
-                        <option value="17">Concepto</option>
-                        <option value="18">Mecánica</option>
-                        <option value="19">De</option>
-                        <option value="20">A</option>
-                        <option value="21">De</option>
-                        <option value="22">A</option>
-                        <option value="23">Clasificación</option>
-                        <option value="24">Cuenta Contable Gasto</option>
-                        <option value="25">Nombre de la cuenta</option>
-                        <option value="26">Cliente</option>
-                        <option value="27">Nombre</option>
-                        <option value="28">Tipo de Cliente</option>
-                        <option value="29">Organización de Ventas</option>
-                        <option value="30">Tax ID</option>
-                        <option value="31">Canal</option>
-                        <option value="32">Descripción</option>
-                        <option value="33">Nombre de Contacto</option>
-                        <option value="34">Email de Contacto</option>
-                        <option value="35">$ Monto Original de Provisión</option>
-                        <option value="36">$ Monto NC/OP</option>
-                        <option value="37">$Monto Aplicado</option>
-                        <option value="38">Saldo Remanente Provisión</option>
-                        <option value="39">$ Monto Reverso Provisión</option>
-                        <option value="40">% Reverso</option>
-                        <option value="41">$ Exceso/(Insuficiencia) Provisión</option>
-                        <option value="42">% Exceso/(Insuficiencia) Provisión</option>
-                        <option value="43">Impactos / Beneficios en el gasto del Periodo</option>
-                        <option value="44">Núm. Registro Provisión</option>
-                        <option value="45">Núm. Registro NC/OP</option>
-                        <option value="46">Núm. Registro Reverso</option>
-                        <option value="47">Fecha Reverso Provisión</option>
-                        <option value="48">Periodo Contable Reverso</option>
-                        <option value="49">Razón Reverso</option>
-                        <option value="50">Comentario Reverso</option>
-                        <option value="51">Usuario</option>
-                        <option value="52">Back Up</option>
-                        <option value="53">Creado Por</option>
-                        <option value="54">Creado Por ID</option>
-                        <option value="55">Solicitado Por</option>
-                        <option value="56">Solicitado Por ID</option>
-                        <option value="57">Modificado Por</option>
-                        <option value="58">Modificado Por ID</option>
-                        <option value="59">Aprobador Nivel 1</option>
-                        <option value="60">Aprobador Nivel 2</option>
-                        <option value="61">Aprobador Nivel 3</option>
-                        <option value="62">Aprobador Nivel 4</option>
-                        <option value="63">Aprobador Nivel 5</option>
-                        <option value="64">Proveedor</option>
-                        <option value="65">Nombre Proveedor</option>
-                        <option value="66">Número Factura Proveedor</option>
-                        <option value="67">Número Factura Kellogg´s</option>
-                        <option value="68">Número NC </option>
-                        <option value="69">Numero Orden de Pago</option>
-                        <option value="70">Expense Recognition en periodo</option>
-                        <option value="71">Expense Recognition Ejercicio</option>
-                        <option value="72">Soporte Incorrecto</option>
-                        <option value="73">Soporte validado con base variable pendiente</option>
-                        <option value="74">Carta</option>
-                        <option value="75">Contrato</option>
-                        <option value="76">JBP</option>
-                        <option value="77">Factura</option>
-                        <option value="78">Otros</option>
-                        <option value="79">Negociación por monto</option>
-                        <option value="80">Negociación por %</option>
-                        <option value="81">Distribución por material</option>
-                        <option value="82">Distribución categoría</option>
-                        <option value="83">Monto Base</option>
-                        <option value="84">Monto %</option>
-                        <option value="85">Recurrente</option>
-                        <option value="86">Recurrente por porcentaje</option>
-                        <option value="87">Recurrente por Monto</option>
-                        <option value="88">Recurrente Cancelada</option>
-                        <option value="89">Objetivo Inicio</option>
-                        <option value="90">Objetivo Límite</option>
-                        <option value="91">Estatus</option>
-                        <option value="92">Venta del Periodo</option>
-                        <option value="93">Monto Provisión</option>
-                        <option value="94">Back Order</option>
-                        <option value="95">Venta Real + BO</option>
-                        <option value="96">NC / OP o Reverso</option>
-                        <option value="97">Monto</option>
+                        <option id="opt_campo_1" value="1">Co. Code</option>
+                        <option id="opt_campo_2" value="2">País</option>
+                        <option id="opt_campo_3" value="3">Subregión</option>
+                        <option id="opt_campo_4" value="4">Estado</option>
+                        <option id="opt_campo_5" value="5">Ciudad</option>
+                        <option id="opt_campo_6" value="6">Número solicitud</option>
+                        <option id="opt_campo_7" value="7">Fecha Solicitud</option>
+                        <option id="opt_campo_8" value="8">Hora solicitud</option>
+                        <option id="opt_campo_9" value="9">Semana del periodo</option>
+                        <option id="opt_campo_10" value="10">Periodo contable</option>
+                        <option id="opt_campo_11" value="11">Año</option>
+                        <option id="opt_campo_12" value="12">Tipo Solicitud</option>
+                        <option id="opt_campo_13" value="13">Tipo Provisión</option>
+                        <option id="opt_campo_14" value="14">Tipo NC</option>
+                        <option id="opt_campo_15" value="15">Tipo OP</option>
+                        <option id="opt_campo_16" value="16">Status</option>
+                        <option id="opt_campo_17" value="17">Concepto</option>
+                        <option id="opt_campo_18" value="18">Mecánica</option>
+                        <option id="opt_campo_19" value="19">De</option>
+                        <option id="opt_campo_20" value="20">A</option>
+                        <option id="opt_campo_21" value="21">De</option>
+                        <option id="opt_campo_22" value="22">A</option>
+                        <option id="opt_campo_23" value="23">Clasificación</option>
+                        <option id="opt_campo_24" value="24">Cuenta Contable Gasto</option>
+                        <option id="opt_campo_25" value="25">Nombre de la cuenta</option>
+                        <option id="opt_campo_26" value="26">Cliente</option>
+                        <option id="opt_campo_27" value="27">Nombre</option>
+                        <option id="opt_campo_28" value="28">Tipo de Cliente</option>
+                        <option id="opt_campo_29" value="29">Organización de Ventas</option>
+                        <option id="opt_campo_30" value="30">Tax ID</option>
+                        <option id="opt_campo_31" value="31">Canal</option>
+                        <option id="opt_campo_32" value="32">Descripción</option>
+                        <option id="opt_campo_33" value="33">Nombre de Contacto</option>
+                        <option id="opt_campo_34" value="34">Email de Contacto</option>
+                        <option id="opt_campo_35" value="35">$ Monto Original de Provisión</option>
+                        <option id="opt_campo_36" value="36">$ Monto NC/OP</option>
+                        <option id="opt_campo_37" value="37">$Monto Aplicado</option>
+                        <option id="opt_campo_38" value="38">Saldo Remanente Provisión</option>
+                        <option id="opt_campo_39" value="39">$ Monto Reverso Provisión</option>
+                        <option id="opt_campo_40" value="40">% Reverso</option>
+                        <option id="opt_campo_41" value="41">$ Exceso/(Insuficiencia) Provisión</option>
+                        <option id="opt_campo_42" value="42">% Exceso/(Insuficiencia) Provisión</option>
+                        <option id="opt_campo_43" value="43">Impactos / Beneficios en el gasto del Periodo</option>
+                        <option id="opt_campo_44" value="44">Núm. Registro Provisión</option>
+                        <option id="opt_campo_45" value="45">Núm. Registro NC/OP</option>
+                        <option id="opt_campo_46" value="46">Núm. Registro Reverso</option>
+                        <option id="opt_campo_47" value="47">Fecha Reverso Provisión</option>
+                        <option id="opt_campo_48" value="48">Periodo Contable Reverso</option>
+                        <option id="opt_campo_49" value="49">Razón Reverso</option>
+                        <option id="opt_campo_50" value="50">Comentario Reverso</option>
+                        <option id="opt_campo_51" value="51">Usuario</option>
+                        <option id="opt_campo_52" value="52">Back Up</option>
+                        <option id="opt_campo_53" value="53">Creado Por</option>
+                        <option id="opt_campo_54" value="54">Creado Por ID</option>
+                        <option id="opt_campo_55" value="55">Solicitado Por</option>
+                        <option id="opt_campo_56" value="56">Solicitado Por ID</option>
+                        <option id="opt_campo_57" value="57">Modificado Por</option>
+                        <option id="opt_campo_58" value="58">Modificado Por ID</option>
+                        <option id="opt_campo_59" value="59">Aprobador Nivel 1</option>
+                        <option id="opt_campo_60" value="60">Aprobador Nivel 2</option>
+                        <option id="opt_campo_61" value="61">Aprobador Nivel 3</option>
+                        <option id="opt_campo_62" value="62">Aprobador Nivel 4</option>
+                        <option id="opt_campo_63" value="63">Aprobador Nivel 5</option>
+                        <option id="opt_campo_64" value="64">Proveedor</option>
+                        <option id="opt_campo_65" value="65">Nombre Proveedor</option>
+                        <option id="opt_campo_66" value="66">Número Factura Proveedor</option>
+                        <option id="opt_campo_67" value="67">Número Factura Kellogg´s</option>
+                        <option id="opt_campo_68" value="68">Número NC </option>
+                        <option id="opt_campo_69" value="69">Numero Orden de Pago</option>
+                        <option id="opt_campo_70" value="70">Expense Recognition en periodo</option>
+                        <option id="opt_campo_71" value="71">Expense Recognition Ejercicio</option>
+                        <option id="opt_campo_72" value="72">Soporte Incorrecto</option>
+                        <option id="opt_campo_73" value="73">Soporte validado con base variable pendiente</option>
+                        <option id="opt_campo_74" value="74">Carta</option>
+                        <option id="opt_campo_75" value="75">Contrato</option>
+                        <option id="opt_campo_76" value="76">JBP</option>
+                        <option id="opt_campo_77" value="77">Factura</option>
+                        <option id="opt_campo_78" value="78">Otros</option>
+                        <option id="opt_campo_79" value="79">Negociación por monto</option>
+                        <option id="opt_campo_80" value="80">Negociación por %</option>
+                        <option id="opt_campo_81" value="81">Distribución por material</option>
+                        <option id="opt_campo_82" value="82">Distribución categoría</option>
+                        <option id="opt_campo_83" value="83">Monto Base</option>
+                        <option id="opt_campo_84" value="84">Monto %</option>
+                        <option id="opt_campo_85" value="85">Recurrente</option>
+                        <option id="opt_campo_86" value="86">Recurrente por porcentaje</option>
+                        <option id="opt_campo_87" value="87">Recurrente por Monto</option>
+                        <option id="opt_campo_88" value="88">Recurrente Cancelada</option>
+                        <option id="opt_campo_89" value="89">Objetivo Inicio</option>
+                        <option id="opt_campo_90" value="90">Objetivo Límite</option>
+                        <option id="opt_campo_91" value="91">Estatus</option>
+                        <option id="opt_campo_92" value="92">Venta del Periodo</option>
+                        <option id="opt_campo_93" value="93">Monto Provisión</option>
+                        <option id="opt_campo_94" value="94">Back Order</option>
+                        <option id="opt_campo_95" value="95">Venta Real + BO</option>
+                        <option id="opt_campo_96" value="96">NC / OP o Reverso</option>
+                        <option id="opt_campo_97" value="97">Monto</option>
                     </select>
-                    <label id="label_campos">Campos *</label>
+                    <label id="lbl_campos">Campos *</label>
                 </div>
             </div>
         </div>
@@ -1160,10 +1158,20 @@
                                 <td>@((item.PRESUPUESTO.CONSU == 0) ? string.Empty : String.Format("{0:C}", item.PRESUPUESTO.CONSU))</td>}<!--Saldo Remanente Provisión-->
                             @if (((string[])ViewBag.campos).Contains("39"))
                             {
-                                <td>@((item.documento.DOCUMENTOR == null) ? string.Empty : String.Format("{0:C}", item.documento.DOCUMENTOR.DOCUMENTO.MONTO_DOC_MD))</td>}<!--$ Monto Reverso Provisión-->
+                                <td>
+                                    @if (item.DOCSREFREVERSOS != null)
+                                    {
+                                        @(String.Format("{0:C}", item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("MONTO_DOC_MD").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null)))
+                                    }
+                                </td>}<!--$ Monto Reverso Provisión-->
                             @if (((string[])ViewBag.campos).Contains("40"))
                             {
-                                <td>@((item.documento.DOCUMENTOR == null) ? string.Empty : Convert.ToInt16((item.documento.DOCUMENTOR.DOCUMENTO.MONTO_DOC_MD * 100) / item.documento.MONTO_DOC_MD).ToString() + "%")</td>}<!--% Reverso-->
+                                <td>
+                                    @if (item.DOCSREFREVERSOS != null)
+                                    {
+                                        @((Convert.ToDecimal(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("MONTO_DOC_MD").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null)) * 100) / item.documento.MONTO_DOC_MD)
+                                    }
+                                </td>}<!--% Reverso-->
                             @if (((string[])ViewBag.campos).Contains("41"))
                             {
                                 <td></td>}<!--$ Exceso/(Insuficiencia) Provisión-->
@@ -1376,7 +1384,7 @@
                                 <td></td>}<!--Objetivo Límite-->
                             @if (((string[])ViewBag.campos).Contains("91"))
                             {
-                                <td></td>}<!--Estatus-->
+                                <td>@(item.ESTATUS_STRING)</td>}<!--Estatus-->
                             @if (((string[])ViewBag.campos).Contains("92"))
                             {
                                 <td></td>}<!--Venta del Periodo-->
