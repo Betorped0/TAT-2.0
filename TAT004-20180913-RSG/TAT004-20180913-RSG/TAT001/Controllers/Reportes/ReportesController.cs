@@ -1257,7 +1257,7 @@ namespace TAT001.Controllers.Reportes
 
             var queryDocs = (from d in db.DOCUMENTOes
                              join ds in db.DOCUMENTOSAPs on d.NUM_DOC equals ds.NUM_DOC
-                             join cgl in db.CUENTAGLs on ds.CUENTA_A equals cgl.ID.ToString()
+                             join cgl in db.CUENTAGLs on d.CUENTAP equals cgl.ID
                              join ts in db.TSOLs on d.TSOL_ID equals ts.ID
                              join f in db.FLUJOes on d.NUM_DOC equals f.NUM_DOC
                              join wfp in db.WORKFPs on new { f.WORKF_ID, f.WF_POS, f.WF_VERSION } equals new { WORKF_ID = wfp.ID, WF_POS = wfp.POS, WF_VERSION = wfp.VERSION }

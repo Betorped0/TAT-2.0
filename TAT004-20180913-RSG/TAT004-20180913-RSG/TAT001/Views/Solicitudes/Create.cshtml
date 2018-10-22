@@ -293,9 +293,9 @@ $(document).ready(function () {
                             <div class="row" style="margin-bottom:0">
                                 <div class="col s6">
                                     <div class="form-group">
-                                        @Html.LabelFor(model => model.SOCIEDAD_ID, "Sociedad", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_sociedad" })@*B20180801 MGC Textos*@
+                                        @Html.LabelFor(model => model.SOCIEDAD_ID, "Co. Code", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_sociedad" })@*B20180801 MGC Textos*@
                                         <div class="col-md-10">
-                                            @Html.EditorFor(model => model.SOCIEDAD_ID, new { htmlAttributes = new { @id = "sociedad_id", @class = "form-control", @disabled = "disabled" } })
+                                            @Html.EditorFor(model => model.SOCIEDAD_ID, new { htmlAttributes = new { @id = "sociedad_id", @class = "form-control", @readonly = true } })
                                         </div>
                                     </div>
                                 </div>
@@ -348,7 +348,7 @@ $(document).ready(function () {
                                     }
                                         var auto = $.noConflict(true);
                                         auto(document).ready(function () {
-                                            var pais = '@ViewBag.pais';
+                                            var pais = $("#pais_id").val();
                                             auto("#state_id").autocomplete({
                                                 source: function (request, response) {
                                                     auto.ajax({
@@ -386,7 +386,7 @@ $(document).ready(function () {
                                             source: function (request, response) {
                                                 var estado = $("#state_id").val();
                                                 auto.ajax({
-                                                    url: root +"/Listas/Ciudades",
+                                                    url: root +"Listas/Ciudades",
                                                     type: "GET",
                                                     dataType: "json",
                                                     data: { estado: estado, Prefix: request.term },
@@ -664,38 +664,51 @@ $(document).ready(function () {
                                     <script>
                                         function cambiaTemp(id) {
                                             var tipo = id.split('-')[1];
+                                            var periodoIId = document.getElementById("periodoi_id"),
+                                                anioIId = document.getElementById("anioi_id"),
+                                                periodoFId = document.getElementById("periodof_id"),
+                                                anioFId = document.getElementById("aniof_id"),
+                                                
+                                                fechI = document.getElementById("fechai_vig2"),
+                                                fechF = document.getElementById("fechaf_vig2");
+
                                             if (tipo == "date" & document.getElementById(id).checked) {
-                                                document.getElementById("periodoi_id").setAttribute("disabled", "disabled");
-                                                document.getElementById("anioi_id").setAttribute("disabled", "disabled");
-                                                document.getElementById("periodof_id").setAttribute("disabled", "disabled");
-                                                document.getElementById("aniof_id").setAttribute("disabled", "disabled");
+                                                periodoIId.setAttribute("disabled", "disabled");
+                                                anioIId.setAttribute("disabled", "disabled");
+                                                periodoFId.setAttribute("disabled", "disabled");
+                                                anioFId.setAttribute("disabled", "disabled");
+                                                
+                                                fechI.removeAttribute("disabled");
+                                                fechF.removeAttribute("disabled");
+                                                
+                                                
+                                            } else if(tipo == "peri")   {
+                                                periodoIId.removeAttribute("disabled");
+                                                anioIId.removeAttribute("disabled");
+                                                periodoFId.removeAttribute("disabled");
+                                                anioFId.removeAttribute("disabled");
 
-                                                //document.getElementById("periodoi_id").value=null;
-                                                //document.getElementById("anioi_id").value = null;
-                                                //document.getElementById("periodof_id").value = null;
-                                                //document.getElementById("aniof_id").value = null;
+                                                fechI.setAttribute("disabled", "disabled");
+                                                fechF.setAttribute("disabled", "disabled");
+                                                fechI.removeAttribute('class','valid');
+                                                fechF.removeAttribute('class','valid');
+                                                document.getElementById("lbl_fechade").removeAttribute('class', 'active');
+                                                document.getElementById("lbl_fechahasta").removeAttribute('class', 'active');
 
-                                                document.getElementById("fechai_vig2").removeAttribute("disabled");
-                                                document.getElementById("fechaf_vig2").removeAttribute("disabled");
-                                            } else {
-                                                document.getElementById("periodoi_id").removeAttribute("disabled");
-                                                document.getElementById("anioi_id").removeAttribute("disabled");
-                                                document.getElementById("periodof_id").removeAttribute("disabled");
-                                                document.getElementById("aniof_id").removeAttribute("disabled");
-
-                                                document.getElementById("fechai_vig2").setAttribute("disabled", "disabled");
-                                                document.getElementById("fechaf_vig2").setAttribute("disabled", "disabled");
-
-                                                //document.getElementById("fechai_vig2").value = null;
-                                                //document.getElementById("fechaf_vig2").value = null;
+                                                fechI.value = '';
+                                                fechF.value = '';
+                                                
+                                                //Se quitan las opciones sin valor en combos de periodo
+                                                var selects = ["periodoi_id", "anioi_id", "periodof_id", "aniof_id"];
+                                                for (var i = 0; i < selects.length; i++) {
+                                                    if (document.getElementById(selects[i]).options.item(0).value == "") {
+                                                        document.getElementById(selects[i]).options.item(0).remove();
+                                                    }
+                                                }
                                             }
                                             setDates(tipo);
                                             var elem = document.querySelectorAll('select');
-                                            var instance = M.FormSelect.init(elem, []);
-                                            pickerFecha2(".format_date");
-
-                                            $("#fechai_vig").trigger('change');
-                                            $("#fechaf_vig").trigger('change');
+                                            M.FormSelect.init(elem, {});
 
                                             //cambiaRec();
                                         }
@@ -730,6 +743,11 @@ $(document).ready(function () {
                                                 document.getElementById("fechaf_vig").value = datef;
                                                 document.getElementById("fechaf_vig2").value = datef;
                                             }
+
+                                            if (!document.getElementById('btn-date').checked) {
+                                                document.getElementById("fechai_vig2").setAttribute("disabled", "disabled");
+                                                document.getElementById("fechaf_vig2").setAttribute("disabled", "disabled");
+                                            } 
                                         }
                                     </script>
 
@@ -860,7 +878,7 @@ $(document).ready(function () {
                                     <thead>
                                         <tr>
                                             <th id="thead_pos">Pos</th> @*B20180801 MGC Textos*@
-                                            <th id="thead_sociedad">Sociedad</th>@*@03-08-2018 jemo *@
+                                            <th id="thead_sociedad">Co. Code</th>@*@03-08-2018 jemo *@
                                             <th id="thead_fact">No. Factura Fiscal</th> @*B20180801 MGC Textos*@
                                             <th id="thead_fecha">Fecha Factura</th> @*B20180801 MGC Textos*@
                                             <th id="thead_bill">Billing</th> @*B20180801 MGC Textos*@

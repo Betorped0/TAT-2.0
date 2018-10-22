@@ -19,6 +19,7 @@ namespace TAT001
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             System.Security.Cryptography.RSACryptoServiceProvider.UseMachineKeyStore = true;
             System.Security.Cryptography.DSACryptoServiceProvider.UseMachineKeyStore = true;
+            log4net.Config.XmlConfigurator.Configure();
         }
 
         protected void Application_PostAuthenticateRequest(Object sender, EventArgs e)
