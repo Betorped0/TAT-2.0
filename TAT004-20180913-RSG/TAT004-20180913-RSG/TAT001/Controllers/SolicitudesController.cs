@@ -1262,53 +1262,37 @@ namespace TAT001.Controllers
 
             //RSG 13.06.2018--------------------------------------------------------
             DateTime fecha = DateTime.Now.Date;
-            List<TAT001.Entities.DELEGAR> del = db.DELEGARs.Where(a => a.USUARIOD_ID.Equals(User.Identity.Name) & a.FECHAI <= fecha & a.FECHAF >= fecha & a.ACTIVO == true).ToList();
+            List<DELEGAR> del = db.DELEGARs.Where(a => a.USUARIOD_ID.Equals(User.Identity.Name) & a.FECHAI <= fecha & a.FECHAF >= fecha & a.ACTIVO == true).ToList();
             if (del.Count > 0)
             {
 
                 List<Delegados> users = new List<Delegados>();
-                List<PAI> pp = (from P in db.PAIS.ToList()
-                                join C in (db.DET_AGENTEC.Where(C => C.USUARIOC_ID == User.Identity.Name & C.ACTIVO == true & C.POS == 1).DistinctBy(a => a.PAIS_ID).ToList())
-                                on P.LAND equals C.PAIS_ID
-                                where P.ACTIVO == true
-                                select P).ToList();
 
                 List<Delegados> delegados = new List<Delegados>();
                 foreach (DELEGAR de in del)
                 {
-                    var pd = (from P in db.PAIS.ToList()
-                              join C in (db.DET_AGENTEC.Where(C => C.USUARIOC_ID == de.USUARIO_ID & C.ACTIVO == true & C.POS == 1).DistinctBy(a => a.PAIS_ID).ToList()) on P.LAND equals C.PAIS_ID
-                              where P.ACTIVO == true
-                              & C.ACTIVO == true
-                              select P).ToList();
+                    
                     Delegados delegado = new Delegados();
                     delegado.usuario = de.USUARIO_ID;
                     delegado.nombre = de.USUARIO_ID + " - " + de.USUARIO.NOMBRE + " " + de.USUARIO.APELLIDO_P + " " + de.USUARIO.APELLIDO_M;
-                    delegado.LISTA = pd;
-                    //if (delegado.LISTA.Count > 0)
+                    delegado.LISTA = new List<PAI>();
                     delegados.Add(delegado);
                 }
-                PAI pq = pp.Where(a => a.LAND == d.PAIS_ID).FirstOrDefault();
-                //if (pq != null)
-                //{
                 Delegados del1 = new Delegados();
                 del1.usuario = User.Identity.Name;
                 USUARIO uu = db.USUARIOs.Find(User.Identity.Name);
                 del1.nombre = User.Identity.Name + " - " + uu.NOMBRE + " " + uu.APELLIDO_P + " " + uu.APELLIDO_M;
                 del1.LISTA = new List<PAI>();
-                //de.LISTA.Add(pq);
                 users.Add(del1);
-                //}
                 foreach (Delegados dele in delegados)
                 {
                     PAI pqq = dele.LISTA.Where(a => a.LAND == d.PAIS_ID).FirstOrDefault();
-                    //if (pqq != null)
                     users.Add(dele);
                 }
 
                 ViewBag.USUARIOD_ID = new SelectList(users, "usuario", "nombre", users[0].usuario);
             }
-            List<TAT001.Entities.DELEGAR> backup = db.DELEGARs.Where(a => a.USUARIO_ID.Equals(User.Identity.Name) & a.FECHAI <= fecha & a.FECHAF >= fecha & a.ACTIVO == true).ToList();
+            List<DELEGAR> backup = db.DELEGARs.Where(a => a.USUARIO_ID.Equals(User.Identity.Name) & a.FECHAI <= fecha & a.FECHAF >= fecha & a.ACTIVO == true).ToList();
             if (backup.Count > 0)
             {
                 ViewBag.USUARIO_BACKUPID = backup.First().USUARIOD_ID;

@@ -37,7 +37,7 @@ namespace TAT001.Controllers.Catalogos
             AlertaViewModel modelView = new AlertaViewModel();
             modelView.alertas = db.WARNINGPs.ToList();
             modelView.alertaMensajes = db.WARNINGPTs.Where(x => x.SPRAS_ID == spras_id).ToList();
-            modelView.alertaCondiciones = db.WARNING_COND.ToList();
+            modelView.alertaCondiciones = db.WARNING_COND.Where(x=>x.ACTIVO).ToList();
             modelView.tabCampos = db.TAB_CAMPO
                             .Join(db.TEXTOes, tc => tc.CAMPO_ID, te => te.CAMPO_ID, (ta, te) => te)
                             .Where(x => x.SPRAS_ID == spras_id && x.PAGINA_ID == 202).ToList();
@@ -149,7 +149,7 @@ namespace TAT001.Controllers.Catalogos
 
             //Condiciones  
             bool esAlertaGral = (modelView.alerta.SOCIEDAD_ID == null || modelView.alerta.TSOL_ID == null || modelView.alerta.ID == WARNING_ID_EX);
-            modelView.alertaCondiciones = db.WARNING_COND.Where(x => x.WARNING_ID == warning_id && x.TAB_ID == tab_id).ToList();
+            modelView.alertaCondiciones = db.WARNING_COND.Where(x => x.WARNING_ID == warning_id && x.TAB_ID == tab_id && x.ACTIVO).ToList();
             modelView.alertaCondiciones.Where(x => x.VALOR_COMP == "").ToList().ForEach(x => { x.VALOR_COMP = (x.VALOR_COMP == "" ? "v" : x.VALOR_COMP); });
             if (!esAlertaGral && modelView.alertaCondiciones.Count() == 1)
             {
