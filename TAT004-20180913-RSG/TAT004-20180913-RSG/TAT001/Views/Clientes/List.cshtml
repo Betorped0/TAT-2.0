@@ -1,4 +1,5 @@
-﻿@using PagedList.Mvc
+﻿@using TAT001.Entities;
+@using PagedList.Mvc
 @model TAT001.Models.ClienteViewModel
 <link href="~/Content/PagedList.css" rel="stylesheet" />
 <table class="table mdl-data-table striped" id="table" style="width:100%;">
@@ -77,6 +78,33 @@
 
     @Html.PagedListPager(Model.clientes, page => Url.Action("List", new { pagina = page, numRegistros = Model.numRegistros }))
 </div>
+<div>
+   
+    @if (ViewBag.textos != null)
+    {
+        foreach (TEXTO t in ViewBag.textos)
+        {
+            <script>
+                try {
+                    var elem = document.getElementById("@t.CAMPO_ID");
+                    if (elem.nodeName != 'INPUT' & elem.nodeName != 'SELECT' & elem.nodeName != 'TABLE' & elem.nodeName != 'TEXTAREA')
+                    elem.innerHTML = "@t.TEXTOS";
+                } catch (e) {
+                    try {
+                        var divs = document.getElementsByClassName("@t.CAMPO_ID");
+                        [].slice.call(divs).forEach(function (div) {
+                            if (div.nodeName != 'INPUT' & div.nodeName != 'SELECT' & div.nodeName != 'TABLE' & div.nodeName != 'TEXTAREA')
+                            div.innerHTML = "@t.TEXTOS";
+                        });
+                    }
+                    catch (ee) {
+
+                    }
+                 }
+            </script>
+        }
+    }
+</div>
 <script>
     //-----Sort
     function sort() {
@@ -103,4 +131,6 @@
         }
     }
     sort();
+
+  
 </script>

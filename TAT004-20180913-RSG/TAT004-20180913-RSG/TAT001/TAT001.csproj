@@ -815,6 +815,7 @@
     <Compile Include="Models\Masiva\Encabezado.cs" />
     <Compile Include="Models\Masiva\Multiple.cs" />
     <Compile Include="Models\Masiva\Relacionada.cs" />
+    <Compile Include="Models\MaterialViewModel.cs" />
     <Compile Include="Models\ReportesModel.cs" />
     <Compile Include="Models\SelectTreeItem.cs" />
     <Compile Include="Models\SOLICITUD_MOD.cs" />
@@ -1665,7 +1666,6 @@
     <Content Include="Scripts\ValidarNumero.js" />
     <Content Include="Scripts\ValidarProv.js" />
     <Content Include="Scripts\ValidarTCambio.js" />
-    <None Include="Views\Clientes\Index_.cshtml" />
     <Content Include="Views\Mails\logo_kellogg.png" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
