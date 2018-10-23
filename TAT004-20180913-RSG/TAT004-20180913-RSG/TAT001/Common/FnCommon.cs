@@ -28,6 +28,12 @@ namespace TAT001.Common
             }
             return texto;
         }
+        public static void ObtenerTextos(TAT001Entities db, int pagina_id_textos, string user_id, ControllerBase controller)
+        {
+            var user = ObtenerUsuario(db, user_id);
+            controller.ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina_id_textos) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+
+        }
         public static void ObtenerConfPage(TAT001Entities db, int pagina_id, string user_id, ControllerBase controller,int? pagina_id_textos=null)
         {
             var user = ObtenerUsuario(db, user_id);
