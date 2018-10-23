@@ -15,80 +15,82 @@
         }
     </div>
 </div>
-<div class="row" style="margin-bottom:0;">
-    <div class="input-field col s3 m3 l3">
-        <select id="selecc">
-            <option value="10" selected>10</option>
-            <option value="25">25</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-        </select>
-        <label id="lbl_length">Ver por página</label>
+<div class="card-panel">
+    <div class="row" style="margin-bottom:0;">
+        <div class="input-field col s3 m3 l3">
+            <select id="selecc">
+                <option value="10" selected>10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </select>
+            <label id="lbl_length">Ver por página</label>
+        </div>
+        <div class="input-field col s5 m3 l3 offset-l6 offset-m6 offset-s4">
+            <input type="text" class="global_filter" id="global_filter">
+            <label for="global_filter" id="lbl_search">Buscar</label>
+        </div>
     </div>
-    <div class="input-field col s5 m3 l3 offset-l6 offset-m6 offset-s4">
-        <input type="text" class="global_filter" id="global_filter">
-        <label for="global_filter" id="lbl_search">Buscar</label>
-    </div>
-</div>
-<script>
-    var elem = document.querySelector('select');
-    var options = [];
-    var instance = M.FormSelect.init(elem, options);
-</script>
-<script src="//code.jquery.com/jquery-1.12.4.js"></script>
-<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-<script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
-<link href="~/Content/dataTable.css" rel="stylesheet" />
-<link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
-<table class="table mdl-data-table striped" id="table" style="width:100%;">
-    <thead>
-        <tr>
-            <th id="lblId">
-                @Html.DisplayNameFor(model => model.ID)
-            </th>
-            <th id="lblNombre">
-                @Html.DisplayNameFor(model => model.NOMBRE)
-            </th>
-            <th id="lblSociedadId">
-                @Html.DisplayNameFor(model => model.SOCIEDAD_ID)
-            </th>
-            <th id="lblPais">
-                @Html.DisplayNameFor(model => model.PAIS_ID)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+    <script>
+        var elem = document.querySelector('select');
+        var options = [];
+        var instance = M.FormSelect.init(elem, options);
+    </script>
+    <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
+    <link href="~/Content/dataTable.css" rel="stylesheet" />
+    <link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
+    <table class="table mdl-data-table striped" id="table" style="width:100%;">
+        <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NOMBRE)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SOCIEDAD_ID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PAIS_ID)
-                </td>
-                <td>
-                    <a data-form-method="post" href="@Url.Action("Edit", "Proveedor", new { id = item.ID})">
-                        <i class='material-icons green-text'>edit</i>
-                    </a>
-                    <a data-form-method="post" href="@Url.Action("Details", "Proveedor", new { id = item.ID})">
-                        <i class='material-icons blue-text'>search</i>
-                    </a>
-                    <a data-form-method="post" href="@Url.Action("Delete", "Proveedor",new { id = item.ID})">
-                        <i class='material-icons red-text'>delete</i>
-                    </a>
-                </td>
+                <th id="lblId">
+                    @Html.DisplayNameFor(model => model.ID)
+                </th>
+                <th id="lblNombre">
+                    @Html.DisplayNameFor(model => model.NOMBRE)
+                </th>
+                <th id="lblSociedadId">
+                    @Html.DisplayNameFor(model => model.SOCIEDAD_ID)
+                </th>
+                <th id="lblPais">
+                    @Html.DisplayNameFor(model => model.PAIS_ID)
+                </th>
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NOMBRE)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SOCIEDAD_ID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PAIS_ID)
+                    </td>
+                    <td>
+                        <a data-form-method="post" href="@Url.Action("Edit", "Proveedor", new { id = item.ID})">
+                            <i class='material-icons green-text'>edit</i>
+                        </a>
+                        <a data-form-method="post" href="@Url.Action("Details", "Proveedor", new { id = item.ID})">
+                            <i class='material-icons blue-text'>search</i>
+                        </a>
+                        <a data-form-method="post" href="@Url.Action("Delete", "Proveedor",new { id = item.ID})">
+                            <i class='material-icons red-text'>delete</i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 <script>
     $(document).ready(function () {
         var table = $('#table').DataTable({
