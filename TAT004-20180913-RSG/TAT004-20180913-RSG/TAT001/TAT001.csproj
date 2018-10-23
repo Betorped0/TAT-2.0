@@ -814,6 +814,7 @@
     <Compile Include="Models\Masiva\Encabezado.cs" />
     <Compile Include="Models\Masiva\Multiple.cs" />
     <Compile Include="Models\Masiva\Relacionada.cs" />
+    <Compile Include="Models\ProveedorViewModel.cs" />
     <Compile Include="Models\ReportesModel.cs" />
     <Compile Include="Models\SelectTreeItem.cs" />
     <Compile Include="Models\SOLICITUD_MOD.cs" />
@@ -1937,6 +1938,7 @@
     <Content Include="Views\Moneda\Details.cshtml" />
     <Content Include="Views\Moneda\Edit.cshtml" />
     <Content Include="Views\Moneda\Index.cshtml" />
+    <Content Include="Views\Proveedor\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->

@@ -1,0 +1,94 @@
+﻿@using PagedList.Mvc
+@model TAT001.Models.ProveedorViewModel
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+<table class="table mdl-data-table striped" id="table" style="width:100%;">
+    <thead>
+        <tr class="header">
+            <th>
+                @Html.ActionLink("ID", "List", new { colOrden = "ID", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros }, new { @class = "lblId" })
+            </th>
+            <th>
+                @Html.ActionLink("NOMBRE", "List", new { colOrden = "NOMBRE", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros }, new { @class = "lblNombre" })
+            </th>
+            <th>
+                @Html.ActionLink("SOCIEDAD_ID", "List", new { colOrden = "SOCIEDAD_ID", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros }, new { @class = "lblSociedadId" })
+            </th>
+            <th>
+                @Html.ActionLink("PAIS_ID", "List", new { colOrden = "PAIS_ID", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros }, new { @class = "lblPais" })
+            </th>
+            <th>
+                @Html.ActionLink("ACTIVO", "List", new { colOrden = "ACTIVO", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros }, new { @class = "lblActivo" })
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.proveedores)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NOMBRE)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SOCIEDAD_ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PAIS_ID)
+            </td>
+            @if ((bool)item.ACTIVO == true)
+            {
+                <td style="align-items:center"><i class='material-icons green-text'>check</i></td>}
+            else
+            {
+                <td style="align-items:center;"><i class='material-icons red-text'>clear</i></td>}
+            <td>
+                <a href="@Url.Action("Edit", "Proveedor", new { id = item.ID })">
+                    <i class='material-icons green-text'>edit</i>
+                </a>
+                <a href="@Url.Action("Details", "Proveedor", new { id = item.ID})">
+                    <i class='material-icons blue-text'>search</i>
+                </a>
+                <a href="@Url.Action("Delete", "Proveedor", new { id = item.ID})">
+                    <i class='material-icons red-text'>delete</i>
+                </a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+<div id='Paging' style="text-align: center">
+    @(Model.proveedores.PageCount < Model.proveedores.PageNumber ? 0 : Model.proveedores.PageNumber)
+    - @Model.proveedores.PageCount
+
+    @Html.PagedListPager(Model.proveedores, page => Url.Action("List", new { pagina = page, numRegistros = Model.numRegistros }))
+</div>
+<script>
+    //-----Sort
+    function sort() {
+        var sortLink = $('.header>th>a');
+        for (var i = 0; i < sortLink.length; i++) {
+            var url = sortLink.get(i).getAttribute("href");
+            var id = 'link_h' + i;
+            if (url) {
+                sortLink.get(i).setAttribute("id", id);
+                sortLink.get(i).setAttribute("url", url);
+                $('#' + id).click(function (me) {
+                    fnCommon.showProcess(true);
+                    $.ajax({
+                        url: me.toElement.getAttribute('url'),
+                        success: function (resultView) {
+                            fnCommon.showProcess(false);
+                            $('#list').html(resultView);
+                            sort();
+                        }
+                    });
+                });
+            }
+            sortLink.get(i).removeAttribute("href");
+        }
+    }
+    sort();
+</script>
