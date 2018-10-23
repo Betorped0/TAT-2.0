@@ -2000,7 +2000,9 @@ namespace TAT001.Controllers
                                     }
                                     docP.MATNR = dOCUMENTO.DOCUMENTOP.ElementAt(j).MATNR;
                                     docP.MATNR = new Cadena().completaMaterial(docP.MATNR);//RSG 07.06.2018
-                                    docP.MATKL = dOCUMENTO.DOCUMENTOP.ElementAt(j).MATKL_ID;
+
+                                    MATERIAL mat = db.MATERIALs.Where(x=>x.ID== docP.MATNR).FirstOrDefault();
+                                    docP.MATKL = mat.MATKL_ID;
                                     docP.CANTIDAD = 1;
                                     docP.MONTO = dOCUMENTO.DOCUMENTOP.ElementAt(j).MONTO;
                                     docP.PORC_APOYO = dOCUMENTO.DOCUMENTOP.ElementAt(j).PORC_APOYO;
