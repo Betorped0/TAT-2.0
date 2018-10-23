@@ -1990,10 +1990,13 @@
                                 <th width=""> Hora inicio</th>
                                 <th width=""> Fecha término</th>
                                 <th width=""> Hora término</th>
-                                <th width="">
+                                <th width="" id="lbl_ew">
+                                    Estatus WF
+                                </th>
+                                <th width="" id="lbl_es">
                                     Estatus
                                 </th>
-                                <th width="30%">
+                                <th width="30%" id="lbl_co">
                                     Comentario
                                 </th>
                             </tr>
@@ -2009,6 +2012,17 @@
                                     <td width=""> @f.FECHAM.Value.ToShortDateString() </td>
                                     <td width=""> @f.FECHAM.Value.TimeOfDay.ToString().Split('.')[0] </td>
                                     <td width=""> @Html.DisplayFor(modelItem => f.ESTATUS) </td>
+                                    @* ------DRS 24.09.18------ *@
+                                    <td width="">
+                                        @{
+                                            string est = (Html.DisplayFor(modelItem => f.STATUS)).ToString();
+
+                                            TAT001.Services.Estatus c = new TAT001.Services.Estatus();
+                                            c.getText(est, Model.D.NUM_DOC);
+                                        }
+                                        @c.getText(est, Model.D.NUM_DOC)
+
+                                    </td>
                                     <td width="30%"> @Html.DisplayFor(modelItem => f.COMENTARIO) </td>
                                 </tr>
                             }
