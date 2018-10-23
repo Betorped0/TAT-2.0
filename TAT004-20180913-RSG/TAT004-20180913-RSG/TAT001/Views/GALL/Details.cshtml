@@ -5,6 +5,8 @@
     ViewBag.carpeta_r = 500;
     //ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+
     List<TAT001.Entities.SPRA> spras = ViewBag.SPRAS as List<TAT001.Entities.SPRA>;
     List<TAT001.Entities.GALLT> lstTXT = new List<TAT001.Entities.GALLT>();
 
@@ -57,6 +59,19 @@
                     </div>
                 }
             </div>
+            <div class="right">
+                @Html.LabelFor(model => model.ACTIVO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblObliga" })
+
+
+                @if ((bool)Model.ACTIVO == true)
+                {
+                    <i class='material-icons green-text'>check</i>}
+                else
+                {
+                    <i class='material-icons red-text'>clear</i>}
+            </div>
+            <br />
+            <br />
         </div>
     </div>
 </div>
