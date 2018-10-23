@@ -16,35 +16,35 @@
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
-
-
         <div class="col s6">
             <div class="card-panel">
-                @Html.HiddenFor(model => model.ID)
-                @Html.HiddenFor(model => model.ACTIVO)
+                @*@Html.HiddenFor(model => model.ID)*@
+                @*@Html.HiddenFor(model => model.ACTIVO)*@
 
                 <div class="row">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     <div class=" input-field col s12">
                         @Html.EditorFor(model => Model.TS_FORMT.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT100, new { htmlAttributes = new { @class = "form-control", @disabled = "@disabled" } })
                         @Html.LabelFor(model => Model.TS_FORMT.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT100)
                     </div>
-                    <div class="input-field col l10 m10" style="margin-bottom:0;">
 
+                    <div class="input-field col l6 m6" style="margin-bottom:0;">
                         @Html.LabelFor(model => model.ACTIVO, "ACTIVO", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblPais" })
                         @Html.ValidationMessageFor(model => model.ACTIVO, "", new { @class = "text-danger" })
-                        @Html.EditorFor(model => model.ACTIVO, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idactivo" } })
+                        @Html.EditorFor(model => model.ACTIVO, new { htmlAttributes = new { @class = "form-control pname material-icons green-text", @maxlength = "230", @hidden = "hidden", id = "idfac" } })
 
                         @if ((bool)Model.ACTIVO == true)
                         {
                             <label>
-                                <input type="checkbox" name="selectedCustomers" value="true" id="activo" onclick="check()" checked />
+                                <input type="checkbox" name="selectedCustomers" value="true" id="fac" onclick="check()" checked />
                                 <span style="height:0"></span>
                             </label>
+
                         }
                         else
                         {
                             <label>
-                                <input type="checkbox" name="selectedCustomers" value="true" id="activo" onclick="check()" />
+                                <input type="checkbox" name="selectedCustomers" value="true" id="fac" onclick="check()" />
                                 <span style="height:0"></span>
                             </label>
                         }
@@ -93,12 +93,15 @@
 
 <script>
     function check() {
-       
-        if ($("#activo").prop('checked'))
-            $("#idactivo").prop('checked', true);
+        if ($("#fac").prop('checked'))
+            $("#idfac").prop('checked', true);
         else
-            $("#idactivo").prop('checked', false);
+            $("#idfac").prop('checked', false);
     }
+
+
+    var elem = document.querySelectorAll('select');
+    var instance = M.FormSelect.init(elem, []);
 </script>
 
 <div style="color:black">

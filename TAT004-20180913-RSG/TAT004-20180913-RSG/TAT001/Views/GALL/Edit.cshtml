@@ -5,27 +5,28 @@
     ViewBag.carpeta_r = 500;
     //ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var lan = ViewBag.lan;
-    List<TAT001.Entities.SPRA> spras = ViewBag.SPRAS as List<TAT001.Entities.SPRA>;
-    List<TAT001.Entities.GALLT> lstTXT = new List<TAT001.Entities.GALLT>();
 
-    List<TAT001.Entities.SPRA> spras2 = new List<TAT001.Entities.SPRA>();
-    foreach (var item in Model.GALLTs)
-    {
-        TAT001.Entities.GALLT txt = new TAT001.Entities.GALLT();
-        txt.SPRAS_ID = item.SPRAS_ID;
-        txt.GALL_ID = item.GALL_ID;
-        txt.TXT50 = item.TXT50;
-        lstTXT.Add(txt);
-    }
-    for (int i = 0; i < spras.Count; i++)
-    {
-        TAT001.Entities.GALLT x2 = lstTXT.Where(a => a.SPRAS_ID == spras[i].ID).FirstOrDefault();
-        if (x2 == null)
-        {
-            spras2.Add(spras[i]);
-        }
-    }
+    //var lan = ViewBag.lan;
+    //List<TAT001.Entities.SPRA> spras = ViewBag.SPRAS as List<TAT001.Entities.SPRA>;
+    //List<TAT001.Entities.GALLT> lstTXT = new List<TAT001.Entities.GALLT>();
+
+    //List<TAT001.Entities.SPRA> spras2 = new List<TAT001.Entities.SPRA>();
+    //foreach (var item in Model.GALLTs)
+    //{
+    //TAT001.Entities.GALLT txt = new TAT001.Entities.GALLT();
+    //txt.SPRAS_ID = item.SPRAS_ID;
+    //txt.GALL_ID = item.GALL_ID;
+    //txt.TXT50 = item.TXT50;
+    //lstTXT.Add(txt);
+    //}
+    //for (int i = 0; i < spras.Count; i++)
+    //{
+    //TAT001.Entities.GALLT x2 = lstTXT.Where(a => a.SPRAS_ID == spras[i].ID).FirstOrDefault();
+    //if (x2 == null)
+    //{
+    //spras2.Add(spras[i]);
+    //}
+    //}
 }
 
 <div class="row">
@@ -33,23 +34,33 @@
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="row right">
+            <div class="col s12 ">
+                <input type="submit" value="Guardar" class="btn btn-default" />
+            </div>
+        </div>
+        <br />
+        <br />
+        <br />
+        <br />
         <div class="col s6 ">
             <div class="card-panel">
                 <div class="row">
                     <div class="form-horizontal">
                         <div class="input-field col s12">
-                            @Html.LabelFor(model => model.ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblDes" })
-                            @Html.EditorFor(model => model.ID, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                            @Html.ValidationMessageFor(model => model.ID, "", new { @class = "text-danger" })
+                            @Html.LabelFor(model => model.DESCRIPCION, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblDes" })
+                            @Html.EditorFor(model => model.DESCRIPCION, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(model => model.DESCRIPCION, "", new { @class = "text-danger" })
                         </div>
+
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col s6 ">
-            <div class="card-panel">
-                <div class="row">
+        @*<div class="col s6 ">
+            <div class="card-panel">*@
+        @*<div class="row">
                     @foreach (var item in Model.GALLTs)
                     {
                         <div class=" input-field col s12">
@@ -74,13 +85,102 @@
                             <button id="btnGEdit" type="submit" value="Submit" class="btn btn-default"></button>
                         </div>
                     </div>
+                    @Html.LabelFor(model => model.ACTIVO, "ACTIVO", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblPais" })
+                    @Html.ValidationMessageFor(model => model.ACTIVO, "", new { @class = "text-danger" })
+                    @Html.EditorFor(model => model.ACTIVO, new { htmlAttributes = new { @class = "form-control pname material-icons green-text", @maxlength = "230", @hidden = "hidden", id = "idfac" } })
+
+                    @if ((bool)Model.ACTIVO == true)
+                    {
+                        <label>
+                            <input type="checkbox" name="selectedCustomers" value="true" id="fac" onclick="check()" checked />
+                            <span style="height:0"></span>
+                        </label>
+
+                    }
+                    else
+                    {
+                        <label>
+                            <input type="checkbox" name="selectedCustomers" value="true" id="fac" onclick="check()" />
+                            <span style="height:0"></span>
+                        </label>
+                    }
                 </div>
+            </div>*@
+
+        <div class="col s6">
+
+            <div class="card-panel">
+                <h5>Traducciones</h5>
+
+                <div class="row">
+                    @*@foreach (var item in Model.GALLTs)
+        {*@
+                    <div class="input-field col l10 m10" style="margin-bottom:0;">
+                        @Html.Editor("EN", new { htmlAttributes = new { @class = "form-control", @maxlength = "50" } })
+                        @*@Html.LabelFor(model => item.TXT100, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_DscEN" })*@
+                        <label>Ingles</label>
+                    </div>
+
+
+                    <div class="input-field col l10 m10" style="margin-bottom:0;">
+                        @Html.Editor("ES", new { htmlAttributes = new { @class = "form-control", @maxlength = "50" } })
+                        @*@Html.LabelFor(model => item.TXT100, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_DscES" })*@
+                        <label>Español</label>
+                        @*<label for="@("A" + Model.TS_FORMT.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().SPRAS_ID)"> @Model.TS_FORMT.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().SPRA.DESCRIPCION</label>*@
+                    </div>
+
+                    <div class="input-field col l10 m10" style="margin-bottom:0;">
+                        @Html.Editor("PT", new { htmlAttributes = new { @class = "form-control", @maxlength = "50" } })
+                        @*@Html.LabelFor(model => item.TXT100, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_DscPT" })*@
+                        <label>Portugues</label>
+                    </div>
+                    @*}*@
+                    <br />
+                    <div class="input-field col l6 m6 right" style="margin-bottom:0;">
+                        @Html.LabelFor(model => model.ACTIVO, "ACTIVO", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblPais" })
+                        @Html.ValidationMessageFor(model => model.ACTIVO, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.ACTIVO, new { htmlAttributes = new { @class = "form-control pname material-icons green-text", @maxlength = "230", @hidden = "hidden", id = "idac" } })
+                        @*@Html.HiddenFor(model => model.ACTIVO)*@
+                        @*@if ((bool)Model.ACTIVO == true)
+                        {
+                            <label>
+                                <input type="checkbox" name="selectedCustomers" value="true" id="ac" onclick="check()" checked />
+                                <span style="height:0"></span>
+                            </label>
+
+                        }
+                        else
+                        {
+                            <label>
+                                <input type="checkbox" name="selectedCustomers" value="true" id="ac" onclick="check()" />
+                                <span style="height:0"></span>
+                            </label>
+                        }*@
+                    </div>
+
+
+
+                </div>
+
+               
+              
             </div>
         </div>
+        @*</div>*@
 
     }
+</div>
+<script>
+    function check() {
+        if ($("#ac").prop('checked'))
+            $("#idac").prop('checked', true);
+        else
+            $("#idfac").prop('checked', false);
+    }
+    var elem = document.querySelectorAll('select');
+    var instance = M.FormSelect.init(elem, []);
+</script>
 
-    <div>
-        @Html.ActionLink("Back to List", "Index", null, new { id = "lblRegresar" })
-    </div>
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { id = "lblRegresar" })
 </div>

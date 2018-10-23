@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<TAT001.Entities.TALL>
 
 @{
-    ViewBag.pagina_r = 791;
+    ViewBag.pagina_r = 881;
     ViewBag.carpeta_r = 500;
     // ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -9,7 +9,7 @@
 
 <div class="row">
     <div class="col s12 right-align">
-        @Html.ActionLink("Create New", "Create", "TALLs", null, new { @class = "btn-small" })
+        @Html.ActionLink("Agregar", "Create", "TALLs", null, new { @class = "btn-small" })
     </div>
 </div>
 <div class="row" style="margin-bottom:0;">
@@ -20,7 +20,7 @@
             <option value="50">50</option>
             <option value="100">100</option>
         </select>
-        <label id="lbl_length">Ver por página</label>
+        <label id="lbl_length">Ver Por Página</label>
     </div>
     <div class="input-field col s5 m3 l3 offset-l6 offset-m6 offset-s4">
         <input type="text" class="global_filter" id="global_filter">
@@ -40,17 +40,20 @@
 <table class="table mdl-data-table striped" id="table" style="width:100%;">
     <thead>
         <tr>
-            <th id="lblId" style="text-align:left;">
-                @Html.DisplayNameFor(model => model.ID)
+            <th id="lblId">
+                @*@Html.DisplayNameFor(model => model.ID)*@
             </th>
             <th id="lblDes" style="text-align:left;">
-                @Html.DisplayNameFor(model => model.DESCRIPCION)
+                @*@Html.DisplayNameFor(model => model.DESCRIPCION)*@
             </th>
             <th id="lblFechaI" style="text-align:left;">
-                @Html.DisplayNameFor(model => model.FECHAI)
+                @*@Html.DisplayNameFor(model => model.FECHAI)*@
             </th>
             <th id="lblFechaF" style="text-align:left;">
-                @Html.DisplayNameFor(model => model.FECHAF)
+                @*@Html.DisplayNameFor(model => model.FECHAF)*@
+            </th>
+            <th id="lblActivo" style="text-align:left;">
+                @*@Html.DisplayNameFor(model => model.ACTIVO)*@
             </th>
             <th></th>
         </tr>
@@ -58,31 +61,39 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td style="text-align:left;">
-                    @Html.DisplayFor(modelItem => item.ID)
-                </td>
-                <td style="text-align:left;">
-                    @Html.DisplayFor(modelItem => item.DESCRIPCION)
-                </td>
-                <td style="text-align:left;">
-                    @Html.DisplayFor(modelItem => item.FECHAI)
-                </td>
-                <td style="text-align:left;">
-                    @Html.DisplayFor(modelItem => item.FECHAF)
-                </td>
-                <td>
-                    <a data-form-method="post" href="@Url.Action("Edit", "TALLs", new { id = item.ID })">
-                        <i class='material-icons green-text'>edit</i>
-                    </a>
-                    <a data-form-method="post" href="@Url.Action("Details", "TALLs", new { id = item.ID })">
-                        <i class='material-icons blue-text'>search</i>
-                    </a>
-                    @*<a data-form-method="post" href="@Url.Action("Delete", "TALLs", new { id = item.ID })">
-                        <i class='material-icons red-text'>delete</i>
-                    </a>*@
-                </td>
-            </tr>
+        <tr>
+            <td style="text-align:left;">
+                @Html.DisplayFor(modelItem => item.ID)
+            </td>
+            <td style="text-align:left;">
+                @Html.DisplayFor(modelItem => item.DESCRIPCION)
+            </td>
+            <td style="text-align:left;">
+                @Html.DisplayFor(modelItem => item.FECHAI)
+            </td>
+            <td style="text-align:left;">
+                @Html.DisplayFor(modelItem => item.FECHAF)
+            </td>
+            @if ((bool)item.ACTIVO == true)
+            {
+                <td style="align-items:center"><i class='material-icons green-text'>check</i></td>
+            }
+            else
+            {
+                <td style="align-items:center;"><i class='material-icons red-text'>clear</i></td>
+            }
+            <td>
+                <a data-form-method="post" href="@Url.Action("Edit", "TALLs", new { id = item.ID })">
+                    <i class='material-icons green-text'>edit</i>
+                </a>
+                <a data-form-method="post" href="@Url.Action("Details", "TALLs", new { id = item.ID })">
+                    <i class='material-icons blue-text'>search</i>
+                </a>
+                @*<a data-form-method="post" href="@Url.Action("Delete", "TALLs", new { id = item.ID })">
+                <i class='material-icons red-text'>delete</i>
+            </a>*@
+            </td>
+        </tr>
         }
     </tbody>
 </table>
