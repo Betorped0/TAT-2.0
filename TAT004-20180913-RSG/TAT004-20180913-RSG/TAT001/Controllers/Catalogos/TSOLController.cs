@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using TAT001.Common;
 using TAT001.Entities;
 
 namespace TAT001.Controllers.Catalogos
@@ -18,7 +19,7 @@ namespace TAT001.Controllers.Catalogos
         // GET: TSOL
         public ActionResult Index()
         {
-            int pagina = 791; //ID EN BASE DE DATOS
+            int pagina = 790; //ID EN BASE DE DATOS
             USUARIO user = null;
             using (TAT001Entities db = new TAT001Entities())
             {
@@ -27,11 +28,11 @@ namespace TAT001.Controllers.Catalogos
                 user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
                 ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
                 ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
+                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;
                 ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(790) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
 
                 try
                 {
@@ -65,7 +66,7 @@ namespace TAT001.Controllers.Catalogos
                 ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(791) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(790) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
 
                 try
                 {
@@ -94,10 +95,13 @@ namespace TAT001.Controllers.Catalogos
 
         // GET: TSOL/Create
         public ActionResult Create()
-        {
+        {   
+            TSOL tsol = new TSOL();
             ViewBag.RANGO_ID = new SelectList(db.RANGOes, "ID", "ID");
             ViewBag.TSOLR = new SelectList(db.TSOLs, "ID", "DESCRIPCION");
-            return View();
+            int pagina_id = 791;//ID EN BASE DE DATOS
+            FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
+            return View(tsol);
         }
 
         // POST: TSOL/Create
@@ -134,7 +138,7 @@ namespace TAT001.Controllers.Catalogos
                 ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(791) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(790) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
 
                 try
                 {
@@ -314,7 +318,7 @@ namespace TAT001.Controllers.Catalogos
                 ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(791) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(790) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
 
                 try
                 {

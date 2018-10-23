@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PagedList;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -6,7 +7,9 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using TAT001.Common;
 using TAT001.Entities;
+using TAT001.Models;
 
 namespace TAT001.Controllers.Catalogos
 {
@@ -14,35 +17,77 @@ namespace TAT001.Controllers.Catalogos
     {
         private TAT001Entities db = new TAT001Entities();
 
-        // GET: Materiales
         public ActionResult Index()
         {
-            int pagina = 661; //ID EN BASE DE DATOS
-            string u = User.Identity.Name;
-            var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-            ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-            ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-            ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;
-            ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-            ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            int pagina_id = 661; //ID EN BASE DE DATOS
+            FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
+            ViewBag.pais = Session["pais"] != null ? Session["pais"].ToString() + ".png" : null;
 
-            try
-            {
-                string p = Session["pais"].ToString();
-                ViewBag.pais = p + ".png";
-            }
-            catch
-            {
-                //return RedirectToAction("Pais", "Home");
-            }
-            Session["spras"] = user.SPRAS_ID;
 
-            var mATERIALs = db.MATERIALs.Include(m => m.MATERIALGP);
-            return View(mATERIALs.Where(x => x.ACTIVO == true).ToList());
+           MaterialViewModel viewModel = new MaterialViewModel();
+            viewModel.pageSizes = FnCommon.ObtenerCmbPageSize();
+            ObtenerListado(ref viewModel);
+
+            return View(viewModel);
         }
 
+        public ActionResult List(string colOrden, string ordenActual, int? numRegistros = 10, int? pagina = 1, string buscar = "")
+        {
+            int pagina_id = 661; //ID EN BASE DE DATOS
+            MaterialViewModel viewModel = new MaterialViewModel();
+            ObtenerListado(ref viewModel, colOrden, ordenActual, numRegistros, pagina, buscar);
+            FnCommon.ObtenerTextos(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
+            return View(viewModel);
+        }
+        public void ObtenerListado(ref MaterialViewModel viewModel, string colOrden = "", string ordenActual = "", int? numRegistros = 10, int? pagina = 1, string buscar = "")
+        {
+            int pageIndex = pagina.Value;
+            List<MATERIAL> clientes = db.MATERIALs.Include(m => m.MATERIALGP).ToList();
+            viewModel.ordenActual = colOrden;
+            viewModel.numRegistros = numRegistros.Value;
+
+            if (!String.IsNullOrEmpty(buscar))
+            {
+                clientes = clientes.Where(x =>
+                String.Concat(x.ID, x.MAKTX, (x.MATERIALGP.DESCRIPCION == null ? "" : x.MATERIALGP.DESCRIPCION))
+                .ToLower().Contains(buscar.ToLower()))
+                .ToList();
+            }
+            switch (colOrden)
+            {
+                case "ID":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.materiales = clientes.OrderByDescending(m => m.ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.materiales = clientes.OrderBy(m => m.ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+                case "MAKTX":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.materiales = clientes.OrderByDescending(m => m.MAKTX).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.materiales = clientes.OrderBy(m => m.MAKTX).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+
+                case "MATERIALGP":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.materiales = clientes.OrderByDescending(m => m.MATERIALGP.DESCRIPCION).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.materiales = clientes.OrderBy(m => m.MATERIALGP.DESCRIPCION).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+
+                case "ACTIVO":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.materiales = clientes.OrderByDescending(m => m.ACTIVO).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.materiales = clientes.OrderBy(m => m.ACTIVO).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+                default:
+                    viewModel.materiales = clientes.OrderBy(m => m.ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+            }
+        }
+
+        
         // GET: Materiales/Details/5
         public ActionResult Details(string id)
         {

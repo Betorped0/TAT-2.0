@@ -2,7 +2,6 @@
 @{
     ViewBag.pagina_r = 502;
     ViewBag.carpeta_r = 500;
-    ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="row">
@@ -28,7 +27,16 @@
                     @Html.LabelFor(model => model.PAIS_ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblPais" })
                 </div>
             </div>
-        </div>
+            <div class="row">
+                <div class="input-field col l6 m6" style="margin-bottom:0;">
+                    @if ((bool)Model.ACTIVO == true)
+                    {
+                    <span id="lblActivo"></span><i class='material-icons green-text'>check</i>}
+                    else
+                    {
+                    <span id="lblActivo"></span><i class='material-icons red-text'>clear</i>}
+                </div>
+            </div>
     </div>
 </div>
 <p>

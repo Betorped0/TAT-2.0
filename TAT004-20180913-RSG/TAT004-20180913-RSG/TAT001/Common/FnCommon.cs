@@ -28,6 +28,12 @@ namespace TAT001.Common
             }
             return texto;
         }
+        public static void ObtenerTextos(TAT001Entities db, int pagina_id_textos, string user_id, ControllerBase controller)
+        {
+            var user = ObtenerUsuario(db, user_id);
+            controller.ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina_id_textos) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+
+        }
         public static void ObtenerConfPage(TAT001Entities db, int pagina_id, string user_id, ControllerBase controller,int? pagina_id_textos=null)
         {
             var user = ObtenerUsuario(db, user_id);
@@ -47,7 +53,7 @@ namespace TAT001.Common
         public static List<SelectListItem> ObtenerCmbSociedades(TAT001Entities db, string id)
         {
             return db.SOCIEDADs
-                .Where(x => x.BUKRS == id || id == null)
+                .Where(x => (x.BUKRS == id || id == null) && x.ACTIVO)
                 .Select(x => new SelectListItem
                 {
                     Value = x.BUKRS,
@@ -68,7 +74,7 @@ namespace TAT001.Common
         public static List<SelectListItem> ObtenerCmbUsuario(TAT001Entities db, string id)
         {
             return db.USUARIOs
-                .Where(x => x.ID == id || id == null)
+                .Where(x => (x.ID == id || id == null) && (x.ACTIVO == null ? false : x.ACTIVO.Value))
                 .Select(x => new SelectListItem
                 {
                     Value = x.ID,
@@ -103,7 +109,7 @@ namespace TAT001.Common
         {
             List<TSOL> tiposSolicitudes = new List<TSOL>();
             return  db.TSOLs
-                .Where(x => ((esReversa.Value == true && x.TSOLR == null) || esReversa.Value == false) && (id == null || x.ID == id))
+                .Where(x => ((esReversa.Value == true && x.TSOLR == null) || esReversa.Value == false) && (id == null || x.ID == id)&& (x.ACTIVO==null?false: x.ACTIVO.Value))
                 .Join(db.TSOLTs, s => s.ID, st => st.TSOL_ID, (s, st) => st)
                 .Where(x => x.SPRAS_ID == spras_id)
                 .Select(x => new SelectListItem
@@ -180,7 +186,7 @@ namespace TAT001.Common
             if (esReversa.Value)
             {
                 items = db.TSOLs
-                    .Where(x=>x.TSOLR==null)
+                    .Where(x=>x.TSOLR==null && (x.ACTIVO == null ? false : x.ACTIVO.Value))
                     .Join(db.TSOLTs, s => s.ID, st => st.TSOL_ID, (s, st) => st)
                     .Where(x=>x.SPRAS_ID == spras_id)
                     .Select(x=> new SelectTreeItem
@@ -196,7 +202,7 @@ namespace TAT001.Common
                 db.TSOL_TREE
                            .Where(y => y.TSOL_GROUP_ID == id_padre && y.TSOL_GROUP_TIPO == tipo_padre)
                            .Join(db.TSOLTs, tst => tst.TSOL_ID, st => st.TSOL_ID, (tst, st) => st)
-                           .Where(y => y.SPRAS_ID == spras_id )
+                           .Where(y => y.SPRAS_ID == spras_id && (y.TSOL.ACTIVO == null ? false : y.TSOL.ACTIVO.Value))
                            .ToList().ForEach(y =>
                            {
                                items.Add(new SelectTreeItem

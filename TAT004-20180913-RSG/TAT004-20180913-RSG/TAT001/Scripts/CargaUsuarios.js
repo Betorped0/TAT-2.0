@@ -300,7 +300,7 @@ function Actualizar() {
     var message = $('.input_mes').serialize();
     var doc = sessionStorage.getItem("num");
     if (doc > 0) {
-        if (message.indexOf('duplicado') > -1) {
+        if (message.indexOf('existe') > -1) {
             $.ajax({
                 type: "POST",
                 url: 'Actualizar',

@@ -674,71 +674,62 @@ function ultimoDiaT(t, num, periodo, ejercicio, monto, tipo, porc, meses) {
 }
 
 function setDates(tipo) {
-    var anioi = document.getElementById('anioi_id').value,
-        aniof = document.getElementById('aniof_id').value,
-        periodoi = document.getElementById('periodoi_id').value,
-        periodof = document.getElementById('periodof_id').value;
 
     if (tipo == "date") {
-        document.getElementById('fechai_vig').value = document.getElementById('fechai_vig2').value;
-        document.getElementById('fechaf_vig').value = document.getElementById('fechaf_vig2').value;
-    } else if (anioi && aniof && periodoi&& periodof) {
-        document.getElementById("loader").style.display = "initial";
-        var ej1 = document.getElementById('anioi_id').value;
-        var pe1 = document.getElementById('periodoi_id').value;
-        var ej2 = document.getElementById('aniof_id').value;
-        var pe2 = document.getElementById('periodof_id').value;
+        var fechI = document.getElementById("fechai_vig2"),
+            fechF = document.getElementById("fechaf_vig2");
+        fechI.value = document.getElementById('fechai_vig').value;
+        fechF.value = document.getElementById('fechaf_vig').value;
+        document.getElementById("lbl_fechade").setAttribute('class', 'active');
+        document.getElementById("lbl_fechahasta").setAttribute('class', 'active');
 
-        $.ajax({
-            type: "POST",
-            url: root+'Listas/getPrimerDia',
-            dataType: "json",
-            data: { ejercicio: ej1, periodo: pe1 },
-            success: function (data) {
-                document.getElementById("loader").style.display = "none";
-                var dd = data.split('/');
-                var dates = new Date(dd[2], dd[1] - 1, dd[0]);
-                datee = dates.getDate() + "/" + (dates.getMonth() + 1) + "/" + dates.getFullYear();
+        pickerFecha2(".format_date");
+    } else  {
 
-                document.getElementById('fechai_vig').value = datee;
-            },
-            error: function (xhr, httpStatusMessage, customErrorMessage) {
-                M.toast({ html: httpStatusMessage });
-                document.getElementById("loader").style.display = "none";
-            },
-            async: false
-        });
-        $.ajax({
-            type: "POST",
-            url: root +'Listas/getUltimoDia',
-            dataType: "json",
-            data: { ejercicio: ej2, periodo: pe2 },
-            success: function (data) {
-                document.getElementById("loader").style.display = "none";
-                var dd = data.split('/');
-                var dates = new Date(dd[2], dd[1] - 1, dd[0]);
-                datee = dates.getDate() + "/" + (dates.getMonth() + 1) + "/" + dates.getFullYear();
+        var anioi = document.getElementById('anioi_id').value,
+            aniof = document.getElementById('aniof_id').value,
+            periodoi = document.getElementById('periodoi_id').value,
+            periodof = document.getElementById('periodof_id').value;
+        if (anioi && periodoi ) {
+            $.ajax({
+                type: "POST",
+                url: root + 'Listas/getPrimerDia',
+                dataType: "json",
+                data: { ejercicio: anioi, periodo: periodoi },
+                success: function (data) {
+                    var dd = data.split('/');
+                    var dates = new Date(dd[2], dd[1] - 1, dd[0]);
+                    datee = dates.getDate() + "/" + (dates.getMonth() + 1) + "/" + dates.getFullYear();
 
-                document.getElementById('fechaf_vig').value = datee;
-            },
-            error: function (xhr, httpStatusMessage, customErrorMessage) {
-                M.toast({ html: httpStatusMessage });
-                document.getElementById("loader").style.display = "none";
-            },
-            async: false
-        });
+                    document.getElementById('fechai_vig').value = datee;
+                },
+                error: function (xhr, httpStatusMessage, customErrorMessage) {
+                    M.toast({ html: httpStatusMessage });
+                },
+                async: false
+            });
+        }
+        if (aniof && periodof) {
+            $.ajax({
+                type: "POST",
+                url: root + 'Listas/getUltimoDia',
+                dataType: "json",
+                data: { ejercicio: aniof, periodo: periodof },
+                success: function (data) {
+                    var dd = data.split('/');
+                    var dates = new Date(dd[2], dd[1] - 1, dd[0]);
+                    datee = dates.getDate() + "/" + (dates.getMonth() + 1) + "/" + dates.getFullYear();
 
-        //var firstDay = new Date(document.getElementById('anioi_id').value, document.getElementById('periodoi_id').value - 1, 1);
-        //var lastDay = new Date(document.getElementById('aniof_id').value, document.getElementById('periodof_id').value, 0);
-
-        //var fechai = firstDay.getDate() + "/" + (firstDay.getMonth() + 1) + "/" + firstDay.getFullYear();
-        //var fechaf = lastDay.getDate() + "/" + (lastDay.getMonth() + 1) + "/" + lastDay.getFullYear();
-
-        //document.getElementById('fechai_vig').value = fechai;
-        //document.getElementById('fechaf_vig').value = fechaf;
+                    document.getElementById('fechaf_vig').value = datee;
+                },
+                error: function (xhr, httpStatusMessage, customErrorMessage) {
+                    M.toast({ html: httpStatusMessage });
+                },
+                async: false
+            });
+        }
     }
-    pickerFecha2(".format_date");
-    cambiaRec();
+    //cambiaRec();
 }
 
 //Evaluar la extensión y tamaño del archivo a cargar

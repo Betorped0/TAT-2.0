@@ -1,7 +1,7 @@
 ﻿function cierre() {
     //string sociedad_id, string tsol_id, int periodo_id, string usuario_id = null
     var soc = $("#sociedad_id").val();
-    var tsol = $("#TSOL_ID").val();
+    var tsol = (!$("#TSOL_ID").val() ? $("#tsol_id").val() : $("#TSOL_ID").val());
     var periodo = $("#periodo").val();
     var user = $("#USUARIOD_ID").val();
     var bool = false
