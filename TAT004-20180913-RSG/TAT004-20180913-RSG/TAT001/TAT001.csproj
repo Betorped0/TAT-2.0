@@ -804,6 +804,7 @@
     <Compile Include="Models\ClienteViewModel.cs" />
     <Compile Include="Models\Comentarios.cs" />
     <Compile Include="Models\dby.cs" />
+    <Compile Include="Models\DesviacionesTS.cs" />
     <Compile Include="Models\Documento.cs" />
     <Compile Include="Models\DOCUMENTOM_MOD.cs" />
     <Compile Include="Models\Delegados.cs" />
@@ -814,6 +815,7 @@
     <Compile Include="Models\Masiva\Encabezado.cs" />
     <Compile Include="Models\Masiva\Multiple.cs" />
     <Compile Include="Models\Masiva\Relacionada.cs" />
+    <Compile Include="Models\MaterialViewModel.cs" />
     <Compile Include="Models\ProveedorViewModel.cs" />
     <Compile Include="Models\ReportesModel.cs" />
     <Compile Include="Models\SelectTreeItem.cs" />
@@ -1332,6 +1334,7 @@
     <Content Include="obj\Release\TempPE\Entities.TAT001.cs.dll" />
     <Content Include="obj\Release\TempPE\Entities.TAT001.Designer.cs.dll" />-->
     <Content Include="images\Simple-wallpapers-HD-for-desktop.png" />
+    <Content Include="PdfTemp\readme.txt" />
     <Content Include="Properties\PublishProfiles\FolderProfile.pubxml.user" />
     <Content Include="Scripts\CargaUsuarios.js" />
     <Content Include="Scripts\CargaClientes.js" />
@@ -1664,7 +1667,6 @@
     <Content Include="Scripts\ValidarNumero.js" />
     <Content Include="Scripts\ValidarProv.js" />
     <Content Include="Scripts\ValidarTCambio.js" />
-    <None Include="Views\Clientes\Index_.cshtml" />
     <Content Include="Views\Mails\logo_kellogg.png" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
