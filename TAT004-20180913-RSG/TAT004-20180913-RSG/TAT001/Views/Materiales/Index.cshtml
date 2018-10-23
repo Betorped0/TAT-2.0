@@ -1,225 +1,78 @@
-﻿@model IEnumerable<TAT001.Entities.MATERIAL>
+﻿@model TAT001.Models.MaterialViewModel
 
 @{
     ViewBag.pagina_r = 661;
     ViewBag.carpeta_r = 500;
-    //ViewBag.Title = "Páginas";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<script src="//code.jquery.com/jquery-1.12.4.js"></script>
-<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-<script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
-<link href="~/Content/dataTable.css" rel="stylesheet" />
-<link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
-
-<div class="row">
-    <div class="card-panel">
-        @*<div class="row" style="height:10px;width:100%;">
-            <div class="col l7 pink darken-1" style="height:10px;padding:0;"></div>
-            <div class="col l3 pink darken-4" style="height:10px;padding:0;">
-                <div class="col l3 pink darken-4" style="height:10px;padding:0;"></div>
-                <div class="col l8 orange" style="height:10px;padding:0;"></div>
-                <div class="col l1 red" style="height:10px;padding:0;"></div>
-            </div>
-            <div class="col l2 yellow" style="height:10px;padding:0;"></div>
-        </div>*@
-        <div class="row" style="margin-bottom:0;">
-            <div class="input-field col s3 m3 l3">
-                <select id="selecc">
-                    <option value="10" selected>10</option>
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                </select>
-                <label id="btn_length"></label>
-            </div>
-            <div class="input-field col s5 m3 l3 offset-l6 offset-m6 offset-s4">
-                <input type="text" class="global_filter" id="global_filter">
-                <label for="global_filter" id="lbl_search"></label>
-            </div>
+<div class="card-panel">
+    <div class="row" style="margin-bottom:0;">
+        <div class="input-field col s3 m3 l3">
+            @Html.DropDownListFor(model => model.numRegistros, Model.pageSizes, "")
+            <label id="lbl_length"></label>
         </div>
-        <script>
-            var elem = document.querySelector('select');
-            var options = [];
-            var instance = M.FormSelect.init(elem, options);
-        </script>
-        @*<p>
-            @Html.ActionLink("Nuevo registro", "Create")
-        </p>*@
-        <table class="table mdl-data-table striped" id="table" style="width:100%;">
-            <thead>
-                <tr>
-                    <th class="lbl_id">
-                    </th>
-                    <th class="lbl_Dsc">
-                    </th>
-                    <th class="lbl_MatGroup">
-                    </th>
-                    <th class="lbl_Activo">
-                    </th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ID)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.MAKTX)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.MATERIALGP.DESCRIPCION)
-                        </td>
-                        @if ((bool)item.ACTIVO == true)
-                        {
-                            <td style="align-items:center"><i class='material-icons green-text'>check</i></td>}
-                        else
-                        {
-                            <td style="align-items:center;"><i class='material-icons red-text'>clear</i></td>}
-                        <td>
-                            <a href="@Url.Action("Edit", "Materiales", new { id = item.ID })">
-                                <i class='material-icons green-text'>edit</i>
-                            </a>&nbsp
-                            <a href="@Url.Action("Details", "Materiales", new { id = item.ID })">
-                                <i class='material-icons blue-text'>search</i>
-                            </a>&nbsp
-                            @*<a data-form-method="post" href="@Url.Action("Delete", "Materiales", new { id = item.ID })">
-                                <i class='material-icons red-text'>delete</i>
-                            </a>*@
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        <div class="input-field col s5 m3 l3 offset-l6 offset-m6 offset-s4">
+            @Html.TextBoxFor(model => model.buscar, new { @class = "global_filter", @id = "global_filter", @maxlength = 50 })
+            <label for="global_filter" id="lbl_search">Buscar</label>
+        </div>
+    </div>
+    <div id="list">
+        @Html.Partial("List", Model)
     </div>
 </div>
+
+<script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
 <script>
-    $(document).ready(function () {
-        var table = $('#table').DataTable({
-            scrollX: "50vh",
-            scrollY: "50vh",
-            scrollCollapse: true,
-            language: {
-                "url": "../Scripts/lang/@Session["spras"].ToString()"+".json"
-            }, columnDefs: [
-                {
-                    targets: [1],
-                    className: 'mdl-data-table__cell--non-numeric'
-                }
-            ],
-            order: [[0, "asc"]],
-            initComplete: function () {
-                this.api().columns().every(function () {
-                    var column = this;
-                    var select = $('<select style="display:initial;" class="browser-default"><option value=""></option></select>')
-                        .appendTo($(column.footer()).empty())
-                        .on('change', function () {
-                            var val = $.fn.dataTable.util.escapeRegex(
-                                $(this).val()
-                            );
-                            column
-                                .search(val ? '^' + val + '$' : '', true, false)
-                                .draw();
-                        });
-                    column.cells('', column[0]).render('display').sort().unique().each(function (d, j) {
-                        var val = $('<div/>').html(d).text();
-                        select.append('<option value="' + val + '">' + val + '</option>');
-                    });
-                });
-            }
-        });
+    var root = '@Url.Content("~")';
+    //---- Inicializador de componentes Materialize----
+    fnCommon.materializeInit('select');
 
-        var a = $('#selecc').val();
-        table.page.len(a).draw();
-        $('#selecc').on('change', function () {
-            table.page.len(this.value).draw();
-        });
-
-        $('input.global_filter').on('keyup click', function () {
-            filterGlobal();
-        });
-
-        $('#table tbody').on('click', 'td.details-control', function () {
-            var tr = $(this).closest('tr');
-            var row = table.row(tr);
-
-            if (row.child.isShown()) {
-                // This row is already open - close it
-                row.child.hide();
-                tr.removeClass('shown');
-            }
-            else {
-                // Open this row
-                var child = format(row.data(), row, tr);
-                if (child != undefined) {
-                }
+    //------Actualizar numero de registros en paginación
+    $('#numRegistros').change(function () {
+        fnCommon.showProcess(true);
+        $.ajax({
+            url: root + 'Materiales/List?numRegistros=' + $('#numRegistros').val(),
+            success: function (resultView) {
+                fnCommon.showProcess(false);
+                $('#list').html(resultView);
             }
         });
     });
-    function filterGlobal() {
-        $('#table').DataTable().search(
-            $('#global_filter').val()).draw();
-    }
-</script>
-@*<script>
-        $(document).ready(function () {
-            var i = 0;
-            $('#table tfoot th').each(function () {
-                i++;
-                var title = $(this).text();
-                $(this).html('<input type="text" id="lbl_search' + i + '" />');
-            });
-            var table = $('#table').DataTable({
-                language: {
-                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
-                },
-                columnDefs: [
-                    {
-                        targets: [0, 1, 2],
-                        className: 'mdl-data-table__cell--non-numeric'
-                    }
-                ]
-            });
-            table.columns().every(function () {
-                var that = this;
-                $('input', this.footer()).on('keyup change', function () {
-                    if (that.search() !== this.value) {
-                        that
-                            .search(this.value)
-                            .draw();
-                    }
-                });
-            })
-            var a = $('#selecc').val();
-            table.page.len(a).draw();
-            $('#selecc').on('change', function () {
-                table.page.len(this.value).draw();
-            });
 
-            $('input.global_filter').on('keyup click', function () {
-                filterGlobal();
-            });
+    //------Actualizar registros por busqueda
+    $('input.global_filter').keyup(function () {
+        var buscar = $('input.global_filter').val();
+         $.ajax({
+             url: root+'Materiales/List?numRegistros=' + $('#numRegistros').val() + '&&buscar=' + $('input.global_filter').val(),
+            success: function (resultView) {
+                $('#list').html(resultView);
+            }
         });
-
-        function filterGlobal() {
-            $('#table').DataTable().search(
-                $('#global_filter').val()).draw();
+    });
+    //-----Pagination
+    function pagination() {
+        var paginationLink = $('.pagination>li>a');
+        for (var i = 0; i < paginationLink.length; i++) {
+            var url = paginationLink.get(i).getAttribute("href");
+            var id = 'link_p' + i;
+            if (url) {
+                paginationLink.get(i).setAttribute("id", id);
+                paginationLink.get(i).setAttribute("url", url);
+                $('#' + id).click(function (me) {
+                    fnCommon.showProcess(true);
+                    $.ajax({
+                        url: me.toElement.getAttribute('url'),
+                        success: function (resultView) {
+                            fnCommon.showProcess(false);
+                            $('#list').html(resultView);
+                            pagination();
+                        }
+                    });
+                });
+            }
+            paginationLink.get(i).removeAttribute("href");
         }
-    </script>*@
-<style>
-    .dataTables_length {
-        display: none;
     }
-
-    .dataTables_filter {
-        display: none;
-    }
-
-    .dataTables_scrollHeadInner, .mdl-data-table {
-        width: 100%;
-    }
-</style>
+    pagination();
+</script>

@@ -130,8 +130,9 @@ namespace TAT001.Controllers
 
                     if (item.ESTATUS == "R")
                     {
+                        FLUJO flujo = db.FLUJOes.Include("USUARIO").Where(x => x.NUM_DOC == item.NUM_DOC & x.ESTATUS == "R").OrderByDescending(a => a.POS).FirstOrDefault();
                         item.ESTATUSS = item.ESTATUSS.Substring(0, 6) +
-                                        db.FLUJOes.Where(x => x.NUM_DOC == item.NUM_DOC & x.ESTATUS == "R").OrderByDescending(a => a.POS).FirstOrDefault().USUARIO.PUESTO_ID +
+                                        flujo.USUARIO.PUESTO_ID +
                                         item.ESTATUSS.Substring(6, 1);
                     }
                     else

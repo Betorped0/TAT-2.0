@@ -637,7 +637,8 @@ namespace TAT001.Controllers
                     dOCUMENTO.TIPO_TECNICO = select_neg;
 
                     //Obtener el número de documento
-                    decimal N_DOC = getSolID(dOCUMENTO.TSOL_ID);
+                    Rangos ran = new Rangos();
+                    decimal N_DOC = ran.getSolID(dOCUMENTO.TSOL_ID);
                     dOCUMENTO.NUM_DOC = N_DOC;
 
 
@@ -704,7 +705,8 @@ namespace TAT001.Controllers
                     dOCUMENTO.MONTO_DOC_MD = Convert.ToDecimal(MONTO_DOC_MD);
 
                     //Obtener el monto de la sociedad
-                    dOCUMENTO.MONTO_DOC_ML = getValSoc(id_bukrs.WAERS, dOCUMENTO.MONEDA_ID, Convert.ToDecimal(dOCUMENTO.MONTO_DOC_MD), out errorString);
+                    TCambio tc = new TCambio();
+                    dOCUMENTO.MONTO_DOC_ML = tc.getValSoc(id_bukrs.WAERS, dOCUMENTO.MONEDA_ID, Convert.ToDecimal(dOCUMENTO.MONTO_DOC_MD), out errorString);
                     if (!errorString.Equals(""))
                     {
                         throw new Exception();
@@ -721,10 +723,10 @@ namespace TAT001.Controllers
                     dOCUMENTO.MONEDAL2_ID = "USD";
 
                     //Tipo cambio de la moneda de la sociedad TIPO_CAMBIOL
-                    dOCUMENTO.TIPO_CAMBIOL = getUkurs(id_bukrs.WAERS, dOCUMENTO.MONEDA_ID, out errorString);
+                    dOCUMENTO.TIPO_CAMBIOL = tc.getUkurs(id_bukrs.WAERS, dOCUMENTO.MONEDA_ID, out errorString);
 
                     //Tipo cambio dolares TIPO_CAMBIOL2
-                    dOCUMENTO.TIPO_CAMBIOL2 = getUkursUSD(dOCUMENTO.MONEDA_ID, "USD", out errorString);
+                    dOCUMENTO.TIPO_CAMBIOL2 = tc.getUkursUSD(dOCUMENTO.MONEDA_ID, "USD", out errorString);
                     if (!errorString.Equals(""))
                     {
                         throw new Exception();
@@ -742,7 +744,7 @@ namespace TAT001.Controllers
                     db.SaveChanges();
 
                     //Actualizar el rango
-                    updateRango(dOCUMENTO.TSOL_ID, dOCUMENTO.NUM_DOC);
+                    ran.updateRango(dOCUMENTO.TSOL_ID, dOCUMENTO.NUM_DOC);
 
                     //RSG 28.05.2018----------------------------------------------
                     drecc.DOC_REF = dOCUMENTO.NUM_DOC;
@@ -1509,128 +1511,14 @@ namespace TAT001.Controllers
             return View(dOCUMENTO);
         }
 
-        [HttpPost]
-        public FileResult Descargar(string archivo)
-        {
-            Models.PresupuestoModels carga = new Models.PresupuestoModels();
-            string nombre = "", contentyp = "";
-            carga.contDescarga(archivo, ref contentyp, ref nombre);
-            return File(archivo, contentyp, nombre);
-        }
-        public decimal getValSoc(string waers, string moneda_id, decimal monto_doc_md, out string errorString)
-        {
-            decimal val = 0;
-
-            //Siempre la conversión va a la sociedad    
-
-            var UKURS = getUkurs(waers, moneda_id, out errorString);
-
-            if (errorString.Equals(""))
-            {
-
-                decimal uk = Convert.ToDecimal(UKURS);
-
-                if (UKURS > 0)
-                {
-                    val = uk * Convert.ToDecimal(monto_doc_md);
-                }
-            }
-
-            return val;
-        }
-
-        public decimal getUkurs(string waers, string moneda_id, out string errorString)
-        {
-            decimal ukurs = 0;
-            errorString = string.Empty;
-            using (TAT001Entities db = new TAT001Entities())
-            {
-                try
-                {
-                    //Siempre la conversión va a la sociedad    
-                    var date = DateTime.Now.Date;
-                    var tcambio = db.TCAMBIOs.Where(t => t.FCURR.Equals(moneda_id) && t.TCURR.Equals(waers) && t.GDATU.Equals(date)).FirstOrDefault();
-                    if (tcambio == null)
-                    {
-                        var max = db.TCAMBIOs.Where(t => t.FCURR.Equals(moneda_id) && t.TCURR.Equals(waers)).Max(a => a.GDATU);
-                        tcambio = db.TCAMBIOs.Where(t => t.FCURR.Equals(moneda_id) && t.TCURR.Equals(waers) && t.GDATU.Equals(max)).FirstOrDefault();
-                    }
-
-                    ukurs = Convert.ToDecimal(tcambio.UKURS);
-
-                }
-                catch (Exception e)
-                {
-                    errorString = "detail: conversion " + moneda_id + " to " + waers + " in date " + DateTime.Now.Date;
-                    return 0;
-                }
-            }
-
-            return ukurs;
-        }
-
-        public decimal getUkursUSD(string waers, string waersusd, out string errorString)
-        {
-            decimal ukurs = 0;
-            errorString = string.Empty;
-            using (TAT001Entities db = new TAT001Entities())
-            {
-                try
-                {
-                    var date = DateTime.Now.Date;
-                    var tcambio = db.TCAMBIOs.Where(t => t.FCURR.Equals(waers) && t.TCURR.Equals(waersusd) && t.GDATU.Equals(date)).FirstOrDefault();
-                    if (tcambio == null)
-                    {
-                        var max = db.TCAMBIOs.Where(t => t.FCURR.Equals(waers) && t.TCURR.Equals(waersusd)).Max(a => a.GDATU);
-                        tcambio = db.TCAMBIOs.Where(t => t.FCURR.Equals(waers) && t.TCURR.Equals(waersusd) && t.GDATU.Equals(max)).FirstOrDefault();
-                    }
-
-                    ukurs = Convert.ToDecimal(tcambio.UKURS);
-                }
-                catch (Exception e)
-                {
-                    errorString = "detail: conversion " + waers + " to " + waersusd + " in date " + DateTime.Now.Date;
-                    return 0;
-                }
-
-            }
-
-            return ukurs;
-        }
-
-        public RANGO getRango(string TSOL_ID)
-        {
-            RANGO rango = new RANGO();
-            using (TAT001Entities db = new TAT001Entities())
-            {
-
-                rango = (from r in db.RANGOes
-                         join s in db.TSOLs
-                         on r.ID equals s.RANGO_ID
-                         where s.ID == TSOL_ID && r.ACTIVO == true
-                         select r).FirstOrDefault();
-
-            }
-
-            return rango;
-
-        }
-
-        public decimal getSolID(string TSOL_ID)
-        {
-
-            decimal id = 0;
-
-            RANGO rango = getRango(TSOL_ID);
-
-            if (rango.ACTUAL > rango.INICIO && rango.ACTUAL < rango.FIN)
-            {
-                rango.ACTUAL++;
-                id = (decimal)rango.ACTUAL;
-            }
-
-            return id;
-        }
+        //[HttpPost]
+        //public FileResult Descargar(string archivo)
+        //{
+        //    Models.PresupuestoModels carga = new Models.PresupuestogetUkursModels();
+        //    string nombre = "", contentyp = "";
+        //    carga.contDescarga(archivo, ref contentyp, ref nombre);
+        //    return File(archivo, contentyp, nombre);
+        //}
 
         public STATE getEstado(int id)
         {
@@ -1662,22 +1550,6 @@ namespace TAT001.Controllers
 
             }
             return payer;
-
-        }
-
-
-        public void updateRango(string TSOL_ID, decimal actual)
-        {
-
-            RANGO rango = getRango(TSOL_ID);
-
-            if (rango.ACTUAL > rango.INICIO && rango.ACTUAL < rango.FIN)
-            {
-                rango.ACTUAL = actual;
-            }
-
-            db.Entry(rango).State = EntityState.Modified;
-            db.SaveChanges();
 
         }
 

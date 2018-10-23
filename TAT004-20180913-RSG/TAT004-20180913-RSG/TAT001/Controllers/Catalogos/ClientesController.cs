@@ -37,9 +37,10 @@ namespace TAT001.Controllers.Catalogos
 
         public ActionResult List(string colOrden, string ordenActual, int? numRegistros = 10, int? pagina = 1, string buscar = "")
         {
+            int pagina_id = 631; //ID EN BASE DE DATOS
             ClienteViewModel viewModel = new ClienteViewModel();
             ObtenerListado(ref viewModel,colOrden,ordenActual,numRegistros,pagina,buscar);
-
+            FnCommon.ObtenerTextos(db,pagina_id, User.Identity.Name, this.ControllerContext.Controller);
             return View(viewModel);
         }
         public void ObtenerListado(ref ClienteViewModel viewModel, string colOrden="", string ordenActual="", int? numRegistros = 10, int? pagina = 1, string buscar = "")
@@ -48,7 +49,6 @@ namespace TAT001.Controllers.Catalogos
             List<CLIENTE> clientes = db.CLIENTEs.Include(c => c.PAI).Include(c => c.TCLIENTE).ToList();
             viewModel.ordenActual = colOrden;
             viewModel.numRegistros = numRegistros.Value;
-            viewModel.buscar = buscar;
 
             if (!String.IsNullOrEmpty(buscar))
             {
@@ -112,35 +112,7 @@ namespace TAT001.Controllers.Catalogos
                     break;
             }
         }
-        // GET: Clientes
-        public ActionResult Index_()
-        {
-            int pagina = 631; //ID EN BASE DE DATOS
-            string u = User.Identity.Name;
-            var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-            ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-            ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-            ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
-            ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-            ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-
-            try
-            {
-                string p = Session["pais"].ToString();
-                ViewBag.pais = p + ".png";
-            }
-            catch
-            {
-                //return RedirectToAction("Pais", "Home");
-            }
-            Session["spras"] = user.SPRAS_ID;
-
-            var cLIENTEs = db.CLIENTEs.Include(c => c.PAI).Include(c => c.TCLIENTE);
-            return View(cLIENTEs.ToList());
-        }
-
+      
         // GET: Clientes/Details/5
         public ActionResult Details(string vko, string vtw, string spa, string kun)
         {
