@@ -141,7 +141,7 @@ namespace TAT001.Controllers.Catalogos
             if (ModelState.IsValid)
             {
                 TS_CAMPO TS = new TS_CAMPO();
-                //TS.ACTIVO = true;
+                TS.ACTIVO = true;
                 db.TS_CAMPO.Add(TS);
                 db.SaveChanges();
                 List<SPRA> ss = db.SPRAS.ToList();
@@ -263,9 +263,9 @@ namespace TAT001.Controllers.Catalogos
         {
             if (ModelState.IsValid)
             {
-                tc.ACTIVO = tc.ACTIVO;
+                
                 db.Entry(tc).State = EntityState.Modified;
-                db.SaveChanges();
+                //db.SaveChanges();
 
                 TS_CAMPO mATERIAL1 = db.TS_CAMPO.Find(tc.ID);
                 var materialtextos = db.TS_FORMT.Where(t => t.TSFORM_ID == tc.ID).ToList();

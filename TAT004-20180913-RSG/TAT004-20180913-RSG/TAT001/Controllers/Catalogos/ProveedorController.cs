@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -7,7 +8,9 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using TAT001.Common;
 using TAT001.Entities;
+using TAT001.Models;
 
 namespace TAT001.Controllers.Catalogos
 {
@@ -18,36 +21,83 @@ namespace TAT001.Controllers.Catalogos
         // GET: Proveedor
         public ActionResult Index()
         {
-            int pagina = 771; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
-            {
-                string u = User.Identity.Name;
-                //string u = "admin";
-                var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
-                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            int pagina_id = 771; //ID EN BASE DE DATOS
+            FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
+            ViewBag.pais = Session["pais"] != null ? Session["pais"].ToString() + ".png" : null;
 
-                try
-                {
-                    string p = Session["pais"].ToString();
-                    ViewBag.pais = p + ".svg";
-                }
-                catch
-                {
-                    //ViewBag.pais = "mx.svg";
-                    //return RedirectToAction("Pais", "Home");
-                }
-                Session["spras"] = user.SPRAS_ID;
-                ViewBag.lan = user.SPRAS_ID;
-            }
-            return View(db.PROVEEDORs.Where(x => x.ACTIVO == true).ToList());
+
+            ProveedorViewModel viewModel = new ProveedorViewModel();
+            viewModel.pageSizes = FnCommon.ObtenerCmbPageSize();
+            ObtenerListado(ref viewModel);
+
+            return View(viewModel);
         }
 
+        public ActionResult List(string colOrden, string ordenActual, int? numRegistros = 10, int? pagina = 1, string buscar = "")
+        {
+            ProveedorViewModel viewModel = new ProveedorViewModel();
+            ObtenerListado(ref viewModel, colOrden, ordenActual, numRegistros, pagina, buscar);
+
+            return View(viewModel);
+        }
+        public void ObtenerListado(ref ProveedorViewModel viewModel, string colOrden = "", string ordenActual = "", int? numRegistros = 10, int? pagina = 1, string buscar = "")
+        {
+            int pageIndex = pagina.Value;
+            List<PROVEEDOR> clientes = db.PROVEEDORs.Where(t=>t.ACTIVO).ToList();
+            viewModel.ordenActual = colOrden;
+            viewModel.numRegistros = numRegistros.Value;
+            viewModel.buscar = buscar;
+
+            if (!String.IsNullOrEmpty(buscar))
+            {
+                clientes = clientes.Where(x =>
+                String.Concat(x.ID, (x.NOMBRE == null ? "" : x.NOMBRE), (x.SOCIEDAD_ID == null ? "" : x.SOCIEDAD_ID), (x.PAIS_ID == null ? "" : x.PAIS_ID), x.ACTIVO)
+                .ToLower().Contains(buscar.ToLower()))
+                .ToList();
+            }
+            switch (colOrden)
+            {
+                case "ID":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.proveedores = clientes.OrderByDescending(m => m.ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.proveedores = clientes.OrderBy(m => m.ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+                case "NOMBRE":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.proveedores = clientes.OrderByDescending(m => m.NOMBRE).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.proveedores = clientes.OrderBy(m => m.NOMBRE).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+
+                case "SOCIEDAD_ID":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.proveedores = clientes.OrderByDescending(m => m.SOCIEDAD_ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.proveedores = clientes.OrderBy(m => m.SOCIEDAD_ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+
+                case "PAIS_ID":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.proveedores = clientes.OrderByDescending(m => m.PAIS_ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.proveedores = clientes.OrderBy(m => m.PAIS_ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+
+                
+
+                case "ACTIVO":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.proveedores = clientes.OrderByDescending(m => m.ACTIVO).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.proveedores = clientes.OrderBy(m => m.ACTIVO).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+
+                default:
+                    viewModel.proveedores = clientes.OrderBy(m => m.ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+            }
+        }
         // GET: Proveedor/Details/5
         public ActionResult Details(string id)
         {
@@ -228,7 +278,7 @@ namespace TAT001.Controllers.Catalogos
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,NOMBRE,SOCIEDAD_ID,PAIS_ID")] PROVEEDOR pROVEEDOR)
+        public ActionResult Edit([Bind(Include = "ID,NOMBRE,SOCIEDAD_ID,PAIS_ID,ACTIVO")] PROVEEDOR pROVEEDOR)
         {
             if (ModelState.IsValid)
             {
