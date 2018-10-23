@@ -1413,7 +1413,22 @@ namespace TAT001.Controllers.Catalogos
                 } //Nivel 7
                 try
                 {
-                    doc.ID_PROVEEDOR = dt.Rows[i][12].ToString();
+                    if (dt.Rows[i][12].ToString() != null && dt.Rows[i][12].ToString() != "")
+                    {
+                        doc.ID_PROVEEDOR = dt.Rows[i][12].ToString();
+                    }
+                    else
+                    {
+                        var ncli = (from x in db.CLIENTEs where x.KUNNR.Equals(doc.KUNNR) select x.PROVEEDOR_ID).FirstOrDefault();
+                        if (ncli == null)
+                        {
+                            doc.ID_PROVEEDOR = "";
+                        }
+                        else
+                        {
+                            doc.ID_PROVEEDOR = ncli;
+                        }
+                    }
                     doc.ID_PROVEEDOR = Completa(doc.ID_PROVEEDOR, 10);
                 }
                 catch (Exception e)
@@ -1422,7 +1437,22 @@ namespace TAT001.Controllers.Catalogos
                 } //Vendor
                 try
                 {
-                    doc.BANNER = dt.Rows[i][13].ToString();
+                    if (dt.Rows[i][13].ToString() != null && dt.Rows[i][13].ToString() != "")
+                    {
+                        doc.BANNER = dt.Rows[i][13].ToString();
+                    }
+                    else
+                    {
+                        var ncli = (from x in db.CLIENTEs where x.KUNNR.Equals(doc.KUNNR) select x.BANNER).FirstOrDefault();
+                        if (ncli == null)
+                        {
+                            doc.BANNER = "";
+                        }
+                        else
+                        {
+                            doc.BANNER = ncli;
+                        }
+                    }
                     doc.BANNER = Completa(doc.BANNER, 10);
                 }
                 catch (Exception e)
@@ -1431,7 +1461,22 @@ namespace TAT001.Controllers.Catalogos
                 } //Banner
                 try
                 {
-                    doc.BANNERG = dt.Rows[i][14].ToString();
+                    if (dt.Rows[i][14].ToString() != null && dt.Rows[i][14].ToString() != "")
+                    {
+                        doc.BANNERG = dt.Rows[i][14].ToString();
+                    }
+                    else
+                    {
+                        var ncli = (from x in db.CLIENTEs where x.KUNNR.Equals(doc.KUNNR) select x.BANNERG).FirstOrDefault();
+                        if (ncli == null)
+                        {
+                            doc.BANNERG = "";
+                        }
+                        else
+                        {
+                            doc.BANNERG = ncli;
+                        }
+                    }
                     doc.BANNERG = Completa(doc.BANNERG, 10);
                 }
                 catch (Exception e)
@@ -1440,7 +1485,22 @@ namespace TAT001.Controllers.Catalogos
                 } //Banner Agrupador
                 try
                 {
-                    doc.CANAL = dt.Rows[i][15].ToString();
+                    if (dt.Rows[i][15].ToString() != null && dt.Rows[i][15].ToString() != "")
+                    {
+                        doc.CANAL = dt.Rows[i][15].ToString();
+                    }
+                    else
+                    {
+                        var ncli = (from x in db.CLIENTEs where x.KUNNR.Equals(doc.KUNNR) select x.CANAL).FirstOrDefault();
+                        if (ncli == null)
+                        {
+                            doc.CANAL = "";
+                        }
+                        else
+                        {
+                            doc.CANAL = ncli;
+                        }
+                    }
                 }
                 catch (Exception e)
                 {
@@ -1448,7 +1508,22 @@ namespace TAT001.Controllers.Catalogos
                 } //Canal
                 try
                 {
-                    doc.EXPORTACION = dt.Rows[i][16].ToString();
+                    if (dt.Rows[i][16].ToString() != null && dt.Rows[i][16].ToString() != "")
+                    {
+                        doc.EXPORTACION = dt.Rows[i][16].ToString();
+                    }
+                    else
+                    {
+                        var ncli = (from x in db.CLIENTEs where x.KUNNR.Equals(doc.KUNNR) select x.EXPORTACION).FirstOrDefault();
+                        if (ncli == null)
+                        {
+                            doc.EXPORTACION = "";
+                        }
+                        else
+                        {
+                            doc.EXPORTACION = ncli;
+                        }
+                    }
                 }
                 catch (Exception e)
                 {
