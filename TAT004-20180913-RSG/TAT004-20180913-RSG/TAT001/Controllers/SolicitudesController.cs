@@ -1184,7 +1184,7 @@ namespace TAT001.Controllers
                         tcambio = db.TCAMBIOs.Where(t => t.FCURR.Equals(id_waersf) && t.TCURR.Equals("USD") && t.GDATU.Equals(max)).FirstOrDefault();//B20180625 MGC 2018.07.02
                     }
                     decimal con = Convert.ToDecimal(tcambio.UKURS);
-                    var cons = con.ToString("0.##");
+                    var cons = con.ToString("0.#####"); //OCG 23/10/18
 
                     //ViewBag.tcambio = cons;
                     tipo_cambio = cons; //MGC B20180625 MGC
@@ -1250,7 +1250,7 @@ namespace TAT001.Controllers
                 {
                     ViewBag.original = padre.MONTO_DOC_MD;
                     List<DOCUMENTO> dd = db.DOCUMENTOes.Where(a => a.DOCUMENTO_REF == padre.NUM_DOC).ToList();
-                    ViewBag.sumaRel = decimal.Parse("0.00"); ;
+                    ViewBag.sumaRel = decimal.Parse("0.00000"); ;
                     foreach (DOCUMENTO dos in dd)
                     {
                         ViewBag.sumaRel += (decimal)dos.MONTO_DOC_MD;
