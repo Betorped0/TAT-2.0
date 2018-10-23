@@ -799,6 +799,7 @@
     <Compile Include="Models\ClienteViewModel.cs" />
     <Compile Include="Models\Comentarios.cs" />
     <Compile Include="Models\dby.cs" />
+    <Compile Include="Models\DesviacionesTS.cs" />
     <Compile Include="Models\Documento.cs" />
     <Compile Include="Models\DOCUMENTOM_MOD.cs" />
     <Compile Include="Models\Delegados.cs" />

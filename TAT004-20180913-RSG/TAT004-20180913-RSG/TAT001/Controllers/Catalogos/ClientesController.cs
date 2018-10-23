@@ -405,11 +405,15 @@ namespace TAT001.Controllers.Catalogos
                 cl.CONTACTOEX = true;
 
                 ////-------------------------------CoCode
-                PAI s = db.PAIS.Where(x => x.SOCIEDAD_ID.Equals(cl.BUKRS) & x.ACTIVO == true).FirstOrDefault();
+                PAI s = paises.Where(x => x.SOCIEDAD_ID.Equals(cl.BUKRS)).FirstOrDefault();
                 if (s == null)
-                    cl.BUKRSX = false;
-                else
-                    paises.Add(s);
+                {
+                    s = db.PAIS.Where(x => x.SOCIEDAD_ID.Equals(cl.BUKRS) & x.ACTIVO == true).FirstOrDefault();
+                    if (s == null)
+                        cl.BUKRSX = false;
+                    else
+                        paises.Add(s);
+                }
                 if (!cl.BUKRSX)
                 {
                     cl.BUKRS = cl.BUKRS + "?";
@@ -418,11 +422,15 @@ namespace TAT001.Controllers.Catalogos
                 }
 
                 ////-------------------------------Pais
-                PAI p = db.PAIS.Where(x => x.LAND.Equals(cl.LAND)).FirstOrDefault();
+                PAI p = paises.Where(x => x.LAND.Equals(cl.LAND)).FirstOrDefault();
                 if (p == null)
-                    cl.LANDX = false;
-                else
-                    paises.Add(p);
+                {
+                    p = db.PAIS.Where(x => x.LAND.Equals(cl.LAND) & x.ACTIVO == true).FirstOrDefault();
+                    if (p == null)
+                        cl.LANDX = false;
+                    else
+                        paises.Add(p);
+                }
                 if (!cl.LANDX)
                 {
                     cl.LAND = cl.LAND + "?";
@@ -431,11 +439,15 @@ namespace TAT001.Controllers.Catalogos
                 }
 
                 ////-------------------------------CLIENTE
-                CLIENTE k = db.CLIENTEs.Where(x => x.KUNNR.Equals(cl.KUNNR) & x.ACTIVO == true).FirstOrDefault();
+                CLIENTE k = clientes.Where(x => x.KUNNR.Equals(cl.KUNNR)).FirstOrDefault();
                 if (k == null)
-                    cl.KUNNRX = false;
-                else
-                    clientes.Add(k);
+                {
+                    k = db.CLIENTEs.Where(x => x.KUNNR.Equals(cl.KUNNR) & x.ACTIVO == true).FirstOrDefault();
+                    if (k == null)
+                        cl.KUNNRX = false;
+                    else
+                        clientes.Add(k);
+                }
                 if (!cl.KUNNRX)
                 {
                     cl.KUNNR = cl.KUNNR + "?";
@@ -457,13 +469,17 @@ namespace TAT001.Controllers.Catalogos
                     if (ids[i] != null && ids[i] != "")
                     {
                         var usuario = ids[i];
-                        USUARIO u = db.USUARIOs.Where(x => x.ID.Equals(usuario)).FirstOrDefault();
+                        USUARIO u = usuarios.Where(x => x.ID.Equals(usuario)).FirstOrDefault();
                         if (u == null)
-                            idsx[i] = false;
-                        else
-                            usuarios.Add(u);
-                        if ((ids[i] == "" && ids[i] == null) && (i == 1 || i == 6))
-                            idsx[i] = false;
+                        {
+                            u = db.USUARIOs.Where(x => x.ID.Equals(usuario) & x.ACTIVO == true).FirstOrDefault();
+                            if (u == null)
+                                idsx[i] = false;
+                            else
+                                usuarios.Add(u);
+                            if ((ids[i] == "" && ids[i] == null) && (i == 1 || i == 6))
+                                idsx[i] = false;
+                        }
                     }
                     if (!idsx[i])
                     {
@@ -815,11 +831,15 @@ namespace TAT001.Controllers.Catalogos
                 cl.CONTACTOEX = true;
 
                 ////-------------------------------CoCode
-                PAI s = db.PAIS.Where(x => x.SOCIEDAD_ID.Equals(cl.BUKRS) & x.ACTIVO == true).FirstOrDefault();
+                PAI s = paises.Where(x => x.SOCIEDAD_ID.Equals(cl.BUKRS)).FirstOrDefault();
                 if (s == null)
-                    cl.BUKRSX = false;
-                else
-                    paises.Add(s);
+                {
+                    s = db.PAIS.Where(x => x.SOCIEDAD_ID.Equals(cl.BUKRS) & x.ACTIVO == true).FirstOrDefault();
+                    if (s == null)
+                        cl.BUKRSX = false;
+                    else
+                        paises.Add(s);
+                }
                 if (!cl.BUKRSX)
                 {
                     cl.BUKRS = cl.BUKRS + "?";
@@ -828,11 +848,15 @@ namespace TAT001.Controllers.Catalogos
                 }
 
                 ////-------------------------------Pais
-                PAI p = db.PAIS.Where(x => x.LAND.Equals(cl.LAND)).FirstOrDefault();
+                PAI p = paises.Where(x => x.LAND.Equals(cl.LAND)).FirstOrDefault();
                 if (p == null)
-                    cl.LANDX = false;
-                else
-                    paises.Add(p);
+                {
+                    p = db.PAIS.Where(x => x.LAND.Equals(cl.LAND) & x.ACTIVO == true).FirstOrDefault();
+                    if (p == null)
+                        cl.LANDX = false;
+                    else
+                        paises.Add(p);
+                }
                 if (!cl.LANDX)
                 {
                     cl.LAND = cl.LAND + "?";
@@ -841,22 +865,26 @@ namespace TAT001.Controllers.Catalogos
                 }
 
                 ////-------------------------------CLIENTE
-                CLIENTE k = db.CLIENTEs.Where(x => x.KUNNR.Equals(cl.KUNNR) & x.ACTIVO == true).FirstOrDefault();
+                CLIENTE k = clientes.Where(x => x.KUNNR.Equals(cl.KUNNR)).FirstOrDefault();
                 if (k == null)
-                    cl.KUNNRX = false;
-                else
                 {
-                    clientes.Add(k);
-                    if (cl.CLIENTE_N == "" || cl.CLIENTE_N == null)
+                    k = db.CLIENTEs.Where(x => x.KUNNR.Equals(cl.KUNNR) & x.ACTIVO == true).FirstOrDefault();
+                    if (k == null)
+                        cl.KUNNRX = false;
+                    else
                     {
-                        var ncli = (from x in db.CLIENTEs where x.KUNNR.Equals(cl.KUNNR) select x.NAME1).FirstOrDefault();
-                        if (ncli == null || ncli == "")
+                        clientes.Add(k);
+                        if (cl.CLIENTE_N == "" || cl.CLIENTE_N == null)
                         {
-                            cl.CLIENTE_N = "";
-                        }
-                        else
-                        {
-                            cl.CLIENTE_N = ncli;
+                            var ncli = (from x in db.CLIENTEs where x.KUNNR.Equals(cl.KUNNR) select x.NAME1).FirstOrDefault();
+                            if (ncli == null || ncli == "")
+                            {
+                                cl.CLIENTE_N = "";
+                            }
+                            else
+                            {
+                                cl.CLIENTE_N = ncli;
+                            }
                         }
                     }
                 }
@@ -881,13 +909,17 @@ namespace TAT001.Controllers.Catalogos
                     if (ids[i] != null && ids[i] != "")
                     {
                         var usuario = ids[i];
-                        USUARIO u = db.USUARIOs.Where(x => x.ID.Equals(usuario)).FirstOrDefault();
+                        USUARIO u = usuarios.Where(x => x.ID.Equals(usuario)).FirstOrDefault();
                         if (u == null)
-                            idsx[i] = false;
-                        else
-                            usuarios.Add(u);
-                        if ((ids[i] == "" && ids[i] == null) && (i == 1 || i == 6))
-                            idsx[i] = false;
+                        {
+                            u = db.USUARIOs.Where(x => x.ID.Equals(usuario) & x.ACTIVO == true).FirstOrDefault();
+                            if (u == null)
+                                idsx[i] = false;
+                            else
+                                usuarios.Add(u);
+                            if ((ids[i] == "" && ids[i] == null) && (i == 1 || i == 6))
+                                idsx[i] = false;
+                        }
                     }
                     if (!idsx[i])
                     {

@@ -925,7 +925,6 @@ namespace TAT001.Controllers.Catalogos
                     //Usuario nuevo con cliente
                     if (vus == false)
                     {
-                        PAI pa = null;
                         ////-------------------------------CLIENTE
                         CLIENTE k = db.CLIENTEs.Where(cc => cc.KUNNR.Equals(us.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
                         if (k == null)
