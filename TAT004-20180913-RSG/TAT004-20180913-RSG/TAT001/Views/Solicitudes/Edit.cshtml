@@ -7,6 +7,9 @@
     if (ViewBag.x_ligada == null) { ViewBag.x_ligada = false; }
     bool _ligada = ViewBag.x_ligada;//LEJ 23.07.2018
 }
+<script>
+    var root = "@Url.Content("~")";
+</script>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.16/datatables.min.css" />
 <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.16/datatables.min.js"></script>
 <script src="~/Scripts/edit.js"></script>
@@ -16,6 +19,7 @@
 <script src="~/Scripts/analisis.js"></script><!--RSG 13.06.2018-->
 <script src="~/Scripts/descargar.js"></script><!--RSG 22.06.2018-->
 <script src="~/Scripts/ValidarNumero.js"></script>
+<script src="~/Scripts/cierre.js"></script>
 @if (ViewBag.error != "")
 {
     <script>
@@ -54,14 +58,14 @@
                     @Html.EditorFor(model => model.USUARIOC_ID, "Usuario", new { htmlAttributes = new { @disabled = "disabled", @Value = us.ID } })
                     @Html.LabelFor(model => model.USUARIOC_ID, "Usuario", new { @id = "lbl_userid" })
                 </div>
-                @*<div class="input-field col s4">
-                        @Html.EditorFor(model => model.USUARIO.MANAGER, new { htmlAttributes = new { @disabled = "disabled", @Value = us.MANAGER } })
-                        @Html.LabelFor(model => model.USUARIO.MANAGER, "Manager", new { @id = "lbl_manager" })
-                    </div>
-                    <div class="input-field col s4">
-                        @Html.EditorFor(model => model.USUARIO.BACKUP_ID, "BACKUP", new { htmlAttributes = new { @disabled = "disabled", @Value = us.BACKUP_ID } })
-                        @Html.LabelFor(model => model.USUARIO.BACKUP_ID, "Backup", new { @id = "lbl_backup" })
-                    </div>*@
+                <div class="input-field col s4">
+                  @Html.EditorFor(model => model.USUARIO.MANAGER, new { htmlAttributes = new { @disabled = "disabled" } })
+                  @Html.LabelFor(model => model.USUARIO.MANAGER, "Manager", new { @id = "lbl_manager" })
+                </div>
+                <div class="input-field col s4">
+                    @Html.EditorFor(model => model.USUARIO.BACKUP_ID, new { htmlAttributes = new { @disabled = "disabled", @Value = ViewBag.USUARIO_BACKUPID } })
+                    @Html.LabelFor(model => model.USUARIO.BACKUP_ID, "Backup", new { @id = "lbl_backup" })
+                </div>
             </div>
         </div>
         <div class="col s12 m4 l4">

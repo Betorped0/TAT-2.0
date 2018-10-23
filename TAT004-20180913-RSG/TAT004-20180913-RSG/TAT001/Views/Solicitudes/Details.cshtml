@@ -1093,7 +1093,7 @@
                             </div>
 
                             if (ViewBag.cartap.Count != 0)
-                            {
+                                {
                                 //LEJ 10.07.2018
 
                                 <div class="col s12 m12 l12">
@@ -1105,7 +1105,7 @@
                                                     @for (int i = 0; i < pos.Count; i++)
                                                     {
                                                         var lstCF = lstCarta.Where(p => p.POS_ID == pos[i].POS_ID).ToList();
-                                                        string idx = "chb" + i;
+                    string idx = "chb" + i;
                                                         <li>
                                                             <div class="collapsible-header">
                                                                 <div><i class="material-icons">arrow_drop_down</i></div>

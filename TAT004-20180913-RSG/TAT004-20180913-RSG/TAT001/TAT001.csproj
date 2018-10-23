@@ -72,6 +72,9 @@
     <Reference Include="itextsharp, Version=5.5.13.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
       <HintPath>..\packages\iTextSharp.5.5.13\lib\itextsharp.dll</HintPath>
     </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
@@ -208,6 +211,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Common\FnCommon.cs" />
+    <Compile Include="Common\Log.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CartaDController.cs" />
     <Compile Include="Controllers\CartaVController.cs" />
@@ -222,6 +226,7 @@
     <Compile Include="Controllers\Catalogos\GALLController.cs" />
     <Compile Include="Controllers\Catalogos\IimpuestoController.cs" />
     <Compile Include="Controllers\Catalogos\ImpuestosController.cs" />
+    <Compile Include="Controllers\Catalogos\MonedaController.cs" />
     <Compile Include="Controllers\Catalogos\SociedadesController.cs" />
     <Compile Include="Controllers\Catalogos\SoporteController.cs" />
     <Compile Include="Controllers\Catalogos\TALLsController.cs" />
@@ -1327,6 +1332,7 @@
     <Content Include="obj\Release\TempPE\Entities.TAT001.cs.dll" />
     <Content Include="obj\Release\TempPE\Entities.TAT001.Designer.cs.dll" />-->
     <Content Include="images\Simple-wallpapers-HD-for-desktop.png" />
+    <Content Include="PdfTemp\readme.txt" />
     <Content Include="Properties\PublishProfiles\FolderProfile.pubxml.user" />
     <Content Include="Scripts\CargaUsuarios.js" />
     <Content Include="Scripts\CargaClientes.js" />
@@ -1926,6 +1932,13 @@
     <Content Include="Views\Soporte\Index.cshtml" />
     <Content Include="Views\Usuarios\AddBackup.cshtml" />
     <Content Include="Views\Usuarios\EditBackup.cshtml" />
+    <Content Include="Views\Materiales\List.cshtml" />
+    <Content Include="Views\TSOL\Create.cshtml" />
+    <Content Include="Views\Moneda\Create.cshtml" />
+    <Content Include="Views\Moneda\Delete.cshtml" />
+    <Content Include="Views\Moneda\Details.cshtml" />
+    <Content Include="Views\Moneda\Edit.cshtml" />
+    <Content Include="Views\Moneda\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->

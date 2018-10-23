@@ -123,7 +123,7 @@ namespace TAT001.Controllers
                     else
                         usuariodel = User.Identity.Name;
 
-                    if (f.USUARIOA_ID.Equals(usuariodel))
+                    if (f.USUARIOA_ID.Replace(" ",String.Empty).Equals(usuariodel))
                         ViewBag.accion = db.WORKFPs.Where(a => a.ID.Equals(f.WORKF_ID) & a.POS.Equals(f.WF_POS) & a.VERSION.Equals(f.WF_VERSION)).FirstOrDefault().ACCION.TIPO;
                 }
                 else
@@ -2481,6 +2481,7 @@ namespace TAT001.Controllers
                 }
                 catch (Exception e)
                 {
+                    Log.ErrorLogApp(e,"Solicitudes","Create");
                     if (errorString == "")
                     {
                         errorString = e.Message.ToString();
@@ -2701,7 +2702,7 @@ namespace TAT001.Controllers
             ViewBag.MONTO_DIS = monto_ret;
 
             //----------------------------RSG 18.05.2018
-            string spras = Session["spras"].ToString();
+            string spras = FnCommon.ObtenerSprasId(db,User.Identity.Name);
             ViewBag.PERIODOS = new SelectList(db.PERIODOTs.Where(a => a.SPRAS_ID == spras).ToList(), "PERIODO_ID", "TXT50", DateTime.Now.Month);
             List<string> anios = new List<string>();
             int mas = 10;
@@ -3514,33 +3515,24 @@ namespace TAT001.Controllers
                 //tipo de solicitud
                 if (ViewBag.reversa == "preversa")
                 {
-                    list_sol = tsols_val.Where(sol => sol.TSOLR == null)
-                                        .Join(
-                                        db.TSOLTs.Where(solt => solt.SPRAS_ID == user.SPRAS_ID),
-                                        sol => sol.ID,
-                                        solt => solt.TSOL_ID,
-                                        (sol, solt) => new TSOLT_MOD
-                                        {
-                                            SPRAS_ID = solt.SPRAS_ID,
-                                            TSOL_ID = solt.TSOL_ID,
-                                            TEXT = solt.TSOL_ID + " " + solt.TXT020
-                                        })
-                                    .ToList();
+
+                    list_sol = FnCommon.ObtenerCmbTiposSolicitud(db, user.SPRAS_ID, null, true)
+                        .Select(x => new TSOLT_MOD
+                        {
+                            SPRAS_ID = user.SPRAS_ID,
+                            TSOL_ID = x.Value,
+                            TEXT = x.Text
+                        }).ToList();
                 }
                 else
                 {
-                    list_sol = tsols_val.Where(sol => sol.ESTATUS != "X" & sol.ADICIONA == false)
-                                        .Join(
-                                        db.TSOLTs.Where(solt => solt.SPRAS_ID == user.SPRAS_ID),
-                                        sol => sol.ID,
-                                        solt => solt.TSOL_ID,
-                                        (sol, solt) => new TSOLT_MOD
-                                        {
-                                            SPRAS_ID = solt.SPRAS_ID,
-                                            TSOL_ID = solt.TSOL_ID,
-                                            TEXT = solt.TSOL_ID + " " + solt.TXT020
-                                        })
-                                    .ToList();
+                    list_sol = FnCommon.ObtenerCmbTiposSolicitud(db, user.SPRAS_ID, null)
+                        .Select(x => new TSOLT_MOD
+                        {
+                            SPRAS_ID = user.SPRAS_ID,
+                            TSOL_ID = x.Value,
+                            TEXT = x.Text
+                        }).ToList();
                 }
 
 
@@ -4094,6 +4086,14 @@ namespace TAT001.Controllers
             ViewBag.horaServer = DateTime.Now.Date.ToString().Split(new[] { ' ' }, 2)[1];//RSG 01.08.2018
             Warning w = new Warning();
             ViewBag.listaValid = w.listaW(d.SOCIEDAD_ID, "ES");//RSG 07.09.2018
+
+            DateTime fecha = DateTime.Now.Date;
+            List<DELEGAR> backup = db.DELEGARs.Where(a => a.USUARIO_ID.Equals(User.Identity.Name) & a.FECHAI <= fecha & a.FECHAF >= fecha & a.ACTIVO == true).ToList();
+            if (backup.Count > 0)
+            {
+                ViewBag.USUARIO_BACKUPID = backup.First().USUARIOD_ID;
+            }
+
             return View(d);
         }
 
@@ -7226,20 +7226,22 @@ namespace TAT001.Controllers
         }
 
         [HttpPost]
-        public JsonResult proveedores(string Prefix)
+        public JsonResult proveedores(string Prefix,string kunnr)
         {
             if (Prefix == null)
                 Prefix = "";
 
             TAT001Entities db = new TAT001Entities();
+            Cadena cad = new Cadena();
+            kunnr = cad.completaCliente(kunnr);
 
             var c = (from m in db.PROVEEDORs
-                     where m.ID.Contains(Prefix)
+                     where m.ID.Contains(Prefix) && m.CLIENTEs.Any(x=>x.KUNNR==kunnr)
                      select new { m.ID, m.NOMBRE }).ToList();
             if (c.Count == 0)
             {
                 var c2 = (from m in db.PROVEEDORs
-                          where m.NOMBRE.Contains(Prefix)
+                          where m.NOMBRE.Contains(Prefix) && m.CLIENTEs.Any(x => x.KUNNR == kunnr)
                           select new { m.ID, m.NOMBRE }).ToList();
                 c.AddRange(c2);
             }
