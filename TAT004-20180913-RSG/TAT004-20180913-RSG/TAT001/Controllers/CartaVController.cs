@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
+using TAT001.Common;
 using TAT001.Entities;
 using TAT001.Models;
 using TAT001.Services; //B20180730 MGC 2018.07.30 Formatos
@@ -662,9 +663,9 @@ namespace TAT001.Controllers
                     fact = db.TSOLs.Where(ts => ts.ID == d.TSOL_ID).FirstOrDefault().FACTURA;
                     d.PAI = db.PAIS.Where(a => a.LAND.Equals(d.PAIS_ID)).FirstOrDefault();
                 }
-                catch (Exception)
+                catch (Exception e )
                 {
-
+                    Log.ErrorLogApp(e, "CartaV", "Create");
                 }
             }
 
@@ -765,9 +766,9 @@ namespace TAT001.Controllers
             {
                 montod = Convert.ToDecimal(monto_enviar);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                Log.ErrorLogApp(e, "CartaV", "Create");
             }
 
             v.monto = format.toShow(montod, decimales);
@@ -1092,7 +1093,7 @@ namespace TAT001.Controllers
                                 }
                                 catch (Exception e)
                                 {
-
+                                    Log.ErrorLogApp(e, "CartaV", "Create");
                                 }
                                 contadorTabla++;
                             }
@@ -1282,7 +1283,7 @@ namespace TAT001.Controllers
                                 }
                                 catch (Exception e)
                                 {
-
+                                    Log.ErrorLogApp(e, "CartaV", "Create");
                                 }
                                 contadorTabla++;
                             }

@@ -227,9 +227,13 @@ namespace TAT001.Controllers
         public ActionResult SelPais(string pais, string returnUrl)
         {
             Session["pais"] = pais.ToUpper();
+            if (!string.IsNullOrEmpty(returnUrl))
+            {
 
-            return Redirect(returnUrl);
-            //return View();
+                return Redirect(returnUrl);
+            }
+
+            return RedirectToAction("Index");
         }
         [HttpGet]
         public ActionResult About()

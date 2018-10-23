@@ -195,6 +195,7 @@ namespace TAT001.Controllers.Catalogos
                                     }
                                 }
                                 u.ACTIVO = true;
+                                u.ID.Trim();
                                 db.USUARIOs.Add(u);
 
                                 ////MIEMBRO m = new MIEMBRO();
@@ -2340,7 +2341,7 @@ namespace TAT001.Controllers.Catalogos
                 {
                     if (da.ID != null)
                     {
-                        us.ID = da.ID;
+                        us.ID = da.ID.Trim();
                         us.PASS = da.PASS;
                         us.NOMBRE = da.NOMBRE;
                         us.APELLIDO_P = da.APELLIDO_P;
@@ -2366,7 +2367,7 @@ namespace TAT001.Controllers.Catalogos
             {
                 USUARIOF uf = new USUARIOF();
 
-                uf.USUARIO_ID = da.ID;
+                uf.USUARIO_ID = da.ID.Trim();
                 uf.VKORG = da.VKORG;
                 uf.VTWEG = da.VTWEG;
                 uf.SPART = da.SPART;
@@ -2391,7 +2392,7 @@ namespace TAT001.Controllers.Catalogos
                 {
                     if (da.ID != null)
                     {
-                        us.ID = da.ID;
+                        us.ID = da.ID.Trim();
                         us.PASS = da.PASS;
                         us.NOMBRE = da.NOMBRE;
                         us.APELLIDO_P = da.APELLIDO_P;
