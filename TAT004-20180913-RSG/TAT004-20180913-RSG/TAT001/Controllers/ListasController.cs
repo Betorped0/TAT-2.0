@@ -70,7 +70,7 @@ namespace TAT001.Controllers
             return cc;
         }
         [HttpGet]
-        public JsonResult ReportesFiltroPayer(string cocodes)
+        public JsonResult ReportesFiltroPayer(string Prefix, string cocodes)
         {
             string[] comcodessplit = { };
             string cocode = cocodes.ToString();
@@ -83,7 +83,7 @@ namespace TAT001.Controllers
 
             var c = (from cl in db.CLIENTEs
                      join p in db.PAIS on cl.LAND equals p.LAND
-                     where comcodessplit.Contains(p.SOCIEDAD_ID) && cl.ACTIVO && p.ACTIVO
+                     where comcodessplit.Contains(p.SOCIEDAD_ID) && cl.NAME1.Contains(Prefix) && cl.ACTIVO && p.ACTIVO
                      orderby cl.NAME1
                      select new { cl.KUNNR, cl.NAME1 });
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
