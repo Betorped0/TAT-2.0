@@ -70,9 +70,9 @@ namespace TAT001.Controllers.Catalogos
 
                 case "MATERIALGP":
                     if (colOrden.Equals(ordenActual))
-                        viewModel.materiales = clientes.OrderByDescending(m => m.MATERIALGP.DESCRIPCION).ToPagedList(pageIndex, viewModel.numRegistros);
+                        viewModel.materiales = clientes.OrderByDescending(m => m.MATERIALGP_ID).ToPagedList(pageIndex, viewModel.numRegistros);
                     else
-                        viewModel.materiales = clientes.OrderBy(m => m.MATERIALGP.DESCRIPCION).ToPagedList(pageIndex, viewModel.numRegistros);
+                        viewModel.materiales = clientes.OrderBy(m => m.MATERIALGP_ID).ToPagedList(pageIndex, viewModel.numRegistros);
                     break;
 
                 case "ACTIVO":
