@@ -1160,7 +1160,7 @@ namespace TAT001.Controllers.Catalogos
                         else
                         {
                             sociedad.Add(b);
-                            admins[cont, 0] = da.BUNIT.ToString();
+                            admins[cont3, 0] = da.BUNIT.ToString();
                             tabla1[cont3, 1] = da.BUNIT.ToString();
                             gua1[cont3] = da.BUNIT.ToString();
                             usuariosoc[cont4, 0] = da.BUNIT.ToString();
