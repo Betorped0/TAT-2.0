@@ -2238,7 +2238,46 @@ namespace TAT001.Controllers
                             }
                             db.SaveChanges();
                         }//Guardar registros de recurrencias  RSG 28.05.2018-------------------
+                    if (dOCUMENTO.DOCUMENTOREC == null & dOCUMENTO.LIGADA == true)
+                    //if (dOCUMENTO.LIGADA == true)
+                    {
 
+                        DOCUMENTOREC drec = new DOCUMENTOREC();
+                        drec.NUM_DOC = dOCUMENTO.NUM_DOC;
+                        drec.POS = 1;
+
+                        if (drec.MONTO_BASE == null) //RSG 31.05.2018-------------------
+                            drec.MONTO_BASE = 0;
+                        if (drec.PORC == null) //RSG 31.05.2018-------------------
+                            drec.PORC = 0;
+                        dOCUMENTO.TIPO_RECURRENTE = db.TSOLs.Where(x => x.ID.Equals(dOCUMENTO.TSOL_ID)).FirstOrDefault().TRECU;
+                        if (dOCUMENTO.TIPO_RECURRENTE == "1" & dOCUMENTO.LIGADA == true)
+                            dOCUMENTO.TIPO_RECURRENTE = "2";
+                        if (dOCUMENTO.TIPO_RECURRENTE != "1" & dOCUMENTO.OBJETIVOQ == true)
+                            dOCUMENTO.TIPO_RECURRENTE = "3";
+                        Calendario445 cal = new Calendario445();
+                        drec.FECHAF = cal.getUltimoDia(dOCUMENTO.FECHAF_VIG.Value.Year, cal.getPeriodo(dOCUMENTO.FECHAF_VIG.Value));
+                        drec.FECHAV = drec.FECHAF;
+
+                        drec.FECHAF = cal.getNextLunes((DateTime)drec.FECHAF);
+                        drec.EJERCICIO = drec.FECHAV.Value.Year;
+                        drec.PERIODO = cal.getPeriodoF(drec.FECHAV.Value);
+
+                        if (drec.PERIODO == 0) drec.PERIODO = 12;
+                        if (dOCUMENTO.DOCUMENTORAN != null)
+                            foreach (DOCUMENTORAN dran in dOCUMENTO.DOCUMENTORAN.Where(x => x.POS == drec.POS))
+                            {
+                                dran.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                drec.DOCUMENTORANs.Add(dran);
+                            }
+                        drec.PORC = dOCUMENTO.PORC_APOYO;
+                        drec.DOC_REF = 0;
+                        drec.ESTATUS = "";
+
+                        dOCUMENTO.DOCUMENTORECs.Add(drec);
+
+                        db.SaveChanges();
+                    }
                     //Guardar los documentos cargados en la sección de soporte
                     var res = "";
                     string errorMessage = "";
