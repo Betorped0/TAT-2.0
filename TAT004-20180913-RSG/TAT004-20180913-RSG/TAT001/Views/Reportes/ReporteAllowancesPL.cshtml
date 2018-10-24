@@ -143,31 +143,31 @@
                     </select>
                     <label id="lbl_cocode">Co. Code *</label>
                     <script>
-                        $(document).on('change', '#selectcocode', function () {
-                            var vcocode = $("#selectcocode").val();
-                            if (vcocode != null) {
-                                vcocode = vcocode.join(',');
-                            }
-                            $.ajax({
-                                url: "../Listas/ReportesFiltroPayer",
-                                type: "GET",
-                                dataType: "json",
-                                data: { cocodes: vcocode },//cocode: $(this).val() },
-                                success: function (data) {
-                                    $('#selectpayer').find('option').remove();
-                                    var opciones = 0;
-                                    for (var i in data) {
-                                        $('#selectpayer').append($('<option>', { value: data[i].KUNNR }).text(data[i].KUNNR)); // + " - " + data[i].NAME1
-                                        var elem = document.querySelector('#selectpayer');
-                                        var options = [];
-                                        var instance = M.FormSelect.init(elem, options);
-                                    }
-                                },
-                                //error: function (data) {
-                                //    alert('error');
-                                //}
-                            })
-                        });
+                        //$(document).on('change', '#selectcocode', function () {
+                        //    var vcocode = $("#selectcocode").val();
+                        //    if (vcocode != null) {
+                        //        vcocode = vcocode.join(',');
+                        //    }
+                        //    $.ajax({
+                        //        url: "../Listas/ReportesFiltroPayer",
+                        //        type: "GET",
+                        //        dataType: "json",
+                        //        data: { cocodes: vcocode },//cocode: $(this).val() },
+                        //        success: function (data) {
+                        //            $('#selectpayer').find('option').remove();
+                        //            var opciones = 0;
+                        //            for (var i in data) {
+                        //                $('#selectpayer').append($('<option>', { value: data[i].KUNNR }).text(data[i].KUNNR)); // + " - " + data[i].NAME1
+                        //                var elem = document.querySelector('#selectpayer');
+                        //                var options = [];
+                        //                var instance = M.FormSelect.init(elem, options);
+                        //            }
+                        //        },
+                        //        //error: function (data) {
+                        //        //    alert('error');
+                        //        //}
+                        //    })
+                        //});
                     </script>
                 </div>
                 <div class="input-field col s2 m2 l2">
@@ -186,8 +186,8 @@
                     <label id="lbl_canal">Canal</label>
                 </div>
                 <div class="input-field col s2 m2 l2">
-                    <select multiple name="selectpayer" id="selectpayer" required="" class="comcode select_all">
-                        @*@try
+                    @*<select multiple name="selectpayer" id="selectpayer" required="" class="comcode select_all">
+                        @try
                         {
                             foreach (var item in ViewBag.payers)
                             {
@@ -197,9 +197,52 @@
                         catch (Exception)
                         {
                             <option value="" id="no_opt">No hay opciones</option>
-                        }*@
-                    </select>
-                    <label id="lbl_payer">Payer *</label>
+                        }
+                    </select>*@
+                    <input class="form-control  text-box single-line ui-autocomplete-input" id="selectpayer" name="selectpayer" type="text" value="" autocomplete="off" style="">
+                    <label id="lbl_payer">Payer</label>
+                    <link href="~/Content/autocomplete.css" rel="stylesheet" />
+                    <script src="~/Scripts/autocomplete1.10.2.js"></script>
+                    <script src="~/Scripts/autocomplete1.11.4.js"></script>
+                    <script>
+                        var auto = $.noConflict(true);
+                        auto(document).ready(function () {
+                            auto("#selectpayer").autocomplete({
+                                source: function (request, response) {
+                                    var vcocode = $("#selectcocode").val();
+                                    if (vcocode != null) {
+                                        vcocode = vcocode.join(',');
+                                    }
+                                    auto.ajax({
+                                        url: "../Listas/ReportesFiltroPayer",
+                                        type: "GET",
+                                        dataType: "json",
+                                        data: { Prefix: request.term, cocodes: vcocode },
+                                        success: function (data) {
+                                            response(auto.map(data, function (item) {
+                                                return { label: item.KUNNR + " - " + item.NAME1, value: item.KUNNR };
+                                            }))
+                                        },
+                                    })
+                                },
+                                messages: {
+                                    noResults: '',
+                                    results: function (resultsCount) { }
+                                },
+                                change: function (e, ui) {
+                                    if (!(ui.item)) {
+                                        e.target.value = "";
+                                    }
+                                },
+                                select: function (event, ui) {
+                                    var label = ui.item.label;
+                                    var value = ui.item.value;
+                                    //selectCliente(value);
+                                }
+                            });
+                        });
+                    </script>
+
                 </div>
                 <div class="input-field col s2 m2 l2">
                     <select multiple name="selectcategory" id="selectcategory" class="comcode select_all">

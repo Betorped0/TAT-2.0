@@ -860,7 +860,7 @@ $(document).ready(function () {
                 else if (_decimales === ',') {
                     $('#tipo_cambio').val("$" + tc.replace('.', ','));
                 }
-                var monto = mt * tc;
+                var monto = mt / tc;
                 monto = parseFloat(monto).toFixed(2);
                 //$('#monto_doc_ml2').val(monto);
                 // $('#montos_doc_ml2').val(monto);

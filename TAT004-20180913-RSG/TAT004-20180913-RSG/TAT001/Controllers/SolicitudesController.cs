@@ -827,6 +827,7 @@ namespace TAT001.Controllers
                         if (docsrel.Count > 0)
                         {
                             docsrelp = docsrel
+                                .Where(x=>x.ESTATUS_C!="C")
                                 .Join(
                                 db.DOCUMENTOPs,
                                 docsl => docsl.NUM_DOC,
@@ -1412,6 +1413,10 @@ namespace TAT001.Controllers
 
                     //OCG 21/10/18
                     CUENTA cu = db.CUENTAs.Where(x => x.TALL_ID == dOCUMENTO.TALL_ID & x.SOCIEDAD_ID == dOCUMENTO.SOCIEDAD_ID).FirstOrDefault();
+                    if (cu == null)
+                    {
+                        errorString = "Sin Cuentas relacionadas";
+                    }
                     dOCUMENTO.CUENTAP = cu.ABONO;
                     dOCUMENTO.CUENTAPL = cu.CARGO;
                     //OCG 21/10/18
@@ -1787,7 +1792,8 @@ namespace TAT001.Controllers
                                         }
                                         docP.MATNR = docmod.MATNR;
                                         docP.MATNR = new Cadena().completaMaterial(docP.MATNR);//RSG 07.06.2018
-                                        docP.MATKL = docmod.MATKL_ID;
+                                        MATERIAL mat = db.MATERIALs.Where(x => x.ID == docP.MATNR).FirstOrDefault();
+                                        docP.MATKL = mat.MATKL_ID;
                                         docP.CANTIDAD = 1;
                                         docP.MONTO = docmod.MONTO;
                                         docP.PORC_APOYO = docmod.PORC_APOYO;
@@ -1823,27 +1829,7 @@ namespace TAT001.Controllers
                                         docP.APOYO_EST = docpl[j].APOYO_EST;
                                         docP.APOYO_REAL = docpl[j].APOYO_REAL;
                                     }
-
-                                    //RSG 05.06.2018 //B20180618 v1 MGC 2018.06.18 se elimino
-                                    //if (cat == "C")
-                                    //{
-                                    //    decimal pos = docpl[j].POS;
-                                    //    List<DOCUMENTOM> mm = db.DOCUMENTOMs.Where(a => a.NUM_DOC == dOCUMENTO.DOCUMENTO_REF & a.POS_ID == pos).ToList();
-                                    //    foreach (DOCUMENTOM mn in mm)
-                                    //    {
-                                    //        DOCUMENTOM ii = new DOCUMENTOM();
-                                    //        ii.NUM_DOC = dOCUMENTO.NUM_DOC;
-                                    //        ii.POS_ID = mn.POS_ID;
-                                    //        ii.POS = mn.POS;
-                                    //        ii.MATNR = mn.MATNR;
-                                    //        ii.APOYO_EST = (docP.APOYO_REAL + docP.APOYO_EST) / mm.Count;
-                                    //        ii.APOYO_REAL = ii.APOYO_EST;
-                                    //        ii.PORC_APOYO = mn.PORC_APOYO;
-                                    //        ii.VIGENCIA_A = mn.VIGENCIA_A;
-                                    //        ii.VIGENCIA_DE = mn.VIGENCIA_DE;
-                                    //        docP.DOCUMENTOMs.Add(ii);
-                                    //    }
-                                    //}
+                                    
                                     //Agregarlo a la bd
                                     db.DOCUMENTOPs.Add(docP);
                                     db.SaveChanges();//RSG
@@ -3200,120 +3186,7 @@ namespace TAT001.Controllers
             return File(archivo, contentyp, nombre);
         }
 
-        //public decimal getValSoc(string waers, string moneda_id, decimal monto_doc_md, out string errorString)
-        //{
-        //    decimal val = 0;
-
-        //    //Siempre la conversión va a la sociedad    
-
-        //    var UKURS = getUkurs(waers, moneda_id, out errorString);
-
-        //    if (errorString.Equals(""))
-        //    {
-
-        //        decimal uk = Convert.ToDecimal(UKURS);
-
-        //        if (UKURS > 0)
-        //        {
-        //            val = uk * Convert.ToDecimal(monto_doc_md);
-        //        }
-        //    }
-
-        //    return val;
-        //}
-
-        //public decimal getUkurs(string waers, string moneda_id, out string errorString)
-        //{
-        //    decimal ukurs = 0;
-        //    errorString = string.Empty;
-        //    using (TAT001Entities db = new TAT001Entities())
-        //    {
-        //        try
-        //        {
-        //            //Siempre la conversión va a la sociedad    
-        //            var date = DateTime.Now.Date;
-        //            var tcambio = db.TCAMBIOs.Where(t => t.FCURR.Equals(moneda_id) && t.TCURR.Equals(waers) && t.GDATU.Equals(date)).FirstOrDefault();
-        //            if (tcambio == null)
-        //            {
-        //                var max = db.TCAMBIOs.Where(t => t.FCURR.Equals(moneda_id) && t.TCURR.Equals(waers)).Max(a => a.GDATU);
-        //                tcambio = db.TCAMBIOs.Where(t => t.FCURR.Equals(moneda_id) && t.TCURR.Equals(waers) && t.GDATU.Equals(max)).FirstOrDefault();
-        //            }
-
-        //            ukurs = Convert.ToDecimal(tcambio.UKURS);
-
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            errorString = "detail: conversion " + moneda_id + " to " + waers + " in date " + DateTime.Now.Date;
-        //            return 0;
-        //        }
-        //    }
-
-        //    return ukurs;
-        //}
-
-        //public decimal getUkursUSD(string waers, string waersusd, out string errorString)
-        //{
-        //    decimal ukurs = 0;
-        //    errorString = string.Empty;
-        //    using (TAT001Entities db = new TAT001Entities())
-        //    {
-        //        try
-        //        {
-        //            var date = DateTime.Now.Date;
-        //            var tcambio = db.TCAMBIOs.Where(t => t.FCURR.Equals(waers) && t.TCURR.Equals(waersusd) && t.GDATU.Equals(date)).FirstOrDefault();
-        //            if (tcambio == null)
-        //            {
-        //                var max = db.TCAMBIOs.Where(t => t.FCURR.Equals(waers) && t.TCURR.Equals(waersusd)).Max(a => a.GDATU);
-        //                tcambio = db.TCAMBIOs.Where(t => t.FCURR.Equals(waers) && t.TCURR.Equals(waersusd) && t.GDATU.Equals(max)).FirstOrDefault();
-        //            }
-
-        //            ukurs = Convert.ToDecimal(tcambio.UKURS);
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            errorString = "detail: conversion " + waers + " to " + waersusd + " in date " + DateTime.Now.Date;
-        //            return 0;
-        //        }
-
-        //    }
-
-        //    return ukurs;
-        //}
-
-        //public RANGO getRango(string TSOL_ID)
-        //{
-        //    RANGO rango = new RANGO();
-        //    using (TAT001Entities db = new TAT001Entities())
-        //    {
-
-        //        rango = (from r in db.RANGOes
-        //                 join s in db.TSOLs
-        //                 on r.ID equals s.RANGO_ID
-        //                 where s.ID == TSOL_ID && r.ACTIVO == true
-        //                 select r).FirstOrDefault();
-
-        //    }
-
-        //    return rango;
-
-        //}
-
-        //public decimal getSolID(string TSOL_ID)
-        //{
-
-        //    decimal id = 0;
-
-        //    RANGO rango = getRango(TSOL_ID);
-
-        //    if (rango.ACTUAL > rango.INICIO && rango.ACTUAL < rango.FIN)
-        //    {
-        //        rango.ACTUAL++;
-        //        id = (decimal)rango.ACTUAL;
-        //    }
-
-        //    return id;
-        //}
+       
 
         public STATE getEstado(int id)
         {
@@ -4866,77 +4739,7 @@ namespace TAT001.Controllers
                     //var dir = createDir(url, dOCUMENTO.NUM_DOC.ToString());
                     var dir = new Files().createDir(url, dOCUMENTO.NUM_DOC.ToString(), dOCUMENTO.EJERCICIO.ToString());//RSG 01.08.2018
 
-                    //Evaluar que se creo el directorio
-                    ////if (dir.Equals(""))
-                    ////{
-
-                    ////    int i = 0;
-                    ////    int indexlabel = 0;
-                    ////    foreach (HttpPostedFileBase file in files_soporte)
-                    ////    {
-                    ////        string errorfiles = "";
-                    ////        var clasefile = "";
-                    ////        try
-                    ////        {
-                    ////            clasefile = labels_soporte[indexlabel];
-                    ////        }
-                    ////        catch (Exception ex)
-                    ////        {
-                    ////            clasefile = "";
-                    ////        }
-                    ////        if (file != null)
-                    ////        {
-                    ////            if (file.ContentLength > 0)
-                    ////            {
-                    ////                string path = "";
-                    ////                string filename = file.FileName;
-                    ////                errorfiles = "";
-                    ////                res = SaveFile(file, url, dOCUMENTO.NUM_DOC.ToString(), out errorfiles, out path);
-
-                    ////                if (errorfiles == "")
-                    ////                {
-                    ////                    DOCUMENTOA doc = new DOCUMENTOA();
-                    ////                    var ext = System.IO.Path.GetExtension(filename);
-                    ////                    i++;
-                    ////                    doc.NUM_DOC = dOCUMENTO.NUM_DOC;
-                    ////                    doc.POS = i;
-                    ////                    doc.TIPO = ext.Replace(".", "");
-                    ////                    try
-                    ////                    {
-                    ////                        var clasefileM = clasefile.ToUpper();
-                    ////                        doc.CLASE = clasefileM.Substring(0, 3);
-                    ////                    }
-                    ////                    catch (Exception e)
-                    ////                    {
-                    ////                        doc.CLASE = "";
-                    ////                    }
-                    ////                    doc.STEP_WF = 1;
-                    ////                    doc.USUARIO_ID = dOCUMENTO.USUARIOC_ID;
-                    ////                    doc.PATH = path;
-                    ////                    doc.ACTIVO = true;
-                    ////                    try
-                    ////                    {
-                    ////                        db.DOCUMENTOAs.Add(doc);
-                    ////                        db.SaveChanges();
-                    ////                    }
-                    ////                    catch (Exception e)
-                    ////                    {
-                    ////                        errorfiles = "" + filename;
-                    ////                    }
-
-                    ////                }
-                    ////            }
-                    ////        }
-                    ////        indexlabel++;
-                    ////        if (errorfiles != "")
-                    ////        {
-                    ////            errorMessage += "Error con el archivo " + errorfiles;
-                    ////        }
-
-
-
-                    ////    }
-                    ////}
+                   
                     //Evaluar que se creo el directorio
                     if (dir.Equals(""))
                     {
@@ -6152,7 +5955,8 @@ namespace TAT001.Controllers
                 {
                     //Obtener el historial de compras de los clientesd
                     var matt = matl.ToList();
-                    var pres = db.PRESUPSAPPs.Where(a => a.VKORG.Equals(vkorg) & a.SPART.Equals(spart) & a.KUNNR == kunnr & (a.GRSLS != null | a.NETLB != null)).ToList();
+                    var pres = db.PRESUPSAPPs.Where(a => a.VKORG.Equals(vkorg) & a.SPART.Equals(spart) & a.KUNNR == kunnr 
+                    & (a.GRSLS != null | a.NETLB != null)).ToList();
 
                     var cat = db.MATERIALGPs.Where(a => a.ACTIVO == true).ToList();
 
@@ -6162,22 +5966,15 @@ namespace TAT001.Controllers
                         if (conf.CAMPO == "GRSLS")
                         {
                             jd = (from ps in pres
-                                  join cl in cie
-                                  on ps.KUNNR equals cl.KUNNR
                                   join m in matt
                                   on ps.MATNR equals m.ID
                                   join mk in cat
                                   on m.MATERIALGP_ID equals mk.ID
-                                  where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) &&
-                                  (ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART //&& ps.VKBUR == cl.VKBUR &&
-                                                                                                        //ps.VKGRP == cl.VKGRP && ps.BZIRK == cl.BZIRK
-                                  ) && ps.BUKRS == soc_id
-                                  && ps.GRSLS > 0
+                                  where ps.BUKRS == soc_id && ps.GRSLS > 0
                                   select new DOCUMENTOM_MOD
                                   {
                                       ID_CAT = m.MATERIALGP_ID,
                                       MATNR = ps.MATNR,
-                                      //mk.TXT50
                                       VAL = Convert.ToDecimal(ps.GRSLS),
                                       EXCLUIR = mk.EXCLUIR //RSG 09.07.2018 ID167
                                   }).ToList();
@@ -6185,23 +5982,16 @@ namespace TAT001.Controllers
                         else
                         {
                             jd = (from ps in pres
-                                  join cl in cie
-                                  on ps.KUNNR equals cl.KUNNR
                                   join m in matt
                                   on ps.MATNR equals m.ID
                                   join mk in cat
                                   on m.MATKL_ID equals mk.ID
                                   where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) &&
-                                  (ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART //&& ps.VKBUR == cl.VKBUR &&
-                                                                                                        //ps.VKGRP == cl.VKGRP && ps.BZIRK == cl.BZIRK
-                                  ) && ps.BUKRS == soc_id
-                                  && ps.NETLB > 0
+                                  ps.BUKRS == soc_id && ps.NETLB > 0
                                   select new DOCUMENTOM_MOD
                                   {
                                       ID_CAT = m.MATERIALGP_ID,
                                       MATNR = ps.MATNR,
-                                      //mk.TXT50
-
                                       VAL = Convert.ToDecimal(ps.NETLB),
                                       EXCLUIR = mk.EXCLUIR //RSG 09.07.2018 ID167
                                   }).ToList();
@@ -7285,7 +7075,7 @@ namespace TAT001.Controllers
             //RSG 07.06.2018---------------------------------------------
             mat = new Cadena().completaMaterial(mat);
             //RSG 07.06.2018---------------------------------------------
-            string spras = Session["spras"].ToString();
+            string spras = FnCommon.ObtenerSprasId(db,User.Identity.Name);
             MaterialVal matt = db.MATERIALTs.Where(m => m.MATERIAL_ID == mat && m.SPRAS == spras).Select(m => new MaterialVal { ID = m.MATERIAL_ID.ToString(), MATKL_ID = m.MATERIAL.MATERIALGP_ID.ToString(), MAKTX = m.MAKTX.ToString() }).FirstOrDefault();
             if (matt == null)
                 matt = db.MATERIALs.Where(m => m.ID == mat).Select(m => new MaterialVal { ID = m.ID.ToString(), MATKL_ID = m.MATERIALGP_ID.ToString(), MAKTX = m.MAKTX.ToString() }).FirstOrDefault();

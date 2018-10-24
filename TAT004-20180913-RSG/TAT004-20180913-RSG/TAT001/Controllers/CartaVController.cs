@@ -131,7 +131,7 @@ namespace TAT001.Controllers
                                                               & a.VTWEG.Equals(d.VTWEG)
                                                             & a.SPART.Equals(d.SPART)
                                                             & a.KUNNR.Equals(d.PAYER_ID)).First();
-                    string sp = Session["spras"].ToString();
+                    string sp = user.SPRAS_ID;
                     pp = db.PUESTOTs.Where(a => a.SPRAS_ID.Equals(sp) && a.PUESTO_ID == d.USUARIO.PUESTO_ID).FirstOrDefault();
                 }
                 ViewBag.legal = db.LEYENDAs.Where(a => a.PAIS_ID.Equals(d.PAIS_ID) && a.ACTIVO == true).FirstOrDefault();
@@ -193,15 +193,12 @@ namespace TAT001.Controllers
                         var con2 = db.DOCUMENTOPs
                                                 .Join(db.MATERIALs, x => x.MATNR, y => y.ID, (x, y) => new { x, y })
                                                 .Join(db.MATERIALTs, t => t.x.MATNR, z => z.MATERIAL_ID, (t, z) => new { t, z })
-                                                .Where(xy => xy.t.x.NUM_DOC.Equals(id) & xy.t.x.VIGENCIA_DE == a1 && xy.t.x.VIGENCIA_AL == a2 & xy.z.SPRAS == d.CLIENTE.SPRAS)
+                                                .Where(xy => xy.t.x.NUM_DOC.Equals(id) & xy.t.x.VIGENCIA_DE == a1 && xy.t.x.VIGENCIA_AL == a2 & xy.z.SPRAS == "EN")
                                                 .Select(xyz => new
                                                 {
                                                     xyz.t.x.NUM_DOC,
                                                     xyz.t.x.MATNR,
-                                                    //xyz.t.x.MATKL,
-                                                    //db.MATERIALGPs.Where(x => x.ID == xyz.t.x.MATKL).FirstOrDefault().DESCRIPCION,
-                                                    xyz.t.y.MATERIALGP.DESCRIPCION,//.Where(x => x.ID == xyz.t.x.MATKL).FirstOrDefault().DESCRIPCION,
-                                                    //y.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(d.CLIENTE.SPRAS)).FirstOrDefault().TXT50,//RSG 03.10.2018
+                                                     xyz.t.y.MATERIALGP.DESCRIPCION,//.Where(x => x.ID == xyz.t.x.MATKL).FirstOrDefault().DESCRIPCION,
                                                     xyz.z.MAKTG,
                                                     xyz.t.x.MONTO,
                                                     xyz.t.y.PUNIT,
@@ -215,27 +212,7 @@ namespace TAT001.Controllers
                                                     xyz.t.x.VOLUMEN_REAL,
                                                 }).ToList();
 
-                        ////var con2 = db.DOCUMENTOPs
-                        ////                      .Where(x => x.NUM_DOC.Equals(id) & x.VIGENCIA_DE == a1 && x.VIGENCIA_AL == a2)
-                        ////                      .Join(db.MATERIALs, x => x.MATNR, y => y.ID, (x, y) => new
-                        ////                      {
-                        ////                          x.NUM_DOC,
-                        ////                          x.MATNR,
-                        ////                          x.MATKL,
-                        ////                          y.MAKTX,
-                        ////                          x.MONTO,
-                        ////                          y.PUNIT,
-                        ////                          x.PORC_APOYO,
-                        ////                          x.MONTO_APOYO,
-                        ////                          resta = (x.MONTO - x.MONTO_APOYO),
-                        ////                          x.PRECIO_SUG,
-                        ////                          x.APOYO_EST,
-                        ////                          x.APOYO_REAL
-                        ////                      ,
-                        ////                          x.VOLUMEN_EST,
-                        ////                          x.VOLUMEN_REAL
-                        ////                      }) //B20180710 MGC 2018.07.10 Se agregó x.VOLUMEN_EST, x.VOLUMEN_REAL
-                        ////                      .ToList();
+                       
 
                         //Definición si la distribución es monto o porcentaje
                         string porclass = "";//B20180710 MGC 2018.07.18 total es input o text
@@ -890,20 +867,16 @@ namespace TAT001.Controllers
                         DateTime a1 = DateTime.Parse(encabezadoFech[i].Remove(encabezadoFech[i].Length / 2));
                         DateTime a2 = DateTime.Parse(encabezadoFech[i].Remove(0, encabezadoFech[i].Length / 2));
 
-                        //var con2 = db.DOCUMENTOPs
-                        //                  .Where(x => x.NUM_DOC.Equals(v.num_doc) & x.VIGENCIA_DE == a1 && x.VIGENCIA_AL == a2)
-                        //                  .Join(db.MATERIALs, x => x.MATNR, y => y.ID, (x, y) => new { x.MATNR, x.MATKL, y.MAKTX, x.MONTO, y.PUNIT, x.PORC_APOYO, x.MONTO_APOYO, resta = (x.MONTO - x.MONTO_APOYO), x.PRECIO_SUG, x.APOYO_EST, x.APOYO_REAL, x.VIGENCIA_DE, x.VIGENCIA_AL }) //B20180710 MGC 2018.07.19
-                        //                  .ToList();
-
+                        
                         var con2 = db.DOCUMENTOPs
                                                 .Join(db.MATERIALs, x => x.MATNR, y => y.ID, (x, y) => new { x, y })
                                                 .Join(db.MATERIALTs, t => t.x.MATNR, z => z.MATERIAL_ID, (t, z) => new { t, z })
-                                                .Where(xy => xy.t.x.NUM_DOC.Equals(v.num_doc) & xy.t.x.VIGENCIA_DE == a1 && xy.t.x.VIGENCIA_AL == a2 & xy.z.SPRAS == d.CLIENTE.SPRAS)
+                                                .Where(xy => xy.t.x.NUM_DOC.Equals(v.num_doc) & xy.t.x.VIGENCIA_DE == a1 && xy.t.x.VIGENCIA_AL == a2 & xy.z.SPRAS == "EN")
                                                 .Select(xyz => new
                                                 {
                                                     xyz.t.x.NUM_DOC,
                                                     xyz.t.x.MATNR,
-                                                    xyz.t.y.MATERIALGP.DESCRIPCION,//.Where(x => x.ID == xyz.t.x.MATKL).FirstOrDefault().DESCRIPCION,
+                                                    xyz.t.y.MATERIALGP.DESCRIPCION,
                                                     xyz.z.MAKTG,
                                                     xyz.t.x.MONTO,
                                                     xyz.t.y.PUNIT,
@@ -928,13 +901,6 @@ namespace TAT001.Controllers
                                 //armadoCuerpoTab.Add(item2.MATNR.TrimStart('0'));
                                 //armadoCuerpoTab.Add(item2.MATKL);
                                 //armadoCuerpoTab.Add(item2.MAKTX);                        
-                                //if (v.costoun_x == true) { armadoCuerpoTab.Add(Math.Round(item2.MONTO, 2).ToString()); }
-                                //if (v.apoyo_x == true) { armadoCuerpoTab.Add(Math.Round(item2.PORC_APOYO, 2).ToString()); }
-                                //if (v.apoyop_x == true) { armadoCuerpoTab.Add(Math.Round(item2.MONTO_APOYO, 2).ToString()); }
-                                //if (v.costoap_x == true) { armadoCuerpoTab.Add(Math.Round(item2.resta, 2).ToString()); }
-                                //if (v.precio_x == true) { armadoCuerpoTab.Add(Math.Round(item2.PRECIO_SUG, 2).ToString()); }
-                                //if (v.apoyoEst_x == true) { armadoCuerpoTab.Add(Math.Round(Convert.ToDouble(item2.APOYO_EST), 2).ToString()); }
-                                //if (v.apoyoRea_x == true) { armadoCuerpoTab.Add(Math.Round(Convert.ToDouble(item2.APOYO_REAL), 2).ToString()); }
                                 DOCUMENTOP_MOD docmod = new DOCUMENTOP_MOD();
 
                                 try
@@ -1464,23 +1430,15 @@ namespace TAT001.Controllers
                         DateTime a1 = DateTime.Parse(encabezadoFech[i].Remove(encabezadoFech[i].Length / 2));
                         DateTime a2 = DateTime.Parse(encabezadoFech[i].Remove(0, encabezadoFech[i].Length / 2));
 
-                        //var con2 = db.DOCUMENTOPs
-                        //                  .Where(x => x.NUM_DOC.Equals(v.num_doc) & x.VIGENCIA_DE == a1 && x.VIGENCIA_AL == a2)
-                        //                  .Join(db.MATERIALs, x => x.MATNR, y => y.ID, (x, y) => new { x.MATNR, x.MATKL, y.MAKTX, x.MONTO, y.PUNIT, x.PORC_APOYO, x.MONTO_APOYO, resta = (x.MONTO - x.MONTO_APOYO), x.PRECIO_SUG, x.APOYO_EST, x.APOYO_REAL })
-                        //                  .ToList();
-
-                        var con2 = db.DOCUMENTOPs
+                            var con2 = db.DOCUMENTOPs
                                                 .Join(db.MATERIALs, x => x.MATNR, y => y.ID, (x, y) => new { x, y })
                                                 .Join(db.MATERIALTs, t => t.x.MATNR, z => z.MATERIAL_ID, (t, z) => new { t, z })
-                                                .Where(xy => xy.t.x.NUM_DOC.Equals(v.num_doc) & xy.t.x.VIGENCIA_DE == a1 && xy.t.x.VIGENCIA_AL == a2 & xy.z.SPRAS == d.CLIENTE.SPRAS)
+                                                .Where(xy => xy.t.x.NUM_DOC.Equals(v.num_doc) & xy.t.x.VIGENCIA_DE == a1 && xy.t.x.VIGENCIA_AL == a2 & xy.z.SPRAS == "EN")
                                                 .Select(xyz => new
                                                 {
                                                     xyz.t.x.NUM_DOC,
                                                     xyz.t.x.MATNR,
-                                                    //xyz.t.x.MATKL,
-                                                    //db.MATERIALGPs.Where(x => x.ID == xyz.t.x.MATKL).FirstOrDefault().DESCRIPCION,
-                                                    xyz.t.y.MATERIALGP.DESCRIPCION,//.Where(x => x.ID == xyz.t.x.MATKL).FirstOrDefault().DESCRIPCION,
-                                                    //y.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(d.CLIENTE.SPRAS)).FirstOrDefault().TXT50,//RSG 03.10.2018
+                                                    xyz.t.y.MATERIALGP.DESCRIPCION,
                                                     xyz.z.MAKTG,
                                                     xyz.t.x.MONTO,
                                                     xyz.t.y.PUNIT,
@@ -1884,82 +1842,7 @@ namespace TAT001.Controllers
             int pagina = 232; //ID EN BASE DE DATOS
             using (TAT001Entities db = new TAT001Entities())
             {
-                //    string u = User.Identity.Name;
-                //    var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-                //    ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-                //    ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                //    ViewBag.usuario = user;
-                //    ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                //    ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                //    ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                //    ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                //    //ViewBag.mon = db.TEXTOCARTAVs.Where(t => t.SPRAS_ID.Equals(user.SPRAS_ID)).Select(t => t.MONTO).FirstOrDefault();
-
-                //    try
-                //    {
-                //        string pa = Session["pais"].ToString();
-                //        ViewBag.pais = pa + ".svg";
-                //    }
-                //    catch
-                //    {
-                //        ViewBag.pais = "mx.svg";
-                //        ////return RedirectToAction("Pais", "Home");
-                //    }
-                //    Session["spras"] = user.SPRAS_ID;
-                //}
-                //CARTA c = new CARTA();
-                //using (TAT001Entities db = new TAT001Entities())
-                //{
-                //    c = db.CARTAs.Where(a => a.NUM_DOC.Equals(id) & a.POS.Equals(pos)).First();
-                //}
-                ////B20180720P MGC 2018.07.23
-                ////CartaF cf = new CartaF();
-                //CartaV cf = new CartaV();
-                //cf.num_doc = id;
-                //cf.company = c.COMPANY;
-                //cf.company_x = (bool)c.COMPANYX;
-                //cf.taxid = c.TAXID;
-                //cf.taxid_x = (bool)c.TAXIDX;
-                //cf.concepto = c.CONCEPTO;
-                //cf.concepto_x = (bool)c.CONCEPTOX;
-                //cf.cliente = c.CLIENTE;
-                //cf.cliente_x = (bool)c.CLIENTEX;
-                //cf.puesto = c.PUESTO;
-                //cf.puesto_x = (bool)c.PUESTOX;
-                //cf.direccion = c.DIRECCION;
-                //cf.direccion_x = (bool)c.DIRECCIONX;
-                //cf.folio = c.FOLIO;
-                //cf.folio_x = (bool)c.FOLIOX;
-                //cf.lugar = c.LUGAR;
-                //cf.lugar_x = (bool)c.LUGARX;
-                //cf.lugarFech = c.LUGARFECH;
-                //cf.lugarFech_x = (bool)c.LUGARFECHX;
-                //cf.payerId = c.PAYER;
-                //cf.payerId_x = (bool)c.PAYERX;
-                //cf.payerNom = c.NOMBREC;
-                //cf.payerNom_x = (bool)c.NOMBRECX;
-                //cf.estimado = c.ESTIMADO;
-                //cf.estimado_x = (bool)c.ESTIMADOX;
-                //cf.mecanica = c.MECANICA;
-                //cf.mecanica_x = (bool)c.MECANICAX;
-                //cf.monto = c.MONEDA;
-                //cf.monto = c.MONTO;
-                //cf.nombreE = c.NOMBREE;
-                //cf.nombreE_x = (bool)c.NOMBREEX;
-                //cf.puestoE = c.PUESTOE;
-                //cf.puestoE_x = (bool)c.PUESTOEX;
-                //cf.companyC = c.COMPANYC;
-                //cf.companyC_x = (bool)c.COMPANYCX;
-                //cf.nombreC = c.NOMBREC;
-                //cf.nombreC_x = (bool)c.NOMBRECX;
-                //cf.puestoC = c.PUESTOC;
-                //cf.puestoC_x = (bool)c.PUESTOCX;
-                //cf.companyCC = c.COMPANYCC;
-                //cf.companyCC_x = (bool)c.COMPANYCCX;
-                //cf.legal = c.LEGAL;
-                //cf.legal_x = (bool)c.LEGALX;
-                //cf.mail = c.MAIL;
-                //cf.mail_x = (bool)c.MAILX;
+               
 
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
