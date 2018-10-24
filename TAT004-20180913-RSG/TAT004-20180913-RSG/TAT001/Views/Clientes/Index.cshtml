@@ -10,7 +10,7 @@ Layout = "~/Views/Shared/_Layout.cshtml";
     </div>
 </div>
 <div class="card-panel">
-    <div class="row" style="margin-bottom:0;">
+    @*<div class="row" style="margin-bottom:0;">
         <div class="input-field col s3 m3 l3">
             @Html.DropDownListFor(model => model.numRegistros, Model.pageSizes, "")
             <label id="lbl_length"></label>
@@ -19,7 +19,7 @@ Layout = "~/Views/Shared/_Layout.cshtml";
             @Html.TextBoxFor(model => model.buscar, new { @class = "global_filter", @id= "global_filter", @maxlength = 50 })
             <label for="global_filter" id="lbl_search">Buscar</label>
         </div>
-    </div>
+    </div>*@
     <div id="list">
         @Html.Partial("List", Model)
     </div>
