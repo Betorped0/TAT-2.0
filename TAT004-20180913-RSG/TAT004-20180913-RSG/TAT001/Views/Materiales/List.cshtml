@@ -5,17 +5,17 @@
 <table class="table mdl-data-table striped" id="table" style="width:100%;">
     <thead>
         <tr class="header">
-            <th >
-                @Html.ActionLink("-", "List", new { colOrden = "ID", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
+            <th>
+                @Html.ActionLink("ID", "List", new { colOrden = "ID", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros },new { id="lbl_id"})
             </th>
             <th > 
-                @Html.ActionLink("-", "List", new { colOrden = "MAKTX", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
+                @Html.ActionLink("MAKTX", "List", new { colOrden = "MAKTX", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros }, new { id = "lbl_Dsc" })
             </th>
-            <th >
-                @Html.ActionLink("-", "List", new { colOrden = "MATERIALGP", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
+            <th>
+                @Html.ActionLink("MATERIALGP", "List", new { colOrden = "MATERIALGP", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros }, new { id = "lbl_MatGroup" })
             </th>
-            <th >
-                @Html.ActionLink("-", "List", new { colOrden = "ACTIVO", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
+            <th>
+                @Html.ActionLink("ACTIVO", "List", new { colOrden = "ACTIVO", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros }, new { id = "lbl_Activo" })
             </th>
             <th></th>
         </tr>

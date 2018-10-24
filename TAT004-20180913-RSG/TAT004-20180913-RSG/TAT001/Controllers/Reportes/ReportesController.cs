@@ -577,9 +577,9 @@ namespace TAT001.Controllers.Reportes
                 string estatuss = r1.STATUSS1 + r1.STATUSS2 + r1.STATUSS3 + r1.STATUSS4;
                 if (r1.STATUS == "R")
                 {
-                    r1.STATUSS = estatuss.Substring(0, 6) +
-                                    db.FLUJOes.Where(x => x.NUM_DOC == dOCUMENTO.NUM_DOC & x.ESTATUS == "R").OrderByDescending(a => a.POS).FirstOrDefault().USUARIO.PUESTO_ID +
-                                    estatuss.Substring(6, 1);
+                    r1.STATUSS = estatuss.Substring(0, 6);
+                    r1.STATUSS += db.USUARIOs.Where(y => y.ID == db.FLUJOes.Where(x => x.NUM_DOC == dOCUMENTO.NUM_DOC & x.ESTATUS == "R").OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID).FirstOrDefault().PUESTO_ID.ToString();
+                    r1.STATUSS += estatuss.Substring(6, 1);
                 }
                 else
                 {

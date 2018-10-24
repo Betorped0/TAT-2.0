@@ -857,7 +857,7 @@ $(document).ready(function () {
                 //$('#tipo_cambio').val(toShow(tc));
                 $('#tipo_cambio').val(toShow5(tc));
 
-                var monto = mt * tc;
+                var monto = mt / tc;
                 monto = parseFloat(monto).toFixed(2);
                 //$('#monto_doc_ml2').val(monto);
                 // $('#montos_doc_ml2').val(monto);

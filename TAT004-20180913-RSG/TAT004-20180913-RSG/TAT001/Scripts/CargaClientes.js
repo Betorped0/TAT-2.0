@@ -186,6 +186,9 @@ function loadExcelDis(file) {
                     var eco = dataj.CONTACTOE;
                     var mes = dataj.MESS;
 
+                    if (mes == null)
+                        mes = "";
+
                     //identificacion de error
                     if (coc.indexOf('?') != -1) {
                         coc = coc.slice(0, -1);
@@ -535,6 +538,9 @@ function creart(metodo, datos) {
                     var cont = dataj.CONTACTO;
                     var eco = dataj.CONTACTOE;
                     var mes = dataj.MESS;
+
+                    if (mes == null)
+                        mes = "";
 
                     //identificacion de error
                     if (coc.indexOf('?') != -1) {
