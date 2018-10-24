@@ -1,4 +1,5 @@
-﻿@using PagedList.Mvc
+﻿@using TAT001.Entities;
+@using PagedList.Mvc
 @model TAT001.Models.ProveedorViewModel
 <link href="~/Content/PagedList.css" rel="stylesheet" />
 <table class="table mdl-data-table striped" id="table" style="width:100%;">
@@ -25,37 +26,37 @@
     <tbody>
         @foreach (var item in Model.proveedores)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NOMBRE)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SOCIEDAD_ID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PAIS_ID)
-            </td>
-            @if ((bool)item.ACTIVO == true)
-            {
-                <td style="align-items:center"><i class='material-icons green-text'>check</i></td>}
-            else
-            {
-                <td style="align-items:center;"><i class='material-icons red-text'>clear</i></td>}
-            <td>
-                <a href="@Url.Action("Edit", "Proveedor", new { id = item.ID })">
-                    <i class='material-icons green-text'>edit</i>
-                </a>
-                <a href="@Url.Action("Details", "Proveedor", new { id = item.ID})">
-                    <i class='material-icons blue-text'>search</i>
-                </a>
-                <a href="@Url.Action("Delete", "Proveedor", new { id = item.ID})">
-                    <i class='material-icons red-text'>delete</i>
-                </a>
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NOMBRE)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SOCIEDAD_ID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PAIS_ID)
+                </td>
+                @if ((bool)item.ACTIVO == true)
+                {
+                    <td style="align-items:center"><i class='material-icons green-text'>check</i></td>}
+                else
+                {
+                    <td style="align-items:center;"><i class='material-icons red-text'>clear</i></td>}
+                <td>
+                    <a href="@Url.Action("Edit", "Proveedor", new { id = item.ID })">
+                        <i class='material-icons green-text'>edit</i>
+                    </a>
+                    <a href="@Url.Action("Details", "Proveedor", new { id = item.ID})">
+                        <i class='material-icons blue-text'>search</i>
+                    </a>
+                    <a href="@Url.Action("Delete", "Proveedor", new { id = item.ID})">
+                        <i class='material-icons red-text'>delete</i>
+                    </a>
+                </td>
+            </tr>
         }
     </tbody>
 </table>
@@ -65,6 +66,31 @@
 
     @Html.PagedListPager(Model.proveedores, page => Url.Action("List", new { pagina = page, numRegistros = Model.numRegistros }))
 </div>
+
+@if (ViewBag.textos != null)
+{
+    foreach (TEXTO t in ViewBag.textos)
+    {
+        <script>
+                try {
+                    var elem = document.getElementById("@t.CAMPO_ID");
+                    if (elem.nodeName != 'INPUT' & elem.nodeName != 'SELECT' & elem.nodeName != 'TABLE' & elem.nodeName != 'TEXTAREA')
+                    elem.innerHTML = "@t.TEXTOS";
+                } catch (e) {
+                    try {
+                        var divs = document.getElementsByClassName("@t.CAMPO_ID");
+                        [].slice.call(divs).forEach(function (div) {
+                            if (div.nodeName != 'INPUT' & div.nodeName != 'SELECT' & div.nodeName != 'TABLE' & div.nodeName != 'TEXTAREA')
+                            div.innerHTML = "@t.TEXTOS";
+                        });
+                    }
+                    catch (ee) {
+
+                    }
+                 }
+        </script>
+    }
+}
 <script>
     //-----Sort
     function sort() {
