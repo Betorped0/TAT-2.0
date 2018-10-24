@@ -1,7 +1,7 @@
 ﻿@model TAT001.Entities.TS_CAMPO
 
 @{
-    ViewBag.Title = "Details";
+    //ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.pagina_r = 1311;
     ViewBag.carpeta_r = 500;
@@ -10,7 +10,7 @@
 <div class="row">
     <div class="col s12 right-align">
         @*<a href="@Url.Action("Edit", "DesviacionesTS")" class="btn-small">Editar</a>*@
-        <a href="@Url.Action("Index", "DesviacionesTS")" class="btn-small">Lista</a>
+        <a href="@Url.Action("Index", "DesviacionesTS")" class="btn btn-default">Lista</a>
     </div>
 </div>
 
@@ -35,13 +35,10 @@
                     <div class="form-horizontal">
 
                         <div class="form-group">
-                            @Html.LabelFor(model => Model.TS_FORMT.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT100)
+                            @Html.LabelFor(model => Model.TS_FORMT.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT100, new { @id = "lblDesc" })
 
                             @Html.EditorFor(model => Model.TS_FORMT.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT100, new { htmlAttributes = new { @class = "form-control", @disabled = "@disabled" } })
 
-                            @*@Html.LabelFor(model => item.TXT100, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblSolId", @disabled = "@disabled" })
-                                @Html.EditorFor(model => item.TXT100, new { htmlAttributes = new { @class = "form-control", @disabled = "@disabled" } })
-                                @Html.ValidationMessageFor(model => item.TXT100, "", new { @class = "text-danger" })*@
 
                         </div>
 
@@ -58,10 +55,6 @@
                 <br />
                 <div class="row">
 
-                    @*<div class=" input-field col s12">
-                            @Html.EditorFor(model => model.TXT100, null, Model.SPRAS_ID, new { htmlAttributes = new { @id = "A" + Model.SPRAS_ID, @readonly = "readonly" } })
-                            <label for="SPRAS_ID">@Model.SPRA.DESCRIPCION</label>
-                        </div>*@
                     @foreach (var item in Model.TS_FORMT)
                     {
                         <div class=" input-field col s12">
@@ -71,10 +64,7 @@
 
                         </div>
                     }
-                    @*<div class=" input-field col s12 pr1">
-                            @Html.Editor("Editor", null, "txval", new { htmlAttributes = new { @readonly = "readonly" } })
-                            <label for="Editor">@Model.TXT100</label>
-                        </div>*@
+
                 </div>
                 <div>
                     @Html.LabelFor(model => model.ACTIVO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblObliga" })
@@ -89,14 +79,7 @@
                 </div>
             </div>
         </div>
-        @*<div class="col s6 ">
-                <div class="card-panel">
-                    <h5>Soportes</h5>
-                    <div class="row">
-                        <div><a href="@Url.Action("Index", "CONSOPORTE", new { tsol = Model.ID})" class="btn-small">Soportes</a></div>
-                    </div>
-                </div>
-            </div>*@
+
     }
 </div>
 <p>

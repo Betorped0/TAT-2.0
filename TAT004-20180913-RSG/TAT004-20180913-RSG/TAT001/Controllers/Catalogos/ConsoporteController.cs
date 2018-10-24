@@ -40,7 +40,7 @@ namespace TAT001.Controllers
             }
             Session["spras"] = user.SPRAS_ID;
 
-            var cONSOPORTEs = db.CONSOPORTEs.Include(c => c.TSOL).Include(c => c.TSOPORTE).Where(c => c.TSOL_ID == tsol);
+            var cONSOPORTEs = db.CONSOPORTEs.Include(c => c.TSOL).Include(c => c.TSOPORTE)/*.Where(c => c.TSOL_ID == tsol)*/;
             return View(cONSOPORTEs.ToList());
         }
 
@@ -110,7 +110,7 @@ namespace TAT001.Controllers
 
             var list = db.CONSOPORTEs.Where(x => x.TSOL_ID == tsol).Select(x => x.TSOPORTE_ID).ToList();
             ViewBag.TSOPORTE_ID = new SelectList(db.TSOPORTEs.Where(x => !list.Contains(x.ID)).ToList(), "ID", "DESCRIPCION");
-            ViewBag.TSOL_ID = new SelectList(db.TSOLs.Where(x => x.ID == tsol), "ID", "DESCRIPCION");
+            ViewBag.TSOL_ID = new SelectList(db.TSOLs.Where(x => !list.Contains(x.ID)).ToList(), "ID", "DESCRIPCION");
             //ViewBag.TSOPORTE_ID = new SelectList(db.TSOPORTEs, "ID", "DESCRIPCION");
             return View();
         }
@@ -185,7 +185,7 @@ namespace TAT001.Controllers
         {
             if (ModelState.IsValid)
             {
-                cONSOPORTE.ACTIVO = true;
+                //cONSOPORTE.ACTIVO = true;
                 db.Entry(cONSOPORTE).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index", new { tsol = cONSOPORTE.TSOL_ID });
