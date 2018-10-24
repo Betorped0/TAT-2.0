@@ -5868,8 +5868,7 @@ namespace TAT001.Controllers
             {
 
             }
-
-            var spras = FnCommon.ObtenerSprasId(db,User.Identity.Name);
+            
             //Validar si hay materiales
             if (matl != null)
             {
@@ -6030,7 +6029,10 @@ namespace TAT001.Controllers
                         dcll.MATNR = d.MATNR;
 
                         //Obtener la descripción del material
-                        string maktg = db.MATERIALTs.Where(w => w.MATERIAL_ID == d.MATNR && w.SPRAS==spras).FirstOrDefault().MAKTG;
+                        string maktg = db.MATERIALs.Where(w => w.ID == d.MATNR).FirstOrDefault().MAKTG;
+                        if (db.MATERIALTs.Any(w => w.MATERIAL_ID == d.MATNR && w.SPRAS == "EN")) {
+                            maktg= db.MATERIALTs.Where(w => w.MATERIAL_ID == d.MATNR && w.SPRAS == "EN").First().MAKTG;
+                        }
                         dcll.DESC = (maktg == null ? "" : maktg);
                         dcll.VAL = val;
 
