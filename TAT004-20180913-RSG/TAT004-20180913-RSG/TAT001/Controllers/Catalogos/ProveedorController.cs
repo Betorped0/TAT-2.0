@@ -35,13 +35,14 @@ namespace TAT001.Controllers.Catalogos
 
         public ActionResult List(string colOrden, string ordenActual, int? numRegistros = 10, int? pagina = 1, string buscar = "")
         {
+            int pagina_id = 771; //ID EN BASE DE DATOS
             ProveedorViewModel viewModel = new ProveedorViewModel();
             ObtenerListado(ref viewModel, colOrden, ordenActual, numRegistros, pagina, buscar);
-
+            FnCommon.ObtenerTextos(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
             return View(viewModel);
         }
         public void ObtenerListado(ref ProveedorViewModel viewModel, string colOrden = "", string ordenActual = "", int? numRegistros = 10, int? pagina = 1, string buscar = "")
-        {
+     {
             int pageIndex = pagina.Value;
             List<PROVEEDOR> clientes = db.PROVEEDORs.Where(t=>t.ACTIVO).ToList();
             viewModel.ordenActual = colOrden;

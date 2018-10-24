@@ -2,12 +2,10 @@
 @{
     ViewBag.pagina_r = 771;
     ViewBag.carpeta_r = 500;
-    //ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="row">
     <div class="col s12 right-align">
-        @* Texto, pagina a ligar "NOMBRE", View *@
         @Html.ActionLink("Agregar Pagina", "Create", "Proveedor", new { @class = "btn-small", @id = "btnAdd" })
         @using (Html.BeginForm("Descargar", "Proveedor", FormMethod.Post, new { @style = "display:initial;" }))
         {
@@ -45,7 +43,7 @@
     $('#numRegistros').change(function () {
         fnCommon.showProcess(true);
         $.ajax({
-            url: root + 'Clientes/List?numRegistros=' + $('#numRegistros').val(),
+            url: root + 'Proveedor/List?numRegistros=' + $('#numRegistros').val(),
             success: function (resultView) {
                 fnCommon.showProcess(false);
                 $('#list').html(resultView);
@@ -57,7 +55,7 @@
     $('input.global_filter').keyup(function () {
         var buscar = $('input.global_filter').val();
          $.ajax({
-             url: root+'Clientes/List?numRegistros=' + $('#numRegistros').val() + '&&buscar=' + $('input.global_filter').val(),
+             url: root+'Proveedor/List?numRegistros=' + $('#numRegistros').val() + '&&buscar=' + $('input.global_filter').val(),
             success: function (resultView) {
                 $('#list').html(resultView);
             }
