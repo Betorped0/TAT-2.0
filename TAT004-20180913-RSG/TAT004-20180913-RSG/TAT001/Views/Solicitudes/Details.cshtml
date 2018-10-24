@@ -682,29 +682,29 @@
                                             <table>
                                                 <thead>
                                                     <tr>
-                                                        <th>Pos</th>
-                                                        <th>Periodo</th>
-                                                        <th>Tipo</th>
-                                                        <th>No solicitud TAT</th>
-                                                        <th>Fecha</th>
+                                                        <th id="lbl_rec_pos">Pos</th>
+                                                        <th id="lbl_rec_periodo">Periodo</th>
+                                                        <th id="lbl_rec_tipo">Tipo</th>
+                                                        <th id="lbl_rec_numsol">No solicitud TAT</th>
+                                                        <th id="lbl_rec_fecha">Fecha</th>
                                                         @if (caso != "1")
                                                         {
-                                                            <th>%</th>
+                                                            <th id="lbl_rec_porc">%</th>
                                                         }
-                                                        <th>Objetivo</th>
-                                                        <th>Estatus</th>
+                                                        <th id="lbl_rec_obj">Objetivo</th>
+                                                        <th id="lbl_rec_estatus">Estatus</th>
 
                                                         @if (ViewBag.recs.Count > 0)
                                                         {
-                                                            <th>Venta del periodo</th>
-                                                            <th>Monto provisión</th>
+                                                            <th id="lbl_rec_venta">Venta del periodo</th>
+                                                            <th id="lbl_rec_montoprov">Monto provisión</th>
                                                             if (Model.D.PAI.BACKORDER)
                                                             {
-                                                                <th>BackOrder</th>
-                                                                <th>Venta real</th>
+                                                                <th id="lbl_rec_backorder">BackOrder</th>
+                                                                <th id="lbl_rec_ventareal">Venta real</th>
                                                             }
-                                                            <th>NC o Reverso</th>
-                                                            <th>Monto</th>
+                                                            <th id="lbl_rec_ncreverso">NC o Reverso</th>
+                                                            <th id="lbl_rec_monto">Monto</th>
                                                         }
                                                     </tr>
                                                 </thead>

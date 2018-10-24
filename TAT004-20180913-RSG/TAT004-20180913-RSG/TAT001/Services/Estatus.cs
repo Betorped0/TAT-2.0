@@ -37,7 +37,8 @@ namespace TAT001.Services
             if (d.TSOL.PADRE) { estatus += "P"; } else { estatus += " "; }
             if (d.FLUJOes.Where(x => x.ESTATUS == "R").ToList().Count > 0)
             {
-                estatus += d.FLUJOes.Where(x => x.ESTATUS == "R").OrderByDescending(a => a.POS).FirstOrDefault().USUARIO.PUESTO_ID;
+                FLUJO flujo = d.FLUJOes.Where(x => x.ESTATUS == "R").OrderByDescending(a => a.POS).FirstOrDefault();
+                estatus += db.USUARIOs.First(x=>x.ID==flujo.USUARIOA_ID).PUESTO_ID;
             }
             else
             {

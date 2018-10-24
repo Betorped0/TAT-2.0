@@ -16,7 +16,7 @@
 
 <div class="row right-align">
     <div class="col s12 right-align">
-        <a href="@Url.Action("Details", "Soporte", new { id = ViewBag.IdTsol })" class="waves-effect waves-light btn">REGRESAR</a>
+        @*<a href="@Url.Action("Details", "Soporte", new { id = ViewBag.IdTsol })" class="waves-effect waves-light btn">REGRESAR</a>*@
         <a href="@Url.Action("Create", "Soporte", new { tsol = ViewBag.IdTsol })" class="waves-effect waves-light btn">AGREGAR</a>
     </div>
 </div>
@@ -38,11 +38,11 @@
         </div>
     </div>
 
-    <script>
+    @*<script>
         var elem = document.querySelector('select');
         var options = [];
         var instance = M.Select.init(elem, options);
-    </script>
+    </script>*@
 
     @*@using (Html.BeginForm())
         {
@@ -53,7 +53,7 @@
                 <th>
                     @Html.DisplayNameFor(model => model.ID)
                 </th>
-                <th>TSOPORTE_ID</th>
+                <th>Tipo de Soporte</th>
                 <th>Tipo de Solicitud</th>
                 <th>
                     @Html.DisplayNameFor(model => model.DESCRIPCION)
@@ -75,14 +75,14 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.ID)
                     </td>
-                    @foreach (var tsol in vb)
-                    {
+                    @*@foreach (var tsol in vb)
+                    {*@
                         <td>
-                            @tsol
+                            @*@tsol*@
                             @*@tsol.Where(modelItem => item.ID.Equals(id)).FirstOrDefault()*@
                             @*@Html.DisplayFor(modelItem => item.CONSOPORTEs.Where(a => a.TSOL_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TSOL_ID)*@
                         </td>
-                    }
+                    @*}*@
                     <td>
                         @Html.DisplayFor(modelItem => item.TSOPORTETs.Where(x => x.TSOPORTE_ID.Equals(item.ID) && x.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50)
                     </td>

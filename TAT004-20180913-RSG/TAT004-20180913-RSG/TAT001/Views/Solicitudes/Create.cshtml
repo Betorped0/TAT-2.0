@@ -280,7 +280,7 @@ $(document).ready(function () {
                                         else
                                         {
                                             @*//MGC B20180611 se elimina clasificación*@
-                                            <input type="hidden" value="@Model.TALL_ID" id="tall_id" /><!--RSG 23.05.2018-->
+                                            @Html.HiddenFor(model=>model.TALL_ID,  new { @id = "tall_id" })
                                             <input type="text" value="@ViewBag.TALL_IDI" disabled="disabled" />
                                         }
                                     </div>

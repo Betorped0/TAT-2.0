@@ -233,7 +233,9 @@ namespace TAT001.Controllers
                         ViewBag.PT = e.TXT50;
                 }
             else
+            {
                 ViewBag.EN = tSOPORTE.DESCRIPCION;
+            }
 
             //ViewBag.SPRAS = db.SPRAS.ToList();
             //ViewBag.TSOL_ID = new SelectList(db.TSOLs, "ID", "DESCRIPCION", cONSOPORTE.TSOL_ID);
@@ -314,6 +316,8 @@ namespace TAT001.Controllers
 
 
             int pagina = 843; //ID EN BASE DE DATOS
+            using (TAT001Entities db = new TAT001Entities())
+            {
             string u = User.Identity.Name;
             var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
             ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
@@ -335,7 +339,7 @@ namespace TAT001.Controllers
                 //return RedirectToAction("Pais", "Home");
             }
             Session["spras"] = user.SPRAS_ID;
-
+        }
 
             //ViewBag.TSOL_ID = new SelectList(db.TSOLs, "ID", "DESCRIPCION", tSOPORTE.ID);
             //ViewBag.TSOPORTE_ID = new SelectList(db.TSOPORTEs, "ID", "DESCRIPCION", tSOPORTE.ID);

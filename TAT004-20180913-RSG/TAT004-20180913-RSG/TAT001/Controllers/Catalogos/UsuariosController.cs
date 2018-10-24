@@ -860,23 +860,23 @@ namespace TAT001.Controllers.Catalogos
                 Usuarios us = new Usuarios();
                 Cryptography c = new Cryptography();
 
-                us.KUNNR = da.KUNNR;
+                us.KUNNR = da.KUNNR.Replace(" ", "");
                 us.KUNNRX = true;
-                us.BUNIT = da.BUNIT;
+                us.BUNIT = da.BUNIT.Replace(" ", "");
                 us.BUNITX = true;
                 us.PUESTO_ID = da.PUESTO_ID.ToString();
                 us.PUESTO_IDX = true;
-                us.ID = da.ID;
+                us.ID = da.ID.Replace(" ", "");
                 us.IDX = true;
                 us.NOMBRE = da.NOMBRE;
                 us.APELLIDO_P = da.APELLIDO_P;
                 us.APELLIDO_M = da.APELLIDO_M;
-                us.EMAIL = da.EMAIL;
+                us.EMAIL = da.EMAIL.Replace(" ", "");
                 us.EMAILX = true;
                 us.SPRAS_ID = da.SPRAS_ID;
                 us.SPRAS_IDX = true;
                 us.PASS = da.PASS;
-
+                
                 int pues = 0;
                 string men = ". Error en el nivel<br/>";
                 if (us.PUESTO_ID != null && us.PUESTO_ID != "")
@@ -995,6 +995,7 @@ namespace TAT001.Controllers.Catalogos
                             {
                                 us.IDX = false;
                                 err = ". El usuario ya existe<br/>";
+                                IDs[cont4] = us.ID;
                                 client[cont2, 1] = us.ID.ToString();
                                 tablas[cont2, 3] = da.ID.ToString();
                                 tablas[cont2, 4] = da.NOMBRE.ToString();
@@ -1083,6 +1084,7 @@ namespace TAT001.Controllers.Catalogos
                             }
 
                         }
+                        messa = "";
                         client[cont2, 1] = da.ID;
                         us.mess = da.mess;
                         tablas[cont2, 10] = messa;
@@ -1161,6 +1163,7 @@ namespace TAT001.Controllers.Catalogos
                             {
                                 us.IDX = false;
                                 err = ". El usuario ya existe<br/>";
+                                IDs[cont4] = us.ID;
                                 admins[cont3, 1] = us.ID.ToString();
                                 tabla1[cont3, 3] = da.ID.ToString();
                                 tabla1[cont3, 4] = da.NOMBRE.ToString();
@@ -1249,6 +1252,7 @@ namespace TAT001.Controllers.Catalogos
                             }
 
                         }
+                        messa = "";
                         admins[cont3, 1] = da.ID;
                         usuariosoc[cont4, 1] = da.ID.ToString();
                         us.mess = da.mess;
@@ -1505,22 +1509,28 @@ namespace TAT001.Controllers.Catalogos
                     if (da.ID != null)
                     {
                         ////---------------------------- USUARIO
-                        us.ID = da.ID.Trim();
-                        us.PASS = da.PASS;
-                        us.NOMBRE = da.NOMBRE;
-                        us.APELLIDO_P = da.APELLIDO_P;
-                        us.APELLIDO_M = da.APELLIDO_M;
-                        us.EMAIL = da.EMAIL;
-                        us.SPRAS_ID = da.SPRAS_ID;
-                        us.ACTIVO = true;
-                        us.PUESTO_ID = da.PUESTO_ID;
-                        us.MANAGER = null;
-                        us.BACKUP_ID = null;
-                        us.BUNIT = da.BUNIT;
+                        try
+                        {
+                            us.ID = da.ID.Trim();
+                            us.PASS = da.PASS;
+                            us.NOMBRE = da.NOMBRE;
+                            us.APELLIDO_P = da.APELLIDO_P;
+                            us.APELLIDO_M = da.APELLIDO_M;
+                            us.EMAIL = da.EMAIL;
+                            us.SPRAS_ID = da.SPRAS_ID;
+                            us.ACTIVO = true;
+                            us.PUESTO_ID = da.PUESTO_ID;
+                            us.MANAGER = null;
+                            us.BACKUP_ID = null;
+                            us.BUNIT = da.BUNIT;
 
-                        db.USUARIOs.Add(us);
-                        db.SaveChanges();
-                        cont++;
+                            db.USUARIOs.Add(us);
+                            db.SaveChanges();
+                            cont++;
+                        }
+                        catch (Exception e)
+                        {
+                        }
                     }
                 }
             }
@@ -1539,19 +1549,25 @@ namespace TAT001.Controllers.Catalogos
                 if (da.mess == null || da.mess == "")
                 {
                     ////---------------------------- USUARIOF
-                    uf.USUARIO_ID = usuario_id;
-                    uf.VKORG = da.VKORG;
-                    uf.VTWEG = da.VTWEG;
-                    uf.SPART = da.SPART;
-                    uf.KUNNR = da.KUNNR;
-                    uf.ACTIVO = true;
-                    uf.USUARIOC_ID = null;
-                    uf.FECHAC = DateTime.Today;
-                    uf.USUARIOM_ID = null;
-                    uf.FECHAM = null;
+                    try
+                    {
+                        uf.USUARIO_ID = usuario_id;
+                        uf.VKORG = da.VKORG;
+                        uf.VTWEG = da.VTWEG;
+                        uf.SPART = da.SPART;
+                        uf.KUNNR = da.KUNNR;
+                        uf.ACTIVO = true;
+                        uf.USUARIOC_ID = null;
+                        uf.FECHAC = DateTime.Today;
+                        uf.USUARIOM_ID = null;
+                        uf.FECHAM = null;
 
-                    db.USUARIOFs.Add(uf);
-                    db.SaveChanges();
+                        db.USUARIOFs.Add(uf);
+                        db.SaveChanges();
+                    }
+                    catch (Exception e)
+                    {
+                    }
                 }
             }
 
@@ -1564,22 +1580,28 @@ namespace TAT001.Controllers.Catalogos
                 {
                     if (da.ID != null && !db.USUARIOs.Any(x=>x.ID==da.ID))
                     {
-                        us.ID = da.ID.Trim();
-                        us.PASS = da.PASS;
-                        us.NOMBRE = da.NOMBRE;
-                        us.APELLIDO_P = da.APELLIDO_P;
-                        us.APELLIDO_M = da.APELLIDO_M;
-                        us.EMAIL = da.EMAIL;
-                        us.SPRAS_ID = da.SPRAS_ID;
-                        us.ACTIVO = true;
-                        us.PUESTO_ID = da.PUESTO_ID;
-                        us.MANAGER = null;
-                        us.BACKUP_ID = null;
-                        us.BUNIT = da.BUNIT;
+                        try
+                        {
+                            us.ID = da.ID.Trim();
+                            us.PASS = da.PASS;
+                            us.NOMBRE = da.NOMBRE;
+                            us.APELLIDO_P = da.APELLIDO_P;
+                            us.APELLIDO_M = da.APELLIDO_M;
+                            us.EMAIL = da.EMAIL;
+                            us.SPRAS_ID = da.SPRAS_ID;
+                            us.ACTIVO = true;
+                            us.PUESTO_ID = da.PUESTO_ID;
+                            us.MANAGER = null;
+                            us.BACKUP_ID = null;
+                            us.BUNIT = da.BUNIT;
 
-                        db.USUARIOs.Add(us);
-                        db.SaveChanges();
-                        cont++;
+                            db.USUARIOs.Add(us);
+                            db.SaveChanges();
+                            cont++;
+                        }
+                        catch (Exception e)
+                        {
+                        }
                     }
                 }
             }
@@ -1597,7 +1619,8 @@ namespace TAT001.Controllers.Catalogos
 
                 if (da.mess == null || da.mess == "")
                 {
-                    
+                    try
+                    { 
                         SOCIEDAD soc = db.SOCIEDADs.Where(x => x.BUKRS == da.BUNIT).First();
                         if (!us.SOCIEDADs.Any(x => x.BUKRS == da.BUNIT))
                         {
@@ -1607,6 +1630,10 @@ namespace TAT001.Controllers.Catalogos
                         db.Entry(us).State = EntityState.Modified;
                         db.SaveChanges();
                         cont++;
+                    }
+                    catch (Exception e)
+                    {
+                    }
                 }
             }
 
@@ -1902,20 +1929,20 @@ namespace TAT001.Controllers.Catalogos
                 Usuarios us = new Usuarios();
                 Cryptography c = new Cryptography();
 
-                us.KUNNR = da.KUNNR;
+                us.KUNNR = da.KUNNR.Replace(" ", "");
                 us.KUNNRX = true;
-                us.BUNIT = da.BUNIT;
+                us.BUNIT = da.BUNIT.Replace(" ", "");
                 us.BUNITX = true;
                 us.PUESTO_ID = da.PUESTO_ID.ToString();
                 us.PUESTO_IDX = true;
-                us.ID = da.ID;
+                us.ID = da.ID.Replace(" ", "");
                 us.IDX = true;
                 us.NOMBRE = da.NOMBRE;
                 us.APELLIDO_P = da.APELLIDO_P;
                 us.APELLIDO_M = da.APELLIDO_M;
-                us.EMAIL = da.EMAIL;
+                us.EMAIL = da.EMAIL.Replace(" ", "");
                 us.EMAILX = true;
-                us.SPRAS_ID = da.SPRAS_ID;
+                us.SPRAS_ID = da.SPRAS_ID.Replace(" ", "");
                 us.SPRAS_IDX = true;
                 us.PASS = da.PASS;
 
@@ -2127,6 +2154,7 @@ namespace TAT001.Controllers.Catalogos
                             }
 
                         }
+                        messa = "";
                         client[cont2, 1] = da.ID;
                         us.mess = da.mess;
                         tablas[cont2, 10] = messa;
@@ -2293,6 +2321,7 @@ namespace TAT001.Controllers.Catalogos
                             }
 
                         }
+                        messa = "";
                         admins[cont3, 1] = da.ID;
                         usuariosoc[cont4, 1] = da.ID.ToString();
                         us.mess = da.mess;
@@ -2336,9 +2365,9 @@ namespace TAT001.Controllers.Catalogos
             {
                 USUARIO us = new USUARIO();
 
-                if ((da.mess).Contains("Usuario duplicado"))
+                if (da.ID != null)
                 {
-                    if (da.ID != null)
+                    try
                     {
                         us.ID = da.ID.Trim();
                         us.PASS = da.PASS;
@@ -2357,6 +2386,9 @@ namespace TAT001.Controllers.Catalogos
                         db.SaveChanges();
                         cont++;
                     }
+                    catch (Exception e)
+                    {
+                    }
                 }
             }
 
@@ -2364,21 +2396,34 @@ namespace TAT001.Controllers.Catalogos
             ld = ObjAList3();
             foreach (DET_AGENTE1 da in ld)
             {
-                USUARIOF uf = new USUARIOF();
+                try
+                {
+                    USUARIOF f = db.USUARIOFs.Where(x => x.KUNNR.Equals(da.KUNNR) & x.USUARIO_ID.Equals(da.ID)).FirstOrDefault();
+                    USUARIOF uf = new USUARIOF();
 
-                uf.USUARIO_ID = da.ID.Trim();
-                uf.VKORG = da.VKORG;
-                uf.VTWEG = da.VTWEG;
-                uf.SPART = da.SPART;
-                uf.KUNNR = da.KUNNR;
-                uf.ACTIVO = true;
-                uf.USUARIOC_ID = null;
-                uf.FECHAC = DateTime.Today;
-                uf.USUARIOM_ID = null;
-                uf.FECHAM = null;
-
-                db.Entry(uf).State = EntityState.Modified;
-                db.SaveChanges();
+                    uf.USUARIO_ID = da.ID.Trim();
+                    uf.VKORG = da.VKORG;
+                    uf.VTWEG = da.VTWEG;
+                    uf.SPART = da.SPART;
+                    uf.KUNNR = da.KUNNR;
+                    uf.ACTIVO = true;
+                    uf.USUARIOC_ID = null;
+                    uf.FECHAC = DateTime.Today;
+                    uf.USUARIOM_ID = null;
+                    uf.FECHAM = null;
+                    if (f != null)
+                    {
+                        db.Entry(uf).State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        db.USUARIOFs.Add(uf);
+                    }
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                }
             }
 
             ////---------------------------- USUARIO Co Codes
@@ -2386,10 +2431,9 @@ namespace TAT001.Controllers.Catalogos
             foreach (DET_AGENTE1 da in ld)
             {
                 USUARIO us = new USUARIO();
-
-                if ((da.mess).Contains("Usuario duplicado"))
+                if (da.ID != null)
                 {
-                    if (da.ID != null)
+                    try
                     {
                         us.ID = da.ID.Trim();
                         us.PASS = da.PASS;
@@ -2405,8 +2449,12 @@ namespace TAT001.Controllers.Catalogos
                         us.BUNIT = da.BUNIT;
 
                         db.Entry(us).State = EntityState.Modified;
+
                         db.SaveChanges();
                         cont++;
+                    }
+                    catch (Exception e)
+                    {
                     }
                 }
             }
@@ -2422,16 +2470,20 @@ namespace TAT001.Controllers.Catalogos
                 }
                 USUARIO us = db.USUARIOs.Where(x => x.ID == usuario_id).First();
 
-                if ((da.mess).Contains("Usuario duplicado"))
+                try
                 {
-                        SOCIEDAD soc = db.SOCIEDADs.Where(x => x.BUKRS == da.BUNIT ).First();
-                        if (!us.SOCIEDADs.Any(x=>x.BUKRS== da.BUNIT)) {
-                            us.SOCIEDADs.Add(soc);
-                        }
+                    SOCIEDAD soc = db.SOCIEDADs.Where(x => x.BUKRS == da.BUNIT).First();
+                    if (!us.SOCIEDADs.Any(x => x.BUKRS == da.BUNIT))
+                    {
+                        us.SOCIEDADs.Add(soc);
+                    }
 
-                        db.Entry(us).State = EntityState.Modified;
-                        db.SaveChanges();
-                        cont++;
+                    db.Entry(us).State = EntityState.Modified;
+                    db.SaveChanges();
+                    cont++;
+                }
+                catch (Exception e)
+                {
                 }
             }
 

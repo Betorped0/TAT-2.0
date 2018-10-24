@@ -26,7 +26,7 @@
             <option value="50">50</option>
             <option value="100">100</option>
         </select>
-        <label id="lbl_length">Ver por página</label>
+        <label id="lbl_length">Ver Por Página</label>
     </div>
     <div class="input-field col s5 m3 l3 offset-l6 offset-m6 offset-s4">
         <input type="text" class="global_filter" id="global_filter">
@@ -55,6 +55,9 @@
             <th id="lblTDes" style="text-align:left;">
                 @asd.ToString()
             </th>
+            <th id="lblAct" style="text-align:left;">
+                @Html.DisplayNameFor(model => model.ACTIVO)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -71,16 +74,26 @@
             {
                 tslt = "";
             }
-            <tr>
-                <td style="text-align:left;">
-                    @Html.DisplayFor(modelItem => item.DESCRIPCION)
-                </td>
-                <td style="text-align:left;">
-                    @Html.DisplayFor(modelItem => item.GRUPO_ALL)
-                </td>
-                <td style="text-align:left;">
-                    @tslt.ToString()
-                </td>
+        <tr>
+            <td style="text-align:left;">
+                @Html.DisplayFor(modelItem => item.DESCRIPCION)
+            </td>
+            <td style="text-align:left;">
+                @Html.DisplayFor(modelItem => item.GRUPO_ALL)
+            </td>
+            <td style="text-align:left;">
+                @tslt.ToString()
+            </td>
+           
+                @if ((bool)item.ACTIVO == true)
+                {
+                <td style="align-items:center"><i class='material-icons green-text'>check</i></td>
+            }
+            else
+            {
+                <td style="align-items:center;"><i class='material-icons red-text'>clear</i></td>
+            }
+               
                 <td>
                     <a data-form-method="post" href="@Url.Action("Edit", "Gall", new { id = item.ID })">
                         <i class='material-icons green-text'>edit</i>
