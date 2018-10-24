@@ -728,21 +728,28 @@
         }
     }
 
+   
     //LEJ 13.07.2018-----------------------------------------------------
     $('.btnEnviar').on("click", function (e) {
         //var _xfile = document.getElementById("file_carta").files.length;
         var msg = "";
         var ban = 0;
+        var existeCarta = ($(".cpC").find($("input[type=checkbox]")).length>0);
         if (document.getElementById("file_carta").files.length > 0) {
             var inputs = $(".cpC").find($("input[type=checkbox]"));
             if (ligada()) {
                 ban++;
-                //var _pTb = _xid.split('b');
-                //var tt = $("#Tt-" + _pTb[1]).text();
-                //var arrTt = tt.split('-');
-                //$("#pos").val(tt[0]);
                 $('#btn_guardar').click();
-            } else {
+            } else if (!existeCarta) {
+                msg = "Favor de Generar la carta.";
+                M.toast({
+                    classes: "validarDis",
+                    displayLength: 1000000,
+                    html: '<span style="padding-right:15px;"><i class="material-icons yellow-text">info</i></span> ' + msg
+                    + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'validarDis\')">Aceptar</button>'
+                });
+                return;
+            }else {
                 $(".cpC :input[type=checkbox]").each(function () {
                     var _xid = $(this).attr('id');
                     var checkedTrue = $('#' + _xid + ':checked').length > 0;
@@ -758,13 +765,30 @@
             }
             if (ban == 0) {
                 msg = "Seleccionar una Distribucion";
-                M.toast({ html: msg })
+                M.toast({
+                    classes: "validarDis",
+                    displayLength: 1000000,
+                    html: '<span style="padding-right:15px;"><i class="material-icons yellow-text">info</i></span> ' + msg
+                    + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'validarDis\')">Aceptar</button>'
+                });
                 document.getElementById("loader").style.display = "none"; //LEJ 13.07.2018
             }
         } else {
             msg = "Favor de subir archivo";
-            M.toast({ html: msg })
+            M.toast({
+                classes: "validarDis",
+                displayLength: 1000000,
+                html: '<span style="padding-right:15px;"><i class="material-icons yellow-text">info</i></span> ' + msg
+                + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'validarDis\')">Aceptar</button>'
+            });
             document.getElementById("loader").style.display = "none"; //LEJ 13.07.2018
         }
     });
 });
+function dismiss(classe) {
+    var toastElement = document.querySelectorAll('.' + classe);
+    for (var i = 0; i < toastElement.length; i++) {
+        var toastInstance = M.Toast.getInstance(toastElement[i]);
+        toastInstance.dismiss();
+    }
+}

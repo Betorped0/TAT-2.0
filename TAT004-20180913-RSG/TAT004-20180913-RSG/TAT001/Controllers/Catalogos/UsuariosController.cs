@@ -195,6 +195,7 @@ namespace TAT001.Controllers.Catalogos
                                     }
                                 }
                                 u.ACTIVO = true;
+                                u.ID.Trim();
                                 db.USUARIOs.Add(u);
 
                                 ////MIEMBRO m = new MIEMBRO();
@@ -865,7 +866,7 @@ namespace TAT001.Controllers.Catalogos
                 us.BUNITX = true;
                 us.PUESTO_ID = da.PUESTO_ID.ToString();
                 us.PUESTO_IDX = true;
-                us.ID = da.ID;
+                us.ID = da.ID.Replace(" ", "");
                 us.IDX = true;
                 us.NOMBRE = da.NOMBRE;
                 us.APELLIDO_P = da.APELLIDO_P;
@@ -875,7 +876,7 @@ namespace TAT001.Controllers.Catalogos
                 us.SPRAS_ID = da.SPRAS_ID;
                 us.SPRAS_IDX = true;
                 us.PASS = da.PASS;
-
+                
                 int pues = 0;
                 string men = ". Error en el nivel<br/>";
                 if (us.PUESTO_ID != null && us.PUESTO_ID != "")
@@ -925,7 +926,6 @@ namespace TAT001.Controllers.Catalogos
                     //Usuario nuevo con cliente
                     if (vus == false)
                     {
-                        PAI pa = null;
                         ////-------------------------------CLIENTE
                         CLIENTE k = db.CLIENTEs.Where(cc => cc.KUNNR.Equals(us.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
                         if (k == null)
@@ -1083,6 +1083,7 @@ namespace TAT001.Controllers.Catalogos
                             }
 
                         }
+                        messa = "";
                         client[cont2, 1] = da.ID;
                         us.mess = da.mess;
                         tablas[cont2, 10] = messa;
@@ -1249,6 +1250,7 @@ namespace TAT001.Controllers.Catalogos
                             }
 
                         }
+                        messa = "";
                         admins[cont3, 1] = da.ID;
                         usuariosoc[cont4, 1] = da.ID.ToString();
                         us.mess = da.mess;
@@ -1908,7 +1910,7 @@ namespace TAT001.Controllers.Catalogos
                 us.BUNITX = true;
                 us.PUESTO_ID = da.PUESTO_ID.ToString();
                 us.PUESTO_IDX = true;
-                us.ID = da.ID;
+                us.ID = da.ID.Replace(" ", "");
                 us.IDX = true;
                 us.NOMBRE = da.NOMBRE;
                 us.APELLIDO_P = da.APELLIDO_P;
@@ -2127,6 +2129,7 @@ namespace TAT001.Controllers.Catalogos
                             }
 
                         }
+                        messa = "";
                         client[cont2, 1] = da.ID;
                         us.mess = da.mess;
                         tablas[cont2, 10] = messa;
@@ -2293,6 +2296,7 @@ namespace TAT001.Controllers.Catalogos
                             }
 
                         }
+                        messa = "";
                         admins[cont3, 1] = da.ID;
                         usuariosoc[cont4, 1] = da.ID.ToString();
                         us.mess = da.mess;
@@ -2340,7 +2344,7 @@ namespace TAT001.Controllers.Catalogos
                 {
                     if (da.ID != null)
                     {
-                        us.ID = da.ID;
+                        us.ID = da.ID.Trim();
                         us.PASS = da.PASS;
                         us.NOMBRE = da.NOMBRE;
                         us.APELLIDO_P = da.APELLIDO_P;
@@ -2366,7 +2370,7 @@ namespace TAT001.Controllers.Catalogos
             {
                 USUARIOF uf = new USUARIOF();
 
-                uf.USUARIO_ID = da.ID;
+                uf.USUARIO_ID = da.ID.Trim();
                 uf.VKORG = da.VKORG;
                 uf.VTWEG = da.VTWEG;
                 uf.SPART = da.SPART;
@@ -2391,7 +2395,7 @@ namespace TAT001.Controllers.Catalogos
                 {
                     if (da.ID != null)
                     {
-                        us.ID = da.ID;
+                        us.ID = da.ID.Trim();
                         us.PASS = da.PASS;
                         us.NOMBRE = da.NOMBRE;
                         us.APELLIDO_P = da.APELLIDO_P;

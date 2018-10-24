@@ -20,6 +20,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Index()
         {
             int pagina = 721; //ID EN BASE DE DATOS
+            int pagina2 = 881;
             using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
@@ -29,9 +30,9 @@ namespace TAT001.Controllers.Catalogos
                 ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
                 ViewBag.usuario = user;
                 ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina2)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina2) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
 
                 try
                 {
@@ -46,14 +47,14 @@ namespace TAT001.Controllers.Catalogos
                 Session["spras"] = user.SPRAS_ID;
                 ViewBag.lan = user.SPRAS_ID;
             }
-            var tALLs = db.TALLs.Where(a => a.ACTIVO == true).Include(t => t.GALL);
+            var tALLs = db.TALLs.Include(t => t.GALL);
             return View(tALLs.ToList());
         }
 
         // GET: TALLs/Details/5
         public ActionResult Details(string id)
         {
-            int pagina = 722; //ID EN BASE DE DATOS
+            int pagina = 882; //ID EN BASE DE DATOS
             using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
@@ -130,20 +131,15 @@ namespace TAT001.Controllers.Catalogos
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,DESCRIPCION,FECHAI,FECHAF,GALL_ID,ACTIVO,GRUPO_ALL")] TALL tALL)
-        {
-            //if (ModelState.IsValid)
-            //{
-            //    db.TALLs.Add(tALL);
-            //    db.SaveChanges();
-            //    return RedirectToAction("Index");
-            //}
+        public ActionResult Create([Bind(Include = "ID,DESCRIPCION,FECHAI,FECHAF,GALL_ID,ACTIVO")] TALL tALL)
+        {       
             if (ModelState.IsValid)
             {
                 //TSOPORTE TS = new TSOPORTE();
-                tALL.ACTIVO = true;
+               
                 tALL.FECHAI = DateTime.Today;
                 tALL.FECHAF = DateTime.MaxValue;
+                tALL.ACTIVO = true;
                 db.TALLs.Add(tALL);
                 db.SaveChanges();
                 List<SPRA> ss = db.SPRAS.ToList();
@@ -160,19 +156,7 @@ namespace TAT001.Controllers.Catalogos
                 return RedirectToAction("Index");
             }
         
-            //List<SPRA> ss = db.SPRAS.ToList();
-
-            //foreach (SPRA s in ss)
-            //{
-            //    TALLT pt = new TALLT();
-            //    pt.TALL_ID = tALL.ID;
-            //    pt.SPRAS_ID = s.ID;
-            //    pt.TXT50 = tALL.DESCRIPCION;
-            //    db.TALLTs.Add(pt);
-
-            //db.SaveChanges();
-            //    return RedirectToAction("Index");
-            
+          
             int pagina = 723; //ID EN BASE DE DATOS
             using (TAT001Entities db = new TAT001Entities())
             {
@@ -257,6 +241,11 @@ namespace TAT001.Controllers.Catalogos
         {
             if (ModelState.IsValid)
             {
+                tALL.ACTIVO = tALL.ACTIVO;
+                var fecha = from a in db.TALLs where a.ID == tALL.ID select a.FECHAI;
+                tALL.FECHAI = fecha.FirstOrDefault();
+                tALL.FECHAF = DateTime.MaxValue;
+                db.Entry(tALL).State = EntityState.Modified;
 
                 foreach (SPRA spr in db.SPRAS.ToList())
                 {

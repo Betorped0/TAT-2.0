@@ -135,6 +135,10 @@ function loadExcelDis(file) {
                     var spr = dataj.SPRAS_ID;
                     var ema = dataj.EMAIL;
                     var bor = i;
+                    var mes = dataj.mess;
+
+                    if (mes == null)
+                        mes = "";
 
                     //identificacion de error
                     if (cli.indexOf('?') != -1) {
@@ -162,7 +166,7 @@ function loadExcelDis(file) {
                         var emax = true;
                     }//Termina identificacion
 
-                    var addedRow = addRow(table, dataj.POS, bor, cli, com, niv, usc, dataj.NOMBRE, dataj.APELLIDO_P, dataj.APELLIDO_M, ema, spr, dataj.PASS, dataj.mess);
+                    var addedRow = addRow(table, dataj.POS, bor, cli, com, niv, usc, dataj.NOMBRE, dataj.APELLIDO_P, dataj.APELLIDO_M, ema, spr, dataj.PASS, mes);
 
                     var cols = addedRow.cells[1];
                     if (clix == true) {
@@ -300,7 +304,7 @@ function Actualizar() {
     var message = $('.input_mes').serialize();
     var doc = sessionStorage.getItem("num");
     if (doc > 0) {
-        if (message.indexOf('duplicado') > -1) {
+        if (message.indexOf('existe') > -1) {
             $.ajax({
                 type: "POST",
                 url: 'Actualizar',
@@ -348,6 +352,10 @@ function creart(metodo, datos) {
                     var ema = dataj.EMAIL;
                     var bor = i;
                     var clix = false;
+                    var mes = dataj.mess;
+
+                    if (mes == null)
+                        mes = "";
 
                     //identificacion de error
                     if (cli.indexOf('?') != -1) {
@@ -375,7 +383,7 @@ function creart(metodo, datos) {
                         var emax = true;
                     }//Termina identificacion
 
-                    var addedRow = addRow(table, dataj.POS, bor, cli, com, niv, usc, dataj.NOMBRE, dataj.APELLIDO_P, dataj.APELLIDO_M, ema, spr, dataj.PASS, dataj.mess);
+                    var addedRow = addRow(table, dataj.POS, bor, cli, com, niv, usc, dataj.NOMBRE, dataj.APELLIDO_P, dataj.APELLIDO_M, ema, spr, dataj.PASS, mes);
 
                     var cols = addedRow.cells[1];
                     if (clix == true) {

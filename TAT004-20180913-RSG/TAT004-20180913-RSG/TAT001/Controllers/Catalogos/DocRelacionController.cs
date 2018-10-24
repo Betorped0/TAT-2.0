@@ -246,24 +246,10 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Edit([Bind(Include = "SOCIEDAD_ID,PAIS_ID,TSOL,FACTURA,FECHA,PROVEEDOR,CONTROL,AUTORIZACION,VENCIMIENTO,FACTURAK,EJERCICIOK,BILL_DOC,BELNR,IMPORTE_FAC,PAYER,DESCRIPCION,SOCIEDAD,ACTIVO")] FACTURASCONF fACTURASCONF)
         {
             if (ModelState.IsValid)
-            {
-         
-
+            {       
                 db.Entry(fACTURASCONF).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index"/*, new*/
-                //{
-                //    id = fACTURASCONF.FACTURA,
-                //    fACTURASCONF.FECHA,
-                //    fACTURASCONF.PROVEEDOR,
-                //    fACTURASCONF.CONTROL,
-                //    fACTURASCONF.AUTORIZACION,
-                //    fACTURASCONF.VENCIMIENTO,
-                //    fACTURASCONF.FACTURAK,
-                //    fACTURASCONF.EJERCICIOK,
-                //    fACTURASCONF.BILL_DOC,
-                //    fACTURASCONF.BELNR
-                );
+                return RedirectToAction("Index");
             }
 
             int pagina = 1213; //ID EN BASE DE DATOS

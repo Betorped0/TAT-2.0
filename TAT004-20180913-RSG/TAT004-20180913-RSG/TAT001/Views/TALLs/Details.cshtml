@@ -1,62 +1,70 @@
 ﻿@model TAT001.Entities.TALL
 
 @{
-    ViewBag.Title = "Details";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.pagina_r = 502;
+    ViewBag.pagina_r = 882;
     ViewBag.carpeta_r = 500;
+    //ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<TAT001.Entities.SPRA> spras = ViewBag.SPRAS as List<TAT001.Entities.SPRA>;
+    List<TAT001.Entities.TALLT> lstTXT = new List<TAT001.Entities.TALLT>();
+    List<TAT001.Entities.SPRA> spras2 = new List<TAT001.Entities.SPRA>();
+    foreach (var item in Model.TALLTs)
+    {
+        TAT001.Entities.TALLT txt = new TAT001.Entities.TALLT();
+        txt.SPRAS_ID = item.SPRAS_ID;
+        txt.TALL_ID = item.TALL_ID;
+        txt.TXT50 = item.TXT50;
+        lstTXT.Add(txt);
+    }
 }
 
-<h2>Details</h2>
+<div class="row">
+    <div class="col s6 ">
+        <div class="card-panel">
+            <div class="row">
+                <div class="input-field col s12">
+                    @Html.LabelFor(model => model.DESCRIPCION, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblDes" })
+                    @Html.EditorFor(model => model.DESCRIPCION, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                    @Html.ValidationMessageFor(model => model.DESCRIPCION, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col s6 ">
+        <div class="card-panel">
+            <div class="row">
+                @foreach (var item in Model.TALLTs)
+                {
+                    <div class=" input-field col s12">
+                        @Html.EditorFor(modelItem => item.TXT50, null, item.TXT50, new { htmlAttributes = new { @id = "A" + item.SPRAS_ID, @readonly = "readonly" } })
+                        <label for="@("A"+item.TXT50)">@item.SPRA.DESCRIPCION</label>
+                    </div>
+                }
+                @foreach (var item in spras2)
+                {
+                    <div class=" input-field col s12 pr1">
+                        @Html.Editor("Editor", null, "txval", new { htmlAttributes = new { @readonly = "readonly" } })
+                        <label for="Editor">@item.DESCRIPCION</label>
+                    </div>
+                }
+            </div>
 
-<div>
-    <h4>TALL</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.DESCRIPCION)
-        </dt>
+            <div class="right">
+                @Html.LabelFor(model => model.ACTIVO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblObliga" })
 
-        <dd>
-            @Html.DisplayFor(model => model.DESCRIPCION)
-        </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.FECHAI)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.FECHAI)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.FECHAF)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.FECHAF)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ACTIVO)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ACTIVO)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.GALL.DESCRIPCION)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.GALL.DESCRIPCION)
-        </dd>
-
-    </dl>
+                @if ((bool)Model.ACTIVO == true)
+                {
+                    <i class='material-icons green-text'>check</i>}
+                else
+                {
+                    <i class='material-icons red-text'>clear</i>}
+            </div>
+        </div>
+    </div>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }, new { id = "lblEditar" }) |
+    @Html.ActionLink("Back to List", "Index", null, new { id = "lblRegresar" })
 </p>

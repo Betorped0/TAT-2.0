@@ -10,7 +10,7 @@ var proverror = "";//B20180625 MGC 2018.06.27
 var importe_fac = 0; // jemo 25-07-2018
 $(document).ready(function () {
     $.ajax({
-        url: "../Listas/TipoRecurrencia",
+        url: root+"Listas/TipoRecurrencia",
         type: "POST",
         async: true,
         timeout: 30000,
@@ -860,7 +860,7 @@ $(document).ready(function () {
                 else if (_decimales === ',') {
                     $('#tipo_cambio').val("$" + tc.replace('.', ','));
                 }
-                var monto = mt * tc;
+                var monto = mt / tc;
                 monto = parseFloat(monto).toFixed(2);
                 //$('#monto_doc_ml2').val(monto);
                 // $('#montos_doc_ml2').val(monto);
@@ -5474,18 +5474,22 @@ function asignCity(valu) {
         $('#citys_id').val(iNum);
     }
 }
-
 function selectCliente(valu) {
     if (valu != "") {
         document.getElementById("loader").style.display = "flex";//RSG 03.07.2018
+
         $.ajax({
             type: "POST",
-            url: 'SelectCliente',
+            url: root + 'Listas/SelectCliente',
             data: { "kunnr": valu },
-
             success: function (data) {
 
+                document.getElementById("loader").style.display = "none";//RSG 03.07.2018
                 if (data !== null || data !== "") {
+                    if (data.MANAGER != null) {
+                        $("label[for='USUARIO_MANAGER']").addClass("active");
+                        $('#USUARIO_MANAGER').val(data.MANAGER);
+                    }
                     $('#cli_name').val(data.NAME1);
                     $("label[for='cli_name']").addClass("active");
                     $('#vkorg').val(data.VKORG).focus();
@@ -5496,13 +5500,7 @@ function selectCliente(valu) {
                     $("label[for='stcd1']").addClass("active");
                     $('#vtweg').val(data.VTWEG);
                     $("label[for='vtweg']").addClass("active");
-                    //Si la solicitud es una relacionada, obtener el nombre y email del contacto almacenado en DOCUMENTO
-                    if (!$('#payer_id').hasClass("prelacionada")) {
-                        ////$('#payer_nombre').val(data.PAYER_NOMBRE);//RSG 01.08.2018
-                        ////$("label[for='payer_nombre']").addClass("active");
-                        ////$('#payer_email').val(data.PAYER_EMAIL);
-                        ////$("label[for='payer_email']").addClass("active");
-                    }
+
                     $("#txt_vkorg").val(data.VKORG);//RSG 05.07.2018
                     $("#txt_vtweg").val(data.VTWEG2);//RSG 05.07.2018
                     //RSG 28.05.2018------------------------------------------
@@ -5511,66 +5509,49 @@ function selectCliente(valu) {
                         llenaCat(data.VKORG, data.VTWEG, data.SPART, valu);
                         getCatMateriales(data.VKORG, data.VTWEG, data.SPART, valu);
                     }
+
                     //RSG 28.05.2018------------------------------------------
                 } else {
-                    $('#cli_name').val("");
-                    $("label[for='cli_name']").removeClass("active");
-                    $('#vkorg').val("").focus();
-                    $("label[for='vkorg']").removeClass("active");
-                    $('#parvw').val("").focus();
-                    $("label[for='parvw']").removeClass("active");
-                    $('#stcd1').val("");
-                    $("label[for='stcd1']").removeClass("active");
-                    $('#vtweg').val("");
-                    $("label[for='vtweg']").removeClass("active");
-                    $('#payer_nombre').val("");
-                    $("label[for='payer_nombre']").removeClass("active");
-                    $('#payer_email').val("");
-                    $("label[for='payer_email']").removeClass("active");
+                    limpiarCliente();
                     $("#txt_vkorg").val("");//RSG 05.07.2018
                     $("#txt_vtweg").val("");//RSG 05.07.2018
+                    $("#payer_nombre").trigger('change');
+                    $("#payer_email").trigger('change');
+                    document.getElementById("loader").style.display = "none";//RSG 03.07.2018
                 }
-
-                document.getElementById("loader").style.display = "none";//RSG 03.07.2018
             },
             error: function (data) {
-                $('#cli_name').val("");
-                $("label[for='cli_name']").removeClass("active");
-                $('#vkorg').val("").focus();
-                $("label[for='vkorg']").removeClass("active");
-                $('#parvw').val("").focus();
-                $("label[for='parvw']").removeClass("active");
-                $('#stcd1').val("");
-                $("label[for='stcd1']").removeClass("active");
-                $('#vtweg').val("");
-                $("label[for='vtweg']").removeClass("active");
-                $('#payer_nombre').val("");
-                $("label[for='payer_nombre']").removeClass("active");
-                $('#payer_email').val("");
-                $("label[for='payer_email']").removeClass("active");
+                limpiarCliente();
                 document.getElementById("loader").style.display = "none";//RSG 03.07.2018
                 $("#txt_vkorg").val("");//RSG 05.07.2018
                 $("#txt_vtweg").val("");//RSG 05.07.2018
+                $("#payer_nombre").trigger('change');
+                $("#payer_email").trigger('change');
             },
             async: true
         });
     } else {
-        $('#cli_name').val("");
-        $("label[for='cli_name']").removeClass("active");
-        $('#vkorg').val("").focus();
-        $("label[for='vkorg']").removeClass("active");
-        $('#parvw').val("").focus();
-        $("label[for='parvw']").removeClass("active");
-        $('#stcd1').val("");
-        $("label[for='stcd1']").removeClass("active");
-        $('#vtweg').val("");
-        $("label[for='vtweg']").removeClass("active");
-        $('#payer_nombre').val("");
-        $("label[for='payer_nombre']").removeClass("active");
-        $('#payer_email').val("");
-        $("label[for='payer_email']").removeClass("active");
+        limpiarCliente();
     }
 
+}
+function limpiarCliente() {
+    $("label[for='USUARIO_MANAGER']").removeClass("active");
+    $('#USUARIO_MANAGER').val("");
+    $('#cli_name').val("");
+    $("label[for='cli_name']").removeClass("active");
+    $('#vkorg').val("").focus();
+    $("label[for='vkorg']").removeClass("active");
+    $('#parvw').val("").focus();
+    $("label[for='parvw']").removeClass("active");
+    $('#stcd1').val("");
+    $("label[for='stcd1']").removeClass("active");
+    $('#vtweg').val("");
+    $("label[for='vtweg']").removeClass("active");
+    $('#payer_nombre').val("");
+    $("label[for='payer_nombre']").removeClass("active");
+    $('#payer_email').val("");
+    $("label[for='payer_email']").removeClass("active");
 }
 
 function getCatMateriales(vkorg, vtweg, spart, kunnr) {

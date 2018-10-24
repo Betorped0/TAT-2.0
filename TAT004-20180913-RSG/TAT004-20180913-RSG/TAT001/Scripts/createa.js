@@ -118,6 +118,10 @@ function selectMaterial(val, desc, tr) {
 }
 
 $('body').on('keydown.autocomplete', '.input_proveedor', function () {
+    var kunnr=document.getElementById('payer_id').value;
+    if (!kunnr) {
+        return;
+    }
     var tr = $(this).closest('tr'); //Obtener el row
     auto(this).autocomplete({
         source: function (request, response) {
@@ -125,7 +129,7 @@ $('body').on('keydown.autocomplete', '.input_proveedor', function () {
                 type: "POST",
                 url: 'proveedores',
                 dataType: "json",
-                data: { "Prefix": request.term },
+                data: { "Prefix": request.term, kunnr: kunnr },
                 success: function (data) {
                     response(auto.map(data, function (item) {
                         return { label: item.ID + " - " + item.NOMBRE, value: item.ID };

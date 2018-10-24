@@ -280,7 +280,7 @@ $(document).ready(function () {
                                         else
                                         {
                                             @*//MGC B20180611 se elimina clasificación*@
-                                            <input type="hidden" value="@Model.TALL_ID" id="tall_id" /><!--RSG 23.05.2018-->
+                                            @Html.HiddenFor(model=>model.TALL_ID,  new { @id = "tall_id" })
                                             <input type="text" value="@ViewBag.TALL_IDI" disabled="disabled" />
                                         }
                                     </div>
@@ -295,7 +295,7 @@ $(document).ready(function () {
                                     <div class="form-group">
                                         @Html.LabelFor(model => model.SOCIEDAD_ID, "Co. Code", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_sociedad" })@*B20180801 MGC Textos*@
                                         <div class="col-md-10">
-                                            @Html.EditorFor(model => model.SOCIEDAD_ID, new { htmlAttributes = new { @id = "sociedad_id", @class = "form-control", @disabled = "disabled" } })
+                                            @Html.EditorFor(model => model.SOCIEDAD_ID, new { htmlAttributes = new { @id = "sociedad_id", @class = "form-control", @readonly = true } })
                                         </div>
                                     </div>
                                 </div>
