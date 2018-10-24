@@ -7285,7 +7285,7 @@ namespace TAT001.Controllers
             //RSG 07.06.2018---------------------------------------------
             mat = new Cadena().completaMaterial(mat);
             //RSG 07.06.2018---------------------------------------------
-            string spras = Session["spras"].ToString();
+            string spras = FnCommon.ObtenerSprasId(db,User.Identity.Name);
             MaterialVal matt = db.MATERIALTs.Where(m => m.MATERIAL_ID == mat && m.SPRAS == spras).Select(m => new MaterialVal { ID = m.MATERIAL_ID.ToString(), MATKL_ID = m.MATERIAL.MATERIALGP_ID.ToString(), MAKTX = m.MAKTX.ToString() }).FirstOrDefault();
             if (matt == null)
                 matt = db.MATERIALs.Where(m => m.ID == mat).Select(m => new MaterialVal { ID = m.ID.ToString(), MATKL_ID = m.MATERIALGP_ID.ToString(), MAKTX = m.MAKTX.ToString() }).FirstOrDefault();
