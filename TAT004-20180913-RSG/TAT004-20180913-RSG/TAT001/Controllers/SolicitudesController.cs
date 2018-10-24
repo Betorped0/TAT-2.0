@@ -5955,7 +5955,8 @@ namespace TAT001.Controllers
                 {
                     //Obtener el historial de compras de los clientesd
                     var matt = matl.ToList();
-                    var pres = db.PRESUPSAPPs.Where(a => a.VKORG.Equals(vkorg) & a.SPART.Equals(spart) & a.KUNNR == kunnr & (a.GRSLS != null | a.NETLB != null)).ToList();
+                    var pres = db.PRESUPSAPPs.Where(a => a.VKORG.Equals(vkorg) & a.SPART.Equals(spart) & a.KUNNR == kunnr 
+                    & (a.GRSLS != null | a.NETLB != null)).ToList();
 
                     var cat = db.MATERIALGPs.Where(a => a.ACTIVO == true).ToList();
 
@@ -5965,22 +5966,15 @@ namespace TAT001.Controllers
                         if (conf.CAMPO == "GRSLS")
                         {
                             jd = (from ps in pres
-                                  join cl in cie
-                                  on ps.KUNNR equals cl.KUNNR
                                   join m in matt
                                   on ps.MATNR equals m.ID
                                   join mk in cat
                                   on m.MATERIALGP_ID equals mk.ID
-                                  where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) &&
-                                  (ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART //&& ps.VKBUR == cl.VKBUR &&
-                                                                                                        //ps.VKGRP == cl.VKGRP && ps.BZIRK == cl.BZIRK
-                                  ) && ps.BUKRS == soc_id
-                                  && ps.GRSLS > 0
+                                  where ps.BUKRS == soc_id && ps.GRSLS > 0
                                   select new DOCUMENTOM_MOD
                                   {
                                       ID_CAT = m.MATERIALGP_ID,
                                       MATNR = ps.MATNR,
-                                      //mk.TXT50
                                       VAL = Convert.ToDecimal(ps.GRSLS),
                                       EXCLUIR = mk.EXCLUIR //RSG 09.07.2018 ID167
                                   }).ToList();
@@ -5988,23 +5982,16 @@ namespace TAT001.Controllers
                         else
                         {
                             jd = (from ps in pres
-                                  join cl in cie
-                                  on ps.KUNNR equals cl.KUNNR
                                   join m in matt
                                   on ps.MATNR equals m.ID
                                   join mk in cat
                                   on m.MATKL_ID equals mk.ID
                                   where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) &&
-                                  (ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART //&& ps.VKBUR == cl.VKBUR &&
-                                                                                                        //ps.VKGRP == cl.VKGRP && ps.BZIRK == cl.BZIRK
-                                  ) && ps.BUKRS == soc_id
-                                  && ps.NETLB > 0
+                                  ps.BUKRS == soc_id && ps.NETLB > 0
                                   select new DOCUMENTOM_MOD
                                   {
                                       ID_CAT = m.MATERIALGP_ID,
                                       MATNR = ps.MATNR,
-                                      //mk.TXT50
-
                                       VAL = Convert.ToDecimal(ps.NETLB),
                                       EXCLUIR = mk.EXCLUIR //RSG 09.07.2018 ID167
                                   }).ToList();
