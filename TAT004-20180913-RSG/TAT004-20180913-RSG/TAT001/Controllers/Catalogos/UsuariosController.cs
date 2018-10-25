@@ -2558,7 +2558,7 @@ namespace TAT001.Controllers.Catalogos
             var cli = Request["cli"];
             var usc = Request["usc"];
             var uscx = true;
-
+            int rowst = 0;
             //Busqueda de clientes
             if (cli != null && cli != "")
             {
@@ -2595,7 +2595,7 @@ namespace TAT001.Controllers.Catalogos
                             ul.BUNIT = com;
                         com = (from x in db.USUARIOFs where x.USUARIO_ID.Equals(us) & x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO_ID).FirstOrDefault();
                         if (com != null)
-                            ul.ID = com;
+                            ul.ID = com + "?";
                         com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.PUESTO_ID).FirstOrDefault().ToString();
                         if (com != null)
                             ul.PUESTO_ID = com;
@@ -2614,7 +2614,8 @@ namespace TAT001.Controllers.Catalogos
                         com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.SPRAS_ID).FirstOrDefault();
                         if (com != null)
                             ul.SPRAS_ID = com;
-
+                        ul.mess = "1. El usuario ya existe<br/>";
+                        rowst++;
                         cc.Add(ul);
                     }
                 }
@@ -2672,7 +2673,7 @@ namespace TAT001.Controllers.Catalogos
                                 ul.BUNIT = com;
                             com = (from x in db.USUARIOs where x.ID.Equals(usc) & x.ACTIVO == true select x.ID).FirstOrDefault();
                             if (com != null)
-                                ul.ID = com;
+                                ul.ID = com + "?";
                             com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.PUESTO_ID).FirstOrDefault().ToString();
                             if (com != null)
                                 ul.PUESTO_ID = com;
@@ -2691,7 +2692,8 @@ namespace TAT001.Controllers.Catalogos
                             com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.SPRAS_ID).FirstOrDefault();
                             if (com != null)
                                 ul.SPRAS_ID = com;
-
+                            ul.mess = "1. El usuario ya existe<br/>";
+                            rowst++;
                             cc.Add(ul);
                         }
                     }
@@ -2762,6 +2764,22 @@ namespace TAT001.Controllers.Catalogos
                     ul.mess = "El usuario no existe";
                 }
             }
+
+            int cont2 = rowst;
+            int cont3 = rowst;
+            string[,] tablas = new string[rowst, 11];
+            string[,] client = new string[rowst, 2];
+            string[,] tabla1 = new string[rowst, 11];
+            string[,] admins = new string[rowst, 2];
+            string[,] usuariosoc = new string[rowst, 2];
+
+            Session["tablas"] = tablas;
+            Session["tabla1"] = tabla1;
+            Session["usuariosoc"] = usuariosoc;
+            Session["client"] = client;
+            Session["admins"] = admins;
+            Session["rowst"] = cont2;
+            Session["rows1"] = cont3;
 
             JsonResult jl = Json(cc, JsonRequestBehavior.AllowGet);
             return jl;

@@ -718,9 +718,8 @@ function creart(metodo, datos) {
                         $(cols).addClass("red");
                     }
                 });
-                $('#table_dis').css("font-size", "12px");
-                $('#table_dis').css("display", "table");
-                $('#tfoot_dis').css("display", "table-footer-group");
+                $('#table').css("font-size", "12px");
+                $('#table').css("display", "table");
                 document.getElementById("loader").style.display = "none";
             }
         },

@@ -268,13 +268,13 @@ function Carga() {
                     //alert(request.responseText);
                 }
             });
-            mostrarAlerta("info", "A", "Se agregaron los nuevos usuarios" );
+            mostrarAlerta("info", "A", "Se agregaron los nuevos usuarios");
             //M.toast({ html: 'Se agregaron los nuevos usuarios' });
-            window.location = root+"Usuarios/Index";
+            window.location = root + "Usuarios/Index";
         }
         else
             mostrarAlerta("info", "E", "Hay errores por corregir");
-            //M.toast({ html: 'Hay errores por corregir' });
+        //M.toast({ html: 'Hay errores por corregir' });
     }
     else
         mostrarAlerta("info", "E", "Seleccione un archivo");
@@ -302,32 +302,26 @@ function Borrar() {
 
 function Actualizar() {
     var message = $('.input_mes').serialize();
-    var doc = sessionStorage.getItem("num");
-    if (doc > 0) {
-        if (message.indexOf('existe') > -1) {
-            $.ajax({
-                type: "POST",
-                url: 'Actualizar',
-                data: null,
-                dataType: "json",
-                success: function () {
+    if (message.indexOf('existe') > -1) {
+        $.ajax({
+            type: "POST",
+            url: 'Actualizar',
+            data: null,
+            dataType: "json",
+            success: function () {
 
-                },
-                error: function (request, status, error) {
-                    //alert(request.responseText);
-                }
-            });
-            mostrarAlerta("info", "A", "Se actualizaron los usuarios")
-            //M.toast({ html: 'Se actualizaron los usuarios' });
-            window.location = root + "Usuarios/Index";
-        }
-        else
-            mostrarAlerta("info", "E", "No hay usuarios por actualizar")
-            //M.toast({ html: 'No hay usuarios por actualizar' });
+            },
+            error: function (request, status, error) {
+                //alert(request.responseText);
+            }
+        });
+        mostrarAlerta("info", "A", "Se actualizaron los usuarios")
+        //M.toast({ html: 'Se actualizaron los usuarios' });
+        window.location = root + "Usuarios/Index";
     }
     else
-        mostrarAlerta("info", "E", "Seleccione un archivo")
-        //M.toast({ html: 'Seleccione un archivo' });
+        mostrarAlerta("info", "E", "No hay usuarios por actualizar")
+        //M.toast({ html: 'No hay usuarios por actualizar' });
 }
 
 function creart(metodo, datos) {
