@@ -2571,7 +2571,6 @@ function validaErrores(h1, h2, h3, h4, h5, num_doc) {
             var num_docH1 = $(rowH1).children().eq(1).children().val();
 
             if (num_docH1 == num_doc) {
-                console.log($(rowH1).children().eq(0).children().attr("class"));
                 $(rowH1).children().eq(0).children().removeClass("red");
                 $(rowH1).children().eq(0).children().addClass("green");
                 $(rowH1).children().eq(0).children().text("done");
@@ -2583,7 +2582,6 @@ function validaErrores(h1, h2, h3, h4, h5, num_doc) {
             var num_docH2 = $(rowH2).children().eq(1).children().val();
 
             if (num_docH2 == num_doc) {
-                console.log($(rowH2).children().eq(0).children().attr("class"));
                 $(rowH2).children().eq(0).children().removeClass("red");
                 $(rowH2).children().eq(0).children().addClass("green");
                 $(rowH2).children().eq(0).children().text("done");
@@ -2595,7 +2593,6 @@ function validaErrores(h1, h2, h3, h4, h5, num_doc) {
             var num_docH3 = $(rowH3).children().eq(1).children().val();
 
             if (num_docH3 == num_doc) {
-                console.log($(rowH3).children().eq(0).children().attr("class"));
                 $(rowH3).children().eq(0).children().removeClass("red");
                 $(rowH3).children().eq(0).children().addClass("green");
                 $(rowH3).children().eq(0).children().text("done");
@@ -2607,7 +2604,6 @@ function validaErrores(h1, h2, h3, h4, h5, num_doc) {
             var num_docH4 = $(rowH4).children().eq(1).children().val();
 
             if (num_docH4 == num_doc) {
-                console.log($(rowH4).children().eq(0).children().attr("class"));
                 $(rowH4).children().eq(0).children().removeClass("red");
                 $(rowH4).children().eq(0).children().addClass("green");
                 $(rowH4).children().eq(0).children().text("done");
@@ -2851,7 +2847,75 @@ function guardaDatos() {
         dataType: "json",
         data: { "h1": tabla1, "h2": tabla2, "h3": tabla3, "h4": tabla4, "h5": tabla5 },
         success: function (data) {
-            var kk = data;
+            if (data != null | data != "") {
+                var eliminarId = [];
+
+                eliminarId = data;
+                var tablaH1 = $('#tab_test1').DataTable();
+                var tablaH2 = $('#tab_test2').DataTable();
+                var tablaH3 = $('#tab_test3').DataTable();
+                var tablaH4 = $('#tab_test4').DataTable();
+                var tablaH5 = $('#tab_test5').DataTable();
+
+                for (var su = 0; su < eliminarId.length; su++) {
+                    var num_doc = eliminarId[su];
+
+                    for (var a = 0; a < tablaH1.rows().data().length; a++) {
+                        var rowH1 = tablaH1.row(a).node();
+                        var rowH11 = tablaH1.row(a);
+                        var num_docH1 = $(rowH1).children().eq(1).children().val();
+
+                        if (num_doc == num_docH1) {
+                            rowH11.remove().draw();
+                            //rowH1.remove();
+                        }
+                    }
+
+                    for (var b = 0; b < tablaH2.rows().data().length; b++) {
+                        var rowH2 = tablaH2.row(b).node();
+                        var rowH22 = tablaH2.row(b);
+                        var num_docH2 = $(rowH2).children().eq(1).children().val();
+
+                        if (num_doc == num_docH2) {
+                            rowH22.remove().draw();
+                            //rowH2.remove();
+                        }
+                    }
+
+                    for (var c = 0; c < tablaH3.rows().data().length; c++) {
+                        var rowH3 = tablaH3.row(c).node();
+                        var rowH33 = tablaH3.row(c);
+                        var num_docH3 = $(rowH3).children().eq(1).children().val();
+
+                        if (num_doc == num_docH3) {
+                            rowH33.remove().draw();
+                            //rowH3.remove();
+                        }
+                    }
+
+                    for (var d = 0; d < tablaH4.rows().data().length; d++) {
+                        var rowH4 = tablaH4.row(d).node();
+                        var rowH44 = tablaH4.row(d);
+                        var num_docH4 = $(rowH4).children().eq(1).children().val();
+
+                        if (num_doc == num_docH4) {
+                            rowH44.remove().draw();
+                            //rowH4.remove();
+                        }
+                    }
+
+                    for (var e = 0; e < tablaH5.rows().data().length; e++) {
+                        var rowH5 = tablaH5.row(e).node();
+                        var rowH55 = tablaH5.row(e);
+                        var num_docH5 = $(rowH5).children().eq(1).children().val();
+
+                        if (num_doc == num_docH5) {
+                            rowH55.remove().draw();
+                            //rowH5.remove();
+                        }
+                    }
+                }
+            }
         }
     });
 }

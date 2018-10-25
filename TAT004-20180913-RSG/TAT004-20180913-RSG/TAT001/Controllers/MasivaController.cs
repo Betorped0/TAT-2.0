@@ -2640,13 +2640,13 @@ namespace TAT001.Controllers
                             f.FECHAC = DateTime.Now;
                             f.FECHAM = DateTime.Now;
                             string c = pf.procesa(f, "");
-                            if (c == "1")
-                            {
-                                string image = Server.MapPath("~/images/logo_kellogg.png");
-                                Email em = new Email();
-                                string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
-                                em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image);
-                            }
+                            //if (c == "1")
+                            //{
+                            //    string image = Server.MapPath("~/images/logo_kellogg.png");
+                            //    Email em = new Email();
+                            //    string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
+                            //    em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image);
+                            //}
                         }
                     }
                     catch (Exception ee) { }
@@ -2893,10 +2893,13 @@ namespace TAT001.Controllers
                     dt.Columns.Add(ds1.Tables[0].Rows[i][15].ToString().Trim());
                 }
 
-                foreach (var item in list)
+                if (list != null)
                 {
-                    string[] miArreglo = (string[])item;
-                    dt.Rows.Add(miArreglo);
+                    foreach (var item in list)
+                    {
+                        string[] miArreglo = (string[])item;
+                        dt.Rows.Add(miArreglo);
+                    }
                 }
             }
 
@@ -2916,10 +2919,13 @@ namespace TAT001.Controllers
                     dt.Columns.Add(ds2.Tables[0].Rows[i][8].ToString().Trim());
                 }
 
-                foreach (var item in list)
+                if (list != null)
                 {
-                    string[] miArreglo = (string[])item;
-                    dt.Rows.Add(miArreglo);
+                    foreach (var item in list)
+                    {
+                        string[] miArreglo = (string[])item;
+                        dt.Rows.Add(miArreglo);
+                    }
                 }
             }
 
@@ -2938,10 +2944,13 @@ namespace TAT001.Controllers
                     dt.Columns.Add(ds3.Tables[0].Rows[i][7].ToString().Trim());
                 }
 
-                foreach (var item in list)
+                if (list != null)
                 {
-                    string[] miArreglo = (string[])item;
-                    dt.Rows.Add(miArreglo);
+                    foreach (var item in list)
+                    {
+                        string[] miArreglo = (string[])item;
+                        dt.Rows.Add(miArreglo);
+                    }
                 }
             }
 
@@ -2966,10 +2975,13 @@ namespace TAT001.Controllers
                     dt.Columns.Add(ds4.Tables[0].Rows[i][13].ToString().Trim());
                 }
 
-                foreach (var item in list)
+                if (list != null)
                 {
-                    string[] miArreglo = (string[])item;
-                    dt.Rows.Add(miArreglo);
+                    foreach (var item in list)
+                    {
+                        string[] miArreglo = (string[])item;
+                        dt.Rows.Add(miArreglo);
+                    }
                 }
             }
 
@@ -2983,12 +2995,15 @@ namespace TAT001.Controllers
                     dt.Columns.Add("NOMBRE");
                 }
 
-                foreach (var item in list)
+                if (list != null)
                 {
-                    string[] miArreglo = (string[])item;
-                    string contenido = miArreglo[0];
-                    string[] miArreglo2 = contenido.Split('*');
-                    dt.Rows.Add(miArreglo2[0], miArreglo2[1], miArreglo2[2]);
+                    foreach (var item in list)
+                    {
+                        string[] miArreglo = (string[])item;
+                        string contenido = miArreglo[0];
+                        string[] miArreglo2 = contenido.Split('*');
+                        dt.Rows.Add(miArreglo2[0], miArreglo2[1], miArreglo2[2]);
+                    }
                 }
             }
 
