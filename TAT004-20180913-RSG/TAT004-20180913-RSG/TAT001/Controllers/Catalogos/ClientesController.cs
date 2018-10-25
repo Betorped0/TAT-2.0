@@ -49,6 +49,7 @@ namespace TAT001.Controllers.Catalogos
             List<CLIENTE> clientes = db.CLIENTEs.Include(c => c.PAI).Include(c => c.TCLIENTE).ToList();
             viewModel.ordenActual = colOrden;
             viewModel.numRegistros = numRegistros.Value;
+            viewModel.buscar = buscar;
 
             if (!String.IsNullOrEmpty(buscar))
             {
