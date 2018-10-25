@@ -14,7 +14,7 @@
     </div>
 </div>
 <div class="card-panel">
-    @*<div class="row" style="margin-bottom:0;">
+    <div class="row" style="margin-bottom:0;">
         <div class="input-field col s3 m3 l3">
             @Html.DropDownListFor(model => model.numRegistros, Model.pageSizes, "")
             <label id="lbl_length"></label>
@@ -23,16 +23,16 @@
             @Html.TextBoxFor(model => model.buscar, new { @class = "global_filter", @id = "global_filter", @maxlength = 50 })
             <label for="global_filter" id="lbl_search">Buscar</label>
         </div>
-    </div>*@
-    <script src="//code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-    <script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
-    <link href="~/Content/dataTable.css" rel="stylesheet" />
-    <link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
-    <div id="list">
-        @Html.Partial("List", Model)
     </div>
-</div>
+        <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+        <script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
+        <link href="~/Content/dataTable.css" rel="stylesheet" />
+        <link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
+        <div id="list">
+            @Html.Partial("List", Model)
+        </div>
+    </div>
 <script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
 <script>
     var root = '@Url.Content("~")';
@@ -43,10 +43,12 @@
     $('#numRegistros').change(function () {
         fnCommon.showProcess(true);
         $.ajax({
-            url: root + 'Proveedor/List?numRegistros=' + $('#numRegistros').val(),
+            url: root + 'Proveedor/List?numRegistros=' + $('#numRegistros').val() + '&&buscar=' + $('input.global_filter').val(),
             success: function (resultView) {
                 fnCommon.showProcess(false);
                 $('#list').html(resultView);
+                pagination();
+                sort();
             }
         });
     });
@@ -58,6 +60,8 @@
              url: root+'Proveedor/List?numRegistros=' + $('#numRegistros').val() + '&&buscar=' + $('input.global_filter').val(),
             success: function (resultView) {
                 $('#list').html(resultView);
+                pagination();
+                sort();
             }
         });
     });
@@ -86,4 +90,29 @@
         }
     }
     pagination();
+    //-----Sort
+    function sort() {
+        var sortLink = $('.header>th>a');
+        for (var i = 0; i < sortLink.length; i++) {
+            var url = sortLink.get(i).getAttribute("href");
+            var id = 'link_h' + i;
+            if (url) {
+                sortLink.get(i).setAttribute("id", id);
+                sortLink.get(i).setAttribute("url", url);
+                $('#' + id).click(function (me) {
+                    fnCommon.showProcess(true);
+                    $.ajax({
+                        url: me.toElement.getAttribute('url'),
+                        success: function (resultView) {
+                            fnCommon.showProcess(false);
+                            $('#list').html(resultView);
+                            sort();
+                        }
+                    });
+                });
+            }
+            sortLink.get(i).removeAttribute("href");
+        }
+    }
+    sort();
 </script>
