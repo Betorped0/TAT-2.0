@@ -408,6 +408,10 @@ function creart(metodo, datos) {
                 document.getElementById("loader").style.display = "none";
             }
         },
+        complete: function () {
+            //var num = $("#table tr").length;
+            //addRow(table, num, num, "", "", "", "", "", "", "", "", "", "", "");
+        }
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             M.toast({
                 html: "Request couldn't be processed. Please try again later. the reason        " + xhr.status + " : " + httpStatusMessage + ": " + customErrorMessage
