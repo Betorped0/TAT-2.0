@@ -283,12 +283,8 @@ function Carga() {
 }
 
 function Comprobar() {
-    var table = $('#table').DataTable();
     var datos = $('#tabla').serializeArray();
-    table.clear().draw();
-    creart('Comprobar', datos);
-    //M.toast({ html: 'Registro Actualizado' });
-
+    creart('Comprobar', datos); 
     mostrarAlerta("info", "A", "Registro Actualizado");
 }
 
@@ -335,6 +331,8 @@ function creart(metodo, datos) {
         data: datos,
         success: function (data) {
             if (data !== null || data !== "") {
+
+                table.clear().draw();
 
                 $.each(data, function (i, dataj) {
 
@@ -433,6 +431,7 @@ function checkoff() {
 
 function Agregar() {
     var datos = $('#tabla').serializeArray();
+    var table = $('#table').DataTable();
     creart('AgregarT', datos);
 }
 
@@ -540,6 +539,39 @@ $('body').on('keydown.autocomplete', '.input_idi', function () {
                 success: function (data) {
                     response(auto.map(data, function (item) {
                         return { label: item.ID + " | " + item.DESCRIPCION, value: item.ID };
+                    }))
+                }
+            })
+        },
+
+        messages: {
+            noResults: '',
+            results: function (resultsCount) { }
+        },
+
+        change: function (e, ui) {
+            if (!(ui.item)) {
+                e.target.value = "";
+            }
+        },
+
+        select: function (event, ui) {
+        }
+    });
+});
+
+$('body').on('keydown.autocomplete', '.input_com', function () {
+
+    auto(this).autocomplete({
+        source: function (request, response) {
+            auto.ajax({
+                type: "POST",
+                url: 'Sociedad',
+                dataType: "json",
+                data: { "Prefix": request.term },
+                success: function (data) {
+                    response(auto.map(data, function (item) {
+                        return { label: item.BUKRS + " | " + item.BUTXT, value: item.BUKRS };
                     }))
                 }
             })
