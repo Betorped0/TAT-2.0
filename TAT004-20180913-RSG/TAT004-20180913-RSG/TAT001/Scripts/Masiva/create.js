@@ -2880,8 +2880,8 @@ function guardaDatos() {
                         var num_docH1 = $(rowH1).children().eq(1).children().val();
 
                         if (num_doc == num_docH1) {
-                            //rowH11.remove().draw();
-                            rowH1.remove();
+                            rowH11.remove().draw();
+                            //rowH1.remove();
                         }
                     }
 
@@ -2891,8 +2891,8 @@ function guardaDatos() {
                         var num_docH2 = $(rowH2).children().eq(1).children().val();
 
                         if (num_doc == num_docH2) {
-                            //rowH22.remove().draw();
-                            rowH2.remove();
+                            rowH22.remove().draw();
+                            //rowH2.remove();
                         }
                     }
 
@@ -2902,8 +2902,8 @@ function guardaDatos() {
                         var num_docH3 = $(rowH3).children().eq(1).children().val();
 
                         if (num_doc == num_docH3) {
-                            //rowH33.remove().draw();
-                            rowH3.remove();
+                            rowH33.remove().draw();
+                            //rowH3.remove();
                         }
                     }
 
@@ -2913,8 +2913,8 @@ function guardaDatos() {
                         var num_docH4 = $(rowH4).children().eq(1).children().val();
 
                         if (num_doc == num_docH4) {
-                            //rowH44.remove().draw();
-                            rowH4.remove();
+                            rowH44.remove().draw();
+                            //rowH4.remove();
                         }
                     }
 
@@ -2924,8 +2924,8 @@ function guardaDatos() {
                         var num_docH5 = $(rowH5).children().eq(1).children().val();
 
                         if (num_doc == num_docH5) {
-                            //rowH55.remove().draw();
-                            rowH5.remove();
+                            rowH55.remove().draw();
+                            //rowH5.remove();
                         }
                     }
                 }
