@@ -6,7 +6,7 @@
         "scrollCollapse": true,
         "order": [],
         "language": {
-            "url": "../Scripts/lang/@Session['spras'].ToString()" + ".json",
+            "url": root+"Scripts/lang/"+spras + ".json",
             "zerorecords": "no hay registros",
             "infoempty": "registros no disponibles"
         },
@@ -159,9 +159,13 @@ function loadExcelDis(file) {
         contentType: false,
         processData: false,
         success: function (data) {
-
-            if (data !== null || data !== "") {
-
+            if (data == "NO VALIDO"){
+                M.toast({
+                    html: "Archivo con numero de columnas incorrecto"
+                });
+                document.getElementById("loader").style.display = "none";
+            }else if (data !== null || data !== "") {
+               // $('#table tbody').html(data);
                 $.each(data, function (i, dataj) {
 
                     var bor = i;
@@ -365,9 +369,8 @@ function loadExcelDis(file) {
                         $(cols).addClass("red");
                     }
                 });
-                $('#table_dis').css("font-size", "12px");
-                $('#table_dis').css("display", "table");
-                $('#tfoot_dis').css("display", "table-footer-group");
+                $('#table').css("font-size", "12px");
+                $('#table').css("display", "table");
                 document.getElementById("loader").style.display = "none";
             }
         },
@@ -378,9 +381,6 @@ function loadExcelDis(file) {
             document.getElementById("loader").style.display = "none";
         },
         async: true
-    });
-    $("#table > tbody  > tr[role='row']").each(function () {
-        alert("as");
     });
 }
 
