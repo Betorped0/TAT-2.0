@@ -6,25 +6,25 @@
     <thead>
         <tr class="header">
             <th>
-                @Html.ActionLink("KUNNR", "List", new { colOrden = "KUNNR", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
+                @Html.ActionLink("KUNNR", "List", new { colOrden = "KUNNR", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar=Model.buscar })
             </th>
             <th>
-                @Html.ActionLink("NAME1", "List", new { colOrden = "NAME1", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
+                @Html.ActionLink("NAME1", "List", new { colOrden = "NAME1", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
             </th>
             <th>
-                @Html.ActionLink("SUBREGION", "List", new { colOrden = "SUBREGION", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
+                @Html.ActionLink("SUBREGION", "List", new { colOrden = "SUBREGION", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
             </th>
             <th>
-                @Html.ActionLink("LAND", "List", new { colOrden = "LAND", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
+                @Html.ActionLink("LAND", "List", new { colOrden = "LAND", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
             </th>
             <th>
-                @Html.ActionLink("PARVW", "List", new { colOrden = "PARVW", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
+                @Html.ActionLink("PARVW", "List", new { colOrden = "PARVW", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
             </th>
             <th>
-                @Html.ActionLink("PAYER", "List", new { colOrden = "PAYER", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
+                @Html.ActionLink("PAYER", "List", new { colOrden = "PAYER", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
             </th>
             <th>
-                @Html.ActionLink("CANAL", "List", new { colOrden = "CANAL", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
+                @Html.ActionLink("CANAL", "List", new { colOrden = "CANAL", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
             </th>
             <th></th>
         </tr>
@@ -73,10 +73,10 @@
     </tbody>
 </table>
 <div id='Paging' style="text-align: center">
-     @(Model.clientes.PageCount < Model.clientes.PageNumber ? 0 : Model.clientes.PageNumber)
+    @(Model.clientes.PageCount < Model.clientes.PageNumber ? 0 : Model.clientes.PageNumber)
     - @Model.clientes.PageCount
 
-    @Html.PagedListPager(Model.clientes, page => Url.Action("List", new { pagina = page, numRegistros = Model.numRegistros }))
+    @Html.PagedListPager(Model.clientes, page => Url.Action("List", new { pagina = page, numRegistros = Model.numRegistros, buscar = Model.buscar }))
 </div>
 
 <script>
@@ -106,7 +106,7 @@
     }
     sort();
 
-  
+
 </script>
 <div>
 
