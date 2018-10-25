@@ -2861,7 +2861,65 @@ function guardaDatos() {
         dataType: "json",
         data: { "h1": tabla1, "h2": tabla2, "h3": tabla3, "h4": tabla4, "h5": tabla5 },
         success: function (data) {
-            getDec = data;
+            if (data != null | data != "") {
+                var eliminarId = [];
+
+                eliminarId = data;
+                var tablaH1 = $('#tab_test1').DataTable();
+                var tablaH2 = $('#tab_test2').DataTable();
+                var tablaH3 = $('#tab_test3').DataTable();
+                var tablaH4 = $('#tab_test4').DataTable();
+                var tablaH5 = $('#tab_test5').DataTable();
+
+                for (var su = 0; su < eliminarId.length; su++) {
+                    var num_doc = eliminarId[su];
+
+                    for (var a = 0; a < tablaH1.rows().data().length; a++) {
+                        var rowH1 = tablaH1.row(a).node();
+                        var num_docH1 = $(rowH1).children().eq(1).children().val();
+
+                        if (num_doc == num_docH1) {
+                            rowH1.remove();
+                        }
+                    }
+
+                    for (var b = 0; b < tablaH2.rows().data().length; b++) {
+                        var rowH2 = tablaH2.row(b).node();
+                        var num_docH2 = $(rowH2).children().eq(1).children().val();
+
+                        if (num_doc == num_docH2) {
+                            rowH2.remove();
+                        }
+                    }
+
+                    for (var c = 0; c < tablaH3.rows().data().length; c++) {
+                        var rowH3 = tablaH3.row(c).node();
+                        var num_docH3 = $(rowH3).children().eq(1).children().val();
+
+                        if (num_doc == num_docH3) {
+                            rowH3.remove();
+                        }
+                    }
+
+                    for (var d = 0; d < tablaH4.rows().data().length; d++) {
+                        var rowH4 = tablaH4.row(d).node();
+                        var num_docH4 = $(rowH4).children().eq(1).children().val();
+
+                        if (num_doc == num_docH4) {
+                            rowH4.remove();
+                        }
+                    }
+
+                    for (var e = 0; e < tablaH5.rows().data().length; e++) {
+                        var rowH5 = tablaH5.row(e).node();
+                        var num_docH5 = $(rowH5).children().eq(1).children().val();
+
+                        if (num_doc == num_docH5) {
+                            rowH5.remove();
+                        }
+                    }
+                }
+            }
         }
     });
 }

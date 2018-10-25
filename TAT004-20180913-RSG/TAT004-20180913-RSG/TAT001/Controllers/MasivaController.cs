@@ -2113,13 +2113,14 @@ namespace TAT001.Controllers
             return cc;
         }
 
-        public bool guardaDatos(DataSet ds1, DataSet ds2, DataSet ds3, DataSet ds4, DataSet ds5)
+        public List<object> guardaDatos(DataSet ds1, DataSet ds2, DataSet ds3, DataSet ds4, DataSet ds5)
         {
             string u = User.Identity.Name;
             string errorString;
             var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
             IEnumerable<HttpPostedFileBase> archivos = (IEnumerable<HttpPostedFileBase>)(Session["archivosSoporte"]);
             List<DOCUMENTO> listD = new List<DOCUMENTO>();
+            List<object> iDs = new List<object>();
 
             for (int i = 0; i < ds1.Tables[0].Rows.Count; i++)
             {
@@ -2579,9 +2580,11 @@ namespace TAT001.Controllers
                     }
                     //FIN DE LA SECCION 5
                 }//FIN DE LA VALIDACION DOP
+                iDs.Add(dop.NUM_DOC);
             }//FIN DEL FOR GLOBAL (CABECERA)
 
             List<string> li = new List<string>();
+            int contadorArchivos = 0;
 
             foreach (DOCUMENTO doc in listD)
             {
@@ -2614,8 +2617,8 @@ namespace TAT001.Controllers
                     }
 
                     updateRango(doc.TSOL_ID, doc.NUM_DOC);
-                    guardaArchivos(N_DOC);//ALMACENAMOS LOS ARCHIVOS DE SOPORTE
-                    //saveFiles();
+                    guardaArchivos(N_DOC, contadorArchivos);//ALMACENAMOS LOS ARCHIVOS DE SOPORTE
+                    contadorArchivos++;
                     li.Add(doc.NUM_DOC.ToString());
 
                     ProcesaFlujo pf = new ProcesaFlujo();
@@ -2656,7 +2659,7 @@ namespace TAT001.Controllers
 
             TempData["docs_masiva"] = li;
 
-            return false;
+            return iDs;
         }
 
         public bool IsNumeric(object Expression)
@@ -3117,30 +3120,28 @@ namespace TAT001.Controllers
             return docupA;
         }
 
-        public string saveFiles()
+        public void guardaArchivos(decimal num_doc, int contador)
         {
-            IEnumerable<HttpPostedFileBase> archivosToSave = (IEnumerable<HttpPostedFileBase>)Session["archivosSave"];
-            var res = "";
-            string error = "";
-            string path = "";
+            //IEnumerable<HttpPostedFileBase> archivosToSave = (IEnumerable<HttpPostedFileBase>)Session["archivosSave"];
+            List<object> archivosToSave = (List<object>)Session["archivosSave"];
+            object[] arrArchivostoSave = new object[archivosToSave.Count];
+            int indice = 0;
 
-            if (archivosToSave.Count() > 0)
+            foreach (List<HttpPostedFileBase> listFile in archivosToSave)
             {
-                foreach (HttpPostedFileBase file in archivosToSave)
-                {
-                    string url = ConfigurationManager.AppSettings["URL_SAVE"];
-                    string filename = file.FileName;
-                    res = new Files().SaveFile(file, url, "GIL", out error, out path, DateTime.Now.Year.ToString());//RSG 01.08.2018
-                }
+                arrArchivostoSave[indice] = listFile.ToArray();
+                indice++;
             }
 
-            return res;
-        }
+            HttpPostedFileBase[] arregloCopia = new HttpPostedFileBase[contador];
+            arregloCopia = (HttpPostedFileBase[])arrArchivostoSave[contador];
 
-        public void guardaArchivos(decimal num_doc)
-        {
-            List<object> archivosToSave = (List<object>)Session["archivosSave"];
-            //IEnumerable<HttpPostedFileBase> archivosToSave = (IEnumerable<HttpPostedFileBase>)Session["archivosSave"];
+            List<HttpPostedFileBase> archivosSaveFinal = new List<HttpPostedFileBase>();
+            for (int i = 0; i < arregloCopia.Length; i++)
+            {
+                archivosSaveFinal.Add(arregloCopia[i]);
+            }
+
             string errorString = "";
             var res = "";
             string errorMessage = "";
@@ -3148,7 +3149,7 @@ namespace TAT001.Controllers
 
             try
             {
-                foreach (HttpPostedFileBase file in archivosToSave)
+                foreach (HttpPostedFileBase file in archivosSaveFinal)
                 {
                     if (file != null)
                     {
@@ -3170,7 +3171,7 @@ namespace TAT001.Controllers
                 //Evaluar que se creo el directorio
                 if (dir.Equals(""))
                 {
-                    foreach (HttpPostedFileBase file in archivosToSave)
+                    foreach (HttpPostedFileBase file in archivosSaveFinal)
                     {
                         string errorfiles = "";
                         string path = "";
