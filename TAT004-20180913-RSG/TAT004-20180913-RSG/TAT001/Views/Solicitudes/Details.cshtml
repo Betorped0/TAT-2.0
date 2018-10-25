@@ -57,7 +57,7 @@
                 </div>
                 @* ---DRS 3.10.2018--- *@
                 <div class="input-field col s4">
-                    @if (Model.D.ESTATUS == "N" | Model.D.ESTATUS != "N")@*//ADD RSG 25.10.2018*@
+                    @if (Model.D.ESTATUS == "N" | Model.D.ESTATUS != "N")
                     {
                         TAT001.Services.Estatus es = new TAT001.Services.Estatus();//ADD RSG 25.10.2018
                         string status = es.getText(Model.D);//ADD RSG 25.10.2018
