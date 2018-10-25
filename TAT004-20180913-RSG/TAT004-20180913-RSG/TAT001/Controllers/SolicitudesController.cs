@@ -1986,9 +1986,7 @@ namespace TAT001.Controllers
                                     }
                                     docP.MATNR = dOCUMENTO.DOCUMENTOP.ElementAt(j).MATNR;
                                     docP.MATNR = new Cadena().completaMaterial(docP.MATNR);//RSG 07.06.2018
-
-                                    MATERIAL mat = db.MATERIALs.Where(x=>x.ID== docP.MATNR).FirstOrDefault();
-                                    docP.MATKL = mat.MATKL_ID;
+                                    docP.MATKL = dOCUMENTO.DOCUMENTOP.ElementAt(j).MATKL_ID;
                                     docP.CANTIDAD = 1;
                                     docP.MONTO = dOCUMENTO.DOCUMENTOP.ElementAt(j).MONTO;
                                     docP.PORC_APOYO = dOCUMENTO.DOCUMENTOP.ElementAt(j).PORC_APOYO;
@@ -2238,7 +2236,58 @@ namespace TAT001.Controllers
                             }
                             db.SaveChanges();
                         }//Guardar registros de recurrencias  RSG 28.05.2018-------------------
+                    if (dOCUMENTO.DOCUMENTOREC == null & dOCUMENTO.LIGADA == true)
+                    //if (dOCUMENTO.LIGADA == true)
+                    {
 
+                        DOCUMENTOREC drec = new DOCUMENTOREC();
+                        drec.NUM_DOC = dOCUMENTO.NUM_DOC;
+                        drec.POS = 1;
+
+                        if (drec.MONTO_BASE == null) //RSG 31.05.2018-------------------
+                            drec.MONTO_BASE = 0;
+                        if (drec.PORC == null) //RSG 31.05.2018-------------------
+                            drec.PORC = 0;
+                        dOCUMENTO.TIPO_RECURRENTE = db.TSOLs.Where(x => x.ID.Equals(dOCUMENTO.TSOL_ID)).FirstOrDefault().TRECU;
+                        if (dOCUMENTO.TIPO_RECURRENTE == "1" & dOCUMENTO.LIGADA == true)
+                            dOCUMENTO.TIPO_RECURRENTE = "2";
+                        if (dOCUMENTO.TIPO_RECURRENTE != "1" & dOCUMENTO.OBJETIVOQ == true)
+                            dOCUMENTO.TIPO_RECURRENTE = "3";
+                        Calendario445 cal = new Calendario445();
+                        drec.FECHAF = cal.getUltimoDia(dOCUMENTO.FECHAF_VIG.Value.Year, cal.getPeriodo(dOCUMENTO.FECHAF_VIG.Value));
+                        drec.FECHAV = drec.FECHAF;
+
+                        drec.FECHAF = cal.getNextLunes((DateTime)drec.FECHAF);
+                        drec.EJERCICIO = drec.FECHAV.Value.Year;
+                        drec.PERIODO = cal.getPeriodoF(drec.FECHAV.Value);
+
+                        if (drec.PERIODO == 0) drec.PERIODO = 12;
+                        if (dOCUMENTO.DOCUMENTORAN != null)
+                        {
+                            foreach (DOCUMENTORAN dran in dOCUMENTO.DOCUMENTORAN.Where(x => x.POS == drec.POS))
+                            {
+                                dran.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                drec.DOCUMENTORANs.Add(dran);
+                            }
+                        }
+                        else
+                        {
+                            DOCUMENTORAN dran = new DOCUMENTORAN();
+                            dran.NUM_DOC = dOCUMENTO.NUM_DOC;
+                            dran.POS = 1;
+                            dran.LIN = 1;
+                            dran.OBJETIVOI = 0;
+                            dran.PORCENTAJE = dOCUMENTO.PORC_APOYO;
+                            drec.DOCUMENTORANs.Add(dran);
+                        }
+                        drec.PORC = dOCUMENTO.PORC_APOYO;
+                        drec.DOC_REF = 0;
+                        drec.ESTATUS = "";
+
+                        dOCUMENTO.DOCUMENTORECs.Add(drec);
+
+                        db.SaveChanges();
+                    }
                     //Guardar los documentos cargados en la sección de soporte
                     var res = "";
                     string errorMessage = "";
@@ -5868,8 +5917,7 @@ namespace TAT001.Controllers
             {
 
             }
-
-            var spras = FnCommon.ObtenerSprasId(db,User.Identity.Name);
+            
             //Validar si hay materiales
             if (matl != null)
             {
@@ -6030,7 +6078,10 @@ namespace TAT001.Controllers
                         dcll.MATNR = d.MATNR;
 
                         //Obtener la descripción del material
-                        string maktg = db.MATERIALTs.Where(w => w.MATERIAL_ID == d.MATNR && w.SPRAS==spras).FirstOrDefault().MAKTG;
+                        string maktg = db.MATERIALs.Where(w => w.ID == d.MATNR).FirstOrDefault().MAKTG;
+                        if (db.MATERIALTs.Any(w => w.MATERIAL_ID == d.MATNR && w.SPRAS == "EN")) {
+                            maktg= db.MATERIALTs.Where(w => w.MATERIAL_ID == d.MATNR && w.SPRAS == "EN").First().MAKTG;
+                        }
                         dcll.DESC = (maktg == null ? "" : maktg);
                         dcll.VAL = val;
 

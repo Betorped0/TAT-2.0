@@ -31,8 +31,8 @@
         </a>
     </div>
     <div class="row right">
-        <a class="waves-effect waves-light btn" href="@Url.Action("Details", "Excel")">Borrar</a>
-        <a class="waves-effect waves-light btn" href="@Url.Action("Details", "Excel")">Enviar</a>
+        <a class="waves-effect waves-light btn" onClick="window.location.reload()">Borrar</a>
+        <a class="waves-effect waves-light btn" onclick="guardaDatos()">Enviar</a>
     </div>
 </div>
 
@@ -52,10 +52,10 @@
     <div class="col s12">
         <ul class="tabs" id="tabs">
             <li class="tab col s2 tabs_menu"><a id="tab_info" href="#test1">Tab 1</a></li>
-            <li class="tab col s3 tabs_menu"><a id="tab_dis" href="#test2">Tab 2</a></li>
-            <li class="tab col s3 tabs_menu"><a id="tab_rec" href="#test3">Tab 3</a></li>
-            <li class="tab col s2 tabs_menu"><a id="tab_fin" href="#test4">Tab 4</a></li>
-            <li class="tab col s2 tabs_menu"><a id="tab_fin2" href="#test5">Tab 5</a></li>
+            <li class="tab col s3 tabs_menu"><a id="tab_rel" href="#test2">Tab 2</a></li>
+            <li class="tab col s3 tabs_menu"><a id="tab_mul" href="#test3">Tab 3</a></li>
+            <li class="tab col s2 tabs_menu"><a id="tab_dis" href="#test4">Tab 4</a></li>
+            <li class="tab col s2 tabs_menu"><a id="tab_arc" href="#test5">Tab 5</a></li>
         </ul>
     </div>
 </div>
@@ -76,11 +76,12 @@
 
 
 <div class="row">
-    <div id="test1" class="card-panel col s12" style="overflow:auto;">
+    <div id="test1" class="card-panel col s12">
         <div style="overflow:auto;">
             <table id="tab_test1" class="display" cellspacing="0" width="100%" style="display:none">
                 <thead>
                     <tr>
+                        <th>ESTATUS</th>
                         <th>NUM_DOC</th>
                         <th>T_SOL</th>
                         <th>GALL_ID</th>
@@ -92,7 +93,8 @@
                         <th>NOTAS</th>
                         <th>PAYER_ID</th>
                         <th>PAYER_NOMBRE</th>
-                        <th>PAYER_EMAIL</th>
+                        <th>CONTACTO_NOMBRE</th>
+                        <th>CONTACTO_EMAIL</th>
                         <th>FECHAI_VIG</th>
                         <th>FECHAF_VIG</th>
                         <th>MONEDA_ID</th>
@@ -106,54 +108,65 @@
         <br />
     </div>
     <div id="test2" class="card-panel col s12">
-        <table id="tab_test2" class="display" cellspacing="0" width="100%" style="display:none">
-            <thead>
-                <tr>
-                    <th>NUM_DOC</th>
-                    <th>FACTURA</th>
-                    <th>FECHA</th>
-                    <th>PROVEEDOR</th>
-                    <th>PROVEEDOR_NOMBRE</th>
-                    <th>AUTORIZACION</th>
-                    <th>VENCIMIENTO</th>
-                    <th>FACTURAK</th>
-                    <th>EJERCICIOK</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-        <br />
-    </div>
-
-    <div id="test3" class="card-panel col s12">
-        <table id="tab_test3" class="display" cellspacing="0" width="100%" style="display:none">
-            <thead>
-                <tr>
-                    <th>NUM_DOC</th>
-                    <th>FACTURA</th>
-                    <th>BILL_DOC</th>
-                    <th>EJERCICIOK</th>
-                    <th>PAYER</th>
-                    <th>IMPORTE_FAC</th>
-                    <th>BELNR</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-        <br />
-    </div>
-
-    @*<div id="test2" class="card-panel col s12">
+        <div style="overflow:auto;">
             <table id="tab_test2" class="display" cellspacing="0" width="100%" style="display:none">
                 <thead>
                     <tr>
+                        <th>ESTATUS</th>
                         <th>NUM_DOC</th>
+                        <th>FACTURA</th>
+                        <th>FECHA</th>
+                        <th>PROVEEDOR</th>
+                        <th>PROVEEDOR_NOMBRE</th>
+                        <th>AUTORIZACION</th>
+                        <th>VENCIMIENTO</th>
+                        <th>FACTURAK</th>
+                        <th>EJERCICIOK</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <br />
+    </div>
+    <div id="test3" class="card-panel col s12">
+        <div style="overflow:auto;">
+            <table id="tab_test3" class="display" cellspacing="0" width="100%" style="display:none">
+                <thead>
+                    <tr>
+                        <th>ESTATUS</th>
+                        <th>NUM_DOC</th>
+                        <th>FACTURA</th>
+                        <th>BILL_DOC</th>
+                        <th>EJERCICIOK</th>
+                        <th>PAYER</th>
+                        <th>PAYER_NOMBRE</th>
+                        <th>IMPORTE_FAC</th>
+                        <th>BELNR</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <br />
+    </div>
+    <div id="test4" class="card-panel col s12">
+        <div style="overflow:auto;">
+            <table id="tab_test4" class="display" cellspacing="0" width="100%" style="display:none">
+                <thead>
+                    <tr>
+                        <th>ESTATUS</th>
+                        <th>NUM_DOC</th>
+                        <th>LIGADA</th>
                         <th>VIGENCIA_DE</th>
                         <th>VIGENCIA_AL</th>
-                        <th>MATNR</th>
-                        <th>MATKL</th>
+                        <th>MATERIAL</th>
+                        <th>CATEGORIA</th>
+                        <th>DESCRIPCION</th>
                         <th>MONTO</th>
                         <th>PORC_APOYO</th>
+                        <th>APOYO_PIEZA</th>
+                        <th>COSTO_APOYO</th>
                         <th>PRECIO_SUG</th>
                         <th>VOLUMEN_REAL</th>
                         <th>APOYO</th>
@@ -161,40 +174,43 @@
                 </thead>
                 <tbody></tbody>
             </table>
-            <br />
-        </div>*@
-    @*<div id="test4" class="card-panel col s12">
-            <table id="tab_test4" class="display" cellspacing="0" width="100%" style="display:none">
+        </div>
+        <br />
+    </div>
+    <div id="test5" class="card-panel col s12">
+        <div style="overflow:auto;">
+            <table id="tab_test5" class="display" cellspacing="0" width="100%" style="display:none">
                 <thead>
                     <tr>
+                        <th style="text-align:center;">ESTATUS</th>
                         <th style="text-align:center;">NUM_DOC</th>
-                        <th style="text-align:center;">RUTA</th>
-                        <th style="text-align:center;">BOTON</th>
+                        <th style="text-align:center;">TIPO</th>
+                        <th style="text-align:center;">ARCHIVO</th>
+                        @*<th style="text-align:center;">BOTON</th>*@
                     </tr>
                 </thead>
                 <tbody></tbody>
             </table>
-            <br />
-        </div>*@
+        </div>
+        <br />
+    </div>
 </div>
-
-
 
 <script>
     var el = document.querySelector(".tabs");
     var instance = M.Tabs.init(el, []);
 </script>
 
-
 <script src="~/Scripts/autocomplete1.10.2.js"></script>
 <script src="~/Scripts/autocomplete1.11.4.js"></script>
+<script src="~/Scripts/Masiva/formatosMasiva.js"></script>
 <script src="~/Scripts/Masiva/create.js"></script><!--LGPP 30.08.2018-->
 <link href="~/Content/autocomplete.css" rel="stylesheet" />
 
 <script>
     var auto = $.noConflict();
+    var ln = "@Session["spras"].ToString()";
 </script>
-
 
 <style>
     .dataTables_length {
@@ -209,34 +225,3 @@
         width: 100%;
     }
 </style>
-
-@*<script>
-        //function formatoTabla() {
-        //    var table = $(".table").DataTable({
-        //        scrollX: "50vh",
-        //        scrollY: "50vh",
-        //        scrollCollapse: true,
-        //        language: {"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"},
-        //        order: [[0, "asc"]],
-        //        initComplete: function () {
-        //            this.api().columns().every(function () {
-        //                var column = this;
-        //                var select = $('<select style="display:initial;" class="browser-default"><option value=""></option></select>')
-        //                    .appendTo($(column.footer()).empty())
-        //                    .on('change', function () {
-        //                        var val = $.fn.dataTable.util.escapeRegex(
-        //                            $(this).val()
-        //                        );
-        //                        column
-        //                            .search(val ? '^' + val + '$' : '', true, false)
-        //                            .draw();
-        //                    });
-        //                column.cells('', column[0]).render('display').sort().unique().each(function (d, j) {
-        //                    var val = $('<div/>').html(d).text();
-        //                    select.append('<option value="' + val + '">' + val + '</option>');
-        //                });
-        //            });
-        //        }
-        //    });
-        //};
-    </script>*@
