@@ -1,0 +1,24 @@
+﻿@model IEnumerable<TAT001.Models.Clientes>
+  <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.BUKRS)</td>
+            <td>@Html.DisplayFor(modelItem => item.LAND)</td>
+            <td>@Html.DisplayFor(modelItem => item.KUNNR)</td>
+            <td>@Html.DisplayFor(modelItem => item.CLIENTE_N)</td>
+            <td>@Html.DisplayFor(modelItem => item.ID_US0)</td>
+            <td>@Html.DisplayFor(modelItem => item.ID_US1)</td>
+            <td>@Html.DisplayFor(modelItem => item.ID_US2)</td>
+            <td>@Html.DisplayFor(modelItem => item.ID_US3)</td>
+            <td>@Html.DisplayFor(modelItem => item.ID_US4)</td>
+            <td>@Html.DisplayFor(modelItem => item.ID_US7)</td>
+            <td>@Html.DisplayFor(modelItem => item.ID_PROVEEDOR)</td>
+            <td>@Html.DisplayFor(modelItem => item.BANNER)</td>
+            <td>@Html.DisplayFor(modelItem => item.EXPORTACION)</td>
+            <td>@Html.DisplayFor(modelItem => item.CONTACTO)</td>
+            <td>@Html.DisplayFor(modelItem => item.CONTACTOE)</td>
+            <td>@Html.DisplayFor(modelItem => item.MESS)</td>
+        </tr>
+    }
+</tbody>

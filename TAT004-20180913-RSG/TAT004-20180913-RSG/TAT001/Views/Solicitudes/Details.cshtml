@@ -56,10 +56,12 @@
                     @Html.LabelFor(model => model.D.USUARIO.BUNIT, "BU", new { @class = "lbl_bu" })
                 </div>
                 @* ---DRS 3.10.2018--- *@
-                <div class="input-field col s2">
-                    @if (Model.D.ESTATUS == "N")
+                <div class="input-field col s4">
+                    @if (Model.D.ESTATUS == "N" | Model.D.ESTATUS != "N")
                     {
-                        <input type="text" id="txt_status" value="Nuevo" disabled="disabled" />
+                        TAT001.Services.Estatus es = new TAT001.Services.Estatus();//ADD RSG 25.10.2018
+                        string status = es.getText(Model.D);//ADD RSG 25.10.2018
+                        <input type="text" id="txt_status" value="@status" disabled="disabled" />@*//ADD RSG 25.10.2018*@
                         <label for="txt_status" id="lbl_status">Estatus</label>
                     }
                 </div>

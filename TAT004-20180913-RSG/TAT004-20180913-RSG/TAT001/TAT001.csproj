@@ -1942,6 +1942,7 @@
     <Content Include="Views\Moneda\Edit.cshtml" />
     <Content Include="Views\Moneda\Index.cshtml" />
     <Content Include="Views\Proveedor\List.cshtml" />
+    <Content Include="Views\Clientes\CargaList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->
