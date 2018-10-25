@@ -45,11 +45,12 @@ namespace TAT001.Controllers.Catalogos
             List<MATERIAL> clientes = db.MATERIALs.Include(m => m.MATERIALGP).ToList();
             viewModel.ordenActual = colOrden;
             viewModel.numRegistros = numRegistros.Value;
+            viewModel.buscar = buscar;
 
             if (!String.IsNullOrEmpty(buscar))
             {
                 clientes = clientes.Where(x =>
-                String.Concat(x.ID, x.MAKTX, (x.MATERIALGP.DESCRIPCION == null ? "" : x.MATERIALGP.DESCRIPCION))
+                String.Concat(x.ID, x.MAKTX, (x.MATERIALGP_ID == null ? "" : x.MATERIALGP.DESCRIPCION))
                 .ToLower().Contains(buscar.ToLower()))
                 .ToList();
             }

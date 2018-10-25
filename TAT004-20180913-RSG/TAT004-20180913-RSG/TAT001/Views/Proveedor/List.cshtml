@@ -6,19 +6,19 @@
     <thead>
         <tr class="header">
             <th>
-                @Html.ActionLink("ID", "List", new { colOrden = "ID", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros }, new { @class = "lblId" })
+                @Html.ActionLink("ID", "List", new { colOrden = "ID", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar }, new { @class = "lblId" })
             </th>
             <th>
-                @Html.ActionLink("NOMBRE", "List", new { colOrden = "NOMBRE", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros }, new { @class = "lblNombre" })
+                @Html.ActionLink("NOMBRE", "List", new { colOrden = "NOMBRE", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar }, new { @class = "lblNombre" })
             </th>
             <th>
-                @Html.ActionLink("SOCIEDAD_ID", "List", new { colOrden = "SOCIEDAD_ID", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros }, new { @class = "lblSociedadId" })
+                @Html.ActionLink("SOCIEDAD_ID", "List", new { colOrden = "SOCIEDAD_ID", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar }, new { @class = "lblSociedadId" })
             </th>
             <th>
-                @Html.ActionLink("PAIS_ID", "List", new { colOrden = "PAIS_ID", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros }, new { @class = "lblPais" })
+                @Html.ActionLink("PAIS_ID", "List", new { colOrden = "PAIS_ID", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar }, new { @class = "lblPais" })
             </th>
             <th>
-                @Html.ActionLink("ACTIVO", "List", new { colOrden = "ACTIVO", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros }, new { @class = "lblActivo" })
+                @Html.ActionLink("ACTIVO", "List", new { colOrden = "ACTIVO", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar }, new { @class = "lblActivo" })
             </th>
             <th></th>
         </tr>
@@ -49,10 +49,10 @@
                     <a href="@Url.Action("Edit", "Proveedor", new { id = item.ID })">
                         <i class='material-icons green-text'>edit</i>
                     </a>
-                    <a href="@Url.Action("Details", "Proveedor", new { id = item.ID})">
+                    <a href="@Url.Action("Details", "Proveedor", new { id = item.ID })">
                         <i class='material-icons blue-text'>search</i>
                     </a>
-                    <a href="@Url.Action("Delete", "Proveedor", new { id = item.ID})">
+                    <a href="@Url.Action("Delete", "Proveedor", new { id = item.ID })">
                         <i class='material-icons red-text'>delete</i>
                     </a>
                 </td>
@@ -64,7 +64,7 @@
     @(Model.proveedores.PageCount < Model.proveedores.PageNumber ? 0 : Model.proveedores.PageNumber)
     - @Model.proveedores.PageCount
 
-    @Html.PagedListPager(Model.proveedores, page => Url.Action("List", new { pagina = page, numRegistros = Model.numRegistros }))
+    @Html.PagedListPager(Model.proveedores, page => Url.Action("List", new { pagina = page, numRegistros = Model.numRegistros, buscar = Model.buscar, colOrden=Model.ordenActual}))
 </div>
 
 @if (ViewBag.textos != null)
@@ -117,4 +117,29 @@
         }
     }
     sort();
+    //-----Pagination
+    function pagination() {
+        var paginationLink = $('.pagination>li>a');
+        for (var i = 0; i < paginationLink.length; i++) {
+            var url = paginationLink.get(i).getAttribute("href");
+            var id = 'link_p' + i;
+            if (url) {
+                paginationLink.get(i).setAttribute("id", id);
+                paginationLink.get(i).setAttribute("url", url);
+                $('#' + id).click(function (me) {
+                    fnCommon.showProcess(true);
+                    $.ajax({
+                        url: me.toElement.getAttribute('url'),
+                        success: function (resultView) {
+                            fnCommon.showProcess(false);
+                            $('#list').html(resultView);
+                            pagination();
+                        }
+                    });
+                });
+            }
+            paginationLink.get(i).removeAttribute("href");
+        }
+    }
+    pagination();
 </script>
