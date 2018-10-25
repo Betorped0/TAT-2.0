@@ -139,7 +139,7 @@ $(document).ready(function () {
             }
         ]
     });
-    
+
     $('#matcat').click(function (e) {
 
         var kunnr = $('#payer_id').val();
@@ -308,7 +308,7 @@ $(document).ready(function () {
     });
 
     $('#addRowB').on('click', function () {
-        if ($("#catmat").val()==""){
+        if ($("#catmat").val() == "") {
             return;
         }
         var relacionada = "";
@@ -381,7 +381,7 @@ $(document).ready(function () {
 
                             var addedRow = addRowCat(t, cat, ddate, adate, opt, "", relacionada, reversa, "", "");
 
-                           
+
                         } else {
                             M.toast({ html: 'Seleccione una categoría' });
                         }
@@ -500,7 +500,7 @@ $(document).ready(function () {
 
         //Set val a DatePicker
         document.querySelectorAll('.input_fe').forEach(function (datePicker) {
-            if (datePicker.value){
+            if (datePicker.value) {
                 var dateVal = moment(datePicker.value, 'DD/MM/YYYY');
                 M.Datepicker.getInstance(datePicker).setDate(dateVal._d);
             }
@@ -1138,7 +1138,7 @@ $(document).ready(function () {
         $("label[for='montos_doc_ml2']").addClass("active");
     }
 
-    
+
 
     /**
        * Delay for a number of milliseconds
@@ -1293,7 +1293,7 @@ $(document).ready(function () {
                 classes: "guardarWarnning",
                 displayLength: 1000000,
                 html: '<span style="padding-right:15px;"><i class="material-icons yellow-text">info</i></span>  ' + msg
-                + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'guardarWarnning\')">Aceptar</button>'
+                    + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'guardarWarnning\')">Aceptar</button>'
             });
             document.getElementById("loader").style.display = "none";//RSG 26.04.2018
         }
@@ -1579,7 +1579,7 @@ $(window).on('load', function () {
         var m = monto + "";
         $('#monto_dis').val(m);
     }
-    
+
     //Add MGC B20180705 2018.07.05 ne no eliminar
     //Obtener el parámetro para no eliminar renglones
     var ne = "";
@@ -1859,7 +1859,7 @@ function guardarBorrador(asyncv) {
         url: 'Borrador',
         dataType: "json",
         data: form.serialize() + "&notas_soporte = " + notas_soporte + "&unafact = " + unafact + "&select_neg = " + select_neg + "&select_dis = " + select_dis +
-        "&select_negi = " + select_negi + "&select_disi = " + select_disi + "&bmonto_apoyo = " + bmonto_apoyo + "&monedadis = " + monedadis,
+            "&select_negi = " + select_negi + "&select_disi = " + select_disi + "&bmonto_apoyo = " + bmonto_apoyo + "&monedadis = " + monedadis,
         //data: {
         //    object: form.serialize(), "notas_soporte": notas_soporte, "unafact": unafact, "select_neg": select_neg, "select_dis": select_dis,
         //    "select_negi": select_negi, "select_disi": select_disi, "bmonto_apoyo": bmonto_apoyo, "monedadis": monedadis},
@@ -2156,7 +2156,7 @@ function copiarTableVista(update, borr, ne) { //Add MGC B20180705 2018.07.05 Cam
                 //    calculo, pm);
                 addedRow = addRowMat(t, matkl_id, matnr, matkl, matkl, costo_unitario,
                     porc_apoyo, monto_apoyo, "", precio_sug, vol, total, relacionada, "", reversa, $.trim(ddate[0]), $.trim(adate[0]), calculo, pm, ne);//Add MGC B20180705 2018.07.05 ne //Add MGC B20180705 2018.07.05 relacionadaed editar el material en los nuevos renglones
-                
+
             } else if (dis == "C") {
                 //Si la distribución es por categoría
                 //Obtener el tipo de negociación
@@ -2171,12 +2171,19 @@ function copiarTableVista(update, borr, ne) { //Add MGC B20180705 2018.07.05 Cam
                     }
 
                     if (agregar) { //B20180625 MGC 2018.07.02
-                        var porcentaje_cat = "<input class=\"" + reversa + " input_oper numberd porc_cat pc\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">";
-                        addedRow = addRowCat(t, matkl_id, $.trim(ddate[0]), $.trim(adate[0]), matkl, "", relacionada, reversa, porcentaje_cat, "pc");
+                        var porccc = "";//ADD RSG 25.10.2018
+                        if (isReversa())//ADD RSG 25.10.2018
+                            porccc = porc_apoyo;//ADD RSG 25.10.2018
+                        var porcentaje_cat = "<input class=\"" + reversa + " input_oper numberd porc_cat pc\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + porccc + "\">";
+                        if (isReversa())//ADD RSG 25.10.2018
+                            addedRow = addRowCat(t, matkl_id, $.trim(ddate[0]), $.trim(adate[0]), matkl, total, relacionada, reversa, porcentaje_cat, "pc");
+                        else
+                            addedRow = addRowCat(t, matkl_id, $.trim(ddate[0]), $.trim(adate[0]), matkl, "", relacionada, reversa, porcentaje_cat, "pc");
                         $(".pc").prop('disabled', true);
                         $('.pc').trigger('click');
                         //Actualizar la tabla con los porcentajes
-                        updateTableCat();
+                        if (!isReversa())//ADD RSG 25.10.2018
+                            updateTableCat();
 
                     }
                 }
@@ -2243,7 +2250,7 @@ function copiarTableVista(update, borr, ne) { //Add MGC B20180705 2018.07.05 Cam
                 });
             }
         }
-        
+
         if (pm == "pm") {
             $(".pm").prop('disabled', true);
             $('.pm').trigger('click');
@@ -2336,7 +2343,7 @@ function copiarTableVistaSop() {
                 bill_doc = "<input class=\"BILL_DOC input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + bill_doc + "\">";
                 imp_fact = "<input class=\"IMPORTE_FAC input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + imp_fact + "\">"//jemo 18-07-2018
                 belnr = "<input class=\"BELNR input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + belnr + "\">"
-                
+
             } else {
 
                 //B20180625 MGC 2018.06.27
@@ -2371,7 +2378,7 @@ function copiarTableVistaSop() {
         ocultarColumnasTablaSoporteDatos();
         $('.input_sop_f').trigger('focusout');
     }
-    
+
 }
 function copiarTableControl(borrador) { //B20180625 MGC 2018.07.03
 
@@ -2836,7 +2843,7 @@ $('body').on('focusout', '.input_oper', function () {
             updateTotalRow(t, tr, "", "", 0);
         }
 
-       
+
     }
 
     //Validar si el focusout fue en la columna de material
@@ -3865,7 +3872,7 @@ function loadExcelDis(file) {
                     $(this).children().eq(3).children().blur();
                 });
             });
-            
+
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             alert("Request couldn't be processed. Please try again later. the reason        " + xhr.status + " : " + httpStatusMessage + " : " + customErrorMessage);
@@ -4042,7 +4049,7 @@ function addRowSop(t) {
         "<input class=\"IMPORTE_FAC input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
         "<input class=\"BELNR input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">"//B20180625 MGC 2018.06.27    
     );
-    
+
 }
 $(document).on("change", ".checkLeke", function () {
     if ($("#sociedad_id").val() === "LEKE") {
@@ -5428,7 +5435,7 @@ function selectMonto(val, message) {
     var ta = $('#table_dis').DataTable();
     ta.clear().draw();
 
-   
+
 
     //Obtener la negociación
     var select_neg = $('#select_neg').val();
@@ -5569,8 +5576,8 @@ function selectCliente(valu) {
 
         $.ajax({
             type: "POST",
-            url: root+'Listas/SelectCliente',
-            data: { "kunnr": valu,esBorrador:esBorrador },
+            url: root + 'Listas/SelectCliente',
+            data: { "kunnr": valu, esBorrador: esBorrador },
             success: function (data) {
 
                 document.getElementById("loader").style.display = "none";//RSG 03.07.2018
@@ -5605,8 +5612,8 @@ function selectCliente(valu) {
                     if (!isRelacionada()) {
                         llenaCat(data.VKORG, data.VTWEG, data.SPART, valu);
                         getCatMateriales(data.VKORG, data.VTWEG, data.SPART, valu);
-                    } 
-                    
+                    }
+
                     //RSG 28.05.2018------------------------------------------
                 } else {
                     limpiarCliente();
