@@ -49,10 +49,10 @@
                     <a href="@Url.Action("Edit", "Proveedor", new { id = item.ID })">
                         <i class='material-icons green-text'>edit</i>
                     </a>
-                    <a href="@Url.Action("Details", "Proveedor", new { id = item.ID})">
+                    <a href="@Url.Action("Details", "Proveedor", new { id = item.ID })">
                         <i class='material-icons blue-text'>search</i>
                     </a>
-                    <a href="@Url.Action("Delete", "Proveedor", new { id = item.ID})">
+                    <a href="@Url.Action("Delete", "Proveedor", new { id = item.ID })">
                         <i class='material-icons red-text'>delete</i>
                     </a>
                 </td>
@@ -64,7 +64,7 @@
     @(Model.proveedores.PageCount < Model.proveedores.PageNumber ? 0 : Model.proveedores.PageNumber)
     - @Model.proveedores.PageCount
 
-    @Html.PagedListPager(Model.proveedores, page => Url.Action("List", new { pagina = page, numRegistros = Model.numRegistros, buscar=Model.buscar  }))
+    @Html.PagedListPager(Model.proveedores, page => Url.Action("List", new { pagina = page, numRegistros = Model.numRegistros, buscar = Model.buscar, colOrden=Model.ordenActual}))
 </div>
 
 @if (ViewBag.textos != null)
@@ -117,4 +117,29 @@
         }
     }
     sort();
+    //-----Pagination
+    function pagination() {
+        var paginationLink = $('.pagination>li>a');
+        for (var i = 0; i < paginationLink.length; i++) {
+            var url = paginationLink.get(i).getAttribute("href");
+            var id = 'link_p' + i;
+            if (url) {
+                paginationLink.get(i).setAttribute("id", id);
+                paginationLink.get(i).setAttribute("url", url);
+                $('#' + id).click(function (me) {
+                    fnCommon.showProcess(true);
+                    $.ajax({
+                        url: me.toElement.getAttribute('url'),
+                        success: function (resultView) {
+                            fnCommon.showProcess(false);
+                            $('#list').html(resultView);
+                            pagination();
+                        }
+                    });
+                });
+            }
+            paginationLink.get(i).removeAttribute("href");
+        }
+    }
+    pagination();
 </script>
