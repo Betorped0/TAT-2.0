@@ -2047,6 +2047,8 @@ function procesarHoja5() {
         complete: function (data) {
             //validarErrores("tab_test5"); //RMG
             $(document).ready(function () {
+                $("#excelBtn").removeAttr("disabled");
+                cloneTables();
                 $(".requiredfile").on("change", function () {
                     if ($(this).hasClass("valid")) {
                         $(this).closest('tr').children().eq(0).children().removeClass("red rojo");
@@ -2057,6 +2059,16 @@ function procesarHoja5() {
                         $(this).closest('tr').children().eq(0).children().removeClass("green");
                         $(this).closest('tr').children().eq(0).children().addClass("red rojo");
                         $(this).closest('tr').children().eq(0).children().text("close");
+                    }
+                });
+
+                $(".outRequiredfile").on("change", function () {
+                    if ($(this).hasClass("valid")) {
+                        var id = $(this).closest('tr').children().eq(1).children().val();
+                        var tipo = $(this).closest('tr').children().eq(2).children().val();
+                        $(this).closest('tr').children().eq(3).children().children().eq(0).children().eq(1).attr('id', id + tipo);
+                    } else {
+                        $(this).closest('tr').children().eq(3).children().children().eq(0).children().eq(1).removeAttr('id');
                     }
                 });
                 $("#tablesToexcel").prop("disabled", "false");
@@ -2085,7 +2097,7 @@ function addRowH5(t, NUM_DOC, TIPO, OBLIGATORIO) {
     }
     else {
         CHECK = "<span class='green white-text material-icons'>done</span>";//RMG
-        fileInpt = "<div class='file-field input-field'><div class='btn-small' style='float: left;'><span>Examinar</span><input type='file'></div><div class='file-path-wrapper'><input class='file-path validate' type='text'></div></div>";
+        fileInpt = "<div class='file-field input-field'><div class='btn-small' style='float: left;'><span>Examinar</span><input type='file'></div><div class='file-path-wrapper'><input class='file-path validate outRequiredfile' type='text'></div></div>";
 
     }
 
@@ -2801,10 +2813,19 @@ function guardaDatos() {
 
             if (idArchivoH5 == (num_docH5 + descripcionH5)) {
                 var archivo = document.getElementById(num_docH5 + descripcionH5).files[0];
-                rowsH5[e] = [num_docH5 + descripcionH5 + "*" + archivo.name + archivo.size];
-                rowsArc[e] = archivo;
-                formData.append("archivos[]", archivo);
-                e++;
+
+                if (idArchivoH5.includes("*")) {
+                    rowsH5[e] = [num_docH5 + descripcionH5 + "*" + archivo.name + archivo.size];
+                    rowsArc[e] = archivo;
+                    formData.append("archivos[]", archivo);
+                    e++;
+                }
+                else {
+                    rowsH5[e] = [num_docH5 + "*" + descripcionH5 + "*" + archivo.name + archivo.size];
+                    rowsArc[e] = archivo;
+                    formData.append("archivos[]", archivo);
+                    e++;
+                }
             }
         }
     }
@@ -2840,10 +2861,216 @@ function guardaDatos() {
         dataType: "json",
         data: { "h1": tabla1, "h2": tabla2, "h3": tabla3, "h4": tabla4, "h5": tabla5 },
         success: function (data) {
-            getDec = data;
+            if (data != null | data != "") {
+                var eliminarId = [];
+
+                eliminarId = data;
+                var tablaH1 = $('#tab_test1').DataTable();
+                var tablaH2 = $('#tab_test2').DataTable();
+                var tablaH3 = $('#tab_test3').DataTable();
+                var tablaH4 = $('#tab_test4').DataTable();
+                var tablaH5 = $('#tab_test5').DataTable();
+
+                for (var su = 0; su < eliminarId.length; su++) {
+                    var num_doc = eliminarId[su];
+
+                    for (var a = 0; a < tablaH1.rows().data().length; a++) {
+                        var rowH1 = tablaH1.row(a).node();
+                        var num_docH1 = $(rowH1).children().eq(1).children().val();
+
+                        if (num_doc == num_docH1) {
+                            rowH1.remove();
+                        }
+                    }
+
+                    for (var b = 0; b < tablaH2.rows().data().length; b++) {
+                        var rowH2 = tablaH2.row(b).node();
+                        var num_docH2 = $(rowH2).children().eq(1).children().val();
+
+                        if (num_doc == num_docH2) {
+                            rowH2.remove();
+                        }
+                    }
+
+                    for (var c = 0; c < tablaH3.rows().data().length; c++) {
+                        var rowH3 = tablaH3.row(c).node();
+                        var num_docH3 = $(rowH3).children().eq(1).children().val();
+
+                        if (num_doc == num_docH3) {
+                            rowH3.remove();
+                        }
+                    }
+
+                    for (var d = 0; d < tablaH4.rows().data().length; d++) {
+                        var rowH4 = tablaH4.row(d).node();
+                        var num_docH4 = $(rowH4).children().eq(1).children().val();
+
+                        if (num_doc == num_docH4) {
+                            rowH4.remove();
+                        }
+                    }
+
+                    for (var e = 0; e < tablaH5.rows().data().length; e++) {
+                        var rowH5 = tablaH5.row(e).node();
+                        var num_docH5 = $(rowH5).children().eq(1).children().val();
+
+                        if (num_doc == num_docH5) {
+                            rowH5.remove();
+                        }
+                    }
+                }
+            }
         }
     });
 }
+
+
+function cloneTables() {
+    var tablaH1c = $('#tab_test1').DataTable();
+    var tablaH2c = $('#tab_test2').DataTable();
+    var tablaH3c = $('#tab_test3').DataTable();
+    var tablaH4c = $('#tab_test4').DataTable();
+
+    ////TAB1Data////
+    $('#tab_test1').append("<table id='tab_test1clond' style='display:none'><thead id='tabclon1hd'></thead><tbody id='tabclon1bd'></tbody></table>");
+    $('#tabclon1hd').append("<tr id='titles1d'></tr>");
+
+    $('#tab_test1 > thead > tr > th').each(function () {
+        if ($(this).text() != "LABEL") {
+            $('#titles1d').append("<th>" + $(this).text() + "</th>");
+        } else {
+        }
+
+    });
+
+    for (var aa = 0; aa < tablaH1c.rows().data().length; aa++) {
+        var rowH1c = tablaH1c.row(aa).node();
+        $('#tabclon1bd').append("<tr id='trd" + aa + "'></tr>");
+        $(rowH1c).children().each(function (td) {
+            if (td != 18 && td != 19) {
+                $("#trd" + aa).append("<td>" + $(this).find('span:first').text() + "</td>");
+            }
+        });
+    }
+
+    ////TAB2////
+    $('#tab_test1').append("<table id='tab_test2clon' style='display:none'><thead id='tabclon2h'></thead><tbody id='tabclon2b'></tbody></table>");
+    $('#tabclon2h').append("<tr id='titles2'></tr>");
+
+    $('#tab_test2 > thead > tr > th').each(function () {
+        if ($(this).text() != "LABEL") {
+            $('#titles2').append("<th>" + $(this).text() + "</th>");
+        } else {
+        }
+
+    });
+
+    for (var bb = 0; bb < tablaH2c.rows().data().length; bb++) {
+        var rowH2c = tablaH2c.row(bb).node();
+        $('#tabclon2b').append("<tr id='tr2" + bb + "'></tr>");
+        $(rowH2c).children().each(function (td) {
+            $("#tr2" + bb).append("<td>" + $(this).find('span:first').text() + "</td>");
+        });
+    }
+    ////TAB3////
+    $('#tab_test1').append("<table id='tab_test3clon' style='display:none'><thead id='tabclon3h'></thead><tbody id='tabclon3b'></tbody></table>");
+    $('#tabclon3h').append("<tr id='titles3'></tr>");
+
+    $('#tab_test3 > thead > tr > th').each(function () {
+        if ($(this).text() != "LABEL") {
+            $('#titles3').append("<th>" + $(this).text() + "</th>");
+        } else {
+        }
+
+    });
+
+    for (var cc = 0; cc < tablaH3c.rows().data().length; cc++) {
+        var rowH3c = tablaH3c.row(cc).node();
+        $('#tabclon3b').append("<tr id='tr3" + cc + "'></tr>");
+        $(rowH3c).children().each(function (td) {
+            $("#tr3" + cc).append("<td>" + $(this).find('span:first').text() + "</td>");
+        });
+    }
+    ////TAB4////
+    $('#tab_test1').append("<table id='tab_test4clon' style='display:none'><thead id='tabclon4h'></thead><tbody id='tabclon4b'></tbody></table>");
+    $('#tabclon4h').append("<tr id='titles4'></tr>");
+
+    $('#tab_test4 > thead > tr > th').each(function () {
+        if ($(this).text() != "LABEL") {
+            $('#titles4').append("<th>" + $(this).text() + "</th>");
+        } else {
+        }
+
+    });
+
+    for (var dd = 0; dd < tablaH4c.rows().data().length; dd++) {
+        var rowH4c = tablaH4c.row(dd).node();
+        $('#tabclon4b').append("<tr id='tr4" + dd + "'></tr>");
+        $(rowH4c).children().each(function (td) {
+            $("#tr4" + dd).append("<td>" + $(this).find('span:first').text() + "</td>");
+        });
+    }
+}
+
+var tablesToExcel = (function () {
+    var uri = 'data:application/vnd.ms-excel;base64,'
+        , tmplWorkbookXML = '<?xml version="1.0"?><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">'
+            + '<DocumentProperties xmlns="urn:schemas-microsoft-com:office:office"><Author>Axel Richter</Author><Created>{created}</Created></DocumentProperties>'
+            + '<Styles>'
+            + '<Style ss:ID="Currency"><NumberFormat ss:Format="Currency"></NumberFormat></Style>'
+            + '<Style ss:ID="Date"><NumberFormat ss:Format="Medium Date"></NumberFormat></Style>'
+            + '</Styles>'
+            + '{worksheets}</Workbook>'
+        , tmplWorksheetXML = '<Worksheet ss:Name="{nameWS}"><Table>{rows}</Table></Worksheet>'
+        , tmplCellXML = '<Cell{attributeStyleID}{attributeFormula}><Data ss:Type="{nameType}">{data}</Data></Cell>'
+        , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+        , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+    return function (tables, wsnames, wbname, appname) {
+        var ctx = "";
+        var workbookXML = "";
+        var worksheetsXML = "";
+        var rowsXML = "";
+
+        for (var i = 0; i < tables.length; i++) {
+            if (!tables[i].nodeType) tables[i] = document.getElementById(tables[i]);
+            for (var j = 0; j < tables[i].rows.length; j++) {
+                rowsXML += '<Row>'
+                for (var k = 0; k < tables[i].rows[j].cells.length; k++) {
+                    var dataType = tables[i].rows[j].cells[k].getAttribute("data-type");
+                    var dataStyle = tables[i].rows[j].cells[k].getAttribute("data-style");
+                    var dataValue = tables[i].rows[j].cells[k].getAttribute("data-value");
+                    dataValue = (dataValue) ? dataValue : tables[i].rows[j].cells[k].innerHTML;
+                    var dataFormula = tables[i].rows[j].cells[k].getAttribute("data-formula");
+                    dataFormula = (dataFormula) ? dataFormula : (appname == 'Calc' && dataType == 'DateTime') ? dataValue : null;
+                    ctx = {
+                        attributeStyleID: (dataStyle == 'Currency' || dataStyle == 'Date') ? ' ss:StyleID="' + dataStyle + '"' : ''
+                        , nameType: (dataType == 'Number' || dataType == 'DateTime' || dataType == 'Boolean' || dataType == 'Error') ? dataType : 'String'
+                        , data: (dataFormula) ? '' : dataValue
+                        , attributeFormula: (dataFormula) ? ' ss:Formula="' + dataFormula + '"' : ''
+                    };
+                    rowsXML += format(tmplCellXML, ctx);
+                }
+                rowsXML += '</Row>'
+            }
+            ctx = { rows: rowsXML, nameWS: wsnames[i] || 'Sheet' + i };
+            worksheetsXML += format(tmplWorksheetXML, ctx);
+            rowsXML = "";
+        }
+
+        ctx = { created: (new Date()).getTime(), worksheets: worksheetsXML };
+        workbookXML = format(tmplWorkbookXML, ctx);
+
+
+
+        var link = document.createElement("A");
+        link.href = uri + base64(workbookXML);
+        link.download = wbname || 'Workbook.xls';
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+})();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
