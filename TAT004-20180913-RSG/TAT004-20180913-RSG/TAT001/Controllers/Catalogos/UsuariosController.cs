@@ -2212,6 +2212,7 @@ namespace TAT001.Controllers.Catalogos
 
                         }
                         messa = "";
+                        da.mess = messa;
                         client[cont2, 1] = da.ID;
                         us.mess = da.mess;
                         tablas[cont2, 10] = messa;
@@ -2379,6 +2380,7 @@ namespace TAT001.Controllers.Catalogos
 
                         }
                         messa = "";
+                        da.mess = messa;
                         admins[cont3, 1] = da.ID;
                         usuariosoc[cont4, 1] = da.ID.ToString();
                         us.mess = da.mess;
@@ -2869,6 +2871,30 @@ namespace TAT001.Controllers.Catalogos
             }
 
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+
+        public JsonResult Sociedad(string Prefix)
+        {
+            if (Prefix == null)
+                Prefix = "";
+
+            TAT001Entities db = new TAT001Entities();
+
+            var c = (from x in db.SOCIEDADs
+                     where x.BUKRS.Contains(Prefix)
+                     select new { x.BUKRS, x.BUTXT }).ToList();
+
+            if (c.Count == 0)
+            {
+                var c2 = (from x in db.SOCIEDADs
+                          where x.BUTXT.Contains(Prefix)
+                          select new { x.BUKRS, x.BUTXT }).ToList();
+                c.AddRange(c2);
+            }
+
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+
             return cc;
         }
 
