@@ -2047,6 +2047,8 @@ function procesarHoja5() {
         complete: function (data) {
             //validarErrores("tab_test5"); //RMG
             $(document).ready(function () {
+                $("#excelBtn").removeAttr("disabled");
+                cloneTables();
                 $(".requiredfile").on("change", function () {
                     if ($(this).hasClass("valid")) {
                         $(this).closest('tr').children().eq(0).children().removeClass("red rojo");
@@ -2872,7 +2874,7 @@ function cloneTables() {
     var tablaH4c = $('#tab_test4').DataTable();
 
     ////TAB1Data////
-    $('#tab_test1').append("<table id='tab_test1clond'><thead id='tabclon1hd'></thead><tbody id='tabclon1bd'></tbody></table>");
+    $('#tab_test1').append("<table id='tab_test1clond' style='display:none'><thead id='tabclon1hd'></thead><tbody id='tabclon1bd'></tbody></table>");
     $('#tabclon1hd').append("<tr id='titles1d'></tr>");
 
     $('#tab_test1 > thead > tr > th').each(function () {
@@ -2894,7 +2896,7 @@ function cloneTables() {
     }
 
     ////TAB2////
-    $('#tab_test1').append("<table id='tab_test2clon'><thead id='tabclon2h'></thead><tbody id='tabclon2b'></tbody></table>");
+    $('#tab_test1').append("<table id='tab_test2clon' style='display:none'><thead id='tabclon2h'></thead><tbody id='tabclon2b'></tbody></table>");
     $('#tabclon2h').append("<tr id='titles2'></tr>");
 
     $('#tab_test2 > thead > tr > th').each(function () {
@@ -2913,7 +2915,7 @@ function cloneTables() {
         });
     }
     ////TAB3////
-    $('#tab_test1').append("<table id='tab_test3clon'><thead id='tabclon3h'></thead><tbody id='tabclon3b'></tbody></table>");
+    $('#tab_test1').append("<table id='tab_test3clon' style='display:none'><thead id='tabclon3h'></thead><tbody id='tabclon3b'></tbody></table>");
     $('#tabclon3h').append("<tr id='titles3'></tr>");
 
     $('#tab_test3 > thead > tr > th').each(function () {
@@ -2932,7 +2934,7 @@ function cloneTables() {
         });
     }
     ////TAB4////
-    $('#tab_test1').append("<table id='tab_test4clon'><thead id='tabclon4h'></thead><tbody id='tabclon4b'></tbody></table>");
+    $('#tab_test1').append("<table id='tab_test4clon' style='display:none'><thead id='tabclon4h'></thead><tbody id='tabclon4b'></tbody></table>");
     $('#tabclon4h').append("<tr id='titles4'></tr>");
 
     $('#tab_test4 > thead > tr > th').each(function () {
