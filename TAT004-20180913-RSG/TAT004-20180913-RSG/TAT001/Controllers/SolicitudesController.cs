@@ -1986,9 +1986,7 @@ namespace TAT001.Controllers
                                     }
                                     docP.MATNR = dOCUMENTO.DOCUMENTOP.ElementAt(j).MATNR;
                                     docP.MATNR = new Cadena().completaMaterial(docP.MATNR);//RSG 07.06.2018
-
-                                    MATERIAL mat = db.MATERIALs.Where(x=>x.ID== docP.MATNR).FirstOrDefault();
-                                    docP.MATKL = mat.MATKL_ID;
+                                    docP.MATKL = dOCUMENTO.DOCUMENTOP.ElementAt(j).MATKL_ID;
                                     docP.CANTIDAD = 1;
                                     docP.MONTO = dOCUMENTO.DOCUMENTOP.ElementAt(j).MONTO;
                                     docP.PORC_APOYO = dOCUMENTO.DOCUMENTOP.ElementAt(j).PORC_APOYO;
@@ -2265,11 +2263,23 @@ namespace TAT001.Controllers
 
                         if (drec.PERIODO == 0) drec.PERIODO = 12;
                         if (dOCUMENTO.DOCUMENTORAN != null)
+                        {
                             foreach (DOCUMENTORAN dran in dOCUMENTO.DOCUMENTORAN.Where(x => x.POS == drec.POS))
                             {
                                 dran.NUM_DOC = dOCUMENTO.NUM_DOC;
                                 drec.DOCUMENTORANs.Add(dran);
                             }
+                        }
+                        else
+                        {
+                            DOCUMENTORAN dran = new DOCUMENTORAN();
+                            dran.NUM_DOC = dOCUMENTO.NUM_DOC;
+                            dran.POS = 1;
+                            dran.LIN = 1;
+                            dran.OBJETIVOI = 0;
+                            dran.PORCENTAJE = dOCUMENTO.PORC_APOYO;
+                            drec.DOCUMENTORANs.Add(dran);
+                        }
                         drec.PORC = dOCUMENTO.PORC_APOYO;
                         drec.DOC_REF = 0;
                         drec.ESTATUS = "";
