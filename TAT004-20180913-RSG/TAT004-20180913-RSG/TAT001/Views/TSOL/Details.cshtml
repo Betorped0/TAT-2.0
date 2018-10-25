@@ -1,6 +1,6 @@
 ﻿@model TAT001.Entities.TSOL
 @{
-    ViewBag.pagina_r = 792;
+    ViewBag.pagina_r = 793;
     ViewBag.carpeta_r = 500;
     //ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -65,11 +65,9 @@
                         </div>
                     }
                 </div>
-                <div class="input-field col l6 m6" style="margin-bottom:0;">
+                <div class="form-group" style="margin-bottom:0;">
 
                     @Html.LabelFor(model => model.ACTIVO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblObliga" })
-
-
                     @if ((bool)Model.ACTIVO == true)
                     {
                         <i class='material-icons green-text'>check</i>}

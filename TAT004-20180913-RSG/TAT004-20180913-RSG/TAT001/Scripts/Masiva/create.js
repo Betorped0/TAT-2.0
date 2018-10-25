@@ -2863,6 +2863,154 @@ function guardaDatos() {
         }
     });
 }
+
+
+function cloneTables() {
+    var tablaH1c = $('#tab_test1').DataTable();
+    var tablaH2c = $('#tab_test2').DataTable();
+    var tablaH3c = $('#tab_test3').DataTable();
+    var tablaH4c = $('#tab_test4').DataTable();
+
+    ////TAB1Data////
+    $('#tab_test1').append("<table id='tab_test1clond'><thead id='tabclon1hd'></thead><tbody id='tabclon1bd'></tbody></table>");
+    $('#tabclon1hd').append("<tr id='titles1d'></tr>");
+
+    $('#tab_test1 > thead > tr > th').each(function () {
+        if ($(this).text() != "LABEL") {
+            $('#titles1d').append("<th>" + $(this).text() + "</th>");
+        } else {
+        }
+
+    });
+
+    for (var aa = 0; aa < tablaH1c.rows().data().length; aa++) {
+        var rowH1c = tablaH1c.row(aa).node();
+        $('#tabclon1bd').append("<tr id='trd" + aa + "'></tr>");
+        $(rowH1c).children().each(function (td) {
+            if (td != 18 && td != 19) {
+                $("#trd" + aa).append("<td>" + $(this).find('span:first').text() + "</td>");
+            }
+        });
+    }
+
+    ////TAB2////
+    $('#tab_test1').append("<table id='tab_test2clon'><thead id='tabclon2h'></thead><tbody id='tabclon2b'></tbody></table>");
+    $('#tabclon2h').append("<tr id='titles2'></tr>");
+
+    $('#tab_test2 > thead > tr > th').each(function () {
+        if ($(this).text() != "LABEL") {
+            $('#titles2').append("<th>" + $(this).text() + "</th>");
+        } else {
+        }
+
+    });
+
+    for (var bb = 0; bb < tablaH2c.rows().data().length; bb++) {
+        var rowH2c = tablaH2c.row(bb).node();
+        $('#tabclon2b').append("<tr id='tr2" + bb + "'></tr>");
+        $(rowH2c).children().each(function (td) {
+            $("#tr2" + bb).append("<td>" + $(this).find('span:first').text() + "</td>");
+        });
+    }
+    ////TAB3////
+    $('#tab_test1').append("<table id='tab_test3clon'><thead id='tabclon3h'></thead><tbody id='tabclon3b'></tbody></table>");
+    $('#tabclon3h').append("<tr id='titles3'></tr>");
+
+    $('#tab_test3 > thead > tr > th').each(function () {
+        if ($(this).text() != "LABEL") {
+            $('#titles3').append("<th>" + $(this).text() + "</th>");
+        } else {
+        }
+
+    });
+
+    for (var cc = 0; cc < tablaH3c.rows().data().length; cc++) {
+        var rowH3c = tablaH3c.row(cc).node();
+        $('#tabclon3b').append("<tr id='tr3" + cc + "'></tr>");
+        $(rowH3c).children().each(function (td) {
+            $("#tr3" + cc).append("<td>" + $(this).find('span:first').text() + "</td>");
+        });
+    }
+    ////TAB4////
+    $('#tab_test1').append("<table id='tab_test4clon'><thead id='tabclon4h'></thead><tbody id='tabclon4b'></tbody></table>");
+    $('#tabclon4h').append("<tr id='titles4'></tr>");
+
+    $('#tab_test4 > thead > tr > th').each(function () {
+        if ($(this).text() != "LABEL") {
+            $('#titles4').append("<th>" + $(this).text() + "</th>");
+        } else {
+        }
+
+    });
+
+    for (var dd = 0; dd < tablaH4c.rows().data().length; dd++) {
+        var rowH4c = tablaH4c.row(dd).node();
+        $('#tabclon4b').append("<tr id='tr4" + dd + "'></tr>");
+        $(rowH4c).children().each(function (td) {
+            $("#tr4" + dd).append("<td>" + $(this).find('span:first').text() + "</td>");
+        });
+    }
+}
+
+var tablesToExcel = (function () {
+    var uri = 'data:application/vnd.ms-excel;base64,'
+        , tmplWorkbookXML = '<?xml version="1.0"?><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">'
+            + '<DocumentProperties xmlns="urn:schemas-microsoft-com:office:office"><Author>Axel Richter</Author><Created>{created}</Created></DocumentProperties>'
+            + '<Styles>'
+            + '<Style ss:ID="Currency"><NumberFormat ss:Format="Currency"></NumberFormat></Style>'
+            + '<Style ss:ID="Date"><NumberFormat ss:Format="Medium Date"></NumberFormat></Style>'
+            + '</Styles>'
+            + '{worksheets}</Workbook>'
+        , tmplWorksheetXML = '<Worksheet ss:Name="{nameWS}"><Table>{rows}</Table></Worksheet>'
+        , tmplCellXML = '<Cell{attributeStyleID}{attributeFormula}><Data ss:Type="{nameType}">{data}</Data></Cell>'
+        , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+        , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+    return function (tables, wsnames, wbname, appname) {
+        var ctx = "";
+        var workbookXML = "";
+        var worksheetsXML = "";
+        var rowsXML = "";
+
+        for (var i = 0; i < tables.length; i++) {
+            if (!tables[i].nodeType) tables[i] = document.getElementById(tables[i]);
+            for (var j = 0; j < tables[i].rows.length; j++) {
+                rowsXML += '<Row>'
+                for (var k = 0; k < tables[i].rows[j].cells.length; k++) {
+                    var dataType = tables[i].rows[j].cells[k].getAttribute("data-type");
+                    var dataStyle = tables[i].rows[j].cells[k].getAttribute("data-style");
+                    var dataValue = tables[i].rows[j].cells[k].getAttribute("data-value");
+                    dataValue = (dataValue) ? dataValue : tables[i].rows[j].cells[k].innerHTML;
+                    var dataFormula = tables[i].rows[j].cells[k].getAttribute("data-formula");
+                    dataFormula = (dataFormula) ? dataFormula : (appname == 'Calc' && dataType == 'DateTime') ? dataValue : null;
+                    ctx = {
+                        attributeStyleID: (dataStyle == 'Currency' || dataStyle == 'Date') ? ' ss:StyleID="' + dataStyle + '"' : ''
+                        , nameType: (dataType == 'Number' || dataType == 'DateTime' || dataType == 'Boolean' || dataType == 'Error') ? dataType : 'String'
+                        , data: (dataFormula) ? '' : dataValue
+                        , attributeFormula: (dataFormula) ? ' ss:Formula="' + dataFormula + '"' : ''
+                    };
+                    rowsXML += format(tmplCellXML, ctx);
+                }
+                rowsXML += '</Row>'
+            }
+            ctx = { rows: rowsXML, nameWS: wsnames[i] || 'Sheet' + i };
+            worksheetsXML += format(tmplWorksheetXML, ctx);
+            rowsXML = "";
+        }
+
+        ctx = { created: (new Date()).getTime(), worksheets: worksheetsXML };
+        workbookXML = format(tmplWorkbookXML, ctx);
+
+
+
+        var link = document.createElement("A");
+        link.href = uri + base64(workbookXML);
+        link.download = wbname || 'Workbook.xls';
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+})();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
