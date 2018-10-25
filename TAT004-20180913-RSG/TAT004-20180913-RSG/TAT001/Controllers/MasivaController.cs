@@ -2568,13 +2568,13 @@ namespace TAT001.Controllers
                                 }//LLAVE FOREACH
                             }
                         }
-                        List<HttpPostedFileBase> archivosToSave = (List<HttpPostedFileBase>)Session["archivosSave"];
+                        List<object> archivosToSave = (List<object>)Session["archivosSave"];
 
                         if (archivosToSave == null)
                         {
-                            archivosToSave = new List<HttpPostedFileBase>();
+                            archivosToSave = new List<object>();
                         }
-                        archivosToSave.AddRange(listaArchivos);
+                        archivosToSave.Add(listaArchivos);
                         Session["archivosSave"] = archivosToSave;
                     }
                     //FIN DE LA SECCION 5
@@ -3139,7 +3139,8 @@ namespace TAT001.Controllers
 
         public void guardaArchivos(decimal num_doc)
         {
-            IEnumerable<HttpPostedFileBase> archivosToSave = (IEnumerable<HttpPostedFileBase>)Session["archivosSave"];
+            List<object> archivosToSave = (List<object>)Session["archivosSave"];
+            //IEnumerable<HttpPostedFileBase> archivosToSave = (IEnumerable<HttpPostedFileBase>)Session["archivosSave"];
             string errorString = "";
             var res = "";
             string errorMessage = "";
@@ -3243,46 +3244,5 @@ namespace TAT001.Controllers
             db2.SaveChanges();
             db2.Dispose();
         }
-
-        //public decimal getSolID(string TSOL_ID)
-        //{
-        //    decimal id = 0;
-        //    RANGO rango = getRango(TSOL_ID);
-
-        //    if (rango.ACTUAL > rango.INICIO && rango.ACTUAL < rango.FIN)
-        //    {
-        //        rango.ACTUAL++;
-        //        id = (decimal)rango.ACTUAL;
-        //    }
-
-        //    return id;
-        //}
-
-        //public RANGO getRango(string TSOL_ID)
-        //{
-        //    RANGO rango = new RANGO();
-
-        //    rango = (from r in db.RANGOes
-        //             join s in db.TSOLs
-        //             on r.ID equals s.RANGO_ID
-        //             where s.ID == TSOL_ID && r.ACTIVO == true
-        //             select r).FirstOrDefault();
-
-        //    return rango;
-        //}
-
-        //public void updateRango(string TSOL_ID, decimal actual)
-        //{
-        //    RANGO rango = getRango(TSOL_ID);
-
-        //    if (rango.ACTUAL > rango.INICIO && rango.ACTUAL < rango.FIN)
-        //    {
-        //        rango.ACTUAL = actual;
-        //    }
-
-        //    db.Entry(rango).State = EntityState.Modified;
-        //    db.SaveChanges();
-        //    db.Dispose();
-        //}
     }
 }

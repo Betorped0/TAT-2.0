@@ -2059,6 +2059,16 @@ function procesarHoja5() {
                         $(this).closest('tr').children().eq(0).children().text("close");
                     }
                 });
+
+                $(".outRequiredfile").on("change", function () {
+                    if ($(this).hasClass("valid")) {
+                        var id = $(this).closest('tr').children().eq(1).children().val();
+                        var tipo = $(this).closest('tr').children().eq(2).children().val();
+                        $(this).closest('tr').children().eq(3).children().children().eq(0).children().eq(1).attr('id', id + tipo);
+                    } else {
+                        $(this).closest('tr').children().eq(3).children().children().eq(0).children().eq(1).removeAttr('id');
+                    }
+                });
                 $("#tablesToexcel").prop("disabled", "false");
                 $("#tablesToexcel").removeAttr("disabled");
             });
@@ -2085,7 +2095,7 @@ function addRowH5(t, NUM_DOC, TIPO, OBLIGATORIO) {
     }
     else {
         CHECK = "<span class='green white-text material-icons'>done</span>";//RMG
-        fileInpt = "<div class='file-field input-field'><div class='btn-small' style='float: left;'><span>Examinar</span><input type='file'></div><div class='file-path-wrapper'><input class='file-path validate' type='text'></div></div>";
+        fileInpt = "<div class='file-field input-field'><div class='btn-small' style='float: left;'><span>Examinar</span><input type='file'></div><div class='file-path-wrapper'><input class='file-path validate outRequiredfile' type='text'></div></div>";
 
     }
 
@@ -2801,10 +2811,19 @@ function guardaDatos() {
 
             if (idArchivoH5 == (num_docH5 + descripcionH5)) {
                 var archivo = document.getElementById(num_docH5 + descripcionH5).files[0];
-                rowsH5[e] = [num_docH5 + descripcionH5 + "*" + archivo.name + archivo.size];
-                rowsArc[e] = archivo;
-                formData.append("archivos[]", archivo);
-                e++;
+
+                if (idArchivoH5.includes("*")) {
+                    rowsH5[e] = [num_docH5 + descripcionH5 + "*" + archivo.name + archivo.size];
+                    rowsArc[e] = archivo;
+                    formData.append("archivos[]", archivo);
+                    e++;
+                }
+                else {
+                    rowsH5[e] = [num_docH5 + "*" + descripcionH5 + "*" + archivo.name + archivo.size];
+                    rowsArc[e] = archivo;
+                    formData.append("archivos[]", archivo);
+                    e++;
+                }
             }
         }
     }
