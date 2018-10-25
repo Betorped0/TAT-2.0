@@ -283,7 +283,9 @@ function Carga() {
 }
 
 function Comprobar() {
+    var table = $('#table').DataTable();
     var datos = $('#tabla').serializeArray();
+    table.clear().draw();
     creart('Comprobar', datos);
     //M.toast({ html: 'Registro Actualizado' });
 
@@ -333,8 +335,6 @@ function creart(metodo, datos) {
         data: datos,
         success: function (data) {
             if (data !== null || data !== "") {
-
-                table.clear().draw();
 
                 $.each(data, function (i, dataj) {
 
