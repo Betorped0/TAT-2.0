@@ -2426,6 +2426,10 @@ namespace TAT001.Controllers.Catalogos
                 {
                     try
                     {
+                        if (da.PASS != null && da.PASS != null)
+                        {
+                            da.PASS = (from x in db.USUARIOs where x.ID.Equals(da.ID) & x.ACTIVO == true select x.PASS).FirstOrDefault().ToString();
+                        }
                         us.ID = da.ID.Trim();
                         us.PASS = da.PASS;
                         us.NOMBRE = da.NOMBRE;
@@ -2492,6 +2496,10 @@ namespace TAT001.Controllers.Catalogos
                 {
                     try
                     {
+                        if (da.PASS != null && da.PASS != null)
+                        {
+                            da.PASS = (from x in db.USUARIOs where x.ID.Equals(da.ID) & x.ACTIVO == true select x.PASS).FirstOrDefault().ToString();
+                        }
                         us.ID = da.ID.Trim();
                         us.PASS = da.PASS;
                         us.NOMBRE = da.NOMBRE;
@@ -2595,7 +2603,7 @@ namespace TAT001.Controllers.Catalogos
                             ul.BUNIT = com;
                         com = (from x in db.USUARIOFs where x.USUARIO_ID.Equals(us) & x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO_ID).FirstOrDefault();
                         if (com != null)
-                            ul.ID = com + "?";
+                            ul.ID = com;
                         com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.PUESTO_ID).FirstOrDefault().ToString();
                         if (com != null)
                             ul.PUESTO_ID = com;
@@ -2614,6 +2622,7 @@ namespace TAT001.Controllers.Catalogos
                         com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.SPRAS_ID).FirstOrDefault();
                         if (com != null)
                             ul.SPRAS_ID = com;
+                        ul.ID = ul.ID + "?";
                         ul.mess = "1. El usuario ya existe<br/>";
                         rowst++;
                         cc.Add(ul);
@@ -2673,7 +2682,7 @@ namespace TAT001.Controllers.Catalogos
                                 ul.BUNIT = com;
                             com = (from x in db.USUARIOs where x.ID.Equals(usc) & x.ACTIVO == true select x.ID).FirstOrDefault();
                             if (com != null)
-                                ul.ID = com + "?";
+                                ul.ID = com;
                             com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.PUESTO_ID).FirstOrDefault().ToString();
                             if (com != null)
                                 ul.PUESTO_ID = com;
@@ -2692,6 +2701,7 @@ namespace TAT001.Controllers.Catalogos
                             com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.SPRAS_ID).FirstOrDefault();
                             if (com != null)
                                 ul.SPRAS_ID = com;
+                            ul.ID = ul.ID + "?";
                             ul.mess = "1. El usuario ya existe<br/>";
                             rowst++;
                             cc.Add(ul);
