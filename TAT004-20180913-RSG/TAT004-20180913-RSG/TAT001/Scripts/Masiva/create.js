@@ -2917,7 +2917,6 @@ function guardaDatos() {
     });
 }
 
-
 function cloneTables() {
     var tablaH1c = $('#tab_test1').DataTable();
     var tablaH2c = $('#tab_test2').DataTable();
