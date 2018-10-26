@@ -424,7 +424,7 @@ namespace TAT001.Models
                 try
                 {
                     TAX_LAND taxl = db.TAX_LAND.Where(x => x.ACTIVO == true && x.PAIS_ID == doc.PAIS_ID).FirstOrDefault();
-                    string pais = "";
+                    string pais = "";//ADD RSG 26.10.2018
                     if (taxl != null)
                         pais = db.TAX_LAND.Where(x => x.ACTIVO == true && x.PAIS_ID == doc.PAIS_ID).Select(x => x.PAIS_ID).Single();
                     if (String.IsNullOrEmpty(pais) == false)
@@ -769,9 +769,12 @@ namespace TAT001.Models
                                 if (enca.CALC_TAXT == false)
                                 {
                                     materi = docm[j].MATNR;
-                                    material = db.MATERIALs.Where(x => x.ID == materi).First();
-                                    grupos = conp[i].MATERIALGP.Split('+');
-                                    grupo = grupos.Where(x => x == material.MATERIALGP_ID).FirstOrDefault();
+                                    if (!String.IsNullOrEmpty(materi))//ADD RSG 26.10.2018
+                                    {
+                                        material = db.MATERIALs.Where(y => y.ID == materi).Single();
+                                        grupos = conp[i].MATERIALGP.Split('+');
+                                        grupo = grupos.Where(x => x == material.MATERIALGP_ID).FirstOrDefault();
+                                    }
                                     if (String.IsNullOrEmpty(grupo) == false)
                                     {
                                         conta.TAX_CODE = conp[i].TAXCODEGP;
@@ -963,9 +966,16 @@ namespace TAT001.Models
                                 if (enca.CALC_TAXT == true)
                                 {
                                     materi = docp[j].MATNR;
-                                    material = db.MATERIALs.Where(y => y.ID == materi).Single();
-                                    grupos = conp[i].MATERIALGP.Split('+');
-                                    grupo = grupos.Where(x => x == material.MATERIALGP_ID).FirstOrDefault();
+                                    if (!String.IsNullOrEmpty(materi))//ADD RSG 26.10.2018
+                                    {
+                                        material = db.MATERIALs.Where(y => y.ID == materi).Single();
+                                        grupos = conp[i].MATERIALGP.Split('+');
+                                        grupo = grupos.Where(x => x == material.MATERIALGP_ID).FirstOrDefault();
+                                    }
+                                    else
+                                    {
+                                        grupo = docp[j].MATKL;
+                                    }
                                     if (String.IsNullOrEmpty(grupo) == false)
                                     {
                                         conta.TAX_CODE = conp[i].TAXCODEGP;
