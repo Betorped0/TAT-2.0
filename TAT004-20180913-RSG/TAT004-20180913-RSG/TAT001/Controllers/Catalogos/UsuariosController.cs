@@ -1013,6 +1013,7 @@ namespace TAT001.Controllers.Catalogos
                                 tablas[cont2, 4] = da.NOMBRE.ToString();
                                 tablas[cont2, 5] = da.APELLIDO_P.ToString();
                                 tablas[cont2, 6] = da.APELLIDO_M.ToString();
+                                us.ID = us.ID + "!";
                             }
                             else
                             {
@@ -1208,6 +1209,7 @@ namespace TAT001.Controllers.Catalogos
                                 tabla1[cont3, 4] = da.NOMBRE.ToString();
                                 tabla1[cont3, 5] = da.APELLIDO_P.ToString();
                                 tabla1[cont3, 6] = da.APELLIDO_M.ToString();
+                                us.ID = us.ID + "!";
                             }
                             else
                             {
@@ -1927,11 +1929,6 @@ namespace TAT001.Controllers.Catalogos
         public JsonResult Comprobar()
         {
             int rowst = (int)Session["rowst"];
-            string[,] tablas = (string[,])Session["tablas"];
-            string[,] client = (string[,])Session["client"];
-            string[,] tabla1 = (string[,])Session["tabla1"];
-            string[,] admins = (string[,])Session["admins"];
-            string[,] usuariosoc = (string[,])Session["usuariosoc"];
             List<DET_AGENTE1> ld = new List<DET_AGENTE1>();
 
             var cli = Request["cli"];
@@ -1946,6 +1943,11 @@ namespace TAT001.Controllers.Catalogos
             var pas = Request["pas"];
 
             rowst = cli.Split(',').Length;
+            string[,] tablas = new string[rowst, 11];
+            string[,] client = new string[rowst, 2];
+            string[,] tabla1 = new string[rowst, 11];
+            string[,] admins = new string[rowst, 2];
+            string[,] usuariosoc = new string[rowst, 2];
 
             string[,] compara = new string[rowst, 11];
             for(int i=0;i<rowst;i++)
@@ -2003,449 +2005,453 @@ namespace TAT001.Controllers.Catalogos
                 us.SPRAS_IDX = true;
                 us.PASS = da.PASS;
 
-                int pues = 0;
-                string men = ". Error en el nivel<br/>";
-                if (us.PUESTO_ID != null && us.PUESTO_ID != "")
-                    pues = int.Parse(us.PUESTO_ID);
-
-                var ni = (from x in db.PUESTOTs
-                          join a in db.PUESTOes on x.PUESTO_ID equals a.ID
-                          where x.PUESTO_ID == pues & x.SPRAS_ID.Equals(p) & a.ACTIVO == true
-                          select x.PUESTO_ID).FirstOrDefault();
-                bool pru = false;
-                var re = (from x in db.DET_APROBH where x.PUESTOC_ID == ni & x.ACTIVO == true select x.SOCIEDAD_ID).FirstOrDefault();
-
-                if (cont2 > 0)
+                if (us.KUNNR != "" || us.BUNIT != "" || us.PUESTO_ID != "" || us.ID != "" || us.NOMBRE != "" || us.APELLIDO_P != "" || us.APELLIDO_M != "" || us.EMAIL != "" || us.SPRAS_ID != "" || us.PASS != "")
                 {
-                    //Comprobacion de la asignacion de varios clientes
-                    if (us.KUNNR != gua[cont2 - 1] && us.BUNIT == "" && us.PUESTO_ID == "" && us.ID == "" && us.NOMBRE == "" && us.APELLIDO_P == "" && us.APELLIDO_M == "" && us.EMAIL == "" && us.SPRAS_ID == "" && us.PASS == "")
+                    int pues = 0;
+                    string men = ". Error en el nivel<br/>";
+                    if (us.PUESTO_ID != null && us.PUESTO_ID != "")
+                        pues = int.Parse(us.PUESTO_ID);
+
+                    var ni = (from x in db.PUESTOTs
+                              join a in db.PUESTOes on x.PUESTO_ID equals a.ID
+                              where x.PUESTO_ID == pues & x.SPRAS_ID.Equals(p) & a.ACTIVO == true
+                              select x.PUESTO_ID).FirstOrDefault();
+                    bool pru = false;
+                    var re = (from x in db.DET_APROBH where x.PUESTOC_ID == ni & x.ACTIVO == true select x.SOCIEDAD_ID).FirstOrDefault();
+
+                    if (cont2 > 0)
                     {
-                        vus = true;
-                        pru = true;
+                        //Comprobacion de la asignacion de varios clientes
+                        if (us.KUNNR != gua[cont2 - 1] && us.BUNIT == "" && us.PUESTO_ID == "" && us.ID == "" && us.NOMBRE == "" && us.APELLIDO_P == "" && us.APELLIDO_M == "" && us.EMAIL == "" && us.SPRAS_ID == "" && us.PASS == "")
+                        {
+                            vus = true;
+                            pru = true;
+                            sel = "venta";
+                        }
+                    }
+                    if (cont3 > 0)
+                    {
+                        //Comprobacion de la asignacion de varios clientes
+                        if (us.BUNIT != gua1[cont3 - 1] && us.KUNNR == "" && us.PUESTO_ID == "" && us.ID == "" && us.NOMBRE == "" && us.APELLIDO_P == "" && us.APELLIDO_M == "" && us.EMAIL == "" && us.SPRAS_ID == "" && us.PASS == "")
+                        {
+                            vus = true;
+                            pru = true;
+                            sel = "super";
+                        }
+                    }
+
+                    // Validacion del tipo de usuario
+                    if ((re != null && re != "") && pru == false)
+                    {
                         sel = "venta";
                     }
-                }
-                if (cont3 > 0)
-                {
-                    //Comprobacion de la asignacion de varios clientes
-                    if (us.BUNIT != gua1[cont3 - 1] && us.KUNNR == "" && us.PUESTO_ID == "" && us.ID == "" && us.NOMBRE == "" && us.APELLIDO_P == "" && us.APELLIDO_M == "" && us.EMAIL == "" && us.SPRAS_ID == "" && us.PASS == "")
+                    else if ((re == null || re == "") && pru == false)
                     {
-                        vus = true;
-                        pru = true;
                         sel = "super";
                     }
-                }
 
-                // Validacion del tipo de usuario
-                if ((re != null && re != "") && pru == false)
-                {
-                    sel = "venta";
-                }
-                else if ((re == null || re == "") && pru == false)
-                {
-                    sel = "super";
-                }
-
-                //Validacion de datos
-                if (sel == "venta")
-                {
-                    //Usuario nuevo con cliente
-                    if (vus == false)
+                    //Validacion de datos
+                    if (sel == "venta")
                     {
-                        ////-------------------------------CLIENTE
-                        var error = "";
-                        CLIENTE k = db.CLIENTEs.Where(cc => cc.KUNNR.Equals(us.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
-                        for (int i = cont2; i >= 0; i--)
+                        //Usuario nuevo con cliente
+                        if (vus == false)
                         {
-                            if (client[i, 0] == us.KUNNR && client[i, 1] == us.ID)
+                            ////-------------------------------CLIENTE
+                            var error = "";
+                            CLIENTE k = db.CLIENTEs.Where(cc => cc.KUNNR.Equals(us.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
+                            for (int i = cont2; i >= 0; i--)
+                            {
+                                if (client[i, 0] == us.KUNNR && client[i, 1] == us.ID)
+                                {
+                                    us.KUNNRX = false;
+                                    error = ". Registro duplicado<br/>";
+                                }
+                            }
+                            if (k == null)
                             {
                                 us.KUNNRX = false;
-                                error = ". Registro duplicado<br/>";
-                            }
-                        }
-                        if (k == null)
-                        {
-                            us.KUNNRX = false;
-                            error = ". Error en el cliente<br/>";
-                        }
-                        else
-                        {
-                            clientes.Add(k);
-                            client[cont2, 0] = us.KUNNR.ToString();
-                            tablas[cont2, 0] = da.KUNNR.ToString();
-                            gua[cont2] = da.KUNNR.ToString();
-                        }
-                        if (!us.KUNNRX)
-                        {
-                            us.KUNNR = us.KUNNR + "?";
-                            messa = cont + error;
-                            cont++;
-                        }
-
-                        ////-------------------------------COMPANY CODE
-                        SOCIEDAD b = db.SOCIEDADs.Where(x => x.BUKRS.Equals(us.BUNIT) & x.ACTIVO == true).FirstOrDefault();
-
-                        if (b == null)
-                        {
-                            us.BUNITX = false;
-                        }
-                        else
-                        {
-                            sociedad.Add(b);
-                            tablas[cont2, 1] = da.BUNIT.ToString();
-                            usuariosoc[cont4, 1] = da.ID.ToString();
-                        }
-                        if (!us.BUNITX)
-                        {
-                            us.BUNIT = us.BUNIT + "?";
-                            messa = messa + cont + ". Error en la sociedad<br/>";
-                            cont++;
-                        }
-
-                        ////-------------------------------NIVEL
-
-                        PUESTO pi = db.PUESTOes.Where(x => x.ID == pues & x.ACTIVO == true).FirstOrDefault();
-                        if (pi == null)
-                            us.PUESTO_IDX = false;
-                        else
-                        {
-                            puesto.Add(pi);
-                            tablas[cont2, 2] = da.PUESTO_ID.ToString();
-
-                        }
-                        if (!us.PUESTO_IDX)
-                        {
-                            us.PUESTO_ID = us.PUESTO_ID + "?";
-                            messa = messa + cont + men;
-                            cont++;
-                        }
-
-                        ////-------------------------------USUARIO ID
-                        var err = ". Error en el ID de usuario<br/>";
-                        if (us.ID == null || us.ID == "")
-                            us.IDX = false;
-                        else if (IDs.Contains(us.ID))
-                            us.IDX = false;
-                        else
-                        {
-                            USUARIO u = db.USUARIOs.Where(xu => xu.ID.Equals(us.ID)).FirstOrDefault();
-                            if (u != null)
-                            {
-                                us.IDX = false;
-                                err = ". El usuario ya existe<br/>";
-                                IDs[cont4] = us.ID;
-                                client[cont2, 1] = us.ID.ToString();
-                                tablas[cont2, 3] = da.ID.ToString();
-                                tablas[cont2, 4] = da.NOMBRE.ToString();
-                                tablas[cont2, 5] = da.APELLIDO_P.ToString();
-                                tablas[cont2, 6] = da.APELLIDO_M.ToString();
+                                error = ". Error en el cliente<br/>";
                             }
                             else
                             {
-                                usuarios.Add(u);
-                                IDs[cont4] = us.ID;
-                                client[cont2, 1] = us.ID.ToString();
-                                tablas[cont2, 3] = da.ID.ToString();
-                                tablas[cont2, 4] = da.NOMBRE.ToString();
-                                tablas[cont2, 5] = da.APELLIDO_P.ToString();
-                                tablas[cont2, 6] = da.APELLIDO_M.ToString();
-                                usuariosoc[cont4, 0] = da.BUNIT.ToString();
+                                clientes.Add(k);
+                                client[cont2, 0] = us.KUNNR.ToString();
+                                tablas[cont2, 0] = da.KUNNR.ToString();
+                                gua[cont2] = da.KUNNR.ToString();
                             }
-                        }
-
-                        if (!us.IDX)
-                        {
-                            us.ID = us.ID + "?";
-                            messa = messa + cont + err;
-                            cont++;
-                        }
-
-                        ////-------------------------------EMAIL
-                        if (ComprobarEmail(us.EMAIL) == false)
-                        {
-                            us.EMAILX = false;
-                        }
-                        else
-                            tablas[cont2, 7] = da.EMAIL.ToString();
-                        if (!us.EMAILX)
-                        {
-                            us.EMAIL = us.EMAIL + "?";
-                            messa = messa + cont + ". Error en el correo<br/>";
-                            cont++;
-                        }
-
-                        ////-------------------------------IDIOMA
-                        if (us.SPRAS_ID == "")
-                        {
-                            us.SPRAS_ID = "ES";
-                            da.SPRAS_ID = us.SPRAS_ID;
-                        }
-                        SPRA si = db.SPRAS.Where(x => x.ID.Equals(us.SPRAS_ID) == true).FirstOrDefault();
-                        if (si == null)
-                        {
-                            us.SPRAS_IDX = false;
-                        }
-                        else
-                        {
-                            tablas[cont2, 8] = da.SPRAS_ID.ToString();
-                            tablas[cont2, 9] = c.Encrypt(da.PASS.ToString());
-                        }
-                        if (!us.SPRAS_IDX)
-                        {
-                            us.SPRAS_ID = us.SPRAS_ID + "?";
-                            messa = messa + cont + ". Error en el idioma<br/>";
-                            cont++;
-                        }
-
-                        da.mess = messa;
-                        us.mess = da.mess;
-                        tablas[cont2, 10] = messa;
-                    }
-                    //Asignacion de mas clientes
-                    else if (vus == true)
-                    {
-                        var error = "";
-                        CLIENTE k = db.CLIENTEs.Where(cc => cc.KUNNR.Equals(us.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
-                        for (int x = cont4; x >= 0; x--)
-                        {
-                            if (IDs[x] != null)
+                            if (!us.KUNNRX)
                             {
-                                da.ID = IDs[x];
-                                x = -1;
+                                us.KUNNR = us.KUNNR + "?";
+                                messa = cont + error;
+                                cont++;
                             }
-                        }
-                        for (int i = cont2; i >= 0; i--)
-                        {
-                            if (client[i, 0] == us.KUNNR && client[i, 1] == da.ID)
-                            {
-                                us.KUNNRX = false;
-                                error = ". Registro duplicado<br/>";
-                            }
-                        }
-                        if (k == null)
-                        {
-                            us.KUNNRX = false;
-                            error = ". Error en el ciente";
-                        }
-                        else
-                        {
-                            clientes.Add(k);
-                            client[cont2, 0] = us.KUNNR.ToString();
 
-                        }
-                        if (!us.KUNNRX)
-                        {
-                            us.KUNNR = us.KUNNR + "?";
-                            messa = cont + error;
-                            cont++;
-                        }
-                        client[cont2, 1] = da.ID;
-                        da.mess = messa;
-                        us.mess = da.mess;
-                        tablas[cont2, 10] = messa;
-                    }
-                    cont2++;
-                }
-                else if (sel == "super")
-                {
-                    //Usuario nuevo con Co Code
-                    if (vus == false)
-                    {
-                        ////-------------------------------CLIENTE
-                        if (us.KUNNR != null && us.KUNNR != "")
-                        {
-                            us.KUNNRX = false;
-                        }
-                        else
-                        {
-                            tabla1[cont3, 0] = da.KUNNR.ToString();
-                        }
-                        if (!us.KUNNRX)
-                        {
-                            us.KUNNR = us.KUNNR + "?";
-                            messa = cont + ". Este usuario no acepta clientes<br/>";
-                            cont++;
-                        }
+                            ////-------------------------------COMPANY CODE
+                            SOCIEDAD b = db.SOCIEDADs.Where(x => x.BUKRS.Equals(us.BUNIT) & x.ACTIVO == true).FirstOrDefault();
 
-                        ////-------------------------------COMPANY CODE
-                        var error = "";
-                        SOCIEDAD b = db.SOCIEDADs.Where(x => x.BUKRS.Equals(us.BUNIT) & x.ACTIVO == true).FirstOrDefault();
-                        for (int i = cont3; i >= 0; i--)
-                        {
-                            if (admins[i, 0] == us.BUNIT && admins[i, 1] == us.ID)
+                            if (b == null)
                             {
                                 us.BUNITX = false;
-                                error = ". Registro duplicado<br/>";
-                            }
-                        }
-                        if (b == null)
-                        {
-                            us.BUNITX = false;
-                            error = ". Error en la Sociedad<br/>";
-                        }
-                        else
-                        {
-                            sociedad.Add(b);
-                            admins[cont3, 0] = da.BUNIT.ToString();
-                            tabla1[cont3, 1] = da.BUNIT.ToString();
-                            gua1[cont3] = da.BUNIT.ToString();
-                            usuariosoc[cont4, 0] = da.BUNIT.ToString();
-                        }
-                        if (!us.BUNITX)
-                        {
-                            us.BUNIT = us.BUNIT + "?";
-                            messa = messa + cont + error;
-                            cont++;
-                        }
-
-                        ////-------------------------------NIVEL
-
-                        PUESTO pi = db.PUESTOes.Where(x => x.ID == pues & x.ACTIVO == true).FirstOrDefault();
-                        if (pi == null)
-                            us.PUESTO_IDX = false;
-                        else
-                        {
-                            puesto.Add(pi);
-                            tabla1[cont3, 2] = da.PUESTO_ID.ToString();
-                        }
-                        if (!us.PUESTO_IDX)
-                        {
-                            us.PUESTO_ID = us.PUESTO_ID + "?";
-                            messa = messa + cont + men;
-                            cont++;
-                        }
-
-                        ////-------------------------------USUARIO ID
-                        var err = ". Error en el ID de usuario<br/>";
-                        if (us.ID == null || us.ID == "")
-                            us.IDX = false;
-                        else if (IDs.Contains(us.ID))
-                            us.IDX = false;
-                        else
-                        {
-                            USUARIO u = db.USUARIOs.Where(xu => xu.ID.Equals(us.ID)).FirstOrDefault();
-                            if (u != null)
-                            {
-                                us.IDX = false;
-                                err = ". El usuario ya existe<br/>";
-                                IDs[cont4] = us.ID;
-                                admins[cont3, 1] = us.ID.ToString();
-                                tabla1[cont3, 3] = da.ID.ToString();
-                                tabla1[cont3, 4] = da.NOMBRE.ToString();
-                                tabla1[cont3, 5] = da.APELLIDO_P.ToString();
-                                tabla1[cont3, 6] = da.APELLIDO_M.ToString();
                             }
                             else
                             {
-                                usuarios.Add(u);
-                                IDs[cont4] = us.ID;
-                                admins[cont3, 1] = us.ID.ToString();
-                                tabla1[cont3, 3] = da.ID.ToString();
-                                tabla1[cont3, 4] = da.NOMBRE.ToString();
-                                tabla1[cont3, 5] = da.APELLIDO_P.ToString();
-                                tabla1[cont3, 6] = da.APELLIDO_M.ToString();
+                                sociedad.Add(b);
+                                tablas[cont2, 1] = da.BUNIT.ToString();
                                 usuariosoc[cont4, 1] = da.ID.ToString();
                             }
-                        }
-
-                        if (!us.IDX)
-                        {
-                            us.ID = us.ID + "?";
-                            messa = messa + cont + err;
-                            cont++;
-                        }
-
-                        ////-------------------------------EMAIL
-                        if (ComprobarEmail(us.EMAIL) == false)
-                        {
-                            us.EMAILX = false;
-                        }
-                        else
-                            tabla1[cont3, 7] = da.EMAIL.ToString();
-                        if (!us.EMAILX)
-                        {
-                            us.EMAIL = us.EMAIL + "?";
-                            messa = messa + cont + ". Error en el correo<br/>";
-                            cont++;
-                        }
-
-                        ////-------------------------------IDIOMA
-                        if (us.SPRAS_ID == "")
-                        {
-                            us.SPRAS_ID = "ES";
-                            da.SPRAS_ID = us.SPRAS_ID;
-                        }
-                        SPRA si = db.SPRAS.Where(x => x.ID.Equals(us.SPRAS_ID) == true).FirstOrDefault();
-                        if (si == null)
-                        {
-                            us.SPRAS_IDX = false;
-                        }
-                        else
-                        {
-                            tabla1[cont3, 8] = da.SPRAS_ID.ToString();
-                            tabla1[cont3, 9] = c.Encrypt(da.PASS.ToString());
-                        }
-                        if (!us.SPRAS_IDX)
-                        {
-                            us.SPRAS_ID = us.SPRAS_ID + "?";
-                            messa = messa + cont + ". Error en el idioma<br/>";
-                            cont++;
-                        }
-
-                        da.mess = messa;
-                        us.mess = da.mess;
-                        tablas[cont3, 10] = messa;
-                    }
-                    //Asignacion de mas Co Codes
-                    else if (vus == true)
-                    {
-                        var error = "";
-                        SOCIEDAD b = db.SOCIEDADs.Where(x => x.BUKRS.Equals(us.BUNIT) & x.ACTIVO == true).FirstOrDefault();
-                        for (int x = cont4; x >= 0; x--)
-                        {
-                            if (IDs[x] != null)
+                            if (!us.BUNITX)
                             {
-                                da.ID = IDs[x];
-                                x = -1;
+                                us.BUNIT = us.BUNIT + "?";
+                                messa = messa + cont + ". Error en la sociedad<br/>";
+                                cont++;
                             }
 
+                            ////-------------------------------NIVEL
+
+                            PUESTO pi = db.PUESTOes.Where(x => x.ID == pues & x.ACTIVO == true).FirstOrDefault();
+                            if (pi == null)
+                                us.PUESTO_IDX = false;
+                            else
+                            {
+                                puesto.Add(pi);
+                                tablas[cont2, 2] = da.PUESTO_ID.ToString();
+
+                            }
+                            if (!us.PUESTO_IDX)
+                            {
+                                us.PUESTO_ID = us.PUESTO_ID + "?";
+                                messa = messa + cont + men;
+                                cont++;
+                            }
+
+                            ////-------------------------------USUARIO ID
+                            var err = ". Error en el ID de usuario<br/>";
+                            if (us.ID == null || us.ID == "")
+                                us.IDX = false;
+                            else if (IDs.Contains(us.ID))
+                                us.IDX = false;
+                            else
+                            {
+                                USUARIO u = db.USUARIOs.Where(xu => xu.ID.Equals(us.ID)).FirstOrDefault();
+                                if (u != null)
+                                {
+                                    us.IDX = false;
+                                    err = ". El usuario ya existe<br/>";
+                                    IDs[cont4] = us.ID;
+                                    client[cont2, 1] = us.ID.ToString();
+                                    tablas[cont2, 3] = da.ID.ToString();
+                                    tablas[cont2, 4] = da.NOMBRE.ToString();
+                                    tablas[cont2, 5] = da.APELLIDO_P.ToString();
+                                    tablas[cont2, 6] = da.APELLIDO_M.ToString();
+                                    us.ID = us.ID + "!";
+                                }
+                                else
+                                {
+                                    usuarios.Add(u);
+                                    IDs[cont4] = us.ID;
+                                    client[cont2, 1] = us.ID.ToString();
+                                    tablas[cont2, 3] = da.ID.ToString();
+                                    tablas[cont2, 4] = da.NOMBRE.ToString();
+                                    tablas[cont2, 5] = da.APELLIDO_P.ToString();
+                                    tablas[cont2, 6] = da.APELLIDO_M.ToString();
+                                    usuariosoc[cont4, 0] = da.BUNIT.ToString();
+                                }
+                            }
+
+                            if (!us.IDX)
+                            {
+                                us.ID = us.ID + "?";
+                                messa = messa + cont + err;
+                                cont++;
+                            }
+
+                            ////-------------------------------EMAIL
+                            if (ComprobarEmail(us.EMAIL) == false)
+                            {
+                                us.EMAILX = false;
+                            }
+                            else
+                                tablas[cont2, 7] = da.EMAIL.ToString();
+                            if (!us.EMAILX)
+                            {
+                                us.EMAIL = us.EMAIL + "?";
+                                messa = messa + cont + ". Error en el correo<br/>";
+                                cont++;
+                            }
+
+                            ////-------------------------------IDIOMA
+                            if (us.SPRAS_ID == "")
+                            {
+                                us.SPRAS_ID = "ES";
+                                da.SPRAS_ID = us.SPRAS_ID;
+                            }
+                            SPRA si = db.SPRAS.Where(x => x.ID.Equals(us.SPRAS_ID) == true).FirstOrDefault();
+                            if (si == null)
+                            {
+                                us.SPRAS_IDX = false;
+                            }
+                            else
+                            {
+                                tablas[cont2, 8] = da.SPRAS_ID.ToString();
+                                tablas[cont2, 9] = c.Encrypt(da.PASS.ToString());
+                            }
+                            if (!us.SPRAS_IDX)
+                            {
+                                us.SPRAS_ID = us.SPRAS_ID + "?";
+                                messa = messa + cont + ". Error en el idioma<br/>";
+                                cont++;
+                            }
+
+                            da.mess = messa;
+                            us.mess = da.mess;
+                            tablas[cont2, 10] = messa;
                         }
-                        for (int i = cont3; i >= 0; i--)
+                        //Asignacion de mas clientes
+                        else if (vus == true)
                         {
-                            if (admins[i, 0] == us.BUNIT && admins[i, 1] == da.ID)
+                            var error = "";
+                            CLIENTE k = db.CLIENTEs.Where(cc => cc.KUNNR.Equals(us.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
+                            for (int x = cont4; x >= 0; x--)
+                            {
+                                if (IDs[x] != null)
+                                {
+                                    da.ID = IDs[x];
+                                    x = -1;
+                                }
+                            }
+                            for (int i = cont2; i >= 0; i--)
+                            {
+                                if (client[i, 0] == us.KUNNR && client[i, 1] == da.ID)
+                                {
+                                    us.KUNNRX = false;
+                                    error = ". Registro duplicado<br/>";
+                                }
+                            }
+                            if (k == null)
+                            {
+                                us.KUNNRX = false;
+                                error = ". Error en el ciente";
+                            }
+                            else
+                            {
+                                clientes.Add(k);
+                                client[cont2, 0] = us.KUNNR.ToString();
+
+                            }
+                            if (!us.KUNNRX)
+                            {
+                                us.KUNNR = us.KUNNR + "?";
+                                messa = cont + error;
+                                cont++;
+                            }
+                            client[cont2, 1] = da.ID;
+                            da.mess = messa;
+                            us.mess = da.mess;
+                            tablas[cont2, 10] = messa;
+                        }
+                        cont2++;
+                    }
+                    else if (sel == "super")
+                    {
+                        //Usuario nuevo con Co Code
+                        if (vus == false)
+                        {
+                            ////-------------------------------CLIENTE
+                            if (us.KUNNR != null && us.KUNNR != "")
+                            {
+                                us.KUNNRX = false;
+                            }
+                            else
+                            {
+                                tabla1[cont3, 0] = da.KUNNR.ToString();
+                            }
+                            if (!us.KUNNRX)
+                            {
+                                us.KUNNR = us.KUNNR + "?";
+                                messa = cont + ". Este usuario no acepta clientes<br/>";
+                                cont++;
+                            }
+
+                            ////-------------------------------COMPANY CODE
+                            var error = "";
+                            SOCIEDAD b = db.SOCIEDADs.Where(x => x.BUKRS.Equals(us.BUNIT) & x.ACTIVO == true).FirstOrDefault();
+                            for (int i = cont3; i >= 0; i--)
+                            {
+                                if (admins[i, 0] == us.BUNIT && admins[i, 1] == us.ID)
+                                {
+                                    us.BUNITX = false;
+                                    error = ". Registro duplicado<br/>";
+                                }
+                            }
+                            if (b == null)
                             {
                                 us.BUNITX = false;
-                                error = ". Registro duplicado<br/>";
+                                error = ". Error en la Sociedad<br/>";
                             }
-                        }
-                        if (b == null)
-                        {
-                            us.BUNITX = false;
-                            error = ". Error en la sociedad";
-                        }
-                        else
-                        {
-                            sociedad.Add(b);
-                            admins[cont3, 0] = da.BUNIT.ToString();
-                            usuariosoc[cont4, 0] = da.BUNIT.ToString();
-                        }
-                        if (!us.BUNITX)
-                        {
-                            us.BUNIT = us.BUNIT + "?";
-                            messa = messa + cont + error;
-                            cont++;
-                        }
-                        da.mess = messa;
-                        admins[cont3, 1] = da.ID;
-                        usuariosoc[cont4, 1] = da.ID.ToString();
-                        us.mess = da.mess;
-                        tabla1[cont3, 10] = messa;
-                    }
-                    cont3++;
-                }
+                            else
+                            {
+                                sociedad.Add(b);
+                                admins[cont3, 0] = da.BUNIT.ToString();
+                                tabla1[cont3, 1] = da.BUNIT.ToString();
+                                gua1[cont3] = da.BUNIT.ToString();
+                                usuariosoc[cont4, 0] = da.BUNIT.ToString();
+                            }
+                            if (!us.BUNITX)
+                            {
+                                us.BUNIT = us.BUNIT + "?";
+                                messa = messa + cont + error;
+                                cont++;
+                            }
 
-                uu.Add(us);
-                cont4++;
+                            ////-------------------------------NIVEL
+
+                            PUESTO pi = db.PUESTOes.Where(x => x.ID == pues & x.ACTIVO == true).FirstOrDefault();
+                            if (pi == null)
+                                us.PUESTO_IDX = false;
+                            else
+                            {
+                                puesto.Add(pi);
+                                tabla1[cont3, 2] = da.PUESTO_ID.ToString();
+                            }
+                            if (!us.PUESTO_IDX)
+                            {
+                                us.PUESTO_ID = us.PUESTO_ID + "?";
+                                messa = messa + cont + men;
+                                cont++;
+                            }
+
+                            ////-------------------------------USUARIO ID
+                            var err = ". Error en el ID de usuario<br/>";
+                            if (us.ID == null || us.ID == "")
+                                us.IDX = false;
+                            else if (IDs.Contains(us.ID))
+                                us.IDX = false;
+                            else
+                            {
+                                USUARIO u = db.USUARIOs.Where(xu => xu.ID.Equals(us.ID)).FirstOrDefault();
+                                if (u != null)
+                                {
+                                    us.IDX = false;
+                                    err = ". El usuario ya existe<br/>";
+                                    IDs[cont4] = us.ID;
+                                    admins[cont3, 1] = us.ID.ToString();
+                                    tabla1[cont3, 3] = da.ID.ToString();
+                                    tabla1[cont3, 4] = da.NOMBRE.ToString();
+                                    tabla1[cont3, 5] = da.APELLIDO_P.ToString();
+                                    tabla1[cont3, 6] = da.APELLIDO_M.ToString();
+                                    us.ID = us.ID + "!";
+                                }
+                                else
+                                {
+                                    usuarios.Add(u);
+                                    IDs[cont4] = us.ID;
+                                    admins[cont3, 1] = us.ID.ToString();
+                                    tabla1[cont3, 3] = da.ID.ToString();
+                                    tabla1[cont3, 4] = da.NOMBRE.ToString();
+                                    tabla1[cont3, 5] = da.APELLIDO_P.ToString();
+                                    tabla1[cont3, 6] = da.APELLIDO_M.ToString();
+                                    usuariosoc[cont4, 1] = da.ID.ToString();
+                                }
+                            }
+
+                            if (!us.IDX)
+                            {
+                                us.ID = us.ID + "?";
+                                messa = messa + cont + err;
+                                cont++;
+                            }
+
+                            ////-------------------------------EMAIL
+                            if (ComprobarEmail(us.EMAIL) == false)
+                            {
+                                us.EMAILX = false;
+                            }
+                            else
+                                tabla1[cont3, 7] = da.EMAIL.ToString();
+                            if (!us.EMAILX)
+                            {
+                                us.EMAIL = us.EMAIL + "?";
+                                messa = messa + cont + ". Error en el correo<br/>";
+                                cont++;
+                            }
+
+                            ////-------------------------------IDIOMA
+                            if (us.SPRAS_ID == "")
+                            {
+                                us.SPRAS_ID = "ES";
+                                da.SPRAS_ID = us.SPRAS_ID;
+                            }
+                            SPRA si = db.SPRAS.Where(x => x.ID.Equals(us.SPRAS_ID) == true).FirstOrDefault();
+                            if (si == null)
+                            {
+                                us.SPRAS_IDX = false;
+                            }
+                            else
+                            {
+                                tabla1[cont3, 8] = da.SPRAS_ID.ToString();
+                                tabla1[cont3, 9] = c.Encrypt(da.PASS.ToString());
+                            }
+                            if (!us.SPRAS_IDX)
+                            {
+                                us.SPRAS_ID = us.SPRAS_ID + "?";
+                                messa = messa + cont + ". Error en el idioma<br/>";
+                                cont++;
+                            }
+
+                            da.mess = messa;
+                            us.mess = da.mess;
+                            tablas[cont3, 10] = messa;
+                        }
+                        //Asignacion de mas Co Codes
+                        else if (vus == true)
+                        {
+                            var error = "";
+                            SOCIEDAD b = db.SOCIEDADs.Where(x => x.BUKRS.Equals(us.BUNIT) & x.ACTIVO == true).FirstOrDefault();
+                            for (int x = cont4; x >= 0; x--)
+                            {
+                                if (IDs[x] != null)
+                                {
+                                    da.ID = IDs[x];
+                                    x = -1;
+                                }
+
+                            }
+                            for (int i = cont3; i >= 0; i--)
+                            {
+                                if (admins[i, 0] == us.BUNIT && admins[i, 1] == da.ID)
+                                {
+                                    us.BUNITX = false;
+                                    error = ". Registro duplicado<br/>";
+                                }
+                            }
+                            if (b == null)
+                            {
+                                us.BUNITX = false;
+                                error = ". Error en la sociedad";
+                            }
+                            else
+                            {
+                                sociedad.Add(b);
+                                admins[cont3, 0] = da.BUNIT.ToString();
+                                usuariosoc[cont4, 0] = da.BUNIT.ToString();
+                            }
+                            if (!us.BUNITX)
+                            {
+                                us.BUNIT = us.BUNIT + "?";
+                                messa = messa + cont + error;
+                                cont++;
+                            }
+                            da.mess = messa;
+                            admins[cont3, 1] = da.ID;
+                            usuariosoc[cont4, 1] = da.ID.ToString();
+                            us.mess = da.mess;
+                            tabla1[cont3, 10] = messa;
+                        }
+                        cont3++;
+                    }
+                    uu.Add(us);
+                    cont4++;
+                }
             }
             Session["tablas"] = tablas;
             Session["tabla1"] = tabla1;
@@ -2594,15 +2600,19 @@ namespace TAT001.Controllers.Catalogos
 
                 try
                 {
-                    SOCIEDAD soc = db.SOCIEDADs.Where(x => x.BUKRS == da.BUNIT).First();
-                    if (!us.SOCIEDADs.Any(x => x.BUKRS == da.BUNIT))
+                    List<SOCIEDAD> clin1 = db.USUARIOs.Where(a => a.ID.Equals(da.ID)).FirstOrDefault().SOCIEDADs.ToList();
+                    if (clin1 == null)
                     {
-                        us.SOCIEDADs.Add(soc);
-                    }
+                        SOCIEDAD soc = db.SOCIEDADs.Where(x => x.BUKRS == da.BUNIT).First();
+                        if (!us.SOCIEDADs.Any(x => x.BUKRS == da.BUNIT))
+                        {
+                            us.SOCIEDADs.Add(soc);
+                        }
 
-                    db.Entry(us).State = EntityState.Modified;
-                    db.SaveChanges();
-                    cont++;
+                        db.Entry(us).State = EntityState.Modified;
+                        db.SaveChanges();
+                        cont++;
+                    }
                 }
                 catch (Exception e)
                 {
@@ -2679,7 +2689,7 @@ namespace TAT001.Controllers.Catalogos
                         com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.SPRAS_ID).FirstOrDefault();
                         if (com != null)
                             ul.SPRAS_ID = com;
-                        ul.ID = ul.ID + "?";
+                        ul.ID = ul.ID + "!";
                         ul.mess = "1. El usuario ya existe<br/>";
                         rowst++;
                         cc.Add(ul);
@@ -2734,32 +2744,35 @@ namespace TAT001.Controllers.Catalogos
                             com = (from x in db.USUARIOFs where x.KUNNR.Equals(us) & x.USUARIO_ID.Equals(usc) & x.ACTIVO == true select x.KUNNR).FirstOrDefault();
                             if (com != null)
                                 ul.KUNNR = com;
-                            com = (from x in db.PAIS join a in db.CLIENTEs on x.LAND equals a.LAND where x.ACTIVO == true & a.KUNNR.Equals(ul.KUNNR) select x.SOCIEDAD_ID).FirstOrDefault();
-                            if (com != null)
-                                ul.BUNIT = com;
-                            com = (from x in db.USUARIOs where x.ID.Equals(usc) & x.ACTIVO == true select x.ID).FirstOrDefault();
-                            if (com != null)
-                                ul.ID = com;
-                            com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.PUESTO_ID).FirstOrDefault().ToString();
-                            if (com != null)
-                                ul.PUESTO_ID = com;
-                            com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.NOMBRE).FirstOrDefault();
-                            if (com != null)
-                                ul.NOMBRE = com;
-                            com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.APELLIDO_P).FirstOrDefault();
-                            if (com != null)
-                                ul.APELLIDO_P = com;
-                            com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.APELLIDO_M).FirstOrDefault();
-                            if (com != null)
-                                ul.APELLIDO_M = com;
-                            com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.EMAIL).FirstOrDefault();
-                            if (com != null)
-                                ul.EMAIL = com;
-                            com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.SPRAS_ID).FirstOrDefault();
-                            if (com != null)
-                                ul.SPRAS_ID = com;
-                            ul.ID = ul.ID + "?";
-                            ul.mess = "1. El usuario ya existe<br/>";
+                            if (i < 1)
+                            {
+                                com = (from x in db.USUARIOs where x.ID.Equals(usc) & x.ACTIVO == true select x.ID).FirstOrDefault();
+                                if (com != null)
+                                    ul.ID = com;
+                                com = (from x in db.USUARIOs where x.ID.Equals(usc) & x.ACTIVO == true select x.BUNIT).FirstOrDefault();
+                                if (com != null)
+                                    ul.BUNIT = com;
+                                com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.PUESTO_ID).FirstOrDefault().ToString();
+                                if (com != null)
+                                    ul.PUESTO_ID = com;
+                                com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.NOMBRE).FirstOrDefault();
+                                if (com != null)
+                                    ul.NOMBRE = com;
+                                com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.APELLIDO_P).FirstOrDefault();
+                                if (com != null)
+                                    ul.APELLIDO_P = com;
+                                com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.APELLIDO_M).FirstOrDefault();
+                                if (com != null)
+                                    ul.APELLIDO_M = com;
+                                com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.EMAIL).FirstOrDefault();
+                                if (com != null)
+                                    ul.EMAIL = com;
+                                com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.SPRAS_ID).FirstOrDefault();
+                                if (com != null)
+                                    ul.SPRAS_ID = com;
+                                ul.ID = ul.ID + "!";
+                                ul.mess = "1. El usuario ya existe<br/>";
+                            }
                             rowst++;
                             cc.Add(ul);
                         }
@@ -2789,28 +2802,32 @@ namespace TAT001.Controllers.Catalogos
                             com = (from x in db.SOCIEDADs where x.BUKRS.Equals(us) select x.BUKRS).FirstOrDefault();
                             if (com != null)
                                 ul.BUNIT = com;
-                            com = (from x in db.USUARIOs where x.ID.Equals(usc) & x.ACTIVO == true select x.ID).FirstOrDefault();
-                            if (com != null)
-                                ul.ID = com;
-                            com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.PUESTO_ID).FirstOrDefault().ToString();
-                            if (com != null)
-                                ul.PUESTO_ID = com;
-                            com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.NOMBRE).FirstOrDefault();
-                            if (com != null)
-                                ul.NOMBRE = com;
-                            com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.APELLIDO_P).FirstOrDefault();
-                            if (com != null)
-                                ul.APELLIDO_P = com;
-                            com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.APELLIDO_M).FirstOrDefault();
-                            if (com != null)
-                                ul.APELLIDO_M = com;
-                            com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.EMAIL).FirstOrDefault();
-                            if (com != null)
-                                ul.EMAIL = com;
-                            com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.SPRAS_ID).FirstOrDefault();
-                            if (com != null)
-                                ul.SPRAS_ID = com;
-
+                            if (i < 1)
+                            {
+                                com = (from x in db.USUARIOs where x.ID.Equals(usc) & x.ACTIVO == true select x.ID).FirstOrDefault();
+                                if (com != null)
+                                    ul.ID = com;
+                                com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.PUESTO_ID).FirstOrDefault().ToString();
+                                if (com != null)
+                                    ul.PUESTO_ID = com;
+                                com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.NOMBRE).FirstOrDefault();
+                                if (com != null)
+                                    ul.NOMBRE = com;
+                                com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.APELLIDO_P).FirstOrDefault();
+                                if (com != null)
+                                    ul.APELLIDO_P = com;
+                                com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.APELLIDO_M).FirstOrDefault();
+                                if (com != null)
+                                    ul.APELLIDO_M = com;
+                                com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.EMAIL).FirstOrDefault();
+                                if (com != null)
+                                    ul.EMAIL = com;
+                                com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.SPRAS_ID).FirstOrDefault();
+                                if (com != null)
+                                    ul.SPRAS_ID = com;
+                                ul.ID = ul.ID + "!";
+                                ul.mess = "1. El usuario ya existe<br/>";
+                            }
                             cc.Add(ul);
                         }
                     } 
