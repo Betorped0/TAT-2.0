@@ -26,7 +26,7 @@
     </div>
 </div>*@
 
-<div class="row" style="height:10px;width:100%;">
+@*<div class="row" style="height:10px;width:100%;">
     <div class="col l7 pink darken-1" style="height:10px;padding:0;"></div>
     <div class="col l3 pink darken-4" style="height:10px;padding:0;">
         <div class="col l3 pink darken-4" style="height:10px;padding:0;"></div>
@@ -34,18 +34,18 @@
         <div class="col l1 red" style="height:10px;padding:0;"></div>
     </div>
     <div class="col l2 yellow" style="height:10px;padding:0;"></div>
-</div>
-
+</div>*@
+<div class="card-panel">
 <table class="table mdl-data-table striped" id="table" style="width:100%;">
     <thead>
-        <tr class="header" style="background-color:#CCCCCC">
-            <th>
+        <tr class="header">
+            <th class="lblIdioma">
                 @Html.DisplayNameFor(model => model.SPRAS_ID)
             </th>
-            <th>
+            <th class="lblCampo">
                 @Html.DisplayNameFor(model => model.CAMPO)
             </th>
-            <th>
+            <th class="lblTexto">
                 @Html.DisplayNameFor(model => model.TEXTO)
             </th>
             <th></th>
@@ -79,7 +79,7 @@
         }
     </tbody>
 </table>
-
+</div>
 <script type="text/javascript">
     $("a[data-form-method='post']").click(function (event) {
         event.preventDefault();
