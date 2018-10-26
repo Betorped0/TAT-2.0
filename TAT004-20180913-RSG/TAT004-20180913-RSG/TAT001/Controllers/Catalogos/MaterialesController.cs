@@ -42,7 +42,32 @@ namespace TAT001.Controllers.Catalogos
         public void ObtenerListado(ref MaterialViewModel viewModel, string colOrden = "", string ordenActual = "", int? numRegistros = 10, int? pagina = 1, string buscar = "")
         {
             int pageIndex = pagina.Value;
-            List<MATERIAL> clientes = db.MATERIALs.Include(m => m.MATERIALGP).ToList();
+            List<MVKEMaterial> clientes = db.MATERIALVKEs.Join(db.MATERIALs,
+                                                              p => p.MATERIAL_ID,
+                                                              e => e.ID,
+                                                              (p, e) => new MVKEMaterial
+                                                              {
+                                                                  MATERIAL_ID = p.MATERIAL_ID,
+                                                                  VKORG = p.VKORG,
+                                                                  VTWEG = p.VTWEG,
+                                                                  MATKL_ID = e.MATKL_ID,
+                                                                  MAKTX = e.MAKTX,
+                                                                  MATERIAL_GROUP = e.MATERIALGP.DESCRIPCION,
+                                                                  ACTIVO=p.ACTIVO
+                                                              }).Where(t=>t.ACTIVO).ToList();
+
+            //List<MVKEMaterial> clientes = (from mvke in db.MATERIALVKEs
+            //              join m in db.MATERIALs
+            //              on mvke.MATERIAL_ID equals m.ID
+            //              select new MVKEMaterial
+            //              {
+            //                  MATERIAL_ID = mvke.MATERIAL_ID,
+            //                  VKORG = mvke.VKORG,
+            //                  VTWEG = mvke.VTWEG,
+            //                  MATKL_ID = m.MATKL_ID,
+            //                  MAKTX = m.MAKTX,
+            //                  MATERIAL_GROUP = m.MATERIALGP.DESCRIPCION
+            //              }).ToList();
             viewModel.ordenActual = colOrden;
             viewModel.numRegistros = numRegistros.Value;
             viewModel.buscar = buscar;
@@ -50,40 +75,52 @@ namespace TAT001.Controllers.Catalogos
             if (!String.IsNullOrEmpty(buscar))
             {
                 clientes = clientes.Where(x =>
-                String.Concat(x.ID, x.MAKTX, (x.MATERIALGP_ID == null ? "" : x.MATERIALGP.DESCRIPCION))
+                String.Concat(x.MATERIAL_ID, x.VKORG, x.VTWEG, x.MATKL_ID, x.MAKTX, x.MATERIAL_GROUP)
                 .ToLower().Contains(buscar.ToLower()))
                 .ToList();
             }
             switch (colOrden)
             {
-                case "ID":
+                case "MATERIAL_ID":
                     if (colOrden.Equals(ordenActual))
-                        viewModel.materiales = clientes.OrderByDescending(m => m.ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                        viewModel.materiales = clientes.OrderByDescending(m => m.MATERIAL_ID).ToPagedList(pageIndex, viewModel.numRegistros);
                     else
-                        viewModel.materiales = clientes.OrderBy(m => m.ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                        viewModel.materiales = clientes.OrderBy(m => m.MATERIAL_ID).ToPagedList(pageIndex, viewModel.numRegistros);
                     break;
+                case "VKORG":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.materiales = clientes.OrderByDescending(m => m.VKORG).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.materiales = clientes.OrderBy(m => m.VKORG).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+
+                case "VTWEG":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.materiales = clientes.OrderByDescending(m => m.VTWEG).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.materiales = clientes.OrderBy(m => m.VTWEG).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+
                 case "MAKTX":
                     if (colOrden.Equals(ordenActual))
                         viewModel.materiales = clientes.OrderByDescending(m => m.MAKTX).ToPagedList(pageIndex, viewModel.numRegistros);
                     else
                         viewModel.materiales = clientes.OrderBy(m => m.MAKTX).ToPagedList(pageIndex, viewModel.numRegistros);
                     break;
-
-                case "MATERIALGP":
+                case "MATKL_ID":
                     if (colOrden.Equals(ordenActual))
-                        viewModel.materiales = clientes.OrderByDescending(m => m.MATERIALGP_ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                        viewModel.materiales = clientes.OrderByDescending(m => m.MATKL_ID).ToPagedList(pageIndex, viewModel.numRegistros);
                     else
-                        viewModel.materiales = clientes.OrderBy(m => m.MATERIALGP_ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                        viewModel.materiales = clientes.OrderBy(m => m.MATKL_ID).ToPagedList(pageIndex, viewModel.numRegistros);
                     break;
-
-                case "ACTIVO":
+                case "MATERIAL_GROUP":
                     if (colOrden.Equals(ordenActual))
-                        viewModel.materiales = clientes.OrderByDescending(m => m.ACTIVO).ToPagedList(pageIndex, viewModel.numRegistros);
+                        viewModel.materiales = clientes.OrderByDescending(m => m.MATERIAL_GROUP).ToPagedList(pageIndex, viewModel.numRegistros);
                     else
-                        viewModel.materiales = clientes.OrderBy(m => m.ACTIVO).ToPagedList(pageIndex, viewModel.numRegistros);
+                        viewModel.materiales = clientes.OrderBy(m => m.MATERIAL_GROUP).ToPagedList(pageIndex, viewModel.numRegistros);
                     break;
                 default:
-                    viewModel.materiales = clientes.OrderBy(m => m.ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                    viewModel.materiales = clientes.OrderBy(m => m.MATERIAL_ID).ToPagedList(pageIndex, viewModel.numRegistros);
                     break;
             }
         }
@@ -276,18 +313,24 @@ namespace TAT001.Controllers.Catalogos
         }
 
         // GET: Materiales/Delete/5
-        public ActionResult Delete(string id)
+        public ActionResult Delete(string id, string vkorg, string vtweg )
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            MATERIAL mATERIAL = db.MATERIALs.Find(id);
+            MATERIALVKE mATERIAL = db.MATERIALVKEs.Find(id,vkorg,vtweg);
             if (mATERIAL == null)
             {
                 return HttpNotFound();
             }
-            return View(mATERIAL);
+            mATERIAL.ACTIVO = false;
+            db.SaveChanges();
+            var material = db.MATERIALs.Where(t => t.ID == id).SingleOrDefault();
+            if (material.MATERIALVKEs.Where(t=>t.ACTIVO==true).ToList().Count == 0)
+                material.ACTIVO = false;
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         // POST: Materiales/Delete/5
