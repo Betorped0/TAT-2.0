@@ -98,7 +98,6 @@ namespace TAT001.Controllers.Catalogos
         {   
             TSOL tsol = new TSOL();
             ViewBag.RANGO_ID = new SelectList(db.RANGOes, "ID", "ID");
-            ViewBag.TSOLR = new SelectList(db.TSOLs, "ID", "DESCRIPCION");
             int pagina_id = 791;//ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
             return View(tsol);
@@ -109,20 +108,48 @@ namespace TAT001.Controllers.Catalogos
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,DESCRIPCION,TSOLR,RANGO_ID,ESTATUS")] TSOL tSOL)
+        public ActionResult Create([Bind(Include = "ID,DESCRIPCION,RANGO_ID,ESTATUS,FACTURA,PADRE,REVERSO,NEGO,CARTA,ADICIONA")] TSOL tSOL, FormCollection collection)
         {
             if (ModelState.IsValid)
             {
-                db.TSOLs.Add(tSOL);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (!existeTSOL(tSOL.ID))
+                {
+                    if (Convert.ToBoolean(tSOL.ESTATUS))
+                        tSOL.ESTATUS = "M";
+                    else
+                        tSOL.ESTATUS = "X";
+                    tSOL.ACTIVO = true;
+                    var radio = collection["group1"];
+                    if (radio == "FACTURA")
+                        tSOL.FACTURA = true;
+                    if (radio == "PADRE")
+                        tSOL.PADRE = true;
+                    if (radio == "REVERSO")
+                        tSOL.REVERSO = true;
+                    db.TSOLs.Add(tSOL);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    int pagina_id = 791;//ID EN BASE DE DATOS
+                    FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
+                    ViewBag.RANGO_ID = new SelectList(db.RANGOes, "ID", "ID", tSOL.RANGO_ID);
+                    return View(tSOL);
+                }
             }
 
             ViewBag.RANGO_ID = new SelectList(db.RANGOes, "ID", "ID", tSOL.RANGO_ID);
-            ViewBag.TSOLR = new SelectList(db.TSOLs, "ID", "DESCRIPCION", tSOL.TSOLR);
             return View(tSOL);
         }
-
+        bool existeTSOL(string ID)
+        {
+            var reg=db.TSOLs.Where(t => t.ID == ID).SingleOrDefault();
+            if (reg == null)
+                return false;
+            else
+                return true;
+        }
         // GET: TSOL/Edit/5
         public ActionResult Edit(string id)
         {
@@ -162,8 +189,8 @@ namespace TAT001.Controllers.Catalogos
                 return HttpNotFound();
             }
             ViewBag.SPRAS = db.SPRAS.ToList();
-            ViewBag.RANGO_ID = new SelectList(db.RANGOes, "ID", "ID", tSOL.RANGO_ID);
-            ViewBag.TSOLR = new SelectList(db.TSOLs, "ID", "DESCRIPCION", tSOL.TSOLR);
+            //ViewBag.RANGO_ID = new SelectList(db.RANGOes, "ID", "ID", tSOL.RANGO_ID);
+            //ViewBag.TSOLR = new SelectList(db.TSOLs, "ID", "DESCRIPCION", tSOL.TSOLR);
             return View(tSOL);
         }
 
@@ -172,138 +199,227 @@ namespace TAT001.Controllers.Catalogos
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,DESCRIPCION,TSOLR,RANGO_ID,ESTATUS")] TSOL tSOL, string[] txval)
+        public ActionResult Edit([Bind(Include = "ID,DESCRIPCION,ACTIVO")] TSOL tSOL, string[] txval)
         {
             if (ModelState.IsValid)
             {
                 List<SPRA> ss = db.SPRAS.ToList();
-                foreach (SPRA s in ss)
+                List<TSOLT> lstc = db.TSOLTs.Where(i => i.TSOL_ID == tSOL.ID).ToList();
+                if (lstc.Count == 0)
                 {
-                    try
+                    var j = 0;
+                    foreach (SPRA s in ss)
                     {
-                        TSOLT p = new TSOLT();
-                        p.TSOL_ID = tSOL.ID;
-                        p.SPRAS_ID = s.ID;
-                        p.TXT020 = Request.Form[s.ID].ToString();
-                        p.TXT50 = Request.Form[s.ID].ToString();
-                        db.Entry(p).State = EntityState.Modified;
-                        db.SaveChanges();
-                    }
-                    catch (Exception e)
-                    {
-                        var x = e.ToString();
-                    }
-                }
-                if (txval != null)
-                {
-                    //Posterior a lo ingresado
-                    List<TSOLT> lstc = db.TSOLTs.Where(i => i.TSOL_ID == tSOL.ID).ToList();
-                    //si el arreglo solo incluye 1 dato, significa que ya hay 2 lenguajes
-                    if (txval.Length == 1)
-                    {
-                        var x1 = lstc[0].SPRAS_ID;
-                        var x2 = lstc[1].SPRAS_ID;
-                        if (lstc[0].SPRAS_ID == "EN")
+
+                        try
                         {
-                            if (lstc[1].SPRAS_ID == "ES")
-                            {
-                                // Lleno el primer objeto
-                                TSOLT trvt = new TSOLT();
-                                trvt.SPRAS_ID = "PT";
-                                trvt.TSOL_ID = tSOL.ID;
-                                trvt.TXT020 = txval[0];
-                                trvt.TXT50 = txval[0];
-                                db.TSOLTs.Add(trvt);
-                                db.SaveChanges();
-                            }
-                            if (lstc[1].SPRAS_ID == "PT")
-                            {  //Lleno el primer objeto
-                                TSOLT trvt = new TSOLT();
-                                trvt.SPRAS_ID = "ES";
-                                trvt.TSOL_ID = tSOL.ID;
-                                trvt.TXT020 = txval[0];
-                                trvt.TXT50 = txval[0];
-                                db.TSOLTs.Add(trvt);
-                                db.SaveChanges();
-                            }
+                            TSOLT p = new TSOLT();
+                            p.TSOL_ID = tSOL.ID;
+                            p.SPRAS_ID = s.ID;
+                            p.TXT020 = txval[j].ToString();
+                            p.TXT50 = txval[j].ToString();
+                            db.Entry(p).State = EntityState.Added;
+                            db.SaveChanges();
+                            j++;
                         }
-                        if (lstc[0].SPRAS_ID == "ES")
+                        catch (Exception e)
                         {
-                            if (lstc[1].SPRAS_ID == "PT")
-                            {
-                                // Lleno el primer objeto
-                                TSOLT trvt = new TSOLT();
-                                trvt.SPRAS_ID = "EN";
-                                trvt.TSOL_ID = tSOL.ID;
-                                trvt.TXT020 = txval[0];
-                                trvt.TXT50 = txval[0];
-                                db.TSOLTs.Add(trvt);
-                                db.SaveChanges();
-                            }
-                        }
-                    }
-                    //si el arreglo  incluye 2 datos, significa que ya hay 1 lenguaje
-                    else if (txval.Length == 2)
-                    {
-                        if (lstc[0].SPRAS_ID == "ES")
-                        {
-                            // Lleno el primer objeto
-                            TSOLT trvt = new TSOLT();
-                            trvt.SPRAS_ID = "EN";
-                            trvt.TSOL_ID = tSOL.ID;
-                            trvt.TXT020 = txval[0];
-                            trvt.TXT50 = txval[0];
-                            db.TSOLTs.Add(trvt);
-                            db.SaveChanges();
-                            //Lleno el segundo objeto
-                            TSOLT trvt2 = new TSOLT();
-                            trvt2.SPRAS_ID = "PT";
-                            trvt2.TSOL_ID = tSOL.ID;
-                            trvt2.TXT020 = txval[1];
-                            trvt2.TXT50 = txval[1];
-                            db.TSOLTs.Add(trvt2);
-                            db.SaveChanges();
-                        }
-                        else if (lstc[0].SPRAS_ID == "EN")
-                        {
-                            // Lleno el primer objeto
-                            TSOLT trvt = new TSOLT();
-                            trvt.SPRAS_ID = "ES";
-                            trvt.TSOL_ID = tSOL.ID;
-                            trvt.TXT020 = txval[0];
-                            trvt.TXT50 = txval[0];
-                            db.TSOLTs.Add(trvt);
-                            db.SaveChanges();
-                            //Lleno el segundo objeto
-                            TSOLT trvt2 = new TSOLT();
-                            trvt2.SPRAS_ID = "PT";
-                            trvt2.TSOL_ID = tSOL.ID;
-                            trvt2.TXT020 = txval[1];
-                            trvt2.TXT50 = txval[1];
-                            db.TSOLTs.Add(trvt2);
-                            db.SaveChanges();
-                        }
-                        else if (lstc[0].SPRAS_ID == "PT")
-                        {
-                            // Lleno el primer objeto
-                            TSOLT trvt = new TSOLT();
-                            trvt.SPRAS_ID = "ES";
-                            trvt.TSOL_ID = tSOL.ID;
-                            trvt.TXT020 = txval[0];
-                            trvt.TXT50 = txval[0];
-                            db.TSOLTs.Add(trvt);
-                            db.SaveChanges();
-                            //Lleno el segundo objeto
-                            TSOLT trvt2 = new TSOLT();
-                            trvt2.SPRAS_ID = "EN";
-                            trvt2.TSOL_ID = tSOL.ID;
-                            trvt2.TXT020 = txval[1];
-                            trvt2.TXT50 = txval[1];
-                            db.TSOLTs.Add(trvt2);
-                            db.SaveChanges();
+                            var x = e.ToString();
                         }
                     }
                 }
+                else
+                {
+                    var j = 0;
+                    foreach (var texto in lstc)
+                    {
+                        try
+                        {
+                            texto.TXT020 = txval[j].ToString();
+                            texto.TXT50 = txval[j].ToString();
+                            db.Entry(texto).State = EntityState.Modified;
+                            db.SaveChanges();
+                            j++;
+                        }
+                        catch (Exception e)
+                        {
+                            var x = e.ToString();
+                        }
+                    }
+                }
+                
+                tSOL.ACTIVO = tSOL.ACTIVO;
+                db.SaveChanges();
+                //if (txval != null)
+                //{
+                //    //Posterior a lo ingresado
+                //    List<TSOLT> lstc = db.TSOLTs.Where(i => i.TSOL_ID == tSOL.ID).ToList();
+                //    //si el arreglo solo incluye 1 dato, significa que ya hay 2 lenguajes
+                //    if (txval.Length == 1)
+                //    {
+                //        var x1 = lstc[0].SPRAS_ID;
+                //        var x2 = lstc[1].SPRAS_ID;
+                //        if (lstc[0].SPRAS_ID == "EN")
+                //        {
+                //            if (lstc[1].SPRAS_ID == "ES")
+                //            {
+                //                // Lleno el primer objeto
+                //                TSOLT trvt = new TSOLT();
+                //                trvt.SPRAS_ID = "PT";
+                //                trvt.TSOL_ID = tSOL.ID;
+                //                trvt.TXT020 = txval[0];
+                //                trvt.TXT50 = txval[0];
+                //                db.TSOLTs.Add(trvt);
+                //                db.SaveChanges();
+                //            }
+                //            if (lstc[1].SPRAS_ID == "PT")
+                //            {  //Lleno el primer objeto
+                //                TSOLT trvt = new TSOLT();
+                //                trvt.SPRAS_ID = "ES";
+                //                trvt.TSOL_ID = tSOL.ID;
+                //                trvt.TXT020 = txval[0];
+                //                trvt.TXT50 = txval[0];
+                //                db.TSOLTs.Add(trvt);
+                //                db.SaveChanges();
+                //            }
+                //        }
+                //        if (lstc[0].SPRAS_ID == "ES")
+                //        {
+                //            if (lstc[1].SPRAS_ID == "PT")
+                //            {
+                //                // Lleno el primer objeto
+                //                TSOLT trvt = new TSOLT();
+                //                trvt.SPRAS_ID = "EN";
+                //                trvt.TSOL_ID = tSOL.ID;
+                //                trvt.TXT020 = txval[0];
+                //                trvt.TXT50 = txval[0];
+                //                db.TSOLTs.Add(trvt);
+                //                db.SaveChanges();
+                //            }
+                //        }
+                //    }
+                //    //si el arreglo  incluye 2 datos, significa que ya hay 1 lenguaje
+                //    else if (txval.Length == 2)
+                //    {
+                //        if (lstc[0].SPRAS_ID == "ES")
+                //        {
+                //            // Lleno el primer objeto
+                //            TSOLT trvt = new TSOLT();
+                //            trvt.SPRAS_ID = "EN";
+                //            trvt.TSOL_ID = tSOL.ID;
+                //            trvt.TXT020 = txval[0];
+                //            trvt.TXT50 = txval[0];
+                //            db.TSOLTs.Add(trvt);
+                //            db.SaveChanges();
+                //            //Lleno el segundo objeto
+                //            TSOLT trvt2 = new TSOLT();
+                //            trvt2.SPRAS_ID = "PT";
+                //            trvt2.TSOL_ID = tSOL.ID;
+                //            trvt2.TXT020 = txval[1];
+                //            trvt2.TXT50 = txval[1];
+                //            db.TSOLTs.Add(trvt2);
+                //            db.SaveChanges();
+                //        }
+                //        else if (lstc[0].SPRAS_ID == "EN")
+                //        {
+                //            // Lleno el primer objeto
+                //            TSOLT trvt = new TSOLT();
+                //            trvt.SPRAS_ID = "ES";
+                //            trvt.TSOL_ID = tSOL.ID;
+                //            trvt.TXT020 = txval[0];
+                //            trvt.TXT50 = txval[0];
+                //            db.TSOLTs.Add(trvt);
+                //            db.SaveChanges();
+                //            //Lleno el segundo objeto
+                //            TSOLT trvt2 = new TSOLT();
+                //            trvt2.SPRAS_ID = "PT";
+                //            trvt2.TSOL_ID = tSOL.ID;
+                //            trvt2.TXT020 = txval[1];
+                //            trvt2.TXT50 = txval[1];
+                //            db.TSOLTs.Add(trvt2);
+                //            db.SaveChanges();
+                //        }
+                //        else if (lstc[0].SPRAS_ID == "PT")
+                //        {
+                //            // Lleno el primer objeto
+                //            TSOLT trvt = new TSOLT();
+                //            trvt.SPRAS_ID = "ES";
+                //            trvt.TSOL_ID = tSOL.ID;
+                //            trvt.TXT020 = txval[0];
+                //            trvt.TXT50 = txval[0];
+                //            db.TSOLTs.Add(trvt);
+                //            db.SaveChanges();
+                //            //Lleno el segundo objeto
+                //            TSOLT trvt2 = new TSOLT();
+                //            trvt2.SPRAS_ID = "EN";
+                //            trvt2.TSOL_ID = tSOL.ID;
+                //            trvt2.TXT020 = txval[1];
+                //            trvt2.TXT50 = txval[1];
+                //            db.TSOLTs.Add(trvt2);
+                //            db.SaveChanges();
+                //        }
+                //    }
+                //    else if (txval.Length == 3)
+                //    {
+                //        if (lstc[0].SPRAS_ID == "ES")
+                //        {
+                //            // Lleno el primer objeto
+                //            TSOLT trvt = new TSOLT();
+                //            trvt.SPRAS_ID = "EN";
+                //            trvt.TSOL_ID = tSOL.ID;
+                //            trvt.TXT020 = txval[0];
+                //            trvt.TXT50 = txval[0];
+                //            db.TSOLTs.Add(trvt);
+                //            db.SaveChanges();
+                //            //Lleno el segundo objeto
+                //            TSOLT trvt2 = new TSOLT();
+                //            trvt2.SPRAS_ID = "PT";
+                //            trvt2.TSOL_ID = tSOL.ID;
+                //            trvt2.TXT020 = txval[1];
+                //            trvt2.TXT50 = txval[1];
+                //            db.TSOLTs.Add(trvt2);
+                //            db.SaveChanges();
+                //        }
+                //        else if (lstc[0].SPRAS_ID == "EN")
+                //        {
+                //            // Lleno el primer objeto
+                //            //TSOLT trvt = new TSOLT();
+                //            //trvt.SPRAS_ID = "ES";
+                //            //trvt.TSOL_ID = tSOL.ID;
+                //            lstc[0].TXT020 = txval[0];
+                //            lstc[0].TXT50 = txval[0];
+                //            db.Entry(lstc[0]).State = EntityState.Modified;
+                //            db.SaveChanges();
+                //            //Lleno el segundo objeto
+                //            TSOLT trvt2 = new TSOLT();
+                //            trvt2.SPRAS_ID = "PT";
+                //            trvt2.TSOL_ID = tSOL.ID;
+                //            trvt2.TXT020 = txval[1];
+                //            trvt2.TXT50 = txval[1];
+                //            db.TSOLTs.Add(trvt2);
+                //            db.SaveChanges();
+                //        }
+                //        else if (lstc[0].SPRAS_ID == "PT")
+                //        {
+                //            // Lleno el primer objeto
+                //            TSOLT trvt = new TSOLT();
+                //            trvt.SPRAS_ID = "ES";
+                //            trvt.TSOL_ID = tSOL.ID;
+                //            trvt.TXT020 = txval[0];
+                //            trvt.TXT50 = txval[0];
+                //            db.TSOLTs.Add(trvt);
+                //            db.SaveChanges();
+                //            //Lleno el segundo objeto
+                //            TSOLT trvt2 = new TSOLT();
+                //            trvt2.SPRAS_ID = "EN";
+                //            trvt2.TSOL_ID = tSOL.ID;
+                //            trvt2.TXT020 = txval[1];
+                //            trvt2.TXT50 = txval[1];
+                //            db.TSOLTs.Add(trvt2);
+                //            db.SaveChanges();
+                //        }
+                //    }
+                //}
                 return RedirectToAction("Index");
             }
             int pagina = 793; //ID EN BASE DE DATOS
