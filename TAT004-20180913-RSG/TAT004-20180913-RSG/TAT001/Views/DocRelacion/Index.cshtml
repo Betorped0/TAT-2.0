@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<TAT001.Entities.FACTURASCONF>
 
 @{
-    ViewBag.Title = "Index";
+    //ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.pagina_r = 1210;
     ViewBag.carpeta_r = 500;
@@ -10,7 +10,7 @@
 <div class="row">
     <div class="col s12 right-align">
         @* Texto, pagina a ligar "NOMBRE", View *@
-        @Html.ActionLink("Agregar", "Create", "DocRelacion", new { @class = "btn-small", @id = "btnAdd" })
+        @Html.ActionLink("Agregar", "Create", "DocRelacion", new { @class = "btn btn-default", @id = "btnAdd" })
 
     </div>
 </div>
@@ -51,52 +51,52 @@
             <th id="lblPais">
                 @Html.DisplayNameFor(model => model.PAIS_ID)
             </th>
-            <th id="lblId">
+            <th id="lblTsol">
                 @Html.DisplayNameFor(model => model.TSOL)
             </th>
-            <th id="lblNombre">
+            <th id="lblFactura">
                 @Html.DisplayNameFor(model => model.FACTURA)
             </th>
-            <th id="lblNombre">
+            <th id="lblFecha">
                 @Html.DisplayNameFor(model => model.FECHA)
             </th>
-            <th id="lblNombre">
+            <th id="lblProveedor">
                 @Html.DisplayNameFor(model => model.PROVEEDOR)
             </th>
-            <th id="lblNombre">
+            <th id="lblControl">
                 @Html.DisplayNameFor(model => model.CONTROL)
             </th>
-            <th id="lblNombre">
+            <th id="lblAutorizacion">
                 @Html.DisplayNameFor(model => model.AUTORIZACION)
             </th>
-            <th id="lblNombre">
+            <th id="lblVenc">
                 @Html.DisplayNameFor(model => model.VENCIMIENTO)
             </th>
-            <th id="lblNombre">
+            <th id="lblFactK">
                 @Html.DisplayNameFor(model => model.FACTURAK)
             </th>
-            <th id="lblNombre">
+            <th id="lblEjeK">
                 @Html.DisplayNameFor(model => model.EJERCICIOK)
             </th>
-            <th id="lblNombre">
+            <th id="lblBill">
                 @Html.DisplayNameFor(model => model.BILL_DOC)
             </th>
-            <th id="lblNombre">
+            <th id="lblBell">
                 @Html.DisplayNameFor(model => model.BELNR)
             </th>
-            <th id="lblNombre">
+            <th id="lblImporte">
                 @Html.DisplayNameFor(model => model.IMPORTE_FAC)
             </th>
-            <th id="lblNombre">
+            <th id="lblPayer">
                 @Html.DisplayNameFor(model => model.PAYER)
             </th>
-            <th id="lblNombre">
+            <th id="lblDesc">
                 @Html.DisplayNameFor(model => model.DESCRIPCION)
             </th>
-            <th id="lblNombre">
+            <th id="lblSoci">
                 @Html.DisplayNameFor(model => model.SOCIEDAD)
             </th>
-            <th id="lblNombre">
+            <th id="lblActivo">
                 @Html.DisplayNameFor(model => model.ACTIVO)
             </th>
             <th></th>

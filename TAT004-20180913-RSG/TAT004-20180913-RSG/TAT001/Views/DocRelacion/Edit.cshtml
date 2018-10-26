@@ -1,10 +1,12 @@
 ﻿@model TAT001.Entities.FACTURASCONF
 
 @{
-    ViewBag.Title = "Edit";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.pagina_r = 1213;
-    ViewBag.carpeta_r = 500;
+                /**/
+
+                //ViewBag.Title = "Edit";
+                Layout = "~/Views/Shared/_Layout.cshtml";
+                ViewBag.pagina_r = 1213;
+                ViewBag.carpeta_r = 500;
 }
 
 <script src="~/Scripts/ValidarProv.js"></script>
@@ -12,7 +14,7 @@
 <div class="row right">
     <div class="col s12">
         <div class="col s6">
-            <a href="@Url.Action("Index", "DocRelacion")" class="btn-small">Lista</a>
+
         </div>
 
     </div>
@@ -21,8 +23,13 @@
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
-        <div class="col s6">
-            <input type="submit" value="Guardar" class="btn btn-default" style="float: right;" />
+        <div class="row right-align">
+            <div class="row">
+                <div class="col l12 m12">
+                    <a href="@Url.Action("Index", "DocRelacion")" class="btn btn-default">Lista</a>
+                    <input type="submit" value="Guardar" class="btn btn-default" />
+                </div>
+            </div>
         </div>
         <div class="col 12 s12">
             <div class="card-panel">
@@ -31,25 +38,25 @@
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                         <div class="row">
                             <div class="input-field col l6 m6" style="margin-bottom:0;">
-                                @Html.LabelFor(model => model.SOCIEDAD_ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblId" })
+                                @Html.LabelFor(model => model.SOCIEDAD_ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblSociedadId" })
                                 @Html.EditorFor(model => model.SOCIEDAD_ID, new { htmlAttributes = new { @class = "form-control txtIDP", @maxlength = "10", @readonly = "readonly" } })
                                 @Html.ValidationMessageFor(model => model.SOCIEDAD_ID, "", new { @class = "text-danger" })
                             </div>
                             <div class="input-field col l6 m6" style="margin-bottom:0;">
-                                @Html.LabelFor(model => model.PAIS_ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblNombre" })
+                                @Html.LabelFor(model => model.PAIS_ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblPais" })
                                 @Html.EditorFor(model => model.PAIS_ID, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @readonly = "readonly" } })
                                 @Html.ValidationMessageFor(model => model.PAIS_ID, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-field col l6 m6" style="margin-bottom:0;">
-                                @Html.LabelFor(model => model.TSOL, "TSOL", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblSociedadId" })
+                                @Html.LabelFor(model => model.TSOL, "TSOL", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblTsol" })
                                 @Html.EditorFor(model => model.TSOL, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @readonly = "readonly" } })
                                 @Html.ValidationMessageFor(model => model.TSOL, "", new { @class = "text-danger" })
                             </div>
 
                             <div class="input-field col l6 m6" style="margin-bottom:0;">
-                                @Html.LabelFor(model => model.FACTURA, "FACTURA", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblPais" })
+                                @Html.LabelFor(model => model.FACTURA, "FACTURA", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblFactura" })
                                 @Html.ValidationMessageFor(model => model.FACTURA, "", new { @class = "text-danger" })
                                 @Html.EditorFor(model => model.FACTURA, new { htmlAttributes = new { @class = "form-control pname material-icons green-text", @maxlength = "230", @hidden = "hidden", id = "idfac" } })
 
@@ -74,7 +81,7 @@
                         </div>
                         <div class="row">
                             <div class="input-field col l6 m6" style="margin-bottom:0;">
-                                @Html.LabelFor(model => model.FECHA, "FECHA", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblSociedadId" })
+                                @Html.LabelFor(model => model.FECHA, "FECHA", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblFecha" })
                                 @Html.ValidationMessageFor(model => model.FECHA, "", new { @class = "text-danger" })
                                 @Html.EditorFor(model => model.FECHA, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idfec" } })
 
@@ -94,7 +101,7 @@
                                 }
                             </div>
                             <div class="input-field col l6 m6" style="margin-bottom:0;">
-                                @Html.LabelFor(model => model.PROVEEDOR, "PROVEEDOR", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblPais" })
+                                @Html.LabelFor(model => model.PROVEEDOR, "PROVEEDOR", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblProveedor" })
                                 @Html.ValidationMessageFor(model => model.PROVEEDOR, "", new { @class = "text-danger" })
                                 @Html.EditorFor(model => model.PROVEEDOR, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idprov" } })
 
@@ -118,7 +125,7 @@
                         <br />
                         <div class="row">
                             <div class="input-field col l6 m6" style="margin-bottom:0;">
-                                @Html.LabelFor(model => model.CONTROL, "CONTROL", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblSociedadId" })
+                                @Html.LabelFor(model => model.CONTROL, "CONTROL", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblControl" })
                                 @Html.ValidationMessageFor(model => model.CONTROL, "", new { @class = "text-danger" })
                                 @Html.EditorFor(model => model.CONTROL, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idcon" } })
 
@@ -138,7 +145,7 @@
                                 }
                             </div>
                             <div class="input-field col l6 m6" style="margin-bottom:0;">
-                                @Html.LabelFor(model => model.AUTORIZACION, "AUTORIZACION", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblSociedadId" })
+                                @Html.LabelFor(model => model.AUTORIZACION, "AUTORIZACION", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblAutorizacion" })
                                 @Html.ValidationMessageFor(model => model.AUTORIZACION, "", new { @class = "text-danger" })
                                 @Html.EditorFor(model => model.AUTORIZACION, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idauto" } })
 
@@ -162,7 +169,7 @@
                         <br />
                         <div class="row">
                             <div class="input-field col l6 m6" style="margin-bottom:0;">
-                                @Html.LabelFor(model => model.VENCIMIENTO, "VENCIMIENTO", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblPais" })
+                                @Html.LabelFor(model => model.VENCIMIENTO, "VENCIMIENTO", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblVenc" })
                                 @Html.ValidationMessageFor(model => model.VENCIMIENTO, "", new { @class = "text-danger" })
                                 @Html.EditorFor(model => model.VENCIMIENTO, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idvenc" } })
 
@@ -182,7 +189,7 @@
                                 }
                             </div>
                             <div class="input-field col l6 m6" style="margin-bottom:0;">
-                                @Html.LabelFor(model => model.FACTURAK, "FACTURAK", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblSociedadId" })
+                                @Html.LabelFor(model => model.FACTURAK, "FACTURAK", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblFactK" })
                                 @Html.ValidationMessageFor(model => model.FACTURAK, "", new { @class = "text-danger" })
                                 @Html.EditorFor(model => model.FACTURAK, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idfactk" } })
 
@@ -207,7 +214,7 @@
                         <br />
                         <div class="row">
                             <div class="input-field col l6 m6" style="margin-bottom:0;">
-                                @Html.LabelFor(model => model.EJERCICIOK, "EJERCICIOK", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblPais" })
+                                @Html.LabelFor(model => model.EJERCICIOK, "EJERCICIOK", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblEjeK" })
                                 @Html.ValidationMessageFor(model => model.VENCIMIENTO, "", new { @class = "text-danger" })
                                 @Html.EditorFor(model => model.EJERCICIOK, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idejek" } })
 
@@ -227,7 +234,7 @@
                                 }
                             </div>
                             <div class="input-field col l6 m6" style="margin-bottom:0;">
-                                @Html.LabelFor(model => model.BILL_DOC, "BILL_DOC", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblPais" })
+                                @Html.LabelFor(model => model.BILL_DOC, "BILL_DOC", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblBill" })
                                 @Html.ValidationMessageFor(model => model.BILL_DOC, "", new { @class = "text-danger" })
                                 @Html.EditorFor(model => model.BILL_DOC, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idbill" } })
 
@@ -251,7 +258,7 @@
                         <br />
                         <div class="row">
                             <div class="input-field col l6 m6" style="margin-bottom:0;">
-                                @Html.LabelFor(model => model.BELNR, "BELNR", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblPais" })
+                                @Html.LabelFor(model => model.BELNR, "BELNR", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblBell" })
                                 @Html.ValidationMessageFor(model => model.BELNR, "", new { @class = "text-danger" })
                                 @Html.EditorFor(model => model.BELNR, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idbellnr" } })
 
@@ -271,7 +278,7 @@
                                 }
                             </div>
                             <div class="input-field col l6 m6" style="margin-bottom:0;">
-                                @Html.LabelFor(model => model.IMPORTE_FAC, "IMPORTE_FAC", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblPais" })
+                                @Html.LabelFor(model => model.IMPORTE_FAC, "IMPORTE_FAC", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblImporte" })
                                 @Html.ValidationMessageFor(model => model.IMPORTE_FAC, "", new { @class = "text-danger" })
                                 @Html.EditorFor(model => model.IMPORTE_FAC, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idimpo" } })
 
@@ -295,7 +302,7 @@
                         <br />
                         <div class="row">
                             <div class="input-field col l6 m6" style="margin-bottom:0;">
-                                @Html.LabelFor(model => model.PAYER, "PAYER", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblPais" })
+                                @Html.LabelFor(model => model.PAYER, "PAYER", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblPayer" })
                                 @Html.ValidationMessageFor(model => model.PAYER, "", new { @class = "text-danger" })
                                 @Html.EditorFor(model => model.PAYER, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idpay" } })
 
@@ -315,7 +322,7 @@
                                 }
                             </div>
                             <div class="input-field col l6 m6" style="margin-bottom:0;">
-                                @Html.LabelFor(model => model.DESCRIPCION, "DESCRIPCION", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblPais" })
+                                @Html.LabelFor(model => model.DESCRIPCION, "DESCRIPCION", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblDesc" })
                                 @Html.ValidationMessageFor(model => model.DESCRIPCION, "", new { @class = "text-danger" })
                                 @Html.EditorFor(model => model.DESCRIPCION, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "iddes" } })
 
@@ -339,7 +346,7 @@
                         <br />
                         <div class="row">
                             <div class="input-field col l6 m6" style="margin-bottom:0;">
-                                @Html.LabelFor(model => model.SOCIEDAD, "SOCIEDAD", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblPais" })
+                                @Html.LabelFor(model => model.SOCIEDAD, "SOCIEDAD", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblSoci" })
                                 @Html.ValidationMessageFor(model => model.SOCIEDAD, "", new { @class = "text-danger" })
                                 @Html.EditorFor(model => model.SOCIEDAD, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idsoc" } })
 
@@ -359,7 +366,7 @@
                                 }
                             </div>
                             <div class="input-field col l6 m6" style="margin-bottom:0;">
-                                @Html.LabelFor(model => model.ACTIVO, "ACTIVO", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblPais" })
+                                @Html.LabelFor(model => model.ACTIVO, "ACTIVO", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblActivo" })
                                 @Html.ValidationMessageFor(model => model.ACTIVO, "", new { @class = "text-danger" })
                                 @Html.EditorFor(model => model.ACTIVO, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idact" } })
 

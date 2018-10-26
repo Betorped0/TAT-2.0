@@ -16,14 +16,19 @@ Layout = "~/Views/Shared/_Layout.cshtml";
             <label id="lbl_length"></label>
         </div>
         <div class="input-field col s5 m3 l3 offset-l6 offset-m6 offset-s4">
-            @Html.TextBoxFor(model => model.buscar, new { @class = "global_filter", @id= "global_filter", @maxlength = 50 })
-            <label for="global_filter" id="lbl_search">Buscar</label>
+                @Html.TextBoxFor(model => model.buscar, new { @class = "global_filter", @id= "global_filter", @maxlength = 50 })
+                <label for="global_filter" id="lbl_search">Buscar</label>
         </div>
     </div>
+    <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
+    <link href="~/Content/dataTable.css" rel="stylesheet" />
+    <link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
     <div id="list">
         @Html.Partial("List", Model)
     </div>
-    </div>
+</div>
 
 <script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
 <script>
@@ -35,10 +40,12 @@ Layout = "~/Views/Shared/_Layout.cshtml";
     $('#numRegistros').change(function () {
         fnCommon.showProcess(true);
         $.ajax({
-            url: root + 'Clientes/List?numRegistros=' + $('#numRegistros').val(),
+            url: root + 'Clientes/List?numRegistros=' + $('#numRegistros').val() + '&&buscar=' + $('input.global_filter').val(),
             success: function (resultView) {
                 fnCommon.showProcess(false);
                 $('#list').html(resultView);
+                pagination();
+                sort();
             }
         });
     });
@@ -50,10 +57,12 @@ Layout = "~/Views/Shared/_Layout.cshtml";
              url: root+'Clientes/List?numRegistros=' + $('#numRegistros').val() + '&&buscar=' + $('input.global_filter').val(),
             success: function (resultView) {
                 $('#list').html(resultView);
+                pagination();
+                sort();
             }
         });
     });
-    //-----Pagination
+  //-----Pagination
     function pagination() {
         var paginationLink = $('.pagination>li>a');
         for (var i = 0; i < paginationLink.length; i++) {
@@ -77,5 +86,30 @@ Layout = "~/Views/Shared/_Layout.cshtml";
             paginationLink.get(i).removeAttribute("href");
         }
     }
-    pagination();
+    pagination(); 
+    //-----Sort
+    function sort() {
+        var sortLink = $('.header>th>a');
+        for (var i = 0; i < sortLink.length; i++) {
+            var url = sortLink.get(i).getAttribute("href");
+            var id = 'link_h' + i;
+            if (url) {
+                sortLink.get(i).setAttribute("id", id);
+                sortLink.get(i).setAttribute("url", url);
+                $('#' + id).click(function (me) {
+                    fnCommon.showProcess(true);
+                    $.ajax({
+                        url: me.toElement.getAttribute('url'),
+                        success: function (resultView) {
+                            fnCommon.showProcess(false);
+                            $('#list').html(resultView);
+                            sort();
+                        }
+                    });
+                });
+            }
+            sortLink.get(i).removeAttribute("href");
+        }
+    }
+    sort();
 </script>

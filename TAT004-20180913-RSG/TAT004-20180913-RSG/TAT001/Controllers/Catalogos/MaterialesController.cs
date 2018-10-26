@@ -45,11 +45,12 @@ namespace TAT001.Controllers.Catalogos
             List<MATERIAL> clientes = db.MATERIALs.Include(m => m.MATERIALGP).ToList();
             viewModel.ordenActual = colOrden;
             viewModel.numRegistros = numRegistros.Value;
+            viewModel.buscar = buscar;
 
             if (!String.IsNullOrEmpty(buscar))
             {
                 clientes = clientes.Where(x =>
-                String.Concat(x.ID, x.MAKTX, (x.MATERIALGP.DESCRIPCION == null ? "" : x.MATERIALGP.DESCRIPCION))
+                String.Concat(x.ID, x.MAKTX, (x.MATERIALGP_ID == null ? "" : x.MATERIALGP.DESCRIPCION))
                 .ToLower().Contains(buscar.ToLower()))
                 .ToList();
             }
@@ -70,9 +71,9 @@ namespace TAT001.Controllers.Catalogos
 
                 case "MATERIALGP":
                     if (colOrden.Equals(ordenActual))
-                        viewModel.materiales = clientes.OrderByDescending(m => m.MATERIALGP.DESCRIPCION).ToPagedList(pageIndex, viewModel.numRegistros);
+                        viewModel.materiales = clientes.OrderByDescending(m => m.MATERIALGP_ID).ToPagedList(pageIndex, viewModel.numRegistros);
                     else
-                        viewModel.materiales = clientes.OrderBy(m => m.MATERIALGP.DESCRIPCION).ToPagedList(pageIndex, viewModel.numRegistros);
+                        viewModel.materiales = clientes.OrderBy(m => m.MATERIALGP_ID).ToPagedList(pageIndex, viewModel.numRegistros);
                     break;
 
                 case "ACTIVO":

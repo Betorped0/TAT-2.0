@@ -3,7 +3,7 @@
 @{
     /**/
 
-    ViewBag.pagina_r = 793;
+    ViewBag.pagina_r = 792;
     ViewBag.carpeta_r = 500;
     //ViewBag.Title = "Tipo de Solicitud";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -39,7 +39,7 @@
         <div class="row">
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Save" id="btn_guardar" class="btn btn-default" style="float:right;" />
+                    <button type="submit" id="btnEd" class="btn btn-default" style="float:right;" />
                 </div>
             </div>
         </div>
@@ -57,7 +57,7 @@
                                     @{ bool activo = Convert.ToBoolean(Model.ACTIVO);
                                     @Html.CheckBox("ACTIVO",activo)
                                             }
-                                    <span id="lbl_Activo"></span>
+                                    <span id="lblObliga"></span>
                                 </label>
                         </div>
                     </div>

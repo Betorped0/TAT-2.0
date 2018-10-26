@@ -230,6 +230,7 @@
     <Compile Include="Controllers\Catalogos\SociedadesController.cs" />
     <Compile Include="Controllers\Catalogos\SoporteController.cs" />
     <Compile Include="Controllers\Catalogos\TALLsController.cs" />
+    <Compile Include="Controllers\Catalogos\TextocvController.cs" />
     <Compile Include="Controllers\Catalogos\UsuariosController2.cs" />
     <Compile Include="Controllers\Configuracion\ccatController.cs" />
     <Compile Include="Controllers\Catalogos\ClienteController.cs" />
@@ -1334,7 +1335,7 @@
     <Content Include="obj\Release\TempPE\Entities.TAT001.cs.dll" />
     <Content Include="obj\Release\TempPE\Entities.TAT001.Designer.cs.dll" />-->
     <Content Include="images\Simple-wallpapers-HD-for-desktop.png" />
-    <Content Include="PdfTemp\readme.txt" />
+    <!--<Content Include="PdfTemp\readme.txt" />-->
     <Content Include="Properties\PublishProfiles\FolderProfile.pubxml.user" />
     <Content Include="Scripts\CargaUsuarios.js" />
     <Content Include="Scripts\CargaClientes.js" />
@@ -1354,6 +1355,7 @@
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\Masiva\create.js" />
+    <Content Include="Scripts\Masiva\formatosMasiva.js" />
     <Content Include="Scripts\moment-with-locales.js" />
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.js" />
@@ -1941,6 +1943,12 @@
     <Content Include="Views\Moneda\Edit.cshtml" />
     <Content Include="Views\Moneda\Index.cshtml" />
     <Content Include="Views\Proveedor\List.cshtml" />
+    <Content Include="Views\Clientes\CargaList.cshtml" />
+    <Content Include="Views\Textocv\Create.cshtml" />
+    <Content Include="Views\Textocv\Delete.cshtml" />
+    <Content Include="Views\Textocv\Details.cshtml" />
+    <Content Include="Views\Textocv\Edit.cshtml" />
+    <Content Include="Views\Textocv\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->

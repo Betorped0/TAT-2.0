@@ -20,7 +20,8 @@ namespace TAT001.Models.Masiva
         public string PAYER_NOMBRE { get; set; }
         public string VKORG { get; set; }
         public string VTWEG { get; set; }
-        public string PAYER_EMAIL { get; set; }
+        public string CONTACTO_NOMBRE { get; set; }
+        public string CONTACTO_EMAIL { get; set; }
         public string FECHAI_VIG { get; set; }
         public string FECHAF_VIG { get; set; }
         public string MONEDA_ID { get; set; }

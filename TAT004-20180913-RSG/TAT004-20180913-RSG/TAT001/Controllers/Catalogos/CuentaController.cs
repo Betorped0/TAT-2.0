@@ -110,6 +110,10 @@ namespace TAT001.Controllers
             ViewBag.TALL_ID = new SelectList(db.TALLs, "ID", "DESCRIPCION");
             ViewBag.PAIS_ID = new SelectList(db.PAIS, "LAND", "LANDX");
             ViewBag.SOCIEDAD_ID = new SelectList(db.SOCIEDADs, "BUKRS", "BUTXT");
+            ViewBag.ABONO = new SelectList(db.CUENTAGLs.Where(t=>t.ACTIVO==true).ToList(), "ID", "NOMBRE");
+            ViewBag.CARGO = new SelectList(db.CUENTAGLs.Where(t => t.ACTIVO == true).ToList(), "ID", "NOMBRE");
+            ViewBag.CLEARING = new SelectList(db.CUENTAGLs.Where(t => t.ACTIVO == true).ToList(), "ID", "NOMBRE");
+            ViewBag.IMPUESTO = new SelectList(db.IMPUESTOes.Where(t => t.ACTIVO == true).ToList(), "MWSKZ", "MWSKZ");
             return View();
         }
 
@@ -118,7 +122,7 @@ namespace TAT001.Controllers
         // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "SOCIEDAD_ID,PAIS_ID,TALL_ID,EJERCICIO,ABONO,CARGO,CLEARING,LIMITE")] CUENTA cUENTA)
+        public ActionResult Create([Bind(Include = "SOCIEDAD_ID,PAIS_ID,TALL_ID,EJERCICIO,ABONO,CARGO,CLEARING,LIMITE,IMPUESTO")] CUENTA cUENTA)
         {
             if (ModelState.IsValid)
             {
@@ -170,7 +174,10 @@ namespace TAT001.Controllers
             ViewBag.TALL_ID = new SelectList(db.TALLs, "ID", "DESCRIPCION", cUENTA.TALL_ID);
             ViewBag.PAIS_ID = new SelectList(db.PAIS, "LAND", "LANDX", cUENTA.PAIS_ID);
             ViewBag.SOCIEDAD_ID = new SelectList(db.SOCIEDADs, "BUKRS", "BUTXT", cUENTA.SOCIEDAD_ID);
-
+            ViewBag.ABONO = new SelectList(db.CUENTAGLs.Where(t => t.ACTIVO == true).ToList(), "ID", "NOMBRE", cUENTA.ABONO);
+            ViewBag.CARGO = new SelectList(db.CUENTAGLs.Where(t => t.ACTIVO == true).ToList(), "ID", "NOMBRE",cUENTA.CARGO);
+            ViewBag.CLEARING = new SelectList(db.CUENTAGLs.Where(t => t.ACTIVO == true).ToList(), "ID", "NOMBRE", cUENTA.CLEARING);
+            ViewBag.IMPUESTO = new SelectList(db.IMPUESTOes.Where(t => t.ACTIVO == true).ToList(), "MWSKZ", "MWSKZ", cUENTA.IMPUESTO);
             return View(cUENTA);
         }
 
@@ -179,7 +186,7 @@ namespace TAT001.Controllers
         // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "SOCIEDAD_ID,PAIS_ID,TALL_ID,EJERCICIO,ABONO,CARGO,CLEARING,LIMITE")] CUENTA cUENTA)
+        public ActionResult Edit([Bind(Include = "SOCIEDAD_ID,PAIS_ID,TALL_ID,EJERCICIO,ABONO,CARGO,CLEARING,LIMITE,IMPUESTO")] CUENTA cUENTA)
         {
             if (ModelState.IsValid)
             {

@@ -860,9 +860,9 @@ namespace TAT001.Controllers.Catalogos
                 Usuarios us = new Usuarios();
                 Cryptography c = new Cryptography();
 
-                us.KUNNR = da.KUNNR;
+                us.KUNNR = da.KUNNR.Replace(" ", "");
                 us.KUNNRX = true;
-                us.BUNIT = da.BUNIT;
+                us.BUNIT = da.BUNIT.Replace(" ", "");
                 us.BUNITX = true;
                 us.PUESTO_ID = da.PUESTO_ID.ToString();
                 us.PUESTO_IDX = true;
@@ -871,7 +871,7 @@ namespace TAT001.Controllers.Catalogos
                 us.NOMBRE = da.NOMBRE;
                 us.APELLIDO_P = da.APELLIDO_P;
                 us.APELLIDO_M = da.APELLIDO_M;
-                us.EMAIL = da.EMAIL;
+                us.EMAIL = da.EMAIL.Replace(" ", "");
                 us.EMAILX = true;
                 us.SPRAS_ID = da.SPRAS_ID;
                 us.SPRAS_IDX = true;
@@ -927,9 +927,21 @@ namespace TAT001.Controllers.Catalogos
                     if (vus == false)
                     {
                         ////-------------------------------CLIENTE
+                        var error = "";
                         CLIENTE k = db.CLIENTEs.Where(cc => cc.KUNNR.Equals(us.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
+                        for (int i = cont2; i >= 0; i--)
+                        {
+                            if (client[i, 0] == us.KUNNR && client[i, 1] == us.ID)
+                            {
+                                us.KUNNRX = false;
+                                error = ". Registro duplicado<br/>";
+                            }
+                        }
                         if (k == null)
+                        {
                             us.KUNNRX = false;
+                            error = ". Error en el cliente<br/>";
+                        }
                         else
                         {
                             clientes.Add(k);
@@ -940,7 +952,7 @@ namespace TAT001.Controllers.Catalogos
                         if (!us.KUNNRX)
                         {
                             us.KUNNR = us.KUNNR + "?";
-                            messa = cont + ". Error en el cliente<br/>";
+                            messa = cont + error;
                             cont++;
                         }
 
@@ -995,6 +1007,7 @@ namespace TAT001.Controllers.Catalogos
                             {
                                 us.IDX = false;
                                 err = ". El usuario ya existe<br/>";
+                                IDs[cont4] = us.ID;
                                 client[cont2, 1] = us.ID.ToString();
                                 tablas[cont2, 3] = da.ID.ToString();
                                 tablas[cont2, 4] = da.NOMBRE.ToString();
@@ -1065,15 +1078,8 @@ namespace TAT001.Controllers.Catalogos
                     //Asignacion de mas clientes
                     else if (vus == true)
                     {
+                        var error = "";
                         CLIENTE k = db.CLIENTEs.Where(cc => cc.KUNNR.Equals(us.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
-                        if (k == null)
-                            us.KUNNRX = false;
-                        else
-                        {
-                            clientes.Add(k);
-                            client[cont2, 0] = us.KUNNR.ToString();
-
-                        }
                         for (int x = cont4; x >= 0; x--)
                         {
                             if (IDs[x] != null)
@@ -1081,10 +1087,34 @@ namespace TAT001.Controllers.Catalogos
                                 da.ID = IDs[x];
                                 x = -1;
                             }
+                        }
+                        for (int i = cont2; i >= 0; i--)
+                        {
+                            if (client[i, 0] == us.KUNNR && client[i, 1] == da.ID)
+                            {
+                                us.KUNNRX = false;
+                                error = ". Registro duplicado<br/>";
+                            }
+                        }
+                        if (k == null)
+                        {
+                            us.KUNNRX = false;
+                            error = ". Error en el ciente";
+                        }
+                        else
+                        {
+                            clientes.Add(k);
+                            client[cont2, 0] = us.KUNNR.ToString();
 
                         }
-                        messa = "";
+                        if (!us.KUNNRX)
+                        {
+                            us.KUNNR = us.KUNNR + "?";
+                            messa = cont + error;
+                            cont++;
+                        }
                         client[cont2, 1] = da.ID;
+                        da.mess = messa;
                         us.mess = da.mess;
                         tablas[cont2, 10] = messa;
                     }
@@ -1112,15 +1142,25 @@ namespace TAT001.Controllers.Catalogos
                         }
 
                         ////-------------------------------COMPANY CODE
+                        var error = "";
                         SOCIEDAD b = db.SOCIEDADs.Where(x => x.BUKRS.Equals(us.BUNIT) & x.ACTIVO == true).FirstOrDefault();
+                        for (int i = cont3; i >= 0; i--)
+                        {
+                            if (admins[i, 0] == us.BUNIT && admins[i, 1] == us.ID)
+                            {
+                                us.BUNITX = false;
+                                error = ". Registro duplicado<br/>";
+                            }
+                        }
                         if (b == null)
                         {
                             us.BUNITX = false;
+                            error = ". Error en la Sociedad<br/>";
                         }
                         else
                         {
                             sociedad.Add(b);
-                            admins[cont, 0] = da.BUNIT.ToString();
+                            admins[cont3, 0] = da.BUNIT.ToString();
                             tabla1[cont3, 1] = da.BUNIT.ToString();
                             gua1[cont3] = da.BUNIT.ToString();
                             usuariosoc[cont4, 0] = da.BUNIT.ToString();
@@ -1128,7 +1168,7 @@ namespace TAT001.Controllers.Catalogos
                         if (!us.BUNITX)
                         {
                             us.BUNIT = us.BUNIT + "?";
-                            messa = messa + cont + ". Error en la Sociedad<br/>";
+                            messa = messa + cont + error;
                             cont++;
                         }
 
@@ -1162,6 +1202,7 @@ namespace TAT001.Controllers.Catalogos
                             {
                                 us.IDX = false;
                                 err = ". El usuario ya existe<br/>";
+                                IDs[cont4] = us.ID;
                                 admins[cont3, 1] = us.ID.ToString();
                                 tabla1[cont3, 3] = da.ID.ToString();
                                 tabla1[cont3, 4] = da.NOMBRE.ToString();
@@ -1232,15 +1273,8 @@ namespace TAT001.Controllers.Catalogos
                     //Asignacion de mas Co Codes
                     else if (vus == true)
                     {
+                        var error = "";
                         SOCIEDAD b = db.SOCIEDADs.Where(x => x.BUKRS.Equals(us.BUNIT) & x.ACTIVO == true).FirstOrDefault();
-                        if (b == null)
-                            us.BUNITX = false;
-                        else
-                        {
-                            sociedad.Add(b);
-                            admins[cont3, 0] = da.BUNIT.ToString();
-                            usuariosoc[cont4, 0] = da.BUNIT.ToString();
-                        }
                         for (int x = cont4; x >= 0; x--)
                         {
                             if (IDs[x] != null)
@@ -1250,7 +1284,32 @@ namespace TAT001.Controllers.Catalogos
                             }
 
                         }
-                        messa = "";
+                        for (int i = cont3; i >= 0; i--)
+                        {
+                            if (admins[i, 0] == us.BUNIT && admins[i, 1] == da.ID)
+                            {
+                                us.BUNITX = false;
+                                error = ". Registro duplicado<br/>";
+                            }
+                        }
+                        if (b == null)
+                        {
+                            us.BUNITX = false;
+                            error = ". Error en la sociedad";
+                        }
+                        else
+                        {
+                            sociedad.Add(b);
+                            admins[cont3, 0] = da.BUNIT.ToString();
+                            usuariosoc[cont4, 0] = da.BUNIT.ToString();
+                        }
+                        if (!us.BUNITX)
+                        {
+                            us.BUNIT = us.BUNIT + "?";
+                            messa = messa + cont + error;
+                            cont++;
+                        }
+                        da.mess = messa;
                         admins[cont3, 1] = da.ID;
                         usuariosoc[cont4, 1] = da.ID.ToString();
                         us.mess = da.mess;
@@ -1507,22 +1566,28 @@ namespace TAT001.Controllers.Catalogos
                     if (da.ID != null)
                     {
                         ////---------------------------- USUARIO
-                        us.ID = da.ID.Trim();
-                        us.PASS = da.PASS;
-                        us.NOMBRE = da.NOMBRE;
-                        us.APELLIDO_P = da.APELLIDO_P;
-                        us.APELLIDO_M = da.APELLIDO_M;
-                        us.EMAIL = da.EMAIL;
-                        us.SPRAS_ID = da.SPRAS_ID;
-                        us.ACTIVO = true;
-                        us.PUESTO_ID = da.PUESTO_ID;
-                        us.MANAGER = null;
-                        us.BACKUP_ID = null;
-                        us.BUNIT = da.BUNIT;
+                        try
+                        {
+                            us.ID = da.ID.Trim();
+                            us.PASS = da.PASS;
+                            us.NOMBRE = da.NOMBRE;
+                            us.APELLIDO_P = da.APELLIDO_P;
+                            us.APELLIDO_M = da.APELLIDO_M;
+                            us.EMAIL = da.EMAIL;
+                            us.SPRAS_ID = da.SPRAS_ID;
+                            us.ACTIVO = true;
+                            us.PUESTO_ID = da.PUESTO_ID;
+                            us.MANAGER = null;
+                            us.BACKUP_ID = null;
+                            us.BUNIT = da.BUNIT;
 
-                        db.USUARIOs.Add(us);
-                        db.SaveChanges();
-                        cont++;
+                            db.USUARIOs.Add(us);
+                            db.SaveChanges();
+                            cont++;
+                        }
+                        catch (Exception e)
+                        {
+                        }
                     }
                 }
             }
@@ -1541,19 +1606,25 @@ namespace TAT001.Controllers.Catalogos
                 if (da.mess == null || da.mess == "")
                 {
                     ////---------------------------- USUARIOF
-                    uf.USUARIO_ID = usuario_id;
-                    uf.VKORG = da.VKORG;
-                    uf.VTWEG = da.VTWEG;
-                    uf.SPART = da.SPART;
-                    uf.KUNNR = da.KUNNR;
-                    uf.ACTIVO = true;
-                    uf.USUARIOC_ID = null;
-                    uf.FECHAC = DateTime.Today;
-                    uf.USUARIOM_ID = null;
-                    uf.FECHAM = null;
+                    try
+                    {
+                        uf.USUARIO_ID = usuario_id;
+                        uf.VKORG = da.VKORG;
+                        uf.VTWEG = da.VTWEG;
+                        uf.SPART = da.SPART;
+                        uf.KUNNR = da.KUNNR;
+                        uf.ACTIVO = true;
+                        uf.USUARIOC_ID = null;
+                        uf.FECHAC = DateTime.Today;
+                        uf.USUARIOM_ID = null;
+                        uf.FECHAM = null;
 
-                    db.USUARIOFs.Add(uf);
-                    db.SaveChanges();
+                        db.USUARIOFs.Add(uf);
+                        db.SaveChanges();
+                    }
+                    catch (Exception e)
+                    {
+                    }
                 }
             }
 
@@ -1566,22 +1637,28 @@ namespace TAT001.Controllers.Catalogos
                 {
                     if (da.ID != null && !db.USUARIOs.Any(x=>x.ID==da.ID))
                     {
-                        us.ID = da.ID.Trim();
-                        us.PASS = da.PASS;
-                        us.NOMBRE = da.NOMBRE;
-                        us.APELLIDO_P = da.APELLIDO_P;
-                        us.APELLIDO_M = da.APELLIDO_M;
-                        us.EMAIL = da.EMAIL;
-                        us.SPRAS_ID = da.SPRAS_ID;
-                        us.ACTIVO = true;
-                        us.PUESTO_ID = da.PUESTO_ID;
-                        us.MANAGER = null;
-                        us.BACKUP_ID = null;
-                        us.BUNIT = da.BUNIT;
+                        try
+                        {
+                            us.ID = da.ID.Trim();
+                            us.PASS = da.PASS;
+                            us.NOMBRE = da.NOMBRE;
+                            us.APELLIDO_P = da.APELLIDO_P;
+                            us.APELLIDO_M = da.APELLIDO_M;
+                            us.EMAIL = da.EMAIL;
+                            us.SPRAS_ID = da.SPRAS_ID;
+                            us.ACTIVO = true;
+                            us.PUESTO_ID = da.PUESTO_ID;
+                            us.MANAGER = null;
+                            us.BACKUP_ID = null;
+                            us.BUNIT = da.BUNIT;
 
-                        db.USUARIOs.Add(us);
-                        db.SaveChanges();
-                        cont++;
+                            db.USUARIOs.Add(us);
+                            db.SaveChanges();
+                            cont++;
+                        }
+                        catch (Exception e)
+                        {
+                        }
                     }
                 }
             }
@@ -1599,7 +1676,8 @@ namespace TAT001.Controllers.Catalogos
 
                 if (da.mess == null || da.mess == "")
                 {
-                    
+                    try
+                    { 
                         SOCIEDAD soc = db.SOCIEDADs.Where(x => x.BUKRS == da.BUNIT).First();
                         if (!us.SOCIEDADs.Any(x => x.BUKRS == da.BUNIT))
                         {
@@ -1609,6 +1687,10 @@ namespace TAT001.Controllers.Catalogos
                         db.Entry(us).State = EntityState.Modified;
                         db.SaveChanges();
                         cont++;
+                    }
+                    catch (Exception e)
+                    {
+                    }
                 }
             }
 
@@ -1904,9 +1986,9 @@ namespace TAT001.Controllers.Catalogos
                 Usuarios us = new Usuarios();
                 Cryptography c = new Cryptography();
 
-                us.KUNNR = da.KUNNR;
+                us.KUNNR = da.KUNNR.Replace(" ", "");
                 us.KUNNRX = true;
-                us.BUNIT = da.BUNIT;
+                us.BUNIT = da.BUNIT.Replace(" ", "");
                 us.BUNITX = true;
                 us.PUESTO_ID = da.PUESTO_ID.ToString();
                 us.PUESTO_IDX = true;
@@ -1915,7 +1997,7 @@ namespace TAT001.Controllers.Catalogos
                 us.NOMBRE = da.NOMBRE;
                 us.APELLIDO_P = da.APELLIDO_P;
                 us.APELLIDO_M = da.APELLIDO_M;
-                us.EMAIL = da.EMAIL;
+                us.EMAIL = da.EMAIL.Replace(" ", "");
                 us.EMAILX = true;
                 us.SPRAS_ID = da.SPRAS_ID;
                 us.SPRAS_IDX = true;
@@ -1970,30 +2052,40 @@ namespace TAT001.Controllers.Catalogos
                     //Usuario nuevo con cliente
                     if (vus == false)
                     {
-                        PAI pa = null;
                         ////-------------------------------CLIENTE
+                        var error = "";
                         CLIENTE k = db.CLIENTEs.Where(cc => cc.KUNNR.Equals(us.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
+                        for (int i = cont2; i >= 0; i--)
+                        {
+                            if (client[i, 0] == us.KUNNR && client[i, 1] == us.ID)
+                            {
+                                us.KUNNRX = false;
+                                error = ". Registro duplicado<br/>";
+                            }
+                        }
                         if (k == null)
+                        {
                             us.KUNNRX = false;
+                            error = ". Error en el cliente<br/>";
+                        }
                         else
                         {
                             clientes.Add(k);
                             client[cont2, 0] = us.KUNNR.ToString();
                             tablas[cont2, 0] = da.KUNNR.ToString();
                             gua[cont2] = da.KUNNR.ToString();
-                            pa = db.PAIS.Where(x => x.LAND.Equals(k.LAND) & x.SOCIEDAD_ID.Equals(us.BUNIT)).FirstOrDefault();
                         }
                         if (!us.KUNNRX)
                         {
                             us.KUNNR = us.KUNNR + "?";
-                            messa = cont + ". Error en el cliente<br/>";
+                            messa = cont + error;
                             cont++;
                         }
 
                         ////-------------------------------COMPANY CODE
                         SOCIEDAD b = db.SOCIEDADs.Where(x => x.BUKRS.Equals(us.BUNIT) & x.ACTIVO == true).FirstOrDefault();
 
-                        if (b == null || pa == null)
+                        if (b == null)
                         {
                             us.BUNITX = false;
                         }
@@ -2006,7 +2098,7 @@ namespace TAT001.Controllers.Catalogos
                         if (!us.BUNITX)
                         {
                             us.BUNIT = us.BUNIT + "?";
-                            messa = messa + cont + ". La sociedad no correspponde con el pais del cliente<br/>";
+                            messa = messa + cont + ". Error en la sociedad<br/>";
                             cont++;
                         }
 
@@ -2041,6 +2133,7 @@ namespace TAT001.Controllers.Catalogos
                             {
                                 us.IDX = false;
                                 err = ". El usuario ya existe<br/>";
+                                IDs[cont4] = us.ID;
                                 client[cont2, 1] = us.ID.ToString();
                                 tablas[cont2, 3] = da.ID.ToString();
                                 tablas[cont2, 4] = da.NOMBRE.ToString();
@@ -2111,15 +2204,8 @@ namespace TAT001.Controllers.Catalogos
                     //Asignacion de mas clientes
                     else if (vus == true)
                     {
+                        var error = "";
                         CLIENTE k = db.CLIENTEs.Where(cc => cc.KUNNR.Equals(us.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
-                        if (k == null)
-                            us.KUNNRX = false;
-                        else
-                        {
-                            clientes.Add(k);
-                            client[cont2, 0] = us.KUNNR.ToString();
-
-                        }
                         for (int x = cont4; x >= 0; x--)
                         {
                             if (IDs[x] != null)
@@ -2127,10 +2213,34 @@ namespace TAT001.Controllers.Catalogos
                                 da.ID = IDs[x];
                                 x = -1;
                             }
+                        }
+                        for (int i = cont2; i >= 0; i--)
+                        {
+                            if (client[i, 0] == us.KUNNR && client[i, 1] == da.ID)
+                            {
+                                us.KUNNRX = false;
+                                error = ". Registro duplicado<br/>";
+                            }
+                        }
+                        if (k == null)
+                        {
+                            us.KUNNRX = false;
+                            error = ". Error en el ciente";
+                        }
+                        else
+                        {
+                            clientes.Add(k);
+                            client[cont2, 0] = us.KUNNR.ToString();
 
                         }
-                        messa = "";
+                        if (!us.KUNNRX)
+                        {
+                            us.KUNNR = us.KUNNR + "?";
+                            messa = cont + error;
+                            cont++;
+                        }
                         client[cont2, 1] = da.ID;
+                        da.mess = messa;
                         us.mess = da.mess;
                         tablas[cont2, 10] = messa;
                     }
@@ -2158,15 +2268,25 @@ namespace TAT001.Controllers.Catalogos
                         }
 
                         ////-------------------------------COMPANY CODE
+                        var error = "";
                         SOCIEDAD b = db.SOCIEDADs.Where(x => x.BUKRS.Equals(us.BUNIT) & x.ACTIVO == true).FirstOrDefault();
+                        for (int i = cont3; i >= 0; i--)
+                        {
+                            if (admins[i, 0] == us.BUNIT && admins[i, 1] == us.ID)
+                            {
+                                us.BUNITX = false;
+                                error = ". Registro duplicado<br/>";
+                            }
+                        }
                         if (b == null)
                         {
                             us.BUNITX = false;
+                            error = ". Error en la Sociedad<br/>";
                         }
                         else
                         {
                             sociedad.Add(b);
-                            admins[cont, 0] = da.BUNIT.ToString();
+                            admins[cont3, 0] = da.BUNIT.ToString();
                             tabla1[cont3, 1] = da.BUNIT.ToString();
                             gua1[cont3] = da.BUNIT.ToString();
                             usuariosoc[cont4, 0] = da.BUNIT.ToString();
@@ -2174,7 +2294,7 @@ namespace TAT001.Controllers.Catalogos
                         if (!us.BUNITX)
                         {
                             us.BUNIT = us.BUNIT + "?";
-                            messa = messa + cont + ". Error en la Sociedad<br/>";
+                            messa = messa + cont + error;
                             cont++;
                         }
 
@@ -2208,6 +2328,7 @@ namespace TAT001.Controllers.Catalogos
                             {
                                 us.IDX = false;
                                 err = ". El usuario ya existe<br/>";
+                                IDs[cont4] = us.ID;
                                 admins[cont3, 1] = us.ID.ToString();
                                 tabla1[cont3, 3] = da.ID.ToString();
                                 tabla1[cont3, 4] = da.NOMBRE.ToString();
@@ -2223,7 +2344,7 @@ namespace TAT001.Controllers.Catalogos
                                 tabla1[cont3, 4] = da.NOMBRE.ToString();
                                 tabla1[cont3, 5] = da.APELLIDO_P.ToString();
                                 tabla1[cont3, 6] = da.APELLIDO_M.ToString();
-                                usuariosoc[cont4, 0] = da.BUNIT.ToString();
+                                usuariosoc[cont4, 1] = da.ID.ToString();
                             }
                         }
 
@@ -2278,15 +2399,8 @@ namespace TAT001.Controllers.Catalogos
                     //Asignacion de mas Co Codes
                     else if (vus == true)
                     {
+                        var error = "";
                         SOCIEDAD b = db.SOCIEDADs.Where(x => x.BUKRS.Equals(us.BUNIT) & x.ACTIVO == true).FirstOrDefault();
-                        if (b == null)
-                            us.BUNITX = false;
-                        else
-                        {
-                            sociedad.Add(b);
-                            admins[cont3, 0] = da.BUNIT.ToString();
-                            usuariosoc[cont4, 0] = da.BUNIT.ToString();
-                        }
                         for (int x = cont4; x >= 0; x--)
                         {
                             if (IDs[x] != null)
@@ -2296,7 +2410,32 @@ namespace TAT001.Controllers.Catalogos
                             }
 
                         }
-                        messa = "";
+                        for (int i = cont3; i >= 0; i--)
+                        {
+                            if (admins[i, 0] == us.BUNIT && admins[i, 1] == da.ID)
+                            {
+                                us.BUNITX = false;
+                                error = ". Registro duplicado<br/>";
+                            }
+                        }
+                        if (b == null)
+                        {
+                            us.BUNITX = false;
+                            error = ". Error en la sociedad";
+                        }
+                        else
+                        {
+                            sociedad.Add(b);
+                            admins[cont3, 0] = da.BUNIT.ToString();
+                            usuariosoc[cont4, 0] = da.BUNIT.ToString();
+                        }
+                        if (!us.BUNITX)
+                        {
+                            us.BUNIT = us.BUNIT + "?";
+                            messa = messa + cont + error;
+                            cont++;
+                        }
+                        da.mess = messa;
                         admins[cont3, 1] = da.ID;
                         usuariosoc[cont4, 1] = da.ID.ToString();
                         us.mess = da.mess;
@@ -2340,10 +2479,14 @@ namespace TAT001.Controllers.Catalogos
             {
                 USUARIO us = new USUARIO();
 
-                if ((da.mess).Contains("Usuario duplicado"))
+                if (da.ID != null)
                 {
-                    if (da.ID != null)
+                    try
                     {
+                        if (da.PASS != null && da.PASS != null)
+                        {
+                            da.PASS = (from x in db.USUARIOs where x.ID.Equals(da.ID) & x.ACTIVO == true select x.PASS).FirstOrDefault().ToString();
+                        }
                         us.ID = da.ID.Trim();
                         us.PASS = da.PASS;
                         us.NOMBRE = da.NOMBRE;
@@ -2361,6 +2504,9 @@ namespace TAT001.Controllers.Catalogos
                         db.SaveChanges();
                         cont++;
                     }
+                    catch (Exception e)
+                    {
+                    }
                 }
             }
 
@@ -2368,21 +2514,34 @@ namespace TAT001.Controllers.Catalogos
             ld = ObjAList3();
             foreach (DET_AGENTE1 da in ld)
             {
-                USUARIOF uf = new USUARIOF();
+                try
+                {
+                    USUARIOF f = db.USUARIOFs.Where(x => x.KUNNR.Equals(da.KUNNR) & x.USUARIO_ID.Equals(da.ID)).FirstOrDefault();
+                    USUARIOF uf = new USUARIOF();
 
-                uf.USUARIO_ID = da.ID.Trim();
-                uf.VKORG = da.VKORG;
-                uf.VTWEG = da.VTWEG;
-                uf.SPART = da.SPART;
-                uf.KUNNR = da.KUNNR;
-                uf.ACTIVO = true;
-                uf.USUARIOC_ID = null;
-                uf.FECHAC = DateTime.Today;
-                uf.USUARIOM_ID = null;
-                uf.FECHAM = null;
-
-                db.Entry(uf).State = EntityState.Modified;
-                db.SaveChanges();
+                    uf.USUARIO_ID = da.ID.Trim();
+                    uf.VKORG = da.VKORG;
+                    uf.VTWEG = da.VTWEG;
+                    uf.SPART = da.SPART;
+                    uf.KUNNR = da.KUNNR;
+                    uf.ACTIVO = true;
+                    uf.USUARIOC_ID = null;
+                    uf.FECHAC = DateTime.Today;
+                    uf.USUARIOM_ID = null;
+                    uf.FECHAM = null;
+                    if (f != null)
+                    {
+                        db.Entry(uf).State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        db.USUARIOFs.Add(uf);
+                    }
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                }
             }
 
             ////---------------------------- USUARIO Co Codes
@@ -2390,11 +2549,14 @@ namespace TAT001.Controllers.Catalogos
             foreach (DET_AGENTE1 da in ld)
             {
                 USUARIO us = new USUARIO();
-
-                if ((da.mess).Contains("Usuario duplicado"))
+                if (da.ID != null)
                 {
-                    if (da.ID != null)
+                    try
                     {
+                        if (da.PASS != null && da.PASS != null)
+                        {
+                            da.PASS = (from x in db.USUARIOs where x.ID.Equals(da.ID) & x.ACTIVO == true select x.PASS).FirstOrDefault().ToString();
+                        }
                         us.ID = da.ID.Trim();
                         us.PASS = da.PASS;
                         us.NOMBRE = da.NOMBRE;
@@ -2409,8 +2571,12 @@ namespace TAT001.Controllers.Catalogos
                         us.BUNIT = da.BUNIT;
 
                         db.Entry(us).State = EntityState.Modified;
+
                         db.SaveChanges();
                         cont++;
+                    }
+                    catch (Exception e)
+                    {
                     }
                 }
             }
@@ -2426,16 +2592,20 @@ namespace TAT001.Controllers.Catalogos
                 }
                 USUARIO us = db.USUARIOs.Where(x => x.ID == usuario_id).First();
 
-                if ((da.mess).Contains("Usuario duplicado"))
+                try
                 {
-                        SOCIEDAD soc = db.SOCIEDADs.Where(x => x.BUKRS == da.BUNIT ).First();
-                        if (!us.SOCIEDADs.Any(x=>x.BUKRS== da.BUNIT)) {
-                            us.SOCIEDADs.Add(soc);
-                        }
+                    SOCIEDAD soc = db.SOCIEDADs.Where(x => x.BUKRS == da.BUNIT).First();
+                    if (!us.SOCIEDADs.Any(x => x.BUKRS == da.BUNIT))
+                    {
+                        us.SOCIEDADs.Add(soc);
+                    }
 
-                        db.Entry(us).State = EntityState.Modified;
-                        db.SaveChanges();
-                        cont++;
+                    db.Entry(us).State = EntityState.Modified;
+                    db.SaveChanges();
+                    cont++;
+                }
+                catch (Exception e)
+                {
                 }
             }
 
@@ -2453,7 +2623,7 @@ namespace TAT001.Controllers.Catalogos
             var cli = Request["cli"];
             var usc = Request["usc"];
             var uscx = true;
-
+            int rowst = 0;
             //Busqueda de clientes
             if (cli != null && cli != "")
             {
@@ -2509,7 +2679,9 @@ namespace TAT001.Controllers.Catalogos
                         com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.SPRAS_ID).FirstOrDefault();
                         if (com != null)
                             ul.SPRAS_ID = com;
-
+                        ul.ID = ul.ID + "?";
+                        ul.mess = "1. El usuario ya existe<br/>";
+                        rowst++;
                         cc.Add(ul);
                     }
                 }
@@ -2586,7 +2758,9 @@ namespace TAT001.Controllers.Catalogos
                             com = (from x in db.USUARIOs where x.ID.Equals(ul.ID) & x.ACTIVO == true select x.SPRAS_ID).FirstOrDefault();
                             if (com != null)
                                 ul.SPRAS_ID = com;
-
+                            ul.ID = ul.ID + "?";
+                            ul.mess = "1. El usuario ya existe<br/>";
+                            rowst++;
                             cc.Add(ul);
                         }
                     }
@@ -2657,6 +2831,22 @@ namespace TAT001.Controllers.Catalogos
                     ul.mess = "El usuario no existe";
                 }
             }
+
+            int cont2 = rowst;
+            int cont3 = rowst;
+            string[,] tablas = new string[rowst, 11];
+            string[,] client = new string[rowst, 2];
+            string[,] tabla1 = new string[rowst, 11];
+            string[,] admins = new string[rowst, 2];
+            string[,] usuariosoc = new string[rowst, 2];
+
+            Session["tablas"] = tablas;
+            Session["tabla1"] = tabla1;
+            Session["usuariosoc"] = usuariosoc;
+            Session["client"] = client;
+            Session["admins"] = admins;
+            Session["rowst"] = cont2;
+            Session["rows1"] = cont3;
 
             JsonResult jl = Json(cc, JsonRequestBehavior.AllowGet);
             return jl;
@@ -2736,6 +2926,30 @@ namespace TAT001.Controllers.Catalogos
             }
 
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+
+        public JsonResult Sociedad(string Prefix)
+        {
+            if (Prefix == null)
+                Prefix = "";
+
+            TAT001Entities db = new TAT001Entities();
+
+            var c = (from x in db.SOCIEDADs
+                     where x.BUKRS.Contains(Prefix)
+                     select new { x.BUKRS, x.BUTXT }).ToList();
+
+            if (c.Count == 0)
+            {
+                var c2 = (from x in db.SOCIEDADs
+                          where x.BUTXT.Contains(Prefix)
+                          select new { x.BUKRS, x.BUTXT }).ToList();
+                c.AddRange(c2);
+            }
+
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+
             return cc;
         }
 

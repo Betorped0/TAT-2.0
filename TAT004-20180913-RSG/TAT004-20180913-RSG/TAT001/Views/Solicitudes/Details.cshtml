@@ -25,8 +25,9 @@
         #lbl_sap {
             font-size: 12px !important;
         }
-        #txt_notas{
-           min-height:90px;
+
+        #txt_notas {
+            min-height: 90px;
         }
     </style>
     <div class="row" style="margin-bottom:0">
@@ -48,7 +49,7 @@
                 @* ---DRS 3.10.2018--- *@
                 <div class="input-field col s2">
                     @Html.EditorFor(model => model.D.USUARIO.BACKUP_ID, "BACKUP", new { htmlAttributes = new { @disabled = "disabled" } })
-                    @Html.LabelFor(model => model.D.USUARIO.BACKUP_ID, "Backup", new { @id = "lbl_backup" })                   
+                    @Html.LabelFor(model => model.D.USUARIO.BACKUP_ID, "Backup", new { @id = "lbl_backup" })
                 </div>
                 @* ---DRS 3.10.2018--- *@
                 <div class="input-field col s2">
@@ -56,10 +57,12 @@
                     @Html.LabelFor(model => model.D.USUARIO.BUNIT, "BU", new { @class = "lbl_bu" })
                 </div>
                 @* ---DRS 3.10.2018--- *@
-                <div class="input-field col s2">
-                    @if (Model.D.ESTATUS == "N")
+                <div class="input-field col s4">
+                    @if (Model.D.ESTATUS == "N" | Model.D.ESTATUS != "N")
                     {
-                        <input type="text" id="txt_status" value="Nuevo" disabled="disabled" />
+                        TAT001.Services.Estatus es = new TAT001.Services.Estatus();//ADD RSG 25.10.2018
+                        string status = es.getText(Model.D);//ADD RSG 25.10.2018
+                        <input type="text" id="txt_status" value="@status" disabled="disabled" />@*//ADD RSG 25.10.2018*@
                         <label for="txt_status" id="lbl_status">Estatus</label>
                     }
                 </div>
@@ -97,7 +100,7 @@
                                 var instance = M.FloatingActionButton.init(elem, options);
                             </script>
                             @*<a id="lbl_wfa" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="A" })">Aprobar</a>
-                    <a id="lbl_wfr" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="R" })">Rechazar</a>*@
+                                <a id="lbl_wfr" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="R" })">Rechazar</a>*@
                             <a class="btn-small modal-trigger" href="#modal1" onclick="aprobar()">Aprobar</a>
                             <a class="btn-small modal-trigger" href="#modal1" onclick="rechazar()">Rechazar</a>
                         }
@@ -227,16 +230,16 @@
                                 </div>
                             </div>
                             <script>
-                                 var elem3 = document.getElementById('modal3');
-                                 if (elem3 != undefined)
-                                     M.Modal.init(elem3, []);
+                                var elem3 = document.getElementById('modal3');
+                                if (elem3 != undefined)
+                                    M.Modal.init(elem3, []);
                             </script>
                         }
                     }
                     @*//else
-            //{*@
-                if (Model.D.TSOL.CARTA)
-                {
+                        //{*@
+                    if (Model.D.TSOL.CARTA)
+                    {
                         @* ---DRS 13.10.2018--- *@
                         <div class="col">
                             <button type="button" class="btn-small" data-target="list_carta" style="width:100%;" id="btn_carta">Carta</button>
@@ -244,33 +247,33 @@
                         @*<button type="button" class="btn-small  " id="btn_cancel">Cancelar</button>*@
                         <ul id='list_carta' class='dropdown-content'>
                             @*
-                    <li><a href="@Url.Action(" Index", "CartaF" , new { id=Model.D.NUM_DOC })" id="lbl_list">Lista de cartas</a></li>*@ @*//B20180720P MGC Guardar Carta*@
-                    @* ---DRS 14.10.2018--- *@
-                    <li><a href="@Url.Action("Lista", "CartaV", new { id = Model.D.NUM_DOC, swf = Model.D.ESTATUS_WF })" id="lbl_list">Lista de cartas</a></li> @*//B20180720P MGC Guardar Carta*@
-                    @if (Model.D.ESTATUS_WF.Equals("S"))
-                    {
-                        <li><a href="@Url.Action("Create", "CartaV", new { id = Model.D.NUM_DOC })" id="lbl_genc">Generar carta</a></li>
+                                <li><a href="@Url.Action(" Index", "CartaF" , new { id=Model.D.NUM_DOC })" id="lbl_list">Lista de cartas</a></li>*@ @*//B20180720P MGC Guardar Carta*@
+                                @* ---DRS 14.10.2018--- *@
+                                <li><a href="@Url.Action("Lista", "CartaV", new { id = Model.D.NUM_DOC, swf = Model.D.ESTATUS_WF })" id="lbl_list">Lista de cartas</a></li> @*//B20180720P MGC Guardar Carta*@
+                                @if (Model.D.ESTATUS_WF.Equals("S"))
+                                {
+                                    <li><a href="@Url.Action("Create", "CartaV", new { id = Model.D.NUM_DOC })" id="lbl_genc">Generar carta</a></li>
+                                }
+                                else if (Model.D.ESTATUS_WF.Equals("F") || Model.D.ESTATUS_WF.Equals("S") || Model.D.ESTATUS_WF.Equals("R"))
+                                {
+                                    <li><a href="@Url.Action("Create", "CartaD", new { id = Model.D.NUM_DOC })" id="lbl_genc">Imprimir</a></li>
+                                }
+                                else
+                                {
+                                    <li><a href="@Url.Action("Create", "CartaD", new { id = Model.D.NUM_DOC })" id="lbl_genc">Imprimir draft</a></li>
+                                }
+                            </ul>
+                            <script>
+                                var elem = document.getElementById('btn_carta');
+                                var options = {
+                                    constrainWidth: false
+                                    //,hover: true
+                                };
+                                var instance = M.Dropdown.init(elem, options);
+                            </script>
+                        }
+                        @* } *@
                     }
-                    else if (Model.D.ESTATUS_WF.Equals("F") || Model.D.ESTATUS_WF.Equals("S") || Model.D.ESTATUS_WF.Equals("R"))
-                    {
-                        <li><a href="@Url.Action("Create", "CartaD", new { id = Model.D.NUM_DOC })" id="lbl_genc">Imprimir</a></li>
-                    }
-                    else
-                    {
-                        <li><a href="@Url.Action("Create", "CartaD", new { id = Model.D.NUM_DOC })" id="lbl_genc">Imprimir draft</a></li>
-                    }
-                </ul>
-                <script>
-                    var elem = document.getElementById('btn_carta');
-                    var options = {
-                        constrainWidth: false
-                        //,hover: true
-                    };
-                    var instance = M.Dropdown.init(elem, options);
-                </script>
-                }
-            @* } *@
-                }
             </div>
         </div>
     </div>
@@ -315,7 +318,7 @@
                                 <div class="row" style="margin-bottom:0">
                                     <div class="input-field col s8">
                                         <input type="text" value="@Model.D.DOCUMENTO_REF" disabled="disabled" />
-                                        <label  for="D_DOCUMENTO_REF" id="lbl_provision"></label>
+                                        <label for="D_DOCUMENTO_REF" id="lbl_provision"></label>
                                     </div>
                                     <div class="col s4 right-align">
                                         <a href="@Url.Action("Details", new { id = Model.D.DOCUMENTO_REF })" class="btn-small  ">Ver</a>
@@ -587,11 +590,11 @@
                                         @Html.LabelFor(model => model.D.CLIENTE.NAME1, "Nombre", new { @id = "lbl_nombrecli" })
                                     </div>
                                     <div class="input-field col s12">
-                                        @{ 
+                                        @{
                                             string spras_id = ViewBag.spras_id;
                                             @Html.EditorFor(model => model.D.CLIENTE.TCLIENTE.TCLIENTETs.Where(x => x.SPRAS == spras_id).FirstOrDefault().TXT50, new { htmlAttributes = new { @disabled = "disabled" } })
                                             @Html.LabelFor(model => model.D.CLIENTE.TCLIENTE.TCLIENTETs.Where(x => x.SPRAS == spras_id).FirstOrDefault().TXT50, "Tipo de cliente", new { @id = "lbl_parvwcli" })
-                                         }
+                                        }
                                     </div>
                                     <div class="input-field col s12">
                                         @Html.EditorFor(model => model.D.VKORG, new { htmlAttributes = new { @disabled = "disabled" } })
@@ -682,29 +685,39 @@
                                             <table>
                                                 <thead>
                                                     <tr>
-                                                        <th>Pos</th>
-                                                        <th>Periodo</th>
-                                                        <th>Tipo</th>
-                                                        <th>No solicitud TAT</th>
-                                                        <th>Fecha</th>
+                                                        <th id="lbl_rec_pos">Pos</th>
+                                                        <th id="lbl_rec_periodo">Periodo</th>
+                                                        <th id="lbl_rec_tipo">Tipo</th>
+                                                        <th id="lbl_rec_numsol">No solicitud TAT</th>
+                                                        <th id="lbl_rec_fecha">Fecha</th>
                                                         @if (caso != "1")
                                                         {
-                                                            <th>%</th>
+                                                            <th id="lbl_rec_porc">%</th>
                                                         }
-                                                        <th>Objetivo</th>
-                                                        <th>Estatus</th>
+                                                        <th id="lbl_rec_obj">Objetivo</th>
+                                                        <th id="lbl_rec_estatus">Estatus</th>
 
                                                         @if (ViewBag.recs.Count > 0)
                                                         {
-                                                            <th>Venta del periodo</th>
-                                                            <th>Monto provisión</th>
-                                                            if (Model.D.PAI.BACKORDER)
+                                                            <th id="lbl_rec_venta">Venta del periodo</th>
+                                                            if (Model.D.DOCUMENTORECs.Count > 1)
                                                             {
-                                                                <th>BackOrder</th>
-                                                                <th>Venta real</th>
+                                                                <th id="lbl_rec_montoprov">Monto provisión</th>
                                                             }
-                                                            <th>NC o Reverso</th>
-                                                            <th>Monto</th>
+                                                            else
+                                                            {
+                                                                <th id="lbl_rec_monto_sol">Monto de solicitud</th>
+                                                            }
+                                                            if (Model.D.DOCUMENTORECs.Count > 1)
+                                                            {
+                                                                if (Model.D.PAI.BACKORDER)
+                                                                {
+                                                                    <th id="lbl_rec_backorder">BackOrder</th>
+                                                                    <th id="lbl_rec_ventareal">Venta real</th>
+                                                                }
+                                                                <th id="lbl_rec_ncreverso">NC o Reverso</th>
+                                                                <th id="lbl_rec_monto">Monto</th>
+                                                            }
                                                         }
                                                     </tr>
                                                 </thead>
@@ -797,81 +810,8 @@
                                                                         <td>Contabilizado</td>
                                                                         <td class="precio">@tol.MONTO_VENTA</td>
                                                                         <td class="precio">@(tol.DOCUMENTO.MONTO_DOC_MD)</td>
-                                                                        if (Model.D.PAI.BACKORDER)
+                                                                        if (Model.D.DOCUMENTORECs.Count > 1)
                                                                         {
-                                                                            if (tol.BACKORDER != null)
-                                                                            {
-                                                                                <td class="precio">@(tol.BACKORDER)</td>
-                                                                                <td class="precio">@(tol.MONTO_VENTA + tol.BACKORDER)</td>
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                <td class="precio">0.00</td>
-                                                                                <td class="precio">0.00</td>
-                                                                            }
-                                                                        }
-                                                                        if (rtol.Where(a => a.DOCUMENTO_REF == tol.NUM_DOC).FirstOrDefault() != null)
-                                                                        {
-                                                                            <td>@rtol.Where(a => a.DOCUMENTO_REF == tol.NUM_DOC).FirstOrDefault().TSOL_ID</td>
-                                                                            <td class="precio">@rtol.Where(a => a.DOCUMENTO_REF == tol.NUM_DOC).FirstOrDefault().MONTO_DOC_MD</td>
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                        }
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                        if (Model.D.PAI.BACKORDER)
-                                                                        {
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                        }
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                    }
-                                                                }
-                                                            }
-                                                            else if (ViewBag.recs.Count > 0)
-                                                            {
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                if (Model.D.PAI.BACKORDER)
-                                                                {
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                }
-                                                                <td></td>
-                                                                <td></td>
-                                                            }
-                                                        </tr>
-                                                        foreach (TAT001.Entities.DOCUMENTORAN ran in iteem.DOCUMENTORANs.Where(x => x.LIN > 1))//RSG 20.09.2018
-                                                        {
-                                                            @*<tr class="ran-@ran.POS" style="display:none;background-color:rgba(242, 242, 242, 0.5);">
-                                                            *@
-                                                            <tr class="ran-@ran.POS" style="background-color:rgba(242, 242, 242, 0.5);">
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td class="porcentaje">@ran.PORCENTAJE</td>
-                                                                <td class="precio">@ran.OBJETIVOI</td>
-
-                                                                @if (ViewBag.recs.Count > 0 & iteem.DOC_REF != null & iteem.DOC_REF != 0)
-                                                                {
-                                                                    foreach (DOCUMENTOL tol in ttol.Where(x => x.NUM_DOC == iteem.DOC_REF).FirstOrDefault().DOCUMENTOLs)
-                                                                    {
-                                                                        if (ran.PORCENTAJE == tol.DOCUMENTO.PORC_APOYO)
-                                                                        {
-                                                                            <td>Contabilizado</td>
-                                                                            <td class="precio">@tol.MONTO_VENTA</td>
-                                                                            <td class="precio">@(tol.DOCUMENTO.MONTO_DOC_MD)</td>
                                                                             if (Model.D.PAI.BACKORDER)
                                                                             {
                                                                                 if (tol.BACKORDER != null)
@@ -896,11 +836,14 @@
                                                                                 <td></td>
                                                                             }
                                                                         }
-                                                                        else
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        if (Model.D.DOCUMENTORECs.Count > 1)
                                                                         {
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
                                                                             if (Model.D.PAI.BACKORDER)
                                                                             {
                                                                                 <td></td>
@@ -911,11 +854,14 @@
                                                                         }
                                                                     }
                                                                 }
-                                                                else if (ViewBag.recs.Count > 0)
+                                                            }
+                                                            else if (ViewBag.recs.Count > 0)
+                                                            {
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                if (Model.D.DOCUMENTORECs.Count > 1)
                                                                 {
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
                                                                     if (Model.D.PAI.BACKORDER)
                                                                     {
                                                                         <td></td>
@@ -923,6 +869,91 @@
                                                                     }
                                                                     <td></td>
                                                                     <td></td>
+                                                                }
+                                                            }
+                                                        </tr>
+                                                        foreach (TAT001.Entities.DOCUMENTORAN ran in iteem.DOCUMENTORANs.Where(x => x.LIN > 1))//RSG 20.09.2018
+                                                        {
+                                                            @*<tr class="ran-@ran.POS" style="display:none;background-color:rgba(242, 242, 242, 0.5);">
+                                                            *@
+                                                            <tr class="ran-@ran.POS" style="background-color:rgba(242, 242, 242, 0.5);">
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td class="porcentaje">@ran.PORCENTAJE</td>
+                                                                <td class="precio">@ran.OBJETIVOI</td>
+
+                                                                @if (ViewBag.recs.Count > 0 & iteem.DOC_REF != null & iteem.DOC_REF != 0)
+                                                                {
+                                                                    foreach (DOCUMENTOL tol in ttol.Where(x => x.NUM_DOC == iteem.DOC_REF).FirstOrDefault().DOCUMENTOLs)
+                                                                    {
+                                                                        if (ran.PORCENTAJE == tol.DOCUMENTO.PORC_APOYO)
+                                                                        {
+                                                                            <td>Contabilizado</td>
+                                                                            <td class="precio">@tol.MONTO_VENTA</td>
+                                                                            <td class="precio">@(tol.DOCUMENTO.MONTO_DOC_MD)</td>
+                                                                            if (Model.D.DOCUMENTORECs.Count > 1)
+                                                                            {
+                                                                                if (Model.D.PAI.BACKORDER)
+                                                                                {
+                                                                                    if (tol.BACKORDER != null)
+                                                                                    {
+                                                                                        <td class="precio">@(tol.BACKORDER)</td>
+                                                                                        <td class="precio">@(tol.MONTO_VENTA + tol.BACKORDER)</td>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <td class="precio">0.00</td>
+                                                                                        <td class="precio">0.00</td>
+                                                                                    }
+                                                                                }
+                                                                                if (rtol.Where(a => a.DOCUMENTO_REF == tol.NUM_DOC).FirstOrDefault() != null)
+                                                                                {
+                                                                                    <td>@rtol.Where(a => a.DOCUMENTO_REF == tol.NUM_DOC).FirstOrDefault().TSOL_ID</td>
+                                                                                    <td class="precio">@rtol.Where(a => a.DOCUMENTO_REF == tol.NUM_DOC).FirstOrDefault().MONTO_DOC_MD</td>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <td></td>
+                                                                                    <td></td>
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            if (Model.D.DOCUMENTORECs.Count > 1)
+                                                                            {
+                                                                                if (Model.D.PAI.BACKORDER)
+                                                                                {
+                                                                                    <td></td>
+                                                                                    <td></td>
+                                                                                }
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                                else if (ViewBag.recs.Count > 0)
+                                                                {
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    if (Model.D.DOCUMENTORECs.Count > 1)
+                                                                    {
+                                                                        if (Model.D.PAI.BACKORDER)
+                                                                        {
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        }
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                    }
                                                                 }
                                                             </tr>
                                                         }
@@ -1090,7 +1121,7 @@
                             </div>
 
                             if (ViewBag.cartap.Count != 0)
-                                {
+                            {
                                 //LEJ 10.07.2018
 
                                 <div class="col s12 m12 l12">
@@ -1102,7 +1133,7 @@
                                                     @for (int i = 0; i < pos.Count; i++)
                                                     {
                                                         var lstCF = lstCarta.Where(p => p.POS_ID == pos[i].POS_ID).ToList();
-                    string idx = "chb" + i;
+                                                        string idx = "chb" + i;
                                                         <li>
                                                             <div class="collapsible-header">
                                                                 <div><i class="material-icons">arrow_drop_down</i></div>
@@ -2396,7 +2427,7 @@
                 var elem2 = document.getElementById('modal2');
                 if (elem2 != undefined)
                     M.Modal.init(elem2, []);
-               
+
 
                 function aprobar() {
                     document.getElementById("txt_app").style.display = 'initial';
@@ -2550,7 +2581,7 @@ catch (Exception ee)
 
     Session["error"] = ee.Message.ToString();
     <script>
-                document.location.replace(root +"Home/Index");
+        document.location.replace(root + "Home/Index");
     </script>
 }
 <p>
@@ -2575,7 +2606,7 @@ catch (Exception ee)
 
         $.ajax({
             type: "POST",
-            url: root +'Listas/getPresupuesto',
+            url: root + 'Listas/getPresupuesto',
             dataType: "json",
             data: { "kunnr": kunnr },
 

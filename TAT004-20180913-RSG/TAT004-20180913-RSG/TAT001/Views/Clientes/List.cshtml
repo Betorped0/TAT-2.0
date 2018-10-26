@@ -6,25 +6,25 @@
     <thead>
         <tr class="header">
             <th>
-                @Html.ActionLink("KUNNR", "List", new { colOrden = "KUNNR", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
+                @Html.ActionLink("KUNNR", "List", new { colOrden = "KUNNR", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar=Model.buscar })
             </th>
             <th>
-                @Html.ActionLink("NAME1", "List", new { colOrden = "NAME1", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
+                @Html.ActionLink("NAME1", "List", new { colOrden = "NAME1", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
             </th>
             <th>
-                @Html.ActionLink("SUBREGION", "List", new { colOrden = "SUBREGION", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
+                @Html.ActionLink("SUBREGION", "List", new { colOrden = "SUBREGION", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
             </th>
             <th>
-                @Html.ActionLink("LAND", "List", new { colOrden = "LAND", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
+                @Html.ActionLink("LAND", "List", new { colOrden = "LAND", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
             </th>
             <th>
-                @Html.ActionLink("PARVW", "List", new { colOrden = "PARVW", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
+                @Html.ActionLink("PARVW", "List", new { colOrden = "PARVW", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
             </th>
             <th>
-                @Html.ActionLink("PAYER", "List", new { colOrden = "PAYER", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
+                @Html.ActionLink("PAYER", "List", new { colOrden = "PAYER", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
             </th>
             <th>
-                @Html.ActionLink("CANAL", "List", new { colOrden = "CANAL", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros })
+                @Html.ActionLink("CANAL", "List", new { colOrden = "CANAL", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
             </th>
             <th></th>
         </tr>
@@ -73,38 +73,12 @@
     </tbody>
 </table>
 <div id='Paging' style="text-align: center">
-     @(Model.clientes.PageCount < Model.clientes.PageNumber ? 0 : Model.clientes.PageNumber)
+    @(Model.clientes.PageCount < Model.clientes.PageNumber ? 0 : Model.clientes.PageNumber)
     - @Model.clientes.PageCount
 
-    @Html.PagedListPager(Model.clientes, page => Url.Action("List", new { pagina = page, numRegistros = Model.numRegistros }))
+    @Html.PagedListPager(Model.clientes, page => Url.Action("List", new { pagina = page, numRegistros = Model.numRegistros, buscar = Model.buscar, colOrden=Model.ordenActual }))
 </div>
-<div>
-   
-    @if (ViewBag.textos != null)
-    {
-        foreach (TEXTO t in ViewBag.textos)
-        {
-            <script>
-                try {
-                    var elem = document.getElementById("@t.CAMPO_ID");
-                    if (elem.nodeName != 'INPUT' & elem.nodeName != 'SELECT' & elem.nodeName != 'TABLE' & elem.nodeName != 'TEXTAREA')
-                    elem.innerHTML = "@t.TEXTOS";
-                } catch (e) {
-                    try {
-                        var divs = document.getElementsByClassName("@t.CAMPO_ID");
-                        [].slice.call(divs).forEach(function (div) {
-                            if (div.nodeName != 'INPUT' & div.nodeName != 'SELECT' & div.nodeName != 'TABLE' & div.nodeName != 'TEXTAREA')
-                            div.innerHTML = "@t.TEXTOS";
-                        });
-                    }
-                    catch (ee) {
 
-                    }
-                 }
-            </script>
-        }
-    }
-</div>
 <script>
     //-----Sort
     function sort() {
@@ -131,6 +105,57 @@
         }
     }
     sort();
+        //-----Pagination
+    function pagination() {
+        var paginationLink = $('.pagination>li>a');
+        for (var i = 0; i < paginationLink.length; i++) {
+            var url = paginationLink.get(i).getAttribute("href");
+            var id = 'link_p' + i;
+            if (url) {
+                paginationLink.get(i).setAttribute("id", id);
+                paginationLink.get(i).setAttribute("url", url);
+                $('#' + id).click(function (me) {
+                    fnCommon.showProcess(true);
+                    $.ajax({
+                        url: me.toElement.getAttribute('url'),
+                        success: function (resultView) {
+                            fnCommon.showProcess(false);
+                            $('#list').html(resultView);
+                            pagination();
+                        }
+                    });
+                });
+            }
+            paginationLink.get(i).removeAttribute("href");
+        }
+    }
+    pagination();
 
-  
 </script>
+<div>
+
+    @if (ViewBag.textos != null)
+    {
+        foreach (TEXTO t in ViewBag.textos)
+        {
+            <script>
+                try {
+                    var elem = document.getElementById("@t.CAMPO_ID");
+                    if (elem.nodeName != 'INPUT' & elem.nodeName != 'SELECT' & elem.nodeName != 'TABLE' & elem.nodeName != 'TEXTAREA')
+                    elem.innerHTML = "@t.TEXTOS";
+                } catch (e) {
+                    try {
+                        var divs = document.getElementsByClassName("@t.CAMPO_ID");
+                        [].slice.call(divs).forEach(function (div) {
+                            if (div.nodeName != 'INPUT' & div.nodeName != 'SELECT' & div.nodeName != 'TABLE' & div.nodeName != 'TEXTAREA')
+                            div.innerHTML = "@t.TEXTOS";
+                        });
+                    }
+                    catch (ee) {
+
+                    }
+                 }
+            </script>
+        }
+    }
+</div>

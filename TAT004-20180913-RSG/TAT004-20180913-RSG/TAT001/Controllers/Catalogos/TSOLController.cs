@@ -54,7 +54,7 @@ namespace TAT001.Controllers.Catalogos
         // GET: TSOL/Details/5
         public ActionResult Details(string id)
         {
-            int pagina = 792; //ID EN BASE DE DATOS
+            int pagina = 793; //ID EN BASE DE DATOS
             using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
@@ -126,7 +126,7 @@ namespace TAT001.Controllers.Catalogos
         // GET: TSOL/Edit/5
         public ActionResult Edit(string id)
         {
-            int pagina = 793; //ID EN BASE DE DATOS
+            int pagina = 792; //ID EN BASE DE DATOS
             using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;

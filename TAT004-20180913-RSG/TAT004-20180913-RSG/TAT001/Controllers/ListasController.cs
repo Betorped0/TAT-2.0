@@ -644,15 +644,11 @@ namespace TAT001.Controllers
                         if (conf.CAMPO == "GRSLS")
                         {
                             jd = (from ps in pres
-                                 // join cl in cie
-                                 // on ps.KUNNR equals cl.KUNNR
                                   join m in matt
                                   on ps.MATNR equals m.ID
                                   join mk in cat
                                   on m.MATERIALGP_ID equals mk.MATERIALGP_ID//RSG 03.10.2018
-                                  where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) 
-                                  //(ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART ) 
-                                  && ps.BUKRS == soc_id && ps.GRSLS > 0
+                                  where  ps.BUKRS == soc_id && ps.GRSLS > 0
                                   group mk by new { ID=mk.MATERIALGP_ID, TXT50 = mk.TXT50 } into mgt
                                   select new MATERIALGPT
                                   {
@@ -663,16 +659,12 @@ namespace TAT001.Controllers
                         else
                         {
                             jd = (from ps in pres
-                                 // join cl in cie
-                                 // on ps.KUNNR equals cl.KUNNR
                                   join m in matt
                                   on ps.MATNR equals m.ID
                                   join mk in cat
                                   on m.MATERIALGP_ID equals mk.MATERIALGP_ID//RSG 03.10.2018
                                   where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) 
-                                 // (ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART ) 
-                                  && ps.BUKRS == soc_id
-                                  && ps.NETLB > 0
+                                  && ps.BUKRS == soc_id&& ps.NETLB > 0
                                   group mk by new { ID = mk.MATERIALGP_ID, TXT50 = mk.TXT50 } into mgt
                                   select new MATERIALGPT
                                   {

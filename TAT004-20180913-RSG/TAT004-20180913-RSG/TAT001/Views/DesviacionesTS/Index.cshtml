@@ -9,7 +9,7 @@
 
 <div class="row">
     <div class="col s12 right-align">
-        @Html.ActionLink("Nuevo", "Create", null, new { @class = "btn-small" })
+        @Html.ActionLink("Nuevo", "Create", null, new { @class = "btn btn-default" })
     </div>
 </div>
 <div class="row">
@@ -42,13 +42,13 @@
         <table class="table mdl-data-table striped" id="table" style="width:100%;">
             <thead>
                 <tr>
-                    <th>
+                    <th id="lblIdioma">
                         @Html.DisplayNameFor(model => model.SPRAS_ID)
                     </th>
-                    <th>
+                    <th id="lblIdTS">
                         @Html.DisplayNameFor(model => model.TSFORM_ID)
                     </th>
-                    <th>
+                    <th id="lbl100">
                         @Html.DisplayNameFor(model => model.TXT100)
                     </th>
                     <th></th>
