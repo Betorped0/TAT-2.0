@@ -383,6 +383,13 @@ namespace TAT001.Controllers
                                 doc.MATNR = matnr;
                                 doc.MATKL = matkl;
                             }
+                            
+
+                            var desMaterial = (from mat1 in db.MATERIALs
+                                           join mat2 in db.MATERIALTs on mat1.ID equals mat2.MATERIAL_ID
+                                           where mat2.MATERIAL_ID == matnr & mat2.MAKTG == descripcion & mat1.ACTIVO == true
+                                           group mat2 by new { mat2.MATERIAL_ID, mat2.MAKTG } into g
+                                           select new {  DESCRIPCION = g.Key.MAKTG }).ToList();
                             doc.DESCRIPCION = descripcion;
 
                             if (IsNumeric(monto) == false) { monto = "0"; }

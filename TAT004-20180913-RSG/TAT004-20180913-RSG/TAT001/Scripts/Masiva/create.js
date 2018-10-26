@@ -2952,7 +2952,7 @@ function cloneTables() {
         }
 
     });
-
+    $('#tabclon1bd').append("<tr><td colspan='16'></td></tr>");
     for (var aa = 0; aa < tablaH1c.rows().data().length; aa++) {
         var rowH1c = tablaH1c.row(aa).node();
         $('#tabclon1bd').append("<tr id='trd" + aa + "'></tr>");
@@ -2974,7 +2974,7 @@ function cloneTables() {
         }
 
     });
-
+    $('#tabclon2bd').append("<tr><td colspan='9'></td></tr>");
     for (var bb = 0; bb < tablaH2c.rows().data().length; bb++) {
         var rowH2c = tablaH2c.row(bb).node();
         $('#tabclon2b').append("<tr id='tr2" + bb + "'></tr>");
@@ -2993,7 +2993,7 @@ function cloneTables() {
         }
 
     });
-
+    $('#tabclon3bd').append("<tr><td colspan='8'></td></tr>");
     for (var cc = 0; cc < tablaH3c.rows().data().length; cc++) {
         var rowH3c = tablaH3c.row(cc).node();
         $('#tabclon3b').append("<tr id='tr3" + cc + "'></tr>");
@@ -3012,7 +3012,7 @@ function cloneTables() {
         }
 
     });
-
+    $('#tabclon4bd').append("<tr><td colspan='14'></td></tr>");
     for (var dd = 0; dd < tablaH4c.rows().data().length; dd++) {
         var rowH4c = tablaH4c.row(dd).node();
         $('#tabclon4b').append("<tr id='tr4" + dd + "'></tr>");

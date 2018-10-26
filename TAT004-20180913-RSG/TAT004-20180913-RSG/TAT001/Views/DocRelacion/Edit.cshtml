@@ -346,7 +346,7 @@
                         <br />
                         <div class="row">
                             <div class="input-field col l6 m6" style="margin-bottom:0;">
-                                @Html.LabelFor(model => model.SOCIEDAD, "SOCIEDAD", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblSoci" })
+                                @Html.LabelFor(model => model.SOCIEDAD, "CO. Code", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblSoci" })
                                 @Html.ValidationMessageFor(model => model.SOCIEDAD, "", new { @class = "text-danger" })
                                 @Html.EditorFor(model => model.SOCIEDAD, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idsoc" } })
 
