@@ -566,6 +566,32 @@ namespace TAT001.Services
             {
 
             }
+            //RSG 26.10.2018------------------------------------------
+            if(dOCpADRE.DOCUMENTOFs != null)
+            {
+                foreach(DOCUMENTOF df in dOCpADRE.DOCUMENTOFs)
+                {
+                    DOCUMENTOF dnf = new DOCUMENTOF();
+                    dnf.AUTORIZACION = df.AUTORIZACION;
+                    dnf.BELNR = df.BELNR;
+                    dnf.BILL_DOC = df.BILL_DOC;
+                    dnf.CONTROL = df.CONTROL;
+                    dnf.DESCRIPCION = df.DESCRIPCION;
+                    dnf.EJERCICIOK = df.EJERCICIOK;
+                    dnf.FACTURA = df.FACTURA;
+                    dnf.FACTURAK = df.FACTURAK;
+                    dnf.FECHA = df.FECHA;
+                    dnf.IMPORTE_FAC = df.IMPORTE_FAC;
+                    dnf.NUM_DOC = df.NUM_DOC;
+                    dnf.PAYER = df.PAYER;
+                    dnf.POS = df.POS;
+                    dnf.PROVEEDOR = df.PROVEEDOR;
+                    dnf.SOCIEDAD = df.SOCIEDAD;
+                    dnf.VENCIMIENTO = df.VENCIMIENTO;
+                    dOCUMENTO.DOCUMENTOFs.Add(dnf);
+                }
+            }
+            //RSG 26.10.2018------------------------------------------
 
             if (dOCpADRE.TIPO_RECURRENTE == "2" | dOCpADRE.TIPO_RECURRENTE == "3")
             {
