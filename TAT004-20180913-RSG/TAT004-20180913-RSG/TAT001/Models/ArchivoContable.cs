@@ -423,7 +423,10 @@ namespace TAT001.Models
                 }
                 try
                 {
-                    string pais = db.TAX_LAND.Where(x => x.ACTIVO == true && x.PAIS_ID == doc.PAIS_ID).Select(x => x.PAIS_ID).Single();
+                    TAX_LAND taxl = db.TAX_LAND.Where(x => x.ACTIVO == true && x.PAIS_ID == doc.PAIS_ID).FirstOrDefault();
+                    string pais = "";
+                    if (taxl != null)
+                        pais = db.TAX_LAND.Where(x => x.ACTIVO == true && x.PAIS_ID == doc.PAIS_ID).Select(x => x.PAIS_ID).Single();
                     if (String.IsNullOrEmpty(pais) == false)
                     {
                         if (enca.TIPO_DOC == "DG" || enca.TIPO_DOC == "BB" || enca.TIPO_DOC == "KG")
