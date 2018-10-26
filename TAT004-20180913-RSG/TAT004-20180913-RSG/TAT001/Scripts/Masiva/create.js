@@ -850,7 +850,7 @@ $('body').on('keydown.autocomplete', '.input_factura', function () {
     amarillo = $(amarillo).hasClass("yelloww");
 
     if (amarillo) {
-        amarillo = "yellow";
+        amarillo = "blue";
     }
     else {
         amarillo = "";
@@ -888,7 +888,7 @@ $('body').on('keydown.autocomplete', '.input_fechaH2', function () {
     amarillo = $(amarillo).hasClass("yelloww");
 
     if (amarillo) {
-        amarillo = "yellow";
+        amarillo = "blue";
     }
     else {
         amarillo = "";
@@ -930,7 +930,7 @@ $('body').on('keydown.autocomplete', '.input_proveedor', function () {
     amarillo = $(amarillo).hasClass("yelloww");
 
     if (amarillo) {
-        amarillo = "yellow";
+        amarillo = "blue";
     }
     else {
         amarillo = "";
@@ -974,9 +974,7 @@ $('body').on('keydown.autocomplete', '.input_proveedor', function () {
         change: function (e, ui) {
             if (!(ui.item)) {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
-                $(tr.find("td:eq(" + col_index2 + ")").children().addClass("red white-text rojo"));
                 $(tr.find("td:eq(" + col_index + ")").children().removeClass(amarillo));
-                $(tr.find("td:eq(" + col_index2 + ")").children().removeClass(amarillo));
                 clearErrors();
                 e.target.value = "";
             }
@@ -987,9 +985,7 @@ $('body').on('keydown.autocomplete', '.input_proveedor', function () {
             label = label.split('-');
             $(clase2).val(label[1]);
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
-            $(tr.find("td:eq(" + col_index2 + ")").children().removeClass("red white-text rojo"));
             $(tr.find("td:eq(" + col_index + ")").children().addClass(amarillo));
-            $(tr.find("td:eq(" + col_index2 + ")").children().addClass(amarillo));
             clearErrors();
         }
     });
@@ -1004,7 +1000,7 @@ $('body').on('keydown.autocomplete', '.input_autorizacion', function () {
     amarillo = $(amarillo).hasClass("yelloww");
 
     if (amarillo) {
-        amarillo = "yellow";
+        amarillo = "blue";
     }
     else {
         amarillo = "";
@@ -1042,7 +1038,7 @@ $('body').on('keydown.autocomplete', '.input_facturak', function () {
     amarillo = $(amarillo).hasClass("yelloww");
 
     if (amarillo) {
-        amarillo = "yellow";
+        amarillo = "blue";
     }
     else {
         amarillo = "";
@@ -1080,7 +1076,7 @@ $('body').on('keydown.autocomplete', '.input_ejerciciok', function () {
     amarillo = $(amarillo).hasClass("yelloww");
 
     if (amarillo) {
-        amarillo = "yellow";
+        amarillo = "blue";
     }
     else {
         amarillo = "";
