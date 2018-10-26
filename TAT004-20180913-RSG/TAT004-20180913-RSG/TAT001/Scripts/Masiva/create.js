@@ -556,7 +556,7 @@ $('body').on('keydown.autocomplete', '.input_cliente', function () {
         change: function (e, ui) {
             if (!(ui.item)) {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
-                $(tr.find("td:eq(" + col_index2 + ")").children().addClass("red white-text rojo"));
+                //$(tr.find("td:eq(" + col_index2 + ")").children().addClass("red white-text rojo"));
                 $(tr.find("td:eq(" + col_index2 + ")").children().val(""));
                 clearErrors();
                 e.target.value = "";
@@ -568,7 +568,7 @@ $('body').on('keydown.autocomplete', '.input_cliente', function () {
             label = label.split('-');
             $(clase2).val(label[1]);
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
-            $(tr.find("td:eq(" + col_index2 + ")").children().removeClass("red white-text rojo"));
+            //$(tr.find("td:eq(" + col_index2 + ")").children().removeClass("red white-text rojo"));
             clearErrors();
         }
     });
@@ -1540,6 +1540,7 @@ $('body').on('keydown.autocomplete', '.input_material', function () {
         change: function (e, ui) {
             if (!(ui.item)) {
                 $(this).addClass("red white-text rojo");
+                $(tr.find("td:eq(" + col_index + ")").children().val(""));
                 clearErrors();
                 //validarErrores("tab_test4");
                 e.target.value = "";
@@ -1550,12 +1551,12 @@ $('body').on('keydown.autocomplete', '.input_material', function () {
             var label = ui.item.label;
             label = label.split('-');
             $(materialDes).val(label[1]);
+            $(this).removeClass("red white-text rojo");
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
             clearErrors();
             //validarErrores("tab_test4");
         }
     });
-
 });
 
 $('body').on('keydown.autocomplete', '.input_categoria', function () {
