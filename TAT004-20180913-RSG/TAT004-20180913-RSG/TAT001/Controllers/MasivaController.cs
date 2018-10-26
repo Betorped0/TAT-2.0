@@ -383,6 +383,11 @@ namespace TAT001.Controllers
                                 doc.MATNR = matnr;
                                 doc.MATKL = matkl;
                             }
+                            var desMaterial = (from mat1 in db.MATERIALs
+                                               join mat2 in db.MATERIALTs on mat1.ID equals mat2.MATERIAL_ID
+                                               where mat2.MATERIAL_ID == matnr & mat2.MAKTG == descripcion & mat1.ACTIVO == true
+                                               group mat2 by new { mat2.MATERIAL_ID, mat2.MAKTG } into g
+                                               select new { DESCRIPCION = g.Key.MAKTG }).ToList();
                             doc.DESCRIPCION = descripcion;
 
                             if (IsNumeric(monto) == false) { monto = "0"; }
@@ -1053,14 +1058,6 @@ namespace TAT001.Controllers
 
 
 
-
-
-
-
-
-
-
-
         public List<object> cargaInicialH1(DataRow fila)
         {
             List<object> regresaRowH1 = new List<object>();
@@ -1335,13 +1332,20 @@ namespace TAT001.Controllers
                     }
                     else
                     {
-                        if (factura.Length <= 50)
+                        if (factura == "")
                         {
                             regresaRowH2.Add("");
                         }
                         else
                         {
-                            regresaRowH2.Add("red white-text rojo");
+                            if (factura.Length <= 50)
+                            {
+                                regresaRowH2.Add("");
+                            }
+                            else
+                            {
+                                regresaRowH2.Add("red white-text rojo");
+                            }
                         }
                     }
 
@@ -1381,20 +1385,27 @@ namespace TAT001.Controllers
                     }
                     else
                     {
-                        if (fecha_factura.Length <= 10)
+                        if (fecha_factura == "")
                         {
-                            if (validaFormatoFecha(fecha_factura))
+                            regresaRowH2.Add("");
+                        }
+                        else
+                        {
+                            if (fecha_factura.Length <= 10)
                             {
-                                regresaRowH2.Add("");
+                                if (validaFormatoFecha(fecha_factura))
+                                {
+                                    regresaRowH2.Add("");
+                                }
+                                else
+                                {
+                                    regresaRowH2.Add("red white-text rojo");
+                                }
                             }
                             else
                             {
                                 regresaRowH2.Add("red white-text rojo");
                             }
-                        }
-                        else
-                        {
-                            regresaRowH2.Add("red white-text rojo");
                         }
                     }
 
@@ -1434,38 +1445,54 @@ namespace TAT001.Controllers
                     }
                     else
                     {
-                        if (proveedor.Length <= 10)
+                        if (proveedor == "")
                         {
-                            if (db.PROVEEDORs.Where(x => x.ID == proveedor & x.SOCIEDAD_ID == sociedad).Count() > 0)
+                            regresaRowH2.Add("");
+                        }
+                        else
+                        {
+                            if (proveedor.Length <= 10)
                             {
-                                regresaRowH2.Add("");
+                                if (db.PROVEEDORs.Where(x => x.ID == proveedor & x.SOCIEDAD_ID == sociedad).Count() > 0)
+                                {
+                                    regresaRowH2.Add("");
+                                }
+                                else
+                                {
+                                    regresaRowH2.Add("red white-text rojo");
+                                }
                             }
                             else
                             {
                                 regresaRowH2.Add("red white-text rojo");
                             }
                         }
-                        else
-                        {
-                            regresaRowH2.Add("red white-text rojo");
-                        }
+                        
                     }
 
-                    if (proveedor_nombre.Length <= 250)
-                    {
-                        if (db.PROVEEDORs.Where(x => x.ID == proveedor & x.NOMBRE == proveedor_nombre & x.SOCIEDAD_ID == sociedad).Count() > 0)
-                        {
-                            regresaRowH2.Add("");
-                        }
-                        else
-                        {
-                            regresaRowH2.Add("red white-text rojo");
-                        }
-                    }
-                    else
-                    {
-                        regresaRowH2.Add("red white-text rojo");
-                    }
+                    regresaRowH2.Add("");//DEBAJO ESTA LA VALIDACION DEL PROOVEDOR
+                    //if (proveedor_nombre == "")
+                    //{
+                    //    regresaRowH2.Add("");
+                    //}
+                    //else
+                    //{
+                    //    if (proveedor_nombre.Length <= 250)
+                    //    {
+                    //        if (db.PROVEEDORs.Where(x => x.ID == proveedor & x.NOMBRE == proveedor_nombre & x.SOCIEDAD_ID == sociedad).Count() > 0)
+                    //        {
+                    //            regresaRowH2.Add("");
+                    //        }
+                    //        else
+                    //        {
+                    //            regresaRowH2.Add("red white-text rojo");
+                    //        }
+                    //    }
+                    //    else
+                    //    {
+                    //        regresaRowH2.Add("red white-text rojo");
+                    //    }
+                    //}
 
                     //if (autorizacion.Length <= 50)
                     //{
@@ -1489,13 +1516,20 @@ namespace TAT001.Controllers
                     }
                     else
                     {
-                        if (autorizacion.Length <= 50)
+                        if (autorizacion == "")
                         {
                             regresaRowH2.Add("");
                         }
                         else
                         {
-                            regresaRowH2.Add("red white-text rojo");
+                            if (autorizacion.Length <= 50)
+                            {
+                                regresaRowH2.Add("");
+                            }
+                            else
+                            {
+                                regresaRowH2.Add("red white-text rojo");
+                            }
                         }
                     }
 
@@ -1535,20 +1569,27 @@ namespace TAT001.Controllers
                     }
                     else
                     {
-                        if (fecha_vencimiento.Length <= 10)
+                        if (fecha_vencimiento == "")
                         {
-                            if (validaFormatoFecha(fecha_vencimiento))
+                            regresaRowH2.Add("");
+                        }
+                        else
+                        {
+                            if (fecha_vencimiento.Length <= 10)
                             {
-                                regresaRowH2.Add("");
+                                if (validaFormatoFecha(fecha_vencimiento))
+                                {
+                                    regresaRowH2.Add("");
+                                }
+                                else
+                                {
+                                    regresaRowH2.Add("red white-text rojo");
+                                }
                             }
                             else
                             {
                                 regresaRowH2.Add("red white-text rojo");
                             }
-                        }
-                        else
-                        {
-                            regresaRowH2.Add("red white-text rojo");
                         }
                     }
 
@@ -1574,13 +1615,20 @@ namespace TAT001.Controllers
                     }
                     else
                     {
-                        if (facturak.Length <= 4000)
+                        if (facturak == "")
                         {
                             regresaRowH2.Add("");
                         }
                         else
                         {
-                            regresaRowH2.Add("red white-text rojo");
+                            if (facturak.Length <= 4000)
+                            {
+                                regresaRowH2.Add("");
+                            }
+                            else
+                            {
+                                regresaRowH2.Add("red white-text rojo");
+                            }
                         }
                     }
 
@@ -1620,20 +1668,27 @@ namespace TAT001.Controllers
                     }
                     else
                     {
-                        if (ejerciciok.Length <= 4)
+                        if (ejerciciok == "")
                         {
-                            if (IsNumeric(ejerciciok))
+                            regresaRowH2.Add("");
+                        }
+                        else
+                        {
+                            if (ejerciciok.Length <= 4)
                             {
-                                regresaRowH2.Add("");
+                                if (IsNumeric(ejerciciok))
+                                {
+                                    regresaRowH2.Add("");
+                                }
+                                else
+                                {
+                                    regresaRowH2.Add("red white-text rojo");
+                                }
                             }
                             else
                             {
                                 regresaRowH2.Add("red white-text rojo");
                             }
-                        }
-                        else
-                        {
-                            regresaRowH2.Add("red white-text rojo");
                         }
                     }
                 }
@@ -1685,7 +1740,7 @@ namespace TAT001.Controllers
 
                     if (con.FACTURA)
                     {
-                        regresaRowH2W.Add("yelloww yellow");
+                        regresaRowH2W.Add("yelloww blue");
                     }
                     else
                     {
@@ -1694,7 +1749,7 @@ namespace TAT001.Controllers
 
                     if (con.FECHA)
                     {
-                        regresaRowH2W.Add("yelloww yellow");
+                        regresaRowH2W.Add("yelloww blue");
                     }
                     else
                     {
@@ -1703,7 +1758,7 @@ namespace TAT001.Controllers
 
                     if (con.PROVEEDOR)
                     {
-                        regresaRowH2W.Add("yelloww yellow");
+                        regresaRowH2W.Add("yelloww blue");
                     }
                     else
                     {
@@ -1721,7 +1776,7 @@ namespace TAT001.Controllers
 
                     if (con.AUTORIZACION)
                     {
-                        regresaRowH2W.Add("yelloww yellow");
+                        regresaRowH2W.Add("yelloww blue");
                     }
                     else
                     {
@@ -1730,7 +1785,7 @@ namespace TAT001.Controllers
 
                     if (con.VENCIMIENTO)
                     {
-                        regresaRowH2W.Add("yelloww yellow");
+                        regresaRowH2W.Add("yelloww blue");
                     }
                     else
                     {
@@ -1739,7 +1794,7 @@ namespace TAT001.Controllers
 
                     if (con.FACTURAK)
                     {
-                        regresaRowH2W.Add("yelloww yellow");
+                        regresaRowH2W.Add("yelloww blue");
                     }
                     else
                     {
@@ -1748,7 +1803,7 @@ namespace TAT001.Controllers
 
                     if (con.EJERCICIOK)
                     {
-                        regresaRowH2W.Add("yelloww yellow");
+                        regresaRowH2W.Add("yelloww blue");
                     }
                     else
                     {
@@ -2893,10 +2948,13 @@ namespace TAT001.Controllers
                     dt.Columns.Add(ds1.Tables[0].Rows[i][15].ToString().Trim());
                 }
 
-                foreach (var item in list)
+                if (list != null)
                 {
-                    string[] miArreglo = (string[])item;
-                    dt.Rows.Add(miArreglo);
+                    foreach (var item in list)
+                    {
+                        string[] miArreglo = (string[])item;
+                        dt.Rows.Add(miArreglo);
+                    }
                 }
             }
 
@@ -2916,10 +2974,13 @@ namespace TAT001.Controllers
                     dt.Columns.Add(ds2.Tables[0].Rows[i][8].ToString().Trim());
                 }
 
-                foreach (var item in list)
+                if (list != null)
                 {
-                    string[] miArreglo = (string[])item;
-                    dt.Rows.Add(miArreglo);
+                    foreach (var item in list)
+                    {
+                        string[] miArreglo = (string[])item;
+                        dt.Rows.Add(miArreglo);
+                    }
                 }
             }
 
@@ -2938,10 +2999,13 @@ namespace TAT001.Controllers
                     dt.Columns.Add(ds3.Tables[0].Rows[i][7].ToString().Trim());
                 }
 
-                foreach (var item in list)
+                if (list != null)
                 {
-                    string[] miArreglo = (string[])item;
-                    dt.Rows.Add(miArreglo);
+                    foreach (var item in list)
+                    {
+                        string[] miArreglo = (string[])item;
+                        dt.Rows.Add(miArreglo);
+                    }
                 }
             }
 
@@ -2966,10 +3030,13 @@ namespace TAT001.Controllers
                     dt.Columns.Add(ds4.Tables[0].Rows[i][13].ToString().Trim());
                 }
 
-                foreach (var item in list)
+                if (list != null)
                 {
-                    string[] miArreglo = (string[])item;
-                    dt.Rows.Add(miArreglo);
+                    foreach (var item in list)
+                    {
+                        string[] miArreglo = (string[])item;
+                        dt.Rows.Add(miArreglo);
+                    }
                 }
             }
 
@@ -2983,12 +3050,15 @@ namespace TAT001.Controllers
                     dt.Columns.Add("NOMBRE");
                 }
 
-                foreach (var item in list)
+                if (list != null)
                 {
-                    string[] miArreglo = (string[])item;
-                    string contenido = miArreglo[0];
-                    string[] miArreglo2 = contenido.Split('*');
-                    dt.Rows.Add(miArreglo2[0], miArreglo2[1], miArreglo2[2]);
+                    foreach (var item in list)
+                    {
+                        string[] miArreglo = (string[])item;
+                        string contenido = miArreglo[0];
+                        string[] miArreglo2 = contenido.Split('*');
+                        dt.Rows.Add(miArreglo2[0], miArreglo2[1], miArreglo2[2]);
+                    }
                 }
             }
 

@@ -211,7 +211,7 @@
           <Property Name="POS_ID" Type="int" Nullable="false" />
           <Property Name="POS" Type="int" Nullable="false" />
           <Property Name="MATNR" Type="nvarchar" MaxLength="18" Nullable="false" />
-          <Property Name="MATKL" Type="nvarchar" MaxLength="9" />
+          <Property Name="MATKL" Type="nvarchar" MaxLength="50" />
           <Property Name="CANTIDAD" Type="decimal" Precision="13" Scale="5" Nullable="false" />
           <Property Name="MONTO" Type="decimal" Precision="13" Scale="5" Nullable="false" />
           <Property Name="PORC_APOYO" Type="decimal" Precision="13" Scale="5" Nullable="false" />
@@ -1651,7 +1651,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.TAB_CAMPO' no tiene definida ning
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="nvarchar" MaxLength="10" Nullable="false" />
-          <Property Name="DESCRIPCION" Type="nvarchar" MaxLength="60" />
+          <Property Name="DESCRIPCION" Type="nvarchar" MaxLength="62" />
           <Property Name="FECHAI" Type="date" />
           <Property Name="FECHAF" Type="date" />
           <Property Name="GALL_ID" Type="nvarchar" MaxLength="5" />
@@ -1664,7 +1664,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.TAB_CAMPO' no tiene definida ning
           </Key>
           <Property Name="SPRAS_ID" Type="nchar" MaxLength="2" Nullable="false" />
           <Property Name="TALL_ID" Type="nvarchar" MaxLength="10" Nullable="false" />
-          <Property Name="TXT50" Type="nvarchar" MaxLength="50" />
+          <Property Name="TXT50" Type="nvarchar" MaxLength="62" />
         </EntityType>
         <EntityType Name="TAX_LAND">
           <Key>
@@ -6164,7 +6164,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Property Name="POS_ID" Type="Int32" Nullable="false" />
           <Property Name="POS" Type="Int32" Nullable="false" />
           <Property Name="MATNR" Type="String" MaxLength="18" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="MATKL" Type="String" MaxLength="9" FixedLength="false" Unicode="true" />
+          <Property Name="MATKL" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="CANTIDAD" Type="Decimal" Precision="13" Scale="5" Nullable="false" />
           <Property Name="MONTO" Type="Decimal" Precision="13" Scale="5" Nullable="false" />
           <Property Name="PORC_APOYO" Type="Decimal" Precision="13" Scale="5" Nullable="false" />
@@ -7842,7 +7842,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="DESCRIPCION" Type="String" MaxLength="60" FixedLength="false" Unicode="true" />
+          <Property Name="DESCRIPCION" Type="String" MaxLength="62" FixedLength="false" Unicode="true" />
           <Property Name="FECHAI" Type="DateTime" Precision="0" />
           <Property Name="FECHAF" Type="DateTime" Precision="0" />
           <Property Name="GALL_ID" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
@@ -7859,7 +7859,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           </Key>
           <Property Name="SPRAS_ID" Type="String" MaxLength="2" FixedLength="true" Unicode="true" Nullable="false" />
           <Property Name="TALL_ID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="TXT50" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TXT50" Type="String" MaxLength="62" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="SPRA" Relationship="Self.FK_TALLT_SPRAS" FromRole="TALLT" ToRole="SPRAS" />
           <NavigationProperty Name="TALL" Relationship="Self.FK_TALLT_TALL" FromRole="TALLT" ToRole="TALL" />
         </EntityType>

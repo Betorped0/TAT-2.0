@@ -2,7 +2,6 @@
 @{
     ViewBag.pagina_r = 691;
     ViewBag.carpeta_r = 500;
-    //ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -20,9 +19,7 @@
 
 <div class="row">
     <div class="row right">
-        <div class="col l12 m12 right">
             <a href="@Url.Action("Create", "Cuenta")" id="lblAgregar" class="waves-effect waves-light btn">AGREGAR</a>
-        </div>
     </div>
 </div>
 <div class="card-panel">
@@ -67,6 +64,9 @@
                 <th class="lbltall">
                     @Html.DisplayNameFor(model => model.TALL.DESCRIPCION)
                 </th>
+                <th class="lblejercicio">
+                    @Html.DisplayNameFor(model => model.EJERCICIO)
+                </th>
                 <th class="lblabono">
                     @Html.DisplayNameFor(model => model.ABONO)
                 </th>
@@ -79,47 +79,55 @@
                 <th class="lbllimite">
                     @Html.DisplayNameFor(model => model.LIMITE)
                 </th>
+                <th class="lblimpuesto">
+                    @Html.DisplayNameFor(model => model.IMPUESTO)
+                </th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.SOCIEDAD.BUTXT)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PAI.LANDX)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TALL.DESCRIPCION)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ABONO)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CARGO)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CLEARING)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.LIMITE)
-                    </td>
-
-                    <td>
-                        <a href="@Url.Action("Edit", "Cuenta", new { soc = item.SOCIEDAD_ID, pai = item.PAIS_ID, tal = item.TALL_ID, eje = item.EJERCICIO })">
-                            <i class='material-icons green-text'>edit</i>
-                        </a>&nbsp
-                        <a href="@Url.Action("Details", "Cuenta", new { soc = item.SOCIEDAD_ID, pai = item.PAIS_ID, tal = item.TALL_ID, eje = item.EJERCICIO })">
-                            <i class='material-icons blue-text'>search</i>
-                        </a>&nbsp
-                        @*<a data-form-method="post" href="@Url.Action("Delete", "Cuenta", new { soc = item.SOCIEDAD_ID, pai = item.PAIS_ID, tal = item.TALL_ID, eje = item.EJERCICIO })">
-                            <i class='material-icons red-text'>delete</i>
-                        </a>*@
-                    </td>
-                </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SOCIEDAD.BUTXT)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PAI.LANDX)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TALL.DESCRIPCION)
+                </td>
+                <td>
+                    @item.EJERCICIO.ToString()
+                </td>
+                <td>
+                    @item.ABONO.ToString()
+                </td>
+                <td>
+                    @item.CARGO.ToString()
+                </td>
+                <td>
+                    @item.CLEARING.ToString()
+                </td>
+                <td>
+                    @Convert.ToDecimal(item.LIMITE).ToString("N")
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IMPUESTO)
+                </td>
+                <td>
+                    <a href="@Url.Action("Edit", "Cuenta", new { soc = item.SOCIEDAD_ID, pai = item.PAIS_ID, tal = item.TALL_ID, eje = item.EJERCICIO })">
+                        <i class='material-icons green-text'>edit</i>
+                    </a>&nbsp
+                    <a href="@Url.Action("Details", "Cuenta", new { soc = item.SOCIEDAD_ID, pai = item.PAIS_ID, tal = item.TALL_ID, eje = item.EJERCICIO })">
+                        <i class='material-icons blue-text'>search</i>
+                    </a>&nbsp
+                    @*<a data-form-method="post" href="@Url.Action("Delete", "Cuenta", new { soc = item.SOCIEDAD_ID, pai = item.PAIS_ID, tal = item.TALL_ID, eje = item.EJERCICIO })">
+                <i class='material-icons red-text'>delete</i>
+            </a>*@
+                </td>
+            </tr>
             }
         </tbody>
     </table>

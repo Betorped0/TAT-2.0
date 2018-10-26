@@ -268,13 +268,13 @@ function Carga() {
                     //alert(request.responseText);
                 }
             });
-            mostrarAlerta("info", "A", "Se agregaron los nuevos usuarios" );
+            mostrarAlerta("info", "A", "Se agregaron los nuevos usuarios");
             //M.toast({ html: 'Se agregaron los nuevos usuarios' });
-            window.location = root+"Usuarios/Index";
+            window.location = root + "Usuarios/Index";
         }
         else
             mostrarAlerta("info", "E", "Hay errores por corregir");
-            //M.toast({ html: 'Hay errores por corregir' });
+        //M.toast({ html: 'Hay errores por corregir' });
     }
     else
         mostrarAlerta("info", "E", "Seleccione un archivo");
@@ -284,9 +284,7 @@ function Carga() {
 
 function Comprobar() {
     var datos = $('#tabla').serializeArray();
-    creart('Comprobar', datos);
-    //M.toast({ html: 'Registro Actualizado' });
-
+    creart('Comprobar', datos); 
     mostrarAlerta("info", "A", "Registro Actualizado");
 }
 
@@ -302,32 +300,26 @@ function Borrar() {
 
 function Actualizar() {
     var message = $('.input_mes').serialize();
-    var doc = sessionStorage.getItem("num");
-    if (doc > 0) {
-        if (message.indexOf('existe') > -1) {
-            $.ajax({
-                type: "POST",
-                url: 'Actualizar',
-                data: null,
-                dataType: "json",
-                success: function () {
+    if (message.indexOf('existe') > -1) {
+        $.ajax({
+            type: "POST",
+            url: 'Actualizar',
+            data: null,
+            dataType: "json",
+            success: function () {
 
-                },
-                error: function (request, status, error) {
-                    //alert(request.responseText);
-                }
-            });
-            mostrarAlerta("info", "A", "Se actualizaron los usuarios")
-            //M.toast({ html: 'Se actualizaron los usuarios' });
-            window.location = root + "Usuarios/Index";
-        }
-        else
-            mostrarAlerta("info", "E", "No hay usuarios por actualizar")
-            //M.toast({ html: 'No hay usuarios por actualizar' });
+            },
+            error: function (request, status, error) {
+                //alert(request.responseText);
+            }
+        });
+        mostrarAlerta("info", "A", "Se actualizaron los usuarios")
+        //M.toast({ html: 'Se actualizaron los usuarios' });
+        window.location = root + "Usuarios/Index";
     }
     else
-        mostrarAlerta("info", "E", "Seleccione un archivo")
-        //M.toast({ html: 'Seleccione un archivo' });
+        mostrarAlerta("info", "E", "No hay usuarios por actualizar")
+        //M.toast({ html: 'No hay usuarios por actualizar' });
 }
 
 function creart(metodo, datos) {
@@ -416,6 +408,10 @@ function creart(metodo, datos) {
                 document.getElementById("loader").style.display = "none";
             }
         },
+        complete: function () {
+            //var num = $("#table tr").length;
+            //addRow(table, num, num, "", "", "", "", "", "", "", "", "", "", "");
+        }
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             M.toast({
                 html: "Request couldn't be processed. Please try again later. the reason        " + xhr.status + " : " + httpStatusMessage + ": " + customErrorMessage
@@ -439,6 +435,7 @@ function checkoff() {
 
 function Agregar() {
     var datos = $('#tabla').serializeArray();
+    var table = $('#table').DataTable();
     creart('AgregarT', datos);
 }
 
@@ -546,6 +543,39 @@ $('body').on('keydown.autocomplete', '.input_idi', function () {
                 success: function (data) {
                     response(auto.map(data, function (item) {
                         return { label: item.ID + " | " + item.DESCRIPCION, value: item.ID };
+                    }))
+                }
+            })
+        },
+
+        messages: {
+            noResults: '',
+            results: function (resultsCount) { }
+        },
+
+        change: function (e, ui) {
+            if (!(ui.item)) {
+                e.target.value = "";
+            }
+        },
+
+        select: function (event, ui) {
+        }
+    });
+});
+
+$('body').on('keydown.autocomplete', '.input_com', function () {
+
+    auto(this).autocomplete({
+        source: function (request, response) {
+            auto.ajax({
+                type: "POST",
+                url: 'Sociedad',
+                dataType: "json",
+                data: { "Prefix": request.term },
+                success: function (data) {
+                    response(auto.map(data, function (item) {
+                        return { label: item.BUKRS + " | " + item.BUTXT, value: item.BUKRS };
                     }))
                 }
             })
