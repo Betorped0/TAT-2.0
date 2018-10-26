@@ -157,6 +157,10 @@ function loadExcelDis(file) {
                         usc = usc.slice(0, -1);
                         var uscx = true;
                     }
+                    if (usc.indexOf('!') != -1) {
+                        usc = usc.slice(0, -1);
+                        var uscy = true;
+                    }
                     if (spr.indexOf('?') != -1) {
                         spr = spr.slice(0, -1);
                         var sprx = true;
@@ -184,6 +188,9 @@ function loadExcelDis(file) {
                     if (uscx == true) {
                         $(cols).addClass("red");
                     }
+                    if (uscy == true) {
+                        $(cols).addClass("yellow");
+                    }
                     var cols = addedRow.cells[8];
                     if (emax == true) {
                         $(cols).addClass("red");
@@ -198,6 +205,11 @@ function loadExcelDis(file) {
                 $('#tfoot_dis').css("display", "table-footer-group");
                 document.getElementById("loader").style.display = "none";
             }
+        },
+        complete: function () {
+
+            var num = $("#table tr").length - 1;
+            addRow(table, num, num, "", "", "", "", "", "", "", "", "", "", "");
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             M.toast({
@@ -366,6 +378,10 @@ function creart(metodo, datos) {
                         usc = usc.slice(0, -1);
                         var uscx = true;
                     }
+                    if (usc.indexOf('!') != -1) {
+                        usc = usc.slice(0, -1);
+                        var uscy = true;
+                    }
                     if (spr.indexOf('?') != -1) {
                         spr = spr.slice(0, -1);
                         var sprx = true;
@@ -393,6 +409,9 @@ function creart(metodo, datos) {
                     if (uscx == true) {
                         $(cols).addClass("red");
                     }
+                    if (uscy == true) {
+                        $(cols).addClass("yellow");
+                    }
                     var cols = addedRow.cells[8];
                     if (emax == true) {
                         $(cols).addClass("red");
@@ -409,9 +428,10 @@ function creart(metodo, datos) {
             }
         },
         complete: function () {
-            //var num = $("#table tr").length;
-            //addRow(table, num, num, "", "", "", "", "", "", "", "", "", "", "");
-        }
+
+            var num = $("#table tr").length - 1;
+            addRow(table, num, num, "", "", "", "", "", "", "", "", "", "", "");
+        },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             M.toast({
                 html: "Request couldn't be processed. Please try again later. the reason        " + xhr.status + " : " + httpStatusMessage + ": " + customErrorMessage
