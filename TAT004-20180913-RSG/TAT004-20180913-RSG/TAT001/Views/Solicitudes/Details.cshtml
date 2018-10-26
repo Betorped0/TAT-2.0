@@ -700,7 +700,14 @@
                                                         @if (ViewBag.recs.Count > 0)
                                                         {
                                                             <th id="lbl_rec_venta">Venta del periodo</th>
-                                                            <th id="lbl_rec_montoprov">Monto provisión</th>
+                                                            if (Model.D.DOCUMENTORECs.Count > 1)
+                                                            {
+                                                                <th id="lbl_rec_montoprov">Monto provisión</th>
+                                                            }
+                                                            else
+                                                            {
+                                                                <th id="lbl_rec_monto_sol">Monto de solicitud</th>
+                                                            }
                                                             if (Model.D.DOCUMENTORECs.Count > 1)
                                                             {
                                                                 if (Model.D.PAI.BACKORDER)
