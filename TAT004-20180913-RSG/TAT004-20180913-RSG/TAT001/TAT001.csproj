@@ -230,6 +230,7 @@
     <Compile Include="Controllers\Catalogos\SociedadesController.cs" />
     <Compile Include="Controllers\Catalogos\SoporteController.cs" />
     <Compile Include="Controllers\Catalogos\TALLsController.cs" />
+    <Compile Include="Controllers\Catalogos\TextocvController.cs" />
     <Compile Include="Controllers\Catalogos\UsuariosController2.cs" />
     <Compile Include="Controllers\Configuracion\ccatController.cs" />
     <Compile Include="Controllers\Catalogos\ClienteController.cs" />
@@ -1943,6 +1944,11 @@
     <Content Include="Views\Moneda\Index.cshtml" />
     <Content Include="Views\Proveedor\List.cshtml" />
     <Content Include="Views\Clientes\CargaList.cshtml" />
+    <Content Include="Views\Textocv\Create.cshtml" />
+    <Content Include="Views\Textocv\Delete.cshtml" />
+    <Content Include="Views\Textocv\Details.cshtml" />
+    <Content Include="Views\Textocv\Edit.cshtml" />
+    <Content Include="Views\Textocv\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->
