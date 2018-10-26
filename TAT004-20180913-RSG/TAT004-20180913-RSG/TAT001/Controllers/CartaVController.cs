@@ -1341,8 +1341,7 @@ namespace TAT001.Controllers
 
                 CartaV carta = v;
                 CartaVEsqueleto cve = new CartaVEsqueleto();
-                cve.crearPDF(carta, user.SPRAS_ID, aprob);
-                string recibeRuta = Convert.ToString(Session["rutaCompletaV"]);
+                string recibeRuta = cve.crearPDF(carta, user.SPRAS_ID, aprob);
                 return RedirectToAction("Index", new { ruta = recibeRuta, ids = v.num_doc });
             }
         }
@@ -1736,8 +1735,7 @@ namespace TAT001.Controllers
 
                 CartaV carta = v;
                 CartaVEsqueleto cve = new CartaVEsqueleto();
-                cve.crearPDF(carta, user.SPRAS_ID, aprob);
-                string recibeRuta = Convert.ToString(Session["rutaCompletaV"]);
+                string recibeRuta = cve.crearPDF(carta, user.SPRAS_ID, aprob);
                 return RedirectToAction("Index", new { ruta = recibeRuta, ids = v.num_doc });
             }
         }
@@ -3066,8 +3064,7 @@ namespace TAT001.Controllers
 
                 CartaV carta = v;
                 CartaVEsqueleto cve = new CartaVEsqueleto();
-                cve.crearPDF(carta, user.SPRAS_ID, aprob);
-                string recibeRuta = Convert.ToString(Session["rutaCompletaV"]);
+                string recibeRuta = cve.crearPDF(carta, user.SPRAS_ID, aprob);
                 return RedirectToAction("Index", new { ruta = recibeRuta, ids = v.num_doc });
 
             }
