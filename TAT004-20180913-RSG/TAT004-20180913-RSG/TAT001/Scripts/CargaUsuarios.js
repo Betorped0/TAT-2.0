@@ -157,6 +157,10 @@ function loadExcelDis(file) {
                         usc = usc.slice(0, -1);
                         var uscx = true;
                     }
+                    if (usc.indexOf('!') != -1) {
+                        usc = usc.slice(0, -1);
+                        var uscy = true;
+                    }
                     if (spr.indexOf('?') != -1) {
                         spr = spr.slice(0, -1);
                         var sprx = true;
@@ -184,6 +188,9 @@ function loadExcelDis(file) {
                     if (uscx == true) {
                         $(cols).addClass("red");
                     }
+                    if (uscy == true) {
+                        $(cols).addClass("yellow");
+                    }
                     var cols = addedRow.cells[8];
                     if (emax == true) {
                         $(cols).addClass("red");
@@ -198,6 +205,11 @@ function loadExcelDis(file) {
                 $('#tfoot_dis').css("display", "table-footer-group");
                 document.getElementById("loader").style.display = "none";
             }
+        },
+        complete: function () {
+
+            var num = $("#table tr").length - 1;
+            addRow(table, num, num, "", "", "", "", "", "", "", "", "", "", "");
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             M.toast({
@@ -284,9 +296,7 @@ function Carga() {
 
 function Comprobar() {
     var datos = $('#tabla').serializeArray();
-    creart('Comprobar', datos);
-    //M.toast({ html: 'Registro Actualizado' });
-
+    creart('Comprobar', datos); 
     mostrarAlerta("info", "A", "Registro Actualizado");
 }
 
@@ -368,6 +378,10 @@ function creart(metodo, datos) {
                         usc = usc.slice(0, -1);
                         var uscx = true;
                     }
+                    if (usc.indexOf('!') != -1) {
+                        usc = usc.slice(0, -1);
+                        var uscy = true;
+                    }
                     if (spr.indexOf('?') != -1) {
                         spr = spr.slice(0, -1);
                         var sprx = true;
@@ -395,6 +409,9 @@ function creart(metodo, datos) {
                     if (uscx == true) {
                         $(cols).addClass("red");
                     }
+                    if (uscy == true) {
+                        $(cols).addClass("yellow");
+                    }
                     var cols = addedRow.cells[8];
                     if (emax == true) {
                         $(cols).addClass("red");
@@ -409,6 +426,11 @@ function creart(metodo, datos) {
                 $('#tfoot_dis').css("display", "table-footer-group");
                 document.getElementById("loader").style.display = "none";
             }
+        },
+        complete: function () {
+
+            var num = $("#table tr").length - 1;
+            addRow(table, num, num, "", "", "", "", "", "", "", "", "", "", "");
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             M.toast({
@@ -433,6 +455,7 @@ function checkoff() {
 
 function Agregar() {
     var datos = $('#tabla').serializeArray();
+    var table = $('#table').DataTable();
     creart('AgregarT', datos);
 }
 
@@ -540,6 +563,39 @@ $('body').on('keydown.autocomplete', '.input_idi', function () {
                 success: function (data) {
                     response(auto.map(data, function (item) {
                         return { label: item.ID + " | " + item.DESCRIPCION, value: item.ID };
+                    }))
+                }
+            })
+        },
+
+        messages: {
+            noResults: '',
+            results: function (resultsCount) { }
+        },
+
+        change: function (e, ui) {
+            if (!(ui.item)) {
+                e.target.value = "";
+            }
+        },
+
+        select: function (event, ui) {
+        }
+    });
+});
+
+$('body').on('keydown.autocomplete', '.input_com', function () {
+
+    auto(this).autocomplete({
+        source: function (request, response) {
+            auto.ajax({
+                type: "POST",
+                url: 'Sociedad',
+                dataType: "json",
+                data: { "Prefix": request.term },
+                success: function (data) {
+                    response(auto.map(data, function (item) {
+                        return { label: item.BUKRS + " | " + item.BUTXT, value: item.BUKRS };
                     }))
                 }
             })

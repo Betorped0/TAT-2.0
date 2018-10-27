@@ -19,50 +19,32 @@
             <div class="card-panel">
                 <div class="row">
                     <div class="input-field col l12">
-                        @Html.EditorFor(model => model.ID, new { htmlAttributes = new { required = true } })
+                        @Html.EditorFor(model => model.ID, new { htmlAttributes = new { required = true, maxlength = "10" } })
                         @Html.LabelFor(model => model.ID, htmlAttributes: new { @class = "control-label col-md-2" })
                     </div>
 
                     <div class="input-field col l12">
-                        @Html.EditorFor(model => model.DESCRIPCION, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.LabelFor(model => model.DESCRIPCION, htmlAttributes: new { @class = "control-label col-md-2", id = "lbl_descripcion", required = true, @maxlength = "60" })
+                        @Html.EditorFor(model => model.DESCRIPCION, new { htmlAttributes = new { @class = "form-control", maxlength = "60", required = true } })
+                        @Html.LabelFor(model => model.DESCRIPCION, htmlAttributes: new { @class = "control-label col-md-2", id = "lbl_descripcion" })
                         @Html.ValidationMessageFor(model => model.DESCRIPCION, "", new { @class = "text-danger" })
                     </div>
 
                     @*<div class="input-field col l12">
-                            @Html.EditorFor(model => model.TSOLR, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.LabelFor(model => model.TSOLR, htmlAttributes: new { @class = "control-label col-md-2" })
-                            @Html.ValidationMessageFor(model => model.TSOLR, "", new { @class = "text-danger" })
-                        </div>*@
+            @Html.EditorFor(model => model.TSOLR, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.LabelFor(model => model.TSOLR, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.ValidationMessageFor(model => model.TSOLR, "", new { @class = "text-danger" })
+        </div>*@
 
                     <div class="input-field col l12">
-                        @Html.DropDownListFor(model => model.RANGO_ID, null, new { htmlAttributes = new { @class = "", required = true } })
+                        @Html.DropDownList("RANGO_ID", null, new { htmlAttributes = new { @class = "", required = true } })
                         @Html.LabelFor(model => model.RANGO_ID, htmlAttributes: new { @class = "", id = "lblRangoId" })
                         @Html.ValidationMessageFor(model => model.RANGO_ID, "", new { @class = "text-danger" })
                     </div>
 
-                    <div class="input-field col l12">
-                        @Html.EditorFor(model => model.ESTATUS, new { htmlAttributes = new { @class = "form-control", required = true } })
-                        @Html.LabelFor(model => model.ESTATUS, htmlAttributes: new { @class = "control-label col-md-2", id = "lbl_estatus" })
-                        @Html.ValidationMessageFor(model => model.ESTATUS, "", new { @class = "text-danger" })
-                    </div>
-
                     <div class="form-group">
                         <label>
-                            @Html.CheckBoxFor(model => model.FACTURA, htmlAttributes: new { required = true })
-                            <span id="lbl_factura"></span>
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label>
-                            @Html.CheckBoxFor(model => model.PADRE, htmlAttributes: new { required = true })
-                            <span id="lbl_padre"></span>
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label>
-                            @Html.CheckBoxFor(model => model.ADICIONA, htmlAttributes: new { required = true })
-                            <span id="lbl_adiciona"></span>
+                            @Html.CheckBox("ESTATUS", new { htmlAttributes = new { @class = "" } })
+                            <span id="lbl_estatus"></span>
                         </label>
                     </div>
                 </div>
@@ -72,24 +54,42 @@
             <div class="card-panel">
                 <div class="row">
 
-                    <div class="input-field col l12">
-                        @Html.EditorFor(model => model.TSOLM, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.LabelFor(model => model.TSOLM, htmlAttributes: new { @class = "control-label col-md-2", id = "lbl_tsolm" })
-                        @Html.ValidationMessageFor(model => model.TSOLM, "", new { @class = "text-danger" })
-                    </div>
+                    @*<div class="input-field col l12">
+            @Html.EditorFor(model => model.TSOLM, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.LabelFor(model => model.TSOLM, htmlAttributes: new { @class = "control-label col-md-2", id = "lbl_tsolm" })
+            @Html.ValidationMessageFor(model => model.TSOLM, "", new { @class = "text-danger" })
+        </div>*@
 
-                    <div class="input-field col l12">
-                        @Html.EditorFor(model => model.TSOLC, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.LabelFor(model => model.TSOLC, htmlAttributes: new { @class = "control-label col-md-2", id = "lbl_tsolc" })
-                        @Html.ValidationMessageFor(model => model.TSOLC, "", new { @class = "text-danger" })
-                    </div>
+                    @*<div class="input-field col l12">
+            @Html.EditorFor(model => model.TSOLC, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.LabelFor(model => model.TSOLC, htmlAttributes: new { @class = "control-label col-md-2", id = "lbl_tsolc" })
+            @Html.ValidationMessageFor(model => model.TSOLC, "", new { @class = "text-danger" })
+        </div>*@
 
-                    <div class="input-field col l12">
-                        @Html.EditorFor(model => model.TRECU, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.LabelFor(model => model.TRECU, htmlAttributes: new { @class = "control-label col-md-2", id = "lbl_trecu" })
-                        @Html.ValidationMessageFor(model => model.TRECU, "", new { @class = "text-danger" })
-                    </div>
+                    @*<div class="input-field col l12">
+            @Html.EditorFor(model => model.TRECU, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.LabelFor(model => model.TRECU, htmlAttributes: new { @class = "control-label col-md-2", id = "lbl_trecu" })
+            @Html.ValidationMessageFor(model => model.TRECU, "", new { @class = "text-danger" })
+        </div>*@
 
+                    <div class="form-group">
+                        <label>
+                            <input name="group1" type="radio" value="FACTURA" required />
+                            <span id="lbl_factura"></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input name="group1" type="radio" value="PADRE" required />
+                            <span id="lbl_padre"></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input name="group1" type="radio" value="REVERSO" required/>
+                            <span id="lbl_reverso"></span>
+                        </label>
+                    </div>
                     <div class="form-group">
                         <label>
                             @Html.CheckBoxFor(model => model.NEGO, htmlAttributes: new { required = true })
@@ -104,16 +104,16 @@
                     </div>
                     <div class="form-group">
                         <label>
-                            @Html.CheckBoxFor(model => model.REVERSO, htmlAttributes: new { required = true })
-                            <span id="lbl_reverso"></span>
+                            @Html.CheckBoxFor(model => model.ADICIONA, htmlAttributes: new { required = true })
+                            <span id="lbl_adiciona"></span>
                         </label>
                     </div>
-                    <div class="form-group">
-                        <label>
-                            @Html.CheckBox("ACTIVO", htmlAttributes: new { required = true })
-                            <span id="lbl_activo"></span>
-                        </label>
-                    </div>
+                    @*<div class="form-group">
+            <label>
+                @Html.CheckBox("ACTIVO", htmlAttributes: new { required = true })
+                <span id="lbl_activo"></span>
+            </label>
+        </div>*@
                 </div>
             </div>
         </div>
@@ -123,6 +123,8 @@
     @Html.ActionLink("Back to List", "Index", null, new { id = "lblRegresar" })
 </div>
 <script>
+    var elem = document.querySelectorAll('select');
+    var instance = M.FormSelect.init(elem, []);
     $("input[type='hidden']").each(function (index, element) {
         $(this).appendTo($(element).parent());
     });

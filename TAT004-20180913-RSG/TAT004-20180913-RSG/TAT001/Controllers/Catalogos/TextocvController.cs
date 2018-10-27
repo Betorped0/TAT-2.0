@@ -8,16 +8,16 @@ using System.Web;
 using System.Web.Mvc;
 using TAT001.Entities;
 
-namespace TAT001.Controllers
+namespace TAT001.Controllers.Catalogos
 {
-    public class CuentaController : Controller
+    public class TextocvController : Controller
     {
         private TAT001Entities db = new TAT001Entities();
 
-        // GET: Cuenta
+        // GET: Textocv
         public ActionResult Index()
         {
-            int pagina = 691; //ID EN BASE DE DATOS
+            int pagina = 711; //ID EN BASE DE DATOS
             string u = User.Identity.Name;
             var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
             ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
@@ -37,23 +37,23 @@ namespace TAT001.Controllers
             {
                 //return RedirectToAction("Pais", "Home");
             }
-            Session["spras"] = user.SPRAS_ID;
+            Session["spras"] = user.SPRAS_ID;;
 
-            var cUENTAs = db.CUENTAs.Include(c => c.TALL).Include(c => c.SOCIEDAD).Include(c => c.PAI).ToList();
-            return View(cUENTAs.ToList());
+            var tEXTOCVs = db.TEXTOCVs.Include(t => t.SPRA);
+            return View(tEXTOCVs.ToList());
         }
 
-        // GET: Cuenta/Details/5
-        public ActionResult Details(string soc, string pai, string tal, int? eje)
+        // GET: Textocv/Details/5
+        public ActionResult Details(int? id)
         {
-            int pagina = 693; //ID EN BASE DE DATOS
+            int pagina = 713; //ID EN BASE DE DATOS
             string u = User.Identity.Name;
             var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
             ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
             ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
             ViewBag.usuario = user;
             ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(692)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID) && b.ID == 692).FirstOrDefault().TXT50;
+            ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(712)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
             ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
             ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
 
@@ -68,24 +68,22 @@ namespace TAT001.Controllers
             }
             Session["spras"] = user.SPRAS_ID;
 
-
-            if (soc == null | pai == null | tal == null | eje == null)
+            if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-
-            CUENTA cUENTA = db.CUENTAs.Find(soc, pai, tal, eje);
-            if (cUENTA == null)
+            TEXTOCV tEXTOCV = db.TEXTOCVs.Find(id);
+            if (tEXTOCV == null)
             {
                 return HttpNotFound();
             }
-            return View(cUENTA);
+            return View(tEXTOCV);
         }
 
-        // GET: Cuenta/Create
+        // GET: Textocv/Create
         public ActionResult Create()
         {
-            int pagina = 693; //ID EN BASE DE DATOS
+            int pagina = 713; //ID EN BASE DE DATOS
             string u = User.Identity.Name;
             var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
             ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
@@ -107,47 +105,39 @@ namespace TAT001.Controllers
             }
             Session["spras"] = user.SPRAS_ID;
 
-            ViewBag.TALL_ID = new SelectList(db.TALLs, "ID", "DESCRIPCION");
-            ViewBag.PAIS_ID = new SelectList(db.PAIS, "LAND", "LANDX");
-            ViewBag.SOCIEDAD_ID = new SelectList(db.SOCIEDADs, "BUKRS", "BUTXT");
-            ViewBag.ABONO = new SelectList(db.CUENTAGLs.Where(t=>t.ACTIVO==true).ToList(), "ID", "NOMBRE");
-            ViewBag.CARGO = new SelectList(db.CUENTAGLs.Where(t => t.ACTIVO == true).ToList(), "ID", "NOMBRE");
-            ViewBag.CLEARING = new SelectList(db.CUENTAGLs.Where(t => t.ACTIVO == true).ToList(), "ID", "NOMBRE");
-            ViewBag.IMPUESTO = new SelectList(db.IMPUESTOes.Where(t => t.ACTIVO == true).ToList(), "MWSKZ", "MWSKZ");
+            ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION");
             return View();
         }
 
-        // POST: Cuenta/Create
+        // POST: Textocv/Create
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
         // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "SOCIEDAD_ID,PAIS_ID,TALL_ID,EJERCICIO,ABONO,CARGO,CLEARING,LIMITE,IMPUESTO")] CUENTA cUENTA)
+        public ActionResult Create([Bind(Include = "ID,SPRAS_ID,CAMPO,TEXTO")] TEXTOCV tEXTOCV)
         {
             if (ModelState.IsValid)
             {
-                db.CUENTAs.Add(cUENTA);
+                db.TEXTOCVs.Add(tEXTOCV);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.TALL_ID = new SelectList(db.TALLs, "ID", "DESCRIPCION", cUENTA.TALL_ID);
-            ViewBag.PAIS_ID = new SelectList(db.PAIS, "LAND", "LANDX", cUENTA.PAIS_ID);
-            ViewBag.SOCIEDAD_ID = new SelectList(db.SOCIEDADs, "BUKRS", "BUTXT", cUENTA.SOCIEDAD_ID);
-            return View(cUENTA);
+            ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION", tEXTOCV.SPRAS_ID);
+            return View(tEXTOCV);
         }
 
-        // GET: Cuenta/Edit/5
-        public ActionResult Edit(string soc, string pai, string tal, int? eje)
+        // GET: Textocv/Edit/5
+        public ActionResult Edit(int? id)
         {
-            int pagina = 693; //ID EN BASE DE DATOS
+            int pagina = 713; //ID EN BASE DE DATOS
             string u = User.Identity.Name;
             var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
             ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
             ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
             ViewBag.usuario = user;
             ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(694)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID) && b.ID == 694).FirstOrDefault().TXT50;
+            ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(714)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
             ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
             ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
 
@@ -162,81 +152,59 @@ namespace TAT001.Controllers
             }
             Session["spras"] = user.SPRAS_ID;
 
-            if (soc == null | pai == null | tal == null | eje == null)
+            if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            CUENTA cUENTA = db.CUENTAs.Find(soc, pai, tal, eje);
-            if (cUENTA == null)
+            TEXTOCV tEXTOCV = db.TEXTOCVs.Find(id);
+            if (tEXTOCV == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.TALL_ID = new SelectList(db.TALLs, "ID", "DESCRIPCION", cUENTA.TALL_ID);
-            ViewBag.PAIS_ID = new SelectList(db.PAIS, "LAND", "LANDX", cUENTA.PAIS_ID);
-            ViewBag.SOCIEDAD_ID = new SelectList(db.SOCIEDADs, "BUKRS", "BUTXT", cUENTA.SOCIEDAD_ID);
-            ViewBag.ABONO = new SelectList(db.CUENTAGLs.Where(t => t.ACTIVO == true).ToList(), "ID", "NOMBRE", cUENTA.ABONO);
-            ViewBag.CARGO = new SelectList(db.CUENTAGLs.Where(t => t.ACTIVO == true).ToList(), "ID", "NOMBRE",cUENTA.CARGO);
-            ViewBag.CLEARING = new SelectList(db.CUENTAGLs.Where(t => t.ACTIVO == true).ToList(), "ID", "NOMBRE", cUENTA.CLEARING);
-            ViewBag.IMPUESTO = new SelectList(db.IMPUESTOes.Where(t => t.ACTIVO == true).ToList(), "MWSKZ", "MWSKZ", cUENTA.IMPUESTO);
-            return View(cUENTA);
+
+            ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION", tEXTOCV.SPRAS_ID);
+            return View(tEXTOCV);
         }
 
-        // POST: Cuenta/Edit/5
+        // POST: Textocv/Edit/5
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
         // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "SOCIEDAD_ID,PAIS_ID,TALL_ID,EJERCICIO,ABONO,CARGO,CLEARING,LIMITE,IMPUESTO")] CUENTA cUENTA)
+        public ActionResult Edit([Bind(Include = "ID,SPRAS_ID,CAMPO,TEXTO")] TEXTOCV tEXTOCV)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(cUENTA).State = EntityState.Modified;
-                string a, b, c, d;
-                a = cUENTA.ABONO.ToString();
-                b = cUENTA.CARGO.ToString();
-                c = cUENTA.CLEARING.ToString();
-                d = cUENTA.LIMITE.ToString();
-
-                if (a.Length > 10) { a = a.Remove(10); }
-                if (b.Length > 10) { b = b.Remove(10); }
-                if (c.Length > 10) { c = c.Remove(10); }
-                if (d.Length > 10) { d = d.Remove(10); }
-
-                cUENTA.ABONO = Convert.ToDecimal(a);
-                cUENTA.CARGO = Convert.ToDecimal(b); 
-                cUENTA.CLEARING = Convert.ToDecimal(c);
-                cUENTA.LIMITE = Convert.ToDecimal(d);
+                db.Entry(tEXTOCV).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.TALL_ID = new SelectList(db.TALLs, "ID", "DESCRIPCION", cUENTA.TALL_ID);
-            ViewBag.PAIS_ID = new SelectList(db.PAIS, "LAND", "LANDX", cUENTA.PAIS_ID);
-            ViewBag.SOCIEDAD_ID = new SelectList(db.SOCIEDADs, "BUKRS", "BUTXT", cUENTA.SOCIEDAD_ID);
-            return View(cUENTA);
+            ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION", tEXTOCV.SPRAS_ID);
+            return View(tEXTOCV);
         }
 
-        // GET: Cuenta/Delete/5
-        public ActionResult Delete(string id)
+        // GET: TEXTOCVs/Delete/5
+        public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            CUENTA cUENTA = db.CUENTAs.Find(id);
-            if (cUENTA == null)
+            TEXTOCV tEXTOCV = db.TEXTOCVs.Find(id);
+            if (tEXTOCV == null)
             {
                 return HttpNotFound();
             }
-            return View(cUENTA);
+            return View(tEXTOCV);
         }
 
-        // POST: Cuenta/Delete/5
+        // POST: TEXTOCVs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(string soc, string pai, string tal, int? eje)
+        public ActionResult DeleteConfirmed(int id)
         {
-            CUENTA cUENTA = db.CUENTAs.Find(soc, pai, tal, eje);
-            db.CUENTAs.Remove(cUENTA);
+            TEXTOCV tEXTOCV = db.TEXTOCVs.Find(id);
+            db.TEXTOCVs.Remove(tEXTOCV);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
