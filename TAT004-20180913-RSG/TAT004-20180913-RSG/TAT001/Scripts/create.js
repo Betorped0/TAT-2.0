@@ -3609,63 +3609,7 @@ function format(catid, idate, fdate) {
 
     return tablamat;
 
-    //    ////Obtener el cliente
-    //    //var kunnr = $('#payer_id').val();
-    //    ////Obtener la sociedad
-    //    //var soc_id = $('#sociedad_id').val();
-
-    //    $.ajax({
-    //        type: "POST",
-    //        url: 'categoriaMateriales',
-    //        data: { "kunnr": kunnr, "catid": id, "soc_id": soc_id },
-    //        success: function (data) {
-    //            var rows = "";
-    //            if (data !== null || data !== "") {
-    //                $.each(data, function (i, dataj) {
-
-    //                    //Obtener la descripción del material
-    //                    var val = valMaterial(dataj.MATNR, "");
-    //                    var desc = "";
-    //                    if (val.ID == dataj.MATNR) {
-
-    //                        desc = val.MAKTX;
-
-    //                    }
-
-    //                    var r =
-    //                        '<tr>' +
-    //                        '<td style = "display:none">' + id + '</td>' +
-    //                        '<td>' + idate + '</td>' +
-    //                        '<td>' + fdate + '</td>' +
-    //                        '<td>' + dataj.MATNR + '</td>' +
-    //                        '<td>' + desc + '</td>';
-    //                    //'<td>Nixon</td>' +
-    //                    //'<td>System Architect</td>' +
-    //                    //'<td>Edinburgh</td>' +
-    //                    //'<td>$320,800</td>' +
-    //                    //'<td>Tiger</td>' +
-    //                    //'<td>Tiger</td>' +
-    //                    //'<td>Tiger</td>' +
-    //                    //'</tr>';
-
-    //                    rows += r;
-
-    //                }); //Fin de for
-    //                //var tablamat = '<table class=\"display\" style=\"width: 100%; margin-left: 65px;\">' +
-    //                var tablamat = '<table class=\"display\" style=\"width: 100%; margin-left: 60px;\"><tbody>' + rows + '</tbody></table>';
-
-    //                useReturnData(tablamat);
-    //            }
-
-    //        },
-    //        error: function (xhr, httpStatusMessage, customErrorMessage) {
-    //            M.toast({ html: msg });
-    //        },
-    //        async: false
-    //    });
-    //}
-
-    //return detail;
+    
 }
 
 function useReturnData(data) {
@@ -5659,23 +5603,20 @@ function limpiarCliente() {
 }
 
 function getCatMateriales(vkorg, vtweg, spart, kunnr) {
-    //document.getElementById("loader").style.display = "initial";
     var soc = document.getElementById("sociedad_id").value;
     $('#catmat').val("");
     $.ajax({
         type: "POST",
-        url: 'grupoMateriales',
+        url: root+'Listas/grupoMateriales',
         dataType: "json",
         data: { vkorg: vkorg, spart: spart, kunnr: kunnr, soc_id: soc },
         success: function (data) {
             if (data !== null || data !== "") {
                 $('#catmat').val(JSON.stringify(data));
             }
-            //document.getElementById("loader").style.display = "none";
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             M.toast({ html: httpStatusMessage });
-            //document.getElementById("loader").style.display = "none";
         },
         async: true
     });

@@ -315,10 +315,37 @@ namespace TAT001.Common
 
 
         }
-
         public static List<MATERIALGP> ObtenerMaterialGroups(TAT001Entities db)
         {
-          return  db.MATERIALGPs.Where(a => a.ACTIVO).ToList();
+            return db.MATERIALGPs.Where(a => a.ACTIVO).ToList();
+        }
+        public static List<MATERIALGPT> ObtenerMaterialGroupsCliente(TAT001Entities db, string vkorg, string spart, string kunnr, string soc_id,int aii, int mii, int aff, int mff)
+        {
+            List<MATERIALGPT> materialgp = db.Database.SqlQuery<MATERIALGPT>("CPS_LISTA_MATERIALGP_CLIENTE @SOCIEDAD_ID,@VKORG,@SPART,@KUNNR,@aii,@mii,@aff,@mff",
+               new SqlParameter("@SOCIEDAD_ID", soc_id),
+              new SqlParameter("@VKORG", vkorg),
+              new SqlParameter("@SPART", spart),
+              new SqlParameter("@KUNNR", kunnr),
+              new SqlParameter("@aii", aii),
+              new SqlParameter("@mii",mii ),
+              new SqlParameter("@aff",aff ),
+              new SqlParameter("@mff", mff)).ToList();
+            return materialgp;
+        }
+        public static List<DOCUMENTOM_MOD> ObtenerMaterialGroupsMateriales(TAT001Entities db, string vkorg, string spart, string kunnr, string soc_id, int aii, int mii, int aff, int mff,string user_id)
+        {
+            string spras_id = ObtenerSprasId(db, user_id);
+            List<DOCUMENTOM_MOD> materialgp = db.Database.SqlQuery<DOCUMENTOM_MOD>("CPS_LISTA_MATERIALGP_MATERIALES @SOCIEDAD_ID,@VKORG,@SPART,@KUNNR,@SPRAS_ID,@aii,@mii,@aff,@mff",
+              new SqlParameter("@SOCIEDAD_ID", soc_id),
+              new SqlParameter("@VKORG", vkorg),
+              new SqlParameter("@SPART", spart),
+              new SqlParameter("@KUNNR", kunnr),
+              new SqlParameter("@SPRAS_ID", spras_id),
+              new SqlParameter("@aii", aii),
+              new SqlParameter("@mii", mii),
+              new SqlParameter("@aff", aff),
+              new SqlParameter("@mff", mff)).ToList();
+            return materialgp;
         }
         public static MATERIALGP ObtenerMaterialGroup(TAT001Entities db,string materialgp_id)
         {

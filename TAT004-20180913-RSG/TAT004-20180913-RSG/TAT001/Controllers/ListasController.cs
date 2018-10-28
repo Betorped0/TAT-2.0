@@ -517,46 +517,7 @@ namespace TAT001.Controllers
 
                 if (cie != null)
                 {
-                    //Obtener el historial de compras de los clientes
-                    List<PRESUPSAPP> pres = db.PRESUPSAPPs.Where(a =>  a.VKORG.Equals(vkorg) & a.SPART.Equals(spart) & a.KUNNR == kunnr 
-                    & (a.GRSLS != null | a.NETLB != null)).ToList();
-                    List<MATERIALGP> materialGroup = FnCommon.ObtenerMaterialGroups(db);
-
-
-
-                    CONFDIST_CAT conf = getCatConf(soc_id);
-                    if (conf != null)
-                        if (conf.CAMPO == "GRSLS")
-                        {
-                            jd = (from ps in pres
-                                  join m in materiales
-                                  on ps.MATNR equals m.ID
-                                  join mg in materialGroup
-                                  on m.MATERIALGP_ID equals mg.ID
-                                  where  ps.BUKRS == soc_id && ps.GRSLS > 0
-                                  group mg by new { ID=mg.ID, TXT50 = mg.DESCRIPCION } into mgt
-                                  select new MATERIALGPT
-                                  {
-                                      MATERIALGP_ID = mgt.First().ID,
-                                      TXT50 = mgt.First().DESCRIPCION
-                                  }).ToList();
-                        }
-                        else
-                        {
-                            jd = (from ps in pres
-                                  join m in materiales
-                                  on ps.MATNR equals m.ID
-                                  join mg in materialGroup
-                                  on m.MATERIALGP_ID equals mg.ID
-                                  where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) 
-                                  && ps.BUKRS == soc_id&& ps.NETLB > 0
-                                  group mg by new { ID = mg.ID, TXT50 = mg.DESCRIPCION } into mgt
-                                  select new MATERIALGPT
-                                  {
-                                      MATERIALGP_ID = mgt.First().ID,
-                                      TXT50 = mgt.First().DESCRIPCION
-                                  }).ToList();
-                        }
+                    jd = FnCommon.ObtenerMaterialGroupsCliente(db,vkorg,spart,kunnr,soc_id,aii,mii,aff,mff);
                 }
             }
 
@@ -677,53 +638,12 @@ namespace TAT001.Controllers
 
                 if (cie != null)
                 {
-                    //Obtener el historial de compras de los clientes
-                    var pres = db.PRESUPSAPPs.Where(a => a.VKORG.Equals(vkorg) & a.SPART.Equals(spart) & a.KUNNR == kunnr
-                    & (a.GRSLS != null | a.NETLB != null)).ToList();
-
-                    List<MATERIALGP> materialGroup = FnCommon.ObtenerMaterialGroups(db);
-
-
-                    CONFDIST_CAT conf = getCatConf(soc_id);
-                    if (conf != null)
-                        if (conf.CAMPO == "GRSLS")
-                        {
-                            jd = (from ps in pres
-                                  join m in materiales
-                                  on ps.MATNR equals m.ID
-                                  join mk in materialGroup
-                                  on m.MATERIALGP_ID equals mk.ID
-                                  where ps.BUKRS == soc_id && ps.GRSLS > 0
-                                  select new DOCUMENTOM_MOD
-                                  {
-                                      ID_CAT = m.MATERIALGP_ID,
-                                      MATNR = ps.MATNR,
-                                      VAL = Convert.ToDecimal(ps.GRSLS),
-                                      EXCLUIR = mk.EXCLUIR //RSG 09.07.2018 ID167
-                                  }).ToList();
-                        }
-                        else
-                        {
-                            jd = (from ps in pres
-                                  join m in materiales
-                                  on ps.MATNR equals m.ID
-                                  join mk in materialGroup
-                                  on m.MATKL_ID equals mk.ID
-                                  where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) &&
-                                  ps.BUKRS == soc_id && ps.NETLB > 0
-                                  select new DOCUMENTOM_MOD
-                                  {
-                                      ID_CAT = m.MATERIALGP_ID,
-                                      MATNR = ps.MATNR,
-                                      VAL = Convert.ToDecimal(ps.NETLB),
-                                      EXCLUIR = mk.EXCLUIR //RSG 09.07.2018 ID167
-                                  }).ToList();
-                        }
+                   jd = FnCommon.ObtenerMaterialGroupsMateriales(db, vkorg, spart, kunnr, soc_id, aii, mii, aff, mff,User.Identity.Name);
                 }
             }
 
             //Obtener las categorías
-            var categorias = jd.GroupBy(c => c.ID_CAT, c => new { ID = c.ID_CAT.ToString() }).ToList();
+            var categorias = jd.GroupBy(c => c.ID_CAT, c => new { ID = c.ID_CAT.ToString(), DESC = c.DESC }).ToList();
 
             List<CategoriaMaterial> lcatmat = new List<CategoriaMaterial>();
 
@@ -736,13 +656,13 @@ namespace TAT001.Controllers
                 //Obtener los materiales de la categoría
                 List<DOCUMENTOM_MOD> dl = new List<DOCUMENTOM_MOD>();
                 List<DOCUMENTOM_MOD> dm = new List<DOCUMENTOM_MOD>();
-                dl = jd.Where(c => c.ID_CAT == item.Key).Select(c => new DOCUMENTOM_MOD { ID_CAT = c.ID_CAT, MATNR = c.MATNR, VAL = c.VAL }).ToList();//Falta obtener el groupby
+                dl = jd.Where(c => c.ID_CAT == item.Key).Select(c => new DOCUMENTOM_MOD { ID_CAT = c.ID_CAT, MATNR = c.MATNR, VAL = c.VAL, DESC = c.DESC }).ToList();//Falta obtener el groupby
 
                 //Obtener la descripción de los materiales
                 foreach (DOCUMENTOM_MOD d in dl)
                 {
                     DOCUMENTOM_MOD dcl = new DOCUMENTOM_MOD();
-                    dcl = dm.Where(z => z.MATNR == d.MATNR).Select(c => new DOCUMENTOM_MOD { ID_CAT = c.ID_CAT, MATNR = c.MATNR, VAL = c.VAL }).FirstOrDefault();
+                    dcl = dm.Where(z => z.MATNR == d.MATNR).Select(c => new DOCUMENTOM_MOD { ID_CAT = c.ID_CAT, MATNR = c.MATNR, VAL = c.VAL, DESC = c.DESC }).FirstOrDefault();
 
                     if (dcl == null)
                     {
@@ -751,9 +671,8 @@ namespace TAT001.Controllers
                         decimal val = dl.Where(y => y.MATNR == d.MATNR).Sum(x => x.VAL);
                         dcll.ID_CAT = item.Key;
                         dcll.MATNR = d.MATNR;
-
-                        //Obtener la descripción del material
-                        dcll.DESC = FnCommon.ObtenerMaterial(db, User.Identity.Name, d.MATNR).MAKTX;
+                        
+                        dcll.DESC = d.DESC;
                         dcll.VAL = val;
 
                         dm.Add(dcll);
@@ -789,7 +708,7 @@ namespace TAT001.Controllers
                     }
                 }
                 //LEJ 18.07.2018-----------------------------------------------------------
-                nnn.UNICA = FnCommon.ObtenerMaterialGroup(db,nnn.ID).UNICA;
+                nnn.UNICA = FnCommon.ObtenerMaterialGroup(db, nnn.ID).UNICA;
                 lcatmat.Add(nnn);
             }
 

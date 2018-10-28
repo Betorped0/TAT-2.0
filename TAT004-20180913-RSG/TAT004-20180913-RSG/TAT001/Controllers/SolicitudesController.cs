@@ -1745,7 +1745,11 @@ namespace TAT001.Controllers
                                         DOCUMENTOP docadd = new DOCUMENTOP();
 
                                         docadd.MATNR = dOCUMENTO.DOCUMENTOP[h].MATNR;
-                                        docadd.MATKL = FnCommon.ObtenerMaterial(db, User.Identity.Name, docadd.MATNR).MATKL_ID;
+                                        if (dOCUMENTO.DOCUMENTOP[h].MATKL_ID == null )
+                                        {
+                                            dOCUMENTO.DOCUMENTOP[h].MATKL_ID="";
+                                        }
+                                        docadd.MATKL = dOCUMENTO.DOCUMENTOP[h].MATKL_ID;
                                         docadd.CANTIDAD = 1;
                                         docadd.MONTO = dOCUMENTO.DOCUMENTOP[h].MONTO;
                                         docadd.PORC_APOYO = dOCUMENTO.DOCUMENTOP[h].PORC_APOYO;
@@ -1786,13 +1790,17 @@ namespace TAT001.Controllers
                                     {
                                         docP.NUM_DOC = dOCUMENTO.NUM_DOC;
                                         docP.POS = docmod.POS;
-                                        if (docmod.MATNR == null || docmod.MATNR == "")
+                                        if (docmod.MATNR == null )
                                         {
                                             docmod.MATNR = "";
                                         }
                                         docP.MATNR = docmod.MATNR;
                                         docP.MATNR = new Cadena().completaMaterial(docP.MATNR);//RSG 07.06.2018
-                                        docP.MATKL = FnCommon.ObtenerMaterial(db, User.Identity.Name, docP.MATNR).MATKL_ID;
+                                        if (docmod.MATKL == null )
+                                        {
+                                            docmod.MATKL = "";
+                                        }
+                                        docP.MATKL = docmod.MATKL;
                                         docP.CANTIDAD = 1;
                                         docP.MONTO = docmod.MONTO;
                                         docP.PORC_APOYO = docmod.PORC_APOYO;
@@ -1984,8 +1992,12 @@ namespace TAT001.Controllers
                                         dOCUMENTO.DOCUMENTOP.ElementAt(j).MATNR = "";
                                     }
                                     docP.MATNR = dOCUMENTO.DOCUMENTOP.ElementAt(j).MATNR;
-                                    docP.MATNR = new Cadena().completaMaterial(docP.MATNR);//RSG 07.06.2018
-                                    docP.MATKL = FnCommon.ObtenerMaterial(db, User.Identity.Name, docP.MATNR).MATKL_ID;
+                                    docP.MATNR = new Cadena().completaMaterial(docP.MATNR);
+                                    if (dOCUMENTO.DOCUMENTOP.ElementAt(j).MATKL_ID == null)
+                                    {
+                                        dOCUMENTO.DOCUMENTOP.ElementAt(j).MATKL_ID = "";
+                                    }
+                                    docP.MATKL = dOCUMENTO.DOCUMENTOP.ElementAt(j).MATKL_ID; 
                                     docP.CANTIDAD = 1;
                                     docP.MONTO = dOCUMENTO.DOCUMENTOP.ElementAt(j).MONTO;
                                     docP.PORC_APOYO = dOCUMENTO.DOCUMENTOP.ElementAt(j).PORC_APOYO;
@@ -2090,7 +2102,7 @@ namespace TAT001.Controllers
                                 }
                                 catch (Exception e)
                                 {
-
+                                    Log.ErrorLogApp(e,"Solicitudes","Create");
                                 }
                             }
                         }
@@ -3056,7 +3068,11 @@ namespace TAT001.Controllers
                             doc.DOCUMENTOP[i].MATNR = "";
                         }
                         dbp.MATNR = doc.DOCUMENTOP[i].MATNR;
-                        dbp.MATKL = FnCommon.ObtenerMaterial(db, User.Identity.Name, dbp.MATNR).MATKL_ID;
+                        if (doc.DOCUMENTOP[i].MATKL_ID == null || !string.IsNullOrEmpty(doc.DOCUMENTOP[i].MATNR))
+                        {
+                            doc.DOCUMENTOP[i].MATKL_ID = "";
+                        }
+                        dbp.MATKL = doc.DOCUMENTOP[i].MATKL_ID;
                         dbp.CANTIDAD = 1;
                         dbp.MONTO = doc.DOCUMENTOP[i].MONTO;
                         dbp.PORC_APOYO = doc.DOCUMENTOP[i].PORC_APOYO;
@@ -3617,8 +3633,12 @@ namespace TAT001.Controllers
                                 {
                                     relacionada_dis = "C";
                                 }
+                                if (docpl[j].MATKL==null)
+                                {
+                                    docpl[j].MATKL = "";
+                                }
                                 docP.MATKL = docpl[j].MATKL;
-                                docP.MATKL_ID = FnCommon.ObtenerMaterial(db, User.Identity.Name, docP.MATNR).MATKL_ID;
+                                docP.MATKL_ID = docpl[j].MATKL;
                                 docP.CANTIDAD = 1;
                                 docP.MONTO = docpl[j].MONTO;
                                 docP.PORC_APOYO = docpl[j].PORC_APOYO;
