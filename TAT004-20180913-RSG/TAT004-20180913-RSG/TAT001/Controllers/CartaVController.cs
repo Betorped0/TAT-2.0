@@ -2530,7 +2530,7 @@ namespace TAT001.Controllers
                 cv.mail = cs.MAIL;
                 cv.mail_x = Convert.ToBoolean(cs.MAILX);
                 cv.monto_x = true;
-                cv.monto = cs.MONTO.ToString();
+                cv.monto =  (cs.MONTO!= null? cs.MONTO.ToString():"");
                 cv.moneda = cs.MONEDA;
 
                 //B20180720P MGC Guardar Carta

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web.Mvc;
 using TAT001.Entities;
@@ -281,6 +282,70 @@ namespace TAT001.Common
                     new SelectListItem{Text="50",Value="50"},
                     new SelectListItem{Text="100",Value="100"}
             };
+        }
+
+        public static List<MATERIAL> ObtenerMateriales(TAT001Entities db,string prefix, string user_id)
+        {
+            string spras_id = ObtenerSprasId(db, user_id);
+            List<MATERIAL> materiales = new List<MATERIAL>();
+            if (prefix==null) {
+                materiales = db.Database.SqlQuery<MATERIAL>("CPS_LISTA_MATERIALES @SPRAS_ID",
+                new SqlParameter("@SPRAS_ID", spras_id)).ToList();
+            }
+            else
+            {
+                materiales = db.Database.SqlQuery<MATERIAL>("CPS_LISTA_MATERIALES @SPRAS_ID,@PREFIX",
+                new SqlParameter("@SPRAS_ID", spras_id),
+                new SqlParameter("@PREFIX",  prefix)).ToList();
+            } 
+            return materiales;
+        }
+        public static MATERIAL ObtenerMaterial(TAT001Entities db, string user_id, string material_id)
+        {
+            string spras_id = ObtenerSprasId(db, user_id);
+            MATERIAL material= db.MATERIALs.Where(x => x.ID == material_id).FirstOrDefault();
+
+            if (material.MATERIALTs.Any(x => x.SPRAS == spras_id))
+            {
+                MATERIALT mt = material.MATERIALTs.First(x => x.SPRAS == spras_id);
+                material.MAKTX = mt.MAKTX;
+                material.MAKTG = mt.MAKTG;
+            }
+            return material;
+
+
+        }
+
+        public static List<MATERIALGP> ObtenerMaterialGroups(TAT001Entities db)
+        {
+          return  db.MATERIALGPs.Where(a => a.ACTIVO).ToList();
+        }
+        public static MATERIALGP ObtenerMaterialGroup(TAT001Entities db,string materialgp_id)
+        {
+            return db.MATERIALGPs.Where(x => x.ID == materialgp_id).FirstOrDefault();
+        }
+        public static MATERIALGPT ObtenerTotalProducts(TAT001Entities db)
+        {
+            return db.MATERIALGPTs.Where(x => x.MATERIALGP_ID == "000" && x.SPRAS_ID == "EN").FirstOrDefault();
+        }
+
+        public static List<CLIENTE> ObtenerClientes(TAT001Entities db, string prefix, string usuario_id, string pais)
+        {
+            List<CLIENTE> clientes = db.Database.SqlQuery<CLIENTE>("CPS_LISTA_CLIENTES @USUARIO_ID,@PAIS,@PREFIX",
+            new SqlParameter("@USUARIO_ID", (usuario_id == null ? "" : usuario_id)),
+            new SqlParameter("@PAIS", (pais == null ? "" : pais)),
+            new SqlParameter("@PREFIX", (prefix==null?"":prefix))).ToList();
+            return clientes;
+        }
+
+        public static List<CONTACTOC> ObtenerContactos(TAT001Entities db, string prefix, string vkorg, string vtweg, string kunnr)
+        {
+            List<CONTACTOC> contactos = db.Database.SqlQuery<CONTACTOC>("CPS_LISTA_CONTACTOS @KUNNR,@VKORG,@VTWEG,@PREFIX",
+            new SqlParameter("@KUNNR", kunnr),
+            new SqlParameter("@VKORG", vkorg),
+            new SqlParameter("@VTWEG", vtweg),
+            new SqlParameter("@PREFIX", (prefix == null ? "" : prefix))).ToList();
+            return contactos;
         }
     }
 }
