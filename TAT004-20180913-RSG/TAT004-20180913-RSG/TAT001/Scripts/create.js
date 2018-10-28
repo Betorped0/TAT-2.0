@@ -308,7 +308,7 @@ $(document).ready(function () {
     });
 
     $('#addRowB').on('click', function () {
-        if ($("#catmat").val() == "") {
+        if ($("#catmat").val() == "" && $("#select_dis").val()=="C") {
             return;
         }
         var relacionada = "";

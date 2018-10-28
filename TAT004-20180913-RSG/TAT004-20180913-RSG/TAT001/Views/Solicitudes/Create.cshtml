@@ -337,7 +337,7 @@ $(document).ready(function () {
                                         change: function (e) {
                                                 var val = e.sender.value();
                                                 selectTsol(val);
-                                                soportes(val, '@Session["spras"].ToString()');
+                                                soportes(val, '@ViewBag.spras_id');
                                                 M.Toast.dismissAll();
                                             }
                                         });

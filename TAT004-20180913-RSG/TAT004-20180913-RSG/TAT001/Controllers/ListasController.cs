@@ -432,11 +432,10 @@ namespace TAT001.Controllers
             }
             List<MATERIALGPT> jd = new List<MATERIALGPT>();
 
-            //Obtener los materiales
-            IEnumerable<MATERIAL> materiales = FnCommon.ObtenerMateriales(db,null,User.Identity.Name);
+           
 
             //Validar si hay materiales
-            if (materiales.Any())
+            if (db.MATERIALs.Any(x => x.MATERIALGP_ID != null && x.ACTIVO.Value))
             {
 
                 CLIENTE cli = new CLIENTE();
@@ -551,12 +550,9 @@ namespace TAT001.Controllers
 
             List<DOCUMENTOM_MOD> jd = new List<DOCUMENTOM_MOD>();
 
-            //Obtener los materiales
-            IEnumerable<MATERIAL> materiales = FnCommon.ObtenerMateriales(db, null,User.Identity.Name);
-            
 
             //Validar si hay materiales
-            if (materiales != null)
+            if (db.MATERIALs.Any(x => x.MATERIALGP_ID != null && x.ACTIVO.Value))
             {
 
                 CLIENTE cli = new CLIENTE();
@@ -889,7 +885,7 @@ namespace TAT001.Controllers
         [HttpPost]
         public JsonResult materiales(string Prefix, string vkorg, string vtweg)
         {
-            List<MATERIAL> materiales = FnCommon.ObtenerMateriales(db, Prefix, User.Identity.Name);
+            List<MATERIAL> materiales = FnCommon.ObtenerMateriales(db, Prefix, vkorg, vtweg, User.Identity.Name);
             
             JsonResult cc = new JsonResult()
             {

@@ -284,20 +284,16 @@ namespace TAT001.Common
             };
         }
 
-        public static List<MATERIAL> ObtenerMateriales(TAT001Entities db,string prefix, string user_id)
+        public static List<MATERIAL> ObtenerMateriales(TAT001Entities db,string prefix, string vkorg, string vtweg, string user_id)
         {
             string spras_id = ObtenerSprasId(db, user_id);
             List<MATERIAL> materiales = new List<MATERIAL>();
-            if (prefix==null) {
-                materiales = db.Database.SqlQuery<MATERIAL>("CPS_LISTA_MATERIALES @SPRAS_ID",
-                new SqlParameter("@SPRAS_ID", spras_id)).ToList();
-            }
-            else
-            {
-                materiales = db.Database.SqlQuery<MATERIAL>("CPS_LISTA_MATERIALES @SPRAS_ID,@PREFIX",
+                materiales = db.Database.SqlQuery<MATERIAL>("CPS_LISTA_MATERIALES @SPRAS_ID,@VKORG,@VTWEG,@PREFIX",
                 new SqlParameter("@SPRAS_ID", spras_id),
-                new SqlParameter("@PREFIX",  prefix)).ToList();
-            } 
+                new SqlParameter("@VKORG", vkorg),
+                new SqlParameter("@VTWEG", vtweg),
+                new SqlParameter("@PREFIX",  (prefix==null?"":prefix))).ToList();
+            
             return materiales;
         }
         public static MATERIAL ObtenerMaterial(TAT001Entities db, string user_id, string material_id)
