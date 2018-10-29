@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
+using TAT001.Common;
 
 namespace TAT001.Services
 {
@@ -15,16 +16,13 @@ namespace TAT001.Services
             string ex = "";
 
             // Specify the path to save the uploaded file to.
-            //string savePath = path + documento + "\\";
             string savePath = path + ejercicio + "\\" + documento + "\\";//RSG 01.08.2018
 
             // Create the path and file name to check for duplicates.
             string pathToCheck = savePath;
-
+            Log.Info(pathToCheck);
             try
             {
-                ////using (Impersonation.LogonUser("192.168.1.77", "EQUIPO", "0906", LogonType.NewCredentials))
-                ////{
                 if (!System.IO.File.Exists(pathToCheck))
                 {
                     //No existe, se necesita crear
@@ -33,15 +31,10 @@ namespace TAT001.Services
                     dir.Create();
 
                 }
-                ////}
-
-                //file.SaveAs(Server.MapPath(savePath)); //Guardarlo el cualquier parte dentro del proyecto <add key="URL_SAVE" value="\Archivos\" />
-                //System.IO.File.Create(savePath,100,FileOptions.DeleteOnClose, )
-                //System.IO.File.Copy(copyFrom, savePath);
-                //f.CopyTo(savePath,true);
             }
             catch (Exception e)
             {
+                Log.ErrorLogApp(e,"Files", "createDir");
                 ex = "No se puede crear el directorio para guardar los archivos";
             }
 

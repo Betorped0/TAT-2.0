@@ -29,7 +29,7 @@
                 <div class="row">
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     <div class="input-field col s12">
-                            @Html.PasswordFor(model => model.pass, new { @id = "pass", required = true })
+                            @Html.PasswordFor(model => model.pass, new { @id = "pass"@*, required = true*@ })
                             @Html.LabelFor(model => model.pass, htmlAttributes: new { @class = "control-label col-md-2", id = "lbl_pass" })
                             @Html.ValidationMessageFor(model => model.pass, "", new { @class = "text-danger" })
                         </div>
