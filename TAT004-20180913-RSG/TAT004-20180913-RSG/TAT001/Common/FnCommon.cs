@@ -233,7 +233,7 @@ namespace TAT001.Common
                     x.ACTIVO == true &&
                     x.SOCIEDAD_ID == sociedad_id && 
                     x.TSOL_ID == tsol_id && 
-                    x.PERIODO==periodo_id &&
+                    x.PERIODO == periodo_id &&
                     x.EJERCICIO==ejercicio &&
                     (fechaActual>= DbFunctions.CreateDateTime(x.PRE_FROMF.Year, x.PRE_FROMF.Month, x.PRE_FROMF.Day, x.PRE_FROMH.Hours, x.PRE_FROMH.Minutes, x.PRE_FROMH.Seconds) && 
                      fechaActual<= DbFunctions.CreateDateTime(x.PRE_TOF.Year, x.PRE_TOF.Month, x.PRE_TOF.Day, x.PRE_TOH.Hours, x.PRE_TOH.Minutes, x.PRE_TOH.Seconds)));
@@ -249,16 +249,38 @@ namespace TAT001.Common
                           (fechaActual >= DbFunctions.CreateDateTime(x.EX_FROMF.Year, x.EX_FROMF.Month, x.EX_FROMF.Day, x.EX_FROMH.Hours, x.EX_FROMH.Minutes,x.EX_FROMH.Seconds) &&
                           fechaActual <= DbFunctions.CreateDateTime(x.EX_TOF.Year, x.EX_TOF.Month, x.EX_TOF.Day, x.EX_TOH.Hours, x.EX_TOH.Minutes, x.EX_TOH.Seconds)));
                     }
+                    if (!esPeriodoAbierto)
+                    {
+                        esPeriodoAbierto = db.CALENDARIO_AC.Any(x =>
+                       x.ACTIVO == true &&
+                       x.SOCIEDAD_ID == sociedad_id &&
+                       x.TSOL_ID == tsol_id &&
+                       x.PERIODO == periodo_id - 1 &&
+                       x.EJERCICIO == ejercicio &&
+                       (fechaActual >= DbFunctions.CreateDateTime(x.PRE_FROMF.Year, x.PRE_FROMF.Month, x.PRE_FROMF.Day, x.PRE_FROMH.Hours, x.PRE_FROMH.Minutes, x.PRE_FROMH.Seconds) &&
+                        fechaActual <= DbFunctions.CreateDateTime(x.PRE_TOF.Year, x.PRE_TOF.Month, x.PRE_TOF.Day, x.PRE_TOH.Hours, x.PRE_TOH.Minutes, x.PRE_TOH.Seconds)));
+
+                    }
                     break;
                 case "CI":
                     esPeriodoAbierto = db.CALENDARIO_AC.Any(x=>
                         x.ACTIVO == true &&
                         x.SOCIEDAD_ID == sociedad_id &&
                         x.TSOL_ID == tsol_id &&
-                        x.PERIODO == periodo_id &&
+                        x.PERIODO == periodo_id  &&
                         x.EJERCICIO == ejercicio &&
                         (fechaActual >= DbFunctions.CreateDateTime(x.CIE_FROMF.Year, x.CIE_FROMF.Month, x.CIE_FROMF.Day, x.CIE_FROMH.Hours, x.CIE_FROMH.Minutes, x.CIE_FROMH.Seconds) && 
                         fechaActual <= DbFunctions.CreateDateTime(x.CIE_TOF.Year, x.CIE_TOF.Month, x.CIE_TOF.Day, x.CIE_TOH.Hours, x.CIE_TOH.Minutes, x.CIE_TOH.Seconds)));
+                    if (!esPeriodoAbierto) {
+                        esPeriodoAbierto = db.CALENDARIO_AC.Any(x =>
+                                               x.ACTIVO == true &&
+                                               x.SOCIEDAD_ID == sociedad_id &&
+                                               x.TSOL_ID == tsol_id &&
+                                                x.PERIODO == periodo_id - 1 &&
+                                               x.EJERCICIO == ejercicio &&
+                                               (fechaActual >= DbFunctions.CreateDateTime(x.CIE_FROMF.Year, x.CIE_FROMF.Month, x.CIE_FROMF.Day, x.CIE_FROMH.Hours, x.CIE_FROMH.Minutes, x.CIE_FROMH.Seconds) &&
+                                               fechaActual <= DbFunctions.CreateDateTime(x.CIE_TOF.Year, x.CIE_TOF.Month, x.CIE_TOF.Day, x.CIE_TOH.Hours, x.CIE_TOH.Minutes, x.CIE_TOH.Seconds)));
+                    }
                     break;
                 default:
                     break;
