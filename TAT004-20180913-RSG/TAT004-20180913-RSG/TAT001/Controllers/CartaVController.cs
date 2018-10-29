@@ -626,7 +626,6 @@ namespace TAT001.Controllers
         //public ActionResult Create([Bind(Include = "num_doc, listaCuerpo, DOCUMENTOP")] CartaV v)
         public ActionResult Create(CartaV v, string monto_enviar, string guardar_param)
         {
-            //v.monto = monto_enviar; //B20180720P MGC //B20180801 MGC Formato
             int pos = 0;//B20180720P MGC Guardar Carta
 
             //B20180726 MGC 2018.07.26
@@ -737,7 +736,6 @@ namespace TAT001.Controllers
             }
 
             //B20180801 MGC Formato
-            //v.monto = monto_enviar;
             decimal montod = 0;
             try
             {
@@ -751,16 +749,12 @@ namespace TAT001.Controllers
             v.monto = format.toShow(montod, decimales);
 
 
-            //CartaFEsqueleto cfe = new CartaFEsqueleto();//B20180720P MGC Guardar Carta
-            //TEXTOCARTAF f = new TEXTOCARTAF();//B20180720P MGC Guardar Carta
-            string u = User.Identity.Name;
-            //string recibeRuta = ""; //B20180720P MGC Guardar Carta
+             string u = User.Identity.Name;
             using (TAT001Entities db = new TAT001Entities())
             {
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
                 var cartas = db.CARTAs.Where(a => a.NUM_DOC.Equals(ca.NUM_DOC)).ToList();
-                //int pos = 0;//B20180720P MGC Guardar Carta
-                if (cartas.Count > 0)
+                 if (cartas.Count > 0)
                     pos = cartas.OrderByDescending(a => a.POS).First().POS;
 
                 ca.POS = pos + 1;
@@ -771,22 +765,10 @@ namespace TAT001.Controllers
                     db.SaveChanges();
                 }
             }
-            //bool aprob = false;//B20180720P MGC Guardar Carta
-            //B20180720P MGC Guardar Carta
-            //using (TAT001Entities db = new TAT001Entities())
-            //{
-            //    DOCUMENTO d = db.DOCUMENTOes.Find(c.num_doc);
-            //    aprob = (d.ESTATUS_WF.Equals("A"));
-
-            //    cfe.crearPDF(c, f, aprob);
-            //    recibeRuta = Convert.ToString(Session["rutaCompletaf"]);
-            //    return RedirectToAction("Details", new { ruta = recibeRuta });
-            //}
-
+           
             using (TAT001Entities db = new TAT001Entities())
             {
                 d = db.DOCUMENTOes.Find(v.num_doc);
-                //string u = User.Identity.Name; //B20180720P MGC Guardar Carta
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
 
                 List<string> encabezadoFech = new List<string>();
@@ -796,8 +778,7 @@ namespace TAT001.Controllers
 
                 int contadorTabla = 0;
                 //B20180726 MGC 2018.07.26
-                //DOCUMENTO d = db.DOCUMENTOes.Find(v.num_doc);
-
+               
 
                 /////////////////////////////////////////////DATOS PARA LA TABLA 1 MATERIALES EN EL PDF///////////////////////////////////////
 
@@ -807,58 +788,12 @@ namespace TAT001.Controllers
                 if (varligada != true)
                 {
                     var con = db.DOCUMENTOPs.Select(x => new { x.NUM_DOC, x.VIGENCIA_DE, x.VIGENCIA_AL }).Where(a => a.NUM_DOC.Equals(v.num_doc)).GroupBy(f => new { f.VIGENCIA_DE, f.VIGENCIA_AL }).ToList();
-                    //B20180710 MGC 2018.07.17 Modificación de monto
-                    //v.monto = monto_enviar; //B20180720P MGC
-                    //B20180710 MGC 2018.07.17 Modificación 9 y 10 dependiendo del campo de factura en tsol............
-                    //bool fact = false;
-                    //try
-                    //{
-                    //    fact = db.TSOLs.Where(ts => ts.ID == d.TSOL_ID).FirstOrDefault().FACTURA;
-                    //}
-                    //catch (Exception)
-                    //{
-
-                    //}
-                    ////B20180710 MGC 2018.07.17 Modificación 9 y 10 dependiendo del campo de factura en tsol..............
-
                     foreach (var item in con)
                     {
                         encabezadoFech.Add(item.Key.VIGENCIA_DE.ToString() + item.Key.VIGENCIA_AL.ToString());
                     }
 
-                    //B20180710 MGC 2018.07.19 Provisional obtener la siguiente posición para carta......................
-                    //B20180720P MGC Guardar Carta.......................................................................
-                    //int pos = 0; //B20180720P MGC Guardar Carta
-
-                    //try
-                    //{
-                    //    pos = db.CARTAs.Where(ca => ca.NUM_DOC == v.num_doc).Max(ca => ca.POS);
-                    //    pos++;
-                    //}
-                    //catch (Exception)
-                    //{
-
-                    //}
-
-                    ////Guardar carta
-                    //if (guardar_param == "guardar_param")
-                    //{
-                    //    CARTA car = new CARTA();
-                    //    car.NUM_DOC = v.num_doc;
-                    //    car.POS = pos;
-
-                    //    try
-                    //    {
-                    //        db.CARTAs.Add(car);
-                    //        db.SaveChanges();
-                    //    }
-                    //    catch (Exception e)
-                    //    {
-
-                    //    }
-                    //}
-                    //B20180720P MGC Guardar Carta......................................................................
-
+                   
                     //B20180710 MGC 2018.07.19 Provisional obtener la siguiente posición para carta......................
                     int indexp = 1; //B20180710 MGC 2018.07.17
                     for (int i = 0; i < encabezadoFech.Count; i++)
@@ -896,12 +831,7 @@ namespace TAT001.Controllers
                         {
                             foreach (var item2 in con2)
                             {
-                                //B20180710 MGC 2018.07.17 Pasar los documentos almacenados pero con los nuevos valores editados
-                                //B20180710 MGC 2018.07.10 Modificaciones para editar los campos de distribución se agrego los objetos
-                                //armadoCuerpoTab.Add(item2.MATNR.TrimStart('0'));
-                                //armadoCuerpoTab.Add(item2.MATKL);
-                                //armadoCuerpoTab.Add(item2.MAKTX);                        
-                                DOCUMENTOP_MOD docmod = new DOCUMENTOP_MOD();
+                                    DOCUMENTOP_MOD docmod = new DOCUMENTOP_MOD();
 
                                 try
                                 {
@@ -938,21 +868,7 @@ namespace TAT001.Controllers
                                             //armadoCuerpoTab.Add(Math.Round(docmod.PRECIO_SUG, 2).ToString());//B20180730 MGC 2018.07.30 Formatos
                                             armadoCuerpoTab.Add(format.toShow(Math.Round(docmod.PRECIO_SUG, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
                                         }
-                                        ////B20180710 MGC 2018.07.12 Apoyo es real o es estimado
-                                        ////fact = true es real
-                                        ////Apoyo
-                                        //if (fact)
-                                        //{
-                                        //    if (v.apoyoRea_x == true) { armadoCuerpoTab.Add(Math.Round(Convert.ToDouble(docmod.APOYO_REAL), 2).ToString()); }
-                                        //}
-                                        //else
-                                        //{
-                                        //    if (v.apoyoEst_x == true) { armadoCuerpoTab.Add(Math.Round(Convert.ToDouble(docmod.APOYO_EST), 2).ToString()); }
-                                        //}
-                                        //Volumen
-                                        //Volumen
-                                        //B20180726 MGC 2018.07.26
-                                        if (v.volumen_x == true)
+                                               if (v.volumen_x == true)
                                         {
                                             if (fact)
                                             {
@@ -996,11 +912,6 @@ namespace TAT001.Controllers
                                             carp.MATNR = item2.MATNR;
                                             carp.MATKL = item2.DESCRIPCION;
                                             carp.CANTIDAD = 1;
-                                            //B20180726 MGC 2018.07.26
-                                            //if (v.costoun_x == true) { carp.MONTO = docmod.MONTO; }
-                                            //if (v.apoyo_x == true) { carp.PORC_APOYO = docmod.PORC_APOYO; }
-                                            //if (v.apoyop_x == true) { carp.MONTO_APOYO = docmod.MONTO_APOYO; }
-                                            //if (v.precio_x == true) { carp.PRECIO_SUG = docmod.PRECIO_SUG; }
                                             carp.MONTO = docmod.MONTO;
                                             carp.PORC_APOYO = docmod.PORC_APOYO;
                                             carp.MONTO_APOYO = docmod.MONTO_APOYO;
@@ -1067,24 +978,10 @@ namespace TAT001.Controllers
                         else
                         {
                             var con3 = db.DOCUMENTOPs.Where(x => x.NUM_DOC.Equals(v.num_doc) & x.VIGENCIA_DE == a1 & x.VIGENCIA_AL == a2).ToList();
-                            //.Join(db.MATERIALGPs, x => x.MATKL, y => y.ID, (x, y) => new { x.NUM_DOC, x.MATNR, x.MATKL, y.ID, x.MONTO, x.PORC_APOYO, y.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(d.CLIENTE.SPRAS)).FirstOrDefault().TXT50, x.MONTO_APOYO, resta = (x.MONTO - x.MONTO_APOYO), x.PRECIO_SUG, x.APOYO_EST, x.APOYO_REAL, x.VIGENCIA_DE, x.VIGENCIA_AL }) //B20180710 MGC 2018.07.19
-                            //.ToList();
-
+                          
                             foreach (var item2 in con3)
                             {
-                                //B20180710 MGC 2018.07.17 Pasar los documentos almacenados pero con los nuevos valores editados
-                                //B20180710 MGC 2018.07.10 Modificaciones para editar los campos de distribución se agrego los objetos
-                                //armadoCuerpoTab.Add("");
-                                //armadoCuerpoTab.Add(item2.MATKL);
-                                //armadoCuerpoTab.Add(item2.TXT50);
-                                //if (v.costoun_x == true) { armadoCuerpoTab.Add(Math.Round(item2.MONTO, 2).ToString()); }
-                                //if (v.apoyo_x == true) { armadoCuerpoTab.Add(Math.Round(item2.PORC_APOYO, 2).ToString()); }
-                                //if (v.apoyop_x == true) { armadoCuerpoTab.Add(Math.Round(item2.MONTO_APOYO, 2).ToString()); }
-                                //if (v.costoap_x == true) { armadoCuerpoTab.Add(Math.Round(item2.resta, 2).ToString()); }
-                                //if (v.precio_x == true) { armadoCuerpoTab.Add(Math.Round(item2.PRECIO_SUG, 2).ToString()); }
-                                //if (v.apoyoEst_x == true) { armadoCuerpoTab.Add(Math.Round(Convert.ToDouble(item2.APOYO_EST), 2).ToString()); }
-                                //if (v.apoyoRea_x == true) { armadoCuerpoTab.Add(Math.Round(Convert.ToDouble(item2.APOYO_REAL), 2).ToString()); }
-                                DOCUMENTOP_MOD docmod = new DOCUMENTOP_MOD();
+                                     DOCUMENTOP_MOD docmod = new DOCUMENTOP_MOD();
 
                                 try
                                 {
@@ -1129,17 +1026,6 @@ namespace TAT001.Controllers
                                             //armadoCuerpoTab.Add(Math.Round(docmod.PRECIO_SUG, 2).ToString());//B20180730 MGC 2018.07.30 Formatos
                                             armadoCuerpoTab.Add(format.toShow(Math.Round(docmod.PRECIO_SUG, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
                                         }
-                                        //B20180710 MGC 2018.07.12 Apoyo es real o es estimado
-                                        //fact = true es real
-                                        //Apoyo
-                                        //if (fact)
-                                        //{
-                                        //    if (v.apoyoRea_x == true) { armadoCuerpoTab.Add(Math.Round(Convert.ToDouble(docmod.APOYO_REAL), 2).ToString()); }
-                                        //}
-                                        //else
-                                        //{
-                                        //    if (v.apoyoEst_x == true) { armadoCuerpoTab.Add(Math.Round(Convert.ToDouble(docmod.APOYO_EST), 2).ToString()); }
-                                        //}
 
                                         //Volumen
                                         //B20180726 MGC 2018.07.26
@@ -1187,11 +1073,6 @@ namespace TAT001.Controllers
                                             carp.MATNR = "";
                                             carp.MATKL = item2.MATKL;
                                             carp.CANTIDAD = 1;
-                                            //B20180726 MGC 2018.07.26
-                                            //if (v.costoun_x == true) { carp.MONTO = docmod.MONTO; }
-                                            //if (v.apoyo_x == true) { carp.PORC_APOYO = docmod.PORC_APOYO; }
-                                            //if (v.apoyop_x == true) { carp.MONTO_APOYO = docmod.MONTO_APOYO; }
-                                            //if (v.precio_x == true) { carp.PRECIO_SUG = docmod.PRECIO_SUG; }
                                             carp.MONTO = docmod.MONTO;
                                             carp.PORC_APOYO = docmod.PORC_APOYO;
                                             carp.MONTO_APOYO = docmod.MONTO_APOYO;
@@ -2530,7 +2411,7 @@ namespace TAT001.Controllers
                 cv.mail = cs.MAIL;
                 cv.mail_x = Convert.ToBoolean(cs.MAILX);
                 cv.monto_x = true;
-                cv.monto = cs.MONTO.ToString();
+                cv.monto =  (cs.MONTO!= null? cs.MONTO.ToString():"");
                 cv.moneda = cs.MONEDA;
 
                 //B20180720P MGC Guardar Carta

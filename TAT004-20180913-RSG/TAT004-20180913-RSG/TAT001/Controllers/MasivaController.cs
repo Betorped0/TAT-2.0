@@ -380,7 +380,7 @@ namespace TAT001.Controllers
                         //string vigencia_al = ds4.Tables[0].Rows[i][3].ToString().Trim();
                         string matnr = ds4.Tables[0].Rows[i][4].ToString().Trim();
                         if (matnr.Length < 18) { matnr = cad.completaMaterial(matnr); }
-                        string  materialSinCero = matnr.TrimStart('0');
+                        string materialSinCero = matnr.TrimStart('0');
                         string matkl = ds4.Tables[0].Rows[i][5].ToString().Trim();
                         string descripcion = ds4.Tables[0].Rows[i][6].ToString().Trim();
                         string monto = ds4.Tables[0].Rows[i][7].ToString().Trim();
@@ -426,7 +426,7 @@ namespace TAT001.Controllers
                             else
                             {
                                 doc.DESCRIPCION = "";
-                            } 
+                            }
 
                             if (IsNumeric(monto) == false) { monto = "0"; }
                             if (IsNumeric(porc_apoyo) == false) { porc_apoyo = "0"; } else { porc_apoyo = (Convert.ToDecimal(porc_apoyo) * 100).ToString(); }
@@ -1504,7 +1504,7 @@ namespace TAT001.Controllers
                                 regresaRowH2.Add("red white-text rojo");
                             }
                         }
-                        
+
                     }
 
                     regresaRowH2.Add("");//DEBAJO ESTA LA VALIDACION DEL PROOVEDOR

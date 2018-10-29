@@ -485,7 +485,7 @@ function dismiss(classe) {
     }
 }
 
-$('body').on('keydown.autocomplete', '.input_cli', function () {
+$('body').on('keydown.autocomplete', '.input_cli1', function () {
 
     auto(this).autocomplete({
         source: function (request, response) {
@@ -494,6 +494,53 @@ $('body').on('keydown.autocomplete', '.input_cli', function () {
                 url: 'Cliente',
                 dataType: "json",
                 data: { "Prefix": request.term },
+                success: function (data) {
+                    response(auto.map(data, function (item) {
+                        return { label: item.KUNNR + " | " + item.NAME1, value: item.KUNNR };
+                    }))
+                }
+            })
+        },
+
+        messages: {
+            noResults: '',
+            results: function (resultsCount) { }
+        },
+
+        change: function (e, ui) {
+            if (!(ui.item)) {
+                e.target.value = "";
+            }
+        },
+
+        select: function (event, ui) {
+        }
+    });
+});
+
+$('body').on('keydown.autocomplete', '.input_cli', function () {
+    var table = $("#table").DataTable();
+    var tr = $(this).closest('tr'); //Obtener el row
+    var row_index = $(this).parent().parent().index();
+    var col_index = $(this).parent().index();
+    var col_index2 = col_index + 1;
+
+    for (var d = (table.rows().data().length) - 1; d > -1; d--) {
+        var row = table.row(d).node();
+        var bukrs = $(row).children().eq(col_index2).children().val();
+        if (bukrs != "") {
+            break;
+        }
+
+    }
+
+    auto(this).autocomplete({
+        source: function (request, response) {
+            auto.ajax({
+                type: "POST",
+                url: 'Cliente1',
+                dataType: "json",
+                data: { "Prefix": request.term, "BUKRS": bukrs },
                 success: function (data) {
                     response(auto.map(data, function (item) {
                         return { label: item.KUNNR + " | " + item.NAME1, value: item.KUNNR };

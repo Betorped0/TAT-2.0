@@ -1006,6 +1006,7 @@
     <Content Include="images\flags\1x1\as.svg" />
     <Content Include="images\flags\1x1\at.png" />
     <Content Include="images\flags\1x1\be.png" />
+    <Content Include="images\flags\1x1\bo.png" />
     <Content Include="images\flags\1x1\br.png" />
     <Content Include="images\flags\1x1\bs.png" />
     <Content Include="images\flags\1x1\bz.png" />
@@ -1356,6 +1357,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\Masiva\create.js" />
     <Content Include="Scripts\Masiva\formatosMasiva.js" />
+    <Content Include="Scripts\Masiva\validaTabs.js" />
     <Content Include="Scripts\moment-with-locales.js" />
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.js" />
