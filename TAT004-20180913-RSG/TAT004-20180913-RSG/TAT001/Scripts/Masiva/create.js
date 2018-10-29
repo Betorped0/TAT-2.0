@@ -2417,7 +2417,7 @@ function clearErrors() {
     var tablaH2 = $('#tab_test2').DataTable();
     var tablaH3 = $('#tab_test3').DataTable();
     var tablaH4 = $('#tab_test4').DataTable();
-    var tablaH5 = $('#tab_test5').DataTable();
+    //var tablaH5 = $('#tab_test5').DataTable();//DELETE RSG 29.10.2018
 
     var tabla1 = [], tabla2 = [], tabla3 = [], tabla4 = [], tabla5 = [], archivos = [];
 
@@ -2453,13 +2453,13 @@ function clearErrors() {
         tabla4[d] = num_docH4 + statusH4;
     }
 
-    for (var e = 0; e < tablaH5.rows().data().length; e++) {
-        var rowH5 = tablaH5.row(e).node();
-        var num_docH5 = $(rowH5).children().eq(1).children().val();
-        var statusH5 = $(rowH5).children().children().hasClass('rojo');
+    //for (var e = 0; e < tablaH5.rows().data().length; e++) {//DELETE RSG 29.10.2018
+    //    var rowH5 = tablaH5.row(e).node();
+    //    var num_docH5 = $(rowH5).children().eq(1).children().val();
+    //    var statusH5 = $(rowH5).children().children().hasClass('rojo');
 
-        tabla5[e] = num_docH5 + statusH5;
-    }
+    //    tabla5[e] = num_docH5 + statusH5;
+    //}
 
     var banderaH1, banderaH2, banderaH3, banderaH4, banderaH5 = false;
 
@@ -2467,6 +2467,15 @@ function clearErrors() {
         var rowH11 = tablaH1.row(aa).node();
         var num_docH11 = $(rowH11).children().eq(1).children().val();
         clearErrorsN(num_docH11);//ADD RSG 29.10.2018
+
+        var tablaH5 = $('#tab_test5').DataTable();                      //ADD RSG 29.10.2018
+        for (var e = 0; e < tablaH5.rows().data().length; e++) {        //ADD RSG 29.10.2018
+            var rowH5 = tablaH5.row(e).node();
+            var num_docH5 = $(rowH5).children().eq(1).children().val();
+            var statusH5 = $(rowH5).children().children().hasClass('rojo');
+
+            tabla5[e] = num_docH5 + statusH5;
+        }
 
         //SI TIENE TRUE TIENE ERROR
         if (jQuery.inArray(num_docH11 + true, tabla1) != -1) {
@@ -2554,6 +2563,7 @@ function clearErrors() {
 
         //console.log(banderaH1, banderaH2, banderaH3, banderaH4, banderaH5, num_docH11);
         //console.log(validaErrores(banderaH1, banderaH2, banderaH3, banderaH4, banderaH5, num_docH11));
+        validaErrores(banderaH1, banderaH2, banderaH3, banderaH4, banderaH5, num_docH11);
     }
 }
 
