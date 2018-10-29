@@ -28,7 +28,6 @@ $("#miMas").change(function () {
             //var instance = M.Select.init(elem, []);
             document.getElementById("loader").style.display = "none";
             clearErrors();
-            console.log(kk);
         } else {
             M.toast({ html: 'Tipo de archivo incorrecto: ' + filename });
         }
@@ -2397,7 +2396,7 @@ function erroresH1() {
         }
     }
 
-    console.log(tabla1);
+    ////console.log(tabla1);
     return tabla1;
 }
 
@@ -2550,8 +2549,8 @@ function clearErrors() {
             }
         }
 
-        console.log(banderaH1, banderaH2, banderaH3, banderaH4, banderaH5, num_docH11);
-        console.log(validaErrores(banderaH1, banderaH2, banderaH3, banderaH4, banderaH5, num_docH11));
+        //console.log(banderaH1, banderaH2, banderaH3, banderaH4, banderaH5, num_docH11);
+        //console.log(validaErrores(banderaH1, banderaH2, banderaH3, banderaH4, banderaH5, num_docH11));
     }
 }
 
@@ -2613,7 +2612,7 @@ function validaErrores(h1, h2, h3, h4, h5, num_doc) {
         //    var esRequerido = $(rowH5).children().eq(3).children().hasClass("isrequired");
 
         //    if (num_docH5 == num_doc & !esRequerido) {
-        //        console.log($(rowH5).children().eq(0).children().attr("class"));
+        //        //console.log($(rowH5).children().eq(0).children().attr("class"));
         //        $(rowH5).children().eq(0).children().removeClass("red");
         //        $(rowH5).children().eq(0).children().addClass("green");
         //        $(rowH5).children().eq(0).children().text("done");
@@ -2672,7 +2671,7 @@ function validaErrores(h1, h2, h3, h4, h5, num_doc) {
         //    var esRequerido2 = $(rowH55).children().eq(3).children().hasClass("isrequired");
 
         //    if (num_docH55 == num_doc & esRequerido2) {
-        //        console.log($(rowH55).children().eq(0).children().attr("class"));
+        //        //console.log($(rowH55).children().eq(0).children().attr("class"));
         //        $(rowH55).children().eq(0).children().removeClass("green");
         //        $(rowH55).children().eq(0).children().addClass("red");
         //        $(rowH55).children().eq(0).children().text("close");
@@ -2834,7 +2833,7 @@ function guardaDatos() {
             var err = "Error " + " " + status + " " + p3 + " " + p4;
             if (xhr.responseText && xhr.responseText[0] == "{")
                 err = JSON.parse(xhr.responseText).Message;
-            console.log(err);
+            //console.log(err);
         }
     });
 
@@ -2928,7 +2927,7 @@ function cloneTables() {
     $('#tabclon1hd').append("<tr id='titles1d'></tr>");
 
     $('#tab_test1 > thead > tr > th').each(function () {
-        if ($(this).text() != "LABEL") {
+        if ($(this).text() != "LABEL" && $(this).text() != "ESTATUS") {
             $('#titles1d').append("<th>" + $(this).text() + "</th>");
         } else {
         }
@@ -2939,8 +2938,8 @@ function cloneTables() {
         var rowH1c = tablaH1c.row(aa).node();
         $('#tabclon1bd').append("<tr id='trd" + aa + "'></tr>");
         $(rowH1c).children().each(function (td) {
-            if (td != 18 && td != 19) {
-                $("#trd" + aa).append("<td>" + $(this).find('span:first').text() + "</td>");
+            if (td != 18 && td != 19 && td != 0) {
+                $("#trd" + aa).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
             }
         });
     }
@@ -2950,18 +2949,20 @@ function cloneTables() {
     $('#tabclon2h').append("<tr id='titles2'></tr>");
 
     $('#tab_test2 > thead > tr > th').each(function () {
-        if ($(this).text() != "LABEL") {
+        if ($(this).text() != "LABEL" && $(this).text() != "ESTATUS") {
             $('#titles2').append("<th>" + $(this).text() + "</th>");
         } else {
         }
 
     });
-    $('#tabclon2bd').append("<tr><td colspan='9'></td></tr>");
+    $('#tabclon2b').append("<tr><td colspan='9'></td></tr>");
     for (var bb = 0; bb < tablaH2c.rows().data().length; bb++) {
         var rowH2c = tablaH2c.row(bb).node();
         $('#tabclon2b').append("<tr id='tr2" + bb + "'></tr>");
-        $(rowH2c).children().each(function (td) {
-            $("#tr2" + bb).append("<td>" + $(this).find('span:first').text() + "</td>");
+        $(rowH2c).children().each(function (td2) {
+            if (td2 != 0) {
+                $("#tr2" + bb).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
+            }
         });
     }
     ////TAB3////
@@ -2969,18 +2970,20 @@ function cloneTables() {
     $('#tabclon3h').append("<tr id='titles3'></tr>");
 
     $('#tab_test3 > thead > tr > th').each(function () {
-        if ($(this).text() != "LABEL") {
+        if ($(this).text() != "LABEL" && $(this).text() != "ESTATUS") {
             $('#titles3').append("<th>" + $(this).text() + "</th>");
         } else {
         }
 
     });
-    $('#tabclon3bd').append("<tr><td colspan='8'></td></tr>");
+    $('#tabclon3b').append("<tr><td colspan='8'></td></tr>");
     for (var cc = 0; cc < tablaH3c.rows().data().length; cc++) {
         var rowH3c = tablaH3c.row(cc).node();
         $('#tabclon3b').append("<tr id='tr3" + cc + "'></tr>");
-        $(rowH3c).children().each(function (td) {
-            $("#tr3" + cc).append("<td>" + $(this).find('span:first').text() + "</td>");
+        $(rowH3c).children().each(function (td3) {
+            if (td3 != 0) {
+                $("#tr3" + cc).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
+            }
         });
     }
     ////TAB4////
@@ -2988,18 +2991,20 @@ function cloneTables() {
     $('#tabclon4h').append("<tr id='titles4'></tr>");
 
     $('#tab_test4 > thead > tr > th').each(function () {
-        if ($(this).text() != "LABEL") {
+        if ($(this).text() != "LABEL" && $(this).text() != "ESTATUS") {
             $('#titles4').append("<th>" + $(this).text() + "</th>");
         } else {
         }
 
     });
-    $('#tabclon4bd').append("<tr><td colspan='14'></td></tr>");
+    $('#tabclon4b').append("<tr><td colspan='14'></td></tr>");
     for (var dd = 0; dd < tablaH4c.rows().data().length; dd++) {
         var rowH4c = tablaH4c.row(dd).node();
         $('#tabclon4b').append("<tr id='tr4" + dd + "'></tr>");
-        $(rowH4c).children().each(function (td) {
-            $("#tr4" + dd).append("<td>" + $(this).find('span:first').text() + "</td>");
+        $(rowH4c).children().each(function (td4) {
+            if (td4 != 0) {
+                $("#tr4" + dd).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
+            }
         });
     }
 }
