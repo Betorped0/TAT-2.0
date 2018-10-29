@@ -28,6 +28,11 @@
                     @Html.EditorFor(model => model.DESCRIPCION, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
                     @Html.ValidationMessageFor(model => model.DESCRIPCION, "", new { @class = "text-danger" })
                 </div>
+                <div class="input-field col s12">
+                    @Html.LabelFor(model => model.GALL_ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblGall" })
+                    @Html.EditorFor(model => model.GALL_ID, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                    @Html.ValidationMessageFor(model => model.GALL_ID, "", new { @class = "text-danger" })
+                </div>
             </div>
         </div>
     </div>
@@ -45,13 +50,13 @@
                 {
                     <div class=" input-field col s12 pr1">
                         @Html.Editor("Editor", null, "txval", new { htmlAttributes = new { @readonly = "readonly" } })
-                        <label for="Editor">@item.DESCRIPCION</label>
+                        <label id="lblDes" for="Editor">@item.DESCRIPCION</label>
                     </div>
                 }
             </div>
 
             <div class="right">
-                @Html.LabelFor(model => model.ACTIVO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblObliga" })
+                @Html.LabelFor(model => model.ACTIVO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblActivo" })
 
 
                 @if ((bool)Model.ACTIVO == true)
@@ -61,6 +66,8 @@
                 {
                     <i class='material-icons red-text'>clear</i>}
             </div>
+            <br />
+            <br />
         </div>
     </div>
 </div>
