@@ -2601,7 +2601,7 @@ namespace TAT001.Controllers.Catalogos
                 try
                 {
                     List<SOCIEDAD> clin1 = db.USUARIOs.Where(a => a.ID.Equals(da.ID)).FirstOrDefault().SOCIEDADs.ToList();
-                    if (clin1 == null)
+                    if (clin1 != null)
                     {
                         SOCIEDAD soc = db.SOCIEDADs.Where(x => x.BUKRS == da.BUNIT).First();
                         if (!us.SOCIEDADs.Any(x => x.BUKRS == da.BUNIT))
