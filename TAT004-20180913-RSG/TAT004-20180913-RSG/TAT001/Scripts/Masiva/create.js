@@ -3061,7 +3061,7 @@ var tablesToExcel = (function () {
 
         var link = document.createElement("A");
         link.href = uri + base64(workbookXML);
-        link.download = wbname || 'Workbook.xls';
+        link.download = wbname || 'TestBook.xls';
         link.target = '_blank';
         document.body.appendChild(link);
         link.click();
