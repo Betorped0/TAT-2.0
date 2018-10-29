@@ -46,6 +46,9 @@
 <table class="table mdl-data-table striped" id="table" style="width:100%;">
     <thead>
         <tr>
+            <th id="lblId" style="text-align:left;">
+                @Html.DisplayNameFor(model => model.ID)
+            </th>
             <th id="lblDes" style="text-align:left;">
                 @Html.DisplayNameFor(model => model.DESCRIPCION)
             </th>
@@ -76,6 +79,9 @@
             }
         <tr>
             <td style="text-align:left;">
+                @Html.DisplayFor(modelItem => item.ID)
+            </td>
+            <td style="text-align:left;">
                 @Html.DisplayFor(modelItem => item.DESCRIPCION)
             </td>
             <td style="text-align:left;">
@@ -84,25 +90,25 @@
             <td style="text-align:left;">
                 @tslt.ToString()
             </td>
-           
-                @if ((bool)item.ACTIVO == true)
-                {
+
+            @if ((bool)item.ACTIVO == true)
+            {
                 <td style="align-items:center"><i class='material-icons green-text'>check</i></td>
             }
             else
             {
                 <td style="align-items:center;"><i class='material-icons red-text'>clear</i></td>
             }
-               
-                <td>
-                    <a data-form-method="post" href="@Url.Action("Edit", "Gall", new { id = item.ID })">
-                        <i class='material-icons green-text'>edit</i>
-                    </a>
-                    <a data-form-method="post" href="@Url.Action("Details", "Gall", new { id = item.ID })">
-                        <i class='material-icons blue-text'>search</i>
-                    </a>
-                </td>
-            </tr>
+
+            <td>
+                <a data-form-method="post" href="@Url.Action("Edit", "Gall", new { id = item.ID })">
+                    <i class='material-icons green-text'>edit</i>
+                </a>
+                <a data-form-method="post" href="@Url.Action("Details", "Gall", new { id = item.ID })">
+                    <i class='material-icons blue-text'>search</i>
+                </a>
+            </td>
+        </tr>
         }
     </tbody>
 </table>
