@@ -191,7 +191,7 @@ namespace TAT001.Controllers
                     doc.PAYER_ID = payer_id.TrimStart('0');
                     doc.VKORG = vkorg;
                     doc.VTWEG = vtweg;
-
+                    
                     //var existeCliente = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault().NAME1;
 
                     //if (existeCliente != null | existeCliente != "")
@@ -199,7 +199,7 @@ namespace TAT001.Controllers
                     //    doc.PAYER_NOMBRE = existeCliente;
                     //}
                     var existeCliente = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault();
-
+                    
                     if (existeCliente != null)
                     {
                         doc.PAYER_NOMBRE = existeCliente.NAME1;
@@ -325,11 +325,11 @@ namespace TAT001.Controllers
                             doc.EJERCICIOK = ejerciciok;
                             doc.PAYER = payer_id.TrimStart('0');
 
-                            var existeCliente = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault().NAME1;
+                            var existeCliente = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault();
 
-                            if (existeCliente != null | existeCliente != "")
+                            if (existeCliente != null)
                             {
-                                doc.PAYER_NOMBRE = existeCliente;
+                                doc.PAYER_NOMBRE = existeCliente.NAME1;
                             }
                             else
                             {
@@ -387,7 +387,7 @@ namespace TAT001.Controllers
                         //string vigencia_al = ds4.Tables[0].Rows[i][3].ToString().Trim();
                         string matnr = ds4.Tables[0].Rows[i][4].ToString().Trim();
                         if (matnr.Length < 18) { matnr = cad.completaMaterial(matnr); }
-                        string  materialSinCero = matnr.TrimStart('0');
+                        string materialSinCero = matnr.TrimStart('0');
                         string matkl = ds4.Tables[0].Rows[i][5].ToString().Trim();
                         string descripcion = ds4.Tables[0].Rows[i][6].ToString().Trim();
                         string monto = ds4.Tables[0].Rows[i][7].ToString().Trim();
@@ -418,7 +418,6 @@ namespace TAT001.Controllers
                                 doc.MATKL = matkl;
                             }
 
-
                             var existMaterial = db.MATERIALs.Where(x => x.ID == matnr).FirstOrDefault();
 
                             if (existMaterial != null)
@@ -427,19 +426,14 @@ namespace TAT001.Controllers
                                                    join mat2 in db.MATERIALTs on mat1.ID equals mat2.MATERIAL_ID
                                                    where mat2.MATERIAL_ID == matnr & mat1.ACTIVO == true
                                                    group mat2 by new { mat2.MATERIAL_ID, mat2.MAKTG } into g
-                                                   select new { DESCRIPCION = g.Key.MAKTG }).FirstOrDefault().DESCRIPCION;
+                                                   select new { DESCRIPCION = g.Key.MAKTG }).FirstOrDefault();
 
-                                var desMaterial2 = db.MATERIALs
-                                                    .Join(db.MATERIALTs, x => x.ID, y => y.MATERIAL_ID, (x, y) => new { x, y })
-                                                    .Where(xy => xy.y.MATERIAL_ID == matnr & xy.x.ACTIVO == true)
-                                                    .Select(xy => xy.y.MAKTG);
-
-                                doc.DESCRIPCION = desMaterial;
+                                doc.DESCRIPCION = desMaterial.DESCRIPCION;
                             }
                             else
                             {
                                 doc.DESCRIPCION = "";
-                            } 
+                            }
 
                             if (IsNumeric(monto) == false) { monto = "0"; }
                             if (IsNumeric(porc_apoyo) == false) { porc_apoyo = "0"; } else { porc_apoyo = (Convert.ToDecimal(porc_apoyo) * 100).ToString(); }
@@ -1107,8 +1101,6 @@ namespace TAT001.Controllers
             return cc;
         }
 
-
-
         public List<object> cargaInicialH1(DataRow fila)
         {
             List<object> regresaRowH1 = new List<object>();
@@ -1519,7 +1511,7 @@ namespace TAT001.Controllers
                                 regresaRowH2.Add("red white-text rojo");
                             }
                         }
-                        
+
                     }
 
                     regresaRowH2.Add("");//DEBAJO ESTA LA VALIDACION DEL PROOVEDOR
@@ -2749,13 +2741,13 @@ namespace TAT001.Controllers
                             f.FECHAC = DateTime.Now;
                             f.FECHAM = DateTime.Now;
                             string c = pf.procesa(f, "");
-                            if (c == "1")
-                            {
-                                string image = Server.MapPath("~/images/logo_kellogg.png");
-                                Email em = new Email();
-                                string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
-                                em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image);
-                            }
+                            //if (c == "1")
+                            //{
+                            //    string image = Server.MapPath("~/images/logo_kellogg.png");
+                            //    Email em = new Email();
+                            //    string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
+                            //    em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image);
+                            //}
                         }
                     }
                     catch (Exception ee) { }
@@ -2767,6 +2759,8 @@ namespace TAT001.Controllers
             }
 
             TempData["docs_masiva"] = li;
+
+            iDs.Add(li);
 
             return iDs;
         }

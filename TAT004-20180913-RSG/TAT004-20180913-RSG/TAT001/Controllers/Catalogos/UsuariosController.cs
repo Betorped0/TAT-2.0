@@ -2601,7 +2601,7 @@ namespace TAT001.Controllers.Catalogos
                 try
                 {
                     List<SOCIEDAD> clin1 = db.USUARIOs.Where(a => a.ID.Equals(da.ID)).FirstOrDefault().SOCIEDADs.ToList();
-                    if (clin1 == null)
+                    if (clin1 != null)
                     {
                         SOCIEDAD soc = db.SOCIEDADs.Where(x => x.BUKRS == da.BUNIT).First();
                         if (!us.SOCIEDADs.Any(x => x.BUKRS == da.BUNIT))
@@ -2915,6 +2915,30 @@ namespace TAT001.Controllers.Catalogos
             {
                 var c2 = (from x in db.CLIENTEs
                           where x.NAME1.Contains(Prefix)
+                          select new { x.KUNNR, x.NAME1 }).ToList();
+                c.AddRange(c2);
+            }
+
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+
+        public JsonResult Cliente1(string Prefix, string BUKRS)
+        {
+            if (Prefix == null)
+                Prefix = "";
+
+            TAT001Entities db = new TAT001Entities();
+            var pa = (from x in db.PAIS where x.ACTIVO == true & x.SOCIEDAD_ID == BUKRS select x.LAND).FirstOrDefault();
+
+            var c = (from x in db.CLIENTEs
+                     where x.KUNNR.Contains(Prefix) & x.LAND.Equals(pa)
+                     select new { x.KUNNR, x.NAME1 }).ToList();
+
+            if (c.Count == 0)
+            {
+                var c2 = (from x in db.CLIENTEs
+                          where x.NAME1.Contains(Prefix) & x.LAND.Equals(pa)
                           select new { x.KUNNR, x.NAME1 }).ToList();
                 c.AddRange(c2);
             }
