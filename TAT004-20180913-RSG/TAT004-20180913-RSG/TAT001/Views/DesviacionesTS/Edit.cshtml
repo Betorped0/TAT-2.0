@@ -1,12 +1,10 @@
 ﻿@model TAT001.Entities.TS_CAMPO
 
 @{
-                /**/
-
-                //ViewBag.Title = "Edit";
-                Layout = "~/Views/Shared/_Layout.cshtml";
-                ViewBag.pagina_r = 1313;
-                ViewBag.carpeta_r = 500;
+    //ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.pagina_r = 1313;
+    ViewBag.carpeta_r = 500;
 }
 <script src="~/Scripts/ValidarProv.js"></script>
 <div class="row">
@@ -55,28 +53,28 @@
                     <div class="input-field col l10 m10" style="margin-bottom:0;">
                         @Html.Editor("EN", new { htmlAttributes = new { @class = "form-control", @maxlength = "50" } })
                         @*@Html.LabelFor(model => item.TXT100, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_DscEN" })*@
-                        <label>Ingles</label>
+                        <label id="lblIngles">Ingles</label>
                     </div>
 
 
                     <div class="input-field col l10 m10" style="margin-bottom:0;">
                         @Html.Editor("ES", new { htmlAttributes = new { @class = "form-control", @maxlength = "50" } })
                         @*@Html.LabelFor(model => item.TXT100, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_DscES" })*@
-                        <label>Español</label>
+                        <label id="lblEspa">Español</label>
                         @*<label for="@("A" + Model.TS_FORMT.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().SPRAS_ID)"> @Model.TS_FORMT.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().SPRA.DESCRIPCION</label>*@
                     </div>
 
                     <div class="input-field col l10 m10" style="margin-bottom:0;">
                         @Html.Editor("PT", new { htmlAttributes = new { @class = "form-control", @maxlength = "50" } })
                         @*@Html.LabelFor(model => item.TXT100, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_DscPT" })*@
-                        <label>Portugues</label>
+                        <label id="lblPortugues">Portugues</label>
                     </div>
 
 
                 </div>
 
                 <div class="col s10 m10 right-align">
-                    @Html.LabelFor(model => model.ACTIVO, "ACTIVO", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblPais" })
+                    @Html.LabelFor(model => model.ACTIVO, "ACTIVO", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblActivo" })
                     @Html.ValidationMessageFor(model => model.ACTIVO, "", new { @class = "text-danger" })
                     @Html.EditorFor(model => model.ACTIVO, new { htmlAttributes = new { @class = "form-control pname material-icons green-text", @maxlength = "230", @hidden = "hidden", id = "idfac" } })
 

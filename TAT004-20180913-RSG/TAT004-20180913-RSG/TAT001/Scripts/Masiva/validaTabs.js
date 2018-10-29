@@ -165,7 +165,7 @@ function validH4(num_doc) {
         banderaH4 = false;
     return banderaH4;
 }
-function validH5() {
+function validH5(num_doc) {
     var tablaH5 = $('#tab_test5').DataTable();
     var tabla1 = [], tabla2 = [], tabla3 = [], tabla4 = [], tabla5 = [], archivos = [];
     var banderaH1, banderaH2, banderaH3, banderaH4, banderaH5 = false;
@@ -204,22 +204,30 @@ function validH5() {
 
 
 function clearErrorsN(num_doc) {
-
     $('#tab_test5 > tbody  > tr').each(function () {
-        var num = $(this).find("td:eq(2) input").val();
-        if (num == num_doc) {
-            var file = $(this).find("td.requiredfile input");
-            if ($(file).hasClass("valid") & validaTabs("1", 4)) {
-                //var ban = validaTabs("1", 4);
-                $(file).closest('tr').children().eq(0).children().removeClass("red rojo");
-                $(file).closest('tr').children().eq(0).children().addClass("green");
-                $(file).closest('tr').children().eq(0).children().text("done");
+        var num = $(this).find("td:eq(1) input").val();
+        if (num === num_doc) {
+            var file = $(this).find("td div.file-path-wrapper input");
+            var td = $(this).find("td div.file-field");
+            var i1 = $(file).hasClass("valid") | $(file).hasClass("outRequiredfile");
+            var i2 = validaTabs(num_doc, 4);
+            if (($(file).hasClass("valid") | $(file).hasClass("outRequiredfile")) & validaTabs(num_doc, 4)) {
+                //$(td).closest('tr').children().eq(0).children().removeClass("red rojo");
+                //$(td).closest('tr').children().eq(0).children().addClass("green");
+                //$(td).closest('tr').children().eq(0).children().text("done");
+                $(this).children().eq(0).children().removeClass("red rojo");
+                $(this).children().eq(0).children().addClass("green");
+                $(this).children().eq(0).children().text("done");
                 //clearErrors();
             } else {
-                $(file).closest('tr').children().eq(0).children().removeClass("green");
-                $(file).closest('tr').children().eq(0).children().addClass("red rojo");
-                $(file).closest('tr').children().eq(0).children().text("close");
+                $(td).closest('tr').children().eq(0).children().removeClass("green");
+                $(td).closest('tr').children().eq(0).children().addClass("red rojo");
+                $(td).closest('tr').children().eq(0).children().text("close");
             }
         }
     });
+    var bb = validaTabs(num_doc, 5);
+    if (bb) {
+        bb = !bb;
+    }
 }
