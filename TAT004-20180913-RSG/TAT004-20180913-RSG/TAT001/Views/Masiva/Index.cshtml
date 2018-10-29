@@ -16,10 +16,38 @@
 <link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
 <input class="form-control" id="txt_spras" value="@(ViewBag.usuario.SPRAS_ID)" hidden>
 
+@*@if (TempData["docs_masiva"] != null)
+{
+    List<string> list_num_doc = (List<string>)TempData["docs_masiva"];
+    foreach (var num_doc in list_num_doc)
+    {
+
+        <script>
+            $(document).ready(function () {
+                function docMessage(msg) {
+                    M.toast({ html: msg });
+                }
+
+                var messages = '@num_doc';
+
+                if (messages != "") {
+                    if (messages.substring(0, 4) == "&lt;") {
+                        docMessage('Error en registro ' + messages.replace("&lt;", ""));
+                    }
+                    else {
+                        docMessage('Documento ' + messages + ' fue creado');
+                    }
+                }
+            });
+        </script>
+    }
+    TempData["docs_masiva"] = null;
+}*@
+
 <div id="borraTabla" class="modal">
     <div class="modal-content">
         <h4>Borrar</h4>
-        <p>¿Desea borrar los datos cargados?</p>
+        <p>¿Estás seguro que quieres borrar la carga actual?</p>
     </div>
     <div class="modal-footer">
         <a href="#!" class="modal-action modal-close btn-flat">NO</a>
@@ -218,6 +246,7 @@
 <script src="~/Scripts/autocomplete1.11.4.js"></script>
 <script src="~/Scripts/Masiva/formatosMasiva.js"></script>
 <script src="~/Scripts/Masiva/create.js"></script><!--LGPP 30.08.2018-->
+<script src="~/Scripts/Masiva/validaTabs.js"></script><!--RSG 26.10.2018-->
 <link href="~/Content/autocomplete.css" rel="stylesheet" />
 
 <script>
