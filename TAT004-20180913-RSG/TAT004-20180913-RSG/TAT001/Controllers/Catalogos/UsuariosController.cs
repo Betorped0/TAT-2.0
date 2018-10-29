@@ -2923,6 +2923,30 @@ namespace TAT001.Controllers.Catalogos
             return cc;
         }
 
+        public JsonResult Cliente1(string Prefix, string BUKRS)
+        {
+            if (Prefix == null)
+                Prefix = "";
+
+            TAT001Entities db = new TAT001Entities();
+            var pa = (from x in db.PAIS where x.ACTIVO == true & x.SOCIEDAD_ID == BUKRS select x.LAND).FirstOrDefault();
+
+            var c = (from x in db.CLIENTEs
+                     where x.KUNNR.Contains(Prefix) & x.LAND.Equals(pa)
+                     select new { x.KUNNR, x.NAME1 }).ToList();
+
+            if (c.Count == 0)
+            {
+                var c2 = (from x in db.CLIENTEs
+                          where x.NAME1.Contains(Prefix) & x.LAND.Equals(pa)
+                          select new { x.KUNNR, x.NAME1 }).ToList();
+                c.AddRange(c2);
+            }
+
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+
         public JsonResult Idioma(string Prefix)
         {
             if (Prefix == null)
