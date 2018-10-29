@@ -1357,6 +1357,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\Masiva\create.js" />
     <Content Include="Scripts\Masiva\formatosMasiva.js" />
+    <Content Include="Scripts\Masiva\validaTabs.js" />
     <Content Include="Scripts\moment-with-locales.js" />
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.js" />
