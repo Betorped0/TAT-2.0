@@ -26,7 +26,7 @@
             <div class="row">
                 <div class="form-horizontal">
                     <div class="col l12 m12 s12">
-                        @Html.LabelFor(model => model.ID, "ID", htmlAttributes: new { @class = "control-label col-md-2", @id = "lblTipo" })
+                        @Html.LabelFor(model => model.ID, "ID", htmlAttributes: new { @class = "control-label col-md-2", @id = "lblId" })
                         @Html.EditorFor(model => model.ID, new { htmlAttributes = new { @class = "form-control txtIDP" } })
                         @Html.ValidationMessageFor(model => model.ID, "", new { @class = "text-danger" })
                     </div>
@@ -46,7 +46,7 @@
                 </script>*@
 
                     <div class="col l12 m12 s12">
-                        @Html.LabelFor(model => model.DESCRIPCION, "DESCRIPCION", htmlAttributes: new { @class = "control-label col-md-2", @id = "lblTipoop" })
+                        @Html.LabelFor(model => model.DESCRIPCION, "DESCRIPCION", htmlAttributes: new { @class = "control-label col-md-2", @id = "lblDes" })
                         @Html.EditorFor(model => model.DESCRIPCION, new { htmlAttributes = new { @class = "form-control txtIDP" } })
                         @Html.ValidationMessageFor(model => model.DESCRIPCION, "", new { @class = "text-danger" })
                     </div>

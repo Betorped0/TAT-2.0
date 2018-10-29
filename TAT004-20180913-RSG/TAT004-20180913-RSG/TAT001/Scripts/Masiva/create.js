@@ -28,7 +28,6 @@ $("#miMas").change(function () {
             //var instance = M.Select.init(elem, []);
             document.getElementById("loader").style.display = "none";
             clearErrors();
-            console.log(kk);
         } else {
             M.toast({ html: 'Tipo de archivo incorrecto: ' + filename });
         }
@@ -2047,7 +2046,8 @@ function procesarHoja5() {
                 $("#excelBtn").removeAttr("disabled");
                 cloneTables();
                 $(".requiredfile").on("change", function () {
-                    if ($(this).hasClass("valid")) {
+                    //if ($(this).hasClass("valid")) {
+                    if ($(this).hasClass("valid") & validaTabs("1", 4)) {//ADD RSG 29.10.2018
                         $(this).closest('tr').children().eq(0).children().removeClass("red rojo");
                         $(this).closest('tr').children().eq(0).children().addClass("green");
                         $(this).closest('tr').children().eq(0).children().text("done");
@@ -2056,6 +2056,7 @@ function procesarHoja5() {
                         $(this).closest('tr').children().eq(0).children().removeClass("green");
                         $(this).closest('tr').children().eq(0).children().addClass("red rojo");
                         $(this).closest('tr').children().eq(0).children().text("close");
+                        clearErrors();//ADD RSG 29.10.2018
                     }
                 });
 
@@ -2397,7 +2398,7 @@ function erroresH1() {
         }
     }
 
-    console.log(tabla1);
+    ////console.log(tabla1);
     return tabla1;
 }
 
@@ -2416,7 +2417,7 @@ function clearErrors() {
     var tablaH2 = $('#tab_test2').DataTable();
     var tablaH3 = $('#tab_test3').DataTable();
     var tablaH4 = $('#tab_test4').DataTable();
-    var tablaH5 = $('#tab_test5').DataTable();
+    //var tablaH5 = $('#tab_test5').DataTable();//DELETE RSG 29.10.2018
 
     var tabla1 = [], tabla2 = [], tabla3 = [], tabla4 = [], tabla5 = [], archivos = [];
 
@@ -2452,19 +2453,29 @@ function clearErrors() {
         tabla4[d] = num_docH4 + statusH4;
     }
 
-    for (var e = 0; e < tablaH5.rows().data().length; e++) {
-        var rowH5 = tablaH5.row(e).node();
-        var num_docH5 = $(rowH5).children().eq(1).children().val();
-        var statusH5 = $(rowH5).children().children().hasClass('rojo');
+    //for (var e = 0; e < tablaH5.rows().data().length; e++) {//DELETE RSG 29.10.2018
+    //    var rowH5 = tablaH5.row(e).node();
+    //    var num_docH5 = $(rowH5).children().eq(1).children().val();
+    //    var statusH5 = $(rowH5).children().children().hasClass('rojo');
 
-        tabla5[e] = num_docH5 + statusH5;
-    }
+    //    tabla5[e] = num_docH5 + statusH5;
+    //}
 
     var banderaH1, banderaH2, banderaH3, banderaH4, banderaH5 = false;
 
     for (var aa = 0; aa < tablaH1.rows().data().length; aa++) {
         var rowH11 = tablaH1.row(aa).node();
         var num_docH11 = $(rowH11).children().eq(1).children().val();
+        clearErrorsN(num_docH11);//ADD RSG 29.10.2018
+
+        var tablaH5 = $('#tab_test5').DataTable();                      //ADD RSG 29.10.2018
+        for (var e = 0; e < tablaH5.rows().data().length; e++) {        //ADD RSG 29.10.2018
+            var rowH5 = tablaH5.row(e).node();
+            var num_docH5 = $(rowH5).children().eq(1).children().val();
+            var statusH5 = $(rowH5).children().children().hasClass('rojo');
+
+            tabla5[e] = num_docH5 + statusH5;
+        }
 
         //SI TIENE TRUE TIENE ERROR
         if (jQuery.inArray(num_docH11 + true, tabla1) != -1) {
@@ -2550,8 +2561,9 @@ function clearErrors() {
             }
         }
 
-        console.log(banderaH1, banderaH2, banderaH3, banderaH4, banderaH5, num_docH11);
-        console.log(validaErrores(banderaH1, banderaH2, banderaH3, banderaH4, banderaH5, num_docH11));
+        //console.log(banderaH1, banderaH2, banderaH3, banderaH4, banderaH5, num_docH11);
+        //console.log(validaErrores(banderaH1, banderaH2, banderaH3, banderaH4, banderaH5, num_docH11));
+        validaErrores(banderaH1, banderaH2, banderaH3, banderaH4, banderaH5, num_docH11);
     }
 }
 
@@ -2613,7 +2625,7 @@ function validaErrores(h1, h2, h3, h4, h5, num_doc) {
         //    var esRequerido = $(rowH5).children().eq(3).children().hasClass("isrequired");
 
         //    if (num_docH5 == num_doc & !esRequerido) {
-        //        console.log($(rowH5).children().eq(0).children().attr("class"));
+        //        //console.log($(rowH5).children().eq(0).children().attr("class"));
         //        $(rowH5).children().eq(0).children().removeClass("red");
         //        $(rowH5).children().eq(0).children().addClass("green");
         //        $(rowH5).children().eq(0).children().text("done");
@@ -2672,7 +2684,7 @@ function validaErrores(h1, h2, h3, h4, h5, num_doc) {
         //    var esRequerido2 = $(rowH55).children().eq(3).children().hasClass("isrequired");
 
         //    if (num_docH55 == num_doc & esRequerido2) {
-        //        console.log($(rowH55).children().eq(0).children().attr("class"));
+        //        //console.log($(rowH55).children().eq(0).children().attr("class"));
         //        $(rowH55).children().eq(0).children().removeClass("green");
         //        $(rowH55).children().eq(0).children().addClass("red");
         //        $(rowH55).children().eq(0).children().text("close");
@@ -2683,6 +2695,8 @@ function validaErrores(h1, h2, h3, h4, h5, num_doc) {
 }
 
 function guardaDatos() {
+    document.getElementById("loader").style.display = "initial";
+
     var tablaH1 = $('#tab_test1').DataTable();
     var tablaH2 = $('#tab_test2').DataTable();
     var tablaH3 = $('#tab_test3').DataTable();
@@ -2834,7 +2848,7 @@ function guardaDatos() {
             var err = "Error " + " " + status + " " + p3 + " " + p4;
             if (xhr.responseText && xhr.responseText[0] == "{")
                 err = JSON.parse(xhr.responseText).Message;
-            console.log(err);
+            //console.log(err);
         }
     });
 
@@ -2846,6 +2860,9 @@ function guardaDatos() {
         success: function (data) {
             if (data != null | data != "") {
                 var eliminarId = [];
+                var listaIds = [];
+
+                listaIds = data.pop();
 
                 eliminarId = data;
                 var tablaH1 = $('#tab_test1').DataTable();
@@ -2854,63 +2871,85 @@ function guardaDatos() {
                 var tablaH4 = $('#tab_test4').DataTable();
                 var tablaH5 = $('#tab_test5').DataTable();
 
-                for (var su = 0; su < eliminarId.length; su++) {
-                    var num_doc = eliminarId[su];
+                for (var a = 0; a < tablaH1.rows().data().length; a++) {
+                    var rowH1 = tablaH1.row(a).node();
+                    var rowH11 = tablaH1.row(a);
+                    var num_docH1 = $(rowH1).children().eq(1).children().val();
 
-                    for (var a = 0; a < tablaH1.rows().data().length; a++) {
-                        var rowH1 = tablaH1.row(a).node();
-                        var rowH11 = tablaH1.row(a);
-                        var num_docH1 = $(rowH1).children().eq(1).children().val();
+                    for (var b = 0; b < eliminarId.length; b++) {
+                        num_doc = eliminarId[b];
 
                         if (num_doc == num_docH1) {
                             rowH11.remove().draw();
-                            //rowH1.remove();
+                            a--;
                         }
                     }
+                }
 
-                    for (var b = 0; b < tablaH2.rows().data().length; b++) {
-                        var rowH2 = tablaH2.row(b).node();
-                        var rowH22 = tablaH2.row(b);
-                        var num_docH2 = $(rowH2).children().eq(1).children().val();
+                for (var c = 0; c < tablaH2.rows().data().length; c++) {
+                    var rowH2 = tablaH2.row(c).node();
+                    var rowH22 = tablaH2.row(c);
+                    var num_docH2 = $(rowH2).children().eq(1).children().val();
+
+                    for (var d = 0; d < eliminarId.length; d++) {
+                        num_doc = eliminarId[d];
 
                         if (num_doc == num_docH2) {
                             rowH22.remove().draw();
-                            //rowH2.remove();
+                            c--;
                         }
                     }
+                }
 
-                    for (var c = 0; c < tablaH3.rows().data().length; c++) {
-                        var rowH3 = tablaH3.row(c).node();
-                        var rowH33 = tablaH3.row(c);
-                        var num_docH3 = $(rowH3).children().eq(1).children().val();
+                for (var e = 0; e < tablaH3.rows().data().length; e++) {
+                    var rowH3 = tablaH3.row(e).node();
+                    var rowH33 = tablaH3.row(e);
+                    var num_docH3 = $(rowH3).children().eq(1).children().val();
+
+                    for (var f = 0; f < eliminarId.length; f++) {
+                        num_doc = eliminarId[f];
 
                         if (num_doc == num_docH3) {
                             rowH33.remove().draw();
-                            //rowH3.remove();
+                            e--;
                         }
                     }
+                }
 
-                    for (var d = 0; d < tablaH4.rows().data().length; d++) {
-                        var rowH4 = tablaH4.row(d).node();
-                        var rowH44 = tablaH4.row(d);
-                        var num_docH4 = $(rowH4).children().eq(1).children().val();
+                for (var g = 0; g < tablaH4.rows().data().length; g++) {
+                    var rowH4 = tablaH4.row(g).node();
+                    var rowH44 = tablaH4.row(g);
+                    var num_docH4 = $(rowH4).children().eq(1).children().val();
+
+                    for (var h = 0; h < eliminarId.length; h++) {
+                        num_doc = eliminarId[h];
 
                         if (num_doc == num_docH4) {
                             rowH44.remove().draw();
-                            //rowH4.remove();
+                            g--;
                         }
                     }
+                }
 
-                    for (var e = 0; e < tablaH5.rows().data().length; e++) {
-                        var rowH5 = tablaH5.row(e).node();
-                        var rowH55 = tablaH5.row(e);
-                        var num_docH5 = $(rowH5).children().eq(1).children().val();
+                for (var i = 0; i < tablaH5.rows().data().length; i++) {
+                    var rowH5 = tablaH5.row(i).node();
+                    var rowH55 = tablaH5.row(i);
+                    var num_docH5 = $(rowH5).children().eq(1).children().val();
+
+                    for (var j = 0; j < eliminarId.length; j++) {
+                        num_doc = eliminarId[j];
 
                         if (num_doc == num_docH5) {
                             rowH55.remove().draw();
-                            //rowH5.remove();
+                            i--;
                         }
                     }
+                }
+
+                document.getElementById("loader").style.display = "none";
+
+                for (var k = 0; k < listaIds.length; k++) {
+                    M.toast({ html: 'Documento ' + listaIds[k] + ' fue creado' });
                 }
             }
         }
@@ -2928,7 +2967,7 @@ function cloneTables() {
     $('#tabclon1hd').append("<tr id='titles1d'></tr>");
 
     $('#tab_test1 > thead > tr > th').each(function () {
-        if ($(this).text() != "LABEL") {
+        if ($(this).text() != "LABEL" && $(this).text() != "ESTATUS") {
             $('#titles1d').append("<th>" + $(this).text() + "</th>");
         } else {
         }
@@ -2939,8 +2978,8 @@ function cloneTables() {
         var rowH1c = tablaH1c.row(aa).node();
         $('#tabclon1bd').append("<tr id='trd" + aa + "'></tr>");
         $(rowH1c).children().each(function (td) {
-            if (td != 18 && td != 19) {
-                $("#trd" + aa).append("<td>" + $(this).find('span:first').text() + "</td>");
+            if (td != 18 && td != 19 && td != 0) {
+                $("#trd" + aa).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
             }
         });
     }
@@ -2950,18 +2989,20 @@ function cloneTables() {
     $('#tabclon2h').append("<tr id='titles2'></tr>");
 
     $('#tab_test2 > thead > tr > th').each(function () {
-        if ($(this).text() != "LABEL") {
+        if ($(this).text() != "LABEL" && $(this).text() != "ESTATUS") {
             $('#titles2').append("<th>" + $(this).text() + "</th>");
         } else {
         }
 
     });
-    $('#tabclon2bd').append("<tr><td colspan='9'></td></tr>");
+    $('#tabclon2b').append("<tr><td colspan='9'></td></tr>");
     for (var bb = 0; bb < tablaH2c.rows().data().length; bb++) {
         var rowH2c = tablaH2c.row(bb).node();
         $('#tabclon2b').append("<tr id='tr2" + bb + "'></tr>");
-        $(rowH2c).children().each(function (td) {
-            $("#tr2" + bb).append("<td>" + $(this).find('span:first').text() + "</td>");
+        $(rowH2c).children().each(function (td2) {
+            if (td2 != 0) {
+                $("#tr2" + bb).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
+            }
         });
     }
     ////TAB3////
@@ -2969,18 +3010,20 @@ function cloneTables() {
     $('#tabclon3h').append("<tr id='titles3'></tr>");
 
     $('#tab_test3 > thead > tr > th').each(function () {
-        if ($(this).text() != "LABEL") {
+        if ($(this).text() != "LABEL" && $(this).text() != "ESTATUS") {
             $('#titles3').append("<th>" + $(this).text() + "</th>");
         } else {
         }
 
     });
-    $('#tabclon3bd').append("<tr><td colspan='8'></td></tr>");
+    $('#tabclon3b').append("<tr><td colspan='8'></td></tr>");
     for (var cc = 0; cc < tablaH3c.rows().data().length; cc++) {
         var rowH3c = tablaH3c.row(cc).node();
         $('#tabclon3b').append("<tr id='tr3" + cc + "'></tr>");
-        $(rowH3c).children().each(function (td) {
-            $("#tr3" + cc).append("<td>" + $(this).find('span:first').text() + "</td>");
+        $(rowH3c).children().each(function (td3) {
+            if (td3 != 0) {
+                $("#tr3" + cc).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
+            }
         });
     }
     ////TAB4////
@@ -2988,18 +3031,20 @@ function cloneTables() {
     $('#tabclon4h').append("<tr id='titles4'></tr>");
 
     $('#tab_test4 > thead > tr > th').each(function () {
-        if ($(this).text() != "LABEL") {
+        if ($(this).text() != "LABEL" && $(this).text() != "ESTATUS") {
             $('#titles4').append("<th>" + $(this).text() + "</th>");
         } else {
         }
 
     });
-    $('#tabclon4bd').append("<tr><td colspan='14'></td></tr>");
+    $('#tabclon4b').append("<tr><td colspan='14'></td></tr>");
     for (var dd = 0; dd < tablaH4c.rows().data().length; dd++) {
         var rowH4c = tablaH4c.row(dd).node();
         $('#tabclon4b').append("<tr id='tr4" + dd + "'></tr>");
-        $(rowH4c).children().each(function (td) {
-            $("#tr4" + dd).append("<td>" + $(this).find('span:first').text() + "</td>");
+        $(rowH4c).children().each(function (td4) {
+            if (td4 != 0) {
+                $("#tr4" + dd).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
+            }
         });
     }
 }
@@ -3056,7 +3101,7 @@ var tablesToExcel = (function () {
 
         var link = document.createElement("A");
         link.href = uri + base64(workbookXML);
-        link.download = wbname || 'Workbook.xls';
+        link.download = wbname || 'TestBook.xls';
         link.target = '_blank';
         document.body.appendChild(link);
         link.click();
