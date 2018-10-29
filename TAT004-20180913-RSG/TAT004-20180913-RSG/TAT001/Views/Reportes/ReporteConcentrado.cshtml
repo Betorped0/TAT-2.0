@@ -1161,7 +1161,7 @@
                                 <td>
                                     @if (item.DOCSREFREVERSOS != null)
                                     {
-                                        @(String.Format("{0:C}", item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("MONTO_DOC_MD").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null)))
+                                        @(String.Format("{0:C}", item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null).GetType().GetProperty("MONTO_DOC_MD").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null), null)))
                                     }
                                 </td>}<!--$ Monto Reverso Provisión-->
                             @if (((string[])ViewBag.campos).Contains("40"))
@@ -1169,7 +1169,7 @@
                                 <td>
                                     @if (item.DOCSREFREVERSOS != null)
                                     {
-                                        @((Convert.ToDecimal(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("MONTO_DOC_MD").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null)) * 100) / item.documento.MONTO_DOC_MD)
+                                        @((Convert.ToDecimal(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null).GetType().GetProperty("MONTO_DOC_MD").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null), null)) * 100) / item.documento.MONTO_DOC_MD)
                                     }
                                 </td>}<!--% Reverso-->
                             @if (((string[])ViewBag.campos).Contains("41"))

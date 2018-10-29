@@ -8,6 +8,7 @@ using System.Linq;
 using System.Web;
 using TAT001.Models;
 using TAT001.Entities;
+using TAT001.Common;
 
 namespace TAT001.Models
 {
@@ -26,8 +27,9 @@ namespace TAT001.Models
         public int a, b, r;
         private int pos, pos2 = 0;
 
-        public void crearPDF(CartaD v, string spr, bool aprob)
+        public string crearPDF(CartaD v, string spr, bool aprob)
         {
+            string ruta = "";
             using (TAT001Entities db = new TAT001Entities())
             {
                 HeaderFooterD hfClass = new HeaderFooterD(v);
@@ -434,12 +436,14 @@ namespace TAT001.Models
 
                     pdfDoc.Add(tabComentarios);
                     pdfDoc.Close();
-                    HttpContext.Current.Session["rutaCompletaV"] = "/PdfTemp/" + nombreArchivo;
+                    ruta = "/PdfTemp/" + nombreArchivo;
                 }
                 catch (Exception ex)
                 {
                     ex.Message.ToString();
+                    Log.ErrorLogApp(ex, "CartaD", "Generar PDF");
                 }
+                return ruta;
             }
         }
     }

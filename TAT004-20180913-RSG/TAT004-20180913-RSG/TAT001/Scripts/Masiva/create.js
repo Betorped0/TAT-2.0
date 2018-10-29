@@ -28,7 +28,6 @@ $("#miMas").change(function () {
             //var instance = M.Select.init(elem, []);
             document.getElementById("loader").style.display = "none";
             clearErrors();
-            console.log(kk);
         } else {
             M.toast({ html: 'Tipo de archivo incorrecto: ' + filename });
         }
@@ -556,7 +555,7 @@ $('body').on('keydown.autocomplete', '.input_cliente', function () {
         change: function (e, ui) {
             if (!(ui.item)) {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
-                $(tr.find("td:eq(" + col_index2 + ")").children().addClass("red white-text rojo"));
+                //$(tr.find("td:eq(" + col_index2 + ")").children().addClass("red white-text rojo"));
                 $(tr.find("td:eq(" + col_index2 + ")").children().val(""));
                 clearErrors();
                 e.target.value = "";
@@ -568,7 +567,7 @@ $('body').on('keydown.autocomplete', '.input_cliente', function () {
             label = label.split('-');
             $(clase2).val(label[1]);
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
-            $(tr.find("td:eq(" + col_index2 + ")").children().removeClass("red white-text rojo"));
+            //$(tr.find("td:eq(" + col_index2 + ")").children().removeClass("red white-text rojo"));
             clearErrors();
         }
     });
@@ -850,7 +849,7 @@ $('body').on('keydown.autocomplete', '.input_factura', function () {
     amarillo = $(amarillo).hasClass("yelloww");
 
     if (amarillo) {
-        amarillo = "yellow";
+        amarillo = "blue";
     }
     else {
         amarillo = "";
@@ -888,7 +887,7 @@ $('body').on('keydown.autocomplete', '.input_fechaH2', function () {
     amarillo = $(amarillo).hasClass("yelloww");
 
     if (amarillo) {
-        amarillo = "yellow";
+        amarillo = "blue";
     }
     else {
         amarillo = "";
@@ -930,7 +929,7 @@ $('body').on('keydown.autocomplete', '.input_proveedor', function () {
     amarillo = $(amarillo).hasClass("yelloww");
 
     if (amarillo) {
-        amarillo = "yellow";
+        amarillo = "blue";
     }
     else {
         amarillo = "";
@@ -974,9 +973,7 @@ $('body').on('keydown.autocomplete', '.input_proveedor', function () {
         change: function (e, ui) {
             if (!(ui.item)) {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
-                $(tr.find("td:eq(" + col_index2 + ")").children().addClass("red white-text rojo"));
                 $(tr.find("td:eq(" + col_index + ")").children().removeClass(amarillo));
-                $(tr.find("td:eq(" + col_index2 + ")").children().removeClass(amarillo));
                 clearErrors();
                 e.target.value = "";
             }
@@ -987,9 +984,7 @@ $('body').on('keydown.autocomplete', '.input_proveedor', function () {
             label = label.split('-');
             $(clase2).val(label[1]);
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
-            $(tr.find("td:eq(" + col_index2 + ")").children().removeClass("red white-text rojo"));
             $(tr.find("td:eq(" + col_index + ")").children().addClass(amarillo));
-            $(tr.find("td:eq(" + col_index2 + ")").children().addClass(amarillo));
             clearErrors();
         }
     });
@@ -1004,7 +999,7 @@ $('body').on('keydown.autocomplete', '.input_autorizacion', function () {
     amarillo = $(amarillo).hasClass("yelloww");
 
     if (amarillo) {
-        amarillo = "yellow";
+        amarillo = "blue";
     }
     else {
         amarillo = "";
@@ -1042,7 +1037,7 @@ $('body').on('keydown.autocomplete', '.input_facturak', function () {
     amarillo = $(amarillo).hasClass("yelloww");
 
     if (amarillo) {
-        amarillo = "yellow";
+        amarillo = "blue";
     }
     else {
         amarillo = "";
@@ -1080,7 +1075,7 @@ $('body').on('keydown.autocomplete', '.input_ejerciciok', function () {
     amarillo = $(amarillo).hasClass("yelloww");
 
     if (amarillo) {
-        amarillo = "yellow";
+        amarillo = "blue";
     }
     else {
         amarillo = "";
@@ -1544,6 +1539,7 @@ $('body').on('keydown.autocomplete', '.input_material', function () {
         change: function (e, ui) {
             if (!(ui.item)) {
                 $(this).addClass("red white-text rojo");
+                $(tr.find("td:eq(" + col_index + ")").children().val(""));
                 clearErrors();
                 //validarErrores("tab_test4");
                 e.target.value = "";
@@ -1554,12 +1550,12 @@ $('body').on('keydown.autocomplete', '.input_material', function () {
             var label = ui.item.label;
             label = label.split('-');
             $(materialDes).val(label[1]);
+            $(this).removeClass("red white-text rojo");
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
             clearErrors();
             //validarErrores("tab_test4");
         }
     });
-
 });
 
 $('body').on('keydown.autocomplete', '.input_categoria', function () {
@@ -2047,8 +2043,11 @@ function procesarHoja5() {
         complete: function (data) {
             //validarErrores("tab_test5"); //RMG
             $(document).ready(function () {
+                $("#excelBtn").removeAttr("disabled");
+                cloneTables();
                 $(".requiredfile").on("change", function () {
-                    if ($(this).hasClass("valid")) {
+                    //if ($(this).hasClass("valid")) {
+                    if ($(this).hasClass("valid") & validaTabs("1", 4)) {//ADD RSG 29.10.2018
                         $(this).closest('tr').children().eq(0).children().removeClass("red rojo");
                         $(this).closest('tr').children().eq(0).children().addClass("green");
                         $(this).closest('tr').children().eq(0).children().text("done");
@@ -2057,6 +2056,17 @@ function procesarHoja5() {
                         $(this).closest('tr').children().eq(0).children().removeClass("green");
                         $(this).closest('tr').children().eq(0).children().addClass("red rojo");
                         $(this).closest('tr').children().eq(0).children().text("close");
+                        clearErrors();//ADD RSG 29.10.2018
+                    }
+                });
+
+                $(".outRequiredfile").on("change", function () {
+                    if ($(this).hasClass("valid")) {
+                        var id = $(this).closest('tr').children().eq(1).children().val();
+                        var tipo = $(this).closest('tr').children().eq(2).children().val();
+                        $(this).closest('tr').children().eq(3).children().children().eq(0).children().eq(1).attr('id', id + tipo);
+                    } else {
+                        $(this).closest('tr').children().eq(3).children().children().eq(0).children().eq(1).removeAttr('id');
                     }
                 });
                 $("#tablesToexcel").prop("disabled", "false");
@@ -2085,7 +2095,7 @@ function addRowH5(t, NUM_DOC, TIPO, OBLIGATORIO) {
     }
     else {
         CHECK = "<span class='green white-text material-icons'>done</span>";//RMG
-        fileInpt = "<div class='file-field input-field'><div class='btn-small' style='float: left;'><span>Examinar</span><input type='file'></div><div class='file-path-wrapper'><input class='file-path validate' type='text'></div></div>";
+        fileInpt = "<div class='file-field input-field'><div class='btn-small' style='float: left;'><span>Examinar</span><input type='file'></div><div class='file-path-wrapper'><input class='file-path validate outRequiredfile' type='text'></div></div>";
 
     }
 
@@ -2388,7 +2398,7 @@ function erroresH1() {
         }
     }
 
-    console.log(tabla1);
+    ////console.log(tabla1);
     return tabla1;
 }
 
@@ -2451,17 +2461,12 @@ function clearErrors() {
         tabla5[e] = num_docH5 + statusH5;
     }
 
-    console.log(tabla1);
-    console.log(tabla2);
-    console.log(tabla3);
-    console.log(tabla4);
-    console.log(tabla5);
-
     var banderaH1, banderaH2, banderaH3, banderaH4, banderaH5 = false;
 
     for (var aa = 0; aa < tablaH1.rows().data().length; aa++) {
         var rowH11 = tablaH1.row(aa).node();
         var num_docH11 = $(rowH11).children().eq(1).children().val();
+        clearErrorsN(num_docH11);//ADD RSG 29.10.2018
 
         //SI TIENE TRUE TIENE ERROR
         if (jQuery.inArray(num_docH11 + true, tabla1) != -1) {
@@ -2547,8 +2552,8 @@ function clearErrors() {
             }
         }
 
-        console.log(banderaH1, banderaH2, banderaH3, banderaH4, banderaH5, num_docH11);
-        console.log(validaErrores(banderaH1, banderaH2, banderaH3, banderaH4, banderaH5, num_docH11));
+        //console.log(banderaH1, banderaH2, banderaH3, banderaH4, banderaH5, num_docH11);
+        //console.log(validaErrores(banderaH1, banderaH2, banderaH3, banderaH4, banderaH5, num_docH11));
     }
 }
 
@@ -2565,7 +2570,6 @@ function validaErrores(h1, h2, h3, h4, h5, num_doc) {
             var num_docH1 = $(rowH1).children().eq(1).children().val();
 
             if (num_docH1 == num_doc) {
-                console.log($(rowH1).children().eq(0).children().attr("class"));
                 $(rowH1).children().eq(0).children().removeClass("red");
                 $(rowH1).children().eq(0).children().addClass("green");
                 $(rowH1).children().eq(0).children().text("done");
@@ -2577,7 +2581,6 @@ function validaErrores(h1, h2, h3, h4, h5, num_doc) {
             var num_docH2 = $(rowH2).children().eq(1).children().val();
 
             if (num_docH2 == num_doc) {
-                console.log($(rowH2).children().eq(0).children().attr("class"));
                 $(rowH2).children().eq(0).children().removeClass("red");
                 $(rowH2).children().eq(0).children().addClass("green");
                 $(rowH2).children().eq(0).children().text("done");
@@ -2589,7 +2592,6 @@ function validaErrores(h1, h2, h3, h4, h5, num_doc) {
             var num_docH3 = $(rowH3).children().eq(1).children().val();
 
             if (num_docH3 == num_doc) {
-                console.log($(rowH3).children().eq(0).children().attr("class"));
                 $(rowH3).children().eq(0).children().removeClass("red");
                 $(rowH3).children().eq(0).children().addClass("green");
                 $(rowH3).children().eq(0).children().text("done");
@@ -2601,7 +2603,6 @@ function validaErrores(h1, h2, h3, h4, h5, num_doc) {
             var num_docH4 = $(rowH4).children().eq(1).children().val();
 
             if (num_docH4 == num_doc) {
-                console.log($(rowH4).children().eq(0).children().attr("class"));
                 $(rowH4).children().eq(0).children().removeClass("red");
                 $(rowH4).children().eq(0).children().addClass("green");
                 $(rowH4).children().eq(0).children().text("done");
@@ -2614,7 +2615,7 @@ function validaErrores(h1, h2, h3, h4, h5, num_doc) {
         //    var esRequerido = $(rowH5).children().eq(3).children().hasClass("isrequired");
 
         //    if (num_docH5 == num_doc & !esRequerido) {
-        //        console.log($(rowH5).children().eq(0).children().attr("class"));
+        //        //console.log($(rowH5).children().eq(0).children().attr("class"));
         //        $(rowH5).children().eq(0).children().removeClass("red");
         //        $(rowH5).children().eq(0).children().addClass("green");
         //        $(rowH5).children().eq(0).children().text("done");
@@ -2628,7 +2629,6 @@ function validaErrores(h1, h2, h3, h4, h5, num_doc) {
             var num_docH11 = $(rowH11).children().eq(1).children().val();
 
             if (num_docH11 == num_doc) {
-                console.log($(rowH11).children().eq(0).children().attr("class"));
                 $(rowH11).children().eq(0).children().removeClass("green");
                 $(rowH11).children().eq(0).children().addClass("red");
                 $(rowH11).children().eq(0).children().text("close");
@@ -2640,7 +2640,6 @@ function validaErrores(h1, h2, h3, h4, h5, num_doc) {
             var num_docH22 = $(rowH22).children().eq(1).children().val();
 
             if (num_docH22 == num_doc) {
-                console.log($(rowH22).children().eq(0).children().attr("class"));
                 $(rowH22).children().eq(0).children().removeClass("green");
                 $(rowH22).children().eq(0).children().addClass("red");
                 $(rowH22).children().eq(0).children().text("close");
@@ -2652,7 +2651,6 @@ function validaErrores(h1, h2, h3, h4, h5, num_doc) {
             var num_docH33 = $(rowH33).children().eq(1).children().val();
 
             if (num_docH33 == num_doc) {
-                console.log($(rowH33).children().eq(0).children().attr("class"));
                 $(rowH33).children().eq(0).children().removeClass("green");
                 $(rowH33).children().eq(0).children().addClass("red");
                 $(rowH33).children().eq(0).children().text("close");
@@ -2664,7 +2662,6 @@ function validaErrores(h1, h2, h3, h4, h5, num_doc) {
             var num_docH44 = $(rowH44).children().eq(1).children().val();
 
             if (num_docH44 == num_doc) {
-                console.log($(rowH44).children().eq(0).children().attr("class"));
                 $(rowH44).children().eq(0).children().removeClass("green");
                 $(rowH44).children().eq(0).children().addClass("red");
                 $(rowH44).children().eq(0).children().text("close");
@@ -2677,7 +2674,7 @@ function validaErrores(h1, h2, h3, h4, h5, num_doc) {
         //    var esRequerido2 = $(rowH55).children().eq(3).children().hasClass("isrequired");
 
         //    if (num_docH55 == num_doc & esRequerido2) {
-        //        console.log($(rowH55).children().eq(0).children().attr("class"));
+        //        //console.log($(rowH55).children().eq(0).children().attr("class"));
         //        $(rowH55).children().eq(0).children().removeClass("green");
         //        $(rowH55).children().eq(0).children().addClass("red");
         //        $(rowH55).children().eq(0).children().text("close");
@@ -2688,6 +2685,8 @@ function validaErrores(h1, h2, h3, h4, h5, num_doc) {
 }
 
 function guardaDatos() {
+    document.getElementById("loader").style.display = "initial";
+
     var tablaH1 = $('#tab_test1').DataTable();
     var tablaH2 = $('#tab_test2').DataTable();
     var tablaH3 = $('#tab_test3').DataTable();
@@ -2801,10 +2800,19 @@ function guardaDatos() {
 
             if (idArchivoH5 == (num_docH5 + descripcionH5)) {
                 var archivo = document.getElementById(num_docH5 + descripcionH5).files[0];
-                rowsH5[e] = [num_docH5 + descripcionH5 + "*" + archivo.name + archivo.size];
-                rowsArc[e] = archivo;
-                formData.append("archivos[]", archivo);
-                e++;
+
+                if (idArchivoH5.includes("*")) {
+                    rowsH5[e] = [num_docH5 + descripcionH5 + "*" + archivo.name + archivo.size];
+                    rowsArc[e] = archivo;
+                    formData.append("archivos[]", archivo);
+                    e++;
+                }
+                else {
+                    rowsH5[e] = [num_docH5 + "*" + descripcionH5 + "*" + archivo.name + archivo.size];
+                    rowsArc[e] = archivo;
+                    formData.append("archivos[]", archivo);
+                    e++;
+                }
             }
         }
     }
@@ -2830,7 +2838,7 @@ function guardaDatos() {
             var err = "Error " + " " + status + " " + p3 + " " + p4;
             if (xhr.responseText && xhr.responseText[0] == "{")
                 err = JSON.parse(xhr.responseText).Message;
-            console.log(err);
+            //console.log(err);
         }
     });
 
@@ -2840,10 +2848,256 @@ function guardaDatos() {
         dataType: "json",
         data: { "h1": tabla1, "h2": tabla2, "h3": tabla3, "h4": tabla4, "h5": tabla5 },
         success: function (data) {
-            getDec = data;
+            if (data != null | data != "") {
+                var eliminarId = [];
+                var listaIds = [];
+
+                listaIds = data.pop();
+
+                eliminarId = data;
+                var tablaH1 = $('#tab_test1').DataTable();
+                var tablaH2 = $('#tab_test2').DataTable();
+                var tablaH3 = $('#tab_test3').DataTable();
+                var tablaH4 = $('#tab_test4').DataTable();
+                var tablaH5 = $('#tab_test5').DataTable();
+
+                for (var a = 0; a < tablaH1.rows().data().length; a++) {
+                    var rowH1 = tablaH1.row(a).node();
+                    var rowH11 = tablaH1.row(a);
+                    var num_docH1 = $(rowH1).children().eq(1).children().val();
+
+                    for (var b = 0; b < eliminarId.length; b++) {
+                        num_doc = eliminarId[b];
+
+                        if (num_doc == num_docH1) {
+                            rowH11.remove().draw();
+                            a--;
+                        }
+                    }
+                }
+
+                for (var c = 0; c < tablaH2.rows().data().length; c++) {
+                    var rowH2 = tablaH2.row(c).node();
+                    var rowH22 = tablaH2.row(c);
+                    var num_docH2 = $(rowH2).children().eq(1).children().val();
+
+                    for (var d = 0; d < eliminarId.length; d++) {
+                        num_doc = eliminarId[d];
+
+                        if (num_doc == num_docH2) {
+                            rowH22.remove().draw();
+                            c--;
+                        }
+                    }
+                }
+
+                for (var e = 0; e < tablaH3.rows().data().length; e++) {
+                    var rowH3 = tablaH3.row(e).node();
+                    var rowH33 = tablaH3.row(e);
+                    var num_docH3 = $(rowH3).children().eq(1).children().val();
+
+                    for (var f = 0; f < eliminarId.length; f++) {
+                        num_doc = eliminarId[f];
+
+                        if (num_doc == num_docH3) {
+                            rowH33.remove().draw();
+                            e--;
+                        }
+                    }
+                }
+
+                for (var g = 0; g < tablaH4.rows().data().length; g++) {
+                    var rowH4 = tablaH4.row(g).node();
+                    var rowH44 = tablaH4.row(g);
+                    var num_docH4 = $(rowH4).children().eq(1).children().val();
+
+                    for (var h = 0; h < eliminarId.length; h++) {
+                        num_doc = eliminarId[h];
+
+                        if (num_doc == num_docH4) {
+                            rowH44.remove().draw();
+                            g--;
+                        }
+                    }
+                }
+
+                for (var i = 0; i < tablaH5.rows().data().length; i++) {
+                    var rowH5 = tablaH5.row(i).node();
+                    var rowH55 = tablaH5.row(i);
+                    var num_docH5 = $(rowH5).children().eq(1).children().val();
+
+                    for (var j = 0; j < eliminarId.length; j++) {
+                        num_doc = eliminarId[j];
+
+                        if (num_doc == num_docH5) {
+                            rowH55.remove().draw();
+                            i--;
+                        }
+                    }
+                }
+
+                document.getElementById("loader").style.display = "none";
+
+                for (var k = 0; k < listaIds.length; k++) {
+                    M.toast({ html: 'Documento ' + listaIds[k] + ' fue creado' });
+                }
+            }
         }
     });
 }
+
+function cloneTables() {
+    var tablaH1c = $('#tab_test1').DataTable();
+    var tablaH2c = $('#tab_test2').DataTable();
+    var tablaH3c = $('#tab_test3').DataTable();
+    var tablaH4c = $('#tab_test4').DataTable();
+
+    ////TAB1Data////
+    $('#tab_test1').append("<table id='tab_test1clond' style='display:none'><thead id='tabclon1hd'></thead><tbody id='tabclon1bd'></tbody></table>");
+    $('#tabclon1hd').append("<tr id='titles1d'></tr>");
+
+    $('#tab_test1 > thead > tr > th').each(function () {
+        if ($(this).text() != "LABEL" && $(this).text() != "ESTATUS") {
+            $('#titles1d').append("<th>" + $(this).text() + "</th>");
+        } else {
+        }
+
+    });
+    $('#tabclon1bd').append("<tr><td colspan='16'></td></tr>");
+    for (var aa = 0; aa < tablaH1c.rows().data().length; aa++) {
+        var rowH1c = tablaH1c.row(aa).node();
+        $('#tabclon1bd').append("<tr id='trd" + aa + "'></tr>");
+        $(rowH1c).children().each(function (td) {
+            if (td != 18 && td != 19 && td != 0) {
+                $("#trd" + aa).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
+            }
+        });
+    }
+
+    ////TAB2////
+    $('#tab_test1').append("<table id='tab_test2clon' style='display:none'><thead id='tabclon2h'></thead><tbody id='tabclon2b'></tbody></table>");
+    $('#tabclon2h').append("<tr id='titles2'></tr>");
+
+    $('#tab_test2 > thead > tr > th').each(function () {
+        if ($(this).text() != "LABEL" && $(this).text() != "ESTATUS") {
+            $('#titles2').append("<th>" + $(this).text() + "</th>");
+        } else {
+        }
+
+    });
+    $('#tabclon2b').append("<tr><td colspan='9'></td></tr>");
+    for (var bb = 0; bb < tablaH2c.rows().data().length; bb++) {
+        var rowH2c = tablaH2c.row(bb).node();
+        $('#tabclon2b').append("<tr id='tr2" + bb + "'></tr>");
+        $(rowH2c).children().each(function (td2) {
+            if (td2 != 0) {
+                $("#tr2" + bb).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
+            }
+        });
+    }
+    ////TAB3////
+    $('#tab_test1').append("<table id='tab_test3clon' style='display:none'><thead id='tabclon3h'></thead><tbody id='tabclon3b'></tbody></table>");
+    $('#tabclon3h').append("<tr id='titles3'></tr>");
+
+    $('#tab_test3 > thead > tr > th').each(function () {
+        if ($(this).text() != "LABEL" && $(this).text() != "ESTATUS") {
+            $('#titles3').append("<th>" + $(this).text() + "</th>");
+        } else {
+        }
+
+    });
+    $('#tabclon3b').append("<tr><td colspan='8'></td></tr>");
+    for (var cc = 0; cc < tablaH3c.rows().data().length; cc++) {
+        var rowH3c = tablaH3c.row(cc).node();
+        $('#tabclon3b').append("<tr id='tr3" + cc + "'></tr>");
+        $(rowH3c).children().each(function (td3) {
+            if (td3 != 0) {
+                $("#tr3" + cc).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
+            }
+        });
+    }
+    ////TAB4////
+    $('#tab_test1').append("<table id='tab_test4clon' style='display:none'><thead id='tabclon4h'></thead><tbody id='tabclon4b'></tbody></table>");
+    $('#tabclon4h').append("<tr id='titles4'></tr>");
+
+    $('#tab_test4 > thead > tr > th').each(function () {
+        if ($(this).text() != "LABEL" && $(this).text() != "ESTATUS") {
+            $('#titles4').append("<th>" + $(this).text() + "</th>");
+        } else {
+        }
+
+    });
+    $('#tabclon4b').append("<tr><td colspan='14'></td></tr>");
+    for (var dd = 0; dd < tablaH4c.rows().data().length; dd++) {
+        var rowH4c = tablaH4c.row(dd).node();
+        $('#tabclon4b').append("<tr id='tr4" + dd + "'></tr>");
+        $(rowH4c).children().each(function (td4) {
+            if (td4 != 0) {
+                $("#tr4" + dd).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
+            }
+        });
+    }
+}
+
+var tablesToExcel = (function () {
+    var uri = 'data:application/vnd.ms-excel;base64,'
+        , tmplWorkbookXML = '<?xml version="1.0"?><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">'
+            + '<DocumentProperties xmlns="urn:schemas-microsoft-com:office:office"><Author>Axel Richter</Author><Created>{created}</Created></DocumentProperties>'
+            + '<Styles>'
+            + '<Style ss:ID="Currency"><NumberFormat ss:Format="Currency"></NumberFormat></Style>'
+            + '<Style ss:ID="Date"><NumberFormat ss:Format="Medium Date"></NumberFormat></Style>'
+            + '</Styles>'
+            + '{worksheets}</Workbook>'
+        , tmplWorksheetXML = '<Worksheet ss:Name="{nameWS}"><Table>{rows}</Table></Worksheet>'
+        , tmplCellXML = '<Cell{attributeStyleID}{attributeFormula}><Data ss:Type="{nameType}">{data}</Data></Cell>'
+        , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+        , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+    return function (tables, wsnames, wbname, appname) {
+        var ctx = "";
+        var workbookXML = "";
+        var worksheetsXML = "";
+        var rowsXML = "";
+
+        for (var i = 0; i < tables.length; i++) {
+            if (!tables[i].nodeType) tables[i] = document.getElementById(tables[i]);
+            for (var j = 0; j < tables[i].rows.length; j++) {
+                rowsXML += '<Row>'
+                for (var k = 0; k < tables[i].rows[j].cells.length; k++) {
+                    var dataType = tables[i].rows[j].cells[k].getAttribute("data-type");
+                    var dataStyle = tables[i].rows[j].cells[k].getAttribute("data-style");
+                    var dataValue = tables[i].rows[j].cells[k].getAttribute("data-value");
+                    dataValue = (dataValue) ? dataValue : tables[i].rows[j].cells[k].innerHTML;
+                    var dataFormula = tables[i].rows[j].cells[k].getAttribute("data-formula");
+                    dataFormula = (dataFormula) ? dataFormula : (appname == 'Calc' && dataType == 'DateTime') ? dataValue : null;
+                    ctx = {
+                        attributeStyleID: (dataStyle == 'Currency' || dataStyle == 'Date') ? ' ss:StyleID="' + dataStyle + '"' : ''
+                        , nameType: (dataType == 'Number' || dataType == 'DateTime' || dataType == 'Boolean' || dataType == 'Error') ? dataType : 'String'
+                        , data: (dataFormula) ? '' : dataValue
+                        , attributeFormula: (dataFormula) ? ' ss:Formula="' + dataFormula + '"' : ''
+                    };
+                    rowsXML += format(tmplCellXML, ctx);
+                }
+                rowsXML += '</Row>'
+            }
+            ctx = { rows: rowsXML, nameWS: wsnames[i] || 'Sheet' + i };
+            worksheetsXML += format(tmplWorksheetXML, ctx);
+            rowsXML = "";
+        }
+
+        ctx = { created: (new Date()).getTime(), worksheets: worksheetsXML };
+        workbookXML = format(tmplWorkbookXML, ctx);
+
+
+
+        var link = document.createElement("A");
+        link.href = uri + base64(workbookXML);
+        link.download = wbname || 'TestBook.xls';
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+})();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 

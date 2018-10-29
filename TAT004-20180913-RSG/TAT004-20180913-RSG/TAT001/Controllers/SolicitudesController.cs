@@ -1745,7 +1745,11 @@ namespace TAT001.Controllers
                                         DOCUMENTOP docadd = new DOCUMENTOP();
 
                                         docadd.MATNR = dOCUMENTO.DOCUMENTOP[h].MATNR;
-                                        docadd.MATKL = dOCUMENTO.DOCUMENTOP[h].MATKL;
+                                        if (dOCUMENTO.DOCUMENTOP[h].MATKL_ID == null )
+                                        {
+                                            dOCUMENTO.DOCUMENTOP[h].MATKL_ID="";
+                                        }
+                                        docadd.MATKL = dOCUMENTO.DOCUMENTOP[h].MATKL_ID;
                                         docadd.CANTIDAD = 1;
                                         docadd.MONTO = dOCUMENTO.DOCUMENTOP[h].MONTO;
                                         docadd.PORC_APOYO = dOCUMENTO.DOCUMENTOP[h].PORC_APOYO;
@@ -1786,14 +1790,17 @@ namespace TAT001.Controllers
                                     {
                                         docP.NUM_DOC = dOCUMENTO.NUM_DOC;
                                         docP.POS = docmod.POS;
-                                        if (docmod.MATNR == null || docmod.MATNR == "")
+                                        if (docmod.MATNR == null )
                                         {
                                             docmod.MATNR = "";
                                         }
                                         docP.MATNR = docmod.MATNR;
                                         docP.MATNR = new Cadena().completaMaterial(docP.MATNR);//RSG 07.06.2018
-                                        MATERIAL mat = db.MATERIALs.Where(x => x.ID == docP.MATNR).FirstOrDefault();
-                                        docP.MATKL = mat.MATKL_ID;
+                                        if (docmod.MATKL == null )
+                                        {
+                                            docmod.MATKL = "";
+                                        }
+                                        docP.MATKL = docmod.MATKL;
                                         docP.CANTIDAD = 1;
                                         docP.MONTO = docmod.MONTO;
                                         docP.PORC_APOYO = docmod.PORC_APOYO;
@@ -1985,10 +1992,12 @@ namespace TAT001.Controllers
                                         dOCUMENTO.DOCUMENTOP.ElementAt(j).MATNR = "";
                                     }
                                     docP.MATNR = dOCUMENTO.DOCUMENTOP.ElementAt(j).MATNR;
-                                    docP.MATNR = new Cadena().completaMaterial(docP.MATNR);//RSG 07.06.2018
-
-                                    MATERIAL mat = db.MATERIALs.Where(x=>x.ID== docP.MATNR).FirstOrDefault();
-                                    docP.MATKL = mat.MATKL_ID;
+                                    docP.MATNR = new Cadena().completaMaterial(docP.MATNR);
+                                    if (dOCUMENTO.DOCUMENTOP.ElementAt(j).MATKL_ID == null)
+                                    {
+                                        dOCUMENTO.DOCUMENTOP.ElementAt(j).MATKL_ID = "";
+                                    }
+                                    docP.MATKL = dOCUMENTO.DOCUMENTOP.ElementAt(j).MATKL_ID; 
                                     docP.CANTIDAD = 1;
                                     docP.MONTO = dOCUMENTO.DOCUMENTOP.ElementAt(j).MONTO;
                                     docP.PORC_APOYO = dOCUMENTO.DOCUMENTOP.ElementAt(j).PORC_APOYO;
@@ -2093,7 +2102,7 @@ namespace TAT001.Controllers
                                 }
                                 catch (Exception e)
                                 {
-
+                                    Log.ErrorLogApp(e,"Solicitudes","Create");
                                 }
                             }
                         }
@@ -2238,7 +2247,58 @@ namespace TAT001.Controllers
                             }
                             db.SaveChanges();
                         }//Guardar registros de recurrencias  RSG 28.05.2018-------------------
+                    if (dOCUMENTO.DOCUMENTOREC == null & dOCUMENTO.LIGADA == true)
+                    //if (dOCUMENTO.LIGADA == true)
+                    {
 
+                        DOCUMENTOREC drec = new DOCUMENTOREC();
+                        drec.NUM_DOC = dOCUMENTO.NUM_DOC;
+                        drec.POS = 1;
+
+                        if (drec.MONTO_BASE == null) //RSG 31.05.2018-------------------
+                            drec.MONTO_BASE = 0;
+                        if (drec.PORC == null) //RSG 31.05.2018-------------------
+                            drec.PORC = 0;
+                        dOCUMENTO.TIPO_RECURRENTE = db.TSOLs.Where(x => x.ID.Equals(dOCUMENTO.TSOL_ID)).FirstOrDefault().TRECU;
+                        if (dOCUMENTO.TIPO_RECURRENTE == "1" & dOCUMENTO.LIGADA == true)
+                            dOCUMENTO.TIPO_RECURRENTE = "2";
+                        if (dOCUMENTO.TIPO_RECURRENTE != "1" & dOCUMENTO.OBJETIVOQ == true)
+                            dOCUMENTO.TIPO_RECURRENTE = "3";
+                        Calendario445 cal = new Calendario445();
+                        drec.FECHAF = cal.getUltimoDia(dOCUMENTO.FECHAF_VIG.Value.Year, cal.getPeriodo(dOCUMENTO.FECHAF_VIG.Value));
+                        drec.FECHAV = drec.FECHAF;
+
+                        drec.FECHAF = cal.getNextLunes((DateTime)drec.FECHAF);
+                        drec.EJERCICIO = drec.FECHAV.Value.Year;
+                        drec.PERIODO = cal.getPeriodoF(drec.FECHAV.Value);
+
+                        if (drec.PERIODO == 0) drec.PERIODO = 12;
+                        if (dOCUMENTO.DOCUMENTORAN != null)
+                        {
+                            foreach (DOCUMENTORAN dran in dOCUMENTO.DOCUMENTORAN.Where(x => x.POS == drec.POS))
+                            {
+                                dran.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                drec.DOCUMENTORANs.Add(dran);
+                            }
+                        }
+                        else
+                        {
+                            DOCUMENTORAN dran = new DOCUMENTORAN();
+                            dran.NUM_DOC = dOCUMENTO.NUM_DOC;
+                            dran.POS = 1;
+                            dran.LIN = 1;
+                            dran.OBJETIVOI = 0;
+                            dran.PORCENTAJE = dOCUMENTO.PORC_APOYO;
+                            drec.DOCUMENTORANs.Add(dran);
+                        }
+                        drec.PORC = dOCUMENTO.PORC_APOYO;
+                        drec.DOC_REF = 0;
+                        drec.ESTATUS = "";
+
+                        dOCUMENTO.DOCUMENTORECs.Add(drec);
+
+                        db.SaveChanges();
+                    }
                     //Guardar los documentos cargados en la sección de soporte
                     var res = "";
                     string errorMessage = "";
@@ -3008,6 +3068,10 @@ namespace TAT001.Controllers
                             doc.DOCUMENTOP[i].MATNR = "";
                         }
                         dbp.MATNR = doc.DOCUMENTOP[i].MATNR;
+                        if (doc.DOCUMENTOP[i].MATKL_ID == null || !string.IsNullOrEmpty(doc.DOCUMENTOP[i].MATNR))
+                        {
+                            doc.DOCUMENTOP[i].MATKL_ID = "";
+                        }
                         dbp.MATKL = doc.DOCUMENTOP[i].MATKL_ID;
                         dbp.CANTIDAD = 1;
                         dbp.MONTO = doc.DOCUMENTOP[i].MONTO;
@@ -3568,6 +3632,10 @@ namespace TAT001.Controllers
                                 if (j == 0 && docP.MATNR == "")
                                 {
                                     relacionada_dis = "C";
+                                }
+                                if (docpl[j].MATKL==null)
+                                {
+                                    docpl[j].MATKL = "";
                                 }
                                 docP.MATKL = docpl[j].MATKL;
                                 docP.MATKL_ID = docpl[j].MATKL;
@@ -5857,20 +5925,10 @@ namespace TAT001.Controllers
             //var jd = (dynamic)null;
 
             List<DOCUMENTOM_MOD> jd = new List<DOCUMENTOM_MOD>();
+         
 
-            //Obtener los materiales
-            IEnumerable<MATERIAL> matl = Enumerable.Empty<MATERIAL>();
-            try
-            {
-                matl = db.MATERIALs.Where(m => m.ACTIVO == true);//.Select(m => m.ID).ToList();
-            }
-            catch (Exception e)
-            {
-
-            }
-            
             //Validar si hay materiales
-            if (matl != null)
+            if (db.MATERIALs.Any(x => x.MATERIALGP_ID != null && x.ACTIVO.Value))
             {
 
                 CLIENTE cli = new CLIENTE();
@@ -5952,54 +6010,12 @@ namespace TAT001.Controllers
 
                 if (cie != null)
                 {
-                    //Obtener el historial de compras de los clientesd
-                    var matt = matl.ToList();
-                    var pres = db.PRESUPSAPPs.Where(a => a.VKORG.Equals(vkorg) & a.SPART.Equals(spart) & a.KUNNR == kunnr 
-                    & (a.GRSLS != null | a.NETLB != null)).ToList();
-
-                    var cat = db.MATERIALGPs.Where(a => a.ACTIVO == true).ToList();
-
-
-                    CONFDIST_CAT conf = getCatConf(soc_id);
-                    if (conf != null)
-                        if (conf.CAMPO == "GRSLS")
-                        {
-                            jd = (from ps in pres
-                                  join m in matt
-                                  on ps.MATNR equals m.ID
-                                  join mk in cat
-                                  on m.MATERIALGP_ID equals mk.ID
-                                  where ps.BUKRS == soc_id && ps.GRSLS > 0
-                                  select new DOCUMENTOM_MOD
-                                  {
-                                      ID_CAT = m.MATERIALGP_ID,
-                                      MATNR = ps.MATNR,
-                                      VAL = Convert.ToDecimal(ps.GRSLS),
-                                      EXCLUIR = mk.EXCLUIR //RSG 09.07.2018 ID167
-                                  }).ToList();
-                        }
-                        else
-                        {
-                            jd = (from ps in pres
-                                  join m in matt
-                                  on ps.MATNR equals m.ID
-                                  join mk in cat
-                                  on m.MATKL_ID equals mk.ID
-                                  where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) &&
-                                  ps.BUKRS == soc_id && ps.NETLB > 0
-                                  select new DOCUMENTOM_MOD
-                                  {
-                                      ID_CAT = m.MATERIALGP_ID,
-                                      MATNR = ps.MATNR,
-                                      VAL = Convert.ToDecimal(ps.NETLB),
-                                      EXCLUIR = mk.EXCLUIR //RSG 09.07.2018 ID167
-                                  }).ToList();
-                        }
+                    jd = FnCommon.ObtenerMaterialGroupsMateriales(db, vkorg, spart, kunnr, soc_id, aii, mii, aff, mff, User.Identity.Name);
                 }
             }
 
             //Obtener las categorías
-            var categorias = jd.GroupBy(c => c.ID_CAT, c => new { ID = c.ID_CAT.ToString() }).ToList();
+            var categorias = jd.GroupBy(c => c.ID_CAT, c => new { ID = c.ID_CAT.ToString(), DESC = c.DESC }).ToList();
 
             List<CategoriaMaterial> lcatmat = new List<CategoriaMaterial>();
 
@@ -6012,13 +6028,13 @@ namespace TAT001.Controllers
                 //Obtener los materiales de la categoría
                 List<DOCUMENTOM_MOD> dl = new List<DOCUMENTOM_MOD>();
                 List<DOCUMENTOM_MOD> dm = new List<DOCUMENTOM_MOD>();
-                dl = jd.Where(c => c.ID_CAT == item.Key).Select(c => new DOCUMENTOM_MOD { ID_CAT = c.ID_CAT, MATNR = c.MATNR, VAL = c.VAL }).ToList();//Falta obtener el groupby
+                dl = jd.Where(c => c.ID_CAT == item.Key).Select(c => new DOCUMENTOM_MOD { ID_CAT = c.ID_CAT, MATNR = c.MATNR, VAL = c.VAL,DESC=c.DESC }).ToList();//Falta obtener el groupby
 
                 //Obtener la descripción de los materiales
                 foreach (DOCUMENTOM_MOD d in dl)
                 {
                     DOCUMENTOM_MOD dcl = new DOCUMENTOM_MOD();
-                    dcl = dm.Where(z => z.MATNR == d.MATNR).Select(c => new DOCUMENTOM_MOD { ID_CAT = c.ID_CAT, MATNR = c.MATNR, VAL = c.VAL }).FirstOrDefault();
+                    dcl = dm.Where(z => z.MATNR == d.MATNR).Select(c => new DOCUMENTOM_MOD { ID_CAT = c.ID_CAT, MATNR = c.MATNR, VAL = c.VAL, DESC = c.DESC }).FirstOrDefault();
 
                     if (dcl == null)
                     {
@@ -6029,11 +6045,11 @@ namespace TAT001.Controllers
                         dcll.MATNR = d.MATNR;
 
                         //Obtener la descripción del material
-                        string maktg = db.MATERIALs.Where(w => w.ID == d.MATNR).FirstOrDefault().MAKTG;
-                        if (db.MATERIALTs.Any(w => w.MATERIAL_ID == d.MATNR && w.SPRAS == "EN")) {
-                            maktg= db.MATERIALTs.Where(w => w.MATERIAL_ID == d.MATNR && w.SPRAS == "EN").First().MAKTG;
-                        }
-                        dcll.DESC = (maktg == null ? "" : maktg);
+                       // string maktg = db.MATERIALs.Where(w => w.ID == d.MATNR).FirstOrDefault().MAKTG;
+                       // if (db.MATERIALTs.Any(w => w.MATERIAL_ID == d.MATNR && w.SPRAS == "EN")) {
+                        //    maktg= db.MATERIALTs.Where(w => w.MATERIAL_ID == d.MATNR && w.SPRAS == "EN").First().MAKTG;
+                       // }
+                        dcll.DESC = d.DESC;
                         dcll.VAL = val;
 
                         dm.Add(dcll);
@@ -6042,17 +6058,9 @@ namespace TAT001.Controllers
 
                 cm.MATERIALES = dm;
                 //LEJ 18.07.2018-----------------------------------------------------------
-                MATERIALGP vv = db.MATERIALGPs.Where(u => u.ID == cm.ID).FirstOrDefault();
+                MATERIALGP vv = FnCommon.ObtenerMaterialGroup(db, cm.ID);
                 cm.UNICA = vv.UNICA;
-                MATERIALGPT vt = vv.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals("EN")).FirstOrDefault();
-                if (vt != null)
-                {
-                    cm.DESCRIPCION = vt.TXT50;
-                }
-                else
-                {
-                    cm.DESCRIPCION = vv.DESCRIPCION;
-                }
+                cm.DESCRIPCION = vv.DESCRIPCION;
                 lcatmat.Add(cm);
             }
 
@@ -6060,14 +6068,7 @@ namespace TAT001.Controllers
             {
                 CategoriaMaterial nnn = new CategoriaMaterial();
                 nnn.ID = "000";
-                try//B20180625 MGC 2018.07.02
-                {
-                    nnn.DESCRIPCION = db.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals("EN") & a.MATERIALGP_ID.Equals(nnn.ID)).FirstOrDefault().TXT50;
-                }
-                catch (Exception)//B20180625 MGC 2018.07.02
-                {
-
-                }
+                nnn.DESCRIPCION = FnCommon.ObtenerTotalProducts(db).TXT50;
                 nnn.MATERIALES = new List<DOCUMENTOM_MOD>();
                 //foreach (var item in lcatmat)//RSG 09.07.2018 ID167
                 foreach (var item in lcatmat.Where(x => x.EXCLUIR == false).ToList())
@@ -6084,7 +6085,7 @@ namespace TAT001.Controllers
                     }
                 }
                 //LEJ 18.07.2018-----------------------------------------------------------
-                nnn.UNICA = db.MATERIALGPs.Where(u => u.ID == nnn.ID).FirstOrDefault().UNICA;
+                nnn.UNICA = FnCommon.ObtenerMaterialGroup(db,nnn.ID).UNICA;
                 lcatmat.Add(nnn);
             }
             

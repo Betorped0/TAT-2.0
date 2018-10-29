@@ -1114,15 +1114,6 @@ $(document).ready(function () {
         $('#montos_doc_ml2').val(monto_doc_md);
         $("label[for='montos_doc_ml2']").addClass("active");
     }
-
-
-
-
-    $('#btn_getmat').on("click", function (e) {
-
-        formatCat();
-    });
-
     /**
        * Delay for a number of milliseconds
        */
@@ -2625,29 +2616,13 @@ function asignarPresupuesto(kunnr) {
 
     $.ajax({
         type: "POST",
-        //url: 'getPresupuesto',
-        url: '../Listas/getPresupuesto',
+        url: root+'Listas/getPresupuesto',
         dataType: "json",
-        data: { "kunnr": kunnr },
+        data: { kunnr: kunnr },
 
         success: function (data) {
 
             if (data !== null || data !== "") {
-                //$('#p_canal').text(data.P_CANAL);
-                //$('#p_banner').text(data.P_BANNER);
-                //$('#pc_c').text(data.PC_C);
-                //$('#pc_a').text(data.PC_A);
-                //$('#pc_p').text(data.PC_P);
-                //$('#pc_t').text(data.PC_T);
-                //RSG 26.04.2018----------------
-                /* $('#p_canal').text('$' + ((data.P_CANAL / 1).toFixed(2)));
-                 $('#p_banner').text('$' + ((data.P_BANNER / 1).toFixed(2)));
-                 $('#pc_c').text('$' + ((data.PC_C / 1).toFixed(2)));
-                 $('#pc_a').text('$' + ((data.PC_A / 1).toFixed(2)));
-                 $('#pc_p').text('$' + ((data.PC_P / 1).toFixed(2)));
-                 $('#pc_t').text('$' + ((data.PC_T / 1).toFixed(2)));
-                 $('#consu').text('$' + ((data.CONSU / 1).toFixed(2)));*/
-                //RSG 26.04.2018----------------
                 //LEJ 09.07.18------------------------------------------
                 var pcan = (data.P_CANAL / 1).toFixed(2);
                 var pban = (data.P_BANNER / 1).toFixed(2);
@@ -2658,45 +2633,7 @@ function asignarPresupuesto(kunnr) {
                 var consu = (data.CONSU / 1).toFixed(2);
                 var _xdec = $("#dec").val();
                 var _xm = $("#miles").val();
-                //if (_xdec === '.') {
-                //    $('#p_canal').text('$' + (pcan.toString().replace(/\B(?=(?=\d*\.)(\d{3})+(?!\d))/g, ",")));
-                //    $('#p_banner').text('$' + (pban.toString().replace(/\B(?=(?=\d*\.)(\d{3})+(?!\d))/g, ",")));
-                //    $('#pc_c').text('$' + (pcc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, _xm)));
-                //    $('#pc_a').text('$' + (pca.toString().replace(/\B(?=(\d{3})+(?!\d))/g, _xm)));
-                //    $('#pc_p').text('$' + (pcp.toString().replace(/\B(?=(\d{3})+(?!\d))/g, _xm)));
-                //    $('#pc_t').text('$' + (pct.toString().replace(/\B(?=(\d{3})+(?!\d))/g, _xm)));
-                //    var _xcs = (consu.toString().replace(/\B(?=(\d{3})+(?!\d))/g, _xm));
-                //    if (_xcs.indexOf("-") >= 0) {
-                //        var _dsARx = _xcs;
-                //        _dsARx = _dsARx.replace('-', '(');
-                //        _dsARx += ")";
-                //        _xcs = _dsARx;
-                //    }
-                //    $('#consu').text('$' + _xcs);
-                //} else
-                //    if (_xdec === ',') {
-                //        pcan = pcan.replace('.', ',');
-                //        pban = pban.replace('.', ',');
-                //        pcc = pcc.replace('.', ',');
-                //        pca = pca.replace('.', ',');
-                //        pcp = pcp.replace('.', ',');
-                //        pct = pct.replace('.', ',');
-                //        consu = consu.replace('.', ',');
-                //        $('#p_canal').text('$' + (pcan.toString().replace(/\B(?=(\d{3})+(?!\d))/g, _xm)));
-                //        $('#p_banner').text('$' + (pban.toString().replace(/\B(?=(\d{3})+(?!\d))/g, _xm)));
-                //        $('#pc_c').text('$' + (pcc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, _xm)));
-                //        $('#pc_a').text('$' + (pca.toString().replace(/\B(?=(\d{3})+(?!\d))/g, _xm)));
-                //        $('#pc_p').text('$' + (pcp.toString().replace(/\B(?=(\d{3})+(?!\d))/g, _xm)));
-                //        $('#pc_t').text('$' + (pct.toString().replace(/\B(?=(\d{3})+(?!\d))/g, _xm)));
-                //        var _xcs = (consu.toString().replace(/\B(?=(\d{3})+(?!\d))/g, _xm));
-                //        if (_xcs.indexOf("-") >= 0) {
-                //            var _dsARx = _xcs;
-                //            _dsARx = _dsARx.replace('-', '(');
-                //            _dsARx += ")";
-                //            _xcs = _dsARx;
-                //        }
-                //        $('#consu').text('$' + _xcs);
-                //    }
+                
                 $('#p_canal').text(toShowG(pcan.toString()));
                 $('#p_banner').text(toShowG(pban.toString()));
                 $('#pc_c').text(toShowG(pcc.toString()));
@@ -3562,91 +3499,13 @@ function format(catid, idate, fdate) {
 
     return tablamat;
 
-    //    ////Obtener el cliente
-    //    //var kunnr = $('#payer_id').val();
-    //    ////Obtener la sociedad
-    //    //var soc_id = $('#sociedad_id').val();
-
-    //    $.ajax({
-    //        type: "POST",
-    //        url: 'categoriaMateriales',
-    //        data: { "kunnr": kunnr, "catid": id, "soc_id": soc_id },
-    //        success: function (data) {
-    //            var rows = "";
-    //            if (data !== null || data !== "") {
-    //                $.each(data, function (i, dataj) {
-
-    //                    //Obtener la descripción del material
-    //                    var val = valMaterial(dataj.MATNR, "");
-    //                    var desc = "";
-    //                    if (val.ID == dataj.MATNR) {
-
-    //                        desc = val.MAKTX;
-
-    //                    }
-
-    //                    var r =
-    //                        '<tr>' +
-    //                        '<td style = "display:none">' + id + '</td>' +
-    //                        '<td>' + idate + '</td>' +
-    //                        '<td>' + fdate + '</td>' +
-    //                        '<td>' + dataj.MATNR + '</td>' +
-    //                        '<td>' + desc + '</td>';
-    //                    //'<td>Nixon</td>' +
-    //                    //'<td>System Architect</td>' +
-    //                    //'<td>Edinburgh</td>' +
-    //                    //'<td>$320,800</td>' +
-    //                    //'<td>Tiger</td>' +
-    //                    //'<td>Tiger</td>' +
-    //                    //'<td>Tiger</td>' +
-    //                    //'</tr>';
-
-    //                    rows += r;
-
-    //                }); //Fin de for
-    //                //var tablamat = '<table class=\"display\" style=\"width: 100%; margin-left: 65px;\">' +
-    //                var tablamat = '<table class=\"display\" style=\"width: 100%; margin-left: 60px;\"><tbody>' + rows + '</tbody></table>';
-
-    //                useReturnData(tablamat);
-    //            }
-
-    //        },
-    //        error: function (xhr, httpStatusMessage, customErrorMessage) {
-    //            M.toast({ html: msg });
-    //        },
-    //        async: false
-    //    });
-    //}
-
-    //return detail;
+    
 }
 
 function useReturnData(data) {
     detail = data;
 };
 
-function formatCat() {
-
-
-    $('#catmat').val("");
-
-    $.ajax({
-        type: "POST",
-        url: 'grupoMateriales',
-        data: {},
-        success: function (data) {
-            if (data !== null || data !== "") {
-                $('#catmat').val(JSON.stringify(data));
-            }
-
-        },
-        error: function (xhr, httpStatusMessage, customErrorMessage) {
-            M.toast({ html: msg });
-        },
-        async: false
-    });
-
-}
 
 function evaluarExt(filename) {
 
@@ -5555,12 +5414,11 @@ function limpiarCliente() {
 }
 
 function getCatMateriales(vkorg, vtweg, spart, kunnr) {
-    //document.getElementById("loader").style.display = "initial";
     var soc = document.getElementById("sociedad_id").value;
     $('#catmat').val("");
     $.ajax({
         type: "POST",
-        url: 'grupoMateriales',
+        url: root + 'Listas/grupoMateriales',
         dataType: "json",
         data: { vkorg: vkorg, spart: spart, kunnr: kunnr, soc_id: soc },
         success: function (data) {

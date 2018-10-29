@@ -1,13 +1,12 @@
 ﻿@model IEnumerable<TAT001.Entities.PUESTO>
 @{
-    //ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.pagina_r = 621;
     ViewBag.carpeta_r = 500;
 }
 <div class="row">
     <div class="col s12 right-align">
-        @Html.ActionLink("Nuevo", "Create", null, new { @class = "btn-small" })
+        @Html.ActionLink("Nuevo", "Create", null, new { @class = "btn-small", id="btn_create" })
     </div>
 </div>
 <div class="row">
@@ -43,28 +42,35 @@
                     <th>
                         @Html.DisplayNameFor(model => model.ID)
                     </th>
-                    <th>
+                    <th class="lblDescripcion">
                         Descripción
                     </th>
+                    <th class="lblActivo"></th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ID)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.PUESTOTs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50)
-                        </td>
-                        <td>
-                            <a href="@Url.Action("Edit", "Puestos", new { id = item.ID })"><i class='material-icons green-text'>edit</i></a>
-                            <a href="@Url.Action("Details", "Puestos", new { id = item.ID })"><i class='material-icons blue-text'>search</i></a>
-                            <a href="@Url.Action("Delete", "Puestos", new { id = item.ID })"><i class='material-icons red-text'>delete</i></a>
-                        </td>
-                    </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PUESTOTs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50)
+                    </td>
+                    @if ((bool)item.ACTIVO == true)
+                    {
+                        <td style="align-items:center"><i class='material-icons green-text'>check</i></td>}
+                    else
+                    {
+                        <td style="align-items:center;"><i class='material-icons red-text'>clear</i></td>}
+                    <td>
+                        <a href="@Url.Action("Edit", "Puestos", new { id = item.ID })"><i class='material-icons green-text'>edit</i></a>
+                        <a href="@Url.Action("Details", "Puestos", new { id = item.ID })"><i class='material-icons blue-text'>search</i></a>
+                        @*<a href="@Url.Action("Delete", "Puestos", new { id = item.ID })"><i class='material-icons red-text'>delete</i></a>*@
+                    </td>
+                </tr>
                 }
             </tbody>
         </table>

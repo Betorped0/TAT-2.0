@@ -72,6 +72,7 @@ namespace TAT001.Services
                             UrlDirectory = UrlDirectory.Replace("Solicitudes/Details", "Correos/" + page);
                             UrlDirectory = UrlDirectory.Replace("Solicitudes/Edit", "Correos/" + page);
                             UrlDirectory = UrlDirectory.Replace("Flujos/Procesa", "Correos/" + page);
+                            UrlDirectory = UrlDirectory.Replace("Masiva/setDatosa", "Correos/" + page);
                             //UrlDirectory += "/" + dOCUMENTO.NUM_DOC + "?mail=true"; //B20180803 MGC Correos
                             UrlDirectory += "/" + dOCUMENTO.NUM_DOC + ""; //B20180803 MGC Correos
                             HttpWebRequest myRequest = (HttpWebRequest)WebRequest.Create(UrlDirectory);

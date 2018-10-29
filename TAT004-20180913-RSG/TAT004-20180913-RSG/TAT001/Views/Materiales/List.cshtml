@@ -6,48 +6,69 @@
     <thead>
         <tr class="header">
             <th>
-                @Html.ActionLink("ID", "List", new { colOrden = "ID", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros },new { id="lbl_id"})
-            </th>
-            <th > 
-                @Html.ActionLink("MAKTX", "List", new { colOrden = "MAKTX", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros }, new { id = "lbl_Dsc" })
+                @Html.ActionLink("MATERIAL_ID", "List", new { colOrden = "MATERIAL_ID", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar }, new { id = "lbl_id" })
             </th>
             <th>
-                @Html.ActionLink("MATERIALGP", "List", new { colOrden = "MATERIALGP", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros }, new { id = "lbl_MatGroup" })
+                @Html.ActionLink("VKORG", "List", new { colOrden = "VKORG", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar }, new { id = "lbl_vkorg" })
             </th>
             <th>
-                @Html.ActionLink("ACTIVO", "List", new { colOrden = "ACTIVO", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros }, new { id = "lbl_Activo" })
+                @Html.ActionLink("VTWEG", "List", new { colOrden = "VTWEG", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar }, new { id = "lbl_vtweg" })
             </th>
+            <th>
+                @Html.ActionLink("MAKTX", "List", new { colOrden = "MAKTX", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar }, new { id = "lbl_Dsc" })
+            </th>
+            <th>
+                @Html.ActionLink("MATKL_ID", "List", new { colOrden = "MATKL_ID", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar }, new { id = "lbl_matklid" })
+            </th>
+            <th>
+                @Html.ActionLink("MATERIAL_GROUP", "List", new { colOrden = "MATERIAL_GROUP", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar }, new { id = "lbl_MatGroup" })
+            </th>
+            @*<th>
+                @Html.ActionLink("ACTIVO", "List", new { colOrden = "ACTIVO", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar }, new { id = "lbl_Activo" })
+            </th>*@
             <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model.materiales)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MAKTX)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MATERIALGP.DESCRIPCION)
-                </td>
-                @if ((bool)item.ACTIVO == true)
-                {
-                    <td style="align-items:center"><i class='material-icons green-text'>check</i></td>}
-                else
-                {
-                    <td style="align-items:center;"><i class='material-icons red-text'>clear</i></td>}
-                <td>
-                    <a href="@Url.Action("Edit", "Materiales", new { id = item.ID })">
-                        <i class='material-icons green-text'>edit</i>
-                    </a>&nbsp
-                    <a href="@Url.Action("Details", "Materiales", new { id = item.ID })">
-                        <i class='material-icons blue-text'>search</i>
-                    </a>
-                </td>
-            </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MATERIAL_ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VKORG)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VTWEG)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MAKTX)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MATKL_ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MATERIAL_GROUP)
+            </td>
+            @*@if ((bool)item.ACTIVO == true)
+            {
+                <td style="align-items:center"><i class='material-icons green-text'>check</i></td>}
+            else
+            {
+                <td style="align-items:center;"><i class='material-icons red-text'>clear</i></td>}*@
+            <td>
+                @*<a href="@Url.Action("Edit", "Materiales", new { id = item.ID })">
+                <i class='material-icons green-text'>edit</i>
+            </a>&nbsp
+            <a href="@Url.Action("Details", "Materiales", new { id = item.ID })">
+                <i class='material-icons blue-text'>search</i>
+            </a>*@
+                <a class="confirmation" href="@Url.Action("Delete", "Materiales", new { id = item.MATERIAL_ID, vkorg=item.VKORG, vtweg=item.VTWEG })">
+                    <i class='material-icons red-text'>delete</i>
+                </a>
+            </td>
+        </tr>
         }
     </tbody>
 </table>
@@ -55,7 +76,7 @@
     @(Model.materiales.PageCount < Model.materiales.PageNumber ? 0 : Model.materiales.PageNumber)
     - @Model.materiales.PageCount
 
-    @Html.PagedListPager(Model.materiales, page => Url.Action("List", new { pagina = page, numRegistros = Model.numRegistros }))
+    @Html.PagedListPager(Model.materiales, page => Url.Action("List", new { pagina = page, numRegistros = Model.numRegistros, buscar = Model.buscar, colOrden = Model.ordenActual }))
 </div>
 <div>
 
@@ -85,6 +106,12 @@
     }
 </div>
 <script>
+    $('.confirmation').on('click', function (e) {
+        e.preventDefault;
+        return confirm('¿Desea eliminar el material?');
+    });
+
+
     //-----Sort
     function sort() {
         var sortLink = $('.header>th>a');
@@ -110,4 +137,29 @@
         }
     }
     sort();
+        //-----Pagination
+    function pagination() {
+        var paginationLink = $('.pagination>li>a');
+        for (var i = 0; i < paginationLink.length; i++) {
+            var url = paginationLink.get(i).getAttribute("href");
+            var id = 'link_p' + i;
+            if (url) {
+                paginationLink.get(i).setAttribute("id", id);
+                paginationLink.get(i).setAttribute("url", url);
+                $('#' + id).click(function (me) {
+                    fnCommon.showProcess(true);
+                    $.ajax({
+                        url: me.toElement.getAttribute('url'),
+                        success: function (resultView) {
+                            fnCommon.showProcess(false);
+                            $('#list').html(resultView);
+                            pagination();
+                        }
+                    });
+                });
+            }
+            paginationLink.get(i).removeAttribute("href");
+        }
+    }
+    pagination();
 </script>
