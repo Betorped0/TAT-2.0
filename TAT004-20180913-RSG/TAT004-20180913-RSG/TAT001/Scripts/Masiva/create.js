@@ -2047,7 +2047,8 @@ function procesarHoja5() {
                 $("#excelBtn").removeAttr("disabled");
                 cloneTables();
                 $(".requiredfile").on("change", function () {
-                    if ($(this).hasClass("valid")) {
+                    //if ($(this).hasClass("valid")) {
+                    if ($(this).hasClass("valid") & validaTabs("1", 4)) {//ADD RSG 29.10.2018
                         $(this).closest('tr').children().eq(0).children().removeClass("red rojo");
                         $(this).closest('tr').children().eq(0).children().addClass("green");
                         $(this).closest('tr').children().eq(0).children().text("done");
@@ -2056,6 +2057,7 @@ function procesarHoja5() {
                         $(this).closest('tr').children().eq(0).children().removeClass("green");
                         $(this).closest('tr').children().eq(0).children().addClass("red rojo");
                         $(this).closest('tr').children().eq(0).children().text("close");
+                        clearErrors();//ADD RSG 29.10.2018
                     }
                 });
 
@@ -2465,6 +2467,7 @@ function clearErrors() {
     for (var aa = 0; aa < tablaH1.rows().data().length; aa++) {
         var rowH11 = tablaH1.row(aa).node();
         var num_docH11 = $(rowH11).children().eq(1).children().val();
+        clearErrorsN(num_docH11);//ADD RSG 29.10.2018
 
         //SI TIENE TRUE TIENE ERROR
         if (jQuery.inArray(num_docH11 + true, tabla1) != -1) {

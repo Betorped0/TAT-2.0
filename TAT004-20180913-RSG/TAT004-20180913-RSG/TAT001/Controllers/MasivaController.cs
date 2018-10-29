@@ -21,6 +21,7 @@ using System.IO;
 
 namespace TAT001.Controllers
 {
+    [Authorize]//ADD RSG 29.10.2018
     public class MasivaController : Controller
     {
         private TAT001Entities db = new TAT001Entities();
@@ -191,11 +192,17 @@ namespace TAT001.Controllers
                     doc.VKORG = vkorg;
                     doc.VTWEG = vtweg;
 
-                    var existeCliente = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault().NAME1;
+                    //var existeCliente = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault().NAME1;
 
-                    if (existeCliente != null | existeCliente != "")
+                    //if (existeCliente != null | existeCliente != "")
+                    //{
+                    //    doc.PAYER_NOMBRE = existeCliente;
+                    //}
+                    var existeCliente = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault();
+
+                    if (existeCliente != null)
                     {
-                        doc.PAYER_NOMBRE = existeCliente;
+                        doc.PAYER_NOMBRE = existeCliente.NAME1;
                     }
                     else
                     {
