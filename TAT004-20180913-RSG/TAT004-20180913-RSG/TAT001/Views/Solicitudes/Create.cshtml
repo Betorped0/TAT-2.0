@@ -17,7 +17,7 @@
 <script src="~/Scripts/analisis.js"></script><!--RSG 13.06.2018-->
 <script src="~/Scripts/ValidarNumero.js"></script><!--LEJ 09.07.2018-->
 <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
-<script src="~/Scripts/cierre.js"></script>
+<script src="~/Scripts/listas.js"></script>
 @if (ViewBag.error != "")
 {
  <script>
@@ -275,7 +275,7 @@ $(document).ready(function () {
                                     <div class="col-md-10">
                                         @if (ViewBag.relacionada == "")
                                         {
-                                            @Html.DropDownList("TALL_ID", null, "", htmlAttributes: new { @id = "tall_id", @class = "form-control  " + @ViewBag.relacionada })
+                                            @Html.DropDownList("TALL_ID", null, "", htmlAttributes: new { @id = "tall_id", @class = "form-control  " + @ViewBag.relacionada,@onchange= "cuentas()" })
                                         }
                                         else
                                         {
@@ -338,6 +338,7 @@ $(document).ready(function () {
                                                 var val = e.sender.value();
                                                 selectTsol(val);
                                                 soportes(val, '@ViewBag.spras_id');
+                                                periodo(val);
                                                 M.Toast.dismissAll();
                                             }
                                         });
@@ -1437,6 +1438,17 @@ $(document).ready(function () {
                                             <span id="span_ligada">Solicitud ligada a facturación </span>@*B20180801 MGC Textos*@
                                         </label>
                                         <script>
+                                            var elem = document.getElementById("span_ligada");
+                                              if (elem != undefined) {
+                                                  var wa = "Se calcula al cierre del periodo.";
+                                                  var options = {
+                                                      html: wa,
+                                                      position: "right"
+                                                  };
+                                                  var instance = M.Tooltip.init(elem, options);
+                                              }
+                                        </script>
+                                        <script>
 
                                             function cambiaLigada(campo) {
                                                 if (campo.checked) {
@@ -1836,64 +1848,11 @@ $(document).ready(function () {
                                     </div>
                                 </div>
                                 <script>
-var clearing = [];
-function getClearing(gall) {
-$("#div_clearing").empty();
-clearing = [];
-/**/
-/**/
-/**/
-/**/
-var bukrs = '@Model.SOCIEDAD_ID';
-/**/
-/**/
-/**/
-/**/
-/**/
-/**/
-/**/
-/**/
-var land = '@Model.PAIS_ID';
-/**/
-/**/
-/**/
-/**/
-/**/
-/**/
-/**/
-/**/
-var ejercicio = '@Model.EJERCICIO';
-/**/
-/**/
-/**/
-/**/
-    $.ajax({
-        type: "POST",
-        url: '../Listas/clearing',
-        dataType: "json",
-        data: { bukrs: bukrs, land: land, gall: gall, ejercicio: ejercicio },
-
-        success: function (data) {
-            if (data !== null || data !== "") {
-                //RSG 26.04.2018----------------
-                clearing.push(data.ABONO);
-                //DRS 28.09.2018
-                clearing.push(data.NOMBREA);
-                clearing.push(data.CARGO);
-                clearing.push(data.NOMBREC);
-                clearing.push(data.CLEARING);
-                clearing.push(data.LIMITE);
-                //RSG 26.04.2018----------------
-            }
-
-        },
-        error: function (xhr, httpStatusMessage, customErrorMessage) {
-            //M.toast({ html: httpStatusMessage });
-        },
-        async: false
-    });
-
-}
+                                            var clearing = [];
+                                            function getClearing() {
+                                            $("#div_clearing").empty();
+                                            cuentas();
+                                            }
                                             function formaClearing() {
                                                 var tex_abono = document.querySelector(".lbl_cabono").innerHTML;
                                                 var tex_cargo = document.querySelector(".lbl_ccargo").innerHTML;

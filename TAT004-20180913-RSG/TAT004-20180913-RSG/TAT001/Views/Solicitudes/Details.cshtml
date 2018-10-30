@@ -1280,6 +1280,16 @@
                                     <div class="card-panel">
                                         <h5 id="head_dis">Distribución</h5>
                                         <div class="row" style="margin-bottom:0">
+                                            @if (Model.D.LIGADA.Value) {
+                                            <div class="input-field col s6">
+                                                <label>
+                                                    <input type="checkbox" checked />
+                                                    <span id="span_ligada">Solicitud ligada a facturación </span>
+                                                </label>
+                                            </div>
+                                            }
+                                        </div>
+                                        <div class="row" style="margin-bottom:0">
                                             <div class="input-field col s6">
                                                 @Html.EditorFor(model => model.D.TIPO_TECNICO, new { htmlAttributes = new { @disabled = "disabled" } })
                                                 @Html.LabelFor(model => model.D.TIPO_TECNICO, "Negociación", htmlAttributes: new { @id = "lbl_tiponeg" })
@@ -1290,23 +1300,23 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col s12 m6 l6">
-                                    <div class="card-panel">
-                                        <h5 id="head_montob">Monto Base</h5>
-                                        <div class="row" style="margin-bottom:0">
-                                            <div class="input-field col s6">
-                                                @Html.EditorFor(model => model.D.MONTO_DOC_MD, new { htmlAttributes = new { @disabled = "disabled", @id = "lbl_montodis", @class = "_vmonto" } })
-                                                @Html.LabelFor(model => model.D.MONTO_DOC_MD, "Monto", htmlAttributes: new { @id = "lbl_montodis" })
-                                            </div>
-                                            <div class="input-field col s6">
-                                                @Html.EditorFor(model => model.D.MONEDA_ID, new { htmlAttributes = new { @disabled = "disabled", @id = "lbl_monedadis" } })
-                                                @Html.LabelFor(model => model.D.MONEDA_ID, "Moneda", htmlAttributes: new { @for = "monedadis_id", @id = "lbl_monedadis" })
+                                        </div>
+                                        <div class="col s12 m6 l6">
+                                            <div class="card-panel">
+                                                <h5 id="head_montob">Monto Base</h5>
+                                                <div class="row" style="margin-bottom:0">
+                                                    <div class="input-field col s6">
+                                                        @Html.EditorFor(model => model.D.MONTO_DOC_MD, new { htmlAttributes = new { @disabled = "disabled", @id = "lbl_montodis", @class = "_vmonto" } })
+                                                        @Html.LabelFor(model => model.D.MONTO_DOC_MD, "Monto", htmlAttributes: new { @id = "lbl_montodis" })
+                                                    </div>
+                                                    <div class="input-field col s6">
+                                                        @Html.EditorFor(model => model.D.MONEDA_ID, new { htmlAttributes = new { @disabled = "disabled", @id = "lbl_monedadis" } })
+                                                        @Html.LabelFor(model => model.D.MONEDA_ID, "Moneda", htmlAttributes: new { @for = "monedadis_id", @id = "lbl_monedadis" })
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
                         }
                         @*///////////////////////////////CAMBIOS LGPP FIN//////////////////////////*@
                         <div class="card-panel">
