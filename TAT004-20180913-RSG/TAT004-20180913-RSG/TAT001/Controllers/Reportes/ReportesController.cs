@@ -295,6 +295,7 @@ namespace TAT001.Controllers.Reportes
             ViewBag.sociedad = db.SOCIEDADs.ToList();
             ViewBag.periodo = db.PERIODOes.ToList();
 
+            string year =  Request["selectyear"];
             var code = Request["filtroCode"];
             var periodo = Request["filtroPeriodo"];
             var anio = Request["filtroAnio"];
@@ -317,9 +318,9 @@ namespace TAT001.Controllers.Reportes
                                   join CLIENTE in db.CLIENTEs on new { x.VKORG, x.VTWEG, x.SPART, x.PAYER_ID } equals new { CLIENTE.VKORG, CLIENTE.VTWEG, CLIENTE.SPART, PAYER_ID = CLIENTE.KUNNR }
                                   join FLUJO in db.FLUJOes on x.NUM_DOC equals FLUJO.NUM_DOC
                                   join CUENTAGL in db.CUENTAGLs on x.CUENTAP equals CUENTAGL.ID
-                                  join DOCUMENSAP in db.DOCUMENTOSAPs on x.NUM_DOC equals DOCUMENSAP.NUM_DOC
+                                  join DOCUMENTOSAP in db.DOCUMENTOSAPs on x.NUM_DOC equals DOCUMENTOSAP.NUM_DOC
 
-                                  where x.SOCIEDAD_ID == item.ToString() && x.PERIODO == filtroPeriodo && x.EJERCICIO == miconsultaAnio && FLUJO.POS == 2
+                                  where x.SOCIEDAD_ID == item.ToString() && x.PERIODO == filtroPeriodo && x.EJERCICIO == year /*&& FLUJO.POS == 2*/
 
                                   select new
                                   {
@@ -333,8 +334,8 @@ namespace TAT001.Controllers.Reportes
                                       x.FECHAC,
                                       x.MONTO_DOC_MD,
                                       x.MONTO_DOC_ML2,
-                                      DOCUMENSAP.IMPORTE,
-                                      fechasap = DOCUMENSAP.FECHAC,
+                                      DOCUMENTOSAP.IMPORTE,
+                                      //DOCUMENTOSAP.FECHAC,
                                       x.CUENTAP,
                                       CUENTAGL.NOMBRE,
                                       x.CUENTAPL,

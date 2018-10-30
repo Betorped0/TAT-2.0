@@ -33,7 +33,12 @@
             <div class="card-panel">
                 <div class="row">
                     <div class="input-field col s12">
-                        @Html.EditorFor(model => model.NOMBRE, new { htmlAttributes = new { @class = "form-control", required=true } })
+                        @Html.EditorFor(model => model.ID, new { htmlAttributes = new { @disabled = "disabled" } })
+                        @Html.LabelFor(model => model.ID, htmlAttributes: new { @id = "lbl_id" })
+                        @Html.ValidationMessageFor(model => model.ID, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="input-field col s12">
+                        @Html.EditorFor(model => model.NOMBRE, new { htmlAttributes = new { @class = "form-control", required = true } })
                         @Html.LabelFor(model => model.NOMBRE, htmlAttributes: new { @id = "lbl_nombre" })
                         @Html.ValidationMessageFor(model => model.NOMBRE, "", new { @class = "text-danger" })
                     </div>

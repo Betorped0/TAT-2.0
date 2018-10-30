@@ -18,21 +18,10 @@
                 {
                     <div class="col s6 m4 l2 center">
                         <div class="row">
-                            <input id="btn_@item.LAND.ToLower()" type="image" src="~/images/flags/1x1/@item.IMAGE" class="circle" style="height:100px;width:100px;" onclick="location.href='@Url.Action("SelPais", "Home", new {pais=item.LAND, returnUrl = ViewBag.returnUrl})';return false;" />
+                            <input id="btn_@item.LAND.ToLower()" type="image" src="~/images/flags/1x1/@item.IMAGE" class="circle" style="height:100px;width:100px;" onclick="location.href='@Url.Action("SelPais", "Home", new {pais=item.LAND,sociedad_id=item.SOCIEDAD_ID , returnUrl = ViewBag.returnUrl})';return false;" />
                         </div>
                     </div>
                 }
-                @*<div class="col s12 m6 l4">
-                        <div style="height:100px;width:100px;">
-                            <input id="btn_mx" type="image" src="~/images/flags/1x1/mx.png" class="circle" style="height:100px;width:100px;" onclick="location.href='@Url.Action("Index", "Home", new {pais="mx"})';return false;" />
-                        </div>
-                    </div>
-                    <div class="col s12 m6 l4">
-                        <input id="btn_pr" type="image" src="~/images/flags/1x1/pr.png" class="circle" style="height:100px;width:100px;" onclick="location.href='@Url.Action("Index", "Home", new {pais="pr"})';return false;" />
-                    </div>
-                    <div class="col s12 m6 l4">
-                        <input id="btn_ec" type="image" src="~/images/flags/1x1/ec.png" class="circle" style="height:100px;width:100px;" onclick="location.href='@Url.Action("Index", "Home", new {pais="ec"})';return false;" />
-                    </div>*@
             </div>
 
             <div class="row">
@@ -48,7 +37,7 @@
                             {
                                 <div class="col s6 m4 l2 center">
                                     <div class="row">
-                                        <input id="btn_@item.LAND.ToLower()" type="image" src="~/images/flags/1x1/@item.IMAGE" class="circle" style="height:100px;width:100px;" onclick="location.href='@Url.Action("SelPais", "Home", new { pais = item.LAND, returnUrl = ViewBag.returnUrl })';return false;" />
+                                        <input id="btn_@item.LAND.ToLower()" type="image" src="~/images/flags/1x1/@item.IMAGE" class="circle" style="height:100px;width:100px;" onclick="location.href='@Url.Action("SelPais", "Home", new { pais = item.LAND,sociedad_id=item.SOCIEDAD_ID , returnUrl = ViewBag.returnUrl })';return false;" />
                                     </div>
                                 </div>
                             }

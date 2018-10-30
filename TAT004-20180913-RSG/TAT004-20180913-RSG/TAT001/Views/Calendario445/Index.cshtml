@@ -83,7 +83,7 @@
                         </thead>
                         <tbody>
                             @foreach (var item in Model.calendarios445)
-                        {
+                            {
                                 <tr class="text-left">
                                     <td>
                                         @Html.DisplayFor(modelItem => item.SOCIEDAD_ID)
@@ -119,8 +119,10 @@
                                         @Html.DisplayFor(modelItem => item.CIE_TOH)
                                     </td>
                                     <td>
-                                        <a href="@Url.Action("Edit", "Calendario445", new { ejercicio=item.EJERCICIO,  periodo= item.PERIODO,  sociedad_id= item.SOCIEDAD_ID,  tsol_id= item.TSOL_ID })"><i class='material-icons green-text'>edit</i></a>
+                                        @if(DateTime.Now < item.CIE_TOF) { 
+                                        <a href="@Url.Action("Edit", "Calendario445", new { ejercicio = item.EJERCICIO, periodo = item.PERIODO, sociedad_id = item.SOCIEDAD_ID, tsol_id = item.TSOL_ID })"><i class='material-icons green-text'>edit</i></a>
                                         <a href="@Url.Action("Index", "CalendarioEx445", new { ejercicio = item.EJERCICIO, periodo = item.PERIODO, sociedad_id = item.SOCIEDAD_ID, tsol_id = item.TSOL_ID })"><i class='material-icons blue-text'>assignment_late</i></a>
+                                        }
                                     </td>
                                 </tr>
                         }
