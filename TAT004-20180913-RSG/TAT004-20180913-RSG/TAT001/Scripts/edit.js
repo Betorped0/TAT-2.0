@@ -2306,10 +2306,11 @@ function copiarTableVistaSop() {
 
             if ($("#check_factura").is(':checked') === false) {
                 //LEJ 03.08.2018
-
+                var fecha = "";
+                ffecha.forEach(function (val) { if (val && val.indexOf("/") > -1) fecha = val; });
                 factura = "<input class=\"FACTURA input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + factura.trim() + "\">";
                 bukrs = "<input class=\"SOCIEDAD input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + bukrs + "\">";
-                ffecha[0] = "<input class=\"FECHA input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + ffecha[0].trim() + "\">";
+                ffecha[0] = "<input class=\"FECHA input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + fecha.trim() + "\">";
                 prov = "<input class=\"PROVEEDOR input_sop_f input_proveedor\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + prov.trim() + "\">";
                 control = "<input class=\"CONTROL input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + control.trim() + "\">";
                 autorizacion = "<input class=\"AUTORIZACION input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + autorizacion.trim() + "\">";
