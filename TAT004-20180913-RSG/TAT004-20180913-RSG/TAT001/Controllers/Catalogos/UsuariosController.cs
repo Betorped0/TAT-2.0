@@ -1278,6 +1278,7 @@ namespace TAT001.Controllers.Catalogos
                                 tabla1[cont3, 4] = da.NOMBRE.ToString();
                                 tabla1[cont3, 5] = da.APELLIDO_P.ToString();
                                 tabla1[cont3, 6] = da.APELLIDO_M.ToString();
+                                usuariosoc[cont4, 1] = da.ID.ToString();
                                 us.ID = us.ID + "!";
                             }
                             else
@@ -2408,6 +2409,7 @@ namespace TAT001.Controllers.Catalogos
                                     tabla1[cont3, 4] = da.NOMBRE.ToString();
                                     tabla1[cont3, 5] = da.APELLIDO_P.ToString();
                                     tabla1[cont3, 6] = da.APELLIDO_M.ToString();
+                                    usuariosoc[cont4, 1] = da.ID.ToString();
                                     us.ID = us.ID + "!";
                                 }
                                 else
@@ -2661,15 +2663,16 @@ namespace TAT001.Controllers.Catalogos
             string usuario_id = null;
             foreach (DET_AGENTE1 da in ld)
             {
+                USUARIO us = new USUARIO();
                 if (!String.IsNullOrEmpty(da.ID))
                 {
                     usuario_id = da.ID;
                 }
-                USUARIO us = db.USUARIOs.Where(x => x.ID == usuario_id).First();
-
+                List<SOCIEDAD> clin1 = db.USUARIOs.Where(a => a.ID.Equals(usuario_id)).FirstOrDefault().SOCIEDADs.ToList();
+                us = db.USUARIOs.Where(x => x.ID == usuario_id).First();
+                List<SOCIEDAD> clin = us.SOCIEDADs.ToList();
                 try
                 {
-                    List<SOCIEDAD> clin1 = db.USUARIOs.Where(a => a.ID.Equals(da.ID)).FirstOrDefault().SOCIEDADs.ToList();
                     if (clin1 != null)
                     {
                         SOCIEDAD soc = db.SOCIEDADs.Where(x => x.BUKRS == da.BUNIT).First();
@@ -2685,6 +2688,7 @@ namespace TAT001.Controllers.Catalogos
                 }
                 catch (Exception e)
                 {
+                    db.Entry(us).State = EntityState.Detached;
                 }
             }
 
