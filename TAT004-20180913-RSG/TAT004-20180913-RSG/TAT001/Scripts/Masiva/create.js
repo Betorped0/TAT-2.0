@@ -26,8 +26,9 @@ $("#miMas").change(function () {
             }
             //var elem = document.querySelectorAll('.miSel');
             //var instance = M.Select.init(elem, []);
-            document.getElementById("loader").style.display = "none";
+            //document.getElementById("loader").style.display = "none";
             clearErrors();
+            document.getElementById("loader").style.display = "none";
         } else {
             M.toast({ html: 'Tipo de archivo incorrecto: ' + filename });
         }
@@ -35,6 +36,7 @@ $("#miMas").change(function () {
         M.toast({ html: 'Seleccione un archivo' });
     }
     //$("#miMas").val("");
+    clearErrors();
 });
 
 function evaluarExt(filename) {
@@ -58,7 +60,8 @@ function getExcelMasivas(file) {
         url: 'loadExcelMasiva',
         data: formData,
         contentType: false,
-        processData: false
+        processData: false,
+        async: false
     }).fail(function () {
         alert("error");
     });
@@ -68,7 +71,7 @@ function getExcelMasivas(file) {
 function procesarHoja1() {
     var table = $('#tab_test1').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" } });
     table.clear().draw();
-
+    
     $.ajax({
         type: "POST",
         url: 'validaHoja1',
@@ -1636,6 +1639,7 @@ $('body').on('focusout', '.input_cantidades', function () {
         url: 'getDecimal',
         dataType: "json",
         data: { "Pais": pais },
+        async: false,
         success: function (data) {
             getDec = data;
 
@@ -1869,6 +1873,7 @@ $('body').on('keydown', '.input_apoyo', function (e) {
         url: 'getDecimal',
         dataType: "json",
         data: { "Pais": pais },
+        async: false,
         success: function (data) {
             getDec = data;
 
@@ -1985,7 +1990,8 @@ function ligada(check) {
                 colVolReal.val(toShowNum('0', getDec)).attr("disabled", false);
                 colApoyo.val(toShow('0', getDec)).attr("disabled", false);
             }
-        }
+        },
+        async: false
     });
 }
 
@@ -2370,7 +2376,8 @@ function obtenDecimalMil(pais, cantidad) {
                 mil = data;
             }
             total = toNum(cantidad, mil, decimal);
-        }
+        },
+        async: false
     });
 
     return total;
@@ -2849,7 +2856,8 @@ function guardaDatos() {
             if (xhr.responseText && xhr.responseText[0] == "{")
                 err = JSON.parse(xhr.responseText).Message;
             //console.log(err);
-        }
+        },
+        async: false
     });
 
     $.ajax({
@@ -2857,6 +2865,7 @@ function guardaDatos() {
         url: 'setDatos',
         dataType: "json",
         data: { "h1": tabla1, "h2": tabla2, "h3": tabla3, "h4": tabla4, "h5": tabla5 },
+        async: false,
         success: function (data) {
             if (data != null | data != "") {
                 var eliminarId = [];
