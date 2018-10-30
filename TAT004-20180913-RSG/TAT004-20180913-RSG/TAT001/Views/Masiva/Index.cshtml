@@ -17,34 +17,44 @@
 <input class="form-control" id="txt_spras" value="@(ViewBag.usuario.SPRAS_ID)" hidden>
 
 @*@if (TempData["docs_masiva"] != null)
-{
-    List<string> list_num_doc = (List<string>)TempData["docs_masiva"];
-    foreach (var num_doc in list_num_doc)
     {
+        List<string> list_num_doc = (List<string>)TempData["docs_masiva"];
+        foreach (var num_doc in list_num_doc)
+        {
 
-        <script>
-            $(document).ready(function () {
-                function docMessage(msg) {
-                    M.toast({ html: msg });
-                }
-
-                var messages = '@num_doc';
-
-                if (messages != "") {
-                    if (messages.substring(0, 4) == "&lt;") {
-                        docMessage('Error en registro ' + messages.replace("&lt;", ""));
+            <script>
+                $(document).ready(function () {
+                    function docMessage(msg) {
+                        M.toast({ html: msg });
                     }
-                    else {
-                        docMessage('Documento ' + messages + ' fue creado');
+
+                    var messages = '@num_doc';
+
+                    if (messages != "") {
+                        if (messages.substring(0, 4) == "&lt;") {
+                            docMessage('Error en registro ' + messages.replace("&lt;", ""));
+                        }
+                        else {
+                            docMessage('Documento ' + messages + ' fue creado');
+                        }
                     }
-                }
-            });
-        </script>
-    }
-    TempData["docs_masiva"] = null;
-}*@
+                });
+            </script>
+        }
+        TempData["docs_masiva"] = null;
+    }*@
 
 <div id="borraTabla" class="modal">
+    <div class="modal-content">
+        <h4>Borrar</h4>
+        <p>¿Estás seguro que quieres borrar la carga actual?</p>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close btn-flat">NO</a>
+        <a href="" class="modal-action modal-close btn-flat">si</a>
+    </div>
+</div>
+<div id="salirPag" class="modal">
     <div class="modal-content">
         <h4>Borrar</h4>
         <p>¿Estás seguro que quieres borrar la carga actual?</p>
@@ -95,18 +105,29 @@
     </div>
 </div>
 
-<div class="row">
-    @using (Html.BeginForm("Index", "Masiva", new { enctype = "multipart/form-data" }))
-    {
-        <div class="file-field input-field col s8 m8 l8">
-            <div class="waves-effect waves-light btn">
-                <span>Seleccionar archivo</span>
-                <input type="file" name="miMas" id="miMas">
+<div class="row" style="margin-bottom:0px;">
+    <div class="col s12 m6 l3">
+        @using (Html.BeginForm("Index", "Masiva", new { enctype = "multipart/form-data" }))
+        {
+            <div class="file-field input-field col s12">
+                <div class="waves-effect waves-light btn col s12">
+                    <span>Seleccionar archivo</span>
+                    <input type="file" name="miMas" id="miMas" />
+                </div><div class="file-path-wrapper hide">
+                    <input class="file-path validate" type="text">
+                </div>
             </div>
+        }
+    </div>
+    <div class="col s12 m6 l3" style="padding-top:14px;">
+        <a class="waves-effect waves-light btn col s12" id="excelBtn" onclick="tablesToExcel(['tab_test1clond','tab_test2clon','tab_test3clon','tab_test4clon'], ['Hoja1','Hoja2','Hoja3','Hoja4'], 'TestBook.xls', 'Excel')" disabled>Exportar vista a Excel</a>
+    </div>
+    <div class="col s12 m6 l3 offset-l3">
+        <div class="input-field col s12">
+            <input type="text" class="global_filter" id="global_filter">
+            <label for="global_filter" id="lbl_search">Buscar</label>
         </div>
-    }
-    &nbsp;
-    <a class="waves-effect waves-light btn col s4 m4 l4" id="excelBtn" onclick="tablesToExcel(['tab_test1clond','tab_test2clon','tab_test3clon','tab_test4clon'], ['Hoja1','Hoja2','Hoja3','Hoja4'], 'TestBook.xls', 'Excel')" disabled>Exportar vista a Excel</a>
+    </div>
 </div>
 
 <div class="row">
@@ -224,6 +245,7 @@
                         <th style="text-align:center;">NUM_DOC</th>
                         <th style="text-align:center;">TIPO</th>
                         <th style="text-align:center;">ARCHIVO</th>
+                        @*<th style="text-align:center;">NOTAS</th>*@
                         @*<th style="text-align:center;">BOTON</th>*@
                     </tr>
                 </thead>
@@ -240,6 +262,16 @@
 
     var elem = document.getElementById('borraTabla');
     M.Modal.init(elem, []);
+</script>
+<script>
+    window.onbeforeunload = confirmExit;
+    function confirmExit() {
+        return "¿Deseas salir del módulo? La infomración se perderá. ";
+    }
+    var instance1 = M.Tabs.init(el1, []);
+    
+    var elem1 = document.getElementById('borraTabla');
+    M.Modal.init(elem1, []);
 </script>
 
 <script src="~/Scripts/autocomplete1.10.2.js"></script>

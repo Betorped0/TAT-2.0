@@ -908,9 +908,8 @@ namespace TAT001.Controllers
                                             carp.NUM_DOC = v.num_doc;
                                             carp.POS_ID = pos;
                                             carp.POS = indexp;
-                                            //carp.MATNR = item2.MATNR.TrimStart('0');
                                             carp.MATNR = item2.MATNR;
-                                            carp.MATKL = item2.DESCRIPCION;
+                                            carp.MATKL = "";
                                             carp.CANTIDAD = 1;
                                             carp.MONTO = docmod.MONTO;
                                             carp.PORC_APOYO = docmod.PORC_APOYO;
@@ -962,7 +961,7 @@ namespace TAT001.Controllers
                                             }
                                             catch (Exception e)
                                             {
-
+                                                Log.ErrorLogApp(e,"CartaV","Create");
                                             }
                                         }
 

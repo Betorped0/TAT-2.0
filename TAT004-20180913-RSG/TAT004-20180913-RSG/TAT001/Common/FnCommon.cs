@@ -119,7 +119,7 @@ namespace TAT001.Common
                     Text = (x.TSOL_ID + " - " + x.TXT50)
                 }).ToList();
         }
-        public static List<SelectTreeItem> ObtenerTreeTiposSolicitud(TAT001Entities db, string spras_id, string tipo = null,bool? esReversa=false)
+        public static List<SelectTreeItem> ObtenerTreeTiposSolicitud(TAT001Entities db,string sociedad_id, string spras_id, string tipo = null,bool? esReversa=false)
         {
             // tipo
             // SD = Solicitud directa
@@ -138,7 +138,7 @@ namespace TAT001.Common
             else
             {
                 db.TSOL_GROUP
-                    .Where(x => x.ID_PADRE == null && x.TIPO_PADRE == null && (tipo == x.TIPO || tipo == null))
+                    .Where(x => x.ID_PADRE == null && x.TIPO_PADRE == null && (tipo == x.TIPO || tipo == null) && ((sociedad_id=="KCMX" || sociedad_id == "KLCO") && x.ID!= "1_5_OP" && x.ID != "2_5_OP"))
                     .Join(db.TSOL_GROUPT, tg => new { ID = tg.ID, TIPO = tg.TIPO }, tgt => new { ID = tgt.TSOL_GROUP_ID, TIPO = tgt.TSOL_GROUP_TIPO }, (tg, tgt) => tgt)
                     .Where(x => x.SPRAS_ID == spras_id).OrderBy(x => x.TSOL_GROUP_ID)
                     .ToList().ForEach(x =>
@@ -216,7 +216,57 @@ namespace TAT001.Common
             }
             return items;
         }
+        public static int ObtenerPeriodoCalendario445(TAT001Entities db, string sociedad_id, string tsol_id, string usuario_id = null)
+        {
+            //tipo
+            //PRE = PreCierre
+            //CI =  Cierre
+            DateTime fechaActual = DateTime.Now;
+            short ejercicio = short.Parse(fechaActual.Year.ToString());
+            CALENDARIO_AC calendarioAc = null;
+            CALENDARIO_EX calendarioEx = null;
 
+            calendarioAc = db.CALENDARIO_AC.FirstOrDefault(x =>
+            x.ACTIVO == true &&
+            x.SOCIEDAD_ID == sociedad_id &&
+            x.TSOL_ID == tsol_id &&
+            x.EJERCICIO == ejercicio &&
+            (fechaActual >= DbFunctions.CreateDateTime(x.PRE_FROMF.Year, x.PRE_FROMF.Month, x.PRE_FROMF.Day, x.PRE_FROMH.Hours, x.PRE_FROMH.Minutes, x.PRE_FROMH.Seconds) &&
+             fechaActual <= DbFunctions.CreateDateTime(x.PRE_TOF.Year, x.PRE_TOF.Month, x.PRE_TOF.Day, x.PRE_TOH.Hours, x.PRE_TOH.Minutes, x.PRE_TOH.Seconds)));
+            if (calendarioAc!=null)
+            {
+                return calendarioAc.PERIODO;
+            }
+            if (calendarioAc==null && usuario_id != null)
+            {
+                calendarioEx = db.CALENDARIO_EX.FirstOrDefault(x =>
+                    x.ACTIVO == true &&
+                    x.SOCIEDAD_ID == sociedad_id &&
+                    x.TSOL_ID == tsol_id &&
+                    x.USUARIO_ID == usuario_id &&
+                    x.EJERCICIO == ejercicio &&
+                    (fechaActual >= DbFunctions.CreateDateTime(x.EX_FROMF.Year, x.EX_FROMF.Month, x.EX_FROMF.Day, x.EX_FROMH.Hours, x.EX_FROMH.Minutes, x.EX_FROMH.Seconds) &&
+                    fechaActual <= DbFunctions.CreateDateTime(x.EX_TOF.Year, x.EX_TOF.Month, x.EX_TOF.Day, x.EX_TOH.Hours, x.EX_TOH.Minutes, x.EX_TOH.Seconds)));
+                if (calendarioEx != null)
+                {
+                    return calendarioEx.PERIODO;
+                }
+            }
+             
+                calendarioAc = db.CALENDARIO_AC.FirstOrDefault(x =>
+                x.ACTIVO == true &&
+                x.SOCIEDAD_ID == sociedad_id &&
+                x.TSOL_ID == tsol_id &&
+                x.EJERCICIO == ejercicio &&
+                (fechaActual >= DbFunctions.CreateDateTime(x.CIE_FROMF.Year, x.CIE_FROMF.Month, x.CIE_FROMF.Day, x.CIE_FROMH.Hours, x.CIE_FROMH.Minutes, x.CIE_FROMH.Seconds) &&
+                fechaActual <= DbFunctions.CreateDateTime(x.CIE_TOF.Year, x.CIE_TOF.Month, x.CIE_TOF.Day, x.CIE_TOH.Hours, x.CIE_TOH.Minutes, x.CIE_TOH.Seconds)));
+            if (calendarioAc != null)
+            {
+                return calendarioAc.PERIODO;
+            }
+
+            return 0;
+        }
         public static bool  ValidarPeriodoEnCalendario445(TAT001Entities db,string sociedad_id, string tsol_id,int periodo_id,string tipo, string usuario_id=null)
         {
             //tipo
@@ -233,7 +283,7 @@ namespace TAT001.Common
                     x.ACTIVO == true &&
                     x.SOCIEDAD_ID == sociedad_id && 
                     x.TSOL_ID == tsol_id && 
-                    x.PERIODO==periodo_id &&
+                    x.PERIODO == periodo_id &&
                     x.EJERCICIO==ejercicio &&
                     (fechaActual>= DbFunctions.CreateDateTime(x.PRE_FROMF.Year, x.PRE_FROMF.Month, x.PRE_FROMF.Day, x.PRE_FROMH.Hours, x.PRE_FROMH.Minutes, x.PRE_FROMH.Seconds) && 
                      fechaActual<= DbFunctions.CreateDateTime(x.PRE_TOF.Year, x.PRE_TOF.Month, x.PRE_TOF.Day, x.PRE_TOH.Hours, x.PRE_TOH.Minutes, x.PRE_TOH.Seconds)));
@@ -255,10 +305,11 @@ namespace TAT001.Common
                         x.ACTIVO == true &&
                         x.SOCIEDAD_ID == sociedad_id &&
                         x.TSOL_ID == tsol_id &&
-                        x.PERIODO == periodo_id &&
+                        x.PERIODO == periodo_id  &&
                         x.EJERCICIO == ejercicio &&
                         (fechaActual >= DbFunctions.CreateDateTime(x.CIE_FROMF.Year, x.CIE_FROMF.Month, x.CIE_FROMF.Day, x.CIE_FROMH.Hours, x.CIE_FROMH.Minutes, x.CIE_FROMH.Seconds) && 
                         fechaActual <= DbFunctions.CreateDateTime(x.CIE_TOF.Year, x.CIE_TOF.Month, x.CIE_TOF.Day, x.CIE_TOH.Hours, x.CIE_TOH.Minutes, x.CIE_TOH.Seconds)));
+                 
                     break;
                 default:
                     break;

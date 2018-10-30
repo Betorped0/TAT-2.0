@@ -148,7 +148,7 @@ namespace TAT001.Controllers
             Models.PresupuestoModels carga = new Models.PresupuestoModels();
             ViewBag.ultMod = carga.consultarUCarga();
 
-            ViewBag.TSOL_RELA = FnCommon.ObtenerTreeTiposSolicitud(db, uu,"SR");
+            ViewBag.TSOL_RELA = FnCommon.ObtenerTreeTiposSolicitud(db, DF.D.SOCIEDAD_ID, uu,"SR");
             //RECUPERO EL PAIS para hacer una busqueda de su formato monetario
             ////var paisMon = Session["pais"].ToString();//------------------------LEJGG090718
             ViewBag.miles = DF.D.PAI.MILES;//LEJGG 090718
@@ -571,7 +571,8 @@ namespace TAT001.Controllers
 
             using (TAT001Entities db = new TAT001Entities())
             {
-                string p = "";
+                string pais_id = "";
+                string sociedad_id = "";
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
                 FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
@@ -685,16 +686,15 @@ namespace TAT001.Controllers
                 {
                     try//RSG 15.05.2018
                     {
-                        p = Session["pais"].ToString();
-                        ViewBag.pais = p + ".png";
+                        pais_id = Session["pais"].ToString();
+                        sociedad_id = Session["sociedad_id"].ToString();
+                        ViewBag.pais = pais_id + ".png";
                     }
                     catch
                     {
-                        //ViewBag.pais = "mx.png";
                         return RedirectToAction("Pais", "Home", new { returnUrl = Request.Url.AbsolutePath });//
                     }
                 }
-
                 Session["spras"] = user.SPRAS_ID;
 
                 List<TSOLT_MOD> list_sol = new List<TSOLT_MOD>();
@@ -719,7 +719,7 @@ namespace TAT001.Controllers
                             TSOL_ID = x.Value,
                             TEXT=x.Text
                         }).ToList();
-                    ViewBag.listtreetsol = FnCommon.ObtenerTreeTiposSolicitud(db, user.SPRAS_ID, null, true);
+                    ViewBag.listtreetsol = FnCommon.ObtenerTreeTiposSolicitud(db, sociedad_id, user.SPRAS_ID, null, true);
                 }
                 else {
                     list_sol = FnCommon.ObtenerCmbTiposSolicitud(db, user.SPRAS_ID,null)
@@ -729,7 +729,7 @@ namespace TAT001.Controllers
                             TSOL_ID = x.Value,
                             TEXT = x.Text
                         }).ToList();
-                    ViewBag.listtreetsol = FnCommon.ObtenerTreeTiposSolicitud(db, user.SPRAS_ID, tipS);
+                    ViewBag.listtreetsol = FnCommon.ObtenerTreeTiposSolicitud(db, sociedad_id, user.SPRAS_ID, tipS);
                 }
                 
                 //Obtener los documentos relacionados
@@ -737,7 +737,6 @@ namespace TAT001.Controllers
 
                 SOCIEDAD id_bukrs = new SOCIEDAD();
                 var id_pais = new PAI();
-                //var id_waers = db.MONEDAs.Where(m => m.ACTIVO == true).ToList();//RSG 01.08.2018
 
                 List<TAT001.Models.GALL_MOD> list_grupo = new List<GALL_MOD>();
                 //Grupos de solicitud
@@ -975,15 +974,15 @@ namespace TAT001.Controllers
                     {
                         docb = db.DOCUMENTBORRs.Find(user.ID);
                         ViewBag.LIGADA = docb.LIGADA;//RSG 09.07.2018
-                        p = docb.PAIS_ID;//RSG 01.08.2018
+                        pais_id = docb.PAIS_ID;//RSG 01.08.2018
                     }
                     catch (Exception e)
                     {
-
+                        Log.ErrorLogApp(e,"Solicitudes","Create");
                     }
 
-                    id_pais = db.PAIS.Where(pais => pais.LAND.Equals(p)).FirstOrDefault();//RSG 15.05.2018 //MGC B20180625 MGC 
-                    id_bukrs = db.SOCIEDADs.Where(soc => soc.BUKRS.Equals(id_pais.SOCIEDAD_ID) && soc.ACTIVO == true).FirstOrDefault();//RSG 15.05.2018 //MGC B20180625 MGC 
+                    id_pais = db.PAIS.Where(pais => pais.LAND.Equals(pais_id)).FirstOrDefault();//RSG 15.05.2018 //MGC B20180625 MGC 
+                    id_bukrs = db.SOCIEDADs.Where(soc => soc.BUKRS.Equals(sociedad_id) && soc.ACTIVO == true).FirstOrDefault();//RSG 15.05.2018 //MGC B20180625 MGC 
                     DET_APROBH dah = id_bukrs.DET_APROBH.Where(x => x.PUESTOC_ID == user.PUESTO_ID & x.ACTIVO == true).FirstOrDefault();
                     if (dah == null) { Session["error"] = "Verifique el flujo de la sociedad: " + id_pais.SOCIEDAD_ID; Session["pais"] = null; return RedirectToAction("Index", "Home"); }
                     if (docb != null)
@@ -1151,7 +1150,7 @@ namespace TAT001.Controllers
                  ViewBag.MONEDA = new SelectList(id_waers, "WAERS", dataTextField: "WAERS", selectedValue: id_waersf); //Duda si cambia en la relacionada //B20180625 MGC 2018.06.28
 
                 //Información del cliente
-                var id_clientes = db.CLIENTEs.Where(c => c.LAND.Equals(p) && c.ACTIVO == true).ToList();
+                var id_clientes = db.CLIENTEs.Where(c => c.LAND.Equals(pais_id) && c.ACTIVO == true).ToList();
 
                 ViewBag.PAYER_ID = new SelectList(id_clientes, "KUNNR", dataTextField: "NAME1");
 
@@ -2319,7 +2318,7 @@ namespace TAT001.Controllers
                     }
                     catch (Exception e)
                     {
-
+                        Log.ErrorLogApp(e, "Solicitudes", "Create");
                     }
 
                     if (numFiles > 0)
@@ -2327,13 +2326,21 @@ namespace TAT001.Controllers
                         //Obtener las variables con los datos de sesión y ruta
                         string url = ConfigurationManager.AppSettings["URL_SAVE"];
                         //Crear el directorio
-                        //var dir = createDir(url, dOCUMENTO.NUM_DOC.ToString());
-                        var dir = new Files().createDir(url, dOCUMENTO.NUM_DOC.ToString(), dOCUMENTO.EJERCICIO.ToString());//RSG 01.08.2018
-
+                        Log.Info("---Solicitudes-Create-Soporte-save---");
+                        var dir = "";
+                        try
+                        {
+                            Log.Info("dir->");
+                            dir = new Files().createDir(url, dOCUMENTO.NUM_DOC.ToString(), dOCUMENTO.EJERCICIO.ToString());//RSG 01.08.2018  
+                        }
+                        catch (Exception e)
+                        {
+                            Log.ErrorLogApp(e, "Solicitudes", "Create");
+                        }
                         //Evaluar que se creo el directorio
                         if (dir.Equals(""))
                         {
-
+                            Log.Info("Inicia guardado de Soporte");
                             int i = 0;
                             int indexlabel = 0;
                             foreach (HttpPostedFileBase file in files_soporte)
@@ -2346,6 +2353,7 @@ namespace TAT001.Controllers
                                 }
                                 catch (Exception ex)
                                 {
+                                    Log.ErrorLogApp(ex, "Solicitudes", "Create");
                                     clasefile = "";
                                 }
                                 if (file != null)
@@ -2355,9 +2363,13 @@ namespace TAT001.Controllers
                                         string path = "";
                                         string filename = file.FileName;
                                         errorfiles = "";
-                                        //res = SaveFile(file, url, dOCUMENTO.NUM_DOC.ToString(), out errorfiles, out path);//RSG 01.08.2018
-                                        res = new Files().SaveFile(file, url, dOCUMENTO.NUM_DOC.ToString(), out errorfiles, out path, dOCUMENTO.EJERCICIO.ToString());//RSG 01.08.2018
-
+                                        try
+                                        {
+                                            res = new Files().SaveFile(file, url, dOCUMENTO.NUM_DOC.ToString(), out errorfiles, out path, dOCUMENTO.EJERCICIO.ToString());//RSG 01.08.2018
+                                        }catch(Exception e)
+                                        {
+                                            Log.ErrorLogApp(e, "Solicitudes", "Create");
+                                        }
                                         if (errorfiles == "")
                                         {
                                             DOCUMENTOA doc = new DOCUMENTOA();
@@ -2373,6 +2385,7 @@ namespace TAT001.Controllers
                                             }
                                             catch (Exception e)
                                             {
+                                                Log.ErrorLogApp(e, "Solicitudes", "Create");
                                                 doc.CLASE = "";
                                             }
                                             doc.STEP_WF = 1;
@@ -2386,6 +2399,7 @@ namespace TAT001.Controllers
                                             }
                                             catch (Exception e)
                                             {
+                                                Log.ErrorLogApp(e, "Solicitudes", "Create");
                                                 errorfiles = "" + filename;
                                             }
 
@@ -2545,25 +2559,18 @@ namespace TAT001.Controllers
             {
                
                 string u = User.Identity.Name;
-                //string u = "admin";
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
                 FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
                 //tipo de solicitud
-                var id_sol = db.TSOLs.Where(sol => sol.ESTATUS != "X")
-                                    .Join(
-                                    db.TSOLTs.Where(solt => solt.SPRAS_ID == user.SPRAS_ID),
-                                    sol => sol.ID,
-                                    solt => solt.TSOL_ID,
-                                    (sol, solt) => new
-                                    {
-                                        solt.SPRAS_ID,
-                                        solt.TSOL_ID,
-                                        TEXT = solt.TSOL_ID + " " + solt.TXT020
-                                    })
-                                .ToList();
-
+                var id_sol  = FnCommon.ObtenerCmbTiposSolicitud(db, user.SPRAS_ID, null)
+                        .Select(x => new TSOLT_MOD
+                        {
+                            SPRAS_ID = user.SPRAS_ID,
+                            TSOL_ID = x.Value,
+                            TEXT = x.Text
+                        }).ToList();
+                ViewBag.listtreetsol = FnCommon.ObtenerTreeTiposSolicitud(db, dOCUMENTO.SOCIEDAD_ID, user.SPRAS_ID, "SD");
                 ViewBag.TSOL_ID = new SelectList(id_sol, "TSOL_ID", "TEXT", selectedValue: dOCUMENTO.TSOL_ID);
-
                 //                      
 
                 //Select clasificación
@@ -2829,9 +2836,9 @@ namespace TAT001.Controllers
                     {
                         dOCUMENTO.GALL_ID = db.TALLs.Where(t => t.ID == dOCUMENTO.TALL_ID).FirstOrDefault().GALL_ID;
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-
+                        Log.ErrorLogApp(e, "Solicitudes", "Borrador");
                     }
                     id_bukrs = db.SOCIEDADs.Where(soc => soc.LAND.Equals(p)).FirstOrDefault();
                     //Obtener el país
@@ -2937,7 +2944,7 @@ namespace TAT001.Controllers
                 }
                 catch (Exception e)
                 {
-
+                    Log.ErrorLogApp(e, "Solicitudes", "Borrador");
                 }
             }
             return res;
@@ -3244,10 +3251,20 @@ namespace TAT001.Controllers
         [HttpPost]
         public FileResult Descargar(string archivo)
         {
-            Models.PresupuestoModels carga = new Models.PresupuestoModels();
-            string nombre = "", contentyp = "";
-            carga.contDescarga(archivo, ref contentyp, ref nombre);
-            return File(archivo, contentyp, nombre);
+            try
+            {
+                Models.PresupuestoModels carga = new Models.PresupuestoModels();
+                string nombre = "", contentyp = "";
+                carga.contDescarga(archivo, ref contentyp, ref nombre);
+                FilePathResult file = File(archivo, contentyp, nombre);
+                return file;
+            }
+            catch (Exception e)
+            {
+                Log.ErrorLogApp(e,"Solicitudes","Descargar");
+                return null;
+            }
+            
         }
 
        
@@ -3285,23 +3302,6 @@ namespace TAT001.Controllers
 
         }
 
-
-        //public void updateRango(string TSOL_ID, decimal actual)
-        //{
-
-        //    RANGO rango = getRango(TSOL_ID);
-
-        //    if (rango.ACTUAL > rango.INICIO && rango.ACTUAL < rango.FIN)
-        //    {
-        //        rango.ACTUAL = actual;
-        //    }
-
-        //    db.Entry(rango).State = EntityState.Modified;
-        //    db.SaveChanges();
-
-        //}
-
-        // GET: Solicitudes/Edit/5
 
         // GET: Solicitudes/Create
         [HttpGet]
@@ -4260,30 +4260,6 @@ namespace TAT001.Controllers
                                         docP.APOYO_REAL = docpl[j].APOYO_REAL;
                                     }
 
-                                    //RSG 05.06.2018 //B20180618 v1 MGC 2018.06.18 se elimino
-                                    //if (cat == "C")
-                                    //{
-                                    //    decimal pos = docpl[j].POS;
-                                    //    List<DOCUMENTOM> mm = db.DOCUMENTOMs.Where(a => a.NUM_DOC == dOCUMENTO.DOCUMENTO_REF & a.POS_ID == pos).ToList();
-                                    //    foreach (DOCUMENTOM mn in mm)
-                                    //    {
-                                    //        DOCUMENTOM ii = new DOCUMENTOM();
-                                    //        ii.NUM_DOC = dOCUMENTO.NUM_DOC;
-                                    //        ii.POS_ID = mn.POS_ID;
-                                    //        ii.POS = mn.POS;
-                                    //        ii.MATNR = mn.MATNR;
-                                    //        ii.APOYO_EST = (docP.APOYO_REAL + docP.APOYO_EST) / mm.Count;
-                                    //        ii.APOYO_REAL = ii.APOYO_EST;
-                                    //        ii.PORC_APOYO = mn.PORC_APOYO;
-                                    //        ii.VIGENCIA_A = mn.VIGENCIA_A;
-                                    //        ii.VIGENCIA_DE = mn.VIGENCIA_DE;
-                                    //        docP.DOCUMENTOMs.Add(ii);
-                                    //    }
-                                    //}
-                                    //Agregarlo a la bd
-                                    //////db.DOCUMENTOPs.Add(docP);
-                                    //////db.SaveChanges();//RSG
-
                                     //Se agrego para las relacionadas //B20180618 v1 MGC 2018.06.18--------------------------------------
                                     //If matnr es "" agregar los materiales de la categoría
                                     List<DOCUMENTOM> docml = new List<DOCUMENTOM>();
@@ -4929,15 +4905,6 @@ namespace TAT001.Controllers
                         if (conta.WORKFP.ACCION.TIPO == "B")
                         {
                             WORKFP wpos = db.WORKFPs.Where(x => x.ID == conta.WORKF_ID & x.VERSION == conta.WF_VERSION & x.POS == conta.WF_POS).FirstOrDefault();
-                            //FLUJO f1 = new FLUJO();
-                            //f1.WORKF_ID = conta.WORKF_ID;
-                            //f1.WF_VERSION = conta.WF_VERSION;
-                            //f1.WF_POS = (int)wpos.NEXT_STEP;
-                            //f1.NUM_DOC = dOCUMENTO.NUM_DOC;
-                            //f1.POS = conta.POS + 1;
-                            //f1.LOOP = 1;
-                            ////f1.USUARIOA_ID = dOCUMENTO.USUARIOC_ID;
-                            ////f1.USUARIOD_ID = dOCUMENTO.USUARIOD_ID;
                             conta.ESTATUS = "A";
                             //f1.FECHAC = DateTime.Now;
                             conta.FECHAM = DateTime.Now;
@@ -4949,11 +4916,6 @@ namespace TAT001.Controllers
                             c = "";
                         }
                     }
-                    //Estatus es = new Estatus();//RSG 18.09.2018
-                    //DOCUMENTO doc = db.DOCUMENTOes.Find(f.NUM_DOC);
-                    //conta.STATUS = es.getEstatus(doc);
-                    //db.Entry(conta).State = EntityState.Modified;
-                    //db.SaveChanges();
 
                     using (TAT001Entities db1 = new TAT001Entities())
                     {
