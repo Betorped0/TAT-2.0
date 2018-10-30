@@ -516,6 +516,16 @@ namespace TAT001.Controllers.Catalogos
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            var usu = User.Identity.Name;
+            USUARIO usu2 = db.USUARIOs.Where(x => x.ID.Equals(usu)).FirstOrDefault();
+            if (usu2.PUESTO_ID == 1 || usu2.PUESTO_ID == 8)
+            {
+                ViewBag.admin = true;
+            }
+            else
+            {
+                ViewBag.admin = false;
+            }
             Pass uSUARIO = new Pass();
             uSUARIO.ID = id;
             return View(uSUARIO);
