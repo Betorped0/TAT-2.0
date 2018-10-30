@@ -1512,7 +1512,7 @@ $(document).ready(function () {
                                         <label id="lbl_montodis" for="monto_dis">Monto</label>@*B20180801 MGC Textos*@
                                     </div>
 
-                                    <div class="input-field col s6">
+                                    <div class="input-field col s6" style="margin-top:12%">
                                         <input type="text" id="moneda_dis" name="monedadis" value="@ViewBag.moneda_dis" disabled="disabled" hidden />@*//B20180625 MGC 2018.06.28*@
                                         @Html.DropDownList("MONEDA", null, htmlAttributes: new { @id = "monedadis_id", @class = "form-control", @disabled = "disabled" })
                                         @Html.LabelFor(model => model.MONEDA_ID, "Moneda", htmlAttributes: new { @for = "monedadis_id", @id = "lbl_monedadis" })@*B20180801 MGC Textos*@
