@@ -524,6 +524,8 @@ namespace TAT001.Controllers.Catalogos
         //[ValidateAntiForgeryToken]
         public ActionResult Pass(/*[Bind(Include = "ID,pass,npass1,npass2")] */Pass pp)
         {
+            var usu = User.Identity.Name;
+            USUARIO usu2 = db.USUARIOs.Where(x => x.ID.Equals(usu)).FirstOrDefault();
             Pass pass = new Pass();
             pass.ID = Request.Form.Get("ID");
             pass.pass = Request.Form.Get("pass");
@@ -532,7 +534,7 @@ namespace TAT001.Controllers.Catalogos
             USUARIO us = db.USUARIOs.Find(pass.ID);
             Cryptography c = new Cryptography();
             string pass_a = c.Decrypt(us.PASS);
-            if (pass.pass.Equals(pass_a))
+            if ((pass.pass.Equals(pass_a) && usu2.ID.Equals(pass.ID)) || (usu2.PUESTO_ID == 1 || usu2.PUESTO_ID == 8))
             {
                 if (pass.npass1.Equals(pass.npass2))
                 {

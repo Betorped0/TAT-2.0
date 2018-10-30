@@ -54,6 +54,16 @@
         <a href="" class="modal-action modal-close btn-flat">si</a>
     </div>
 </div>
+<div id="salirPag" class="modal">
+    <div class="modal-content">
+        <h4>Borrar</h4>
+        <p>¿Estás seguro que quieres borrar la carga actual?</p>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close btn-flat">NO</a>
+        <a href="" class="modal-action modal-close btn-flat">si</a>
+    </div>
+</div>
 
 <div class="row">
     <div class="row left">
@@ -235,6 +245,7 @@
                         <th style="text-align:center;">NUM_DOC</th>
                         <th style="text-align:center;">TIPO</th>
                         <th style="text-align:center;">ARCHIVO</th>
+                        @*<th style="text-align:center;">NOTAS</th>*@
                         @*<th style="text-align:center;">BOTON</th>*@
                     </tr>
                 </thead>
@@ -251,6 +262,16 @@
 
     var elem = document.getElementById('borraTabla');
     M.Modal.init(elem, []);
+</script>
+<script>
+    window.onbeforeunload = confirmExit;
+    function confirmExit() {
+        return "¿Deseas salir del módulo? La infomración se perderá. ";
+    }
+    var instance1 = M.Tabs.init(el1, []);
+    
+    var elem1 = document.getElementById('borraTabla');
+    M.Modal.init(elem1, []);
 </script>
 
 <script src="~/Scripts/autocomplete1.10.2.js"></script>

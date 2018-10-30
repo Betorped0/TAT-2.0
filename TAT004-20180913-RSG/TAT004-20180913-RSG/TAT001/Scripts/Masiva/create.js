@@ -2625,19 +2625,6 @@ function validaErrores(h1, h2, h3, h4, h5, num_doc) {
                 $(rowH4).children().eq(0).children().text("done");
             }
         }
-
-        //for (var e = 0; e < tablaH5.rows().data().length; e++) {
-        //    var rowH5 = tablaH5.row(e).node();
-        //    var num_docH5 = $(rowH5).children().eq(1).children().val();
-        //    var esRequerido = $(rowH5).children().eq(3).children().hasClass("isrequired");
-
-        //    if (num_docH5 == num_doc & !esRequerido) {
-        //        //console.log($(rowH5).children().eq(0).children().attr("class"));
-        //        $(rowH5).children().eq(0).children().removeClass("red");
-        //        $(rowH5).children().eq(0).children().addClass("green");
-        //        $(rowH5).children().eq(0).children().text("done");
-        //    }
-        //}
         return "SE MODIFICARON LOS REGISTROS: " + num_doc;
     }
     else {

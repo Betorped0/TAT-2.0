@@ -16,7 +16,7 @@
                 M.toast({
                     classes: "guardarWarnning",
                     displayLength: 1000000,
-                    html: '<span style="padding-right:15px;"><i class="material-icons yellow-text">info</i></span> Periodo cerrado'
+                    html: '<span style="padding-right:15px;"><i class="material-icons yellow-text">info</i></span> Periodo ' + periodo+' cerrado '
                     + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'guardarWarnning\')">Aceptar</button>'
                 });
                 bool = true;

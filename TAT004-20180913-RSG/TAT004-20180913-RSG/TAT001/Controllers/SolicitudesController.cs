@@ -2319,7 +2319,7 @@ namespace TAT001.Controllers
                     }
                     catch (Exception e)
                     {
-
+                        Log.ErrorLogApp(e, "Solicitudes", "Create");
                     }
 
                     if (numFiles > 0)
@@ -2327,13 +2327,21 @@ namespace TAT001.Controllers
                         //Obtener las variables con los datos de sesión y ruta
                         string url = ConfigurationManager.AppSettings["URL_SAVE"];
                         //Crear el directorio
-                        //var dir = createDir(url, dOCUMENTO.NUM_DOC.ToString());
-                        var dir = new Files().createDir(url, dOCUMENTO.NUM_DOC.ToString(), dOCUMENTO.EJERCICIO.ToString());//RSG 01.08.2018
-
+                        Log.Info("---Solicitudes-Create-Soporte-save---");
+                        var dir = "";
+                        try
+                        {
+                            Log.Info("dir->");
+                            dir = new Files().createDir(url, dOCUMENTO.NUM_DOC.ToString(), dOCUMENTO.EJERCICIO.ToString());//RSG 01.08.2018  
+                        }
+                        catch (Exception e)
+                        {
+                            Log.ErrorLogApp(e, "Solicitudes", "Create");
+                        }
                         //Evaluar que se creo el directorio
                         if (dir.Equals(""))
                         {
-
+                            Log.Info("Inicia guardado de Soporte");
                             int i = 0;
                             int indexlabel = 0;
                             foreach (HttpPostedFileBase file in files_soporte)
@@ -2346,6 +2354,7 @@ namespace TAT001.Controllers
                                 }
                                 catch (Exception ex)
                                 {
+                                    Log.ErrorLogApp(ex, "Solicitudes", "Create");
                                     clasefile = "";
                                 }
                                 if (file != null)
@@ -2355,9 +2364,13 @@ namespace TAT001.Controllers
                                         string path = "";
                                         string filename = file.FileName;
                                         errorfiles = "";
-                                        //res = SaveFile(file, url, dOCUMENTO.NUM_DOC.ToString(), out errorfiles, out path);//RSG 01.08.2018
-                                        res = new Files().SaveFile(file, url, dOCUMENTO.NUM_DOC.ToString(), out errorfiles, out path, dOCUMENTO.EJERCICIO.ToString());//RSG 01.08.2018
-
+                                        try
+                                        {
+                                            res = new Files().SaveFile(file, url, dOCUMENTO.NUM_DOC.ToString(), out errorfiles, out path, dOCUMENTO.EJERCICIO.ToString());//RSG 01.08.2018
+                                        }catch(Exception e)
+                                        {
+                                            Log.ErrorLogApp(e, "Solicitudes", "Create");
+                                        }
                                         if (errorfiles == "")
                                         {
                                             DOCUMENTOA doc = new DOCUMENTOA();
@@ -2373,6 +2386,7 @@ namespace TAT001.Controllers
                                             }
                                             catch (Exception e)
                                             {
+                                                Log.ErrorLogApp(e, "Solicitudes", "Create");
                                                 doc.CLASE = "";
                                             }
                                             doc.STEP_WF = 1;
@@ -2386,6 +2400,7 @@ namespace TAT001.Controllers
                                             }
                                             catch (Exception e)
                                             {
+                                                Log.ErrorLogApp(e, "Solicitudes", "Create");
                                                 errorfiles = "" + filename;
                                             }
 
@@ -2829,9 +2844,9 @@ namespace TAT001.Controllers
                     {
                         dOCUMENTO.GALL_ID = db.TALLs.Where(t => t.ID == dOCUMENTO.TALL_ID).FirstOrDefault().GALL_ID;
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-
+                        Log.ErrorLogApp(e, "Solicitudes", "Borrador");
                     }
                     id_bukrs = db.SOCIEDADs.Where(soc => soc.LAND.Equals(p)).FirstOrDefault();
                     //Obtener el país
@@ -2937,7 +2952,7 @@ namespace TAT001.Controllers
                 }
                 catch (Exception e)
                 {
-
+                    Log.ErrorLogApp(e, "Solicitudes", "Borrador");
                 }
             }
             return res;
