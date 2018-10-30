@@ -11,7 +11,30 @@
     List<Tuple<decimal, decimal>> negAmount = new List<Tuple<decimal, decimal>>();
 }
 
+@if (!ViewBag.Display)
+{
+    <script>
 
+        $(document).ready(function () {
+
+
+
+            $('select.select_all').siblings('ul').prepend("<li id=sm_select_all><span id='filters_all'>Todas las Opciones</span></li>");
+            $('li#sm_select_all').on('click', function () {
+                var jq_elem = $(this),
+                    jq_elem_span = jq_elem.find('span'),
+                    select_all = jq_elem_span.text() == 'Todas las Opciones',
+                    set_text = select_all ? 'Borrar Selección' : 'Todas las Opciones';
+                jq_elem_span.text(set_text);
+                jq_elem.siblings('li').filter(function () {
+                    return $(this).find('input').prop('checked') != select_all;
+                }).click();
+            });
+
+        });
+
+    </script>
+}
 
 @*<div class="col s2 right-align">
         <button id="id_excel" name="excel" class="btn-small" type="submit" onclick="tableToExcel('table', 'Reporte Provisiones Abiertas TS')" value="Export to Excel">Generar Excel</button>
@@ -20,6 +43,7 @@
 {
     @Html.AntiForgeryToken()
     DateTime newDate = DateTime.Now;
+
     int yeard = newDate.Year;
     int year1 = yeard + 1;
     int year2 = yeard + 2;
@@ -31,11 +55,21 @@
                 @*<a id="id_excel" onclick="tableToExcel('table', 'Reporte Provisiones Abiertas TS')">Generar Excel</a>
             </div>*@
 
-        <div class="col s12 right-align">
+        @if (ViewBag.Display)
+        {
 
-            <button class="btn-small" id="btnConsultar" type="submit" name="action" @*style="display:none"*@>Consultar</button>
-            <input class="btn-small" id="id_excel" type="button" onclick="tableToExcel('table', 'Reporte Provisiones Abiertas TS')" value="Generar Excel" name="action" />
-        </div>
+            <div class="col s12 right-align">
+
+                <button class="btn-small" id="btnConsultar" type="submit" name="action" @*style="display:none"*@>Consultar</button>
+                <input class="btn-small" id="id_excel" type="button" onclick="tableToExcel('table', 'Reporte Provisiones Abiertas TS')" value="Generar Excel" name="action" />
+            </div>
+        }
+        else
+        {
+            <div class="col s12 right-align">
+                <button class="btn-small" id="btnConsultar" type="submit" name="action" @*style="display:none"*@>Consultar</button>
+            </div>
+        }
     </div>
     <div class="card-panel" id="todo">
         <div class=" row">
@@ -126,6 +160,7 @@
         <link href="~/Content/subfilters/jquery.tablesorter.pager.css" rel="stylesheet" />
         <script src="~/Scripts/subfilters/jquery.tablesorter.pager.js"></script>
         <script src="~/Scripts/subfilters/widget-filter.js"></script>
+        <script src="~/Scripts/tablesort/tableToExcel.js"></script>
         <script>
             var elem = document.querySelectorAll('select');
             var options = [];
@@ -139,20 +174,37 @@
                 $(".grid thead td").click(function () {
                     showFilterOption(this);
                 });
-                $('select').formSelect;
-                $('select.select_all').siblings('ul').prepend('<li id=sm_select_all><span>Seleccionar Todo</span></li>');
+
+                //$('select').formSelect;
+                //$('select.select_all').siblings('ul').prepend('<li id=sm_select_all><span>Seleccionar Todo</span></li>');
+                //$('li#sm_select_all').on('click', function () {
+                //    var jq_elem = $(this),
+                //        jq_elem_span = jq_elem.find('span'),
+                //        select_all = jq_elem_span.text() == 'Seleccionar Todo',
+                //        set_text = select_all ? 'Seleccionar Ninguno' : 'Seleccionar Todo';
+                //    jq_elem_span.text(set_text);
+                //    jq_elem.siblings('li').filter(function () {
+                //        return $(this).find('input').prop('checked') != select_all;
+                //    }).click();
+                //});
+
+
+                $('select.select_all').siblings('ul').prepend('<li id=sm_select_all id="filters_all"><span>Todas Las Opciones</span></li>');
                 $('li#sm_select_all').on('click', function () {
                     var jq_elem = $(this),
                         jq_elem_span = jq_elem.find('span'),
-                        select_all = jq_elem_span.text() == 'Seleccionar Todo',
-                        set_text = select_all ? 'Seleccionar Ninguno' : 'Seleccionar Todo';
+                        select_all = jq_elem_span.text() == 'Todas Las Opciones',
+                        set_text = select_all ? 'Borrar Selección' : 'Todas Las Opciones';
                     jq_elem_span.text(set_text);
                     jq_elem.siblings('li').filter(function () {
                         return $(this).find('input').prop('checked') != select_all;
                     }).click();
                 });
+                $("#id_excel").click(function () {
+                    $('#table').trigger('destroyPager');
+                    tableToExcel('table', 'Reporte de Provisiones Abiertas');
+                });
             });
-
 
             $(function () {
 
@@ -209,12 +261,12 @@
             })()
         </script>
 
-        <br />
-        <span id="titulo2" style="color:deeppink; font-family:Tahoma; font-size:15px;">REPORTE DE PROVISIONES ABIERTAS 2.0</span>
+        @*<br />*@
+        @*<span id="titulo2" style="color:deeppink; font-family:Tahoma; font-size:15px;">REPORTE DE PROVISIONES ABIERTAS 2.0</span>
         <span style="color:deeppink; font-size:15px;">
             @System.DateTime.Now.ToString("dd/MM/yyyy")
         </span>
-        <br />
+        <br />*@
         <br />
         <div style="width:100%;height:50vh;overflow:scroll;">
             <table class="table mdl-data-table striped grid centered table" id="table" style="width:100%;">
@@ -298,7 +350,7 @@
 
 
                         </th>
-                  
+
                     </tr>
                 </tfoot>
 
@@ -309,7 +361,7 @@
                         foreach (var consulta in multi)
                         {
                             /////////////////////AGING//////////////////////
-                            var registro = consulta.GetType().GetProperty("fechasap").GetValue(consulta, null);
+                            var registro = consulta.GetType().GetProperty("FECHAC").GetValue(consulta, null);
 
                             int ejercicio2 = Int32.Parse(consulta.GetType().GetProperty("EJERCICIO").GetValue(consulta, null));
                             int periodo2 = Int32.Parse(consulta.GetType().GetProperty("PERIODO").GetValue(consulta, null).ToString());
@@ -404,7 +456,7 @@
 
                                 <td>
                                     @* FECHA REGISTRO CONTABLE *@
-                                    @consulta.GetType().GetProperty("fechasap").GetValue(consulta, null)
+                                    @consulta.GetType().GetProperty("FECHAC").GetValue(consulta, null)
                                 </td>
 
                                 <td>

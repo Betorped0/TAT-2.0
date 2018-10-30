@@ -24,7 +24,7 @@
                 <div class="form-horizontal">
                     <div class="form-group">
                         @Html.LabelFor(model => model.SOCIEDAD_ID, "Co. Code", htmlAttributes: new { @class = "control-label col-md-2 active", @id = "lblSociedadId" })
-                        @Html.DropDownList("Co. Code", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.DropDownList("SOCIEDAD_ID", null, htmlAttributes: new { @class = "form-control" })
                         @Html.ValidationMessageFor(model => model.SOCIEDAD_ID, "", new { @class = "text-danger" })
                     </div>
                     <div class="form-group">
@@ -37,41 +37,41 @@
                         @Html.DropDownList("TSOL", null, htmlAttributes: new { @class = "form-control" })
                         @Html.ValidationMessageFor(model => model.TSOL, "", new { @class = "text-danger" })
                     </div>
-
+                    <br />
+                    <br />
                     <div class="row">
-                        <div class="row col s6 m6" style="margin-bottom:0;">
+                        <div class="row col l6 m6" style="margin-bottom:0;">
 
                             <div class="row col s3 m3">
                                 @Html.LabelFor(model => model.FACTURA, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblFactura" })
                                 @Html.EditorFor(model => model.FACTURA, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idfac" } })
                             </div>
-                            <div class="row col s2 m2">
+                            <div class="row col s3 m3">
                                 <label>
                                     <input type="checkbox" name="selectedCustomers" value="true" id="fac" onclick="check()" />
                                     <span style="height:0"></span>
                                 </label>
-                                </div>
                             </div>
-
-                        <div class="col s6 m6" style="margin-bottom:0;">
+                        </div>
+                       
+                        <div class="row col l6 m6" style="margin-bottom:0;">
                             <div class="row col s3 m3">
                                 @Html.LabelFor(model => model.FECHA, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblFecha" })
                                 @Html.EditorFor(model => model.FECHA, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idfec" } })
                             </div>
-
+                          
                             <div class="row col s3 m3">
                                 <label>
                                     <input type="checkbox" name="selectedCustomers" value="true" id="fec" onclick="check()" />
-                                    <span style="height:1%"></span>
+                                    <span style="height:0"></span>
                                 </label>
                             </div>
-                            </div>
                         </div>
+                    </div>
 
 
 
-                    <br />
-                    <br />
+                   
                     <div class="row">
                         <div class="col l6 m6" style="margin-bottom:0;">
                             <div class="row col s3 m3">
@@ -101,8 +101,7 @@
                                 </div>
                             </div>
                         </div>
-                    <br />
-                    <br />
+           
                     <div class="row">
                         <div class="col l6 m6" style="margin-bottom:0;">
                             <div class="row col s3 m3">
@@ -130,8 +129,7 @@
                                 </div>
                             </div>
                         </div>
-                    <br />
-                    <br />
+                  
                     <div class="row">
                         <div class="col l6 m6" style="margin-bottom:0;">
                             <div class="row col s3 m3">
@@ -159,8 +157,7 @@
                                 </div>
                             </div>
                         </div>
-                    <br />
-                    <br />
+               
                     <div class="row">
                         <div class="col l6 m6" style="margin-bottom:0;">
                             <div class="row col s3 m3">
@@ -189,8 +186,7 @@
                                 </div>
                             </div>
                         </div>
-                    <br />
-                    <br />
+          
                     <div class="row">
                         <div class="col l6 m6" style="margin-bottom:0;">
                             <div class="row col s3 m3">
@@ -217,8 +213,7 @@
                                 </div>
                             </div>
                         </div>
-                    <br />
-                    <br />
+          
                     <div class="row">
                         <div class="col l6 m6" style="margin-bottom:0;">
                             <div class="row col s3 m3">
@@ -246,8 +241,7 @@
                                 </div>
                             </div>
                         </div>
-                    <br />
-                    <br />
+                
                     <div class="row">
                         <div class="col l6 m6" style="margin-bottom:0;">
                             <div class="row col s3 m3">
