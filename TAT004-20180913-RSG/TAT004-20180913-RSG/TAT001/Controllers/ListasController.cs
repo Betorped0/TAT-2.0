@@ -220,12 +220,12 @@ namespace TAT001.Controllers
             return cc;
         }
         [HttpPost]
-        public JsonResult getPresupuesto(string kunnr)
+        public JsonResult getPresupuesto(string kunnr, string periodo)
         {
             PRESUPUESTO_MOD pm = new PRESUPUESTO_MOD();
             Presupuesto pr = new Presupuesto();
             Cadena c = new Cadena();
-            pm = pr.getPresupuesto(c.completaCliente(kunnr));
+            pm = pr.getPresupuesto(c.completaCliente(kunnr), periodo);
             
 
             JsonResult cc = Json(pm, JsonRequestBehavior.AllowGet);
@@ -954,6 +954,11 @@ namespace TAT001.Controllers
                 return "X";
             else
                 return "";
+        }
+        [HttpPost]
+        public int periodo(string sociedad_id, string tsol_id, string usuario_id)
+        {
+            return FnCommon.ObtenerPeriodoCalendario445(db,sociedad_id,tsol_id,usuario_id);
         }
 
 

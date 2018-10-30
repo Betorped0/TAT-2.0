@@ -340,7 +340,7 @@ namespace TAT001.Controllers.Catalogos
                         modelView.sociedades = FnCommon.ObtenerCmbSociedades(db, id);
                         break;
                     case CMBTREE_TIPOSSOLICITUD:
-                        modelView.treeTiposSolicitud = FnCommon.ObtenerTreeTiposSolicitud(db, spras_id);
+                        modelView.treeTiposSolicitud = FnCommon.ObtenerTreeTiposSolicitud(db,null, spras_id);
                         break;
                     case CMB_TIPOSSOLICITUD:
                         modelView.cmbTiposSolicitud = FnCommon.ObtenerCmbTiposSolicitud(db, spras_id, id);
