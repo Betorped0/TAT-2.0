@@ -710,7 +710,12 @@ namespace TAT001.Controllers
                     tipS = "SR";
                     //relacionada SR
                 }
-                if (ViewBag.reversa == "preversa") { 
+                if (rel > 0)
+                {
+                    d = db.DOCUMENTOes.Where(doc => doc.NUM_DOC == rel).FirstOrDefault();
+                    sociedad_id = d.SOCIEDAD_ID;
+                }
+                    if (ViewBag.reversa == "preversa") { 
                
                     list_sol = FnCommon.ObtenerCmbTiposSolicitud(db, user.SPRAS_ID, null, true)
                         .Select(x=>new TSOLT_MOD
