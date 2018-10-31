@@ -398,7 +398,7 @@ namespace TAT001.Models
             db = new TAT001Entities();
             List<CONPOSAPP> conp = new List<CONPOSAPP>();
             CLIENTE clien;
-            CUENTA cuent;
+            CUENTA cuent = new CUENTA();
             TCAMBIO cambio = new TCAMBIO();
             TAXEOH taxh = new TAXEOH();
             IIMPUESTO impu = new IIMPUESTO();
@@ -434,7 +434,10 @@ namespace TAT001.Models
                 }
                 try
                 {
-                    cuent = db.CUENTAs.Where(x => x.PAIS_ID == doc.PAIS_ID && x.SOCIEDAD_ID == doc.SOCIEDAD_ID && x.TALL_ID == doc.TALL_ID).Single();
+                    //cuent = db.CUENTAs.Where(x => x.PAIS_ID == doc.PAIS_ID && x.SOCIEDAD_ID == doc.SOCIEDAD_ID && x.TALL_ID == doc.TALL_ID).Single();
+                    cuent.ABONO = doc.CUENTAP;
+                    cuent.CARGO = doc.CUENTAPL;
+                    cuent.CLEARING = doc.CUENTACL;
                 }
                 catch (Exception h)
                 {
