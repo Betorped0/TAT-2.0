@@ -30,7 +30,7 @@ namespace TAT001.Services
                 DET_APROBH dah = db.DET_APROBH.Where(a => a.SOCIEDAD_ID == d.SOCIEDAD_ID & a.PUESTOC_ID == d.PUESTO_ID & a.ACTIVO == true)
                                     .OrderByDescending(a => a.VERSION).FirstOrDefault();
                 if (dah == null)
-                    return "1";
+                    return "0";
                 CLIENTEF cf = db.CLIENTEFs.Where(a => a.VKORG.Equals(d.VKORG) & a.VTWEG.Equals(d.VTWEG) & a.SPART.Equals(d.SPART) & a.KUNNR.Equals(d.PAYER_ID) & a.ACTIVO == true
                                ).OrderByDescending(a => a.VERSION).FirstOrDefault();
 
@@ -125,7 +125,10 @@ namespace TAT001.Services
                     db.SaveChanges();
                 }
                 else
+                {
+                    correcto = "2";
                     db.SaveChanges();
+                }
             }
             else if (f.ESTATUS.Equals("A"))   //---------------------EN PROCESO DE APROBACIÓN
             {

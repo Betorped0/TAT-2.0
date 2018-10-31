@@ -993,8 +993,8 @@ $(document).ready(function () {
                         </div>
                     }
                     @{List<TAT001.Entities.DOCUMENTOA>
-                                                                                                                                                                                                              archivos = ViewBag.files as List<TAT001.Entities.DOCUMENTOA>
-                                                                                                                                                                                                                  ;
+                                                                                                                                                                                                                archivos = ViewBag.files as List<TAT001.Entities.DOCUMENTOA>
+                                                                                                                                                                                                                    ;
                         if (ViewBag.relacionadan != "" && (archivos != null && archivos.Count > 0))
                         {
                             string[] nombrefile;
@@ -1458,23 +1458,25 @@ $(document).ready(function () {
                                                 $("#txt_ligada").val("");
                                                 cambiaCheckRec();
                                             }
-                                            <span id="span_ligada">Solicitud ligada a facturación </span>@*B20180801 MGC Textos*@
-                                        </label>
-                                        <script>
-                                            var elem = document.getElementById("span_ligada");
-                                              if (elem != undefined) {
-                                                  var wa = "Se calcula al cierre del periodo.";
-                                                  var options = {
-                                                      html: wa,
-                                                      position: "right"
-                                                  };
-                                                  var instance = M.Tooltip.init(elem, options);
-                                              }
+                                        }
+                                    </script>
+                                    @*<span id="span_ligada">Solicitud ligada a facturación </span>
+                                        </label>*@
+                                    <script>
+                                        var elem = document.getElementById("span_ligada");
+                                        if (elem != undefined) {
+                                            var wa = "Se calcula al cierre del periodo.";
+                                            var options = {
+                                                html: wa,
+                                                position: "right"
+                                            };
+                                            var instance = M.Tooltip.init(elem, options);
+                                        }
                                     </script>
                                     <script>
-                                              var elem = document.getElementById('select_neg');
-                                              var instance = M.FormSelect.init(elem, []);
-                                          }
+                                        var elem = document.getElementById('select_neg');
+                                        var instance = M.FormSelect.init(elem, []);
+                                    
                                     </script>
                                 </div>
                             }
@@ -1853,50 +1855,50 @@ $(document).ready(function () {
                                     </div>
                                 </div>
                                 <script>
-                                                                    var clearing = [];
-                                                                                function getClearing() {
-                                                        $("#div_clearing").empty();
-                                                    cuentas();
-                                                    }
-                                                                                function formaClearing() {
-                                                                                    var tex_abono = document.querySelector(".lbl_cabono").innerHTML;
-                                                    var tex_cargo = document.querySelector(".lbl_ccargo").innerHTML;
-                                                    //DRS 24.09.18---------------------------------------------
-                                                    var nombreC = document.querySelector(".cuenta_Nombre").innerHTML;
-                                                    var tex_clearing = document.querySelector(".lbl_cclear").innerHTML;
-                                                    getClearing(document.getElementById("tall_id").value);
-                                                    $("#div_clearing").empty();
-                                                    //var monto = document.getElementById("monto_dis").value;
-                                                    var monto = $('#monto_doc_md').val();
+                                    var clearing = [];
+                                    function getClearing() {
+                                        $("#div_clearing").empty();
+                                        cuentas();
+                                    }
+                                    function formaClearing() {
+                                        var tex_abono = document.querySelector(".lbl_cabono").innerHTML;
+                                        var tex_cargo = document.querySelector(".lbl_ccargo").innerHTML;
+                                        //DRS 24.09.18---------------------------------------------
+                                        var nombreC = document.querySelector(".cuenta_Nombre").innerHTML;
+                                        var tex_clearing = document.querySelector(".lbl_cclear").innerHTML;
+                                        getClearing(document.getElementById("tall_id").value);
+                                        $("#div_clearing").empty();
+                                        //var monto = document.getElementById("monto_dis").value;
+                                        var monto = $('#monto_doc_md').val();
 
-                                                                                    var div = "<ul class='collection'><li class='collection-item'>";
-                                                    //DRS 24.09.18---------------------------------------------+
-                                                                                    div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_abono + "</div><div class='col s3'>" + clearing[1] + "</div><div class='col s3'>" + clearing[0] + "</div><div class='col s3 right-align'>" + monto + "</div></div>";
-                                                                                    div += "</li><li class='collection-item'>";
+                                        var div = "<ul class='collection'><li class='collection-item'>";
+                                        //DRS 24.09.18---------------------------------------------+
+                                        div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_abono + "</div><div class='col s3'>" + clearing[1] + "</div><div class='col s3'>" + clearing[0] + "</div><div class='col s3 right-align'>" + monto + "</div></div>";
+                                        div += "</li><li class='collection-item'>";
 
-                                                                                    if (clearing[5] == null) {
-                                                                //DRS 24.09.18---------------------------------------------
-                                                                div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + clearing[3] + "</div><div class='col s3'>" + clearing[2] + "</div><div class='col s3 right-align'>" + monto + "</div></div></div>";
-                                                            } else {
-                                                                                        if (clearing[2] != null) {
-                                                                                            if (monto <= clearing[3]) {
+                                        if (clearing[5] == null) {
+                                            //DRS 24.09.18---------------------------------------------
+                                            div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + clearing[3] + "</div><div class='col s3'>" + clearing[2] + "</div><div class='col s3 right-align'>" + monto + "</div></div></div>";
+                                        } else {
+                                            if (clearing[2] != null) {
+                                                if (monto <= clearing[3]) {
 
-                                                                div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + clearing[3] + "</div><div class='col s3'>" + clearing[2] + "</div><div class='col s3 right-align'>" + monto + "</div></div>";
-                                                            div += "</li><li class='collection-item'>";
-                                                                                                div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>" + tex_clearing + "</div><div class='col s4'>" + clearing[4] + "</div><div class='col s4'>0.00</div></div>";
-                                                                                                div += "</li>";
-                                                                                            } else {
-                                                            div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + clearing[3] + "</div><div class='col s3'>" + clearing[2] + "</div><div class='col s3'>" + clearing[5] + "</div></div>";
-                                                        div += "</li><li class='collection-item'>";
-                                                                                                div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>" + tex_clearing + "</div><div class='col s4'>" + clearing[4] + "</div><div class='col s4'>" + (monto - clearing[5]) + "</div></div>";
-                                                                                                div += "</li>";
+                                                    div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + clearing[3] + "</div><div class='col s3'>" + clearing[2] + "</div><div class='col s3 right-align'>" + monto + "</div></div>";
+                                                    div += "</li><li class='collection-item'>";
+                                                    div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>" + tex_clearing + "</div><div class='col s4'>" + clearing[4] + "</div><div class='col s4'>0.00</div></div>";
+                                                    div += "</li>";
+                                                } else {
+                                                    div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + clearing[3] + "</div><div class='col s3'>" + clearing[2] + "</div><div class='col s3'>" + clearing[5] + "</div></div>";
+                                                    div += "</li><li class='collection-item'>";
+                                                    div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>" + tex_clearing + "</div><div class='col s4'>" + clearing[4] + "</div><div class='col s4'>" + (monto - clearing[5]) + "</div></div>";
+                                                    div += "</li>";
                                                 }
                                             }
                                         }
-                                                                                    div += "</li>";
-                                            div += "</ul>";
-                                            $("#div_clearing").append(div);
-                                        }
+                                        div += "</li>";
+                                        div += "</ul>";
+                                        $("#div_clearing").append(div);
+                                    }
                                 </script>
                             </div>
                             <div class="card-panel">
