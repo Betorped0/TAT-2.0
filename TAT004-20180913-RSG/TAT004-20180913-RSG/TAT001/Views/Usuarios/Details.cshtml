@@ -87,11 +87,40 @@
                         @Html.LabelFor(model => model.MIEMBROS, htmlAttributes: new { @class = "control-label col-md-2" })
                         @Html.ValidationMessageFor(model => model.MIEMBROS, "", new { @class = "text-danger" })
                     </div>*@
-                <div class="input-field col s12">
-                    @Html.EditorFor(model => model.BUNIT, new { htmlAttributes = new { @disabled = "disabled" } })
-                    @Html.LabelFor(model => model.BUNIT, htmlAttributes: new { @id = "lbl_bukrs" })
-                    @Html.ValidationMessageFor(model => model.BUNIT, "", new { @class = "text-danger" })
-                </div>
+                @if (ViewBag.PUESTO_ID1 == null || ViewBag.PUESTO_ID1 == "")
+                {
+                    <div class="input-field col s12">
+                        <table class="table mdl-data-table striped" id="table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.EditorFor(model => model.BUNIT, new { htmlAttributes = new { @disabled = "disabled", @style = "display: none" } })
+                                        @Html.LabelFor(model => model.BUNIT, htmlAttributes: new { @id = "lbl_bukrs" })
+                                        @Html.ValidationMessageFor(model => model.BUNIT, "", new { @class = "text-danger" })
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in ViewBag.BUNIT1)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item)
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="input-field col s12">
+                        @Html.EditorFor(model => model.BUNIT, new { htmlAttributes = new { @disabled = "disabled" } })
+                        @Html.LabelFor(model => model.BUNIT, htmlAttributes: new { @id = "lbl_bukrs" })
+                        @Html.ValidationMessageFor(model => model.BUNIT, "", new { @class = "text-danger" })
+                    </div>
+                }
             </div>
         </div>
     </div>
