@@ -424,5 +424,6 @@ namespace TAT001.Common
             new SqlParameter("@PREFIX", (prefix == null ? "" : prefix))).ToList();
             return contactos;
         }
+        
     }
 }
