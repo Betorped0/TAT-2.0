@@ -24,7 +24,7 @@
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             M.toast({ html: httpStatusMessage });
         },
-        async: true
+        async: false
     });
 }
 function cuentas() {

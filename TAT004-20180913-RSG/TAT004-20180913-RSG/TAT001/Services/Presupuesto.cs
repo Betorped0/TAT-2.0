@@ -20,10 +20,7 @@ namespace TAT001.Services
                     kunnr = "";
 
                 //Obtener presupuesto
-                //Calendario445 c445 = new Calendario445();
-                //string mes = c445.getPeriodo(DateTime.Now.Date) + "";
-                var presupuesto = FnCommon.ObtenerPresupuestoCliente(db,kunnr,mes);// db.CSP_PRESU_CLIENT(cLIENTE: kunnr, pERIODO: mes).ToList();
-                //.Select(p => new { DESC = p.DESCRIPCION.ToString(), VAL = p.VALOR.ToString() }).ToList();
+                var presupuesto =  db.CSP_PRESU_CLIENT(cLIENTE: kunnr, pERIODO: mes).ToList();
                 string clien = db.CLIENTEs.Where(x => x.KUNNR == kunnr).Select(x => x.BANNERG).First();
                 var clien2 = db.CLIENTEs.Where(x => x.KUNNR == kunnr).FirstOrDefault();
                 string desCanal = db.CANALs.Where(x => x.CANAL1 == clien2.CANAL).FirstOrDefault().CDESCRIPCION;
