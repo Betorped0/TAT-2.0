@@ -100,7 +100,7 @@
                                 var instance = M.FloatingActionButton.init(elem, options);
                             </script>
                             @*<a id="lbl_wfa" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="A" })">Aprobar</a>
-                                <a id="lbl_wfr" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="R" })">Rechazar</a>*@
+                    <a id="lbl_wfr" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="R" })">Rechazar</a>*@
                             <a class="btn-small modal-trigger" href="#modal1" onclick="aprobar()">Aprobar</a>
                             <a class="btn-small modal-trigger" href="#modal1" onclick="rechazar()">Rechazar</a>
                         }
@@ -235,11 +235,15 @@
                                     M.Modal.init(elem3, []);
                             </script>
                         }
+                        if (Model.D.ESTATUS_WF == "B")//ADD RSG 30.10.2018
+                        {
+                            <a class="btn-small" id="lbl_wfn" href="@Url.Action("Edit", "Solicitudes", new { id_d = Model.D.NUM_DOC })">Editar</a>
+                        }
                     }
                     @*//else
                         //{*@
-                    if (Model.D.TSOL.CARTA)
-                    {
+                if (Model.D.TSOL.CARTA)
+                {
                         @* ---DRS 13.10.2018--- *@
                         <div class="col">
                             <button type="button" class="btn-small" data-target="list_carta" style="width:100%;" id="btn_carta">Carta</button>
@@ -247,6 +251,7 @@
                         @*<button type="button" class="btn-small  " id="btn_cancel">Cancelar</button>*@
                         <ul id='list_carta' class='dropdown-content'>
                             @*
+
                                 <li><a href="@Url.Action(" Index", "CartaF" , new { id=Model.D.NUM_DOC })" id="lbl_list">Lista de cartas</a></li>*@ @*//B20180720P MGC Guardar Carta*@
                                 @* ---DRS 14.10.2018--- *@
                                 <li><a href="@Url.Action("Lista", "CartaV", new { id = Model.D.NUM_DOC, swf = Model.D.ESTATUS_WF })" id="lbl_list">Lista de cartas</a></li> @*//B20180720P MGC Guardar Carta*@
@@ -271,9 +276,9 @@
                                 };
                                 var instance = M.Dropdown.init(elem, options);
                             </script>
-                        }
+                }
                         @* } *@
-                    }
+                }
             </div>
         </div>
     </div>
@@ -618,17 +623,27 @@
                                     </div>
                                 </div>
                             </div>
+                            @{ 
+                                string fechai = "", fechaf = "";
+                                if (Model.D.FECHAI_VIG != null) {
+                                    fechai = Model.D.FECHAI_VIG.Value.ToShortDateString();
+                                }
+                                if (Model.D.FECHAI_VIG != null) {
+                                    fechaf = Model.D.FECHAF_VIG.Value.ToShortDateString();
+                                }
+                            }
+
                             <div class="card-panel">
                                 <div class="row" style="margin-bottom:0">
                                     <h5 id="head_vigencia">Vigencia</h5>
                                     <div class="input-field col s12">
                                         @*@Html.EditorFor(model => model.D.FECHAI_VIG, new { htmlAttributes = new { @disabled = "disabled", @type = "text", @value=Model.D.FECHAI_VIG.Value.ToShortDateString() } })*@
-                                        <input type="text" value="@Model.D.FECHAI_VIG.Value.ToShortDateString()" disabled="disabled" />
+                                        <input type="text" value="@fechai" disabled="disabled" />
                                         @Html.LabelFor(model => model.D.FECHAI_VIG, "De", new { @id = "lbl_fechade" })
                                     </div>
                                     <div class="input-field col s12">
                                         @*@Html.EditorFor(model => model.D.FECHAF_VIG, new { htmlAttributes = new { @disabled = "disabled", @type = "text" } })*@
-                                        <input type="text" value="@Model.D.FECHAF_VIG.Value.ToShortDateString()" disabled="disabled" />
+                                        <input type="text" value="@fechaf" disabled="disabled" />
                                         @Html.LabelFor(model => model.D.FECHAF_VIG, "A", new { @id = "lbl_fechahasta" })
                                     </div>
                                 </div>
@@ -732,7 +747,7 @@
                                                             <td>@Model.D.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(ViewBag.spras_id)).FirstOrDefault().TXT50</td>
                                                             @if (iteem.DOC_REF > 0)
                                                             {
-                                                                <td><a href="@Url.Action("Details", new { id=iteem.DOC_REF })">@iteem.DOC_REF</a></td>
+                                                                <td><a href="@Url.Action("Details", new { id = iteem.DOC_REF })">@iteem.DOC_REF</a></td>
                                                             }
                                                             else
                                                             {
@@ -872,8 +887,8 @@
                                                                 }
                                                             }
                                                         </tr>
-                                                        foreach (TAT001.Entities.DOCUMENTORAN ran in iteem.DOCUMENTORANs.Where(x => x.LIN > 1))//RSG 20.09.2018
-                                                        {
+                                                                foreach (TAT001.Entities.DOCUMENTORAN ran in iteem.DOCUMENTORANs.Where(x => x.LIN > 1))//RSG 20.09.2018
+                                                                {
                                                             @*<tr class="ran-@ran.POS" style="display:none;background-color:rgba(242, 242, 242, 0.5);">
                                                             *@
                                                             <tr class="ran-@ran.POS" style="background-color:rgba(242, 242, 242, 0.5);">
@@ -956,8 +971,8 @@
                                                                     }
                                                                 }
                                                             </tr>
-                                                        }
-                                                    }
+                                                                    }
+                                                                }
                                                 </tbody>
                                             </table>
                                         </div>
@@ -1037,10 +1052,10 @@
                             @*
                                 </div>
                                 </div>*@
-                        }
+                                                                }
                     </div>
                 </div>
-            }
+                                                                }
             @*///////////////////////////////CAMBIOS LGPP FIN//////////////////////////*@
             <div id="supp" class="col s12">
                 @{
@@ -1280,6 +1295,17 @@
                                     <div class="card-panel">
                                         <h5 id="head_dis">Distribución</h5>
                                         <div class="row" style="margin-bottom:0">
+                                            @if (Model.D.LIGADA!=null && Model.D.LIGADA.Value)
+                                            {
+                                            <div class="input-field col s6">
+                                                <label>
+                                                    <input type="checkbox" checked />
+                                                    <span id="span_ligada">Solicitud ligada a facturación </span>
+                                                </label>
+                                            </div>
+                                            }
+                                        </div>
+                                        <div class="row" style="margin-bottom:0">
                                             <div class="input-field col s6">
                                                 @Html.EditorFor(model => model.D.TIPO_TECNICO, new { htmlAttributes = new { @disabled = "disabled" } })
                                                 @Html.LabelFor(model => model.D.TIPO_TECNICO, "Negociación", htmlAttributes: new { @id = "lbl_tiponeg" })
@@ -1290,23 +1316,23 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col s12 m6 l6">
-                                    <div class="card-panel">
-                                        <h5 id="head_montob">Monto Base</h5>
-                                        <div class="row" style="margin-bottom:0">
-                                            <div class="input-field col s6">
-                                                @Html.EditorFor(model => model.D.MONTO_DOC_MD, new { htmlAttributes = new { @disabled = "disabled", @id = "lbl_montodis", @class = "_vmonto" } })
-                                                @Html.LabelFor(model => model.D.MONTO_DOC_MD, "Monto", htmlAttributes: new { @id = "lbl_montodis" })
-                                            </div>
-                                            <div class="input-field col s6">
-                                                @Html.EditorFor(model => model.D.MONEDA_ID, new { htmlAttributes = new { @disabled = "disabled", @id = "lbl_monedadis" } })
-                                                @Html.LabelFor(model => model.D.MONEDA_ID, "Moneda", htmlAttributes: new { @for = "monedadis_id", @id = "lbl_monedadis" })
+                                        </div>
+                                        <div class="col s12 m6 l6">
+                                            <div class="card-panel">
+                                                <h5 id="head_montob">Monto Base</h5>
+                                                <div class="row" style="margin-bottom:0">
+                                                    <div class="input-field col s6">
+                                                        @Html.EditorFor(model => model.D.MONTO_DOC_MD, new { htmlAttributes = new { @disabled = "disabled", @id = "lbl_montodis", @class = "_vmonto" } })
+                                                        @Html.LabelFor(model => model.D.MONTO_DOC_MD, "Monto", htmlAttributes: new { @id = "lbl_montodis" })
+                                                    </div>
+                                                    <div class="input-field col s6">
+                                                        @Html.EditorFor(model => model.D.MONEDA_ID, new { htmlAttributes = new { @disabled = "disabled", @id = "lbl_monedadis" } })
+                                                        @Html.LabelFor(model => model.D.MONEDA_ID, "Moneda", htmlAttributes: new { @for = "monedadis_id", @id = "lbl_monedadis" })
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
                         }
                         @*///////////////////////////////CAMBIOS LGPP FIN//////////////////////////*@
                         <div class="card-panel">
@@ -1352,12 +1378,12 @@
                                                         <td>
                                                             @try
                                                             {@item.VIGENCIA_DE.Value.ToShortDateString()}
-                                                        catch { }
+                                                            catch { }
                                                         </td>
                                                         <td>
                                                             @try
                                                             {@item.VIGENCIA_AL.Value.ToShortDateString()}
-                                                        catch { }
+                                                            catch { }
                                                         </td>
                                                         @if (item.MATNR != "")
                                                         {
@@ -1413,8 +1439,8 @@
                                                         }
                                                     </tr>
                                                     @*LEJ 12.07.18 Añadi un identificador para modificarse dinamicamente*@
-                                                    foreach (var mat in item.DOCUMENTOMs)
-                                                    {
+                                                foreach (var mat in item.DOCUMENTOMs)
+                                                {
                                                         <tr class="mat-@mat.POS_ID grey lighten-4" style="display:none;">
                                                             <td></td>
                                                             <td></td>
@@ -1452,12 +1478,12 @@
                                                             }
                                                         </tr>
 
-                                                    }
-                                                    idn++;//LEJ 12.07.18
-                                                }
+                                                                    }
+                                                                    idn++;//LEJ 12.07.18
+                                                                }
                                             </tbody>
                                         </table>
-                                    }
+                                                                }
                                 </div>
                             </div>
                         </div>
@@ -1938,7 +1964,7 @@
                                                                 @miCi.TSOL.TSOLTs.Where(x => x.SPRAS_ID == ViewBag.spras_id).FirstOrDefault().TXT010
                                                             </td>
                                                             <td>
-                                                                <a href="@Url.Action("Details",new { id=miCi.NUM_DOC})">@miCi.NUM_DOC</a>
+                                                                <a href="@Url.Action("Details", new { id = miCi.NUM_DOC })">@miCi.NUM_DOC</a>
                                                             </td>
                                                             <td>
                                                                 @miCi.DOCUMENTO_SAP
@@ -2316,7 +2342,7 @@
                                                                 @item.HORAC.Value.ToString().Split('.')[0]
                                                                 </td>*@
                                                             <td>
-                                                                <a href="@Url.Action("Details", new { id=item.NUM_DOC })" class="btn-small">Ver</a>
+                                                                <a href="@Url.Action("Details", new { id = item.NUM_DOC })" class="btn-small">Ver</a>
                                                             </td>
                                                         </tr>
                                                     }
@@ -2337,10 +2363,10 @@
             var instance = M.Tabs.init(el, options);
         </script>
     </div>
-    if (ViewBag.acciones != null)
-    {
-        using (Html.BeginForm("Procesa", "Flujos"))
-        {
+                                                                if (ViewBag.acciones != null)
+                                                                {
+                                                                    using (Html.BeginForm("Procesa", "Flujos"))
+                                                                    {
             <div id="modal1" class="modal  bottom-sheet">
                 @Html.AntiForgeryToken()
                 <div class="modal-content">
@@ -2382,8 +2408,8 @@
                     @*<a class="btn-small btn-default" href="@Url.Action("Details", "Solicitudes" , new { id=Model.F.NUM_DOC})">Cancelar</a>*@
                 </div>
             </div>
-            if (ViewBag.accion == "R")
-            {
+                                                                        if (ViewBag.accion == "R")
+                                                                        {
                 <div class="row" style="font-size:12px;">
                     <div class="col s12">
                         <div class="row" style="margin-bottom:0">
@@ -2419,7 +2445,7 @@
                         </div>
                     </div>
                 </div>
-            }
+                                                                        }
             <script>
 
                 var elem = document.getElementById('modal1');
@@ -2462,10 +2488,10 @@
                     document.getElementById("wf_estatus").value = 'A';
                 }
             </script>
-        }
-    }
-    if (ViewBag.tts.Count != 0)
-    {
+                                                                    }
+                                                                }
+                                                                if (ViewBag.tts.Count != 0)
+                                                                {
 
         <div class="row" style="font-size:12px;">
             <div class="col s12">
@@ -2509,9 +2535,9 @@
                 </div>
             </div>
         </div>
-    }
-    if (ViewBag.workflow.Count != 0)
-    {
+                                                                }
+                                                                if (ViewBag.workflow.Count != 0)
+                                                                {
         <div class="row" style="font-size:12px;">
             <div class="col s12">
                 <div class="card-panel">
@@ -2566,7 +2592,7 @@
                                         </td>
                                         <td width="30%"> @Html.DisplayFor(modelItem => f.COMENTARIO) </td>
                                     </tr>
-                                }
+                                                }
                             </tbody>
                         </table>
                     </div>
@@ -2578,15 +2604,14 @@
 }
 catch (Exception ee)
 {
-
+    TAT001.Common.Log.ErrorLogApp(ee,"View-Details","");
     Session["error"] = ee.Message.ToString();
     <script>
         document.location.replace(root + "Home/Index");
     </script>
 }
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.D.NUM_DOC }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Regresar", "Index")
 </p>
 
 @*///////////////////////////////L.G.P.P MODIFICACIONES INICIO*@

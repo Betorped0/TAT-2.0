@@ -23,7 +23,7 @@
             <div class="row">
                 <div class="form-horizontal">
                     <div class="form-group">
-                        @Html.LabelFor(model => model.SOCIEDAD_ID, "SOCIEDAD_ID", htmlAttributes: new { @class = "control-label col-md-2 active", @id = "lblSociedadId" })
+                        @Html.LabelFor(model => model.SOCIEDAD_ID, "Co. Code", htmlAttributes: new { @class = "control-label col-md-2 active", @id = "lblSociedadId" })
                         @Html.DropDownList("SOCIEDAD_ID", null, htmlAttributes: new { @class = "form-control" })
                         @Html.ValidationMessageFor(model => model.SOCIEDAD_ID, "", new { @class = "text-danger" })
                     </div>
@@ -37,176 +37,226 @@
                         @Html.DropDownList("TSOL", null, htmlAttributes: new { @class = "form-control" })
                         @Html.ValidationMessageFor(model => model.TSOL, "", new { @class = "text-danger" })
                     </div>
-
-                    <div class="row">
-                        <div class="input-field col l6 m6" style="margin-bottom:0;">
-                            @Html.LabelFor(model => model.FACTURA, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblFactura" })
-                            @Html.EditorFor(model => model.FACTURA, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idfac" } })
-
-                            <label>
-                                <input type="checkbox" name="selectedCustomers" value="true" id="fac" onclick="check()" />
-                                <span style="height:0"></span>
-                            </label>
-                        </div>
-
-                        <div class="input-field col l6 m6" style="margin-bottom:0;">
-                            @Html.LabelFor(model => model.FECHA, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblFecha" })
-                            @Html.EditorFor(model => model.FECHA, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idfec" } })
-
-                            <label>
-                                <input type="checkbox" name="selectedCustomers" value="true" id="fec" onclick="check()" />
-                                <span style="height:0"></span>
-                            </label>
-                        </div>
-                    </div>
                     <br />
                     <br />
                     <div class="row">
-                        <div class="input-field col l6 m6" style="margin-bottom:0;">
-                            @Html.LabelFor(model => model.PROVEEDOR, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblProveedor" })
-                            @Html.EditorFor(model => model.PROVEEDOR, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idprov" } })
+                        <div class="row col l6 m6" style="margin-bottom:0;">
 
-                            <label>
-                                <input type="checkbox" name="selectedCustomers" value="true" id="prov" onclick="check()" />
-                                <span style="height:0"></span>
-                            </label>
+                            <div class="row col s3 m3">
+                                @Html.LabelFor(model => model.FACTURA, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblFactura" })
+                                @Html.EditorFor(model => model.FACTURA, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idfac" } })
+                            </div>
+                            <div class="row col s3 m3">
+                                <label>
+                                    <input type="checkbox" name="selectedCustomers" value="true" id="fac" onclick="check()" />
+                                    <span style="height:0"></span>
+                                </label>
+                            </div>
                         </div>
-
-                        <div class="input-field col l6 m6" style="margin-bottom:0;">
-                            @Html.LabelFor(model => model.CONTROL, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblControl" })
-                            @Html.EditorFor(model => model.CONTROL, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idcon" } })
-
-                            <label>
-                                <input type="checkbox" name="selectedCustomers" value="true" id="con" onclick="check()" />
-                                <span style="height:0"></span>
-                            </label>
+                       
+                        <div class="row col l6 m6" style="margin-bottom:0;">
+                            <div class="row col s3 m3">
+                                @Html.LabelFor(model => model.FECHA, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblFecha" })
+                                @Html.EditorFor(model => model.FECHA, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idfec" } })
+                            </div>
+                          
+                            <div class="row col s3 m3">
+                                <label>
+                                    <input type="checkbox" name="selectedCustomers" value="true" id="fec" onclick="check()" />
+                                    <span style="height:0"></span>
+                                </label>
+                            </div>
                         </div>
                     </div>
-                    <br />
-                    <br />
+
+
+
+                   
                     <div class="row">
-                        <div class="input-field col l6 m6" style="margin-bottom:0;">
-                            @Html.LabelFor(model => model.AUTORIZACION, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblAutorizacion" })
-                            @Html.EditorFor(model => model.AUTORIZACION, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idauto" } })
+                        <div class="col l6 m6" style="margin-bottom:0;">
+                            <div class="row col s3 m3">
+                                @Html.LabelFor(model => model.PROVEEDOR, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblProveedor" })
+                                @Html.EditorFor(model => model.PROVEEDOR, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idprov" } })
+                            </div>
 
-                            <label>
-                                <input type="checkbox" name="selectedCustomers" value="true" id="auto" onclick="check()" />
-                                <span style="height:0"></span>
-                            </label>
+                            <div class="row col s3 m3">
+                                <label>
+                                    <input type="checkbox" name="selectedCustomers" value="true" id="prov" onclick="check()" />
+                                    <span style="height:0"></span>
+                                </label>
+                                </div>
+                            </div>
+
+                        <div class="col l6 m6" style="margin-bottom:0;">
+                            <div class="row col s3 m3">
+                                @Html.LabelFor(model => model.CONTROL, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblControl" })
+                                @Html.EditorFor(model => model.CONTROL, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idcon" } })
+                            </div>
+
+                            <div class="row col s3 m3">
+                                <label>
+                                    <input type="checkbox" name="selectedCustomers" value="true" id="con" onclick="check()" />
+                                    <span style="height:0"></span>
+                                </label>
+                                </div>
+                            </div>
                         </div>
-
-                        <div class="input-field col l6 m6" style="margin-bottom:0;">
-                            @Html.LabelFor(model => model.VENCIMIENTO, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblVenc" })
-                            @Html.EditorFor(model => model.VENCIMIENTO, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idvenc" } })
-
-                            <label>
-                                <input type="checkbox" name="selectedCustomers" value="true" id="venc" onclick="check()" />
-                                <span style="height:0"></span>
-                            </label>
-                        </div>
-                    </div>
-                    <br />
-                    <br />
+           
                     <div class="row">
-                        <div class="input-field col l6 m6" style="margin-bottom:0;">
-                            @Html.LabelFor(model => model.FACTURAK, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblFactK" })
-                            @Html.EditorFor(model => model.FACTURAK, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idfactk" } })
+                        <div class="col l6 m6" style="margin-bottom:0;">
+                            <div class="row col s3 m3">
+                                @Html.LabelFor(model => model.AUTORIZACION, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblAutorizacion" })
+                                @Html.EditorFor(model => model.AUTORIZACION, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idauto" } })
+                            </div>
+                            <div class="row col s3 m3">
+                                <label>
+                                    <input type="checkbox" name="selectedCustomers" value="true" id="auto" onclick="check()" />
+                                    <span style="height:0"></span>
+                                </label>
+                                </div>
+                            </div>
 
-                            <label>
-                                <input type="checkbox" name="selectedCustomers" value="true" id="factk" onclick="check()" />
-                                <span style="height:0"></span>
-                            </label>
+                        <div class="col l6 m6" style="margin-bottom:0;">
+                            <div class="row col s3 m3">
+                                @Html.LabelFor(model => model.VENCIMIENTO, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblVenc" })
+                                @Html.EditorFor(model => model.VENCIMIENTO, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idvenc" } })
+                            </div>
+                            <div class="row col s3 m3">
+                                <label>
+                                    <input type="checkbox" name="selectedCustomers" value="true" id="venc" onclick="check()" />
+                                    <span style="height:0"></span>
+                                </label>
+                                </div>
+                            </div>
                         </div>
-
-                        <div class="input-field col l6 m6" style="margin-bottom:0;">
-                            @Html.LabelFor(model => model.EJERCICIOK, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblEjeK" })
-                            @Html.EditorFor(model => model.EJERCICIOK, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idejek" } })
-
-                            <label>
-                                <input type="checkbox" name="selectedCustomers" value="true" id="ejek" onclick="check()" />
-                                <span style="height:0"></span>
-                            </label>
-                        </div>
-                    </div>
-                    <br />
-                    <br />
+                  
                     <div class="row">
-                        <div class="input-field col l6 m6" style="margin-bottom:0;">
-                            @Html.LabelFor(model => model.BILL_DOC, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblBill" })
-                            @Html.EditorFor(model => model.BILL_DOC, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idbill" } })
+                        <div class="col l6 m6" style="margin-bottom:0;">
+                            <div class="row col s3 m3">
+                                @Html.LabelFor(model => model.FACTURAK, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblFactK" })
+                                @Html.EditorFor(model => model.FACTURAK, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idfactk" } })
+                            </div>
+                            <div class="row col s3 m3">
+                                <label>
+                                    <input type="checkbox" name="selectedCustomers" value="true" id="factk" onclick="check()" />
+                                    <span style="height:0"></span>
+                                </label>
+                                </div>
+                            </div>
 
-                            <label>
-                                <input type="checkbox" name="selectedCustomers" value="true" id="bill" onclick="check()" />
-                                <span style="height:0"></span>
-                            </label>
+                        <div class="col l6 m6" style="margin-bottom:0;">
+                            <div class="row col s3 m3">
+                                @Html.LabelFor(model => model.EJERCICIOK, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblEjeK" })
+                                @Html.EditorFor(model => model.EJERCICIOK, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idejek" } })
+                            </div>
+                            <div class="row col s3 m3">
+                                <label>
+                                    <input type="checkbox" name="selectedCustomers" value="true" id="ejek" onclick="check()" />
+                                    <span style="height:0"></span>
+                                </label>
+                                </div>
+                            </div>
                         </div>
-
-                        <div class="input-field col l6 m6" style="margin-bottom:0;">
-                            @Html.LabelFor(model => model.BELNR, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblBell" })
-                            @Html.EditorFor(model => model.BELNR, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idbellnr" } })
-
-                            <label>
-                                <input type="checkbox" name="selectedCustomers" value="true" id="bellnr" onclick="check()" />
-                                <span style="height:0"></span>
-                            </label>
-                        </div>
-                    </div>
-                    <br />
-                    <br />
+               
                     <div class="row">
-                        <div class="input-field col l6 m6" style="margin-bottom:0;">
-                            @Html.LabelFor(model => model.IMPORTE_FAC, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblImporte" })
-                            @Html.EditorFor(model => model.IMPORTE_FAC, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idimpo" } })
+                        <div class="col l6 m6" style="margin-bottom:0;">
+                            <div class="row col s3 m3">
+                                @Html.LabelFor(model => model.BILL_DOC, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblBill" })
+                                @Html.EditorFor(model => model.BILL_DOC, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idbill" } })
+                            </div>
 
-                            <label>
-                                <input type="checkbox" name="selectedCustomers" value="true" id="impo" onclick="check()" />
-                                <span style="height:0"></span>
-                            </label>
-                        </div>
-                        <div class="input-field col l6 m6" style="margin-bottom:0;">
-                            @Html.LabelFor(model => model.PAYER, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblPayer" })
-                            @Html.EditorFor(model => model.PAYER, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idpay" } })
+                            <div class="row col s3 m3">
+                                <label>
+                                    <input type="checkbox" name="selectedCustomers" value="true" id="bill" onclick="check()" />
+                                    <span style="height:0"></span>
+                                </label>
+                                </div>
+                            </div>
 
-                            <label>
-                                <input type="checkbox" name="selectedCustomers" value="true" id="pay" onclick="check()" />
-                                <span style="height:0"></span>
-                            </label>
+                        <div class="col l6 m6" style="margin-bottom:0;">
+                            <div class="row col s3 m3">
+                                @Html.LabelFor(model => model.BELNR, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblBell" })
+                                @Html.EditorFor(model => model.BELNR, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idbellnr" } })
+                            </div>
+                            <div class="row col s3 m3">
+                                <label>
+                                    <input type="checkbox" name="selectedCustomers" value="true" id="bellnr" onclick="check()" />
+                                    <span style="height:0"></span>
+                                </label>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <br />
-                    <br />
+          
                     <div class="row">
-                        <div class="input-field col l6 m6" style="margin-bottom:0;">
-                            @Html.LabelFor(model => model.DESCRIPCION, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblDesc" })
-                            @Html.EditorFor(model => model.DESCRIPCION, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "iddes" } })
-
-                            <label>
-                                <input type="checkbox" name="selectedCustomers" value="true" id="des" onclick="check()" />
-                                <span style="height:0"></span>
-                            </label>
+                        <div class="col l6 m6" style="margin-bottom:0;">
+                            <div class="row col s3 m3">
+                                @Html.LabelFor(model => model.IMPORTE_FAC, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblImporte" })
+                                @Html.EditorFor(model => model.IMPORTE_FAC, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idimpo" } })
+                            </div>
+                            <div class="row col s3 m3">
+                                <label>
+                                    <input type="checkbox" name="selectedCustomers" value="true" id="impo" onclick="check()" />
+                                    <span style="height:0"></span>
+                                </label>
+                                </div>
+                            </div>
+                        <div class="col l6 m6" style="margin-bottom:0;">
+                            <div class="row col s3 m3">
+                                @Html.LabelFor(model => model.PAYER, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblPayer" })
+                                @Html.EditorFor(model => model.PAYER, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idpay" } })
+                            </div>
+                            <div class="row col s3 m3">
+                                <label>
+                                    <input type="checkbox" name="selectedCustomers" value="true" id="pay" onclick="check()" />
+                                    <span style="height:0"></span>
+                                </label>
+                                </div>
+                            </div>
                         </div>
-                        <div class="input-field col l6 m6" style="margin-bottom:0;">
-                            @Html.LabelFor(model => model.SOCIEDAD, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblSoci" })
-                            @Html.EditorFor(model => model.SOCIEDAD, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idsoc" } })
-
-                            <label>
-                                <input type="checkbox" name="selectedCustomers" value="true" id="soc" onclick="check()" />
-                                <span style="height:0"></span>
-                            </label>
-                        </div>
-                    </div>
-                    <br />
-                    <br />
+          
                     <div class="row">
-                        <div class="input-field col l6 m6" style="margin-bottom:0;">
-                            @Html.LabelFor(model => model.ACTIVO, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblActivo" })
-                            @Html.EditorFor(model => model.ACTIVO, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idact" } })
-                            <label>
-                                <input type="checkbox" name="selectedCustomers" value="true" id="act" onclick="check()" />
-                                <span style="height:0"></span>
-                            </label>
+                        <div class="col l6 m6" style="margin-bottom:0;">
+                            <div class="row col s3 m3">
+                                @Html.LabelFor(model => model.DESCRIPCION, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblDesc" })
+                                @Html.EditorFor(model => model.DESCRIPCION, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "iddes" } })
+                            </div>
+                            <div class="row col s3 m3">
+                                <label>
+                                    <input type="checkbox" name="selectedCustomers" value="true" id="des" onclick="check()" />
+                                    <span style="height:0"></span>
+                                </label>
+                                </div>
+                            </div>
+                            @*input-field*@
+                        <div class="col l6 m6" style="margin-bottom:0;">
+                            <div class="row col s3 m3">
+                                @Html.LabelFor(model => model.SOCIEDAD, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblSoci" })
+                                @Html.EditorFor(model => model.SOCIEDAD, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idsoc" } })
+                            </div>
+                            <div class="row col s3 m3">
+                                <label>
+                                    <input type="checkbox" name="selectedCustomers" value="true" id="soc" onclick="check()" />
+                                    <span style="height:0"></span>
+                                </label>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                
+                    <div class="row">
+                        <div class="col l6 m6" style="margin-bottom:0;">
+                            <div class="row col s3 m3">
+                                @Html.LabelFor(model => model.ACTIVO, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblActivo" })
+                                @Html.EditorFor(model => model.ACTIVO, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idact" } })
+                            </div>
+
+                            <div class="row col s3 m3">
+                                <label>
+                                    <input type="checkbox" name="selectedCustomers" value="true" id="act" onclick="check()" />
+                                    <span style="height:0"></span>
+                                </label>
+                                </div>
+                            </div>
+                        </div>
                 </div>
             </div>
         </div>

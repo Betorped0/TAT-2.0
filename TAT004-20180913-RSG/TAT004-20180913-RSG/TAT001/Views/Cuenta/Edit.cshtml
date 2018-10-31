@@ -36,7 +36,7 @@
         <div class="form-horizontal">
             <div class="row">
                 <div class="form-group col m6" style="margin-bottom:0;">
-                    @Html.LabelFor(model => model.SOCIEDAD_ID, "SOCIEDAD_ID", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_sociedad" })
+                    @Html.LabelFor(model => model.SOCIEDAD_ID, "Co. Code", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_sociedad" })
                     @Html.DropDownList("SOCIEDAD_ID", null, htmlAttributes: new { @class = "form-control", @id = "sel-soc", disabled = true })
                     @Html.ValidationMessageFor(model => model.SOCIEDAD_ID, "", new { @class = "text-danger" })
                 </div>

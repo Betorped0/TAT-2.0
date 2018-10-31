@@ -52,6 +52,9 @@
             <th id="lblFechaF" style="text-align:left;">
                 @*@Html.DisplayNameFor(model => model.FECHAF)*@
             </th>
+            <th id="lblGall" style="text-align:left;">
+                @*@Html.DisplayNameFor(model => model.FECHAF)*@
+            </th>
             <th id="lblActivo" style="text-align:left;">
                 @*@Html.DisplayNameFor(model => model.ACTIVO)*@
             </th>
@@ -73,6 +76,11 @@
             </td>
             <td style="text-align:left;">
                 @Html.DisplayFor(modelItem => item.FECHAF)
+            </td>
+            <td style="text-align:left;">
+                @*@Html.DisplayFor(modelItem => item.GALL_ID)*@
+                @item.GALL.DESCRIPCION
+
             </td>
             @if ((bool)item.ACTIVO == true)
             {

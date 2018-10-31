@@ -33,7 +33,10 @@ namespace TAT001.Controllers
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
                 ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
                 ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
+                ViewBag.usuario = user;
+                ViewBag.returnUrl = Request.Url.PathAndQuery;
+                ViewBag.nivelUsuario = user.PUESTO_ID;
+                ViewBag.sociedadesUsuario = user.SOCIEDADs;
                 ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
@@ -225,9 +228,10 @@ namespace TAT001.Controllers
             }
         }
         [HttpGet]
-        public ActionResult SelPais(string pais, string returnUrl)
+        public ActionResult SelPais(string pais, string returnUrl,string sociedad_id)
         {
             Session["pais"] = pais.ToUpper();
+            Session["sociedad_id"] = sociedad_id;
             if (!string.IsNullOrEmpty(returnUrl))
             {
 
@@ -260,20 +264,7 @@ namespace TAT001.Controllers
                 ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
                 ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
 
-                ////Flujo 1 - Anterior
-                //var p = from P in db.PAIS
-                //        join C in db.CREADOR2 on P.LAND equals C.LAND
-                //        where P.ACTIVO == true
-                //        & C.ID == u & C.ACTIVO == true
-                //        select P;
-
-                ////flujo2
-                //var p = from P in db.PAIS.ToList()
-                //        join C in (db.DET_AGENTEC.Where(C => C.USUARIOC_ID == u & C.ACTIVO == true & C.POS == 1).DistinctBy(a => a.PAIS_ID).ToList())
-                //        on P.LAND equals C.PAIS_ID
-                //        where P.ACTIVO == true
-                //        select P;
-                //flujo3
+               
                 var p = (from P in db.PAIS.ToList()
                         join C in db.CLIENTEs.Where(x => x.ACTIVO == true).ToList()
                         on P.LAND equals C.LAND
@@ -288,16 +279,7 @@ namespace TAT001.Controllers
                 //List<TAT001.Entities.DELEGAR> del = db.DELEGARs.Where(a => a.USUARIOD_ID.Equals(u)).ToList();
                 foreach (DELEGAR de in del)
                 {
-                    //var pd = (from P in db.PAIS
-                    //          join C in db.CREADOR2 on P.LAND equals C.LAND
-                    //          where P.ACTIVO == true
-                    //          & C.ID == de.USUARIO_ID & C.ACTIVO == true
-                    //          select P).ToList();
-                    //var pd = (from P in db.PAIS.ToList()
-                    //          join C in (db.DET_AGENTEC.Where(C => C.USUARIOC_ID == de.USUARIO_ID & C.ACTIVO == true & C.POS == 1).DistinctBy(a => a.PAIS_ID).ToList())
-                    //          on P.LAND equals C.PAIS_ID
-                    //          where P.ACTIVO == true
-                    //          select P).ToList();
+                  
                     var pd = (from P in db.PAIS.ToList()
                               join C in db.CLIENTEs.Where(x => x.ACTIVO == true).ToList()
                               on P.LAND equals C.LAND

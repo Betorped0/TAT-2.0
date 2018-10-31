@@ -157,6 +157,10 @@ function loadExcelDis(file) {
                         usc = usc.slice(0, -1);
                         var uscx = true;
                     }
+                    if (usc.indexOf('!') != -1) {
+                        usc = usc.slice(0, -1);
+                        var uscy = true;
+                    }
                     if (spr.indexOf('?') != -1) {
                         spr = spr.slice(0, -1);
                         var sprx = true;
@@ -184,6 +188,9 @@ function loadExcelDis(file) {
                     if (uscx == true) {
                         $(cols).addClass("red");
                     }
+                    if (uscy == true) {
+                        $(cols).addClass("yellow");
+                    }
                     var cols = addedRow.cells[8];
                     if (emax == true) {
                         $(cols).addClass("red");
@@ -198,6 +205,11 @@ function loadExcelDis(file) {
                 $('#tfoot_dis').css("display", "table-footer-group");
                 document.getElementById("loader").style.display = "none";
             }
+        },
+        complete: function () {
+
+            var num = $("#table tr").length - 1;
+            addRow(table, num, num, "", "", "", "", "", "", "", "", "", "", "");
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             M.toast({
@@ -366,6 +378,10 @@ function creart(metodo, datos) {
                         usc = usc.slice(0, -1);
                         var uscx = true;
                     }
+                    if (usc.indexOf('!') != -1) {
+                        usc = usc.slice(0, -1);
+                        var uscy = true;
+                    }
                     if (spr.indexOf('?') != -1) {
                         spr = spr.slice(0, -1);
                         var sprx = true;
@@ -393,6 +409,9 @@ function creart(metodo, datos) {
                     if (uscx == true) {
                         $(cols).addClass("red");
                     }
+                    if (uscy == true) {
+                        $(cols).addClass("yellow");
+                    }
                     var cols = addedRow.cells[8];
                     if (emax == true) {
                         $(cols).addClass("red");
@@ -409,9 +428,10 @@ function creart(metodo, datos) {
             }
         },
         complete: function () {
-            //var num = $("#table tr").length;
-            //addRow(table, num, num, "", "", "", "", "", "", "", "", "", "", "");
-        }
+
+            var num = $("#table tr").length - 1;
+            addRow(table, num, num, "", "", "", "", "", "", "", "", "", "", "");
+        },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             M.toast({
                 html: "Request couldn't be processed. Please try again later. the reason        " + xhr.status + " : " + httpStatusMessage + ": " + customErrorMessage
@@ -465,7 +485,7 @@ function dismiss(classe) {
     }
 }
 
-$('body').on('keydown.autocomplete', '.input_cli', function () {
+$('body').on('keydown.autocomplete', '.input_cli1', function () {
 
     auto(this).autocomplete({
         source: function (request, response) {
@@ -474,6 +494,53 @@ $('body').on('keydown.autocomplete', '.input_cli', function () {
                 url: 'Cliente',
                 dataType: "json",
                 data: { "Prefix": request.term },
+                success: function (data) {
+                    response(auto.map(data, function (item) {
+                        return { label: item.KUNNR + " | " + item.NAME1, value: item.KUNNR };
+                    }))
+                }
+            })
+        },
+
+        messages: {
+            noResults: '',
+            results: function (resultsCount) { }
+        },
+
+        change: function (e, ui) {
+            if (!(ui.item)) {
+                e.target.value = "";
+            }
+        },
+
+        select: function (event, ui) {
+        }
+    });
+});
+
+$('body').on('keydown.autocomplete', '.input_cli', function () {
+    var table = $("#table").DataTable();
+    var tr = $(this).closest('tr'); //Obtener el row
+    var row_index = $(this).parent().parent().index();
+    var col_index = $(this).parent().index();
+    var col_index2 = col_index + 1;
+
+    for (var d = (table.rows().data().length) - 1; d > -1; d--) {
+        var row = table.row(d).node();
+        var bukrs = $(row).children().eq(col_index2).children().val();
+        if (bukrs != "") {
+            break;
+        }
+
+    }
+
+    auto(this).autocomplete({
+        source: function (request, response) {
+            auto.ajax({
+                type: "POST",
+                url: 'Cliente1',
+                dataType: "json",
+                data: { "Prefix": request.term, "BUKRS": bukrs },
                 success: function (data) {
                     response(auto.map(data, function (item) {
                         return { label: item.KUNNR + " | " + item.NAME1, value: item.KUNNR };

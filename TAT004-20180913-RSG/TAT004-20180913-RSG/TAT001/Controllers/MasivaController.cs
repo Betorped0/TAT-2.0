@@ -21,6 +21,7 @@ using System.IO;
 
 namespace TAT001.Controllers
 {
+    [Authorize]//ADD RSG 29.10.2018
     public class MasivaController : Controller
     {
         private TAT001Entities db = new TAT001Entities();
@@ -190,7 +191,24 @@ namespace TAT001.Controllers
                     doc.PAYER_ID = payer_id.TrimStart('0');
                     doc.VKORG = vkorg;
                     doc.VTWEG = vtweg;
-                    doc.PAYER_NOMBRE = payer_nombre;
+                    
+                    //var existeCliente = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault().NAME1;
+
+                    //if (existeCliente != null | existeCliente != "")
+                    //{
+                    //    doc.PAYER_NOMBRE = existeCliente;
+                    //}
+                    var existeCliente = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault();
+                    
+                    if (existeCliente != null)
+                    {
+                        doc.PAYER_NOMBRE = existeCliente.NAME1;
+                    }
+                    else
+                    {
+                        doc.PAYER_NOMBRE = "";
+                    }
+
                     doc.CONTACTO_NOMBRE = contacto_nombre;
                     doc.CONTACTO_EMAIL = contacto_email;
                     doc.FECHAI_VIG = fechai_vig2[0];
@@ -285,6 +303,8 @@ namespace TAT001.Controllers
                     string bill_doc = ds3.Tables[0].Rows[i][2].ToString().Trim();
                     string ejerciciok = ds3.Tables[0].Rows[i][3].ToString().Trim();
                     string payer_id = ds3.Tables[0].Rows[i][4].ToString().Trim();
+                    if (payer_id.Length < 10) { payer_id = cad.completaCliente(payer_id); }
+                    string payerSinCero = payer_id.TrimStart('0');
                     string payer_nombre = ds3.Tables[0].Rows[i][5].ToString().Trim();
                     string importe_fac = ds3.Tables[0].Rows[i][6].ToString().Trim();
                     string belnr = ds3.Tables[0].Rows[i][7].ToString().Trim();
@@ -304,7 +324,18 @@ namespace TAT001.Controllers
                             doc.BILL_DOC = bill_doc;
                             doc.EJERCICIOK = ejerciciok;
                             doc.PAYER = payer_id.TrimStart('0');
-                            doc.PAYER_NOMBRE = payer_nombre;
+
+                            var existeCliente = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault();
+
+                            if (existeCliente != null)
+                            {
+                                doc.PAYER_NOMBRE = existeCliente.NAME1;
+                            }
+                            else
+                            {
+                                doc.PAYER_NOMBRE = "";
+                            }
+
                             doc.IMPORTE_FAC = fc.toShow(Convert.ToDecimal(importe_fac), decimales);
                             doc.BELNR = belnr;
                         }
@@ -356,6 +387,7 @@ namespace TAT001.Controllers
                         //string vigencia_al = ds4.Tables[0].Rows[i][3].ToString().Trim();
                         string matnr = ds4.Tables[0].Rows[i][4].ToString().Trim();
                         if (matnr.Length < 18) { matnr = cad.completaMaterial(matnr); }
+                        string materialSinCero = matnr.TrimStart('0');
                         string matkl = ds4.Tables[0].Rows[i][5].ToString().Trim();
                         string descripcion = ds4.Tables[0].Rows[i][6].ToString().Trim();
                         string monto = ds4.Tables[0].Rows[i][7].ToString().Trim();
@@ -366,6 +398,8 @@ namespace TAT001.Controllers
                         string volumen_real = ds4.Tables[0].Rows[i][12].ToString().Trim();
                         string apoyo = ds4.Tables[0].Rows[i][13].ToString().Trim();
 
+
+
                         if (num_docH1 == num_doc)
                         {
                             doc.NUM_DOC = num_doc;
@@ -374,21 +408,32 @@ namespace TAT001.Controllers
                             doc.VIGENCIA_AL = vigencia_al2[0];
                             if (matnr != "" & matkl == "")
                             {
-                                doc.MATNR = matnr;
+                                doc.MATNR = matnr.TrimStart('0');
                                 var idMat = db.MATERIALs.Where(y => y.ID == matnr).FirstOrDefault().MATERIALGP_ID;
                                 doc.MATKL = db.MATERIALGPTs.Where(x => x.MATERIALGP_ID == idMat & x.SPRAS_ID == "EN").FirstOrDefault().TXT50;
                             }
                             else
                             {
-                                doc.MATNR = matnr;
+                                doc.MATNR = matnr.TrimStart('0');
                                 doc.MATKL = matkl;
                             }
-                            var desMaterial = (from mat1 in db.MATERIALs
-                                               join mat2 in db.MATERIALTs on mat1.ID equals mat2.MATERIAL_ID
-                                               where mat2.MATERIAL_ID == matnr & mat2.MAKTG == descripcion & mat1.ACTIVO == true
-                                               group mat2 by new { mat2.MATERIAL_ID, mat2.MAKTG } into g
-                                               select new { DESCRIPCION = g.Key.MAKTG }).ToList();
-                            doc.DESCRIPCION = descripcion;
+
+                            var existMaterial = db.MATERIALs.Where(x => x.ID == matnr).FirstOrDefault();
+
+                            if (existMaterial != null)
+                            {
+                                var desMaterial = (from mat1 in db.MATERIALs
+                                                   join mat2 in db.MATERIALTs on mat1.ID equals mat2.MATERIAL_ID
+                                                   where mat2.MATERIAL_ID == matnr & mat1.ACTIVO == true
+                                                   group mat2 by new { mat2.MATERIAL_ID, mat2.MAKTG } into g
+                                                   select new { DESCRIPCION = g.Key.MAKTG }).FirstOrDefault();
+
+                                doc.DESCRIPCION = desMaterial.DESCRIPCION;
+                            }
+                            else
+                            {
+                                doc.DESCRIPCION = "";
+                            }
 
                             if (IsNumeric(monto) == false) { monto = "0"; }
                             if (IsNumeric(porc_apoyo) == false) { porc_apoyo = "0"; } else { porc_apoyo = (Convert.ToDecimal(porc_apoyo) * 100).ToString(); }
@@ -1056,8 +1101,6 @@ namespace TAT001.Controllers
             return cc;
         }
 
-
-
         public List<object> cargaInicialH1(DataRow fila)
         {
             List<object> regresaRowH1 = new List<object>();
@@ -1205,14 +1248,15 @@ namespace TAT001.Controllers
                 regresaRowH1.Add("red white-text rojo");
             }
 
-            if (db.CLIENTEs.Where(x => x.KUNNR == payer_id & x.NAME1 == payer_nombre & x.ACTIVO == true).Count() > 0)
-            {
-                regresaRowH1.Add("");
-            }
-            else
-            {
-                regresaRowH1.Add("red white-text rojo");
-            }
+            regresaRowH1.Add("");
+            //if (db.CLIENTEs.Where(x => x.KUNNR == payer_id & x.NAME1 == payer_nombre & x.ACTIVO == true).Count() > 0)
+            //{
+            //    regresaRowH1.Add("");
+            //}
+            //else
+            //{
+            //    regresaRowH1.Add("red white-text rojo");
+            //}
 
             if (contacto_nombre.Length <= 50)
             {
@@ -1467,7 +1511,7 @@ namespace TAT001.Controllers
                                 regresaRowH2.Add("red white-text rojo");
                             }
                         }
-                        
+
                     }
 
                     regresaRowH2.Add("");//DEBAJO ESTA LA VALIDACION DEL PROOVEDOR
@@ -1889,14 +1933,15 @@ namespace TAT001.Controllers
                         regresaRowH3.Add("red white-text rojo");
                     }
 
-                    if (db.CLIENTEs.Where(x => x.KUNNR == payer_id & x.NAME1 == payer_nombre & x.ACTIVO == true).Count() > 0)
-                    {
-                        regresaRowH3.Add("");
-                    }
-                    else
-                    {
-                        regresaRowH3.Add("red white-text rojo");
-                    }
+                    regresaRowH3.Add("");
+                    //if (db.CLIENTEs.Where(x => x.KUNNR == payer_id & x.NAME1 == payer_nombre & x.ACTIVO == true).Count() > 0)
+                    //{
+                    //    regresaRowH3.Add("");
+                    //}
+                    //else
+                    //{
+                    //    regresaRowH3.Add("red white-text rojo");
+                    //}
 
                     if (IsNumeric(importe_fac))
                     {
@@ -1991,14 +2036,15 @@ namespace TAT001.Controllers
                                            group mat2 by new { mat2.MATERIAL_ID, mat2.MAKTG } into g
                                            select new { ID = g.Key.MATERIAL_ID, DESCRIPCION = g.Key.MAKTG }).ToList();
 
-                        if (desMaterial.Count() > 0)
-                        {
-                            regresaRowH4.Add("");
-                        }
-                        else
-                        {
-                            regresaRowH4.Add("red white-text rojo");
-                        }
+                        regresaRowH4.Add("");
+                        //if (desMaterial.Count() > 0)
+                        //{
+                        //    regresaRowH4.Add("");
+                        //}
+                        //else
+                        //{
+                        //    regresaRowH4.Add("red white-text rojo");
+                        //}
                     }
                     else if (matnr == "" & matkl != "")
                     {
@@ -2025,7 +2071,7 @@ namespace TAT001.Controllers
                     {
                         regresaRowH4.Add("red white-text rojo");
                         regresaRowH4.Add("red white-text rojo");
-                        regresaRowH4.Add("red white-text rojo");
+                        regresaRowH4.Add("");
                     }
 
                     if (apoyo != "")
@@ -2134,13 +2180,14 @@ namespace TAT001.Controllers
             return cc;
         }
 
-        public JsonResult setDatos(List<object> h1, List<object> h2, List<object> h3, List<object> h4, List<object> h5)
+        public JsonResult setDatos(List<object> h1, List<object> h2, List<object> h3, List<object> h4, List<object> h5, List<object> notas)
         {
             DataTable dtt = ConvertToDatatable(h1, "h1");
             DataTable dtt2 = ConvertToDatatable(h2, "h2");
             DataTable dtt3 = ConvertToDatatable(h3, "h3");
             DataTable dtt4 = ConvertToDatatable(h4, "h4");
             DataTable dtt5 = ConvertToDatatable(h5, "h5");
+            DataTable dtt6 = ConvertToDatatable(notas, "notas");
 
             //////CABECERA
             DataSet dt = new DataSet();
@@ -2162,13 +2209,17 @@ namespace TAT001.Controllers
             DataSet dt5 = new DataSet();
             dt5.Tables.Add(dtt5);
 
-            var c = guardaDatos(dt, dt2, dt3, dt4, dt5);
+            /////NOTAS
+            DataSet dt6 = new DataSet();
+            dt6.Tables.Add(dtt6);
+
+            var c = guardaDatos(dt, dt2, dt3, dt4, dt5, dt6);
 
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
             return cc;
         }
 
-        public List<object> guardaDatos(DataSet ds1, DataSet ds2, DataSet ds3, DataSet ds4, DataSet ds5)
+        public List<object> guardaDatos(DataSet ds1, DataSet ds2, DataSet ds3, DataSet ds4, DataSet ds5, DataSet ds6)
         {
             string u = User.Identity.Name;
             string errorString;
@@ -2302,19 +2353,19 @@ namespace TAT001.Controllers
                 if (dop != null)
                 {
                     //SECCION 2.- VALIDACION DE DATOS DE LA SEGUNDA HOJA DEL EXCEL (RELACIONADA)
-                    for (int m = 0; m < ds2.Tables[0].Rows.Count; m++)
+                    for (int j = 0; j < ds2.Tables[0].Rows.Count; j++)
                     {
-                        string num_docH2 = ds2.Tables[0].Rows[m][0].ToString().Trim();
+                        string num_docH2 = ds2.Tables[0].Rows[j][0].ToString().Trim();
                         num_docH2 = num_docH2.TrimStart('0').Trim();
-                        string factura = ds2.Tables[0].Rows[m][1].ToString().Trim();
-                        string fecha_factura = ds2.Tables[0].Rows[m][2].ToString().Trim();
-                        string proveedor = ds2.Tables[0].Rows[m][3].ToString().Trim();
+                        string factura = ds2.Tables[0].Rows[j][1].ToString().Trim();
+                        string fecha_factura = ds2.Tables[0].Rows[j][2].ToString().Trim();
+                        string proveedor = ds2.Tables[0].Rows[j][3].ToString().Trim();
                         if (proveedor.Length < 10) { proveedor = cad.completaCliente(proveedor); }
-                        string proveedor_nombre = ds2.Tables[0].Rows[m][4].ToString().Trim();
-                        string autorizacion = ds2.Tables[0].Rows[m][5].ToString().Trim();
-                        string fecha_vencimiento = ds2.Tables[0].Rows[m][6].ToString().Trim();
-                        string facturak = ds2.Tables[0].Rows[m][7].ToString().Trim();
-                        string ejerciciok = ds2.Tables[0].Rows[m][8].ToString().Trim();
+                        string proveedor_nombre = ds2.Tables[0].Rows[j][4].ToString().Trim();
+                        string autorizacion = ds2.Tables[0].Rows[j][5].ToString().Trim();
+                        string fecha_vencimiento = ds2.Tables[0].Rows[j][6].ToString().Trim();
+                        string facturak = ds2.Tables[0].Rows[j][7].ToString().Trim();
+                        string ejerciciok = ds2.Tables[0].Rows[j][8].ToString().Trim();
 
                         if (num_docH2 == num_doc)
                         {
@@ -2324,7 +2375,7 @@ namespace TAT001.Controllers
                             if (facturasConf != null)
                             {
                                 docupF.NUM_DOC = Convert.ToDecimal(num_docH2);
-                                docupF.POS = m;
+                                docupF.POS = j;
 
                                 if (facturasConf.FACTURA == true)
                                 { docupF.FACTURA = factura; }
@@ -2381,15 +2432,15 @@ namespace TAT001.Controllers
                         for (int m = 0; m < ds3.Tables[0].Rows.Count; m++)
                         {
                             DOCUMENTOF docupF = new DOCUMENTOF();
-                            string num_docH3 = ds3.Tables[0].Rows[i][0].ToString().Trim();
-                            string factura = ds3.Tables[0].Rows[i][1].ToString().Trim();
-                            string bill_doc = ds3.Tables[0].Rows[i][2].ToString().Trim();
-                            string ejerciciok = ds3.Tables[0].Rows[i][3].ToString().Trim();
-                            string payer_idH3 = ds3.Tables[0].Rows[i][4].ToString().Trim();
-                            string payer_nombreH3 = ds3.Tables[0].Rows[i][5].ToString().Trim();
-                            string importe_fac = ds3.Tables[0].Rows[i][6].ToString().Trim();
+                            string num_docH3 = ds3.Tables[0].Rows[m][0].ToString().Trim();
+                            string factura = ds3.Tables[0].Rows[m][1].ToString().Trim();
+                            string bill_doc = ds3.Tables[0].Rows[m][2].ToString().Trim();
+                            string ejerciciok = ds3.Tables[0].Rows[m][3].ToString().Trim();
+                            string payer_idH3 = ds3.Tables[0].Rows[m][4].ToString().Trim();
+                            string payer_nombreH3 = ds3.Tables[0].Rows[m][5].ToString().Trim();
+                            string importe_fac = ds3.Tables[0].Rows[m][6].ToString().Trim();
                             importe_fac = fc.toNum(importe_fac, miles, decimales).ToString();
-                            string belnr = ds3.Tables[0].Rows[i][7].ToString().Trim();
+                            string belnr = ds3.Tables[0].Rows[m][7].ToString().Trim();
 
                             num_docH3 = num_docH3.TrimStart('0').Trim();
 
@@ -2455,26 +2506,26 @@ namespace TAT001.Controllers
                         {
                             DOCUMENTOP docup = new DOCUMENTOP();
 
-                            string ligada = ds4.Tables[0].Rows[i][1].ToString().Trim();
-                            string vigencia_de = ds4.Tables[0].Rows[i][2].ToString().Trim();
-                            string vigencia_al = ds4.Tables[0].Rows[i][3].ToString().Trim();
-                            string matnr = ds4.Tables[0].Rows[i][4].ToString().Trim();
+                            string ligada = ds4.Tables[0].Rows[k][1].ToString().Trim();
+                            string vigencia_de = ds4.Tables[0].Rows[k][2].ToString().Trim();
+                            string vigencia_al = ds4.Tables[0].Rows[k][3].ToString().Trim();
+                            string matnr = ds4.Tables[0].Rows[k][4].ToString().Trim();
                             if (matnr.Length < 18) { matnr = cad.completaMaterial(matnr); }
-                            string matkl = ds4.Tables[0].Rows[i][5].ToString().Trim();
-                            string descripcion = ds4.Tables[0].Rows[i][6].ToString().Trim();
-                            string monto = ds4.Tables[0].Rows[i][7].ToString().Trim();
+                            string matkl = ds4.Tables[0].Rows[k][5].ToString().Trim();
+                            string descripcion = ds4.Tables[0].Rows[k][6].ToString().Trim();
+                            string monto = ds4.Tables[0].Rows[k][7].ToString().Trim();
                             monto = fc.toNum(monto, miles, decimales).ToString();
-                            string porc_apoyo = ds4.Tables[0].Rows[i][8].ToString().Trim();
+                            string porc_apoyo = ds4.Tables[0].Rows[k][8].ToString().Trim();
                             porc_apoyo = fc.toNum(porc_apoyo, miles, decimales).ToString();
-                            string apoyo_pieza = ds4.Tables[0].Rows[i][9].ToString().Trim();
+                            string apoyo_pieza = ds4.Tables[0].Rows[k][9].ToString().Trim();
                             apoyo_pieza = fc.toNum(apoyo_pieza, miles, decimales).ToString();
-                            string costo_apoyo = ds4.Tables[0].Rows[i][10].ToString().Trim();
+                            string costo_apoyo = ds4.Tables[0].Rows[k][10].ToString().Trim();
                             costo_apoyo = fc.toNum(costo_apoyo, miles, decimales).ToString();
-                            string precio_sug = ds4.Tables[0].Rows[i][11].ToString().Trim();
+                            string precio_sug = ds4.Tables[0].Rows[k][11].ToString().Trim();
                             precio_sug = fc.toNum(precio_sug, miles, decimales).ToString();
-                            string volumen_real = ds4.Tables[0].Rows[i][12].ToString().Trim();
+                            string volumen_real = ds4.Tables[0].Rows[k][12].ToString().Trim();
                             volumen_real = fc.toNum(volumen_real, miles, decimales).ToString();
-                            string apoyo = ds4.Tables[0].Rows[i][13].ToString().Trim();
+                            string apoyo = ds4.Tables[0].Rows[k][13].ToString().Trim();
                             apoyo = fc.toNum(apoyo, miles, decimales).ToString();
 
                             DateTime vigencia_de2 = Convert.ToDateTime(vigencia_de);
@@ -2537,11 +2588,11 @@ namespace TAT001.Controllers
                         List<DOCUMENTOA> docupA = new List<DOCUMENTOA>();
                         //VALIDACION DE DATOS DE LA CUARTA HOJA DEL EXCEL (DISTRIBUCION)
 
-                        for (int j = 0; j < ds5.Tables[0].Rows.Count; j++)
+                        for (int l = 0; l < ds5.Tables[0].Rows.Count; l++)
                         {
-                            string num_docH5 = ds5.Tables[0].Rows[j][0].ToString().Trim();
-                            string tipo = ds5.Tables[0].Rows[j][1].ToString().Trim();
-                            string nombre_archivo = ds5.Tables[0].Rows[j][2].ToString().Trim();
+                            string num_docH5 = ds5.Tables[0].Rows[l][0].ToString().Trim();
+                            string tipo = ds5.Tables[0].Rows[l][1].ToString().Trim();
+                            string nombre_archivo = ds5.Tables[0].Rows[l][2].ToString().Trim();
                             num_docH5 = num_docH5.TrimStart('0').Trim();
 
 
@@ -2576,7 +2627,7 @@ namespace TAT001.Controllers
                                                 {
                                                     DOCUMENTOA doc = new DOCUMENTOA();
                                                     doc.NUM_DOC = Convert.ToInt32(num_docH5);
-                                                    doc.POS = j;
+                                                    doc.POS = l;
                                                     doc.TIPO = Path.GetExtension(nombre_archivoInList).Replace(".", "");
                                                     try
                                                     {
@@ -2600,7 +2651,7 @@ namespace TAT001.Controllers
                                             {
                                                 DOCUMENTOA doc = new DOCUMENTOA();
                                                 doc.NUM_DOC = Convert.ToInt32(num_docH5);
-                                                doc.POS = j;
+                                                doc.POS = l;
                                                 doc.TIPO = Path.GetExtension(nombre_archivoInList).Replace(".", "");
                                                 try
                                                 {
@@ -2634,16 +2685,18 @@ namespace TAT001.Controllers
                         Session["archivosSave"] = archivosToSave;
                     }
                     //FIN DE LA SECCION 5
+
                 }//FIN DE LA VALIDACION DOP
                 iDs.Add(dop.NUM_DOC);
             }//FIN DEL FOR GLOBAL (CABECERA)
 
             List<string> li = new List<string>();
             int contadorArchivos = 0;
+            int contadorNotas = 0;
 
             foreach (DOCUMENTO doc in listD)
             {
-                if (doc.DOCUMENTOPs.Count() != 0 & doc.DOCUMENTOFs.Count() != 0)
+                if (doc.DOCUMENTOPs.Count() != 0)
                 {
                     decimal N_DOC = getSolID(doc.TSOL_ID);
                     doc.NUM_DOC = N_DOC;
@@ -2694,14 +2747,16 @@ namespace TAT001.Controllers
                             f.ESTATUS = "I";
                             f.FECHAC = DateTime.Now;
                             f.FECHAM = DateTime.Now;
+                            f.COMENTARIO = ds6.Tables[0].Rows[contadorNotas][1].ToString().Trim();
                             string c = pf.procesa(f, "");
-                            if (c == "1")
-                            {
-                                string image = Server.MapPath("~/images/logo_kellogg.png");
-                                Email em = new Email();
-                                string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
-                                em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image);
-                            }
+                            //if (c == "1")
+                            //{
+                            //    string image = Server.MapPath("~/images/logo_kellogg.png");
+                            //    Email em = new Email();
+                            //    string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
+                            //    em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image);
+                            //}
+                            contadorNotas++;
                         }
                     }
                     catch (Exception ee) { }
@@ -2713,6 +2768,8 @@ namespace TAT001.Controllers
             }
 
             TempData["docs_masiva"] = li;
+
+            iDs.Add(li);
 
             return iDs;
         }
@@ -3058,6 +3115,26 @@ namespace TAT001.Controllers
                         string contenido = miArreglo[0];
                         string[] miArreglo2 = contenido.Split('*');
                         dt.Rows.Add(miArreglo2[0], miArreglo2[1], miArreglo2[2]);
+                    }
+                }
+            }
+
+            else if (hoja == "notas")
+            {
+                DataSet ds6 = new DataSet();
+                for (int i = 0; i < 1; i++)
+                {
+                    dt.Columns.Add("ID");
+                    dt.Columns.Add("NOTA");
+                }
+
+                if (list != null)
+                {
+                    foreach (var item in list)
+                    {
+                        string nota = item.ToString();
+                        string[] contenido = nota.Split('*');
+                        dt.Rows.Add(contenido[0], contenido[1]);
                     }
                 }
             }

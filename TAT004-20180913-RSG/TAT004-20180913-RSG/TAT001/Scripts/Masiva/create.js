@@ -18,6 +18,7 @@ $("#miMas").change(function () {
                 procesarHoja5();
                 checkRelacionada();
                 var kk = checkRelacionadaMat();
+                //checkRelMul()
             }
             else {
                 for (var i = 0; i < err.length; i++) {
@@ -26,9 +27,9 @@ $("#miMas").change(function () {
             }
             //var elem = document.querySelectorAll('.miSel');
             //var instance = M.Select.init(elem, []);
-            document.getElementById("loader").style.display = "none";
+            //document.getElementById("loader").style.display = "none";
             clearErrors();
-            console.log(kk);
+            document.getElementById("loader").style.display = "none";
         } else {
             M.toast({ html: 'Tipo de archivo incorrecto: ' + filename });
         }
@@ -36,6 +37,7 @@ $("#miMas").change(function () {
         M.toast({ html: 'Seleccione un archivo' });
     }
     //$("#miMas").val("");
+    clearErrors();
 });
 
 function evaluarExt(filename) {
@@ -59,7 +61,8 @@ function getExcelMasivas(file) {
         url: 'loadExcelMasiva',
         data: formData,
         contentType: false,
-        processData: false
+        processData: false,
+        async: true
     }).fail(function () {
         alert("error");
     });
@@ -69,7 +72,7 @@ function getExcelMasivas(file) {
 function procesarHoja1() {
     var table = $('#tab_test1').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" } });
     table.clear().draw();
-
+    
     $.ajax({
         type: "POST",
         url: 'validaHoja1',
@@ -124,7 +127,7 @@ function addRowH1(t, NUM_DOC, TSOL_ID, GALL_ID, SOCIEDAD_ID, PAIS_ID, ESTADO, CI
     //clasificacion = clasificacion + "</select>";
     var icono, clase = null;
 
-    if (jQuery.inArray('red white-text rojo', ERRORES) != -1) {
+    if (jQuery.inArray('red white-text rojo', ERRORES) !== -1) {
         icono = 'close';
         clase = 'red white-text';
     }
@@ -161,7 +164,7 @@ function addRowH1(t, NUM_DOC, TSOL_ID, GALL_ID, SOCIEDAD_ID, PAIS_ID, ESTADO, CI
     return r;
 }
 
-$('body').on('keydown.autocomplete', '.input_numdoc', function () {
+$('#tab_test1').on('keydown.autocomplete', '.input_numdoc', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -185,7 +188,7 @@ $('body').on('keydown.autocomplete', '.input_numdoc', function () {
         },
 
         change: function () {
-            if ($(this).val() == "") {
+            if ($(this).val() === "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
             }
             else {
@@ -198,7 +201,7 @@ $('body').on('keydown.autocomplete', '.input_numdoc', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_tsol', function () {
+$('#tab_test1').on('keydown.autocomplete', '.input_tsol', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -239,7 +242,7 @@ $('body').on('keydown.autocomplete', '.input_tsol', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_clasificacion', function () {
+$('#tab_test1').on('keydown.autocomplete', '.input_clasificacion', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -279,7 +282,7 @@ $('body').on('keydown.autocomplete', '.input_clasificacion', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_sociedad', function () {
+$('#tab_test1').on('keydown.autocomplete', '.input_sociedad', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -319,7 +322,7 @@ $('body').on('keydown.autocomplete', '.input_sociedad', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_pais', function () {
+$('#tab_test1').on('keydown.autocomplete', '.input_pais', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -367,7 +370,7 @@ $('body').on('keydown.autocomplete', '.input_pais', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_estado', function () {
+$('#tab_test1').on('keydown.autocomplete', '.input_estado', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -411,7 +414,7 @@ $('body').on('keydown.autocomplete', '.input_estado', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_ciudad', function () {
+$('#tab_test1').on('keydown.autocomplete', '.input_ciudad', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -456,7 +459,7 @@ $('body').on('keydown.autocomplete', '.input_ciudad', function () {
 
 });
 
-$('body').on('keydown.autocomplete', '.input_concepto', function () {
+$('#tab_test1').on('keydown.autocomplete', '.input_concepto', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -480,7 +483,7 @@ $('body').on('keydown.autocomplete', '.input_concepto', function () {
         },
 
         change: function () {
-            if ($(this).val() == "") {
+            if ($(this).val() === "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
             }
             clearErrors();
@@ -488,7 +491,7 @@ $('body').on('keydown.autocomplete', '.input_concepto', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_notas', function () {
+$('#tab_test1').on('keydown.autocomplete', '.input_notas', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -523,9 +526,9 @@ $('body').on('keydown.autocomplete', '.input_cliente', function () {
 
     var defClase = null;
 
-    if (numTabla == 'tab_test1') {
+    if (numTabla === 'tab_test1') {
         defClase = 'clienteNumH1';
-    } else if (numTabla == 'tab_test3') {
+    } else if (numTabla === 'tab_test3') {
         defClase = 'clienteNumH3';
     }
 
@@ -556,7 +559,7 @@ $('body').on('keydown.autocomplete', '.input_cliente', function () {
         change: function (e, ui) {
             if (!(ui.item)) {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
-                $(tr.find("td:eq(" + col_index2 + ")").children().addClass("red white-text rojo"));
+                //$(tr.find("td:eq(" + col_index2 + ")").children().addClass("red white-text rojo"));
                 $(tr.find("td:eq(" + col_index2 + ")").children().val(""));
                 clearErrors();
                 e.target.value = "";
@@ -568,13 +571,13 @@ $('body').on('keydown.autocomplete', '.input_cliente', function () {
             label = label.split('-');
             $(clase2).val(label[1]);
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
-            $(tr.find("td:eq(" + col_index2 + ")").children().removeClass("red white-text rojo"));
+            //$(tr.find("td:eq(" + col_index2 + ")").children().removeClass("red white-text rojo"));
             clearErrors();
         }
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_contacto', function () {
+$('#tab_test1').on('keydown.autocomplete', '.input_contacto', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -598,7 +601,7 @@ $('body').on('keydown.autocomplete', '.input_contacto', function () {
         },
 
         change: function () {
-            if ($(this).val() == "") {
+            if ($(this).val() === "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
             }
             clearErrors();
@@ -606,7 +609,7 @@ $('body').on('keydown.autocomplete', '.input_contacto', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_email', function () {
+$('#tab_test1').on('keydown.autocomplete', '.input_email', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -630,7 +633,7 @@ $('body').on('keydown.autocomplete', '.input_email', function () {
         },
 
         change: function () {
-            if ($(this).val() == "") {
+            if ($(this).val() === "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
             }
             clearErrors();
@@ -638,7 +641,7 @@ $('body').on('keydown.autocomplete', '.input_email', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_fechai', function () {
+$('#tab_test1').on('keydown.autocomplete', '.input_fechai', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -668,7 +671,7 @@ $('body').on('keydown.autocomplete', '.input_fechai', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_fechaf', function () {
+$('#tab_test1').on('keydown.autocomplete', '.input_fechaf', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -698,7 +701,7 @@ $('body').on('keydown.autocomplete', '.input_fechaf', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_moneda', function () {
+$('#tab_test1').on('keydown.autocomplete', '.input_moneda', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -743,7 +746,7 @@ $("#tab_info").click(function () {
     var tbody = $("#tab_test1 tbody");
     var arregloNumDoc = [];
 
-    if (tbody.children().length != 0) {
+    if (tbody.children().length !== 0) {
         arregloNumDoc = checkRelacionada();
 
         if (arregloNumDoc.length > 0) {
@@ -753,7 +756,7 @@ $("#tab_info").click(function () {
                 var rowH3 = tablaH3.row(a).node();
                 var num_docH3 = $(rowH3).children().eq(1).children().val();
 
-                if (jQuery.inArray(num_docH3, arregloNumDoc) != -1) {
+                if (jQuery.inArray(num_docH3, arregloNumDoc) !== -1) {
                     $(rowH3).children().eq(1).children().addClass("red white-text rojo");
                 }
             }
@@ -813,7 +816,7 @@ function procesarHoja2() {
 function addRowH2(t, NUM_DOC, FACTURA, FECHA, PROVEEDOR, PROVEEDOR_NOMBRE, AUTORIZACION, VENCIMIENTO, FACTURAK, EJERCICIOK, ERRORES, WARNINGS) {
     var icono, clase = null;
 
-    if (jQuery.inArray('red white-text rojo', ERRORES) != -1) {
+    if (jQuery.inArray('red white-text rojo', ERRORES) !== -1) {
         icono = 'close';
         clase = 'red white-text';
     }
@@ -841,7 +844,7 @@ function addRowH2(t, NUM_DOC, FACTURA, FECHA, PROVEEDOR, PROVEEDOR_NOMBRE, AUTOR
     return r;
 }
 
-$('body').on('keydown.autocomplete', '.input_factura', function () {
+$('#tab_test2').on('keydown.autocomplete', '.input_factura', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -879,7 +882,7 @@ $('body').on('keydown.autocomplete', '.input_factura', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_fechaH2', function () {
+$('#tab_test2').on('keydown.autocomplete', '.input_fechaH2', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -917,7 +920,7 @@ $('body').on('keydown.autocomplete', '.input_fechaH2', function () {
     });
 });//APLICA PARA AMBAS FECHAS EN H2 FECHA FACTURA Y FECHA VENCIMIENTO
 
-$('body').on('keydown.autocomplete', '.input_proveedor', function () {
+$('#tab_test2').on('keydown.autocomplete', '.input_proveedor', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -946,7 +949,7 @@ $('body').on('keydown.autocomplete', '.input_proveedor', function () {
         var rowH1 = tablaH1.row(a).node();
         num_docH1 = $(rowH1).children().eq(1).children().val();
 
-        if (num_docH1 == num_doc) {
+        if (num_docH1 === num_doc) {
             sociedadH1 = $(rowH1).find('td:eq(4)').children().val();
         }
     }
@@ -991,7 +994,7 @@ $('body').on('keydown.autocomplete', '.input_proveedor', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_autorizacion', function () {
+$('#tab_test2').on('keydown.autocomplete', '.input_autorizacion', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -1029,7 +1032,7 @@ $('body').on('keydown.autocomplete', '.input_autorizacion', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_facturak', function () {
+$('#tab_test2').on('keydown.autocomplete', '.input_facturak', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -1067,7 +1070,7 @@ $('body').on('keydown.autocomplete', '.input_facturak', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_ejerciciok', function () {
+$('#tab_test2').on('keydown.autocomplete', '.input_ejerciciok', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -1103,7 +1106,7 @@ $('body').on('keydown.autocomplete', '.input_ejerciciok', function () {
         },
 
         change: function () {
-            if ($(this).val() == "") {
+            if ($(this).val() === "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
                 $(tr.find("td:eq(" + col_index + ")").children().removeClass(amarillo));
             }
@@ -1116,7 +1119,7 @@ $("#tab_rel").click(function () {
     var tbody = $("#tab_test2 tbody");
     var arregloNumDoc = [];
 
-    if (tbody.children().length != 0) {
+    if (tbody.children().length !== 0) {
         arregloNumDoc = checkRelacionada();
 
         if (arregloNumDoc.length > 0) {
@@ -1126,7 +1129,7 @@ $("#tab_rel").click(function () {
                 var rowH3 = tablaH3.row(a).node();
                 var num_docH3 = $(rowH3).children().eq(1).children().val();
 
-                if (jQuery.inArray(num_docH3, arregloNumDoc) != -1) {
+                if (jQuery.inArray(num_docH3, arregloNumDoc) !== -1) {
                     $(rowH3).children().eq(1).children().addClass("red white-text rojo");
                 }
             }
@@ -1182,7 +1185,7 @@ function procesarHoja3() {
 function addRowH3(t, NUM_DOC, FACTURA, BILL_DOC, EJERCICIOK, PAYER, PAYER_NOMBRE, IMPORTE_FAC, BELNR, ERRORES) {
     var icono, clase = null;
 
-    if (jQuery.inArray('red white-text rojo', ERRORES) != -1) {
+    if (jQuery.inArray('red white-text rojo', ERRORES) !== -1) {
         icono = 'close';
         clase = 'red white-text';
     }
@@ -1209,7 +1212,7 @@ function addRowH3(t, NUM_DOC, FACTURA, BILL_DOC, EJERCICIOK, PAYER, PAYER_NOMBRE
     return r;
 }
 
-$('body').on('keydown.autocomplete', '.input_facturaH3', function () {
+$('#tab_test3').on('keydown.autocomplete', '.input_facturaH3', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -1244,7 +1247,7 @@ $('body').on('keydown.autocomplete', '.input_facturaH3', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_bill', function () {
+$('#tab_test3').on('keydown.autocomplete', '.input_bill', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -1276,7 +1279,7 @@ $('body').on('keydown.autocomplete', '.input_bill', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_ejerciciokH3', function () {
+$('#tab_test3').on('keydown.autocomplete', '.input_ejerciciokH3', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -1313,7 +1316,7 @@ $('body').on('keydown.autocomplete', '.input_ejerciciokH3', function () {
 
 //PAYER Y NOMBRE PAYER APUNTA A INPUT CLIENTE EN ASIGNACIONES DE HOJA1
 
-$('body').on('keydown.autocomplete', '.input_importe', function () {
+$('#tab_test3').on('keydown.autocomplete', '.input_importe', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -1364,7 +1367,7 @@ $('body').on('keydown.autocomplete', '.input_importe', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_belnr', function () {
+$('#tab_test3').on('keydown.autocomplete', '.input_belnr', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -1400,7 +1403,7 @@ $("#tab_mul").click(function () {
     var tbody = $("#tab_test3 tbody");
     var arregloNumDoc = [];
 
-    if (tbody.children().length != 0) {
+    if (tbody.children().length !== 0) {
         arregloNumDoc = checkRelacionada();
 
         if (arregloNumDoc.length > 0) {
@@ -1410,7 +1413,7 @@ $("#tab_mul").click(function () {
                 var rowH3 = tablaH3.row(a).node();
                 var num_docH3 = $(rowH3).children().eq(1).children().val();
 
-                if (jQuery.inArray(num_docH3, arregloNumDoc) != -1) {
+                if (jQuery.inArray(num_docH3, arregloNumDoc) !== -1) {
                     $(rowH3).children().eq(1).children().addClass("red white-text rojo");
                 }
             }
@@ -1467,7 +1470,7 @@ function procesarHoja4() {
 function addRowH4(t, NUM_DOC, LIGADA, VIGENCIA_DE, VIGENCIA_AL, MATNR, MATKL, DESCRIPCION, MONTO, PORC_APOYO, APOYO_PIEZA, COSTO_APOYO, PRECIO_SUG, VOLUMEN_REAL, APOYO, ERRORES) {
     var check, bloqueo, icono, clase = null;
 
-    if (LIGADA != "") {
+    if (LIGADA !== "") {
         check = "checked='checked'";
         bloqueo = "disabled";
     }
@@ -1475,7 +1478,7 @@ function addRowH4(t, NUM_DOC, LIGADA, VIGENCIA_DE, VIGENCIA_AL, MATNR, MATKL, DE
         check = "";
     }
 
-    if (jQuery.inArray('red white-text rojo', ERRORES) != -1) {
+    if (jQuery.inArray('red white-text rojo', ERRORES) !== -1) {
         icono = 'close';
         clase = 'red white-text';
     }
@@ -1508,7 +1511,7 @@ function addRowH4(t, NUM_DOC, LIGADA, VIGENCIA_DE, VIGENCIA_AL, MATNR, MATKL, DE
     return r;
 }
 
-$('body').on('keydown.autocomplete', '.input_material', function () {
+$('#tab_test4').on('keydown.autocomplete', '.input_material', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -1540,6 +1543,7 @@ $('body').on('keydown.autocomplete', '.input_material', function () {
         change: function (e, ui) {
             if (!(ui.item)) {
                 $(this).addClass("red white-text rojo");
+                $(tr.find("td:eq(" + col_index + ")").children().val(""));
                 clearErrors();
                 //validarErrores("tab_test4");
                 e.target.value = "";
@@ -1550,15 +1554,15 @@ $('body').on('keydown.autocomplete', '.input_material', function () {
             var label = ui.item.label;
             label = label.split('-');
             $(materialDes).val(label[1]);
+            $(this).removeClass("red white-text rojo");
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
             clearErrors();
             //validarErrores("tab_test4");
         }
     });
-
 });
 
-$('body').on('keydown.autocomplete', '.input_categoria', function () {
+$('#tab_test4').on('keydown.autocomplete', '.input_categoria', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -1601,7 +1605,7 @@ $('body').on('keydown.autocomplete', '.input_categoria', function () {
 
 });
 
-$('body').on('focusout', '.input_cantidades', function () {
+$('#tab_test4').on('focusout', '.input_cantidades', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -1636,6 +1640,7 @@ $('body').on('focusout', '.input_cantidades', function () {
         url: 'getDecimal',
         dataType: "json",
         data: { "Pais": pais },
+        async: false,
         success: function (data) {
             getDec = data;
 
@@ -1775,7 +1780,7 @@ $('body').on('focusout', '.input_cantidades', function () {
             //VISTA PARA EL APOYO
             if ($.isNumeric(apoyo)) {
                 if (apoyo > 0) {
-                    if (($.isNumeric(monto) & monto != '0.00') & ($.isNumeric(porApoyo) & porApoyo != '0.00') & ($.isNumeric(volReal) & volReal != '0.00')) {
+                    if (($.isNumeric(monto) & monto !== '0.00') & ($.isNumeric(porApoyo) & porApoyo !== '0.00') & ($.isNumeric(volReal) & volReal !== '0.00')) {
                         num1 = monto * (porApoyo / 100);
                         num2 = num1 * volReal;
 
@@ -1786,7 +1791,7 @@ $('body').on('focusout', '.input_cantidades', function () {
                         validaApoyo(num2, colApoyo);
                     }
                     else if ((monto == "" | porApoyo == "" | volReal == "") | (monto == "0.00" | porApoyo == "0.00" | volReal == "0.00")) {
-                        if ((monto == "" & porApoyo == "" & volReal == "") | (monto == "0.00" & porApoyo == "0.00" & volReal == "0.00") & apoyo != "") {
+                        if ((monto == "" & porApoyo == "" & volReal == "") | (monto == "0.00" & porApoyo == "0.00" & volReal == "0.00") & apoyo !== "") {
                             colMonto.val(toShow('0', getDec));
                             colPorApoyo.val(toShowPorc('0', getDec));
                             colPieApoyo.val(toShow('0', getDec));
@@ -1837,7 +1842,7 @@ $('body').on('focusout', '.input_cantidades', function () {
     });
 });
 
-$('body').on('keydown', '.input_apoyo', function (e) {
+$('#tab_test4').on('keydown', '.input_apoyo', function (e) {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var num_docH1 = null, pais = null, getDec = null;
@@ -1869,6 +1874,7 @@ $('body').on('keydown', '.input_apoyo', function (e) {
         url: 'getDecimal',
         dataType: "json",
         data: { "Pais": pais },
+        async: false,
         success: function (data) {
             getDec = data;
 
@@ -1906,9 +1912,9 @@ function validaApoyo(apoyo, colApoyo) {
     var tr = $(colApoyo).closest('tr'); //Obtener el row
     var errorSumMateriales = tr.find('td:eq(14) input').hasClass("errorCantidades");
 
-    if (apoyo != "") {
+    if (apoyo !== "") {
         if ($.isNumeric(apoyo)) {
-            if (apoyo != '0.00' & apoyo > '0.00') {
+            if (apoyo !== '0.00' & apoyo > '0.00') {
                 //if (!errorSumMateriales) {
 
                 //}
@@ -1985,7 +1991,8 @@ function ligada(check) {
                 colVolReal.val(toShowNum('0', getDec)).attr("disabled", false);
                 colApoyo.val(toShow('0', getDec)).attr("disabled", false);
             }
-        }
+        },
+        async: false
     });
 }
 
@@ -1993,7 +2000,7 @@ $("#tab_dis").click(function () {
     var tbody = $("#tab_test4 tbody");
     var arregloNumDoc = [];
 
-    if (tbody.children().length != 0) {
+    if (tbody.children().length !== 0) {
         arregloNumDoc = checkRelacionada();
 
         if (arregloNumDoc.length > 0) {
@@ -2003,7 +2010,7 @@ $("#tab_dis").click(function () {
                 var rowH3 = tablaH3.row(a).node();
                 var num_docH3 = $(rowH3).children().eq(1).children().val();
 
-                if (jQuery.inArray(num_docH3, arregloNumDoc) != -1) {
+                if (jQuery.inArray(num_docH3, arregloNumDoc) !== -1) {
                     $(rowH3).children().eq(1).children().addClass("red white-text rojo");
                 }
             }
@@ -2014,7 +2021,11 @@ $("#tab_dis").click(function () {
 
 /////////////////////////////////////////////////////////HOJA 5 FUNCIONES Y ASIGNACIONES////////////////////////////////////////////////////////
 function procesarHoja5() {
-    var table = $('#tab_test5').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" } });
+    var table = $('#tab_test5').DataTable(
+        {
+            language: { "url": "../Scripts/lang/" + ln + ".json" },
+                "paging": false
+        });
     table.clear().draw();
 
     $.ajax({
@@ -2043,10 +2054,12 @@ function procesarHoja5() {
         complete: function (data) {
             //validarErrores("tab_test5"); //RMG
             $(document).ready(function () {
+                var tablaH5 = $('#tab_test5').DataTable();
                 $("#excelBtn").removeAttr("disabled");
                 cloneTables();
-                $(".requiredfile").on("change", function () {
-                    if ($(this).hasClass("valid")) {
+                $("#tab_test5").on("change", ".requiredfile", function () {
+                    var data = table.row(this).data();
+                    if ($(this).hasClass("valid") & validaTabs("1", 4)) {//ADD RSG 29.10.2018
                         $(this).closest('tr').children().eq(0).children().removeClass("red rojo");
                         $(this).closest('tr').children().eq(0).children().addClass("green");
                         $(this).closest('tr').children().eq(0).children().text("done");
@@ -2055,10 +2068,11 @@ function procesarHoja5() {
                         $(this).closest('tr').children().eq(0).children().removeClass("green");
                         $(this).closest('tr').children().eq(0).children().addClass("red rojo");
                         $(this).closest('tr').children().eq(0).children().text("close");
+                        clearErrors();//ADD RSG 29.10.2018
                     }
                 });
 
-                $(".outRequiredfile").on("change", function () {
+                $("#tab_test5").on("change", ".outRequiredfile", function () {
                     if ($(this).hasClass("valid")) {
                         var id = $(this).closest('tr').children().eq(1).children().val();
                         var tipo = $(this).closest('tr').children().eq(2).children().val();
@@ -2070,8 +2084,6 @@ function procesarHoja5() {
                 $("#tablesToexcel").prop("disabled", "false");
                 $("#tablesToexcel").removeAttr("disabled");
             });
-            //clearErrorsIni();
-
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             alert("Request couldn't be processed. Please try again later. the reason " + xhr.status + " : " + httpStatusMessage + " : " + customErrorMessage);
@@ -2101,7 +2113,8 @@ function addRowH5(t, NUM_DOC, TIPO, OBLIGATORIO) {
         CHECK,
         "<input class='' style='font-size:12px; text-align:center;' type='text' id='' name='' disabled value='" + NUM_DOC + "'><span hidden>" + NUM_DOC + "</span>",
         "<input class='' style='font-size:12px; text-align:center;' type='text' id='' name='' value='" + TIPO + "' disabled><span hidden>" + TIPO + "</span>",
-        fileInpt //RMG
+        fileInpt, //RMG
+        "<input class='NOTAS" + NUM_DOC + TIPO + "' style='font-size:12px; text-align:center;' type='text' id='' name='' value=''><span hidden>NOTAS" + NUM_DOC + TIPO + "</span>",
         //"<input class='' style='font-size:10px; text-align:center;' type='text' id='' name='' value=''>",
         //"<div class='file-field input-field col s8 offset-s3'><div class='btn'><span>Seleccionar archivo</span><input type='file' class='btnF' name='' id='"+NUM_DOC+TIPO+"'></div></div>"
     ]).draw(false).node();
@@ -2116,7 +2129,7 @@ $("#tab_arc").click(function () {
     var tbody = $("#tab_test5 tbody");
     var arregloNumDoc = [];
 
-    if (tbody.children().length != 0) {
+    if (tbody.children().length !== 0) {
         arregloNumDoc = checkRelacionada();
 
         if (arregloNumDoc.length > 0) {
@@ -2126,7 +2139,7 @@ $("#tab_arc").click(function () {
                 var rowH3 = tablaH3.row(a).node();
                 var num_docH3 = $(rowH3).children().eq(1).children().val();
 
-                if (jQuery.inArray(num_docH3, arregloNumDoc) != -1) {
+                if (jQuery.inArray(num_docH3, arregloNumDoc) !== -1) {
                     $(rowH3).children().eq(1).children().addClass("red white-text rojo");
                 }
             }
@@ -2136,6 +2149,42 @@ $("#tab_arc").click(function () {
 });
 
 /////////////////////////////////////////////FUNCIONES GENERALES////////////////////////////
+function checkRelMul() {
+    var tablaH1 = $('#tab_test1').DataTable();
+    var tablaH2 = $('#tab_test2').DataTable();
+    var tablaH3 = $('#tab_test3').DataTable();
+
+    for (var a = 0; a < tablaH1.rows().data().length; a++) {
+        var rowH1 = tablaH1.row(a).node();
+        var num_docH1 = $(rowH1).children().eq(1).children().val();
+        var banderaH2 = false, banderaH3 = false;
+
+        for (var b = 0; b < tablaH2.rows().data().length; b++) {
+            var rowH2 = tablaH2.row(b).node();
+            var num_docH2 = $(rowH2).children().eq(1).children().val();
+
+            if (num_docH1 == num_docH2) {
+                banderaH2 = true;
+                break;
+            }
+        }
+
+        for (var c = 0; c < tablaH3.rows().data().length; c++) {
+            var rowH3 = tablaH3.row(c).node();
+            var num_docH3 = $(rowH3).children().eq(1).children().val();
+
+            if (num_docH1 == num_docH3) {
+                banderaH3 = true;
+                break;
+            }
+        }
+
+        if (!banderaH2 & !banderaH3) {
+            $(rowH1).children().eq(1).children().addClass("red white-text rojo");
+        }
+    }
+}
+
 function checkRelacionada() {
     var tablaH2 = $('#tab_test2').DataTable();
     var tablaH3 = $('#tab_test3').DataTable();
@@ -2164,7 +2213,7 @@ function checkRelacionada() {
             var rowH33 = tablaH3.row(c).node();
             var num_docH33 = $(rowH33).children().eq(1).children().val();
 
-            if (jQuery.inArray(num_docH33, arregloNumDoc) != -1) {
+            if (jQuery.inArray(num_docH33, arregloNumDoc) !== -1) {
                 $(rowH33).children().eq(1).children().addClass("red white-text rojo");
             }
         }
@@ -2227,7 +2276,7 @@ function checkRelacionadaMat() {
             }
         }
 
-        if (jQuery.inArray(num_docH11, cantidadesH3Num) != -1) {
+        if (jQuery.inArray(num_docH11, cantidadesH3Num) !== -1) {
             cantidadesUniH3[contadorH1] = num_docH11 + '-' + sumH3;
             contadorH1++;
         }
@@ -2285,7 +2334,7 @@ function checkRelacionadaMat() {
             }
         }
 
-        if (jQuery.inArray(num_docH1111, cantidadesH4Num) != -1) {
+        if (jQuery.inArray(num_docH1111, cantidadesH4Num) !== -1) {
             cantidadesUniH4[contadorH1] = num_docH1111 + '-' + sumH4;
             contadorH1++;
         }
@@ -2363,12 +2412,13 @@ function obtenDecimalMil(pais, cantidad) {
         dataType: "json",
         data: { "Pais": pais },
         success: function (data) {
-            if (data != null | data != "") {
+            if (data !== null | data !== "") {
                 decimal = data.pop();
                 mil = data;
             }
             total = toNum(cantidad, mil, decimal);
-        }
+        },
+        async: false
     });
 
     return total;
@@ -2396,7 +2446,7 @@ function erroresH1() {
         }
     }
 
-    console.log(tabla1);
+    ////console.log(tabla1);
     return tabla1;
 }
 
@@ -2415,7 +2465,7 @@ function clearErrors() {
     var tablaH2 = $('#tab_test2').DataTable();
     var tablaH3 = $('#tab_test3').DataTable();
     var tablaH4 = $('#tab_test4').DataTable();
-    var tablaH5 = $('#tab_test5').DataTable();
+    //var tablaH5 = $('#tab_test5').DataTable();//DELETE RSG 29.10.2018
 
     var tabla1 = [], tabla2 = [], tabla3 = [], tabla4 = [], tabla5 = [], archivos = [];
 
@@ -2451,22 +2501,32 @@ function clearErrors() {
         tabla4[d] = num_docH4 + statusH4;
     }
 
-    for (var e = 0; e < tablaH5.rows().data().length; e++) {
-        var rowH5 = tablaH5.row(e).node();
-        var num_docH5 = $(rowH5).children().eq(1).children().val();
-        var statusH5 = $(rowH5).children().children().hasClass('rojo');
+    //for (var e = 0; e < tablaH5.rows().data().length; e++) {//DELETE RSG 29.10.2018
+    //    var rowH5 = tablaH5.row(e).node();
+    //    var num_docH5 = $(rowH5).children().eq(1).children().val();
+    //    var statusH5 = $(rowH5).children().children().hasClass('rojo');
 
-        tabla5[e] = num_docH5 + statusH5;
-    }
+    //    tabla5[e] = num_docH5 + statusH5;
+    //}
 
     var banderaH1, banderaH2, banderaH3, banderaH4, banderaH5 = false;
 
     for (var aa = 0; aa < tablaH1.rows().data().length; aa++) {
         var rowH11 = tablaH1.row(aa).node();
         var num_docH11 = $(rowH11).children().eq(1).children().val();
+        clearErrorsN(num_docH11);//ADD RSG 29.10.2018
+
+        var tablaH5 = $('#tab_test5').DataTable();                      //ADD RSG 29.10.2018
+        for (var e = 0; e < tablaH5.rows().data().length; e++) {        //ADD RSG 29.10.2018
+            var rowH5 = tablaH5.row(e).node();
+            var num_docH5 = $(rowH5).children().eq(1).children().val();
+            var statusH5 = $(rowH5).children().children().hasClass('rojo');
+
+            tabla5[e] = num_docH5 + statusH5;
+        }
 
         //SI TIENE TRUE TIENE ERROR
-        if (jQuery.inArray(num_docH11 + true, tabla1) != -1) {
+        if (jQuery.inArray(num_docH11 + true, tabla1) !== -1) {
             banderaH1 = true;
         }
         else {
@@ -2479,7 +2539,7 @@ function clearErrors() {
 
             if (num_docH11 == num_docH22) {
                 //SI TIENE TRUE TIENE ERROR
-                if (jQuery.inArray(num_docH22 + true, tabla2) != -1) {
+                if (jQuery.inArray(num_docH22 + true, tabla2) !== -1) {
                     banderaH2 = true;
                     break;
                 }
@@ -2498,7 +2558,7 @@ function clearErrors() {
 
             if (num_docH11 == num_docH33) {
                 //SI TIENE TRUE TIENE ERROR
-                if (jQuery.inArray(num_docH33 + true, tabla3) != -1) {
+                if (jQuery.inArray(num_docH33 + true, tabla3) !== -1) {
                     banderaH3 = true;
                     break;
                 }
@@ -2517,7 +2577,7 @@ function clearErrors() {
 
             if (num_docH11 == num_docH44) {
                 //SI TIENE TRUE TIENE ERROR
-                if (jQuery.inArray(num_docH44 + true, tabla4) != -1) {
+                if (jQuery.inArray(num_docH44 + true, tabla4) !== -1) {
                     banderaH4 = true;
                     break;
                 }
@@ -2536,7 +2596,7 @@ function clearErrors() {
 
             if (num_docH11 == num_docH55) {
                 //SI TIENE TRUE TIENE ERROR
-                if (jQuery.inArray(num_docH55 + true, tabla5) != -1) {
+                if (jQuery.inArray(num_docH55 + true, tabla5) !== -1) {
                     banderaH5 = true;
                     break;
                 }
@@ -2549,8 +2609,9 @@ function clearErrors() {
             }
         }
 
-        console.log(banderaH1, banderaH2, banderaH3, banderaH4, banderaH5, num_docH11);
-        console.log(validaErrores(banderaH1, banderaH2, banderaH3, banderaH4, banderaH5, num_docH11));
+        //console.log(banderaH1, banderaH2, banderaH3, banderaH4, banderaH5, num_docH11);
+        //console.log(validaErrores(banderaH1, banderaH2, banderaH3, banderaH4, banderaH5, num_docH11));
+        validaErrores(banderaH1, banderaH2, banderaH3, banderaH4, banderaH5, num_docH11);
     }
 }
 
@@ -2605,19 +2666,6 @@ function validaErrores(h1, h2, h3, h4, h5, num_doc) {
                 $(rowH4).children().eq(0).children().text("done");
             }
         }
-
-        //for (var e = 0; e < tablaH5.rows().data().length; e++) {
-        //    var rowH5 = tablaH5.row(e).node();
-        //    var num_docH5 = $(rowH5).children().eq(1).children().val();
-        //    var esRequerido = $(rowH5).children().eq(3).children().hasClass("isrequired");
-
-        //    if (num_docH5 == num_doc & !esRequerido) {
-        //        console.log($(rowH5).children().eq(0).children().attr("class"));
-        //        $(rowH5).children().eq(0).children().removeClass("red");
-        //        $(rowH5).children().eq(0).children().addClass("green");
-        //        $(rowH5).children().eq(0).children().text("done");
-        //    }
-        //}
         return "SE MODIFICARON LOS REGISTROS: " + num_doc;
     }
     else {
@@ -2671,7 +2719,7 @@ function validaErrores(h1, h2, h3, h4, h5, num_doc) {
         //    var esRequerido2 = $(rowH55).children().eq(3).children().hasClass("isrequired");
 
         //    if (num_docH55 == num_doc & esRequerido2) {
-        //        console.log($(rowH55).children().eq(0).children().attr("class"));
+        //        //console.log($(rowH55).children().eq(0).children().attr("class"));
         //        $(rowH55).children().eq(0).children().removeClass("green");
         //        $(rowH55).children().eq(0).children().addClass("red");
         //        $(rowH55).children().eq(0).children().text("close");
@@ -2682,13 +2730,15 @@ function validaErrores(h1, h2, h3, h4, h5, num_doc) {
 }
 
 function guardaDatos() {
+    document.getElementById("loader").style.display = "initial";
+
     var tablaH1 = $('#tab_test1').DataTable();
     var tablaH2 = $('#tab_test2').DataTable();
     var tablaH3 = $('#tab_test3').DataTable();
     var tablaH4 = $('#tab_test4').DataTable();
     var tablaH5 = $('#tab_test5').DataTable();
 
-    var tabla1 = [], tabla2 = [], tabla3 = [], tabla4 = [], tabla5 = [], archivos = [];
+    var tabla1 = [], tabla2 = [], tabla3 = [], tabla4 = [], tabla5 = [], notasArr = [];
     var rowsH1 = [], rowsH2 = [], rowsH3 = [], rowsH4 = [], rowsH5 = [], rowsArc = [];
     var a = 0, b = 0, c = 0, d = 0, e = 0;
     var formData = new FormData();
@@ -2793,6 +2843,7 @@ function guardaDatos() {
             var descripcionH5 = $(rowH5).children().eq(2).children().val();
             var idArchivoH5 = $(rowH5).children().eq(3).children().children().eq(0).children().eq(1).attr('id');
 
+
             if (idArchivoH5 == (num_docH5 + descripcionH5)) {
                 var archivo = document.getElementById(num_docH5 + descripcionH5).files[0];
 
@@ -2811,6 +2862,39 @@ function guardaDatos() {
             }
         }
     }
+
+    var contadorNota = 0;
+    for (var f = 0; f < tablaH1.rows().data().length; f++) {
+        var rowH1 = tablaH1.row(f).node();
+        var num_docH1 = $(rowH1).children().eq(1).children().val();
+        var notaFinal = "";
+
+        for (var g = 0; g < tablaH5.rows().data().length; g++) {
+            var rowH5 = tablaH5.row(g).node();
+            var statusH5 = $(rowH5).children().eq(0).children().text();
+
+            if (statusH5 == "done") {
+                var num_docH5 = $(rowH5).children().eq(1).children().val();
+                var nota = $(rowH5).children().eq(4).children().val();
+
+
+                if (num_docH1 == num_docH5) {
+                    if (notaFinal == "") {
+                        notaFinal = notaFinal + nota;
+                    }
+                    else if (nota != "") {
+                        notaFinal = notaFinal + "," + nota;
+                    }
+                }
+            }
+        }
+
+        if (notaFinal != "") {
+            notasArr[contadorNota] = num_docH1 + "*" + notaFinal;
+            contadorNota++;
+        }
+    }
+
 
     tabla1 = rowsH1;
     tabla2 = rowsH2;
@@ -2833,18 +2917,23 @@ function guardaDatos() {
             var err = "Error " + " " + status + " " + p3 + " " + p4;
             if (xhr.responseText && xhr.responseText[0] == "{")
                 err = JSON.parse(xhr.responseText).Message;
-            console.log(err);
-        }
+            //console.log(err);
+        },
+        async: true
     });
 
     $.ajax({
         type: "POST",
         url: 'setDatos',
         dataType: "json",
-        data: { "h1": tabla1, "h2": tabla2, "h3": tabla3, "h4": tabla4, "h5": tabla5 },
+        data: { "h1": tabla1, "h2": tabla2, "h3": tabla3, "h4": tabla4, "h5": tabla5, "notas": notasArr },
+        async: true,
         success: function (data) {
-            if (data != null | data != "") {
+            if (data !== null | data !== "") {
                 var eliminarId = [];
+                var listaIds = [];
+
+                listaIds = data.pop();
 
                 eliminarId = data;
                 var tablaH1 = $('#tab_test1').DataTable();
@@ -2853,69 +2942,100 @@ function guardaDatos() {
                 var tablaH4 = $('#tab_test4').DataTable();
                 var tablaH5 = $('#tab_test5').DataTable();
 
-                for (var su = 0; su < eliminarId.length; su++) {
-                    var num_doc = eliminarId[su];
+                for (var a = 0; a < tablaH1.rows().data().length; a++) {
+                    var rowH1 = tablaH1.row(a).node();
+                    var rowH11 = tablaH1.row(a);
+                    var num_docH1 = $(rowH1).children().eq(1).children().val();
 
-                    for (var a = 0; a < tablaH1.rows().data().length; a++) {
-                        var rowH1 = tablaH1.row(a).node();
-                        var rowH11 = tablaH1.row(a);
-                        var num_docH1 = $(rowH1).children().eq(1).children().val();
+                    for (var b = 0; b < eliminarId.length; b++) {
+                        num_doc = eliminarId[b];
 
                         if (num_doc == num_docH1) {
                             rowH11.remove().draw();
-                            //rowH1.remove();
-                        }
-                    }
-
-                    for (var b = 0; b < tablaH2.rows().data().length; b++) {
-                        var rowH2 = tablaH2.row(b).node();
-                        var rowH22 = tablaH2.row(b);
-                        var num_docH2 = $(rowH2).children().eq(1).children().val();
-
-                        if (num_doc == num_docH2) {
-                            rowH22.remove().draw();
-                            //rowH2.remove();
-                        }
-                    }
-
-                    for (var c = 0; c < tablaH3.rows().data().length; c++) {
-                        var rowH3 = tablaH3.row(c).node();
-                        var rowH33 = tablaH3.row(c);
-                        var num_docH3 = $(rowH3).children().eq(1).children().val();
-
-                        if (num_doc == num_docH3) {
-                            rowH33.remove().draw();
-                            //rowH3.remove();
-                        }
-                    }
-
-                    for (var d = 0; d < tablaH4.rows().data().length; d++) {
-                        var rowH4 = tablaH4.row(d).node();
-                        var rowH44 = tablaH4.row(d);
-                        var num_docH4 = $(rowH4).children().eq(1).children().val();
-
-                        if (num_doc == num_docH4) {
-                            rowH44.remove().draw();
-                            //rowH4.remove();
-                        }
-                    }
-
-                    for (var e = 0; e < tablaH5.rows().data().length; e++) {
-                        var rowH5 = tablaH5.row(e).node();
-                        var rowH55 = tablaH5.row(e);
-                        var num_docH5 = $(rowH5).children().eq(1).children().val();
-
-                        if (num_doc == num_docH5) {
-                            rowH55.remove().draw();
-                            //rowH5.remove();
+                            a--;
                         }
                     }
                 }
+
+                for (var c = 0; c < tablaH2.rows().data().length; c++) {
+                    var rowH2 = tablaH2.row(c).node();
+                    var rowH22 = tablaH2.row(c);
+                    var num_docH2 = $(rowH2).children().eq(1).children().val();
+
+                    for (var d = 0; d < eliminarId.length; d++) {
+                        num_doc = eliminarId[d];
+
+                        if (num_doc == num_docH2) {
+                            rowH22.remove().draw();
+                            c--;
+                        }
+                    }
+                }
+
+                for (var e = 0; e < tablaH3.rows().data().length; e++) {
+                    var rowH3 = tablaH3.row(e).node();
+                    var rowH33 = tablaH3.row(e);
+                    var num_docH3 = $(rowH3).children().eq(1).children().val();
+
+                    for (var f = 0; f < eliminarId.length; f++) {
+                        num_doc = eliminarId[f];
+
+                        if (num_doc == num_docH3) {
+                            rowH33.remove().draw();
+                            e--;
+                        }
+                    }
+                }
+
+                for (var g = 0; g < tablaH4.rows().data().length; g++) {
+                    var rowH4 = tablaH4.row(g).node();
+                    var rowH44 = tablaH4.row(g);
+                    var num_docH4 = $(rowH4).children().eq(1).children().val();
+
+                    for (var h = 0; h < eliminarId.length; h++) {
+                        num_doc = eliminarId[h];
+
+                        if (num_doc == num_docH4) {
+                            rowH44.remove().draw();
+                            g--;
+                        }
+                    }
+                }
+
+                for (var i = 0; i < tablaH5.rows().data().length; i++) {
+                    var rowH5 = tablaH5.row(i).node();
+                    var rowH55 = tablaH5.row(i);
+                    var num_docH5 = $(rowH5).children().eq(1).children().val();
+
+                    for (var j = 0; j < eliminarId.length; j++) {
+                        num_doc = eliminarId[j];
+
+                        if (num_doc == num_docH5) {
+                            rowH55.remove().draw();
+                            i--;
+                        }
+                    }
+                }
+
+                document.getElementById("loader").style.display = "none";
+
+                for (var k = 0; k < listaIds.length; k++) {
+                    M.toast({ html: 'Documento ' + listaIds[k] + ' fue creado' });
+                }
+
+                //var table = $('#tab_test1').DataTable();
+
+                //if (!table.data().any()) {
+                //    tablaH1.ajax.reload();
+                //    tablaH2.ajax.reload();
+                //    tablaH3.ajax.reload();
+                //    tablaH4.ajax.reload();
+                //    tablaH5.ajax.reload();
+                //}
             }
         }
     });
 }
-
 
 function cloneTables() {
     var tablaH1c = $('#tab_test1').DataTable();
@@ -2928,19 +3048,19 @@ function cloneTables() {
     $('#tabclon1hd').append("<tr id='titles1d'></tr>");
 
     $('#tab_test1 > thead > tr > th').each(function () {
-        if ($(this).text() != "LABEL") {
+        if ($(this).text() !== "LABEL" && $(this).text() !== "ESTATUS") {
             $('#titles1d').append("<th>" + $(this).text() + "</th>");
         } else {
         }
 
     });
-
+    $('#tabclon1bd').append("<tr><td colspan='16'></td></tr>");
     for (var aa = 0; aa < tablaH1c.rows().data().length; aa++) {
         var rowH1c = tablaH1c.row(aa).node();
         $('#tabclon1bd').append("<tr id='trd" + aa + "'></tr>");
         $(rowH1c).children().each(function (td) {
-            if (td != 18 && td != 19) {
-                $("#trd" + aa).append("<td>" + $(this).find('span:first').text() + "</td>");
+            if (td !== 18 && td !== 19 && td !== 0) {
+                $("#trd" + aa).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
             }
         });
     }
@@ -2950,18 +3070,20 @@ function cloneTables() {
     $('#tabclon2h').append("<tr id='titles2'></tr>");
 
     $('#tab_test2 > thead > tr > th').each(function () {
-        if ($(this).text() != "LABEL") {
+        if ($(this).text() !== "LABEL" && $(this).text() !== "ESTATUS") {
             $('#titles2').append("<th>" + $(this).text() + "</th>");
         } else {
         }
 
     });
-
+    $('#tabclon2b').append("<tr><td colspan='9'></td></tr>");
     for (var bb = 0; bb < tablaH2c.rows().data().length; bb++) {
         var rowH2c = tablaH2c.row(bb).node();
         $('#tabclon2b').append("<tr id='tr2" + bb + "'></tr>");
-        $(rowH2c).children().each(function (td) {
-            $("#tr2" + bb).append("<td>" + $(this).find('span:first').text() + "</td>");
+        $(rowH2c).children().each(function (td2) {
+            if (td2 !== 0) {
+                $("#tr2" + bb).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
+            }
         });
     }
     ////TAB3////
@@ -2969,18 +3091,20 @@ function cloneTables() {
     $('#tabclon3h').append("<tr id='titles3'></tr>");
 
     $('#tab_test3 > thead > tr > th').each(function () {
-        if ($(this).text() != "LABEL") {
+        if ($(this).text() !== "LABEL" && $(this).text() !== "ESTATUS") {
             $('#titles3').append("<th>" + $(this).text() + "</th>");
         } else {
         }
 
     });
-
+    $('#tabclon3b').append("<tr><td colspan='8'></td></tr>");
     for (var cc = 0; cc < tablaH3c.rows().data().length; cc++) {
         var rowH3c = tablaH3c.row(cc).node();
         $('#tabclon3b').append("<tr id='tr3" + cc + "'></tr>");
-        $(rowH3c).children().each(function (td) {
-            $("#tr3" + cc).append("<td>" + $(this).find('span:first').text() + "</td>");
+        $(rowH3c).children().each(function (td3) {
+            if (td3 !== 0) {
+                $("#tr3" + cc).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
+            }
         });
     }
     ////TAB4////
@@ -2988,18 +3112,20 @@ function cloneTables() {
     $('#tabclon4h').append("<tr id='titles4'></tr>");
 
     $('#tab_test4 > thead > tr > th').each(function () {
-        if ($(this).text() != "LABEL") {
+        if ($(this).text() !== "LABEL" && $(this).text() !== "ESTATUS") {
             $('#titles4').append("<th>" + $(this).text() + "</th>");
         } else {
         }
 
     });
-
+    $('#tabclon4b').append("<tr><td colspan='14'></td></tr>");
     for (var dd = 0; dd < tablaH4c.rows().data().length; dd++) {
         var rowH4c = tablaH4c.row(dd).node();
         $('#tabclon4b').append("<tr id='tr4" + dd + "'></tr>");
-        $(rowH4c).children().each(function (td) {
-            $("#tr4" + dd).append("<td>" + $(this).find('span:first').text() + "</td>");
+        $(rowH4c).children().each(function (td4) {
+            if (td4 !== 0) {
+                $("#tr4" + dd).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
+            }
         });
     }
 }
@@ -3056,7 +3182,7 @@ var tablesToExcel = (function () {
 
         var link = document.createElement("A");
         link.href = uri + base64(workbookXML);
-        link.download = wbname || 'Workbook.xls';
+        link.download = wbname || 'TestBook.xls';
         link.target = '_blank';
         document.body.appendChild(link);
         link.click();

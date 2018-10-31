@@ -6777,7 +6777,8 @@ function(e, define) {
                         }
                     }, this.angular("cleanup", o);
                     try {
-                        s.val(r(i))
+                        var text = r(i).replace("&#39;", "'");
+                        s.val(text)
                     } catch (a) {
                         s && s.val("")
                     }
