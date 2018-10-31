@@ -993,8 +993,8 @@ $(document).ready(function () {
                         </div>
                     }
                     @{List<TAT001.Entities.DOCUMENTOA>
-                                                                                                                                                                                                            archivos = ViewBag.files as List<TAT001.Entities.DOCUMENTOA>
-                                                                                                                                                                                                                ;
+                                                                                                                                                                                                              archivos = ViewBag.files as List<TAT001.Entities.DOCUMENTOA>
+                                                                                                                                                                                                                  ;
                         if (ViewBag.relacionadan != "" && (archivos != null && archivos.Count > 0))
                         {
                             string[] nombrefile;
@@ -1470,11 +1470,11 @@ $(document).ready(function () {
                                                   };
                                                   var instance = M.Tooltip.init(elem, options);
                                               }
-                                        </script>
-                                        <script>
-                                            var elem = document.getElementById('select_neg');
-                                            var instance = M.FormSelect.init(elem, []);
-                                        }
+                                    </script>
+                                    <script>
+                                              var elem = document.getElementById('select_neg');
+                                              var instance = M.FormSelect.init(elem, []);
+                                          }
                                     </script>
                                 </div>
                             }
@@ -1510,44 +1510,44 @@ $(document).ready(function () {
                         </div>
                     </div>
                 </div>
-@if (ViewBag.ligada != null & ViewBag.relacionadan == "")//RSG 09.07.2018
-                    {
-                        <script>
-                            $("#select_neg").prop("disabled", "disabled");
+                @if (ViewBag.ligada != null & ViewBag.relacionadan == "")//RSG 09.07.2018
+                {
+                    <script>
+                        $("#select_neg").prop("disabled", "disabled");
 
-                            var elem = document.getElementById('select_neg');
-                            var instance = M.FormSelect.init(elem, []);
-                        </script>
-                    }
-                    <div id="div_montobase" class="col s12 m6 l6" style="display:none">
-                        <div class="card-panel">
-                            <h5 id="head_montob">Monto Base</h5>@*B20180801 MGC Textos*@
-                            <div class="row" style="margin-bottom:0">
-                                @if (ViewBag.ligada != null & false)
-                                {
-                                    <div class="input-field col s6">
-                                        <input value="@ViewBag.MONTO_DIS" id="monto_dis" type="text" class="@ViewBag.reversa" disabled="disabled" />
-                                        <label id="lbl_montodis" for="monto_dis">Monto</label>@*B20180801 MGC Textos*@
-                                    </div>
+                        var elem = document.getElementById('select_neg');
+                        var instance = M.FormSelect.init(elem, []);
+                    </script>
+                }
+                <div id="div_montobase" class="col s12 m6 l6" style="display:none">
+                    <div class="card-panel">
+                        <h5 id="head_montob">Monto Base</h5>@*B20180801 MGC Textos*@
+                        <div class="row" style="margin-bottom:0">
+                            @if (ViewBag.ligada != null & false)
+                            {
+                                <div class="input-field col s6">
+                                    <input value="@ViewBag.MONTO_DIS" id="monto_dis" type="text" class="@ViewBag.reversa" disabled="disabled" />
+                                    <label id="lbl_montodis" for="monto_dis">Monto</label>@*B20180801 MGC Textos*@
+                                </div>
 
-                                    <div class="input-field col s6" style="margin-top:12%">
-                                        <input type="text" id="moneda_dis" name="monedadis" value="@ViewBag.moneda_dis" disabled="disabled" hidden />@*//B20180625 MGC 2018.06.28*@
-                                        @Html.DropDownList("MONEDA", null, htmlAttributes: new { @id = "monedadis_id", @class = "form-control", @disabled = "disabled" })
-                                        @Html.LabelFor(model => model.MONEDA_ID, "Moneda", htmlAttributes: new { @for = "monedadis_id", @id = "lbl_monedadis" })@*B20180801 MGC Textos*@
-                                    </div>
-                                }
-                                else
-                                {
-                                    <div class="input-field col s6">
-                                        <input value="@ViewBag.MONTO_DIS" id="monto_dis" type="text" class="@ViewBag.reversa" />
-                                        <label id="lbl_montodis" for="monto_dis">Monto</label>@*B20180801 MGC Textos*@
-                                    </div>
-                                    <div class="input-field col s6">
-                                        <input type="text" id="moneda_dis" name="monedadis" value="@ViewBag.moneda_dis" disabled="disabled" hidden /> @*//B20180625 MGC 2018.06.28*@
-                                        @Html.DropDownList("MONEDA", null, htmlAttributes: new { @id = "monedadis_id", @class = "form-control" })
-                                        @Html.LabelFor(model => model.MONEDA_ID, "Moneda", htmlAttributes: new { @for = "monedadis_id", @id = "lbl_monedadis" })@*B20180801 MGC Textos*@
-                                   </div>
-                                }
+                                <div class="input-field col s6" style="margin-top:12%">
+                                    <input type="text" id="moneda_dis" name="monedadis" value="@ViewBag.moneda_dis" disabled="disabled" hidden />@*//B20180625 MGC 2018.06.28*@
+                                    @Html.DropDownList("MONEDA", null, htmlAttributes: new { @id = "monedadis_id", @class = "form-control", @disabled = "disabled" })
+                                    @Html.LabelFor(model => model.MONEDA_ID, "Moneda", htmlAttributes: new { @for = "monedadis_id", @id = "lbl_monedadis" })@*B20180801 MGC Textos*@
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="input-field col s6">
+                                    <input value="@ViewBag.MONTO_DIS" id="monto_dis" type="text" class="@ViewBag.reversa" />
+                                    <label id="lbl_montodis" for="monto_dis">Monto</label>@*B20180801 MGC Textos*@
+                                </div>
+                                <div class="input-field col s6">
+                                    <input type="text" id="moneda_dis" name="monedadis" value="@ViewBag.moneda_dis" disabled="disabled" hidden /> @*//B20180625 MGC 2018.06.28*@
+                                    @Html.DropDownList("MONEDA", null, htmlAttributes: new { @id = "monedadis_id", @class = "form-control" })
+                                    @Html.LabelFor(model => model.MONEDA_ID, "Moneda", htmlAttributes: new { @for = "monedadis_id", @id = "lbl_monedadis" })@*B20180801 MGC Textos*@
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>
@@ -1853,125 +1853,126 @@ $(document).ready(function () {
                                     </div>
                                 </div>
                                 <script>
-                                            var clearing = [];
-                                            function getClearing() {
-                                            $("#div_clearing").empty();
-                                            cuentas();
-                                            }
-                                            function formaClearing() {
-                                                var tex_abono = document.querySelector(".lbl_cabono").innerHTML;
-                                                var tex_cargo = document.querySelector(".lbl_ccargo").innerHTML;
-                                                //DRS 24.09.18---------------------------------------------
-                                                var nombreC = document.querySelector(".cuenta_Nombre").innerHTML;
-                                                var tex_clearing = document.querySelector(".lbl_cclear").innerHTML;
-                                                getClearing(document.getElementById("tall_id").value);
-                                                $("#div_clearing").empty();
-                                                //var monto = document.getElementById("monto_dis").value;
-                                                var monto = $('#monto_doc_md').val();
-
-                                                var div = "<ul class='collection'><li class='collection-item'>";
-                                                //DRS 24.09.18---------------------------------------------+
-                                                div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_abono + "</div><div class='col s3'>" + clearing[1] + "</div><div class='col s3'>" + clearing[0] + "</div><div class='col s3 right-align'>" + monto + "</div></div>";
-                                                div += "</li><li class='collection-item'>";
-
-                                                if (clearing[5] == null) {
-                                                    //DRS 24.09.18---------------------------------------------
-                                                    div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + clearing[3] + "</div><div class='col s3'>" + clearing[2] + "</div><div class='col s3 right-align'>" + monto + "</div></div></div>";
-                                                } else {
-                                                    if (clearing[2] != null) {
-                                                        if (monto <= clearing[3]) {
-
-                                                            div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + clearing[3] + "</div><div class='col s3'>" + clearing[2] + "</div><div class='col s3 right-align'>" + monto + "</div></div>";
-                                                            div += "</li><li class='collection-item'>";
-                                                            div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>" + tex_clearing + "</div><div class='col s4'>" + clearing[4] + "</div><div class='col s4'>0.00</div></div>";
-                                                            div += "</li>";
-                                                        } else {
-                                                            div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + clearing[3] + "</div><div class='col s3'>" + clearing[2] + "</div><div class='col s3'>" + clearing[5] + "</div></div>";
-                                                            div += "</li><li class='collection-item'>";
-                                                            div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>" + tex_clearing + "</div><div class='col s4'>" + clearing[4] + "</div><div class='col s4'>" + (monto - clearing[5]) + "</div></div>";
-                                                            div += "</li>";
-                                                        }
+                                                                    var clearing = [];
+                                                                                function getClearing() {
+                                                        $("#div_clearing").empty();
+                                                    cuentas();
                                                     }
+                                                                                function formaClearing() {
+                                                                                    var tex_abono = document.querySelector(".lbl_cabono").innerHTML;
+                                                    var tex_cargo = document.querySelector(".lbl_ccargo").innerHTML;
+                                                    //DRS 24.09.18---------------------------------------------
+                                                    var nombreC = document.querySelector(".cuenta_Nombre").innerHTML;
+                                                    var tex_clearing = document.querySelector(".lbl_cclear").innerHTML;
+                                                    getClearing(document.getElementById("tall_id").value);
+                                                    $("#div_clearing").empty();
+                                                    //var monto = document.getElementById("monto_dis").value;
+                                                    var monto = $('#monto_doc_md').val();
+
+                                                                                    var div = "<ul class='collection'><li class='collection-item'>";
+                                                    //DRS 24.09.18---------------------------------------------+
+                                                                                    div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_abono + "</div><div class='col s3'>" + clearing[1] + "</div><div class='col s3'>" + clearing[0] + "</div><div class='col s3 right-align'>" + monto + "</div></div>";
+                                                                                    div += "</li><li class='collection-item'>";
+
+                                                                                    if (clearing[5] == null) {
+                                                                //DRS 24.09.18---------------------------------------------
+                                                                div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + clearing[3] + "</div><div class='col s3'>" + clearing[2] + "</div><div class='col s3 right-align'>" + monto + "</div></div></div>";
+                                                            } else {
+                                                                                        if (clearing[2] != null) {
+                                                                                            if (monto <= clearing[3]) {
+
+                                                                div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + clearing[3] + "</div><div class='col s3'>" + clearing[2] + "</div><div class='col s3 right-align'>" + monto + "</div></div>";
+                                                            div += "</li><li class='collection-item'>";
+                                                                                                div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>" + tex_clearing + "</div><div class='col s4'>" + clearing[4] + "</div><div class='col s4'>0.00</div></div>";
+                                                                                                div += "</li>";
+                                                                                            } else {
+                                                            div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + clearing[3] + "</div><div class='col s3'>" + clearing[2] + "</div><div class='col s3'>" + clearing[5] + "</div></div>";
+                                                        div += "</li><li class='collection-item'>";
+                                                                                                div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>" + tex_clearing + "</div><div class='col s4'>" + clearing[4] + "</div><div class='col s4'>" + (monto - clearing[5]) + "</div></div>";
+                                                                                                div += "</li>";
                                                 }
-                                                div += "</li>";
-                                                div += "</ul>";
-                                                $("#div_clearing").append(div);
                                             }
-                            </script>
-                        </div>
-                        <div class="card-panel">
-                            <h5 id="head_solicitudanalisis">Análisis Solicitud</h5>@*B20180801 MGC Textos*@
-                            <div class="row" style="margin-bottom:0">
-                                <div class="col s12">
-                                    <ul class="collection">
-                                        <li class="collection-item">
-                                            <div class="row" style="margin-bottom:0;padding-bottom:0;">
-                                                <div id="div_importesolicitud" class="col s6">
-                                                    @*B20180801 MGC Textos*@
-                                                    Importe solicitud
+                                        }
+                                                                                    div += "</li>";
+                                            div += "</ul>";
+                                            $("#div_clearing").append(div);
+                                        }
+                                </script>
+                            </div>
+                            <div class="card-panel">
+                                <h5 id="head_solicitudanalisis">Análisis Solicitud</h5>@*B20180801 MGC Textos*@
+                                <div class="row" style="margin-bottom:0">
+                                    <div class="col s12">
+                                        <ul class="collection">
+                                            <li class="collection-item">
+                                                <div class="row" style="margin-bottom:0;padding-bottom:0;">
+                                                    <div id="div_importesolicitud" class="col s6">
+                                                        @*B20180801 MGC Textos*@
+                                                        Importe solicitud
+                                                    </div>
+                                                    <div class="col s6 right-align">
+                                                        <span id="s_montob">-</span>
+                                                    </div>
                                                 </div>
-                                                <div class="col s6 right-align">
-                                                    <span id="s_montob">-</span>
+                                            </li>
+                                            <li class="collection-item">
+                                                <div class="row" style="margin-bottom:0;padding-bottom:0;">
+                                                    <div id="div_montoprov" class="col s6">
+                                                        @*B20180801 MGC Textos*@
+                                                        Monto provisión original
+                                                    </div>
+                                                    <div class="col s6 right-align">
+                                                        <span id="s_montop">-</span>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </li>
-                                        <li class="collection-item">
-                                            <div class="row" style="margin-bottom:0;padding-bottom:0;">
-                                                <div id="div_montoprov" class="col s6">
-                                                    @*B20180801 MGC Textos*@
-                                                    Monto provisión original
+                                            </li>
+                                            <li class="collection-item">
+                                                <div class="row" style="margin-bottom:0;padding-bottom:0;">
+                                                    <div id="div_montoapli" class="col s6">
+                                                        @*B20180801 MGC Textos*@
+                                                        Monto aplicado
+                                                    </div>
+                                                    <div class="col s6 right-align">
+                                                        <span id="s_montoa">-</span>
+                                                    </div>
                                                 </div>
-                                                <div class="col s6 right-align">
-                                                    <span id="s_montop">-</span>
+                                            </li>
+                                            <li class="collection-item" id="a4">
+                                                <div class="row" style="margin-bottom:0;padding-bottom:0;">
+                                                    <div id="div_remanente" class="col s6">
+                                                        @*B20180801 MGC Textos*@
+                                                        Remanente/(Exceso)
+                                                    </div>
+                                                    <div class="col s6 right-align">
+                                                        <span id="s_rema">-</span>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </li>
-                                        <li class="collection-item">
-                                            <div class="row" style="margin-bottom:0;padding-bottom:0;">
-                                                <div id="div_montoapli" class="col s6">
-                                                    @*B20180801 MGC Textos*@
-                                                    Monto aplicado
+                                            </li>
+                                            <li class="collection-item" id="a5">
+                                                <div class="row" style="margin-bottom:0;padding-bottom:0;">
+                                                    <div id="div_montototal" class="col s6">
+                                                        @*B20180801 MGC Textos*@
+                                                        Monto total
+                                                    </div>
+                                                    <div class="col s6 right-align">
+                                                        <span id="s_total">-</span>
+                                                    </div>
                                                 </div>
-                                                <div class="col s6 right-align">
-                                                    <span id="s_montoa">-</span>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li class="collection-item" id="a4">
-                                            <div class="row" style="margin-bottom:0;padding-bottom:0;">
-                                                <div id="div_remanente" class="col s6">
-                                                    @*B20180801 MGC Textos*@
-                                                    Remanente/(Exceso)
-                                                </div>
-                                                <div class="col s6 right-align">
-                                                    <span id="s_rema">-</span>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li class="collection-item" id="a5">
-                                            <div class="row" style="margin-bottom:0;padding-bottom:0;">
-                                                <div id="div_montototal" class="col s6">
-                                                    @*B20180801 MGC Textos*@
-                                                    Monto total
-                                                </div>
-                                                <div class="col s6 right-align">
-                                                    <span id="s_total">-</span>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        @* SCRIPT ------------------------------------------------------------------------------------------ LEJ 09.07.18*@
-        <script src="~/Scripts/ValidarFormatoDecimalesC.js"></script>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input style="display:none" id="btn_guardar" type="submit" value="Guardar" class="btn btn-default" />
+            @* SCRIPT ------------------------------------------------------------------------------------------ LEJ 09.07.18*@
+            <script src="~/Scripts/ValidarFormatoDecimalesC.js"></script>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input style="display:none" id="btn_guardar" type="submit" value="Guardar" class="btn btn-default" />
+                </div>
             </div>
         </div>
     </div>
