@@ -17,13 +17,14 @@
                     + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'pWarnning\')">Aceptar</button>'
                 });
             } else {
+                $("#PERIODO").val(data)
                 $("#periodo").val(data);
             }
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             M.toast({ html: httpStatusMessage });
         },
-        async: true
+        async: false
     });
 }
 function cuentas() {
