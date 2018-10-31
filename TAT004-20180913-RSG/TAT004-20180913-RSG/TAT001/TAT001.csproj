@@ -1351,6 +1351,7 @@
       <DependentUpon>TAT001.edmx</DependentUpon>
     </Content>
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\borrador.js" />
     <Content Include="Scripts\dropdowntree.js" />
     <Content Include="Scripts\fnCommon.js" />
     <Content Include="Scripts\jquery.validate.js" />

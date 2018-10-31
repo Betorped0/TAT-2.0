@@ -95,6 +95,8 @@ namespace TAT001.Services
                 ret = "<span class='lbl_soporte new badge yellow darken-2 white-text' data-badge-caption=' '>Pendiente firma</span>";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[T]...."))
                 ret = "<span class='lbl_tax new badge yellow darken-2 white-text' data-badge-caption=' '>Pendiente tax</span>";
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[B]...."))
+                ret = "<span class='lbl_borr new badge orange darken-2 white-text' data-badge-caption=' '>Borrador</span>";
             else
                 ret = "<td></td>";
 
@@ -140,6 +142,8 @@ namespace TAT001.Services
                 ret = "<span class='lbl_soporte new badge yellow darken-2 white-text' data-badge-caption=' '>Pendiente firma</span>";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[T]...."))
                 ret = "<span class='lbl_tax new badge yellow darken-2 white-text' data-badge-caption=' '>Pendiente tax</span>";
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[B]...."))
+                ret = "<span class='lbl_borr new badge orange darken-2 white-text' data-badge-caption=' '>Borrador</span>";
             else
                 ret = "<td></td>";
 
@@ -187,6 +191,8 @@ namespace TAT001.Services
                 ret = "Pendiente firma ";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[T]...."))
                 ret = "Pendiente tax ";
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[B]...."))
+                ret = "Borrador";
             else
                 ret = " ";
 
@@ -232,6 +238,8 @@ namespace TAT001.Services
                 ret = "lbl_soporte new badge yellow darken-2 white-text ";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[T]...."))
                 ret = "lbl_tax new badge yellow darken-2 white-text";
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[B]...."))
+                ret = "lbl_borr new badge orange darken-2 white-text";
             else
                 ret = " ";
 
@@ -287,6 +295,8 @@ namespace TAT001.Services
                 ret = "Pendiente firma ";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[T]...."))
                 ret = "Pendiente tax ";
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[B]...."))
+                ret = "Borrador";
             else
                 ret = " ";
 
@@ -343,6 +353,8 @@ namespace TAT001.Services
                 ret = "lbl_soporte new badge yellow darken-2 white-text ";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[T]...."))
                 ret = "lbl_tax new badge yellow darken-2 white-text";
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[B]...."))
+                ret = "lbl_borr new badge orange darken-2 white-text";
             else
                 ret = " ";
 
