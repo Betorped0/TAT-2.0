@@ -59,8 +59,8 @@
                     @Html.LabelFor(model => model.USUARIOC_ID, "Usuario", new { @id = "lbl_userid" })
                 </div>
                 <div class="input-field col s4">
-                  @Html.EditorFor(model => model.USUARIO.MANAGER, new { htmlAttributes = new { @disabled = "disabled" } })
-                  @Html.LabelFor(model => model.USUARIO.MANAGER, "Manager", new { @id = "lbl_manager" })
+                    @Html.EditorFor(model => model.USUARIO.MANAGER, new { htmlAttributes = new { @disabled = "disabled" } })
+                    @Html.LabelFor(model => model.USUARIO.MANAGER, "Manager", new { @id = "lbl_manager" })
                 </div>
                 <div class="input-field col s4">
                     @Html.EditorFor(model => model.USUARIO.BACKUP_ID, new { htmlAttributes = new { @disabled = "disabled", @Value = ViewBag.USUARIO_BACKUPID } })
@@ -223,6 +223,7 @@
                                         {
                                             @*@Html.HiddenFor(model => model.TSOL_ID, new { @id = "tsol_id" })*@
                                             @Html.HiddenFor(model => model.TSOL_ID, new { @id = "tsol_id", onchange = @"selectTsol(this.value)" })@*@lej 24-07-2018*@
+                                            @Html.HiddenFor(model => model.TSOL_ID, new { @id = "TSOL_ID", onchange = @"selectTsol(this.value)" })@*@lej 24-07-2018*@
 
                                             <input type="text" value="@ViewBag.TSOL_IDI" disabled="disabled" />
                                             <input type="text" id="tsolant_id" value="@ViewBag.TSOL_ANT" disabled="disabled" hidden />
@@ -589,15 +590,30 @@
                             <h5>Vigencia</h5>
                             <div class="row" style="margin-bottom:0">
                                 <!--RSG 22.05.2018-->
+                                <div class="col s12">
+                                    <p>
+                                        <label>
+                                            @if (Model.DOCUMENTOREC.Count > 1)
+                                            {
+                                                <input id="check_recurrente" type="checkbox" onchange="cambiaCheckRec(this)" checked="checked" />
+                                            }
+                                            else
+                                            {
+                                                <input id="check_recurrente" type="checkbox" onchange="cambiaCheckRec(this)" />
+                                            }
+                                            <span id="span_docrec">Solicitud recurrente</span>
+                                        </label>
+                                    </p>
+                                </div>
                                 @if (!Model.TSOL.REVERSO & Model.DOCUMENTO_REF == null)
                                 {
                                     <div class="col s12">
                                         <label class="col s6">
-                                            <input name="group1" type="radio" id="btn-date" onclick="cambiaTemp(this.id)" />
+                                            <input name="group1" type="radio" checked id="btn-date" onclick="cambiaTemp(this.id)" />
                                             <span>Por fecha</span>
                                         </label>
                                         <label class="col s6">
-                                            <input name="group1" type="radio" checked id="btn-peri" onclick="cambiaTemp(this.id)" />
+                                            <input name="group1" type="radio" id="btn-peri" onclick="cambiaTemp(this.id)" />
                                             <span>Por periodo</span>
                                         </label>
                                     </div>
@@ -886,13 +902,13 @@
                         <input type="hidden" id="txt_trec" />
                         <div class="row" style="margin-bottom:0;">
                             <p>
-                                <input type="hidden" value="@Model.DOCUMENTOREC.Count" id="valRec" />@*LEJ 31.07.2018---------------------*@
-                                <label>
-                                    @*<input id="check_reccurrentes" name="unarect" type="hidden" value="@ViewBag.RECURR" />*@
-                                    <input id="check_recurrente" type="checkbox" onchange="cambiaRec(this)" />
-                                    <span>Documento recurrente</span>
-                                </label>
+                                @*<input type="hidden" value="@Model.DOCUMENTOREC.Count" id="valRec" />*@@*LEJ 31.07.2018---------------------*@
+                                @*<label>
+                <input id="check_recurrente" type="checkbox" onchange="cambiaRec(this)" />
+                <span>Documento recurrente</span>
+            </label>*@
                             </p>
+                            <input type="hidden" id="txt_trec" />
                             <table class="table_rec display" id="table_rec" cellspacing="0" style="width:100%;display:none">
                                 <thead>
                                     <tr>
@@ -900,9 +916,11 @@
                                         <th id="thead_rnumero">NO</th>@*B20180801 MGC Textos*@
                                         <th id="thead_rperiodo">Periodo</th>@*B20180801 MGC Textos*@
                                         <th id="thead_rtiposol">Solicitud</th>@*B20180801 MGC Textos*@
+                                        <th id="thead_rtiposol">No solicitud TAT</th>@*B20180801 MGC Textos*@
                                         <th id="thead_rfecha">FECHA</th>@*B20180801 MGC Textos*@
                                         <th id="thead_rmonto">Monto</th>@*B20180801 MGC Textos*@
                                         <th id="thead_rporc">Porcentaje</th>@*B20180801 MGC Textos*@
+                                        <th id="thead_rporc">Estatus</th>@*B20180801 MGC Textos*@
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -916,6 +934,7 @@
                                         <th>FECHA</th>
                                         <th>Monto</th>
                                         <th>Porcentaje</th>
+                                        <th>E</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -1325,28 +1344,27 @@
                                             function cambiaLigada(campo) {
                                                 if (campo.checked) {
                                                     $("#select_neg").val("P");
-                                                    $("#select_dis").val("C");
                                                     $("#select_negi").val("P");
-                                                    $("#select_disi").val("C");
                                                     $("#select_neg").prop("disabled", "disabled");
-                                                    $("#select_dis").prop("disabled", "disabled");
                                                     $("#select_neg").change();
-                                                    $("#select_dis").change();
                                                     $("#div_objq").removeClass("hide");
                                                     $("#txt_ligada").val("X");
                                                 } else {
                                                     $("#select_neg").prop("disabled", false);
-                                                    $("#select_dis").prop("disabled", false);
                                                     $("#select_neg").change();
-                                                    $("#select_dis").change();
                                                     $("#div_objq").addClass("hide");
                                                     $("#txt_ligada").val("");
+                                                    cambiaCheckRec();
                                                 }
+
+                                                var elem = document.getElementById('select_neg');
+                                                var instance = M.FormSelect.init(elem, []);
                                             }
                                             var elem = document.getElementById('select_neg');
                                             var instance = M.FormSelect.init(elem, []);
                                             elem = document.getElementById('select_dis');
                                             instance = M.FormSelect.init(elem, []);
+                                            cambiaCheckRec();
                                         </script>
                                     }
                                     else

@@ -18,6 +18,7 @@ $("#miMas").change(function () {
                 procesarHoja5();
                 checkRelacionada();
                 var kk = checkRelacionadaMat();
+                checkRelMul()
             }
             else {
                 for (var i = 0; i < err.length; i++) {
@@ -2020,7 +2021,11 @@ $("#tab_dis").click(function () {
 
 /////////////////////////////////////////////////////////HOJA 5 FUNCIONES Y ASIGNACIONES////////////////////////////////////////////////////////
 function procesarHoja5() {
-    var table = $('#tab_test5').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" } });
+    var table = $('#tab_test5').DataTable(
+        {
+            language: { "url": "../Scripts/lang/" + ln + ".json" },
+                "paging": false
+        });
     table.clear().draw();
 
     $.ajax({
@@ -2049,10 +2054,11 @@ function procesarHoja5() {
         complete: function (data) {
             //validarErrores("tab_test5"); //RMG
             $(document).ready(function () {
+                var tablaH5 = $('#tab_test5').DataTable();
                 $("#excelBtn").removeAttr("disabled");
                 cloneTables();
-                $(".requiredfile").on("change", function () {
-                    //if ($(this).hasClass("valid")) {
+                $("#tab_test5").on("change", ".requiredfile", function () {
+                    var data = table.row(this).data();
                     if ($(this).hasClass("valid") & validaTabs("1", 4)) {//ADD RSG 29.10.2018
                         $(this).closest('tr').children().eq(0).children().removeClass("red rojo");
                         $(this).closest('tr').children().eq(0).children().addClass("green");
@@ -2063,10 +2069,10 @@ function procesarHoja5() {
                         $(this).closest('tr').children().eq(0).children().addClass("red rojo");
                         $(this).closest('tr').children().eq(0).children().text("close");
                         clearErrors();//ADD RSG 29.10.2018
-                    }
+                    //}
                 });
 
-                $(".outRequiredfile").on("change", function () {
+                $("#tab_test5").on("change", ".outRequiredfile", function () {
                     if ($(this).hasClass("valid")) {
                         var id = $(this).closest('tr').children().eq(1).children().val();
                         var tipo = $(this).closest('tr').children().eq(2).children().val();
@@ -2078,8 +2084,6 @@ function procesarHoja5() {
                 $("#tablesToexcel").prop("disabled", "false");
                 $("#tablesToexcel").removeAttr("disabled");
             });
-            //clearErrorsIni();
-
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             alert("Request couldn't be processed. Please try again later. the reason " + xhr.status + " : " + httpStatusMessage + " : " + customErrorMessage);
@@ -2109,7 +2113,8 @@ function addRowH5(t, NUM_DOC, TIPO, OBLIGATORIO) {
         CHECK,
         "<input class='' style='font-size:12px; text-align:center;' type='text' id='' name='' disabled value='" + NUM_DOC + "'><span hidden>" + NUM_DOC + "</span>",
         "<input class='' style='font-size:12px; text-align:center;' type='text' id='' name='' value='" + TIPO + "' disabled><span hidden>" + TIPO + "</span>",
-        fileInpt //RMG
+        fileInpt, //RMG
+        "<input class='NOTAS" + NUM_DOC + TIPO + "' style='font-size:12px; text-align:center;' type='text' id='' name='' value=''><span hidden>NOTAS" + NUM_DOC + TIPO + "</span>",
         //"<input class='' style='font-size:10px; text-align:center;' type='text' id='' name='' value=''>",
         //"<div class='file-field input-field col s8 offset-s3'><div class='btn'><span>Seleccionar archivo</span><input type='file' class='btnF' name='' id='"+NUM_DOC+TIPO+"'></div></div>"
     ]).draw(false).node();
@@ -2144,6 +2149,42 @@ $("#tab_arc").click(function () {
 });
 
 /////////////////////////////////////////////FUNCIONES GENERALES////////////////////////////
+function checkRelMul() {
+    var tablaH1 = $('#tab_test1').DataTable();
+    var tablaH2 = $('#tab_test2').DataTable();
+    var tablaH3 = $('#tab_test3').DataTable();
+
+    for (var a = 0; a < tablaH1.rows().data().length; a++) {
+        var rowH1 = tablaH1.row(a).node();
+        var num_docH1 = $(rowH1).children().eq(1).children().val();
+        var banderaH2 = false, banderaH3 = false;
+
+        for (var b = 0; b < tablaH2.rows().data().length; b++) {
+            var rowH2 = tablaH2.row(b).node();
+            var num_docH2 = $(rowH2).children().eq(1).children().val();
+
+            if (num_docH1 == num_docH2) {
+                banderaH2 = true;
+                break;
+            }
+        }
+
+        for (var c = 0; c < tablaH3.rows().data().length; c++) {
+            var rowH3 = tablaH3.row(c).node();
+            var num_docH3 = $(rowH3).children().eq(1).children().val();
+
+            if (num_docH1 == num_docH3) {
+                banderaH3 = true;
+                break;
+            }
+        }
+
+        if (!banderaH2 & !banderaH3) {
+            $(rowH1).children().eq(1).children().addClass("red white-text rojo");
+        }
+    }
+}
+
 function checkRelacionada() {
     var tablaH2 = $('#tab_test2').DataTable();
     var tablaH3 = $('#tab_test3').DataTable();
@@ -2697,7 +2738,7 @@ function guardaDatos() {
     var tablaH4 = $('#tab_test4').DataTable();
     var tablaH5 = $('#tab_test5').DataTable();
 
-    var tabla1 = [], tabla2 = [], tabla3 = [], tabla4 = [], tabla5 = [], archivos = [];
+    var tabla1 = [], tabla2 = [], tabla3 = [], tabla4 = [], tabla5 = [], notasArr = [];
     var rowsH1 = [], rowsH2 = [], rowsH3 = [], rowsH4 = [], rowsH5 = [], rowsArc = [];
     var a = 0, b = 0, c = 0, d = 0, e = 0;
     var formData = new FormData();
@@ -2802,6 +2843,7 @@ function guardaDatos() {
             var descripcionH5 = $(rowH5).children().eq(2).children().val();
             var idArchivoH5 = $(rowH5).children().eq(3).children().children().eq(0).children().eq(1).attr('id');
 
+
             if (idArchivoH5 == (num_docH5 + descripcionH5)) {
                 var archivo = document.getElementById(num_docH5 + descripcionH5).files[0];
 
@@ -2820,6 +2862,39 @@ function guardaDatos() {
             }
         }
     }
+
+    var contadorNota = 0;
+    for (var f = 0; f < tablaH1.rows().data().length; f++) {
+        var rowH1 = tablaH1.row(f).node();
+        var num_docH1 = $(rowH1).children().eq(1).children().val();
+        var notaFinal = "";
+
+        for (var g = 0; g < tablaH5.rows().data().length; g++) {
+            var rowH5 = tablaH5.row(g).node();
+            var statusH5 = $(rowH5).children().eq(0).children().text();
+
+            if (statusH5 == "done") {
+                var num_docH5 = $(rowH5).children().eq(1).children().val();
+                var nota = $(rowH5).children().eq(4).children().val();
+
+
+                if (num_docH1 == num_docH5) {
+                    if (notaFinal == "") {
+                        notaFinal = notaFinal + nota;
+                    }
+                    else if (nota != "") {
+                        notaFinal = notaFinal + "," + nota;
+                    }
+                }
+            }
+        }
+
+        if (notaFinal != "") {
+            notasArr[contadorNota] = num_docH1 + "*" + notaFinal;
+            contadorNota++;
+        }
+    }
+
 
     tabla1 = rowsH1;
     tabla2 = rowsH2;
@@ -2851,7 +2926,7 @@ function guardaDatos() {
         type: "POST",
         url: 'setDatos',
         dataType: "json",
-        data: { "h1": tabla1, "h2": tabla2, "h3": tabla3, "h4": tabla4, "h5": tabla5 },
+        data: { "h1": tabla1, "h2": tabla2, "h3": tabla3, "h4": tabla4, "h5": tabla5, "notas": notasArr },
         async: false,
         success: function (data) {
             if (data !== null | data !== "") {

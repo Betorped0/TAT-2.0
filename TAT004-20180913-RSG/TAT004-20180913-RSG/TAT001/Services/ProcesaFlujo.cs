@@ -45,82 +45,87 @@ namespace TAT001.Services
                 actual.ESTATUS = f.ESTATUS;
                 db.FLUJOes.Add(actual);
 
-                WORKFP paso_a = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS.Equals(actual.WF_POS)).FirstOrDefault();
-                int next_step_a = 0;
-                if (paso_a.NEXT_STEP != null)
-                    next_step_a = (int)paso_a.NEXT_STEP;
+                if (recurrente != "B")//NO ES BORRADOR
+                {
+                    WORKFP paso_a = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS.Equals(actual.WF_POS)).FirstOrDefault();
+                    int next_step_a = 0;
+                    if (paso_a.NEXT_STEP != null)
+                        next_step_a = (int)paso_a.NEXT_STEP;
 
-                WORKFP next = new WORKFP();
-                if (recurrente != "X")
-                {
-                    next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS == next_step_a).FirstOrDefault();
-                }
-                else
-                {
-                    WORKFP autoriza = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.ACCION_ID == 5).FirstOrDefault();
-                    next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS == autoriza.NS_ACCEPT).FirstOrDefault();
-                }
-                if (next.NEXT_STEP.Equals(99))//--------FIN DEL WORKFLOW
-                {
-                    d.ESTATUS_WF = "A";
-                    if (paso_a.EMAIL.Equals("X"))
-                        correcto = "2";
-                }
-                else
-                {
-                    //DOCUMENTO d = db.DOCUMENTOes.Find(actual.NUM_DOC);
-                    FLUJO nuevo = new FLUJO();
-                    nuevo.WORKF_ID = next.ID;
-                    nuevo.WF_VERSION = next.VERSION;
-                    nuevo.WF_POS = next.POS;
-                    nuevo.NUM_DOC = actual.NUM_DOC;
-                    nuevo.POS = actual.POS + 1;
-                    nuevo.LOOP = 1;
-
-                    if (next.ACCION.TIPO == "E")
+                    WORKFP next = new WORKFP();
+                    if (recurrente != "X")
                     {
-                        nuevo.USUARIOA_ID = null;
-                        nuevo.DETPOS = 0;
-                        nuevo.DETVER = 0;
+                        next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS == next_step_a).FirstOrDefault();
                     }
                     else
                     {
-                        if (recurrente != "X")
-                        {
-                            FLUJO detA = determinaAgenteI(cf, dah);
-                            nuevo.USUARIOA_ID = detA.USUARIOA_ID;
-                            nuevo.USUARIOD_ID = nuevo.USUARIOA_ID;
+                        WORKFP autoriza = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.ACCION_ID == 5).FirstOrDefault();
+                        next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS == autoriza.NS_ACCEPT).FirstOrDefault();
+                    }
+                    if (next.NEXT_STEP.Equals(99))//--------FIN DEL WORKFLOW
+                    {
+                        d.ESTATUS_WF = "A";
+                        if (paso_a.EMAIL.Equals("X"))
+                            correcto = "2";
+                    }
+                    else
+                    {
+                        //DOCUMENTO d = db.DOCUMENTOes.Find(actual.NUM_DOC);
+                        FLUJO nuevo = new FLUJO();
+                        nuevo.WORKF_ID = next.ID;
+                        nuevo.WF_VERSION = next.VERSION;
+                        nuevo.WF_POS = next.POS;
+                        nuevo.NUM_DOC = actual.NUM_DOC;
+                        nuevo.POS = actual.POS + 1;
+                        nuevo.LOOP = 1;
 
-                            DateTime fecha = DateTime.Now.Date;
-                            DELEGAR del = db.DELEGARs.Where(a => a.USUARIO_ID.Equals(nuevo.USUARIOD_ID) & a.FECHAI <= fecha & a.FECHAF >= fecha & a.ACTIVO == true).FirstOrDefault();
-                            if (del != null)
-                                nuevo.USUARIOA_ID = del.USUARIOD_ID;
-                            else
-                                nuevo.USUARIOA_ID = nuevo.USUARIOD_ID;
-
-                            nuevo.DETPOS = detA.DETPOS;
-                            nuevo.DETVER = cf.VERSION;
-                        }
-                        else
+                        if (next.ACCION.TIPO == "E")
                         {
                             nuevo.USUARIOA_ID = null;
                             nuevo.DETPOS = 0;
                             nuevo.DETVER = 0;
                         }
-                    }
-                    nuevo.ESTATUS = "P";
-                    nuevo.FECHAC = DateTime.Now;
-                    nuevo.FECHAM = DateTime.Now;
+                        else
+                        {
+                            if (recurrente != "X")
+                            {
+                                FLUJO detA = determinaAgenteI(cf, dah);
+                                nuevo.USUARIOA_ID = detA.USUARIOA_ID;
+                                nuevo.USUARIOD_ID = nuevo.USUARIOA_ID;
 
-                    if (paso_a.EMAIL.Equals("X"))
-                        correcto = "1";
-                    d.ESTATUS_WF = "P";
+                                DateTime fecha = DateTime.Now.Date;
+                                DELEGAR del = db.DELEGARs.Where(a => a.USUARIO_ID.Equals(nuevo.USUARIOD_ID) & a.FECHAI <= fecha & a.FECHAF >= fecha & a.ACTIVO == true).FirstOrDefault();
+                                if (del != null)
+                                    nuevo.USUARIOA_ID = del.USUARIOD_ID;
+                                else
+                                    nuevo.USUARIOA_ID = nuevo.USUARIOD_ID;
 
-                    db.FLUJOes.Add(nuevo);
-                    db.Entry(d).State = EntityState.Modified;
+                                nuevo.DETPOS = detA.DETPOS;
+                                nuevo.DETVER = cf.VERSION;
+                            }
+                            else
+                            {
+                                nuevo.USUARIOA_ID = null;
+                                nuevo.DETPOS = 0;
+                                nuevo.DETVER = 0;
+                            }
+                        }
+                        nuevo.ESTATUS = "P";
+                        nuevo.FECHAC = DateTime.Now;
+                        nuevo.FECHAM = DateTime.Now;
+
+                        if (paso_a.EMAIL.Equals("X"))
+                            correcto = "1";
+                        d.ESTATUS_WF = "P";
+
+                        db.FLUJOes.Add(nuevo);
+                        db.Entry(d).State = EntityState.Modified;
+                    }//ADD RSG 30.10.2018
 
                     db.SaveChanges();
                 }
+                else
+                    db.SaveChanges();
             }
             else if (f.ESTATUS.Equals("A"))   //---------------------EN PROCESO DE APROBACIÓN
             {
@@ -643,7 +648,7 @@ namespace TAT001.Services
             {
                 f.USUARIOA_ID = cf.USUARIO5_ID;
             }
-            
+
             return f;
         }
 
