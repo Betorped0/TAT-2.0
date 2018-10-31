@@ -55,7 +55,7 @@ namespace TAT001.Controllers
             }
             Session["spras"] = user.SPRAS_ID;
 
-            return View(db.DOCUMENTOes.ToList());
+            return View();
         }
 
         [HttpPost]
