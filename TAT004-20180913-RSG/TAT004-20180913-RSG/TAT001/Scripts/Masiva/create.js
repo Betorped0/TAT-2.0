@@ -2054,6 +2054,7 @@ function procesarHoja5() {
         complete: function (data) {
             //validarErrores("tab_test5"); //RMG
             $(document).ready(function () {
+                $('#global_filter').removeAttr('disabled');
                 var tablaH5 = $('#tab_test5').DataTable();
                 $("#excelBtn").removeAttr("disabled");
                 cloneTables();
@@ -3026,11 +3027,7 @@ function guardaDatos() {
                 //var table = $('#tab_test1').DataTable();
 
                 //if (!table.data().any()) {
-                //    tablaH1.ajax.reload();
-                //    tablaH2.ajax.reload();
-                //    tablaH3.ajax.reload();
-                //    tablaH4.ajax.reload();
-                //    tablaH5.ajax.reload();
+                //    location.reload();
                 //}
             }
         }
