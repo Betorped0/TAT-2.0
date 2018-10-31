@@ -2069,7 +2069,7 @@ function procesarHoja5() {
                         $(this).closest('tr').children().eq(0).children().addClass("red rojo");
                         $(this).closest('tr').children().eq(0).children().text("close");
                         clearErrors();//ADD RSG 29.10.2018
-                    //}
+                    }
                 });
 
                 $("#tab_test5").on("change", ".outRequiredfile", function () {
