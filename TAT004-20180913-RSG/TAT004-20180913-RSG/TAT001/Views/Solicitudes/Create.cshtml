@@ -18,7 +18,7 @@
 <script src="~/Scripts/borrador.js"></script><!--RSG 30.10.2018-->
 <script src="~/Scripts/ValidarNumero.js"></script><!--LEJ 09.07.2018-->
 <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
-<script src="~/Scripts/cierre.js"></script>
+<script src="~/Scripts/listas.js"></script>
 @if (ViewBag.error != "")
 {
     <script>
@@ -342,6 +342,7 @@ $(document).ready(function () {
                                                 var val = e.sender.value();
                                                 selectTsol(val);
                                                 soportes(val, '@ViewBag.spras_id');
+                                                periodo(val);
                                                 M.Toast.dismissAll();
                                             }
                                         });
@@ -1457,7 +1458,20 @@ $(document).ready(function () {
                                                 $("#txt_ligada").val("");
                                                 cambiaCheckRec();
                                             }
-
+                                            <span id="span_ligada">Solicitud ligada a facturación </span>@*B20180801 MGC Textos*@
+                                        </label>
+                                        <script>
+                                            var elem = document.getElementById("span_ligada");
+                                              if (elem != undefined) {
+                                                  var wa = "Se calcula al cierre del periodo.";
+                                                  var options = {
+                                                      html: wa,
+                                                      position: "right"
+                                                  };
+                                                  var instance = M.Tooltip.init(elem, options);
+                                              }
+                                        </script>
+                                        <script>
                                             var elem = document.getElementById('select_neg');
                                             var instance = M.FormSelect.init(elem, []);
                                         }
@@ -1496,44 +1510,44 @@ $(document).ready(function () {
                         </div>
                     </div>
                 </div>
-                @if (ViewBag.ligada != null & ViewBag.relacionadan == "")//RSG 09.07.2018
-                {
-                    <script>
-                        $("#select_neg").prop("disabled", "disabled");
+@if (ViewBag.ligada != null & ViewBag.relacionadan == "")//RSG 09.07.2018
+                    {
+                        <script>
+                            $("#select_neg").prop("disabled", "disabled");
 
-                        var elem = document.getElementById('select_neg');
-                        var instance = M.FormSelect.init(elem, []);
-                    </script>
-                }
-                <div id="div_montobase" class="col s12 m6 l6" style="display:none">
-                    <div class="card-panel">
-                        <h5 id="head_montob">Monto Base</h5>@*B20180801 MGC Textos*@
-                        <div class="row" style="margin-bottom:0">
-                            @if (ViewBag.ligada != null & false)
-                            {
-                                <div class="input-field col s6">
-                                    <input value="@ViewBag.MONTO_DIS" id="monto_dis" type="text" class="@ViewBag.reversa" disabled="disabled" />
-                                    <label id="lbl_montodis" for="monto_dis">Monto</label>@*B20180801 MGC Textos*@
-                                </div>
+                            var elem = document.getElementById('select_neg');
+                            var instance = M.FormSelect.init(elem, []);
+                        </script>
+                    }
+                    <div id="div_montobase" class="col s12 m6 l6" style="display:none">
+                        <div class="card-panel">
+                            <h5 id="head_montob">Monto Base</h5>@*B20180801 MGC Textos*@
+                            <div class="row" style="margin-bottom:0">
+                                @if (ViewBag.ligada != null & false)
+                                {
+                                    <div class="input-field col s6">
+                                        <input value="@ViewBag.MONTO_DIS" id="monto_dis" type="text" class="@ViewBag.reversa" disabled="disabled" />
+                                        <label id="lbl_montodis" for="monto_dis">Monto</label>@*B20180801 MGC Textos*@
+                                    </div>
 
-                                <div class="input-field col s6">
-                                    <input type="text" id="moneda_dis" name="monedadis" value="@ViewBag.moneda_dis" disabled="disabled" hidden />@*//B20180625 MGC 2018.06.28*@
-                                    @Html.DropDownList("MONEDA", null, htmlAttributes: new { @id = "monedadis_id", @class = "form-control", @disabled = "disabled" })
-                                    @Html.LabelFor(model => model.MONEDA_ID, "Moneda", htmlAttributes: new { @for = "monedadis_id", @id = "lbl_monedadis" })@*B20180801 MGC Textos*@
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="input-field col s6">
-                                    <input value="@ViewBag.MONTO_DIS" id="monto_dis" type="text" class="@ViewBag.reversa" />
-                                    <label id="lbl_montodis" for="monto_dis">Monto</label>@*B20180801 MGC Textos*@
-                                </div>
-                                <div class="input-field col s6">
-                                    <input type="text" id="moneda_dis" name="monedadis" value="@ViewBag.moneda_dis" disabled="disabled" hidden /> @*//B20180625 MGC 2018.06.28*@
-                                    @Html.DropDownList("MONEDA", null, htmlAttributes: new { @id = "monedadis_id", @class = "form-control" })
-                                    @Html.LabelFor(model => model.MONEDA_ID, "Moneda", htmlAttributes: new { @for = "monedadis_id", @id = "lbl_monedadis" })@*B20180801 MGC Textos*@
-                                </div>
-                            }
+                                    <div class="input-field col s6" style="margin-top:12%">
+                                        <input type="text" id="moneda_dis" name="monedadis" value="@ViewBag.moneda_dis" disabled="disabled" hidden />@*//B20180625 MGC 2018.06.28*@
+                                        @Html.DropDownList("MONEDA", null, htmlAttributes: new { @id = "monedadis_id", @class = "form-control", @disabled = "disabled" })
+                                        @Html.LabelFor(model => model.MONEDA_ID, "Moneda", htmlAttributes: new { @for = "monedadis_id", @id = "lbl_monedadis" })@*B20180801 MGC Textos*@
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="input-field col s6">
+                                        <input value="@ViewBag.MONTO_DIS" id="monto_dis" type="text" class="@ViewBag.reversa" />
+                                        <label id="lbl_montodis" for="monto_dis">Monto</label>@*B20180801 MGC Textos*@
+                                    </div>
+                                    <div class="input-field col s6">
+                                        <input type="text" id="moneda_dis" name="monedadis" value="@ViewBag.moneda_dis" disabled="disabled" hidden /> @*//B20180625 MGC 2018.06.28*@
+                                        @Html.DropDownList("MONEDA", null, htmlAttributes: new { @id = "monedadis_id", @class = "form-control" })
+                                        @Html.LabelFor(model => model.MONEDA_ID, "Moneda", htmlAttributes: new { @for = "monedadis_id", @id = "lbl_monedadis" })@*B20180801 MGC Textos*@
+                                   </div>
+                                }
                         </div>
                     </div>
                 </div>
@@ -1838,66 +1852,12 @@ $(document).ready(function () {
                                     <div id="div_clearing">
                                     </div>
                                 </div>
-                            </div>
-                            <script>
-var clearing = [];
-function getClearing(gall) {
-$("#div_clearing").empty();
-clearing = [];
-/**/
-/**/
-/**/
-/**/
-var bukrs = '@Model.SOCIEDAD_ID';
-/**/
-/**/
-/**/
-/**/
-/**/
-/**/
-/**/
-/**/
-var land = '@Model.PAIS_ID';
-/**/
-/**/
-/**/
-/**/
-/**/
-/**/
-/**/
-/**/
-var ejercicio = '@Model.EJERCICIO';
-/**/
-/**/
-/**/
-/**/
-    $.ajax({
-        type: "POST",
-        url: '../Listas/clearing',
-        dataType: "json",
-        data: { bukrs: bukrs, land: land, gall: gall, ejercicio: ejercicio },
-
-        success: function (data) {
-            if (data !== null || data !== "") {
-                //RSG 26.04.2018----------------
-                clearing.push(data.ABONO);
-                //DRS 28.09.2018
-                clearing.push(data.NOMBREA);
-                clearing.push(data.CARGO);
-                clearing.push(data.NOMBREC);
-                clearing.push(data.CLEARING);
-                clearing.push(data.LIMITE);
-                //RSG 26.04.2018----------------
-            }
-
-        },
-        error: function (xhr, httpStatusMessage, customErrorMessage) {
-            //M.toast({ html: httpStatusMessage });
-        },
-        async: false
-    });
-
-}
+                                <script>
+                                            var clearing = [];
+                                            function getClearing() {
+                                            $("#div_clearing").empty();
+                                            cuentas();
+                                            }
                                             function formaClearing() {
                                                 var tex_abono = document.querySelector(".lbl_cabono").innerHTML;
                                                 var tex_cargo = document.querySelector(".lbl_ccargo").innerHTML;
