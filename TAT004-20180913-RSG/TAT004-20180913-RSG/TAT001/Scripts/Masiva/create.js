@@ -2052,18 +2052,18 @@ function procesarHoja5() {
                 $("#excelBtn").removeAttr("disabled");
                 cloneTables();
                 $(".requiredfile").on("change", function () {
-                    //if ($(this).hasClass("valid")) {
-                    if ($(this).hasClass("valid") & validaTabs("1", 4)) {//ADD RSG 29.10.2018
-                        $(this).closest('tr').children().eq(0).children().removeClass("red rojo");
-                        $(this).closest('tr').children().eq(0).children().addClass("green");
-                        $(this).closest('tr').children().eq(0).children().text("done");
-                        clearErrors();
-                    } else {
-                        $(this).closest('tr').children().eq(0).children().removeClass("green");
-                        $(this).closest('tr').children().eq(0).children().addClass("red rojo");
-                        $(this).closest('tr').children().eq(0).children().text("close");
+                    ////if ($(this).hasClass("valid")) {
+                    //if ($(this).hasClass("valid") & validaTabs("1", 4)) {//ADD RSG 29.10.2018
+                    //    $(this).closest('tr').children().eq(0).children().removeClass("red rojo");
+                    //    $(this).closest('tr').children().eq(0).children().addClass("green");
+                    //    $(this).closest('tr').children().eq(0).children().text("done");
+                    //    clearErrors();
+                    //} else {
+                    //    $(this).closest('tr').children().eq(0).children().removeClass("green");
+                    //    $(this).closest('tr').children().eq(0).children().addClass("red rojo");
+                    //    $(this).closest('tr').children().eq(0).children().text("close");
                         clearErrors();//ADD RSG 29.10.2018
-                    }
+                    //}
                 });
 
                 $(".outRequiredfile").on("change", function () {
