@@ -424,5 +424,13 @@ namespace TAT001.Common
             new SqlParameter("@PREFIX", (prefix == null ? "" : prefix))).ToList();
             return contactos;
         }
+
+        public static List<CSP_PRESU_CLIENT_Result> ObtenerPresupuestoCliente(TAT001Entities db,  string kunnr,string periodo)
+        {
+            List<CSP_PRESU_CLIENT_Result> presupuesto = db.Database.SqlQuery<CSP_PRESU_CLIENT_Result>("CSP_PRESU_CLIENT @CLIENTE,@PERIODO",
+            new SqlParameter("@CLIENTE", kunnr),
+            new SqlParameter("@PERIODO", periodo)).ToList();
+            return presupuesto;
+        }
     }
 }
