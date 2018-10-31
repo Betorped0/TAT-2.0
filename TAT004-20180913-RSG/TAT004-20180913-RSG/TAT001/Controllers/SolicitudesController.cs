@@ -1424,6 +1424,7 @@ namespace TAT001.Controllers
                     }
                     dOCUMENTO.CUENTAP = cu.ABONO;
                     dOCUMENTO.CUENTAPL = cu.CARGO;
+                    dOCUMENTO.CUENTACL = cu.CLEARING;
                     //OCG 21/10/18
 
                     DOCUMENTO d = new DOCUMENTO();

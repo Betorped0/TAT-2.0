@@ -833,6 +833,7 @@
           <Property Name="CUENTAP" Type="numeric" Precision="10" Scale="0" />
           <Property Name="CUENTAPL" Type="numeric" Precision="10" Scale="0" />
           <Property Name="EXCEDE_PRES" Type="char" MaxLength="1" />
+          <Property Name="CUENTACL" Type="numeric" Precision="10" Scale="0" />
         </EntityType>
         <EntityType Name="DOCUMENTOA">
           <Key>
@@ -6876,6 +6877,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <NavigationProperty Name="DOCUMENTOSAP" Relationship="Self.FK_DOCUMENTOSAP_DOCUMENTO" FromRole="DOCUMENTO" ToRole="DOCUMENTOSAP" />
           <NavigationProperty Name="DOCUMENTOTS" Relationship="Self.FK_DOCUMENTOTS_DOCUMENTO" FromRole="DOCUMENTO" ToRole="DOCUMENTOTS" />
           <NavigationProperty Name="FLUJOes" Relationship="Self.FK_FLUJO_DOCUMENTO" FromRole="DOCUMENTO" ToRole="FLUJO" />
+          <Property Name="CUENTACL" Type="Decimal" Precision="10" Scale="0" />
         </EntityType>
         <EntityType Name="DOCUMENTOA">
           <Key>
@@ -12887,6 +12889,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <EntitySetMapping Name="DOCUMENTOes">
             <EntityTypeMapping TypeName="TAT001Model.DOCUMENTO">
               <MappingFragment StoreEntitySet="DOCUMENTO">
+                <ScalarProperty Name="CUENTACL" ColumnName="CUENTACL" />
                 <ScalarProperty Name="NUM_DOC" ColumnName="NUM_DOC" />
                 <ScalarProperty Name="TSOL_ID" ColumnName="TSOL_ID" />
                 <ScalarProperty Name="TALL_ID" ColumnName="TALL_ID" />
