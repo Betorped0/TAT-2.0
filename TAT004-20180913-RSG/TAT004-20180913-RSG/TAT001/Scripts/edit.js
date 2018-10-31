@@ -1557,6 +1557,7 @@ $(window).on('load', function () {
     }
     //Valores en información antes soporte
     copiarTableVistaSop();
+    copiarTableVistaRec(); //ADD RSG 30.10.2018
     //Valores en  distribución    
     //copiarTableVista("", borr); //B20180625 MGC 2018.07.02
     copiarTableVista("", borr, ne); //B20180625 MGC 2018.07.02 //Add MGC B20180705 2018.07.05 ne no eliminar
@@ -1665,55 +1666,59 @@ function _ff() {
     var datei = $("#fechai_vig").val().split(" ")[0];
     var _anoi = datei.split('/')[2];
 
-    $.ajax({
-        type: "POST",
-        url: 'getPeriodo',
-        dataType: "json",
-        data: { "fecha": datei },
-        success: function (data) {
-            var _xd = data;
-            var pp = parseInt(data);
-            if (pp != 0) {
-                $("#periodoi_id").val(pp);
-                document.getElementById("btn-peri").checked = true;
-                $("#btn-peri").trigger("change");
-                $("#anioi_id").val(_anoi);
-            } else {
-                document.getElementById("btn-date").checked = true;
-                $("#btn-date").trigger("change");
-            }
-        },
-        error: function (xhr, httpStatusMessage, customErrorMessage) {
-            M.toast({ html: httpStatusMessage });
-        },
-        async: true
-    });
+    if (datei !== "") {
+        $.ajax({
+            type: "POST",
+            url: 'getPeriodo',
+            dataType: "json",
+            data: { "fecha": datei },
+            success: function (data) {
+                var _xd = data;
+                var pp = parseInt(data);
+                if (pp != 0) {
+                    $("#periodoi_id").val(pp);
+                    document.getElementById("btn-peri").checked = true;
+                    $("#btn-peri").trigger("change");
+                    $("#anioi_id").val(_anoi);
+                } else {
+                    document.getElementById("btn-date").checked = true;
+                    $("#btn-date").trigger("change");
+                }
+            },
+            error: function (xhr, httpStatusMessage, customErrorMessage) {
+                M.toast({ html: httpStatusMessage });
+            },
+            async: true
+        });
+    }
     var datef = $("#fechaf_vig").val().split(" ")[0];
     var _anof = datef.split('/')[2];
-    $.ajax({
-        type: "POST",
-        url: 'getPeriodo',
-        dataType: "json",
-        data: { "fecha": datef },
-        success: function (data) {
-            var _xd = data;
-            var pp = parseInt(data);
-            if (pp != 0) {
-                $("#periodof_id").val(pp);
-                document.getElementById("btn-peri").checked = true;
-                $("#btn-peri").trigger("change");
-                $("#aniof_id").val(_anof);
-            } else {
-                document.getElementById("btn-date").checked = true;
-                $("#btn-date").trigger("change");
-            }
+    if (datef !== "") {
+        $.ajax({
+            type: "POST",
+            url: 'getPeriodo',
+            dataType: "json",
+            data: { "fecha": datef },
+            success: function (data) {
+                var _xd = data;
+                var pp = parseInt(data);
+                if (pp != 0) {
+                    $("#periodof_id").val(pp);
+                    document.getElementById("btn-peri").checked = true;
+                    $("#btn-peri").trigger("change");
+                    $("#aniof_id").val(_anof);
+                } else {
+                    document.getElementById("btn-date").checked = true;
+                    $("#btn-date").trigger("change");
+                }
 
-        },
-        error: function (xhr, httpStatusMessage, customErrorMessage) {
-            M.toast({ html: httpStatusMessage });
-        },
-        async: true
-    });
+            },
+            error: function (xhr, httpStatusMessage, customErrorMessage) {
+                M.toast({ html: httpStatusMessage });
+            },
+            async: true
+        });
+    }
 }
 //LEJ 30.07.2018--------------------------------------T
 

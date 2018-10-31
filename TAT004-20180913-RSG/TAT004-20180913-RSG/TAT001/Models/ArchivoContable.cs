@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Reflection;
+using SimpleImpersonation;
 
 namespace TAT001.Models
 {
@@ -149,60 +150,20 @@ namespace TAT001.Models
                 {
                     doc.MONEDA_ID = "USD";
                 }
-                using (StreamWriter sw = new StreamWriter(dirFile))
+                string saveFileDev = ConfigurationManager.AppSettings["saveFileDev"];
+                if (saveFileDev == "1")
                 {
-                    CONPOSAPH dir = tab;
-                    sw.WriteLine(
-                        tab.TIPO_DOC + "|" +
-                        dir.SOCIEDAD.Trim() + "|"
-                        + String.Format("{0:MM.dd.yyyy}", doc.FECHAC).Replace(".", "") + "|"
-                        + dir.FECHA_DOCU.Trim() + "|"
-                        + doc.MONEDA_ID.Trim() + "|"
-                        + dir.HEADER_TEXT.Trim() + "|"
-                        + dir.REFERENCIA.Trim() + "|"
-                        + dir.CALC_TAXT.ToString().Replace("True", "X").Replace("False", "") + "|"
-                        + dir.NOTA.Trim() + "|"
-                        + dir.CORRESPONDENCIA.Trim()
-                        );
-                    sw.WriteLine("");
-                    for (int i = 0; i < det.Count; i++)
+                    EscribirArchivo(dirFile, tab, doc, det);
+                }
+                else
+                {
+                    string serverDocs = ConfigurationManager.AppSettings["serverDocs"],
+                     serverDocsUser = ConfigurationManager.AppSettings["serverDocsUser"],
+                     serverDocsPass = ConfigurationManager.AppSettings["serverDocsPass"];
+                    using (Impersonation.LogonUser(serverDocs, serverDocsUser, serverDocsPass, LogonType.NewCredentials))
                     {
-                        sw.WriteLine(
-                            det[i].POS_TYPE + "|" +
-                            det[i].COMP_CODE + "|" +
-                            det[i].BUS_AREA + "|" +
-                            det[i].POST_KEY + "|" +
-                            det[i].ACCOUNT + "|" +
-                            det[i].COST_CENTER + "|" +
-                            det[i].BALANCE + "|" +
-                            det[i].TEXT + "|" +
-                            det[i].SALES_ORG + "|" +
-                            det[i].DIST_CHANEL + "|" +
-                            det[i].DIVISION + "|" +
-                            //"|" +
-                            //"|" +
-                            //"|" +
-                            //"|" +
-                            //"|" +
-                            det[i].INV_REF + "|" +
-                            det[i].PAY_TERM + "|" +
-                            det[i].JURIS_CODE + "|" +
-                            //"|" +
-                            det[i].CUSTOMER + "|" +
-                            det[i].PRODUCT + "|" +
-                            det[i].TAX_CODE + "|" +
-                            det[i].PLANT + "|" +
-                            det[i].REF_KEY1 + "|" +
-                            det[i].REF_KEY2 + "|" +
-                            det[i].REF_KEY3 + "|" +
-                            det[i].ASSIGNMENT + "|" +
-                            det[i].QTY + "|" +
-                            det[i].BASE_UNIT + "|" +
-                            det[i].AMOUNT_LC + "|" +
-                            det[i].RETENCION_ID + "|"
-                            );
+                        EscribirArchivo(dirFile, tab, doc, det);
                     }
-                    sw.Close();
                 }
                 if (tab.TIPO_SOL == "NIM")
                 {
@@ -244,6 +205,64 @@ namespace TAT001.Models
             catch (Exception e)
             {
                 return "Error al generar el documento contable " + e.Message;
+            }
+        }
+        private void EscribirArchivo(string dirFile,CONPOSAPH tab,DOCUMENTO doc,List<DetalleContab> det)
+        {
+            using (StreamWriter sw = new StreamWriter(dirFile))
+            {
+                CONPOSAPH dir = tab;
+                sw.WriteLine(
+                    tab.TIPO_DOC + "|" +
+                    dir.SOCIEDAD.Trim() + "|"
+                    + String.Format("{0:MM.dd.yyyy}", doc.FECHAC).Replace(".", "") + "|"
+                    + dir.FECHA_DOCU.Trim() + "|"
+                    + doc.MONEDA_ID.Trim() + "|"
+                    + dir.HEADER_TEXT.Trim() + "|"
+                    + dir.REFERENCIA.Trim() + "|"
+                    + dir.CALC_TAXT.ToString().Replace("True", "X").Replace("False", "") + "|"
+                    + dir.NOTA.Trim() + "|"
+                    + dir.CORRESPONDENCIA.Trim()
+                    );
+                sw.WriteLine("");
+                for (int i = 0; i < det.Count; i++)
+                {
+                    sw.WriteLine(
+                        det[i].POS_TYPE + "|" +
+                        det[i].COMP_CODE + "|" +
+                        det[i].BUS_AREA + "|" +
+                        det[i].POST_KEY + "|" +
+                        det[i].ACCOUNT + "|" +
+                        det[i].COST_CENTER + "|" +
+                        det[i].BALANCE + "|" +
+                        det[i].TEXT + "|" +
+                        det[i].SALES_ORG + "|" +
+                        det[i].DIST_CHANEL + "|" +
+                        det[i].DIVISION + "|" +
+                        //"|" +
+                        //"|" +
+                        //"|" +
+                        //"|" +
+                        //"|" +
+                        det[i].INV_REF + "|" +
+                        det[i].PAY_TERM + "|" +
+                        det[i].JURIS_CODE + "|" +
+                        //"|" +
+                        det[i].CUSTOMER + "|" +
+                        det[i].PRODUCT + "|" +
+                        det[i].TAX_CODE + "|" +
+                        det[i].PLANT + "|" +
+                        det[i].REF_KEY1 + "|" +
+                        det[i].REF_KEY2 + "|" +
+                        det[i].REF_KEY3 + "|" +
+                        det[i].ASSIGNMENT + "|" +
+                        det[i].QTY + "|" +
+                        det[i].BASE_UNIT + "|" +
+                        det[i].AMOUNT_LC + "|" +
+                        det[i].RETENCION_ID + "|"
+                        );
+                }
+                sw.Close();
             }
         }
         private string Referencia(string campo, DOCUMENTO doc, List<DOCUMENTOF> docf, CLIENTE clien, int pos)

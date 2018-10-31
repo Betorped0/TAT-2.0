@@ -245,7 +245,7 @@
                         <th style="text-align:center;">NUM_DOC</th>
                         <th style="text-align:center;">TIPO</th>
                         <th style="text-align:center;">ARCHIVO</th>
-                        @*<th style="text-align:center;">NOTAS</th>*@
+                        <th style="text-align:center;">NOTAS</th>
                         @*<th style="text-align:center;">BOTON</th>*@
                     </tr>
                 </thead>
@@ -269,7 +269,7 @@
         return "¿Deseas salir del módulo? La infomración se perderá. ";
     }
     var instance1 = M.Tabs.init(el1, []);
-    
+
     var elem1 = document.getElementById('borraTabla');
     M.Modal.init(elem1, []);
 </script>
@@ -299,3 +299,27 @@
         width: 100%;
     }
 </style>
+
+<script>
+    //$(".mdl-button").on("click", function () {
+    //    if ($(this).hasClass("valid")) {
+    //        var id = $(this).closest('tr').children().eq(1).children().val();
+    //        var tipo = $(this).closest('tr').children().eq(2).children().val();
+    //        $(this).closest('tr').children().eq(3).children().children().eq(0).children().eq(1).attr('id', id + tipo);
+    //    } else {
+    //        $(this).closest('tr').children().eq(3).children().children().eq(0).children().eq(1).removeAttr('id');
+    //    }
+    function pag() {
+        $(".outRequiredfile").on("change", function () {
+            if ($(this).hasClass("valid")) {
+                var id = $(this).closest('tr').children().eq(1).children().val();
+                var tipo = $(this).closest('tr').children().eq(2).children().val();
+                $(this).closest('tr').children().eq(3).children().children().eq(0).children().eq(1).attr('id', id + tipo);
+            } else {
+                $(this).closest('tr').children().eq(3).children().children().eq(0).children().eq(1).removeAttr('id');
+            }
+        });
+    }
+    //});
+</script>
+<button class="btn" onclick="pag();">Page</button>
