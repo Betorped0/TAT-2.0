@@ -18,6 +18,8 @@
 <script src="~/Scripts/recurrente.js"></script><!--RSG 27.05.2018-->
 <script src="~/Scripts/analisis.js"></script><!--RSG 13.06.2018-->
 <script src="~/Scripts/descargar.js"></script><!--RSG 22.06.2018-->
+<script src="~/Scripts/rangos.js"></script>
+<script src="~/Scripts/borrador.js"></script><!--RSG 30.10.2018-->
 <script src="~/Scripts/ValidarNumero.js"></script>
 <script src="~/Scripts/listas.js"></script>
 @if (ViewBag.error != "")
@@ -164,6 +166,7 @@
         @if (ViewBag.reversan != "X" | ViewBag.reversan == "X")
         {
             <a id="btn_guardarh" class="btn btn-small disabled">Guardar</a>
+            <a id="btn_guardarBorr" class="btn btn-small">Nuevo borrador</a><!--ADD RSG 30.10.2018-->
         }
     </div>
     <div class="div_bottom">
@@ -188,6 +191,7 @@
     {
         @Html.AntiForgeryToken()
 
+        <input type="hidden" id="txt_flujo" name="txt_flujo" value="P" /><!--ADD RSG 30.10.2018-->
         <div class="form-horizontal">
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             @*Información*@
@@ -687,11 +691,11 @@
                                             </div>
                                         </div><div class="col s12">
                                             <div class="input-field col s6">
-                                                @Html.DropDownList("PERIODOS", null, "", htmlAttributes: new { @id = "periodof_id", @onchange = "setDates('')" })
+                                                @Html.DropDownList("PERIODOSF", null, "", htmlAttributes: new { @id = "periodof_id", @onchange = "setDates('')" })
                                                 <label>Hasta</label>
                                             </div>
                                             <div class="input-field col s3">
-                                                @Html.DropDownList("ANIOS", null, "", htmlAttributes: new { @id = "aniof_id", @onchange = "setDates('')" })
+                                                @Html.DropDownList("ANIOSF", null, "", htmlAttributes: new { @id = "aniof_id", @onchange = "setDates('')" })
                                             </div>
                                         </div>
                                     </div>
@@ -904,9 +908,9 @@
                             <p>
                                 @*<input type="hidden" value="@Model.DOCUMENTOREC.Count" id="valRec" />*@@*LEJ 31.07.2018---------------------*@
                                 @*<label>
-                <input id="check_recurrente" type="checkbox" onchange="cambiaRec(this)" />
-                <span>Documento recurrente</span>
-            </label>*@
+                                        <input id="check_recurrente" type="checkbox" onchange="cambiaRec(this)" />
+                                        <span>Documento recurrente</span>
+                                    </label>*@
                             </p>
                             <input type="hidden" id="txt_trec" />
                             <table class="table_rec display" id="table_rec" cellspacing="0" style="width:100%;display:none">
@@ -985,6 +989,67 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div>
+
+                            <table id="table_ranh" class="display" cellspacing="0" style="display:none">
+                                <thead>
+                                    <tr>
+                                        <th>NO</th>
+                                        <th>POS</th>
+                                        <th>LIN</th>
+                                        <th>OBJ</th>
+                                        <th>PORC</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.DOCUMENTORAN != null)
+                                    {
+                                        for (var i = 0; i < Model.DOCUMENTORAN.Count; i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Html.EditorFor(m => m.DOCUMENTORAN[i].NUM_DOC)
+                                                </td>
+                                                <td>
+                                                    @Html.EditorFor(m => m.DOCUMENTORAN[i].POS)
+                                                </td>
+                                                <td>
+                                                    @Html.EditorFor(m => m.DOCUMENTORAN[i].LIN)
+                                                </td>
+                                                <td>
+                                                    @Html.EditorFor(m => m.DOCUMENTORAN[i].OBJETIVOI)
+                                                </td>
+                                                <td>
+                                                    @Html.EditorFor(m => m.DOCUMENTORAN[i].PORCENTAJE)
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row" style="margin-bottom:0;">
+                            <div class="col s12 m6 offset-m6 right-align">
+                                <input type="button" id="btnRango" style="display:none;" class="btn-small" onclick="addRango()" value="Agragar rango" />
+                                <input type="button" id="btnDelRango" style="display:none;" class="btn-small" onclick="delRango()" value="Quitar rangos" />
+                                @*<input type="button" id="dd" style="" class="btn-small" onclick="enviaRan()" value="Enviar" />*@
+                            </div>
+                            <div class="col s12 m6 offset-m6">
+                                <table class="table_rangos display" id="table_rangos" cellspacing="0" style="width:100%;display:none;font-size:12px;">
+                                    <!--RSG 01.08.2018-->
+                                    <thead>
+                                        <tr>
+                                            @*<th></th>*@
+                                            <th id="">Documento</th>
+                                            <th id="">Rango</th>
+                                            <th id="">Objetivo inicio</th>
+                                            <th id="">Porcentaje</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col s12">
@@ -992,14 +1057,21 @@
                     <div id="div_objq" class="card-panel hide">
                         <input type="hidden" id="txt_trec" />
                         <div class="row" style="margin-bottom:0;">
+                            <!--RSG 01.08.2018-->
                             <p>
                                 <label>
-                                    @*<input id="check_reccurrentes" name="unarect" type="hidden" value="@ViewBag.RECURR" />*@
                                     <input id="check_objetivoq" name="check_objetivoq" type="checkbox" onchange="objetivoQ(this.checked);" />
                                     <span id="span_objq">Objetivo Q</span> @*B20180801 MGC Textos*@
                                 </label>
+                                @if (Model.OBJETIVOQ == true)
+                                {
+                                    <script>
+                                        document.getElementById("check_objetivoq").checked = true;
+                                    </script>
+                                }
                                 <script>
                                     function objetivoQ(ban) {
+                                        $(".objqT").remove();
                                         if (ban) {
                                             var lengthT = $("table#table_rec tbody tr[role='row']").length;
                                             if (lengthT > 0) {
@@ -1009,40 +1081,92 @@
                                                 var fecha = "";
                                                 var tsol = "";
                                                 $("#table_rec > tbody  > tr[role='row']").each(function () {
-                                                    total += parseFloat(toNum($(this).find("td.MONTO input").val()));
-                                                    //porc = toNum($(this).find("td.PORCENTAJE").text());
                                                     fecha = ($(this).find("td.FECHA").text());
                                                     tsol = $(this).find("td.TSOL").text();
+
+
+                                                    var pos = $(this).find("td.POS").text().split("/")[0];
+                                                    if (pos != "1") {
+                                                        var tr = "";
+                                                        tr += "<tr class='objqT'>"
+                                                        tr += "<td>Q " + pos + "</td>"
+                                                        tr += "<td>" + tsol + "</td>";
+                                                        tr += "<td>" + fecha + "</td>";
+                                                        total = 0;
+                                                        for (var i = 0; i < listaRangos.length; i++) {
+                                                            var poss = listaRangos[i].LIN;
+                                                            if (poss == 1 & pos == listaRangos[i].POS)
+                                                                total += parseFloat(toNum(listaRangos[i].OBJ1));
+                                                        }
+                                                        tr += "<td>" + toShow(total) + "</td>";
+                                                        tr += "<td>" + 0 + "</td>";
+                                                        tr += "</tr>"
+                                                        $("#table_objQ tbody").append(tr);
+                                                    } else {
+                                                        total = 0;
+                                                        for (var i = 0; i < listaRangos.length; i++) {
+                                                            var poss = listaRangos[i].LIN;
+                                                            if (poss == 1 & pos == listaRangos[i].POS)
+                                                                total += parseFloat(toNum(listaRangos[i].OBJ1));
+                                                        }
+                                                        document.getElementById("obqTSOL").innerText = tsol;
+                                                        document.getElementById("obqFECHA").innerText = fecha;
+                                                        document.getElementById("obqMONTO").innerText = toShow(total);
+                                                    }
                                                 });
-                                                document.getElementById("obqTSOL").innerText = tsol;
-                                                document.getElementById("obqFECHA").innerText = fecha;
-                                                document.getElementById("obqMONTO").innerText = toShow(total);
-                                                //document.getElementById("obqPORC").innerText = toShowPorc(porc);
                                             }
                                         }
                                         else {
                                             document.getElementById('table_objQ').classList.add("hide");
                                         }
+                                        $("#table_objQ").DataTable();
                                     }
                                     function updateObjQ() {
+                                        $(".objqT").remove();
                                         var lengthT = $("table#table_rec tbody tr[role='row']").length;
                                         if (lengthT > 0) {
                                             var total = 0;
+                                            var porc = 0;
+                                            var fecha = "";
+                                            var tsol = "";
                                             $("#table_rec > tbody  > tr[role='row']").each(function () {
-                                                total += parseFloat(toNum($(this).find("td.MONTO input").val()));
-                                            });
-                                            document.getElementById("obqMONTO").innerText = toShow(total);
-                                        }
+                                                fecha = ($(this).find("td.FECHA").text());
+                                                tsol = $(this).find("td.TSOL").text();
 
+
+                                                var pos = $(this).find("td.POS").text().split("/")[0];
+                                                if (pos != "1") {
+                                                    var tr = "";
+                                                    tr += "<tr class='objqT'>"
+                                                    tr += "<td>Q " + pos + "</td>"
+                                                    tr += "<td>" + tsol + "</td>";
+                                                    tr += "<td>" + fecha + "</td>";
+                                                    total = 0;
+                                                    for (var i = 0; i < listaRangos.length; i++) {
+                                                        var poss = listaRangos[i].LIN;
+                                                        if (poss == 1 & pos == listaRangos[i].POS)
+                                                            total += parseFloat(toNum(listaRangos[i].OBJ1));
+                                                    }
+                                                    tr += "<td>" + toShow(total) + "</td>";
+                                                    tr += "<td>" + 0 + "</td>";
+                                                    tr += "</tr>"
+                                                    $("#table_objQ tbody").append(tr);
+                                                } else {
+                                                    total = 0;
+                                                    for (var i = 0; i < listaRangos.length; i++) {
+                                                        var poss = listaRangos[i].LIN;
+                                                        if (poss == 1 & pos == listaRangos[i].POS)
+                                                            total += parseFloat(toNum(listaRangos[i].OBJ1));
+                                                    }
+                                                    document.getElementById("obqTSOL").innerText = tsol;
+                                                    document.getElementById("obqFECHA").innerText = fecha;
+                                                    document.getElementById("obqMONTO").innerText = toShow(total);
+                                                }
+                                            });
+                                        }
+                                        $("#table_objQ").DataTable();
                                     }
                                 </script>
-                                @if (Model.OBJETIVOQ == true)
-                                {
-                                    <script>
-                                        document.getElementById("check_objetivoq").checked = true;
-
-                                    </script>
-                                }
                             </p>
                             <div style="overflow:auto;">
                                 <table id="table_objQ" class="display hide" cellspacing="0" style="font-size:12px;">

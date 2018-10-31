@@ -39,8 +39,8 @@ namespace TAT001.Services
             {
                 p = pp.Where(a => a.MES_NATURAL == fecha.Month).OrderBy(a => a.DIA_NATURAL).FirstOrDefault();
             }
-            else
-            {
+            ////else
+            ////{
                 if (fecha.Day > p.DIA_NATURAL)
                 {
                     periodo = p.PERIODO + 1;
@@ -49,7 +49,7 @@ namespace TAT001.Services
                 {
                     periodo = p.PERIODO;
                 }
-            }
+            ////}
 
             return periodo;
         }
