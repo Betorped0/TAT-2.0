@@ -27,8 +27,9 @@ $("#miMas").change(function () {
             }
             //var elem = document.querySelectorAll('.miSel');
             //var instance = M.Select.init(elem, []);
-            document.getElementById("loader").style.display = "none";
+            //document.getElementById("loader").style.display = "none";
             clearErrors();
+            document.getElementById("loader").style.display = "none";
         } else {
             M.toast({ html: 'Tipo de archivo incorrecto: ' + filename });
         }
@@ -36,6 +37,7 @@ $("#miMas").change(function () {
         M.toast({ html: 'Seleccione un archivo' });
     }
     //$("#miMas").val("");
+    clearErrors();
 });
 
 function evaluarExt(filename) {
@@ -59,7 +61,8 @@ function getExcelMasivas(file) {
         url: 'loadExcelMasiva',
         data: formData,
         contentType: false,
-        processData: false
+        processData: false,
+        async: false
     }).fail(function () {
         alert("error");
     });
@@ -69,7 +72,7 @@ function getExcelMasivas(file) {
 function procesarHoja1() {
     var table = $('#tab_test1').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" } });
     table.clear().draw();
-
+    
     $.ajax({
         type: "POST",
         url: 'validaHoja1',
@@ -124,7 +127,7 @@ function addRowH1(t, NUM_DOC, TSOL_ID, GALL_ID, SOCIEDAD_ID, PAIS_ID, ESTADO, CI
     //clasificacion = clasificacion + "</select>";
     var icono, clase = null;
 
-    if (jQuery.inArray('red white-text rojo', ERRORES) != -1) {
+    if (jQuery.inArray('red white-text rojo', ERRORES) !== -1) {
         icono = 'close';
         clase = 'red white-text';
     }
@@ -185,7 +188,7 @@ $('body').on('keydown.autocomplete', '.input_numdoc', function () {
         },
 
         change: function () {
-            if ($(this).val() == "") {
+            if ($(this).val() === "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
             }
             else {
@@ -480,7 +483,7 @@ $('body').on('keydown.autocomplete', '.input_concepto', function () {
         },
 
         change: function () {
-            if ($(this).val() == "") {
+            if ($(this).val() === "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
             }
             clearErrors();
@@ -523,9 +526,9 @@ $('body').on('keydown.autocomplete', '.input_cliente', function () {
 
     var defClase = null;
 
-    if (numTabla == 'tab_test1') {
+    if (numTabla === 'tab_test1') {
         defClase = 'clienteNumH1';
-    } else if (numTabla == 'tab_test3') {
+    } else if (numTabla === 'tab_test3') {
         defClase = 'clienteNumH3';
     }
 
@@ -598,7 +601,7 @@ $('body').on('keydown.autocomplete', '.input_contacto', function () {
         },
 
         change: function () {
-            if ($(this).val() == "") {
+            if ($(this).val() === "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
             }
             clearErrors();
@@ -630,7 +633,7 @@ $('body').on('keydown.autocomplete', '.input_email', function () {
         },
 
         change: function () {
-            if ($(this).val() == "") {
+            if ($(this).val() === "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
             }
             clearErrors();
@@ -743,7 +746,7 @@ $("#tab_info").click(function () {
     var tbody = $("#tab_test1 tbody");
     var arregloNumDoc = [];
 
-    if (tbody.children().length != 0) {
+    if (tbody.children().length !== 0) {
         arregloNumDoc = checkRelacionada();
 
         if (arregloNumDoc.length > 0) {
@@ -753,7 +756,7 @@ $("#tab_info").click(function () {
                 var rowH3 = tablaH3.row(a).node();
                 var num_docH3 = $(rowH3).children().eq(1).children().val();
 
-                if (jQuery.inArray(num_docH3, arregloNumDoc) != -1) {
+                if (jQuery.inArray(num_docH3, arregloNumDoc) !== -1) {
                     $(rowH3).children().eq(1).children().addClass("red white-text rojo");
                 }
             }
@@ -813,7 +816,7 @@ function procesarHoja2() {
 function addRowH2(t, NUM_DOC, FACTURA, FECHA, PROVEEDOR, PROVEEDOR_NOMBRE, AUTORIZACION, VENCIMIENTO, FACTURAK, EJERCICIOK, ERRORES, WARNINGS) {
     var icono, clase = null;
 
-    if (jQuery.inArray('red white-text rojo', ERRORES) != -1) {
+    if (jQuery.inArray('red white-text rojo', ERRORES) !== -1) {
         icono = 'close';
         clase = 'red white-text';
     }
@@ -946,7 +949,7 @@ $('body').on('keydown.autocomplete', '.input_proveedor', function () {
         var rowH1 = tablaH1.row(a).node();
         num_docH1 = $(rowH1).children().eq(1).children().val();
 
-        if (num_docH1 == num_doc) {
+        if (num_docH1 === num_doc) {
             sociedadH1 = $(rowH1).find('td:eq(4)').children().val();
         }
     }
@@ -1103,7 +1106,7 @@ $('body').on('keydown.autocomplete', '.input_ejerciciok', function () {
         },
 
         change: function () {
-            if ($(this).val() == "") {
+            if ($(this).val() === "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
                 $(tr.find("td:eq(" + col_index + ")").children().removeClass(amarillo));
             }
@@ -1116,7 +1119,7 @@ $("#tab_rel").click(function () {
     var tbody = $("#tab_test2 tbody");
     var arregloNumDoc = [];
 
-    if (tbody.children().length != 0) {
+    if (tbody.children().length !== 0) {
         arregloNumDoc = checkRelacionada();
 
         if (arregloNumDoc.length > 0) {
@@ -1126,7 +1129,7 @@ $("#tab_rel").click(function () {
                 var rowH3 = tablaH3.row(a).node();
                 var num_docH3 = $(rowH3).children().eq(1).children().val();
 
-                if (jQuery.inArray(num_docH3, arregloNumDoc) != -1) {
+                if (jQuery.inArray(num_docH3, arregloNumDoc) !== -1) {
                     $(rowH3).children().eq(1).children().addClass("red white-text rojo");
                 }
             }
@@ -1182,7 +1185,7 @@ function procesarHoja3() {
 function addRowH3(t, NUM_DOC, FACTURA, BILL_DOC, EJERCICIOK, PAYER, PAYER_NOMBRE, IMPORTE_FAC, BELNR, ERRORES) {
     var icono, clase = null;
 
-    if (jQuery.inArray('red white-text rojo', ERRORES) != -1) {
+    if (jQuery.inArray('red white-text rojo', ERRORES) !== -1) {
         icono = 'close';
         clase = 'red white-text';
     }
@@ -1400,7 +1403,7 @@ $("#tab_mul").click(function () {
     var tbody = $("#tab_test3 tbody");
     var arregloNumDoc = [];
 
-    if (tbody.children().length != 0) {
+    if (tbody.children().length !== 0) {
         arregloNumDoc = checkRelacionada();
 
         if (arregloNumDoc.length > 0) {
@@ -1410,7 +1413,7 @@ $("#tab_mul").click(function () {
                 var rowH3 = tablaH3.row(a).node();
                 var num_docH3 = $(rowH3).children().eq(1).children().val();
 
-                if (jQuery.inArray(num_docH3, arregloNumDoc) != -1) {
+                if (jQuery.inArray(num_docH3, arregloNumDoc) !== -1) {
                     $(rowH3).children().eq(1).children().addClass("red white-text rojo");
                 }
             }
@@ -1467,7 +1470,7 @@ function procesarHoja4() {
 function addRowH4(t, NUM_DOC, LIGADA, VIGENCIA_DE, VIGENCIA_AL, MATNR, MATKL, DESCRIPCION, MONTO, PORC_APOYO, APOYO_PIEZA, COSTO_APOYO, PRECIO_SUG, VOLUMEN_REAL, APOYO, ERRORES) {
     var check, bloqueo, icono, clase = null;
 
-    if (LIGADA != "") {
+    if (LIGADA !== "") {
         check = "checked='checked'";
         bloqueo = "disabled";
     }
@@ -1475,7 +1478,7 @@ function addRowH4(t, NUM_DOC, LIGADA, VIGENCIA_DE, VIGENCIA_AL, MATNR, MATKL, DE
         check = "";
     }
 
-    if (jQuery.inArray('red white-text rojo', ERRORES) != -1) {
+    if (jQuery.inArray('red white-text rojo', ERRORES) !== -1) {
         icono = 'close';
         clase = 'red white-text';
     }
@@ -1637,6 +1640,7 @@ $('body').on('focusout', '.input_cantidades', function () {
         url: 'getDecimal',
         dataType: "json",
         data: { "Pais": pais },
+        async: false,
         success: function (data) {
             getDec = data;
 
@@ -1776,7 +1780,7 @@ $('body').on('focusout', '.input_cantidades', function () {
             //VISTA PARA EL APOYO
             if ($.isNumeric(apoyo)) {
                 if (apoyo > 0) {
-                    if (($.isNumeric(monto) & monto != '0.00') & ($.isNumeric(porApoyo) & porApoyo != '0.00') & ($.isNumeric(volReal) & volReal != '0.00')) {
+                    if (($.isNumeric(monto) & monto !== '0.00') & ($.isNumeric(porApoyo) & porApoyo !== '0.00') & ($.isNumeric(volReal) & volReal !== '0.00')) {
                         num1 = monto * (porApoyo / 100);
                         num2 = num1 * volReal;
 
@@ -1787,7 +1791,7 @@ $('body').on('focusout', '.input_cantidades', function () {
                         validaApoyo(num2, colApoyo);
                     }
                     else if ((monto == "" | porApoyo == "" | volReal == "") | (monto == "0.00" | porApoyo == "0.00" | volReal == "0.00")) {
-                        if ((monto == "" & porApoyo == "" & volReal == "") | (monto == "0.00" & porApoyo == "0.00" & volReal == "0.00") & apoyo != "") {
+                        if ((monto == "" & porApoyo == "" & volReal == "") | (monto == "0.00" & porApoyo == "0.00" & volReal == "0.00") & apoyo !== "") {
                             colMonto.val(toShow('0', getDec));
                             colPorApoyo.val(toShowPorc('0', getDec));
                             colPieApoyo.val(toShow('0', getDec));
@@ -1870,6 +1874,7 @@ $('body').on('keydown', '.input_apoyo', function (e) {
         url: 'getDecimal',
         dataType: "json",
         data: { "Pais": pais },
+        async: false,
         success: function (data) {
             getDec = data;
 
@@ -1907,9 +1912,9 @@ function validaApoyo(apoyo, colApoyo) {
     var tr = $(colApoyo).closest('tr'); //Obtener el row
     var errorSumMateriales = tr.find('td:eq(14) input').hasClass("errorCantidades");
 
-    if (apoyo != "") {
+    if (apoyo !== "") {
         if ($.isNumeric(apoyo)) {
-            if (apoyo != '0.00' & apoyo > '0.00') {
+            if (apoyo !== '0.00' & apoyo > '0.00') {
                 //if (!errorSumMateriales) {
 
                 //}
@@ -1986,7 +1991,8 @@ function ligada(check) {
                 colVolReal.val(toShowNum('0', getDec)).attr("disabled", false);
                 colApoyo.val(toShow('0', getDec)).attr("disabled", false);
             }
-        }
+        },
+        async: false
     });
 }
 
@@ -1994,7 +2000,7 @@ $("#tab_dis").click(function () {
     var tbody = $("#tab_test4 tbody");
     var arregloNumDoc = [];
 
-    if (tbody.children().length != 0) {
+    if (tbody.children().length !== 0) {
         arregloNumDoc = checkRelacionada();
 
         if (arregloNumDoc.length > 0) {
@@ -2004,7 +2010,7 @@ $("#tab_dis").click(function () {
                 var rowH3 = tablaH3.row(a).node();
                 var num_docH3 = $(rowH3).children().eq(1).children().val();
 
-                if (jQuery.inArray(num_docH3, arregloNumDoc) != -1) {
+                if (jQuery.inArray(num_docH3, arregloNumDoc) !== -1) {
                     $(rowH3).children().eq(1).children().addClass("red white-text rojo");
                 }
             }
@@ -2123,7 +2129,7 @@ $("#tab_arc").click(function () {
     var tbody = $("#tab_test5 tbody");
     var arregloNumDoc = [];
 
-    if (tbody.children().length != 0) {
+    if (tbody.children().length !== 0) {
         arregloNumDoc = checkRelacionada();
 
         if (arregloNumDoc.length > 0) {
@@ -2133,7 +2139,7 @@ $("#tab_arc").click(function () {
                 var rowH3 = tablaH3.row(a).node();
                 var num_docH3 = $(rowH3).children().eq(1).children().val();
 
-                if (jQuery.inArray(num_docH3, arregloNumDoc) != -1) {
+                if (jQuery.inArray(num_docH3, arregloNumDoc) !== -1) {
                     $(rowH3).children().eq(1).children().addClass("red white-text rojo");
                 }
             }
@@ -2207,7 +2213,7 @@ function checkRelacionada() {
             var rowH33 = tablaH3.row(c).node();
             var num_docH33 = $(rowH33).children().eq(1).children().val();
 
-            if (jQuery.inArray(num_docH33, arregloNumDoc) != -1) {
+            if (jQuery.inArray(num_docH33, arregloNumDoc) !== -1) {
                 $(rowH33).children().eq(1).children().addClass("red white-text rojo");
             }
         }
@@ -2270,7 +2276,7 @@ function checkRelacionadaMat() {
             }
         }
 
-        if (jQuery.inArray(num_docH11, cantidadesH3Num) != -1) {
+        if (jQuery.inArray(num_docH11, cantidadesH3Num) !== -1) {
             cantidadesUniH3[contadorH1] = num_docH11 + '-' + sumH3;
             contadorH1++;
         }
@@ -2328,7 +2334,7 @@ function checkRelacionadaMat() {
             }
         }
 
-        if (jQuery.inArray(num_docH1111, cantidadesH4Num) != -1) {
+        if (jQuery.inArray(num_docH1111, cantidadesH4Num) !== -1) {
             cantidadesUniH4[contadorH1] = num_docH1111 + '-' + sumH4;
             contadorH1++;
         }
@@ -2406,12 +2412,13 @@ function obtenDecimalMil(pais, cantidad) {
         dataType: "json",
         data: { "Pais": pais },
         success: function (data) {
-            if (data != null | data != "") {
+            if (data !== null | data !== "") {
                 decimal = data.pop();
                 mil = data;
             }
             total = toNum(cantidad, mil, decimal);
-        }
+        },
+        async: false
     });
 
     return total;
@@ -2519,7 +2526,7 @@ function clearErrors() {
         }
 
         //SI TIENE TRUE TIENE ERROR
-        if (jQuery.inArray(num_docH11 + true, tabla1) != -1) {
+        if (jQuery.inArray(num_docH11 + true, tabla1) !== -1) {
             banderaH1 = true;
         }
         else {
@@ -2532,7 +2539,7 @@ function clearErrors() {
 
             if (num_docH11 == num_docH22) {
                 //SI TIENE TRUE TIENE ERROR
-                if (jQuery.inArray(num_docH22 + true, tabla2) != -1) {
+                if (jQuery.inArray(num_docH22 + true, tabla2) !== -1) {
                     banderaH2 = true;
                     break;
                 }
@@ -2551,7 +2558,7 @@ function clearErrors() {
 
             if (num_docH11 == num_docH33) {
                 //SI TIENE TRUE TIENE ERROR
-                if (jQuery.inArray(num_docH33 + true, tabla3) != -1) {
+                if (jQuery.inArray(num_docH33 + true, tabla3) !== -1) {
                     banderaH3 = true;
                     break;
                 }
@@ -2570,7 +2577,7 @@ function clearErrors() {
 
             if (num_docH11 == num_docH44) {
                 //SI TIENE TRUE TIENE ERROR
-                if (jQuery.inArray(num_docH44 + true, tabla4) != -1) {
+                if (jQuery.inArray(num_docH44 + true, tabla4) !== -1) {
                     banderaH4 = true;
                     break;
                 }
@@ -2589,7 +2596,7 @@ function clearErrors() {
 
             if (num_docH11 == num_docH55) {
                 //SI TIENE TRUE TIENE ERROR
-                if (jQuery.inArray(num_docH55 + true, tabla5) != -1) {
+                if (jQuery.inArray(num_docH55 + true, tabla5) !== -1) {
                     banderaH5 = true;
                     break;
                 }
@@ -2911,7 +2918,8 @@ function guardaDatos() {
             if (xhr.responseText && xhr.responseText[0] == "{")
                 err = JSON.parse(xhr.responseText).Message;
             //console.log(err);
-        }
+        },
+        async: false
     });
 
     $.ajax({
@@ -2919,8 +2927,9 @@ function guardaDatos() {
         url: 'setDatos',
         dataType: "json",
         data: { "h1": tabla1, "h2": tabla2, "h3": tabla3, "h4": tabla4, "h5": tabla5, "notas": notasArr },
+        async: false,
         success: function (data) {
-            if (data != null | data != "") {
+            if (data !== null | data !== "") {
                 var eliminarId = [];
                 var listaIds = [];
 
@@ -3029,7 +3038,7 @@ function cloneTables() {
     $('#tabclon1hd').append("<tr id='titles1d'></tr>");
 
     $('#tab_test1 > thead > tr > th').each(function () {
-        if ($(this).text() != "LABEL" && $(this).text() != "ESTATUS") {
+        if ($(this).text() !== "LABEL" && $(this).text() !== "ESTATUS") {
             $('#titles1d').append("<th>" + $(this).text() + "</th>");
         } else {
         }
@@ -3040,7 +3049,7 @@ function cloneTables() {
         var rowH1c = tablaH1c.row(aa).node();
         $('#tabclon1bd').append("<tr id='trd" + aa + "'></tr>");
         $(rowH1c).children().each(function (td) {
-            if (td != 18 && td != 19 && td != 0) {
+            if (td !== 18 && td !== 19 && td !== 0) {
                 $("#trd" + aa).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
             }
         });
@@ -3051,7 +3060,7 @@ function cloneTables() {
     $('#tabclon2h').append("<tr id='titles2'></tr>");
 
     $('#tab_test2 > thead > tr > th').each(function () {
-        if ($(this).text() != "LABEL" && $(this).text() != "ESTATUS") {
+        if ($(this).text() !== "LABEL" && $(this).text() !== "ESTATUS") {
             $('#titles2').append("<th>" + $(this).text() + "</th>");
         } else {
         }
@@ -3062,7 +3071,7 @@ function cloneTables() {
         var rowH2c = tablaH2c.row(bb).node();
         $('#tabclon2b').append("<tr id='tr2" + bb + "'></tr>");
         $(rowH2c).children().each(function (td2) {
-            if (td2 != 0) {
+            if (td2 !== 0) {
                 $("#tr2" + bb).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
             }
         });
@@ -3072,7 +3081,7 @@ function cloneTables() {
     $('#tabclon3h').append("<tr id='titles3'></tr>");
 
     $('#tab_test3 > thead > tr > th').each(function () {
-        if ($(this).text() != "LABEL" && $(this).text() != "ESTATUS") {
+        if ($(this).text() !== "LABEL" && $(this).text() !== "ESTATUS") {
             $('#titles3').append("<th>" + $(this).text() + "</th>");
         } else {
         }
@@ -3083,7 +3092,7 @@ function cloneTables() {
         var rowH3c = tablaH3c.row(cc).node();
         $('#tabclon3b').append("<tr id='tr3" + cc + "'></tr>");
         $(rowH3c).children().each(function (td3) {
-            if (td3 != 0) {
+            if (td3 !== 0) {
                 $("#tr3" + cc).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
             }
         });
@@ -3093,7 +3102,7 @@ function cloneTables() {
     $('#tabclon4h').append("<tr id='titles4'></tr>");
 
     $('#tab_test4 > thead > tr > th').each(function () {
-        if ($(this).text() != "LABEL" && $(this).text() != "ESTATUS") {
+        if ($(this).text() !== "LABEL" && $(this).text() !== "ESTATUS") {
             $('#titles4').append("<th>" + $(this).text() + "</th>");
         } else {
         }
@@ -3104,7 +3113,7 @@ function cloneTables() {
         var rowH4c = tablaH4c.row(dd).node();
         $('#tabclon4b').append("<tr id='tr4" + dd + "'></tr>");
         $(rowH4c).children().each(function (td4) {
-            if (td4 != 0) {
+            if (td4 !== 0) {
                 $("#tr4" + dd).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
             }
         });
