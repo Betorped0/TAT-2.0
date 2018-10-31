@@ -72,7 +72,7 @@
     {
         string[] defaulS = new string[1];
         string[] defaul2 = new string[1];
-        string defaul = "";
+        string defaul = "", moneda = "";
         System.Globalization.TextInfo myTI = new System.Globalization.CultureInfo("en-US", false).TextInfo;
         System.Globalization.DateTimeFormatInfo formatoFecha = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat;
         int j = 0;
@@ -94,7 +94,7 @@
                         {
                             if (defaul2 != null)
                             {
-                                if (defaul2.Contains( Model.sociedad[i].BUKRS))
+                                if (defaul2.Contains(Model.sociedad[i].BUKRS))
                                 {
                                     <option value="@Model.sociedad[i].BUKRS" selected="selected">@Model.sociedad[i].BUKRS</option>
                                 }
@@ -210,11 +210,12 @@
                 <select name="cambio" id="selec">
                     @try
                     {
+                        <option value="" selected>LC</option>
                         defaul = Session["cambio"].ToString();
                     }
                     catch (Exception)
                     {
-                        <option value="" disabled selected></option>
+
                     }
                     @try
                     {
@@ -231,6 +232,7 @@
                                 <option value="@cambio">@Model.cambio[i].TCURR</option>
                             }
                         }
+
                     }
                     catch (Exception)
                     {
@@ -244,7 +246,23 @@
                     Consultar
                 </button>
                 <p id="fechUlt"><label id="lbl_last">Ultima fecha de carga CPT: </label> @ViewBag.ultMod</p>
-                <p id="fechUlt">$ en miles LC</p>
+                @try
+                {
+                    if (Session["cambio"].ToString() == "")
+                    {
+                        moneda = "LC";
+                    }
+                    else
+                    {
+                        string[] monedas = Session["cambio"].ToString().Split('-');
+                        moneda = monedas[1];
+                    }
+                }
+                catch (Exception)
+                {
+                    moneda = "LC";
+                }
+                <p id="fechUlt">$ en miles @moneda</p>
             </div>
             <div>
                 <p>

@@ -138,7 +138,10 @@ namespace TAT001.Common
             else
             {
                 db.TSOL_GROUP
-                    .Where(x => x.ID_PADRE == null && x.TIPO_PADRE == null && (tipo == x.TIPO || tipo == null) && ((sociedad_id=="KCMX" || sociedad_id == "KLCO") && x.ID!= "1_5_OP" && x.ID != "2_5_OP"))
+                    .Where(x => 
+                    x.ID_PADRE == null && x.TIPO_PADRE == null 
+                    && (tipo == x.TIPO || tipo == null) 
+                    && (((sociedad_id=="KCMX" || sociedad_id == "KLCO") && x.ID!= "1_5_OP" && x.ID != "2_5_OP")|| (sociedad_id != "KCMX" && sociedad_id != "KLCO")))
                     .Join(db.TSOL_GROUPT, tg => new { ID = tg.ID, TIPO = tg.TIPO }, tgt => new { ID = tgt.TSOL_GROUP_ID, TIPO = tgt.TSOL_GROUP_TIPO }, (tg, tgt) => tgt)
                     .Where(x => x.SPRAS_ID == spras_id).OrderBy(x => x.TSOL_GROUP_ID)
                     .ToList().ForEach(x =>
