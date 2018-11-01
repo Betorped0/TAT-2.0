@@ -3888,16 +3888,31 @@ namespace TAT001.Controllers
             ViewBag.CATMAT = res; //B20180618 v1 MGC 2018.06.18
             ViewBag.MONTO_DIS = "";
 
-            //----------------------------RSG 18.05.2018
+            //----------------------------RSG 31.10.2018
+            Calendario445 cal = new Calendario445();
+            if (d.FECHAI_VIG == null)
+                d.FECHAI_VIG = DateTime.Now;
+            if (d.FECHAF_VIG == null)
+                d.FECHAF_VIG = DateTime.Now;
+            int mesi = cal.getPeriodoF((DateTime)d.FECHAI_VIG);
+            int mesf = cal.getPeriodoF((DateTime)d.FECHAF_VIG);
+
             string spras = Session["spras"].ToString();
-            ViewBag.PERIODOS = new SelectList(db.PERIODOTs.Where(a => a.SPRAS_ID == spras).ToList(), "PERIODO_ID", "TXT50", DateTime.Now.Month);
+            ViewBag.PERIODOS = new SelectList(db.PERIODOTs.Where(a => a.SPRAS_ID == spras).ToList(), "PERIODO_ID", "TXT50", mesi);
+            ViewBag.PERIODOSF = new SelectList(db.PERIODOTs.Where(a => a.SPRAS_ID == spras).ToList(), "PERIODO_ID", "TXT50", mesf);
+            //----------------------------RSG 31.10.2018
+            //----------------------------RSG 18.05.2018
+            ////string spras = Session["spras"].ToString();
+            ////ViewBag.PERIODOS = new SelectList(db.PERIODOTs.Where(a => a.SPRAS_ID == spras).ToList(), "PERIODO_ID", "TXT50", DateTime.Now.Month);
             List<string> anios = new List<string>();
             int mas = 10;
             for (int i = 0; i < mas; i++)
             {
                 anios.Add((DateTime.Now.Year + i).ToString());
             }
-            ViewBag.ANIOS = new SelectList(anios, DateTime.Now.Year.ToString());
+            //ViewBag.ANIOS = new SelectList(anios, DateTime.Now.Year.ToString());
+            ViewBag.ANIOS = new SelectList(anios, d.FECHAI_VIG.Value.Year.ToString());//ADD RSG 31.10.2018
+            ViewBag.ANIOSF = new SelectList(anios, d.FECHAF_VIG.Value.Year.ToString());//ADD RSG 31.10.2018
             d.SOCIEDAD = db.SOCIEDADs.Find(d.SOCIEDAD_ID);
             //----------------------------RSG 18.05.2018
             //----------------------------RSG 12.06.2018
@@ -4048,6 +4063,12 @@ namespace TAT001.Controllers
             {
                 ViewBag.USUARIO_BACKUPID = backup.First().USUARIOD_ID;
             }
+            //ADD RSG 31.10.2018------------------------------
+            d.DOCUMENTORAN = new List<DOCUMENTORAN>();
+            foreach (DOCUMENTOREC drec in d.DOCUMENTOREC.ToList()) {
+                d.DOCUMENTORAN.AddRange(drec.DOCUMENTORANs.ToList());
+            }
+            //ADD RSG 31.10.2018------------------------------
 
             return View(d);
         }
@@ -4064,9 +4085,10 @@ namespace TAT001.Controllers
             "MONTO_BASE_NS_PCT_ML2,IMPUESTO,FECHAI_VIG,FECHAF_VIG,ESTATUS_EXT,SOLD_TO_ID,PAYER_ID,GRUPO_CTE_ID,CANAL_ID," +
             "MONEDA_ID,TIPO_CAMBIO,NO_FACTURA,FECHAD_SOPORTE,METODO_PAGO,NO_PROVEEDOR,PASO_ACTUAL,AGENTE_ACTUAL,FECHA_PASO_ACTUAL," +
             "VKORG,VTWEG,SPART,HORAC,FECHAC_PLAN,FECHAC_USER,HORAC_USER,CONCEPTO,PORC_ADICIONAL,PAYER_NOMBRE,PAYER_EMAIL," +
-            "MONEDAL_ID,MONEDAL2_ID,TIPO_CAMBIOL,TIPO_CAMBIOL2,DOCUMENTOP, DOCUMENTOF, DOCUMENTOREC, GALL_ID")] DOCUMENTO dOCUMENTO,
+            "MONEDAL_ID,MONEDAL2_ID,TIPO_CAMBIOL,TIPO_CAMBIOL2,DOCUMENTOP, DOCUMENTOF, DOCUMENTOREC, GALL_ID, USUARIOD_ID, OBJQ_PORC, DOCUMENTORAN")] DOCUMENTO dOCUMENTO,
                 IEnumerable<HttpPostedFileBase> files_soporte, string notas_soporte, string[] labels_soporte, string unafact,
-                string FECHAD_REV, string TREVERSA, string select_neg, string select_dis, string select_negi, string select_disi, string bmonto_apoyo, string catmat, string txt_sop_borr)
+                string FECHAD_REV, string TREVERSA, string select_neg, string select_dis, string select_negi, string select_disi, 
+                string bmonto_apoyo, string catmat, string txt_sop_borr, string txt_flujo)
         {
             if (ModelState.IsValid)
             {
@@ -4196,6 +4218,9 @@ namespace TAT001.Controllers
 
                         listcatm = grupoMaterialesController(listcat, d.VKORG, d.SPART, d.PAYER_ID, d.SOCIEDAD_ID, out totalcats);
                     }
+                    
+                    d.ESTATUS_WF = txt_flujo;//ADD RSG 30.10.2018
+
                     //Se cambio de pocisión //B20180618 v1 MGC 2018.06.18--------------------------------------
                     //Guardar los documentos p para el documento guardado
                     try
@@ -4605,12 +4630,20 @@ namespace TAT001.Controllers
                                 drec.EJERCICIO = drec.FECHAV.Value.Year;
                                 drec.PERIODO = cal.getPeriodo(drec.FECHAV.Value);
 
+                                //RSG 29.07.2018-add----------------------------------
+                                if (dOCUMENTO.DOCUMENTORAN != null)
+                                    foreach (DOCUMENTORAN dran in dOCUMENTO.DOCUMENTORAN.Where(x => x.POS == drec.POS))
+                                    {
+                                        dran.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                        drec.DOCUMENTORANs.Add(dran);
+                                    }
+
                                 d.DOCUMENTORECs.Add(drec);
                             }
                             db.Entry(d).State = EntityState.Modified;
                             db.SaveChanges();
                         }//Guardar registros de recurrencias  RSG 01.08.2018-------------------
-                    if (d.DOCUMENTOREC == null & d.LIGADA == true)
+                    if (dOCUMENTO.DOCUMENTOREC == null & dOCUMENTO.LIGADA == true)
                     //if (dOCUMENTO.LIGADA == true)
                     {
 
@@ -4623,9 +4656,9 @@ namespace TAT001.Controllers
                         if (drec.PORC == null) //RSG 31.05.2018-------------------
                             drec.PORC = 0;
                         d.TIPO_RECURRENTE = db.TSOLs.Where(x => x.ID.Equals(d.TSOL_ID)).FirstOrDefault().TRECU;
-                        if (d.TIPO_RECURRENTE == "1" & d.LIGADA == true)
+                        if (d.TIPO_RECURRENTE == "1" & dOCUMENTO.LIGADA == true)
                             d.TIPO_RECURRENTE = "2";
-                        if (d.TIPO_RECURRENTE != "1" & d.OBJETIVOQ == true)
+                        if (d.TIPO_RECURRENTE != "1" & dOCUMENTO.OBJETIVOQ == true)
                             d.TIPO_RECURRENTE = "3";
                         Calendario445 cal = new Calendario445();
                         drec.FECHAF = cal.getUltimoDia(d.FECHAF_VIG.Value.Year, cal.getPeriodo(d.FECHAF_VIG.Value));
@@ -4638,7 +4671,7 @@ namespace TAT001.Controllers
                         if (drec.PERIODO == 0) drec.PERIODO = 12;
                         if (d.DOCUMENTORAN != null)
                         {
-                            foreach (DOCUMENTORAN dran in d.DOCUMENTORAN.Where(x => x.POS == drec.POS))
+                            foreach (DOCUMENTORAN dran in dOCUMENTO.DOCUMENTORAN.Where(x => x.POS == drec.POS))
                             {
                                 dran.NUM_DOC = d.NUM_DOC;
                                 drec.DOCUMENTORANs.Add(dran);
@@ -4651,10 +4684,10 @@ namespace TAT001.Controllers
                             dran.POS = 1;
                             dran.LIN = 1;
                             dran.OBJETIVOI = 0;
-                            dran.PORCENTAJE = d.PORC_APOYO;
+                            dran.PORCENTAJE = dOCUMENTO.PORC_APOYO;
                             drec.DOCUMENTORANs.Add(dran);
                         }
-                        drec.PORC = d.PORC_APOYO;
+                        drec.PORC = dOCUMENTO.PORC_APOYO;
                         drec.DOC_REF = 0;
                         drec.ESTATUS = "";
 
@@ -4953,57 +4986,61 @@ namespace TAT001.Controllers
                     Session["ERROR_FILES"] = errorMessage;
                 }
 
-
-                ProcesaFlujo pf = new ProcesaFlujo();
-                try
+                string rec = "";//ADD RSG 30.10.2018
+                if (txt_flujo == "B")//ADD RSG 30.10.2018
+                    rec = "B";//ADD RSG 30.10.2018
+                if (rec != "B")//ADD RSG 31.10.2018
                 {
-                    FLUJO f = db.FLUJOes.Where(a => a.NUM_DOC == d.NUM_DOC).OrderByDescending(a => a.POS).FirstOrDefault();
-                    f.ESTATUS = "A";
-                    f.FECHAM = DateTime.Now;
-                    string c = pf.procesa(f, "");
-                    FLUJO conta = db.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
-                    while (c == "1")
+                    ProcesaFlujo pf = new ProcesaFlujo();
+                    try
                     {
-                        Email em = new Email();
-                        string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
-                        string image = Server.MapPath("~/images/logo_kellogg.png");
-                        em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image);
-
-
-                        if (conta.WORKFP.ACCION.TIPO == "B")
+                        FLUJO f = db.FLUJOes.Where(a => a.NUM_DOC == d.NUM_DOC).OrderByDescending(a => a.POS).FirstOrDefault();
+                        f.ESTATUS = "A";
+                        f.FECHAM = DateTime.Now;
+                        string c = pf.procesa(f, rec);
+                        FLUJO conta = db.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+                        while (c == "1")
                         {
-                            WORKFP wpos = db.WORKFPs.Where(x => x.ID == conta.WORKF_ID & x.VERSION == conta.WF_VERSION & x.POS == conta.WF_POS).FirstOrDefault();
-                            conta.ESTATUS = "A";
-                            //f1.FECHAC = DateTime.Now;
-                            conta.FECHAM = DateTime.Now;
-                            c = pf.procesa(conta, "");
-                            conta = db.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+                            Email em = new Email();
+                            string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
+                            string image = Server.MapPath("~/images/logo_kellogg.png");
+                            em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image);
+
+
+                            if (conta.WORKFP.ACCION.TIPO == "B")
+                            {
+                                WORKFP wpos = db.WORKFPs.Where(x => x.ID == conta.WORKF_ID & x.VERSION == conta.WF_VERSION & x.POS == conta.WF_POS).FirstOrDefault();
+                                conta.ESTATUS = "A";
+                                //f1.FECHAC = DateTime.Now;
+                                conta.FECHAM = DateTime.Now;
+                                c = pf.procesa(conta, "");
+                                conta = db.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+                            }
+                            else
+                            {
+                                c = "";
+                            }
                         }
-                        else
+
+                        using (TAT001Entities db1 = new TAT001Entities())
                         {
-                            c = "";
+                            FLUJO ff = db1.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+                            Estatus es = new Estatus();//RSG 18.09.2018
+                            DOCUMENTO ddoc = db1.DOCUMENTOes.Find(f.NUM_DOC);
+                            ff.STATUS = es.getEstatus(ddoc);
+                            db1.Entry(ff).State = EntityState.Modified;
+                            db1.SaveChanges();
                         }
                     }
-
-                    using (TAT001Entities db1 = new TAT001Entities())
+                    catch (Exception ee)
                     {
-                        FLUJO ff = db1.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
-                        Estatus es = new Estatus();//RSG 18.09.2018
-                        DOCUMENTO ddoc = db1.DOCUMENTOes.Find(f.NUM_DOC);
-                        ff.STATUS = es.getEstatus(ddoc);
-                        db1.Entry(ff).State = EntityState.Modified;
-                        db1.SaveChanges();
+                        if (errorString == "")
+                        {
+                            errorString = ee.Message.ToString();
+                        }
+                        ViewBag.error = errorString;
                     }
-                }
-                catch (Exception ee)
-                {
-                    if (errorString == "")
-                    {
-                        errorString = ee.Message.ToString();
-                    }
-                    ViewBag.error = errorString;
-                }
-
+                }//ADD RSG 31.10.2018
                 return RedirectToAction("Index", "Home");
             }
             ViewBag.TALL_ID = new SelectList(db.TALLs, "ID", "DESCRIPCION", dOCUMENTO.TALL_ID);

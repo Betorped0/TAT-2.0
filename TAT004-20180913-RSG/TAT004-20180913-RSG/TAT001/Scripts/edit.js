@@ -1247,6 +1247,7 @@ $(document).ready(function () {
             copiarTableControl("");//Distribución //B20180625 MGC 2018.07.03
             copiarSopTableControl(""); //Soporte ahora en información //B20180625 MGC 2018.07.03
             enviaRec("");//RSG 28.05.2018 //B20180625 MGC 2018.07.03
+            enviaRan("");//RSG 31.10.2018
 
             //B20180625 MGC2 2018.07.04
             //enviar borrador
@@ -1658,12 +1659,13 @@ $(window).on('load', function () {
     if (mt > 0) { //B20180625 MGC 2018.07.02
         $('#tipo_cambio').val(mt); //B20180625 MGC 2018.07.02
     }
+    copiarTableVistaRan(); //ADD RSG 30.10.2018
 });
 
 //LEJ 30.07.2018--------------------------------------I
 function _ff() {
     var meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-    var datei = $("#fechai_vig").val().split(" ")[0];
+    var datei = $("#fechai_vig").val().split(' ')[0];
     var _anoi = datei.split('/')[2];
 
     if (datei !== "") {
@@ -1691,7 +1693,7 @@ function _ff() {
             async: true
         });
     }
-    var datef = $("#fechaf_vig").val().split(" ")[0];
+    var datef = $("#fechaf_vig").val().split(' ')[0];
     var _anof = datef.split('/')[2];
     if (datef !== "") {
         $.ajax({
@@ -1791,6 +1793,8 @@ function guardarBorrador(asyncv) {
     copiarTableControl("X");//Distribución //B20180625 MGC 2018.07.03
     copiarSopTableControl("X"); //Soporte ahora en información //B20180625 MGC 2018.07.03
     enviaRec("X");//RSG 28.05.2018 //B20180625 MGC 2018.07.03
+    enviaRan("X");//RSG 31.10.2018
+
 
     //B20180625 MGC 2018.06.28
     //Moneda en distribución

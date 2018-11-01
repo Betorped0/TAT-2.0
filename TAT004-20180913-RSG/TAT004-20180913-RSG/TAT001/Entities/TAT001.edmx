@@ -1181,6 +1181,25 @@
           <Property Name="BUKRS" Type="nchar" MaxLength="4" />
           <Property Name="LAND" Type="nchar" MaxLength="2" />
         </EntityType>
+        <EntityType Name="Grupo">
+          <Key>
+            <PropertyRef Name="Grupo_ID" />
+            <PropertyRef Name="SPRAS_ID" />
+          </Key>
+          <Property Name="Grupo_ID" Type="int" Nullable="false" />
+          <Property Name="SPRAS_ID" Type="nchar" MaxLength="2" Nullable="false" />
+          <Property Name="Descripcion" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="GrupoCat">
+          <Key>
+            <PropertyRef Name="Grupo_ID" />
+            <PropertyRef Name="SPRAS_ID" />
+          </Key>
+          <Property Name="Grupo_ID" Type="int" Nullable="false" />
+          <Property Name="SPRAS_ID" Type="nchar" MaxLength="2" Nullable="false" />
+          <Property Name="Descripcion" Type="nvarchar" MaxLength="25" />
+          <Property Name="Mantto" Type="int" />
+        </EntityType>
         <EntityType Name="IIMPUESTO">
           <Key>
             <PropertyRef Name="LAND" />
@@ -1329,6 +1348,8 @@
           <Property Name="ICON" Type="nvarchar" MaxLength="20" />
           <Property Name="MOSTRAR" Type="bit" Nullable="false" />
           <Property Name="ACTIVO" Type="bit" Nullable="false" />
+          <Property Name="Mantenimiento" Type="int" />
+          <Property Name="Grupo" Type="int" />
         </EntityType>
         <EntityType Name="PAGINAT">
           <Key>
@@ -2318,6 +2339,10 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.PAGINAV' no tiene definida ningun
           <Property Name="PERMISO" Type="bit" />
           <Property Name="SPRAS_ID" Type="nchar" MaxLength="2" Nullable="false" />
           <Property Name="USUARIO_SPRAS" Type="nchar" MaxLength="2" Nullable="false" />
+          <Property Name="Mantenimiento" Type="int" />
+          <Property Name="ManttoText" Type="nvarchar" MaxLength="50" />
+          <Property Name="Grupo" Type="int" />
+          <Property Name="GrupoText" Type="nvarchar" MaxLength="25" />
         </EntityType>
         <!--Errores durante la generación:
 advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
@@ -4922,6 +4947,8 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <EntitySet Name="GALL" EntityType="Self.GALL" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GALLT" EntityType="Self.GALLT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GAUTORIZACION" EntityType="Self.GAUTORIZACION" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Grupo" EntityType="Self.Grupo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GrupoCat" EntityType="Self.GrupoCat" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="IIMPUESTO" EntityType="Self.IIMPUESTO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="IMPUESTO" EntityType="Self.IMPUESTO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LEYENDA" EntityType="Self.LEYENDA" Schema="dbo" store:Type="Tables" />
@@ -5135,7 +5162,11 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
     [PAGINAV].[ICON] AS [ICON], 
     [PAGINAV].[PERMISO] AS [PERMISO], 
     [PAGINAV].[SPRAS_ID] AS [SPRAS_ID], 
-    [PAGINAV].[USUARIO_SPRAS] AS [USUARIO_SPRAS]
+    [PAGINAV].[USUARIO_SPRAS] AS [USUARIO_SPRAS], 
+    [PAGINAV].[Mantenimiento] AS [Mantenimiento], 
+    [PAGINAV].[ManttoText] AS [ManttoText], 
+    [PAGINAV].[Grupo] AS [Grupo], 
+    [PAGINAV].[GrupoText] AS [GrupoText]
     FROM [dbo].[PAGINAV] AS [PAGINAV]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="WARNINGV" EntityType="Self.WARNINGV" store:Type="Views" store:Schema="dbo">
@@ -7437,6 +7468,8 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <NavigationProperty Name="CARPETA" Relationship="Self.FK_PAGINA_CARPETA" FromRole="PAGINA" ToRole="CARPETA" />
           <NavigationProperty Name="PAGINATs" Relationship="Self.FK_PAGINAT_PAGINA" FromRole="PAGINA" ToRole="PAGINAT" />
           <NavigationProperty Name="PERMISO_PAGINA" Relationship="Self.FK_PERMISO_PAGINA_PAGINA" FromRole="PAGINA" ToRole="PERMISO_PAGINA" />
+          <Property Name="Mantenimiento" Type="Int32" />
+          <Property Name="Grupo" Type="Int32" />
         </EntityType>
         <EntityType Name="PAGINAT">
           <Key>
@@ -8570,6 +8603,10 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Property Name="PERMISO" Type="Boolean" />
           <Property Name="SPRAS_ID" Type="String" MaxLength="2" FixedLength="true" Unicode="true" Nullable="false" />
           <Property Name="USUARIO_SPRAS" Type="String" MaxLength="2" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Mantenimiento" Type="Int32" />
+          <Property Name="ManttoText" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Grupo" Type="Int32" />
+          <Property Name="GrupoText" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="WARNINGV">
           <Key>
@@ -11977,6 +12014,8 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
             <End Role="SOCIEDAD" EntitySet="SOCIEDADs" />
             <End Role="USUARIO" EntitySet="USUARIOs" />
           </AssociationSet>
+          <EntitySet Name="Grupoes" EntityType="TAT001Model.Grupo" />
+          <EntitySet Name="GrupoCats" EntityType="TAT001Model.GrupoCat" />
         </EntityContainer>
         <ComplexType Name="CPS_LISTA_CLI_PRO_Result">
           <Property Type="String" Name="KUNNR" Nullable="false" MaxLength="10" />
@@ -12168,6 +12207,25 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Property Type="String" Name="BANNER" Nullable="true" MaxLength="10" />
           <Property Type="String" Name="SOCIEDAD" Nullable="true" MaxLength="4" />
         </ComplexType>
+        <EntityType Name="Grupo">
+          <Key>
+            <PropertyRef Name="Grupo_ID" />
+            <PropertyRef Name="SPRAS_ID" />
+          </Key>
+          <Property Name="Grupo_ID" Type="Int32" Nullable="false" />
+          <Property Name="SPRAS_ID" Type="String" Nullable="false" MaxLength="2" FixedLength="true" Unicode="true" />
+          <Property Name="Descripcion" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="GrupoCat">
+          <Key>
+            <PropertyRef Name="Grupo_ID" />
+            <PropertyRef Name="SPRAS_ID" />
+          </Key>
+          <Property Name="Grupo_ID" Type="Int32" Nullable="false" />
+          <Property Name="SPRAS_ID" Type="String" Nullable="false" MaxLength="2" FixedLength="true" Unicode="true" />
+          <Property Name="Descripcion" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="Mantto" Type="Int32" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -13459,6 +13517,8 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <EntitySetMapping Name="PAGINAs">
             <EntityTypeMapping TypeName="TAT001Model.PAGINA">
               <MappingFragment StoreEntitySet="PAGINA">
+                <ScalarProperty Name="Grupo" ColumnName="Grupo" />
+                <ScalarProperty Name="Mantenimiento" ColumnName="Mantenimiento" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="URL" ColumnName="URL" />
                 <ScalarProperty Name="TITULO" ColumnName="TITULO" />
@@ -14379,6 +14439,10 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <EntitySetMapping Name="PAGINAVs">
             <EntityTypeMapping TypeName="TAT001Model.PAGINAV">
               <MappingFragment StoreEntitySet="PAGINAV">
+                <ScalarProperty Name="GrupoText" ColumnName="GrupoText" />
+                <ScalarProperty Name="Grupo" ColumnName="Grupo" />
+                <ScalarProperty Name="ManttoText" ColumnName="ManttoText" />
+                <ScalarProperty Name="Mantenimiento" ColumnName="Mantenimiento" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="PAGINA_ID" ColumnName="PAGINA_ID" />
                 <ScalarProperty Name="PAGINA_URL" ColumnName="PAGINA_URL" />
@@ -14668,6 +14732,25 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
               <ScalarProperty Name="BUKRS" ColumnName="SOCIEDAD_ID" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="Grupoes">
+            <EntityTypeMapping TypeName="TAT001Model.Grupo">
+              <MappingFragment StoreEntitySet="Grupo">
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="SPRAS_ID" ColumnName="SPRAS_ID" />
+                <ScalarProperty Name="Grupo_ID" ColumnName="Grupo_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GrupoCats">
+            <EntityTypeMapping TypeName="TAT001Model.GrupoCat">
+              <MappingFragment StoreEntitySet="GrupoCat">
+                <ScalarProperty Name="Mantto" ColumnName="Mantto" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="SPRAS_ID" ColumnName="SPRAS_ID" />
+                <ScalarProperty Name="Grupo_ID" ColumnName="Grupo_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

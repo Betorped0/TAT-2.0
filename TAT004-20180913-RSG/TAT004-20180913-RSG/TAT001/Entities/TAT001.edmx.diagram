@@ -352,6 +352,8 @@
         <EntityTypeShape EntityType="TAT001Model.TSOL_TREE" Width="1.5" PointX="18.375" PointY="16.75" />
         <EntityTypeShape EntityType="TAT001Model.TSOL_GROUPT" Width="1.5" PointX="19.375" PointY="0.75" />
         <AssociationConnector Association="TAT001Model.USUARIOSOC" />
+        <EntityTypeShape EntityType="TAT001Model.Grupo" Width="1.5" PointX="0.75" PointY="19.75" />
+        <EntityTypeShape EntityType="TAT001Model.GrupoCat" Width="1.5" PointX="2.75" PointY="19.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
