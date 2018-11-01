@@ -162,7 +162,75 @@ namespace TAT001.Controllers.Catalogos
             catch (Exception e) { var a = e.ToString(); }
             return View(tX_TNOTA);
         }
+        // GET: Txn/Create
+        public ActionResult CreateA()
+        {
+            int pagina = 824; //ID EN BASE DE DATOS
+            USUARIO user = null;
+            using (TAT001Entities db = new TAT001Entities())
+            {
+                string u = User.Identity.Name;
+                //string u = "admin";
+                user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
+                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
+                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
+                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(821) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
 
+                try
+                {
+                    string p = Session["pais"].ToString();
+                    ViewBag.pais = p + ".svg";
+                }
+                catch
+                {
+                    //ViewBag.pais = "mx.svg";
+                    //return RedirectToAction("Pais", "Home");
+                }
+                Session["spras"] = user.SPRAS_ID;
+                ViewBag.lan = user.SPRAS_ID;
+            }
+            return View();
+        }
+
+        // POST: Txn/Create
+        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
+        // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        public ActionResult CreateA([Bind(Include = "ID,DESCRIPCION,ACTIVO")] TX_TNOTA tX_TNOTA)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    tX_TNOTA.ACTIVO = true;
+                    db.TX_TNOTA.Add(tX_TNOTA);
+                    db.SaveChanges();
+                    TX_TNOTA txn = db.TX_TNOTA.Where(x => x.DESCRIPCION == tX_TNOTA.DESCRIPCION).FirstOrDefault();
+                    if (txn != null)
+                    {
+                        List<SPRA> ss = db.SPRAS.ToList();
+                        foreach (SPRA s in ss)
+                        {
+                            TX_NOTAT txt = new TX_NOTAT();
+                            txt.SPRAS_ID = s.ID;
+                            txt.TNOTA_ID = txn.ID;
+                            txt.TXT50 = txn.DESCRIPCION;
+                            db.TX_NOTAT.Add(txt);
+                            db.SaveChanges();
+                        }
+                    }
+                    TempData["Mensaje"] = "Tipo de contribuyente creado correctamente.";
+                    return Json("Tipo de contribuyente creado correctamente.",JsonRequestBehavior.AllowGet);
+                }
+
+            }
+            catch (Exception e) { var a = e.ToString(); }
+            return View(tX_TNOTA);
+        }
         // GET: Txn/Edit/5
         public ActionResult Edit(int id)
         {

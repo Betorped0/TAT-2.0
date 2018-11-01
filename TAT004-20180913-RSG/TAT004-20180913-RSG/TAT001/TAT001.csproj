@@ -218,6 +218,7 @@
     <Compile Include="Controllers\Catalogos\AlertasController.cs" />
     <Compile Include="Controllers\Catalogos\Calendario445Controller.cs" />
     <Compile Include="Controllers\Catalogos\CalendarioEx445Controller.cs" />
+    <Compile Include="Controllers\Catalogos\CANALController.cs" />
     <Compile Include="Controllers\Catalogos\ConsoporteController.cs" />
     <Compile Include="Controllers\Catalogos\CuentaController.cs" />
     <Compile Include="Controllers\Catalogos\CuentasController.cs" />
@@ -515,6 +516,12 @@
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\GAUTORIZACION.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Grupo.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GrupoCat.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\IIMPUESTO.cs">
@@ -1352,6 +1359,7 @@
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\dropdowntree.js" />
     <Content Include="Scripts\fnCommon.js" />
+    <Content Include="Scripts\jquery.mask.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\Masiva\create.js" />
@@ -1949,6 +1957,13 @@
     <Content Include="Views\Textocv\Details.cshtml" />
     <Content Include="Views\Textocv\Edit.cshtml" />
     <Content Include="Views\Textocv\Index.cshtml" />
+    <Content Include="Views\Txc\CreateA.cshtml" />
+    <Content Include="Views\Txn\CreateA.cshtml" />
+    <Content Include="Views\CANAL\Create.cshtml" />
+    <Content Include="Views\CANAL\Delete.cshtml" />
+    <Content Include="Views\CANAL\Details.cshtml" />
+    <Content Include="Views\CANAL\Edit.cshtml" />
+    <Content Include="Views\CANAL\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->
@@ -1958,7 +1973,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="packages.config" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\materialize.min.js" />
     <Content Include="Views\Home\Pais.cshtml" />

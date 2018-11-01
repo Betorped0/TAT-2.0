@@ -7,6 +7,7 @@
     ViewBag.carpeta_r = 500;
 }
 <script src="~/Scripts/ValidarDecimalesTP.js"></script>
+<script src="~/Scripts/jquery.mask.js"></script>
 <div>
     @using (Html.BeginForm("Edit", "Taxeop", FormMethod.Post))
     {
@@ -75,6 +76,10 @@
         <script>
             var elem = document.querySelectorAll('select');
             var instance = M.FormSelect.init(elem, []);
+            jQuery(function ($) {
+                $("#PORC").mask('#0.00%', { reverse: true });
+                $("#txtPorc").mask('#0.00%', { reverse: true });
+            });
         </script>
         <div class="form-actions no-color">
             @Html.ActionLink("Back to List", "Index", new { kun = @ViewBag.kun, vk = @ViewBag.vk, vtw = @ViewBag.vtw, sp = @ViewBag.sp, sc = @ViewBag.sc, ld = @ViewBag.ld, con = @ViewBag.con }, new { id = "lblRegresar" })
