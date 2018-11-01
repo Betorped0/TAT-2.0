@@ -148,7 +148,7 @@ namespace TAT001.Controllers
             Models.PresupuestoModels carga = new Models.PresupuestoModels();
             ViewBag.ultMod = carga.consultarUCarga();
 
-            ViewBag.TSOL_RELA = FnCommon.ObtenerTreeTiposSolicitud(db, DF.D.SOCIEDAD_ID, uu,"SR");
+            ViewBag.TSOL_RELA = FnCommon.ObtenerTreeTiposSolicitud(db, DF.D.SOCIEDAD_ID, uu, "SR");
             //RECUPERO EL PAIS para hacer una busqueda de su formato monetario
             ////var paisMon = Session["pais"].ToString();//------------------------LEJGG090718
             ViewBag.miles = DF.D.PAI.MILES;//LEJGG 090718
@@ -538,7 +538,7 @@ namespace TAT001.Controllers
         }
         // GET: Solicitudes/Create
         [HttpGet]
-        public ActionResult Create(string id_d, string tsol)
+        public ActionResult Create(string id_d, string tsol, string dp = null)
         {
 
             Models.PresupuestoModels carga = new Models.PresupuestoModels();
@@ -589,8 +589,16 @@ namespace TAT001.Controllers
                         throw new Exception();
                     }
                     rel = Convert.ToDecimal(id_d);
-                    ViewBag.relacionada = "prelacionada";
-                    ViewBag.relacionadan = rel + "";
+                    if (dp != "X")//ADD 31.10.2018
+                    {
+                        ViewBag.relacionada = "prelacionada";
+                        ViewBag.relacionadan = rel + "";
+                    }
+                    else//ADD 31.10.2018----------------------------i
+                    {
+                        ViewBag.relacionada = "";
+                        ViewBag.relacionadan = "";
+                    }//ADD 31.10.2018-------------------------------f
 
                 }
                 catch
@@ -715,7 +723,13 @@ namespace TAT001.Controllers
                     d = db.DOCUMENTOes.Where(doc => doc.NUM_DOC == rel).FirstOrDefault();
                     sociedad_id = d.SOCIEDAD_ID;
                 }
-                    if (ViewBag.reversa == "preversa") { 
+                if (dp == "X")//ADD 31.10.2018-------------------
+                {
+                    pais_id = db.DOCUMENTOes.Find(rel).PAIS_ID;
+                    rel = 0;
+                }//ADD 31.10.2018----------------------------
+                if (ViewBag.reversa == "preversa")
+                {
                     list_sol = FnCommon.ObtenerCmbTiposSolicitud(db, user.SPRAS_ID, null, true)
                         .Select(x => new TSOLT_MOD
                         {
@@ -983,15 +997,22 @@ namespace TAT001.Controllers
                     }
                     catch (Exception e)
                     {
-                        Log.ErrorLogApp(e,"Solicitudes","Create");
+                        Log.ErrorLogApp(e, "Solicitudes", "Create");
                     }
 
                     id_pais = db.PAIS.Where(pais => pais.LAND.Equals(pais_id)).FirstOrDefault();//RSG 15.05.2018 //MGC B20180625 MGC 
                     id_bukrs = db.SOCIEDADs.Where(soc => soc.BUKRS.Equals(sociedad_id) && soc.ACTIVO == true).FirstOrDefault();//RSG 15.05.2018 //MGC B20180625 MGC 
                     DET_APROBH dah = id_bukrs.DET_APROBH.Where(x => x.PUESTOC_ID == user.PUESTO_ID & x.ACTIVO == true).FirstOrDefault();
                     if (dah == null) { Session["error"] = "Verifique el flujo de la sociedad: " + id_pais.SOCIEDAD_ID; Session["pais"] = null; return RedirectToAction("Index", "Home"); }
-                    if (docb != null)
+                    //if (docb != null)
+                    if (docb != null | dp == "X")//ADD 31.10.2018
                     {
+                        if (dp == "X")
+                        {
+                            rel = Convert.ToDecimal(id_d);
+                            Duplicado dup = new Duplicado();
+                            docb = dup.llenaDuplicado(rel, user.ID);
+                        }
                         //Hay borrador 
                         borrador = "true";
                         d.TSOL_ID = docb.TSOL_ID;
@@ -2574,7 +2595,7 @@ namespace TAT001.Controllers
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
                 FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
                 //tipo de solicitud
-                var id_sol  = FnCommon.ObtenerCmbTiposSolicitud(db, user.SPRAS_ID, null)
+                var id_sol = FnCommon.ObtenerCmbTiposSolicitud(db, user.SPRAS_ID, null)
                         .Select(x => new TSOLT_MOD
                         {
                             SPRAS_ID = user.SPRAS_ID,
@@ -3273,10 +3294,10 @@ namespace TAT001.Controllers
             }
             catch (Exception e)
             {
-                Log.ErrorLogApp(e,"Solicitudes","Descargar");
+                Log.ErrorLogApp(e, "Solicitudes", "Descargar");
                 return null;
             }
-            
+
         }
 
 
@@ -4065,7 +4086,8 @@ namespace TAT001.Controllers
             }
             //ADD RSG 31.10.2018------------------------------
             d.DOCUMENTORAN = new List<DOCUMENTORAN>();
-            foreach (DOCUMENTOREC drec in d.DOCUMENTOREC.ToList()) {
+            foreach (DOCUMENTOREC drec in d.DOCUMENTOREC.ToList())
+            {
                 d.DOCUMENTORAN.AddRange(drec.DOCUMENTORANs.ToList());
             }
             //ADD RSG 31.10.2018------------------------------
@@ -4087,7 +4109,7 @@ namespace TAT001.Controllers
             "VKORG,VTWEG,SPART,HORAC,FECHAC_PLAN,FECHAC_USER,HORAC_USER,CONCEPTO,PORC_ADICIONAL,PAYER_NOMBRE,PAYER_EMAIL," +
             "MONEDAL_ID,MONEDAL2_ID,TIPO_CAMBIOL,TIPO_CAMBIOL2,DOCUMENTOP, DOCUMENTOF, DOCUMENTOREC, GALL_ID, USUARIOD_ID, OBJQ_PORC, DOCUMENTORAN")] DOCUMENTO dOCUMENTO,
                 IEnumerable<HttpPostedFileBase> files_soporte, string notas_soporte, string[] labels_soporte, string unafact,
-                string FECHAD_REV, string TREVERSA, string select_neg, string select_dis, string select_negi, string select_disi, 
+                string FECHAD_REV, string TREVERSA, string select_neg, string select_dis, string select_negi, string select_disi,
                 string bmonto_apoyo, string catmat, string txt_sop_borr, string txt_flujo)
         {
             if (ModelState.IsValid)
@@ -4218,7 +4240,7 @@ namespace TAT001.Controllers
 
                         listcatm = grupoMaterialesController(listcat, d.VKORG, d.SPART, d.PAYER_ID, d.SOCIEDAD_ID, out totalcats);
                     }
-                    
+
                     d.ESTATUS_WF = txt_flujo;//ADD RSG 30.10.2018
 
                     //Se cambio de pocisión //B20180618 v1 MGC 2018.06.18--------------------------------------
