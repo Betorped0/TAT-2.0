@@ -3821,31 +3821,13 @@ namespace TAT001.Controllers
                 }
                 d.MONEDA_ID = id_bukrs.WAERS;
                 var date = DateTime.Now.Date;
-                //TAT001.Entities.TCAMBIO tcambio = new TAT001.Entities.TCAMBIO();
-                //try
-                //{
-                //    tcambio = db.TCAMBIOs.Where(t => t.FCURR.Equals(id_bukrs.WAERS) && t.TCURR.Equals("USD") && t.GDATU.Equals(date)).FirstOrDefault();
-                //    if (tcambio == null)
-                //    {
-                //        var max = db.TCAMBIOs.Where(t => t.FCURR.Equals(id_bukrs.WAERS) && t.TCURR.Equals("USD")).Max(a => a.GDATU);
-                //        tcambio = db.TCAMBIOs.Where(t => t.FCURR.Equals(id_bukrs.WAERS) && t.TCURR.Equals("USD") && t.GDATU.Equals(max)).FirstOrDefault();
-                //    }
-                //    decimal con = Convert.ToDecimal(tcambio.UKURS);
-                //    var cons = con.ToString("0.##");
-
-                //    ViewBag.tcambio = cons;
-                //}
-                //catch (Exception e)
-                //{
-                //    errorString = e.Message + "detail: conversion " + id_bukrs.WAERS + " to " + "USD" + " in date " + DateTime.Now.Date;
-                //    ViewBag.tcambio = "";
-                //}
+              
 
                 ViewBag.tcambio = d.TIPO_CAMBIO;
 
             }//RSG 13.06.2018
 
-            d.PERIODO = Convert.ToInt32(DateTime.Now.ToString("MM"));
+            d.PERIODO = FnCommon.ObtenerPeriodoCalendario445(db,d.SOCIEDAD_ID,d.TSOL_ID,User.Identity.Name);
             d.EJERCICIO = Convert.ToString(DateTime.Now.Year);
 
             d.FECHAD = theTime;
