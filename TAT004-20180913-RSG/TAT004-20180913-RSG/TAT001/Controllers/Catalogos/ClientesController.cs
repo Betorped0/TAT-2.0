@@ -149,6 +149,13 @@ namespace TAT001.Controllers.Catalogos
             {
                 return HttpNotFound();
             }
+            if (!String.IsNullOrEmpty(cLIENTE.CANAL))
+            {
+                CANAL canaldsc = db.CANALs.Where(t => t.CANAL1 == cLIENTE.CANAL).SingleOrDefault();
+                if (canaldsc != null)
+                    ViewBag.CanalDsc = canaldsc.CANAL1 + "-" + canaldsc.CDESCRIPCION;
+            }
+
             return View(cLIENTE);
         }
 
