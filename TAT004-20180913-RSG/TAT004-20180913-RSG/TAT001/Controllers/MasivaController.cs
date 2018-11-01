@@ -55,7 +55,7 @@ namespace TAT001.Controllers
             }
             Session["spras"] = user.SPRAS_ID;
 
-            return View(db.DOCUMENTOes.ToList());
+            return View();
         }
 
         [HttpPost]
@@ -2696,7 +2696,7 @@ namespace TAT001.Controllers
 
             foreach (DOCUMENTO doc in listD)
             {
-                if (doc.DOCUMENTOPs.Count() != 0 & doc.DOCUMENTOFs.Count() != 0)
+                if (doc.DOCUMENTOPs.Count() != 0)
                 {
                     decimal N_DOC = getSolID(doc.TSOL_ID);
                     doc.NUM_DOC = N_DOC;

@@ -66,7 +66,7 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.EMAIL)
                                 </td>
-                                @if ((bool)item.DEFECTO == true)
+                                @if (item.DEFECTO != null && (bool)item.DEFECTO == true)
                                 {
                                     <td style="text-align:center;"><i class='material-icons green-text'>check</i></td>
                                 }

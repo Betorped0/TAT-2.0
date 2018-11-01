@@ -147,6 +147,18 @@ namespace TAT001.Models
             public decimal LAGA { get; set; }
             public decimal KLCH { get; set; }
             public bool IS_DOLAR { get; set; }
+            public decimal KCMX_USD { get; set; }
+            public decimal KLCA_USD { get; set; }
+            public decimal LCCR_USD { get; set; }
+            public decimal LPKP_USD { get; set; }
+            public decimal KLSV_USD { get; set; }
+            public decimal KCAR_USD { get; set; }
+            public decimal KPRS_USD { get; set; }
+            public decimal KLCO_USD { get; set; }
+            public decimal LEKE_USD { get; set; }
+            public decimal LAGA_USD { get; set; }
+            public decimal KLCH_USD { get; set; }
+            public int ORDEN { get; internal set; }
         }
 
         public class AllowancesPL

@@ -1,7 +1,7 @@
 ﻿@model TAT001.Entities.CLIENTE
 
 @{
-    ViewBag.pagina_r = 632;
+    ViewBag.pagina_r = 635;
     ViewBag.carpeta_r = 500;
     //ViewBag.Title = "MODIFICAR";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -161,9 +161,14 @@
                         </div>
 
                         <div class="input-field col s12" style="margin-bottom:0;">
-                            @Html.EditorFor(model => model.CANAL, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.DropDownList("CANAL", null, htmlAttributes: new {id = "sel-canal" } )
                             @Html.LabelFor(model => model.CANAL, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_canal" })
                         </div>
+                        <script>
+                            var elem = document.getElementById('sel-canal');
+                            var options = [];
+                            var instance = M.FormSelect.init(elem, options);
+                        </script>
                     </div>
                 </div>
             </div>

@@ -182,7 +182,7 @@ namespace TAT001.Controllers.Catalogos
         // GET: Clientes/Edit/5
         public ActionResult Edit(string vko, string vtw, string spa, string kun)
         {
-            int pagina = 632; //ID EN BASE DE DATOS
+            int pagina = 635; //ID EN BASE DE DATOS PARA EL TITULO
             string u = User.Identity.Name;
             var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
             ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
@@ -190,6 +190,7 @@ namespace TAT001.Controllers.Catalogos
             ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
             ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
             ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            pagina = 632; //ID EN BASE DE DATOS
             ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
             ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
 
@@ -216,6 +217,8 @@ namespace TAT001.Controllers.Catalogos
             }
             ViewBag.LAND = new SelectList(db.PAIS, "LAND", "LANDX", cLIENTE.LAND);
             ViewBag.PARVW = new SelectList(db.TCLIENTEs, "ID", "ID", cLIENTE.PARVW);
+            var canales = db.CANALs.Select(x => new { x.CANAL1, DESCRIPCION = x.CANAL1 + "-" + x.CDESCRIPCION });
+            ViewBag.CANAL = new SelectList(canales, "CANAL1","DESCRIPCION", cLIENTE.CANAL.TrimEnd());
             return View(cLIENTE);
         }
 

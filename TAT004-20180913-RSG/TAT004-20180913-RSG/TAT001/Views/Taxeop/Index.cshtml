@@ -101,7 +101,7 @@
                         @Html.DisplayFor(modelItem => item.SPART)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.KUNNR)
+                        @item.KUNNR.TrimStart('0')
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.CONCEPTO_ID)

@@ -18,7 +18,7 @@ $("#miMas").change(function () {
                 procesarHoja5();
                 checkRelacionada();
                 var kk = checkRelacionadaMat();
-                checkRelMul()
+                //checkRelMul()
             }
             else {
                 for (var i = 0; i < err.length; i++) {
@@ -62,7 +62,7 @@ function getExcelMasivas(file) {
         data: formData,
         contentType: false,
         processData: false,
-        async: false
+        async: true
     }).fail(function () {
         alert("error");
     });
@@ -164,7 +164,7 @@ function addRowH1(t, NUM_DOC, TSOL_ID, GALL_ID, SOCIEDAD_ID, PAIS_ID, ESTADO, CI
     return r;
 }
 
-$('body').on('keydown.autocomplete', '.input_numdoc', function () {
+$('#tab_test1').on('keydown.autocomplete', '.input_numdoc', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -201,7 +201,7 @@ $('body').on('keydown.autocomplete', '.input_numdoc', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_tsol', function () {
+$('#tab_test1').on('keydown.autocomplete', '.input_tsol', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -242,7 +242,7 @@ $('body').on('keydown.autocomplete', '.input_tsol', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_clasificacion', function () {
+$('#tab_test1').on('keydown.autocomplete', '.input_clasificacion', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -282,7 +282,7 @@ $('body').on('keydown.autocomplete', '.input_clasificacion', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_sociedad', function () {
+$('#tab_test1').on('keydown.autocomplete', '.input_sociedad', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -322,7 +322,7 @@ $('body').on('keydown.autocomplete', '.input_sociedad', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_pais', function () {
+$('#tab_test1').on('keydown.autocomplete', '.input_pais', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -370,7 +370,7 @@ $('body').on('keydown.autocomplete', '.input_pais', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_estado', function () {
+$('#tab_test1').on('keydown.autocomplete', '.input_estado', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -414,7 +414,7 @@ $('body').on('keydown.autocomplete', '.input_estado', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_ciudad', function () {
+$('#tab_test1').on('keydown.autocomplete', '.input_ciudad', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -459,7 +459,7 @@ $('body').on('keydown.autocomplete', '.input_ciudad', function () {
 
 });
 
-$('body').on('keydown.autocomplete', '.input_concepto', function () {
+$('#tab_test1').on('keydown.autocomplete', '.input_concepto', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -491,7 +491,7 @@ $('body').on('keydown.autocomplete', '.input_concepto', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_notas', function () {
+$('#tab_test1').on('keydown.autocomplete', '.input_notas', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -577,7 +577,7 @@ $('body').on('keydown.autocomplete', '.input_cliente', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_contacto', function () {
+$('#tab_test1').on('keydown.autocomplete', '.input_contacto', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -609,7 +609,7 @@ $('body').on('keydown.autocomplete', '.input_contacto', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_email', function () {
+$('#tab_test1').on('keydown.autocomplete', '.input_email', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -641,7 +641,7 @@ $('body').on('keydown.autocomplete', '.input_email', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_fechai', function () {
+$('#tab_test1').on('keydown.autocomplete', '.input_fechai', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -671,7 +671,7 @@ $('body').on('keydown.autocomplete', '.input_fechai', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_fechaf', function () {
+$('#tab_test1').on('keydown.autocomplete', '.input_fechaf', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -701,7 +701,7 @@ $('body').on('keydown.autocomplete', '.input_fechaf', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_moneda', function () {
+$('#tab_test1').on('keydown.autocomplete', '.input_moneda', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -844,7 +844,7 @@ function addRowH2(t, NUM_DOC, FACTURA, FECHA, PROVEEDOR, PROVEEDOR_NOMBRE, AUTOR
     return r;
 }
 
-$('body').on('keydown.autocomplete', '.input_factura', function () {
+$('#tab_test2').on('keydown.autocomplete', '.input_factura', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -882,7 +882,7 @@ $('body').on('keydown.autocomplete', '.input_factura', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_fechaH2', function () {
+$('#tab_test2').on('keydown.autocomplete', '.input_fechaH2', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -920,7 +920,7 @@ $('body').on('keydown.autocomplete', '.input_fechaH2', function () {
     });
 });//APLICA PARA AMBAS FECHAS EN H2 FECHA FACTURA Y FECHA VENCIMIENTO
 
-$('body').on('keydown.autocomplete', '.input_proveedor', function () {
+$('#tab_test2').on('keydown.autocomplete', '.input_proveedor', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -994,7 +994,7 @@ $('body').on('keydown.autocomplete', '.input_proveedor', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_autorizacion', function () {
+$('#tab_test2').on('keydown.autocomplete', '.input_autorizacion', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -1032,7 +1032,7 @@ $('body').on('keydown.autocomplete', '.input_autorizacion', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_facturak', function () {
+$('#tab_test2').on('keydown.autocomplete', '.input_facturak', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -1070,7 +1070,7 @@ $('body').on('keydown.autocomplete', '.input_facturak', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_ejerciciok', function () {
+$('#tab_test2').on('keydown.autocomplete', '.input_ejerciciok', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -1212,7 +1212,7 @@ function addRowH3(t, NUM_DOC, FACTURA, BILL_DOC, EJERCICIOK, PAYER, PAYER_NOMBRE
     return r;
 }
 
-$('body').on('keydown.autocomplete', '.input_facturaH3', function () {
+$('#tab_test3').on('keydown.autocomplete', '.input_facturaH3', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -1247,7 +1247,7 @@ $('body').on('keydown.autocomplete', '.input_facturaH3', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_bill', function () {
+$('#tab_test3').on('keydown.autocomplete', '.input_bill', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -1279,7 +1279,7 @@ $('body').on('keydown.autocomplete', '.input_bill', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_ejerciciokH3', function () {
+$('#tab_test3').on('keydown.autocomplete', '.input_ejerciciokH3', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -1316,7 +1316,7 @@ $('body').on('keydown.autocomplete', '.input_ejerciciokH3', function () {
 
 //PAYER Y NOMBRE PAYER APUNTA A INPUT CLIENTE EN ASIGNACIONES DE HOJA1
 
-$('body').on('keydown.autocomplete', '.input_importe', function () {
+$('#tab_test3').on('keydown.autocomplete', '.input_importe', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -1367,7 +1367,7 @@ $('body').on('keydown.autocomplete', '.input_importe', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_belnr', function () {
+$('#tab_test3').on('keydown.autocomplete', '.input_belnr', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -1511,7 +1511,7 @@ function addRowH4(t, NUM_DOC, LIGADA, VIGENCIA_DE, VIGENCIA_AL, MATNR, MATKL, DE
     return r;
 }
 
-$('body').on('keydown.autocomplete', '.input_material', function () {
+$('#tab_test4').on('keydown.autocomplete', '.input_material', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -1562,7 +1562,7 @@ $('body').on('keydown.autocomplete', '.input_material', function () {
     });
 });
 
-$('body').on('keydown.autocomplete', '.input_categoria', function () {
+$('#tab_test4').on('keydown.autocomplete', '.input_categoria', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -1605,7 +1605,7 @@ $('body').on('keydown.autocomplete', '.input_categoria', function () {
 
 });
 
-$('body').on('focusout', '.input_cantidades', function () {
+$('#tab_test4').on('focusout', '.input_cantidades', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
@@ -1842,7 +1842,7 @@ $('body').on('focusout', '.input_cantidades', function () {
     });
 });
 
-$('body').on('keydown', '.input_apoyo', function (e) {
+$('#tab_test4').on('keydown', '.input_apoyo', function (e) {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var num_docH1 = null, pais = null, getDec = null;
@@ -2054,6 +2054,7 @@ function procesarHoja5() {
         complete: function (data) {
             //validarErrores("tab_test5"); //RMG
             $(document).ready(function () {
+                $('#global_filter').removeAttr('disabled');
                 var tablaH5 = $('#tab_test5').DataTable();
                 $("#excelBtn").removeAttr("disabled");
                 cloneTables();
@@ -2069,7 +2070,7 @@ function procesarHoja5() {
                         $(this).closest('tr').children().eq(0).children().addClass("red rojo");
                         $(this).closest('tr').children().eq(0).children().text("close");
                         clearErrors();//ADD RSG 29.10.2018
-                    //}
+                    }
                 });
 
                 $("#tab_test5").on("change", ".outRequiredfile", function () {
@@ -2919,7 +2920,7 @@ function guardaDatos() {
                 err = JSON.parse(xhr.responseText).Message;
             //console.log(err);
         },
-        async: false
+        async: true
     });
 
     $.ajax({
@@ -2927,7 +2928,7 @@ function guardaDatos() {
         url: 'setDatos',
         dataType: "json",
         data: { "h1": tabla1, "h2": tabla2, "h3": tabla3, "h4": tabla4, "h5": tabla5, "notas": notasArr },
-        async: false,
+        async: true,
         success: function (data) {
             if (data !== null | data !== "") {
                 var eliminarId = [];
@@ -3022,6 +3023,12 @@ function guardaDatos() {
                 for (var k = 0; k < listaIds.length; k++) {
                     M.toast({ html: 'Documento ' + listaIds[k] + ' fue creado' });
                 }
+
+                //var table = $('#tab_test1').DataTable();
+
+                //if (!table.data().any()) {
+                //    location.reload();
+                //}
             }
         }
     });

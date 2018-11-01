@@ -204,6 +204,116 @@ namespace TAT001.Controllers.Catalogos
 
         }
 
+        public ActionResult CreateA()
+        {
+            int pagina = 804; //ID EN BASE DE DATOS
+            USUARIO user = null;
+            using (TAT001Entities db = new TAT001Entities())
+            {
+                string u = User.Identity.Name;
+                //string u = "admin";
+                user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
+                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
+                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
+                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(801) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+
+                try
+                {
+                    string p = Session["pais"].ToString();
+                    ViewBag.pais = p + ".svg";
+                }
+                catch
+                {
+                    //ViewBag.pais = "mx.svg";
+                    //return RedirectToAction("Pais", "Home");
+                }
+                Session["spras"] = user.SPRAS_ID;
+                ViewBag.lan = user.SPRAS_ID;
+            }
+            return View();
+        }
+
+        // POST: Txc/Create
+        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
+        // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        public ActionResult CreateA([Bind(Include = "ID,DESCRIPCION,ACTIVO")] TX_CONCEPTO tX_CONCEPTO)
+        {
+            try
+            {
+                if (tX_CONCEPTO.DESCRIPCION != null)
+                {
+                    if (ModelState.IsValid)
+                    {
+                        tX_CONCEPTO.ACTIVO = true;
+                        db.TX_CONCEPTO.Add(tX_CONCEPTO);
+                        db.SaveChanges();
+                        //Posterior a la insercion del registro, insertar en treversat
+                        TX_CONCEPTO trvi = db.TX_CONCEPTO.Where(x => x.DESCRIPCION == tX_CONCEPTO.DESCRIPCION).FirstOrDefault();
+                        //si trae registros entra
+                        if (trvi != null)
+                        {
+                            List<SPRA> ss = db.SPRAS.ToList();
+                            foreach (SPRA s in ss)
+                            {
+                                TX_CONCEPTOT trvt = new TX_CONCEPTOT();
+                                trvt.SPRAS_ID = s.ID;
+                                trvt.CONCEPTO_ID = trvi.ID;
+                                trvt.TXT50 = tX_CONCEPTO.DESCRIPCION;
+                                db.TX_CONCEPTOT.Add(trvt);
+                                db.SaveChanges();
+                            }
+                        }
+                        TempData["Mensaje"] = "Concepto creado correctamente.";
+                        return Json("Concepto creado correctamente.", JsonRequestBehavior.AllowGet);
+                    }
+                }
+                else
+                {
+                    ViewBag.error = "Sin Texto";
+                }
+
+            }
+            catch (Exception e)
+            {
+                var x = e.ToString();
+            }
+            int pagina = 804; //ID EN BASE DE DATOS
+            USUARIO user = null;
+            using (TAT001Entities db = new TAT001Entities())
+            {
+                string u = User.Identity.Name;
+                //string u = "admin";
+                user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
+                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
+                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
+                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(801) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+
+                try
+                {
+                    string p = Session["pais"].ToString();
+                    ViewBag.pais = p + ".svg";
+                }
+                catch
+                {
+                    //ViewBag.pais = "mx.svg";
+                    //return RedirectToAction("Pais", "Home");
+                }
+                Session["spras"] = user.SPRAS_ID;
+                ViewBag.lan = user.SPRAS_ID;
+            }
+            return Json("");
+
+        }
+
         // GET: Txc/Edit/5
         public ActionResult Edit(int id)
         {
