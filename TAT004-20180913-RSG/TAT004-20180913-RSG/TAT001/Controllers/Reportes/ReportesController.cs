@@ -295,6 +295,7 @@ namespace TAT001.Controllers.Reportes
             ViewBag.sociedad = db.SOCIEDADs.ToList();
             ViewBag.periodo = db.PERIODOes.ToList();
 
+            string year =  Request["selectyear"];
             var code = Request["filtroCode"];
             var periodo = Request["filtroPeriodo"];
             var anio = Request["filtroAnio"];
@@ -317,9 +318,9 @@ namespace TAT001.Controllers.Reportes
                                   join CLIENTE in db.CLIENTEs on new { x.VKORG, x.VTWEG, x.SPART, x.PAYER_ID } equals new { CLIENTE.VKORG, CLIENTE.VTWEG, CLIENTE.SPART, PAYER_ID = CLIENTE.KUNNR }
                                   join FLUJO in db.FLUJOes on x.NUM_DOC equals FLUJO.NUM_DOC
                                   join CUENTAGL in db.CUENTAGLs on x.CUENTAP equals CUENTAGL.ID
-                                  join DOCUMENSAP in db.DOCUMENTOSAPs on x.NUM_DOC equals DOCUMENSAP.NUM_DOC
+                                  join DOCUMENTOSAP in db.DOCUMENTOSAPs on x.NUM_DOC equals DOCUMENTOSAP.NUM_DOC
 
-                                  where x.SOCIEDAD_ID == item.ToString() && x.PERIODO == filtroPeriodo && x.EJERCICIO == miconsultaAnio && FLUJO.POS == 2
+                                  where x.SOCIEDAD_ID == item.ToString() && x.PERIODO == filtroPeriodo && x.EJERCICIO == year /*&& FLUJO.POS == 2*/
 
                                   select new
                                   {
@@ -333,8 +334,8 @@ namespace TAT001.Controllers.Reportes
                                       x.FECHAC,
                                       x.MONTO_DOC_MD,
                                       x.MONTO_DOC_ML2,
-                                      DOCUMENSAP.IMPORTE,
-                                      fechasap = DOCUMENSAP.FECHAC,
+                                      DOCUMENTOSAP.IMPORTE,
+                                      //DOCUMENTOSAP.FECHAC,
                                       x.CUENTAP,
                                       CUENTAGL.NOMBRE,
                                       x.CUENTAPL,
@@ -1256,8 +1257,8 @@ namespace TAT001.Controllers.Reportes
             //join ACCION ac on wfp.ACCION_ID = ac.ID
 
             var queryDocs = (from d in db.DOCUMENTOes
-                             join ds in db.DOCUMENTOSAPs on d.NUM_DOC equals ds.NUM_DOC
-                             join cgl in db.CUENTAGLs on d.CUENTAP equals cgl.ID
+                             //join ds in db.DOCUMENTOSAPs on d.NUM_DOC equals ds.NUM_DOC
+                             join cgl in db.CUENTAGLs on d.CUENTAPL equals cgl.ID
                              join ts in db.TSOLs on d.TSOL_ID equals ts.ID
                              join f in db.FLUJOes on d.NUM_DOC equals f.NUM_DOC
                              join wfp in db.WORKFPs on new { f.WORKF_ID, f.WF_POS, f.WF_VERSION } equals new { WORKF_ID = wfp.ID, WF_POS = wfp.POS, WF_VERSION = wfp.VERSION }
@@ -1265,10 +1266,11 @@ namespace TAT001.Controllers.Reportes
                              where d.EJERCICIO == year
                                  && (!string.IsNullOrEmpty(comcode) ? comcodessplit.Contains(d.SOCIEDAD_ID) : true)
                                  && (!string.IsNullOrEmpty(period) ? periodsplit.Contains(d.PERIODO.ToString()) : true)
-                             select new { ds.CUENTA_A, cgl.NOMBRE, d.SOCIEDAD_ID, d.MONTO_DOC_ML, f.ESTATUS, d.ESTATUS_C, d.ESTATUS_SAP, d.ESTATUS_WF, ac.TIPO, ts.PADRE }
+                             orderby d.CUENTAPL, cgl.NOMBRE, d.SOCIEDAD_ID
+                             select new { CUENTA_A = d.CUENTAPL, cgl.NOMBRE, d.SOCIEDAD_ID, d.MONTO_DOC_ML, d.MONTO_DOC_ML2, f.ESTATUS, d.ESTATUS_C, d.ESTATUS_SAP, d.ESTATUS_WF, ac.TIPO, ts.PADRE }
                              )
                              .ToList()
-                             .Select(s => new { s.CUENTA_A, s.NOMBRE, s.SOCIEDAD_ID, s.MONTO_DOC_ML, STATUS_ALLOWANCE = statusAllowance(s.ESTATUS, s.ESTATUS_C, s.ESTATUS_SAP, s.ESTATUS_WF, s.TIPO, s.PADRE) })
+                             .Select(s => new { s.CUENTA_A, s.NOMBRE, s.SOCIEDAD_ID, s.MONTO_DOC_ML, s.MONTO_DOC_ML2, STATUS_ALLOWANCE = statusAllowance(s.ESTATUS, s.ESTATUS_C, s.ESTATUS_SAP, s.ESTATUS_WF, s.TIPO, s.PADRE) })
                              .GroupBy(x => new { x.CUENTA_A, x.NOMBRE, x.STATUS_ALLOWANCE })
                              .ToList();
 
@@ -1282,40 +1284,52 @@ namespace TAT001.Controllers.Reportes
                 foreach (var doc2 in doc)
                 {
                     decimal monto = ((doc2.MONTO_DOC_ML == null) ? 0 : (Decimal)doc2.MONTO_DOC_ML);
+                    decimal monto2 = ((doc2.MONTO_DOC_ML2 == null) ? 0 : (Decimal)doc2.MONTO_DOC_ML2);
                     switch (doc2.SOCIEDAD_ID)
                     {
                         case "KCMX":
                             all.KCMX += monto;
+                            all.KCMX_USD += monto2;
                             break;
                         case "KLCA":
                             all.KLCA += monto;
+                            all.KLCA_USD += monto2;
                             break;
                         case "LCCR":
                             all.LCCR += monto;
+                            all.LCCR_USD += monto2;
                             break;
                         case "LPKP":
                             all.LPKP += monto;
+                            all.LPKP_USD += monto2;
                             break;
                         case "KLSV":
                             all.KLSV += monto;
+                            all.KLSV_USD += monto2;
                             break;
                         case "KCAR":
                             all.KCAR += monto;
+                            all.KCAR_USD += monto2;
                             break;
                         case "KPRS":
                             all.KPRS += monto;
+                            all.KPRS_USD += monto2;
                             break;
                         case "KLCO":
                             all.KLCO += monto;
+                            all.KLCO_USD += monto2;
                             break;
                         case "LEKE":
                             all.LEKE += monto;
+                            all.LEKE_USD += monto2;
                             break;
                         case "LAGA":
                             all.LAGA += monto;
+                            all.LAGA_USD += monto2;
                             break;
                         case "KLCH":
                             all.KLCH += monto;
+                            all.KLCH_USD += monto2;
                             break;
                     }
                 }
@@ -1325,7 +1339,48 @@ namespace TAT001.Controllers.Reportes
                 }
             }
 
-            ViewBag.reporte = alls.ToList();
+            foreach (IGrouping<string, AllowancesB> all in alls.GroupBy(x => x.CUENTA_DE_BALANCE))
+            {
+                if(all.Count() < 2)
+                {
+                    AllowancesB tmpall = new AllowancesB();
+                    tmpall.CUENTA_DE_BALANCE = all.First().CUENTA_DE_BALANCE;
+                    tmpall.DESCRIPCION = all.First().DESCRIPCION;
+                    tmpall.FUENTE = ((all.First().DESCRIPCION == "En Proceso TAT") ? "Allowance TAT" : "En Proceso TAT");
+                    alls.Add(tmpall);
+                }
+                AllowancesB tmp_all = new AllowancesB();
+                tmp_all.CUENTA_DE_BALANCE = all.First().CUENTA_DE_BALANCE;
+                tmp_all.DESCRIPCION = all.First().DESCRIPCION;
+                tmp_all.FUENTE = "Allowances Facturados";
+                alls.Add(tmp_all);
+                tmp_all = new AllowancesB();
+                tmp_all.CUENTA_DE_BALANCE = all.First().CUENTA_DE_BALANCE;
+                tmp_all.DESCRIPCION = all.First().DESCRIPCION;
+                tmp_all.FUENTE = "Ajustes y Reclasificaciones Manuales";
+                alls.Add(tmp_all);
+            }
+
+            foreach (AllowancesB tall in alls)
+            {
+                switch (tall.FUENTE)
+                {
+                    case "En Proceso TAT":
+                        tall.ORDEN = 1;
+                        break;
+                    case "Allowance TAT":
+                        tall.ORDEN = 2;
+                        break;
+                    case "Allowances Facturados":
+                        tall.ORDEN = 3;
+                        break;
+                    case "Ajustes y Reclasificaciones Manuales":
+                        tall.ORDEN = 4;
+                        break;
+                }
+            }
+
+            ViewBag.reporte = alls.ToList().OrderBy(x => x.CUENTA_DE_BALANCE).ThenBy(x => x.ORDEN).ToList();
 
             return View();
         }

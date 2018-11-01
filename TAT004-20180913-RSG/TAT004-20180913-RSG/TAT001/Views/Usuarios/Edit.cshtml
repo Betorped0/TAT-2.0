@@ -33,7 +33,12 @@
             <div class="card-panel">
                 <div class="row">
                     <div class="input-field col s12">
-                        @Html.EditorFor(model => model.NOMBRE, new { htmlAttributes = new { @class = "form-control", required=true } })
+                        @Html.EditorFor(model => model.ID, new { htmlAttributes = new { @disabled = "disabled" } })
+                        @Html.LabelFor(model => model.ID, htmlAttributes: new { @id = "lbl_id" })
+                        @Html.ValidationMessageFor(model => model.ID, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="input-field col s12">
+                        @Html.EditorFor(model => model.NOMBRE, new { htmlAttributes = new { @class = "form-control", required = true } })
                         @Html.LabelFor(model => model.NOMBRE, htmlAttributes: new { @id = "lbl_nombre" })
                         @Html.ValidationMessageFor(model => model.NOMBRE, "", new { @class = "text-danger" })
                     </div>
@@ -69,7 +74,6 @@
                         @Html.LabelFor(model => model.PUESTO_ID, "PUESTO_ID", htmlAttributes: new { @id = "lbl_puesto" })
                         @Html.ValidationMessageFor(model => model.PUESTO_ID, "", new { @class = "text-danger" })
                     </div>
-
                     @*<div class="input-field col s4">
                             @Html.EditorFor(model => model.MANAGER, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.LabelFor(model => model.MANAGER, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -81,13 +85,46 @@
                             @Html.LabelFor(model => model.BACKUP_ID, htmlAttributes: new { @class = "control-label col-md-2" })
                             @Html.ValidationMessageFor(model => model.BACKUP_ID, "", new { @class = "text-danger" })
                         </div>*@
+                    @if (ViewBag.PUESTO_ID1 == null || ViewBag.PUESTO_ID1 == "")
+                    {
+                        <div class="input-field col s12">
+                            <select multiple name="selectcocode" id="selectcocode" required="" class="comcode select_all">
+                                @try
+                                {
+                                    foreach (var item in ViewBag.SOCIEDADES)
+                                    {
+                                        <option id="@item.BUKRS" value="@item.BUKRS">@item.BUKRS</option>
 
-                    <div class="input-field col s12">
-                        @Html.DropDownList("BUNIT", null, htmlAttributes: new { @class = "select", required = true })
-                        @*@Html.EditorFor(model => model.BUNIT, new { htmlAttributes = new { @class = "form-control" } })*@
-                        @Html.LabelFor(model => model.BUNIT, htmlAttributes: new { @id = "lbl_bukrs" })
-                        @Html.ValidationMessageFor(model => model.BUNIT, "", new { @class = "text-danger" })
-                    </div>
+
+                                        if (ViewBag.sociedad )
+                                        {
+                                            <option id="@item.BUKRS" value="@item.BUKRS" class="selected">@item.BUKRS</option>
+                                        }
+                                        else
+                                        {
+                                            <option id="@item.BUKRS" value="@item.BUKRS">@item.BUKRS</option>
+                                        }
+                                    }
+                                }
+                                catch (Exception)
+                                {
+                                    <option value="" id="no_opt">No hay opciones</option>
+                                }
+
+
+                            </select>
+                            <label id="label_cocode">Co. Code</label>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="input-field col s12">
+                            @Html.DropDownList("BUNIT", null, htmlAttributes: new { @class = "select", required = true })
+                            @*@Html.EditorFor(model => model.BUNIT, new { htmlAttributes = new { @class = "form-control" } })*@
+                            @Html.LabelFor(model => model.BUNIT, htmlAttributes: new { @id = "lbl_bukrs" })
+                            @Html.ValidationMessageFor(model => model.BUNIT, "", new { @class = "text-danger" })
+                        </div>
+                    }
                 </div>
             </div>
         </div>
@@ -159,6 +196,9 @@
     </div>
     //OCG 11/10/18 Validacion de email
     <script>
+        $(document).ready(function () {
+            
+        });
 
         $('#EMAIL').on("focusout", function () {
             var email = $('#EMAIL').val();

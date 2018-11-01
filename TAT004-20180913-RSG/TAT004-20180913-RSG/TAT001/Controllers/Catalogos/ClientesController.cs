@@ -182,7 +182,7 @@ namespace TAT001.Controllers.Catalogos
         // GET: Clientes/Edit/5
         public ActionResult Edit(string vko, string vtw, string spa, string kun)
         {
-            int pagina = 632; //ID EN BASE DE DATOS
+            int pagina = 635; //ID EN BASE DE DATOS PARA EL TITULO
             string u = User.Identity.Name;
             var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
             ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
@@ -190,6 +190,7 @@ namespace TAT001.Controllers.Catalogos
             ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
             ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
             ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            pagina = 632; //ID EN BASE DE DATOS
             ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
             ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
 
@@ -576,7 +577,6 @@ namespace TAT001.Controllers.Catalogos
             foreach (DET_AGENTE1 da in ld)
             {
                 CLIENTEF cl = new CLIENTEF();
-                CONTACTOC co = new CONTACTOC();
 
                 if (da.MESS == null || da.MESS == "")
                 {
@@ -615,25 +615,41 @@ namespace TAT001.Controllers.Catalogos
                     cl.USUARIO6_ID = (da.ID_US6 != null ? da.ID_US6.Trim() : null);
                     cl.USUARIO7_ID = (da.ID_US7 != null ? da.ID_US7.Trim() : null);
                     cl.ACTIVO = true;
+                    
                     ////Modificar a CLIENTE
-                    cl1.NAME1 = da.CLIENTE_N;
-                    cl1.PROVEEDOR_ID = (da.ID_PROVEEDOR != null ? da.ID_PROVEEDOR.Trim() : null);
-                    cl1.LAND = (da.LAND != null ? da.LAND.Trim() : null);
-                    cl1.BANNER = (da.BANNER != null ? da.BANNER.Trim() : null);
-                    cl1.BANNERG = (da.BANNERG != null ? da.BANNERG.Trim() : null);
-                    cl1.CANAL = (da.CANAL != null ? da.CANAL.Trim() : null);
-                    cl1.EXPORTACION = (da.EXPORTACION != null ? da.EXPORTACION.Trim() : null);
+                    cl1.PROVEEDOR_ID = (da.ID_PROVEEDOR != null ? da.ID_PROVEEDOR.Trim() : cl1.PROVEEDOR_ID);
+                    cl1.LAND = (da.LAND != null ? da.LAND.Trim() : cl1.LAND);
+                    cl1.BANNER = (da.BANNER != null ? da.BANNER.Trim() : cl1.BANNER);
+                    cl1.BANNERG = (da.BANNERG != null ? da.BANNERG.Trim() : cl1.BANNERG);
+                    cl1.CANAL = (da.CANAL != null ? da.CANAL.Trim() : cl1.CANAL);
+                    cl1.EXPORTACION = (da.EXPORTACION != null ? da.EXPORTACION.Trim() : cl1.EXPORTACION);
+                    cl1.CONTAC = (da.CONTACTO != null ? da.CONTACTO.Trim() : cl1.CONTAC);
+                    cl1.CONT_EMAIL = (da.CONTACTOE != null ? da.CONTACTOE.Trim() : cl1.CONT_EMAIL);
+                    db.Entry(cl1).State = EntityState.Modified;
+                    
                     ////Agregar a contacto
                     if (da.CONTACTO != null)
                     {
-                        co.NOMBRE = da.CONTACTO;
-                        co.EMAIL = (da.CONTACTOE != null ? da.CONTACTOE.Trim() : null);
-                        co.VKORG = da.VKORG;
-                        co.VTWEG = da.VTWEG;
-                        co.SPART = da.SPART;
-                        co.KUNNR = da.KUNNR;
-                        co.ACTIVO = true;
-                        db.CONTACTOCs.Add(co);
+                        CONTACTOC co = new CONTACTOC();
+                        db.CONTACTOCs.Where(x => (x.DEFECTO != null && x.DEFECTO.Value) && x.VKORG == da.VKORG
+                        && x.VTWEG == co.VTWEG && da.SPART == x.SPART && x.KUNNR == da.KUNNR).ToList().ForEach(x=>
+                        {
+                            x.DEFECTO = false;
+                            db.Entry(x).State = EntityState.Modified;
+                        });
+                        if (!db.CONTACTOCs.Any(x=>x.EMAIL== (da.CONTACTOE != null ? da.CONTACTOE.Trim() : null) && x.NOMBRE== (da.CONTACTO != null ? da.CONTACTO.Trim() : null)))
+                        {
+                            co.NOMBRE = (da.CONTACTO != null ? da.CONTACTO.Trim() : null);
+                            co.EMAIL = (da.CONTACTOE != null ? da.CONTACTOE.Trim() : null);
+                            co.VKORG = da.VKORG;
+                            co.VTWEG = da.VTWEG;
+                            co.SPART = da.SPART;
+                            co.KUNNR = da.KUNNR;
+                            co.ACTIVO = true;
+                            co.DEFECTO = true;
+                            db.CONTACTOCs.Add(co);
+                        }
+                      
                     }
                     ////Guardar cambios en db
                     db.CLIENTEFs.Add(cl);

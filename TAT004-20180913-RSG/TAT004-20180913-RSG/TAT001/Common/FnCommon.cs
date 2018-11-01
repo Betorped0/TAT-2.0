@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web.Mvc;
 using TAT001.Entities;
@@ -118,7 +119,7 @@ namespace TAT001.Common
                     Text = (x.TSOL_ID + " - " + x.TXT50)
                 }).ToList();
         }
-        public static List<SelectTreeItem> ObtenerTreeTiposSolicitud(TAT001Entities db, string spras_id, string tipo = null,bool? esReversa=false)
+        public static List<SelectTreeItem> ObtenerTreeTiposSolicitud(TAT001Entities db,string sociedad_id, string spras_id, string tipo = null,bool? esReversa=false)
         {
             // tipo
             // SD = Solicitud directa
@@ -137,7 +138,10 @@ namespace TAT001.Common
             else
             {
                 db.TSOL_GROUP
-                    .Where(x => x.ID_PADRE == null && x.TIPO_PADRE == null && (tipo == x.TIPO || tipo == null))
+                    .Where(x => 
+                    x.ID_PADRE == null && x.TIPO_PADRE == null 
+                    && (tipo == x.TIPO || tipo == null) 
+                    && (((sociedad_id=="KCMX" || sociedad_id == "KLCO") && x.ID!= "1_5_OP" && x.ID != "2_5_OP")|| (sociedad_id != "KCMX" && sociedad_id != "KLCO")))
                     .Join(db.TSOL_GROUPT, tg => new { ID = tg.ID, TIPO = tg.TIPO }, tgt => new { ID = tgt.TSOL_GROUP_ID, TIPO = tgt.TSOL_GROUP_TIPO }, (tg, tgt) => tgt)
                     .Where(x => x.SPRAS_ID == spras_id).OrderBy(x => x.TSOL_GROUP_ID)
                     .ToList().ForEach(x =>
@@ -215,7 +219,57 @@ namespace TAT001.Common
             }
             return items;
         }
+        public static int ObtenerPeriodoCalendario445(TAT001Entities db, string sociedad_id, string tsol_id, string usuario_id = null)
+        {
+            //tipo
+            //PRE = PreCierre
+            //CI =  Cierre
+            DateTime fechaActual = DateTime.Now;
+            short ejercicio = short.Parse(fechaActual.Year.ToString());
+            CALENDARIO_AC calendarioAc = null;
+            CALENDARIO_EX calendarioEx = null;
 
+            calendarioAc = db.CALENDARIO_AC.FirstOrDefault(x =>
+            x.ACTIVO == true &&
+            x.SOCIEDAD_ID == sociedad_id &&
+            x.TSOL_ID == tsol_id &&
+            x.EJERCICIO == ejercicio &&
+            (fechaActual >= DbFunctions.CreateDateTime(x.PRE_FROMF.Year, x.PRE_FROMF.Month, x.PRE_FROMF.Day, x.PRE_FROMH.Hours, x.PRE_FROMH.Minutes, x.PRE_FROMH.Seconds) &&
+             fechaActual <= DbFunctions.CreateDateTime(x.PRE_TOF.Year, x.PRE_TOF.Month, x.PRE_TOF.Day, x.PRE_TOH.Hours, x.PRE_TOH.Minutes, x.PRE_TOH.Seconds)));
+            if (calendarioAc!=null)
+            {
+                return calendarioAc.PERIODO;
+            }
+            if (calendarioAc==null && usuario_id != null)
+            {
+                calendarioEx = db.CALENDARIO_EX.FirstOrDefault(x =>
+                    x.ACTIVO == true &&
+                    x.SOCIEDAD_ID == sociedad_id &&
+                    x.TSOL_ID == tsol_id &&
+                    x.USUARIO_ID == usuario_id &&
+                    x.EJERCICIO == ejercicio &&
+                    (fechaActual >= DbFunctions.CreateDateTime(x.EX_FROMF.Year, x.EX_FROMF.Month, x.EX_FROMF.Day, x.EX_FROMH.Hours, x.EX_FROMH.Minutes, x.EX_FROMH.Seconds) &&
+                    fechaActual <= DbFunctions.CreateDateTime(x.EX_TOF.Year, x.EX_TOF.Month, x.EX_TOF.Day, x.EX_TOH.Hours, x.EX_TOH.Minutes, x.EX_TOH.Seconds)));
+                if (calendarioEx != null)
+                {
+                    return calendarioEx.PERIODO;
+                }
+            }
+             
+                calendarioAc = db.CALENDARIO_AC.FirstOrDefault(x =>
+                x.ACTIVO == true &&
+                x.SOCIEDAD_ID == sociedad_id &&
+                x.TSOL_ID == tsol_id &&
+                x.EJERCICIO == ejercicio &&
+                (fechaActual >= DbFunctions.CreateDateTime(x.CIE_FROMF.Year, x.CIE_FROMF.Month, x.CIE_FROMF.Day, x.CIE_FROMH.Hours, x.CIE_FROMH.Minutes, x.CIE_FROMH.Seconds) &&
+                fechaActual <= DbFunctions.CreateDateTime(x.CIE_TOF.Year, x.CIE_TOF.Month, x.CIE_TOF.Day, x.CIE_TOH.Hours, x.CIE_TOH.Minutes, x.CIE_TOH.Seconds)));
+            if (calendarioAc != null)
+            {
+                return calendarioAc.PERIODO;
+            }
+
+            return 0;
+        }
         public static bool  ValidarPeriodoEnCalendario445(TAT001Entities db,string sociedad_id, string tsol_id,int periodo_id,string tipo, string usuario_id=null)
         {
             //tipo
@@ -232,7 +286,7 @@ namespace TAT001.Common
                     x.ACTIVO == true &&
                     x.SOCIEDAD_ID == sociedad_id && 
                     x.TSOL_ID == tsol_id && 
-                    x.PERIODO==periodo_id &&
+                    x.PERIODO == periodo_id &&
                     x.EJERCICIO==ejercicio &&
                     (fechaActual>= DbFunctions.CreateDateTime(x.PRE_FROMF.Year, x.PRE_FROMF.Month, x.PRE_FROMF.Day, x.PRE_FROMH.Hours, x.PRE_FROMH.Minutes, x.PRE_FROMH.Seconds) && 
                      fechaActual<= DbFunctions.CreateDateTime(x.PRE_TOF.Year, x.PRE_TOF.Month, x.PRE_TOF.Day, x.PRE_TOH.Hours, x.PRE_TOH.Minutes, x.PRE_TOH.Seconds)));
@@ -254,10 +308,11 @@ namespace TAT001.Common
                         x.ACTIVO == true &&
                         x.SOCIEDAD_ID == sociedad_id &&
                         x.TSOL_ID == tsol_id &&
-                        x.PERIODO == periodo_id &&
+                        x.PERIODO == periodo_id  &&
                         x.EJERCICIO == ejercicio &&
                         (fechaActual >= DbFunctions.CreateDateTime(x.CIE_FROMF.Year, x.CIE_FROMF.Month, x.CIE_FROMF.Day, x.CIE_FROMH.Hours, x.CIE_FROMH.Minutes, x.CIE_FROMH.Seconds) && 
                         fechaActual <= DbFunctions.CreateDateTime(x.CIE_TOF.Year, x.CIE_TOF.Month, x.CIE_TOF.Day, x.CIE_TOH.Hours, x.CIE_TOH.Minutes, x.CIE_TOH.Seconds)));
+                 
                     break;
                 default:
                     break;
@@ -282,5 +337,93 @@ namespace TAT001.Common
                     new SelectListItem{Text="100",Value="100"}
             };
         }
+
+        public static List<MATERIAL> ObtenerMateriales(TAT001Entities db,string prefix, string vkorg, string vtweg, string user_id)
+        {
+            string spras_id = ObtenerSprasId(db, user_id);
+            List<MATERIAL> materiales = new List<MATERIAL>();
+                materiales = db.Database.SqlQuery<MATERIAL>("CPS_LISTA_MATERIALES @SPRAS_ID,@VKORG,@VTWEG,@PREFIX",
+                new SqlParameter("@SPRAS_ID", spras_id),
+                new SqlParameter("@VKORG", vkorg),
+                new SqlParameter("@VTWEG", vtweg),
+                new SqlParameter("@PREFIX",  (prefix==null?"":prefix))).ToList();
+            
+            return materiales;
+        }
+        public static MATERIAL ObtenerMaterial(TAT001Entities db, string user_id, string material_id)
+        {
+            string spras_id = ObtenerSprasId(db, user_id);
+            MATERIAL material= db.MATERIALs.Where(x => x.ID == material_id).FirstOrDefault();
+
+            if (material.MATERIALTs.Any(x => x.SPRAS == spras_id))
+            {
+                MATERIALT mt = material.MATERIALTs.First(x => x.SPRAS == spras_id);
+                material.MAKTX = mt.MAKTX;
+                material.MAKTG = mt.MAKTG;
+            }
+            return material;
+
+
+        }
+        public static List<MATERIALGP> ObtenerMaterialGroups(TAT001Entities db)
+        {
+            return db.MATERIALGPs.Where(a => a.ACTIVO).ToList();
+        }
+        public static List<MATERIALGPT> ObtenerMaterialGroupsCliente(TAT001Entities db, string vkorg, string spart, string kunnr, string soc_id,int aii, int mii, int aff, int mff)
+        {
+            List<MATERIALGPT> materialgp = db.Database.SqlQuery<MATERIALGPT>("CPS_LISTA_MATERIALGP_CLIENTE @SOCIEDAD_ID,@VKORG,@SPART,@KUNNR,@aii,@mii,@aff,@mff",
+               new SqlParameter("@SOCIEDAD_ID", soc_id),
+              new SqlParameter("@VKORG", vkorg),
+              new SqlParameter("@SPART", spart),
+              new SqlParameter("@KUNNR", kunnr),
+              new SqlParameter("@aii", aii),
+              new SqlParameter("@mii",mii ),
+              new SqlParameter("@aff",aff ),
+              new SqlParameter("@mff", mff)).ToList();
+            return materialgp;
+        }
+        public static List<DOCUMENTOM_MOD> ObtenerMaterialGroupsMateriales(TAT001Entities db, string vkorg, string spart, string kunnr, string soc_id, int aii, int mii, int aff, int mff,string user_id)
+        {
+            string spras_id = ObtenerSprasId(db, user_id);
+            List<DOCUMENTOM_MOD> materialgp = db.Database.SqlQuery<DOCUMENTOM_MOD>("CPS_LISTA_MATERIALGP_MATERIALES @SOCIEDAD_ID,@VKORG,@SPART,@KUNNR,@SPRAS_ID,@aii,@mii,@aff,@mff",
+              new SqlParameter("@SOCIEDAD_ID", soc_id),
+              new SqlParameter("@VKORG", vkorg),
+              new SqlParameter("@SPART", spart),
+              new SqlParameter("@KUNNR", kunnr),
+              new SqlParameter("@SPRAS_ID", spras_id),
+              new SqlParameter("@aii", aii),
+              new SqlParameter("@mii", mii),
+              new SqlParameter("@aff", aff),
+              new SqlParameter("@mff", mff)).ToList();
+            return materialgp;
+        }
+        public static MATERIALGP ObtenerMaterialGroup(TAT001Entities db,string materialgp_id)
+        {
+            return db.MATERIALGPs.Where(x => x.ID == materialgp_id).FirstOrDefault();
+        }
+        public static MATERIALGPT ObtenerTotalProducts(TAT001Entities db)
+        {
+            return db.MATERIALGPTs.Where(x => x.MATERIALGP_ID == "000" && x.SPRAS_ID == "EN").FirstOrDefault();
+        }
+
+        public static List<CLIENTE> ObtenerClientes(TAT001Entities db, string prefix, string usuario_id, string pais)
+        {
+            List<CLIENTE> clientes = db.Database.SqlQuery<CLIENTE>("CPS_LISTA_CLIENTES @USUARIO_ID,@PAIS,@PREFIX",
+            new SqlParameter("@USUARIO_ID", (usuario_id == null ? "" : usuario_id)),
+            new SqlParameter("@PAIS", (pais == null ? "" : pais)),
+            new SqlParameter("@PREFIX", (prefix==null?"":prefix))).ToList();
+            return clientes;
+        }
+
+        public static List<CONTACTOC> ObtenerContactos(TAT001Entities db, string prefix, string vkorg, string vtweg, string kunnr)
+        {
+            List<CONTACTOC> contactos = db.Database.SqlQuery<CONTACTOC>("CPS_LISTA_CONTACTOS @KUNNR,@VKORG,@VTWEG,@PREFIX",
+            new SqlParameter("@KUNNR", kunnr),
+            new SqlParameter("@VKORG", vkorg),
+            new SqlParameter("@VTWEG", vtweg),
+            new SqlParameter("@PREFIX", (prefix == null ? "" : prefix))).ToList();
+            return contactos;
+        }
+        
     }
 }

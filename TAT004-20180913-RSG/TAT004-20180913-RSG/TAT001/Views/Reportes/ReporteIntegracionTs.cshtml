@@ -9,7 +9,7 @@
     ViewBag.carpeta_r = 1103;
     List<Tuple<decimal, decimal>> negAmount = new List<Tuple<decimal, decimal>>();
 }
-@if (!ViewBag.Display)
+@if (!ViewBag.display)
 {
     <script>
 
@@ -59,7 +59,7 @@
                 </button>
             </div>
             <div class="input-field col s3 m3 l3 offset-l1 offset-m1 offset-s1">
-                <a class="waves-effect waves-light btn" id="excelBtn" @*onclick="tableToExcel('table', 'Reporte de IntegraciónTS')"*@>Generar Excel</a>
+                <a class="waves-effect waves-light btn" id="excelBtn">Generar Excel</a>
             </div>
         }
         else
@@ -174,7 +174,6 @@
         <script src="~/Scripts/subfilters/jquery.tablesorter.js"></script>
         <script src="~/Scripts/subfilters/jquery.tablesorter.pager.js"></script>
         <script src="~/Scripts/subfilters/widget-filter.js"></script>
-        <script src="~/Scripts/tablesort/tableToExcel.js"></script>
 
 
         <script>
@@ -187,7 +186,39 @@
     if (ViewBag.display)
     {
         <script>
+            function fnExcelReport() {
+                var tab_text = "<table border='1px'><tr bgcolor='#87AFC6'>";
+                var textRange; var j = 0;
+               
+                tab = document.getElementById('table'); // id of table
 
+                for (j = 0; j < tab.rows.length; j++) {
+                    
+                    tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
+                    //tab_text=tab_text+"</tr>";
+                }
+
+                tab_text = tab_text + "</table>";
+                tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
+                tab_text = tab_text.replace(/<img[^>]*>/gi, ""); // remove if u want images in your table
+                tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+
+                var ua = window.navigator.userAgent;
+                var msie = ua.indexOf("MSIE ");
+
+                if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+                {
+                    txtArea1.document.open("txt/html", "replace");
+                    txtArea1.document.write(tab_text);
+                    txtArea1.document.close();
+                    txtArea1.focus();
+                    sa = txtArea1.document.execCommand("SaveAs", true, "Say Thanks to Sumit.xls");
+                }
+                else                 //other browser not tested on IE 11
+                    sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
+
+                return (sa);
+            }
         $(document).ready(function () {
             $(".grid thead td").click(function () {
                 showFilterOption(this);
@@ -293,7 +324,9 @@
             });
             $("#excelBtn").click(function () {
                 $('#table').trigger('destroyPager');
-                tableToExcel('table', 'Reporte de IntegraciónTS');
+                var tableid = table;
+                fnExcelReport();
+                location.refresh();
             });
         });
 

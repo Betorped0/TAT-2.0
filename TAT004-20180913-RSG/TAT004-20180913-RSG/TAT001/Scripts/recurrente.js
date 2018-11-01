@@ -573,6 +573,7 @@ function copiarTableVistaRec() {
             var monto = $(this).find("td:eq(3)").text();
             //var control = $(this).find("td.CONTROL").text();
             var porc = $(this).find("td:eq(4)").text();
+            var per = $(this).find("td:eq(11)").text();
             // var autorizacion = $(this).find("td.AUTORIZACION").text();
 
             //if ($("#check_factura").is(':checked')) {
@@ -603,7 +604,7 @@ function copiarTableVistaRec() {
             }
             var t = $('#table_rec').DataTable();
 
-            addRowRecl(t, pos.trim(), sol.trim(), ffecha[0], monto, porc);
+            addRowRecl(t, pos.trim(), sol.trim(), ffecha[0], monto, porc, per);
 
             //Quitar el row
             $(this).remove();

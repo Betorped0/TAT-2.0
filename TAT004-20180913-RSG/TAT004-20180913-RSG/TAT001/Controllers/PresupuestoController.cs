@@ -69,6 +69,7 @@ namespace TAT001.Controllers
             //catch (Exception)
             //{
             //}
+            
             Session["sociedad"] = select;
             Session["cambio"] = cambio;
             Session["periodoconsu"] = periodoconsu;
