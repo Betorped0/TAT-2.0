@@ -5424,11 +5424,14 @@ function selectCliente(valu) {
     if (valu != "") {
         document.getElementById("loader").style.display = "flex";//RSG 03.07.2018
         var esBorrador = $('#borradore').val() == "true";
-
+        var num = $('#duplicate').val();//RSG 01.11.2018
+        if (num !== "")//RSG 01.11.2018
+            num = parseFloat(num);//RSG 01.11.2018
         $.ajax({
             type: "POST",
-            url: root + 'Listas/SelectCliente',
-            data: { "kunnr": valu, esBorrador: esBorrador },
+            //url: root + 'Listas/SelectCliente',
+            url: root + 'Listas/SelectClienteDup',
+            data: { "kunnr": valu, esBorrador: esBorrador, num_doc: num },
             success: function (data) {
 
                 document.getElementById("loader").style.display = "none";//RSG 03.07.2018

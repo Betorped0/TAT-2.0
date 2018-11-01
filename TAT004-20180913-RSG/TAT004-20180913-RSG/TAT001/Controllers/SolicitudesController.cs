@@ -589,7 +589,7 @@ namespace TAT001.Controllers
                         throw new Exception();
                     }
                     if (dp != "X")//ADD 31.10.2018
-                    { 
+                    {
                         rel = Convert.ToDecimal(id_d);
                         ViewBag.relacionada = "prelacionada";
                         ViewBag.relacionadan = rel + "";
@@ -693,6 +693,7 @@ namespace TAT001.Controllers
                 if (dp == "X")//ADD 31.10.2018-------------------
                 {
                     rel = decimal.Parse(id_d);
+                    ViewBag.duplicate = rel;
                 }//ADD 31.10.2018----------------------------
                 if (rel == 0)
                 {
@@ -712,7 +713,8 @@ namespace TAT001.Controllers
                 List<TSOLT_MOD> list_sol = new List<TSOLT_MOD>();
                 //tipo de solicitud
                 string tipS;
-                if (id_d == null || id_d == "")
+                //if (id_d == null || id_d == "")
+                if ((id_d == null || id_d == "") | dp == "X")
                 {
                     tipS = "SD";
                     //directa SD

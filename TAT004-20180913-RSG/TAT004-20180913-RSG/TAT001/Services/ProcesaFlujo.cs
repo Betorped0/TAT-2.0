@@ -12,6 +12,14 @@ namespace TAT001.Services
     {
         public string procesa(FLUJO f, string recurrente)
         {
+            //ADD RSG 01.11.2018----------------------
+            bool recurrent = false;
+            bool draft = false;
+            if (recurrente == "X")
+                recurrent = true;
+            if (recurrente == "B")
+                draft = true;
+            //ADD RSG 01.11.2018----------------------
             string correcto = String.Empty;
             TAT001Entities db = new TAT001Entities();
             FLUJO actual = new FLUJO();
@@ -45,7 +53,7 @@ namespace TAT001.Services
                 actual.ESTATUS = f.ESTATUS;
                 db.FLUJOes.Add(actual);
 
-                if (recurrente != "B")//NO ES BORRADOR
+                if (!draft)//NO ES BORRADOR
                 {
                     WORKFP paso_a = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS.Equals(actual.WF_POS)).FirstOrDefault();
                     int next_step_a = 0;
@@ -53,7 +61,8 @@ namespace TAT001.Services
                         next_step_a = (int)paso_a.NEXT_STEP;
 
                     WORKFP next = new WORKFP();
-                    if (recurrente != "X")
+                    //if (recurrente != "X")
+                    if (!recurrent)
                     {
                         next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS == next_step_a).FirstOrDefault();
                     }
@@ -87,7 +96,8 @@ namespace TAT001.Services
                         }
                         else
                         {
-                            if (recurrente != "X")
+                            //if (recurrente != "X")
+                            if (!recurrent)
                             {
                                 FLUJO detA = determinaAgenteI(cf, dah);
                                 nuevo.USUARIOA_ID = detA.USUARIOA_ID;
@@ -150,7 +160,8 @@ namespace TAT001.Services
                         next_step_a = (int)paso_a.NEXT_STEP;
 
                     WORKFP next = new WORKFP();
-                    if (recurrente != "X")
+                    //if (recurrente != "X")
+                    if (!recurrent)
                     {
                         next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS == next_step_a).FirstOrDefault();
                     }
@@ -184,7 +195,8 @@ namespace TAT001.Services
                         }
                         else
                         {
-                            if (recurrente != "X")
+                            //if (recurrente != "X")
+                            if (!recurrent)
                             {
                                 FLUJO detA = determinaAgenteI(cf, dah);
                                 nuevo.USUARIOA_ID = detA.USUARIOA_ID;
@@ -302,12 +314,14 @@ namespace TAT001.Services
                                 }
 
                                 if (d.DOCUMENTORECs.Count > 0)
-                                    recurrente = "X";
+                                    recurrent = true;
+                                //recurrente = "X";
 
                                 if (nuevo.DETPOS == 0 | nuevo.DETPOS == 99)
                                 {
                                     next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS == next_step_a).FirstOrDefault();
-                                    if (recurrente == "X" & next.ACCION.TIPO.Equals("P"))
+                                    //if (recurrente == "X" & next.ACCION.TIPO.Equals("P"))
+                                    if (recurrent & next.ACCION.TIPO.Equals("P"))
                                     {
                                         next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS == next_step_a).FirstOrDefault();
                                         if (next.NEXT_STEP != null)
@@ -322,7 +336,8 @@ namespace TAT001.Services
                                         d.ESTATUS_WF = "A";
                                         if (paso_a.EMAIL.Equals("X"))
                                             correcto = "2";
-                                        if (recurrente == "X")
+                                        //if (recurrente == "X")
+                                        if (recurrent)
                                         {
                                             FLUJO nuevos = new FLUJO();
                                             nuevos.WORKF_ID = paso_a.ID;
@@ -372,7 +387,8 @@ namespace TAT001.Services
                                                 nuevo.USUARIOA_ID = null;
                                                 d.ESTATUS_WF = "A";
                                                 d.ESTATUS_SAP = "P";
-                                                if (recurrente == "X")
+                                                //if (recurrente == "X")
+                                                if (recurrent)
                                                 {
                                                     nuevo.WF_POS++;
                                                     d.ESTATUS_SAP = "";
