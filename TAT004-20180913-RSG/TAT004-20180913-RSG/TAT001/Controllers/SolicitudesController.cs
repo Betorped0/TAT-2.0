@@ -4988,56 +4988,58 @@ namespace TAT001.Controllers
                 string rec = "";//ADD RSG 30.10.2018
                 if (txt_flujo == "B")//ADD RSG 30.10.2018
                     rec = "B";//ADD RSG 30.10.2018
-                ProcesaFlujo pf = new ProcesaFlujo();
-                try
+                if (rec != "B")//ADD RSG 31.10.2018
                 {
-                    FLUJO f = db.FLUJOes.Where(a => a.NUM_DOC == d.NUM_DOC).OrderByDescending(a => a.POS).FirstOrDefault();
-                    f.ESTATUS = "A";
-                    f.FECHAM = DateTime.Now;
-                    string c = pf.procesa(f, rec);
-                    FLUJO conta = db.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
-                    while (c == "1")
+                    ProcesaFlujo pf = new ProcesaFlujo();
+                    try
                     {
-                        Email em = new Email();
-                        string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
-                        string image = Server.MapPath("~/images/logo_kellogg.png");
-                        em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image);
-
-
-                        if (conta.WORKFP.ACCION.TIPO == "B")
+                        FLUJO f = db.FLUJOes.Where(a => a.NUM_DOC == d.NUM_DOC).OrderByDescending(a => a.POS).FirstOrDefault();
+                        f.ESTATUS = "A";
+                        f.FECHAM = DateTime.Now;
+                        string c = pf.procesa(f, rec);
+                        FLUJO conta = db.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+                        while (c == "1")
                         {
-                            WORKFP wpos = db.WORKFPs.Where(x => x.ID == conta.WORKF_ID & x.VERSION == conta.WF_VERSION & x.POS == conta.WF_POS).FirstOrDefault();
-                            conta.ESTATUS = "A";
-                            //f1.FECHAC = DateTime.Now;
-                            conta.FECHAM = DateTime.Now;
-                            c = pf.procesa(conta, "");
-                            conta = db.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+                            Email em = new Email();
+                            string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
+                            string image = Server.MapPath("~/images/logo_kellogg.png");
+                            em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image);
+
+
+                            if (conta.WORKFP.ACCION.TIPO == "B")
+                            {
+                                WORKFP wpos = db.WORKFPs.Where(x => x.ID == conta.WORKF_ID & x.VERSION == conta.WF_VERSION & x.POS == conta.WF_POS).FirstOrDefault();
+                                conta.ESTATUS = "A";
+                                //f1.FECHAC = DateTime.Now;
+                                conta.FECHAM = DateTime.Now;
+                                c = pf.procesa(conta, "");
+                                conta = db.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+                            }
+                            else
+                            {
+                                c = "";
+                            }
                         }
-                        else
+
+                        using (TAT001Entities db1 = new TAT001Entities())
                         {
-                            c = "";
+                            FLUJO ff = db1.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+                            Estatus es = new Estatus();//RSG 18.09.2018
+                            DOCUMENTO ddoc = db1.DOCUMENTOes.Find(f.NUM_DOC);
+                            ff.STATUS = es.getEstatus(ddoc);
+                            db1.Entry(ff).State = EntityState.Modified;
+                            db1.SaveChanges();
                         }
                     }
-
-                    using (TAT001Entities db1 = new TAT001Entities())
+                    catch (Exception ee)
                     {
-                        FLUJO ff = db1.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
-                        Estatus es = new Estatus();//RSG 18.09.2018
-                        DOCUMENTO ddoc = db1.DOCUMENTOes.Find(f.NUM_DOC);
-                        ff.STATUS = es.getEstatus(ddoc);
-                        db1.Entry(ff).State = EntityState.Modified;
-                        db1.SaveChanges();
+                        if (errorString == "")
+                        {
+                            errorString = ee.Message.ToString();
+                        }
+                        ViewBag.error = errorString;
                     }
-                }
-                catch (Exception ee)
-                {
-                    if (errorString == "")
-                    {
-                        errorString = ee.Message.ToString();
-                    }
-                    ViewBag.error = errorString;
-                }
-
+                }//ADD RSG 31.10.2018
                 return RedirectToAction("Index", "Home");
             }
             ViewBag.TALL_ID = new SelectList(db.TALLs, "ID", "DESCRIPCION", dOCUMENTO.TALL_ID);

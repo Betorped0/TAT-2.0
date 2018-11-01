@@ -165,8 +165,8 @@
         }
         @if (ViewBag.reversan != "X" | ViewBag.reversan == "X")
         {
-            <a id="btn_guardarh" class="btn btn-small disabled">Guardar</a>
-            <a id="btn_guardarBorr" class="btn btn-small">Nuevo borrador</a><!--ADD RSG 30.10.2018-->
+            <a id="btn_guardarBorr" class="btn btn-small">Guardar</a><!--ADD RSG 30.10.2018-->
+            <a id="btn_guardarh" class="btn btn-small disabled">Enviar</a>
         }
     </div>
     <div class="div_bottom">
@@ -1729,6 +1729,7 @@
                             <div class="row" style="margin-bottom:0">
                                 <div class="row">
                                     <div class="input-field col s6">
+                                        <input value=" " id="txtPres" name="txtPres" type="hidden" class="" />
                                         <input value="" id="monto_doc_md" type="text" class="" disabled="disabled" />
                                         <label for="monto_doc_md">Monto</label>
                                         @Html.HiddenFor(model => model.MONTO_DOC_MD)
