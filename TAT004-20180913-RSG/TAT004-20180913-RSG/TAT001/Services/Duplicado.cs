@@ -8,12 +8,12 @@ namespace TAT001.Services
 {
     public class Duplicado
     {
-        public DOCUMENTBORR llenaDuplicado(decimal num_doc, string user)
+        public DOCUMENTBORR llenaDuplicado(TAT001Entities db1, decimal num_doc, string user)
         {
-            using (TAT001Entities db = new TAT001Entities())
-            {
+            //using (TAT001Entities db1 = new TAT001Entities())
+            //{
                 DOCUMENTBORR docb = new DOCUMENTBORR();
-                DOCUMENTO docPadre = db.DOCUMENTOes.Find(num_doc);
+                DOCUMENTO docPadre = db1.DOCUMENTOes.Find(num_doc);
                 docb.AGENTE_ACTUAL = docPadre.AGENTE_ACTUAL;
                 docb.CANAL_ID  = docPadre.CANAL_ID ;
                 docb.CANTIDAD_EV  = docPadre.CANTIDAD_EV ;
@@ -45,6 +45,7 @@ namespace TAT001.Services
                 docb.METODO_PAGO  = docPadre.METODO_PAGO ;
                 docb.MONEDAL2_ID  = docPadre.MONEDAL2_ID ;
                 docb.MONEDAL_ID  = docPadre.MONEDAL_ID ;
+                docb.MONEDA_ID = docPadre.MONEDA_ID;
                 docb.MONEDA_DIS  = docPadre.MONEDA_ID ;
                 docb.MONTO_BASE_GS_PCT_MD  = docPadre.MONTO_BASE_GS_PCT_MD ;
                 docb.MONTO_BASE_GS_PCT_ML  = docPadre.MONTO_BASE_GS_PCT_ML ;
@@ -84,6 +85,7 @@ namespace TAT001.Services
                 docb.VKORG  = docPadre.VKORG ;
                 docb.VTWEG  = docPadre.VTWEG ;
 
+                if(docPadre.DOCUMENTOPs!=null)
                 foreach(DOCUMENTOP dp in docPadre.DOCUMENTOPs.ToList())
                 {
                     DOCUMENTOBORRP docBp = new DOCUMENTOBORRP();
@@ -105,8 +107,50 @@ namespace TAT001.Services
                     docb.DOCUMENTOBORRPs.Add(docBp);
                 }
 
+                if (docPadre.DOCUMENTOFs != null)
+                    foreach (DOCUMENTOF df in docPadre.DOCUMENTOFs)
+                {
+                    DOCUMENTOBORRF docBf = new DOCUMENTOBORRF();
+                    docBf.ACTIVO = true;
+                    docBf.AUTORIZACION = df.AUTORIZACION;
+                    docBf.BELNR = df.BELNR;
+                    docBf.BILL_DOC = df.BILL_DOC;
+                    docBf.CONTROL = df.CONTROL;
+                    docBf.EJERCICIOK = df.EJERCICIOK;
+                    docBf.FACTURA = df.FACTURA;
+                    docBf.FACTURAK = df.FACTURAK;
+                    docBf.FECHA = df.FECHA;
+                    docBf.IMPORTE_FAC = df.IMPORTE_FAC;
+                    docBf.PAYER = df.PAYER;
+                    docBf.POS = df.POS;
+                    docBf.PROVEEDOR = df.PROVEEDOR;
+                    docBf.SOCIEDAD = df.SOCIEDAD;
+                    docBf.VENCIMIENTO = df.VENCIMIENTO;
+
+                    docb.DOCUMENTOBORRFs.Add(docBf);
+                }
+
+                if (docPadre.DOCUMENTORECs != null)
+                    foreach (DOCUMENTOREC dre in docPadre.DOCUMENTORECs)
+                {
+                    DOCUMENTOBORRREC docRe = new DOCUMENTOBORRREC();
+                    docRe.DOC_REF = dre.DOC_REF;
+                    docRe.EJERCICIO = dre.EJERCICIO ;
+                    docRe.ESTATUS = dre.ESTATUS ;
+                    docRe.FECHAF = dre.FECHAF ;
+                    docRe.FECHAV = dre.FECHAV ;
+                    docRe.MONTO_BASE = dre.MONTO_BASE ;
+                    docRe.MONTO_FIJO = dre.MONTO_FIJO ;
+                    docRe.MONTO_GRS = dre.MONTO_GRS ;
+                    docRe.MONTO_NET = dre.MONTO_NET ;
+                    docRe.PERIODO = dre.PERIODO ;
+                    docRe.PORC = dre.PORC ;
+                    docRe.POS = dre.POS ;
+
+                    docb.DOCUMENTOBORRRECs.Add(docRe);
+                }
                 return docb;
-            }
+            //}
         }
     }
 }

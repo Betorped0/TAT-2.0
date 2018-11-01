@@ -588,9 +588,9 @@ namespace TAT001.Controllers
                     {
                         throw new Exception();
                     }
-                    rel = Convert.ToDecimal(id_d);
                     if (dp != "X")//ADD 31.10.2018
-                    {
+                    { 
+                        rel = Convert.ToDecimal(id_d);
                         ViewBag.relacionada = "prelacionada";
                         ViewBag.relacionadan = rel + "";
                     }
@@ -690,6 +690,10 @@ namespace TAT001.Controllers
                 if (tmp != null)
                     Session["pais"] = tmp.PAIS_ID;
 
+                if (dp == "X")//ADD 31.10.2018-------------------
+                {
+                    rel = decimal.Parse(id_d);
+                }//ADD 31.10.2018----------------------------
                 if (rel == 0)
                 {
                     try//RSG 15.05.2018
@@ -1011,7 +1015,7 @@ namespace TAT001.Controllers
                         {
                             rel = Convert.ToDecimal(id_d);
                             Duplicado dup = new Duplicado();
-                            docb = dup.llenaDuplicado(rel, user.ID);
+                            docb = dup.llenaDuplicado(db, rel, user.ID);
                         }
                         //Hay borrador 
                         borrador = "true";
@@ -1072,6 +1076,7 @@ namespace TAT001.Controllers
                         d.DOCUMENTOF = docfl;
 
                         //RSG add 20.09.2018------------------------------------------
+                        d.DOCUMENTORECs = new List<DOCUMENTOREC>();//ADD RSG 31.10.2018
                         foreach (DOCUMENTOBORRREC drec in docb.DOCUMENTOBORRRECs)
                         {
                             DOCUMENTOREC dbp = new DOCUMENTOREC();
