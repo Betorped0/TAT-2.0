@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using System.Reflection;
 using SimpleImpersonation;
+using TAT001.Common;
 
 namespace TAT001.Models
 {
@@ -1065,6 +1066,7 @@ namespace TAT001.Models
             }
             catch (Exception e)
             {
+                Log.ErrorLogApp(e,"ArchivoContable","Detalle");
                 return "Error al obtener detalle contable";
             }
         }

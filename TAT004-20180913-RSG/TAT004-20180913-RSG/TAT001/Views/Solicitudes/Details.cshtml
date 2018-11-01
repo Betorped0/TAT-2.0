@@ -791,21 +791,6 @@
                                                                 }
                                                                 <td class="precio">@iteem.MONTO_BASE</td>
                                                             }
-                                                            @*}
-                                                                else//si tiene objetivo contabilizado
-                                                                {
-                                                                    DOCUMENTORAN ran = iteem.DOCUMENTORANs.Where(x => x.PORCENTAJE == ttol.Where(y => y.NUM_DOC == iteem.DOC_REF).FirstOrDefault().PORC_APOYO).FirstOrDefault();
-                                                                    if (ran != null)
-                                                                    {
-                                                                        <td class="porcentaje">@ran.PORCENTAJE</td>
-                                                                        <td class="precio">@ran.OBJETIVOI</td>
-                                                                    }
-                                                                }*@
-                                                            @*if (iteem.ESTATUS == "P")
-                                                                {
-                                                                    <td>Contabilizado</td>
-                                                                }
-                                                                else*@
                                                             @if (iteem.ESTATUS == "C")
                                                             {
                                                                 <td>Cancelado</td>
@@ -1294,17 +1279,17 @@
                                 <div class="col s12 m6 l6">
                                     <div class="card-panel">
                                         <h5 id="head_dis">Distribución</h5>
-                                        <div class="row" style="margin-bottom:0">
-                                            @if (Model.D.LIGADA!=null && Model.D.LIGADA.Value)
-                                            {
-                                            <div class="input-field col s6">
-                                                <label>
-                                                    <input type="checkbox" checked />
-                                                    <span id="span_ligada">Solicitud ligada a facturación </span>
-                                                </label>
+                                        @if (Model.D.LIGADA != null && Model.D.LIGADA.Value)
+                                        {
+                                            <div class="row" style="margin-bottom:0">
+                                                <div class="col s6">
+                                                    <label>
+                                                        <input type="checkbox" checked disabled="disabled"/>
+                                                        <span id="span_ligada">Solicitud ligada a facturación </span>
+                                                    </label>
+                                                    </div>
                                             </div>
-                                            }
-                                        </div>
+                                        }
                                         <div class="row" style="margin-bottom:0">
                                             <div class="input-field col s6">
                                                 @Html.EditorFor(model => model.D.TIPO_TECNICO, new { htmlAttributes = new { @disabled = "disabled" } })
@@ -1319,17 +1304,33 @@
                                         </div>
                                         <div class="col s12 m6 l6">
                                             <div class="card-panel">
-                                                <h5 id="head_montob">Monto Base</h5>
-                                                <div class="row" style="margin-bottom:0">
-                                                    <div class="input-field col s6">
-                                                        @Html.EditorFor(model => model.D.MONTO_DOC_MD, new { htmlAttributes = new { @disabled = "disabled", @id = "lbl_montodis", @class = "_vmonto" } })
-                                                        @Html.LabelFor(model => model.D.MONTO_DOC_MD, "Monto", htmlAttributes: new { @id = "lbl_montodis" })
+
+                                                @if ((Model.D.LIGADA != null && Model.D.LIGADA.Value) || Model.D.TIPO_TECNICO=="P")
+                                                {
+                                                            <h5 id="head_baseaplicar">Base para aplicar %</h5> @*B20180801 MGC Textos*@
+                                                            <div class="row" style="margin-bottom:0">
+                                                                <div class="input-field col s6">
+                                                                    @Html.EditorFor(model => model.D.PORC_APOYO, new { htmlAttributes = new { @disabled = "disabled", @id = "lbl_montodis", @class = "_vmonto" } })
+                                                                    <label id="lbl_porcapoyo" for="bmonto_apoyo">% Apoyo</label>@*B20180801 MGC Textos*@
+                                                                </div>
+                                                            </div>
+                                                       
+                                                }
+                                                else
+                                                {
+                                                    <h5 id="head_montob">Monto Base</h5>
+                                                    <div class="row" style="margin-bottom:0">
+                                                        <div class="input-field col s6">
+                                                            @Html.EditorFor(model => model.D.MONTO_DOC_MD, new { htmlAttributes = new { @disabled = "disabled", @id = "lbl_montodis", @class = "_vmonto" } })
+                                                            @Html.LabelFor(model => model.D.MONTO_DOC_MD, "Monto", htmlAttributes: new { @id = "lbl_montodis" })
+                                                        </div>
+                                                        <div class="input-field col s6">
+                                                            @Html.EditorFor(model => model.D.MONEDA_ID, new { htmlAttributes = new { @disabled = "disabled", @id = "lbl_monedadis" } })
+                                                            @Html.LabelFor(model => model.D.MONEDA_ID, "Moneda", htmlAttributes: new { @for = "monedadis_id", @id = "lbl_monedadis" })
+                                                        </div>
                                                     </div>
-                                                    <div class="input-field col s6">
-                                                        @Html.EditorFor(model => model.D.MONEDA_ID, new { htmlAttributes = new { @disabled = "disabled", @id = "lbl_monedadis" } })
-                                                        @Html.LabelFor(model => model.D.MONEDA_ID, "Moneda", htmlAttributes: new { @for = "monedadis_id", @id = "lbl_monedadis" })
-                                                    </div>
-                                                </div>
+                                                }
+
                                             </div>
                                         </div>
                                     </div>
