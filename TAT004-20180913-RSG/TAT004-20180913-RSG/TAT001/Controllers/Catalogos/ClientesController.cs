@@ -218,7 +218,7 @@ namespace TAT001.Controllers.Catalogos
             ViewBag.LAND = new SelectList(db.PAIS, "LAND", "LANDX", cLIENTE.LAND);
             ViewBag.PARVW = new SelectList(db.TCLIENTEs, "ID", "ID", cLIENTE.PARVW);
             var canales = db.CANALs.Select(x => new { x.CANAL1, DESCRIPCION = x.CANAL1 + "-" + x.CDESCRIPCION });
-            ViewBag.CANAL = new SelectList(canales, "CANAL1","DESCRIPCION", cLIENTE.CANAL.TrimEnd());
+            ViewBag.CANAL = new SelectList(canales, "CANAL1","DESCRIPCION", cLIENTE.CANAL != null ? cLIENTE.CANAL.TrimEnd() : "");
             return View(cLIENTE);
         }
 
