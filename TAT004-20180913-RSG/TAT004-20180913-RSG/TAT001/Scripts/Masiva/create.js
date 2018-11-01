@@ -2060,7 +2060,8 @@ function procesarHoja5() {
                 cloneTables();
                 $("#tab_test5").on("change", ".requiredfile", function () {
                     var data = table.row(this).data();
-                    if ($(this).hasClass("valid") & validaTabs("1", 4)) {//ADD RSG 29.10.2018
+                    var val = $(this).val();
+                    if ($(this).hasClass("valid") | val !== "") {//ADD RSG 29.10.2018
                         $(this).closest('tr').children().eq(0).children().removeClass("red rojo");
                         $(this).closest('tr').children().eq(0).children().addClass("green");
                         $(this).closest('tr').children().eq(0).children().text("done");
