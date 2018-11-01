@@ -182,7 +182,7 @@
                     }
                     else if ((Model.D.ESTATUS.Equals("A") | Model.D.ESTATUS.Equals("R")) && (Model.D.TSOL.PADRE) /*&& Model.D.DOCUMENTORECs.Count < 1 && Model.D.DOCUMENTOLs.Count < 1*/)//RSG 20181002
                     {
-                        if (Model.D.USUARIOC_ID == ViewBag.usuario.ID & Model.D.DOCUMENTO_SAP != null)
+                        if (Model.D.USUARIOC_ID == ViewBag.usuario.ID & (Model.D.DOCUMENTO_SAP != null && Model.D.DOCUMENTO_SAP != "0"))
                         {
                             <div id="div_drop" class="col">
                                 <a href="@Url.Action("Create", "Solicitudes", new { id_d = Model.D.NUM_DOC.ToString(), tsol = "CPR" })" class="btn-small">Reversar</a>
@@ -477,7 +477,7 @@
                                                         {
                                                             if (Model.D.DOCUMENTOF[0].BILL_DOC.Trim() != "0")
                                                             {
-                                                                <th id="thead_fact">No. Factura Fiscal</th> @*B20180801 MGC Textos*@
+                                                                <th id="thead_fact">Billing</th> @*B20180801 MGC Textos*@
                                                             }
                                                         }
                                                         @if (Model.D.DOCUMENTOF[0].BELNR.Trim() != "0")
