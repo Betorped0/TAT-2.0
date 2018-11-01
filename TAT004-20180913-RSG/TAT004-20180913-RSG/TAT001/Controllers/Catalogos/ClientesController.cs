@@ -606,25 +606,26 @@ namespace TAT001.Controllers.Catalogos
                             db.SaveChanges();
                         }
                     }
-                    cl.USUARIO0_ID = (da.ID_US0!=null ?da.ID_US0.Trim():null);
-                    cl.USUARIO1_ID = (da.ID_US1 != null ? da.ID_US1.Trim() : null);
-                    cl.USUARIO2_ID = (da.ID_US2 != null ? da.ID_US2.Trim() : null);
-                    cl.USUARIO3_ID = (da.ID_US3 != null ? da.ID_US3.Trim() : null);
-                    cl.USUARIO4_ID = (da.ID_US4 != null ? da.ID_US4.Trim() : null);
-                    cl.USUARIO5_ID = (da.ID_US5 != null ? da.ID_US5.Trim() : null);
-                    cl.USUARIO6_ID = (da.ID_US6 != null ? da.ID_US6.Trim() : null);
-                    cl.USUARIO7_ID = (da.ID_US7 != null ? da.ID_US7.Trim() : null);
+                    cl.USUARIO0_ID = (!string.IsNullOrEmpty(da.ID_US0) ?da.ID_US0.Trim():null);
+                    cl.USUARIO1_ID = (!string.IsNullOrEmpty(da.ID_US1) ? da.ID_US1.Trim() : null);
+                    cl.USUARIO2_ID = (!string.IsNullOrEmpty(da.ID_US2) ? da.ID_US2.Trim() : null);
+                    cl.USUARIO3_ID = (!string.IsNullOrEmpty(da.ID_US3) ? da.ID_US3.Trim() : null);
+                    cl.USUARIO4_ID = (!string.IsNullOrEmpty(da.ID_US4) ? da.ID_US4.Trim() : null);
+                    cl.USUARIO5_ID = (!string.IsNullOrEmpty(da.ID_US5) ? da.ID_US5.Trim() : null);
+                    cl.USUARIO6_ID = (!string.IsNullOrEmpty(da.ID_US6) ? da.ID_US6.Trim() : null);
+                    cl.USUARIO7_ID = (!string.IsNullOrEmpty(da.ID_US7) ? da.ID_US7.Trim() : null);
                     cl.ACTIVO = true;
-                    
+
                     ////Modificar a CLIENTE
-                    cl1.PROVEEDOR_ID = (da.ID_PROVEEDOR != null ? da.ID_PROVEEDOR.Trim() : cl1.PROVEEDOR_ID);
-                    cl1.LAND = (da.LAND != null ? da.LAND.Trim() : cl1.LAND);
-                    cl1.BANNER = (da.BANNER != null ? da.BANNER.Trim() : cl1.BANNER);
-                    cl1.BANNERG = (da.BANNERG != null ? da.BANNERG.Trim() : cl1.BANNERG);
-                    cl1.CANAL = (da.CANAL != null ? da.CANAL.Trim() : cl1.CANAL);
-                    cl1.EXPORTACION = (da.EXPORTACION != null ? da.EXPORTACION.Trim() : cl1.EXPORTACION);
-                    cl1.CONTAC = (da.CONTACTO != null ? da.CONTACTO.Trim() : cl1.CONTAC);
-                    cl1.CONT_EMAIL = (da.CONTACTOE != null ? da.CONTACTOE.Trim() : cl1.CONT_EMAIL);
+                    cl1.NAME1 = (!string.IsNullOrEmpty(da.CLIENTE_N) ? da.CLIENTE_N.Trim() : cl1.NAME1);
+                    cl1.PROVEEDOR_ID = (!string.IsNullOrEmpty(da.ID_PROVEEDOR) ? da.ID_PROVEEDOR.Trim() : cl1.PROVEEDOR_ID);
+                    cl1.LAND = (!string.IsNullOrEmpty(da.LAND) ? da.LAND.Trim() : cl1.LAND);
+                    cl1.BANNER = (!string.IsNullOrEmpty(da.BANNER) ? da.BANNER.Trim() : cl1.BANNER);
+                    cl1.BANNERG = (!string.IsNullOrEmpty(da.BANNERG) ? da.BANNERG.Trim() : cl1.BANNERG);
+                    cl1.CANAL = (!string.IsNullOrEmpty(da.CANAL) ? da.CANAL.Trim() : cl1.CANAL);
+                    cl1.EXPORTACION = (!string.IsNullOrEmpty(da.EXPORTACION) ? da.EXPORTACION.Trim() : cl1.EXPORTACION);
+                    cl1.CONTAC = (!string.IsNullOrEmpty(da.CONTACTO) ? da.CONTACTO.Trim() : cl1.CONTAC);
+                    cl1.CONT_EMAIL = (!string.IsNullOrEmpty(da.CONTACTOE ) ? da.CONTACTOE.Trim() : cl1.CONT_EMAIL);
                     db.Entry(cl1).State = EntityState.Modified;
                     
                     ////Agregar a contacto
@@ -639,8 +640,8 @@ namespace TAT001.Controllers.Catalogos
                         });
                         if (!db.CONTACTOCs.Any(x=>x.EMAIL== (da.CONTACTOE != null ? da.CONTACTOE.Trim() : null) && x.NOMBRE== (da.CONTACTO != null ? da.CONTACTO.Trim() : null)))
                         {
-                            co.NOMBRE = (da.CONTACTO != null ? da.CONTACTO.Trim() : null);
-                            co.EMAIL = (da.CONTACTOE != null ? da.CONTACTOE.Trim() : null);
+                            co.NOMBRE = (!string.IsNullOrEmpty(da.CONTACTO) ? da.CONTACTO.Trim() : null);
+                            co.EMAIL = (!string.IsNullOrEmpty(da.CONTACTOE) ? da.CONTACTOE.Trim() : null);
                             co.VKORG = da.VKORG;
                             co.VTWEG = da.VTWEG;
                             co.SPART = da.SPART;
