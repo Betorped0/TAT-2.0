@@ -66,7 +66,7 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.EMAIL)
                                 </td>
-                                @if ((bool)item.DEFECTO == true)
+                                @if (item.DEFECTO != null && (bool)item.DEFECTO == true)
                                 {
                                     <td style="text-align:center;"><i class='material-icons green-text'>check</i></td>
                                 }
@@ -74,9 +74,6 @@
                                 {
                                     <td style="text-align:center;"><i class='material-icons red-text'>clear</i></td>
                                 }
-                                @*<td>
-                                        @Html.CheckBoxFor(modelItem => Convert.ToBoolean(item.DEFECTO))
-                                    </td>*@
                                 <td>
                                     <a data-form-method="post" href="@Url.Action("Edit", "Contacto", new { vko = item.VKORG, vtw = item.VTWEG, kun = item.KUNNR, spa = item.SPART, id = item.ID })">
                                         <i class='material-icons green-text'>edit</i>

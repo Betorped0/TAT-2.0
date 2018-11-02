@@ -99,15 +99,26 @@ namespace TAT001.Controllers.Catalogos
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             USUARIO uSUARIO = db.USUARIOs.Find(id);
+            string spra = Session["spras"].ToString();
             if (uSUARIO == null)
             {
                 return HttpNotFound();
             }
-            //ViewBag.PUESTO_ID = new SelectList(db.PUESTOes, "ID", "ID", uSUARIO.PUESTO_ID);
-            string spra = Session["spras"].ToString();
+            var ni = (from x in db.PUESTOTs
+                      join a in db.PUESTOes on x.PUESTO_ID equals a.ID
+                      where x.PUESTO_ID == uSUARIO.PUESTO_ID & x.SPRAS_ID.Equals(spra) & a.ACTIVO == true
+                      select x.PUESTO_ID).FirstOrDefault();
+            ViewBag.PUESTO_ID1 = (from x in db.DET_APROBH where x.PUESTOC_ID == ni & x.ACTIVO == true select x.SOCIEDAD_ID).FirstOrDefault();
+            List<SOCIEDAD> sociedades = db.USUARIOs.Where(a => a.ID.Equals(uSUARIO.ID)).FirstOrDefault().SOCIEDADs.ToList();
+            string[] sociedad = new string[sociedades.Count];
+            for (int i = 0; i < sociedades.Count; i++)
+            {
+                sociedad[i] = sociedades[i].BUKRS;
+            }
             ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION", uSUARIO.SPRAS_ID);
             ViewBag.PUESTO_ID = new SelectList(db.PUESTOTs.Where(a => a.SPRAS_ID.Equals(spra)), "PUESTO_ID", "TXT50", uSUARIO.PUESTO_ID);
             ViewBag.BUNIT = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS", uSUARIO.BUNIT);
+            ViewBag.BUNIT1 = sociedad;
             ViewBag.ROLES = db.ROLTs.Where(a => a.SPRAS_ID.Equals(spra));
             ViewBag.SOCIEDADES = db.SOCIEDADs;
             ViewBag.PAISES = db.PAIS.Where(a => a.SOCIEDAD_ID != null & a.ACTIVO == true).ToList();
@@ -360,11 +371,23 @@ namespace TAT001.Controllers.Catalogos
             }
             //ViewBag.PUESTO_ID = new SelectList(db.PUESTOes, "ID", "ID", uSUARIO.PUESTO_ID);
             string spra = Session["spras"].ToString();
+            var ni = (from x in db.PUESTOTs
+                      join a in db.PUESTOes on x.PUESTO_ID equals a.ID
+                      where x.PUESTO_ID == uSUARIO.PUESTO_ID & x.SPRAS_ID.Equals(spra) & a.ACTIVO == true
+                      select x.PUESTO_ID).FirstOrDefault();
+            ViewBag.PUESTO_ID1 = (from x in db.DET_APROBH where x.PUESTOC_ID == ni & x.ACTIVO == true select x.SOCIEDAD_ID).FirstOrDefault();
+            List<SOCIEDAD> sociedades = db.USUARIOs.Where(a => a.ID.Equals(uSUARIO.ID)).FirstOrDefault().SOCIEDADs.ToList();
+            string[] sociedad = new string[sociedades.Count];
+            for (int i = 0; i < sociedades.Count; i++)
+            {
+                sociedad[i] = sociedades[i].BUKRS;
+            }
             ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION", uSUARIO.SPRAS_ID);
             ViewBag.PUESTO_ID = new SelectList(db.PUESTOTs.Where(a => a.SPRAS_ID.Equals(spra)), "PUESTO_ID", "TXT50", uSUARIO.PUESTO_ID);
             ViewBag.BUNIT = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS", uSUARIO.BUNIT);
             ViewBag.ROLES = db.ROLTs.Where(a => a.SPRAS_ID.Equals(spra));
             ViewBag.SOCIEDADES = db.SOCIEDADs;
+            ViewBag.sociedad = sociedad;
             ViewBag.PAISES = db.PAIS;
             ViewBag.APROBADORES = db.DET_APROB.Where(a => a.BUKRS.Equals("KCMX") & a.PUESTOC_ID == uSUARIO.PUESTO_ID).ToList();
             return View(uSUARIO);

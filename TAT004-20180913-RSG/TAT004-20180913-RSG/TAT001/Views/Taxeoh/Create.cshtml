@@ -11,9 +11,9 @@
 {
     @Html.AntiForgeryToken()
     <div class="row right-align">
-            <div class="col l12 m12 s12" style="margin-top:24px;">
-               <a href="@Url.Action("Index", "Taxeoh", new { kun = @ViewBag.kun, vko = @ViewBag.vko, vtw = @ViewBag.vtw, spa = @ViewBag.spa })"id = "lblRegresar" class = "btn-small"></a>
-                <button id="btnAg" type="submit" value="Submit" class="btn-small" >Submit</button>
+        <div class="col l12 m12 s12" style="margin-top:24px;">
+            <a href="@Url.Action("Index", "Taxeoh", new { kun = @ViewBag.kun, vko = @ViewBag.vko, vtw = @ViewBag.vtw, spa = @ViewBag.spa })" id="lblRegresar" class="btn-small"></a>
+            <button id="btnAg" type="submit" value="Submit" class="btn-small">Submit</button>
         </div>
     </div>
     <div class="row">
@@ -27,15 +27,21 @@
                             @Html.DropDownList("SOCIEDAD_ID", null, htmlAttributes: new { @class = "form-control clSc" })
                             @Html.ValidationMessageFor(model => model.SOCIEDAD_ID, "", new { @class = "text-danger" })
                         </div>
-                        <div class="col l12 m12 s12">
+                        <div class="col l11 m11 s11">
                             @Html.LabelFor(model => model.CONCEPTO_ID, "CONCEPTO_ID", htmlAttributes: new { @class = "control-label col-md-2", @id = "lblConId" })
-                            @Html.DropDownList("CONCEPTO_ID", null, htmlAttributes: new { @class = "form-control" })
+                            @Html.DropDownList("CONCEPTO_ID", null, htmlAttributes: new { @class = "form-control col-md-8" })
                             @Html.ValidationMessageFor(model => model.CONCEPTO_ID, "", new { @class = "text-danger" })
                         </div>
-                        <div class="col l12 m12 s12">
+                        <div class="col l1 m1 s1">
+                            <a href="#modalconcepto" class="btn-floating modal-trigger" id="newtxc"><i class="material-icons">add</i></a>
+                        </div>
+                        <div class="col l11 m11 s11">
                             @Html.LabelFor(model => model.TNOTA_ID, "TNOTA_ID", htmlAttributes: new { @class = "control-label col-md-2", @id = "lblNotas" })
                             @Html.DropDownList("TNOTA_ID", null, htmlAttributes: new { @class = "form-control" })
                             @Html.ValidationMessageFor(model => model.TNOTA_ID, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col l1 m1 s1">
+                            <a href="#modalnota" class="modal-trigger btn-floating" id="newtxn"><i class="material-icons">add</i></a>
                         </div>
                     </div>
                     <div class="col s6 m6 l6">
@@ -55,9 +61,78 @@
         </div>
     </div>
 }
+<div id="modalconcepto" class="modal">
+    <div class="modal-content">
+        <h4>Nuevo concepto</h4>
+        <form id="newconcepto" method="post" action="/Txc/CreateA" class="col s12">
+            <div class="row">
+                <div class="input-field col s6">
+                    <input id="DESCRIPCION" type="text" class="validate" required>
+                    <label for="DESCRIPCION">Descripción</label>
+                </div>
+            </div>
+            <input type="submit" class="btn btn-default" name="submit" value="Crear" />
+            <div id="server-results1" class="center-align"><!-- For server results --></div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="modal-action modal-close waves-effect waves-green btn-flat">Cerrar</button>
+    </div>
+</div>
+<div id="modalnota" class="modal">
+    <div class="modal-content">
+        <h4>Nuevo Tipo Contribuyente</h4>
+        <form id="newnota" method="post" action="/Txn/CreateA" class="col s12">
+            <div class="row">
+                <div class="input-field col s6">
+                    <input id="DESCRIPCIONNOTA" type="text" class="validate" required>
+                    <label for="DESCRIPCIONNOTA">Descripción</label>
+                </div>
+            </div>
+            <input type="submit" class="btn btn-default" name="submit" value="Crear" />
+            <div class="center-align" id="server-results2"><!-- For server results --></div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="modal-action modal-close waves-effect waves-green btn-flat">Cerrar</button>
+    </div>
+</div>
 <script>
     var elem = document.querySelectorAll('select');
     var instance = M.FormSelect.init(elem, []);
+    $(document).ready(function () {
+        // opens the modal
+        $('.modal').modal();
+        $("#newconcepto").submit(function (event) {
+            event.preventDefault(); //prevent default action 
+            var post_url = $(this).attr("action"); //get form action url
+            var request_method = $(this).attr("method"); //get form GET/POST method
+            var form_data = new FormData(this);
+            $.ajax({
+                url: post_url,
+                type: request_method,
+                data: { DESCRIPCION: $("#DESCRIPCION").val() },
+                success: function (result) {
+                    $("#server-results1").text(result);
+                }
+            });
+        });
+        $("#newnota").submit(function (event) {
+            event.preventDefault(); //prevent default action 
+            var post_url = $(this).attr("action"); //get form action url
+            var request_method = $(this).attr("method"); //get form GET/POST method
+            var form_data = new FormData(this);
+            $.ajax({
+                url: post_url,
+                type: request_method,
+                data: { DESCRIPCION: $("#DESCRIPCIONNOTA").val() },
+                success: function (result) {
+                    $("#server-results2").text(result);
+                }
+            });
+        });
+        $('.modal-close').click(function (e) {
+            window.location.reload();
+        });
+    });
 </script>
-<div>
-   </div>

@@ -365,6 +365,7 @@ namespace TAT001.Controllers
                     else
                     {
                         em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Details", image);
+                        return RedirectToAction("Index", "Home");
                     }
                     return RedirectToAction("Details", "Solicitudes", new { id = flujo.NUM_DOC });
                 }

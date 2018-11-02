@@ -56,6 +56,9 @@ $(document).ready(function () {
                 }
             }
         }
+        if (index < 4) {
+            $('#monto_doc_md').val($("#monto_dis").val());
+        }
         msg += '!';
         if (res) {
             //loadFilesf();

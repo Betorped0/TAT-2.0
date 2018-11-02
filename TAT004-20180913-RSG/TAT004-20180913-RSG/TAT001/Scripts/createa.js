@@ -78,6 +78,7 @@ function selectMaterial(val, desc, tr) {
     var index = getIndex();
     var cat = getCategoria(val);    
     desc = $.trim(desc);
+    if (val!=""){ tr.find('td').eq((5 + index)).removeClass("errorMaterial");}
     if (index == -2) {
         unica1 = false;
         if (cat.UNICA)

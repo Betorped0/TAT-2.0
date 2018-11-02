@@ -2054,12 +2054,14 @@ function procesarHoja5() {
         complete: function (data) {
             //validarErrores("tab_test5"); //RMG
             $(document).ready(function () {
+                $('#global_filter').removeAttr('disabled');
                 var tablaH5 = $('#tab_test5').DataTable();
                 $("#excelBtn").removeAttr("disabled");
                 cloneTables();
                 $("#tab_test5").on("change", ".requiredfile", function () {
                     var data = table.row(this).data();
-                    if ($(this).hasClass("valid") & validaTabs("1", 4)) {//ADD RSG 29.10.2018
+                    var val = $(this).val();
+                    if ($(this).hasClass("valid") | val !== "") {//ADD RSG 29.10.2018
                         $(this).closest('tr').children().eq(0).children().removeClass("red rojo");
                         $(this).closest('tr').children().eq(0).children().addClass("green");
                         $(this).closest('tr').children().eq(0).children().text("done");
@@ -2069,7 +2071,7 @@ function procesarHoja5() {
                         $(this).closest('tr').children().eq(0).children().addClass("red rojo");
                         $(this).closest('tr').children().eq(0).children().text("close");
                         clearErrors();//ADD RSG 29.10.2018
-                    //}
+                    }
                 });
 
                 $("#tab_test5").on("change", ".outRequiredfile", function () {
@@ -3026,11 +3028,7 @@ function guardaDatos() {
                 //var table = $('#tab_test1').DataTable();
 
                 //if (!table.data().any()) {
-                //    tablaH1.ajax.reload();
-                //    tablaH2.ajax.reload();
-                //    tablaH3.ajax.reload();
-                //    tablaH4.ajax.reload();
-                //    tablaH5.ajax.reload();
+                //    location.reload();
                 //}
             }
         }

@@ -34,7 +34,7 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.KUNNR)
+                    @item.KUNNR.TrimStart('0')
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.NAME1)
@@ -49,10 +49,10 @@
                     @Html.DisplayFor(modelItem => item.PARVW)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.PAYER)
+                    @item.PAYER.TrimStart('0')
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CANAL)
+                    @item.CANAL
                 </td>
                 <td>
                     <a href="@Url.Action("Edit", "Clientes", new { vko = item.VKORG, vtw = item.VTWEG, spa = item.SPART, kun = item.KUNNR })">
