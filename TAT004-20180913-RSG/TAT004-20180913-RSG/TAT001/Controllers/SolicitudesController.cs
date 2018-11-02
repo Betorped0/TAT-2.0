@@ -714,10 +714,18 @@ namespace TAT001.Controllers
                 //tipo de solicitud
                 string tipS;
                 //if (id_d == null || id_d == "")
-                if ((id_d == null || id_d == "") | dp == "X")
+                if ((id_d == null || id_d == ""))
                 {
                     tipS = "SD";
                     //directa SD
+                }
+                else if (dp == "X")
+                {
+                    DOCUMENTO duo = db.DOCUMENTOes.Find(decimal.Parse(id_d));
+                    if (duo.DOCUMENTO_REF == null)
+                        tipS = "SD";
+                    else
+                        tipS = "SR";
                 }
                 else
                 {

@@ -884,7 +884,7 @@ namespace TAT001.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public JsonResult SelectClienteDup(string kunnr, bool? esBorrador, decimal num_doc)
+        public JsonResult SelectClienteDup(string kunnr, bool? esBorrador, string num_doc)
         {
             Cadena cad = new Cadena();
             kunnr = cad.completaCliente(kunnr);
@@ -966,8 +966,7 @@ namespace TAT001.Controllers
                 }
                 else//ADD RSG 01.11.2018
                 {
-
-                    DOCUMENTO dp = db.DOCUMENTOes.Find(num_doc);
+                    DOCUMENTO dp = db.DOCUMENTOes.Find(decimal.Parse(num_doc));
                     id_cl.PAYER_EMAIL = dp.PAYER_EMAIL;
                     id_cl.PAYER_NOMBRE = dp.PAYER_NOMBRE;
                 }

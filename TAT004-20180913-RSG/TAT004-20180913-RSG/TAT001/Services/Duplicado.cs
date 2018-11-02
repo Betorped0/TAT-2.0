@@ -93,7 +93,7 @@ namespace TAT001.Services
                     docBp.APOYO_REAL = dp.APOYO_REAL;
                     docBp.CANTIDAD = dp.CANTIDAD;
                     docBp.MATKL = dp.MATKL;
-                    docBp.MATNR = dp.MATNR;
+                    docBp.MATNR = dp.MATNR.TrimStart('0');
                     docBp.MONTO = dp.MONTO;
                     docBp.MONTO_APOYO = dp.MONTO_APOYO;
                     docBp.PORC_APOYO = dp.PORC_APOYO;

@@ -5425,8 +5425,6 @@ function selectCliente(valu) {
         document.getElementById("loader").style.display = "flex";//RSG 03.07.2018
         var esBorrador = $('#borradore').val() == "true";
         var num = $('#duplicate').val();//RSG 01.11.2018
-        if (num !== "")//RSG 01.11.2018
-            num = parseFloat(num);//RSG 01.11.2018
         $.ajax({
             type: "POST",
             //url: root + 'Listas/SelectCliente',
