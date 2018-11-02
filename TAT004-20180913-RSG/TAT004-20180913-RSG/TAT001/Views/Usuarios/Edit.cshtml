@@ -74,7 +74,6 @@
                         @Html.LabelFor(model => model.PUESTO_ID, "PUESTO_ID", htmlAttributes: new { @id = "lbl_puesto" })
                         @Html.ValidationMessageFor(model => model.PUESTO_ID, "", new { @class = "text-danger" })
                     </div>
-
                     @*<div class="input-field col s4">
                             @Html.EditorFor(model => model.MANAGER, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.LabelFor(model => model.MANAGER, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -86,13 +85,38 @@
                             @Html.LabelFor(model => model.BACKUP_ID, htmlAttributes: new { @class = "control-label col-md-2" })
                             @Html.ValidationMessageFor(model => model.BACKUP_ID, "", new { @class = "text-danger" })
                         </div>*@
-
-                    <div class="input-field col s12">
-                        @Html.DropDownList("BUNIT", null, htmlAttributes: new { @class = "select", required = true })
-                        @*@Html.EditorFor(model => model.BUNIT, new { htmlAttributes = new { @class = "form-control" } })*@
-                        @Html.LabelFor(model => model.BUNIT, htmlAttributes: new { @id = "lbl_bukrs" })
-                        @Html.ValidationMessageFor(model => model.BUNIT, "", new { @class = "text-danger" })
-                    </div>
+                    @if (ViewBag.PUESTO_ID1 == null || ViewBag.PUESTO_ID1 == "")
+                    {                        
+                        <div class="input-field col s12">
+                            @Html.HiddenFor(model => model.SOCIEDADs)
+                            @{string jval2 = ViewBag.sociedad;
+                                @Html.Hidden("SELECT_SOCIEDADES", jval2)
+                            }
+                            <select multiple name="selectcocode" id="selectcocode" required="" class="comcode select_all">
+                                @try
+                                {
+                                    foreach (var item in ViewBag.SOCIEDADES)
+                                    {
+                                        <option id="@item.BUKRS" value="@item.BUKRS">@item.BUKRS</option>
+                                    }
+                                }
+                                catch (Exception)
+                                {
+                                    <option value="" id="no_opt">No hay opciones</option>
+                                }
+                            </select>
+                            <label id="label_cocode">Co. Code</label>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="input-field col s12">
+                            @Html.DropDownList("BUNIT", null, htmlAttributes: new { @class = "select", required = true })
+                            @*@Html.EditorFor(model => model.BUNIT, new { htmlAttributes = new { @class = "form-control" } })*@
+                            @Html.LabelFor(model => model.BUNIT, htmlAttributes: new { @id = "lbl_bukrs" })
+                            @Html.ValidationMessageFor(model => model.BUNIT, "", new { @class = "text-danger" })
+                        </div>
+                    }
                 </div>
             </div>
         </div>
@@ -164,6 +188,26 @@
     </div>
     //OCG 11/10/18 Validacion de email
     <script>
+        $(document).ready(function () {
+            var admin = "@ViewBag.admin";
+            //var jsval1 = $.parseJSON(admin);
+            var sociedad = $("#SELECT_SOCIEDADES").val();
+            var jsval = $.parseJSON(sociedad);
+            for (var i = 0; i < jsval.length; i++) {
+                var ids = "#" + jsval[i] + "";
+                $(ids).prop('selected', true);
+            }
+
+            $("input.select-dropdown").trigger("click");
+            $("input.select-dropdown").trigger("click");
+
+            if (admin == "no") {
+                $("#txt_puestoid").prop("disabled", true);
+                $("#selectcocode").prop("disabled", true);
+                var elem = document.querySelectorAll('select');
+                var instance = M.FormSelect.init(elem, []);
+            }
+        });
 
         $('#EMAIL').on("focusout", function () {
             var email = $('#EMAIL').val();

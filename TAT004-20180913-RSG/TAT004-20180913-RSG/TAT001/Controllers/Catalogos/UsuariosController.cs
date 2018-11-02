@@ -1,4 +1,5 @@
 ﻿using ExcelDataReader;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -99,15 +100,26 @@ namespace TAT001.Controllers.Catalogos
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             USUARIO uSUARIO = db.USUARIOs.Find(id);
+            string spra = Session["spras"].ToString();
             if (uSUARIO == null)
             {
                 return HttpNotFound();
             }
-            //ViewBag.PUESTO_ID = new SelectList(db.PUESTOes, "ID", "ID", uSUARIO.PUESTO_ID);
-            string spra = Session["spras"].ToString();
+            var ni = (from x in db.PUESTOTs
+                      join a in db.PUESTOes on x.PUESTO_ID equals a.ID
+                      where x.PUESTO_ID == uSUARIO.PUESTO_ID & x.SPRAS_ID.Equals(spra) & a.ACTIVO == true
+                      select x.PUESTO_ID).FirstOrDefault();
+            ViewBag.PUESTO_ID1 = (from x in db.DET_APROBH where x.PUESTOC_ID == ni & x.ACTIVO == true select x.SOCIEDAD_ID).FirstOrDefault();
+            List<SOCIEDAD> sociedades = db.USUARIOs.Where(a => a.ID.Equals(uSUARIO.ID)).FirstOrDefault().SOCIEDADs.ToList();
+            string[] sociedad = new string[sociedades.Count];
+            for (int i = 0; i < sociedades.Count; i++)
+            {
+                sociedad[i] = sociedades[i].BUKRS;
+            }
             ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION", uSUARIO.SPRAS_ID);
             ViewBag.PUESTO_ID = new SelectList(db.PUESTOTs.Where(a => a.SPRAS_ID.Equals(spra)), "PUESTO_ID", "TXT50", uSUARIO.PUESTO_ID);
             ViewBag.BUNIT = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS", uSUARIO.BUNIT);
+            ViewBag.BUNIT1 = sociedad;
             ViewBag.ROLES = db.ROLTs.Where(a => a.SPRAS_ID.Equals(spra));
             ViewBag.SOCIEDADES = db.SOCIEDADs;
             ViewBag.PAISES = db.PAIS.Where(a => a.SOCIEDAD_ID != null & a.ACTIVO == true).ToList();
@@ -349,6 +361,17 @@ namespace TAT001.Controllers.Catalogos
             //    }
             //    Session["spras"] = user.SPRAS_ID;
             //}
+            var usu = User.Identity.Name;
+            USUARIO usu2 = db.USUARIOs.Where(x => x.ID.Equals(usu)).FirstOrDefault();
+            if (usu2.PUESTO_ID == 1 || usu2.PUESTO_ID == 8)
+            {
+                ViewBag.admin = "si";
+            }
+            else
+            {
+                ViewBag.admin = "no";
+            }
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -360,11 +383,23 @@ namespace TAT001.Controllers.Catalogos
             }
             //ViewBag.PUESTO_ID = new SelectList(db.PUESTOes, "ID", "ID", uSUARIO.PUESTO_ID);
             string spra = Session["spras"].ToString();
+            var ni = (from x in db.PUESTOTs
+                      join a in db.PUESTOes on x.PUESTO_ID equals a.ID
+                      where x.PUESTO_ID == uSUARIO.PUESTO_ID & x.SPRAS_ID.Equals(spra) & a.ACTIVO == true
+                      select x.PUESTO_ID).FirstOrDefault();
+            ViewBag.PUESTO_ID1 = (from x in db.DET_APROBH where x.PUESTOC_ID == ni & x.ACTIVO == true select x.SOCIEDAD_ID).FirstOrDefault();
+            List<SOCIEDAD> sociedades = db.USUARIOs.Where(a => a.ID.Equals(uSUARIO.ID)).FirstOrDefault().SOCIEDADs.ToList();
+            string[] sociedad = new string[sociedades.Count];
+            for (int i = 0; i < sociedades.Count; i++)
+            {
+                sociedad[i] = sociedades[i].BUKRS;
+            }
             ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION", uSUARIO.SPRAS_ID);
             ViewBag.PUESTO_ID = new SelectList(db.PUESTOTs.Where(a => a.SPRAS_ID.Equals(spra)), "PUESTO_ID", "TXT50", uSUARIO.PUESTO_ID);
             ViewBag.BUNIT = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS", uSUARIO.BUNIT);
             ViewBag.ROLES = db.ROLTs.Where(a => a.SPRAS_ID.Equals(spra));
             ViewBag.SOCIEDADES = db.SOCIEDADs;
+            ViewBag.sociedad = JsonConvert.SerializeObject(sociedad, Formatting.Indented);
             ViewBag.PAISES = db.PAIS;
             ViewBag.APROBADORES = db.DET_APROB.Where(a => a.BUKRS.Equals("KCMX") & a.PUESTOC_ID == uSUARIO.PUESTO_ID).ToList();
             return View(uSUARIO);
@@ -377,13 +412,105 @@ namespace TAT001.Controllers.Catalogos
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,PASS,NOMBRE,APELLIDO_P,APELLIDO_M,EMAIL,SPRAS_ID,ACTIVO,PUESTO_ID,MANAGER,BACKUP_ID,BUNIT")] USUARIO uSUARIO)
         {
+            string spra = Session["spras"].ToString();
             if (ModelState.IsValid)
             {
                 if (ComprobarEmail(uSUARIO.EMAIL) != false & uSUARIO.EMAIL != null & uSUARIO.EMAIL != "")
                 {
-                    uSUARIO.ACTIVO = true;
-                    db.Entry(uSUARIO).State = EntityState.Modified;
-                    db.SaveChanges();
+                    USUARIO us = new USUARIO();
+                    //db.Entry(us).State = EntityState.Detached;
+                    //db.Entry(uSUARIO).State = EntityState.Detached;
+                    var ni = (from x in db.PUESTOTs
+                              join a in db.PUESTOes on x.PUESTO_ID equals a.ID
+                              where x.PUESTO_ID == uSUARIO.PUESTO_ID & x.SPRAS_ID.Equals(spra) & a.ACTIVO == true
+                              select x.PUESTO_ID).FirstOrDefault();
+                    var re = (from x in db.DET_APROBH where x.PUESTOC_ID == ni & x.ACTIVO == true select x.SOCIEDAD_ID).FirstOrDefault();
+                    List<SOCIEDAD> sociedades = db.USUARIOs.Where(a => a.ID.Equals(uSUARIO.ID)).FirstOrDefault().SOCIEDADs.ToList();
+                    int num = 1;
+                    string comcode = Request["selectcocode"] as string;
+
+                    if (comcode != null)
+                    {
+                        num = comcode.Split(',').Length;
+                    }
+
+                    us = db.USUARIOs.Where(x => x.ID == uSUARIO.ID).FirstOrDefault();
+
+                    foreach (var da in sociedades)
+                    {
+                        try
+                        {
+                            us.SOCIEDADs.Remove(da);
+                            db.Entry(us).State = EntityState.Modified;
+                            db.SaveChanges();
+                        }
+                        catch (Exception e)
+                        {
+                            db.Entry(us).State = EntityState.Detached;
+                        }
+                    }
+
+                    us.ID = uSUARIO.ID;
+                    us.PASS = uSUARIO.PASS;
+                    us.NOMBRE = uSUARIO.NOMBRE;
+                    us.APELLIDO_P = uSUARIO.APELLIDO_P;
+                    us.APELLIDO_M = uSUARIO.APELLIDO_M;
+                    us.ACTIVO = true;
+                    us.EMAIL = uSUARIO.EMAIL;
+                    us.SPRAS_ID = uSUARIO.SPRAS_ID;
+                    us.PUESTO_ID = uSUARIO.PUESTO_ID;
+                    us.MANAGER = uSUARIO.MANAGER;
+                    us.BACKUP_ID = uSUARIO.BACKUP_ID;
+                    us.BUNIT = uSUARIO.BUNIT;
+
+                    if (re != null)
+                    {
+                        db.Entry(us).State = EntityState.Modified;
+                        db.SaveChanges();
+
+                        try
+                        {
+                            SOCIEDAD soc = db.SOCIEDADs.Where(x => x.BUKRS == us.BUNIT).First();
+                            us.SOCIEDADs.Add(soc);
+                            db.Entry(us).State = EntityState.Modified;
+                            db.SaveChanges();
+                        }
+                        catch (Exception e)
+                        {
+                            db.Entry(us).State = EntityState.Detached;
+                        }
+
+                    }
+                    else
+                    {
+                        string[] codes = new string[num];
+                        if (comcode == null)
+                        {
+                            codes = uSUARIO.BUNIT.Split(',');
+                        }
+                        else
+                        {
+                            codes = comcode.Split(',');
+                        }
+                        us.BUNIT = codes[0];
+                        db.Entry(us).State = EntityState.Modified;
+                        db.SaveChanges();
+
+                        foreach (var da in codes)
+                        {
+                            try
+                            {
+                                SOCIEDAD soc = db.SOCIEDADs.Where(x => x.BUKRS == da).First();
+                                us.SOCIEDADs.Add(soc);
+                                db.Entry(us).State = EntityState.Modified;
+                                db.SaveChanges();
+                            }
+                            catch (Exception e)
+                            {
+                                db.Entry(us).State = EntityState.Detached;
+                            }
+                        }
+                    }
                     return RedirectToAction("Details", new { id = uSUARIO.ID });
                     //return RedirectToAction("Index");
                 }
@@ -420,7 +547,6 @@ namespace TAT001.Controllers.Catalogos
             //    }
             //    Session["spras"] = user.SPRAS_ID;
             //}
-            string spra = Session["spras"].ToString();
             ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "ID", uSUARIO.SPRAS_ID);
             ViewBag.PUESTO_ID = new SelectList(db.PUESTOTs.Where(a => a.SPRAS_ID.Equals(spra)), "PUESTO_ID", "TXT50", uSUARIO.PUESTO_ID);
             ViewBag.BUNIT = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS", uSUARIO.BUNIT);

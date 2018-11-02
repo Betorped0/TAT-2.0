@@ -113,7 +113,48 @@ namespace TAT001.Controllers.Catalogos
                     break;
             }
         }
-      
+        public ActionResult VerFlujo(string vko, string vtw, string spa, string kun, int version)
+        {
+            int pagina_id = 604; //ID EN BASE DE DATOS
+            FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
+            var flujo = db.CLIENTEFs.Find(vko, vtw, spa, kun, version);
+            if (flujo.USUARIO1_ID != null)
+            {
+                var usu1 = db.USUARIOs.Where(t => t.ID == flujo.USUARIO1_ID).SingleOrDefault();
+                ViewBag.Usuario1 = usu1 != null ? flujo.USUARIO1_ID + " - " + usu1.NOMBRE + " " + usu1.APELLIDO_P : "";
+            }
+            if (flujo.USUARIO2_ID != null)
+            {
+                var usu2 = db.USUARIOs.Where(t => t.ID == flujo.USUARIO2_ID).SingleOrDefault();
+                ViewBag.Usuario2 = usu2 != null ? flujo.USUARIO2_ID + " - " + usu2.NOMBRE + " " + usu2.APELLIDO_P : "";
+            }
+            if (flujo.USUARIO3_ID != null)
+            {
+                var usu3 = db.USUARIOs.Where(t => t.ID == flujo.USUARIO3_ID).SingleOrDefault();
+                ViewBag.Usuario3 = usu3 != null ? flujo.USUARIO3_ID + " - " + usu3.NOMBRE + " " + usu3.APELLIDO_P : "";
+            }
+            if (flujo.USUARIO4_ID != null)
+            {
+                var usu4 = db.USUARIOs.Where(t => t.ID == flujo.USUARIO4_ID).SingleOrDefault();
+                ViewBag.Usuario4 = usu4 != null ? flujo.USUARIO4_ID + " - " + usu4.NOMBRE + " " + usu4.APELLIDO_P : "";
+            }
+            if (flujo.USUARIO5_ID != null)
+            {
+                var usu5 = db.USUARIOs.Where(t => t.ID == flujo.USUARIO5_ID).SingleOrDefault();
+                ViewBag.Usuario5 = usu5 != null ? flujo.USUARIO5_ID + " - " + usu5.NOMBRE + " " + usu5.APELLIDO_P : "";
+            }
+            if (flujo.USUARIO6_ID != null)
+            {
+                var usu6 = db.USUARIOs.Where(t => t.ID == flujo.USUARIO6_ID).SingleOrDefault();
+                ViewBag.Usuario6 = usu6 != null ? flujo.USUARIO6_ID+" - "+ usu6.NOMBRE + " " + usu6.APELLIDO_P : "";
+            }
+            if (flujo.USUARIO7_ID != null)
+            {
+                var usu7 = db.USUARIOs.Where(t => t.ID == flujo.USUARIO7_ID).SingleOrDefault();
+                ViewBag.Usuario7 = usu7 != null ? flujo.USUARIO7_ID + " - " + usu7.NOMBRE + " " + usu7.APELLIDO_P : "";
+            }
+            return View(flujo);
+        }
         // GET: Clientes/Details/5
         public ActionResult Details(string vko, string vtw, string spa, string kun)
         {
@@ -149,6 +190,13 @@ namespace TAT001.Controllers.Catalogos
             {
                 return HttpNotFound();
             }
+            if (!String.IsNullOrEmpty(cLIENTE.CANAL))
+            {
+                CANAL canaldsc = db.CANALs.Where(t => t.CANAL1 == cLIENTE.CANAL).SingleOrDefault();
+                if (canaldsc != null)
+                    ViewBag.CanalDsc = canaldsc.CANAL1 + "-" + canaldsc.CDESCRIPCION;
+            }
+
             return View(cLIENTE);
         }
 
@@ -217,6 +265,8 @@ namespace TAT001.Controllers.Catalogos
             }
             ViewBag.LAND = new SelectList(db.PAIS, "LAND", "LANDX", cLIENTE.LAND);
             ViewBag.PARVW = new SelectList(db.TCLIENTEs, "ID", "ID", cLIENTE.PARVW);
+            var canales = db.CANALs.Select(x => new { x.CANAL1, DESCRIPCION = x.CANAL1 + "-" + x.CDESCRIPCION });
+            ViewBag.CANAL = new SelectList(canales, "CANAL1","DESCRIPCION", cLIENTE.CANAL != null ? cLIENTE.CANAL.TrimEnd() : "");
             return View(cLIENTE);
         }
 
@@ -604,25 +654,26 @@ namespace TAT001.Controllers.Catalogos
                             db.SaveChanges();
                         }
                     }
-                    cl.USUARIO0_ID = (da.ID_US0!=null ?da.ID_US0.Trim():null);
-                    cl.USUARIO1_ID = (da.ID_US1 != null ? da.ID_US1.Trim() : null);
-                    cl.USUARIO2_ID = (da.ID_US2 != null ? da.ID_US2.Trim() : null);
-                    cl.USUARIO3_ID = (da.ID_US3 != null ? da.ID_US3.Trim() : null);
-                    cl.USUARIO4_ID = (da.ID_US4 != null ? da.ID_US4.Trim() : null);
-                    cl.USUARIO5_ID = (da.ID_US5 != null ? da.ID_US5.Trim() : null);
-                    cl.USUARIO6_ID = (da.ID_US6 != null ? da.ID_US6.Trim() : null);
-                    cl.USUARIO7_ID = (da.ID_US7 != null ? da.ID_US7.Trim() : null);
+                    cl.USUARIO0_ID = (!string.IsNullOrEmpty(da.ID_US0) ?da.ID_US0.Trim():null);
+                    cl.USUARIO1_ID = (!string.IsNullOrEmpty(da.ID_US1) ? da.ID_US1.Trim() : null);
+                    cl.USUARIO2_ID = (!string.IsNullOrEmpty(da.ID_US2) ? da.ID_US2.Trim() : null);
+                    cl.USUARIO3_ID = (!string.IsNullOrEmpty(da.ID_US3) ? da.ID_US3.Trim() : null);
+                    cl.USUARIO4_ID = (!string.IsNullOrEmpty(da.ID_US4) ? da.ID_US4.Trim() : null);
+                    cl.USUARIO5_ID = (!string.IsNullOrEmpty(da.ID_US5) ? da.ID_US5.Trim() : null);
+                    cl.USUARIO6_ID = (!string.IsNullOrEmpty(da.ID_US6) ? da.ID_US6.Trim() : null);
+                    cl.USUARIO7_ID = (!string.IsNullOrEmpty(da.ID_US7) ? da.ID_US7.Trim() : null);
                     cl.ACTIVO = true;
-                    
+
                     ////Modificar a CLIENTE
-                    cl1.PROVEEDOR_ID = (da.ID_PROVEEDOR != null ? da.ID_PROVEEDOR.Trim() : cl1.PROVEEDOR_ID);
-                    cl1.LAND = (da.LAND != null ? da.LAND.Trim() : cl1.LAND);
-                    cl1.BANNER = (da.BANNER != null ? da.BANNER.Trim() : cl1.BANNER);
-                    cl1.BANNERG = (da.BANNERG != null ? da.BANNERG.Trim() : cl1.BANNERG);
-                    cl1.CANAL = (da.CANAL != null ? da.CANAL.Trim() : cl1.CANAL);
-                    cl1.EXPORTACION = (da.EXPORTACION != null ? da.EXPORTACION.Trim() : cl1.EXPORTACION);
-                    cl1.CONTAC = (da.CONTACTO != null ? da.CONTACTO.Trim() : cl1.CONTAC);
-                    cl1.CONT_EMAIL = (da.CONTACTOE != null ? da.CONTACTOE.Trim() : cl1.CONT_EMAIL);
+                    cl1.NAME1 = (!string.IsNullOrEmpty(da.CLIENTE_N) ? da.CLIENTE_N.Trim() : cl1.NAME1);
+                    cl1.PROVEEDOR_ID = (!string.IsNullOrEmpty(da.ID_PROVEEDOR) ? da.ID_PROVEEDOR.Trim() : cl1.PROVEEDOR_ID);
+                    cl1.LAND = (!string.IsNullOrEmpty(da.LAND) ? da.LAND.Trim() : cl1.LAND);
+                    cl1.BANNER = (!string.IsNullOrEmpty(da.BANNER) ? da.BANNER.Trim() : cl1.BANNER);
+                    cl1.BANNERG = (!string.IsNullOrEmpty(da.BANNERG) ? da.BANNERG.Trim() : cl1.BANNERG);
+                    cl1.CANAL = (!string.IsNullOrEmpty(da.CANAL) ? da.CANAL.Trim() : cl1.CANAL);
+                    cl1.EXPORTACION = (!string.IsNullOrEmpty(da.EXPORTACION) ? da.EXPORTACION.Trim() : cl1.EXPORTACION);
+                    cl1.CONTAC = (!string.IsNullOrEmpty(da.CONTACTO) ? da.CONTACTO.Trim() : cl1.CONTAC);
+                    cl1.CONT_EMAIL = (!string.IsNullOrEmpty(da.CONTACTOE ) ? da.CONTACTOE.Trim() : cl1.CONT_EMAIL);
                     db.Entry(cl1).State = EntityState.Modified;
                     
                     ////Agregar a contacto
@@ -637,8 +688,8 @@ namespace TAT001.Controllers.Catalogos
                         });
                         if (!db.CONTACTOCs.Any(x=>x.EMAIL== (da.CONTACTOE != null ? da.CONTACTOE.Trim() : null) && x.NOMBRE== (da.CONTACTO != null ? da.CONTACTO.Trim() : null)))
                         {
-                            co.NOMBRE = (da.CONTACTO != null ? da.CONTACTO.Trim() : null);
-                            co.EMAIL = (da.CONTACTOE != null ? da.CONTACTOE.Trim() : null);
+                            co.NOMBRE = (!string.IsNullOrEmpty(da.CONTACTO) ? da.CONTACTO.Trim() : null);
+                            co.EMAIL = (!string.IsNullOrEmpty(da.CONTACTOE) ? da.CONTACTOE.Trim() : null);
                             co.VKORG = da.VKORG;
                             co.VTWEG = da.VTWEG;
                             co.SPART = da.SPART;
@@ -1222,7 +1273,15 @@ namespace TAT001.Controllers.Catalogos
                 doc.KUNNR = dt.Rows[i][2].ToString();
                 doc.KUNNR = Completa(doc.KUNNR, 10);
 
-                existeCliente = db.CLIENTEs.Where(cc => cc.KUNNR==doc.KUNNR & cc.ACTIVO).FirstOrDefault();
+                existeCliente = db.CLIENTEs.Where(cc => cc.KUNNR == doc.KUNNR & cc.ACTIVO).FirstOrDefault();
+                if (!String.IsNullOrEmpty(dt.Rows[i][3].ToString()))
+                {
+                    doc.CLIENTE_N = dt.Rows[i][3].ToString().Replace(',',' ').ToUpper();
+                }
+                else
+                {
+                    doc.CLIENTE_N = (existeCliente.NAME1 == null ? "" : existeCliente.NAME1.Replace(',',' '));
+                }
                 if (existeCliente == null)
                     doc.VKORG = null;
                 else
@@ -1231,7 +1290,6 @@ namespace TAT001.Controllers.Catalogos
                     doc.VTWEG = existeCliente.VTWEG;
                     doc.SPART = existeCliente.SPART;
                 }
-                doc.CLIENTE_N = (existeCliente.NAME1 == null ? "" : existeCliente.NAME1);
                 //Manager
                 doc.ID_US0 = (dt.Rows[i][4] != null ? dt.Rows[i][4].ToString().ToUpper() : null);
                 //Nivel 1

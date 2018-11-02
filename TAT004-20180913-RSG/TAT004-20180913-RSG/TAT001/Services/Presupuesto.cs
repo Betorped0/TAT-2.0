@@ -10,9 +10,9 @@ namespace TAT001.Services
 {
     public class Presupuesto
     {
+     readonly   TAT001Entities db = new TAT001Entities();
         public PRESUPUESTO_MOD getPresupuesto(string kunnr , string mes)//RSG 07.06.2018---------------------------------------------
         {
-            TAT001Entities db = new TAT001Entities();
             PRESUPUESTO_MOD pm = new PRESUPUESTO_MOD();
             try
             {
@@ -20,7 +20,7 @@ namespace TAT001.Services
                     kunnr = "";
 
                 //Obtener presupuesto
-                var presupuesto =  db.CSP_PRESU_CLIENT(cLIENTE: kunnr, pERIODO: mes).ToList();
+                var presupuesto = FnCommon.ObtenerPresupuestoCliente(db,kunnr, mes);// db.CSP_PRESU_CLIENT(cLIENTE: kunnr, pERIODO: mes).ToList();
                 string clien = db.CLIENTEs.Where(x => x.KUNNR == kunnr).Select(x => x.BANNERG).First();
                 var clien2 = db.CLIENTEs.Where(x => x.KUNNR == kunnr).FirstOrDefault();
                 string desCanal = db.CANALs.Where(x => x.CANAL1 == clien2.CANAL).FirstOrDefault().CDESCRIPCION;
@@ -55,7 +55,6 @@ namespace TAT001.Services
             {
                 Log.ErrorLogApp(e,"Presupuesto","getPresupuesto");
             }
-            db.Dispose();
             return pm;
         }
     }

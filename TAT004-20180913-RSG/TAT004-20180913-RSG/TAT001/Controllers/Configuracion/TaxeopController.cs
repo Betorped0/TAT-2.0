@@ -70,7 +70,90 @@ namespace TAT001.Controllers.Configuracion
             }
             return View(tAXEOP);
         }
+        [HttpPost]
+        public ActionResult CreateR([Bind(Include = "ID,DESCRIPCIÓN,PORC,ACTIVO")] RETENCION tX_CONCEPTO)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var retenciones = db.RETENCIONs.OrderByDescending(t => t.ID).First();
+                    tX_CONCEPTO.ID = retenciones.ID + 1;
+                        tX_CONCEPTO.ACTIVO = true;
+                        db.RETENCIONs.Add(tX_CONCEPTO);
+                        db.SaveChanges();
+                        //Posterior a la insercion del registro, insertar en treversat
+                        RETENCION trvi = db.RETENCIONs.Where(x => x.ID == tX_CONCEPTO.ID).FirstOrDefault();
+                        //si trae registros entra
+                        if (trvi != null)
+                        {
+                            List<SPRA> ss = db.SPRAS.ToList();
+                            foreach (SPRA s in ss)
+                            {
+                                RETENCIONT trvt = new RETENCIONT();
+                                trvt.SPRAS_ID = s.ID;
+                                trvt.RETENCION_ID = trvi.ID;
+                                trvt.TXT50 = tX_CONCEPTO.DESCRIPCIÓN;
+                                db.RETENCIONTs.Add(trvt);
+                                db.SaveChanges();
+                            }
+                        }
+                    TempData["Mensaje"] = "Retención creado correctamente.";
+                    return Json("Retención creada correctamente.", JsonRequestBehavior.AllowGet);
+                }
+                    else
+                {
+                    return Json("Modelo no valido", JsonRequestBehavior.AllowGet);
+                }
 
+            }
+            catch (Exception e)
+            {
+                var x = e.ToString();
+                return Json(e, JsonRequestBehavior.AllowGet);
+            }
+        }
+        [HttpPost]
+        public ActionResult CreateTR([Bind(Include = "ID,DESCRIPCION,ACTIVO")] TRETENCION tX_CONCEPTO)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    tX_CONCEPTO.ACTIVO = true;
+                    db.TRETENCIONs.Add(tX_CONCEPTO);
+                    db.SaveChanges();
+                    //Posterior a la insercion del registro, insertar en treversat
+                    TRETENCION trvi = db.TRETENCIONs.Where(x => x.ID == tX_CONCEPTO.ID).FirstOrDefault();
+                    //si trae registros entra
+                    if (trvi != null)
+                    {
+                        List<SPRA> ss = db.SPRAS.ToList();
+                        foreach (SPRA s in ss)
+                        {
+                            TRETENCIONT trvt = new TRETENCIONT();
+                            trvt.SPRAS_ID = s.ID;
+                            trvt.TRETENCION_ID = trvi.ID;
+                            trvt.TXT50 = tX_CONCEPTO.DESCRIPCION;
+                            db.TRETENCIONTs.Add(trvt);
+                            db.SaveChanges();
+                        }
+                    }
+                    TempData["Mensaje"] = "Retención creada correctamente.";
+                    return Json("Tipo Retención creada correctamente.", JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json("Modelo no valido", JsonRequestBehavior.AllowGet);
+                }
+
+            }
+            catch (Exception e)
+            {
+                var x = e.ToString();
+                return Json(e, JsonRequestBehavior.AllowGet);
+            }
+        }
         // GET: Taxeop/Create
         public ActionResult Create(string sc, string ld, string kun, string vk, string vtw, string sp, string con)
         {
@@ -123,8 +206,10 @@ namespace TAT001.Controllers.Configuracion
                 txp.CONCEPTO_ID = Convert.ToInt32(con);
             }
             txp.PORC = null;
-            ViewBag.RETENCION_ID = new SelectList(db.RETENCIONs, "ID", "ID");
-            ViewBag.TRETENCION_ID = new SelectList(db.TRETENCIONs, "ID", "ID");
+            var retenciones = db.RETENCIONs.Where(t => t.ACTIVO).Select(t => new { t.ID, DESCRIPCION = t.DESCRIPCIÓN + "-" + t.PORC + "%" });
+            ViewBag.RETENCION_ID = new SelectList(retenciones, "ID","DESCRIPCION");
+            var tretenciones = db.TRETENCIONs.Where(t => t.ACTIVO==true).Select(t => new { t.ID, DESCRIPCION = t.ID + "-" + t.DESCRIPCION  });
+            ViewBag.TRETENCION_ID = new SelectList(tretenciones, "ID", "DESCRIPCION");
             return View(txp);
         }
 
@@ -238,8 +323,10 @@ namespace TAT001.Controllers.Configuracion
             ViewBag.sp = sp;
             ViewBag.con = con;
             //
-            ViewBag.RETENCION_ID = new SelectList(db.RETENCIONs, "ID", "ID");
-            ViewBag.TRETENCION_ID = new SelectList(db.TRETENCIONs, "ID", "ID");
+            var retenciones = db.RETENCIONs.Where(t => t.ACTIVO).Select(t => new { t.ID, DESCRIPCION = t.DESCRIPCIÓN + "-" + t.PORC + "%" });
+            ViewBag.RETENCION_ID = new SelectList(retenciones, "ID", "DESCRIPCION",txp.RETENCION_ID );
+            var tretenciones = db.TRETENCIONs.Where(t => t.ACTIVO == true).Select(t => new { t.ID, DESCRIPCION = t.ID + "-" + t.DESCRIPCION });
+            ViewBag.TRETENCION_ID = new SelectList(tretenciones, "ID", "DESCRIPCION",txp.TRETENCION_ID);
             return View(txp);
         }
 
