@@ -103,49 +103,49 @@ $(document).ready(function () {
     $('#formulario ').submit(function (e) {
 
         var value = $(document.activeElement).val();
-        if ($(document.activeElement).val() == 'Cargar') {
+        if ($(document.activeElement).val() === 'Cargar') {
             var concatValorS = 0;
             var concatValorP = 0;
             var concatValorA = 0;
             var mostrar = false;
             var mostrarG = false;
-            if (acept == false) {
-                if ($('#CPT').val() != '') {
+            if (acept === false) {
+                if ($('#CPT').val() !== '') {
                     var totalsoccpt = $('[name="sociedadcpt"] option').length;
                     $('[name="sociedadcpt"] option').filter(':selected').each(function () {
-                        if ($(this).val() != "") {
+                        if ($(this).val() !== "") {
                             concatValorS++;
                         }
                     });
                     var totalpercpt = $('[name="periodocpt"] option').length;
                     $('[name="periodocpt"] option').filter(':selected').each(function () {
-                        if ($(this).val() != "") {
+                        if ($(this).val() !== "") {
                             concatValorP++;
                         }
                     });
                     var totalanicpt = $('[name="aniocpt"] option').length;
                     $('[name="aniocpt"] option').filter(':selected').each(function () {
-                        if ($(this).val() != "") {
+                        if ($(this).val() !== "") {
                             concatValorA++;
                         }
                     });
-                    if (concatValorS == 0 || concatValorP == 0 || concatValorA == 0) {
+                    if (concatValorS === 0 || concatValorP === 0 || concatValorA === 0) {
                         $('#mensaje').text("Seleccione una opcion en Sociedad, Año y Periodo para carga CPT");
                         $('#footer').html('<a class="modal-action modal-close waves-effect waves-green btn-flat">OK</a>');
                         $('#dialogo').trigger('click');
                         e.preventDefault();
                         return;
                     }
-                    if (totalsoccpt == concatValorS && totalpercpt == concatValorP) {
+                    if (totalsoccpt === concatValorS && totalpercpt === concatValorP) {
                         $('#mensaje').text("Se cargaran todos los datos de las sociedaes y periodos seleccionados,\n ¿Desea continuar?");
                         mostrar = true;
                     }
                     else {
-                        if (totalsoccpt == concatValorS) {
+                        if (totalsoccpt === concatValorS) {
                             $('#mensaje').text("Se cargaran todos los datos de las sociedaes seleccionadas,\n ¿Desea continuar?");
                             mostrar = true;
                         }
-                        if (totalpercpt == concatValorP) {
+                        if (totalpercpt === concatValorP) {
                             $('#mensaje').text("Se cargaran todos los datos de los periodos seleccionados,\n ¿Desea continuar?");
                             mostrar = true;
                         }
@@ -158,18 +158,18 @@ $(document).ready(function () {
                     }
                 }
                 else {
-                    if ($('#SAP').val() != '') {
+                    if ($('#SAP').val() !== '') {
                         $('[name="sociedadsap"] option').filter(':selected').each(function () {
-                            if ($(this).val() != "") {
+                            if ($(this).val() !== "") {
                                 concatValorS++;
                             }
                         });
                         $('[name="periodosap"] option').filter(':selected').each(function () {
-                            if ($(this).val() != "") {
+                            if ($(this).val() !== "") {
                                 concatValorP++;
                             }
                         });
-                        if (concatValorS == 0 || concatValorP == 0) {
+                        if (concatValorS === 0 || concatValorP === 0) {
                             $('#mensaje').text("Seleccione una opcion en Sociedad y Presupuesto para carga SAP");
                             $('#footer').html('<a class="modal-action modal-close waves-effect waves-green btn-flat">OK</a>');
                             $('#dialogo').trigger('click');
@@ -207,10 +207,10 @@ $(document).ready(function () {
 
     $('select').select();
     $(".f > .select-wrapper > .select-dropdown").prepend(
-        '<li style="display:none" class="toggle selectnone"><span><label></label>Select none</span></li>'
+        '<li style="display:none" class="toggle selectnone"><span><label></label>Ninguno</span></li>'
     );
     $(".f > .select-wrapper > .select-dropdown").prepend(
-        '<li  class="toggle selectall"><span><label></label>Select all</span></li>'
+        '<li  class="toggle selectall"><span><label></label>Todos</span></li>'
     );
     $(".f > .select-wrapper > .select-dropdown .selectall").on(
         "click",

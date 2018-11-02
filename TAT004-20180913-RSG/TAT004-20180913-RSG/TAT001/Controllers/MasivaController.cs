@@ -191,7 +191,7 @@ namespace TAT001.Controllers
                     doc.PAYER_ID = payer_id.TrimStart('0');
                     doc.VKORG = vkorg;
                     doc.VTWEG = vtweg;
-                    
+
                     //var existeCliente = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault().NAME1;
 
                     //if (existeCliente != null | existeCliente != "")
@@ -199,7 +199,7 @@ namespace TAT001.Controllers
                     //    doc.PAYER_NOMBRE = existeCliente;
                     //}
                     var existeCliente = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault();
-                    
+
                     if (existeCliente != null)
                     {
                         doc.PAYER_NOMBRE = existeCliente.NAME1;
@@ -2747,15 +2747,18 @@ namespace TAT001.Controllers
                             f.ESTATUS = "I";
                             f.FECHAC = DateTime.Now;
                             f.FECHAM = DateTime.Now;
-                            f.COMENTARIO = ds6.Tables[0].Rows[contadorNotas][1].ToString().Trim();
+                            try
+                            {
+                                f.COMENTARIO = ds6.Tables[0].Rows[contadorNotas][1].ToString().Trim();
+                            } catch { f.COMENTARIO = ""; }
                             string c = pf.procesa(f, "");
-                            //if (c == "1")
-                            //{
-                            //    string image = Server.MapPath("~/images/logo_kellogg.png");
-                            //    Email em = new Email();
-                            //    string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
-                            //    em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image);
-                            //}
+                            if (c == "1")
+                            {
+                                string image = Server.MapPath("~/images/logo_kellogg.png");
+                                Email em = new Email();
+                                string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
+                                em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image);
+                            }
                             contadorNotas++;
                         }
                     }
@@ -3271,80 +3274,83 @@ namespace TAT001.Controllers
         {
             //IEnumerable<HttpPostedFileBase> archivosToSave = (IEnumerable<HttpPostedFileBase>)Session["archivosSave"];
             List<object> archivosToSave = (List<object>)Session["archivosSave"];
-            object[] arrArchivostoSave = new object[archivosToSave.Count];
-            int indice = 0;
-
-            foreach (List<HttpPostedFileBase> listFile in archivosToSave)
+            if (archivosToSave != null)//ADD RSG 01.11.2018
             {
-                arrArchivostoSave[indice] = listFile.ToArray();
-                indice++;
-            }
+                object[] arrArchivostoSave = new object[archivosToSave.Count];
+                int indice = 0;
 
-            HttpPostedFileBase[] arregloCopia = new HttpPostedFileBase[contador];
-            arregloCopia = (HttpPostedFileBase[])arrArchivostoSave[contador];
-
-            List<HttpPostedFileBase> archivosSaveFinal = new List<HttpPostedFileBase>();
-            for (int i = 0; i < arregloCopia.Length; i++)
-            {
-                archivosSaveFinal.Add(arregloCopia[i]);
-            }
-
-            string errorString = "";
-            var res = "";
-            string errorMessage = "";
-            int numFiles = 0;
-
-            try
-            {
-                foreach (HttpPostedFileBase file in archivosSaveFinal)
+                foreach (List<HttpPostedFileBase> listFile in archivosToSave)
                 {
-                    if (file != null)
-                    {
-                        if (file.ContentLength > 0)
-                        {
-                            numFiles++;
-                        }
-                    }
+                    arrArchivostoSave[indice] = listFile.ToArray();
+                    indice++;
                 }
-            }
-            catch (Exception e) { }
 
-            if (numFiles > 0)
-            {
-                string url = ConfigurationManager.AppSettings["URL_SAVE"];
-                //string url = "C:\\Users\\EQUIPO\\Desktop\\Nueva carpeta\\";
-                var dir = new Files().createDir(url, num_doc.ToString(), DateTime.Now.Year.ToString());
+                HttpPostedFileBase[] arregloCopia = new HttpPostedFileBase[contador];
+                arregloCopia = (HttpPostedFileBase[])arrArchivostoSave[contador];
 
-                //Evaluar que se creo el directorio
-                if (dir.Equals(""))
+                List<HttpPostedFileBase> archivosSaveFinal = new List<HttpPostedFileBase>();
+                for (int i = 0; i < arregloCopia.Length; i++)
+                {
+                    archivosSaveFinal.Add(arregloCopia[i]);
+                }
+
+                string errorString = "";
+                var res = "";
+                string errorMessage = "";
+                int numFiles = 0;
+
+                try
                 {
                     foreach (HttpPostedFileBase file in archivosSaveFinal)
                     {
-                        string errorfiles = "";
-                        string path = "";
-                        errorfiles = "";
-                        res = new Files().SaveFile(file, url, num_doc.ToString(), out errorfiles, out path, DateTime.Now.Year.ToString());
-
-                        var cambio = db.DOCUMENTOAs.Where(x => x.NUM_DOC == num_doc & x.PATH == file.FileName).FirstOrDefault();
-                        if (cambio != null)
+                        if (file != null)
                         {
-                            cambio.PATH = path;
-                            db.SaveChanges();
-                        }
-
-                        if (errorfiles != "")
-                        {
-                            errorMessage += "Error con el archivo " + errorfiles;
+                            if (file.ContentLength > 0)
+                            {
+                                numFiles++;
+                            }
                         }
                     }
                 }
-                else
+                catch (Exception e) { }
+
+                if (numFiles > 0)
                 {
-                    errorMessage = dir;
+                    string url = ConfigurationManager.AppSettings["URL_SAVE"];
+                    //string url = "C:\\Users\\EQUIPO\\Desktop\\Nueva carpeta\\";
+                    var dir = new Files().createDir(url, num_doc.ToString(), DateTime.Now.Year.ToString());
+
+                    //Evaluar que se creo el directorio
+                    if (dir.Equals(""))
+                    {
+                        foreach (HttpPostedFileBase file in archivosSaveFinal)
+                        {
+                            string errorfiles = "";
+                            string path = "";
+                            errorfiles = "";
+                            res = new Files().SaveFile(file, url, num_doc.ToString(), out errorfiles, out path, DateTime.Now.Year.ToString());
+
+                            var cambio = db.DOCUMENTOAs.Where(x => x.NUM_DOC == num_doc & x.PATH == file.FileName).FirstOrDefault();
+                            if (cambio != null)
+                            {
+                                cambio.PATH = path;
+                                db.SaveChanges();
+                            }
+
+                            if (errorfiles != "")
+                            {
+                                errorMessage += "Error con el archivo " + errorfiles;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        errorMessage = dir;
+                    }
+                    errorString = errorMessage;
+                    Session["ERROR_FILES"] = errorMessage;
                 }
-                errorString = errorMessage;
-                Session["ERROR_FILES"] = errorMessage;
-            }
+            }//ADD RSG 01.11.2018
         }
 
         public decimal getSolID(string TSOL_ID)

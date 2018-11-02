@@ -740,7 +740,7 @@
             if (ligada()) {
                 ban++;
                 $('#btn_guardar').click();
-            } else if (!existeCarta) {
+            } else if (cartasCount == "0") {
                 msg = "Favor de Generar la carta.";
                 M.toast({
                     classes: "validarDis",
