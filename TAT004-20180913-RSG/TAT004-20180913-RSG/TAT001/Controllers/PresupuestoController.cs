@@ -186,6 +186,7 @@ namespace TAT001.Controllers
             }
             Models.CargarModel carga = new Models.CargarModel();
             pRESUPUESTOP = carga.consultSociedad(User.Identity.Name);
+            string nombref = "", nombre = "";
             if (String.IsNullOrEmpty(enviar) == false || String.IsNullOrEmpty(guardar) == false)
             {
                 if (fileCPT != null || fileSAP != null)
@@ -195,21 +196,39 @@ namespace TAT001.Controllers
                     {
                         if (fileCPT != null)
                         {
-                            pRESUPUESTOP.presupuestoCPT = carga.cargarPresupuestoCPT(fileCPT, sociedadcpt, periodocpt, aniocpt, ref mensajeC);
-                            Session["Presupuesto"] = pRESUPUESTOP;
-                            Session["Sociedadcpt"] = sociedadcpt;
-                            Session["Aniocpt"] = aniocpt;
-                            Session["Periodocpt"] = periodocpt;
-                            ViewBag.sociedadcpt = 1;
+                            nombref += "CPT_BUDGET_" + DateTime.Today.Year.ToString().Substring(2, 2);
+                            nombre = fileCPT.FileName.Remove(11, 4).Substring(0, 13);
+                            if (nombre == nombref)
+                            {
+                                pRESUPUESTOP.presupuestoCPT = carga.cargarPresupuestoCPT(fileCPT, sociedadcpt, periodocpt, aniocpt, ref mensajeC);
+                                Session["Presupuesto"] = pRESUPUESTOP;
+                                Session["Sociedadcpt"] = sociedadcpt;
+                                Session["Aniocpt"] = aniocpt;
+                                Session["Periodocpt"] = periodocpt;
+                                ViewBag.sociedadcpt = 1;
+                            }
+                            else
+                            {
+                                ViewBag.MensajeGE = carga.mensajes(16);
+                            }
                         }
                         if (fileSAP[0] != null)
                         {
-                            pRESUPUESTOP.presupuestoSAP = carga.cargarPresupuestoSAP(fileSAP, sociedadsap, periodosap, aniosap, ref mensajeS);
-                            Session["Presupuesto"] = pRESUPUESTOP;
-                            Session["Sociedadsap"] = sociedadsap;
-                            Session["Aniosap"] = aniosap;
-                            Session["Periodosap"] = periodosap;
-                            ViewBag.sociedadsap = 1;
+                            nombref += "OUTBOUND_BUDG_" + string.Format("{0:00}", DateTime.Today.Month) + DateTime.Today.Year.ToString().Substring(2, 2);
+                            nombre = fileSAP[0].FileName .Remove(14, 5).Remove(16, 2).Substring(0, 18);
+                            if (nombre == nombref)
+                            {
+                                pRESUPUESTOP.presupuestoSAP = carga.cargarPresupuestoSAP(fileSAP, sociedadsap, periodosap, aniosap, ref mensajeS);
+                                Session["Presupuesto"] = pRESUPUESTOP;
+                                Session["Sociedadsap"] = sociedadsap;
+                                Session["Aniosap"] = aniosap;
+                                Session["Periodosap"] = periodosap;
+                                ViewBag.sociedadsap = 1;
+                            }
+                            else
+                            {
+                                ViewBag.MensajeGE = carga.mensajes(16);
+                            }
                         }
                     }
                     catch (Exception e)
