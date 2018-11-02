@@ -148,7 +148,7 @@ namespace TAT001.Controllers
             Models.PresupuestoModels carga = new Models.PresupuestoModels();
             ViewBag.ultMod = carga.consultarUCarga();
 
-            ViewBag.TSOL_RELA = FnCommon.ObtenerTreeTiposSolicitud(db, DF.D.SOCIEDAD_ID, uu,"SR");
+            ViewBag.TSOL_RELA = FnCommon.ObtenerTreeTiposSolicitud(db, DF.D.SOCIEDAD_ID, uu, "SR");
             //RECUPERO EL PAIS para hacer una busqueda de su formato monetario
             ////var paisMon = Session["pais"].ToString();//------------------------LEJGG090718
             ViewBag.miles = DF.D.PAI.MILES;//LEJGG 090718
@@ -715,7 +715,8 @@ namespace TAT001.Controllers
                     d = db.DOCUMENTOes.Where(doc => doc.NUM_DOC == rel).FirstOrDefault();
                     sociedad_id = d.SOCIEDAD_ID;
                 }
-                    if (ViewBag.reversa == "preversa") { 
+                if (ViewBag.reversa == "preversa")
+                {
                     list_sol = FnCommon.ObtenerCmbTiposSolicitud(db, user.SPRAS_ID, null, true)
                         .Select(x => new TSOLT_MOD
                         {
@@ -983,7 +984,7 @@ namespace TAT001.Controllers
                     }
                     catch (Exception e)
                     {
-                        Log.ErrorLogApp(e,"Solicitudes","Create");
+                        Log.ErrorLogApp(e, "Solicitudes", "Create");
                     }
 
                     id_pais = db.PAIS.Where(pais => pais.LAND.Equals(pais_id)).FirstOrDefault();//RSG 15.05.2018 //MGC B20180625 MGC 
@@ -2502,7 +2503,8 @@ namespace TAT001.Controllers
                         ViewBag.error = errorString;
                     }
                     //---------------------------------------------------------------------------------TODO CORRECTO
-                    if (dOCUMENTO.DOCUMENTO_REF > 0)
+                    //if (dOCUMENTO.DOCUMENTO_REF > 0)
+                    if (dOCUMENTO.DOCUMENTO_REF > 0 & txt_flujo != "B")//ADD RSG 02.11.2018
                     {
                         if (dOCUMENTO.TSOL_ID != "CPR")
                         {
@@ -2574,7 +2576,7 @@ namespace TAT001.Controllers
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
                 FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
                 //tipo de solicitud
-                var id_sol  = FnCommon.ObtenerCmbTiposSolicitud(db, user.SPRAS_ID, null)
+                var id_sol = FnCommon.ObtenerCmbTiposSolicitud(db, user.SPRAS_ID, null)
                         .Select(x => new TSOLT_MOD
                         {
                             SPRAS_ID = user.SPRAS_ID,
@@ -3273,10 +3275,10 @@ namespace TAT001.Controllers
             }
             catch (Exception e)
             {
-                Log.ErrorLogApp(e,"Solicitudes","Descargar");
+                Log.ErrorLogApp(e, "Solicitudes", "Descargar");
                 return null;
             }
-            
+
         }
 
 
@@ -3822,13 +3824,13 @@ namespace TAT001.Controllers
                 }
                 d.MONEDA_ID = id_bukrs.WAERS;
                 var date = DateTime.Now.Date;
-              
+
 
                 ViewBag.tcambio = d.TIPO_CAMBIO;
 
             }//RSG 13.06.2018
 
-            d.PERIODO = FnCommon.ObtenerPeriodoCalendario445(db,d.SOCIEDAD_ID,d.TSOL_ID,User.Identity.Name);
+            d.PERIODO = FnCommon.ObtenerPeriodoCalendario445(db, d.SOCIEDAD_ID, d.TSOL_ID, User.Identity.Name);
             d.EJERCICIO = Convert.ToString(DateTime.Now.Year);
 
             d.FECHAD = theTime;
@@ -3930,12 +3932,12 @@ namespace TAT001.Controllers
                 //                select P).ToList();
 
                 List<PAI> pp = (from P in db.PAIS.ToList()
-                         join C in db.CLIENTEs.Where(x => x.ACTIVO == true).ToList()
-                         on P.LAND equals C.LAND
-                         join U in db.USUARIOFs.Where(x => x.USUARIO_ID == User.Identity.Name & x.ACTIVO == true)
-                         on new { C.VKORG, C.VTWEG, C.SPART, C.KUNNR } equals new { U.VKORG, U.VTWEG, U.SPART, U.KUNNR }
-                         where P.ACTIVO == true
-                         select P).DistinctBy(x => x.LAND).ToList();
+                                join C in db.CLIENTEs.Where(x => x.ACTIVO == true).ToList()
+                                on P.LAND equals C.LAND
+                                join U in db.USUARIOFs.Where(x => x.USUARIO_ID == User.Identity.Name & x.ACTIVO == true)
+                                on new { C.VKORG, C.VTWEG, C.SPART, C.KUNNR } equals new { U.VKORG, U.VTWEG, U.SPART, U.KUNNR }
+                                where P.ACTIVO == true
+                                select P).DistinctBy(x => x.LAND).ToList();
 
                 List<Delegados> delegados = new List<Delegados>();
                 foreach (DELEGAR de in del)
@@ -4065,7 +4067,8 @@ namespace TAT001.Controllers
             }
             //ADD RSG 31.10.2018------------------------------
             d.DOCUMENTORAN = new List<DOCUMENTORAN>();
-            foreach (DOCUMENTOREC drec in d.DOCUMENTOREC.ToList()) {
+            foreach (DOCUMENTOREC drec in d.DOCUMENTOREC.ToList())
+            {
                 d.DOCUMENTORAN.AddRange(drec.DOCUMENTORANs.ToList());
             }
             //ADD RSG 31.10.2018------------------------------
@@ -4087,7 +4090,7 @@ namespace TAT001.Controllers
             "VKORG,VTWEG,SPART,HORAC,FECHAC_PLAN,FECHAC_USER,HORAC_USER,CONCEPTO,PORC_ADICIONAL,PAYER_NOMBRE,PAYER_EMAIL," +
             "MONEDAL_ID,MONEDAL2_ID,TIPO_CAMBIOL,TIPO_CAMBIOL2,DOCUMENTOP, DOCUMENTOF, DOCUMENTOREC, GALL_ID, USUARIOD_ID, OBJQ_PORC, DOCUMENTORAN")] DOCUMENTO dOCUMENTO,
                 IEnumerable<HttpPostedFileBase> files_soporte, string notas_soporte, string[] labels_soporte, string unafact,
-                string FECHAD_REV, string TREVERSA, string select_neg, string select_dis, string select_negi, string select_disi, 
+                string FECHAD_REV, string TREVERSA, string select_neg, string select_dis, string select_negi, string select_disi,
                 string bmonto_apoyo, string catmat, string txt_sop_borr, string txt_flujo, string chk_ligada)
         {
             if (ModelState.IsValid)
@@ -4136,18 +4139,18 @@ namespace TAT001.Controllers
                         d.TIPO_TECNICO = "P";
 
 
-                ////if (d.PAYER_ID != dOCUMENTO.PAYER_ID)
-                ////{
-                ////    d.PAYER_ID = dOCUMENTO.PAYER_ID;
-                ////    CLIENTE c = db.CLIENTEs.Where(a => a.KUNNR.Equals(dOCUMENTO.PAYER_ID)).FirstOrDefault();
-                ////    if (c != null)
-                ////    {
-                ////        d.VKORG = c.VKORG;
-                ////        d.VTWEG = c.VTWEG;
-                ////        d.SPART = c.SPART;
-                ////    }
-                ////}
-                d.PAYER_EMAIL = dOCUMENTO.PAYER_EMAIL;
+                    ////if (d.PAYER_ID != dOCUMENTO.PAYER_ID)
+                    ////{
+                    ////    d.PAYER_ID = dOCUMENTO.PAYER_ID;
+                    ////    CLIENTE c = db.CLIENTEs.Where(a => a.KUNNR.Equals(dOCUMENTO.PAYER_ID)).FirstOrDefault();
+                    ////    if (c != null)
+                    ////    {
+                    ////        d.VKORG = c.VKORG;
+                    ////        d.VTWEG = c.VTWEG;
+                    ////        d.SPART = c.SPART;
+                    ////    }
+                    ////}
+                    d.PAYER_EMAIL = dOCUMENTO.PAYER_EMAIL;
                     d.PAYER_NOMBRE = dOCUMENTO.PAYER_NOMBRE;
 
                     d.FECHAF_VIG = dOCUMENTO.FECHAF_VIG;
@@ -4222,7 +4225,7 @@ namespace TAT001.Controllers
 
                         listcatm = grupoMaterialesController(listcat, d.VKORG, d.SPART, d.PAYER_ID, d.SOCIEDAD_ID, out totalcats);
                     }
-                    
+
                     d.ESTATUS_WF = txt_flujo;//ADD RSG 30.10.2018
 
                     //Se cambio de pocisión //B20180618 v1 MGC 2018.06.18--------------------------------------
