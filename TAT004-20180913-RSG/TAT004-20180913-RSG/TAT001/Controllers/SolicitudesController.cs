@@ -3524,6 +3524,7 @@ namespace TAT001.Controllers
                                 })
                             .ToList();
 
+                ViewBag.x_ligada = d.LIGADA;//LEJ 30.07.2018
                 List<DOCUMENTOA> archivos = new List<DOCUMENTOA>();
                 if (rel > 0)
                 {
@@ -4087,7 +4088,7 @@ namespace TAT001.Controllers
             "MONEDAL_ID,MONEDAL2_ID,TIPO_CAMBIOL,TIPO_CAMBIOL2,DOCUMENTOP, DOCUMENTOF, DOCUMENTOREC, GALL_ID, USUARIOD_ID, OBJQ_PORC, DOCUMENTORAN")] DOCUMENTO dOCUMENTO,
                 IEnumerable<HttpPostedFileBase> files_soporte, string notas_soporte, string[] labels_soporte, string unafact,
                 string FECHAD_REV, string TREVERSA, string select_neg, string select_dis, string select_negi, string select_disi, 
-                string bmonto_apoyo, string catmat, string txt_sop_borr, string txt_flujo)
+                string bmonto_apoyo, string catmat, string txt_sop_borr, string txt_flujo, string chk_ligada)
         {
             if (ModelState.IsValid)
             {
@@ -4131,18 +4132,22 @@ namespace TAT001.Controllers
                     d.NOTAS = dOCUMENTO.NOTAS;
                     d.TIPO_TECNICO = select_neg;
 
-                    ////if (d.PAYER_ID != dOCUMENTO.PAYER_ID)
-                    ////{
-                    ////    d.PAYER_ID = dOCUMENTO.PAYER_ID;
-                    ////    CLIENTE c = db.CLIENTEs.Where(a => a.KUNNR.Equals(dOCUMENTO.PAYER_ID)).FirstOrDefault();
-                    ////    if (c != null)
-                    ////    {
-                    ////        d.VKORG = c.VKORG;
-                    ////        d.VTWEG = c.VTWEG;
-                    ////        d.SPART = c.SPART;
-                    ////    }
-                    ////}
-                    d.PAYER_EMAIL = dOCUMENTO.PAYER_EMAIL;
+                    if (chk_ligada == "on")//ADD RSG 02.11.2018
+                        d.TIPO_TECNICO = "P";
+
+
+                ////if (d.PAYER_ID != dOCUMENTO.PAYER_ID)
+                ////{
+                ////    d.PAYER_ID = dOCUMENTO.PAYER_ID;
+                ////    CLIENTE c = db.CLIENTEs.Where(a => a.KUNNR.Equals(dOCUMENTO.PAYER_ID)).FirstOrDefault();
+                ////    if (c != null)
+                ////    {
+                ////        d.VKORG = c.VKORG;
+                ////        d.VTWEG = c.VTWEG;
+                ////        d.SPART = c.SPART;
+                ////    }
+                ////}
+                d.PAYER_EMAIL = dOCUMENTO.PAYER_EMAIL;
                     d.PAYER_NOMBRE = dOCUMENTO.PAYER_NOMBRE;
 
                     d.FECHAF_VIG = dOCUMENTO.FECHAF_VIG;
@@ -4597,6 +4602,10 @@ namespace TAT001.Controllers
 
 
                     //Guardar registros de recurrencias  RSG 01.08.2018------------------
+                    if (chk_ligada == "on")
+                        d.LIGADA = true;
+                    else
+                        d.LIGADA = false;
 
                     if (dOCUMENTO.DOCUMENTOREC != null)
                         if (dOCUMENTO.DOCUMENTOREC.Count > 0)
@@ -4642,7 +4651,7 @@ namespace TAT001.Controllers
                             db.Entry(d).State = EntityState.Modified;
                             db.SaveChanges();
                         }//Guardar registros de recurrencias  RSG 01.08.2018-------------------
-                    if (dOCUMENTO.DOCUMENTOREC == null & dOCUMENTO.LIGADA == true)
+                    if (dOCUMENTO.DOCUMENTOREC == null & d.LIGADA == true)
                     //if (dOCUMENTO.LIGADA == true)
                     {
 
@@ -4655,9 +4664,9 @@ namespace TAT001.Controllers
                         if (drec.PORC == null) //RSG 31.05.2018-------------------
                             drec.PORC = 0;
                         d.TIPO_RECURRENTE = db.TSOLs.Where(x => x.ID.Equals(d.TSOL_ID)).FirstOrDefault().TRECU;
-                        if (d.TIPO_RECURRENTE == "1" & dOCUMENTO.LIGADA == true)
+                        if (d.TIPO_RECURRENTE == "1" & d.LIGADA == true)
                             d.TIPO_RECURRENTE = "2";
-                        if (d.TIPO_RECURRENTE != "1" & dOCUMENTO.OBJETIVOQ == true)
+                        if (d.TIPO_RECURRENTE != "1" & d.OBJETIVOQ == true)
                             d.TIPO_RECURRENTE = "3";
                         Calendario445 cal = new Calendario445();
                         drec.FECHAF = cal.getUltimoDia(d.FECHAF_VIG.Value.Year, cal.getPeriodo(d.FECHAF_VIG.Value));
@@ -4683,10 +4692,10 @@ namespace TAT001.Controllers
                             dran.POS = 1;
                             dran.LIN = 1;
                             dran.OBJETIVOI = 0;
-                            dran.PORCENTAJE = dOCUMENTO.PORC_APOYO;
+                            dran.PORCENTAJE = d.PORC_APOYO;
                             drec.DOCUMENTORANs.Add(dran);
                         }
-                        drec.PORC = dOCUMENTO.PORC_APOYO;
+                        drec.PORC = d.PORC_APOYO;
                         drec.DOC_REF = 0;
                         drec.ESTATUS = "";
 

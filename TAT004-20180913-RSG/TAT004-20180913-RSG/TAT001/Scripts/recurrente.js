@@ -4,7 +4,7 @@
     $("#div_categoria").find('.select-dropdown.dropdown-trigger').addClass('ui-autocomplete-loading');
     $.ajax({
         type: "POST",
-        url: root+'Listas/categoriasCliente',
+        url: root + 'Listas/categoriasCliente',
         dataType: "json",
         data: { vkorg: vkorg, spart: spart, kunnr: kunnr, soc_id: soc },
         success: function (data) {
@@ -159,7 +159,7 @@ $(document).ready(function () {
             showRangos(tableR, $(this));
         }
     });
-    
+
     cambiaCheckRec();
 
     $('body').on('focusout', '#objPORC', function () {
@@ -417,7 +417,7 @@ function addRowRec(t, num, date, monto, tipo, porc, periodo, meses) {
                 tsoll,
                 date,
                 "<input class=\"MONTO input_rec numberd input_dc monto \" style=\"font-size:12px;height:2rem;\" type=\"text\" id=\"\" name=\"\" value=\"" + toShow(monto) + "\" onchange='updateObjQ()'>",
-               toShowPorc(porc)
+                toShowPorc(porc)
                 , periodo
             );
         }
@@ -552,7 +552,8 @@ function copiarTableVistaRec() {
         //Obtener los valores de la tabla para agregarlos a la tabla de la vista en información
         //Se tiene que jugar con los index porque las columnas (ocultas) en vista son diferentes a las del plugin
         //$('#check_recurrente').trigger('change');
-        document.getElementById("check_recurrente").checked = true;
+        if (lengthT > 1)
+            document.getElementById("check_recurrente").checked = true;
         $(".table_rec").css("display", "table");
         var rowsn = 0;
 
@@ -616,7 +617,7 @@ function copiarTableVistaRec() {
         //ocultarColumnasTablaSoporteDatos();
         //$('.input_sop_f').trigger('focusout');
     }
-    
+
 }
 
 //function primerDiaT(t, num, date, monto, tipo) {
@@ -685,13 +686,13 @@ function setDates(tipo) {
         document.getElementById("lbl_fechahasta").setAttribute('class', 'active');
 
         pickerFecha2(".format_date");
-    } else  {
+    } else {
 
         var anioi = document.getElementById('anioi_id').value,
             aniof = document.getElementById('aniof_id').value,
             periodoi = document.getElementById('periodoi_id').value,
             periodof = document.getElementById('periodof_id').value;
-        if (anioi && periodoi ) {
+        if (anioi && periodoi) {
             $.ajax({
                 type: "POST",
                 url: root + 'Listas/getPrimerDia',
