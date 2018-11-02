@@ -11,7 +11,7 @@ $("#miMas").change(function () {
             getExcelMasivas(file);
             procesarHoja1();
             var err = erroresH1();
-            if (err.length <= 0) {
+            ////if (err.length <= 0) {
                 procesarHoja2();
                 procesarHoja3();
                 procesarHoja4();
@@ -19,12 +19,12 @@ $("#miMas").change(function () {
                 checkRelacionada();
                 var kk = checkRelacionadaMat();
                 //checkRelMul()
-            }
-            else {
-                for (var i = 0; i < err.length; i++) {
-                    M.toast({ html: 'Datos primarios con error en NUM_DOC: ' + err[i] });
-                }
-            }
+            ////}
+            ////else {
+            ////    for (var i = 0; i < err.length; i++) {
+            ////        M.toast({ html: 'Datos primarios con error en NUM_DOC: ' + err[i] });
+            ////    }
+            ////}
             //var elem = document.querySelectorAll('.miSel');
             //var instance = M.Select.init(elem, []);
             //document.getElementById("loader").style.display = "none";
@@ -330,7 +330,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_pais', function () {
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
     var col_index2 = col_index - 1;
-
+    var thisS = this;
     $(tr.find("td:eq(" + col_index2 + ")").children().addClass('' + row_index + 'sociedad' + col_index2));
     var sociedad = $('.' + row_index + 'sociedad' + col_index2).val();
     //ESTO SIRVE
@@ -348,7 +348,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_pais', function () {
                 success: function (data) {
                     response(auto.map(data, function (item) {
                         //return { label: item.LANDX, value: item.LANDX };
-                        return { label: item.LANDX, value: item.LAND };
+                        return { label: item.LAND + " " + item.LANDX, value: item.LANDX};
                     }));
                 }
             });
@@ -369,6 +369,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_pais', function () {
 
         select: function (event, ui) {
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+            $(thisS).parent().parent().find(".span_pais").text(ui.item.label.split(' ')[0]); //ADD RSG 01.11.2018
             clearErrors();
         }
     });
