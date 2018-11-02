@@ -354,11 +354,6 @@ function cambiaCheckRec() {
         $("#tabs_rec").addClass("disabled");
 
     }
-    //var opt = document.getElementById("select_neg").getElementsByTagName("option");
-    //for (var i = 0; i < opt.length; i++) {
-    //    if (opt[i].value == "P")
-    //        opt[i].disabled = !campo.checked;
-    //}
     if (campo.checked) {
         $("#select_neg").val("M");
         $("#select_negi").val("M");

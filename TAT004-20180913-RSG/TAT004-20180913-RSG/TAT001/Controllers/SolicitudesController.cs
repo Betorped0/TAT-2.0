@@ -155,16 +155,10 @@ namespace TAT001.Controllers
             ViewBag.dec = DF.D.PAI.DECIMAL;//LEJGG 090718
 
             /////////DRS 24.09.18/////////          
-            var nombrec = from cuen in db.CUENTAs
-                          join cg in db.CUENTAGLs on cuen.ABONO equals cg.ID
-                          where cuen.TALL_ID == dOCUMENTO.TALL_ID
-                          select cg.NOMBRE;
+            var nombrec = db.CUENTAGLs.Where(x => x.ID == DF.D.CUENTAP).Select(x => x.NOMBRE); 
             ViewBag.nombreC = nombrec.ToList();
 
-            var nombrec1 = from cuen in db.CUENTAs
-                           join cg in db.CUENTAGLs on cuen.CARGO equals cg.ID
-                           where cuen.TALL_ID == dOCUMENTO.TALL_ID
-                           select cg.NOMBRE;
+            var nombrec1 = db.CUENTAGLs.Where(x => x.ID == DF.D.CUENTAPL).Select(x => x.NOMBRE);
             ViewBag.nombreC2 = nombrec1.ToList();
 
             ///////////////////////////////CAMBIOS LGPP INICIO//////////////////////////*@
@@ -204,6 +198,26 @@ namespace TAT001.Controllers
                                     ).ToList();
             ViewBag.recs = recs;
             ViewBag.recls = recls;
+            //Tab_Fin Análisis Solicitud
+            decimal montoProv = 0.0M;
+            decimal montoApli = 0.0M;
+            bool esDocRef = false;
+            if (DF.D.DOCUMENTO_REF != null)
+            {
+                montoProv = db.DOCUMENTOes.First(x=>x.NUM_DOC== DF.D.DOCUMENTO_REF).MONTO_DOC_MD.Value;
+            }
+            if (db.DOCUMENTOes.Any(x=>x.DOCUMENTO_REF== DF.D.NUM_DOC))
+            {
+                esDocRef = true;
+                montoApli = db.DOCUMENTOes.Sum(x => x.MONTO_DOC_MD.Value);
+
+            }
+            ViewBag.montoSol = DF.D.MONTO_DOC_MD;
+            ViewBag.montoProv = (DF.D.DOCUMENTO_REF != null? montoProv.ToString():"-");
+            ViewBag.montoApli = (esDocRef? montoApli.ToString():"-");
+            ViewBag.remanente = DF.D.MONTO_DOC_MD- montoApli;
+            ViewBag.montoTotal = DF.D.MONTO_DOC_MD;
+
             return View(DF);
         }
         [HttpPost]
