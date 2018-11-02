@@ -1967,6 +1967,11 @@
     <Content Include="Views\CANAL\Details.cshtml" />
     <Content Include="Views\CANAL\Edit.cshtml" />
     <Content Include="Views\CANAL\Index.cshtml" />
+    <Content Include="Views\Solicitudes\_CreateTabInfo.cshtml" />
+    <Content Include="Views\Solicitudes\_CreateTabSop.cshtml" />
+    <Content Include="Views\Solicitudes\_CreateTabDis.cshtml" />
+    <Content Include="Views\Solicitudes\_CreateTabRec.cshtml" />
+    <Content Include="Views\Solicitudes\_CreateTabFin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->
