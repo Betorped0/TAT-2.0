@@ -477,7 +477,7 @@
                                                         {
                                                             if (Model.D.DOCUMENTOF[0].BILL_DOC.Trim() != "0")
                                                             {
-                                                                <th id="thead_fact">No. Factura Fiscal</th> @*B20180801 MGC Textos*@
+                                                                <th id="thead_fact">Billing</th> @*B20180801 MGC Textos*@
                                                             }
                                                         }
                                                         @if (Model.D.DOCUMENTOF[0].BELNR.Trim() != "0")
@@ -1119,7 +1119,9 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <script>
+                                  var cartasCount = "@Model.D.CARTAs.Count()";
+                            </script>
                             if (ViewBag.cartap.Count != 0)
                             {
                                 //LEJ 10.07.2018
@@ -1310,7 +1312,7 @@
                                                             <h5 id="head_baseaplicar">Base para aplicar %</h5> @*B20180801 MGC Textos*@
                                                             <div class="row" style="margin-bottom:0">
                                                                 <div class="input-field col s6">
-                                                                    @Html.EditorFor(model => model.D.PORC_APOYO, new { htmlAttributes = new { @disabled = "disabled", @id = "lbl_montodis", @class = "_vmonto" } })
+                                                                    @Html.EditorFor(model => model.D.PORC_APOYO, new { htmlAttributes = new { @disabled = "disabled", @id = "lbl_montodis", @class = "porcentaje" } })
                                                                     <label id="lbl_porcapoyo" for="bmonto_apoyo">% Apoyo</label>@*B20180801 MGC Textos*@
                                                                 </div>
                                                             </div>

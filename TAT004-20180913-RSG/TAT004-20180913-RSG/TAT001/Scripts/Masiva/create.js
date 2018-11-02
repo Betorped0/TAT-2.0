@@ -11,7 +11,7 @@ $("#miMas").change(function () {
             getExcelMasivas(file);
             procesarHoja1();
             var err = erroresH1();
-            if (err.length <= 0) {
+            ////if (err.length <= 0) {
                 procesarHoja2();
                 procesarHoja3();
                 procesarHoja4();
@@ -19,12 +19,12 @@ $("#miMas").change(function () {
                 checkRelacionada();
                 var kk = checkRelacionadaMat();
                 //checkRelMul()
-            }
-            else {
-                for (var i = 0; i < err.length; i++) {
-                    M.toast({ html: 'Datos primarios con error en NUM_DOC: ' + err[i] });
-                }
-            }
+            ////}
+            ////else {
+            ////    for (var i = 0; i < err.length; i++) {
+            ////        M.toast({ html: 'Datos primarios con error en NUM_DOC: ' + err[i] });
+            ////    }
+            ////}
             //var elem = document.querySelectorAll('.miSel');
             //var instance = M.Select.init(elem, []);
             //document.getElementById("loader").style.display = "none";
@@ -72,7 +72,7 @@ function getExcelMasivas(file) {
 function procesarHoja1() {
     var table = $('#tab_test1').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" } });
     table.clear().draw();
-    
+
     $.ajax({
         type: "POST",
         url: 'validaHoja1',
@@ -92,7 +92,7 @@ function procesarHoja1() {
                         //if (i % 2 == 0) {
                         //    var addedRow = addRowH1(table, dataj.NUM_DOC, dataj.TSOL_ID, dataj.GALL_ID, dataj.SOCIEDAD_ID, dataj.PAIS_ID, dataj.ESTADO, dataj.CIUDAD, dataj.CONCEPTO, dataj.NOTAS, dataj.PAYER_ID, dataj.PAYER_NOMBRE, dataj.CONTACTO_NOMBRE, dataj.CONTACTO_EMAIL, dataj.FECHAI_VIG, dataj.FECHAF_VIG, dataj.MONEDA_ID, dataj.VKORG, dataj.VTWEG);
                         //}
-                        var addedRow = addRowH1(table, dataj.NUM_DOC, dataj.TSOL_ID, dataj.GALL_ID, dataj.SOCIEDAD_ID, dataj.PAIS_ID, dataj.ESTADO, dataj.CIUDAD, dataj.CONCEPTO, dataj.NOTAS, dataj.PAYER_ID, dataj.PAYER_NOMBRE, dataj.CONTACTO_NOMBRE, dataj.CONTACTO_EMAIL, dataj.FECHAI_VIG, dataj.FECHAF_VIG, dataj.MONEDA_ID, dataj.VKORG, dataj.VTWEG, errores[i]);
+                        var addedRow = addRowH1(table, dataj.NUM_DOC, dataj.TSOL_ID, dataj.GALL_ID, dataj.SOCIEDAD_ID, dataj.PAIS_ID, dataj.ESTADO, dataj.CIUDAD, dataj.CONCEPTO, dataj.NOTAS, dataj.PAYER_ID, dataj.PAYER_NOMBRE, dataj.CONTACTO_NOMBRE, dataj.CONTACTO_EMAIL, dataj.FECHAI_VIG, dataj.FECHAF_VIG, dataj.MONEDA_ID, dataj.VKORG, dataj.VTWEG, errores[i], dataj.PAIS_NAME);
                     }); //FIN DEL FOR
 
                     $('#tab_test1').css("font-size", "10px");
@@ -113,7 +113,7 @@ function procesarHoja1() {
     });
 }
 
-function addRowH1(t, NUM_DOC, TSOL_ID, GALL_ID, SOCIEDAD_ID, PAIS_ID, ESTADO, CIUDAD, CONCEPTO, NOTAS, PAYER_ID, PAYER_NOMBRE, CONTACTO_NOMBRE, CONTACTO_EMAIL, FECHAI_VIG, FECHAF_VIG, MONEDA_ID, VKORG, VTWEG, ERRORES) {
+function addRowH1(t, NUM_DOC, TSOL_ID, GALL_ID, SOCIEDAD_ID, PAIS_ID, ESTADO, CIUDAD, CONCEPTO, NOTAS, PAYER_ID, PAYER_NOMBRE, CONTACTO_NOMBRE, CONTACTO_EMAIL, FECHAI_VIG, FECHAF_VIG, MONEDA_ID, VKORG, VTWEG, ERRORES, PAIS_NAME) {
 
     //var clasificacion = "<select id=\"clas\" class=\"miSel\">";
     //$.each(arr1, function (i, data) {
@@ -142,7 +142,8 @@ function addRowH1(t, NUM_DOC, TSOL_ID, GALL_ID, SOCIEDAD_ID, PAIS_ID, ESTADO, CI
         "<input class='" + ERRORES[1] + " input_tsol' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + TSOL_ID + "'><span hidden>" + TSOL_ID + "</span>",
         "<input class='" + ERRORES[2] + " input_clasificacion' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + GALL_ID + "'><span hidden>" + GALL_ID + "</span>",
         "<input class='" + ERRORES[3] + " input_sociedad' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + SOCIEDAD_ID + "'><span hidden>" + SOCIEDAD_ID + "</span>",
-        "<input class='" + ERRORES[4] + " input_pais' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + PAIS_ID + "'><span hidden>" + PAIS_ID + "</span>",
+        //"<input class='" + ERRORES[4] + " input_pais' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + PAIS_ID + "'><span hidden class='span_pais'>" + PAIS_ID + "</span>",
+        "<input class='" + ERRORES[4] + " input_pais' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + PAIS_NAME + "'><span hidden class='span_pais'>" + PAIS_ID + "</span>",
         "<input class='" + ERRORES[5] + " input_estado' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + ESTADO + "'><span hidden>" + ESTADO + "</span>",
         "<input class='" + ERRORES[6] + " input_ciudad' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + CIUDAD + "'><span hidden>" + CIUDAD + "</span>",
         "<input class='" + ERRORES[7] + " input_concepto' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + CONCEPTO + "'><span hidden>" + CONCEPTO + "</span>",
@@ -286,6 +287,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_sociedad', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
+    var us = $("#USUARIOC_ID").val(); //ADD RSG 01.11.2018
 
     auto(this).autocomplete({
         source: function (request, response) {
@@ -293,7 +295,8 @@ $('#tab_test1').on('keydown.autocomplete', '.input_sociedad', function () {
                 type: "POST",
                 url: 'sociedad',
                 dataType: "json",
-                data: { "Prefix": request.term },
+                //data: { "Prefix": request.term },
+                data: { "Prefix": request.term, user: us },//ADD RSG 01.11.2018
                 success: function (data) {
                     response(auto.map(data, function (item) {
                         return { label: item.BUKRS, value: item.BUKRS };
@@ -327,7 +330,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_pais', function () {
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
     var col_index2 = col_index - 1;
-
+    var thisS = this;
     $(tr.find("td:eq(" + col_index2 + ")").children().addClass('' + row_index + 'sociedad' + col_index2));
     var sociedad = $('.' + row_index + 'sociedad' + col_index2).val();
     //ESTO SIRVE
@@ -344,7 +347,8 @@ $('#tab_test1').on('keydown.autocomplete', '.input_pais', function () {
                 data: { "Prefix": request.term, "Sociedad": sociedad.toUpperCase() },
                 success: function (data) {
                     response(auto.map(data, function (item) {
-                        return { label: item.LANDX, value: item.LANDX };
+                        //return { label: item.LANDX, value: item.LANDX };
+                        return { label: item.LAND + " " + item.LANDX, value: item.LANDX};
                     }));
                 }
             });
@@ -365,6 +369,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_pais', function () {
 
         select: function (event, ui) {
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+            $(thisS).parent().parent().find(".span_pais").text(ui.item.label.split(' ')[0]); //ADD RSG 01.11.2018
             clearErrors();
         }
     });
@@ -523,6 +528,9 @@ $('body').on('keydown.autocomplete', '.input_cliente', function () {
     var col_index2 = col_index + 1;
     var numTabla = $(this).parents()[3];
     numTabla = $(numTabla).attr('id');
+    var us = $("#USUARIOC_ID").val(); //ADD RSG 01.11.2018
+    var pais = $(this).parent().parent().find(".span_pais").text(); //ADD RSG 01.11.2018
+        //pais = $(this).parent().parent().find(".input_pais").val(); //ADD RSG 01.11.2018
 
     var defClase = null;
 
@@ -542,11 +550,15 @@ $('body').on('keydown.autocomplete', '.input_cliente', function () {
                 type: "POST",
                 url: 'cliente',
                 dataType: "json",
-                data: { "Prefix": request.term },
+                //data: { "Prefix": request.term },
+                data: { "Prefix": request.term, "usuario": us, "pais": pais }, //ADD RSG 01.11.2018
                 success: function (data) {
                     response(auto.map(data, function (item) {
                         return { label: trimStart('0', item.KUNNR) + '-' + item.NAME1, value: trimStart('0', item.KUNNR) };
                     }));
+                }
+                ,error: function (e, er) {
+                    alert(e);
                 }
             });
         },
@@ -2024,7 +2036,7 @@ function procesarHoja5() {
     var table = $('#tab_test5').DataTable(
         {
             language: { "url": "../Scripts/lang/" + ln + ".json" },
-                "paging": false
+            "paging": false
         });
     table.clear().draw();
 
@@ -2060,7 +2072,8 @@ function procesarHoja5() {
                 cloneTables();
                 $("#tab_test5").on("change", ".requiredfile", function () {
                     var data = table.row(this).data();
-                    if ($(this).hasClass("valid") & validaTabs("1", 4)) {//ADD RSG 29.10.2018
+                    var val = $(this).val();
+                    if ($(this).hasClass("valid") | val !== "") {//ADD RSG 29.10.2018
                         $(this).closest('tr').children().eq(0).children().removeClass("red rojo");
                         $(this).closest('tr').children().eq(0).children().addClass("green");
                         $(this).closest('tr').children().eq(0).children().text("done");

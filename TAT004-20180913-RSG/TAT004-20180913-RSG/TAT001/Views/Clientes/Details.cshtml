@@ -138,12 +138,12 @@
                 </div>
 
                 <div class="input-field col s12" style="margin-bottom:0;">
-                    @Html.EditorFor(model => model.BANNER, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                    @Html.EditorFor(model => model.BANNER, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @Value=Model.BANNER!=null?Model.BANNER.TrimStart('0'):"" } })
                     @Html.LabelFor(model => model.BANNER, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_banner" })
                 </div>
 
                 <div class="input-field col s12" style="margin-bottom:0;">
-                    @Html.EditorFor(model => model.CANAL, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                    @Html.EditorFor(model => model.CANAL, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly",@Value=ViewBag.CanalDsc } })
                     @Html.LabelFor(model => model.CANAL, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_canal" })
                 </div>
             </div>

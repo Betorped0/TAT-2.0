@@ -149,6 +149,13 @@ namespace TAT001.Controllers.Catalogos
             {
                 return HttpNotFound();
             }
+            if (!String.IsNullOrEmpty(cLIENTE.CANAL))
+            {
+                CANAL canaldsc = db.CANALs.Where(t => t.CANAL1 == cLIENTE.CANAL).SingleOrDefault();
+                if (canaldsc != null)
+                    ViewBag.CanalDsc = canaldsc.CANAL1 + "-" + canaldsc.CDESCRIPCION;
+            }
+
             return View(cLIENTE);
         }
 
@@ -1225,7 +1232,15 @@ namespace TAT001.Controllers.Catalogos
                 doc.KUNNR = dt.Rows[i][2].ToString();
                 doc.KUNNR = Completa(doc.KUNNR, 10);
 
-                existeCliente = db.CLIENTEs.Where(cc => cc.KUNNR==doc.KUNNR & cc.ACTIVO).FirstOrDefault();
+                existeCliente = db.CLIENTEs.Where(cc => cc.KUNNR == doc.KUNNR & cc.ACTIVO).FirstOrDefault();
+                if (!String.IsNullOrEmpty(dt.Rows[i][3].ToString()))
+                {
+                    doc.CLIENTE_N = dt.Rows[i][3].ToString().Replace(',',' ').ToUpper();
+                }
+                else
+                {
+                    doc.CLIENTE_N = (existeCliente.NAME1 == null ? "" : existeCliente.NAME1.Replace(',',' '));
+                }
                 if (existeCliente == null)
                     doc.VKORG = null;
                 else
@@ -1234,7 +1249,6 @@ namespace TAT001.Controllers.Catalogos
                     doc.VTWEG = existeCliente.VTWEG;
                     doc.SPART = existeCliente.SPART;
                 }
-                doc.CLIENTE_N = (existeCliente.NAME1 == null ? "" : existeCliente.NAME1);
                 //Manager
                 doc.ID_US0 = (dt.Rows[i][4] != null ? dt.Rows[i][4].ToString().ToUpper() : null);
                 //Nivel 1

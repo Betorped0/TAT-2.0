@@ -3821,31 +3821,13 @@ namespace TAT001.Controllers
                 }
                 d.MONEDA_ID = id_bukrs.WAERS;
                 var date = DateTime.Now.Date;
-                //TAT001.Entities.TCAMBIO tcambio = new TAT001.Entities.TCAMBIO();
-                //try
-                //{
-                //    tcambio = db.TCAMBIOs.Where(t => t.FCURR.Equals(id_bukrs.WAERS) && t.TCURR.Equals("USD") && t.GDATU.Equals(date)).FirstOrDefault();
-                //    if (tcambio == null)
-                //    {
-                //        var max = db.TCAMBIOs.Where(t => t.FCURR.Equals(id_bukrs.WAERS) && t.TCURR.Equals("USD")).Max(a => a.GDATU);
-                //        tcambio = db.TCAMBIOs.Where(t => t.FCURR.Equals(id_bukrs.WAERS) && t.TCURR.Equals("USD") && t.GDATU.Equals(max)).FirstOrDefault();
-                //    }
-                //    decimal con = Convert.ToDecimal(tcambio.UKURS);
-                //    var cons = con.ToString("0.##");
-
-                //    ViewBag.tcambio = cons;
-                //}
-                //catch (Exception e)
-                //{
-                //    errorString = e.Message + "detail: conversion " + id_bukrs.WAERS + " to " + "USD" + " in date " + DateTime.Now.Date;
-                //    ViewBag.tcambio = "";
-                //}
+              
 
                 ViewBag.tcambio = d.TIPO_CAMBIO;
 
             }//RSG 13.06.2018
 
-            d.PERIODO = Convert.ToInt32(DateTime.Now.ToString("MM"));
+            d.PERIODO = FnCommon.ObtenerPeriodoCalendario445(db,d.SOCIEDAD_ID,d.TSOL_ID,User.Identity.Name);
             d.EJERCICIO = Convert.ToString(DateTime.Now.Year);
 
             d.FECHAD = theTime;
@@ -3940,20 +3922,37 @@ namespace TAT001.Controllers
             {
 
                 List<Delegados> users = new List<Delegados>();
-                List<PAI> pp = (from P in db.PAIS
-                                join C in db.CREADOR2 on P.LAND equals C.LAND
-                                where P.ACTIVO == true
-                                & C.ID == User.Identity.Name & C.ACTIVO == true
-                                select P).ToList();
+                //List<PAI> pp = (from P in db.PAIS
+                //                join C in db.CREADOR2 on P.LAND equals C.LAND
+                //                where P.ACTIVO == true
+                //                & C.ID == User.Identity.Name & C.ACTIVO == true
+                //                select P).ToList();
+
+                List<PAI> pp = (from P in db.PAIS.ToList()
+                         join C in db.CLIENTEs.Where(x => x.ACTIVO == true).ToList()
+                         on P.LAND equals C.LAND
+                         join U in db.USUARIOFs.Where(x => x.USUARIO_ID == User.Identity.Name & x.ACTIVO == true)
+                         on new { C.VKORG, C.VTWEG, C.SPART, C.KUNNR } equals new { U.VKORG, U.VTWEG, U.SPART, U.KUNNR }
+                         where P.ACTIVO == true
+                         select P).DistinctBy(x => x.LAND).ToList();
 
                 List<Delegados> delegados = new List<Delegados>();
                 foreach (DELEGAR de in del)
                 {
-                    var pd = (from P in db.PAIS
-                              join C in db.CREADOR2 on P.LAND equals C.LAND
-                              where P.ACTIVO == true
-                              & C.ID == de.USUARIO_ID & C.ACTIVO == true
-                              select P).ToList();
+                    //var pd = (from P in db.PAIS
+                    //          join C in db.CREADOR2 on P.LAND equals C.LAND
+                    //          where P.ACTIVO == true
+                    //          & C.ID == de.USUARIO_ID & C.ACTIVO == true
+                    //          select P).ToList();
+
+                    List<PAI> pd = (from P in db.PAIS.ToList()
+                                    join C in db.CLIENTEs.Where(x => x.ACTIVO == true).ToList()
+                                    on P.LAND equals C.LAND
+                                    join U in db.USUARIOFs.Where(x => x.USUARIO_ID == de.USUARIO_ID & x.ACTIVO == true)
+                                    on new { C.VKORG, C.VTWEG, C.SPART, C.KUNNR } equals new { U.VKORG, U.VTWEG, U.SPART, U.KUNNR }
+                                    where P.ACTIVO == true
+                                    select P).DistinctBy(x => x.LAND).ToList();
+                    pp.AddRange(pd);
                     Delegados delegado = new Delegados();
                     delegado.usuario = de.USUARIO_ID;
                     delegado.nombre = de.USUARIO_ID + " - " + de.USUARIO.NOMBRE + " " + de.USUARIO.APELLIDO_P + " " + de.USUARIO.APELLIDO_M;
