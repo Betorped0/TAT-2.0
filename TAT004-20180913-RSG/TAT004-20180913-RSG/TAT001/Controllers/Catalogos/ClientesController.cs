@@ -1239,7 +1239,7 @@ namespace TAT001.Controllers.Catalogos
                 }
                 else
                 {
-                    doc.CLIENTE_N = (existeCliente.NAME1 == null ? "" : existeCliente.NAME1).Replace(',', ' ');
+                    doc.CLIENTE_N = (existeCliente.NAME1 == null ? "" : existeCliente.NAME1.Replace(',',' '));
                 }
                 if (existeCliente == null)
                     doc.VKORG = null;
