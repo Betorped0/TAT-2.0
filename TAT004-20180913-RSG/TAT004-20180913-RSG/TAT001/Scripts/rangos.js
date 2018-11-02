@@ -140,7 +140,7 @@ function enviaRan(borrador) { //B20180625 MGC 2018.07.03
     var tipo = document.getElementById("select_neg").value;
     var tipoR = document.getElementById("txt_trec").value;
 
-    if (lengthT > 0) {
+    if (lengthT > 1) {
         var indext = 0;
         jsonObjDocs = [];
         var j = 1;
