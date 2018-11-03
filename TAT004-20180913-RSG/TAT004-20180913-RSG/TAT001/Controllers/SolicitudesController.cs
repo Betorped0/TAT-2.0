@@ -139,8 +139,8 @@ namespace TAT001.Controllers
             ViewBag.tts = db.DOCUMENTOTS.Where(a => a.NUM_DOC.Equals(DF.D.NUM_DOC)).ToList();
 
             if (DF.D.DOCUMENTO_REF != null)
-                ViewBag.Title += DF.D.DOCUMENTO_REF + "-";
-            ViewBag.Title += id;
+                ViewBag.Title += " "+ DF.D.DOCUMENTO_REF + "-";
+            ViewBag.Title += " " + id;
 
             //LEJ 10.07.2018----------------------------------------------
             ViewBag.cartap = db.CARTAPs.Where(i => i.NUM_DOC == id).ToList();
@@ -204,6 +204,24 @@ namespace TAT001.Controllers
                                     ).ToList();
             ViewBag.recs = recs;
             ViewBag.recls = recls;
+            //Tab_Fin Análisis Solicitud
+            decimal montoProv = 0.0M;
+            decimal montoApli = 0.0M;
+            decimal remanente = 0.0M;
+            bool esDocRef = false;
+            if (DF.D.DOCUMENTO_REF != null){ montoProv = db.DOCUMENTOes.First(x=>x.NUM_DOC== DF.D.DOCUMENTO_REF).MONTO_DOC_MD.Value;}
+            if (db.DOCUMENTOes.Any(x=>x.DOCUMENTO_REF== DF.D.NUM_DOC))
+            {
+                esDocRef = true;
+                montoApli = db.DOCUMENTOes.Sum(x => x.MONTO_DOC_MD.Value);
+            }
+            if (montoProv > 0 && montoApli > 0){ remanente = montoProv - montoApli;}
+            ViewBag.montoSol = DF.D.MONTO_DOC_MD;
+            ViewBag.montoProv = (DF.D.DOCUMENTO_REF != null? montoProv.ToString():"-");
+            ViewBag.montoApli = (esDocRef? montoApli.ToString():"-");
+            ViewBag.remanente = ((montoProv > 0 && montoApli > 0) ? (remanente<0?"(-)"+ remanente.ToString() : remanente.ToString()) : "-");
+            ViewBag.montoTotal = DF.D.MONTO_DOC_MD;
+
             return View(DF);
         }
         [HttpPost]
@@ -1238,7 +1256,7 @@ namespace TAT001.Controllers
             string spras = Session["spras"].ToString();
             ViewBag.PERIODOS = new SelectList(db.PERIODOTs.Where(a => a.SPRAS_ID == spras).ToList(), "PERIODO_ID", "TXT50", DateTime.Now.Month);
             List<string> anios = new List<string>();
-            int mas = 10;
+            int mas = 5;
             for (int i = 0; i < mas; i++)
             {
                 anios.Add((DateTime.Now.Year + i).ToString());
@@ -4051,6 +4069,24 @@ namespace TAT001.Controllers
                 d.DOCUMENTORAN.AddRange(drec.DOCUMENTORANs.ToList());
             }
             //ADD RSG 31.10.2018------------------------------
+
+            //Tab_Fin Análisis Solicitud
+            decimal montoProv = 0.0M;
+            decimal montoApli = 0.0M;
+            decimal remanente = 0.0M;
+            bool esDocRef = false;
+            if (DF.D.DOCUMENTO_REF != null) { montoProv = db.DOCUMENTOes.First(x => x.NUM_DOC == DF.D.DOCUMENTO_REF).MONTO_DOC_MD.Value; }
+            if (db.DOCUMENTOes.Any(x => x.DOCUMENTO_REF == DF.D.NUM_DOC))
+            {
+                esDocRef = true;
+                montoApli = db.DOCUMENTOes.Sum(x => x.MONTO_DOC_MD.Value);
+            }
+            if (montoProv > 0 && montoApli > 0) { remanente = montoProv - montoApli; }
+            ViewBag.montoSol = DF.D.MONTO_DOC_MD;
+            ViewBag.montoProv = (DF.D.DOCUMENTO_REF != null ? montoProv.ToString() : "-");
+            ViewBag.montoApli = (esDocRef ? montoApli.ToString() : "-");
+            ViewBag.remanente = ((montoProv > 0 && montoApli > 0) ? (remanente < 0 ? "(-)" + remanente.ToString() : remanente.ToString()) : "-");
+            ViewBag.montoTotal = DF.D.MONTO_DOC_MD;
 
             return View(d);
         }

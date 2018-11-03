@@ -72,7 +72,7 @@
         </div>
         <div class="col s12 m4 l4">
             <div class="input-field col s3">
-                @Html.EditorFor(model => model.USUARIO.BUNIT, "BU", new { htmlAttributes = new { @disabled = "disabled", @Value = us.BUNIT } })
+                @Html.EditorFor(model => model.USUARIO.BUNIT, "BU", new { htmlAttributes = new { @disabled = "disabled", @Value = Model.SOCIEDAD_ID } })
                 @Html.LabelFor(model => model.USUARIO.BUNIT, "BU", new { @id = "lbl_bu" })
             </div>
             <div class="input-field col s3">
@@ -1882,21 +1882,9 @@
                             function getClearing(gall) {
                                 $("#div_clearing").empty();
                                 clearing = [];
-                                /**/
-                                /**/
                                 var bukrs = '@Model.SOCIEDAD_ID';
-                            /**/
-                            /**/
-                            /**/
-                            /**/
                             var land = '@Model.PAIS_ID';
-                            /**/
-                            /**/
-                            /**/
-                            /**/
                             var ejercicio = '@Model.EJERCICIO';
-                            /**/
-                            /**/
                             $.ajax({
                                 type: "POST",
                                 url: '../Listas/clearing',
@@ -1953,7 +1941,7 @@
                         }
                                 </script>
                             </div>
-                            <div class="card-panel" style="display:none;">
+                            <div class="card-panel">
                                 <h5>Análisis Solicitud</h5>
                                 <div class="row" style="margin-bottom:0">
                                     <div class="col s12">
@@ -1964,7 +1952,7 @@
                                                         Importe solicitud
                                                     </div>
                                                     <div class="col s6 right-align">
-                                                        <span id="s_montob">-</span>
+                                                        <span id="s_montob">@ViewBag.montoSol</span>
                                                     </div>
                                                 </div>
                                             </li>
@@ -1974,7 +1962,7 @@
                                                         Monto provisión original
                                                     </div>
                                                     <div class="col s6 right-align">
-                                                        <span id="s_montop">-</span>
+                                                        <span id="s_montop">@ViewBag.montoProv</span>
                                                     </div>
                                                 </div>
                                             </li>
@@ -1984,7 +1972,7 @@
                                                         Monto aplicado
                                                     </div>
                                                     <div class="col s6 right-align">
-                                                        <span id="s_montoa">-</span>
+                                                        <span id="s_montoa">@ViewBag.montoApli</span>
                                                     </div>
                                                 </div>
                                             </li>
@@ -1994,7 +1982,16 @@
                                                         Remanente/(Exceso)
                                                     </div>
                                                     <div class="col s6 right-align">
-                                                        <span id="s_rema">-</span>
+                                                        @{ 
+                                                            bool esNeg = ViewBag.remanente.Contains("(-)");
+                                                        }
+                                                        @if (esNeg) {
+                                                        <span id="s_rema" style="color:red;">@ViewBag.remanente</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span id="s_rema">@ViewBag.remanente</span>
+                                                        }
                                                     </div>
                                                 </div>
                                             </li>
@@ -2004,7 +2001,7 @@
                                                         Monto total
                                                     </div>
                                                     <div class="col s6 right-align">
-                                                        <span id="s_total">-</span>
+                                                        <span id="s_total">@ViewBag.montoTotal</span>
                                                     </div>
                                                 </div>
                                             </li>
@@ -2012,85 +2009,6 @@
                                     </div>
                                 </div>
                             </div>
-                            @*<div class="card-panel">
-                                    <h5>Análisis Solicitud</h5>
-                                    <div class="row" style="margin-bottom:0">
-                                        <table class="tg">
-                                            <tr>
-                                                <td class="tg-yw4l">
-                                                    <label>Importe solicitud</label>
-                                                </td>
-                                                <td class="tg-yw4l">
-                                                    <label id=""></label>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="tg-yw4l">
-                                                    <label>Monto provisión original</label>
-                                                </td>
-                                                <td class="tg-yw4l">
-                                                    <label id=""></label>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="tg-yw4l">
-                                                    <label>Monto aplicado</label>
-                                                </td>
-                                                <td class="tg-yw4l">
-                                                    <label id=""></label>
-                                                </td>
-                                            </tr>
-                                            <tr id="s_color">
-                                                <td class="tg-yw4l">
-                                                    <label id="">Remanente/(Exceso)</label>
-                                                </td>
-                                                <td class="tg-yw4l">
-                                                    <label id=""></label>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="tg-yw4l">
-                                                    <label>Impuesto a</label>
-                                                </td>
-                                                <td class="tg-yw4l">
-                                                    <label id="s_impa"></label>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="tg-yw4l">
-                                                    <label>Impuesto b</label>
-                                                </td>
-                                                <td class="tg-yw4l">
-                                                    <label id="s_impb"></label>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="tg-yw4l">
-                                                    <label>Impuesto c</label>
-                                                </td>
-                                                <td class="tg-yw4l">
-                                                    <label id="s_impc"></label>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="tg-yw4l">
-                                                    <label>Retención</label>
-                                                </td>
-                                                <td class="tg-yw4l">
-                                                    <label id="s_ret"></label>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="tg-yw4l">
-                                                    <label>Monto total</label>
-                                                </td>
-                                                <td class="tg-yw4l">
-                                                    <label id=""></label>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </div>*@
                         </div>
                     </div>
                 </div>
