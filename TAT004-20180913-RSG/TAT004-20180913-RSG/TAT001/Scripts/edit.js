@@ -2943,30 +2943,34 @@ function updateTotalRow(t, tr, tdp_apoyo, totals, total_val) {
         if (_decimales === '.') {
             col8 = tr.find("td:eq(" + (8 + index) + ") input").val();//.replace('$', '');//RSG 09.07.2018
             if (col8 != null) {
-                col8 = col8.replace('$', '');
-                var _cl8 = col8.replace(',', '');
-                col8 = _cl8;
+                //col8 = col8.replace('$', '');
+                //var _cl8 = col8.replace(',', '');
+                //col8 = _cl8;
+                col8 = toNum(col8);
             }
             col9 = tr.find("td:eq(" + (9 + index) + ") input").val();
-            var _cl9 = col9.replace(',', '');
-            col9 = _cl9.replace('%', '');
+            //var _cl9 = col9.replace(',', '');
+            //col9 = _cl9.replace('%', '');
+            col9 = toNum(col9);
         } else if (_decimales === ',') {
             col8 = tr.find("td:eq(" + (8 + index) + ") input").val();//.replace('$', '');//RSG 09.07.2018
-            if (col8 != null) {
-                col8 = col8.replace('$', '');
-                col8 = col8.replace(',', '*');
-                col8 = col8.replace('.', '');
-                col8 = col8.replace('*', '.');
-            } else
-                col8 = "";
+            //if (col8 != null) {
+            //    col8 = col8.replace('$', '');
+            //    col8 = col8.replace(',', '*');
+            //    col8 = col8.replace('.', '');
+            //    col8 = col8.replace('*', '.');
+            //} else
+            //    col8 = "";
+            col8 = toNum(col8);
             col9 = tr.find("td:eq(" + (9 + index) + ") input").val();
-            if (col9 != null) {//RSG 09.07.2018
-                col9 = col9.replace(',', '*');
-                col9 = col9.replace('.', '');
-                col9 = col9.replace('*', '.');
-                col9 = col9.replace('%', '');
-            } else
-                col9 = "";
+            //if (col9 != null) {//RSG 09.07.2018
+            //    col9 = col9.replace(',', '*');
+            //    col9 = col9.replace('.', '');
+            //    col9 = col9.replace('*', '.');
+            //    col9 = col9.replace('%', '');
+            //} else
+            //    col9 = "";
+            col9 = toNum(col9);
         }
         col9 = convertP(col9);
 
@@ -2979,11 +2983,13 @@ function updateTotalRow(t, tr, tdp_apoyo, totals, total_val) {
         //Modificar el input
         var _c10 = col10.toFixed(2);
         if (_decimales === '.') {
-            tr.find("td:eq(" + (10 + index) + ") input").val("$" + _c10.toString().replace(/\B(?=(\d{3})+(?!\d))/g, _miles));
+            //tr.find("td:eq(" + (10 + index) + ") input").val("$" + _c10.toString().replace(/\B(?=(\d{3})+(?!\d))/g, _miles));
+            tr.find("td:eq(" + (10 + index) + ") input").val(toShow(_c10.toString()));
         }
         else if (_decimales === ',') {
             _c10 = _c10.replace('.', ',');
-            tr.find("td:eq(" + (10 + index) + ") input").val("$" + _c10.toString().replace(/\B(?=(\d{3})+(?!\d))/g, _miles));
+            //tr.find("td:eq(" + (10 + index) + ") input").val("$" + _c10.toString().replace(/\B(?=(\d{3})+(?!\d))/g, _miles));
+            tr.find("td:eq(" + (10 + index) + ") input").val(toShow(_c10.toString()));
         }
 
         //Costo con apoyo
@@ -2991,33 +2997,38 @@ function updateTotalRow(t, tr, tdp_apoyo, totals, total_val) {
         //col11 = col11.toFixed(2);
 
         if (_decimales === '.') {
-            tr.find("td:eq(" + (11 + index) + ")").text("$" + col11.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, _miles));
+            //tr.find("td:eq(" + (11 + index) + ")").text("$" + col11.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, _miles));
+            tr.find("td:eq(" + (11 + index) + ")").text(toShow(col11.toFixed(2).toString()));
         } else if (_decimales === ',') {
             col11 = col11.toFixed(2);
             col11 = col11.replace('.', ',');
-            tr.find("td:eq(" + (11 + index) + ")").text("$" + col11.toString().replace(/\B(?=(\d{3})+(?!\d))/g, _miles));
+            //tr.find("td:eq(" + (11 + index) + ")").text("$" + col11.toString().replace(/\B(?=(\d{3})+(?!\d))/g, _miles));
+            tr.find("td:eq(" + (11 + index) + ")").text(toShow(col11.toString()));
         }
 
         //Estimado apoyo
         var col13 = "";
         if (_decimales === '.') {
-            var _xxxxx = tr.find("td:eq(" + (13 + index) + ") input").val();
-            col13 = tr.find("td:eq(" + (13 + index) + ") input").val().replace(',', '');
+            col13 = tr.find("td:eq(" + (13 + index) + ") input").val();
+            col13 = toNum(col13);
         } else if (_decimales === ',') {
             col13 = tr.find("td:eq(" + (13 + index) + ") input").val();
             if (col13 == null) col13 = "";//RSG 09.07.2018
-            var _c13 = col13.replace('.', '');
-            _c13 = _c13.replace(',', '.');
-            col13 = _c13;
+            //var _c13 = col13.replace('.', '');
+            //_c13 = _c13.replace(',', '.');
+            //col13 = _c13;
+            col13 = toNum(col13);
         }
         var col14 = col10 * col13;
         //col14 = col14.toFixed(2);
         if (_decimales === '.') {
-            tr.find("td:eq(" + (14 + index) + ") input").val("$" + col14.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, _miles));
+            //tr.find("td:eq(" + (14 + index) + ") input").val("$" + col14.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, _miles));
+            tr.find("td:eq(" + (14 + index) + ") input").val(toShow(col14.toFixed(2).toString()));
         } else if (_decimales === ',') {
             col14 = col14.toFixed(2);
             col14 = col14.replace('.', ',');
-            tr.find("td:eq(" + (14 + index) + ") input").val("$" + col14.toString().replace(/\B(?=(\d{3})+(?!\d))/g, _miles));
+            //tr.find("td:eq(" + (14 + index) + ") input").val("$" + col14.toString().replace(/\B(?=(\d{3})+(?!\d))/g, _miles));
+            tr.find("td:eq(" + (14 + index) + ") input").val(toShow(col14.toString()));
         }
 
         //Agregar nada más el total
@@ -3030,6 +3041,7 @@ function updateTotalRow(t, tr, tdp_apoyo, totals, total_val) {
         else if (_decimales === ',') {
             //total_val = total_val.replace('.', '');
             //total_val = total_val.replace(',', '.');
+
             total_val = parseFloat(toNum(total_val));
         }
         var col14 = total_val.toFixed(2);
@@ -3046,7 +3058,8 @@ function updateTotalRow(t, tr, tdp_apoyo, totals, total_val) {
         tr.find("td:eq(" + (11 + index) + ")").text("");
         tr.find("td:eq(" + (12 + index) + ") input").val("");
         tr.find("td:eq(" + (13 + index) + ") input").val("");
-        tr.find("td:eq(" + (14 + index) + ") input").val("$" + col14.toString().replace(/\B(?=(\d{3})+(?!\d))/g, _miles));
+        //tr.find("td:eq(" + (14 + index) + ") input").val("$" + col14.toString().replace(/\B(?=(\d{3})+(?!\d))/g, _miles));
+        tr.find("td:eq(" + (14 + index) + ") input").val(toShow(col14.toString()));
     }
 
     updateFooter();
