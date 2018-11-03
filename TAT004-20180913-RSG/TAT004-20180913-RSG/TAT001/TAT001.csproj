@@ -1972,6 +1972,11 @@
     <Content Include="Views\Solicitudes\_CreateTabDis.cshtml" />
     <Content Include="Views\Solicitudes\_CreateTabRec.cshtml" />
     <Content Include="Views\Solicitudes\_CreateTabFin.cshtml" />
+    <Content Include="Views\Solicitudes\_DetailsTabInfo.cshtml" />
+    <Content Include="Views\Solicitudes\_DetailsTabDis.cshtml" />
+    <Content Include="Views\Solicitudes\_DetailsTabRec.cshtml" />
+    <Content Include="Views\Solicitudes\_DetailsTabFin.cshtml" />
+    <Content Include="Views\Solicitudes\_DetailsTabSop.cshtml" />
     <Content Include="Views\Clientes\VerFlujo.cshtml" />
   </ItemGroup>
   <ItemGroup>
