@@ -3024,12 +3024,13 @@ function updateTotalRow(t, tr, tdp_apoyo, totals, total_val) {
     }
     else {
         if (_decimales === '.') {
-            total_val = parseFloat(total_val);
+            //total_val = parseFloat(total_val);
+            total_val = parseFloat(toNum(total_val));
         }
         else if (_decimales === ',') {
-            total_val = total_val.replace('.', '');
-            total_val = total_val.replace(',', '.');
-            total_val = parseFloat(total_val);
+            //total_val = total_val.replace('.', '');
+            //total_val = total_val.replace(',', '.');
+            total_val = parseFloat(toNum(total_val));
         }
         var col14 = total_val.toFixed(2);
         if (_decimales === '.') {
