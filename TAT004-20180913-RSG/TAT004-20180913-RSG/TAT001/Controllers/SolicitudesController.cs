@@ -139,8 +139,8 @@ namespace TAT001.Controllers
             ViewBag.tts = db.DOCUMENTOTS.Where(a => a.NUM_DOC.Equals(DF.D.NUM_DOC)).ToList();
 
             if (DF.D.DOCUMENTO_REF != null)
-                ViewBag.Title += DF.D.DOCUMENTO_REF + "-";
-            ViewBag.Title += id;
+                ViewBag.Title += " " + DF.D.DOCUMENTO_REF + "-";
+            ViewBag.Title += " " + id;
 
             //LEJ 10.07.2018----------------------------------------------
             ViewBag.cartap = db.CARTAPs.Where(i => i.NUM_DOC == id).ToList();

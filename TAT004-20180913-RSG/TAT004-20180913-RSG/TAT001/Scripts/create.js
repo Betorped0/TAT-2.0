@@ -522,9 +522,11 @@ $(document).ready(function () {
             var file = document.getElementById("file_dis").files[0];
             var filename = file.name;
             if (evaluarExt(filename)) {
+                document.getElementById("loader").style.display = "flex";
                 M.toast({ html: 'Cargando ' + filename });
                 loadExcelDis(file);
                 updateFooter();
+                document.getElementById("loader").style.display = "none";
             } else {
                 M.toast({ html: 'Tipo de archivo incorrecto: ' + filename });
             }
