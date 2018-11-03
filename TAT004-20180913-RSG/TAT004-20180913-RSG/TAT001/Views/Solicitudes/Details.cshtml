@@ -53,7 +53,7 @@
                 </div>
                 @* ---DRS 3.10.2018--- *@
                 <div class="input-field col s2">
-                    @Html.EditorFor(model => model.D.USUARIO.BUNIT, "BU", new { htmlAttributes = new { @disabled = "disabled" } })
+                    @Html.EditorFor(model => model.D.USUARIO.BUNIT, "BU", new { htmlAttributes = new { @disabled = "disabled",@Value = Model.D.SOCIEDAD_ID } })
                     @Html.LabelFor(model => model.D.USUARIO.BUNIT, "BU", new { @class = "lbl_bu" })
                 </div>
                 @* ---DRS 3.10.2018--- *@
@@ -1312,7 +1312,7 @@
                                                             <h5 id="head_baseaplicar">Base para aplicar %</h5> @*B20180801 MGC Textos*@
                                                             <div class="row" style="margin-bottom:0">
                                                                 <div class="input-field col s6">
-                                                                    @Html.EditorFor(model => model.D.PORC_APOYO, new { htmlAttributes = new { @disabled = "disabled", @id = "lbl_montodis", @class = "porcentaje" } })
+                                                                    @Html.EditorFor(model => model.D.PORC_APOYO, new { htmlAttributes = new { @disabled = "disabled", @id = "lbl_montodis", @class = "_vmonto" } })
                                                                     <label id="lbl_porcapoyo" for="bmonto_apoyo">% Apoyo</label>@*B20180801 MGC Textos*@
                                                                 </div>
                                                             </div>

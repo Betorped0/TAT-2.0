@@ -6,7 +6,7 @@
 }
 <div class="row">
     <div class="col s12 right-align">
-        @*@Html.ActionLink("Agregar Pagina", "Create", "Proveedor", new { @class = "btn-small", @id = "btnAdd" })*@
+        @Html.ActionLink("Agregar Pagina", "Create", "Proveedor", new { @class = "btn-small", @id = "btnAdd" })
         @using (Html.BeginForm("Descargar", "Proveedor", FormMethod.Post, new { @style = "display:initial;" }))
         {
             <button id="btnExport" name="excel" class="btn-small" type="submit" value="Excel"></button>

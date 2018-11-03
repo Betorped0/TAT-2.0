@@ -131,31 +131,31 @@
 </div>
 <div id="modalretencion" class="modal">
     <div class="modal-content">
-        <h4 id="lbl_nuevaret">Nueva retención</h4>
+        <h4>Nueva retención</h4>
         <form id="newconcepto" method="post" action="/Taxeop/CreateR" class="col s12">
             <div class="row">
                 <div class="input-field col s6">
                     <input id="DESCRIPCION" type="text" class="validate" required>
-                    <label for="DESCRIPCION" id="lbl_dscnuevaret">Descripción</label>
+                    <label for="DESCRIPCION">Descripción</label>
                 </div>
             </div>
             <div class="row">
                 <div class="input-field col s6">
                     <input id="PORC" type="text" class="validate" required>
-                    <label for="PORC" id="lbl_porcnuevaret">Porcentaje</label>
+                    <label for="PORC">Porcentaje</label>
                 </div>
             </div>
-            <button id="btnCrearR" type="submit" class="btn btn-default" name="submit" value="Crear" />
+            <input type="submit" class="btn btn-default" name="submit" value="Crear" />
             <div id="server-results1" class="center-align"><!-- For server results --></div>
         </form>
     </div>
     <div class="modal-footer">
-        <button class="modal-action modal-close waves-effect waves-green btn-flat" id="lbl_cerrar">Cerrar</button>
+        <button class="modal-action modal-close waves-effect waves-green btn-flat">Cerrar</button>
     </div>
 </div>
 <div id="modaltiporetencion" class="modal">
     <div class="modal-content">
-        <h4 id="lbl_nuevotret">Nuevo Tipo Retención</h4>
+        <h4>Nuevo Tipo Retención</h4>
         <form id="newnota" method="post" action="/Taxeop/CreateTR" class="col s12">
             <div class="row">
                 <div class="input-field col s6">
@@ -166,14 +166,14 @@
             <div class="row">
                 <div class="input-field col s6">
                     <input id="DESCRIPCIONTR" type="text" class="validate">
-                    <label for="DESCRIPCIONTR" id="lbl_nuevotret">Descripción</label>
+                    <label for="DESCRIPCIONTR">Descripción</label>
                 </div>
             </div>
-            <button id="btnCreateTR" type="submit" class="btn btn-default" name="submit" value="Crear" />
+            <input type="submit" class="btn btn-default" name="submit" value="Crear" />
             <div class="center-align" id="server-results2"><!-- For server results --></div>
         </form>
     </div>
     <div class="modal-footer">
-        <button class="modal-action modal-close waves-effect waves-green btn-flat" id="lbl_cerrar2">Cerrar</button>
+        <button class="modal-action modal-close waves-effect waves-green btn-flat">Cerrar</button>
     </div>
 </div>
