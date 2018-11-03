@@ -307,12 +307,12 @@
         @if (Model.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().WORKFP.ACCION.TIPO == "A")
         {
             <div style="display:inline-block;width:200px;"></div>
-            <h5 style="display:inline; text-align:center;color:white;font-size:30px;">MAIL APROBACIÓN - @Model.TSOL.TSOLTs.Where(x => x.SPRAS_ID.Equals(Model.USUARIO.SPRAS_ID)).FirstOrDefault().TXT020</h5>
+            <h5 style="display:inline; text-align:center;color:white;font-size:30px;">MAIL APROBACIÓN</h5>
         }
         else
         {
             <div style="display:inline-block;width:200px;"></div>
-            <h5 style="display:inline; text-align:center;color:white;font-size:30px;">MAIL NOTIFICACIÓN - @Model.TSOL.TSOLTs.Where(x => x.SPRAS_ID.Equals(Model.USUARIO.SPRAS_ID)).FirstOrDefault().TXT020</h5>
+            <h5 style="display:inline; text-align:center;color:white;font-size:30px;">MAIL NOTIFICACIÓN</h5>
         }
     </div>
     @*<div class="container" style="width:1300px">*@
@@ -329,7 +329,7 @@
                                 En caso de no autorizar la solicitud:<br />
                                 1-Dar click en el boton de rechazar.<br />
                                 2-En el mail alterno que se genera, debera indicar sus comentarios.<br />
-                                3-Deberán dar click en enviar al mensaje.<br />
+                                3-Debera dar click en enviar el mensaje.<br />
                             </p>
                         </div>
                     </td>

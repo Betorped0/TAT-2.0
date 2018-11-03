@@ -113,48 +113,7 @@ namespace TAT001.Controllers.Catalogos
                     break;
             }
         }
-        public ActionResult VerFlujo(string vko, string vtw, string spa, string kun, int version)
-        {
-            int pagina_id = 604; //ID EN BASE DE DATOS
-            FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
-            var flujo = db.CLIENTEFs.Find(vko, vtw, spa, kun, version);
-            if (flujo.USUARIO1_ID != null)
-            {
-                var usu1 = db.USUARIOs.Where(t => t.ID == flujo.USUARIO1_ID).SingleOrDefault();
-                ViewBag.Usuario1 = usu1 != null ? flujo.USUARIO1_ID + " - " + usu1.NOMBRE + " " + usu1.APELLIDO_P : "";
-            }
-            if (flujo.USUARIO2_ID != null)
-            {
-                var usu2 = db.USUARIOs.Where(t => t.ID == flujo.USUARIO2_ID).SingleOrDefault();
-                ViewBag.Usuario2 = usu2 != null ? flujo.USUARIO2_ID + " - " + usu2.NOMBRE + " " + usu2.APELLIDO_P : "";
-            }
-            if (flujo.USUARIO3_ID != null)
-            {
-                var usu3 = db.USUARIOs.Where(t => t.ID == flujo.USUARIO3_ID).SingleOrDefault();
-                ViewBag.Usuario3 = usu3 != null ? flujo.USUARIO3_ID + " - " + usu3.NOMBRE + " " + usu3.APELLIDO_P : "";
-            }
-            if (flujo.USUARIO4_ID != null)
-            {
-                var usu4 = db.USUARIOs.Where(t => t.ID == flujo.USUARIO4_ID).SingleOrDefault();
-                ViewBag.Usuario4 = usu4 != null ? flujo.USUARIO4_ID + " - " + usu4.NOMBRE + " " + usu4.APELLIDO_P : "";
-            }
-            if (flujo.USUARIO5_ID != null)
-            {
-                var usu5 = db.USUARIOs.Where(t => t.ID == flujo.USUARIO5_ID).SingleOrDefault();
-                ViewBag.Usuario5 = usu5 != null ? flujo.USUARIO5_ID + " - " + usu5.NOMBRE + " " + usu5.APELLIDO_P : "";
-            }
-            if (flujo.USUARIO6_ID != null)
-            {
-                var usu6 = db.USUARIOs.Where(t => t.ID == flujo.USUARIO6_ID).SingleOrDefault();
-                ViewBag.Usuario6 = usu6 != null ? flujo.USUARIO6_ID+" - "+ usu6.NOMBRE + " " + usu6.APELLIDO_P : "";
-            }
-            if (flujo.USUARIO7_ID != null)
-            {
-                var usu7 = db.USUARIOs.Where(t => t.ID == flujo.USUARIO7_ID).SingleOrDefault();
-                ViewBag.Usuario7 = usu7 != null ? flujo.USUARIO7_ID + " - " + usu7.NOMBRE + " " + usu7.APELLIDO_P : "";
-            }
-            return View(flujo);
-        }
+      
         // GET: Clientes/Details/5
         public ActionResult Details(string vko, string vtw, string spa, string kun)
         {
@@ -1273,15 +1232,7 @@ namespace TAT001.Controllers.Catalogos
                 doc.KUNNR = dt.Rows[i][2].ToString();
                 doc.KUNNR = Completa(doc.KUNNR, 10);
 
-                existeCliente = db.CLIENTEs.Where(cc => cc.KUNNR == doc.KUNNR & cc.ACTIVO).FirstOrDefault();
-                if (!String.IsNullOrEmpty(dt.Rows[i][3].ToString()))
-                {
-                    doc.CLIENTE_N = dt.Rows[i][3].ToString().Replace(',',' ').ToUpper();
-                }
-                else
-                {
-                    doc.CLIENTE_N = (existeCliente.NAME1 == null ? "" : existeCliente.NAME1.Replace(',',' '));
-                }
+                existeCliente = db.CLIENTEs.Where(cc => cc.KUNNR==doc.KUNNR & cc.ACTIVO).FirstOrDefault();
                 if (existeCliente == null)
                     doc.VKORG = null;
                 else
@@ -1290,6 +1241,7 @@ namespace TAT001.Controllers.Catalogos
                     doc.VTWEG = existeCliente.VTWEG;
                     doc.SPART = existeCliente.SPART;
                 }
+                doc.CLIENTE_N = (existeCliente.NAME1 == null ? "" : existeCliente.NAME1);
                 //Manager
                 doc.ID_US0 = (dt.Rows[i][4] != null ? dt.Rows[i][4].ToString().ToUpper() : null);
                 //Nivel 1
