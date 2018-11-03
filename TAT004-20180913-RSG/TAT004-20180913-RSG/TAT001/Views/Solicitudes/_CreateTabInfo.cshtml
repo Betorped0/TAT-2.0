@@ -242,7 +242,8 @@
                         <label id="lbl_concepto" for="concepto">Concepto*</label> @*B20180801 MGC Textos*@
                     </div>
                     <div class="input-field col s12">
-                        @Html.TextAreaFor(model => model.NOTAS, new { @class = "materialize-textarea " + @ViewBag.relacionada, @id = "notas_txt", onkeyup = "maxchar();", @maxlength = 255 })
+                        @*@Html.TextAreaFor(model => model.NOTAS, new { @class = "materialize-textarea " + @ViewBag.relacionada, @id = "notas_txt", onkeyup = "maxchar();", @maxlength = 255 })*@
+                        @Html.TextAreaFor(model => model.NOTAS, new { @class = "materialize-textarea " , @id = "notas_txt", onkeyup = "maxchar();", @maxlength = 255 })
                         @Html.LabelFor(model => model.NOTAS, "Mecánica de negociación", htmlAttributes: new { @class = "active", @for = "notas_txt", @id = "lbl_notas" })@*B20180801 MGC Textos*@
                     </div>
                     <script>
