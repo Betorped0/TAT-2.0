@@ -15,7 +15,6 @@
 <link href="~/Content/dataTable.css" rel="stylesheet" />
 <link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
 <input class="form-control" id="txt_spras" value="@(ViewBag.usuario.SPRAS_ID)" hidden>
-<input id="USUARIOC_ID" value="@(ViewBag.usuario.ID)" type="hidden">
 
 @*@if (TempData["docs_masiva"] != null)
     {
@@ -302,25 +301,25 @@
 </style>
 
 @*<script>
-        //$(".mdl-button").on("click", function () {
-        //    if ($(this).hasClass("valid")) {
-        //        var id = $(this).closest('tr').children().eq(1).children().val();
-        //        var tipo = $(this).closest('tr').children().eq(2).children().val();
-        //        $(this).closest('tr').children().eq(3).children().children().eq(0).children().eq(1).attr('id', id + tipo);
-        //    } else {
-        //        $(this).closest('tr').children().eq(3).children().children().eq(0).children().eq(1).removeAttr('id');
-        //    }
-        function pag() {
-            $(".outRequiredfile").on("change", function () {
-                if ($(this).hasClass("valid")) {
-                    var id = $(this).closest('tr').children().eq(1).children().val();
-                    var tipo = $(this).closest('tr').children().eq(2).children().val();
-                    $(this).closest('tr').children().eq(3).children().children().eq(0).children().eq(1).attr('id', id + tipo);
-                } else {
-                    $(this).closest('tr').children().eq(3).children().children().eq(0).children().eq(1).removeAttr('id');
-                }
-            });
-        }
-        //});
-    </script>
-    <button class="btn" onclick="pag();">Page</button>*@
+    //$(".mdl-button").on("click", function () {
+    //    if ($(this).hasClass("valid")) {
+    //        var id = $(this).closest('tr').children().eq(1).children().val();
+    //        var tipo = $(this).closest('tr').children().eq(2).children().val();
+    //        $(this).closest('tr').children().eq(3).children().children().eq(0).children().eq(1).attr('id', id + tipo);
+    //    } else {
+    //        $(this).closest('tr').children().eq(3).children().children().eq(0).children().eq(1).removeAttr('id');
+    //    }
+    function pag() {
+        $(".outRequiredfile").on("change", function () {
+            if ($(this).hasClass("valid")) {
+                var id = $(this).closest('tr').children().eq(1).children().val();
+                var tipo = $(this).closest('tr').children().eq(2).children().val();
+                $(this).closest('tr').children().eq(3).children().children().eq(0).children().eq(1).attr('id', id + tipo);
+            } else {
+                $(this).closest('tr').children().eq(3).children().children().eq(0).children().eq(1).removeAttr('id');
+            }
+        });
+    }
+    //});
+</script>
+<button class="btn" onclick="pag();">Page</button>*@

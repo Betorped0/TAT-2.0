@@ -12,7 +12,7 @@ namespace TAT001.Controllers
     [Authorize]
     public class PresupuestoController : Controller
     {
-
+        USUARIO user = new USUARIO();
         public ActionResult Index()
         {
             int pagina = 301; //ID EN BASE DE DATOS
@@ -20,7 +20,7 @@ namespace TAT001.Controllers
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
-                var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+                user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
                 ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
                 ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
                 ViewBag.usuario = user;
@@ -79,7 +79,7 @@ namespace TAT001.Controllers
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
-                var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+                user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
                 ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
                 ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
                 ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
@@ -161,7 +161,7 @@ namespace TAT001.Controllers
             {
                 string u = User.Identity.Name;
                 //string u = "admin";
-                var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+                user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
                 ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
                 ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
                 ViewBag.usuario = user;
@@ -200,7 +200,7 @@ namespace TAT001.Controllers
                             nombre = fileCPT.FileName.Remove(11, 4).Substring(0, 13);
                             if (nombre == nombref)
                             {
-                                pRESUPUESTOP.presupuestoCPT = carga.cargarPresupuestoCPT(fileCPT, sociedadcpt, periodocpt, aniocpt, ref mensajeC);
+                                pRESUPUESTOP.presupuestoCPT = carga.cargarPresupuestoCPT(fileCPT, sociedadcpt, periodocpt, aniocpt, ref mensajeC, user.SPRAS_ID);
                                 Session["Presupuesto"] = pRESUPUESTOP;
                                 Session["Sociedadcpt"] = sociedadcpt;
                                 Session["Aniocpt"] = aniocpt;
@@ -209,16 +209,16 @@ namespace TAT001.Controllers
                             }
                             else
                             {
-                                ViewBag.MensajeGE = carga.mensajes(16);
+                                ViewBag.MensajeGE = carga.mensajes(16, user.SPRAS_ID);
                             }
                         }
                         if (fileSAP[0] != null)
                         {
-                            nombref += "OUTBOUND_BUDG_" + string.Format("{0:00}", DateTime.Today.Month) + DateTime.Today.Year.ToString().Substring(2, 2);
-                            nombre = fileSAP[0].FileName .Remove(14, 5).Remove(16, 2).Substring(0, 18);
+                            nombref += "OUTBOUND_BUDG_" + DateTime.Today.Year.ToString() + string.Format("{0:000}", periodosap[0].PadLeft(3,'0'));
+                            nombre = fileSAP[0].FileName .Remove(14, 5).Substring(0, 21);
                             if (nombre == nombref)
                             {
-                                pRESUPUESTOP.presupuestoSAP = carga.cargarPresupuestoSAP(fileSAP, sociedadsap, periodosap, aniosap, ref mensajeS);
+                                pRESUPUESTOP.presupuestoSAP = carga.cargarPresupuestoSAP(fileSAP, sociedadsap, periodosap, aniosap, ref mensajeS, user.SPRAS_ID);
                                 Session["Presupuesto"] = pRESUPUESTOP;
                                 Session["Sociedadsap"] = sociedadsap;
                                 Session["Aniosap"] = aniosap;
@@ -227,13 +227,13 @@ namespace TAT001.Controllers
                             }
                             else
                             {
-                                ViewBag.MensajeGE = carga.mensajes(16);
+                                ViewBag.MensajeGE = carga.mensajes(16, user.SPRAS_ID);
                             }
                         }
                     }
                     catch (Exception e)
                     {
-                        ViewBag.MensajeGE = carga.mensajes(1);//"Error en la carga de archivo CPT y/o SAP";
+                        ViewBag.MensajeGE = carga.mensajes(1, user.SPRAS_ID);//"Error en la carga de archivo CPT y/o SAP";
                         //ViewBag.MensajeG = e.Message;
                     }
                     ViewBag.MensajeC = mensajeC;
@@ -249,26 +249,26 @@ namespace TAT001.Controllers
                             pRESUPUESTOP = Session["Presupuesto"] as DatosPresupuesto;
                             if (pRESUPUESTOP.presupuestoCPT.Count > 0 || pRESUPUESTOP.presupuestoSAP.Count > 0)
                             {
-                                ViewBag.MensajeC = carga.guardarPresupuesto(ref pRESUPUESTOP, Session["Sociedadcpt"] as string[], Session["Periodocpt"] as string[], Session["Sociedadsap"] as string[], Session["Periodosap"] as string[], User.Identity.Name, opciong);
+                                ViewBag.MensajeC = carga.guardarPresupuesto(ref pRESUPUESTOP, Session["Sociedadcpt"] as string[], Session["Periodocpt"] as string[], Session["Sociedadsap"] as string[], Session["Periodosap"] as string[], User.Identity.Name, opciong, user.SPRAS_ID);
                                 if (pRESUPUESTOP.bannerscanal.Count > 0)
                                 {
-                                    ViewBag.MensajeGI = carga.mensajes(3);//"Se encontraron banners sin canal asignados";
+                                    ViewBag.MensajeGI = carga.mensajes(3, user.SPRAS_ID);//"Se encontraron banners sin canal asignados";
                                 }
                             }
                             else
                             {
-                                ViewBag.MensajeGE = carga.mensajes(6);//"Ocurrio algo intente de nuevo cargar el/los archivo/s";
+                                ViewBag.MensajeGE = carga.mensajes(6, user.SPRAS_ID);//"Ocurrio algo intente de nuevo cargar el/los archivo/s";
                             }
                         }
                         catch (Exception e)
                         {
-                            ViewBag.MensajeGE = carga.mensajes(6);//"Ocurrio algo, intenté de nuevo cargar el/los archivo/s";
+                            ViewBag.MensajeGE = carga.mensajes(6, user.SPRAS_ID);//"Ocurrio algo, intenté de nuevo cargar el/los archivo/s";
                             //ViewBag.MensajeG = e.InnerException.Message;
                         }
                     }
                     else
                     {
-                        ViewBag.MensajeGE = carga.mensajes(2);//"Cargue algún archivo";
+                        ViewBag.MensajeGE = carga.mensajes(2, user.SPRAS_ID);//"Cargue algún archivo";
                     }
                     Session["Presupuesto"] = null;
                     Session["Sociedadsap"] = null;
@@ -293,7 +293,7 @@ namespace TAT001.Controllers
                 Session["Aniosap"] = null;
                 pRESUPUESTOP.presupuestoCPT = new List<PRESUPUESTOP>();
                 pRESUPUESTOP.presupuestoSAP = new List<PRESUPSAPP>();
-                ViewBag.MensajeGI = carga.mensajes(4);//"Carga cancelada";
+                ViewBag.MensajeGI = carga.mensajes(4,user.SPRAS_ID);//"Carga cancelada";
                 return View(pRESUPUESTOP);
             }
         }
@@ -302,7 +302,7 @@ namespace TAT001.Controllers
         {
             Models.CargarModel carga = new Models.CargarModel();
             string[] defaul = Session["Sociedadcpt"] as string[];
-            carga.bannres(Server.MapPath("~/pdfTemp/"), defaul);
+            carga.bannres(Server.MapPath("~/pdfTemp/"), defaul, user.SPRAS_ID);
             return File(Server.MapPath("~/pdfTemp/Banners sin canal.xlsx"), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Banners sin canal.xlsx");
         }
     }
