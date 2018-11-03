@@ -242,7 +242,7 @@
                         <label id="lbl_concepto" for="concepto">Concepto*</label> @*B20180801 MGC Textos*@
                     </div>
                     <div class="input-field col s12">
-                        @Html.TextAreaFor(model => model.NOTAS, new { @class = "materialize-textarea ", @id = "notas_txt", onkeyup = "maxchar();", @maxlength = 255 })
+                       @Html.TextAreaFor(model => model.NOTAS, new { @class = "materialize-textarea ", @id = "notas_txt", onkeyup = "maxchar();", @maxlength = 255 })
                         @Html.LabelFor(model => model.NOTAS, "Mecánica de negociación", htmlAttributes: new { @class = "active", @for = "notas_txt", @id = "lbl_notas" })@*B20180801 MGC Textos*@
                     </div>
                     <script>
@@ -558,6 +558,30 @@
                                     var optionsth = {
                                         defaultDate: new Date(datei.split('/')[2], datei.split('/')[1] - 1, datei.split('/')[0]),
                                         format: 'dd/mm/yyyy',
+<<<<<<< HEAD
+=======
+                                        onClose: function (e) {
+                                            var datei = $('#fechai_vig2').val();
+                                            var datef = $('#fechaf_vig2').val();
+
+                                            var fechaIni = new Date(datei);
+                                            var anioFechaIni = fechaIni.getFullYear();
+                                            var fechaActual = new Date();
+                                            var anioActual = fechaActual.getFullYear();
+
+                                            if (anioFechaIni < anioActual) {
+                                                M.toast({ html: 'El año no puede ser menor al año actual' });
+                                                $('#fechai_vig2').val("");
+                                                return;
+                                            }
+
+                                            if (anioFechaIni > anioActual+4) {
+                                                M.toast({ html: 'El año no puede ser mayor a ' + (anioActual + 4) });
+                                                $('#fechai_vig2').val("");
+                                                return;
+                                            }
+                                        },
+>>>>>>> parent of 018e5f5... merge
                                         i18n: {
                                             clear: 'Limpiar',
                                             today: 'Hoy',
@@ -580,6 +604,27 @@
                                         onClose: function (e) {
                                             var datei = $('#fechai_vig2').val();
                                             var datef = $('#fechaf_vig2').val();
+<<<<<<< HEAD
+=======
+
+                                            var fechaFin = new Date(datef);
+                                            var anioFechaFin = fechaFin.getFullYear();
+                                            var fechaActual = new Date();
+                                            var anioActual = fechaActual.getFullYear();
+
+                                            if (anioFechaFin < anioActual) {
+                                                M.toast({ html: 'El año no puede ser menor al año actual' });
+                                                $('#fechaf_vig2').val("");
+                                                return;
+                                            }
+
+                                            if (anioFechaFin > anioActual + 4) {
+                                                M.toast({ html: 'El año no puede ser mayor a ' + (anioActual + 4) });
+                                                $('#fechaf_vig2').val("");
+                                                return;
+                                            }
+
+>>>>>>> parent of 018e5f5... merge
                                             var res = validar_fechas(datei, datef);
 
                                             if (!res) {

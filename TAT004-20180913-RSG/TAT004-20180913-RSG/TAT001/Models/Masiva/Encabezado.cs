@@ -12,6 +12,7 @@ namespace TAT001.Models.Masiva
         public string GALL_ID { get; set; }
         public string SOCIEDAD_ID { get; set; }
         public string PAIS_ID { get; set; }
+        public string PAIS_NAME { get; set; }//RSG 01.11.2018
         public string ESTADO { get; set; }
         public string CIUDAD { get; set; }
         public string CONCEPTO { get; set; }

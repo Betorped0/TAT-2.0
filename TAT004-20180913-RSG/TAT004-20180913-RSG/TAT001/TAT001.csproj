@@ -808,7 +808,6 @@
     <Compile Include="Models\CargaMasivaModels.cs" />
     <Compile Include="Models\CartaD.cs" />
     <Compile Include="Models\CartaDEsqueleto.cs" />
-    <Compile Include="Models\DocumentoMaterial.cs" />
     <Compile Include="Models\CategoriaMaterial.cs" />
     <Compile Include="Models\ClienteViewModel.cs" />
     <Compile Include="Models\Comentarios.cs" />
@@ -1968,16 +1967,17 @@
     <Content Include="Views\CANAL\Details.cshtml" />
     <Content Include="Views\CANAL\Edit.cshtml" />
     <Content Include="Views\CANAL\Index.cshtml" />
-    <Content Include="Views\Solicitudes\_CreateTabDis.cshtml" />
-    <Content Include="Views\Solicitudes\_CreateTabFin.cshtml" />
     <Content Include="Views\Solicitudes\_CreateTabInfo.cshtml" />
-    <Content Include="Views\Solicitudes\_CreateTabRec.cshtml" />
     <Content Include="Views\Solicitudes\_CreateTabSop.cshtml" />
-    <Content Include="Views\Solicitudes\_DetailsTabDis.cshtml" />
-    <Content Include="Views\Solicitudes\_DetailsTabFin.cshtml" />
+    <Content Include="Views\Solicitudes\_CreateTabDis.cshtml" />
+    <Content Include="Views\Solicitudes\_CreateTabRec.cshtml" />
+    <Content Include="Views\Solicitudes\_CreateTabFin.cshtml" />
     <Content Include="Views\Solicitudes\_DetailsTabInfo.cshtml" />
+    <Content Include="Views\Solicitudes\_DetailsTabDis.cshtml" />
     <Content Include="Views\Solicitudes\_DetailsTabRec.cshtml" />
+    <Content Include="Views\Solicitudes\_DetailsTabFin.cshtml" />
     <Content Include="Views\Solicitudes\_DetailsTabSop.cshtml" />
+    <Content Include="Views\Clientes\VerFlujo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->

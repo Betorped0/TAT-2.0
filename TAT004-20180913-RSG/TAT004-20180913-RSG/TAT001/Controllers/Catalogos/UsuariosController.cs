@@ -398,7 +398,7 @@ namespace TAT001.Controllers.Catalogos
             ViewBag.BUNIT = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS", uSUARIO.BUNIT);
             ViewBag.ROLES = db.ROLTs.Where(a => a.SPRAS_ID.Equals(spra));
             ViewBag.SOCIEDADES = db.SOCIEDADs;
-            ViewBag.sociedad = sociedad;
+            ViewBag.sociedad = JsonConvert.SerializeObject(sociedad, Formatting.Indented);
             ViewBag.PAISES = db.PAIS;
             ViewBag.sociedad = JsonConvert.SerializeObject(sociedad, Formatting.Indented);
             ViewBag.APROBADORES = db.DET_APROB.Where(a => a.BUKRS.Equals("KCMX") & a.PUESTOC_ID == uSUARIO.PUESTO_ID).ToList();

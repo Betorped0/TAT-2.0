@@ -86,7 +86,7 @@
                             @Html.ValidationMessageFor(model => model.BACKUP_ID, "", new { @class = "text-danger" })
                         </div>*@
                     @if (ViewBag.PUESTO_ID1 == null || ViewBag.PUESTO_ID1 == "")
-                    {
+                    {                        
                         <div class="input-field col s12">
                             @Html.HiddenFor(model => model.SOCIEDADs)
                             @{string jval2 = ViewBag.sociedad;
@@ -98,14 +98,6 @@
                                     foreach (var item in ViewBag.SOCIEDADES)
                                     {
                                         <option id="@item.BUKRS" value="@item.BUKRS">@item.BUKRS</option>
-                                        if (ViewBag.sociedad )
-                                        {
-                                            <option id="@item.BUKRS" value="@item.BUKRS" class="selected">@item.BUKRS</option>
-                                        }
-                                        else
-                                        {
-                                            <option id="@item.BUKRS" value="@item.BUKRS">@item.BUKRS</option>
-                                        }
                                     }
                                 }
                                 catch (Exception)

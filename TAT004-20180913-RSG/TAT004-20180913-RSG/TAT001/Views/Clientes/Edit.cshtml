@@ -159,7 +159,6 @@
                             @Html.EditorFor(model => model.BANNER, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.LabelFor(model => model.BANNER, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_banner" })
                         </div>
-
                         <div class="input-field col s12" style="margin-bottom:0;">
                             @Html.DropDownList("PROVEEDOR_ID", null, htmlAttributes: new { id = "sel-vendor" })
                             @Html.LabelFor(model => model.PROVEEDOR_ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_proveedor" })
@@ -181,7 +180,6 @@
                             var options = [];
                             var instance = M.FormSelect.init(elem, options);
                         </script>
-
                     </div>
                 </div>
             </div>
@@ -222,3 +220,4 @@
 <div>
     <a href="@Url.Action("Index", "Clientes")" id="lbl_regresar"> </a>
 </div>
+

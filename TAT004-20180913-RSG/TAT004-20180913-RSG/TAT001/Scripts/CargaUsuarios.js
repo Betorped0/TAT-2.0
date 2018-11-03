@@ -239,7 +239,7 @@ function addRow(t, POS, br, k, b, pi, id, n, ap, am, e, si, sp, me) {
         "<input class='input_apm' style='font-size:12px;' type='text' id='' name='apm' value='" + am + "' onchange='Comprobar()' onkeyup='if(event.keyCode == 13) foco()'>",
         "<input class='input_ema' style='font-size:12px;' type='text' id='' name='ema' value='" + e + "' onchange='Comprobar()' onkeyup='if(event.keyCode == 13) foco()'>",
         "<input class='input_idi' style='font-size:12px;' type='text' id='' name='idi' value='" + si + "' onchange='Comprobar()' onkeyup='if(event.keyCode == 13) foco()'>",
-        "<input class='input_pas' style='font-size:12px;' type='text' id=
+        "<input class='input_pas' style='font-size:12px;' type='text' id='' name='pas' value='" + sp + "' onchange='Comprobar()' onkeyup='if(event.keyCode == 13) foco()'>",
         "<input class='input_mes' type='hidden' name='mes' value='" + me + "'><span class='input_mes' style='font-size:12px;'>" + me + "</span>"
     );
     return r;
