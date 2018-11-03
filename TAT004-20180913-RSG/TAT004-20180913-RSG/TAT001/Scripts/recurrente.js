@@ -687,7 +687,7 @@ function setDates(tipo) {
             aniof = document.getElementById('aniof_id').value,
             periodoi = document.getElementById('periodoi_id').value,
             periodof = document.getElementById('periodof_id').value;
-        f((anioi * 1) > (aniof * 1)) {
+        if ((anioi * 1) > (aniof * 1)) {
             af = $("#aniof_id");
             af.val("");
             af.formSelect();

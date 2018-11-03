@@ -1472,7 +1472,10 @@ namespace TAT001.Controllers
                         dOCUMENTO.PAIS_ID = p.ToUpper();//RSG 15.05.2018
                     }
                     //Tipo técnico
-                    dOCUMENTO.TIPO_TECNICO = select_neg;
+                    if(select_neg!=null)//RSG 03.11.2018
+                        dOCUMENTO.TIPO_TECNICO = select_neg;
+                    else if (select_negi != null)//RSG 03.11.2018
+                        dOCUMENTO.TIPO_TECNICO = select_negi;
                     if (chk_ligada == "on")
                         dOCUMENTO.TIPO_TECNICO = "P";
 
