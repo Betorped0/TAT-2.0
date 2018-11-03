@@ -255,7 +255,7 @@
                                 <li><a href="@Url.Action(" Index", "CartaF" , new { id=Model.D.NUM_DOC })" id="lbl_list">Lista de cartas</a></li>*@ @*//B20180720P MGC Guardar Carta*@
                                 @* ---DRS 14.10.2018--- *@
                                 <li><a href="@Url.Action("Lista", "CartaV", new { id = Model.D.NUM_DOC, swf = Model.D.ESTATUS_WF })" id="lbl_list">Lista de cartas</a></li> @*//B20180720P MGC Guardar Carta*@
-                                @if (Model.D.ESTATUS_WF.Equals("S"))
+                                @if (Model.D.ESTATUS_WF.Equals("S") && (Model.D.USUARIOD_ID==User.Identity.Name))
                                 {
                                     <li><a href="@Url.Action("Create", "CartaV", new { id = Model.D.NUM_DOC })" id="lbl_genc">Generar carta</a></li>
                                 }
