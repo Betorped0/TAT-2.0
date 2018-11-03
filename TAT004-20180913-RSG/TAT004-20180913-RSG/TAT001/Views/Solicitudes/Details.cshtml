@@ -4,10 +4,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.pagina_r = 201;
     ViewBag.carpeta_r = 200;
-    List<TAT001.Entities.CARTAP>
-    lstCarta = ViewBag.cartap as List<TAT001.Entities.CARTAP>;
-    var pos = lstCarta.GroupBy(c => c.POS_ID).Select(g => g.First()).ToList();
-    int idn = 0;//LEJ 12.07.18
 }
 <script>
     var root = "@Url.Content("~")";

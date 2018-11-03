@@ -432,6 +432,16 @@ namespace TAT001.Common
             new SqlParameter("@PERIODO", (periodo == null ? "" : periodo))).ToList();
             return presupuesto;
         }
+        public static List<DocumentoMaterial> ObtenerDocumetoMaterialesCarta(TAT001Entities db, decimal num_doc, string user_id, DateTime a1, DateTime a2)
+        {
+            string spras_id = ObtenerSprasId(db, user_id);
+            List<DocumentoMaterial> docMateriales = db.Database.SqlQuery<DocumentoMaterial>("CPS_LISTA_DOC_MATERIALES @NUM_DOC, @SPRAS_ID, @VIGENCIA_DE,@VIGENCIA_AL",
+            new SqlParameter("@NUM_DOC", num_doc),
+            new SqlParameter("@SPRAS_ID", spras_id),
+            new SqlParameter("@VIGENCIA_DE", a1),
+            new SqlParameter("@VIGENCIA_AL", a2)).ToList();
+            return docMateriales;
+        }
 
     }
 }
