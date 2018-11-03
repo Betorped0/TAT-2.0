@@ -112,7 +112,6 @@
                     {
                         <div class="input-field col s12">
                             @Html.DropDownList("BUNIT", null, htmlAttributes: new { @class = "select", required = true })
-                            @*@Html.EditorFor(model => model.BUNIT, new { htmlAttributes = new { @class = "form-control" } })*@
                             @Html.LabelFor(model => model.BUNIT, htmlAttributes: new { @id = "lbl_bukrs" })
                             @Html.ValidationMessageFor(model => model.BUNIT, "", new { @class = "text-danger" })
                         </div>
@@ -190,7 +189,6 @@
     <script>
         $(document).ready(function () {
             var admin = "@ViewBag.admin";
-            //var jsval1 = $.parseJSON(admin);
             var sociedad = $("#SELECT_SOCIEDADES").val();
             var jsval = $.parseJSON(sociedad);
             for (var i = 0; i < jsval.length; i++) {

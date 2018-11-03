@@ -371,7 +371,6 @@ namespace TAT001.Controllers.Catalogos
             {
                 ViewBag.admin = "no";
             }
-
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -401,6 +400,7 @@ namespace TAT001.Controllers.Catalogos
             ViewBag.SOCIEDADES = db.SOCIEDADs;
             ViewBag.sociedad = JsonConvert.SerializeObject(sociedad, Formatting.Indented);
             ViewBag.PAISES = db.PAIS;
+            ViewBag.sociedad = JsonConvert.SerializeObject(sociedad, Formatting.Indented);
             ViewBag.APROBADORES = db.DET_APROB.Where(a => a.BUKRS.Equals("KCMX") & a.PUESTOC_ID == uSUARIO.PUESTO_ID).ToList();
             return View(uSUARIO);
         }
