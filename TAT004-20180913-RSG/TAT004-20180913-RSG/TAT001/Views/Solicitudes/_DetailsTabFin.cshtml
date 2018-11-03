@@ -331,7 +331,17 @@
                                             Remanente/(Exceso)
                                         </div>
                                         <div class="col s6 right-align">
+                                           @{
+                                               bool esNeg = ViewBag.remanente.Contains("(-)");
+                                        }
+                                        @if (esNeg)
+                                        {
+                                            <span id="s_rema" style="color:red;">@ViewBag.remanente</span>
+                                        }
+                                        else
+                                        {
                                             <span id="s_rema">@ViewBag.remanente</span>
+                                        }
                                         </div>
                                     </div>
                                 </li>

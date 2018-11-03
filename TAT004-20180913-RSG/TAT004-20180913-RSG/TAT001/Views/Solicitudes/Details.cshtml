@@ -49,7 +49,7 @@
                 </div>
                 @* ---DRS 3.10.2018--- *@
                 <div class="input-field col s2">
-                    @Html.EditorFor(model => model.D.USUARIO.BUNIT, "BU", new { htmlAttributes = new { @disabled = "disabled" } })
+                    @Html.EditorFor(model => model.D.USUARIO.BUNIT, "BU", new { htmlAttributes = new { @disabled = "disabled",@Value = Model.D.SOCIEDAD_ID } })
                     @Html.LabelFor(model => model.D.USUARIO.BUNIT, "BU", new { @class = "lbl_bu" })
                 </div>
                 @* ---DRS 3.10.2018--- *@

@@ -67,7 +67,7 @@ $(document).ready(function () {
 
             @* ---DRS 3.10.2018--- *@
             <div class="input-field col s2">
-                @Html.EditorFor(model => model.USUARIO.BUNIT, "BU", new { htmlAttributes = new { @disabled = "disabled", @Value = us.BUNIT } })
+                @Html.EditorFor(model => model.USUARIO.BUNIT, "BU", new { htmlAttributes = new { @disabled = "disabled", @Value = Model.SOCIEDAD_ID } })
                 @Html.LabelFor(model => model.USUARIO.BUNIT, "BU", new { @id = "lbl_bu" })
             </div>
             @* ---DRS 3.10.2018--- *@

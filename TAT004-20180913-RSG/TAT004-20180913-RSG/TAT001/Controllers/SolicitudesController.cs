@@ -201,21 +201,19 @@ namespace TAT001.Controllers
             //Tab_Fin Análisis Solicitud
             decimal montoProv = 0.0M;
             decimal montoApli = 0.0M;
+            decimal remanente = 0.0M;
             bool esDocRef = false;
-            if (DF.D.DOCUMENTO_REF != null)
-            {
-                montoProv = db.DOCUMENTOes.First(x=>x.NUM_DOC== DF.D.DOCUMENTO_REF).MONTO_DOC_MD.Value;
-            }
+            if (DF.D.DOCUMENTO_REF != null){ montoProv = db.DOCUMENTOes.First(x=>x.NUM_DOC== DF.D.DOCUMENTO_REF).MONTO_DOC_MD.Value;}
             if (db.DOCUMENTOes.Any(x=>x.DOCUMENTO_REF== DF.D.NUM_DOC))
             {
                 esDocRef = true;
                 montoApli = db.DOCUMENTOes.Sum(x => x.MONTO_DOC_MD.Value);
-
             }
+            if (montoProv > 0 && montoApli > 0){ remanente = montoProv - montoApli;}
             ViewBag.montoSol = DF.D.MONTO_DOC_MD;
             ViewBag.montoProv = (DF.D.DOCUMENTO_REF != null? montoProv.ToString():"-");
             ViewBag.montoApli = (esDocRef? montoApli.ToString():"-");
-            ViewBag.remanente = DF.D.MONTO_DOC_MD- montoApli;
+            ViewBag.remanente = ((montoProv > 0 && montoApli > 0) ? (remanente<0?"(-)"+ remanente.ToString() : remanente.ToString()) : "-");
             ViewBag.montoTotal = DF.D.MONTO_DOC_MD;
 
             return View(DF);
@@ -4083,6 +4081,24 @@ namespace TAT001.Controllers
                 d.DOCUMENTORAN.AddRange(drec.DOCUMENTORANs.ToList());
             }
             //ADD RSG 31.10.2018------------------------------
+
+            //Tab_Fin Análisis Solicitud
+            decimal montoProv = 0.0M;
+            decimal montoApli = 0.0M;
+            decimal remanente = 0.0M;
+            bool esDocRef = false;
+            if (DF.D.DOCUMENTO_REF != null) { montoProv = db.DOCUMENTOes.First(x => x.NUM_DOC == DF.D.DOCUMENTO_REF).MONTO_DOC_MD.Value; }
+            if (db.DOCUMENTOes.Any(x => x.DOCUMENTO_REF == DF.D.NUM_DOC))
+            {
+                esDocRef = true;
+                montoApli = db.DOCUMENTOes.Sum(x => x.MONTO_DOC_MD.Value);
+            }
+            if (montoProv > 0 && montoApli > 0) { remanente = montoProv - montoApli; }
+            ViewBag.montoSol = DF.D.MONTO_DOC_MD;
+            ViewBag.montoProv = (DF.D.DOCUMENTO_REF != null ? montoProv.ToString() : "-");
+            ViewBag.montoApli = (esDocRef ? montoApli.ToString() : "-");
+            ViewBag.remanente = ((montoProv > 0 && montoApli > 0) ? (remanente < 0 ? "(-)" + remanente.ToString() : remanente.ToString()) : "-");
+            ViewBag.montoTotal = DF.D.MONTO_DOC_MD;
 
             return View(d);
         }
