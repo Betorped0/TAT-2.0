@@ -12,7 +12,7 @@
                 @Html.ActionLink("NOMBRE", "List", new { colOrden = "NOMBRE", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar }, new { @class = "lblNombre" })
             </th>
             <th>
-                @Html.ActionLink("Co. Code", "List", new { colOrden = "SOCIEDAD_ID", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar }, new { @class = "lblSociedadId" })
+                @Html.ActionLink("SOCIEDAD_ID", "List", new { colOrden = "SOCIEDAD_ID", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar }, new { @class = "lblSociedadId" })
             </th>
             <th>
                 @Html.ActionLink("PAIS_ID", "List", new { colOrden = "PAIS_ID", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar }, new { @class = "lblPais" })
@@ -41,10 +41,10 @@
                 </td>
                 @if ((bool)item.ACTIVO == true)
                 {
-                    <td style="align-items:center"><i class='material-icons green-text'>check</i></td>}
+                    <td style="align-items:center"><a href="@Url.Action("Desactivar", "Proveedor", new { id = item.ID, a=false })"><i class='material-icons green-text'>check</i></a></td>}
                 else
                 {
-                    <td style="align-items:center;"><i class='material-icons red-text'>clear</i></td>}
+                    <td style="align-items:center;"><a href="@Url.Action("Desactivar", "Proveedor", new { id = item.ID, a=true })"><i class='material-icons red-text'>clear</i></a></td>}
                 <td>
                     @*<a href="@Url.Action("Edit", "Proveedor", new { id = item.ID })">
                         <i class='material-icons green-text'>edit</i>
@@ -52,9 +52,9 @@
                     <a href="@Url.Action("Details", "Proveedor", new { id = item.ID })">
                         <i class='material-icons blue-text'>search</i>
                     </a>
-                    <a href="@Url.Action("Delete", "Proveedor", new { id = item.ID })">
+                    @*<a href="@Url.Action("Delete", "Proveedor", new { id = item.ID })">
                         <i class='material-icons red-text'>delete</i>
-                    </a>
+                    </a>*@
                 </td>
             </tr>
         }
