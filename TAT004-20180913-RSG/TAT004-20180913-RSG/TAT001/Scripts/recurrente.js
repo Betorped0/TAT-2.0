@@ -691,6 +691,22 @@ function setDates(tipo) {
             aniof = document.getElementById('aniof_id').value,
             periodoi = document.getElementById('periodoi_id').value,
             periodof = document.getElementById('periodof_id').value;
+
+        if ((anioi * 1) > (aniof * 1)) {
+            af = $("#aniof_id");
+            af.val("");
+            af.formSelect();
+            M.toast({ html: 'Los años no tiene una secuencia correcta' });
+            return;
+        }
+        if (((periodoi * 1) > (periodof * 1)) && ((anioi * 1) === (aniof * 1)) ) {
+            pf = $("#periodof_id");
+            pf.val("");
+            pf.formSelect();
+            M.toast({ html: 'Los meses no tiene una secuencia correcta' });
+            return;
+        }
+
         if (anioi && periodoi ) {
             $.ajax({
                 type: "POST",

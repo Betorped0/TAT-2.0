@@ -1238,7 +1238,7 @@ namespace TAT001.Controllers
             string spras = Session["spras"].ToString();
             ViewBag.PERIODOS = new SelectList(db.PERIODOTs.Where(a => a.SPRAS_ID == spras).ToList(), "PERIODO_ID", "TXT50", DateTime.Now.Month);
             List<string> anios = new List<string>();
-            int mas = 10;
+            int mas = 5;
             for (int i = 0; i < mas; i++)
             {
                 anios.Add((DateTime.Now.Year + i).ToString());
