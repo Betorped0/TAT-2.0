@@ -44,7 +44,7 @@ namespace TAT001.Controllers.Catalogos
         public void ObtenerListado(ref ProveedorViewModel viewModel, string colOrden = "", string ordenActual = "", int? numRegistros = 10, int? pagina = 1, string buscar = "")
         {
             int pageIndex = pagina.Value;
-            List<PROVEEDOR> clientes = db.PROVEEDORs.Where(t=>t.ACTIVO).ToList();
+            List<PROVEEDOR> clientes = db.PROVEEDORs.ToList();
             viewModel.ordenActual = colOrden;
             viewModel.numRegistros = numRegistros.Value;
             viewModel.buscar = buscar;
@@ -389,11 +389,26 @@ namespace TAT001.Controllers.Catalogos
                 return View();
             }
         }
-
+        public ActionResult Desactivar(string id, bool a)
+        {
+            try
+            {
+                PROVEEDOR pROVEEDOR = db.PROVEEDORs.Find(id);
+                pROVEEDOR.ACTIVO = a;
+                db.Entry(pROVEEDOR).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            catch (Exception e)
+            {
+                var y = e.ToString();
+                return RedirectToAction("Index");
+            }
+        }
         [HttpPost]
         public FileResult Descargar()
         {
-            var pr = db.PROVEEDORs.Where(x => x.ACTIVO == true).ToList();
+            var pr = db.PROVEEDORs.ToList();
             generarExcelHome(pr, Server.MapPath("~/pdfTemp/"));
             return File(Server.MapPath("~/pdfTemp/DocPr" + DateTime.Now.ToShortDateString() + ".xlsx"), "application /vnd.openxmlformats-officedocument.spreadsheetml.sheet", "DocPr" + DateTime.Now.ToShortDateString() + ".xlsx");
         }
@@ -429,6 +444,12 @@ namespace TAT001.Controllers.Catalogos
                       BANNER = "PAIS"
                       },
                     };
+                worksheet.Cell("E1").Value = new[]
+{
+                  new {
+                      BANNER = "ACTIVO"
+                      },
+                    };
                 for (int i = 2; i <= (lst.Count + 1); i++)
                 {
                     worksheet.Cell("A" + i).Value = new[]
@@ -453,6 +474,12 @@ namespace TAT001.Controllers.Catalogos
                  {
                     new {
                         BANNER       = lst[i-2].PAIS_ID
+                        },
+                      };
+                    worksheet.Cell("E" + i).Value = new[]
+{
+                    new {
+                        BANNER       = lst[i-2].ACTIVO
                         },
                       };
                 }

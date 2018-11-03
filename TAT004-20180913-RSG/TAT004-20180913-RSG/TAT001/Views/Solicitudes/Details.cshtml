@@ -121,7 +121,7 @@
                                 };
                                 var instance = M.FloatingActionButton.init(elem, options);
                             </script>
-                            if (Model.D.USUARIOC_ID == ViewBag.usuario.ID)
+                            if (Model.D.USUARIOC_ID == ViewBag.usuario.ID | Model.D.USUARIOD_ID == ViewBag.usuario.ID | true)
                             {
                                 <a class="btn-small modal-trigger" id="btn_cancel" href="#modal2"></a>
                                 <div id="modal2" class="modal">
@@ -174,9 +174,9 @@
                         }
                         else if (!Model.D.ESTATUS.Equals("A") & !Model.D.ESTATUS.Equals("R"))//RSG 20181002
                         {
-                            if (Model.D.USUARIOC_ID == ViewBag.usuario.ID)
+                            if (Model.D.USUARIOC_ID == ViewBag.usuario.ID | Model.D.USUARIOD_ID == ViewBag.usuario.ID)
                             {
-                                <a class="btn-small modal-trigger" id="btn_cancel" href="#modal2"></a>
+                                <a class="col btn-small modal-trigger" id="btn_cancel" href="#modal2"></a>
                                 <div id="modal2" class="modal">
                                     <div class="modal-content">
                                         <div class="row">
@@ -201,7 +201,7 @@
                     }
                     else if ((Model.D.ESTATUS.Equals("A") | Model.D.ESTATUS.Equals("R")) && (Model.D.TSOL.PADRE) /*&& Model.D.DOCUMENTORECs.Count < 1 && Model.D.DOCUMENTOLs.Count < 1*/)//RSG 20181002
                     {
-                        if (Model.D.USUARIOC_ID == ViewBag.usuario.ID & (Model.D.DOCUMENTO_SAP != null && Model.D.DOCUMENTO_SAP != "0"))
+                        if (Model.D.USUARIOC_ID == ViewBag.usuario.ID & Model.D.DOCUMENTO_SAP != null)
                         {
                             <div id="div_drop" class="col">
                                 <a href="@Url.Action("Create", "Solicitudes", new { id_d = Model.D.NUM_DOC.ToString(), tsol = "CPR" })" class="btn-small">Reversar</a>
@@ -226,9 +226,9 @@
                     }
                     else if (!Model.D.ESTATUS.Equals("A"))
                     {
-                        if (Model.D.USUARIOC_ID == ViewBag.usuario.ID)
+                        if (Model.D.USUARIOC_ID == ViewBag.usuario.ID | Model.D.USUARIOD_ID == ViewBag.usuario.ID)
                         {
-                            <a class="btn-small modal-trigger" id="btn_cancel" href="#modal3"></a>
+                            <a class="col btn-small modal-trigger" id="btn_cancel" href="#modal3"></a>
                             <div id="modal3" class="modal">
                                 <div class="modal-content">
                                     <div class="row">
@@ -245,7 +245,7 @@
                                 </div>
                                 <div class="modal-footer right">
                                     <a href="#!" class="modal-action modal-close btn-flat">No</a>
-                                    <a class="modal-action btn-flat" href="@Url.Action("Cancelar", "Solicitudes", new { id = Model.D.NUM_DOC })">Si</a>
+                                    <a class="modal-action btn-flat" href="@Url.Action(" Cancelar", "Solicitudes", new { id = Model.D.NUM_DOC })">Si</a>
                                 </div>
                             </div>
                             <script>
@@ -260,44 +260,45 @@
                         }
                     }
                     @*//else
-            //{*@
-                    if (Model.D.TSOL.CARTA)
-                    {
+                        //{*@
+                if (Model.D.TSOL.CARTA)
+                {
                         @* ---DRS 13.10.2018--- *@
                         <div class="col">
                             <button type="button" class="btn-small" data-target="list_carta" style="width:100%;" id="btn_carta">Carta</button>
                         </div>
                         @*<button type="button" class="btn-small  " id="btn_cancel">Cancelar</button>*@
-                        <ul id='list_carta' class='dropdown-content'>
-                            @*
+                    <ul id='list_carta' class='dropdown-content'>
+                        @*
 
-                    <li><a href="@Url.Action(" Index", "CartaF" , new { id=Model.D.NUM_DOC })" id="lbl_list">Lista de cartas</a></li>*@ @*//B20180720P MGC Guardar Carta*@
-                    @* ---DRS 14.10.2018--- *@
-                    <li><a href="@Url.Action("Lista", "CartaV", new { id = Model.D.NUM_DOC, swf = Model.D.ESTATUS_WF })" id="lbl_list">Lista de cartas</a></li> @*//B20180720P MGC Guardar Carta*@
-                    @if (Model.D.ESTATUS_WF.Equals("S") && (Model.D.USUARIOD_ID == User.Identity.Name))
-                    {
-                        <li><a href="@Url.Action("Create", "CartaV", new { id = Model.D.NUM_DOC })" id="lbl_genc">Generar carta</a></li>
-                    }
-                    else if (Model.D.ESTATUS_WF.Equals("F") || Model.D.ESTATUS_WF.Equals("S") || Model.D.ESTATUS_WF.Equals("R"))
-                    {
-                        <li><a href="@Url.Action("Create", "CartaD", new { id = Model.D.NUM_DOC })" id="lbl_genc">Imprimir</a></li>
-                    }
-                    else
-                    {
-                        <li><a href="@Url.Action("Create", "CartaD", new { id = Model.D.NUM_DOC })" id="lbl_genc">Imprimir draft</a></li>
-                    }
-                </ul>
+                <li><a href="@Url.Action(" Index", "CartaF" , new { id=Model.D.NUM_DOC })" id="lbl_list">Lista de cartas</a></li>*@ @*//B20180720P MGC Guardar Carta*@
+                @* ---DRS 14.10.2018--- *@
+                <li><a href="@Url.Action("Lista", "CartaV", new { id = Model.D.NUM_DOC, swf = Model.D.ESTATUS_WF })" id="lbl_list">Lista de cartas</a></li> @*//B20180720P MGC Guardar Carta*@
+                @if (Model.D.ESTATUS_WF.Equals("S"))
+                {
+                    <li><a href="@Url.Action("Create", "CartaV", new { id = Model.D.NUM_DOC })" id="lbl_genc">Generar carta</a></li>
+                }
+                else if (Model.D.ESTATUS_WF.Equals("F") || Model.D.ESTATUS_WF.Equals("S") || Model.D.ESTATUS_WF.Equals("R"))
+                {
+                    <li><a href="@Url.Action("Create", "CartaD", new { id = Model.D.NUM_DOC })" id="lbl_genc">Imprimir</a></li>
+                }
+                else
+                {
+                    <li><a href="@Url.Action("Create", "CartaD", new { id = Model.D.NUM_DOC })" id="lbl_genc">Imprimir draft</a></li>
+                }
+            </ul>
                 <script>
-                    var elem = document.getElementById('btn_carta');
-                    var options = {
-                        constrainWidth: false
-                        //,hover: true
-                    };
-                    var instance = M.Dropdown.init(elem, options);
+                                var elem = document.getElementById('btn_carta');
+                                var options = {
+                                    constrainWidth: false
+                                    //,hover: true
+                                };
+                                var instance = M.Dropdown.init(elem, options);
                 </script>
-            }
-            @* } *@
-        }
+                }
+                @* } *@
+                }
+                                
             </div>
         </div>
     </div>
@@ -320,7 +321,7 @@
                     <li class="tab col s2"><a href="#dist" id="tab_dis">Distribución</a></li>
                     @if (Model.D.DOCUMENTORECs.Count > 0)
                     {
-                        <li class="tab col s2"><a href="#recu" id="tab_dis">Recurrencia</a></li><!--RSG 09.07.2018 ADD-->
+                        <li class="tab col s2"><a href="#recu" id="tab_rec">Recurrencia</a></li><!--RSG 09.07.2018 ADD-->
                     }
                     @if (ViewBag.acciones != null & ViewBag.accion == "T")
                     {
@@ -361,8 +362,8 @@
                 <div class="modal-content">
                     <div class="row">
                         <h4 id="txt_app" style="display:none">Aprobar solicitud</h4>
-                        <h4 id="txt_rec" style="display:none"> Rechazar solicitud</h4>
-                        <h4 id="txt_nex" style="display:none"> Agregar comentario</h4>
+                        <h4 id="txt_rec" style="display:none">Rechazar solicitud</h4>
+                        <h4 id="txt_nex" style="display:none">Agregar comentario</h4>
                         <h4 id="txt_cont" style="display:none">
                             Contabilizar
                         </h4>
@@ -385,7 +386,7 @@
                                 @*@Html.LabelFor(model => model.F.ESTATUS, new { @id = "lbl_userid" })*@
                                 <div class="input-field col s10 offset-s1">
                                     @Html.TextAreaFor(model => model.F.COMENTARIO, new { @class = "materialize-textarea", @id = "txt_comentario", @maxlength = 255 })
-                                    @Html.LabelFor(model => model.F.COMENTARIO, new { @id = "lbl_userid" })
+                                    @Html.LabelFor(model => model.F.COMENTARIO, new { @id = "lbl_co" })
                                 </div>
                             </div>
                         </div>
@@ -404,7 +405,7 @@
                         <div class="row" style="margin-bottom:0">
                             <div class="card-panel">
                                 <div class="row">
-                                    <h5>Trade Spending</h5>
+                                    <h5 id="lblTrade">Trade Spending</h5>
                                 </div>
                                 <div class="row">
                                     <div class="col l6 m6 s12">
@@ -487,7 +488,7 @@
                 <div class="row" style="margin-bottom:0">
                     <div class="card-panel">
                         <div class="row">
-                            <h5>Trade Spending</h5>
+                            <h5 id="lblTrade">Trade Spending</h5>
                         </div>
                         <div class="row">
                             <div class="col l4 m4 s12">
@@ -531,7 +532,7 @@
             <div class="col s12">
                 <div class="card-panel">
                     <div class="row" style="margin-bottom:0">
-                        <h5>Workflow</h5>
+                        <h5 id="lblWorkflow">Workflow</h5>
                         <table class="table highlight responsive-table" id="table">
                             <thead>
                                 <tr>

@@ -214,8 +214,8 @@ namespace TAT001.Controllers
                         }
                         if (fileSAP[0] != null)
                         {
-                            nombref += "OUTBOUND_BUDG_" + DateTime.Today.Year.ToString() + string.Format("{0:000}", periodosap[0].PadLeft(3,'0'));
-                            nombre = fileSAP[0].FileName .Remove(14, 5).Substring(0, 21);
+                            nombref += "OUTBOUND_BUDG_" + DateTime.Today.Year.ToString() + string.Format("{0:000}", periodosap[0].PadLeft(3, '0'));
+                            nombre = fileSAP[0].FileName.Remove(14, 5).Remove(16, 2).Substring(0, 18); nombre = fileSAP[0].FileName.Remove(14, 5).Substring(0, 21);
                             if (nombre == nombref)
                             {
                                 pRESUPUESTOP.presupuestoSAP = carga.cargarPresupuestoSAP(fileSAP, sociedadsap, periodosap, aniosap, ref mensajeS, user.SPRAS_ID);
@@ -259,7 +259,7 @@ namespace TAT001.Controllers
                             {
                                 ViewBag.MensajeGE = carga.mensajes(6, user.SPRAS_ID);//"Ocurrio algo intente de nuevo cargar el/los archivo/s";
                             }
-                        }
+                            }
                         catch (Exception e)
                         {
                             ViewBag.MensajeGE = carga.mensajes(6, user.SPRAS_ID);//"Ocurrio algo, intenté de nuevo cargar el/los archivo/s";
@@ -293,7 +293,7 @@ namespace TAT001.Controllers
                 Session["Aniosap"] = null;
                 pRESUPUESTOP.presupuestoCPT = new List<PRESUPUESTOP>();
                 pRESUPUESTOP.presupuestoSAP = new List<PRESUPSAPP>();
-                ViewBag.MensajeGI = carga.mensajes(4,user.SPRAS_ID);//"Carga cancelada";
+                ViewBag.MensajeGI = carga.mensajes(4, user.SPRAS_ID);//"Carga cancelada";
                 return View(pRESUPUESTOP);
             }
         }

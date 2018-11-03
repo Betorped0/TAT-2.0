@@ -424,10 +424,10 @@
                 <tr>
                     <td>
                         @Html.LabelFor(model => model.SOCIEDAD_ID, "Co. Code", new
-                   {
-                       @style = "color: rgba(0, 0, 0, 1.0);font-size:10px;",
-                       @id = "lbl_sociedadid"
-                   })
+                        {
+                            @style = "color: rgba(0, 0, 0, 1.0);font-size:10px;",
+                            @id = "lbl_sociedadid"
+                        })
                     </td>
                 </tr>
                 <tr>
@@ -444,17 +444,17 @@
                 <tr>
                     <td>
                         @Html.LabelFor(model => model.USUARIOC_ID, "Usuario", new
-                   {
-                       @style = "color: rgba(0, 0, 0, 1.0);font-size:10px;",
-                       @id = "lbl_userid"
-                   })
+                        {
+                            @style = "color: rgba(0, 0, 0, 1.0);font-size:10px;",
+                            @id = "lbl_userid"
+                        })
                     </td>
                     <td>
                         @Html.LabelFor(model => model.USUARIO.NOMBRE, "Nombre", new
-                   {
-                       @style = "color: rgba(0, 0, 0, 1.0);font-size:10px;",
-                       @id = "lbl_manager"
-                   })
+                        {
+                            @style = "color: rgba(0, 0, 0, 1.0);font-size:10px;",
+                            @id = "lbl_manager"
+                        })
                     </td>
                     <td colspan="4"></td>
                 </tr>
@@ -462,13 +462,13 @@
                     <td style="padding:5px;">
                         <div class="input-field col s4">
                             @Html.EditorFor(model => model.USUARIOC_ID, new
-                       {
-                           htmlAttributes = new
-                           {
-                               @disabled = "disabled",
-                               @style = "color: rgba(0, 0, 0, 1.0); background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 120px;font-size: 12px;margin: 0 0 8px 0;padding: 0; "
-                           }
-                       })
+                            {
+                                htmlAttributes = new
+                                {
+                                    @disabled = "disabled",
+                                    @style = "color: rgba(0, 0, 0, 1.0); background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 120px;font-size: 12px;margin: 0 0 8px 0;padding: 0; "
+                                }
+                            })
                         </div>
                     </td>
                     <td style="padding:5px;">
@@ -506,28 +506,28 @@
                                         <div class="input-field col s12" @*style="width:48%; float:left;  margin-right: 8px;"*@>
                                             @Html.LabelFor(model => model.TSOL_ID, "Tipo solicitud", new { @style = "color: rgba(0, 0, 0, 1.0);font-size:10px;", @id = "lbl_userid" })
                                             @Html.EditorFor(model => model.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(model.USUARIO.SPRAS_ID)).FirstOrDefault().TXT020, new
-                                       {
-                                           htmlAttributes = new
-                                           {
-                                               @disabled = "disabled",
-                                               @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;font-size: 12px;margin: 0 0 8px 0;padding: 0; "
-                                           }
-                                       })
+                                            {
+                                                htmlAttributes = new
+                                                {
+                                                    @disabled = "disabled",
+                                                    @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;font-size: 12px;margin: 0 0 8px 0;padding: 0; "
+                                                }
+                                            })
                                         </div>
                                         <div class="input-field col s12" @*style="width:48%; float:left; margin-right: 8px;"*@>
                                             @Html.LabelFor(model => model.TALL_ID, "Clasificación", new
-                                       {
-                                           @style = "    color: rgba(0, 0, 0, 1.0);font-size:10px;",
-                                           @id = "lbl_userid"
-                                       })
+                                            {
+                                                @style = "    color: rgba(0, 0, 0, 1.0);font-size:10px;",
+                                                @id = "lbl_userid"
+                                            })
                                             @Html.EditorFor(model => model.TALL.TALLTs.Where(a => a.SPRAS_ID.Equals(model.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50, new
-                                       {
-                                           htmlAttributes = new
-                                           {
-                                               @disabled = "disabled",
-                                               @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;font-size: 12px;margin: 0 0 8px 0;padding: 0; "
-                                           }
-                                       })
+                                            {
+                                                htmlAttributes = new
+                                                {
+                                                    @disabled = "disabled",
+                                                    @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;font-size: 12px;margin: 0 0 8px 0;padding: 0; "
+                                                }
+                                            })
                                         </div>
                                     </div>
                                 </div>
@@ -537,33 +537,33 @@
                                     <div class="row">
                                         <div class="input-field col s12" @*style="width:48%;  float:left;  margin-right: 8px;"*@>
                                             @Html.LabelFor(model => model.PAYER_ID, "Cliente", new
-                                       {
-                                           @style = "    color: rgba(0, 0, 0, 1.0);font-size:10px;",
-                                           @id = "lbl_userid"
-                                       })
+                                            {
+                                                @style = "    color: rgba(0, 0, 0, 1.0);font-size:10px;",
+                                                @id = "lbl_userid"
+                                            })
                                             @Html.EditorFor(model => model.PAYER_ID, new
-                                       {
-                                           htmlAttributes = new
-                                           {
-                                               @disabled = "disabled",
-                                               @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;font-size: 12px;margin: 0 0 8px 0;padding: 0; "
-                                           }
-                                       })
+                                            {
+                                                htmlAttributes = new
+                                                {
+                                                    @disabled = "disabled",
+                                                    @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;font-size: 12px;margin: 0 0 8px 0;padding: 0; "
+                                                }
+                                            })
                                         </div>
                                         <div class="input-field col s12" @*style="width:48%; float:left; margin-right: 8px;"*@>
                                             @Html.LabelFor(model => model.PAYER_NOMBRE, "Nombre", new
-                                       {
-                                           @style = "    color: rgba(0, 0, 0, 1.0);font-size:10px;",
-                                           @id = "lbl_userid"
-                                       })
+                                            {
+                                                @style = "    color: rgba(0, 0, 0, 1.0);font-size:10px;",
+                                                @id = "lbl_userid"
+                                            })
                                             @Html.EditorFor(model => model.CLIENTE.NAME1, new
-                                       {
-                                           htmlAttributes = new
-                                           {
-                                               @disabled = "disabled",
-                                               @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;font-size: 12px;margin: 0 0 8px 0;padding: 0; "
-                                           }
-                                       })
+                                            {
+                                                htmlAttributes = new
+                                                {
+                                                    @disabled = "disabled",
+                                                    @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;font-size: 12px;margin: 0 0 8px 0;padding: 0; "
+                                                }
+                                            })
                                         </div>
 
                                     </div>
@@ -585,13 +585,13 @@
                                         <div class="input-field col s12" @*style="width:48%; float:left;  margin-right: 8px;"*@>
                                             @Html.LabelFor(model => model.CONCEPTO, "Concepto", new { @style = "color: rgba(0, 0, 0, 1.0);font-size:10px;", @id = "lbl_userid" })
                                             @Html.EditorFor(model => model.CONCEPTO, new
-                                       {
-                                           htmlAttributes = new
-                                           {
-                                               @disabled = "disabled",
-                                               @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;font-size: 12px;margin: 0 0 8px 0;padding: 0; "
-                                           }
-                                       })
+                                            {
+                                                htmlAttributes = new
+                                                {
+                                                    @disabled = "disabled",
+                                                    @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;font-size: 12px;margin: 0 0 8px 0;padding: 0; "
+                                                }
+                                            })
                                         </div>
 
                                     </div>
@@ -602,10 +602,10 @@
                                     <div class="row">
                                         <div class="input-field col s12" @*style="width:48%;  float:left;  margin-right: 8px;"*@>
                                             @Html.LabelFor(model => model.FECHAF_VIG, "Vigencia a", new
-                                       {
-                                           @style = "    color: rgba(0, 0, 0, 1.0);font-size:10px;",
-                                           @id = "lbl_userid"
-                                       })
+                                            {
+                                                @style = "    color: rgba(0, 0, 0, 1.0);font-size:10px;",
+                                                @id = "lbl_userid"
+                                            })
                                             <input type="text"
                                                    disabled="disabled" ,
                                                    style="color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;font-size: 12px;margin: 0 0 8px 0;padding: 0; " ,
@@ -613,13 +613,13 @@
                                         </div>
                                         <div class="input-field col s12" @*style="width:48%; float:left;  margin-right: 8px;"*@>
                                             @Html.LabelFor(model => model.MONTO_DOC_MD, "Monto", new
-                                       {
-                                           @style = "    color: rgba(0, 0, 0, 1.0);font-size:10px;",
-                                           @id = "lbl_userid"
-                                       })<input type="text"
-                                                disabled="disabled" ,
-                                                style="color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;font-size: 12px;margin: 0 0 8px 0;padding: 0; " ,
-                                                value="@ViewBag.monto" />
+                                            {
+                                                @style = "    color: rgba(0, 0, 0, 1.0);font-size:10px;",
+                                                @id = "lbl_userid"
+                                            })<input type="text"
+                                                     disabled="disabled" ,
+                                                     style="color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;font-size: 12px;margin: 0 0 8px 0;padding: 0; " ,
+                                                     value="@ViewBag.monto" />
                                         </div>
                                     </div>
                                 </div>

@@ -325,7 +325,7 @@ namespace TAT001.Models
                             i++;
                         }
                     }
-                }                
+                }
                 if (pRESUPUESTOPS.Count == 0)
                 {
                     mensaje = mensajes(8, idioma);//"No se encontraron datos en el archivo SAP de acuerdo al filtro de datos";
@@ -345,10 +345,10 @@ namespace TAT001.Models
             int ide = 0;
             string opc = "1";
             string sociedad = "";
-            if (opciong !="on")
+            if (opciong != "on")
             {
                 opc = "2";
-            }            
+            }
             if (presupuesto.presupuestoCPT.Count > 0)
             {
                 soc = ""; pre = "";
