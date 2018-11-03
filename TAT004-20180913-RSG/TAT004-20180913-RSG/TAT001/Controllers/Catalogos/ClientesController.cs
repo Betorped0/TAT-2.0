@@ -155,6 +155,16 @@ namespace TAT001.Controllers.Catalogos
                 if (canaldsc != null)
                     ViewBag.CanalDsc = canaldsc.CANAL1 + "-" + canaldsc.CDESCRIPCION;
             }
+            if (!String.IsNullOrEmpty(cLIENTE.PROVEEDOR_ID))
+            {
+                PROVEEDOR proveedordsc = db.PROVEEDORs.Where(p => p.ID == cLIENTE.PROVEEDOR_ID).SingleOrDefault();
+                if (proveedordsc != null)
+                    ViewBag.ProveedorDsc = proveedordsc.ID + "-" + proveedordsc.NOMBRE;
+            }
+            else
+            {
+                ViewBag.ProveedorDsc = "";
+            }
 
             return View(cLIENTE);
         }
@@ -189,7 +199,7 @@ namespace TAT001.Controllers.Catalogos
         // GET: Clientes/Edit/5
         public ActionResult Edit(string vko, string vtw, string spa, string kun)
         {
-            int pagina = 635; //ID EN BASE DE DATOS PARA EL TITULO
+            int pagina = 632; //ID EN BASE DE DATOS PARA EL TITULO
             string u = User.Identity.Name;
             var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
             ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
@@ -226,6 +236,8 @@ namespace TAT001.Controllers.Catalogos
             ViewBag.PARVW = new SelectList(db.TCLIENTEs, "ID", "ID", cLIENTE.PARVW);
             var canales = db.CANALs.Select(x => new { x.CANAL1, DESCRIPCION = x.CANAL1 + "-" + x.CDESCRIPCION });
             ViewBag.CANAL = new SelectList(canales, "CANAL1","DESCRIPCION", cLIENTE.CANAL != null ? cLIENTE.CANAL.TrimEnd() : "");
+            var proveedores = db.PROVEEDORs.Select(x => new { x.ID, NOMBRE = x.ID + "-" + x.NOMBRE });
+            ViewBag.PROVEEDOR_ID = new SelectList(proveedores, "ID","NOMBRE", cLIENTE.PROVEEDOR_ID != null ? cLIENTE.PROVEEDOR_ID.TrimEnd() : "");
             return View(cLIENTE);
         }
 
@@ -234,7 +246,7 @@ namespace TAT001.Controllers.Catalogos
         // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "VKORG,VTWEG,SPART,KUNNR,NAME1,STCD1,STCD2,LAND,REGION,SUBREGION,REGIO,ORT01,STRAS_GP,PSTLZ,CONTAC,CONT_EMAIL,PARVW,PAYER,GRUPO,SPRAS,ACTIVO,BDESCRIPCION,BANNER,CANAL,BZIRK,KONDA,VKGRP,VKBUR,BANNERG")] CLIENTE cLIENTE)
+        public ActionResult Edit([Bind(Include = "VKORG,VTWEG,SPART,KUNNR,NAME1,STCD1,STCD2,LAND,REGION,SUBREGION,REGIO,ORT01,STRAS_GP,PSTLZ,CONTAC,CONT_EMAIL,PARVW,PAYER,GRUPO,SPRAS,ACTIVO,BDESCRIPCION,BANNER, PROVEEDOR_ID,CANAL,BZIRK,KONDA,VKGRP,VKBUR,BANNERG")] CLIENTE cLIENTE)
         {
             if (ModelState.IsValid)
             {
