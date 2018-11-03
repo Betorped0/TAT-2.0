@@ -317,7 +317,7 @@ namespace TAT001.Controllers.Reportes
 
                                   join CLIENTE in db.CLIENTEs on new { x.VKORG, x.VTWEG, x.SPART, x.PAYER_ID } equals new { CLIENTE.VKORG, CLIENTE.VTWEG, CLIENTE.SPART, PAYER_ID = CLIENTE.KUNNR }
                                   join FLUJO in db.FLUJOes on x.NUM_DOC equals FLUJO.NUM_DOC
-                                  join CUENTAGL in db.CUENTAGLs on x.CUENTAP equals CUENTAGL.ID
+                                  join CUENTAGL in db.CUENTAGLs on x.CUENTAP equals CUENTAGL.ID                          
                                   join DOCUMENTOSAP in db.DOCUMENTOSAPs on x.NUM_DOC equals DOCUMENTOSAP.NUM_DOC
 
                                   where x.SOCIEDAD_ID == item.ToString() && x.PERIODO == filtroPeriodo && x.EJERCICIO == year /*&& FLUJO.POS == 2*/
@@ -337,7 +337,7 @@ namespace TAT001.Controllers.Reportes
                                       DOCUMENTOSAP.IMPORTE,
                                       //DOCUMENTOSAP.FECHAC,
                                       x.CUENTAP,
-                                      CUENTAGL.NOMBRE,
+                                      CUENTAGL.NOMBRE,                        
                                       x.CUENTAPL,
                                       x.DOCUMENTO_SAP,
                                       x.USUARIOC_ID,
@@ -347,6 +347,10 @@ namespace TAT001.Controllers.Reportes
                                       x.EJERCICIO,
                                       x.PERIODO
                                   }).Distinct().ToList();
+
+                //var nombregl = (from a in db.DOCUMENTOes.ToList()
+                //                join cuentagl in db.CUENTAGLs on a.CUENTAGL equals cuentagl.ID
+                //                select cuentagl.NOMBRE).Distinct().ToList();
 
                 var montos = (from doc in db.DOCUMENTOes.ToList()
                               join refe in miConsulta on doc.DOCUMENTO_REF equals refe.NUM_DOC

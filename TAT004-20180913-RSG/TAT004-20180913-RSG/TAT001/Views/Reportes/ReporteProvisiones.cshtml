@@ -200,6 +200,7 @@
                         return $(this).find('input').prop('checked') != select_all;
                     }).click();
                 });
+
                 $("#id_excel").click(function () {
                     $('#table').trigger('destroyPager');
                     tableToExcel('table', 'Reporte de Provisiones Abiertas');
@@ -267,7 +268,7 @@
             @System.DateTime.Now.ToString("dd/MM/yyyy")
         </span>
         <br />*@
-        <br />
+        @*<br />*@
         <div style="width:100%;height:50vh;overflow:scroll;">
             <table class="table mdl-data-table striped grid centered table" id="table" style="width:100%;">
                 <thead>
@@ -369,7 +370,9 @@
                             c2.getUltimoDia(ejercicio2, periodo2);
 
                             var cierre = c2.getUltimoDia(ejercicio2, periodo2);
-                            TimeSpan agingr = cierre - registro;
+                   
+                            DateTime diahoy = DateTime.Now;
+                            TimeSpan agingr = diahoy - registro;
                             int aging = agingr.Days;
 
                             /////////////////////////////REMANENTE///////////////////////////
@@ -451,7 +454,7 @@
 
                                 <td>
                                     @* PERIODO *@
-                                    @consulta.GetType().GetProperty("FECHAC").GetValue(consulta, null)
+                                    @consulta.GetType().GetProperty("PERIODO").GetValue(consulta, null)
                                 </td>
 
                                 <td>
@@ -546,7 +549,8 @@
                                 </td>
                                 <td>
                                     @* NOMBRE CUENTA PL *@
-                                    @consulta.GetType().GetProperty("NOMBRE").GetValue(consulta, null)
+                                    @*@consulta.GetType().GetProperty("NOMBRE").GetValue(consulta, null)*@
+                            
                                 </td>
                                 <td>
                                     @* NUM REGISTRO CONTABLE *@
