@@ -523,8 +523,10 @@ $(document).ready(function () {
             var filename = file.name;
             if (evaluarExt(filename)) {
                 M.toast({ html: 'Cargando ' + filename });
+                document.getElementById("loader").style.display = "flex";
                 loadExcelDis(file);
                 updateFooter();
+                document.getElementById("loader").style.display = "none";
             } else {
                 M.toast({ html: 'Tipo de archivo incorrecto: ' + filename });
             }

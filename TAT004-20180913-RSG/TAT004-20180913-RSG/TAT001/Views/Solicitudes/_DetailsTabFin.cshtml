@@ -153,10 +153,6 @@
                 <h5>Detalle de solicitud</h5>
                 <div class="row" style="margin-bottom:0">
                     <div class="input-field col s8">
-                        @if (ViewBag.accion == "N")
-                        {
-                            @Html.EditorFor(model => model.D.MONTO_DOC_MD)
-                        }
                         @Html.EditorFor(model => model.D.MONTO_DOC_MD, new { htmlAttributes = new { @disabled = "disabled", @class = "_vmonto" } })
                         @Html.LabelFor(model => model.D.MONTO_DOC_MD, "Monto", new { @id = "lbl_montomd" })
                     </div>

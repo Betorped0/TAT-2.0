@@ -161,6 +161,18 @@
                         </div>
 
                         <div class="input-field col s12" style="margin-bottom:0;">
+                            @Html.DropDownList("PROVEEDOR_ID", null, htmlAttributes: new { id = "sel-vendor" })
+                            @Html.LabelFor(model => model.PROVEEDOR_ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_proveedor" })
+                        </div>
+                        <script>
+                            $(document).ready(function () {
+                                $('#sel-vendor').siblings('ul').prepend("<li id=sm_select_all><span id='filters_all'></span></li>");
+                            });
+                            var elem = document.getElementById('sel-vendor');
+                            var options = [];
+                            var instance = M.FormSelect.init(elem, options);
+                        </script>
+                        <div class="input-field col s12" style="margin-bottom:0;">
                             @Html.DropDownList("CANAL", null, htmlAttributes: new { id = "sel-canal" })
                             @Html.LabelFor(model => model.CANAL, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_canal" })
                         </div>
@@ -170,10 +182,6 @@
                             var instance = M.FormSelect.init(elem, options);
                         </script>
 
-                        <div class="input-field col s12" style="margin-bottom:0;">
-                            @Html.EditorFor(model => model.PROVEEDOR_ID, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.LabelFor(model => model.PROVEEDOR_ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_proveedor" })
-                        </div>
                     </div>
                 </div>
             </div>
@@ -214,4 +222,3 @@
 <div>
     <a href="@Url.Action("Index", "Clientes")" id="lbl_regresar"> </a>
 </div>
-
