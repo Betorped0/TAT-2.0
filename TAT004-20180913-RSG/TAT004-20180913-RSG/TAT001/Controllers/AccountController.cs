@@ -206,7 +206,7 @@ namespace TAT001.Controllers
                 if (usu != null)
                 {
                     var checkUser = db.USUARIOLOGs.SingleOrDefault(x => x.USUARIO_ID == usu.USUARIO_ID);
-
+                    if(checkUser!=null)
                     if (checkUser.SESION == System.Web.HttpContext.Current.Session.SessionID)
                     {
                         db.Entry(checkUser).State = System.Data.Entity.EntityState.Deleted;
