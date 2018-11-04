@@ -392,10 +392,10 @@ function jsConsulta(idioma) {
         }
     );
     $(".g > .select-wrapper > .select-dropdown").prepend(
-        '<li style="display:none" class="toggle selectnone"><span><label></label>Select none</span></li>'
+        '<li style="display:none" class="toggle selectnone"><span><label></label>Ninguno</span></li>'
     );
     $(".g > .select-wrapper > .select-dropdown").prepend(
-        '<li  class="toggle selectall"><span><label></label>Select all</span></li>'
+        '<li  class="toggle selectall"><span><label></label>Todos</span></li>'
     );
     $(".g > .select-wrapper > .select-dropdown .selectall").on(
         "click",

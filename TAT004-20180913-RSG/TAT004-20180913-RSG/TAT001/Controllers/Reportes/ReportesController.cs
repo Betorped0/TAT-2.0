@@ -69,7 +69,7 @@ namespace TAT001.Controllers.Reportes
             string accnt = Request["selectaccount"] as string;
             string[] accntssplit = accnt.Split(',');
             int period = Int32.Parse(Request["selectperiod"]);
-            string year =  Request["selectyear"];
+            string year = Request["selectyear"];
             decimal decAccnt;
             ViewBag.display = true;
             ViewBag.Calendario = cal;
@@ -88,12 +88,12 @@ namespace TAT001.Controllers.Reportes
 
             List<object> queryList = new List<object>();
             List<object> provitions = new List<object>();
-            decimal docrefs = 0 ;
+            decimal docrefs = 0;
 
-            
-                
-                foreach (string companyCode in comcodessplit)
-                {
+
+
+            foreach (string companyCode in comcodessplit)
+            {
                 foreach (string account in accntssplit)
                 {
                     decimal numDoc;
@@ -114,9 +114,9 @@ namespace TAT001.Controllers.Reportes
 
                     var qqueryp2 = (from doc in db.DOCUMENTOes.ToList()
                                     join refe in queryP on doc.DOCUMENTO_REF equals refe.NUM_DOC
-                                    select new { refe.NUM_DOC, refe.MONTO_DOC_MD, doc.DOCUMENTO_REF}).ToList();
-                    
-                    
+                                    select new { refe.NUM_DOC, refe.MONTO_DOC_MD, doc.DOCUMENTO_REF }).ToList();
+
+
                     //var docnumb = (from cu in db.cuentas
                     //              join cg in db.cuentagls on cu.abono equals cg.id
                     //              join doc in db.documentoes on cg.id equals doc.cuentap  //num_doc + documento_sap payer_id + cliente-name1 + tallt-txt050 + documento-concepto --documento-usuariod
@@ -144,11 +144,11 @@ namespace TAT001.Controllers.Reportes
 
                     provitions.Add(qqueryp2);
                     queryList.Add(queryP);
-                   
+
                 }
             }
-           
-            
+
+
 
             ViewBag.Consulta2 = queryList;
             ViewBag.MontoNeg = provitions;
@@ -295,7 +295,7 @@ namespace TAT001.Controllers.Reportes
             ViewBag.sociedad = db.SOCIEDADs.ToList();
             ViewBag.periodo = db.PERIODOes.ToList();
 
-            string year =  Request["selectyear"];
+            string year = Request["selectyear"];
             var code = Request["filtroCode"];
             var periodo = Request["filtroPeriodo"];
             var anio = Request["filtroAnio"];
@@ -306,6 +306,7 @@ namespace TAT001.Controllers.Reportes
             List<object> rema = new List<object>();
             List<object> perio = new List<object>();
             List<object> comen = new List<object>();
+            List<object> cuenta = new List<object>();
 
             ViewBag.miles = ",";
             ViewBag.decimales = ".";
@@ -317,7 +318,7 @@ namespace TAT001.Controllers.Reportes
 
                                   join CLIENTE in db.CLIENTEs on new { x.VKORG, x.VTWEG, x.SPART, x.PAYER_ID } equals new { CLIENTE.VKORG, CLIENTE.VTWEG, CLIENTE.SPART, PAYER_ID = CLIENTE.KUNNR }
                                   join FLUJO in db.FLUJOes on x.NUM_DOC equals FLUJO.NUM_DOC
-                                  join CUENTAGL in db.CUENTAGLs on x.CUENTAP equals CUENTAGL.ID
+                                  join CUENTAGL in db.CUENTAGLs on x.CUENTAP equals CUENTAGL.ID                          
                                   join DOCUMENTOSAP in db.DOCUMENTOSAPs on x.NUM_DOC equals DOCUMENTOSAP.NUM_DOC
 
                                   where x.SOCIEDAD_ID == item.ToString() && x.PERIODO == filtroPeriodo && x.EJERCICIO == year /*&& FLUJO.POS == 2*/
@@ -337,7 +338,7 @@ namespace TAT001.Controllers.Reportes
                                       DOCUMENTOSAP.IMPORTE,
                                       //DOCUMENTOSAP.FECHAC,
                                       x.CUENTAP,
-                                      CUENTAGL.NOMBRE,
+                                      CUENTAGL.NOMBRE,                        
                                       x.CUENTAPL,
                                       x.DOCUMENTO_SAP,
                                       x.USUARIOC_ID,
@@ -347,6 +348,10 @@ namespace TAT001.Controllers.Reportes
                                       x.EJERCICIO,
                                       x.PERIODO
                                   }).Distinct().ToList();
+
+                var nombregl = (from a in db.DOCUMENTOes
+                                                 join CUENTAGL in db.CUENTAGLs on a.CUENTAPL equals CUENTAGL.ID                               
+                                                 select new { CUENTAGL.ID, CUENTAGL.NOMBRE }).Distinct().ToList();
 
                 var montos = (from doc in db.DOCUMENTOes.ToList()
                               join refe in miConsulta on doc.DOCUMENTO_REF equals refe.NUM_DOC
@@ -370,11 +375,13 @@ namespace TAT001.Controllers.Reportes
                 rema.Add(montos);
                 perio.Add(period);
                 comen.Add(comentarios);
+                cuenta.AddRange(nombregl);
             }
             ViewBag.miConsulSplit = lista;
             ViewBag.remanente = rema;
             ViewBag.peri = perio;
             ViewBag.ultimo = comen;
+            ViewBag.cuenta = cuenta;
 
             //CONSULTA DEL FILTRO AÑO
             var consultaAnio = (from a in db.DOCUMENTOes select new { a.EJERCICIO }).Distinct().ToList();
@@ -524,7 +531,8 @@ namespace TAT001.Controllers.Reportes
                 .Include(d => d.DOCUMENTOTS)
                 .Include(d => d.FLUJOes).ToList();
 
-            if (!string.IsNullOrEmpty(pais)) {
+            if (!string.IsNullOrEmpty(pais))
+            {
                 documentos = documentos.Where(d => paissplit.Contains(d.CLIENTE.LAND)).ToList();
             }
 
@@ -572,7 +580,7 @@ namespace TAT001.Controllers.Reportes
                                   ).FirstOrDefault();
                 r1.STATUSS2 = ((queryFlujo == null) ? " " : queryFlujo.ToString());
                 r1.STATUSS4 = ((from dr in db.DOCUMENTORECs
-                                     where dr.NUM_DOC == dOCUMENTO.NUM_DOC
+                                where dr.NUM_DOC == dOCUMENTO.NUM_DOC
                                 select dr.NUM_DOC
                                   ).ToList().Count > 0 ? "R" : " ");
 
@@ -591,12 +599,12 @@ namespace TAT001.Controllers.Reportes
                 r1.ESTATUS_STRING = e.getText(r1.STATUSS, dOCUMENTO.NUM_DOC);
 
                 r1.DOCSREFREVERSOS = (from d in db.DOCUMENTOes
-                                     join dr in db.DOCUMENTORs on d.NUM_DOC equals dr.NUM_DOC
-                                     join tr in db.TREVERSATs on dr.TREVERSA_ID equals tr.TREVERSA_ID
-                                     where tr.SPRAS_ID == user.SPRAS_ID
+                                      join dr in db.DOCUMENTORs on d.NUM_DOC equals dr.NUM_DOC
+                                      join tr in db.TREVERSATs on dr.TREVERSA_ID equals tr.TREVERSA_ID
+                                      where tr.SPRAS_ID == user.SPRAS_ID
                                       where d.DOCUMENTO_REF == r1.documento.NUM_DOC
-                                     select new { d, dr, tr }).FirstOrDefault();
-                
+                                      select new { d, dr, tr }).FirstOrDefault();
+
                 reporte.Add(r1);
             }
             ViewBag.lista_reporte = reporte;
@@ -1313,7 +1321,7 @@ namespace TAT001.Controllers.Reportes
             //join ACCION ac on wfp.ACCION_ID = ac.ID
 
             var queryDocs = (from d in db.DOCUMENTOes
-                             //join ds in db.DOCUMENTOSAPs on d.NUM_DOC equals ds.NUM_DOC
+                                 //join ds in db.DOCUMENTOSAPs on d.NUM_DOC equals ds.NUM_DOC
                              join cgl in db.CUENTAGLs on d.CUENTAPL equals cgl.ID
                              join ts in db.TSOLs on d.TSOL_ID equals ts.ID
                              join f in db.FLUJOes on d.NUM_DOC equals f.NUM_DOC
@@ -1398,7 +1406,7 @@ namespace TAT001.Controllers.Reportes
 
             foreach (IGrouping<string, AllowancesB> all in alls.GroupBy(x => x.CUENTA_DE_BALANCE))
             {
-                if(all.Count() < 2)
+                if (all.Count() < 2)
                 {
                     AllowancesB tmpall = new AllowancesB();
                     tmpall.CUENTA_DE_BALANCE = all.First().CUENTA_DE_BALANCE;
@@ -1560,10 +1568,10 @@ namespace TAT001.Controllers.Reportes
                               MONTO_2 = (decimal)d.MONTO_DOC_ML2
                           }).ToList();
 
-            foreach(MRLTS renglon in queryP)
+            foreach (MRLTS renglon in queryP)
             {
                 renglon.EXPENSE_RECOGNITION = ((from dts in db.DOCUMENTOTS
-                                                where dts.NUM_DOC == renglon.NUMERO_SOLICITUD && (dts.TSFORM_ID == 1 || dts.TSFORM_ID == 2 || dts.TSFORM_ID == 5 || dts.TSFORM_ID == 7 || dts.TSFORM_ID == 9 || dts.TSFORM_ID == 10 ) && ((bool)dts.CHECKS)
+                                                where dts.NUM_DOC == renglon.NUMERO_SOLICITUD && (dts.TSFORM_ID == 1 || dts.TSFORM_ID == 2 || dts.TSFORM_ID == 5 || dts.TSFORM_ID == 7 || dts.TSFORM_ID == 9 || dts.TSFORM_ID == 10) && ((bool)dts.CHECKS)
                                                 select dts.NUM_DOC
                                                 ).ToList().Count > 0 ? renglon.MONTO : 0);
 
@@ -1591,8 +1599,8 @@ namespace TAT001.Controllers.Reportes
                                   ).FirstOrDefault();
                 renglon.STATUSS2 = ((queryFlujo == null) ? " " : queryFlujo.ToString());
                 renglon.STATUSS4 = ((from dr in db.DOCUMENTORECs
-                                   where dr.NUM_DOC == renglon.NUMERO_SOLICITUD
-                                   select dr.NUM_DOC
+                                     where dr.NUM_DOC == renglon.NUMERO_SOLICITUD
+                                     select dr.NUM_DOC
                                   ).ToList().Count > 0 ? "R" : " ");
 
                 string estatuss = renglon.STATUSS1 + renglon.STATUSS2 + renglon.STATUSS3 + renglon.STATUSS4;

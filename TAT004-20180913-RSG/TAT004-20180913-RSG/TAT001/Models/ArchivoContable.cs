@@ -87,7 +87,7 @@ namespace TAT001.Models
                 }
                 else if (tab.TIPO_SOL == "NCM")
                 {
-                    dirFile = ConfigurationManager.AppSettings["URL_SAVE"] + @"POSTING\INBOUND_" + tab.TIPO_SOL.Substring(0, 2) + docum.ToString().PadLeft(10, '0') + "-1-fact" + pos + ".txt";
+                    dirFile = ConfigurationManager.AppSettings["URL_SAVE"] + @"POSTING\INBOUND_" + tab.TIPO_SOL.Substring(0, 2) + docum.ToString().PadLeft(10, '0') + "-1-"+ contdoc + "fact" + pos + ".txt";
                 }
                 else
                 {
@@ -169,13 +169,16 @@ namespace TAT001.Models
                 if (tab.TIPO_SOL == "NIM")
                 {
                     pos = 0;
-                    padre = Convert.ToInt32(tab.RELACION);
                     unico = true;
                     for (int i = 0; i < docf.Count; i++)
                     {
                         msj = generarArchivo(docum, Convert.ToInt32(tab.RELACION), i);
                     }
                     return msj;
+                }
+                if (tab.TIPO_DOC == "KR")
+                {
+                    padre = Convert.ToInt32(tab.RELACION);
                 }
                 //if (padre == tab.RELACION && relacion != 0)
                 //{
@@ -208,7 +211,7 @@ namespace TAT001.Models
                 return "Error al generar el documento contable " + e.Message;
             }
         }
-        private void EscribirArchivo(string dirFile,CONPOSAPH tab,DOCUMENTO doc,List<DetalleContab> det)
+        private void EscribirArchivo(string dirFile, CONPOSAPH tab, DOCUMENTO doc, List<DetalleContab> det)
         {
             using (StreamWriter sw = new StreamWriter(dirFile))
             {
@@ -505,6 +508,14 @@ namespace TAT001.Models
                     if (String.IsNullOrWhiteSpace(conp[i].TAX_CODE) == false && String.IsNullOrEmpty(conp[i].TAX_CODE) == false)
                     {
                         string impuesto = conp[i].TAX_CODE;
+                        if (padre > 0)
+                        {
+                            impuesto = db.CONPOSAPPs.Where(x => x.CONSECUTIVO == padre && x.POSICION == i).Select(x => x.TAX_CODE).SingleOrDefault();
+                        }
+                        else
+                        {
+                            impuesto = conp[i].TAX_CODE;
+                        }
                         impu = db.IIMPUESTOes.Where(x => x.LAND == doc.PAIS_ID && x.MWSKZ == impuesto && x.ACTIVO == true).SingleOrDefault();
                     }
                     else
@@ -878,6 +889,10 @@ namespace TAT001.Models
                                     {
                                         conta.BALANCE = Conversion(Convert.ToDecimal(docp[j].APOYO_REAL), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
                                     }
+                                    if (docp[j].APOYO_EST == 0)
+                                    {
+                                        conta.BALANCE = Conversion(Convert.ToDecimal(docp[j].APOYO_REAL), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                    }
                                     conta.ASSIGNMENT = doc.PAYER_ID;
                                     conta.REF_KEY1 = "";
                                     conta.REF_KEY3 = "";
@@ -1069,7 +1084,7 @@ namespace TAT001.Models
             }
             catch (Exception e)
             {
-                Log.ErrorLogApp(e,"ArchivoContable","Detalle");
+                Log.ErrorLogApp(e, "ArchivoContable", "Detalle");
                 return "Error al obtener detalle contable";
             }
         }

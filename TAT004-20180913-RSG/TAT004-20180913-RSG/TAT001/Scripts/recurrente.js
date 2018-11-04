@@ -4,7 +4,7 @@
     $("#div_categoria").find('.select-dropdown.dropdown-trigger').addClass('ui-autocomplete-loading');
     $.ajax({
         type: "POST",
-        url: root+'Listas/categoriasCliente',
+        url: root + 'Listas/categoriasCliente',
         dataType: "json",
         data: { vkorg: vkorg, spart: spart, kunnr: kunnr, soc_id: soc },
         success: function (data) {
@@ -159,7 +159,7 @@ $(document).ready(function () {
             showRangos(tableR, $(this));
         }
     });
-    
+
     cambiaCheckRec();
 
     $('body').on('focusout', '#objPORC', function () {
@@ -338,11 +338,24 @@ function cambiaRec() {
 }
 
 function cambiaCheckRec() {
+
+    var anioi = $('#anioi_id'), anioiV = anioi.val() * 1, aniof = $('#aniof_id'), aniofV = aniof.val() * 1,
+        periodoi = $('#periodoi_id'), periodoiV = periodoi.val() * 1, periodof = $('#periodof_id'), periodofV = periodof.val() * 1;
+
     var campo = document.getElementById("check_recurrente");
     document.getElementById("btn-date").disabled = false;
     document.getElementById("btn-peri").disabled = false;
 
     if (campo.checked) {
+        if (periodoiV === periodofV) {
+            var periodo = (periodoiV + 1) === 13 ? 1 : (periodoiV + 1);
+            if (periodo === 1 && (anioiV === aniofV)) {
+                aniof.val(anioiV + 1);
+                aniof.formSelect();
+            }
+            periodof.val(periodo);
+            periodof.formSelect();
+        }
         document.getElementById("btn-peri").checked = true;
         document.getElementById("btn-date").disabled = true;
         document.getElementById("btn-peri").disabled = true;
@@ -354,11 +367,6 @@ function cambiaCheckRec() {
         $("#tabs_rec").addClass("disabled");
 
     }
-    //var opt = document.getElementById("select_neg").getElementsByTagName("option");
-    //for (var i = 0; i < opt.length; i++) {
-    //    if (opt[i].value == "P")
-    //        opt[i].disabled = !campo.checked;
-    //}
     if (campo.checked) {
         $("#select_neg").val("M");
         $("#select_negi").val("M");
@@ -417,7 +425,7 @@ function addRowRec(t, num, date, monto, tipo, porc, periodo, meses) {
                 tsoll,
                 date,
                 "<input class=\"MONTO input_rec numberd input_dc monto \" style=\"font-size:12px;height:2rem;\" type=\"text\" id=\"\" name=\"\" value=\"" + toShow(monto) + "\" onchange='updateObjQ()'>",
-               toShowPorc(porc)
+                toShowPorc(porc)
                 , periodo
             );
         }
@@ -552,7 +560,8 @@ function copiarTableVistaRec() {
         //Obtener los valores de la tabla para agregarlos a la tabla de la vista en información
         //Se tiene que jugar con los index porque las columnas (ocultas) en vista son diferentes a las del plugin
         //$('#check_recurrente').trigger('change');
-        document.getElementById("check_recurrente").checked = true;
+        if (lengthT > 1)
+            document.getElementById("check_recurrente").checked = true;
         $(".table_rec").css("display", "table");
         var rowsn = 0;
 
@@ -616,7 +625,7 @@ function copiarTableVistaRec() {
         //ocultarColumnasTablaSoporteDatos();
         //$('.input_sop_f').trigger('focusout');
     }
-    
+
 }
 
 //function primerDiaT(t, num, date, monto, tipo) {
@@ -685,13 +694,31 @@ function setDates(tipo) {
         document.getElementById("lbl_fechahasta").setAttribute('class', 'active');
 
         pickerFecha2(".format_date");
-    } else  {
+    } else {
 
         var anioi = document.getElementById('anioi_id').value,
             aniof = document.getElementById('aniof_id').value,
             periodoi = document.getElementById('periodoi_id').value,
             periodof = document.getElementById('periodof_id').value;
-        if (anioi && periodoi ) {
+        if ((anioi * 1) > (aniof * 1)) {
+            af = $("#aniof_id");
+            af.val("");
+            af.formSelect();
+            fechaf_vig = $("#fechaf_vig");
+            fechaf_vig.val("");
+            M.toast({ html: 'Los años no tienen una secuencia correcta' });
+            return;
+        }
+        if (((periodoi * 1) > (periodof * 1)) && ((anioi * 1) === (aniof * 1))) {
+            pf = $("#periodof_id");
+            pf.val("");
+            pf.formSelect();
+            fechaf_vig = $("#fechaf_vig");
+            fechaf_vig.val("");
+            M.toast({ html: 'Los meses no tienen una secuencia correcta' });
+            return;
+        }
+        if (anioi && periodoi) {
             $.ajax({
                 type: "POST",
                 url: root + 'Listas/getPrimerDia',
@@ -730,7 +757,6 @@ function setDates(tipo) {
             });
         }
     }
-    //cambiaRec();
 }
 
 //Evaluar la extensión y tamaño del archivo a cargar

@@ -16,7 +16,7 @@ namespace TAT001.Models
     {
         private TAT001Entities db = new TAT001Entities();
 
-        public List<PRESUPUESTOP> cargarPresupuestoCPT(HttpPostedFileBase file, string[] sociedad, string[] periodo, string[] anio, ref string mensaje)
+        public List<PRESUPUESTOP> cargarPresupuestoCPT(HttpPostedFileBase file, string[] sociedad, string[] periodo, string[] anio, ref string mensaje, string idioma)
         {
             TAT001Entities db = new TAT001Entities();
             List<PRESUPUESTOP> pRESUPUESTOPS = new List<PRESUPUESTOP>();
@@ -169,16 +169,16 @@ namespace TAT001.Models
                 pRESUPUESTOP = new PRESUPUESTOP();
                 if (pRESUPUESTOPS.Count == 0)
                 {
-                    mensaje = mensajes(5);//"No se encontraron datos en el archivo CPT de acuerdo al filtro de datos";
+                    mensaje = mensajes(5, idioma);//"No se encontraron datos en el archivo CPT de acuerdo al filtro de datos";
                 }
             }
             catch (Exception e)
             {
-                mensaje = mensajes(7);//"Formato de archivo para carga CPT incorrecto";
+                mensaje = mensajes(7, idioma);//"Formato de archivo para carga CPT incorrecto";
             }
             return pRESUPUESTOPS;
         }
-        public List<PRESUPSAPP> cargarPresupuestoSAP(HttpPostedFileBase[] file, string[] sociedad, string[] periodo, string[] anio, ref string mensaje)
+        public List<PRESUPSAPP> cargarPresupuestoSAP(HttpPostedFileBase[] file, string[] sociedad, string[] periodo, string[] anio, ref string mensaje, string idioma)
         {
             TAT001Entities db = new TAT001Entities();
             List<PRESUPSAPP> pRESUPUESTOPS = new List<PRESUPSAPP>();
@@ -325,30 +325,30 @@ namespace TAT001.Models
                             i++;
                         }
                     }
-                }                
+                }
                 if (pRESUPUESTOPS.Count == 0)
                 {
-                    mensaje = mensajes(8);//"No se encontraron datos en el archivo SAP de acuerdo al filtro de datos";
+                    mensaje = mensajes(8, idioma);//"No se encontraron datos en el archivo SAP de acuerdo al filtro de datos";
                 }
             }
             catch (Exception)
             {
-                mensaje = mensajes(9); //"Formato de archivo para carga de SAP es incorrecto.";
+                mensaje = mensajes(9, idioma); //"Formato de archivo para carga de SAP es incorrecto.";
             }
 
             return pRESUPUESTOPS;
         }
-        public string guardarPresupuesto(ref DatosPresupuesto presupuesto, string[] sociedadcpt, string[] periodocpt, string[] sociedadsap, string[] periodosap, string usuario, string opciong)
+        public string guardarPresupuesto(ref DatosPresupuesto presupuesto, string[] sociedadcpt, string[] periodocpt, string[] sociedadsap, string[] periodosap, string usuario, string opciong, string idioma)
         {
             TAT001Entities db = new TAT001Entities();
             string mensaje = "", soc = "", pre = "";
             int ide = 0;
             string opc = "1";
             string sociedad = "";
-            if (opciong !="on")
+            if (opciong != "on")
             {
                 opc = "2";
-            }            
+            }
             if (presupuesto.presupuestoCPT.Count > 0)
             {
                 soc = ""; pre = "";
@@ -369,16 +369,16 @@ namespace TAT001.Models
                             sociedad += sociedadcpt[i] + ",";
                         }
                         presupuesto.bannerscanal = db.CSP_BANNERSINCANAL(sociedad).ToList();
-                        mensaje = mensajes(15); //"Guardado Correctamente CPT.";
+                        mensaje = mensajes(15, idioma); //"Guardado Correctamente CPT.";
                     }
                     else
                     {
-                        mensaje = mensajes(10); //"El usuario con el que se esta cargando los datos no exitene en el sistema.";
+                        mensaje = mensajes(10, idioma); //"El usuario con el que se esta cargando los datos no exitene en el sistema.";
                     }
                 }
                 else
                 {
-                    mensaje = mensajes(11); //"Ocurrio algo mientra se guardaba.";
+                    mensaje = mensajes(11, idioma); //"Ocurrio algo mientra se guardaba.";
                 }
             }
             if (presupuesto.presupuestoSAP.Count > 0)
@@ -396,16 +396,16 @@ namespace TAT001.Models
                             presupuesto.presupuestoSAP[i].ID = ide;
                         }
                         db.BulkInsert(presupuesto.presupuestoSAP);
-                        mensaje = mensajes(12); //"Guardado Correctamente SAP.";
+                        mensaje = mensajes(12, idioma); //"Guardado Correctamente SAP.";
                     }
                     else
                     {
-                        mensaje = mensajes(10); //"El usuario con el que se esta cargando los datos no exitene en el sistema.";
+                        mensaje = mensajes(10, idioma); //"El usuario con el que se esta cargando los datos no exitene en el sistema.";
                     }
                 }
                 else
                 {
-                    mensaje = mensajes(13); //"Ocurrio algo mientra se guardaba.";
+                    mensaje = mensajes(13, idioma); //"Ocurrio algo mientra se guardaba.";
                 }
             }
             return mensaje;
@@ -415,70 +415,224 @@ namespace TAT001.Models
             switch (concepto)
             {
                 case "NETLB":
-                    presu.NETLB = data;
+                    if (presu.NETLB == null)
+                    {
+                        presu.NETLB = data;
+                    }
+                    else
+                    {
+                        presu.NETLB += data;
+                    }
                     break;
                 case "TOTCS":
-                    presu.TOTCS = data;
+                    if (presu.TOTCS == null)
+                    {
+                        presu.TOTCS = data;
+                    }
+                    else
+                    {
+                        presu.TOTCS += data;
+                    }
                     break;
                 case "ADVER":
-                    presu.ADVER = data;
+                    if (presu.ADVER == null)
+                    {
+                        presu.ADVER = data;
+                    }
+                    else
+                    {
+                        presu.ADVER += data;
+                    }
                     break;
                 case "DIRLB":
-                    presu.DIRLB = data;
+                    if (presu.DIRLB == null)
+                    {
+                        presu.DIRLB = data;
+                    }
+                    else
+                    {
+                        presu.DIRLB += data;
+                    }
                     break;
                 case "OVHDF":
-                    presu.OVHDF = data;
+                    if (presu.OVHDF == null)
+                    {
+                        presu.OVHDF = data;
+                    }
+                    else
+                    {
+                        presu.OVHDF += data;
+                    }
                     break;
                 case "OVHDV":
-                    presu.OVHDV = data;
+                    if (presu.OVHDV == null)
+                    {
+                        presu.OVHDV = data;
+                    }
+                    else
+                    {
+                        presu.OVHDV += data;
+                    }
                     break;
                 case "PKGMT":
-                    presu.PKGMT = data;
+                    if (presu.PKGMT == null)
+                    {
+                        presu.PKGMT = data;
+                    }
+                    else
+                    {
+                        presu.PKGMT += data;
+                    }
                     break;
                 case "RAWMT":
-                    presu.RAWMT = data;
+                    if (presu.RAWMT == null)
+                    {
+                        presu.RAWMT = data;
+                    }
+                    else
+                    {
+                        presu.RAWMT += data;
+                    }
                     break;
                 case "CONPR":
-                    presu.CONPR = data;
+                    if (presu.CONPR == null)
+                    {
+                        presu.CONPR = data;
+                    }
+                    else
+                    {
+                        presu.CONPR += data;
+                    }
                     break;
                 case "POP":
-                    presu.POP = data;
+                    if (presu.POP == null)
+                    {
+                        presu.POP = data;
+                    }
+                    else
+                    {
+                        presu.POP += data;
+                    }
                     break;
                 case "DSTRB":
-                    presu.DSTRB = data;
+                    if (presu.DSTRB == null)
+                    {
+                        presu.DSTRB = data;
+                    }
+                    else
+                    {
+                        presu.DSTRB += data;
+                    }
                     break;
                 case "GRSLS":
-                    presu.GRSLS = data;
+                    if (presu.GRSLS == null)
+                    {
+                        presu.GRSLS = data;
+                    }
+                    else
+                    {
+                        presu.GRSLS += data;
+                    }
                     break;
                 case "CSHDC":
-                    presu.CSHDC = data;
+                    if (presu.CSHDC == null)
+                    {
+                        presu.CSHDC = data;
+                    }
+                    else
+                    {
+                        presu.CSHDC += data;
+                    }
                     break;
                 case "FREEG":
-                    presu.FREEG = data;
+                    if (presu.FREEG == null)
+                    {
+                        presu.FREEG = data;
+                    }
+                    else
+                    {
+                        presu.FREEG += data;
+                    }
                     break;
                 case "PMVAR":
-                    presu.PMVAR = data;
+                    if (presu.PMVAR == null)
+                    {
+                        presu.PMVAR = data;
+                    }
+                    else
+                    {
+                        presu.PMVAR += data;
+                    }
                     break;
                 case "PURCH":
-                    presu.PURCH = data;
+                    if (presu.PURCH == null)
+                    {
+                        presu.PURCH = data;
+                    }
+                    else
+                    {
+                        presu.PURCH += data;
+                    }
                     break;
                 case "RECUN":
-                    presu.RECUN = data;
+                    if (presu.RECUN == null)
+                    {
+                        presu.RECUN = data;
+                    }
+                    else
+                    {
+                        presu.RECUN += data;
+                    }
                     break;
                 case "RSRDV":
-                    presu.RSRDV = data;
+                    if (presu.RSRDV == null)
+                    {
+                        presu.RSRDV = data;
+                    }
+                    else
+                    {
+                        presu.RSRDV += data;
+                    }
                     break;
                 case "VVX17":
-                    presu.VVX17 = data;
+                    if (presu.VVX17 == null)
+                    {
+                        presu.VVX17 = data;
+                    }
+                    else
+                    {
+                        presu.VVX17 += data;
+                    }
                     break;
                 case "OTHTA":
-                    presu.OTHTA = data;
+                    if (presu.OTHTA == null)
+                    {
+                        presu.OTHTA = data;
+                    }
+                    else
+                    {
+                        presu.OTHTA += data;
+                    }
                     break;
                 case "CORPM":
-                    presu.CORPM = data;
+                    if (presu.CORPM == null)
+                    {
+                        presu.CORPM = data;
+                    }
+                    else
+                    {
+                        presu.CORPM += data;
+                    }
                     break;
                 case "SPA":
-                    presu.SPA = data;
+                    if (presu.SPA == null)
+                    {
+                        presu.SPA = data;
+                    }
+                    else
+                    {
+                        presu.SPA += data;
+                    }
                     break;
                 default:
                     break;
@@ -637,7 +791,7 @@ namespace TAT001.Models
             sociedades.sociedad = db.USUARIOs.Where(a => a.ID.Equals(user)).FirstOrDefault().SOCIEDADs.ToList();
             return sociedades;
         }
-        public string bannres(string ruta, string[] sociedadcpt)
+        public string bannres(string ruta, string[] sociedadcpt, string idioma)
         {
 
             string sociedad = "";
@@ -653,7 +807,7 @@ namespace TAT001.Models
             }
             else
             {
-                return mensajes(14); //"No se pudo obtener los banners sin canal";
+                return mensajes(14, idioma); //"No se pudo obtener los banners sin canal";
             }
         }
         public void generarExcelBanner(List<CSP_BANNERSINCANAL_Result> banners, string ruta)
@@ -696,9 +850,9 @@ namespace TAT001.Models
 
             }
         }
-        public string mensajes(int id)
+        public string mensajes(int id, string idioma)
         {
-            return db.MENSAJES.Where(x => x.ID_MENSAJE == id).Select(x => x.DESCRIPCION).Single();
+            return db.MENSAJES.Where(x => x.ID_MENSAJE == id).Select(x => x.DESCRIPCION).SingleOrDefault();
         }
     }
 

@@ -57,7 +57,7 @@ function validH1(num_doc) {
             else {
                 banderaH1 = false;
             }
-            
+
             //console.log(banderaH1, banderaH2, banderaH3, banderaH4, banderaH5, num_docH11);
             //console.log(validaErrores(banderaH1, banderaH2, banderaH3, banderaH4, banderaH5, num_docH11));
         }
@@ -224,9 +224,10 @@ function clearErrorsN(num_doc) {
         if (num === num_doc) {
             var file = $(this).find("td div.file-path-wrapper input");
             var td = $(this).find("td div.file-field");
-            var i1 = $(file).hasClass("valid") | $(file).hasClass("outRequiredfile");
+            var val = $(file).val();
+            var i1 = $(file).hasClass("valid") | $(file).hasClass("outRequiredfile") | val !== "";
             var i2 = validaTabs(num_doc, 4);
-            if (($(file).hasClass("valid") | $(file).hasClass("outRequiredfile")) & validaTabs(num_doc, 4)) {
+            if (($(file).hasClass("valid") | $(file).hasClass("outRequiredfile") | val !== "") & validaTabs(num_doc, 4)) {
                 //$(td).closest('tr').children().eq(0).children().removeClass("red rojo");
                 //$(td).closest('tr').children().eq(0).children().addClass("green");
                 //$(td).closest('tr').children().eq(0).children().text("done");
