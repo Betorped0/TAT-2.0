@@ -18,6 +18,7 @@ using TAT001.Models.Masiva;
 using System.Text.RegularExpressions;
 using System.Globalization;
 using System.IO;
+using System.Web.Security;
 using TAT001.Common;
 
 namespace TAT001.Controllers
@@ -30,6 +31,7 @@ namespace TAT001.Controllers
         private Calendario445 cal445 = new Calendario445();
         private TCambio tcambio = new TCambio();
         private Cadena cad = new Cadena();
+        private UsuarioLogin usuValidateLogin = new UsuarioLogin();
 
         // GET: Masiva
         public ActionResult Index()
@@ -1103,19 +1105,27 @@ namespace TAT001.Controllers
             if (Prefix == null)
                 Prefix = "";
 
-            var c = (from mat1 in db.MATERIALs
-                     join cat in db.MATERIALGPTs on mat1.MATERIALGP_ID equals cat.MATERIALGP_ID
-                     where cat.MATERIALGP_ID.Contains(Prefix) && cat.SPRAS_ID == "EN" && mat1.ACTIVO == true
-                     group cat by new { cat.MATERIALGP_ID, cat.TXT50 } into g
-                     select new { ID = g.Key.MATERIALGP_ID, DESCRIPCION = g.Key.TXT50 }).ToList();
+            //var c = (from mat1 in db.MATERIALs
+            //         join cat in db.MATERIALGPTs on mat1.MATERIALGP_ID equals cat.MATERIALGP_ID
+            //         where cat.MATERIALGP_ID.Contains(Prefix) && cat.SPRAS_ID == "EN" && mat1.ACTIVO == true
+            //         group cat by new { cat.MATERIALGP_ID, cat.TXT50 } into g
+            //         select new { ID = g.Key.MATERIALGP_ID, DESCRIPCION = g.Key.TXT50 }).ToList();
+
+            var c = (from cat in db.MATERIALGPs
+                     where cat.DESCRIPCION.Contains(Prefix)
+                     select new { ID = cat.ID, DESCRIPCION = cat.DESCRIPCION }).ToList();
 
             if (c.Count == 0)
             {
-                var c2 = (from mat1 in db.MATERIALs
-                          join cat in db.MATERIALGPTs on mat1.MATERIALGP_ID equals cat.MATERIALGP_ID
-                          where cat.TXT50.Contains(Prefix) && cat.SPRAS_ID == "EN" && mat1.ACTIVO == true
-                          group cat by new { cat.MATERIALGP_ID, cat.TXT50 } into g
-                          select new { ID = g.Key.MATERIALGP_ID, DESCRIPCION = g.Key.TXT50 }).ToList();
+                //var c2 = (from mat1 in db.MATERIALs
+                //          join cat in db.MATERIALGPTs on mat1.MATERIALGP_ID equals cat.MATERIALGP_ID
+                //          where cat.TXT50.Contains(Prefix) && cat.SPRAS_ID == "EN" && mat1.ACTIVO == true
+                //          group cat by new { cat.MATERIALGP_ID, cat.TXT50 } into g
+                //          select new { ID = g.Key.MATERIALGP_ID, DESCRIPCION = g.Key.TXT50 }).ToList();
+
+                var c2 = (from cat in db.MATERIALGPs
+                         where cat.ID.Contains(Prefix)
+                         select new { ID = cat.ID, DESCRIPCION = cat.DESCRIPCION }).ToList();
                 c.AddRange(c2);
             }
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
@@ -2123,11 +2133,14 @@ namespace TAT001.Controllers
                     {
                         regresaRowH4.Add("");
 
-                        var categoria = (from mat1 in db.MATERIALs
-                                         join cat in db.MATERIALGPTs on mat1.MATERIALGP_ID equals cat.MATERIALGP_ID
-                                         where cat.TXT50 == matkl & cat.SPRAS_ID == "EN" & mat1.ACTIVO == true
-                                         group cat by new { cat.MATERIALGP_ID, cat.TXT50 } into g
-                                         select new { ID = g.Key.MATERIALGP_ID, DESCRIPCION = g.Key.TXT50 }).ToList();
+                        //var categoria = (from mat1 in db.MATERIALs
+                        //                 join cat in db.MATERIALGPTs on mat1.MATERIALGP_ID equals cat.MATERIALGP_ID
+                        //                 where cat.TXT50 == matkl & cat.SPRAS_ID == "EN" & mat1.ACTIVO == true
+                        //                 group cat by new { cat.MATERIALGP_ID, cat.TXT50 } into g
+                        //                 select new { ID = g.Key.MATERIALGP_ID, DESCRIPCION = g.Key.TXT50 }).ToList();
+                        var categoria = (from cat in db.MATERIALGPs
+                                         where cat.DESCRIPCION == matkl
+                                         select new { ID = cat.ID, DESCRIPCION = cat.DESCRIPCION }).ToList();
 
                         if (categoria.Count() > 0)
                         {
@@ -2635,8 +2648,11 @@ namespace TAT001.Controllers
                                 docup.APOYO_REAL = Convert.ToDecimal(apoyo);
                                 dop.MONTO_DOC_MD = +docup.APOYO_REAL;
                                 dop.MONTO_DOC_ML = tcambio.getValSoc(sociedad.WAERS, moneda_id, Convert.ToDecimal(apoyo), out errorString);
-                                var TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
-                                dop.MONTO_DOC_ML2 = (TIPO_CAMBIOL2 * dop.MONTO_DOC_MD);
+                                dop.TIPO_CAMBIOL = tcambio.getUkurs(sociedad.WAERS, moneda_id, out errorString);
+                                dop.TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
+                                dop.MONTO_DOC_ML2 = (dop.TIPO_CAMBIOL2 / dop.MONTO_DOC_MD);
+                                //var TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
+                                //dop.MONTO_DOC_ML2 = (TIPO_CAMBIOL2 * dop.MONTO_DOC_MD);
                             }
                             else
                             {
@@ -2646,8 +2662,11 @@ namespace TAT001.Controllers
                                 docup.APOYO_EST = Convert.ToDecimal(apoyo);
                                 dop.MONTO_DOC_MD = +docup.APOYO_EST;
                                 dop.MONTO_DOC_ML = tcambio.getValSoc(sociedad.WAERS, moneda_id, Convert.ToDecimal(apoyo), out errorString);
-                                var TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
-                                dop.MONTO_DOC_ML2 = (TIPO_CAMBIOL2 * dop.MONTO_DOC_MD);
+                                dop.TIPO_CAMBIOL = tcambio.getUkurs(sociedad.WAERS, moneda_id, out errorString);
+                                dop.TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
+                                dop.MONTO_DOC_ML2 = (dop.TIPO_CAMBIOL2 / dop.MONTO_DOC_MD);
+                                //var TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
+                                //dop.MONTO_DOC_ML2 = (TIPO_CAMBIOL2 * dop.MONTO_DOC_MD);
                             }
                             dop.DOCUMENTOPs.Add(docup);
                         }
