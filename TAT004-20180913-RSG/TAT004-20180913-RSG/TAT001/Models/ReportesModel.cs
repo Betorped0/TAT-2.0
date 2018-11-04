@@ -90,6 +90,7 @@ namespace TAT001.Models
 
             public int POS { get; internal set; }
             public DateTime? FECHA_SOLICITUD { get; internal set; }
+            public string USUARIO_ACCION { get; internal set; }
         }
 
         public class MRLTS
@@ -101,6 +102,7 @@ namespace TAT001.Models
             public decimal NUMERO_SOLICITUD { get; set; }
             public DateTime FECHA_SOLICITUD { get; set; }
             public int PERIODO_CONTABLE { get; set; }
+            public string ANIO_CONTABLE { get; internal set; }
             public string NUMERO_DOCUMENTO_SAP { get; set; }
             public int NUMERO_REVERSO_SAP { get; set; }
             public DateTime FECHA_REVERSO { get; set; }

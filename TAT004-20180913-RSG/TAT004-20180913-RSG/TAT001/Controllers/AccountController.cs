@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using System.Web.UI.WebControls;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
@@ -20,6 +22,7 @@ namespace TAT001.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        TAT001Entities db = new TAT001Entities();
 
         public AccountController()
         {
@@ -135,7 +138,49 @@ namespace TAT001.Controllers
                 HttpContext.Response.Cookies.Add(authCookie);
                 //return RedirectToAction("Index", "Home");
                 if (returnUrl != null)
+                {
+                    var checkUser = db.USUARIOLOGs.SingleOrDefault(x => x.USUARIO_ID == user.ID);
+
+                    try
+                    {
+                        if (checkUser == null)
+                        {
+                            USUARIOLOG usuLog = new USUARIOLOG();
+                            usuLog.USUARIO_ID = user.ID;
+                            usuLog.POS = 1;
+                            usuLog.SESION = System.Web.HttpContext.Current.Session.SessionID;
+                            usuLog.NAVEGADOR = Request.Browser.Type;
+                            usuLog.UBICACION = RegionInfo.CurrentRegion.DisplayName;
+                            usuLog.FECHA = DateTime.Now;
+                            usuLog.LOGIN = true;
+                            db.USUARIOLOGs.Add(usuLog);
+                            db.SaveChanges();
+                            Session["userlog"] = usuLog;
+                            return Redirect(returnUrl);
+                        }
+                        else
+                        {
+                            return RedirectToAction("validateLoginView", new { USUARIO_ID = user.ID });
+                            //checkUser.USUARIO_ID = user.ID;
+                            //checkUser.POS = 1;
+                            //checkUser.SESION = System.Web.HttpContext.Current.Session.SessionID;
+                            //checkUser.NAVEGADOR = Request.Browser.Type;
+                            //checkUser.UBICACION = RegionInfo.CurrentRegion.DisplayName;
+                            //checkUser.FECHA = DateTime.Now;
+                            //checkUser.LOGIN = true;
+                            //db.SaveChanges();
+                            //Session["userlog"] = checkUser;
+                            //return Redirect(returnUrl);
+                        }
+
+                    }
+                    catch
+                    {
+
+                    }
+
                     return Redirect(returnUrl);
+                }
                 return RedirectToAction("Index", "Home");
             }
 
@@ -156,6 +201,18 @@ namespace TAT001.Controllers
             try
             {
                 Session["pais"] = null;
+                USUARIOLOG usu = new USUARIOLOG();
+                usu = (USUARIOLOG)Session["userlog"];
+                if (usu != null)
+                {
+                    var checkUser = db.USUARIOLOGs.SingleOrDefault(x => x.USUARIO_ID == usu.USUARIO_ID);
+                    if(checkUser!=null)
+                    if (checkUser.SESION == System.Web.HttpContext.Current.Session.SessionID)
+                    {
+                        db.Entry(checkUser).State = System.Data.Entity.EntityState.Deleted;
+                        db.SaveChanges();
+                    }
+                }
                 FormsAuthentication.SignOut();
                 return RedirectToAction("Index", "Home");
             }
@@ -163,6 +220,45 @@ namespace TAT001.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
+        }
+
+        public ActionResult validateLoginView(string USUARIO_ID)
+        {
+            int pagina = 221; //ID EN BASE DE DATOS
+            string u = User.Identity.Name;
+            var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+            ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
+            ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
+            ViewBag.usuario = user;
+            ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            //ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            var checkUser = db.USUARIOLOGs.SingleOrDefault(x => x.USUARIO_ID == USUARIO_ID);
+
+
+            return View(checkUser);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult validateLoginView([Bind(Include = "USUARIO_ID,POS,SESION,NAVEGADOR,UBICACION,FECHA,LOGIN")] USUARIOLOG uSUARIOLOG)
+        {
+            if (ModelState.IsValid)
+            {
+                uSUARIOLOG.POS = 1;
+                uSUARIOLOG.SESION = System.Web.HttpContext.Current.Session.SessionID;
+                uSUARIOLOG.NAVEGADOR = Request.Browser.Type;
+                uSUARIOLOG.UBICACION = RegionInfo.CurrentRegion.DisplayName;
+                uSUARIOLOG.FECHA = DateTime.Now;
+                uSUARIOLOG.LOGIN = true;
+                db.Entry(uSUARIOLOG).State = EntityState.Modified;
+                db.SaveChanges();
+                Session["userlog"] = uSUARIOLOG;
+                return RedirectToAction("Index", "Home");
+            }
+           
+            return View();
         }
 
         //

@@ -354,6 +354,8 @@
         <AssociationConnector Association="TAT001Model.USUARIOSOC" />
         <EntityTypeShape EntityType="TAT001Model.Grupo" Width="1.5" PointX="0.75" PointY="19.75" />
         <EntityTypeShape EntityType="TAT001Model.GrupoCat" Width="1.5" PointX="2.75" PointY="19.75" />
+        <EntityTypeShape EntityType="TAT001Model.USUARIOLOG" Width="1.5" PointX="14.25" PointY="102.875" />
+        <AssociationConnector Association="TAT001Model.FK_USUARIOLOG_USUARIO" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
