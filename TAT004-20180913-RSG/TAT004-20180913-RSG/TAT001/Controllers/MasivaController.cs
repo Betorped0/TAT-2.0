@@ -18,6 +18,7 @@ using TAT001.Models.Masiva;
 using System.Text.RegularExpressions;
 using System.Globalization;
 using System.IO;
+using System.Web.Security;
 
 namespace TAT001.Controllers
 {
@@ -29,6 +30,7 @@ namespace TAT001.Controllers
         private Calendario445 cal445 = new Calendario445();
         private TCambio tcambio = new TCambio();
         private Cadena cad = new Cadena();
+        private UsuarioLogin usuValidateLogin = new UsuarioLogin();
 
         // GET: Masiva
         public ActionResult Index()
@@ -2562,8 +2564,11 @@ namespace TAT001.Controllers
                                 docup.APOYO_REAL = Convert.ToDecimal(apoyo);
                                 dop.MONTO_DOC_MD = +docup.APOYO_REAL;
                                 dop.MONTO_DOC_ML = tcambio.getValSoc(sociedad.WAERS, moneda_id, Convert.ToDecimal(apoyo), out errorString);
-                                var TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
-                                dop.MONTO_DOC_ML2 = (TIPO_CAMBIOL2 * dop.MONTO_DOC_MD);
+                                dop.TIPO_CAMBIOL = tcambio.getUkurs(sociedad.WAERS, moneda_id, out errorString);
+                                dop.TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
+                                dop.MONTO_DOC_ML2 = (dop.TIPO_CAMBIOL2 / dop.MONTO_DOC_MD);
+                                //var TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
+                                //dop.MONTO_DOC_ML2 = (TIPO_CAMBIOL2 * dop.MONTO_DOC_MD);
                             }
                             else
                             {
@@ -2573,8 +2578,11 @@ namespace TAT001.Controllers
                                 docup.APOYO_EST = Convert.ToDecimal(apoyo);
                                 dop.MONTO_DOC_MD = +docup.APOYO_EST;
                                 dop.MONTO_DOC_ML = tcambio.getValSoc(sociedad.WAERS, moneda_id, Convert.ToDecimal(apoyo), out errorString);
-                                var TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
-                                dop.MONTO_DOC_ML2 = (TIPO_CAMBIOL2 * dop.MONTO_DOC_MD);
+                                dop.TIPO_CAMBIOL = tcambio.getUkurs(sociedad.WAERS, moneda_id, out errorString);
+                                dop.TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
+                                dop.MONTO_DOC_ML2 = (dop.TIPO_CAMBIOL2 / dop.MONTO_DOC_MD);
+                                //var TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
+                                //dop.MONTO_DOC_ML2 = (TIPO_CAMBIOL2 * dop.MONTO_DOC_MD);
                             }
                             dop.DOCUMENTOPs.Add(docup);
                         }
@@ -2750,7 +2758,8 @@ namespace TAT001.Controllers
                             try
                             {
                                 f.COMENTARIO = ds6.Tables[0].Rows[contadorNotas][1].ToString().Trim();
-                            } catch { f.COMENTARIO = ""; }
+                            }
+                            catch { f.COMENTARIO = ""; }
                             string c = pf.procesa(f, "");
                             if (c == "1")
                             {
