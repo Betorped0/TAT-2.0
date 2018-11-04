@@ -767,6 +767,9 @@
     <Compile Include="Entities\USUARIOF.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\USUARIOLOG.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\USUARIOSAP.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
@@ -878,6 +881,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ProcesaFlujo4.cs" />
     <Compile Include="Services\ProcesaFlujo3.cs" />
+    <Compile Include="Services\UsuarioLogin.cs" />
     <Compile Include="Services\Warning.cs" />
     <Compile Include="Services\Presupuesto.cs" />
     <Compile Include="Services\Estatus.cs" />
@@ -1976,6 +1980,7 @@
     <Content Include="Views\Solicitudes\_DetailsTabFin.cshtml" />
     <Content Include="Views\Solicitudes\_DetailsTabSop.cshtml" />
     <Content Include="Views\Clientes\VerFlujo.cshtml" />
+    <Content Include="Views\Account\ValidateLoginView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->
