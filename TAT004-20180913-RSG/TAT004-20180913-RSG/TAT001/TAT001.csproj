@@ -808,7 +808,6 @@
     <Compile Include="Models\CargaMasivaModels.cs" />
     <Compile Include="Models\CartaD.cs" />
     <Compile Include="Models\CartaDEsqueleto.cs" />
-    <Compile Include="Models\DocumentoMaterial.cs" />
     <Compile Include="Models\CategoriaMaterial.cs" />
     <Compile Include="Models\ClienteViewModel.cs" />
     <Compile Include="Models\Comentarios.cs" />
@@ -1380,12 +1379,10 @@
     <Content Include="Scripts\subfilters\widget-filter.js" />
     <Content Include="Scripts\tablesort\tableToExcel.js" />
     <Content Include="Scripts\warning.js" />
-    <Content Include="Scripts\analisis.js" />
     <Content Include="Scripts\autocomplete1.11.4.js" />
     <Content Include="Scripts\CargaPresupuesto.js" />
     <Content Include="Scripts\ConsultarPresupuesto.js" />
     <Content Include="Scripts\cartaV.js" />
-    <Content Include="Scripts\correos.js" />
     <Content Include="Scripts\create.js" />
     <Content Include="Scripts\create2.js" />
     <Content Include="Scripts\edit - antes.js" />
@@ -1968,20 +1965,22 @@
     <Content Include="Views\CANAL\Details.cshtml" />
     <Content Include="Views\CANAL\Edit.cshtml" />
     <Content Include="Views\CANAL\Index.cshtml" />
-    <Content Include="Views\Solicitudes\_CreateTabDis.cshtml" />
-    <Content Include="Views\Solicitudes\_CreateTabFin.cshtml" />
     <Content Include="Views\Solicitudes\_CreateTabInfo.cshtml" />
-    <Content Include="Views\Solicitudes\_CreateTabRec.cshtml" />
     <Content Include="Views\Solicitudes\_CreateTabSop.cshtml" />
-    <Content Include="Views\Solicitudes\_DetailsTabDis.cshtml" />
-    <Content Include="Views\Solicitudes\_DetailsTabFin.cshtml" />
+    <Content Include="Views\Solicitudes\_CreateTabDis.cshtml" />
+    <Content Include="Views\Solicitudes\_CreateTabRec.cshtml" />
+    <Content Include="Views\Solicitudes\_CreateTabFin.cshtml" />
     <Content Include="Views\Solicitudes\_DetailsTabInfo.cshtml" />
+    <Content Include="Views\Solicitudes\_DetailsTabDis.cshtml" />
     <Content Include="Views\Solicitudes\_DetailsTabRec.cshtml" />
+    <Content Include="Views\Solicitudes\_DetailsTabFin.cshtml" />
     <Content Include="Views\Solicitudes\_DetailsTabSop.cshtml" />
+    <Content Include="Views\Clientes\VerFlujo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->
     <Folder Include="App_Data\" />
+    <Folder Include="PdfTemp\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

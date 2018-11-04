@@ -306,6 +306,7 @@ namespace TAT001.Controllers.Reportes
             List<object> rema = new List<object>();
             List<object> perio = new List<object>();
             List<object> comen = new List<object>();
+            List<object> cuenta = new List<object>();
 
             ViewBag.miles = ",";
             ViewBag.decimales = ".";
@@ -348,9 +349,9 @@ namespace TAT001.Controllers.Reportes
                                       x.PERIODO
                                   }).Distinct().ToList();
 
-                //var nombregl = (from a in db.DOCUMENTOes.ToList()
-                //                join cuentagl in db.CUENTAGLs on a.CUENTAGL equals cuentagl.ID
-                //                select cuentagl.NOMBRE).Distinct().ToList();
+                var nombregl = (from a in db.DOCUMENTOes
+                                                 join CUENTAGL in db.CUENTAGLs on a.CUENTAPL equals CUENTAGL.ID                               
+                                                 select new { CUENTAGL.ID, CUENTAGL.NOMBRE }).Distinct().ToList();
 
                 var montos = (from doc in db.DOCUMENTOes.ToList()
                               join refe in miConsulta on doc.DOCUMENTO_REF equals refe.NUM_DOC
@@ -374,11 +375,13 @@ namespace TAT001.Controllers.Reportes
                 rema.Add(montos);
                 perio.Add(period);
                 comen.Add(comentarios);
+                cuenta.AddRange(nombregl);
             }
             ViewBag.miConsulSplit = lista;
             ViewBag.remanente = rema;
             ViewBag.peri = perio;
             ViewBag.ultimo = comen;
+            ViewBag.cuenta = cuenta;
 
             //CONSULTA DEL FILTRO AÑO
             var consultaAnio = (from a in db.DOCUMENTOes select new { a.EJERCICIO }).Distinct().ToList();

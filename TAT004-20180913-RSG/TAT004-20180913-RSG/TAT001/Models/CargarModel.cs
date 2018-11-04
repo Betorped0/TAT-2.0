@@ -325,7 +325,7 @@ namespace TAT001.Models
                             i++;
                         }
                     }
-                }                
+                }
                 if (pRESUPUESTOPS.Count == 0)
                 {
                     mensaje = mensajes(8, idioma);//"No se encontraron datos en el archivo SAP de acuerdo al filtro de datos";
@@ -345,10 +345,10 @@ namespace TAT001.Models
             int ide = 0;
             string opc = "1";
             string sociedad = "";
-            if (opciong !="on")
+            if (opciong != "on")
             {
                 opc = "2";
-            }            
+            }
             if (presupuesto.presupuestoCPT.Count > 0)
             {
                 soc = ""; pre = "";
@@ -415,70 +415,224 @@ namespace TAT001.Models
             switch (concepto)
             {
                 case "NETLB":
-                    presu.NETLB = data;
+                    if (presu.NETLB == null)
+                    {
+                        presu.NETLB = data;
+                    }
+                    else
+                    {
+                        presu.NETLB += data;
+                    }
                     break;
                 case "TOTCS":
-                    presu.TOTCS = data;
+                    if (presu.TOTCS == null)
+                    {
+                        presu.TOTCS = data;
+                    }
+                    else
+                    {
+                        presu.TOTCS += data;
+                    }
                     break;
                 case "ADVER":
-                    presu.ADVER = data;
+                    if (presu.ADVER == null)
+                    {
+                        presu.ADVER = data;
+                    }
+                    else
+                    {
+                        presu.ADVER += data;
+                    }
                     break;
                 case "DIRLB":
-                    presu.DIRLB = data;
+                    if (presu.DIRLB == null)
+                    {
+                        presu.DIRLB = data;
+                    }
+                    else
+                    {
+                        presu.DIRLB += data;
+                    }
                     break;
                 case "OVHDF":
-                    presu.OVHDF = data;
+                    if (presu.OVHDF == null)
+                    {
+                        presu.OVHDF = data;
+                    }
+                    else
+                    {
+                        presu.OVHDF += data;
+                    }
                     break;
                 case "OVHDV":
-                    presu.OVHDV = data;
+                    if (presu.OVHDV == null)
+                    {
+                        presu.OVHDV = data;
+                    }
+                    else
+                    {
+                        presu.OVHDV += data;
+                    }
                     break;
                 case "PKGMT":
-                    presu.PKGMT = data;
+                    if (presu.PKGMT == null)
+                    {
+                        presu.PKGMT = data;
+                    }
+                    else
+                    {
+                        presu.PKGMT += data;
+                    }
                     break;
                 case "RAWMT":
-                    presu.RAWMT = data;
+                    if (presu.RAWMT == null)
+                    {
+                        presu.RAWMT = data;
+                    }
+                    else
+                    {
+                        presu.RAWMT += data;
+                    }
                     break;
                 case "CONPR":
-                    presu.CONPR = data;
+                    if (presu.CONPR == null)
+                    {
+                        presu.CONPR = data;
+                    }
+                    else
+                    {
+                        presu.CONPR += data;
+                    }
                     break;
                 case "POP":
-                    presu.POP = data;
+                    if (presu.POP == null)
+                    {
+                        presu.POP = data;
+                    }
+                    else
+                    {
+                        presu.POP += data;
+                    }
                     break;
                 case "DSTRB":
-                    presu.DSTRB = data;
+                    if (presu.DSTRB == null)
+                    {
+                        presu.DSTRB = data;
+                    }
+                    else
+                    {
+                        presu.DSTRB += data;
+                    }
                     break;
                 case "GRSLS":
-                    presu.GRSLS = data;
+                    if (presu.GRSLS == null)
+                    {
+                        presu.GRSLS = data;
+                    }
+                    else
+                    {
+                        presu.GRSLS += data;
+                    }
                     break;
                 case "CSHDC":
-                    presu.CSHDC = data;
+                    if (presu.CSHDC == null)
+                    {
+                        presu.CSHDC = data;
+                    }
+                    else
+                    {
+                        presu.CSHDC += data;
+                    }
                     break;
                 case "FREEG":
-                    presu.FREEG = data;
+                    if (presu.FREEG == null)
+                    {
+                        presu.FREEG = data;
+                    }
+                    else
+                    {
+                        presu.FREEG += data;
+                    }
                     break;
                 case "PMVAR":
-                    presu.PMVAR = data;
+                    if (presu.PMVAR == null)
+                    {
+                        presu.PMVAR = data;
+                    }
+                    else
+                    {
+                        presu.PMVAR += data;
+                    }
                     break;
                 case "PURCH":
-                    presu.PURCH = data;
+                    if (presu.PURCH == null)
+                    {
+                        presu.PURCH = data;
+                    }
+                    else
+                    {
+                        presu.PURCH += data;
+                    }
                     break;
                 case "RECUN":
-                    presu.RECUN = data;
+                    if (presu.RECUN == null)
+                    {
+                        presu.RECUN = data;
+                    }
+                    else
+                    {
+                        presu.RECUN += data;
+                    }
                     break;
                 case "RSRDV":
-                    presu.RSRDV = data;
+                    if (presu.RSRDV == null)
+                    {
+                        presu.RSRDV = data;
+                    }
+                    else
+                    {
+                        presu.RSRDV += data;
+                    }
                     break;
                 case "VVX17":
-                    presu.VVX17 = data;
+                    if (presu.VVX17 == null)
+                    {
+                        presu.VVX17 = data;
+                    }
+                    else
+                    {
+                        presu.VVX17 += data;
+                    }
                     break;
                 case "OTHTA":
-                    presu.OTHTA = data;
+                    if (presu.OTHTA == null)
+                    {
+                        presu.OTHTA = data;
+                    }
+                    else
+                    {
+                        presu.OTHTA += data;
+                    }
                     break;
                 case "CORPM":
-                    presu.CORPM = data;
+                    if (presu.CORPM == null)
+                    {
+                        presu.CORPM = data;
+                    }
+                    else
+                    {
+                        presu.CORPM += data;
+                    }
                     break;
                 case "SPA":
-                    presu.SPA = data;
+                    if (presu.SPA == null)
+                    {
+                        presu.SPA = data;
+                    }
+                    else
+                    {
+                        presu.SPA += data;
+                    }
                     break;
                 default:
                     break;

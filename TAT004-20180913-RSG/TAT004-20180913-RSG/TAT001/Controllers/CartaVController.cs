@@ -161,7 +161,23 @@ namespace TAT001.Controllers
                 if (varligada != true)
                 {
                     var con = db.DOCUMENTOPs.Select(x => new { x.NUM_DOC, x.VIGENCIA_DE, x.VIGENCIA_AL }).Where(a => a.NUM_DOC.Equals(id)).GroupBy(f => new { f.VIGENCIA_DE, f.VIGENCIA_AL }).ToList();
-                    
+
+                    ////B20180710 MGC 2018.07.12 Modificación 9 y 10 dependiendo del campo de factura en tsol............
+                    //bool fact = false;
+                    //try
+                    //{
+                    //    fact = db.TSOLs.Where(ts => ts.ID == d.TSOL_ID).FirstOrDefault().FACTURA;
+                    //}
+                    //catch (Exception)
+                    //{
+
+                    //}
+                    //B20180710 MGC 2018.07.12 Modificación 9 y 10 dependiendo del campo de factura en tsol..............
+
+                    //B20180710 MGC 2018.07.18 total es input o text
+                    //string trclass = "";//B20180710 MGC 2018.07.18 editar el monto en porcentaje categoría
+                    //bool editmonto = false; //B20180710 MGC 2018.07.18 editar el monto en porcentaje categoría
+
                     foreach (var item in con)
                     {
                         lista.Add(item.Key.VIGENCIA_DE.ToString() + item.Key.VIGENCIA_AL.ToString());
@@ -174,7 +190,7 @@ namespace TAT001.Controllers
                         DateTime a1 = DateTime.Parse(lista[i].Remove(lista[i].Length / 2));
                         DateTime a2 = DateTime.Parse(lista[i].Remove(0, lista[i].Length / 2));
 
-                        List<DocumentoMaterial> con2 = FnCommon.ObtenerDocumetoMaterialesCarta(db,id,User.Identity.Name,a1,a2); /*db.DOCUMENTOPs
+                        var con2 = db.DOCUMENTOPs
                                                 .Join(db.MATERIALs, x => x.MATNR, y => y.ID, (x, y) => new { x, y })
                                                 .Join(db.MATERIALTs, t => t.x.MATNR, z => z.MATERIAL_ID, (t, z) => new { t, z })
                                                 .Where(xy => xy.t.x.NUM_DOC.Equals(id) & xy.t.x.VIGENCIA_DE == a1 && xy.t.x.VIGENCIA_AL == a2 & xy.z.SPRAS == "EN")
@@ -183,7 +199,7 @@ namespace TAT001.Controllers
                                                     xyz.t.x.NUM_DOC,
                                                     xyz.t.x.MATNR,
                                                      xyz.t.y.MATERIALGP.DESCRIPCION,//.Where(x => x.ID == xyz.t.x.MATKL).FirstOrDefault().DESCRIPCION,
-                                                    xyz.z.MAKTX,
+                                                    xyz.z.MAKTG,
                                                     xyz.t.x.MONTO,
                                                     xyz.t.y.PUNIT,
                                                     xyz.t.x.PORC_APOYO,
@@ -194,7 +210,7 @@ namespace TAT001.Controllers
                                                     xyz.t.x.APOYO_REAL,
                                                     xyz.t.x.VOLUMEN_EST,
                                                     xyz.t.x.VOLUMEN_REAL,
-                                                }).ToList();*/
+                                                }).ToList();
 
                        
 
@@ -229,7 +245,7 @@ namespace TAT001.Controllers
                                 armadoCuerpoTab.Add(lc2);
 
                                 listacuerpoc lc3 = new listacuerpoc();
-                                lc3.val = item2.MAKTX;
+                                lc3.val = item2.MAKTG;
                                 lc3.clase = "ni";
                                 armadoCuerpoTab.Add(lc3);
 
@@ -257,7 +273,7 @@ namespace TAT001.Controllers
                                 //Costo con apoyo
                                 listacuerpoc lc7 = new listacuerpoc();
                                 //lc7.val = "$" + Math.Round(item2.resta, 2).ToString();//B20180730 MGC 2018.07.30 Formatos
-                                lc7.val = format.toShow(Math.Round(item2.RESTA, 2), decimales);//B20180730 MGC 2018.07.30 Formatos
+                                lc7.val = format.toShow(Math.Round(item2.resta, 2), decimales);//B20180730 MGC 2018.07.30 Formatos
                                 lc7.clase = "input_oper numberd costoa input_dc mon" + porclass;//Importante costoa para validación en vista
                                 armadoCuerpoTab.Add(lc7);
 
@@ -1807,34 +1823,14 @@ namespace TAT001.Controllers
                     DateTime a2 = DateTime.Parse(lista[i].Remove(0, lista[i].Length / 2));
 
                     //B20180720P MGC 2018.07.23
-                    //var con2 = db.DOCUMENTOPs
-                    //                      .Where(x => x.NUM_DOC.Equals(id) & x.VIGENCIA_DE == a1 && x.VIGENCIA_AL == a2)
-                    //                      .Join(db.MATERIALs, x => x.MATNR, y => y.ID, (x, y) => new {
-                    //                          x.NUM_DOC,
-                    //                          x.MATNR,
-                    //                          x.MATKL,
-                    //                          y.MAKTX,
-                    //                          x.MONTO,
-                    //                          y.PUNIT,
-                    //                          x.PORC_APOYO,
-                    //                          x.MONTO_APOYO,
-                    //                          resta = (x.MONTO - x.MONTO_APOYO),
-                    //                          x.PRECIO_SUG,
-                    //                          x.APOYO_EST,
-                    //                          x.APOYO_REAL
-                    //                      ,
-                    //                          x.VOLUMEN_EST,
-                    //                          x.VOLUMEN_REAL
-                    //                      }) //B20180710 MGC 2018.07.10 Se agregó x.VOLUMEN_EST, x.VOLUMEN_REAL
-                    //                      .ToList();
-
+                  
                     var con2 = db.CARTAPs
                                           .Where(x => x.NUM_DOC.Equals(id) & x.POS_ID.Equals(pos) & x.VIGENCIA_DE == a1 && x.VIGENCIA_AL == a2)
                                           .Join(db.MATERIALs, x => x.MATNR, y => y.ID, (x, y) => new
                                           {
                                               x.NUM_DOC,
                                               x.MATNR,
-                                              x.MATKL,
+                                             MATKL=db.MATERIALGPs.FirstOrDefault(j=>j.ID==(db.MATERIALs.FirstOrDefault(k=>k.ID==x.MATNR).MATERIALGP_ID)).DESCRIPCION,
                                               y.MAKTX,
                                               x.MONTO,
                                               y.PUNIT,
@@ -1850,21 +1846,7 @@ namespace TAT001.Controllers
                                           }) //B20180710 MGC 2018.07.10 Se agregó x.VOLUMEN_EST, x.VOLUMEN_REAL
                                           .ToList();
 
-                    //B20180720P MGC 2018.07.23
-                    //Definición si la distribución es monto o porcentaje
-                    //string porclass = "";//B20180710 MGC 2018.07.18 total es input o text
-                    //string totalm = "";//B20180710 MGC 2018.07.18 total es input o text
-                    //if (d.TIPO_TECNICO == "M")
-                    //{
-                    //    porclass = " tipom";
-                    //    totalm = " total";
-                    //    trclass = " total";
-                    //}
-                    //else if (d.TIPO_TECNICO == "P")
-                    //{
-                    //    porclass = " tipop";
-                    //    totalm = " ni";
-                    //}
+                 
 
                     if (con2.Count > 0)
                     {
@@ -1958,27 +1940,6 @@ namespace TAT001.Controllers
                     }
                     else
                     {
-                        //B20180720P MGC 2018.07.23
-                        //var con3 = db.DOCUMENTOPs
-                        //                    .Where(x => x.NUM_DOC.Equals(id) & x.VIGENCIA_DE == a1 && x.VIGENCIA_AL == a2)
-                        //                    .Join(db.MATERIALGPs, x => x.MATKL, y => y.ID, (x, y) => new {
-                        //                        x.NUM_DOC,
-                        //                        x.MATNR,
-                        //                        x.MATKL,
-                        //                        y.ID,
-                        //                        x.MONTO,
-                        //                        x.PORC_APOYO,
-                        //                        y.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(d.CLIENTE.SPRAS)).FirstOrDefault().TXT50,
-                        //                        x.MONTO_APOYO,
-                        //                        resta = (x.MONTO - x.MONTO_APOYO),
-                        //                        x.PRECIO_SUG,
-                        //                        x.APOYO_EST,
-                        //                        x.APOYO_REAL
-                        //                    ,
-                        //                        x.VOLUMEN_EST,
-                        //                        x.VOLUMEN_REAL
-                        //                    }) //B20180710 MGC 2018.07.10 Se agregó x.VOLUMEN_EST, x.VOLUMEN_REAL})
-                        //                    .ToList();
                         var con3 = db.CARTAPs
                                             .Where(x => x.NUM_DOC.Equals(id) & x.POS_ID.Equals(pos) & x.VIGENCIA_DE == a1 && x.VIGENCIA_AL == a2)
                                             .Join(db.MATERIALGPs, x => x.MATKL, y => y.ID, (x, y) => new

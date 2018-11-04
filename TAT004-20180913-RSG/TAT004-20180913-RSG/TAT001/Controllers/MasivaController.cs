@@ -19,6 +19,7 @@ using System.Text.RegularExpressions;
 using System.Globalization;
 using System.IO;
 using System.Web.Security;
+using TAT001.Common;
 
 namespace TAT001.Controllers
 {
@@ -185,7 +186,18 @@ namespace TAT001.Controllers
                     doc.TSOL_ID = t_sol;
                     doc.GALL_ID = gall_id;
                     doc.SOCIEDAD_ID = bukrs;
-                    doc.PAIS_ID = land;
+                    doc.PAIS_NAME = land;
+                    List<PAI> pp = (from P in db.PAIS.ToList()//ADD RSG 01.11.2018--------------------------------------------------
+                                    join C in db.CLIENTEs.Where(x => x.ACTIVO == true).ToList()
+                                    on P.LAND equals C.LAND
+                                    join U in db.USUARIOFs.Where(x => x.USUARIO_ID == User.Identity.Name & x.ACTIVO == true)
+                                    on new { C.VKORG, C.VTWEG, C.SPART, C.KUNNR } equals new { U.VKORG, U.VTWEG, U.SPART, U.KUNNR }
+                                    where P.ACTIVO == true
+                                    select P).DistinctBy(x => x.LAND).ToList();
+
+                    PAI p = pp.Where(a => a.LANDX == land).FirstOrDefault();
+                    if (p != null)
+                        doc.PAIS_ID = p.LAND;//ADD RSG 01.11.2018--------------------------------------------------
                     doc.ESTADO = estado;
                     doc.CIUDAD = ciudad;
                     doc.CONCEPTO = concepto;
@@ -618,17 +630,41 @@ namespace TAT001.Controllers
         }
 
         //COSULTA DE AJAX PARA LA SOCIEDAD
-        public JsonResult sociedad(string Prefix)
+        //public JsonResult sociedad(string Prefix)
+        public JsonResult sociedad(string Prefix, string user)//ADD RSG 01.11.2018
         {
             if (Prefix == null)
                 Prefix = "";
 
-            var c = (from s in db.SOCIEDADs
-                     where s.BUKRS.Contains(Prefix) && s.ACTIVO == true
-                     select new { s.BUKRS }).ToList();
+            //----------------BEGIN OF RSG 01.11.2018
+            List<PAI> pp = (from P in db.PAIS.ToList()
+                            join C in db.CLIENTEs.Where(x => x.ACTIVO == true).ToList()
+                            on P.LAND equals C.LAND
+                            join U in db.USUARIOFs.Where(x => x.USUARIO_ID == user & x.ACTIVO == true)
+                            on new { C.VKORG, C.VTWEG, C.SPART, C.KUNNR } equals new { U.VKORG, U.VTWEG, U.SPART, U.KUNNR }
+                            where P.ACTIVO == true
+                            select P).DistinctBy(x => x.LAND).ToList();
+            if (pp != null)
+            {
+                var c = (from s in db.SOCIEDADs.ToList()
+                         join p in pp
+                         on s.BUKRS equals p.SOCIEDAD_ID
+                         where s.BUKRS.Contains(Prefix) && s.ACTIVO == true
+                         select new { s.BUKRS }).ToList();
 
-            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
-            return cc;
+                JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+                return cc;
+            }
+            else
+                return null;
+            //----------------BEGIN OF RSG 01.11.2018
+
+            ////var c = (from s in db.SOCIEDADs
+            ////         where s.BUKRS.Contains(Prefix) && s.ACTIVO == true
+            ////         select new { s.BUKRS }).ToList();
+
+            //JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            //return cc;
         }
 
         //COSULTA DE AJAX PARA EL TIPO DE PAIS
@@ -639,13 +675,15 @@ namespace TAT001.Controllers
 
             var c = (from p in db.PAIS
                      where p.LANDX.Contains(Prefix) && p.SOCIEDAD_ID == Sociedad && p.ACTIVO == true
-                     select new { p.LANDX }).ToList();
+                     //select new { p.LANDX }).ToList();
+                     select new { p.LAND, p.LANDX }).ToList();
 
             if (c.Count == 0)
             {
                 var c2 = (from p in db.PAIS
                           where p.LAND.Contains(Prefix) && p.SOCIEDAD_ID == Sociedad && p.ACTIVO == true
-                          select new { p.LANDX }).ToList();
+                          //select new { p.LANDX }).ToList();
+                          select new { p.LAND, p.LANDX }).ToList();
                 c.AddRange(c2);
             }
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
@@ -770,25 +808,36 @@ namespace TAT001.Controllers
             return cc;
         }
 
-        //COSULTA DE AJAX PARA EL TIPO DE CLIENTE
-        public JsonResult cliente(string Prefix)
+        //////COSULTA DE AJAX PARA EL TIPO DE CLIENTE
+        ////public JsonResult cliente(string Prefix)
+        ////{
+        ////    if (Prefix == null)
+        ////        Prefix = "";
+
+        ////    var c = (from cliente in db.CLIENTEs
+        ////             where cliente.KUNNR.Contains(Prefix) && cliente.ACTIVO == true
+        ////             select new { cliente.KUNNR, cliente.NAME1 }).ToList();
+
+        ////    if (c.Count == 0)
+        ////    {
+        ////        var c2 = (from cliente in db.CLIENTEs
+        ////                  where cliente.NAME1.Contains(Prefix) && cliente.ACTIVO == true
+        ////                  select new { cliente.KUNNR, cliente.NAME1 }).ToList();
+        ////        c.AddRange(c2);
+        ////    }
+        ////    JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+        ////    return cc;
+        ////}
+        [HttpPost]
+        public JsonResult cliente(string Prefix, string usuario, string pais)
         {
-            if (Prefix == null)
-                Prefix = "";
-
-            var c = (from cliente in db.CLIENTEs
-                     where cliente.KUNNR.Contains(Prefix) && cliente.ACTIVO == true
-                     select new { cliente.KUNNR, cliente.NAME1 }).ToList();
-
-            if (c.Count == 0)
-            {
-                var c2 = (from cliente in db.CLIENTEs
-                          where cliente.NAME1.Contains(Prefix) && cliente.ACTIVO == true
-                          select new { cliente.KUNNR, cliente.NAME1 }).ToList();
-                c.AddRange(c2);
-            }
-            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            if (usuario == "") { usuario = null; }
+            if (pais == "") { pais = null; }
+            var clientes = FnCommon.ObtenerClientes(db, Prefix, usuario, pais);
+            JsonResult cc = Json(clientes, JsonRequestBehavior.AllowGet);
             return cc;
+
+
         }
 
         //COSULTA DE AJAX PARA VALIDAR LOS RANGOS DE FECHA 
@@ -1166,9 +1215,25 @@ namespace TAT001.Controllers
                 regresaRowH1.Add("red white-text rojo");
             }
 
+            string land_id = "";
+            List<PAI> pp = (from P in db.PAIS.ToList()
+                            join C in db.CLIENTEs.Where(x => x.ACTIVO == true).ToList()
+                            on P.LAND equals C.LAND
+                            join U in db.USUARIOFs.Where(x => x.USUARIO_ID == User.Identity.Name & x.ACTIVO == true)
+                            on new { C.VKORG, C.VTWEG, C.SPART, C.KUNNR } equals new { U.VKORG, U.VTWEG, U.SPART, U.KUNNR }
+                            where P.ACTIVO == true
+                            select P).DistinctBy(x => x.LAND).ToList();
+
+            PAI p = pp.Where(a => a.LANDX == land).FirstOrDefault();//ADD RSG 01.11.2018
+            SOCIEDAD soc = new SOCIEDAD();
+            if (p != null)//ADD RSG 01.11.2018
+                land_id = p.LAND;//ADD RSG 01.11.2018
+            if (land_id != null & land_id != "")
+                soc = db.SOCIEDADs.Find(bukrs);
             if (bukrs.Length == 4)
             {
-                if (db.SOCIEDADs.Where(x => x.BUKRS == bukrs).Count() > 0)
+                //if (db.SOCIEDADs.Where(x => x.BUKRS == bukrs).Count() > 0)
+                if (soc.BUKRS == bukrs)
                 {
                     regresaRowH1.Add("");
                 }
@@ -1184,9 +1249,17 @@ namespace TAT001.Controllers
 
             if (land.Length <= 50)
             {
-                if (db.PAIS.Where(x => x.LANDX == land & x.SOCIEDAD_ID == bukrs).Select(x => x.LAND).Count() > 0)
+                //if (db.PAIS.Where(x => x.LANDX == land & x.SOCIEDAD_ID == bukrs).Select(x => x.LAND).Count() > 0)
+                if (p != null)
                 {
-                    regresaRowH1.Add("");
+                    if (p.LAND == land_id)
+                    {
+                        regresaRowH1.Add("");
+                    }
+                    else
+                    {
+                        regresaRowH1.Add("red white-text rojo");
+                    }
                 }
                 else
                 {

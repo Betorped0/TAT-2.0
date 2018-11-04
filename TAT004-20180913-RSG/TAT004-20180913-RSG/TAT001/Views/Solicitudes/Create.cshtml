@@ -14,7 +14,6 @@
 <script src="~/Scripts/soporte.js"></script><!--RSG 23.05.2018-->
 <script src="~/Scripts/recurrente.js"></script><!--RSG 27.05.2018-->
 <script src="~/Scripts/rangos.js"></script><!--RSG 27.05.2018-->
-<script src="~/Scripts/analisis.js"></script><!--RSG 13.06.2018-->
 <script src="~/Scripts/borrador.js"></script><!--RSG 30.10.2018-->
 <script src="~/Scripts/ValidarNumero.js"></script><!--LEJ 09.07.2018-->
 <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
@@ -85,9 +84,10 @@ $(document).ready(function () {
         </div>
     }
     <style>
-
-
-        .dataTables_wrapper {
+        input[readonly] {
+            color: gray;
+        }
+            .dataTables_wrapper {
             overflow: auto;
         }
 
@@ -235,7 +235,6 @@ $(document).ready(function () {
         @Html.Partial("_CreateTabFin", Model)
     </div>
 }
-
 <div id="validaciones">
     <script>
             var lista1 = [];
@@ -247,7 +246,6 @@ $(document).ready(function () {
     </script>
     <script src="~/Scripts/warning.js"></script>
 </div>
-
 <script>
     var el = document.querySelector(".tabs");
     var instance = M.Tabs.init(el, []);

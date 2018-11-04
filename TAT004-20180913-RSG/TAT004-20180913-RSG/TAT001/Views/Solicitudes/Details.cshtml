@@ -121,7 +121,7 @@
                                 };
                                 var instance = M.FloatingActionButton.init(elem, options);
                             </script>
-                            if (Model.D.USUARIOC_ID == ViewBag.usuario.ID)
+                            if (Model.D.USUARIOC_ID == ViewBag.usuario.ID | Model.D.USUARIOD_ID == ViewBag.usuario.ID | true)
                             {
                                 <a class="btn-small modal-trigger" id="btn_cancel" href="#modal2"></a>
                                 <div id="modal2" class="modal">
@@ -174,9 +174,9 @@
                         }
                         else if (!Model.D.ESTATUS.Equals("A") & !Model.D.ESTATUS.Equals("R"))//RSG 20181002
                         {
-                            if (Model.D.USUARIOC_ID == ViewBag.usuario.ID)
+                            if (Model.D.USUARIOC_ID == ViewBag.usuario.ID | Model.D.USUARIOD_ID == ViewBag.usuario.ID)
                             {
-                                <a class="btn-small modal-trigger" id="btn_cancel" href="#modal2"></a>
+                                <a class="col btn-small modal-trigger" id="btn_cancel" href="#modal2"></a>
                                 <div id="modal2" class="modal">
                                     <div class="modal-content">
                                         <div class="row">
@@ -201,21 +201,30 @@
                     }
                     else if ((Model.D.ESTATUS.Equals("A") | Model.D.ESTATUS.Equals("R")) && (Model.D.TSOL.PADRE) /*&& Model.D.DOCUMENTORECs.Count < 1 && Model.D.DOCUMENTOLs.Count < 1*/)//RSG 20181002
                     {
-                        if (Model.D.USUARIOC_ID == ViewBag.usuario.ID & (Model.D.DOCUMENTO_SAP != null && Model.D.DOCUMENTO_SAP != "0"))
+
+                        using (TAT001Entities db = new TAT001Entities())
                         {
-                            <div id="div_drop" class="col">
-                                <a href="@Url.Action("Create", "Solicitudes", new { id_d = Model.D.NUM_DOC.ToString(), tsol = "CPR" })" class="btn-small">Reversar</a>
-                                @*<button type="button" class="btn-small  " id="btn_cancel">Cancelar</button>*@
-                                <button type="button" class="btn-small dropdown-trigger">Crear solicitud relacionada</button>
-                                <div id="list_rela" class="dropdowntree"></div>
-                            </div>
-                            <script>
+                            List<DOCUMENTO> inf = new List<DOCUMENTO>();
+                            inf = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == Model.D.NUM_DOC).ToList();
+                            if (inf.Where(x => x.TSOL.REVERSO == true).ToList().Count == 0)
+                            {
+                                if (Model.D.USUARIOC_ID == ViewBag.usuario.ID & Model.D.DOCUMENTO_SAP != null)
+                                {
+                                    <div id="div_drop" class="col">
+                                        <a href="@Url.Action("Create", "Solicitudes", new { id_d = Model.D.NUM_DOC.ToString(), tsol = "CPR" })" class="btn-small">Reversar</a>
+                                        @*<button type="button" class="btn-small  " id="btn_cancel">Cancelar</button>*@
+                                        <button type="button" class="btn-small dropdown-trigger">Crear solicitud relacionada</button>
+                                        <div id="list_rela" class="dropdowntree"></div>
+                                    </div>
+                                    <script>
                                  $('#list_rela').kendoTreeView({
                                      link: '@Url.Content("~")Solicitudes/Create?id_d=@Model.D.NUM_DOC.ToString()&tsol={val}',
                                     dataSource:@Html.Raw(Json.Encode(ViewBag.TSOL_RELA))
                                   });
-                            </script>
+                                    </script>
 
+                                }
+                            }
                         }
                         if (ViewBag.usuario.PUESTO_ID == 8 & Model.D.DOCUMENTOLs.Count > 0)
                         {
@@ -226,9 +235,9 @@
                     }
                     else if (!Model.D.ESTATUS.Equals("A"))
                     {
-                        if (Model.D.USUARIOC_ID == ViewBag.usuario.ID)
+                        if (Model.D.USUARIOC_ID == ViewBag.usuario.ID | Model.D.USUARIOD_ID == ViewBag.usuario.ID)
                         {
-                            <a class="btn-small modal-trigger" id="btn_cancel" href="#modal3"></a>
+                            <a class="col btn-small modal-trigger" id="btn_cancel" href="#modal3"></a>
                             <div id="modal3" class="modal">
                                 <div class="modal-content">
                                     <div class="row">
@@ -298,6 +307,7 @@
             }
             @* } *@
         }
+
             </div>
         </div>
     </div>
@@ -320,7 +330,7 @@
                     <li class="tab col s2"><a href="#dist" id="tab_dis">Distribución</a></li>
                     @if (Model.D.DOCUMENTORECs.Count > 0)
                     {
-                        <li class="tab col s2"><a href="#recu" id="tab_dis">Recurrencia</a></li><!--RSG 09.07.2018 ADD-->
+                        <li class="tab col s2"><a href="#recu" id="tab_rec">Recurrencia</a></li><!--RSG 09.07.2018 ADD-->
                     }
                     @if (ViewBag.acciones != null & ViewBag.accion == "T")
                     {
@@ -361,8 +371,8 @@
                 <div class="modal-content">
                     <div class="row">
                         <h4 id="txt_app" style="display:none">Aprobar solicitud</h4>
-                        <h4 id="txt_rec" style="display:none"> Rechazar solicitud</h4>
-                        <h4 id="txt_nex" style="display:none"> Agregar comentario</h4>
+                        <h4 id="txt_rec" style="display:none">Rechazar solicitud</h4>
+                        <h4 id="txt_nex" style="display:none">Agregar comentario</h4>
                         <h4 id="txt_cont" style="display:none">
                             Contabilizar
                         </h4>
@@ -385,7 +395,7 @@
                                 @*@Html.LabelFor(model => model.F.ESTATUS, new { @id = "lbl_userid" })*@
                                 <div class="input-field col s10 offset-s1">
                                     @Html.TextAreaFor(model => model.F.COMENTARIO, new { @class = "materialize-textarea", @id = "txt_comentario", @maxlength = 255 })
-                                    @Html.LabelFor(model => model.F.COMENTARIO, new { @id = "lbl_userid" })
+                                    @Html.LabelFor(model => model.F.COMENTARIO, new { @id = "lbl_co" })
                                 </div>
                             </div>
                         </div>
@@ -404,7 +414,7 @@
                         <div class="row" style="margin-bottom:0">
                             <div class="card-panel">
                                 <div class="row">
-                                    <h5>Trade Spending</h5>
+                                    <h5 id="lblTrade">Trade Spending</h5>
                                 </div>
                                 <div class="row">
                                     <div class="col l6 m6 s12">
@@ -487,7 +497,7 @@
                 <div class="row" style="margin-bottom:0">
                     <div class="card-panel">
                         <div class="row">
-                            <h5>Trade Spending</h5>
+                            <h5 id="lblTrade">Trade Spending</h5>
                         </div>
                         <div class="row">
                             <div class="col l4 m4 s12">
@@ -531,7 +541,7 @@
             <div class="col s12">
                 <div class="card-panel">
                     <div class="row" style="margin-bottom:0">
-                        <h5>Workflow</h5>
+                        <h5 id="lblWorkflow">Workflow</h5>
                         <table class="table highlight responsive-table" id="table">
                             <thead>
                                 <tr>
@@ -617,32 +627,16 @@ catch (Exception ee)
     asignarPresupuesto(aaa);
 
     function asignarPresupuesto(kunnr) {
-
+        var periodo = $("#D_PERIODO").val();
         $.ajax({
             type: "POST",
             url: root + 'Listas/getPresupuesto',
             dataType: "json",
-            data: { "kunnr": kunnr },
+            data: { "kunnr": kunnr,periodo: periodo},
 
             success: function (data) {
 
                 if (data !== null || data !== "") {
-                    //$('#p_canal').text(data.P_CANAL);
-                    //$('#p_banner').text(data.P_BANNER);
-                    //$('#pc_c').text(data.PC_C);
-                    //$('#pc_a').text(data.PC_A);
-                    //$('#pc_p').text(data.PC_P);
-                    //$('#pc_t').text(data.PC_T);
-                    //RSG 26.04.2018----------------
-
-                    //$('#p_canal').text('$' + ((data.P_CANAL / 1).toFixed(2)));
-                    //$('#p_banner').text('$' + ((data.P_BANNER / 1).toFixed(2)));
-                    //$('#pc_c').text('($' + ((data.PC_C / 1).toFixed(2)) + ')');
-                    //$('#pc_a').text('($' + ((data.PC_A / 1).toFixed(2)) + ')');
-                    //$('#pc_p').text('($' + ((data.PC_P / 1).toFixed(2)) + ')');
-                    //$('#pc_t').text('($' + ((data.PC_T / 1).toFixed(2)) + ')');
-                    //$('#consu').text('$' + ((data.CONSU / 1).toFixed(2)));
-                    //RSG 26.04.2018----------------
 
                     $('#p_vtweg').text(canal[0] + ' ' + data.CANAL);
                     $('#p_kunnr').text(kunnr.replace(/^0+/, '') + ' ' + data.CLIENTE);
