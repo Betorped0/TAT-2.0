@@ -1105,19 +1105,27 @@ namespace TAT001.Controllers
             if (Prefix == null)
                 Prefix = "";
 
-            var c = (from mat1 in db.MATERIALs
-                     join cat in db.MATERIALGPTs on mat1.MATERIALGP_ID equals cat.MATERIALGP_ID
-                     where cat.MATERIALGP_ID.Contains(Prefix) && cat.SPRAS_ID == "EN" && mat1.ACTIVO == true
-                     group cat by new { cat.MATERIALGP_ID, cat.TXT50 } into g
-                     select new { ID = g.Key.MATERIALGP_ID, DESCRIPCION = g.Key.TXT50 }).ToList();
+            //var c = (from mat1 in db.MATERIALs
+            //         join cat in db.MATERIALGPTs on mat1.MATERIALGP_ID equals cat.MATERIALGP_ID
+            //         where cat.MATERIALGP_ID.Contains(Prefix) && cat.SPRAS_ID == "EN" && mat1.ACTIVO == true
+            //         group cat by new { cat.MATERIALGP_ID, cat.TXT50 } into g
+            //         select new { ID = g.Key.MATERIALGP_ID, DESCRIPCION = g.Key.TXT50 }).ToList();
+
+            var c = (from cat in db.MATERIALGPs
+                     where cat.DESCRIPCION.Contains(Prefix)
+                     select new { ID = cat.ID, DESCRIPCION = cat.DESCRIPCION }).ToList();
 
             if (c.Count == 0)
             {
-                var c2 = (from mat1 in db.MATERIALs
-                          join cat in db.MATERIALGPTs on mat1.MATERIALGP_ID equals cat.MATERIALGP_ID
-                          where cat.TXT50.Contains(Prefix) && cat.SPRAS_ID == "EN" && mat1.ACTIVO == true
-                          group cat by new { cat.MATERIALGP_ID, cat.TXT50 } into g
-                          select new { ID = g.Key.MATERIALGP_ID, DESCRIPCION = g.Key.TXT50 }).ToList();
+                //var c2 = (from mat1 in db.MATERIALs
+                //          join cat in db.MATERIALGPTs on mat1.MATERIALGP_ID equals cat.MATERIALGP_ID
+                //          where cat.TXT50.Contains(Prefix) && cat.SPRAS_ID == "EN" && mat1.ACTIVO == true
+                //          group cat by new { cat.MATERIALGP_ID, cat.TXT50 } into g
+                //          select new { ID = g.Key.MATERIALGP_ID, DESCRIPCION = g.Key.TXT50 }).ToList();
+
+                var c2 = (from cat in db.MATERIALGPs
+                         where cat.ID.Contains(Prefix)
+                         select new { ID = cat.ID, DESCRIPCION = cat.DESCRIPCION }).ToList();
                 c.AddRange(c2);
             }
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
@@ -2125,11 +2133,14 @@ namespace TAT001.Controllers
                     {
                         regresaRowH4.Add("");
 
-                        var categoria = (from mat1 in db.MATERIALs
-                                         join cat in db.MATERIALGPTs on mat1.MATERIALGP_ID equals cat.MATERIALGP_ID
-                                         where cat.TXT50 == matkl & cat.SPRAS_ID == "EN" & mat1.ACTIVO == true
-                                         group cat by new { cat.MATERIALGP_ID, cat.TXT50 } into g
-                                         select new { ID = g.Key.MATERIALGP_ID, DESCRIPCION = g.Key.TXT50 }).ToList();
+                        //var categoria = (from mat1 in db.MATERIALs
+                        //                 join cat in db.MATERIALGPTs on mat1.MATERIALGP_ID equals cat.MATERIALGP_ID
+                        //                 where cat.TXT50 == matkl & cat.SPRAS_ID == "EN" & mat1.ACTIVO == true
+                        //                 group cat by new { cat.MATERIALGP_ID, cat.TXT50 } into g
+                        //                 select new { ID = g.Key.MATERIALGP_ID, DESCRIPCION = g.Key.TXT50 }).ToList();
+                        var categoria = (from cat in db.MATERIALGPs
+                                         where cat.DESCRIPCION == matkl
+                                         select new { ID = cat.ID, DESCRIPCION = cat.DESCRIPCION }).ToList();
 
                         if (categoria.Count() > 0)
                         {
