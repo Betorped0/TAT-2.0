@@ -2823,7 +2823,14 @@ $('body').on('focusout', '#bmonto_apoyo', function () {
     if (ligada()) {//RSG 29.07.2018
         val = 0;
     }
-    updateTableValIndex(9, val);
+    updateTableValIndex(9, this.value);
+    var file = $("#file_dis");
+    var select_neg = $('#select_neg').val();
+    if (ligada() || select_neg==="P") {
+        (this.value === "0" || this.value === "0.00%") ? file.prop('disabled', true) : file.prop('disabled', false);
+    } else {
+        file.prop('disabled', false);
+    }
 });
 
 //$('body').on('focusout', '#monto_dis', function () {
@@ -3355,7 +3362,9 @@ function updateTableValIndex(indexr, val) {
 
     });
 
-    updateTable();
+    if (!ligada()) {
+        updateTable();
+    }
 
     updateFooter();
 
@@ -3712,8 +3721,13 @@ function loadExcelDis(file) {
                     }
                     //LEJ 09.07.2018---------------------------------Termina
                     //var addedRow = addRowMat(table, dataj.POS, dataj.MATNR, dataj.MATKL, dataj.DESC, dataj.MONTO, dataj.PORC_APOYO, dataj.MONTO_APOYO, dataj.MONTOC_APOYO, dataj.PRECIO_SUG, dataj.VOLUMEN_EST, dataj.APOYO_EST, relacionada, reversa, date_de, date_al, calculo, pm);//RSG 24.05.2018
-                    var addedRow = addRowMat(table, dataj.POS, dataj.MATNR, dataj.MATKL, dataj.DESC, dataj.MONTO, dataj.PORC_APOYO, dataj.MONTO_APOYO, dataj.MONTOC_APOYO, dataj.PRECIO_SUG, dataj.VOLUMEN_EST, dataj.APOYO_EST, relacionada, "", reversa, date_de, date_al, calculo, pm, "");//RSG 24.05.2018 //Add MGC B20180705 2018.07.05 ne parametro después de pm //Add MGC B20180705 2018.07.05 relacionadaed editar el material en los nuevos renglones
-
+                    var addedRow; 
+                    if (ligada()) {
+                        addedRow = addRowMat(table, dataj.POS, dataj.MATNR, dataj.MATKL, dataj.DESC, "", toShowPorc(dataj.PORC_APOYO), "", "", "", "", "", relacionada, "", reversa, date_de, date_al, calculo, pm, "");
+                    }
+                    else {
+                        addedRow = addRowMat(table, dataj.POS, dataj.MATNR, dataj.MATKL, dataj.DESC, dataj.MONTO, dataj.PORC_APOYO, dataj.MONTO_APOYO, dataj.MONTOC_APOYO, dataj.PRECIO_SUG, dataj.VOLUMEN_EST, dataj.APOYO_EST, relacionada, "", reversa, date_de, date_al, calculo, pm, "");//RSG 24.05.2018 //Add MGC B20180705 2018.07.05 ne parametro después de pm //Add MGC B20180705 2018.07.05 relacionadaed editar el material en los nuevos renglones
+                    }
 
 
                     if (calculo != "")//RSG 24.05.2018
@@ -3734,8 +3748,10 @@ function loadExcelDis(file) {
                     table.column(0).visible(false);
                     table.column(1).visible(false);
                 }
-
-                updateTable();
+                if (!ligada()) {
+                    updateTable();
+                }
+                
 
                 if (pm == "pm") {
                     $(".pm").prop('disabled', true);
@@ -3762,7 +3778,10 @@ function loadExcelDis(file) {
     });
 
     //Actualizar los valores en la tabla
-    updateTable();
+    if (!ligada()) {
+        updateTable();
+    }
+
 
 }
 
@@ -5345,6 +5364,7 @@ function selectMonto(val, message) {
             $('#div_montobase').css("display", "inherit");
         } else if (select_neg == "P") {//Porcentaje
             $('#monto_dis').val("0");
+            $('#file_dis').prop('disabled', true);
             if (message == "X") {
                 if (disdistribucion != true) { //B20180625 MGC 2018.06.29 Evitar Mensaje al cargar página
                     M.toast({ html: '¿Desea realizar esta solicitud por porcentaje?' });//Add
