@@ -339,9 +339,9 @@ function cambiaRec() {
 
 function cambiaCheckRec() {
 
-    var anioi = $('#anioi_id'),anioiV = anioi.val()*1,aniof = $('#aniof_id'), aniofV = aniof.val()*1,
-        periodoi = $('#periodoi_id'), periodoiV = periodoi.val()*1,periodof = $('#periodof_id'),periodofV = periodof.val()*1;
-    
+    var anioi = $('#anioi_id'), anioiV = anioi.val() * 1, aniof = $('#aniof_id'), aniofV = aniof.val() * 1,
+        periodoi = $('#periodoi_id'), periodoiV = periodoi.val() * 1, periodof = $('#periodof_id'), periodofV = periodof.val() * 1;
+
     var campo = document.getElementById("check_recurrente");
     document.getElementById("btn-date").disabled = false;
     document.getElementById("btn-peri").disabled = false;
@@ -700,7 +700,7 @@ function setDates(tipo) {
             aniof = document.getElementById('aniof_id').value,
             periodoi = document.getElementById('periodoi_id').value,
             periodof = document.getElementById('periodof_id').value;
-        if((anioi * 1) > (aniof * 1)) {
+        if ((anioi * 1) > (aniof * 1)) {
             af = $("#aniof_id");
             af.val("");
             af.formSelect();

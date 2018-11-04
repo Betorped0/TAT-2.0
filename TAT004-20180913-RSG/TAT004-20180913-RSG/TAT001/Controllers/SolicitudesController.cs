@@ -3931,11 +3931,15 @@ namespace TAT001.Controllers
             int mas = 10;
             for (int i = 0; i < mas; i++)
             {
-                anios.Add((DateTime.Now.Year + i).ToString());
+                anios.Add((d.FECHAI_VIG.Value.Year + i).ToString());
             }
+            string selYear1 = d.FECHAI_VIG.Value.Year.ToString();//ADD RSG 04.11.2018-------------------------------
+            string selYear2 = d.FECHAF_VIG.Value.Year.ToString();
+            if (cal.anioMas(d.FECHAI_VIG.Value)) selYear1 = (d.FECHAI_VIG.Value.Year + 1).ToString();
+            if (cal.anioMas(d.FECHAF_VIG.Value)) selYear2 = (d.FECHAF_VIG.Value.Year + 1).ToString();//ADD RSG 04.11.2018-------------------------------
             //ViewBag.ANIOS = new SelectList(anios, DateTime.Now.Year.ToString());
-            ViewBag.ANIOS = new SelectList(anios, d.FECHAI_VIG.Value.Year.ToString());//ADD RSG 31.10.2018
-            ViewBag.ANIOSF = new SelectList(anios, d.FECHAF_VIG.Value.Year.ToString());//ADD RSG 31.10.2018
+            ViewBag.ANIOS = new SelectList(anios, selYear1);//ADD RSG 31.10.2018
+            ViewBag.ANIOSF = new SelectList(anios, selYear2);//ADD RSG 31.10.2018
             d.SOCIEDAD = db.SOCIEDADs.Find(d.SOCIEDAD_ID);
             //----------------------------RSG 18.05.2018
             //----------------------------RSG 12.06.2018
@@ -4673,7 +4677,11 @@ namespace TAT001.Controllers
                                 if (drec.PORC == null)
                                     drec.PORC = 0;
                                 dOCUMENTO.TIPO_RECURRENTE = db.TSOLs.Where(x => x.ID.Equals(dOCUMENTO.TSOL_ID)).FirstOrDefault().TRECU;
-
+                                if (dOCUMENTO.TIPO_RECURRENTE == "1" & dOCUMENTO.LIGADA == true)
+                                    dOCUMENTO.TIPO_RECURRENTE = "2";
+                                if (dOCUMENTO.TIPO_RECURRENTE != "1" & dOCUMENTO.OBJETIVOQ == true)
+                                    dOCUMENTO.TIPO_RECURRENTE = "3";
+                                //RSG 29.07.2018-add----------------------------------
                                 drec.FECHAV = drec.FECHAF;
                                 Calendario445 cal = new Calendario445();
                                 if (dOCUMENTO.TIPO_RECURRENTE == "1")
@@ -4681,8 +4689,13 @@ namespace TAT001.Controllers
                                 else
                                     drec.FECHAF = cal.getNextLunes((DateTime)drec.FECHAF);
                                 drec.EJERCICIO = drec.FECHAV.Value.Year;
-                                drec.PERIODO = cal.getPeriodo(drec.FECHAV.Value);
-
+                                if (dOCUMENTO.TIPO_RECURRENTE == "1")
+                                    drec.PERIODO = cal.getPeriodo(drec.FECHAV.Value);
+                                else
+                                    drec.PERIODO = cal.getPeriodoF(drec.FECHAV.Value);
+                                if (dOCUMENTO.TIPO_RECURRENTE == "1")
+                                    drec.PERIODO--;
+                                if (drec.PERIODO == 0) drec.PERIODO = 12;
                                 //RSG 29.07.2018-add----------------------------------
                                 if (dOCUMENTO.DOCUMENTORAN != null)
                                     foreach (DOCUMENTORAN dran in dOCUMENTO.DOCUMENTORAN.Where(x => x.POS == drec.POS))
@@ -4860,16 +4873,16 @@ namespace TAT001.Controllers
                                         docF = dOCUMENTO.DOCUMENTOF[i];
                                         _df2.POS = docF.POS;
                                         _df2.NUM_DOC = dOCUMENTO.NUM_DOC;
-                                        _df2.FACTURA = docF.FACTURA;
-                                        _df2.PROVEEDOR = docF.PROVEEDOR;
-                                        _df2.CONTROL = docF.CONTROL;
-                                        _df2.AUTORIZACION = docF.AUTORIZACION;
-                                        _df2.FACTURAK = docF.FACTURAK;
-                                        _df2.EJERCICIOK = docF.EJERCICIOK;
-                                        _df2.BILL_DOC = docF.BILL_DOC;
-                                        _df2.BELNR = docF.BELNR;
+                                        _df2.FACTURA = docF.FACTURA.Trim();
+                                        _df2.PROVEEDOR = docF.PROVEEDOR.Trim();
+                                        _df2.CONTROL = docF.CONTROL.Trim();
+                                        _df2.AUTORIZACION = docF.AUTORIZACION.Trim();
+                                        _df2.FACTURAK = docF.FACTURAK.Trim();
+                                        _df2.EJERCICIOK = docF.EJERCICIOK.Trim();
+                                        _df2.BILL_DOC = docF.BILL_DOC.Trim();
+                                        _df2.BELNR = docF.BELNR.Trim();
                                         _df2.IMPORTE_FAC = docF.IMPORTE_FAC;
-                                        _df2.PAYER = docF.PAYER;
+                                        _df2.PAYER = docF.PAYER.Trim();
                                         db.DOCUMENTOFs.Add(_df2);
                                         db.SaveChanges();
                                     }

@@ -716,18 +716,30 @@ namespace TAT001.Services
                     f.FECHAC = DateTime.Now;
                     f.FECHAM = DateTime.Now;
                     string c = pf.procesa(f, recurrente);
+
+                    FLUJO conta = db.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+                    Estatus es = new Estatus();//RSG 18.09.2018
+                    DOCUMENTO doc = db.DOCUMENTOes.Find(f.NUM_DOC);
+                    conta.STATUS = es.getEstatus(doc);
+                    db.Entry(conta).State = EntityState.Modified;
+                    db.SaveChanges();
                     //RSG 28.05.2018 -----------------------------------
                     if (c == "1")
                     {
                         //Email em = new Email();
                         //em.enviaMail(f.NUM_DOC, true);
                     }
-                    FLUJO conta = db.FLUJOes.Where(a => a.NUM_DOC.Equals(f.NUM_DOC)).OrderByDescending(a => a.POS).FirstOrDefault();
+                    conta = db.FLUJOes.Where(a => a.NUM_DOC.Equals(f.NUM_DOC)).OrderByDescending(a => a.POS).FirstOrDefault();
                     conta.USUARIOA_ID = user.ID;
                     conta.ESTATUS = "A";
                     conta.FECHAM = DateTime.Now;
                     pf.procesa(conta, "");
                     //RSG 28.05.2018 -----------------------------------
+                    conta = db.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+                    doc = db.DOCUMENTOes.Find(f.NUM_DOC);
+                    conta.STATUS = es.getEstatus(doc);
+                    db.Entry(conta).State = EntityState.Modified;
+                    db.SaveChanges();
                 }
             }
             catch (Exception ee)

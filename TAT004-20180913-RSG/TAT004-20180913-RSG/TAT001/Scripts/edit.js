@@ -1681,7 +1681,7 @@ function _ff() {
                     $("#periodoi_id").val(pp);
                     document.getElementById("btn-peri").checked = true;
                     $("#btn-peri").trigger("change");
-                    $("#anioi_id").val(_anoi);
+                    //$("#anioi_id").val(_anoi);
                 } else {
                     document.getElementById("btn-date").checked = true;
                     $("#btn-date").trigger("change");
@@ -1708,7 +1708,7 @@ function _ff() {
                     $("#periodof_id").val(pp);
                     document.getElementById("btn-peri").checked = true;
                     $("#btn-peri").trigger("change");
-                    $("#aniof_id").val(_anof);
+                    //$("#aniof_id").val(_anof);
                 } else {
                     document.getElementById("btn-date").checked = true;
                     $("#btn-date").trigger("change");
