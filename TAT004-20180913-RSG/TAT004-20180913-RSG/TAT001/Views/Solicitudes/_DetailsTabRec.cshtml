@@ -52,7 +52,13 @@
                                         {
                                             <th id="lbl_rec_porc">%</th>
                                         }
-                                        <th id="lbl_rec_obj">Objetivo</th>
+                                        @if (Model.D.LIGADA != null && Model.D.LIGADA.Value)
+                                        {<th id="lbl_rec_obj">Objetivo</th>
+                                        }
+                                        else
+                                        {
+                                            <th id="lbl_rec_monto">Monto</th>
+                                        }
                                         <th id="lbl_rec_estatus">Estatus</th>
 
                                         @if (ViewBag.recs.Count > 0)
