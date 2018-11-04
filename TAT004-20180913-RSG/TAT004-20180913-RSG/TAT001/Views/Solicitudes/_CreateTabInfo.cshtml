@@ -25,15 +25,7 @@
                     <div class="form-group col s12">
                         @Html.LabelFor(model => model.TSOL_ID, "Tipo de solicitud", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_tiposol" }) @*B20180801 MGC Textos*@
                         <div class="col-md-10">
-                            @if (ViewBag.reversan == "X")
-                            {
-                                @Html.EditorFor(model => model.TSOL_ID, new { htmlAttributes = new { @class = "dropdowntree", @readonly = true } })
-
-                            }
-                            else
-                            {
-                                @Html.EditorFor(model => model.TSOL_ID, new { htmlAttributes = new { @class = "dropdowntree" } })
-                            }
+                                @Html.EditorFor(model => model.TSOL_ID, new { htmlAttributes = new { @class = "dropdowntree " + @ViewBag.relacionada } })
                         </div>
 
                         @Html.HiddenFor(model => model.DOCUMENTO_REF)
@@ -74,7 +66,7 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.SOCIEDAD_ID, "Co. Code", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_sociedad" })@*B20180801 MGC Textos*@
                             <div class="col-md-10">
-                                @Html.EditorFor(model => model.SOCIEDAD_ID, new { htmlAttributes = new { @id = "sociedad_id", @class = "form-control", @readonly = true } })
+                                @Html.EditorFor(model => model.SOCIEDAD_ID, new { htmlAttributes = new { @id = "sociedad_id", @class = "form-control", @readonly = "readonly" } })
                             </div>
                         </div>
                     </div>
@@ -84,7 +76,7 @@
                             <div class="form-group hidden">
                                 @Html.LabelFor(model => model.PAIS_ID, "Subregión", htmlAttributes: new { @class = "control-label col-md-2 hidden", @id = "lbl_pais" }) @*B20180801 MGC Textos*@
                                 <div class="col-md-10">
-                                    @Html.EditorFor(model => model.PAIS_ID, new { htmlAttributes = new { @id = "pais_id", @class = "form-control hidden", @readonly = true, @Value = pais.LAND } })
+                                    @Html.EditorFor(model => model.PAIS_ID, new { htmlAttributes = new { @id = "pais_id", @class = "form-control hidden", @readonly = "readonly", @Value = pais.LAND } })
                                 </div>
                             </div>
                             <div class="input-field col-md-2">
@@ -124,7 +116,8 @@
 
                                     var reversan = "@ViewBag.reversan";
                                     if (reversan == "X") {
-                                        $("#tsol_id").attr('readonly', '');
+                                        $("#TSOL_ID").attr('readonly', 'readonly');
+                                        $("#tsol_id").attr('readonly', 'readonly');
                                     }
                                         var auto = $.noConflict(true);
                                         auto(document).ready(function () {
@@ -266,10 +259,13 @@
                 <h5 id="head_infocli">Información del cliente</h5>@*B20180801 MGC Textos*@
                 <div class="row" style="margin-bottom:0">
                     <div class="input-field col s12">
-                        @Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @id = "payer_id", @class = "form-control " + @ViewBag.relacionada, @onchange = @"selectCliente(this.value)", @maxlength = 10 } }) @*OCG 15-10-18 Se inserta aqui para no afectar la vista*@
+                        @Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @id = "payer_id", @class = "form-control " + @ViewBag.relacionada, @maxlength = 10 } }) @*OCG 15-10-18 Se inserta aqui para no afectar la vista*@
                         @Html.LabelFor(model => model.PAYER_ID, "Cliente", htmlAttributes: new { @for = "payer_id", @id = "lbl_payer" })@*B20180801 MGC Textos*@
                     </div>
                     <script>
+                                if ($('#payer_id').hasClass("prelacionada")) {
+                                    selectCliente($('#payer_id').val());
+                                }
                                     auto(document).ready(function () {
                                         auto("#payer_id").autocomplete({
                                             source: function (request, response) {
@@ -302,6 +298,7 @@
                                             select: function (event, ui) {
                                                 var label = ui.item.label;
                                                 var value = ui.item.value;
+                                                selectCliente(value);
                                             }
                                         });
                                         //OCG 11/10/18
@@ -318,7 +315,8 @@
                                         }
                                         var clien = cliente.substring(con, i);
                                         auto("#payer_id").attr("value", clien);
-                                    });
+                                });
+                                  
                     </script>
                     <input type="hidden" id="txt_vkorg" />
                     <input type="hidden" id="txt_vtweg" />
@@ -393,7 +391,7 @@
                                             var value = ui.item.value;
                                             var email = ui.item.mail;
                                             document.getElementById('payer_email').value = email;
-                                            //selectCliente(value);
+                                           
                                         }
                                     });
                                 })
