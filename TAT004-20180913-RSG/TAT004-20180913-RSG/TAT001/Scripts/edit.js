@@ -788,7 +788,6 @@ $(document).ready(function () {
             var num2 = $('#monto_doc_md').val();//RSG 12.06.2018
 
             asignarPresupuesto(kunnr);
-            //asignarSolicitud(num, num2.replace("$", ""));//RSG 12.06.2018 //LEJ 09.07.18
 
         } else {
             M.toast({ html: 'Verificar valores en los campos de Distribución!' });

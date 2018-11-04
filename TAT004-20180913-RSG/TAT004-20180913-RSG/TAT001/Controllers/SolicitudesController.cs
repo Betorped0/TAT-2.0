@@ -3287,8 +3287,11 @@ namespace TAT001.Controllers
             decimal montoProv = 0.0M;
             decimal montoApli = 0.0M;
             decimal remanente = 0.0M;
+            decimal impuesto = 0.0M;
             bool esDocRef = false;
             bool esProv = false;
+            bool esNC = false;
+            
 
             if (D.DOCUMENTO_REF != null) {//Es hijo
                 esProv = true;
@@ -3313,10 +3316,26 @@ namespace TAT001.Controllers
             {
                 remanente = montoProv - montoApli;
             }
+            if (D.TSOL_ID=="NC" || D.TSOL_ID == "NCA"|| D.TSOL_ID == "NCAS")
+            {
+                decimal KBETR = 0.0M;
+                esNC = true;
+                if (db.DOCUMENTOPs.Any(x=>(x.MATKL== "605"|| x.MATKL == "207") && x.NUM_DOC==D.NUM_DOC)) {
+                    KBETR = db.IIMPUESTOes.First(x => x.MWSKZ == "A0").KBETR.Value;
+                }
+                else
+                {
+                    decimal concecutivo = db.CONPOSAPHs.First(x => x.TIPO_SOL == "NC" && x.SOCIEDAD == D.SOCIEDAD_ID && (x.TIPO_DOC == "YG" || x.TIPO_DOC == "DG")).CONSECUTIVO;
+                    string tax_code = db.CONPOSAPPs.First(x => x.CONSECUTIVO == concecutivo).TAX_CODE;
+                     KBETR = db.IIMPUESTOes.First(x => x.MWSKZ == tax_code).KBETR.Value;
+                }
+                impuesto = (D.MONTO_DOC_MD.Value * KBETR);
+            }
             ViewBag.montoSol = format.toShow(D.MONTO_DOC_MD.Value, ".");
             ViewBag.montoProv = (esProv ? format.toShow(montoProv, ".") : "-");
             ViewBag.montoApli = (esDocRef ? format.toShow(montoApli, ".") : "-");
             ViewBag.remanente = ((montoProv > 0 && montoApli > 0) ? format.toShow(remanente, ".") : "-");
+            ViewBag.impuesto =(esNC? format.toShow(impuesto, "."):"-") ;
             ViewBag.montoTotal = format.toShow(D.MONTO_DOC_MD.Value,".");
         }
 
@@ -5382,90 +5401,7 @@ namespace TAT001.Controllers
             return jc;
         }
 
-        [HttpPost]
-        [AllowAnonymous]
-        public JsonResult SelectCliente(string kunnr)
-        {
-
-            TAT001Entities db = new TAT001Entities();
-
-            CLIENTE_MOD id_cl = (from c in db.CLIENTEs
-                                 join co in db.CONTACTOCs
-                                 on new { c.VKORG, c.VTWEG, c.SPART, c.KUNNR } equals new { co.VKORG, co.VTWEG, co.SPART, co.KUNNR } into jjcont
-                                 from co in jjcont.DefaultIfEmpty()
-                                 where (c.KUNNR == kunnr & co.DEFECTO == true)
-                                 select new CLIENTE_MOD
-                                 {
-                                     VKORG = c.VKORG,
-                                     VTWEG = c.VTWEG,
-                                     VTWEG2 = c.VTWEG,//RSG 05.07.2018
-                                     SPART = c.SPART,//RSG 28.05.2018-------------------
-                                     NAME1 = c.NAME1,
-                                     KUNNR = c.KUNNR,
-                                     STCD1 = c.STCD1,
-                                     PARVW = c.PARVW,
-                                     BANNER = c.BANNER,
-                                     CANAL = c.CANAL,
-                                     PAYER_NOMBRE = co == null ? String.Empty : co.NOMBRE,
-                                     PAYER_EMAIL = co == null ? String.Empty : co.EMAIL,
-                                 }).FirstOrDefault();
-
-            if (id_cl == null)
-            {
-                id_cl = (from c in db.CLIENTEs
-                         where (c.KUNNR == kunnr)
-                         select new CLIENTE_MOD
-                         {
-                             VKORG = c.VKORG,
-                             VTWEG = c.VTWEG,
-                             VTWEG2 = c.VTWEG,//RSG 05.07.2018
-                             SPART = c.SPART,//RSG 28.05.2018-------------------
-                             NAME1 = c.NAME1,
-                             KUNNR = c.KUNNR,
-                             STCD1 = c.STCD1,
-                             PARVW = c.PARVW,
-                             BANNER = c.BANNER,
-                             CANAL = c.CANAL,
-                             PAYER_NOMBRE = String.Empty,
-                             PAYER_EMAIL = String.Empty,
-                         }).FirstOrDefault();
-            }
-
-            if (id_cl != null)
-            {
-                //Obtener el cliente
-                //CANAL canal = db.CANALs.Where(ca => ca.BANNER == id_cl.BANNER && ca.KUNNR == kunnr).FirstOrDefault();
-                CANAL canal = db.CANALs.Where(ca => ca.CANAL1 == id_cl.CANAL).FirstOrDefault();
-                id_cl.VTWEG = "";
-                //if (canal == null)
-                //{
-                //    string kunnrwz = kunnr.TrimStart('0');
-                //    string bannerwz = id_cl.BANNER.TrimStart('0');
-                //    canal = db.CANALs.Where(ca => ca.BANNER == bannerwz && ca.KUNNR == kunnrwz).FirstOrDefault();
-                //}
-
-                if (canal != null)
-                {
-                    id_cl.VTWEG = canal.CANAL1 + " - " + canal.CDESCRIPCION;
-                }
-
-                //Obtener el tipo de cliente
-                var clientei = (from c in db.TCLIENTEs
-                                join ct in db.TCLIENTETs
-                                on c.ID equals ct.PARVW_ID
-                                where c.ID == id_cl.PARVW && c.ACTIVO == true
-                                select ct).FirstOrDefault();
-                id_cl.PARVW = "";
-                if (clientei != null)
-                {
-                    id_cl.PARVW = clientei.TXT50;
-                }
-
-            }
-
-            JsonResult jc = Json(id_cl, JsonRequestBehavior.AllowGet);
-            return jc;
-        }
+        
 
         [HttpPost]
         [AllowAnonymous]
@@ -7488,29 +7424,11 @@ namespace TAT001.Controllers
             doc.DOCUMENTORAN = docs;
             return PartialView("~/Views/Solicitudes/_PartialRanTr.cshtml", doc);
         }
-        //private string completaMaterial(string material)//RSG 07.06.2018---------------------------------------------
-        //{
-        //    string m = material;
-        //    try
-        //    {
-        //        long matnr1 = long.Parse(m);
-        //        int l = 18 - m.Length;
-        //        for (int i = 0; i < l; i++)
-        //        {
-        //            m = "0" + m;
-        //        }
-        //    }
-        //    catch
-        //    {
-
-        //    }
-        //    return m;
-        //}
 
         [HttpPost]
-        public JsonResult getSolicitud(string num, string num2)//RSG 07.06.2018---------------------------------------------
+        public JsonResult getSolicitud(string num, string monto,string tsol_id,string sociedad_id,bool esCategoriaUnica)//RSG 07.06.2018---------------------------------------------
         {
-            TAT001.Models.SOLICITUD_MOD sm = new SOLICITUD_MOD();
+            SOLICITUD_MOD sm = new SOLICITUD_MOD();
 
             //Obtener info solicitud
             if (num == null | num == "" | num == "0.00")
@@ -7526,9 +7444,9 @@ namespace TAT001.Controllers
                 {
                     //CON UN RELACIONADO 
                     var rev2 = db.DOCUMENTOes.Where(x => x.NUM_DOC == num_doc).FirstOrDefault();
-                    decimal? rem2 = (rev2.MONTO_DOC_MD - Convert.ToDecimal(num2));
+                    decimal? rem2 = (rev2.MONTO_DOC_MD - Convert.ToDecimal(monto));
 
-                    sm.S_MONTOB = num2;
+                    sm.S_MONTOB = monto;
                     sm.S_MONTOP = rev2.MONTO_DOC_MD.ToString();
                     sm.S_MONTOA = "-";
                     sm.S_REMA = rem2.ToString();
@@ -7536,16 +7454,16 @@ namespace TAT001.Controllers
                     sm.S_IMPB = "-";
                     sm.S_IMPC = "-";
                     sm.S_RET = "-";
-                    sm.S_TOTAL = num2;
+                    sm.S_TOTAL = monto;
                 }
                 else if (rev.Count() == 1)
                 {
                     //CON DOS RELACIONADOS
                     var rev3 = db.DOCUMENTOes.Where(x => x.NUM_DOC == num_doc).FirstOrDefault();
                     var rev33 = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == num_doc && x.ESTATUS_C == null).FirstOrDefault();
-                    decimal? rem3 = ((rev3.MONTO_DOC_MD - rev33.MONTO_DOC_MD) - (Convert.ToDecimal(num2)));
+                    decimal? rem3 = ((rev3.MONTO_DOC_MD - rev33.MONTO_DOC_MD) - (Convert.ToDecimal(monto)));
 
-                    sm.S_MONTOB = num2;
+                    sm.S_MONTOB = monto;
                     sm.S_MONTOP = rev3.MONTO_DOC_MD.ToString();
                     sm.S_MONTOA = rev33.MONTO_DOC_MD.ToString();
                     sm.S_REMA = rem3.ToString();
@@ -7553,7 +7471,7 @@ namespace TAT001.Controllers
                     sm.S_IMPB = "-";
                     sm.S_IMPC = "-";
                     sm.S_RET = "-";
-                    sm.S_TOTAL = num2;
+                    sm.S_TOTAL = monto;
                 }
                 else if (rev.Count() > 1)
                 {
@@ -7565,9 +7483,9 @@ namespace TAT001.Controllers
                     {
                         sum = sum + k.Value;
                     }
-                    decimal? rem4 = ((rev4.MONTO_DOC_MD - sum) - (Convert.ToDecimal(num2)));
+                    decimal? rem4 = ((rev4.MONTO_DOC_MD - sum) - (Convert.ToDecimal(monto)));
 
-                    sm.S_MONTOB = num2;
+                    sm.S_MONTOB = monto;
                     sm.S_MONTOP = rev4.MONTO_DOC_MD.ToString();
                     sm.S_MONTOA = sum.ToString();
                     sm.S_REMA = rem4.ToString();
@@ -7575,10 +7493,25 @@ namespace TAT001.Controllers
                     sm.S_IMPB = "-";
                     sm.S_IMPC = "-";
                     sm.S_RET = "-";
-                    sm.S_TOTAL = num2;
+                    sm.S_TOTAL = monto;
                 }
+                
             }
-
+            if (tsol_id == "NC" || tsol_id == "NCA" || tsol_id == "NCAS")
+            {
+                decimal KBETR = 0.0M;
+                if (esCategoriaUnica)
+                {
+                    KBETR = db.IIMPUESTOes.First(x => x.MWSKZ == "A0").KBETR.Value;
+                }
+                else
+                {
+                    decimal concecutivo = db.CONPOSAPHs.First(x => x.TIPO_SOL == "NC" && x.SOCIEDAD == sociedad_id && (x.TIPO_DOC == "YG" || x.TIPO_DOC == "DG")).CONSECUTIVO;
+                    string tax_code = db.CONPOSAPPs.First(x => x.CONSECUTIVO == concecutivo).TAX_CODE;
+                    KBETR = db.IIMPUESTOes.First(x => x.MWSKZ == tax_code).KBETR.Value;
+                }
+                sm.S_IMPA = (Convert.ToDecimal(monto) * KBETR).ToString();
+            }
             JsonResult cc = Json(sm, JsonRequestBehavior.AllowGet);
             return cc;
         }
