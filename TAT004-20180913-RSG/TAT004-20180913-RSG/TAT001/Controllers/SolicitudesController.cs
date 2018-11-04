@@ -1455,7 +1455,10 @@ namespace TAT001.Controllers
                         dOCUMENTO.PAIS_ID = p.ToUpper();//RSG 15.05.2018
                     }
                     //Tipo técnico
-                    dOCUMENTO.TIPO_TECNICO = select_neg;
+                    if(select_neg!=null)//RSG 03.11.2018
+                        dOCUMENTO.TIPO_TECNICO = select_neg;
+                    else if (select_negi != null)//RSG 03.11.2018
+                        dOCUMENTO.TIPO_TECNICO = select_negi;
                     if (chk_ligada == "on")
                         dOCUMENTO.TIPO_TECNICO = "P";
 
@@ -1805,7 +1808,7 @@ namespace TAT001.Controllers
                                         {
                                             docmod.MATKL = "";
                                         }
-                                        docP.MATKL = docmod.MATKL;
+                                        //docP.MATKL = docmod.MATKL;
                                         docP.CANTIDAD = 1;
                                         docP.MONTO = docmod.MONTO;
                                         docP.PORC_APOYO = docmod.PORC_APOYO;
@@ -5091,6 +5094,56 @@ namespace TAT001.Controllers
                         ViewBag.error = errorString;
                     }
                 }//ADD RSG 31.10.2018
+
+                if (d.DOCUMENTO_REF > 0 & txt_flujo != "B")//ADD RSG 02.11.2018
+                {
+                    if (d.TSOL.REVERSO == true)
+                    {
+                        List<DOCUMENTO> dd = db.DOCUMENTOes.Where(a => a.DOCUMENTO_REF == (d.DOCUMENTO_REF)).ToList();
+                        List<DOCUMENTOP> ddr = db.DOCUMENTOPs.Where(a => a.NUM_DOC == (d.DOCUMENTO_REF)).ToList();
+                        ////decimal total = 0;
+                        decimal[] totales = new decimal[ddr.Count()];
+                        foreach (DOCUMENTOP dr in ddr)
+                        {
+                            //totales[(int)dr.POS - 1] = dr.VOLUMEN_EST * dr.MONTO_APOYO;
+                            totales[(int)dr.POS - 1] = (decimal)dr.APOYO_EST;
+                            foreach (DOCUMENTO d1 in dd)
+                            {
+                                foreach (DOCUMENTOP dp in d1.DOCUMENTOPs)
+                                {
+                                    if (dr.POS == dp.POS)
+                                    {
+                                        //var suma2 = dp.VOLUMEN_REAL * dp.MONTO_APOYO;
+                                        var suma2 = dp.APOYO_REAL;
+
+                                        totales[(int)dr.POS - 1] = totales[(int)dr.POS - 1] - (decimal)suma2;
+                                    }
+                                }
+                            }
+                        }
+                        //RSG 14.06.2018----------------------
+                        decimal resto = decimal.Parse("0.00");
+                        foreach (decimal dec in totales)
+                        {
+                            resto += dec;
+                        }
+                        //RSG 14.06.2018----------------------
+                        foreach (decimal dec in totales)
+                        {
+                            if (dec > 0)
+                                return RedirectToAction("Reversa", new { id = dOCUMENTO.DOCUMENTO_REF, resto = resto });
+                        }
+                    }
+                    using (TAT001Entities db1 = new TAT001Entities())
+                    {
+                        decimal num_ref = (decimal)d.DOCUMENTO_REF;
+                        DOCUMENTO referencia = db1.DOCUMENTOes.Find(num_ref);
+                        referencia.ESTATUS = "R";
+                        db1.Entry(referencia).State = EntityState.Modified;
+                        db1.SaveChanges();
+                    }
+                }
+
                 return RedirectToAction("Index", "Home");
             }
             ViewBag.TALL_ID = new SelectList(db.TALLs, "ID", "DESCRIPCION", dOCUMENTO.TALL_ID);
