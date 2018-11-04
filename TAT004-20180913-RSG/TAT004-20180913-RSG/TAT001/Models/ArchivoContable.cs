@@ -87,7 +87,7 @@ namespace TAT001.Models
                 }
                 else if (tab.TIPO_SOL == "NCM")
                 {
-                    dirFile = ConfigurationManager.AppSettings["URL_SAVE"] + @"POSTING\INBOUND_" + tab.TIPO_SOL.Substring(0, 2) + docum.ToString().PadLeft(10, '0') + "-1-fact" + pos + ".txt";
+                    dirFile = ConfigurationManager.AppSettings["URL_SAVE"] + @"POSTING\INBOUND_" + tab.TIPO_SOL.Substring(0, 2) + docum.ToString().PadLeft(10, '0') + "-1-"+ contdoc + "fact" + pos + ".txt";
                 }
                 else
                 {
@@ -886,6 +886,10 @@ namespace TAT001.Models
                                 {
                                     //conta.BALANCE = docp[j].APOYO_EST.ToString(); //KCMX solic
                                     if (hijo)
+                                    {
+                                        conta.BALANCE = Conversion(Convert.ToDecimal(docp[j].APOYO_REAL), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                    }
+                                    if (docp[j].APOYO_EST == 0)
                                     {
                                         conta.BALANCE = Conversion(Convert.ToDecimal(docp[j].APOYO_REAL), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
                                     }
