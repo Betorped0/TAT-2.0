@@ -201,21 +201,30 @@
                     }
                     else if ((Model.D.ESTATUS.Equals("A") | Model.D.ESTATUS.Equals("R")) && (Model.D.TSOL.PADRE) /*&& Model.D.DOCUMENTORECs.Count < 1 && Model.D.DOCUMENTOLs.Count < 1*/)//RSG 20181002
                     {
-                        if (Model.D.USUARIOC_ID == ViewBag.usuario.ID & Model.D.DOCUMENTO_SAP != null)
+
+                        using (TAT001Entities db = new TAT001Entities())
                         {
-                            <div id="div_drop" class="col">
-                                <a href="@Url.Action("Create", "Solicitudes", new { id_d = Model.D.NUM_DOC.ToString(), tsol = "CPR" })" class="btn-small">Reversar</a>
-                                @*<button type="button" class="btn-small  " id="btn_cancel">Cancelar</button>*@
-                                <button type="button" class="btn-small dropdown-trigger">Crear solicitud relacionada</button>
-                                <div id="list_rela" class="dropdowntree"></div>
-                            </div>
-                            <script>
+                            List<DOCUMENTO> inf = new List<DOCUMENTO>();
+                            inf = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == Model.D.NUM_DOC).ToList();
+                            if (inf.Where(x => x.TSOL.REVERSO == true).ToList().Count == 0)
+                            {
+                                if (Model.D.USUARIOC_ID == ViewBag.usuario.ID & Model.D.DOCUMENTO_SAP != null)
+                                {
+                                    <div id="div_drop" class="col">
+                                        <a href="@Url.Action("Create", "Solicitudes", new { id_d = Model.D.NUM_DOC.ToString(), tsol = "CPR" })" class="btn-small">Reversar</a>
+                                        @*<button type="button" class="btn-small  " id="btn_cancel">Cancelar</button>*@
+                                        <button type="button" class="btn-small dropdown-trigger">Crear solicitud relacionada</button>
+                                        <div id="list_rela" class="dropdowntree"></div>
+                                    </div>
+                                    <script>
                                  $('#list_rela').kendoTreeView({
                                      link: '@Url.Content("~")Solicitudes/Create?id_d=@Model.D.NUM_DOC.ToString()&tsol={val}',
                                     dataSource:@Html.Raw(Json.Encode(ViewBag.TSOL_RELA))
                                   });
-                            </script>
+                                    </script>
 
+                                }
+                            }
                         }
                         if (ViewBag.usuario.PUESTO_ID == 8 & Model.D.DOCUMENTOLs.Count > 0)
                         {
@@ -260,45 +269,45 @@
                         }
                     }
                     @*//else
-                        //{*@
-                if (Model.D.TSOL.CARTA)
-                {
+            //{*@
+                    if (Model.D.TSOL.CARTA)
+                    {
                         @* ---DRS 13.10.2018--- *@
                         <div class="col">
                             <button type="button" class="btn-small" data-target="list_carta" style="width:100%;" id="btn_carta">Carta</button>
                         </div>
                         @*<button type="button" class="btn-small  " id="btn_cancel">Cancelar</button>*@
-                    <ul id='list_carta' class='dropdown-content'>
-                        @*
+                        <ul id='list_carta' class='dropdown-content'>
+                            @*
 
-                <li><a href="@Url.Action(" Index", "CartaF" , new { id=Model.D.NUM_DOC })" id="lbl_list">Lista de cartas</a></li>*@ @*//B20180720P MGC Guardar Carta*@
-                @* ---DRS 14.10.2018--- *@
-                <li><a href="@Url.Action("Lista", "CartaV", new { id = Model.D.NUM_DOC, swf = Model.D.ESTATUS_WF })" id="lbl_list">Lista de cartas</a></li> @*//B20180720P MGC Guardar Carta*@
-               @if (Model.D.ESTATUS_WF.Equals("S") && (Model.D.USUARIOD_ID == User.Identity.Name))
-               {
-                    <li><a href="@Url.Action("Create", "CartaV", new { id = Model.D.NUM_DOC })" id="lbl_genc">Generar carta</a></li>
-                }
-                else if (Model.D.ESTATUS_WF.Equals("F") || Model.D.ESTATUS_WF.Equals("S") || Model.D.ESTATUS_WF.Equals("R"))
-                {
-                    <li><a href="@Url.Action("Create", "CartaD", new { id = Model.D.NUM_DOC })" id="lbl_genc">Imprimir</a></li>
-                }
-                else
-                {
-                    <li><a href="@Url.Action("Create", "CartaD", new { id = Model.D.NUM_DOC })" id="lbl_genc">Imprimir draft</a></li>
-                }
-            </ul>
+                    <li><a href="@Url.Action(" Index", "CartaF" , new { id=Model.D.NUM_DOC })" id="lbl_list">Lista de cartas</a></li>*@ @*//B20180720P MGC Guardar Carta*@
+                    @* ---DRS 14.10.2018--- *@
+                    <li><a href="@Url.Action("Lista", "CartaV", new { id = Model.D.NUM_DOC, swf = Model.D.ESTATUS_WF })" id="lbl_list">Lista de cartas</a></li> @*//B20180720P MGC Guardar Carta*@
+                    @if (Model.D.ESTATUS_WF.Equals("S") && (Model.D.USUARIOD_ID == User.Identity.Name))
+                    {
+                        <li><a href="@Url.Action("Create", "CartaV", new { id = Model.D.NUM_DOC })" id="lbl_genc">Generar carta</a></li>
+                    }
+                    else if (Model.D.ESTATUS_WF.Equals("F") || Model.D.ESTATUS_WF.Equals("S") || Model.D.ESTATUS_WF.Equals("R"))
+                    {
+                        <li><a href="@Url.Action("Create", "CartaD", new { id = Model.D.NUM_DOC })" id="lbl_genc">Imprimir</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="@Url.Action("Create", "CartaD", new { id = Model.D.NUM_DOC })" id="lbl_genc">Imprimir draft</a></li>
+                    }
+                </ul>
                 <script>
-                                var elem = document.getElementById('btn_carta');
-                                var options = {
-                                    constrainWidth: false
-                                    //,hover: true
-                                };
-                                var instance = M.Dropdown.init(elem, options);
+                    var elem = document.getElementById('btn_carta');
+                    var options = {
+                        constrainWidth: false
+                        //,hover: true
+                    };
+                    var instance = M.Dropdown.init(elem, options);
                 </script>
-                }
-                @* } *@
-                }
-                                
+            }
+            @* } *@
+        }
+
             </div>
         </div>
     </div>
