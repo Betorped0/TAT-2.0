@@ -16,7 +16,6 @@
 <script src="~/Scripts/formatos.js"></script>
 <script src="~/Scripts/soporte.js"></script><!--RSG 23.05.2018-->
 <script src="~/Scripts/recurrente.js"></script><!--RSG 27.05.2018-->
-<script src="~/Scripts/analisis.js"></script><!--RSG 13.06.2018-->
 <script src="~/Scripts/descargar.js"></script><!--RSG 22.06.2018-->
 <script src="~/Scripts/rangos.js"></script>
 <script src="~/Scripts/borrador.js"></script><!--RSG 30.10.2018-->
@@ -2012,6 +2011,17 @@
                                                 </div>
                                             </li>
                                         }
+                                            <li class="collection-item" id="a5">
+                                                <div class="row" style="margin-bottom:0;padding-bottom:0;">
+                                                    <div id="div_impuesto" class="col s6">
+                                                        @*B20180801 MGC Textos*@
+                                                        Impuesto
+                                                    </div>
+                                                    <div class="col s6 right-align">
+                                                        <span id="s_impa">@ViewBag.impuesto</span>
+                                                    </div>
+                                                </div>
+                                            </li>
                                             <li class="collection-item" id="a5">
                                                 <div class="row" style="margin-bottom:0;padding-bottom:0;">
                                                     <div class="col s6">

@@ -1379,7 +1379,6 @@
     <Content Include="Scripts\subfilters\widget-filter.js" />
     <Content Include="Scripts\tablesort\tableToExcel.js" />
     <Content Include="Scripts\warning.js" />
-    <Content Include="Scripts\analisis.js" />
     <Content Include="Scripts\autocomplete1.11.4.js" />
     <Content Include="Scripts\CargaPresupuesto.js" />
     <Content Include="Scripts\ConsultarPresupuesto.js" />
