@@ -562,23 +562,28 @@
                                         format: 'dd/mm/yyyy',
                                         onClose: function (e) {
                                             var datei = $('#fechai_vig2').val();
-                                            var datef = $('#fechaf_vig2').val();
 
-                                            var fechaIni = new Date(datei);
-                                            var anioFechaIni = fechaIni.getFullYear();
-                                            var fechaActual = new Date();
-                                            var anioActual = fechaActual.getFullYear();
+                                            var FechaActual = new Date();
+                                            anioActual = FechaActual.getFullYear();
 
-                                            if (anioFechaIni < anioActual) {
-                                                M.toast({ html: 'El año no puede ser menor al año actual' });
+                                            date = new Date(datei)
+                                            AniofechaIni = date.getFullYear()
+
+                                            if (AniofechaIni < anioActual) {
+                                                M.toast({ html: "El año seleccionado no debe ser menor al año actual" });
                                                 $('#fechai_vig2').val("");
                                                 return;
                                             }
-
-                                            if (anioFechaIni > anioActual+4) {
-                                                M.toast({ html: 'El año no puede ser mayor a ' + (anioActual + 4) });
+                                            if (AniofechaIni > (anioActual + 4)) {
+                                                M.toast({ html: "El año seleccionado no debe ser mayor a " + (anioActual + 4) });
                                                 $('#fechai_vig2').val("");
                                                 return;
+                                            }
+                                            var res = validar_fechas(datei, datef);
+
+                                            if (!res) {
+                                                $('#fechaf_vig2').val("");
+                                                M.toast({ html: 'Las fechas no tienen un secuencia correcta' });
                                             }
                                         },
                                         i18n: {
@@ -603,23 +608,23 @@
                                         onClose: function (e) {
                                             var datei = $('#fechai_vig2').val();
                                             var datef = $('#fechaf_vig2').val();
-                                            var fechaFin = new Date(datef);
-                                            var anioFechaFin = fechaFin.getFullYear();
-                                            var fechaActual = new Date();
-                                            var anioActual = fechaActual.getFullYear();
 
-                                            if (anioFechaFin < anioActual) {
-                                                M.toast({ html: 'El año no puede ser menor al año actual' });
+                                            var FechaActual = new Date();
+                                            anioActual = FechaActual.getFullYear();
+
+                                            date = new Date(datef)
+                                            AniofechaFin = date.getFullYear()
+
+                                            if (AniofechaFin < anioActual) {
+                                                M.toast({ html: "El año seleccionado no debe ser menor al año actual" });
                                                 $('#fechaf_vig2').val("");
                                                 return;
                                             }
-
-                                            if (anioFechaFin > anioActual + 4) {
-                                                M.toast({ html: 'El año no puede ser mayor a ' + (anioActual + 4) });
+                                            if (AniofechaFin > (anioActual + 4)) {
+                                                M.toast({ html: "El año seleccionado no debe ser mayor a " + (anioActual + 4) });
                                                 $('#fechaf_vig2').val("");
                                                 return;
                                             }
-
 
                                             var res = validar_fechas(datei, datef);
 

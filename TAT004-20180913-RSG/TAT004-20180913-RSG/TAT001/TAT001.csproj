@@ -1384,7 +1384,6 @@
     <Content Include="Scripts\CargaPresupuesto.js" />
     <Content Include="Scripts\ConsultarPresupuesto.js" />
     <Content Include="Scripts\cartaV.js" />
-    <Content Include="Scripts\correos.js" />
     <Content Include="Scripts\create.js" />
     <Content Include="Scripts\create2.js" />
     <Content Include="Scripts\edit - antes.js" />
@@ -1982,6 +1981,7 @@
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->
     <Folder Include="App_Data\" />
+    <Folder Include="PdfTemp\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
