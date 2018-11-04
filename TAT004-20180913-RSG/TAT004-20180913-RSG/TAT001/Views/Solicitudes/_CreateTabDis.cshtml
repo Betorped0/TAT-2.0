@@ -23,7 +23,9 @@
                             </label>
                             <script>
 
-                                        function cambiaLigada(campo) {
+                                function cambiaLigada(campo) {
+                                            
+                                               var f = $("#file_dis")
                                             if (campo.checked) {
                                                 $("#select_neg").val("P");
                                                 $("#select_negi").val("P");
@@ -31,11 +33,15 @@
                                                 $("#select_neg").change();
                                                 $("#div_objq").removeClass("hide");
                                                 $("#txt_ligada").val("X");
+                                                var monto = $('#bmonto_apoyo').val();
+                                                (monto === "0" || monto==="0.00%") ? f.prop('disabled', true) : f.prop('disabled', false)
+
                                             } else {
                                                 $("#select_neg").prop("disabled", false);
                                                 $("#select_neg").change();
                                                 $("#div_objq").addClass("hide");
                                                 $("#txt_ligada").val("");
+                                                f.prop('disabled', false)
                                                 cambiaCheckRec();
                                             }
                                         }
