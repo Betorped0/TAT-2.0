@@ -25,7 +25,15 @@
                     <div class="form-group col s12">
                         @Html.LabelFor(model => model.TSOL_ID, "Tipo de solicitud", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_tiposol" }) @*B20180801 MGC Textos*@
                         <div class="col-md-10">
-                                @Html.EditorFor(model => model.TSOL_ID, new { htmlAttributes = new { @class = "dropdowntree " + @ViewBag.relacionada } })
+                            @if (ViewBag.reversan == "X")
+                            {
+                                @Html.EditorFor(model => model.TSOL_ID, new { htmlAttributes = new { @class = "dropdowntree", @readonly = "readonly",@style="color:gray;" } })
+
+                            }
+                            else
+                            {
+                                @Html.EditorFor(model => model.TSOL_ID, new { htmlAttributes = new { @class = "dropdowntree" } })
+                            }
                         </div>
 
                         @Html.HiddenFor(model => model.DOCUMENTO_REF)
