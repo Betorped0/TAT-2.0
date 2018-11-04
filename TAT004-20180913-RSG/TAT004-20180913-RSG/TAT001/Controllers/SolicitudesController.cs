@@ -199,24 +199,7 @@ namespace TAT001.Controllers
             ViewBag.recs = recs;
             ViewBag.recls = recls;
             //Tab_Fin Análisis Solicitud
-            decimal montoProv = 0.0M;
-            decimal montoApli = 0.0M;
-            decimal remanente = 0.0M;
-            bool esDocRef = false;
-            if (DF.D.DOCUMENTO_REF != null){ montoProv = db.DOCUMENTOes.First(x=>x.NUM_DOC== DF.D.DOCUMENTO_REF).MONTO_DOC_MD.Value;}
-
-            if (db.DOCUMENTOes.Any(x=>x.DOCUMENTO_REF== DF.D.NUM_DOC))
-            {
-                esDocRef = true;
-                montoApli = db.DOCUMENTOes.Sum(x => x.MONTO_DOC_MD.Value);
-
-            }
-            if (montoProv > 0 && montoApli > 0){ remanente = montoProv - montoApli;}
-            ViewBag.montoSol = DF.D.MONTO_DOC_MD;
-            ViewBag.montoProv = (DF.D.DOCUMENTO_REF != null? montoProv.ToString():"-");
-            ViewBag.montoApli = (esDocRef? montoApli.ToString():"-");
-            ViewBag.remanente = ((montoProv > 0 && montoApli > 0) ? (remanente<0?"(-)"+ remanente.ToString() : remanente.ToString()) : "-");
-            ViewBag.montoTotal = DF.D.MONTO_DOC_MD;
+            ObtenerAnalisisSolicitud(DF.D);
 
             return View(DF);
         }
@@ -794,7 +777,7 @@ namespace TAT001.Controllers
                 if (rel > 0)
                 {
                     d = db.DOCUMENTOes.Where(doc => doc.NUM_DOC == rel).FirstOrDefault();
-                    docsrel = db.DOCUMENTOes.Where(docr => docr.DOCUMENTO_REF == rel).ToList();
+                    docsrel = db.DOCUMENTOes.Where(docr => docr.DOCUMENTO_REF == rel && docr.ESTATUS_C == null).ToList();
                     id_bukrs = db.SOCIEDADs.Where(soc => soc.BUKRS == d.SOCIEDAD_ID && soc.ACTIVO == true).FirstOrDefault();
                     id_waersf = id_bukrs.WAERS;//MGC B20180625 MGC 
                     id_pais = db.PAIS.Where(pais => pais.LAND.Equals(d.PAIS_ID)).FirstOrDefault();//RSG 15.05.2018
@@ -1269,7 +1252,7 @@ namespace TAT001.Controllers
                 if (padre != null)
                 {
                     ViewBag.original = padre.MONTO_DOC_MD;
-                    List<DOCUMENTO> dd = db.DOCUMENTOes.Where(a => a.DOCUMENTO_REF == padre.NUM_DOC).ToList();
+                    List<DOCUMENTO> dd = db.DOCUMENTOes.Where(a => a.DOCUMENTO_REF == padre.NUM_DOC && a.ESTATUS_C==null).ToList();
                     ViewBag.sumaRel = decimal.Parse("0.00000"); ;
                     foreach (DOCUMENTO dos in dd)
                     {
@@ -3298,6 +3281,44 @@ namespace TAT001.Controllers
 
         }
 
+        void ObtenerAnalisisSolicitud(DOCUMENTO D)
+        {
+            FormatosC format = new FormatosC();
+            decimal montoProv = 0.0M;
+            decimal montoApli = 0.0M;
+            decimal remanente = 0.0M;
+            bool esDocRef = false;
+            bool esProv = false;
+
+            if (D.DOCUMENTO_REF != null) {//Es hijo
+                esProv = true;
+                montoProv = db.DOCUMENTOes.First(x => x.NUM_DOC == D.DOCUMENTO_REF).MONTO_DOC_MD.Value; }
+            else if (db.DOCUMENTOes.Any(x=>x.DOCUMENTO_REF==D.NUM_DOC && x.ESTATUS_C == null)) {
+                //Es padre
+                esProv = true;
+                montoProv = D.MONTO_DOC_MD.Value; }
+
+            if (db.DOCUMENTOes.Any(x => x.DOCUMENTO_REF == D.NUM_DOC && x.ESTATUS_C == null))
+            {
+                esDocRef = true;
+                montoApli = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == D.NUM_DOC && x.ESTATUS_C == null).Sum(x => x.MONTO_DOC_MD.Value);
+            }
+            else if (D.DOCUMENTO_REF != null)
+            {
+                esDocRef = true;
+                montoApli = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == D.DOCUMENTO_REF && x.ESTATUS_C == null).Sum(x => x.MONTO_DOC_MD.Value);
+
+            }
+            if (montoProv > 0 && montoApli > 0)
+            {
+                remanente = montoProv - montoApli;
+            }
+            ViewBag.montoSol = format.toShow(D.MONTO_DOC_MD.Value, ".");
+            ViewBag.montoProv = (esProv ? format.toShow(montoProv, ".") : "-");
+            ViewBag.montoApli = (esDocRef ? format.toShow(montoApli, ".") : "-");
+            ViewBag.remanente = ((montoProv > 0 && montoApli > 0) ? format.toShow(remanente, ".") : "-");
+            ViewBag.montoTotal = format.toShow(D.MONTO_DOC_MD.Value,".");
+        }
 
 
         public STATE getEstado(int id)
@@ -4092,22 +4113,7 @@ namespace TAT001.Controllers
             //ADD RSG 31.10.2018------------------------------
 
             //Tab_Fin Análisis Solicitud
-            decimal montoProv = 0.0M;
-            decimal montoApli = 0.0M;
-            decimal remanente = 0.0M;
-            bool esDocRef = false;
-            if (DF.D.DOCUMENTO_REF != null) { montoProv = db.DOCUMENTOes.First(x => x.NUM_DOC == DF.D.DOCUMENTO_REF).MONTO_DOC_MD.Value; }
-            if (db.DOCUMENTOes.Any(x => x.DOCUMENTO_REF == DF.D.NUM_DOC))
-            {
-                esDocRef = true;
-                montoApli = db.DOCUMENTOes.Sum(x => x.MONTO_DOC_MD.Value);
-            }
-            if (montoProv > 0 && montoApli > 0) { remanente = montoProv - montoApli; }
-            ViewBag.montoSol = DF.D.MONTO_DOC_MD;
-            ViewBag.montoProv = (DF.D.DOCUMENTO_REF != null ? montoProv.ToString() : "-");
-            ViewBag.montoApli = (esDocRef ? montoApli.ToString() : "-");
-            ViewBag.remanente = ((montoProv > 0 && montoApli > 0) ? (remanente < 0 ? "(-)" + remanente.ToString() : remanente.ToString()) : "-");
-            ViewBag.montoTotal = DF.D.MONTO_DOC_MD;
+            ObtenerAnalisisSolicitud(d);
 
             return View(d);
         }
@@ -7500,14 +7506,13 @@ namespace TAT001.Controllers
             }
             else
             {
-                decimal hola = Convert.ToDecimal(num);
-                var rev = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == hola).ToList();
-                ;
-
+                decimal num_doc = Convert.ToDecimal(num);
+                var rev = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == num_doc && x.ESTATUS_C==null).ToList();
+                
                 if (rev.Count() == 0)
                 {
                     //CON UN RELACIONADO 
-                    var rev2 = db.DOCUMENTOes.Where(x => x.NUM_DOC == hola).FirstOrDefault();
+                    var rev2 = db.DOCUMENTOes.Where(x => x.NUM_DOC == num_doc).FirstOrDefault();
                     decimal? rem2 = (rev2.MONTO_DOC_MD - Convert.ToDecimal(num2));
 
                     sm.S_MONTOB = num2;
@@ -7523,8 +7528,8 @@ namespace TAT001.Controllers
                 else if (rev.Count() == 1)
                 {
                     //CON DOS RELACIONADOS
-                    var rev3 = db.DOCUMENTOes.Where(x => x.NUM_DOC == hola).FirstOrDefault();
-                    var rev33 = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == hola).FirstOrDefault();
+                    var rev3 = db.DOCUMENTOes.Where(x => x.NUM_DOC == num_doc).FirstOrDefault();
+                    var rev33 = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == num_doc && x.ESTATUS_C == null).FirstOrDefault();
                     decimal? rem3 = ((rev3.MONTO_DOC_MD - rev33.MONTO_DOC_MD) - (Convert.ToDecimal(num2)));
 
                     sm.S_MONTOB = num2;
@@ -7539,8 +7544,8 @@ namespace TAT001.Controllers
                 }
                 else if (rev.Count() > 1)
                 {
-                    var rev4 = db.DOCUMENTOes.Where(x => x.NUM_DOC == hola).FirstOrDefault();
-                    var rev44 = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == hola).Select(x => x.MONTO_DOC_MD);
+                    var rev4 = db.DOCUMENTOes.Where(x => x.NUM_DOC == num_doc).FirstOrDefault();
+                    var rev44 = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == num_doc && x.ESTATUS_C == null).Select(x => x.MONTO_DOC_MD);
                     decimal sum = 0;
 
                     foreach (var k in rev44)

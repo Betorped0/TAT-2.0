@@ -254,7 +254,7 @@
                                 </div>
                                 <div class="modal-footer right">
                                     <a href="#!" class="modal-action modal-close btn-flat">No</a>
-                                    <a class="modal-action btn-flat" href="@Url.Action(" Cancelar", "Solicitudes", new { id = Model.D.NUM_DOC })">Si</a>
+                                    <a class="modal-action btn-flat" href="@Url.Action("Cancelar", "Solicitudes", new { id = Model.D.NUM_DOC })">Si</a>
                                 </div>
                             </div>
                             <script>
@@ -627,32 +627,16 @@ catch (Exception ee)
     asignarPresupuesto(aaa);
 
     function asignarPresupuesto(kunnr) {
-
+        var periodo = $("#D_PERIODO").val();
         $.ajax({
             type: "POST",
             url: root + 'Listas/getPresupuesto',
             dataType: "json",
-            data: { "kunnr": kunnr },
+            data: { "kunnr": kunnr,periodo: periodo},
 
             success: function (data) {
 
                 if (data !== null || data !== "") {
-                    //$('#p_canal').text(data.P_CANAL);
-                    //$('#p_banner').text(data.P_BANNER);
-                    //$('#pc_c').text(data.PC_C);
-                    //$('#pc_a').text(data.PC_A);
-                    //$('#pc_p').text(data.PC_P);
-                    //$('#pc_t').text(data.PC_T);
-                    //RSG 26.04.2018----------------
-
-                    //$('#p_canal').text('$' + ((data.P_CANAL / 1).toFixed(2)));
-                    //$('#p_banner').text('$' + ((data.P_BANNER / 1).toFixed(2)));
-                    //$('#pc_c').text('($' + ((data.PC_C / 1).toFixed(2)) + ')');
-                    //$('#pc_a').text('($' + ((data.PC_A / 1).toFixed(2)) + ')');
-                    //$('#pc_p').text('($' + ((data.PC_P / 1).toFixed(2)) + ')');
-                    //$('#pc_t').text('($' + ((data.PC_T / 1).toFixed(2)) + ')');
-                    //$('#consu').text('$' + ((data.CONSU / 1).toFixed(2)));
-                    //RSG 26.04.2018----------------
 
                     $('#p_vtweg').text(canal[0] + ' ' + data.CANAL);
                     $('#p_kunnr').text(kunnr.replace(/^0+/, '') + ' ' + data.CLIENTE);

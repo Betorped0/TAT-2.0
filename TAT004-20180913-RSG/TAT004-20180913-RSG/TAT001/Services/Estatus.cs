@@ -75,7 +75,9 @@ namespace TAT001.Services
                 ret = "<span class='lbl_txt new badge green darken-1 white-text' data-badge-caption=' '>Por gen.txt</span>";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[C]..[A]...."))
                 ret = "<span class='lbl_txt new badge green darken-1 white-text' data-badge-caption=' '>Cerrada</span>";
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]...."))
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]....[0]"))
+                ret = "<span class='new badge grey darken-2 white-text' data-badge-caption=' '><span class='lbl_pending'>Pendiente reverso</span></span>";
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]....[1]"))
                 ret = "<span class='lbl_rev new badge green darken-1 white-text' data-badge-caption=' '>Reversada</span>";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[P]..[A]...."))
                 ret = "<span class='lbl_contab new badge green darken-1 white-text' data-badge-caption=' '>Por contabilizar</span>";
@@ -124,7 +126,9 @@ namespace TAT001.Services
                 ret = "<span class='lbl_txt new badge green darken-1 white-text' data-badge-caption=' '>Por gen.txt</span>";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[C]..[A]...."))
                 ret = "<span class='lbl_txt new badge green darken-1 white-text' data-badge-caption=' '>Cerrada</span>";
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]...."))
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]....[0]"))
+                ret = "<span class='new badge grey darken-2 white-text' data-badge-caption=' '><span class='lbl_pending'>Pendiente reverso</span></span>";
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]....[1]"))
                 ret = "<span class='lbl_rev new badge green darken-1 white-text' data-badge-caption=' '>Reversada</span>";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[P]..[A]...."))
                 ret = "<span class='lbl_contab new badge green darken-1 white-text' data-badge-caption=' '>Por contabilizar</span>";
@@ -173,7 +177,9 @@ namespace TAT001.Services
                 ret = "Por gen.txt ";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[C]..[A]...."))
                 ret = "Cerrada";
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]...."))
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]....[0]"))
+                ret = ">Pendiente reverso";
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]....[1]"))
                 ret = "Reversada";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[P]..[A]...."))
                 ret = "Por contabilizar ";
@@ -222,7 +228,9 @@ namespace TAT001.Services
                 ret = "lbl_txt new badge green darken-1 white-text";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[C]..[A]...."))
                 ret = "lbl_txt new badge green darken-1 white-text";
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]...."))
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]....[0]"))
+                ret = "new badge grey darken-2 white-text";
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]....[1]"))
                 ret = "lbl_rev new badge green darken-1 white-text";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[P]..[A]...."))
                 ret = "lbl_contab new badge green darken-1 white-text";
@@ -281,7 +289,9 @@ namespace TAT001.Services
                 ret = "Por gen.txt ";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[C]..[A]...."))
                 ret = "Cerrada";
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]...."))
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]....[0]"))
+                ret = "Pendiente reverso";
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]....[1]"))
                 ret = "Reversada";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[P]..[A]...."))
                 ret = "Por contabilizar ";
@@ -341,7 +351,9 @@ namespace TAT001.Services
                 ret = "lbl_txt new badge green darken-1 white-text";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[C]..[A]...."))
                 ret = "lbl_txt new badge green darken-1 white-text";
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]...."))
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]....[0]"))
+                ret = "new badge grey darken-2 white-text";
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]....[1]"))
                 ret = "lbl_rev new badge green darken-1 white-text";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[P]..[A]...."))
                 ret = "lbl_contab new badge green darken-1 white-text";

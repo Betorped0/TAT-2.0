@@ -42,12 +42,12 @@ namespace TAT001.Services
                     else
                     {
                         pm.P_CANAL = decimal.Parse(presupuesto[0].VALOR.ToString());
-                        pm.P_BANNER = decimal.Parse(presupuesto[0].VALOR.ToString());
+                        pm.P_BANNER = decimal.Parse(presupuesto[1].VALOR.ToString());
                         pm.PC_C = (decimal.Parse(presupuesto[4].VALOR.ToString()) + decimal.Parse(presupuesto[5].VALOR.ToString()) + decimal.Parse(presupuesto[6].VALOR.ToString()));
                         pm.PC_A = decimal.Parse(presupuesto[8].VALOR.ToString());
                         pm.PC_P = decimal.Parse(presupuesto[9].VALOR.ToString());
                         pm.PC_T = pm.PC_C + pm.PC_A + pm.PC_P;
-                        pm.CONSU = (decimal.Parse(presupuesto[0].VALOR.ToString()) - pm.PC_T);
+                        pm.CONSU = (decimal.Parse(presupuesto[1].VALOR.ToString()) - pm.PC_T);
                     }
                 }
             }
