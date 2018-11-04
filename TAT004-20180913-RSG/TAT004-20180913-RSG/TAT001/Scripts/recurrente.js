@@ -338,11 +338,24 @@ function cambiaRec() {
 }
 
 function cambiaCheckRec() {
+
+    var anioi = $('#anioi_id'),anioiV = anioi.val()*1,aniof = $('#aniof_id'), aniofV = aniof.val()*1,
+        periodoi = $('#periodoi_id'), periodoiV = periodoi.val()*1,periodof = $('#periodof_id'),periodofV = periodof.val()*1;
+    
     var campo = document.getElementById("check_recurrente");
     document.getElementById("btn-date").disabled = false;
     document.getElementById("btn-peri").disabled = false;
 
     if (campo.checked) {
+        if (periodoiV === periodofV) {
+            var periodo = (periodoiV + 1) === 13 ? 1 : (periodoiV + 1);
+            if (periodo === 1 && (anioiV === aniofV)) {
+                aniof.val(anioiV + 1);
+                aniof.formSelect();
+            }
+            periodof.val(periodo);
+            periodof.formSelect();
+        }
         document.getElementById("btn-peri").checked = true;
         document.getElementById("btn-date").disabled = true;
         document.getElementById("btn-peri").disabled = true;
