@@ -607,6 +607,7 @@ namespace TAT001.Services
                 DOCUMENTOL dl = new DOCUMENTOL();
                 dl.ESTATUS = null;
                 dl.FECHAF = drecc.FECHAF.Value.AddDays(4);
+                if(dOCUMENTO.PORC_APOYO > 0)
                 dl.MONTO_VENTA = (dOCUMENTO.MONTO_DOC_MD / dOCUMENTO.PORC_APOYO) * 100;
                 dl.NUM_DOC = dOCUMENTO.NUM_DOC;
                 dl.POS = 1;
