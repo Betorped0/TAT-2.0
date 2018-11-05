@@ -32,27 +32,18 @@
                     <div class="card-panel">
                         <h5 id="head_docssoporte">Documentos de Soporte</h5>
                         <div class="row" style="margin-bottom:0">
-                            @using (Html.BeginForm("Descargar", "Solicitudes", FormMethod.Post))
-                            {
-                                try
-                                {
-                                    for (int i = 0; i < archivos.Count; i++)
+                            @for (int i = 0; i < archivos.Count; i++)
                                     {
                                         nombrefile = archivos[i].PATH.Split('\\');
 
                                         @archivos[i].CLASE
                                         <div class="file-field input-field">
-                                            <button name="archivo" class="btn lbl_cargar" type="submit" value="@archivos[i].PATH">DESCARGAR</button> @*B20180801 MGC Textos*@
+                                            <button name="archivo" class="btn lbl_cargar" type="button" value="@archivos[i].PATH" onclick="descargarArchivo(this)">DESCARGAR</button> @*B20180801 MGC Textos*@
                                             <div class="file-path-wrapper">
                                                 <input disabled value="@nombrefile[nombrefile.Length - 1]" id="disabled" type="text" class="file-path ">
                                             </div>
                                         </div>
                                     }
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
                         </div>
                     </div>
                 }

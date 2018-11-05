@@ -6029,4 +6029,14 @@ function categoriaUnica(cat) {
 
     return res;
 }
-
+function descargarArchivo(me) {
+    var form = document.createElement("form"),
+        Archivo = document.createElement("input");
+    form.method = "POST";
+    form.action = root + 'Solicitudes/Descargar';
+    Archivo.value = me.value;
+    Archivo.name = "archivo";
+    form.appendChild(Archivo);
+    document.body.appendChild(form);
+    form.submit();
+}
