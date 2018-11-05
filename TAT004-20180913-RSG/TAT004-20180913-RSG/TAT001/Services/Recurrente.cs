@@ -231,6 +231,15 @@ namespace TAT001.Services
 
             dOCUMENTO.DOCUMENTO_REF = null;
 
+            //ADD 04.11.2018---------------------------------------------
+            CUENTA cta = db.CUENTAs.Where(x => x.SOCIEDAD_ID.Equals(dOCUMENTO.SOCIEDAD_ID) & x.PAIS_ID.Equals(dOCUMENTO.PAIS_ID) & x.TALL_ID.Equals(dOCUMENTO.TALL_ID)).FirstOrDefault();
+            if (cta != null)
+            {
+                dOCUMENTO.CUENTAP = cta.ABONO;
+                dOCUMENTO.CUENTAPL = cta.CARGO;
+                dOCUMENTO.CUENTACL = cta.CLEARING;
+            }
+            //ADD 04.11.2018---------------------------------------------
 
             //Guardar el documento
             db.DOCUMENTOes.Add(dOCUMENTO);
