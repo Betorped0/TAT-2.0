@@ -2365,7 +2365,7 @@ namespace TAT001.Controllers
                     docu.CIUDAD = ciudad;
                     docu.PERIODO = cal445.getPeriodo(System.DateTime.Now);
                     docu.EJERCICIO = Convert.ToString(System.DateTime.Now.Year);
-                    docu.TIPO_TECNICO = "";///////////////////////////////////////////////CHECK
+                    docu.TIPO_TECNICO = "M";///////////////////////////////////////////////CHECK
                     docu.TIPO_RECURRENTE = null;
                     docu.CANTIDAD_EV = 1;
                     docu.USUARIOC_ID = user.ID;
@@ -2683,6 +2683,7 @@ namespace TAT001.Controllers
                             if (ligada.Trim() != "false" & dop.DOCUMENTORECs.Count == 0)//ES LIGADA
                             {
                                 dop.LIGADA = true;
+                                dop.TIPO_TECNICO = "P";
                                 DOCUMENTOREC drec = new DOCUMENTOREC();
                                 drec.NUM_DOC = dop.NUM_DOC;
                                 drec.POS = 1;
@@ -2729,7 +2730,7 @@ namespace TAT001.Controllers
 
                                 dop.DOCUMENTORECs.Add(drec);
 
-                                db.SaveChanges();
+                                //db.SaveChanges();
                             }
                             //-------------------------------------------------ADD RSG 04.11.2018
                             dop.DOCUMENTOPs.Add(docup);
@@ -2849,6 +2850,16 @@ namespace TAT001.Controllers
             List<string> li = new List<string>();
             int contadorArchivos = 0;
             int contadorNotas = 0;
+
+            foreach(DOCUMENTO doc in listD)
+            {
+                int pos = 1;
+                foreach(DOCUMENTOP docp in doc.DOCUMENTOPs)
+                {
+                    docp.POS = pos;
+                    pos++;
+                }
+            }
 
             foreach (DOCUMENTO doc in listD)
             {
