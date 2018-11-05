@@ -2432,6 +2432,15 @@ namespace TAT001.Controllers
                     docu.CUENTAPL = null;
                     docu.EXCEDE_PRES = "";////////////////////////////checar presupusto
                     docu.MONTO_DOC_MD = 0; //ADD RSG 04.11.2018
+
+                    CUENTA cta = db.CUENTAs.Where(x => x.SOCIEDAD_ID.Equals(docu.SOCIEDAD_ID) & x.PAIS_ID.Equals(docu.PAIS_ID) & x.TALL_ID.Equals(docu.TALL_ID)).FirstOrDefault();
+                    if (cta != null)
+                    {
+                        docu.CUENTAP = cta.ABONO;
+                        docu.CUENTAPL = cta.CARGO;
+                        docu.CUENTACL = cta.CLEARING;
+                    }
+
                     listD.Add(docu);
                 }
                 DOCUMENTO dop = listD.Where(x => x.NUM_DOC == docu.NUM_DOC).FirstOrDefault();
