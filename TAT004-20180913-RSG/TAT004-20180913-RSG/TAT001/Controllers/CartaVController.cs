@@ -530,14 +530,15 @@ namespace TAT001.Controllers
                     armadoCuerpoTab2.Add(item.POS.ToString());
                     armadoCuerpoTab2.Add(db.TSOLs.Where(x => x.ID == item.TSOL_ID).Select(x => x.DESCRIPCION).First());
                     armadoCuerpoTab2.Add(a.ToShortDateString());
-                    if (varligada) {
-                        DOCUMENTORAN docRan= db.DOCUMENTORANs.First(x=> x.LIN == 1 && x.NUM_DOC==id);
-                        armadoCuerpoTab2.Add(docRan.OBJETIVOI.ToString());
+                    if (varligada)
+                    {
+                        DOCUMENTORAN docRan = db.DOCUMENTORANs.First(x => x.LIN == 1 && x.NUM_DOC == id);
+                        armadoCuerpoTab2.Add(format.toShow(Math.Round(docRan.OBJETIVOI.Value, 2), decimales));
                         armadoCuerpoTab2.Add(docRan.PORCENTAJE.Value.ToString("##.00"));
                     }
                     else
                     {
-                        armadoCuerpoTab2.Add(item.MONTO_BASE.ToString());
+                        armadoCuerpoTab2.Add(format.toShow(Math.Round(item.MONTO_BASE.Value, 2), decimales));
                         armadoCuerpoTab2.Add(item.PORC.Value.ToString("##.00"));
                     }
                 }
@@ -1229,12 +1230,12 @@ namespace TAT001.Controllers
                     if (varligada)
                     {
                         DOCUMENTORAN docRan = db.DOCUMENTORANs.First(x => x.LIN == 1 && x.NUM_DOC == v.num_doc);
-                        armadoCuerpoTab2.Add(docRan.OBJETIVOI.ToString());
+                        armadoCuerpoTab2.Add(format.toShow(Math.Round(docRan.OBJETIVOI.Value, 2), decimales));
                         armadoCuerpoTab2.Add(docRan.PORCENTAJE.Value.ToString("##.00"));
                     }
                     else
                     {
-                        armadoCuerpoTab2.Add(item.MONTO_BASE.ToString());
+                        armadoCuerpoTab2.Add(format.toShow(Math.Round(item.MONTO_BASE.Value, 2), decimales));
                         armadoCuerpoTab2.Add(item.PORC.Value.ToString("##.00"));
                     }
                 }
@@ -1612,11 +1613,18 @@ namespace TAT001.Controllers
 
                 /////////////////////////////////////////////DATOS PARA LA TABLA 2 RECURRENCIAS EN PDF///////////////////////////////////////
                 var cabeza2 = new List<string>();
-                cabeza2.Add(db.TEXTOCVs.Where(x => x.SPRAS_ID == user.SPRAS_ID & x.CAMPO == "posC2").Select(x => x.TEXTO).FirstOrDefault());
-                cabeza2.Add(db.TEXTOCVs.Where(x => x.SPRAS_ID == user.SPRAS_ID & x.CAMPO == "tipoC2").Select(x => x.TEXTO).FirstOrDefault());
-                cabeza2.Add(db.TEXTOCVs.Where(x => x.SPRAS_ID == user.SPRAS_ID & x.CAMPO == "fechaC2").Select(x => x.TEXTO).FirstOrDefault());
-                cabeza2.Add(db.TEXTOCVs.Where(x => x.SPRAS_ID == user.SPRAS_ID & x.CAMPO == "montoC2").Select(x => x.TEXTO).FirstOrDefault());
-                cabeza2.Add(db.TEXTOCVs.Where(x => x.SPRAS_ID == user.SPRAS_ID & x.CAMPO == "porcentajeC2").Select(x => x.TEXTO).FirstOrDefault());
+                cabeza2.Add(ObtenerTexto(db, user.SPRAS_ID, "posC2"));
+                cabeza2.Add(ObtenerTexto(db, user.SPRAS_ID, "tipoC2"));
+                cabeza2.Add(ObtenerTexto(db, user.SPRAS_ID, "fechaC2"));
+                if (varligada)
+                {
+                    cabeza2.Add(ObtenerTexto(db, user.SPRAS_ID, "objetivo"));
+                }
+                else
+                {
+                    cabeza2.Add(ObtenerTexto(db, user.SPRAS_ID, "montoC2"));
+                }
+                cabeza2.Add(ObtenerTexto(db, user.SPRAS_ID, "porcentajeC2"));
 
                 var con4 = db.DOCUMENTORECs
                                             .Where(x => x.NUM_DOC.Equals(v.num_doc))
@@ -1629,7 +1637,17 @@ namespace TAT001.Controllers
                     armadoCuerpoTab2.Add(item.POS.ToString());
                     armadoCuerpoTab2.Add(db.TSOLs.Where(x => x.ID == item.TSOL_ID).Select(x => x.DESCRIPCION).First());
                     armadoCuerpoTab2.Add(a.ToShortDateString());
-                    armadoCuerpoTab2.Add(item.MONTO_BASE.ToString());
+                    if (varligada)
+                    {
+                        DOCUMENTORAN docRan = db.DOCUMENTORANs.First(x => x.LIN == 1 && x.NUM_DOC == v.num_doc);
+                        armadoCuerpoTab2.Add(format.toShow(Math.Round(docRan.OBJETIVOI.Value, 2), decimales));
+                        armadoCuerpoTab2.Add(docRan.PORCENTAJE.Value.ToString("##.00"));
+                    }
+                    else
+                    {
+                        armadoCuerpoTab2.Add(format.toShow(Math.Round(item.MONTO_BASE.Value, 2), decimales));
+                        armadoCuerpoTab2.Add(item.PORC.Value.ToString("##.00"));
+                    }
                     armadoCuerpoTab2.Add(item.PORC.ToString());
                 }
                 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1844,7 +1862,7 @@ namespace TAT001.Controllers
                 //B20180710 MGC 2018.07.18 total es input o text
                 //string trclass = "";
                 //bool editmonto = false; //B20180710 MGC 2018.07.18 editar el monto en porcentaje categoría
-
+                bool varligada = Convert.ToBoolean(d.LIGADA);
                 foreach (var item in con)
                 {
                     lista.Add(item.Key.VIGENCIA_DE.ToString() + item.Key.VIGENCIA_AL.ToString());
@@ -2160,11 +2178,18 @@ namespace TAT001.Controllers
 
                 /////////////////////////////////////////////DATOS PARA LA TABLA 2 RECURRENCIAS EN LA VISTA///////////////////////////////////////
                 var cabeza2 = new List<string>();
-                cabeza2.Add(db.TEXTOCVs.Where(x => x.SPRAS_ID == user.SPRAS_ID & x.CAMPO == "posC2").Select(x => x.TEXTO).FirstOrDefault());
-                cabeza2.Add(db.TEXTOCVs.Where(x => x.SPRAS_ID == user.SPRAS_ID & x.CAMPO == "tipoC2").Select(x => x.TEXTO).FirstOrDefault());
-                cabeza2.Add(db.TEXTOCVs.Where(x => x.SPRAS_ID == user.SPRAS_ID & x.CAMPO == "fechaC2").Select(x => x.TEXTO).FirstOrDefault());
-                cabeza2.Add(db.TEXTOCVs.Where(x => x.SPRAS_ID == user.SPRAS_ID & x.CAMPO == "montoC2").Select(x => x.TEXTO).FirstOrDefault());
-                cabeza2.Add(db.TEXTOCVs.Where(x => x.SPRAS_ID == user.SPRAS_ID & x.CAMPO == "porcentajeC2").Select(x => x.TEXTO).FirstOrDefault());
+                cabeza2.Add(ObtenerTexto(db, user.SPRAS_ID, "posC2"));
+                cabeza2.Add(ObtenerTexto(db, user.SPRAS_ID, "tipoC2"));
+                cabeza2.Add(ObtenerTexto(db, user.SPRAS_ID, "fechaC2"));
+                if (varligada)
+                {
+                    cabeza2.Add(ObtenerTexto(db, user.SPRAS_ID, "objetivo"));
+                }
+                else
+                {
+                    cabeza2.Add(ObtenerTexto(db, user.SPRAS_ID, "montoC2"));
+                }
+                cabeza2.Add(ObtenerTexto(db, user.SPRAS_ID, "porcentajeC2"));
 
                 var con4 = db.DOCUMENTORECs
                                             .Where(x => x.NUM_DOC.Equals(id))
@@ -2178,8 +2203,17 @@ namespace TAT001.Controllers
                     armadoCuerpoTab2.Add(item.POS.ToString());
                     armadoCuerpoTab2.Add(db.TSOLs.Where(x => x.ID == item.TSOL_ID).Select(x => x.DESCRIPCION).First());
                     armadoCuerpoTab2.Add(a.ToShortDateString());
-                    armadoCuerpoTab2.Add(item.MONTO_BASE.ToString());
-                    armadoCuerpoTab2.Add(item.PORC.ToString());
+                    if (varligada)
+                    {
+                        DOCUMENTORAN docRan = db.DOCUMENTORANs.First(x => x.LIN == 1 && x.NUM_DOC == id);
+                        armadoCuerpoTab2.Add(format.toShow(Math.Round(docRan.OBJETIVOI.Value, 2), decimales));
+                        armadoCuerpoTab2.Add(docRan.PORCENTAJE.Value.ToString("##.00"));
+                    }
+                    else
+                    {
+                        armadoCuerpoTab2.Add(format.toShow(Math.Round(item.MONTO_BASE.Value, 2), decimales));
+                        armadoCuerpoTab2.Add(item.PORC.Value.ToString("##.00"));
+                    }
                 }
                 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -2491,7 +2525,7 @@ namespace TAT001.Controllers
                 {
 
                 }
-
+                bool varligada = Convert.ToBoolean(d.LIGADA);
                 List<string> encabezadoFech = new List<string>();
                 List<string> armadoCuerpoTab = new List<string>(); //B20180710 MGC 2018.07.10 Modificaciones para editar los campos de distribución se agrego los objetos
                 List<string> armadoCuerpoTab2 = new List<string>();
@@ -2559,7 +2593,7 @@ namespace TAT001.Controllers
                 v.mail = cs.MAIL;
                 v.mail_x = Convert.ToBoolean(cs.MAILX);
                 v.monto_x = true;
-                v.monto = cs.MONTO.ToString();
+                v.monto = (cs.MONTO!=null? cs.MONTO.ToString():"");
                 v.moneda = cs.MONEDA;
                 v.payerNom = cs.PAYERNOM;
                 v.payerNom_x = Convert.ToBoolean(cs.PAYERNOMX);
@@ -2847,11 +2881,18 @@ namespace TAT001.Controllers
 
                 /////////////////////////////////////////////DATOS PARA LA TABLA 2 RECURRENCIAS EN LA VISTA///////////////////////////////////////
                 var cabeza2 = new List<string>();
-                cabeza2.Add(db.TEXTOCVs.Where(x => x.SPRAS_ID == user.SPRAS_ID & x.CAMPO == "posC2").Select(x => x.TEXTO).FirstOrDefault());
-                cabeza2.Add(db.TEXTOCVs.Where(x => x.SPRAS_ID == user.SPRAS_ID & x.CAMPO == "tipoC2").Select(x => x.TEXTO).FirstOrDefault());
-                cabeza2.Add(db.TEXTOCVs.Where(x => x.SPRAS_ID == user.SPRAS_ID & x.CAMPO == "fechaC2").Select(x => x.TEXTO).FirstOrDefault());
-                cabeza2.Add(db.TEXTOCVs.Where(x => x.SPRAS_ID == user.SPRAS_ID & x.CAMPO == "montoC2").Select(x => x.TEXTO).FirstOrDefault());
-                cabeza2.Add(db.TEXTOCVs.Where(x => x.SPRAS_ID == user.SPRAS_ID & x.CAMPO == "porcentajeC2").Select(x => x.TEXTO).FirstOrDefault());
+                cabeza2.Add(ObtenerTexto(db, user.SPRAS_ID, "posC2"));
+                cabeza2.Add(ObtenerTexto(db, user.SPRAS_ID, "tipoC2"));
+                cabeza2.Add(ObtenerTexto(db, user.SPRAS_ID, "fechaC2"));
+                if (varligada)
+                {
+                    cabeza2.Add(ObtenerTexto(db, user.SPRAS_ID, "objetivo"));
+                }
+                else
+                {
+                    cabeza2.Add(ObtenerTexto(db, user.SPRAS_ID, "montoC2"));
+                }
+                cabeza2.Add(ObtenerTexto(db, user.SPRAS_ID, "porcentajeC2"));
 
                 var con4 = db.DOCUMENTORECs
                                             .Where(x => x.NUM_DOC.Equals(id))
@@ -2865,8 +2906,17 @@ namespace TAT001.Controllers
                     armadoCuerpoTab2.Add(item.POS.ToString());
                     armadoCuerpoTab2.Add(db.TSOLs.Where(x => x.ID == item.TSOL_ID).Select(x => x.DESCRIPCION).First());
                     armadoCuerpoTab2.Add(a.ToShortDateString());
-                    armadoCuerpoTab2.Add(item.MONTO_BASE.ToString());
-                    armadoCuerpoTab2.Add(item.PORC.ToString());
+                    if (varligada)
+                    {
+                        DOCUMENTORAN docRan = db.DOCUMENTORANs.First(x => x.LIN == 1 && x.NUM_DOC == id);
+                        armadoCuerpoTab2.Add(format.toShow(Math.Round(docRan.OBJETIVOI.Value, 2), decimales));
+                        armadoCuerpoTab2.Add(docRan.PORCENTAJE.Value.ToString("##.00"));
+                    }
+                    else
+                    {
+                        armadoCuerpoTab2.Add(format.toShow(Math.Round(item.MONTO_BASE.Value, 2), decimales));
+                        armadoCuerpoTab2.Add(item.PORC.Value.ToString("##.00"));
+                    }
                 }
                 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
