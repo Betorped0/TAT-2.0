@@ -2431,6 +2431,7 @@ namespace TAT001.Controllers
                     docu.CUENTAP = null;
                     docu.CUENTAPL = null;
                     docu.EXCEDE_PRES = "";////////////////////////////checar presupusto
+                    docu.MONTO_DOC_MD = 0; //ADD RSG 04.11.2018
                     listD.Add(docu);
                 }
                 DOCUMENTO dop = listD.Where(x => x.NUM_DOC == docu.NUM_DOC).FirstOrDefault();
@@ -2646,7 +2647,7 @@ namespace TAT001.Controllers
                                 docup.APOYO_EST = 0;
                                 docup.VOLUMEN_REAL = Convert.ToDecimal(volumen_real);
                                 docup.APOYO_REAL = Convert.ToDecimal(apoyo);
-                                dop.MONTO_DOC_MD = +docup.APOYO_REAL;
+                                dop.MONTO_DOC_MD += docup.APOYO_REAL;
                                 dop.MONTO_DOC_ML = tcambio.getValSoc(sociedad.WAERS, moneda_id, Convert.ToDecimal(apoyo), out errorString);
                                 dop.TIPO_CAMBIOL = tcambio.getUkurs(sociedad.WAERS, moneda_id, out errorString);
                                 dop.TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
@@ -2660,7 +2661,7 @@ namespace TAT001.Controllers
                                 docup.APOYO_REAL = 0;
                                 docup.VOLUMEN_EST = Convert.ToDecimal(volumen_real);
                                 docup.APOYO_EST = Convert.ToDecimal(apoyo);
-                                dop.MONTO_DOC_MD = +docup.APOYO_EST;
+                                dop.MONTO_DOC_MD += docup.APOYO_EST;
                                 dop.MONTO_DOC_ML = tcambio.getValSoc(sociedad.WAERS, moneda_id, Convert.ToDecimal(apoyo), out errorString);
                                 dop.TIPO_CAMBIOL = tcambio.getUkurs(sociedad.WAERS, moneda_id, out errorString);
                                 dop.TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
@@ -2845,13 +2846,34 @@ namespace TAT001.Controllers
                             }
                             catch { f.COMENTARIO = ""; }
                             string c = pf.procesa(f, "");
-                            if (c == "1")
+                            FLUJO conta = db.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+                            while (c == "1")
                             {
                                 string image = Server.MapPath("~/images/logo_kellogg.png");
                                 Email em = new Email();
                                 string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
                                 em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image);
+
+                                if (conta.WORKFP.ACCION.TIPO == "B")
+                                {
+                                    WORKFP wpos = db.WORKFPs.Where(x => x.ID == conta.WORKF_ID & x.VERSION == conta.WF_VERSION & x.POS == conta.WF_POS).FirstOrDefault();
+                                    conta.ESTATUS = "A";
+                                    conta.FECHAM = DateTime.Now;
+                                    c = pf.procesa(conta, "");
+                                    conta = db.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+
+                                }
+                                else
+                                {
+                                    c = "";
+                                }
                             }
+                            Estatus es = new Estatus();//RSG 18.09.2018
+                            DOCUMENTO docE = db.DOCUMENTOes.Find(f.NUM_DOC);
+                            conta.STATUS = es.getEstatus(docE);
+                            db.Entry(conta).State = EntityState.Modified;
+                            db.SaveChanges();
+
                             contadorNotas++;
                         }
                     }
