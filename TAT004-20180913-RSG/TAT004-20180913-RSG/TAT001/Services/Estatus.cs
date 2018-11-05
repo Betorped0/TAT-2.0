@@ -84,7 +84,7 @@ namespace TAT001.Services
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]....[0]"))
                 ret = "<span class='new badge grey darken-2 white-text' data-badge-caption=' '><span class='lbl_pending'>Pendiente reverso</span></span>";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]....[1]"))
-                ret = "<span class='lbl_rev new badge green darken-1 white-text' data-badge-caption=' '>Reversada</span>";
+                ret = "<span class='lbl_rev new badge green darken-1 white-text' data-badge-caption=' '>Reversado</span>";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[P]..[A]...."))
                 ret = "<span class='lbl_contab new badge green darken-1 white-text' data-badge-caption=' '>Por contabilizar</span>";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[P][A]...[R]"))
@@ -135,7 +135,7 @@ namespace TAT001.Services
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]....[0]"))
                 ret = "<span class='new badge grey darken-2 white-text' data-badge-caption=' '><span class='lbl_pending'>Pendiente reverso</span></span>";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]....[1]"))
-                ret = "<span class='lbl_rev new badge green darken-1 white-text' data-badge-caption=' '>Reversada</span>";
+                ret = "<span class='lbl_rev new badge green darken-1 white-text' data-badge-caption=' '>Reversado</span>";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[P]..[A]...."))
                 ret = "<span class='lbl_contab new badge green darken-1 white-text' data-badge-caption=' '>Por contabilizar</span>";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[P][A]...[R]"))
@@ -186,7 +186,7 @@ namespace TAT001.Services
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]....[0]"))
                 ret = ">Pendiente reverso";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]....[1]"))
-                ret = "Reversada";
+                ret = "Reversado";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[P]..[A]...."))
                 ret = "Por contabilizar ";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[P][A]...[R]"))
@@ -298,7 +298,7 @@ namespace TAT001.Services
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]....[0]"))
                 ret = "Pendiente reverso";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]....[1]"))
-                ret = "Reversada";
+                ret = "Reversado";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[P]..[A]...."))
                 ret = "Por contabilizar ";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[P][A]...[R]"))
