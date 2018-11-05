@@ -649,7 +649,7 @@ namespace TAT001.Controllers
                 var c = (from s in db.SOCIEDADs.ToList()
                          join p in pp
                          on s.BUKRS equals p.SOCIEDAD_ID
-                         where s.BUKRS.Contains(Prefix) && s.ACTIVO == true
+                         where s.BUKRS.Contains(Prefix.ToUpper()) && s.ACTIVO == true
                          select new { s.BUKRS }).ToList();
 
                 JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
@@ -1124,8 +1124,8 @@ namespace TAT001.Controllers
                 //          select new { ID = g.Key.MATERIALGP_ID, DESCRIPCION = g.Key.TXT50 }).ToList();
 
                 var c2 = (from cat in db.MATERIALGPs
-                         where cat.ID.Contains(Prefix)
-                         select new { ID = cat.ID, DESCRIPCION = cat.DESCRIPCION }).ToList();
+                          where cat.ID.Contains(Prefix)
+                          select new { ID = cat.ID, DESCRIPCION = cat.DESCRIPCION }).ToList();
                 c.AddRange(c2);
             }
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
@@ -2651,7 +2651,7 @@ namespace TAT001.Controllers
                                 dop.MONTO_DOC_ML = tcambio.getValSoc(sociedad.WAERS, moneda_id, Convert.ToDecimal(apoyo), out errorString);
                                 dop.TIPO_CAMBIOL = tcambio.getUkurs(sociedad.WAERS, moneda_id, out errorString);
                                 dop.TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
-                                dop.MONTO_DOC_ML2 = (dop.TIPO_CAMBIOL2 / dop.MONTO_DOC_MD);
+                                dop.MONTO_DOC_ML2 = (dop.MONTO_DOC_MD / dop.TIPO_CAMBIOL2);
                                 //var TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
                                 //dop.MONTO_DOC_ML2 = (TIPO_CAMBIOL2 * dop.MONTO_DOC_MD);
                             }
@@ -2665,10 +2665,64 @@ namespace TAT001.Controllers
                                 dop.MONTO_DOC_ML = tcambio.getValSoc(sociedad.WAERS, moneda_id, Convert.ToDecimal(apoyo), out errorString);
                                 dop.TIPO_CAMBIOL = tcambio.getUkurs(sociedad.WAERS, moneda_id, out errorString);
                                 dop.TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
-                                dop.MONTO_DOC_ML2 = (dop.TIPO_CAMBIOL2 / dop.MONTO_DOC_MD);
+                                dop.MONTO_DOC_ML2 = (dop.MONTO_DOC_MD / dop.TIPO_CAMBIOL2);
                                 //var TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
                                 //dop.MONTO_DOC_ML2 = (TIPO_CAMBIOL2 * dop.MONTO_DOC_MD);
                             }
+                            //-------------------------------------------------ADD RSG 04.11.2018
+
+                            if (ligada.Trim() != "false" & dop.DOCUMENTORECs.Count == 0)//ES LIGADA
+                            {
+                                dop.LIGADA = true;
+                                DOCUMENTOREC drec = new DOCUMENTOREC();
+                                drec.NUM_DOC = dop.NUM_DOC;
+                                drec.POS = 1;
+
+                                if (drec.MONTO_BASE == null) //RSG 31.05.2018-------------------
+                                    drec.MONTO_BASE = 0;
+                                if (drec.PORC == null) //RSG 31.05.2018-------------------
+                                    drec.PORC = 0;
+                                dop.TIPO_RECURRENTE = db.TSOLs.Where(x => x.ID.Equals(dop.TSOL_ID)).FirstOrDefault().TRECU;
+                                if (dop.TIPO_RECURRENTE == "1" & dop.LIGADA == true)
+                                    dop.TIPO_RECURRENTE = "2";
+                                //if (dop.TIPO_RECURRENTE != "1" & dop.OBJETIVOQ == true)
+                                //    dop.TIPO_RECURRENTE = "3";
+                                Calendario445 cal = new Calendario445();
+                                drec.FECHAF = cal.getUltimoDia(dop.FECHAF_VIG.Value.Year, cal.getPeriodo(dop.FECHAF_VIG.Value));
+                                drec.FECHAV = drec.FECHAF;
+
+                                drec.FECHAF = cal.getNextLunes((DateTime)drec.FECHAF);
+                                drec.EJERCICIO = drec.FECHAV.Value.Year;
+                                drec.PERIODO = cal.getPeriodoF(drec.FECHAV.Value);
+
+                                if (drec.PERIODO == 0) drec.PERIODO = 12;
+                                if (dop.DOCUMENTORAN != null)
+                                {
+                                    //foreach (DOCUMENTORAN dran in dOCUMENTO.DOCUMENTORAN.Where(x => x.POS == drec.POS))
+                                    //{
+                                    //    dran.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                    //    drec.DOCUMENTORANs.Add(dran);
+                                    //}
+                                }
+                                else
+                                {
+                                    DOCUMENTORAN dran = new DOCUMENTORAN();
+                                    dran.NUM_DOC = dop.NUM_DOC;
+                                    dran.POS = 1;
+                                    dran.LIN = 1;
+                                    dran.OBJETIVOI = 0;
+                                    dran.PORCENTAJE = dop.PORC_APOYO;
+                                    drec.DOCUMENTORANs.Add(dran);
+                                }
+                                drec.PORC = dop.PORC_APOYO;
+                                drec.DOC_REF = 0;
+                                drec.ESTATUS = "";
+
+                                dop.DOCUMENTORECs.Add(drec);
+
+                                db.SaveChanges();
+                            }
+                            //-------------------------------------------------ADD RSG 04.11.2018
                             dop.DOCUMENTOPs.Add(docup);
                         }
                     }
