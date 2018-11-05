@@ -34,7 +34,9 @@ namespace TAT001.Services
             {
                 estatus += " ";
             }
-            if (d.TSOL.PADRE) { estatus += "P"; } else { estatus += " "; }
+            if (d.TSOL != null)
+                if (d.TSOL.PADRE) { estatus += "P"; } else { estatus += " "; }
+            else { estatus += " "; }
             if (d.FLUJOes.Where(x => x.ESTATUS == "R").ToList().Count > 0)
             {
                 FLUJO flujo = d.FLUJOes.Where(x => x.ESTATUS == "R").OrderByDescending(a => a.POS).FirstOrDefault();
