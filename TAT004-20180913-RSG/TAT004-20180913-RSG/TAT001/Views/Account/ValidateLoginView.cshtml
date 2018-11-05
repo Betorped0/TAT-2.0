@@ -14,23 +14,23 @@
                 <h3>Sesión activa</h3>
                 <div class="row">
                     <div class="input-field col s12" style="margin-bottom:0;">
-                        @Html.EditorFor(model => model.USUARIO_ID, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                        @Html.LabelFor(model => model.USUARIO_ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "" })
+                        @Html.EditorFor(model => model.USUARIO_ID,  new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.LabelFor(model => model.USUARIO_ID, "Usuario", htmlAttributes: new { @class = "control-label col-md-2", @id = "" })
                     </div>
 
                     <div class="input-field col s12" style="margin-bottom:0;">
                         @Html.EditorFor(model => model.NAVEGADOR, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                        @Html.LabelFor(model => model.NAVEGADOR, htmlAttributes: new { @class = "control-label col-md-2", @id = "" })
+                        @Html.LabelFor(model => model.NAVEGADOR, "Navegador", htmlAttributes: new { @class = "control-label col-md-2", @id = "" })
                     </div>
 
                     <div class="input-field col s12" style="margin-bottom:0;">
                         @Html.EditorFor(model => model.UBICACION, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                        @Html.LabelFor(model => model.UBICACION, htmlAttributes: new { @class = "control-label col-md-2", @id = "" })
+                        @Html.LabelFor(model => model.UBICACION, "Equipo", htmlAttributes: new { @class = "control-label col-md-2", @id = "" })
                     </div>
 
                     <div class="input-field col s12" style="margin-bottom:0;">
                         @Html.TextBoxFor(model => model.FECHA, new { @class = "form-control", @readonly = "readonly", @disabled = "disabled" })
-                        @Html.LabelFor(model => model.FECHA, htmlAttributes: new { @class = "control-label col-md-2", @id = "" })
+                        @Html.LabelFor(model => model.FECHA, "Fecha", htmlAttributes: new { @class = "control-label col-md-2", @id = "" })
                     </div>
                 </div>
 
