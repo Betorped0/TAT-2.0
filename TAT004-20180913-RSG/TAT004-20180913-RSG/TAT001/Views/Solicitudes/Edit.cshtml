@@ -1595,6 +1595,7 @@
                                 @*@if (ViewBag.relacionadan == "")*@
                                 @if (ViewBag.relacionadan != "" & ViewBag.reversan != "X" & (Model.DOCUMENTO_REF == null | Model.TSOL.ADICIONA))
                                 {
+                                    <input type="text" id="txt_addrowt" name="txt_addrowt" value="@ViewBag.addrowt" disabled="disabled" hidden /> @*//Add RSG 2018.11.05*@
                                     <div class="file-field input-field" id="cargar_excel" style="display:none">
                                         <div class="btn">
                                             <span>Examinar</span>
