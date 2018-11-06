@@ -1,4 +1,5 @@
-﻿using ExcelDataReader;
+﻿using ClosedXML.Excel;
+using ExcelDataReader;
 using PagedList;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI;
 using TAT001.Common;
 using TAT001.Entities;
 using TAT001.Models;
@@ -1219,6 +1221,48 @@ namespace TAT001.Controllers.Catalogos
             JsonResult jl = Json(cc, JsonRequestBehavior.AllowGet);
             return jl;
         }
+        [HttpPost]
+        public FileResult Descargar()
+        {
+            var cLiente = db.CLIENTEs.ToList();
+            generarExcelHome(cLiente, Server.MapPath("~/pdfTemp/"));
+            return File(Server.MapPath("~/pdfTemp/Clientes_" + DateTime.Now.ToShortDateString() + ".xlsx"), "application /vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Clientes_" + DateTime.Now.ToShortDateString() + ".xlsx");
+        }
+
+        public void generarExcelHome(List<CLIENTE> lst, string ruta)
+        {
+            var workbook = new XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("Sheet 1");
+            try
+            {
+                worksheet.Cell("A1").Value = new[] { new { BANNER = "Id Cliente" }, };
+                worksheet.Cell("B1").Value = new[] { new { BANNER = "Nombre" }, };
+                worksheet.Cell("C1").Value = new[] { new { BANNER = "Región" }, };
+                worksheet.Cell("D1").Value = new[] { new { BANNER = "País" }, };
+                worksheet.Cell("E1").Value = new[] { new { BANNER = "Tipo de Cliente" }, };
+                worksheet.Cell("F1").Value = new[] { new { BANNER = "Payer" }, };
+                worksheet.Cell("G1").Value = new[] { new { BANNER = "Canal" }, };
+
+                for (int i = 2; i <= (lst.Count + 1); i++)
+                {
+                    var pais = lst[i - 2].LAND;
+                    var pais2 = db.PAIS.Where(X => X.LAND.Equals(pais)).Select(x => x.LANDX).FirstOrDefault();
+                    worksheet.Cell("A" + i).Value = new[] { new { BANNER = lst[i - 2].KUNNR.TrimStart('0') }, };
+                    worksheet.Cell("B" + i).Value = new[] { new { BANNER = lst[i - 2].NAME1 }, };
+                    worksheet.Cell("C" + i).Value = new[] { new { BANNER = lst[i - 2].SUBREGION }, };
+                    worksheet.Cell("D" + i).Value = new[] { new { BANNER = pais2 }, };
+                    worksheet.Cell("E" + i).Value = new[] { new { BANNER = lst[i - 2].PARVW }, };
+                    worksheet.Cell("F" + i).Value = new[] { new { BANNER = lst[i - 2].PAYER.TrimStart('0') }, };
+                    worksheet.Cell("G" + i).Value = new[] { new { BANNER = lst[i - 2].CANAL }, };
+                }
+                var rt = ruta + @"\Clientes_" + DateTime.Now.ToShortDateString() + ".xlsx";
+                workbook.SaveAs(rt);
+            }
+            catch (Exception e)
+            {
+                var ex = e.ToString();
+            }
+        }
 
         public static bool ComprobarEmail(string email)
         {
@@ -1287,11 +1331,11 @@ namespace TAT001.Controllers.Catalogos
                 existeCliente = db.CLIENTEs.Where(cc => cc.KUNNR == doc.KUNNR & cc.ACTIVO).FirstOrDefault();
                 if (!String.IsNullOrEmpty(dt.Rows[i][3].ToString()))
                 {
-                    doc.CLIENTE_N = dt.Rows[i][3].ToString().Replace(',',' ').ToUpper();
+                    doc.CLIENTE_N = dt.Rows[i][3].ToString().Replace(',', ' ').ToUpper();
                 }
-                else
+                else if (existeCliente != null)
                 {
-                    doc.CLIENTE_N = (existeCliente.NAME1 == null ? "" : existeCliente.NAME1.Replace(',',' '));
+                    doc.CLIENTE_N = (existeCliente.NAME1 == null ? "" : existeCliente.NAME1.Replace(',', ' '));
                 }
                 if (existeCliente == null)
                     doc.VKORG = null;
@@ -1661,7 +1705,6 @@ namespace TAT001.Controllers.Catalogos
             }
         }
 
-        ////Metodos de autocompletar 
         public JsonResult Vendor(string Prefix)
         {
             if (Prefix == null)

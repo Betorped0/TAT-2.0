@@ -2700,7 +2700,8 @@ $('body').on('keydown', '.input_oper.numberd', function (e) {
 });
 
 $('body').on('focusout', '.input_oper', function () {
-
+    if (!materialesExist)
+        return;
     var t = $('#table_dis').DataTable();
     var tr = $(this).closest('tr'); //Obtener el row 
 
@@ -4013,7 +4014,7 @@ function addRowCatl(t, cat, exp, sel, ddate, adate, opt, porcentaje, total) {
         ddate + "", //col3
         adate + "",
         "", //Material
-        opt + "",
+        opt + "",//opt + "",//RSG 06.11.2018
         opt + "",
         //"<input class=\"" + reversa + " input_oper numberd input_dc\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
         //"<input class=\"" + reversa + " input_oper numberd input_dc\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
@@ -4763,6 +4764,7 @@ function evaluarDisTable() {
 
                     if (valp.ID == null || valp.ID == "") {
                         $(this).find('td').eq((5 + indext)).addClass("errorMaterial");
+                        res = "Error con el material";
                         return false;
                     } else if (trimStart('0', valp.ID) == val) {//RSG 07.06.2018
 
@@ -6057,5 +6059,28 @@ function cambiaLigada(campo) {
         $("#btnRango").css("display", "none");
         $("#btnDelRango").css("display", "none");
     }
+}
+function descargarArchivo(me) {
+    var form = document.createElement("form"),
+        Archivo = document.createElement("input");
+    form.method = "POST";
+    form.action = root + 'Solicitudes/Descargar';
+    Archivo.value = me.value;
+    Archivo.name = "archivo";
+    form.appendChild(Archivo);
+    document.body.appendChild(form);
+    form.submit();
+}
+
+function descargarArchivo(me) {
+    var form = document.createElement("form"),
+        Archivo = document.createElement("input");
+    form.method = "POST";
+    form.action = root + 'Solicitudes/Descargar';
+    Archivo.value = me.value;
+    Archivo.name = "archivo";
+    form.appendChild(Archivo);
+    document.body.appendChild(form);
+    form.submit();
 }
 

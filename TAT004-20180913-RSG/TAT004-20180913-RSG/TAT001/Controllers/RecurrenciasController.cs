@@ -3466,10 +3466,10 @@ namespace TAT001.Controllers
                 ViewBag.Title += " ";
                 ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
                 ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                
+
                 Session["spras"] = user.SPRAS_ID;
             }
-            
+
             return View();
         }
 
@@ -3503,7 +3503,9 @@ namespace TAT001.Controllers
             foreach (DOCUMENTOREC drec in ddrec)
             {
                 Recurrente r = new Recurrente();
-                r.creaRecurrente(drec.NUM_DOC, drec.DOCUMENTO.TSOL_ID, hoy, drec.POS);
+                bool ban = true;
+                if (ban)
+                    r.creaRecurrente(drec.NUM_DOC, drec.DOCUMENTO.TSOL_ID, hoy, drec.POS);
             }
             return RedirectToAction("Ejecutar");
         }

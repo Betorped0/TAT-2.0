@@ -7,7 +7,6 @@ $("#miMas").change(function () {
         var filename = file.name;
         //EVALUAMOS LA EXTENSION PARA VER QUE SOLO PERMITA FORMATOS DE EXCEL
         if (evaluarExt(filename)) {
-            document.getElementById("loader").style.display = "initial";
             M.toast({ html: 'Cargando ' + filename });
             getExcelMasivas(file);
             tsols = "";
@@ -29,16 +28,13 @@ $("#miMas").change(function () {
             ////}
             //var elem = document.querySelectorAll('.miSel');
             //var instance = M.Select.init(elem, []);
-            //document.getElementById("loader").style.display = "none";
             clearErrors();
-            document.getElementById("loader").style.display = "none";
         } else {
             M.toast({ html: 'Tipo de archivo incorrecto: ' + filename });
         }
     } else {
         M.toast({ html: 'Seleccione un archivo' });
     }
-    //$("#miMas").val("");
     clearErrors();
 });
 
@@ -72,6 +68,7 @@ function getExcelMasivas(file) {
 
 /////////////////////////////////////////////////////////HOJA 1 FUNCIONES Y ASIGNACIONES////////////////////////////////////////////////////////
 function procesarHoja1() {
+    document.getElementById("loader").style.display = "initial";
     var table = $('#tab_test1').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" } });
     table.clear().draw();
 
@@ -106,13 +103,15 @@ function procesarHoja1() {
                 }
             }
         },
+
         complete: function (data) {
-            //validarErrores("tab_test1");
+            //document.getElementById("loader").style.display = "none";
+            //document.getElementById("loader").style.display = "initial";
         },
+
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             alert("Request couldn't be processed. Please try again later. the reason " + xhr.status + " : " + httpStatusMessage + " : " + customErrorMessage);
-        },
-        async: false
+        }
     });
 }
 
@@ -821,7 +820,7 @@ function procesarHoja2() {
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             alert("Request couldn't be processed. Please try again later. the reason " + xhr.status + " : " + httpStatusMessage + " : " + customErrorMessage);
         },
-        async: false
+        //async: false
     });
 
     //Actualizar los valores en la tabla
@@ -1190,7 +1189,7 @@ function procesarHoja3() {
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             alert("Request couldn't be processed. Please try again later. the reason " + xhr.status + " : " + httpStatusMessage + " : " + customErrorMessage);
         },
-        async: false
+        //async: false
     });
 
     //Actualizar los valores en la tabla
@@ -1475,7 +1474,7 @@ function procesarHoja4() {
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             alert("Request couldn't be processed. Please try again later. the reason " + xhr.status + " : " + httpStatusMessage + " : " + customErrorMessage);
         },
-        async: false
+        //async: false
     });
 
     //Actualizar los valores en la tabla
@@ -2036,11 +2035,7 @@ $("#tab_dis").click(function () {
 
 /////////////////////////////////////////////////////////HOJA 5 FUNCIONES Y ASIGNACIONES////////////////////////////////////////////////////////
 function procesarHoja5() {
-    var table = $('#tab_test5').DataTable(
-        {
-            language: { "url": "../Scripts/lang/" + ln + ".json" },
-            "paging": false
-        });
+    var table = $('#tab_test5').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" }, "paging": false });
     table.clear().draw();
 
     $.ajax({
@@ -2065,6 +2060,7 @@ function procesarHoja5() {
                 $('#tab_test5').css("font-size", "10px");
                 $('#tab_test5').css("display", "table");
             }
+            document.getElementById("loader").style.display = "none";
         },
         complete: function (data) {
             //validarErrores("tab_test5"); //RMG
@@ -2105,7 +2101,7 @@ function procesarHoja5() {
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             alert("Request couldn't be processed. Please try again later. the reason " + xhr.status + " : " + httpStatusMessage + " : " + customErrorMessage);
         },
-        async: false
+        //async: false
     });
 }
 
