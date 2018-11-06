@@ -3316,7 +3316,8 @@ namespace TAT001.Controllers
             {
                 remanente = montoProv - montoApli;
             }
-            if (D.TSOL_ID=="NC" || D.TSOL_ID == "NCA"|| D.TSOL_ID == "NCAS")
+            string[] tsolImp = new string []{ "NC", "NCA", "NCAS","NCAM", "NCASM", "NCS", "NCI", "NCIA", "NCIAS", "NCIS" };
+            if (tsolImp.Contains(D.TSOL_ID))
             {
                 decimal KBETR = 0.0M;
                 esNC = true;
@@ -7497,7 +7498,8 @@ namespace TAT001.Controllers
                 }
                 
             }
-            if (tsol_id == "NC" || tsol_id == "NCA" || tsol_id == "NCAS")
+            string[] tsolImp = new string[] { "NC", "NCA", "NCAS", "NCAM", "NCASM", "NCS", "NCI", "NCIA", "NCIAS", "NCIS" };
+            if (tsolImp.Contains(tsol_id))
             {
                 decimal KBETR = 0.0M;
                 if (esCategoriaUnica)
