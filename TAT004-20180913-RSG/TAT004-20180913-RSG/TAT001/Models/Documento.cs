@@ -40,5 +40,8 @@ namespace TAT001.Models
         public string NUM_CLIENTE { get; set; }
         public string NUM_IMPORTE { get; set; }
         public string NUM_CUENTA { get; set; }
+        public decimal? CUENTAP { get; set; }
+        public decimal? CUENTAPL { get; set; }
+        public decimal? CUENTACL { get; set; }
     }
 }
