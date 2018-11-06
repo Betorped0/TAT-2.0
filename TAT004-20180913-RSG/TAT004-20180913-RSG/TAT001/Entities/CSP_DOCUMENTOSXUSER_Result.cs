@@ -43,5 +43,8 @@ namespace TAT001.Entities
         public Nullable<decimal> IMPORTE { get; set; }
         public string CUENTA_C { get; set; }
         public Nullable<decimal> CARGO { get; set; }
+        public Nullable<decimal> CUENTAP { get; set; }
+        public Nullable<decimal> CUENTAPL { get; set; }
+        public Nullable<decimal> CUENTACL { get; set; }
     }
 }

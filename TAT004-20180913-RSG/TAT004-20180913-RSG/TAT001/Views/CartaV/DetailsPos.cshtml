@@ -20,7 +20,7 @@
                 @*<input type="submit" value="Imprimir" class="btn btn-default" />*@
                 @* -----DRS 14.10.2018---- *@
                 <a href="@Url.Action("Lista", "CartaV" , new { id = Model.num_doc, swf = TempData["ESTATUS_WF"]})" class="btn btn-default">Regresar</a>
-                <button class="btn waves-effect" type="submit" name="action" id="lbl_print" onclick="timer()">
+                <button class="btn waves-effect" type="submit" name="action" id="lbl_print" >
                     Imprimir
                     <i class="material-icons right">print</i>
                 </button>

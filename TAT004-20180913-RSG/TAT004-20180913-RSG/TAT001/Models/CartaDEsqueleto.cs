@@ -306,7 +306,14 @@ namespace TAT001.Models
                         int tamaño2 = 600 / cols2;
                         PdfPTable tablasN2 = new PdfPTable(cols2);
 
-                        tablasN2.SetWidthPercentage(new float[] { tamaño2, tamaño2, tamaño2, tamaño2, tamaño2 }, PageSize.A4);
+                        if (cols2 == 5)
+                        {
+                            tablasN2.SetWidthPercentage(new float[] { tamaño2, tamaño2, tamaño2, tamaño2, tamaño2 }, PageSize.A4);
+                        }
+                        else if (cols2 == 4)
+                        {
+                            tablasN2.SetWidthPercentage(new float[] { tamaño2, tamaño2, tamaño2, tamaño2 }, PageSize.A4);
+                        }
 
                         foreach (var celCabecera2 in v.numColEncabezado2)
                         {
