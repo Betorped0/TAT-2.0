@@ -707,7 +707,12 @@ function setDates(tipo) {
             af.formSelect();
             fechaf_vig = $("#fechaf_vig");
             fechaf_vig.val("");
-            M.toast({ html: 'Los años no tienen una secuencia correcta' });
+            M.toast({
+                classes: "pFechas",
+                displayLength: 1000000,
+                html: '<span style="padding-right:15px;"><i class="material-icons yellow-text">info</i></span> Los años no tienen una secuencia correcta.'
+                    + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'pFechas\')">Aceptar</button>'
+            });
             return;
         }
         if (((periodoi * 1) > (periodof * 1)) && ((anioi * 1) === (aniof * 1))) {
@@ -716,7 +721,12 @@ function setDates(tipo) {
             pf.formSelect();
             fechaf_vig = $("#fechaf_vig");
             fechaf_vig.val("");
-            M.toast({ html: 'Los meses no tienen una secuencia correcta' });
+            M.toast({
+                classes: "pFechas",
+                displayLength: 1000000,
+                html: '<span style="padding-right:15px;"><i class="material-icons yellow-text">info</i></span> Los meses no tienen una secuencia correcta.'
+                    + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'pFechas\')">Aceptar</button>'
+            });
             return;
         }
         if (anioi && periodoi) {
