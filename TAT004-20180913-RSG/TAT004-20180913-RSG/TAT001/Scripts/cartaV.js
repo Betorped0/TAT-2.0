@@ -22,7 +22,9 @@ $('body').on('focusout', '#ed_monto', function (e) {
     var monto = $('#monto').val();
     monto = parseFloat(monto);
     if (total > monto) {
-        M.toast({ html: 'Monto de distribución es mayor al monto de la solicitud' });
+        M.toast({ html: 'Monto de solicitud mayor al monto aprobado.' });
+    } else if (total <= 0) {
+        M.toast({ html: 'Favor de ingresar un monto mayor a 0.' });
     }
     var ed_monto = $('#ed_monto').val();
     $('#ed_monto').val(toShow(ed_monto))
@@ -156,8 +158,15 @@ function guardarcarta(guardar) {
     monto = parseFloat(monto);
 
     if (total > monto) {
-        M.toast({ html: 'Monto de distribución es mayor al monto de la solicitud' });
-    } else {
+        M.toast({ html: 'Monto de solicitud mayor al monto aprobado.' });
+        document.getElementById("loader").style.display = "none";
+
+    } else if (total <= 0 && varligada=="false") {
+        M.toast({ html: 'Favor de ingresar un monto mayor a 0.' });
+        document.getElementById("loader").style.display = "none";
+
+    }
+    else{
         copiarTableControl();
         $('#monto_enviar').val(total.toFixed(2));
         if (guardar == "guardar_param") {
@@ -290,14 +299,22 @@ function updateFooter(flag) {
     total = totalFooter();
 
     var texto = armarMonto(toShow(total.toFixed(2)));//RSG 01.08.2018
-
+    var b = $('#btn_guardar');
     //Obtener el monto original
     if (flag) {
         var monto = $('#monto').val();
         var montof = parseFloat(monto);
         var totalf = parseFloat(total);
         if (totalf > montof) {
-            M.toast({ html: 'Monto de distribución es mayor al monto de la solicitud' });
+            b.prop('disabled', true);
+            M.toast({ html: 'Monto de solicitud mayor al monto aprobado.' });
+        }
+        else if (totalf <= 0) {
+            b.prop('disabled', true);
+            M.toast({ html: 'Favor de ingresar un monto mayor a 0.' });
+
+        } else {
+            b.prop('disabled', false);
         }
     }
 

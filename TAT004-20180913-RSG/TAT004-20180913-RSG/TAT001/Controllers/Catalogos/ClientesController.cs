@@ -1,4 +1,5 @@
-﻿using ExcelDataReader;
+﻿using ClosedXML.Excel;
+using ExcelDataReader;
 using PagedList;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI;
 using TAT001.Common;
 using TAT001.Entities;
 using TAT001.Models;
@@ -25,7 +27,7 @@ namespace TAT001.Controllers.Catalogos
         {
             int pagina_id = 631; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
-            ViewBag.pais = Session["pais"] != null ? Session["pais"].ToString() + ".png" : null;
+            ViewBag.pais = Session["pais"]!=null? Session["pais"].ToString() + ".png" :null;
 
 
             ClienteViewModel viewModel = new ClienteViewModel();
@@ -39,11 +41,11 @@ namespace TAT001.Controllers.Catalogos
         {
             int pagina_id = 631; //ID EN BASE DE DATOS
             ClienteViewModel viewModel = new ClienteViewModel();
-            ObtenerListado(ref viewModel, colOrden, ordenActual, numRegistros, pagina, buscar);
-            FnCommon.ObtenerTextos(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
+            ObtenerListado(ref viewModel,colOrden,ordenActual,numRegistros,pagina,buscar);
+            FnCommon.ObtenerTextos(db,pagina_id, User.Identity.Name, this.ControllerContext.Controller);
             return View(viewModel);
         }
-        public void ObtenerListado(ref ClienteViewModel viewModel, string colOrden = "", string ordenActual = "", int? numRegistros = 10, int? pagina = 1, string buscar = "")
+        public void ObtenerListado(ref ClienteViewModel viewModel, string colOrden="", string ordenActual="", int? numRegistros = 10, int? pagina = 1, string buscar = "")
         {
             int pageIndex = pagina.Value;
             List<CLIENTE> clientes = db.CLIENTEs.Include(c => c.PAI).Include(c => c.TCLIENTE).ToList();
@@ -113,7 +115,48 @@ namespace TAT001.Controllers.Catalogos
                     break;
             }
         }
-
+        public ActionResult VerFlujo(string vko, string vtw, string spa, string kun, int version)
+        {
+            int pagina_id = 604; //ID EN BASE DE DATOS
+            FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
+            var flujo = db.CLIENTEFs.Find(vko, vtw, spa, kun, version);
+            if (flujo.USUARIO1_ID != null)
+            {
+                var usu1 = db.USUARIOs.Where(t => t.ID == flujo.USUARIO1_ID).SingleOrDefault();
+                ViewBag.Usuario1 = usu1 != null ? flujo.USUARIO1_ID + " - " + usu1.NOMBRE + " " + usu1.APELLIDO_P : "";
+            }
+            if (flujo.USUARIO2_ID != null)
+            {
+                var usu2 = db.USUARIOs.Where(t => t.ID == flujo.USUARIO2_ID).SingleOrDefault();
+                ViewBag.Usuario2 = usu2 != null ? flujo.USUARIO2_ID + " - " + usu2.NOMBRE + " " + usu2.APELLIDO_P : "";
+            }
+            if (flujo.USUARIO3_ID != null)
+            {
+                var usu3 = db.USUARIOs.Where(t => t.ID == flujo.USUARIO3_ID).SingleOrDefault();
+                ViewBag.Usuario3 = usu3 != null ? flujo.USUARIO3_ID + " - " + usu3.NOMBRE + " " + usu3.APELLIDO_P : "";
+            }
+            if (flujo.USUARIO4_ID != null)
+            {
+                var usu4 = db.USUARIOs.Where(t => t.ID == flujo.USUARIO4_ID).SingleOrDefault();
+                ViewBag.Usuario4 = usu4 != null ? flujo.USUARIO4_ID + " - " + usu4.NOMBRE + " " + usu4.APELLIDO_P : "";
+            }
+            if (flujo.USUARIO5_ID != null)
+            {
+                var usu5 = db.USUARIOs.Where(t => t.ID == flujo.USUARIO5_ID).SingleOrDefault();
+                ViewBag.Usuario5 = usu5 != null ? flujo.USUARIO5_ID + " - " + usu5.NOMBRE + " " + usu5.APELLIDO_P : "";
+            }
+            if (flujo.USUARIO6_ID != null)
+            {
+                var usu6 = db.USUARIOs.Where(t => t.ID == flujo.USUARIO6_ID).SingleOrDefault();
+                ViewBag.Usuario6 = usu6 != null ? flujo.USUARIO6_ID+" - "+ usu6.NOMBRE + " " + usu6.APELLIDO_P : "";
+            }
+            if (flujo.USUARIO7_ID != null)
+            {
+                var usu7 = db.USUARIOs.Where(t => t.ID == flujo.USUARIO7_ID).SingleOrDefault();
+                ViewBag.Usuario7 = usu7 != null ? flujo.USUARIO7_ID + " - " + usu7.NOMBRE + " " + usu7.APELLIDO_P : "";
+            }
+            return View(flujo);
+        }
         // GET: Clientes/Details/5
         public ActionResult Details(string vko, string vtw, string spa, string kun)
         {
@@ -122,7 +165,7 @@ namespace TAT001.Controllers.Catalogos
             var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
             ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
             ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-            ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
+            ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
             ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
             ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
             ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
@@ -165,7 +208,6 @@ namespace TAT001.Controllers.Catalogos
             {
                 ViewBag.ProveedorDsc = "";
             }
-
             return View(cLIENTE);
         }
 
@@ -204,7 +246,7 @@ namespace TAT001.Controllers.Catalogos
             var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
             ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
             ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-            ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
+            ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
             ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
             ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
             pagina = 632; //ID EN BASE DE DATOS
@@ -238,7 +280,7 @@ namespace TAT001.Controllers.Catalogos
             ViewBag.CANAL = new SelectList(canales, "CANAL1", "DESCRIPCION", cLIENTE.CANAL != null ? cLIENTE.CANAL.TrimEnd() : "");
             var proveedores = db.PROVEEDORs.Select(x => new { x.ID, NOMBRE = x.ID + "-" + x.NOMBRE });
             ViewBag.PROVEEDOR_ID = new SelectList(proveedores, "ID", "NOMBRE", cLIENTE.PROVEEDOR_ID != null ? cLIENTE.PROVEEDOR_ID.TrimEnd() : "");
-            return View(cLIENTE);
+             return View(cLIENTE);
         }
 
         // POST: Clientes/Edit/5
@@ -313,8 +355,10 @@ namespace TAT001.Controllers.Catalogos
             //{
             //    string u = User.Identity.Name;
                 //string u = "admin";
+
                 //var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
                 FnCommon.ObtenerConfPage(db, pagina, u, this.ControllerContext.Controller);
+
                 try
                 {
                     string p = Session["pais"].ToString();
@@ -346,7 +390,7 @@ namespace TAT001.Controllers.Catalogos
                 IExcelDataReader reader = ExcelReaderFactory.CreateReader(file.InputStream);
                 DataSet result = reader.AsDataSet();
                 DataTable dt = result.Tables[0];
-                if (dt.Columns.Count != 19)
+                if (dt.Columns.Count!=19)
                 {
                     return Json("NO VALIDO", JsonRequestBehavior.AllowGet); ;
                 }
@@ -401,16 +445,16 @@ namespace TAT001.Controllers.Catalogos
                 cl.CONTACTOEX = true;
 
                 ////-------------------------------CoCode
-                if (!db.PAIS.Any(x => x.SOCIEDAD_ID == cl.BUKRS & x.ACTIVO))
+                if (!db.PAIS.Any(x => x.SOCIEDAD_ID==cl.BUKRS & x.ACTIVO))
                 {
-                    cl.BUKRSX = false;
+                        cl.BUKRSX = false;
                     cl.BUKRS = cl.BUKRS + "?";
                     messa = cont + ". Error con el CoCode<br/>";
                     cont++;
                 }
 
                 ////-------------------------------Pais
-                if (!db.PAIS.Any(x => x.LAND == cl.LAND & x.ACTIVO))
+                if (!db.PAIS.Any(x => x.LAND==cl.LAND & x.ACTIVO))
                 {
                     cl.LANDX = false;
                     cl.LAND = cl.LAND + "?";
@@ -419,7 +463,7 @@ namespace TAT001.Controllers.Catalogos
                 }
 
                 ////-------------------------------CLIENTE
-                if (da.VKORG == null)
+                if (da.VKORG==null)
                 {
                     cl.KUNNRX = false;
                     cl.KUNNR = cl.KUNNR + "?";
@@ -428,7 +472,7 @@ namespace TAT001.Controllers.Catalogos
                 }
 
                 ////-------------------------------NOMBRE DEL CLIENTE
-                if (string.IsNullOrEmpty(cl.CLIENTE_N))
+                if (string.IsNullOrEmpty(cl.CLIENTE_N) )
                 {
                     cl.CLIENTE_N = cl.CLIENTE_N + "?";
                     messa = cont + ". Error con el Nombre del Cliente<br/>";
@@ -441,11 +485,11 @@ namespace TAT001.Controllers.Catalogos
                     if (ids[i] != null && ids[i] != "")
                     {
                         var usuario = ids[i];
-                        if (!db.USUARIOs.Any(x => x.ID == usuario & x.ACTIVO == true))
-                            idsx[i] = false;
-                        else if (string.IsNullOrEmpty(ids[i]) && (i == 1 || i == 6))
-                            idsx[i] = false;
-
+                            if (!db.USUARIOs.Any(x => x.ID==usuario & x.ACTIVO==true))
+                                idsx[i] = false;
+                            else if (string.IsNullOrEmpty(ids[i]) && (i == 1 || i == 6))
+                                idsx[i] = false;
+                        
                     }
                     if (!idsx[i])
                     {
@@ -472,32 +516,32 @@ namespace TAT001.Controllers.Catalogos
                 cl.ID_US7X = idsx[7];
 
                 ////-------------------------------ID_PROVEEDOR
-                if (!string.IsNullOrEmpty(cl.ID_PROVEEDOR) && !db.PROVEEDORs.Any(x => x.ID == cl.ID_PROVEEDOR))
-                {
-                    cl.ID_PROVEEDORX = false;
-                    cl.ID_PROVEEDOR = cl.ID_PROVEEDOR + "?";
-                    messa = messa + cont + ". Error en el vendor<br/>";
-                    cont++;
-                }
-
+                    if (!string.IsNullOrEmpty(cl.ID_PROVEEDOR) && !db.PROVEEDORs.Any(x => x.ID==cl.ID_PROVEEDOR))
+                    {
+                        cl.ID_PROVEEDORX = false;
+                        cl.ID_PROVEEDOR = cl.ID_PROVEEDOR + "?";
+                        messa = messa + cont + ". Error en el vendor<br/>";
+                        cont++;
+                    }
+                
                 ////-------------------------------CANAL
                 if (!string.IsNullOrEmpty(cl.CANAL) && !db.CANALs.Any(x => x.CANAL1 == cl.CANAL))
                 {
-                    cl.CANALX = false;
-                    cl.CANAL = cl.CANAL + "?";
-                    messa = messa + cont + ". Error en el canal<br/>";
-                    cont++;
+                        cl.CANALX = false;
+                        cl.CANAL = cl.CANAL + "?";
+                        messa = messa + cont + ". Error en el canal<br/>";
+                        cont++;
                 }
 
                 ////-------------------------------EMAIL
-                if (!string.IsNullOrEmpty(cl.CONTACTO) && !ComprobarEmail(cl.CONTACTOE))
-                {
-                    cl.CONTACTOEX = false;
-                    cl.CONTACTOE = cl.CONTACTOE + "?";
-                    messa = messa + cont + ". Error en el correo<br/>";
-                    cont++;
-                }
-
+                    if (!string.IsNullOrEmpty(cl.CONTACTO) && !ComprobarEmail(cl.CONTACTOE) )
+                    {
+                        cl.CONTACTOEX = false;
+                        cl.CONTACTOE = cl.CONTACTOE + "?";
+                        messa = messa + cont + ". Error en el correo<br/>";
+                        cont++;
+                    }
+                
 
                 da.MESS = messa;
                 cl.MESS = da.MESS;
@@ -630,15 +674,14 @@ namespace TAT001.Controllers.Catalogos
                         cl.FECHAC = null;
                         cl.FECHAM = DateTime.Today;
                         //Actualizar a 0 Actiovo
-                        CLIENTEF clienteF = clientesF.Where(x => x.ACTIVO).FirstOrDefault();
-                        if (clienteF != null)
-                        {
+                        CLIENTEF clienteF = clientesF.Where(x=>x.ACTIVO).FirstOrDefault();
+                        if (clienteF!=null) {
                             clienteF.ACTIVO = false;
                             db.Entry(clienteF).State = EntityState.Modified;
                             db.SaveChanges();
                         }
                     }
-                    cl.USUARIO0_ID = (!string.IsNullOrEmpty(da.ID_US0) ? da.ID_US0.Trim() : null);
+                    cl.USUARIO0_ID = (!string.IsNullOrEmpty(da.ID_US0) ?da.ID_US0.Trim():null);
                     cl.USUARIO1_ID = (!string.IsNullOrEmpty(da.ID_US1) ? da.ID_US1.Trim() : null);
                     cl.USUARIO2_ID = (!string.IsNullOrEmpty(da.ID_US2) ? da.ID_US2.Trim() : null);
                     cl.USUARIO3_ID = (!string.IsNullOrEmpty(da.ID_US3) ? da.ID_US3.Trim() : null);
@@ -657,20 +700,20 @@ namespace TAT001.Controllers.Catalogos
                     cl1.CANAL = (!string.IsNullOrEmpty(da.CANAL) ? da.CANAL.Trim() : cl1.CANAL);
                     cl1.EXPORTACION = (!string.IsNullOrEmpty(da.EXPORTACION) ? da.EXPORTACION.Trim() : cl1.EXPORTACION);
                     cl1.CONTAC = (!string.IsNullOrEmpty(da.CONTACTO) ? da.CONTACTO.Trim() : cl1.CONTAC);
-                    cl1.CONT_EMAIL = (!string.IsNullOrEmpty(da.CONTACTOE) ? da.CONTACTOE.Trim() : cl1.CONT_EMAIL);
+                    cl1.CONT_EMAIL = (!string.IsNullOrEmpty(da.CONTACTOE ) ? da.CONTACTOE.Trim() : cl1.CONT_EMAIL);
                     db.Entry(cl1).State = EntityState.Modified;
-
+                    
                     ////Agregar a contacto
                     if (da.CONTACTO != null)
                     {
                         CONTACTOC co = new CONTACTOC();
                         db.CONTACTOCs.Where(x => (x.DEFECTO != null && x.DEFECTO.Value) && x.VKORG == da.VKORG
-                        && x.VTWEG == co.VTWEG && da.SPART == x.SPART && x.KUNNR == da.KUNNR).ToList().ForEach(x =>
+                        && x.VTWEG == co.VTWEG && da.SPART == x.SPART && x.KUNNR == da.KUNNR).ToList().ForEach(x=>
                         {
                             x.DEFECTO = false;
                             db.Entry(x).State = EntityState.Modified;
                         });
-                        if (!db.CONTACTOCs.Any(x => x.EMAIL == (da.CONTACTOE != null ? da.CONTACTOE.Trim() : null) && x.NOMBRE == (da.CONTACTO != null ? da.CONTACTO.Trim() : null)))
+                        if (!db.CONTACTOCs.Any(x=>x.EMAIL== (da.CONTACTOE != null ? da.CONTACTOE.Trim() : null) && x.NOMBRE== (da.CONTACTO != null ? da.CONTACTO.Trim() : null)))
                         {
                             co.NOMBRE = (!string.IsNullOrEmpty(da.CONTACTO) ? da.CONTACTO.Trim() : null);
                             co.EMAIL = (!string.IsNullOrEmpty(da.CONTACTOE) ? da.CONTACTOE.Trim() : null);
@@ -682,7 +725,7 @@ namespace TAT001.Controllers.Catalogos
                             co.DEFECTO = true;
                             db.CONTACTOCs.Add(co);
                         }
-
+                      
                     }
                     ////Guardar cambios en db
                     db.CLIENTEFs.Add(cl);
@@ -972,7 +1015,7 @@ namespace TAT001.Controllers.Catalogos
         public JsonResult Actualizar()
         {
             List<Clientes> cc = new List<Clientes>();
-
+            
             CLIENTEF cf = new CLIENTEF();
 
             var cli = Request["cli"];
@@ -1077,9 +1120,9 @@ namespace TAT001.Controllers.Catalogos
                 else
                 {
                     var ucl = (from x in db.CLIENTEFs
-                               where x.USUARIO0_ID.Equals(ni0) | x.USUARIO1_ID.Equals(ni0) | x.USUARIO2_ID.Equals(ni0) | x.USUARIO3_ID.Equals(ni0)
-                                 | x.USUARIO4_ID.Equals(ni0) | x.USUARIO5_ID.Equals(ni0) | x.USUARIO6_ID.Equals(ni0) | x.USUARIO7_ID.Equals(ni0)
-                               select x.KUNNR).ToArray();
+                                 where x.USUARIO0_ID.Equals(ni0) | x.USUARIO1_ID.Equals(ni0) | x.USUARIO2_ID.Equals(ni0) | x.USUARIO3_ID.Equals(ni0)
+                                   | x.USUARIO4_ID.Equals(ni0) | x.USUARIO5_ID.Equals(ni0) | x.USUARIO6_ID.Equals(ni0) | x.USUARIO7_ID.Equals(ni0)
+                                 select x.KUNNR).ToArray();
                     for (int i = 0; i < ucl.Length; i++)
                     {
                         Clientes cl = new Clientes();
@@ -1192,6 +1235,48 @@ namespace TAT001.Controllers.Catalogos
             JsonResult jl = Json(cc, JsonRequestBehavior.AllowGet);
             return jl;
         }
+        [HttpPost]
+        public FileResult Descargar()
+        {
+            var cLiente = db.CLIENTEs.ToList();
+            generarExcelHome(cLiente, Server.MapPath("~/pdfTemp/"));
+            return File(Server.MapPath("~/pdfTemp/Clientes_" + DateTime.Now.ToShortDateString() + ".xlsx"), "application /vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Clientes_" + DateTime.Now.ToShortDateString() + ".xlsx");
+        }
+
+        public void generarExcelHome(List<CLIENTE> lst, string ruta)
+        {
+            var workbook = new XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("Sheet 1");
+            try
+            {
+                worksheet.Cell("A1").Value = new[] { new { BANNER = "Id Cliente" }, };
+                worksheet.Cell("B1").Value = new[] { new { BANNER = "Nombre" }, };
+                worksheet.Cell("C1").Value = new[] { new { BANNER = "Región" }, };
+                worksheet.Cell("D1").Value = new[] { new { BANNER = "País" }, };
+                worksheet.Cell("E1").Value = new[] { new { BANNER = "Tipo de Cliente" }, };
+                worksheet.Cell("F1").Value = new[] { new { BANNER = "Payer" }, };
+                worksheet.Cell("G1").Value = new[] { new { BANNER = "Canal" }, };
+
+                for (int i = 2; i <= (lst.Count + 1); i++)
+                {
+                    var pais = lst[i - 2].LAND;
+                    var pais2 = db.PAIS.Where(X => X.LAND.Equals(pais)).Select(x => x.LANDX).FirstOrDefault();
+                    worksheet.Cell("A" + i).Value = new[] { new { BANNER = lst[i - 2].KUNNR.TrimStart('0') }, };
+                    worksheet.Cell("B" + i).Value = new[] { new { BANNER = lst[i - 2].NAME1 }, };
+                    worksheet.Cell("C" + i).Value = new[] { new { BANNER = lst[i - 2].SUBREGION }, };
+                    worksheet.Cell("D" + i).Value = new[] { new { BANNER = pais2 }, };
+                    worksheet.Cell("E" + i).Value = new[] { new { BANNER = lst[i - 2].PARVW }, };
+                    worksheet.Cell("F" + i).Value = new[] { new { BANNER = lst[i - 2].PAYER.TrimStart('0') }, };
+                    worksheet.Cell("G" + i).Value = new[] { new { BANNER = lst[i - 2].CANAL }, };
+                }
+                var rt = ruta + @"\Clientes_" + DateTime.Now.ToShortDateString() + ".xlsx";
+                workbook.SaveAs(rt);
+            }
+            catch (Exception e)
+            {
+                var ex = e.ToString();
+            }
+        }
 
         public static bool ComprobarEmail(string email)
         {
@@ -1250,7 +1335,7 @@ namespace TAT001.Controllers.Catalogos
                 doc.POS = Convert.ToInt32(pos);
 
                 //CoCode
-                doc.BUKRS = (dt.Rows[i][0] != null ? dt.Rows[i][0].ToString().ToUpper() : null);
+                doc.BUKRS = (dt.Rows[i][0]!=null? dt.Rows[i][0].ToString().ToUpper():null);
                 //Pais
                 doc.LAND = dt.Rows[i][1].ToString().ToUpper();
                 //Cliente
@@ -1258,6 +1343,14 @@ namespace TAT001.Controllers.Catalogos
                 doc.KUNNR = Completa(doc.KUNNR, 10);
 
                 existeCliente = db.CLIENTEs.Where(cc => cc.KUNNR == doc.KUNNR & cc.ACTIVO).FirstOrDefault();
+                if (!String.IsNullOrEmpty(dt.Rows[i][3].ToString()))
+                {
+                    doc.CLIENTE_N = dt.Rows[i][3].ToString().Replace(',', ' ').ToUpper();
+                }
+                else if (existeCliente != null)
+                {
+                    doc.CLIENTE_N = (existeCliente.NAME1 == null ? "" : existeCliente.NAME1.Replace(',', ' '));
+                }
                 if (existeCliente == null)
                     doc.VKORG = null;
                 else
@@ -1266,7 +1359,6 @@ namespace TAT001.Controllers.Catalogos
                     doc.VTWEG = existeCliente.VTWEG;
                     doc.SPART = existeCliente.SPART;
                 }
-                doc.CLIENTE_N = (existeCliente.NAME1 == null ? "" : existeCliente.NAME1);
                 //Manager
                 doc.ID_US0 = (dt.Rows[i][4] != null ? dt.Rows[i][4].ToString().ToUpper() : null);
                 //Nivel 1
@@ -1284,95 +1376,95 @@ namespace TAT001.Controllers.Catalogos
                 //Nivel 7
                 doc.ID_US7 = (dt.Rows[i][11] != null ? dt.Rows[i][11].ToString().ToUpper() : null);
 
-                if (string.IsNullOrEmpty(dt.Rows[i][12] == null ? "" : dt.Rows[i][12].ToString()))
-                {
-                    doc.ID_PROVEEDOR = dt.Rows[i][12].ToString();
-                }
-                else
-                {
-                    if (existeCliente == null)
+                if (string.IsNullOrEmpty(dt.Rows[i][12]==null?"": dt.Rows[i][12].ToString()))
                     {
-                        doc.ID_PROVEEDOR = "";
+                        doc.ID_PROVEEDOR = dt.Rows[i][12].ToString();
                     }
                     else
                     {
-                        doc.ID_PROVEEDOR = (existeCliente.PROVEEDOR_ID == null ? "" : existeCliente.PROVEEDOR_ID);
+                        if (existeCliente == null)
+                        {
+                            doc.ID_PROVEEDOR = "";
+                        }
+                        else
+                        {
+                            doc.ID_PROVEEDOR = (existeCliente.PROVEEDOR_ID==null?"": existeCliente.PROVEEDOR_ID);
+                        }
                     }
-                }
-                doc.ID_PROVEEDOR = Completa(doc.ID_PROVEEDOR, 10);
+                    doc.ID_PROVEEDOR = Completa(doc.ID_PROVEEDOR, 10);
                 //Banner
 
-                if (string.IsNullOrEmpty(dt.Rows[i][13] == null ? "" : dt.Rows[i][13].ToString()))
-                {
-                    doc.BANNER = dt.Rows[i][13].ToString();
-                }
-                else
-                {
-                    if (existeCliente == null)
+                if(string.IsNullOrEmpty(dt.Rows[i][13] == null ? "" : dt.Rows[i][13].ToString()))
                     {
-                        doc.BANNER = "";
+                        doc.BANNER = dt.Rows[i][13].ToString();
                     }
                     else
                     {
-                        doc.BANNER = (existeCliente.BANNER == null ? "" : existeCliente.BANNER);
+                        if (existeCliente == null)
+                        {
+                            doc.BANNER = "";
+                        }
+                        else
+                        {
+                            doc.BANNER = (existeCliente.BANNER==null?"": existeCliente.BANNER);
+                        }
                     }
-                }
-                doc.BANNER = Completa(doc.BANNER, 10);
+                    doc.BANNER = Completa(doc.BANNER, 10);
                 //Banner Agrupador
                 if (string.IsNullOrEmpty(dt.Rows[i][14] == null ? "" : dt.Rows[i][14].ToString()))
                 {
-                    doc.BANNERG = dt.Rows[i][14].ToString();
-                }
-                else
-                {
-                    if (existeCliente == null)
-                    {
-                        doc.BANNERG = "";
+                        doc.BANNERG = dt.Rows[i][14].ToString();
                     }
                     else
                     {
-                        doc.BANNERG = (existeCliente.BANNERG == null ? "" : existeCliente.BANNERG);
+                        if (existeCliente == null)
+                        {
+                            doc.BANNERG = "";
+                        }
+                        else
+                        {
+                            doc.BANNERG = (existeCliente.BANNERG == null ? "" : existeCliente.BANNERG); 
+                        }
                     }
-                }
-                doc.BANNERG = Completa(doc.BANNERG, 10);
+                    doc.BANNERG = Completa(doc.BANNERG, 10);
 
                 //Canal
                 if (string.IsNullOrEmpty(dt.Rows[i][15] == null ? "" : dt.Rows[i][15].ToString()))
                 {
-                    doc.CANAL = dt.Rows[i][15].ToString();
-                }
-                else
-                {
-                    if (existeCliente == null)
-                    {
-                        doc.CANAL = "";
+                        doc.CANAL = dt.Rows[i][15].ToString();
                     }
                     else
                     {
-                        doc.CANAL = (existeCliente.CANAL == null ? "" : existeCliente.CANAL);
+                        if (existeCliente == null)
+                        {
+                            doc.CANAL = "";
+                        }
+                        else
+                        {
+                            doc.CANAL = (existeCliente.CANAL == null ? "" : existeCliente.CANAL);
+                        }
                     }
-                }
                 //EXPORTACION
                 if (string.IsNullOrEmpty(dt.Rows[i][16] == null ? "" : dt.Rows[i][16].ToString()))
                 {
-                    doc.EXPORTACION = dt.Rows[i][16].ToString();
-                }
-                else
-                {
-                    if (existeCliente == null)
-                    {
-                        doc.EXPORTACION = "";
+                        doc.EXPORTACION = dt.Rows[i][16].ToString();
                     }
                     else
                     {
-                        doc.EXPORTACION = (existeCliente.EXPORTACION == null ? "" : existeCliente.EXPORTACION);
+                        if (existeCliente == null)
+                        {
+                            doc.EXPORTACION = "";
+                        }
+                        else
+                        {
+                            doc.EXPORTACION = (existeCliente.EXPORTACION == null ? "" : existeCliente.EXPORTACION);
+                        }
                     }
-                }
                 //CONTACTO
-                doc.CONTACTO = (dt.Rows[i][17] != null ? dt.Rows[i][17].ToString().ToUpper() : null);
-                //Contacto Enal
-
-                doc.CONTACTOE = (dt.Rows[i][18] != null ? dt.Rows[i][18].ToString().ToUpper() : null);
+                    doc.CONTACTO = (dt.Rows[i][17] != null ? dt.Rows[i][17].ToString().ToUpper() : null);
+                 //Contacto Enal
+               
+                    doc.CONTACTOE = (dt.Rows[i][18]!= null ? dt.Rows[i][18].ToString().ToUpper() : null);
 
 
                 ld.Add(doc);
@@ -1627,7 +1719,6 @@ namespace TAT001.Controllers.Catalogos
             }
         }
 
-        ////Metodos de autocompletar 
         public JsonResult Vendor(string Prefix)
         {
             if (Prefix == null)
@@ -1642,11 +1733,11 @@ namespace TAT001.Controllers.Catalogos
             if (c.Count == 0)
             {
                 var c2 = (from x in db.PROVEEDORs
-                          where x.NOMBRE.Contains(Prefix) && x.ACTIVO == true
-                          select new { x.ID, x.NOMBRE }).ToList();
+                         where x.NOMBRE.Contains(Prefix) && x.ACTIVO == true
+                         select new { x.ID, x.NOMBRE }).ToList();
                 c.AddRange(c2);
             }
-
+            
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
             return cc;
         }
@@ -1665,11 +1756,11 @@ namespace TAT001.Controllers.Catalogos
             if (c.Count == 0)
             {
                 var c2 = (from x in db.CANALs
-                          where x.CDESCRIPCION.Contains(Prefix)
-                          select new { x.CANAL1, x.CDESCRIPCION }).ToList();
+                         where x.CDESCRIPCION.Contains(Prefix)
+                         select new { x.CANAL1, x.CDESCRIPCION }).ToList();
                 c.AddRange(c2);
             }
-
+            
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
             return cc;
         }
@@ -1688,11 +1779,11 @@ namespace TAT001.Controllers.Catalogos
             if (c.Count == 0)
             {
                 var c2 = (from x in db.CLIENTEs
-                          where x.NAME1.Contains(Prefix)
-                          select new { x.KUNNR, x.NAME1 }).ToList();
+                         where x.NAME1.Contains(Prefix)
+                         select new { x.KUNNR, x.NAME1 }).ToList();
                 c.AddRange(c2);
             }
-
+            
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
             return cc;
         }

@@ -706,5 +706,69 @@ namespace TAT001.Controllers
             }
             return ld;
         }
+
+
+        [HttpGet]
+        public ActionResult Nuevo(decimal id)
+        {
+            try
+            {
+                ProcesaFlujo pf = new ProcesaFlujo();
+                DOCUMENTO dOCUMENTO = db.DOCUMENTOes.Find(id);
+                //WORKFV wf = db.WORKFHs.Where(a => a.BUKRS.Equals(dOCUMENTO.SOCIEDAD_ID) & a.ROL_ID == rol).FirstOrDefault().WORKFVs.OrderByDescending(a => a.VERSION).FirstOrDefault();
+                WORKFV wf = db.WORKFHs.Where(a => a.TSOL_ID.Equals(dOCUMENTO.TSOL_ID)).FirstOrDefault().WORKFVs.OrderByDescending(a => a.VERSION).FirstOrDefault();
+                if (wf != null)
+                {
+                    WORKFP wp = wf.WORKFPs.OrderBy(a => a.POS).FirstOrDefault();
+                    FLUJO f = new FLUJO();
+                    f.WORKF_ID = wf.ID;
+                    f.WF_VERSION = wf.VERSION;
+                    f.WF_POS = wp.POS;
+                    f.NUM_DOC = dOCUMENTO.NUM_DOC;
+                    f.POS = 1;
+                    f.LOOP = 1;
+                    f.USUARIOA_ID = dOCUMENTO.USUARIOC_ID;
+                    f.USUARIOD_ID = dOCUMENTO.USUARIOD_ID;
+                    f.ESTATUS = "I";
+                    f.FECHAC = DateTime.Now;
+                    f.FECHAM = DateTime.Now;
+                    f.COMENTARIO = "";//ADD RSG 20.08.2018
+                    string c = pf.procesa(f, "");
+                    FLUJO conta = db.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+                    while (c == "1")
+                    {
+                        Email em = new Email();
+                        string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
+                        string image = Server.MapPath("~/images/logo_kellogg.png");
+                        em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image);
+
+                        if (conta.WORKFP.ACCION.TIPO == "B")
+                        {
+                            WORKFP wpos = db.WORKFPs.Where(x => x.ID == conta.WORKF_ID & x.VERSION == conta.WF_VERSION & x.POS == conta.WF_POS).FirstOrDefault();
+                            conta.ESTATUS = "A";
+                            conta.FECHAM = DateTime.Now;
+                            c = pf.procesa(conta, "");
+                            conta = db.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+
+                        }
+                        else
+                        {
+                            c = "";
+                        }
+                    }
+                    Estatus es = new Estatus();//RSG 18.09.2018
+                    DOCUMENTO doc = db.DOCUMENTOes.Find(f.NUM_DOC);
+                    conta.STATUS = es.getEstatus(doc);
+                    db.Entry(conta).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ee)
+            {
+                return RedirectToAction("Details", "Solicitudes", new { id = id });
+            }
+
+            return RedirectToAction("Details", "Solicitudes", new { id = id });
+        }
     }
 }

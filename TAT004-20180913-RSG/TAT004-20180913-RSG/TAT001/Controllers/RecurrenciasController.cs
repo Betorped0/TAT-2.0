@@ -11,6 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using TAT001.Entities;
 using TAT001.Models;
 using TAT001.Services;
@@ -21,6 +22,7 @@ namespace TAT001.Controllers
     public class RecurrenciasController : Controller
     {
         private TAT001Entities db = new TAT001Entities();
+        private UsuarioLogin usuValidateLogin = new UsuarioLogin();
 
         #region anterior
         [AllowAnonymous]
@@ -3451,6 +3453,11 @@ namespace TAT001.Controllers
                 string u = User.Identity.Name;
                 //string u = "admin";
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+                if (!usuValidateLogin.validaUsuario(user.ID))
+                {
+                    FormsAuthentication.SignOut();
+                    return RedirectToAction("Index", "Home");
+                }
                 ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
                 ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
                 ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
@@ -3459,10 +3466,10 @@ namespace TAT001.Controllers
                 ViewBag.Title += " ";
                 ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
                 ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                
+
                 Session["spras"] = user.SPRAS_ID;
             }
-            
+
             return View();
         }
 
@@ -3496,7 +3503,9 @@ namespace TAT001.Controllers
             foreach (DOCUMENTOREC drec in ddrec)
             {
                 Recurrente r = new Recurrente();
-                r.creaRecurrente(drec.NUM_DOC, drec.DOCUMENTO.TSOL_ID, hoy, drec.POS);
+                bool ban = true;
+                if (ban)
+                    r.creaRecurrente(drec.NUM_DOC, drec.DOCUMENTO.TSOL_ID, hoy, drec.POS);
             }
             return RedirectToAction("Ejecutar");
         }

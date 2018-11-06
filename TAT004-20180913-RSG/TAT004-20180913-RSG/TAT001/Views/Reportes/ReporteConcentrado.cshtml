@@ -12,11 +12,7 @@
 @if (!ViewBag.Display)
 {
     <script>
-
         $(document).ready(function () {
-
-
-
             $('select.select_all').siblings('ul').prepend("<li id=sm_select_all><span id='filters_all'>Todas las Opciones</span></li>");
             $('li#sm_select_all').on('click', function () {
                 var jq_elem = $(this),
@@ -28,17 +24,12 @@
                     return $(this).find('input').prop('checked') != select_all;
                 }).click();
             });
-            $(document).ready(function () {
-                $("#sendbtn").click(function () {
-                    $("#excelBtn").prop("disabled", "false");
-                });
-            });
+            //$(document).ready(function () {
+            //    $("#sendbtn").click(function () {
+            //        $("#excelBtn").prop("disabled", "false");
+            //    });
+            //});
         });
-
-
-
-
-
     </script>
 }
 
@@ -286,35 +277,21 @@
         </script>
         <script src="//code.jquery.com/jquery-1.12.4.js"></script>
         <script src="//code.jquery.com/jquery-2.0.3.min.js"></script>
-        <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-        <script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
         <link href="~/Content/dataTable.css" rel="stylesheet" />
-        <link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
-        <link href="~/Scripts/subfilters/jquery.tablesorter.pager.css" rel="stylesheet" />
+        @*<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>*@
+        <script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
+        @*<link href="~/Content/dataTable.css" rel="stylesheet" />
+        <link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />*@
         <script src="~/Scripts/subfilters/jquery.tablesorter.js"></script>
+        <link href="~/Scripts/subfilters/jquery.tablesorter.pager.css" rel="stylesheet" />
         <script src="~/Scripts/subfilters/jquery.tablesorter.pager.js"></script>
         <script src="~/Scripts/subfilters/widget-filter.js"></script>
         <script src="~/Scripts/tablesort/tableToExcel.js"></script>
-
-
-        <script>
+        @*<script>
             var elem = document.querySelector('select');
             var options = [];
             var instance = M.FormSelect.init(elem, options);
-
-            var tableToExcel = (function () {
-                var uri = 'data:application/vnd.ms-excel;base64,'
-                    , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
-                    , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
-                    , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
-                return function (table, name) {
-                    if (!table.nodeType) table = document.getElementById(table)
-                    var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
-                    window.location.href = uri + base64(format(template, ctx))
-                }
-            })()
-        </script>
-
+        </script>*@
     </div>
     if (ViewBag.display)
     {
@@ -324,10 +301,9 @@
                 $(".grid thead td").click(function () {
                     showFilterOption(this);
                 });
-                $("#excelBtn").click(function () {
-                    $("#table").tableExport();
-                });
-
+                //$("#excelBtn").click(function () {
+                //    $("#table").tableExport();
+                //});
                 $('select.select_all').siblings('ul').prepend('<li id=sm_select_all id="filters_all"><span>Todas Las Opciones</span></li>');
                 $('li#sm_select_all').on('click', function () {
                     var jq_elem = $(this),
@@ -339,33 +315,88 @@
                         return $(this).find('input').prop('checked') != select_all;
                     }).click();
                 });
+                $("#id_excel").click(function () {
+                    $("#table").trigger("filterReset");
+                    $('#table').trigger('destroyPager');
+                    $('#table').trigger('destroy');
+                    var pager = $('#table tfoot').html();
+                    //var filters = $('#table thead tr.tablesorter-filter-row').html();
+                    $('#table tfoot').html("");
+                    //$('#table thead tr.tablesorter-filter-row').html("");
+                    tableToExcel('table', 'Reporte Concentrado');
+                    $('#table tfoot').html(pager);
+                    //$('#table thead tr.tablesorter-filter-row').html(filters);
+                    $('#table').tablesorter({
+                        theme: "materialize",
+                        headerTemplate: '{content} {icon}',
+                        widthFixed: true,
+                        widgets: ["filter", "zebra", "stickyHeaders"],
+                        widgetOptions: {
+                            stickyHeaders: '',
+                            stickyHeaders_offset: 0,
+                            stickyHeaders_cloneId: '-sticky',
+                            stickyHeaders_addResizeEvent: true,
+                            stickyHeaders_includeCaption: true,
+                            stickyHeaders_zIndex: 2,
+                            stickyHeaders_attachTo: null,
+                            stickyHeaders_xScroll: null,
+                            stickyHeaders_yScroll: null,
+                            stickyHeaders_filteredToTop: true,
+                        }
+                    }).tablesorterPager({
+                        container: $(".ts-pager"),
+                        cssGoto: ".pagenum",
+                        removeRows: true,
+                        output: '{startRow} - {endRow} / {filteredRows} ({totalRows})'
+                    });
+                });
             });
 
 
-
             $(function () {
+                $("#table").tablesorter({
+                        theme: "materialize",
+                        headerTemplate: '{content} {icon}',
+                        widthFixed: true,
+                        // widget code contained in the jquery.tablesorter.widgets.js file
+                        // use the zebra stripe widget if you plan on hiding any rows (filter widget)
+                        widgets: ["filter", "zebra", "stickyHeaders"],
 
-                $("table").tablesorter({
-                    theme: "materialize",
+                        widgetOptions: {
+                            // extra class name added to the sticky header row
+                            stickyHeaders: '',
+                            // number or jquery selector targeting the position:fixed element
+                            stickyHeaders_offset: 0,
+                            // added to table ID, if it exists
+                            stickyHeaders_cloneId: '-sticky',
+                            // trigger "resize" event on headers
+                            stickyHeaders_addResizeEvent: true,
+                            // if false and a caption exist, it won't be included in the sticky header
+                            stickyHeaders_includeCaption: true,
+                            // The zIndex of the stickyHeaders, allows the user to adjust this to their needs
+                            stickyHeaders_zIndex: 2,
+                            // jQuery selector or object to attach sticky header to
+                            stickyHeaders_attachTo: null,
+                            // jQuery selector or object to monitor horizontal scroll position (defaults: xScroll > attachTo > window)
+                            stickyHeaders_xScroll: null,
+                            // jQuery selector or object to monitor vertical scroll position (defaults: yScroll > attachTo > window)
+                            stickyHeaders_yScroll: null,
 
-                    widthFixed: true,
-                    // widget code contained in the jquery.tablesorter.widgets.js file
-                    // use the zebra stripe widget if you plan on hiding any rows (filter widget)
-                    widgets: ["filter", "zebra"],
+                            // scroll table top into view after filtering
+                            stickyHeaders_filteredToTop: true,
 
-                    widgetOptions: {
-                        // using the default zebra striping class name, so it actually isn't included in the theme variable above
-                        // this is ONLY needed for materialize theming if you are using the filter widget, because rows are hidden
-                        zebra: ["even", "odd"],
+                            // using the default zebra striping class name, so it actually isn't included in the theme variable above
+                            // this is ONLY needed for materialize theming if you are using the filter widget, because rows are hidden
+                            // zebra: ["even", "odd"],
 
-                        // reset filters button
-                        filter_reset: ".reset",
+                            // reset filters button
+                            // filter_reset: ".reset",
 
-                        // extra css class name (string or array) added to the filter element (input or select)
-                        // select needs a "browser-default" class or it gets hidden
-                        filter_cssFilter: ["", "", "browser-default"]
-                    }
-                })
+                            // extra css class name (string or array) added to the filter element (input or select)
+                            // select needs a "browser-default" class or it gets hidden
+                            // filter_cssFilter: ["", "", "browser-default"]
+                        }
+                    })
                     .tablesorterPager({
 
                         // target the pager markup - see the HTML block below
@@ -383,8 +414,18 @@
                         output: '{startRow} - {endRow} / {filteredRows} ({totalRows})'
 
                     });
-
             });
+            var tableToExcel = (function () {
+                var uri = 'data:application/vnd.ms-excel;base64,'
+                    , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+                    , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+                    , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+                return function (table, name) {
+                    if (!table.nodeType) table = document.getElementById(table)
+                    var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
+                    window.location.href = uri + base64(format(template, ctx))
+                }
+            })()
         </script>
         <div style="width:100%;height:50vh;overflow:scroll;">
             <table class="table mdl-data-table striped grid centered table" id="table" style="width:100%;">
@@ -684,299 +725,6 @@
                     </tr>
                 </thead>
                 <tfoot>
-                    <tr>
-                        @if (((string[])ViewBag.campos).Contains("1"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_1">Co. Code</th>}
-                        @if (((string[])ViewBag.campos).Contains("2"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_2">País</th>}
-                        @if (((string[])ViewBag.campos).Contains("3"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_3">Subregión</th>}
-                        @if (((string[])ViewBag.campos).Contains("4"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_4">Estado</th>}
-                        @if (((string[])ViewBag.campos).Contains("5"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_5">Ciudad</th>}
-                        @if (((string[])ViewBag.campos).Contains("6"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_6">Número solicitud</th>}
-                        @if (((string[])ViewBag.campos).Contains("7"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_7">Fecha Solicitud</th>}
-                        @if (((string[])ViewBag.campos).Contains("8"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_8">Hora solicitud</th>}
-                        @if (((string[])ViewBag.campos).Contains("9"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_9">Semana del periodo</th>}
-                        @if (((string[])ViewBag.campos).Contains("10"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_10">Periodo contable</th>}
-                        @if (((string[])ViewBag.campos).Contains("11"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_11">Año</th>}
-                        @if (((string[])ViewBag.campos).Contains("12"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_12">Tipo Solicitud</th>}
-                        @if (((string[])ViewBag.campos).Contains("13"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_13">Tipo Provisión</th>}
-                        @if (((string[])ViewBag.campos).Contains("14"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_14">Tipo NC</th>}
-                        @if (((string[])ViewBag.campos).Contains("15"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_15">Tipo OP</th>}
-                        @if (((string[])ViewBag.campos).Contains("16"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_16">Status</th>}
-                        @if (((string[])ViewBag.campos).Contains("17"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_17">Concepto</th>}
-                        @if (((string[])ViewBag.campos).Contains("18"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_18">Mecánica</th>}
-                        @if (((string[])ViewBag.campos).Contains("19"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_19">De</th>}
-                        @if (((string[])ViewBag.campos).Contains("20"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_20">A</th>}
-                        @if (((string[])ViewBag.campos).Contains("21"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_21">De</th>}
-                        @if (((string[])ViewBag.campos).Contains("22"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_22">A</th>}
-                        @if (((string[])ViewBag.campos).Contains("23"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_23">Clasificación</th>}
-                        @if (((string[])ViewBag.campos).Contains("24"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_24">Cuenta Contable Gasto</th>}
-                        @if (((string[])ViewBag.campos).Contains("25"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_25">Nombre de la cuenta</th>}
-                        @if (((string[])ViewBag.campos).Contains("26"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_26">Cliente</th>}
-                        @if (((string[])ViewBag.campos).Contains("27"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_27">Nombre</th>}
-                        @if (((string[])ViewBag.campos).Contains("28"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_28">Tipo de Cliente</th>}
-                        @if (((string[])ViewBag.campos).Contains("29"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_29">Organización de Ventas</th>}
-                        @if (((string[])ViewBag.campos).Contains("30"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_30">Tax ID</th>}
-                        @if (((string[])ViewBag.campos).Contains("31"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_31">Canal</th>}
-                        @if (((string[])ViewBag.campos).Contains("32"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_32">Descripción</th>}
-                        @if (((string[])ViewBag.campos).Contains("33"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_33">Nombre de Contacto</th>}
-                        @if (((string[])ViewBag.campos).Contains("34"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_34">Email de Contacto</th>}
-                        @if (((string[])ViewBag.campos).Contains("35"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_35">$ Monto Original de Provisión</th>}
-                        @if (((string[])ViewBag.campos).Contains("36"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_36">$ Monto NC/OP</th>}
-                        @if (((string[])ViewBag.campos).Contains("37"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_37">$Monto Aplicado</th>}
-                        @if (((string[])ViewBag.campos).Contains("38"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_38">Saldo Remanente Provisión</th>}
-                        @if (((string[])ViewBag.campos).Contains("39"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_39">$ Monto Reverso Provisión</th>}
-                        @if (((string[])ViewBag.campos).Contains("40"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_40">% Reverso</th>}
-                        @if (((string[])ViewBag.campos).Contains("41"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_41">$ Exceso/(Insuficiencia) Provisión</th>}
-                        @if (((string[])ViewBag.campos).Contains("42"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_42">% Exceso/(Insuficiencia) Provisión</th>}
-                        @if (((string[])ViewBag.campos).Contains("43"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_43">Impactos / Beneficios en el gasto del Periodo</th>}
-                        @if (((string[])ViewBag.campos).Contains("44"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_44">Núm. Registro Provisión</th>}
-                        @if (((string[])ViewBag.campos).Contains("45"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_45">Núm. Registro NC/OP</th>}
-                        @if (((string[])ViewBag.campos).Contains("46"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_46">Núm. Registro Reverso</th>}
-                        @if (((string[])ViewBag.campos).Contains("47"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_47">Fecha Reverso Provisión</th>}
-                        @if (((string[])ViewBag.campos).Contains("48"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_48">Periodo Contable Reverso</th>}
-                        @if (((string[])ViewBag.campos).Contains("49"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_49">Razón Reverso</th>}
-                        @if (((string[])ViewBag.campos).Contains("50"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_50">Comentario Reverso</th>}
-                        @if (((string[])ViewBag.campos).Contains("51"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_51">Usuario</th>}
-                        @if (((string[])ViewBag.campos).Contains("52"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_52">Back Up</th>}
-                        @if (((string[])ViewBag.campos).Contains("53"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_53">Creado Por</th>}
-                        @if (((string[])ViewBag.campos).Contains("54"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_54">Creado Por ID</th>}
-                        @if (((string[])ViewBag.campos).Contains("55"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_55">Solicitado Por</th>}
-                        @if (((string[])ViewBag.campos).Contains("56"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_56">Solicitado Por ID</th>}
-                        @if (((string[])ViewBag.campos).Contains("57"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_57">Modificado Por</th>}
-                        @if (((string[])ViewBag.campos).Contains("58"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_58">Modificado Por ID</th>}
-                        @if (((string[])ViewBag.campos).Contains("59"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_59">Aprobador Nivel 1</th>}
-                        @if (((string[])ViewBag.campos).Contains("60"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_60">Aprobador Nivel 2</th>}
-                        @if (((string[])ViewBag.campos).Contains("61"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_61">Aprobador Nivel 3</th>}
-                        @if (((string[])ViewBag.campos).Contains("62"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_62">Aprobador Nivel 4</th>}
-                        @if (((string[])ViewBag.campos).Contains("63"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_63">Aprobador Nivel 5</th>}
-                        @if (((string[])ViewBag.campos).Contains("64"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_64">Proveedor</th>}
-                        @if (((string[])ViewBag.campos).Contains("65"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_65">Nombre Proveedor</th>}
-                        @if (((string[])ViewBag.campos).Contains("66"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_66">Número Factura Proveedor</th>}
-                        @if (((string[])ViewBag.campos).Contains("67"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_67">Número Factura Kellogg´s</th>}
-                        @if (((string[])ViewBag.campos).Contains("68"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_68">Número NC </th>}
-                        @if (((string[])ViewBag.campos).Contains("69"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_69">Numero Orden de Pago</th>}
-                        @if (((string[])ViewBag.campos).Contains("70"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_70">Expense Recognition en periodo</th>}
-                        @if (((string[])ViewBag.campos).Contains("71"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_71">Expense Recognition Ejercicio</th>}
-                        @if (((string[])ViewBag.campos).Contains("72"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_72">Soporte Incorrecto</th>}
-                        @if (((string[])ViewBag.campos).Contains("73"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_73">Soporte validado con base variable pendiente</th>}
-                        @if (((string[])ViewBag.campos).Contains("74"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_74">Carta</th>}
-                        @if (((string[])ViewBag.campos).Contains("75"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_75">Contrato</th>}
-                        @if (((string[])ViewBag.campos).Contains("76"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_76">JBP</th>}
-                        @if (((string[])ViewBag.campos).Contains("77"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_77">Factura</th>}
-                        @if (((string[])ViewBag.campos).Contains("78"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_78">Otros</th>}
-                        @if (((string[])ViewBag.campos).Contains("79"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_79">Negociación por monto</th>}
-                        @if (((string[])ViewBag.campos).Contains("80"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_80">Negociación por %</th>}
-                        @if (((string[])ViewBag.campos).Contains("81"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_81">Distribución por material</th>}
-                        @if (((string[])ViewBag.campos).Contains("82"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_82">Distribución categoría</th>}
-                        @if (((string[])ViewBag.campos).Contains("83"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_83">Monto Base</th>}
-                        @if (((string[])ViewBag.campos).Contains("84"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_84">Monto %</th>}
-                        @if (((string[])ViewBag.campos).Contains("85"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_85">Recurrente</th>}
-                        @if (((string[])ViewBag.campos).Contains("86"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_86">Recurrente por porcentaje</th>}
-                        @if (((string[])ViewBag.campos).Contains("87"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_87">Recurrente por Monto</th>}
-                        @if (((string[])ViewBag.campos).Contains("88"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_88">Recurrente Cancelada</th>}
-                        @if (((string[])ViewBag.campos).Contains("89"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_89">Objetivo Inicio</th>}
-                        @if (((string[])ViewBag.campos).Contains("90"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_90">Objetivo Límite</th>}
-                        @if (((string[])ViewBag.campos).Contains("91"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_91">Estatus</th>}
-                        @if (((string[])ViewBag.campos).Contains("92"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_92">Venta del Periodo</th>}
-                        @if (((string[])ViewBag.campos).Contains("93"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_93">Monto Provisión</th>}
-                        @if (((string[])ViewBag.campos).Contains("94"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_94">Back Order</th>}
-                        @if (((string[])ViewBag.campos).Contains("95"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_95">Venta Real + BO</th>}
-                        @if (((string[])ViewBag.campos).Contains("96"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_96">NC / OP o Reverso</th>}
-                        @if (((string[])ViewBag.campos).Contains("97"))
-                        {
-                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_campo_97">Monto</th>}
-                    </tr>
                     <!-- include "tablesorter-ignoreRow" class for pager rows in thead -->
                     <tr class="tablesorter-ignoreRow">
                         <th colspan="2" class="ts-pager form-horizontal">
@@ -998,7 +746,7 @@
                                 <select class="pagenum browser-default" title="Select page number"></select>
                             </div>
                         </th>
-                        <th colspan="12">
+                        <th colspan="95">
                         </th>
                     </tr>
                 </tfoot>
@@ -1127,7 +875,7 @@
                                 <td>@(item.documento.CLIENTE.CANAL)</td>}<!--Canal-->
                             @if (((string[])ViewBag.campos).Contains("32"))
                             {
-                                <td>@(item.CANAL.CDESCRIPCION)</td>}<!--Descripción-->
+                                <td>@((item.CANAL == null)? "" : item.CANAL.CDESCRIPCION)</td>}<!--Descripción-->
                             @if (((string[])ViewBag.campos).Contains("33"))
                             {
                                 <td>@(item.documento.PAYER_NOMBRE)</td>}<!--Nombre de Contacto-->
@@ -1411,10 +1159,6 @@
     }
     else { }
     <style>
-
-
-
-
         .dataTables_length {
             display: none;
         }

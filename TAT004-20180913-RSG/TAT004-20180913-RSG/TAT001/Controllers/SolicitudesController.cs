@@ -139,7 +139,7 @@ namespace TAT001.Controllers
             ViewBag.tts = db.DOCUMENTOTS.Where(a => a.NUM_DOC.Equals(DF.D.NUM_DOC)).ToList();
 
             if (DF.D.DOCUMENTO_REF != null)
-                ViewBag.Title += " "+ DF.D.DOCUMENTO_REF + "-";
+                ViewBag.Title += " " + DF.D.DOCUMENTO_REF + "-";
             ViewBag.Title += " " + id;
 
             //LEJ 10.07.2018----------------------------------------------
@@ -148,23 +148,17 @@ namespace TAT001.Controllers
             Models.PresupuestoModels carga = new Models.PresupuestoModels();
             ViewBag.ultMod = carga.consultarUCarga();
 
-            ViewBag.TSOL_RELA = FnCommon.ObtenerTreeTiposSolicitud(db, DF.D.SOCIEDAD_ID, uu,"SR");
+            ViewBag.TSOL_RELA = FnCommon.ObtenerTreeTiposSolicitud(db, DF.D.SOCIEDAD_ID, uu, "SR");
             //RECUPERO EL PAIS para hacer una busqueda de su formato monetario
             ////var paisMon = Session["pais"].ToString();//------------------------LEJGG090718
             ViewBag.miles = DF.D.PAI.MILES;//LEJGG 090718
             ViewBag.dec = DF.D.PAI.DECIMAL;//LEJGG 090718
 
             /////////DRS 24.09.18/////////          
-            var nombrec = from cuen in db.CUENTAs
-                          join cg in db.CUENTAGLs on cuen.ABONO equals cg.ID
-                          where cuen.TALL_ID == dOCUMENTO.TALL_ID
-                          select cg.NOMBRE;
+            var nombrec = db.CUENTAGLs.Where(x => x.ID == DF.D.CUENTAP).Select(x => x.NOMBRE);
             ViewBag.nombreC = nombrec.ToList();
 
-            var nombrec1 = from cuen in db.CUENTAs
-                           join cg in db.CUENTAGLs on cuen.CARGO equals cg.ID
-                           where cuen.TALL_ID == dOCUMENTO.TALL_ID
-                           select cg.NOMBRE;
+            var nombrec1 = db.CUENTAGLs.Where(x => x.ID == DF.D.CUENTAPL).Select(x => x.NOMBRE);
             ViewBag.nombreC2 = nombrec1.ToList();
 
             ///////////////////////////////CAMBIOS LGPP INICIO//////////////////////////*@
@@ -205,22 +199,7 @@ namespace TAT001.Controllers
             ViewBag.recs = recs;
             ViewBag.recls = recls;
             //Tab_Fin Análisis Solicitud
-            decimal montoProv = 0.0M;
-            decimal montoApli = 0.0M;
-            decimal remanente = 0.0M;
-            bool esDocRef = false;
-            if (DF.D.DOCUMENTO_REF != null){ montoProv = db.DOCUMENTOes.First(x=>x.NUM_DOC== DF.D.DOCUMENTO_REF).MONTO_DOC_MD.Value;}
-            if (db.DOCUMENTOes.Any(x=>x.DOCUMENTO_REF== DF.D.NUM_DOC))
-            {
-                esDocRef = true;
-                montoApli = db.DOCUMENTOes.Sum(x => x.MONTO_DOC_MD.Value);
-            }
-            if (montoProv > 0 && montoApli > 0){ remanente = montoProv - montoApli;}
-            ViewBag.montoSol = DF.D.MONTO_DOC_MD;
-            ViewBag.montoProv = (DF.D.DOCUMENTO_REF != null? montoProv.ToString():"-");
-            ViewBag.montoApli = (esDocRef? montoApli.ToString():"-");
-            ViewBag.remanente = ((montoProv > 0 && montoApli > 0) ? (remanente<0?"(-)"+ remanente.ToString() : remanente.ToString()) : "-");
-            ViewBag.montoTotal = DF.D.MONTO_DOC_MD;
+            ObtenerAnalisisSolicitud(DF.D);
 
             return View(DF);
         }
@@ -733,7 +712,8 @@ namespace TAT001.Controllers
                     d = db.DOCUMENTOes.Where(doc => doc.NUM_DOC == rel).FirstOrDefault();
                     sociedad_id = d.SOCIEDAD_ID;
                 }
-                    if (ViewBag.reversa == "preversa") { 
+                if (ViewBag.reversa == "preversa")
+                {
                     list_sol = FnCommon.ObtenerCmbTiposSolicitud(db, user.SPRAS_ID, null, true)
                         .Select(x => new TSOLT_MOD
                         {
@@ -797,7 +777,7 @@ namespace TAT001.Controllers
                 if (rel > 0)
                 {
                     d = db.DOCUMENTOes.Where(doc => doc.NUM_DOC == rel).FirstOrDefault();
-                    docsrel = db.DOCUMENTOes.Where(docr => docr.DOCUMENTO_REF == rel).ToList();
+                    docsrel = db.DOCUMENTOes.Where(docr => docr.DOCUMENTO_REF == rel && docr.ESTATUS_C == null).ToList();
                     id_bukrs = db.SOCIEDADs.Where(soc => soc.BUKRS == d.SOCIEDAD_ID && soc.ACTIVO == true).FirstOrDefault();
                     id_waersf = id_bukrs.WAERS;//MGC B20180625 MGC 
                     id_pais = db.PAIS.Where(pais => pais.LAND.Equals(d.PAIS_ID)).FirstOrDefault();//RSG 15.05.2018
@@ -1001,7 +981,7 @@ namespace TAT001.Controllers
                     }
                     catch (Exception e)
                     {
-                        Log.ErrorLogApp(e,"Solicitudes","Create");
+                        Log.ErrorLogApp(e, "Solicitudes", "Create");
                     }
 
                     id_pais = db.PAIS.Where(pais => pais.LAND.Equals(pais_id)).FirstOrDefault();//RSG 15.05.2018 //MGC B20180625 MGC 
@@ -1256,7 +1236,7 @@ namespace TAT001.Controllers
             string spras = Session["spras"].ToString();
             ViewBag.PERIODOS = new SelectList(db.PERIODOTs.Where(a => a.SPRAS_ID == spras).ToList(), "PERIODO_ID", "TXT50", DateTime.Now.Month);
             List<string> anios = new List<string>();
-            int mas = 5;
+            int mas = 10;
             for (int i = 0; i < mas; i++)
             {
                 anios.Add((DateTime.Now.Year + i).ToString());
@@ -1272,7 +1252,7 @@ namespace TAT001.Controllers
                 if (padre != null)
                 {
                     ViewBag.original = padre.MONTO_DOC_MD;
-                    List<DOCUMENTO> dd = db.DOCUMENTOes.Where(a => a.DOCUMENTO_REF == padre.NUM_DOC).ToList();
+                    List<DOCUMENTO> dd = db.DOCUMENTOes.Where(a => a.DOCUMENTO_REF == padre.NUM_DOC && a.ESTATUS_C == null).ToList();
                     ViewBag.sumaRel = decimal.Parse("0.00000"); ;
                     foreach (DOCUMENTO dos in dd)
                     {
@@ -1475,7 +1455,10 @@ namespace TAT001.Controllers
                         dOCUMENTO.PAIS_ID = p.ToUpper();//RSG 15.05.2018
                     }
                     //Tipo técnico
-                    dOCUMENTO.TIPO_TECNICO = select_neg;
+                    if (select_neg != null)//RSG 03.11.2018
+                        dOCUMENTO.TIPO_TECNICO = select_neg;
+                    else if (select_negi != null)//RSG 03.11.2018
+                        dOCUMENTO.TIPO_TECNICO = select_negi;
                     if (chk_ligada == "on")
                         dOCUMENTO.TIPO_TECNICO = "P";
 
@@ -1825,7 +1808,7 @@ namespace TAT001.Controllers
                                         {
                                             docmod.MATKL = "";
                                         }
-                                        docP.MATKL = docmod.MATKL;
+                                        //docP.MATKL = docmod.MATKL;
                                         docP.CANTIDAD = 1;
                                         docP.MONTO = docmod.MONTO;
                                         docP.PORC_APOYO = docmod.PORC_APOYO;
@@ -2520,7 +2503,8 @@ namespace TAT001.Controllers
                         ViewBag.error = errorString;
                     }
                     //---------------------------------------------------------------------------------TODO CORRECTO
-                    if (dOCUMENTO.DOCUMENTO_REF > 0)
+                    //if (dOCUMENTO.DOCUMENTO_REF > 0)
+                    if (dOCUMENTO.DOCUMENTO_REF > 0 & txt_flujo != "B")//ADD RSG 02.11.2018
                     {
                         if (dOCUMENTO.TSOL_ID != "CPR")
                         {
@@ -2592,7 +2576,7 @@ namespace TAT001.Controllers
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
                 FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
                 //tipo de solicitud
-                var id_sol  = FnCommon.ObtenerCmbTiposSolicitud(db, user.SPRAS_ID, null)
+                var id_sol = FnCommon.ObtenerCmbTiposSolicitud(db, user.SPRAS_ID, null)
                         .Select(x => new TSOLT_MOD
                         {
                             SPRAS_ID = user.SPRAS_ID,
@@ -3291,12 +3275,75 @@ namespace TAT001.Controllers
             }
             catch (Exception e)
             {
-                Log.ErrorLogApp(e,"Solicitudes","Descargar");
+                Log.ErrorLogApp(e, "Solicitudes", "Descargar");
                 return null;
             }
-            
+
         }
 
+        void ObtenerAnalisisSolicitud(DOCUMENTO D)
+        {
+            FormatosC format = new FormatosC();
+            decimal montoProv = 0.0M;
+            decimal montoApli = 0.0M;
+            decimal remanente = 0.0M;
+            decimal impuesto = 0.0M;
+            bool esDocRef = false;
+            bool esProv = false;
+            bool esNC = false;
+
+
+            if (D.DOCUMENTO_REF != null)
+            {//Es hijo
+                esProv = true;
+                montoProv = db.DOCUMENTOes.First(x => x.NUM_DOC == D.DOCUMENTO_REF).MONTO_DOC_MD.Value;
+            }
+            else if (db.DOCUMENTOes.Any(x => x.DOCUMENTO_REF == D.NUM_DOC && x.ESTATUS_C == null))
+            {
+                //Es padre
+                esProv = true;
+                montoProv = D.MONTO_DOC_MD.Value;
+            }
+
+            if (db.DOCUMENTOes.Any(x => x.DOCUMENTO_REF == D.NUM_DOC && x.ESTATUS_C == null))
+            {
+                esDocRef = true;
+                montoApli = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == D.NUM_DOC && x.ESTATUS_C == null).Sum(x => x.MONTO_DOC_MD.Value);
+            }
+            else if (D.DOCUMENTO_REF != null)
+            {
+                esDocRef = true;
+                montoApli = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == D.DOCUMENTO_REF && x.ESTATUS_C == null).Sum(x => x.MONTO_DOC_MD.Value);
+
+            }
+            if (montoProv > 0 && montoApli > 0)
+            {
+                remanente = montoProv - montoApli;
+            }
+            string[] tsolImp = new string []{ "NC", "NCA", "NCAS","NCAM", "NCASM", "NCS", "NCI", "NCIA", "NCIAS", "NCIS" };
+            if (tsolImp.Contains(D.TSOL_ID))
+            {
+                decimal KBETR = 0.0M;
+                esNC = true;
+                if (db.DOCUMENTOPs.Any(x => (x.MATKL == "605" || x.MATKL == "207") && x.NUM_DOC == D.NUM_DOC))
+                {
+                    KBETR = db.IIMPUESTOes.First(x => x.MWSKZ == "A0").KBETR.Value;
+                }
+                else
+                {
+                    decimal concecutivo = db.CONPOSAPHs.First(x => x.TIPO_SOL == "NC" && x.SOCIEDAD == D.SOCIEDAD_ID && (x.TIPO_DOC == "YG" || x.TIPO_DOC == "DG")).CONSECUTIVO;
+                    string tax_code = db.CONPOSAPPs.First(x => x.CONSECUTIVO == concecutivo).TAX_CODE;
+                    KBETR = db.IIMPUESTOes.First(x => x.MWSKZ == tax_code).KBETR.Value;
+                }
+                impuesto = (D.MONTO_DOC_MD.Value * KBETR);
+            }
+            ViewBag.montoSol = format.toShow(D.MONTO_DOC_MD.Value, ".");
+            ViewBag.montoProv = (esProv ? format.toShow(montoProv, ".") : "-");
+            ViewBag.montoApli = (esDocRef ? format.toShow(montoApli, ".") : "-");
+            ViewBag.remanente = ((montoProv > 0 && montoApli > 0) ? format.toShow(remanente, ".") : "-");
+            ViewBag.impuesto = (esNC ? format.toShow(impuesto, ".") : "-");
+            ViewBag.montoTotal = format.toShow(D.MONTO_DOC_MD.Value, ".");
+        }
 
 
         public STATE getEstado(int id)
@@ -3542,6 +3589,7 @@ namespace TAT001.Controllers
                                 })
                             .ToList();
 
+                ViewBag.x_ligada = d.LIGADA;//LEJ 30.07.2018
                 List<DOCUMENTOA> archivos = new List<DOCUMENTOA>();
                 if (rel > 0)
                 {
@@ -3839,13 +3887,13 @@ namespace TAT001.Controllers
                 }
                 d.MONEDA_ID = id_bukrs.WAERS;
                 var date = DateTime.Now.Date;
-              
+
 
                 ViewBag.tcambio = d.TIPO_CAMBIO;
 
             }//RSG 13.06.2018
 
-            d.PERIODO = FnCommon.ObtenerPeriodoCalendario445(db,d.SOCIEDAD_ID,d.TSOL_ID,User.Identity.Name);
+            d.PERIODO = FnCommon.ObtenerPeriodoCalendario445(db, d.SOCIEDAD_ID, d.TSOL_ID, User.Identity.Name);
             d.EJERCICIO = Convert.ToString(DateTime.Now.Year);
 
             d.FECHAD = theTime;
@@ -3908,11 +3956,15 @@ namespace TAT001.Controllers
             int mas = 10;
             for (int i = 0; i < mas; i++)
             {
-                anios.Add((DateTime.Now.Year + i).ToString());
+                anios.Add((d.FECHAI_VIG.Value.Year + i).ToString());
             }
+            string selYear1 = d.FECHAI_VIG.Value.Year.ToString();//ADD RSG 04.11.2018-------------------------------
+            string selYear2 = d.FECHAF_VIG.Value.Year.ToString();
+            if (cal.anioMas(d.FECHAI_VIG.Value)) selYear1 = (d.FECHAI_VIG.Value.Year + 1).ToString();
+            if (cal.anioMas(d.FECHAF_VIG.Value)) selYear2 = (d.FECHAF_VIG.Value.Year + 1).ToString();//ADD RSG 04.11.2018-------------------------------
             //ViewBag.ANIOS = new SelectList(anios, DateTime.Now.Year.ToString());
-            ViewBag.ANIOS = new SelectList(anios, d.FECHAI_VIG.Value.Year.ToString());//ADD RSG 31.10.2018
-            ViewBag.ANIOSF = new SelectList(anios, d.FECHAF_VIG.Value.Year.ToString());//ADD RSG 31.10.2018
+            ViewBag.ANIOS = new SelectList(anios, selYear1);//ADD RSG 31.10.2018
+            ViewBag.ANIOSF = new SelectList(anios, selYear2);//ADD RSG 31.10.2018
             d.SOCIEDAD = db.SOCIEDADs.Find(d.SOCIEDAD_ID);
             //----------------------------RSG 18.05.2018
             //----------------------------RSG 12.06.2018
@@ -3940,20 +3992,38 @@ namespace TAT001.Controllers
             {
 
                 List<Delegados> users = new List<Delegados>();
-                List<PAI> pp = (from P in db.PAIS
-                                join C in db.CREADOR2 on P.LAND equals C.LAND
+                //List<PAI> pp = (from P in db.PAIS
+                //                join C in db.CREADOR2 on P.LAND equals C.LAND
+                //                where P.ACTIVO == true
+                //                & C.ID == User.Identity.Name & C.ACTIVO == true
+                //                select P).ToList();
+
+                List<PAI> pp = (from P in db.PAIS.ToList()
+                                join C in db.CLIENTEs.Where(x => x.ACTIVO == true).ToList()
+                                on P.LAND equals C.LAND
+                                join U in db.USUARIOFs.Where(x => x.USUARIO_ID == User.Identity.Name & x.ACTIVO == true)
+                                on new { C.VKORG, C.VTWEG, C.SPART, C.KUNNR } equals new { U.VKORG, U.VTWEG, U.SPART, U.KUNNR }
                                 where P.ACTIVO == true
-                                & C.ID == User.Identity.Name & C.ACTIVO == true
-                                select P).ToList();
+                                select P).DistinctBy(x => x.LAND).ToList();
+
 
                 List<Delegados> delegados = new List<Delegados>();
                 foreach (DELEGAR de in del)
                 {
-                    var pd = (from P in db.PAIS
-                              join C in db.CREADOR2 on P.LAND equals C.LAND
-                              where P.ACTIVO == true
-                              & C.ID == de.USUARIO_ID & C.ACTIVO == true
-                              select P).ToList();
+                    //var pd = (from P in db.PAIS
+                    //          join C in db.CREADOR2 on P.LAND equals C.LAND
+                    //          where P.ACTIVO == true
+                    //          & C.ID == de.USUARIO_ID & C.ACTIVO == true
+                    //          select P).ToList();
+
+                    List<PAI> pd = (from P in db.PAIS.ToList()
+                                    join C in db.CLIENTEs.Where(x => x.ACTIVO == true).ToList()
+                                    on P.LAND equals C.LAND
+                                    join U in db.USUARIOFs.Where(x => x.USUARIO_ID == de.USUARIO_ID & x.ACTIVO == true)
+                                    on new { C.VKORG, C.VTWEG, C.SPART, C.KUNNR } equals new { U.VKORG, U.VTWEG, U.SPART, U.KUNNR }
+                                    where P.ACTIVO == true
+                                    select P).DistinctBy(x => x.LAND).ToList();
+                    pp.AddRange(pd);
                     Delegados delegado = new Delegados();
                     delegado.usuario = de.USUARIO_ID;
                     delegado.nombre = de.USUARIO_ID + " - " + de.USUARIO.NOMBRE + " " + de.USUARIO.APELLIDO_P + " " + de.USUARIO.APELLIDO_M;
@@ -4065,28 +4135,14 @@ namespace TAT001.Controllers
             }
             //ADD RSG 31.10.2018------------------------------
             d.DOCUMENTORAN = new List<DOCUMENTORAN>();
-            foreach (DOCUMENTOREC drec in d.DOCUMENTOREC.ToList()) {
+            foreach (DOCUMENTOREC drec in d.DOCUMENTOREC.ToList())
+            {
                 d.DOCUMENTORAN.AddRange(drec.DOCUMENTORANs.ToList());
             }
             //ADD RSG 31.10.2018------------------------------
 
             //Tab_Fin Análisis Solicitud
-            decimal montoProv = 0.0M;
-            decimal montoApli = 0.0M;
-            decimal remanente = 0.0M;
-            bool esDocRef = false;
-            if (DF.D.DOCUMENTO_REF != null) { montoProv = db.DOCUMENTOes.First(x => x.NUM_DOC == DF.D.DOCUMENTO_REF).MONTO_DOC_MD.Value; }
-            if (db.DOCUMENTOes.Any(x => x.DOCUMENTO_REF == DF.D.NUM_DOC))
-            {
-                esDocRef = true;
-                montoApli = db.DOCUMENTOes.Sum(x => x.MONTO_DOC_MD.Value);
-            }
-            if (montoProv > 0 && montoApli > 0) { remanente = montoProv - montoApli; }
-            ViewBag.montoSol = DF.D.MONTO_DOC_MD;
-            ViewBag.montoProv = (DF.D.DOCUMENTO_REF != null ? montoProv.ToString() : "-");
-            ViewBag.montoApli = (esDocRef ? montoApli.ToString() : "-");
-            ViewBag.remanente = ((montoProv > 0 && montoApli > 0) ? (remanente < 0 ? "(-)" + remanente.ToString() : remanente.ToString()) : "-");
-            ViewBag.montoTotal = DF.D.MONTO_DOC_MD;
+            ObtenerAnalisisSolicitud(d);
 
             return View(d);
         }
@@ -4105,8 +4161,8 @@ namespace TAT001.Controllers
             "VKORG,VTWEG,SPART,HORAC,FECHAC_PLAN,FECHAC_USER,HORAC_USER,CONCEPTO,PORC_ADICIONAL,PAYER_NOMBRE,PAYER_EMAIL," +
             "MONEDAL_ID,MONEDAL2_ID,TIPO_CAMBIOL,TIPO_CAMBIOL2,DOCUMENTOP, DOCUMENTOF, DOCUMENTOREC, GALL_ID, USUARIOD_ID, OBJQ_PORC, DOCUMENTORAN")] DOCUMENTO dOCUMENTO,
                 IEnumerable<HttpPostedFileBase> files_soporte, string notas_soporte, string[] labels_soporte, string unafact,
-                string FECHAD_REV, string TREVERSA, string select_neg, string select_dis, string select_negi, string select_disi, 
-                string bmonto_apoyo, string catmat, string txt_sop_borr, string txt_flujo)
+                string FECHAD_REV, string TREVERSA, string select_neg, string select_dis, string select_negi, string select_disi,
+                string bmonto_apoyo, string catmat, string txt_sop_borr, string txt_flujo, string chk_ligada)
         {
             if (ModelState.IsValid)
             {
@@ -4150,6 +4206,9 @@ namespace TAT001.Controllers
                     d.NOTAS = dOCUMENTO.NOTAS;
                     d.TIPO_TECNICO = select_neg;
 
+                    if (chk_ligada == "on")//ADD RSG 02.11.2018
+                        d.TIPO_TECNICO = "P";
+
                     ////if (d.PAYER_ID != dOCUMENTO.PAYER_ID)
                     ////{
                     ////    d.PAYER_ID = dOCUMENTO.PAYER_ID;
@@ -4162,6 +4221,7 @@ namespace TAT001.Controllers
                     ////    }
                     ////}
                     d.PAYER_EMAIL = dOCUMENTO.PAYER_EMAIL;
+
                     d.PAYER_NOMBRE = dOCUMENTO.PAYER_NOMBRE;
 
                     d.FECHAF_VIG = dOCUMENTO.FECHAF_VIG;
@@ -4236,7 +4296,7 @@ namespace TAT001.Controllers
 
                         listcatm = grupoMaterialesController(listcat, d.VKORG, d.SPART, d.PAYER_ID, d.SOCIEDAD_ID, out totalcats);
                     }
-                    
+
                     d.ESTATUS_WF = txt_flujo;//ADD RSG 30.10.2018
 
                     //Se cambio de pocisión //B20180618 v1 MGC 2018.06.18--------------------------------------
@@ -4616,6 +4676,10 @@ namespace TAT001.Controllers
 
 
                     //Guardar registros de recurrencias  RSG 01.08.2018------------------
+                    if (chk_ligada == "on")
+                        d.LIGADA = true;
+                    else
+                        d.LIGADA = false;
 
                     if (dOCUMENTO.DOCUMENTOREC != null)
                         if (dOCUMENTO.DOCUMENTOREC.Count > 0)
@@ -4638,7 +4702,11 @@ namespace TAT001.Controllers
                                 if (drec.PORC == null)
                                     drec.PORC = 0;
                                 dOCUMENTO.TIPO_RECURRENTE = db.TSOLs.Where(x => x.ID.Equals(dOCUMENTO.TSOL_ID)).FirstOrDefault().TRECU;
-
+                                if (dOCUMENTO.TIPO_RECURRENTE == "1" & dOCUMENTO.LIGADA == true)
+                                    dOCUMENTO.TIPO_RECURRENTE = "2";
+                                if (dOCUMENTO.TIPO_RECURRENTE != "1" & dOCUMENTO.OBJETIVOQ == true)
+                                    dOCUMENTO.TIPO_RECURRENTE = "3";
+                                //RSG 29.07.2018-add----------------------------------
                                 drec.FECHAV = drec.FECHAF;
                                 Calendario445 cal = new Calendario445();
                                 if (dOCUMENTO.TIPO_RECURRENTE == "1")
@@ -4646,8 +4714,13 @@ namespace TAT001.Controllers
                                 else
                                     drec.FECHAF = cal.getNextLunes((DateTime)drec.FECHAF);
                                 drec.EJERCICIO = drec.FECHAV.Value.Year;
-                                drec.PERIODO = cal.getPeriodo(drec.FECHAV.Value);
-
+                                if (dOCUMENTO.TIPO_RECURRENTE == "1")
+                                    drec.PERIODO = cal.getPeriodo(drec.FECHAV.Value);
+                                else
+                                    drec.PERIODO = cal.getPeriodoF(drec.FECHAV.Value);
+                                if (dOCUMENTO.TIPO_RECURRENTE == "1")
+                                    drec.PERIODO--;
+                                if (drec.PERIODO == 0) drec.PERIODO = 12;
                                 //RSG 29.07.2018-add----------------------------------
                                 if (dOCUMENTO.DOCUMENTORAN != null)
                                     foreach (DOCUMENTORAN dran in dOCUMENTO.DOCUMENTORAN.Where(x => x.POS == drec.POS))
@@ -4661,7 +4734,7 @@ namespace TAT001.Controllers
                             db.Entry(d).State = EntityState.Modified;
                             db.SaveChanges();
                         }//Guardar registros de recurrencias  RSG 01.08.2018-------------------
-                    if (dOCUMENTO.DOCUMENTOREC == null & dOCUMENTO.LIGADA == true)
+                    if (dOCUMENTO.DOCUMENTOREC == null & d.LIGADA == true)
                     //if (dOCUMENTO.LIGADA == true)
                     {
 
@@ -4674,9 +4747,9 @@ namespace TAT001.Controllers
                         if (drec.PORC == null) //RSG 31.05.2018-------------------
                             drec.PORC = 0;
                         d.TIPO_RECURRENTE = db.TSOLs.Where(x => x.ID.Equals(d.TSOL_ID)).FirstOrDefault().TRECU;
-                        if (d.TIPO_RECURRENTE == "1" & dOCUMENTO.LIGADA == true)
+                        if (d.TIPO_RECURRENTE == "1" & d.LIGADA == true)
                             d.TIPO_RECURRENTE = "2";
-                        if (d.TIPO_RECURRENTE != "1" & dOCUMENTO.OBJETIVOQ == true)
+                        if (d.TIPO_RECURRENTE != "1" & d.OBJETIVOQ == true)
                             d.TIPO_RECURRENTE = "3";
                         Calendario445 cal = new Calendario445();
                         drec.FECHAF = cal.getUltimoDia(d.FECHAF_VIG.Value.Year, cal.getPeriodo(d.FECHAF_VIG.Value));
@@ -4702,10 +4775,10 @@ namespace TAT001.Controllers
                             dran.POS = 1;
                             dran.LIN = 1;
                             dran.OBJETIVOI = 0;
-                            dran.PORCENTAJE = dOCUMENTO.PORC_APOYO;
+                            dran.PORCENTAJE = d.PORC_APOYO;
                             drec.DOCUMENTORANs.Add(dran);
                         }
-                        drec.PORC = dOCUMENTO.PORC_APOYO;
+                        drec.PORC = d.PORC_APOYO;
                         drec.DOC_REF = 0;
                         drec.ESTATUS = "";
 
@@ -4825,16 +4898,16 @@ namespace TAT001.Controllers
                                         docF = dOCUMENTO.DOCUMENTOF[i];
                                         _df2.POS = docF.POS;
                                         _df2.NUM_DOC = dOCUMENTO.NUM_DOC;
-                                        _df2.FACTURA = docF.FACTURA;
-                                        _df2.PROVEEDOR = docF.PROVEEDOR;
-                                        _df2.CONTROL = docF.CONTROL;
-                                        _df2.AUTORIZACION = docF.AUTORIZACION;
-                                        _df2.FACTURAK = docF.FACTURAK;
-                                        _df2.EJERCICIOK = docF.EJERCICIOK;
-                                        _df2.BILL_DOC = docF.BILL_DOC;
-                                        _df2.BELNR = docF.BELNR;
+                                        _df2.FACTURA = docF.FACTURA.Trim();
+                                        _df2.PROVEEDOR = docF.PROVEEDOR.Trim();
+                                        _df2.CONTROL = docF.CONTROL.Trim();
+                                        _df2.AUTORIZACION = docF.AUTORIZACION.Trim();
+                                        _df2.FACTURAK = docF.FACTURAK.Trim();
+                                        _df2.EJERCICIOK = docF.EJERCICIOK.Trim();
+                                        _df2.BILL_DOC = docF.BILL_DOC.Trim();
+                                        _df2.BELNR = docF.BELNR.Trim();
                                         _df2.IMPORTE_FAC = docF.IMPORTE_FAC;
-                                        _df2.PAYER = docF.PAYER;
+                                        _df2.PAYER = docF.PAYER.Trim();
                                         db.DOCUMENTOFs.Add(_df2);
                                         db.SaveChanges();
                                     }
@@ -5059,6 +5132,56 @@ namespace TAT001.Controllers
                         ViewBag.error = errorString;
                     }
                 }//ADD RSG 31.10.2018
+
+                if (d.DOCUMENTO_REF > 0 & txt_flujo != "B")//ADD RSG 02.11.2018
+                {
+                    if (d.TSOL.REVERSO == true)
+                    {
+                        List<DOCUMENTO> dd = db.DOCUMENTOes.Where(a => a.DOCUMENTO_REF == (d.DOCUMENTO_REF)).ToList();
+                        List<DOCUMENTOP> ddr = db.DOCUMENTOPs.Where(a => a.NUM_DOC == (d.DOCUMENTO_REF)).ToList();
+                        ////decimal total = 0;
+                        decimal[] totales = new decimal[ddr.Count()];
+                        foreach (DOCUMENTOP dr in ddr)
+                        {
+                            //totales[(int)dr.POS - 1] = dr.VOLUMEN_EST * dr.MONTO_APOYO;
+                            totales[(int)dr.POS - 1] = (decimal)dr.APOYO_EST;
+                            foreach (DOCUMENTO d1 in dd)
+                            {
+                                foreach (DOCUMENTOP dp in d1.DOCUMENTOPs)
+                                {
+                                    if (dr.POS == dp.POS)
+                                    {
+                                        //var suma2 = dp.VOLUMEN_REAL * dp.MONTO_APOYO;
+                                        var suma2 = dp.APOYO_REAL;
+
+                                        totales[(int)dr.POS - 1] = totales[(int)dr.POS - 1] - (decimal)suma2;
+                                    }
+                                }
+                            }
+                        }
+                        //RSG 14.06.2018----------------------
+                        decimal resto = decimal.Parse("0.00");
+                        foreach (decimal dec in totales)
+                        {
+                            resto += dec;
+                        }
+                        //RSG 14.06.2018----------------------
+                        foreach (decimal dec in totales)
+                        {
+                            if (dec > 0)
+                                return RedirectToAction("Reversa", new { id = dOCUMENTO.DOCUMENTO_REF, resto = resto });
+                        }
+                    }
+                    using (TAT001Entities db1 = new TAT001Entities())
+                    {
+                        decimal num_ref = (decimal)d.DOCUMENTO_REF;
+                        DOCUMENTO referencia = db1.DOCUMENTOes.Find(num_ref);
+                        referencia.ESTATUS = "R";
+                        db1.Entry(referencia).State = EntityState.Modified;
+                        db1.SaveChanges();
+                    }
+                }
+
                 return RedirectToAction("Index", "Home");
             }
             ViewBag.TALL_ID = new SelectList(db.TALLs, "ID", "DESCRIPCION", dOCUMENTO.TALL_ID);
@@ -5284,90 +5407,7 @@ namespace TAT001.Controllers
             return jc;
         }
 
-        [HttpPost]
-        [AllowAnonymous]
-        public JsonResult SelectCliente(string kunnr)
-        {
 
-            TAT001Entities db = new TAT001Entities();
-
-            CLIENTE_MOD id_cl = (from c in db.CLIENTEs
-                                 join co in db.CONTACTOCs
-                                 on new { c.VKORG, c.VTWEG, c.SPART, c.KUNNR } equals new { co.VKORG, co.VTWEG, co.SPART, co.KUNNR } into jjcont
-                                 from co in jjcont.DefaultIfEmpty()
-                                 where (c.KUNNR == kunnr & co.DEFECTO == true)
-                                 select new CLIENTE_MOD
-                                 {
-                                     VKORG = c.VKORG,
-                                     VTWEG = c.VTWEG,
-                                     VTWEG2 = c.VTWEG,//RSG 05.07.2018
-                                     SPART = c.SPART,//RSG 28.05.2018-------------------
-                                     NAME1 = c.NAME1,
-                                     KUNNR = c.KUNNR,
-                                     STCD1 = c.STCD1,
-                                     PARVW = c.PARVW,
-                                     BANNER = c.BANNER,
-                                     CANAL = c.CANAL,
-                                     PAYER_NOMBRE = co == null ? String.Empty : co.NOMBRE,
-                                     PAYER_EMAIL = co == null ? String.Empty : co.EMAIL,
-                                 }).FirstOrDefault();
-
-            if (id_cl == null)
-            {
-                id_cl = (from c in db.CLIENTEs
-                         where (c.KUNNR == kunnr)
-                         select new CLIENTE_MOD
-                         {
-                             VKORG = c.VKORG,
-                             VTWEG = c.VTWEG,
-                             VTWEG2 = c.VTWEG,//RSG 05.07.2018
-                             SPART = c.SPART,//RSG 28.05.2018-------------------
-                             NAME1 = c.NAME1,
-                             KUNNR = c.KUNNR,
-                             STCD1 = c.STCD1,
-                             PARVW = c.PARVW,
-                             BANNER = c.BANNER,
-                             CANAL = c.CANAL,
-                             PAYER_NOMBRE = String.Empty,
-                             PAYER_EMAIL = String.Empty,
-                         }).FirstOrDefault();
-            }
-
-            if (id_cl != null)
-            {
-                //Obtener el cliente
-                //CANAL canal = db.CANALs.Where(ca => ca.BANNER == id_cl.BANNER && ca.KUNNR == kunnr).FirstOrDefault();
-                CANAL canal = db.CANALs.Where(ca => ca.CANAL1 == id_cl.CANAL).FirstOrDefault();
-                id_cl.VTWEG = "";
-                //if (canal == null)
-                //{
-                //    string kunnrwz = kunnr.TrimStart('0');
-                //    string bannerwz = id_cl.BANNER.TrimStart('0');
-                //    canal = db.CANALs.Where(ca => ca.BANNER == bannerwz && ca.KUNNR == kunnrwz).FirstOrDefault();
-                //}
-
-                if (canal != null)
-                {
-                    id_cl.VTWEG = canal.CANAL1 + " - " + canal.CDESCRIPCION;
-                }
-
-                //Obtener el tipo de cliente
-                var clientei = (from c in db.TCLIENTEs
-                                join ct in db.TCLIENTETs
-                                on c.ID equals ct.PARVW_ID
-                                where c.ID == id_cl.PARVW && c.ACTIVO == true
-                                select ct).FirstOrDefault();
-                id_cl.PARVW = "";
-                if (clientei != null)
-                {
-                    id_cl.PARVW = clientei.TXT50;
-                }
-
-            }
-
-            JsonResult jc = Json(id_cl, JsonRequestBehavior.AllowGet);
-            return jc;
-        }
 
         [HttpPost]
         [AllowAnonymous]
@@ -6287,61 +6327,67 @@ namespace TAT001.Controllers
 
                 if (cie != null)
                 {
-                    //Obtener el historial de compras de los clientesd
-                    var matt = matl.ToList();
-                    //kunnr = kunnr.TrimStart('0').Trim();
-                    var pres = db.PRESUPSAPPs.Where(a => a.VKORG.Equals(vkorg) & a.SPART.Equals(spart) & a.KUNNR == kunnr & (a.GRSLS != null | a.NETLB != null)).ToList();
-                    var cat = db.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals("EN")).ToList();
-                    //foreach (var c in cie)
-                    //{
-                    //    c.KUNNR = c.KUNNR.TrimStart('0').Trim();
-                    //}
+                    ////    //Obtener el historial de compras de los clientesd
+                    ////    var matt = matl.ToList();
+                    ////    //kunnr = kunnr.TrimStart('0').Trim();
+                    ////    var pres = db.PRESUPSAPPs.Where(a => a.VKORG.Equals(vkorg) & a.SPART.Equals(spart) & a.KUNNR == kunnr & (a.GRSLS != null | a.NETLB != null)).ToList();
+                    ////    var cat = db.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals("EN")).ToList();
+                    ////    //foreach (var c in cie)
+                    ////    //{
+                    ////    //    c.KUNNR = c.KUNNR.TrimStart('0').Trim();
+                    ////    //}
 
-                    CONFDIST_CAT conf = getCatConf(soc_id);
-                    if (conf.CAMPO == "GRSLS")
+                    ////    CONFDIST_CAT conf = getCatConf(soc_id);
+                    ////    if (conf.CAMPO == "GRSLS")
+                    ////    {
+                    ////        jd = (from ps in pres
+                    ////              join cl in cie
+                    ////              on ps.KUNNR equals cl.KUNNR
+                    ////              join m in matt
+                    ////              on ps.MATNR equals m.ID
+                    ////              join mk in cat
+                    ////              on m.MATERIALGP_ID equals mk.MATERIALGP_ID
+                    ////              where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) &&
+                    ////              (ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART
+                    ////              ) && ps.BUKRS == soc_id
+                    ////              && ps.GRSLS > 0
+                    ////              select new DOCUMENTOM_MOD
+                    ////              {
+                    ////                  ID_CAT = m.MATERIALGP_ID,
+                    ////                  MATNR = ps.MATNR,
+                    ////                  //mk.TXT50
+                    ////                  VAL = Convert.ToDecimal(ps.GRSLS),
+                    ////                  EXCLUIR = mk.MATERIALGP.EXCLUIR // RSG 09.07.2018 ID 156
+                    ////              }).ToList();
+                    ////    }
+                    ////    else
+                    ////    {
+                    ////        jd = (from ps in pres
+                    ////              join cl in cie
+                    ////              on ps.KUNNR equals cl.KUNNR
+                    ////              join m in matt
+                    ////              on ps.MATNR equals m.ID
+                    ////              join mk in cat
+                    ////              on m.MATERIALGP_ID equals mk.MATERIALGP_ID
+                    ////              where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) &&
+                    ////              (ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART
+                    ////              ) && ps.BUKRS == soc_id
+                    ////              && ps.NETLB > 0
+                    ////              select new DOCUMENTOM_MOD
+                    ////              {
+                    ////                  ID_CAT = m.MATERIALGP_ID,
+                    ////                  MATNR = ps.MATNR,
+                    ////                  //mk.TXT50
+                    ////                  VAL = Convert.ToDecimal(ps.NETLB),
+                    ////                  EXCLUIR = mk.MATERIALGP.EXCLUIR // RSG 09.07.2018 ID 156
+                    ////              }).ToList();
+                    ////    }
+                    ///
+                    if (cie != null)
                     {
-                        jd = (from ps in pres
-                              join cl in cie
-                              on ps.KUNNR equals cl.KUNNR
-                              join m in matt
-                              on ps.MATNR equals m.ID
-                              join mk in cat
-                              on m.MATERIALGP_ID equals mk.MATERIALGP_ID
-                              where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) &&
-                              (ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART
-                              ) && ps.BUKRS == soc_id
-                              && ps.GRSLS > 0
-                              select new DOCUMENTOM_MOD
-                              {
-                                  ID_CAT = m.MATERIALGP_ID,
-                                  MATNR = ps.MATNR,
-                                  //mk.TXT50
-                                  VAL = Convert.ToDecimal(ps.GRSLS),
-                                  EXCLUIR = mk.MATERIALGP.EXCLUIR // RSG 09.07.2018 ID 156
-                              }).ToList();
+                        jd = FnCommon.ObtenerMaterialGroupsMateriales(db, vkorg, spart, kunnr, soc_id, aii, mii, aff, mff, User.Identity.Name);
                     }
-                    else
-                    {
-                        jd = (from ps in pres
-                              join cl in cie
-                              on ps.KUNNR equals cl.KUNNR
-                              join m in matt
-                              on ps.MATNR equals m.ID
-                              join mk in cat
-                              on m.MATERIALGP_ID equals mk.MATERIALGP_ID
-                              where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) &&
-                              (ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART
-                              ) && ps.BUKRS == soc_id
-                              && ps.NETLB > 0
-                              select new DOCUMENTOM_MOD
-                              {
-                                  ID_CAT = m.MATERIALGP_ID,
-                                  MATNR = ps.MATNR,
-                                  //mk.TXT50
-                                  VAL = Convert.ToDecimal(ps.NETLB),
-                                  EXCLUIR = mk.MATERIALGP.EXCLUIR // RSG 09.07.2018 ID 156
-                              }).ToList();
-                    }
+
                 }
             }
 
@@ -7292,7 +7338,7 @@ namespace TAT001.Controllers
                             {
                                 SPRAS_ID = ct.SPRAS_ID.ToString(),
                                 CATEGORIA_ID = ct.MATERIALGP_ID.ToString(),//B20180625 MGC 2018.06.28
-                                TXT50 = ct.TXT50.ToString()
+                        TXT50 = ct.TXT50.ToString()
                             })
                         .FirstOrDefault();
             }
@@ -7390,29 +7436,11 @@ namespace TAT001.Controllers
             doc.DOCUMENTORAN = docs;
             return PartialView("~/Views/Solicitudes/_PartialRanTr.cshtml", doc);
         }
-        //private string completaMaterial(string material)//RSG 07.06.2018---------------------------------------------
-        //{
-        //    string m = material;
-        //    try
-        //    {
-        //        long matnr1 = long.Parse(m);
-        //        int l = 18 - m.Length;
-        //        for (int i = 0; i < l; i++)
-        //        {
-        //            m = "0" + m;
-        //        }
-        //    }
-        //    catch
-        //    {
-
-        //    }
-        //    return m;
-        //}
 
         [HttpPost]
-        public JsonResult getSolicitud(string num, string num2)//RSG 07.06.2018---------------------------------------------
+        public JsonResult getSolicitud(string num, string monto, string tsol_id, string sociedad_id, bool esCategoriaUnica)//RSG 07.06.2018---------------------------------------------
         {
-            TAT001.Models.SOLICITUD_MOD sm = new SOLICITUD_MOD();
+            SOLICITUD_MOD sm = new SOLICITUD_MOD();
 
             //Obtener info solicitud
             if (num == null | num == "" | num == "0.00")
@@ -7421,17 +7449,16 @@ namespace TAT001.Controllers
             }
             else
             {
-                decimal hola = Convert.ToDecimal(num);
-                var rev = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == hola).ToList();
-                ;
+                decimal num_doc = Convert.ToDecimal(num);
+                var rev = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == num_doc && x.ESTATUS_C == null).ToList();
 
                 if (rev.Count() == 0)
                 {
                     //CON UN RELACIONADO 
-                    var rev2 = db.DOCUMENTOes.Where(x => x.NUM_DOC == hola).FirstOrDefault();
-                    decimal? rem2 = (rev2.MONTO_DOC_MD - Convert.ToDecimal(num2));
+                    var rev2 = db.DOCUMENTOes.Where(x => x.NUM_DOC == num_doc).FirstOrDefault();
+                    decimal? rem2 = (rev2.MONTO_DOC_MD - Convert.ToDecimal(monto));
 
-                    sm.S_MONTOB = num2;
+                    sm.S_MONTOB = monto;
                     sm.S_MONTOP = rev2.MONTO_DOC_MD.ToString();
                     sm.S_MONTOA = "-";
                     sm.S_REMA = rem2.ToString();
@@ -7439,16 +7466,16 @@ namespace TAT001.Controllers
                     sm.S_IMPB = "-";
                     sm.S_IMPC = "-";
                     sm.S_RET = "-";
-                    sm.S_TOTAL = num2;
+                    sm.S_TOTAL = monto;
                 }
                 else if (rev.Count() == 1)
                 {
                     //CON DOS RELACIONADOS
-                    var rev3 = db.DOCUMENTOes.Where(x => x.NUM_DOC == hola).FirstOrDefault();
-                    var rev33 = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == hola).FirstOrDefault();
-                    decimal? rem3 = ((rev3.MONTO_DOC_MD - rev33.MONTO_DOC_MD) - (Convert.ToDecimal(num2)));
+                    var rev3 = db.DOCUMENTOes.Where(x => x.NUM_DOC == num_doc).FirstOrDefault();
+                    var rev33 = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == num_doc && x.ESTATUS_C == null).FirstOrDefault();
+                    decimal? rem3 = ((rev3.MONTO_DOC_MD - rev33.MONTO_DOC_MD) - (Convert.ToDecimal(monto)));
 
-                    sm.S_MONTOB = num2;
+                    sm.S_MONTOB = monto;
                     sm.S_MONTOP = rev3.MONTO_DOC_MD.ToString();
                     sm.S_MONTOA = rev33.MONTO_DOC_MD.ToString();
                     sm.S_REMA = rem3.ToString();
@@ -7456,21 +7483,21 @@ namespace TAT001.Controllers
                     sm.S_IMPB = "-";
                     sm.S_IMPC = "-";
                     sm.S_RET = "-";
-                    sm.S_TOTAL = num2;
+                    sm.S_TOTAL = monto;
                 }
                 else if (rev.Count() > 1)
                 {
-                    var rev4 = db.DOCUMENTOes.Where(x => x.NUM_DOC == hola).FirstOrDefault();
-                    var rev44 = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == hola).Select(x => x.MONTO_DOC_MD);
+                    var rev4 = db.DOCUMENTOes.Where(x => x.NUM_DOC == num_doc).FirstOrDefault();
+                    var rev44 = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == num_doc && x.ESTATUS_C == null).Select(x => x.MONTO_DOC_MD);
                     decimal sum = 0;
 
                     foreach (var k in rev44)
                     {
                         sum = sum + k.Value;
                     }
-                    decimal? rem4 = ((rev4.MONTO_DOC_MD - sum) - (Convert.ToDecimal(num2)));
+                    decimal? rem4 = ((rev4.MONTO_DOC_MD - sum) - (Convert.ToDecimal(monto)));
 
-                    sm.S_MONTOB = num2;
+                    sm.S_MONTOB = monto;
                     sm.S_MONTOP = rev4.MONTO_DOC_MD.ToString();
                     sm.S_MONTOA = sum.ToString();
                     sm.S_REMA = rem4.ToString();
@@ -7478,10 +7505,26 @@ namespace TAT001.Controllers
                     sm.S_IMPB = "-";
                     sm.S_IMPC = "-";
                     sm.S_RET = "-";
-                    sm.S_TOTAL = num2;
+                    sm.S_TOTAL = monto;
                 }
-            }
 
+            }
+            string[] tsolImp = new string[] { "NC", "NCA", "NCAS", "NCAM", "NCASM", "NCS", "NCI", "NCIA", "NCIAS", "NCIS" };
+            if (tsolImp.Contains(tsol_id))
+            {
+                decimal KBETR = 0.0M;
+                if (esCategoriaUnica)
+                {
+                    KBETR = db.IIMPUESTOes.First(x => x.MWSKZ == "A0").KBETR.Value;
+                }
+                else
+                {
+                    decimal concecutivo = db.CONPOSAPHs.First(x => x.TIPO_SOL == "NC" && x.SOCIEDAD == sociedad_id && (x.TIPO_DOC == "YG" || x.TIPO_DOC == "DG")).CONSECUTIVO;
+                    string tax_code = db.CONPOSAPPs.First(x => x.CONSECUTIVO == concecutivo).TAX_CODE;
+                    KBETR = db.IIMPUESTOes.First(x => x.MWSKZ == tax_code).KBETR.Value;
+                }
+                sm.S_IMPA = (Convert.ToDecimal(monto) * KBETR).ToString();
+            }
             JsonResult cc = Json(sm, JsonRequestBehavior.AllowGet);
             return cc;
         }

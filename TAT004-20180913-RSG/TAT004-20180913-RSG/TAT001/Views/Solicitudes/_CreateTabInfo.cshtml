@@ -27,7 +27,7 @@
                         <div class="col-md-10">
                             @if (ViewBag.reversan == "X")
                             {
-                                @Html.EditorFor(model => model.TSOL_ID, new { htmlAttributes = new { @class = "dropdowntree", @readonly = true } })
+                                @Html.EditorFor(model => model.TSOL_ID, new { htmlAttributes = new { @class = "dropdowntree", @readonly = "readonly",@style="color:gray;" } })
 
                             }
                             else
@@ -74,7 +74,7 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.SOCIEDAD_ID, "Co. Code", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_sociedad" })@*B20180801 MGC Textos*@
                             <div class="col-md-10">
-                                @Html.EditorFor(model => model.SOCIEDAD_ID, new { htmlAttributes = new { @id = "sociedad_id", @class = "form-control", @readonly = true } })
+                                @Html.EditorFor(model => model.SOCIEDAD_ID, new { htmlAttributes = new { @id = "sociedad_id", @class = "form-control", @readonly = "readonly" } })
                             </div>
                         </div>
                     </div>
@@ -84,7 +84,7 @@
                             <div class="form-group hidden">
                                 @Html.LabelFor(model => model.PAIS_ID, "Subregión", htmlAttributes: new { @class = "control-label col-md-2 hidden", @id = "lbl_pais" }) @*B20180801 MGC Textos*@
                                 <div class="col-md-10">
-                                    @Html.EditorFor(model => model.PAIS_ID, new { htmlAttributes = new { @id = "pais_id", @class = "form-control hidden", @readonly = true, @Value = pais.LAND } })
+                                    @Html.EditorFor(model => model.PAIS_ID, new { htmlAttributes = new { @id = "pais_id", @class = "form-control hidden", @readonly = "readonly", @Value = pais.LAND } })
                                 </div>
                             </div>
                             <div class="input-field col-md-2">
@@ -124,7 +124,8 @@
 
                                     var reversan = "@ViewBag.reversan";
                                     if (reversan == "X") {
-                                        $("#tsol_id").attr('readonly', '');
+                                        $("#TSOL_ID").attr('readonly', 'readonly');
+                                        $("#tsol_id").attr('readonly', 'readonly');
                                     }
                                         var auto = $.noConflict(true);
                                         auto(document).ready(function () {
@@ -242,7 +243,7 @@
                         <label id="lbl_concepto" for="concepto">Concepto*</label> @*B20180801 MGC Textos*@
                     </div>
                     <div class="input-field col s12">
-                        @Html.TextAreaFor(model => model.NOTAS, new { @class = "materialize-textarea ", @id = "notas_txt", onkeyup = "maxchar();", @maxlength = 255 })
+                       @Html.TextAreaFor(model => model.NOTAS, new { @class = "materialize-textarea ", @id = "notas_txt", onkeyup = "maxchar();", @maxlength = 255 })
                         @Html.LabelFor(model => model.NOTAS, "Mecánica de negociación", htmlAttributes: new { @class = "active", @for = "notas_txt", @id = "lbl_notas" })@*B20180801 MGC Textos*@
                     </div>
                     <script>
@@ -266,10 +267,13 @@
                 <h5 id="head_infocli">Información del cliente</h5>@*B20180801 MGC Textos*@
                 <div class="row" style="margin-bottom:0">
                     <div class="input-field col s12">
-                        @Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @id = "payer_id", @class = "form-control " + @ViewBag.relacionada, @onchange = @"selectCliente(this.value)", @maxlength = 10 } }) @*OCG 15-10-18 Se inserta aqui para no afectar la vista*@
+                        @Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @id = "payer_id", @class = "form-control " + @ViewBag.relacionada, @maxlength = 10 } }) @*OCG 15-10-18 Se inserta aqui para no afectar la vista*@
                         @Html.LabelFor(model => model.PAYER_ID, "Cliente", htmlAttributes: new { @for = "payer_id", @id = "lbl_payer" })@*B20180801 MGC Textos*@
                     </div>
                     <script>
+                                if ($('#payer_id').hasClass("prelacionada")) {
+                                    selectCliente($('#payer_id').val());
+                                }
                                     auto(document).ready(function () {
                                         auto("#payer_id").autocomplete({
                                             source: function (request, response) {
@@ -302,6 +306,7 @@
                                             select: function (event, ui) {
                                                 var label = ui.item.label;
                                                 var value = ui.item.value;
+                                                selectCliente(value);
                                             }
                                         });
                                         //OCG 11/10/18
@@ -318,7 +323,8 @@
                                         }
                                         var clien = cliente.substring(con, i);
                                         auto("#payer_id").attr("value", clien);
-                                    });
+                                });
+                                  
                     </script>
                     <input type="hidden" id="txt_vkorg" />
                     <input type="hidden" id="txt_vtweg" />
@@ -393,7 +399,7 @@
                                             var value = ui.item.value;
                                             var email = ui.item.mail;
                                             document.getElementById('payer_email').value = email;
-                                            //selectCliente(value);
+                                           
                                         }
                                     });
                                 })
@@ -558,6 +564,32 @@
                                     var optionsth = {
                                         defaultDate: new Date(datei.split('/')[2], datei.split('/')[1] - 1, datei.split('/')[0]),
                                         format: 'dd/mm/yyyy',
+                                        onClose: function (e) {
+                                            var datei = $('#fechai_vig2').val();
+
+                                            var FechaActual = new Date();
+                                            anioActual = FechaActual.getFullYear();
+
+                                            date = new Date(datei)
+                                            AniofechaIni = date.getFullYear()
+
+                                            if (AniofechaIni < anioActual) {
+                                                M.toast({ html: "El año seleccionado no debe ser menor al año actual" });
+                                                $('#fechai_vig2').val("");
+                                                return;
+                                            }
+                                            if (AniofechaIni > (anioActual + 4)) {
+                                                M.toast({ html: "El año seleccionado no debe ser mayor a " + (anioActual + 4) });
+                                                $('#fechai_vig2').val("");
+                                                return;
+                                            }
+                                            var res = validar_fechas(datei, datef);
+
+                                            if (!res) {
+                                                $('#fechaf_vig2').val("");
+                                                M.toast({ html: 'Las fechas no tienen un secuencia correcta' });
+                                            }
+                                        },
                                         i18n: {
                                             clear: 'Limpiar',
                                             today: 'Hoy',
@@ -580,6 +612,24 @@
                                         onClose: function (e) {
                                             var datei = $('#fechai_vig2').val();
                                             var datef = $('#fechaf_vig2').val();
+
+                                            var FechaActual = new Date();
+                                            anioActual = FechaActual.getFullYear();
+
+                                            date = new Date(datef)
+                                            AniofechaFin = date.getFullYear()
+
+                                            if (AniofechaFin < anioActual) {
+                                                M.toast({ html: "El año seleccionado no debe ser menor al año actual" });
+                                                $('#fechaf_vig2').val("");
+                                                return;
+                                            }
+                                            if (AniofechaFin > (anioActual + 4)) {
+                                                M.toast({ html: "El año seleccionado no debe ser mayor a " + (anioActual + 4) });
+                                                $('#fechaf_vig2').val("");
+                                                return;
+                                            }
+
                                             var res = validar_fechas(datei, datef);
 
                                             if (!res) {

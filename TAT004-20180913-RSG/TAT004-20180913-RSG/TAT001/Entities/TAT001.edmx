@@ -2037,6 +2037,18 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.TAB_CAMPO' no tiene definida ning
           <Property Name="USUARIO_ID" Type="nvarchar" MaxLength="16" Nullable="false" />
           <Property Name="AGROUP_ID" Type="bigint" Nullable="false" />
         </EntityType>
+        <EntityType Name="USUARIOLOG">
+          <Key>
+            <PropertyRef Name="USUARIO_ID" />
+          </Key>
+          <Property Name="USUARIO_ID" Type="nvarchar" MaxLength="16" Nullable="false" />
+          <Property Name="POS" Type="int" />
+          <Property Name="SESION" Type="nvarchar(max)" />
+          <Property Name="NAVEGADOR" Type="nvarchar(max)" />
+          <Property Name="UBICACION" Type="nvarchar(max)" />
+          <Property Name="FECHA" Type="datetime" />
+          <Property Name="LOGIN" Type="bit" />
+        </EntityType>
         <EntityType Name="USUARIOSAP">
           <Key>
             <PropertyRef Name="IDUSUARIO" />
@@ -4621,6 +4633,18 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_USUARIOLOG_USUARIO">
+          <End Role="USUARIO" Type="Self.USUARIO" Multiplicity="1" />
+          <End Role="USUARIOLOG" Type="Self.USUARIOLOG" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="USUARIO">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="USUARIOLOG">
+              <PropertyRef Name="USUARIO_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_USUARIOSOC_SOCIEDAD">
           <End Role="SOCIEDAD" Type="Self.SOCIEDAD" Multiplicity="1" />
           <End Role="USUARIOSOC" Type="Self.USUARIOSOC" Multiplicity="*" />
@@ -5021,6 +5045,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <EntitySet Name="USUARIO" EntityType="Self.USUARIO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="USUARIOF" EntityType="Self.USUARIOF" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="USUARIOGA" EntityType="Self.USUARIOGA" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="USUARIOLOG" EntityType="Self.USUARIOLOG" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="USUARIOSAP" EntityType="Self.USUARIOSAP" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="USUARIOSOC" EntityType="Self.USUARIOSOC" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="WARNING" EntityType="Self.WARNING" Schema="dbo" store:Type="Tables" />
@@ -5904,6 +5929,10 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <AssociationSet Name="FK_USUARIOGA_USUARIO" Association="Self.FK_USUARIOGA_USUARIO">
             <End Role="USUARIO" EntitySet="USUARIO" />
             <End Role="USUARIOGA" EntitySet="USUARIOGA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_USUARIOLOG_USUARIO" Association="Self.FK_USUARIOLOG_USUARIO">
+            <End Role="USUARIO" EntitySet="USUARIO" />
+            <End Role="USUARIOLOG" EntitySet="USUARIOLOG" />
           </AssociationSet>
           <AssociationSet Name="FK_USUARIOSOC_SOCIEDAD" Association="Self.FK_USUARIOSOC_SOCIEDAD">
             <End Role="SOCIEDAD" EntitySet="SOCIEDAD" />
@@ -8271,6 +8300,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <NavigationProperty Name="USUARIOFs" Relationship="Self.FK_USUARIOF_USUARIO" FromRole="USUARIO" ToRole="USUARIOF" />
           <NavigationProperty Name="GAUTORIZACIONs" Relationship="Self.USUARIOGA" FromRole="USUARIO" ToRole="GAUTORIZACION" />
           <NavigationProperty Name="SOCIEDADs" Relationship="TAT001Model.USUARIOSOC" FromRole="USUARIO" ToRole="SOCIEDAD" />
+          <NavigationProperty Name="USUARIOLOG" Relationship="TAT001Model.FK_USUARIOLOG_USUARIO" FromRole="USUARIO" ToRole="USUARIOLOG" />
         </EntityType>
         <EntityType Name="USUARIOF">
           <Key>
@@ -12016,6 +12046,11 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           </AssociationSet>
           <EntitySet Name="Grupoes" EntityType="TAT001Model.Grupo" />
           <EntitySet Name="GrupoCats" EntityType="TAT001Model.GrupoCat" />
+          <EntitySet Name="USUARIOLOGs" EntityType="TAT001Model.USUARIOLOG" />
+          <AssociationSet Name="FK_USUARIOLOG_USUARIO" Association="TAT001Model.FK_USUARIOLOG_USUARIO">
+            <End Role="USUARIO" EntitySet="USUARIOs" />
+            <End Role="USUARIOLOG" EntitySet="USUARIOLOGs" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="CPS_LISTA_CLI_PRO_Result">
           <Property Type="String" Name="KUNNR" Nullable="false" MaxLength="10" />
@@ -12078,12 +12113,12 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Property Type="DateTime" Name="FECHAD" Nullable="true" Precision="23" />
           <Property Type="Time" Name="HORAC" Nullable="true" />
           <Property Type="Int32" Name="PERIODO" Nullable="true" />
-          <Property Type="String" Name="ESTATUSS" Nullable="false" MaxLength="7" />
+          <Property Type="String" Name="ESTATUSS" Nullable="false" MaxLength="8" />
           <Property Type="String" Name="PAYER_ID" Nullable="true" MaxLength="10" />
           <Property Type="String" Name="NAME1" Nullable="true" MaxLength="100" />
           <Property Type="String" Name="CANAL" Nullable="true" MaxLength="10" />
           <Property Type="String" Name="TXT020" Nullable="true" MaxLength="20" />
-          <Property Type="String" Name="TXT50" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="TXT50" Nullable="true" MaxLength="62" />
           <Property Type="String" Name="CONCEPTO" Nullable="true" MaxLength="100" />
           <Property Type="Decimal" Name="MONTO_DOC_MD" Nullable="true" Precision="13" Scale="2" />
           <Property Type="String" Name="FACTURA" Nullable="true" MaxLength="50" />
@@ -12096,6 +12131,9 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Property Type="Decimal" Name="IMPORTE" Nullable="true" Precision="13" Scale="5" />
           <Property Type="String" Name="CUENTA_C" Nullable="true" MaxLength="10" />
           <Property Type="Decimal" Name="CARGO" Nullable="true" Precision="10" Scale="0" />
+          <Property Type="Decimal" Name="CUENTAP" Nullable="true" Precision="10" Scale="0" />
+          <Property Type="Decimal" Name="CUENTAPL" Nullable="true" Precision="10" Scale="0" />
+          <Property Type="Decimal" Name="CUENTACL" Nullable="true" Precision="10" Scale="0" />
         </ComplexType>
         <ComplexType Name="CSP_PERMISO_Result">
           <Property Type="String" Name="ID" Nullable="false" MaxLength="16" />
@@ -12226,6 +12264,31 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Property Name="Descripcion" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
           <Property Name="Mantto" Type="Int32" />
         </EntityType>
+        <EntityType Name="USUARIOLOG">
+          <Key>
+            <PropertyRef Name="USUARIO_ID" />
+          </Key>
+          <Property Name="USUARIO_ID" Type="String" Nullable="false" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Name="POS" Type="Int32" />
+          <Property Name="SESION" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="NAVEGADOR" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="UBICACION" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FECHA" Type="DateTime" Precision="3" />
+          <Property Name="LOGIN" Type="Boolean" />
+          <NavigationProperty Name="USUARIO" Relationship="TAT001Model.FK_USUARIOLOG_USUARIO" FromRole="USUARIOLOG" ToRole="USUARIO" />
+        </EntityType>
+        <Association Name="FK_USUARIOLOG_USUARIO">
+          <End Type="TAT001Model.USUARIO" Role="USUARIO" Multiplicity="1" />
+          <End Type="TAT001Model.USUARIOLOG" Role="USUARIOLOG" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="USUARIO">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="USUARIOLOG">
+              <PropertyRef Name="USUARIO_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -14591,6 +14654,9 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
                 <ScalarProperty Name="IMPORTE" ColumnName="IMPORTE" />
                 <ScalarProperty Name="CUENTA_C" ColumnName="CUENTA_C" />
                 <ScalarProperty Name="CARGO" ColumnName="CARGO" />
+                <ScalarProperty Name="CUENTAP" ColumnName="CUENTAP" />
+                <ScalarProperty Name="CUENTAPL" ColumnName="CUENTAPL" />
+                <ScalarProperty Name="CUENTACL" ColumnName="CUENTACL" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -14748,6 +14814,19 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
                 <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
                 <ScalarProperty Name="SPRAS_ID" ColumnName="SPRAS_ID" />
                 <ScalarProperty Name="Grupo_ID" ColumnName="Grupo_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="USUARIOLOGs">
+            <EntityTypeMapping TypeName="TAT001Model.USUARIOLOG">
+              <MappingFragment StoreEntitySet="USUARIOLOG">
+                <ScalarProperty Name="LOGIN" ColumnName="LOGIN" />
+                <ScalarProperty Name="FECHA" ColumnName="FECHA" />
+                <ScalarProperty Name="UBICACION" ColumnName="UBICACION" />
+                <ScalarProperty Name="NAVEGADOR" ColumnName="NAVEGADOR" />
+                <ScalarProperty Name="SESION" ColumnName="SESION" />
+                <ScalarProperty Name="POS" ColumnName="POS" />
+                <ScalarProperty Name="USUARIO_ID" ColumnName="USUARIO_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

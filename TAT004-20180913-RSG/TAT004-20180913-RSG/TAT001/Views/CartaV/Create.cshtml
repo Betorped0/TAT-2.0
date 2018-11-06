@@ -10,7 +10,9 @@
 
 <script src="~/Scripts/cartaV.js"></script> @*B20180710 MGC 2018.07.12 Modificaciones para editar los campos de distribución*@
 <script src="~/Scripts/formatos.js"></script>
-
+<script>
+    var varligada = "@ViewBag.varligada";
+</script>
 @* ------------------------------------------------------------------------LEJ 09-07-18 *@
 <input id="miles" name="miles" type="hidden" value="@ViewBag.miles">
 <input id="dec" name="dec" type="hidden" value="@ViewBag.dec">
@@ -413,6 +415,7 @@
                     </table>
                     @*Tabla para ser enviada siempre está oculta*@
                     @*//B20180720P MGC 2018.07.25*@
+               
                     @if (ViewBag.varligada != true)
                     {
                         <div class="row">

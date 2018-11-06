@@ -565,7 +565,8 @@ namespace TAT001.Controllers.Reportes
                 var proveedor = dOCUMENTO.DOCUMENTOFs.Select(df => df.PROVEEDOR).FirstOrDefault();
                 r1.PROVEEDOR_NOMBRE = db.PROVEEDORs.Where(x => x.ID.Equals(proveedor)).Select(p => p.NOMBRE).FirstOrDefault();
 
-                r1.SEMANA = System.Globalization.CultureInfo.InvariantCulture.Calendar.GetWeekOfYear((DateTime)r1.documento.FECHAC, System.Globalization.CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+                //r1.SEMANA = System.Globalization.CultureInfo.InvariantCulture.Calendar.GetWeekOfYear((DateTime)r1.documento.FECHAC, System.Globalization.CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+                r1.SEMANA = (((DateTime)r1.documento.FECHAC).Day + ((int)((DateTime)r1.documento.FECHAC).DayOfWeek)) / 7 + 1;
 
                 r1.STATUS = dOCUMENTO.ESTATUS_WF;
                 r1.STATUSS1 = (dOCUMENTO.ESTATUS ?? " ") + (dOCUMENTO.ESTATUS_C ?? " ") + (dOCUMENTO.ESTATUS_SAP ?? " ") + (dOCUMENTO.ESTATUS_WF ?? " ");
@@ -717,10 +718,37 @@ namespace TAT001.Controllers.Reportes
 
             //Quarters
             string[] quartersplit = { };
+            List<string> quarterperiod = new List<string>();
             string quarter = Request["selectq"] as string;
             if (!string.IsNullOrEmpty(quarter))
             {
                 quartersplit = quarter.Split(',');
+            }
+            foreach (string q in quartersplit)
+            {
+                switch (q)
+                {
+                    case "1":
+                        quarterperiod.Add("1");
+                        quarterperiod.Add("2");
+                        quarterperiod.Add("3");
+                        break;
+                    case "2":
+                        quarterperiod.Add("4");
+                        quarterperiod.Add("5");
+                        quarterperiod.Add("6");
+                        break;
+                    case "3":
+                        quarterperiod.Add("7");
+                        quarterperiod.Add("8");
+                        quarterperiod.Add("9");
+                        break;
+                    case "4":
+                        quarterperiod.Add("10");
+                        quarterperiod.Add("11");
+                        quarterperiod.Add("12");
+                        break;
+                }
             }
 
             //Periods
@@ -790,6 +818,7 @@ namespace TAT001.Controllers.Reportes
                                  && (!string.IsNullOrEmpty(canal) ? c.CANAL == canal : true)
                                  && (!string.IsNullOrEmpty(comcode) ? comcodessplit.Contains(d.SOCIEDAD_ID) : true)
                                  && (!string.IsNullOrEmpty(period) ? periodsplit.Contains(d.PERIODO.ToString()) : true)
+                                 && (!string.IsNullOrEmpty(quarter) ? quarterperiod.Contains(d.PERIODO.ToString()) : true)
                                  && (!string.IsNullOrEmpty(payer) ? payersplit.Contains(d.PAYER_ID) : true)
                                  && (!string.IsNullOrEmpty(category) ? categorysplit.Contains(mgpt.TXT50) : true)
                              select new { d.PERIODO, d.EJERCICIO, d.SOCIEDAD_ID, d.PAYER_ID, c.CANAL, ca.CDESCRIPCION, mgpt.TXT50, d.TALL_ID, f.ESTATUS, d.ESTATUS_C, d.ESTATUS_SAP, d.ESTATUS_WF, ac.TIPO, ts.PADRE, d.MONTO_DOC_ML })
@@ -1204,6 +1233,7 @@ namespace TAT001.Controllers.Reportes
         {
             string[] comcodessplit = { };
             string[] quartersplit = { };
+            List<string> quarterperiod = new List<string>();
             string[] periodsplit = { };
             int pagina = 1105;
             string u = User.Identity.Name;
@@ -1221,6 +1251,32 @@ namespace TAT001.Controllers.Reportes
             if (!string.IsNullOrEmpty(quarter))
             {
                 quartersplit = quarter.Split(',');
+            }
+            foreach (string q in quartersplit)
+            {
+                switch (q)
+                {
+                    case "1":
+                        quarterperiod.Add("1");
+                        quarterperiod.Add("2");
+                        quarterperiod.Add("3");
+                        break;
+                    case "2":
+                        quarterperiod.Add("4");
+                        quarterperiod.Add("5");
+                        quarterperiod.Add("6");
+                        break;
+                    case "3":
+                        quarterperiod.Add("7");
+                        quarterperiod.Add("8");
+                        quarterperiod.Add("9");
+                        break;
+                    case "4":
+                        quarterperiod.Add("10");
+                        quarterperiod.Add("11");
+                        quarterperiod.Add("12");
+                        break;
+                }
             }
 
             //Period
@@ -1274,6 +1330,7 @@ namespace TAT001.Controllers.Reportes
                              where d.EJERCICIO == year
                                  && (!string.IsNullOrEmpty(comcode) ? comcodessplit.Contains(d.SOCIEDAD_ID) : true)
                                  && (!string.IsNullOrEmpty(period) ? periodsplit.Contains(d.PERIODO.ToString()) : true)
+                                 && (!string.IsNullOrEmpty(quarter) ? quarterperiod.Contains(d.PERIODO.ToString()) : true)
                              orderby d.CUENTAPL, cgl.NOMBRE, d.SOCIEDAD_ID
                              select new { CUENTA_A = d.CUENTAPL, cgl.NOMBRE, d.SOCIEDAD_ID, d.MONTO_DOC_ML, d.MONTO_DOC_ML2, f.ESTATUS, d.ESTATUS_C, d.ESTATUS_SAP, d.ESTATUS_WF, ac.TIPO, ts.PADRE }
                              )
@@ -1487,6 +1544,7 @@ namespace TAT001.Controllers.Reportes
                               NUMERO_SOLICITUD = d.NUM_DOC,
                               FECHA_SOLICITUD = (DateTime)d.FECHAC,
                               PERIODO_CONTABLE = (Int32)d.PERIODO,
+                              ANIO_CONTABLE = d.EJERCICIO,
                               NUMERO_DOCUMENTO_SAP = d.DOCUMENTO_SAP,
                               //NUMERO_REVERSO_SAP =
                               //FECHA_REVERSO = (DateTime)dr.FECHAC,
@@ -1680,7 +1738,8 @@ namespace TAT001.Controllers.Reportes
                               FECHA = (DateTime)f.FECHAC,
                               PERIODO = (Int32)d.PERIODO,
                               ANIO = d.EJERCICIO,
-                              USUARIO = f.USUARIOA_ID,
+                              USUARIO = d.USUARIOC_ID,
+                              USUARIO_ACCION = f.USUARIOA_ID,
                               COMENTARIO = f.COMENTARIO,
                               ROL = pt.TXT50
                               //, STATUS_STRING = statusToString(f.ESTATUS, d.ESTATUS_C, d.ESTATUS_SAP, d.ESTATUS_WF, ac.TIPO, ts.PADRE)

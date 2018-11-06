@@ -92,5 +92,6 @@ namespace TAT001.Entities
         public virtual ICollection<GAUTORIZACION> GAUTORIZACIONs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SOCIEDAD> SOCIEDADs { get; set; }
+        public virtual USUARIOLOG USUARIOLOG { get; set; }
     }
 }

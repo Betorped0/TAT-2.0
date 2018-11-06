@@ -14,6 +14,10 @@
         @*<a class="waves-effect waves-light btn modal-trigger" href="#modal1">Nuevo</a>*@
         <a class="btn-small" id="btn_cargarusuarios" href="@Url.Action("Carga")">Cargar Usuarios</a>
         @*<a class="btn-small" href="@Url.Action("Carga", "Flujos")">Cargar flujo</a>*@
+        @using (Html.BeginForm("Descargar", "Usuarios", FormMethod.Post, new { @style = "display:inline;" }))
+        {
+            <button id="btnExport" name="excel" class="btn-small" type="submit" value="Excel"></button>
+        }
     </div>
 </div>
 <div class="card-panel">
