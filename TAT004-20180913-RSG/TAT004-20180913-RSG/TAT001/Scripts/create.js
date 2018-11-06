@@ -4013,7 +4013,7 @@ function addRowCatl(t, cat, exp, sel, ddate, adate, opt, porcentaje, total) {
         ddate + "", //col3
         adate + "",
         "", //Material
-        cat + "",//opt + "",
+        opt + "",//opt + "",//RSG 06.11.2018
         opt + "",
         //"<input class=\"" + reversa + " input_oper numberd input_dc\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
         //"<input class=\"" + reversa + " input_oper numberd input_dc\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
@@ -6057,5 +6057,17 @@ function cambiaLigada(campo) {
         $("#btnRango").css("display", "none");
         $("#btnDelRango").css("display", "none");
     }
+}
+
+function descargarArchivo(me) {
+    var form = document.createElement("form"),
+        Archivo = document.createElement("input");
+    form.method = "POST";
+    form.action = root + 'Solicitudes/Descargar';
+    Archivo.value = me.value;
+    Archivo.name = "archivo";
+    form.appendChild(Archivo);
+    document.body.appendChild(form);
+    form.submit();
 }
 
