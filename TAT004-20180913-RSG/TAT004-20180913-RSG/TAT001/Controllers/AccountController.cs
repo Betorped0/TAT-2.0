@@ -150,7 +150,7 @@ namespace TAT001.Controllers
                             usuLog.POS = 1;
                             usuLog.SESION = System.Web.HttpContext.Current.Session.SessionID;
                             usuLog.NAVEGADOR = Request.Browser.Type;
-                            usuLog.UBICACION = RegionInfo.CurrentRegion.DisplayName;
+                            usuLog.UBICACION = System.Environment.MachineName + " - " + RegionInfo.CurrentRegion.DisplayName;
                             usuLog.FECHA = DateTime.Now;
                             usuLog.LOGIN = true;
                             db.USUARIOLOGs.Add(usuLog);
@@ -206,12 +206,12 @@ namespace TAT001.Controllers
                 if (usu != null)
                 {
                     var checkUser = db.USUARIOLOGs.SingleOrDefault(x => x.USUARIO_ID == usu.USUARIO_ID);
-                    if(checkUser!=null)
-                    if (checkUser.SESION == System.Web.HttpContext.Current.Session.SessionID)
-                    {
-                        db.Entry(checkUser).State = System.Data.Entity.EntityState.Deleted;
-                        db.SaveChanges();
-                    }
+                    if (checkUser != null)
+                        if (checkUser.SESION == System.Web.HttpContext.Current.Session.SessionID)
+                        {
+                            db.Entry(checkUser).State = System.Data.Entity.EntityState.Deleted;
+                            db.SaveChanges();
+                        }
                 }
                 FormsAuthentication.SignOut();
                 return RedirectToAction("Index", "Home");
@@ -252,12 +252,16 @@ namespace TAT001.Controllers
                 uSUARIOLOG.UBICACION = RegionInfo.CurrentRegion.DisplayName;
                 uSUARIOLOG.FECHA = DateTime.Now;
                 uSUARIOLOG.LOGIN = true;
-                db.Entry(uSUARIOLOG).State = EntityState.Modified;
-                db.SaveChanges();
-                Session["userlog"] = uSUARIOLOG;
+                try
+                {
+                    db.Entry(uSUARIOLOG).State = EntityState.Modified;
+                    db.SaveChanges();
+                    Session["userlog"] = uSUARIOLOG;
+                }
+                catch { }
                 return RedirectToAction("Index", "Home");
             }
-           
+
             return View();
         }
 

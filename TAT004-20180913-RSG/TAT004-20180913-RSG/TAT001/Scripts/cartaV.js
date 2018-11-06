@@ -23,6 +23,8 @@ $('body').on('focusout', '#ed_monto', function (e) {
     monto = parseFloat(monto);
     if (total > monto) {
         M.toast({ html: 'Monto de solicitud mayor al monto aprobado.' });
+    } else if (totalf <= 0) {
+        M.toast({ html: 'Favor de ingresar un monto mayor a 0.' });
     }
     var ed_monto = $('#ed_monto').val();
     $('#ed_monto').val(toShow(ed_monto))
@@ -157,7 +159,10 @@ function guardarcarta(guardar) {
 
     if (total > monto) {
         M.toast({ html: 'Monto de solicitud mayor al monto aprobado.' });
-    } else {
+    } else if (totalf <= 0) {
+        M.toast({ html: 'Favor de ingresar un monto mayor a 0.'});
+    }
+    else{
         copiarTableControl();
         $('#monto_enviar').val(total.toFixed(2));
         if (guardar == "guardar_param") {
@@ -299,6 +304,11 @@ function updateFooter(flag) {
         if (totalf > montof) {
             b.prop('disabled', true);
             M.toast({ html: 'Monto de solicitud mayor al monto aprobado.' });
+        }
+        else if (totalf <= 0) {
+            b.prop('disabled', true);
+            M.toast({ html: 'Favor de ingresar un monto mayor a 0.' });
+
         } else {
             b.prop('disabled', false);
         }

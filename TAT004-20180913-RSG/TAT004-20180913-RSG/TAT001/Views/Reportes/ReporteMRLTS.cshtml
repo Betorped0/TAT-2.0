@@ -22,11 +22,11 @@
                     return $(this).find('input').prop('checked') != select_all;
                 }).click();
             });
-            $(document).ready(function () {
-                $("#sendbtn").click(function () {
-                    $("#excelBtn").prop("disabled", "false");
-                });
-            });
+            //$(document).ready(function () {
+            //    $("#sendbtn").click(function () {
+            //        $("#excelBtn").prop("disabled", "false");
+            //    });
+            //});
         });
     </script>
 }
@@ -147,33 +147,21 @@
         </script>
         <script src="//code.jquery.com/jquery-1.12.4.js"></script>
         <script src="//code.jquery.com/jquery-2.0.3.min.js"></script>
-        <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-        <script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
         <link href="~/Content/dataTable.css" rel="stylesheet" />
-        <link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
-        <link href="~/Scripts/subfilters/jquery.tablesorter.pager.css" rel="stylesheet" />
+        @*<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>*@
+        <script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
+        @*<link href="~/Content/dataTable.css" rel="stylesheet" />
+        <link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />*@
         <script src="~/Scripts/subfilters/jquery.tablesorter.js"></script>
+        <link href="~/Scripts/subfilters/jquery.tablesorter.pager.css" rel="stylesheet" />
         <script src="~/Scripts/subfilters/jquery.tablesorter.pager.js"></script>
         <script src="~/Scripts/subfilters/widget-filter.js"></script>
         <script src="~/Scripts/tablesort/tableToExcel.js"></script>
-        <script>
+        @*<script>
             var elem = document.querySelector('select');
             var options = [];
             var instance = M.FormSelect.init(elem, options);
-
-            var tableToExcel = (function () {
-                var uri = 'data:application/vnd.ms-excel;base64,'
-                    , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
-                    , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
-                    , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
-                return function (table, name) {
-                    if (!table.nodeType) table = document.getElementById(table)
-                    var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
-                    window.location.href = uri + base64(format(template, ctx))
-                }
-            })()
-
-        </script>
+        </script>*@
     </div>
     if (ViewBag.display)
     {
@@ -182,10 +170,9 @@
                 $(".grid thead td").click(function () {
                     showFilterOption(this);
                 });
-                $("#excelBtn").click(function () {
-                    $("#table").tableExport();
-                });
-
+                //$("#excelBtn").click(function () {
+                //    $("#table").tableExport();
+                //});
                 $('select.select_all').siblings('ul').prepend('<li id=sm_select_all id="filters_all"><span>Todas Las Opciones</span></li>');
                 $('li#sm_select_all').on('click', function () {
                     var jq_elem = $(this),
@@ -197,10 +184,35 @@
                         return $(this).find('input').prop('checked') != select_all;
                     }).click();
                 });
+
+                $("#id_excel").click(function () {
+                    $("#table").trigger("filterReset");
+                    $('#table').trigger('destroyPager');
+                    $('#table').trigger('destroy');
+                    var pager = $('#table tfoot').html();
+                    $('#table tfoot').html("");
+                    tableToExcel('table', 'Reporte MRL TS');
+                    $('#table tfoot').html(pager);
+                    $('#table').tablesorter({
+                        theme: "materialize",
+                        widthFixed: true,
+                        widgets: ["filter", "zebra"],
+                        widgetOptions: {
+                            zebra: ["even", "odd"],
+                            filter_reset: ".reset",
+                            filter_cssFilter: ["", "", "browser-default"]
+                        }
+                    }).tablesorterPager({
+                        container: $(".ts-pager"),
+                        cssGoto: ".pagenum",
+                        removeRows: true,
+                        output: '{startRow} - {endRow} / {filteredRows} ({totalRows})'
+                    });
+                });
             });
 
             $(function () {
-                $("table").tablesorter({
+                $("#table").tablesorter({
                     theme: "materialize",
                     widthFixed: true,
                     // widget code contained in the jquery.tablesorter.widgets.js file
@@ -230,6 +242,17 @@
                         output: '{startRow} - {endRow} / {filteredRows} ({totalRows})'
                     });
             });
+            var tableToExcel = (function () {
+                var uri = 'data:application/vnd.ms-excel;base64,'
+                    , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+                    , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+                    , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+                return function (table, name) {
+                    if (!table.nodeType) table = document.getElementById(table)
+                    var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
+                    window.location.href = uri + base64(format(template, ctx))
+                }
+            })()
         </script>
         <div style="width:100%;height:50vh;overflow:scroll;">
             <table class="table mdl-data-table striped grid centered table" id="table" style="width:100%;">
@@ -266,7 +289,7 @@
                     </tr>
                 </thead>
                 <tfoot>
-                    <tr>
+                    @*<tr>
                         <th class="filter-select" data-placeholder="Todas las opciones" id="head_code">Co. Code</th>
                         <th class="filter-select" data-placeholder="Todas las opciones" id="head_pais">País</th>
                         <th class="filter-select" data-placeholder="Todas las opciones" id="head_num_solicitud">Número de solicitud</th>
@@ -295,7 +318,7 @@
                         <th class="filter-select" data-placeholder="Todas las opciones" id="head_importe_USD">$ Importe NC/OP USD</th>
                         <th class="filter-select" data-placeholder="Todas las opciones" id="head_reverso_USD">$ Reverso USD</th>
                         <th class="filter-select" data-placeholder="Todas las opciones" id="head_beneficio_USD">Beneficio/ (impacto) - MRL USD</th>
-                    </tr>
+                    </tr>*@
                     <!-- include "tablesorter-ignoreRow" class for pager rows in thead -->
                     <tr class="tablesorter-ignoreRow">
                         <th colspan="2" class="ts-pager form-horizontal">
@@ -317,7 +340,7 @@
                                 <select class="pagenum browser-default" title="Select page number"></select>
                             </div>
                         </th>
-                        <th colspan="12">
+                        <th colspan="26">
                         </th>
                     </tr>
                 </tfoot>

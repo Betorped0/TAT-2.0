@@ -143,6 +143,14 @@ namespace TAT001.Controllers
             List<object> validacion = new List<object>();
             var numColumnas = ds1.Tables[0].Columns.Count;
 
+            List<PAI> pp = (from P in db.PAIS.ToList()//ADD RSG 01.11.2018--------------------------------------------------
+                            join C in db.CLIENTEs.Where(x => x.ACTIVO == true).ToList()
+                            on P.LAND equals C.LAND
+                            join U in db.USUARIOFs.Where(x => x.USUARIO_ID == User.Identity.Name & x.ACTIVO == true)
+                            on new { C.VKORG, C.VTWEG, C.SPART, C.KUNNR } equals new { U.VKORG, U.VTWEG, U.SPART, U.KUNNR }
+                            where P.ACTIVO == true
+                            select P).DistinctBy(x => x.LAND).ToList();
+
             if (numColumnas == 16)
             {
                 for (int i = 2; i < ds1.Tables[0].Rows.Count; i++)
@@ -187,13 +195,6 @@ namespace TAT001.Controllers
                     doc.GALL_ID = gall_id;
                     doc.SOCIEDAD_ID = bukrs;
                     doc.PAIS_NAME = land;
-                    List<PAI> pp = (from P in db.PAIS.ToList()//ADD RSG 01.11.2018--------------------------------------------------
-                                    join C in db.CLIENTEs.Where(x => x.ACTIVO == true).ToList()
-                                    on P.LAND equals C.LAND
-                                    join U in db.USUARIOFs.Where(x => x.USUARIO_ID == User.Identity.Name & x.ACTIVO == true)
-                                    on new { C.VKORG, C.VTWEG, C.SPART, C.KUNNR } equals new { U.VKORG, U.VTWEG, U.SPART, U.KUNNR }
-                                    where P.ACTIVO == true
-                                    select P).DistinctBy(x => x.LAND).ToList();
 
                     PAI p = pp.Where(a => a.LANDX == land).FirstOrDefault();
                     if (p != null)
@@ -230,7 +231,8 @@ namespace TAT001.Controllers
                     doc.MONEDA_ID = moneda_id;
 
                     lp.Add(doc);
-                    validacion.Add(cargaInicialH1(ds1.Tables[0].Rows[i]));
+                    validacion.Add(cargaInicialH1(ds1.Tables[0].Rows[i], pp));
+
                 }
 
                 lp.Add(validacion);
@@ -253,39 +255,105 @@ namespace TAT001.Controllers
             List<object> warnings = new List<object>();
             var numColumnas = ds2.Tables[0].Columns.Count;
 
+            DataSet ds1 = (DataSet)Session["ds1"];
+            List<DOCUMENTO> dd = new List<DOCUMENTO>();
+
+            List<PAI> pp = (from P in db.PAIS.ToList()//ADD RSG 01.11.2018--------------------------------------------------
+                            join C in db.CLIENTEs.Where(x => x.ACTIVO == true).ToList()
+                            on P.LAND equals C.LAND
+                            join U in db.USUARIOFs.Where(x => x.USUARIO_ID == User.Identity.Name & x.ACTIVO == true)
+                            on new { C.VKORG, C.VTWEG, C.SPART, C.KUNNR } equals new { U.VKORG, U.VTWEG, U.SPART, U.KUNNR }
+                            where P.ACTIVO == true
+                            select P).DistinctBy(x => x.LAND).ToList();
+
+            for (int i = 2; i < ds1.Tables[0].Rows.Count; i++)
+            {
+                string num_doc = ds1.Tables[0].Rows[i][0].ToString().Trim();
+                string tsol = ds1.Tables[0].Rows[i][1].ToString().Trim();
+                string bukrs = ds1.Tables[0].Rows[i][3].ToString().Trim();
+                string land = ds1.Tables[0].Rows[i][4].ToString().Trim();
+                
+                PAI p = pp.Where(a => a.LANDX == land).FirstOrDefault();
+
+                DOCUMENTO d = new DOCUMENTO();
+                d.NUM_DOC = decimal.Parse(num_doc);
+                d.TSOL_ID = tsol;
+                d.SOCIEDAD_ID = bukrs;
+                if (p != null)
+                    d.PAIS_ID = p.LAND;//ADD RSG 01.11.2018--------------------------------------------------
+                dd.Add(d);
+            }
+
             if (numColumnas == 9)
             {
-                for (int i = 2; i < ds2.Tables[0].Rows.Count; i++)
+                foreach (DOCUMENTO d in dd)
                 {
-                    Relacionada doc = new Relacionada();
+                    List<Relacionada> rel = new List<Relacionada>();
+                    for (int i = 2; i < ds2.Tables[0].Rows.Count; i++)
+                    {
+                        string num_doc = ds2.Tables[0].Rows[i][0].ToString().Trim();
+                        if (d.NUM_DOC == decimal.Parse(num_doc))
+                        {
+                            Relacionada doc = new Relacionada();
 
-                    string num_doc = ds2.Tables[0].Rows[i][0].ToString().Trim();
-                    string factura = ds2.Tables[0].Rows[i][1].ToString().Trim();
-                    string fecha_factura = ds2.Tables[0].Rows[i][2].ToString().Trim();
-                    string[] fecha_factura2 = fecha_factura.Split(' ');
-                    string proveedor = ds2.Tables[0].Rows[i][3].ToString().Trim();
-                    string proveedor_nombre = ds2.Tables[0].Rows[i][4].ToString().Trim();
-                    string autorizacion = ds2.Tables[0].Rows[i][5].ToString().Trim();
-                    string vencimiento = ds2.Tables[0].Rows[i][6].ToString().Trim();
-                    string[] vencimiento2 = vencimiento.Split(' ');
-                    string facturak = ds2.Tables[0].Rows[i][7].ToString().Trim();
-                    string ejerciciok = ds2.Tables[0].Rows[i][8].ToString().Trim();
+                            string factura = ds2.Tables[0].Rows[i][1].ToString().Trim();
+                            string fecha_factura = ds2.Tables[0].Rows[i][2].ToString().Trim();
+                            string[] fecha_factura2 = fecha_factura.Split(' ');
+                            string proveedor = ds2.Tables[0].Rows[i][3].ToString().Trim();
+                            string proveedor_nombre = ds2.Tables[0].Rows[i][4].ToString().Trim();
+                            string autorizacion = ds2.Tables[0].Rows[i][5].ToString().Trim();
+                            string vencimiento = ds2.Tables[0].Rows[i][6].ToString().Trim();
+                            string[] vencimiento2 = vencimiento.Split(' ');
+                            string facturak = ds2.Tables[0].Rows[i][7].ToString().Trim();
+                            string ejerciciok = ds2.Tables[0].Rows[i][8].ToString().Trim();
 
-                    doc.NUM_DOC = num_doc;
-                    doc.FACTURA = factura;
-                    doc.FECHA = fecha_factura2[0];
-                    doc.PROVEEDOR = proveedor.TrimStart('0');
-                    doc.PROVEEDOR_NOMBRE = proveedor_nombre;
-                    doc.AUTORIZACION = autorizacion;
-                    doc.VENCIMIENTO = vencimiento2[0];
-                    doc.FACTURAK = facturak;
-                    doc.EJERCICIOK = ejerciciok;
+                            doc.NUM_DOC = num_doc;
+                            doc.FACTURA = factura;
+                            doc.FECHA = fecha_factura2[0];
+                            doc.PROVEEDOR = proveedor.TrimStart('0');
+                            doc.PROVEEDOR_NOMBRE = proveedor_nombre;
+                            doc.AUTORIZACION = autorizacion;
+                            doc.VENCIMIENTO = vencimiento2[0];
+                            doc.FACTURAK = facturak;
+                            doc.EJERCICIOK = ejerciciok;
 
-                    lp.Add(doc);
-                    errores.Add(cargaInicialH2(ds2.Tables[0].Rows[i]));
-                    warnings.Add(cargaInicialH2W(ds2.Tables[0].Rows[i]));
+                            rel.Add(doc);
+                            lp.Add(doc);
+                            errores.Add(cargaInicialH2(ds2.Tables[0].Rows[i]));
+                            warnings.Add(cargaInicialH2W(ds2.Tables[0].Rows[i]));
+                        }
+                    }
+                    if (rel.Where(x => x.NUM_DOC == d.NUM_DOC.ToString()).Count() == 0)
+                    {
+                        FACTURASCONF fcon = db.FACTURASCONFs.Where(x => x.SOCIEDAD_ID == d.SOCIEDAD_ID & x.PAIS_ID == d.PAIS_ID && x.TSOL == d.TSOL_ID).FirstOrDefault();
+                        if (fcon != null)
+                        {
+                            Relacionada doc = new Relacionada();
+                            doc.NUM_DOC = d.NUM_DOC.ToString();
+                            doc.FACTURA = "";
+                            doc.FECHA = "";
+                            doc.PROVEEDOR = "";
+                            doc.PROVEEDOR_NOMBRE = "";
+                            doc.AUTORIZACION = "";
+                            doc.VENCIMIENTO = "";
+                            doc.FACTURAK = "";
+                            doc.EJERCICIOK = "";
+                            lp.Add(doc);
+                            List<string> err = new List<string>();
+                            for (int i = 0; i < 9; i++)
+                            {
+                                err.Add("red white-text rojo");
+                            }
+                            List<string> war = new List<string>();
+                            for (int i = 0; i < 9; i++)
+                            {
+                                war.Add("");
+                            }
+                            errores.Add(err);
+                            warnings.Add(war);
+                        }
+                    }
                 }
-
                 lp.Add(errores);
                 lp.Add(warnings);
             }
@@ -649,7 +717,7 @@ namespace TAT001.Controllers
                 var c = (from s in db.SOCIEDADs.ToList()
                          join p in pp
                          on s.BUKRS equals p.SOCIEDAD_ID
-                         where s.BUKRS.Contains(Prefix) && s.ACTIVO == true
+                         where s.BUKRS.Contains(Prefix.ToUpper()) && s.ACTIVO == true
                          select new { s.BUKRS }).ToList();
 
                 JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
@@ -1124,8 +1192,8 @@ namespace TAT001.Controllers
                 //          select new { ID = g.Key.MATERIALGP_ID, DESCRIPCION = g.Key.TXT50 }).ToList();
 
                 var c2 = (from cat in db.MATERIALGPs
-                         where cat.ID.Contains(Prefix)
-                         select new { ID = cat.ID, DESCRIPCION = cat.DESCRIPCION }).ToList();
+                          where cat.ID.Contains(Prefix)
+                          select new { ID = cat.ID, DESCRIPCION = cat.DESCRIPCION }).ToList();
                 c.AddRange(c2);
             }
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
@@ -1160,7 +1228,7 @@ namespace TAT001.Controllers
             return cc;
         }
 
-        public List<object> cargaInicialH1(DataRow fila)
+        public List<object> cargaInicialH1(DataRow fila, List<PAI> pp)//, DOCUMENTOP docp)
         {
             List<object> regresaRowH1 = new List<object>();
 
@@ -1198,6 +1266,12 @@ namespace TAT001.Controllers
                 regresaRowH1.Add("red white-text rojo");
             }
 
+            string land_id = "";
+            PAI p = pp.Where(a => a.LANDX == land).FirstOrDefault();//ADD RSG 01.11.2018
+            SOCIEDAD soc = new SOCIEDAD();
+            if (p != null)//ADD RSG 01.11.2018
+                land_id = p.LAND;//ADD RSG 01.11.2018
+
             if (t_sol.Length <= 10)
             {
                 if (db.TSOLs.Where(x => x.ID == t_sol).Count() > 0)
@@ -1223,19 +1297,6 @@ namespace TAT001.Controllers
                 regresaRowH1.Add("red white-text rojo");
             }
 
-            string land_id = "";
-            List<PAI> pp = (from P in db.PAIS.ToList()
-                            join C in db.CLIENTEs.Where(x => x.ACTIVO == true).ToList()
-                            on P.LAND equals C.LAND
-                            join U in db.USUARIOFs.Where(x => x.USUARIO_ID == User.Identity.Name & x.ACTIVO == true)
-                            on new { C.VKORG, C.VTWEG, C.SPART, C.KUNNR } equals new { U.VKORG, U.VTWEG, U.SPART, U.KUNNR }
-                            where P.ACTIVO == true
-                            select P).DistinctBy(x => x.LAND).ToList();
-
-            PAI p = pp.Where(a => a.LANDX == land).FirstOrDefault();//ADD RSG 01.11.2018
-            SOCIEDAD soc = new SOCIEDAD();
-            if (p != null)//ADD RSG 01.11.2018
-                land_id = p.LAND;//ADD RSG 01.11.2018
             if (land_id != null & land_id != "")
                 soc = db.SOCIEDADs.Find(bukrs);
             if (bukrs.Length == 4)
@@ -2365,7 +2426,7 @@ namespace TAT001.Controllers
                     docu.CIUDAD = ciudad;
                     docu.PERIODO = cal445.getPeriodo(System.DateTime.Now);
                     docu.EJERCICIO = Convert.ToString(System.DateTime.Now.Year);
-                    docu.TIPO_TECNICO = "";///////////////////////////////////////////////CHECK
+                    docu.TIPO_TECNICO = "M";///////////////////////////////////////////////CHECK
                     docu.TIPO_RECURRENTE = null;
                     docu.CANTIDAD_EV = 1;
                     docu.USUARIOC_ID = user.ID;
@@ -2432,6 +2493,15 @@ namespace TAT001.Controllers
                     docu.CUENTAPL = null;
                     docu.EXCEDE_PRES = "";////////////////////////////checar presupusto
                     docu.MONTO_DOC_MD = 0; //ADD RSG 04.11.2018
+
+                    CUENTA cta = db.CUENTAs.Where(x => x.SOCIEDAD_ID.Equals(docu.SOCIEDAD_ID) & x.PAIS_ID.Equals(docu.PAIS_ID) & x.TALL_ID.Equals(docu.TALL_ID)).FirstOrDefault();
+                    if (cta != null)
+                    {
+                        docu.CUENTAP = cta.ABONO;
+                        docu.CUENTAPL = cta.CARGO;
+                        docu.CUENTACL = cta.CLEARING;
+                    }
+
                     listD.Add(docu);
                 }
                 DOCUMENTO dop = listD.Where(x => x.NUM_DOC == docu.NUM_DOC).FirstOrDefault();
@@ -2651,7 +2721,7 @@ namespace TAT001.Controllers
                                 dop.MONTO_DOC_ML = tcambio.getValSoc(sociedad.WAERS, moneda_id, Convert.ToDecimal(apoyo), out errorString);
                                 dop.TIPO_CAMBIOL = tcambio.getUkurs(sociedad.WAERS, moneda_id, out errorString);
                                 dop.TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
-                                dop.MONTO_DOC_ML2 = (dop.TIPO_CAMBIOL2 / dop.MONTO_DOC_MD);
+                                dop.MONTO_DOC_ML2 = (dop.MONTO_DOC_MD / dop.TIPO_CAMBIOL2);
                                 //var TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
                                 //dop.MONTO_DOC_ML2 = (TIPO_CAMBIOL2 * dop.MONTO_DOC_MD);
                             }
@@ -2665,10 +2735,65 @@ namespace TAT001.Controllers
                                 dop.MONTO_DOC_ML = tcambio.getValSoc(sociedad.WAERS, moneda_id, Convert.ToDecimal(apoyo), out errorString);
                                 dop.TIPO_CAMBIOL = tcambio.getUkurs(sociedad.WAERS, moneda_id, out errorString);
                                 dop.TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
-                                dop.MONTO_DOC_ML2 = (dop.TIPO_CAMBIOL2 / dop.MONTO_DOC_MD);
+                                dop.MONTO_DOC_ML2 = (dop.MONTO_DOC_MD / dop.TIPO_CAMBIOL2);
                                 //var TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
                                 //dop.MONTO_DOC_ML2 = (TIPO_CAMBIOL2 * dop.MONTO_DOC_MD);
                             }
+                            //-------------------------------------------------ADD RSG 04.11.2018
+
+                            if (ligada.Trim() != "false" & dop.DOCUMENTORECs.Count == 0)//ES LIGADA
+                            {
+                                dop.LIGADA = true;
+                                dop.TIPO_TECNICO = "P";
+                                DOCUMENTOREC drec = new DOCUMENTOREC();
+                                drec.NUM_DOC = dop.NUM_DOC;
+                                drec.POS = 1;
+
+                                if (drec.MONTO_BASE == null) //RSG 31.05.2018-------------------
+                                    drec.MONTO_BASE = 0;
+                                if (drec.PORC == null) //RSG 31.05.2018-------------------
+                                    drec.PORC = 0;
+                                dop.TIPO_RECURRENTE = db.TSOLs.Where(x => x.ID.Equals(dop.TSOL_ID)).FirstOrDefault().TRECU;
+                                if (dop.TIPO_RECURRENTE == "1" & dop.LIGADA == true)
+                                    dop.TIPO_RECURRENTE = "2";
+                                //if (dop.TIPO_RECURRENTE != "1" & dop.OBJETIVOQ == true)
+                                //    dop.TIPO_RECURRENTE = "3";
+                                Calendario445 cal = new Calendario445();
+                                drec.FECHAF = cal.getUltimoDia(dop.FECHAF_VIG.Value.Year, cal.getPeriodo(dop.FECHAF_VIG.Value));
+                                drec.FECHAV = drec.FECHAF;
+
+                                drec.FECHAF = cal.getNextLunes((DateTime)drec.FECHAF);
+                                drec.EJERCICIO = drec.FECHAV.Value.Year;
+                                drec.PERIODO = cal.getPeriodoF(drec.FECHAV.Value);
+
+                                if (drec.PERIODO == 0) drec.PERIODO = 12;
+                                if (dop.DOCUMENTORAN != null)
+                                {
+                                    //foreach (DOCUMENTORAN dran in dOCUMENTO.DOCUMENTORAN.Where(x => x.POS == drec.POS))
+                                    //{
+                                    //    dran.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                    //    drec.DOCUMENTORANs.Add(dran);
+                                    //}
+                                }
+                                else
+                                {
+                                    DOCUMENTORAN dran = new DOCUMENTORAN();
+                                    dran.NUM_DOC = dop.NUM_DOC;
+                                    dran.POS = 1;
+                                    dran.LIN = 1;
+                                    dran.OBJETIVOI = 0;
+                                    dran.PORCENTAJE = dop.PORC_APOYO;
+                                    drec.DOCUMENTORANs.Add(dran);
+                                }
+                                drec.PORC = dop.PORC_APOYO;
+                                drec.DOC_REF = 0;
+                                drec.ESTATUS = "";
+
+                                dop.DOCUMENTORECs.Add(drec);
+
+                                //db.SaveChanges();
+                            }
+                            //-------------------------------------------------ADD RSG 04.11.2018
                             dop.DOCUMENTOPs.Add(docup);
                         }
                     }
@@ -2786,6 +2911,16 @@ namespace TAT001.Controllers
             List<string> li = new List<string>();
             int contadorArchivos = 0;
             int contadorNotas = 0;
+
+            foreach (DOCUMENTO doc in listD)
+            {
+                int pos = 1;
+                foreach (DOCUMENTOP docp in doc.DOCUMENTOPs)
+                {
+                    docp.POS = pos;
+                    pos++;
+                }
+            }
 
             foreach (DOCUMENTO doc in listD)
             {

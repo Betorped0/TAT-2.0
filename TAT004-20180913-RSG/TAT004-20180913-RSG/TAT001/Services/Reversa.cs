@@ -440,7 +440,7 @@ namespace TAT001.Services
             db.SaveChanges();
             //Guardar los documentos p para el documento guardado
 
-            ProcesaFlujo2 pf = new ProcesaFlujo2();
+            ProcesaFlujo pf = new ProcesaFlujo();
             //db.DOCUMENTOes.Add(dOCUMENTO);
             //db.SaveChanges();
 
@@ -477,6 +477,13 @@ namespace TAT001.Services
                     ////conta.FECHAM = DateTime.Now;
                     ////pf.procesa(conta, "");
                     //RSG 28.05.2018 -----------------------------------
+
+                    FLUJO conta = db.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+                    Estatus es = new Estatus();//RSG 18.09.2018
+                    DOCUMENTO doc = db.DOCUMENTOes.Find(f.NUM_DOC);
+                    conta.STATUS = es.getEstatus(doc);
+                    db.Entry(conta).State = EntityState.Modified;
+                    db.SaveChanges();
                 }
             }
             catch (Exception ee)
