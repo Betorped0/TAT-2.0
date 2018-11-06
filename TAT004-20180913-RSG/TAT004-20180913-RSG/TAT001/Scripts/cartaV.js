@@ -23,7 +23,7 @@ $('body').on('focusout', '#ed_monto', function (e) {
     monto = parseFloat(monto);
     if (total > monto) {
         M.toast({ html: 'Monto de solicitud mayor al monto aprobado.' });
-    } else if (totalf <= 0) {
+    } else if (total <= 0) {
         M.toast({ html: 'Favor de ingresar un monto mayor a 0.' });
     }
     var ed_monto = $('#ed_monto').val();
@@ -159,7 +159,7 @@ function guardarcarta(guardar) {
 
     if (total > monto) {
         M.toast({ html: 'Monto de solicitud mayor al monto aprobado.' });
-    } else if (totalf <= 0) {
+    } else if (total <= 0) {
         M.toast({ html: 'Favor de ingresar un monto mayor a 0.'});
     }
     else{
