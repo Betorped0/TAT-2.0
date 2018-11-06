@@ -871,7 +871,7 @@ namespace TAT001.Controllers.Catalogos
 
         public ActionResult Carga()
         {
-            int pagina = 601;
+            int pagina = 608;
             using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;

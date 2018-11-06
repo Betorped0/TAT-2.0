@@ -1,9 +1,9 @@
 ﻿@model TAT001.Models.Usuarios
 
 @{
-    ViewBag.Title = "Carga de usuarios";
+    //ViewBag.Title = "Carga de usuarios";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.pagina_r = 601;
+    ViewBag.pagina_r = 608;
     ViewBag.carpeta_r = 500;
 }
 
@@ -21,9 +21,9 @@
 
 <div class="row right-align">
     <div class="col s12">
-        <input type="button" value="Agregar" class="btn btn-small" onclick="Carga();" />
-        <input type="button" value="Borrar" class="btn btn-small" onclick="Borrar()" />
-        <input type="button" value="Actualizar" class="btn btn-small" onclick="Actualizar()" />
+        <input type="button" id="btnAgregar" value="Agregar" class="btn btn-small" onclick="Carga();" />
+        <input type="button" id="btnBorrar" value="Borrar" class="btn btn-small" onclick="Borrar()" />
+        <input type="button" id="btnActualizar" value="Actualizar" class="btn btn-small" onclick="Actualizar()" />
     </div>
 </div>
 @Html.AntiForgeryToken()
@@ -31,7 +31,7 @@
     <div class="row">
         <div class="file-field input-field col s12 m12 l6">
             <div class="btn-small" style="float:left;">
-                <span>File</span>
+                <span id="lblArchivo">File</span>
                 <input type="file" id="files" name="files" onchange="subeExcel();">
             </div>
             <div class="file-path-wrapper">

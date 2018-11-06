@@ -8,8 +8,8 @@
 }
 <div class="row">
     <div class="col s12 right-align">
-        <a href="@Url.Action("Edit", "Soporte", new { id = Model.ID })" class="btn btn-default">Editar</a>
-        <a href="@Url.Action("Index", "Soporte")" class="btn btn-default">Lista</a>
+        <a href="@Url.Action("Edit", "Soporte", new { id = Model.ID })" id="btnEditar" class="btn btn-default">Editar</a>
+        <a href="@Url.Action("Index", "Soporte")" id="btnLista" class="btn btn-default">Lista</a>
     </div>
 </div>
 
@@ -78,6 +78,5 @@
 </div>
 
 <p>
-    @Html.ActionLink("Edit", "Edit", new { tsol = Model.ID, tsopo = Model.DESCRIPCION }, new { id = "lblEditar" }) |
     @Html.ActionLink("Back to List", "Index", new { tsol = Model.ID })
 </p>

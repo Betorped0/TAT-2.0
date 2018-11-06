@@ -370,6 +370,7 @@
                                 /////////////////////AGING//////////////////////
                                 var registro = consulta.GetType().GetProperty("FECHAC").GetValue(consulta, null);
 
+
                                 int ejercicio2 = Int32.Parse(consulta.GetType().GetProperty("EJERCICIO").GetValue(consulta, null));
                                 int periodo2 = Int32.Parse(consulta.GetType().GetProperty("PERIODO").GetValue(consulta, null).ToString());
                                 TAT001.Services.Calendario445 c2 = new TAT001.Services.Calendario445();
@@ -400,536 +401,540 @@
                                 var numdoc = consulta.GetType().GetProperty("NUM_DOC").GetValue(consulta, null);
 
                                 @*foreach (var docamnt in ViewBag.peri)
-                                    {
+                {
 
-                                        foreach (var amount in docamnt)
-                                        {
+                    foreach (var amount in docamnt)
+                    {
 
-                                            if (consulta.GetType().GetProperty("NUM_DOC").GetValue(consulta, null) == amount.GetType().GetProperty("DOCUMENTO_REF").GetValue(amount, null))
-                                            {
-                                                amountParent2 = amountParent2 - amount.GetType().GetProperty("MONTO_DOC_MD").GetValue(amount, null);
-                                            }
+                        if (consulta.GetType().GetProperty("NUM_DOC").GetValue(consulta, null) == amount.GetType().GetProperty("DOCUMENTO_REF").GetValue(amount, null))
+                        {
+                            amountParent2 = amountParent2 - amount.GetType().GetProperty("MONTO_DOC_MD").GetValue(amount, null);
+                        }
 
-                                        }
-                                    }
+                    }
+                }
 
 
-                                    if (amountParent2 < 0)
-                                    {
-                                        amountParent2 = amountParent2 * -1;
-                                        string showamnt2 = "($" + amountParent2 + ")";
-                                        @showamnt2;
-                                    }
-                                    else
-                                    {
-                                        string showamnt2 = "$" + amountParent2;
-                                        @showamnt2;
-                                    }*@
+                if (amountParent2 < 0)
+                {
+                    amountParent2 = amountParent2 * -1;
+                    string showamnt2 = "($" + amountParent2 + ")";
+                    @showamnt2;
+                }
+                else
+                {
+                    string showamnt2 = "$" + amountParent2;
+                    @showamnt2;
+                }*@
 
                                 /////////////////////////////REMANENTE EN DOLARES///////////////////////////
                                 var amountParent3 = consulta.GetType().GetProperty("MONTO_DOC_ML2").GetValue(consulta, null);
 
-                    <tr>
-                        <td>
-                            @consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null)
-                        </td>
+                                <tr>
+                                    <td>
+                                        @consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null)
+                                    </td>
 
-                        <td>
-                            @consulta.GetType().GetProperty("PAIS_ID").GetValue(consulta, null)
-                        </td>
+                                    <td>
+                                        @consulta.GetType().GetProperty("PAIS_ID").GetValue(consulta, null)
+                                    </td>
 
-                        <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = consulta.GetType().GetProperty("NUM_DOC").GetValue(consulta, null) })'" style="cursor:pointer">
-                            @consulta.GetType().GetProperty("NUM_DOC").GetValue(consulta, null)
-                        </td>
+                                    <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = consulta.GetType().GetProperty("NUM_DOC").GetValue(consulta, null) })'" style="cursor:pointer">
+                                        @consulta.GetType().GetProperty("NUM_DOC").GetValue(consulta, null)
+                                    </td>
 
-                        <td>
-                            @consulta.GetType().GetProperty("PAYER_ID").GetValue(consulta, null)
-                        </td>
+                                    <td>
+                                        @consulta.GetType().GetProperty("PAYER_ID").GetValue(consulta, null)
+                                    </td>
 
-                        <td>
-                            @consulta.GetType().GetProperty("NAME1").GetValue(consulta, null)
-                        </td>
+                                    <td>
+                                        @consulta.GetType().GetProperty("NAME1").GetValue(consulta, null)
+                                    </td>
 
-                        <td>
-                            @consulta.GetType().GetProperty("CANAL").GetValue(consulta, null)
-                        </td>
+                                    <td>
+                                        @consulta.GetType().GetProperty("CANAL").GetValue(consulta, null)
+                                    </td>
 
-                        <td>
-                            @consulta.GetType().GetProperty("CONCEPTO").GetValue(consulta, null)
-                        </td>
+                                    <td>
+                                        @consulta.GetType().GetProperty("CONCEPTO").GetValue(consulta, null)
+                                    </td>
 
-                        <td>
-                            @* PERIODO *@
-                            @consulta.GetType().GetProperty("FECHAC").GetValue(consulta, null)
-                        </td>
+                                    <td>
+                                        @* PERIODO *@
+                                        @{
+                                            var per = consulta.GetType().GetProperty("FECHAC").GetValue(consulta, null);
+                                            per.ToString("MM / yyyy");
+                                        }
+                                        @per.ToString("MM / yyyy")
+                                    </td>
 
-                        <td>
-                            @* FECHA REGISTRO CONTABLE *@
-                            @consulta.GetType().GetProperty("FECHAC").GetValue(consulta, null)
-                        </td>
+                                    <td>
+                                        @* FECHA REGISTRO CONTABLE *@
+                                        @consulta.GetType().GetProperty("FECHAC").GetValue(consulta, null)
+                                    </td>
 
-                        <td>
-                            @* FECHA CIERRE CONTABLE *@
-                            @{
-                                int ejercicio = Int32.Parse(consulta.GetType().GetProperty("EJERCICIO").GetValue(consulta, null));
-                                int periodo = Int32.Parse(consulta.GetType().GetProperty("PERIODO").GetValue(consulta, null).ToString());
-                                TAT001.Services.Calendario445 c = new TAT001.Services.Calendario445();
-                                c.getUltimoDia(ejercicio, periodo);
-                            }
-                            @c.getUltimoDia(ejercicio, periodo)
+                                    <td>
+                                        @* FECHA CIERRE CONTABLE *@
+                                        @{
+                                            int ejercicio = Int32.Parse(consulta.GetType().GetProperty("EJERCICIO").GetValue(consulta, null));
+                                            int periodo = Int32.Parse(consulta.GetType().GetProperty("PERIODO").GetValue(consulta, null).ToString());
+                                            TAT001.Services.Calendario445 c = new TAT001.Services.Calendario445();
+                                            c.getUltimoDia(ejercicio, periodo);
+                                        }
+                                        @c.getUltimoDia(ejercicio, periodo)
 
-                        </td>
+                                    </td>
 
-                        <td>
-                            @* MONTO ORIGINAL DE LA PROVISION *@
-                            $@consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null)
-                        </td>
+                                    <td>
+                                        @* MONTO ORIGINAL DE LA PROVISION *@
+                                        $@consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null)
+                                    </td>
 
-                        <td>
-                            @* REMANENTE *@
+                                    <td>
+                                        @* REMANENTE *@
 
-                            @foreach (var docamnt in ViewBag.remanente)
-                            {
-                                foreach (var amount in docamnt)
-                                {
+                                        @foreach (var docamnt in ViewBag.remanente)
+                                        {
+                                            foreach (var amount in docamnt)
+                                            {
 
-                                    if (consulta.GetType().GetProperty("NUM_DOC").GetValue(consulta, null) == amount.GetType().GetProperty("DOCUMENTO_REF").GetValue(amount, null))
+                                                if (consulta.GetType().GetProperty("NUM_DOC").GetValue(consulta, null) == amount.GetType().GetProperty("DOCUMENTO_REF").GetValue(amount, null))
+                                                {
+                                                    amountParent = amountParent - amount.GetType().GetProperty("MONTO_DOC_MD").GetValue(amount, null);
+                                                }
+
+                                            }
+                                        }
+
+                                        @if (amountParent == 0)
+                                        {
+                                            string showamnt = "-";
+                                            @showamnt;
+
+                                        }
+                                        else if (amountParent < 0)
+                                        {
+                                            amountParent = amountParent * -1;
+                                            string showamnt = "($" + amountParent + ")";
+                                            @showamnt;
+                                        }
+                                        else
+                                        {
+                                            string showamnt = "$" + amountParent;
+                                            @showamnt;
+                                        }
+
+                                    </td>
+
+                                    <td>
+                                        @* PORCENTAJE DEL REMANENTE *@
+
+                                        @{
+                                            var original = consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null);
+                                            var opRemanente = amountParent * 100 / original;
+                                            string porcentaje = opRemanente + "%";
+
+                                            @porcentaje
+                                        }
+
+                                    </td>
+
+                                    <td>
+                                        @* Aging *@
+                                        @aging
+                                    </td>
+
+                                    <td>
+                                        @* CUENTA PASIVO *@
+                                        @consulta.GetType().GetProperty("CUENTAP").GetValue(consulta, null)
+                                    </td>
+
+                                    <td>
+                                        @* NOMBRE CUENTA PASIVO *@
+                                        @consulta.GetType().GetProperty("NOMBRE").GetValue(consulta, null)
+                                    </td>
+                                    <td>
+                                        @consulta.GetType().GetProperty("CUENTAPL").GetValue(consulta, null)
+                                    </td>
+
+                                    <td>
+                                        @foreach (var a in ViewBag.cuenta)
+                                        {
+                                            @* NOMBRE CUENTA PL *@
+                                            if (a.GetType().GetProperty("ID").GetValue(a, null) == consulta.GetType().GetProperty("CUENTAPL").GetValue(consulta, null))
+                                            {
+                                                @a.GetType().GetProperty("NOMBRE").GetValue(a, null)
+                                            }
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @* NUM REGISTRO CONTABLE *@
+                                        @consulta.GetType().GetProperty("DOCUMENTO_SAP").GetValue(consulta, null)
+                                    </td>
+
+                                    <td>
+                                        @* MODIFICADO POR *@
+                                        @consulta.GetType().GetProperty("USUARIOC_ID").GetValue(consulta, null)
+                                    </td>
+                                    <td>
+                                        @* USUARIO CREADOR *@
+                                        @consulta.GetType().GetProperty("USUARIOD_ID").GetValue(consulta, null)
+                                    </td>
+                                    <td>
+                                        @* MANAGER *@
+                                        @consulta.GetType().GetProperty("USUARIOA_ID").GetValue(consulta, null)
+                                    </td>
+                                    <td>
+                                        @*COMENTARIO*@
+
+                                        @foreach (var come in ViewBag.ultimo)
+                                        {
+                                            foreach (TAT001.Models.Comentarios com in come)
+                                            {
+                                                if (consulta.GetType().GetProperty("NUM_DOC").GetValue(consulta, null) == com.NUM_DOC)
+                                                {
+                                                    @com.COMENTARIOS
+                                                }
+                                            }
+                                        }
+                                    </td>
+
+                                    @* AL CIERRE MONEDA LOCAL *@
+                                    @if (aging <= 30)
                                     {
-                                        amountParent = amountParent - amount.GetType().GetProperty("MONTO_DOC_MD").GetValue(amount, null);
+                                        <td>
+                                            @amountParent2
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+
+
+                                    }
+                                    else if (aging >= 31 && aging <= 60)
+
+                                    {
+                                        <td></td>
+                                        <td> @amountParent2</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    }
+                                    else if (aging >= 61 && aging <= 90)
+                                    {
+                                        <td></td>
+                                        <td></td>
+                                        <td> @amountParent2</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+
+                                    }
+                                    else if (aging >= 91 && aging <= 120)
+
+                                    {
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>@amountParent2</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+
+                                    }
+                                    else if (aging >= 121 && aging <= 180)
+
+                                    {
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>@amountParent2</td>
+                                        <td></td>
+                                        <td></td>
+
+                                    }
+                                    else if (aging >= 181 && aging <= 360)
+
+                                    {
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>@amountParent2</td>
+                                        <td></td>
+
+                                    }
+                                    else if (aging > 360)
+                                    {
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>@amountParent2</td>
+
                                     }
 
-                                }
-                            }
+                                    @* FECHA ACTUAL MONEDA LOCAL  *@
 
-                            @if (amountParent == 0)
-                            {
-                                string showamnt = "-";
-                                @showamnt;
-
-                            }
-                            else if (amountParent < 0)
-                            {
-                                amountParent = amountParent * -1;
-                                string showamnt = "($" + amountParent + ")";
-                                @showamnt;
-                            }
-                            else
-                            {
-                                string showamnt = "$" + amountParent;
-                                @showamnt;
-                            }
-
-                        </td>
-
-                        <td>
-                            @* PORCENTAJE DEL REMANENTE *@
-
-                            @{
-                                var original = consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null);
-                                var opRemanente = amountParent * 100 / original;
-                                string porcentaje = opRemanente + "%";
-
-                                @porcentaje
-                            }
-
-                        </td>
-
-                        <td>
-                            @* Aging *@
-                            @aging
-                        </td>
-
-                        <td>
-                            @* CUENTA PASIVO *@
-                            @consulta.GetType().GetProperty("CUENTAP").GetValue(consulta, null)
-                        </td>
-
-                        <td>
-                            @* NOMBRE CUENTA PASIVO *@
-                            @consulta.GetType().GetProperty("NOMBRE").GetValue(consulta, null)
-                        </td>
-                        <td>
-                            @consulta.GetType().GetProperty("CUENTAPL").GetValue(consulta, null)
-                        </td>
-
-                        <td>
-                            @foreach (var a in ViewBag.cuenta)
-                            {
-                                @* NOMBRE CUENTA PL *@
-                                if (a.GetType().GetProperty("ID").GetValue(a, null) == consulta.GetType().GetProperty("CUENTAPL").GetValue(consulta, null))
-                                {
-                                    @a.GetType().GetProperty("NOMBRE").GetValue(a, null)
-                                }                               
-                            }
-                        </td>
-
-                        <td>
-                            @* NUM REGISTRO CONTABLE *@
-                            @consulta.GetType().GetProperty("DOCUMENTO_SAP").GetValue(consulta, null)
-                        </td>
-
-                        <td>
-                            @* MODIFICADO POR *@
-                            @consulta.GetType().GetProperty("USUARIOC_ID").GetValue(consulta, null)
-                        </td>
-                        <td>
-                            @* USUARIO CREADOR *@
-                            @consulta.GetType().GetProperty("USUARIOD_ID").GetValue(consulta, null)
-                        </td>
-                        <td>
-                            @* MANAGER *@
-                            @consulta.GetType().GetProperty("USUARIOA_ID").GetValue(consulta, null)
-                        </td>
-                        <td>
-                            @*COMENTARIO*@
-
-                            @foreach (var come in ViewBag.ultimo)
-                            {
-                                foreach (TAT001.Models.Comentarios com in come)
-                                {
-                                    if (consulta.GetType().GetProperty("NUM_DOC").GetValue(consulta, null) == com.NUM_DOC)
+                                    @if (aging <= 30)
                                     {
-                                        @com.COMENTARIOS
+                                        <td>
+                                            @amountParent
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+
                                     }
-                                }
+                                    else if (aging >= 31 && aging <= 60)
+
+                                    {
+                                        <td></td>
+                                        <td> @amountParent</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+
+                                    }
+                                    else if (aging >= 61 && aging <= 90)
+
+                                    {
+                                        <td></td>
+                                        <td></td>
+                                        <td>@amountParent</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+
+                                    }
+                                    else if (aging >= 91 && aging <= 120)
+
+                                    {
+                                        <td></td>
+                                        <td></td>
+                                        <td> </td>
+                                        <td>@amountParent</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    }
+                                    else if (aging >= 121 && aging <= 180)
+
+                                    {
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>@amountParent</td>
+                                        <td></td>
+                                        <td></td>
+                                    }
+                                    else if (aging >= 181 && aging <= 360)
+
+                                    {
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>@amountParent</td>
+                                        <td></td>
+
+                                    }
+                                    else if (aging > 360)
+                                    {
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>@amountParent</td>
+                                    }
+
+                                    @* AL CIERRE DOLARES *@
+                                    @if (aging <= 30)
+                                    {
+                                        <td>
+                                            @amountParent3
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    }
+                                    else if (aging >= 31 && aging <= 60)
+                                    {
+                                        <td></td>
+                                        <td> @amountParent3</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+
+                                    }
+
+                                    else if (aging >= 61 && aging <= 90)
+
+                                    {
+                                        <td></td>
+                                        <td> </td>
+                                        <td>@amountParent3</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    }
+                                    else if (aging >= 91 && aging <= 120)
+
+                                    {
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td> @amountParent3</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    }
+                                    else if (aging >= 121 && aging <= 180)
+
+                                    {
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>@amountParent3</td>
+                                        <td></td>
+                                        <td></td>
+                                    }
+                                    else if (aging >= 181 && aging <= 360)
+
+                                    {
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>@amountParent3</td>
+                                        <td></td>
+                                    }
+                                    else if (aging > 360)
+                                    {
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>@amountParent3</td>
+
+                                    }
+
+                                    @* A LA FECHA ACTUAL DOLARES *@
+
+                                    @if (aging <= 30)
+                                    {
+                                        <td>
+                                            @amountParent3
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+
+                                    }
+                                    else if (aging >= 31 && aging <= 60)
+
+                                    {
+                                        <td></td>
+                                        <td> @amountParent3</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    }
+                                    else if (aging >= 61 && aging <= 90)
+                                    {
+                                        <td></td>
+                                        <td> </td>
+                                        <td>@amountParent3</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    }
+                                    else if (aging >= 91 && aging <= 120)
+
+                                    {
+                                        <td></td>
+                                        <td> </td>
+                                        <td> </td>
+                                        <td> @amountParent3</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    }
+                                    else if (aging >= 121 && aging <= 180)
+
+                                    {
+                                        <td></td>
+                                        <td> </td>
+                                        <td> </td>
+                                        <td> </td>
+                                        <td>@amountParent3</td>
+                                        <td></td>
+                                        <td></td>
+                                    }
+                                    else if (aging >= 181 && aging <= 360)
+
+                                    {
+                                        <td></td>
+                                        <td> </td>
+                                        <td> </td>
+                                        <td> </td>
+                                        <td></td>
+                                        <td>@amountParent3</td>
+                                        <td></td>
+                                    }
+                                    else if (aging > 360)
+                                    {
+                                        <td></td>
+                                        <td> </td>
+                                        <td> </td>
+                                        <td> </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>
+                                            @amountParent3
+                                        </td>
+                                    }
+                                </tr>
                             }
-                        </td>
-
-                        @* AL CIERRE MONEDA LOCAL *@
-                        @if (aging <= 30)
-                        {
-                            <td>
-                                @amountParent2
-                            </td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-
-
                         }
-                        else if (aging >= 31 && aging <= 60)
-
-                        {
-                            <td></td>
-                            <td> @amountParent2</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        }
-                        else if (aging >= 61 && aging <= 90)
-                        {
-                            <td></td>
-                            <td></td>
-                            <td> @amountParent2</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-
-                        }
-                        else if (aging >= 91 && aging <= 120)
-
-                        {
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>@amountParent2</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-
-                        }
-                        else if (aging >= 121 && aging <= 180)
-
-                        {
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>@amountParent2</td>
-                            <td></td>
-                            <td></td>
-
-                        }
-                        else if (aging >= 181 && aging <= 360)
-
-                        {
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>@amountParent2</td>
-                            <td></td>
-
-                        }
-                        else if (aging > 360)
-                        {
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>@amountParent2</td>
-
-                        }
-
-                        @* FECHA ACTUAL MONEDA LOCAL  *@
-
-                        @if (aging <= 30)
-                        {
-                            <td>
-                                @amountParent
-                            </td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-
-                        }
-                        else if (aging >= 31 && aging <= 60)
-
-                        {
-                            <td></td>
-                            <td> @amountParent</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-
-                        }
-                        else if (aging >= 61 && aging <= 90)
-
-                        {
-                            <td></td>
-                            <td></td>
-                            <td>@amountParent</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-
-                        }
-                        else if (aging >= 91 && aging <= 120)
-
-                        {
-                            <td></td>
-                            <td></td>
-                            <td> </td>
-                            <td>@amountParent</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        }
-                        else if (aging >= 121 && aging <= 180)
-
-                        {
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>@amountParent</td>
-                            <td></td>
-                            <td></td>
-                        }
-                        else if (aging >= 181 && aging <= 360)
-
-                        {
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>@amountParent</td>
-                            <td></td>
-
-                        }
-                        else if (aging > 360)
-                        {
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>@amountParent</td>
-                        }
-
-                        @* AL CIERRE DOLARES *@
-                        @if (aging <= 30)
-                        {
-                            <td>
-                                @amountParent3
-                            </td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        }
-                        else if (aging >= 31 && aging <= 60)
-                        {
-                            <td></td>
-                            <td> @amountParent3</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-
-                        }
-
-                        else if (aging >= 61 && aging <= 90)
-
-                        {
-                            <td></td>
-                            <td> </td>
-                            <td>@amountParent3</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        }
-                        else if (aging >= 91 && aging <= 120)
-
-                        {
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td> @amountParent3</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        }
-                        else if (aging >= 121 && aging <= 180)
-
-                        {
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>@amountParent3</td>
-                            <td></td>
-                            <td></td>
-                        }
-                        else if (aging >= 181 && aging <= 360)
-
-                        {
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>@amountParent3</td>
-                            <td></td>
-                        }
-                        else if (aging > 360)
-                        {
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>@amountParent3</td>
-
-                        }
-
-                        @* A LA FECHA ACTUAL DOLARES *@
-
-                        @if (aging <= 30)
-                        {
-                            <td>
-                                @amountParent3
-                            </td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-
-                        }
-                        else if (aging >= 31 && aging <= 60)
-
-                        {
-                            <td></td>
-                            <td> @amountParent3</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        }
-                        else if (aging >= 61 && aging <= 90)
-                        {
-                            <td></td>
-                            <td> </td>
-                            <td>@amountParent3</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        }
-                        else if (aging >= 91 && aging <= 120)
-
-                        {
-                            <td></td>
-                            <td> </td>
-                            <td> </td>
-                            <td> @amountParent3</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        }
-                        else if (aging >= 121 && aging <= 180)
-
-                        {
-                            <td></td>
-                            <td> </td>
-                            <td> </td>
-                            <td> </td>
-                            <td>@amountParent3</td>
-                            <td></td>
-                            <td></td>
-                        }
-                        else if (aging >= 181 && aging <= 360)
-
-                        {
-                            <td></td>
-                            <td> </td>
-                            <td> </td>
-                            <td> </td>
-                            <td></td>
-                            <td>@amountParent3</td>
-                            <td></td>
-                        }
-                        else if (aging > 360)
-                        {
-                            <td></td>
-                            <td> </td>
-                            <td> </td>
-                            <td> </td>
-                            <td></td>
-                            <td></td>
-                            <td>
-                                @amountParent3
-                            </td>
-                        }
-                    </tr>
-                        }
-                    }
-                </tbody>
+                    </tbody>
             </table>
         </div>
     }
