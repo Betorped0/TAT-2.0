@@ -86,6 +86,7 @@ namespace TAT001.Controllers
                 d = db.DOCUMENTOes.Include("SOCIEDAD").Include("USUARIO").Where(a => a.NUM_DOC.Equals(id)).First();
                 
                 ViewBag.dec = d.PAI.DECIMAL;//LEJGG 090718
+                ViewBag.miles = d.PAI.MILES;//LEJGG 090718
 
                 List<string> lista = new List<string>();
                 List<listacuerpoc> armadoCuerpoTab = new List<listacuerpoc>(); //B20180710 MGC 2018.07.10 Modificaciones para editar los campos de distribución se agrego los objetos

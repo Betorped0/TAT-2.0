@@ -159,8 +159,12 @@ function guardarcarta(guardar) {
 
     if (total > monto) {
         M.toast({ html: 'Monto de solicitud mayor al monto aprobado.' });
-    } else if (total <= 0) {
-        M.toast({ html: 'Favor de ingresar un monto mayor a 0.'});
+        document.getElementById("loader").style.display = "none";
+
+    } else if (total <= 0 && varligada=="false") {
+        M.toast({ html: 'Favor de ingresar un monto mayor a 0.' });
+        document.getElementById("loader").style.display = "none";
+
     }
     else{
         copiarTableControl();
