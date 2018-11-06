@@ -2428,7 +2428,7 @@ namespace TAT001.Controllers
                     docu.EJERCICIO = Convert.ToString(System.DateTime.Now.Year);
                     docu.TIPO_TECNICO = "M";///////////////////////////////////////////////CHECK
                     docu.TIPO_RECURRENTE = null;
-                    docu.CANTIDAD_EV = 1;
+                    docu.CANTIDAD_EV = 2;
                     docu.USUARIOC_ID = user.ID;
                     docu.USUARIOD_ID = user.ID;
                     docu.FECHAD = System.DateTime.Today;
