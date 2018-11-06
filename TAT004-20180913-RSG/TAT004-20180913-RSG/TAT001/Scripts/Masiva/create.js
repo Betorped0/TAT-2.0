@@ -1,4 +1,5 @@
-﻿//LEEMOS EL ARCHIVO UNA VEZ CARGADO AL ELEMENTO FILE INPUT
+﻿var tsols = "";
+//LEEMOS EL ARCHIVO UNA VEZ CARGADO AL ELEMENTO FILE INPUT
 $("#miMas").change(function () {
     var filenum = $('#miMas').get(0).files.length;
     if (filenum > 0) {
@@ -8,16 +9,17 @@ $("#miMas").change(function () {
         if (evaluarExt(filename)) {
             M.toast({ html: 'Cargando ' + filename });
             getExcelMasivas(file);
+            tsols = "";
             procesarHoja1();
             var err = erroresH1();
             ////if (err.length <= 0) {
-                procesarHoja2();
-                procesarHoja3();
-                procesarHoja4();
-                procesarHoja5();
-                checkRelacionada();
-                var kk = checkRelacionadaMat();
-                //checkRelMul()
+            procesarHoja2();
+            procesarHoja3();
+            procesarHoja4();
+            procesarHoja5();
+            checkRelacionada();
+            var kk = checkRelacionadaMat();
+            //checkRelMul()
             ////}
             ////else {
             ////    for (var i = 0; i < err.length; i++) {
@@ -90,6 +92,7 @@ function procesarHoja1() {
                         //    var addedRow = addRowH1(table, dataj.NUM_DOC, dataj.TSOL_ID, dataj.GALL_ID, dataj.SOCIEDAD_ID, dataj.PAIS_ID, dataj.ESTADO, dataj.CIUDAD, dataj.CONCEPTO, dataj.NOTAS, dataj.PAYER_ID, dataj.PAYER_NOMBRE, dataj.CONTACTO_NOMBRE, dataj.CONTACTO_EMAIL, dataj.FECHAI_VIG, dataj.FECHAF_VIG, dataj.MONEDA_ID, dataj.VKORG, dataj.VTWEG);
                         //}
                         var addedRow = addRowH1(table, dataj.NUM_DOC, dataj.TSOL_ID, dataj.GALL_ID, dataj.SOCIEDAD_ID, dataj.PAIS_ID, dataj.ESTADO, dataj.CIUDAD, dataj.CONCEPTO, dataj.NOTAS, dataj.PAYER_ID, dataj.PAYER_NOMBRE, dataj.CONTACTO_NOMBRE, dataj.CONTACTO_EMAIL, dataj.FECHAI_VIG, dataj.FECHAF_VIG, dataj.MONEDA_ID, dataj.VKORG, dataj.VTWEG, errores[i], dataj.PAIS_NAME);
+                        tsols += "." + dataj.NUM_DOC + "-" + dataj.TSOL_ID;//ADD RSG 05.11.2018
                     }); //FIN DEL FOR
 
                     $('#tab_test1').css("font-size", "10px");
@@ -347,7 +350,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_pais', function () {
                 success: function (data) {
                     response(auto.map(data, function (item) {
                         //return { label: item.LANDX, value: item.LANDX };
-                        return { label: item.LAND + " " + item.LANDX, value: item.LANDX};
+                        return { label: item.LAND + " " + item.LANDX, value: item.LANDX };
                     }));
                 }
             });
@@ -529,7 +532,7 @@ $('body').on('keydown.autocomplete', '.input_cliente', function () {
     numTabla = $(numTabla).attr('id');
     var us = $("#USUARIOC_ID").val(); //ADD RSG 01.11.2018
     var pais = $(this).parent().parent().find(".span_pais").text(); //ADD RSG 01.11.2018
-        //pais = $(this).parent().parent().find(".input_pais").val(); //ADD RSG 01.11.2018
+    //pais = $(this).parent().parent().find(".input_pais").val(); //ADD RSG 01.11.2018
 
     var defClase = null;
 
@@ -556,7 +559,7 @@ $('body').on('keydown.autocomplete', '.input_cliente', function () {
                         return { label: trimStart('0', item.KUNNR) + '-' + item.NAME1, value: trimStart('0', item.KUNNR) };
                     }));
                 }
-                ,error: function (e, er) {
+                , error: function (e, er) {
                     alert(e);
                 }
             });
@@ -798,7 +801,7 @@ function procesarHoja2() {
 
                     //INICIO DEL CICLO FOR
                     $.each(data, function (i, dataj) {
-
+                        if (dataj.NUM_DOC != undefined)
                         var addedRow = addRowH2(table, dataj.NUM_DOC, dataj.FACTURA, dataj.FECHA, dataj.PROVEEDOR, dataj.PROVEEDOR_NOMBRE, dataj.AUTORIZACION, dataj.VENCIMIENTO, dataj.FACTURAK, dataj.EJERCICIOK, errores[i], warnings[i]);
 
                     }); //FIN DEL FOR

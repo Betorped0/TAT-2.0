@@ -371,6 +371,7 @@ function cambiaCheckRec() {
         $("#select_neg").val("M");
         $("#select_negi").val("M");
         $("#select_neg").prop("disabled", "disabled");
+        $("#select_neg").formSelect();
         $("#select_neg").change();
     } else {
         $("#select_neg").prop("disabled", false);

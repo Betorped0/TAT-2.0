@@ -2828,6 +2828,7 @@ $('body').on('focusout', '#bmonto_apoyo', function () {
     var select_neg = $('#select_neg').val();
     if (ligada() || select_neg==="P") {
         (this.value === "0" || this.value === "0.00%") ? file.prop('disabled', true) : file.prop('disabled', false);
+        cambiaRec();
     } else {
         file.prop('disabled', false);
     }
@@ -6028,5 +6029,33 @@ function categoriaUnica(cat) {
     });
 
     return res;
+}
+function cambiaLigada(campo) {
+
+    var f = $("#file_dis")
+    if (campo.checked) {
+        $("#select_neg").val("P");
+        $("#select_negi").val("P");
+        $("#select_neg").prop("disabled", "disabled");
+        $("#select_neg").change();
+        $("#select_neg").formSelect();
+        $("#div_objq").removeClass("hide");
+        $("#txt_ligada").val("X");
+        var monto = $('#bmonto_apoyo').val();
+        (monto === "0" || monto === "0.00%") ? f.prop('disabled', true) : f.prop('disabled', false)
+        //Actualización de vista recurrentes
+        cambiaRec();
+    } else {
+        $("#select_neg").prop("disabled", false);
+        $("#select_neg").change();
+        $("#div_objq").addClass("hide");
+        $("#txt_ligada").val("");
+        f.prop('disabled', false);
+        //Actualización de vista recurrentes
+        cambiaCheckRec();
+        $(".table_rangos").css("display", "none");
+        $("#btnRango").css("display", "none");
+        $("#btnDelRango").css("display", "none");
+    }
 }
 
