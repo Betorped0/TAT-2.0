@@ -88,7 +88,7 @@
             }
         </script>
     }
-    <div class="col s8 right-align right">
+    <div class="col s12 right-align right" id="botones">
         @Html.ActionLink("Crear Solicitud", "Create", "Solicitudes", null, new { @class = "btn-small", @id = "btn_create" })
         @using (Html.BeginForm("Descargar", "Home", FormMethod.Post, new { @style = "display:inline;" }))
         {
@@ -286,10 +286,10 @@
                     <th id="lbl_estatus">
                         @Html.DisplayNameFor(model => model.ESTATUS)
                     </th>
-                    <th id="lblPayId">
+                    <th class="lblPayId">
                         @Html.DisplayNameFor(model => model.PAYER_ID)
                     </th>
-                    <th id="lblCliente">
+                    <th class="lblCliente">
                         @Html.DisplayName("Cliente")
                     </th>
                     <th id="lblCanal">
@@ -301,8 +301,17 @@
                     <th id="lbl_tall">
                         @Html.DisplayNameFor(model => model.TALL)
                     </th>
-                    <th id="lblCuentas">
+                    @*<th id="lblCuentas">
                         @Html.DisplayName("Cuentas")
+                    </th>*@
+                    <th class="lblCCG">
+                        @Html.DisplayName("Cuenta Contable Gasto")
+                    </th>
+                    <th id="lblCCP">
+                        @Html.DisplayName("Cuenta Contable Pasivo")
+                    </th>
+                    <th id="lblCCC">
+                        @Html.DisplayName("Cuenta Contable Clearing")
                     </th>
                     <th id="lbl_concepto">
                         @Html.DisplayNameFor(model => model.CONCEPTO)
@@ -325,31 +334,31 @@
                     @*<th id="lblNC">
                         @Html.DisplayName("Número Nota Crédito/Orden de Pago")
                     </th>*@
-                    <th id="lblRP">
+                    <th id="lblRP" style="background-color:lightgrey">
                         @Html.DisplayName("Núm. Registro Provisión")
                     </th>
-                    <th id="lblRnc">
+                    <th id="lblRnc" style="background-color:lightgrey">
                         @Html.DisplayName("Núm. Registro NC/OP")
                     </th>
-                    <th id="lblRap">
+                    <th id="lblRap" style="background-color:lightgrey">
                         @Html.DisplayName("Núm Registro AP")
                     </th>
-                    <th id="lblRR">
+                    <th id="lblRR" style="background-color:lightgrey">
                         @Html.DisplayName("Núm. Registro Reverso")
                     </th>
-                    <th id="lblTDoc">
+                    <th id="lblTDoc" style="background-color:lightgrey">
                         @Html.DisplayName("Tipo Documento")
                     </th>
-                    <th id="lblPayer">
+                    <th class="lblPayId" style="background-color:lightgrey">
                         @Html.DisplayName("Payer")
                     </th>
-                    <th id="lblCl">
+                    <th id="lblCl" style="background-color:lightgrey">
                         @Html.DisplayName("Cliente")
                     </th>
-                    <th id="lblIL">
+                    <th id="lblIL" style="background-color:lightgrey">
                         @Html.DisplayName("$ Importe Moneda Local")
                     </th>
-                    <th id="lblCCG">
+                    <th class="lblCCG" style="background-color:lightgrey">
                         @Html.DisplayName("Cuenta Contable Gasto")
                     </th>
                 </tr>
@@ -678,9 +687,12 @@
         <td>@item.CANAL</td>
         <td>@item.TSOL</td>
         <td>@item.TALL</td>
-        <td>@item.CUENTAS</td>
+        @*<td>@item.CUENTAS</td>*@
+        <td>@item.CUENTAP</td>
+        <td>@item.CUENTAPL</td>
+        <td>@item.CUENTACL</td>
         <td>@item.CONCEPTO</td>
-        <td class="precio">@item.MONTO_DOC_ML</td>
+        <td>@item.MONTO_DOC_ML</td>
         <td>@item.FACTURA</td>
         <td>@item.FACTURAK</td>
         <td>@item.USUARIOC_ID</td>
@@ -692,7 +704,7 @@
         <td>@item.BLART</td>
         <td>@item.NUM_PAYER</td>
         <td>@item.NUM_CLIENTE</td>
-        <td class="precio">@item.NUM_IMPORTE</td>
+        <td>@item.NUM_IMPORTE</td>
         <td>@item.NUM_CUENTA</td>
     </tr>
 }
@@ -703,6 +715,9 @@
         <input id="dec" name="dec" type="hidden" value="@ViewBag.dec">
         <script src="~/Scripts/formatos.js"></script><!--RSG 01.08.2018-->
         <iframe id="txtArea1" style="display:none"></iframe>
+        <script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
         <script>
     $(document).ready(function () {
         var table = $('#table').DataTable({
@@ -766,7 +781,39 @@
                 });
             }
         });
-
+        new $.fn.dataTable.Buttons(table, {
+            buttons: [{
+                extend: 'excelHtml5',
+                footer: false,
+                className: 'btn-small',
+                text: 'Generar Excel',
+                exportOptions: {
+                    columns: ":not(:eq(0)):visible"
+                },
+                customize: function (xlsx) {
+                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                    // Loop over the cells in column `C`
+                    $('row[r!=1] c[r^="H"]', sheet).each(function () {
+                        // Get the value
+                        var status = $('is t', this).text();
+                        if (status == 'Por contabilizar' || status == 'Registrado SAP' || status == 'Por gen.txt' || status == 'Provisi\u00F3n abierta' || status == 'Reversada') {
+                            $(this).attr('s', '15');
+                        }
+                        else if (status == 'Pendiente reverso' || status == 'Pendiente aprobador') {
+                            $(this).attr('s', '5');
+                        }
+                        else if (status == 'Pendiente firma' || status == 'Pendiente validaci\u00F3n TS') {
+                            $(this).attr('s', '20');
+                        }
+                        else if (status == 'Borrador' || status == 'Pendiente correcci\u00F3n usuario TS' || status == 'Cancelado' || status == 'Error en contabilizaci\u00F3n' || status == 'Pendiente correcci\u00F3n usuario') {
+                            $(this).attr('s', '10');
+                        }
+                    });
+                }
+            }],
+        });
+        //table.buttons().container()
+        //    .appendTo($('#botones'));
         var a = $('#selecc').val();
         table.page.len(a).draw();
         $('#selecc').on('change', function () {
@@ -832,11 +879,11 @@
                     ret += "<td class='" + uu[i].value.ESTATUS + " white-text'>" + uu[i].value.ESTATUS_WF+"</td>";*@
                     ret += "<td>" + uu[i].value.ESTATUS + "</td>";
                     ret += "<td>" + uu[i].value.CONCEPTO + "</td>";
-                    ret += "<td>" + uu[i].value.MONTO_DOC_ML + "</td>";
+                    ret += "<td>" + parseFloat(uu[i].value.MONTO_DOC_ML).toLocaleString("es-MX", { style: 'currency', currency: 'MXN' }) + "</td>";
                     for (var aa = 0; aa < uu.length; aa++) {
                         sum = sum + uu[aa].value.MONTO_DOC_ML;
                     }
-                    ret += "<td>" + toShow(sum.toFixed(2)) + "</td>";
+                    ret += "<td>" + parseFloat(sum).toLocaleString("es-MX", { style: 'currency', currency: 'MXN' }) + "</td>";
                     ret += "<td style='width:70%;'></td>";
 
                     ret += "</tr>";
@@ -862,7 +909,10 @@
     }
         </script>
         <style>
-
+            .dt-buttons
+            {
+                display:inline !important;
+            }
             .dataTables_length {
                 display: none;
             }
