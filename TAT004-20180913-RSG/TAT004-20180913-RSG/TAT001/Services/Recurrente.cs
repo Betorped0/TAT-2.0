@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
+using TAT001.Common;
 using TAT001.Entities;
 using TAT001.Models;
 
@@ -899,61 +900,63 @@ namespace TAT001.Services
 
                     if (cie != null)
                     {
-                        //Obtener el historial de compras de los clientesd
-                        var matt = matl.ToList();
-                        //kunnr = kunnr.TrimStart('0').Trim();
-                        var pres = db.PRESUPSAPPs.Where(a => a.VKORG.Equals(vkorg) & a.SPART.Equals(spart) & a.KUNNR == kunnr & (a.GRSLS != null | a.NETLB != null)).ToList();
-                        //var cat = db.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(spras)).ToList();//RSG 09.07.2018 
-                        //var cat = db.MATERIALGPs.Where(a => a.ACTIVO == true).ToList();
-                        //foreach (var c in cie)
+                        ////Obtener el historial de compras de los clientesd
+                        //var matt = matl.ToList();
+                        ////kunnr = kunnr.TrimStart('0').Trim();
+                        //var pres = db.PRESUPSAPPs.Where(a => a.VKORG.Equals(vkorg) & a.SPART.Equals(spart) & a.KUNNR == kunnr & (a.GRSLS != null | a.NETLB != null)).ToList();
+                        ////var cat = db.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(spras)).ToList();//RSG 09.07.2018 
+                        ////var cat = db.MATERIALGPs.Where(a => a.ACTIVO == true).ToList();
+                        ////foreach (var c in cie)
+                        ////{
+                        ////    c.KUNNR = c.KUNNR.TrimStart('0').Trim();
+                        ////}
+
+                        //if (conf.CAMPO == "GRSLS")
                         //{
-                        //    c.KUNNR = c.KUNNR.TrimStart('0').Trim();
+                        //    jd = (from ps in pres
+                        //          join cl in cie
+                        //          on ps.KUNNR equals cl.KUNNR
+                        //          join m in matt
+                        //          on ps.MATNR equals m.ID
+                        //          join mk in catstabla
+                        //          //on m.MATERIALGP_ID equals mk.MATERIALGP_ID
+                        //          on m.ID equals mk//RSG 09.07.2018 
+                        //          where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) &&
+                        //          (ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART
+                        //          ) && ps.BUKRS == soc_id
+                        //          && ps.GRSLS > 0
+                        //          select new DOCUMENTOM_MOD
+                        //          {
+                        //              ID_CAT = m.MATERIALGP_ID,
+                        //              MATNR = ps.MATNR,
+                        //              //mk.TXT50
+                        //              VAL = Convert.ToDecimal(ps.GRSLS),
+                        //          }).ToList();
+                        //}
+                        //else
+                        //{
+                        //    jd = (from ps in pres
+                        //          join cl in cie
+                        //          on ps.KUNNR equals cl.KUNNR
+                        //          join m in matt
+                        //          on ps.MATNR equals m.ID
+                        //          join mk in catstabla
+                        //          //on m.MATERIALGP_ID equals mk.MATERIALGP_ID
+                        //          on m.ID equals mk//RSG 09.07.2018 
+                        //          where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) &&
+                        //          (ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART
+                        //          ) && ps.BUKRS == soc_id
+                        //          && ps.NETLB > 0
+                        //          select new DOCUMENTOM_MOD
+                        //          {
+                        //              ID_CAT = m.MATERIALGP_ID,
+                        //              MATNR = ps.MATNR,
+                        //              //mk.TXT50
+                        //              VAL = Convert.ToDecimal(ps.NETLB)
+                        //          }).ToList();
                         //}
 
-                        if (conf.CAMPO == "GRSLS")
-                        {
-                            jd = (from ps in pres
-                                  join cl in cie
-                                  on ps.KUNNR equals cl.KUNNR
-                                  join m in matt
-                                  on ps.MATNR equals m.ID
-                                  join mk in catstabla
-                                  //on m.MATERIALGP_ID equals mk.MATERIALGP_ID
-                                  on m.ID equals mk//RSG 09.07.2018 
-                                  where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) &&
-                                  (ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART
-                                  ) && ps.BUKRS == soc_id
-                                  && ps.GRSLS > 0
-                                  select new DOCUMENTOM_MOD
-                                  {
-                                      ID_CAT = m.MATERIALGP_ID,
-                                      MATNR = ps.MATNR,
-                                      //mk.TXT50
-                                      VAL = Convert.ToDecimal(ps.GRSLS),
-                                  }).ToList();
-                        }
-                        else
-                        {
-                            jd = (from ps in pres
-                                  join cl in cie
-                                  on ps.KUNNR equals cl.KUNNR
-                                  join m in matt
-                                  on ps.MATNR equals m.ID
-                                  join mk in catstabla
-                                  //on m.MATERIALGP_ID equals mk.MATERIALGP_ID
-                                  on m.ID equals mk//RSG 09.07.2018 
-                                  where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) &&
-                                  (ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART
-                                  ) && ps.BUKRS == soc_id
-                                  && ps.NETLB > 0
-                                  select new DOCUMENTOM_MOD
-                                  {
-                                      ID_CAT = m.MATERIALGP_ID,
-                                      MATNR = ps.MATNR,
-                                      //mk.TXT50
-                                      VAL = Convert.ToDecimal(ps.NETLB)
-                                  }).ToList();
-                        }
+                        jd = FnCommon.ObtenerMaterialGroupsMateriales(db, vkorg, spart, kunnr, soc_id, aii, mii, aff, mff, "admin");
                     }
                 }
 
@@ -1144,62 +1147,65 @@ namespace TAT001.Services
                     if (cie != null)
                     {
                         //Obtener el historial de compras de los clientesd
-                        var matt = matl.ToList();
-                        //kunnr = kunnr.TrimStart('0').Trim();
-                        var pres = db.PRESUPSAPPs.Where(a => a.VKORG.Equals(vkorg) & a.SPART.Equals(spart) & a.KUNNR == kunnr & (a.GRSLS != null | a.NETLB != null)).ToList();
-                        //var cat = db.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(spras)).ToList();//RSG 09.07.2018 
-                        var cat = db.MATERIALGPs.Where(a => a.ACTIVO == true).ToList();
-                        //foreach (var c in cie)
-                        //{
-                        //    c.KUNNR = c.KUNNR.TrimStart('0').Trim();
-                        //}
+                        ////    var matt = matl.ToList();
+                        ////    //kunnr = kunnr.TrimStart('0').Trim();
+                        ////    var pres = db.PRESUPSAPPs.Where(a => a.VKORG.Equals(vkorg) & a.SPART.Equals(spart) & a.KUNNR == kunnr & (a.GRSLS != null | a.NETLB != null)).ToList();
+                        ////    //var cat = db.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(spras)).ToList();//RSG 09.07.2018 
+                        ////    var cat = db.MATERIALGPs.Where(a => a.ACTIVO == true).ToList();
+                        ////    //foreach (var c in cie)
+                        ////    //{
+                        ////    //    c.KUNNR = c.KUNNR.TrimStart('0').Trim();
+                        ////    //}
 
-                        if (conf.CAMPO == "GRSLS")
-                        {
-                            jd = (from ps in pres
-                                  join cl in cie
-                                  on ps.KUNNR equals cl.KUNNR
-                                  join m in matt
-                                  on ps.MATNR equals m.ID
-                                  join mk in cat
-                                  //on m.MATERIALGP_ID equals mk.MATERIALGP_ID
-                                  on m.MATERIALGP_ID equals mk.ID//RSG 09.07.2018 
-                                  where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) &&
-                                  (ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART
-                                  ) && ps.BUKRS == soc_id
-                                  && ps.GRSLS > 0
-                                  select new DOCUMENTOM_MOD
-                                  {
-                                      ID_CAT = m.MATERIALGP_ID,
-                                      MATNR = ps.MATNR,
-                                      //mk.TXT50
-                                      VAL = Convert.ToDecimal(ps.GRSLS),
-                                      EXCLUIR = mk.EXCLUIR // RSG 09.07.2018 ID 156
-                                  }).ToList();
-                        }
-                        else
-                        {
-                            jd = (from ps in pres
-                                  join cl in cie
-                                  on ps.KUNNR equals cl.KUNNR
-                                  join m in matt
-                                  on ps.MATNR equals m.ID
-                                  join mk in cat
-                                  //on m.MATERIALGP_ID equals mk.MATERIALGP_ID
-                                  on m.MATERIALGP_ID equals mk.ID//RSG 09.07.2018 
-                                  where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) &&
-                                  (ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART
-                                  ) && ps.BUKRS == soc_id
-                                  && ps.NETLB > 0
-                                  select new DOCUMENTOM_MOD
-                                  {
-                                      ID_CAT = m.MATERIALGP_ID,
-                                      MATNR = ps.MATNR,
-                                      //mk.TXT50
-                                      VAL = Convert.ToDecimal(ps.NETLB),
-                                      EXCLUIR = mk.EXCLUIR // RSG 09.07.2018 ID 156
-                                  }).ToList();
-                        }
+                        ////    if (conf.CAMPO == "GRSLS")
+                        ////    {
+                        ////        jd = (from ps in pres
+                        ////              join cl in cie
+                        ////              on ps.KUNNR equals cl.KUNNR
+                        ////              join m in matt
+                        ////              on ps.MATNR equals m.ID
+                        ////              join mk in cat
+                        ////              //on m.MATERIALGP_ID equals mk.MATERIALGP_ID
+                        ////              on m.MATERIALGP_ID equals mk.ID//RSG 09.07.2018 
+                        ////              where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) &&
+                        ////              (ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART
+                        ////              ) && ps.BUKRS == soc_id
+                        ////              && ps.GRSLS > 0
+                        ////              select new DOCUMENTOM_MOD
+                        ////              {
+                        ////                  ID_CAT = m.MATERIALGP_ID,
+                        ////                  MATNR = ps.MATNR,
+                        ////                  //mk.TXT50
+                        ////                  VAL = Convert.ToDecimal(ps.GRSLS),
+                        ////                  EXCLUIR = mk.EXCLUIR // RSG 09.07.2018 ID 156
+                        ////              }).ToList();
+                        ////    }
+                        ////    else
+                        ////    {
+                        ////        jd = (from ps in pres
+                        ////              join cl in cie
+                        ////              on ps.KUNNR equals cl.KUNNR
+                        ////              join m in matt
+                        ////              on ps.MATNR equals m.ID
+                        ////              join mk in cat
+                        ////              //on m.MATERIALGP_ID equals mk.MATERIALGP_ID
+                        ////              on m.MATERIALGP_ID equals mk.ID//RSG 09.07.2018 
+                        ////              where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) &&
+                        ////              (ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART
+                        ////              ) && ps.BUKRS == soc_id
+                        ////              && ps.NETLB > 0
+                        ////              select new DOCUMENTOM_MOD
+                        ////              {
+                        ////                  ID_CAT = m.MATERIALGP_ID,
+                        ////                  MATNR = ps.MATNR,
+                        ////                  //mk.TXT50
+                        ////                  VAL = Convert.ToDecimal(ps.NETLB),
+                        ////                  EXCLUIR = mk.EXCLUIR // RSG 09.07.2018 ID 156
+                        ////              }).ToList();
+                        ////    }
+                        ////}
+
+                        jd = FnCommon.ObtenerMaterialGroupsMateriales(db, vkorg, spart, kunnr, soc_id, aii, mii, aff, mff, "admin");
                     }
                 }
 

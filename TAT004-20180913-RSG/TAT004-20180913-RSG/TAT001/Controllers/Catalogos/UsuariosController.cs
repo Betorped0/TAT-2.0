@@ -1,4 +1,5 @@
-﻿using ExcelDataReader;
+﻿using ClosedXML.Excel;
+using ExcelDataReader;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -3068,7 +3069,44 @@ namespace TAT001.Controllers.Catalogos
             return jl;
         }
 
-        //// Buscar
+        [HttpPost]
+        public FileResult Descargar()
+        {
+            var uSuario = db.USUARIOs.ToList();
+            generarExcelHome(uSuario, Server.MapPath("~/pdfTemp/"));
+            return File(Server.MapPath("~/pdfTemp/Usuarios_" + DateTime.Now.ToShortDateString() + ".xlsx"), "application /vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Usuarios_" + DateTime.Now.ToShortDateString() + ".xlsx");
+        }
+
+        public void generarExcelHome(List<USUARIO> lst, string ruta)
+        {
+            string spra = Session["spras"].ToString();
+            var workbook = new XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("Sheet 1");
+            try
+            {
+                worksheet.Cell("A1").Value = new[] { new { BANNER = "Id" }, };
+                worksheet.Cell("B1").Value = new[] { new { BANNER = "Nombre" }, };
+                worksheet.Cell("C1").Value = new[] { new { BANNER = "Email" }, };
+                worksheet.Cell("D1").Value = new[] { new { BANNER = "Rol" }, };
+
+                for (int i = 2; i <= (lst.Count + 1); i++)
+                {
+                    var pues = lst[i - 2].PUESTO_ID;
+                    var puesto = db.PUESTOTs.Where(x => x.PUESTO_ID == pues && x.SPRAS_ID.Equals(spra)).Select(x => x.TXT50).FirstOrDefault();
+                    worksheet.Cell("A" + i).Value = new[] { new { BANNER = lst[i - 2].ID }, };
+                    worksheet.Cell("B" + i).Value = new[] { new { BANNER = (lst[i - 2].NOMBRE + " " + lst[i - 2].APELLIDO_P + " " + lst[i - 2].APELLIDO_M) }, };
+                    worksheet.Cell("C" + i).Value = new[] { new { BANNER = lst[i - 2].EMAIL }, };
+                    worksheet.Cell("D" + i).Value = new[] { new { BANNER = puesto }, };
+                }
+                var rt = ruta + @"\Usuarios_" + DateTime.Now.ToShortDateString() + ".xlsx";
+                workbook.SaveAs(rt);
+            }
+            catch (Exception e)
+            {
+                var ex = e.ToString();
+            }
+        }
+
         public JsonResult Usuario(string Prefix)
         {
             if (Prefix == null)
