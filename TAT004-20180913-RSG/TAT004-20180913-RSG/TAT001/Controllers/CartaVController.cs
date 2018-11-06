@@ -842,6 +842,7 @@ namespace TAT001.Controllers
                 if (varligada)
                 {
                     cabeza2.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "objetivo"));
+                    cabeza2.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "porcentajeC2"));
                 }
                 else
                 {
