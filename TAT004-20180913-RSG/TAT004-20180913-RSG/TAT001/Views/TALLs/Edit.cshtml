@@ -37,7 +37,7 @@
     <div class="col s12 right-align">
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Guardar" class="btn btn-default" />
+                <input type="submit" value="Guardar" id="btnGuardar" class="btn btn-default" />
             </div>
         </div>
     </div>
@@ -50,11 +50,11 @@
             <div class="row">
                 <div class="input-field col s12">
                     @Html.LabelFor(model => model.DESCRIPCION, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblDes" })
-                    @Html.EditorFor(model => model.DESCRIPCION, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                    @Html.EditorFor(model => model.DESCRIPCION, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled"} })
                 </div>
                 <div class="input-field col s12">
                     @Html.DropDownList("GALL_ID", null, htmlAttributes: new { @class = "form-control", @id = "dpGall"})
-                    @Html.LabelFor(model => model.GALL_ID, "Grupos de Allowance", htmlAttributes: new { @class = "control-label col-md-2", @disabled = "disabled" })
+                    @Html.LabelFor(model => model.GALL_ID, "Grupos de Allowance", htmlAttributes: new { @class = "control-label col-md-2", @disabled = "disabled", @id = "lblGall" })
                 </div>
             </div>
         </div>
@@ -83,7 +83,7 @@
                 }
 
                     <div class="input-field col s4 right" style="margin-bottom:0;">
-                        @Html.LabelFor(model => model.ACTIVO, "ACTIVO", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblPais" })
+                        @Html.LabelFor(model => model.ACTIVO, "ACTIVO", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblActivo" })
                         @Html.ValidationMessageFor(model => model.ACTIVO, "", new { @class = "text-danger" })
                         @Html.EditorFor(model => model.ACTIVO, new { htmlAttributes = new { @class = "form-control pname material-icons green-text", @maxlength = "230", @hidden = "hidden", id = "idact" } })
 

@@ -339,67 +339,95 @@ namespace TAT001.Common
                                 int pos = db.CARTAs.Where(a => a.NUM_DOC.Equals(d.NUM_DOC)).OrderByDescending(a => a.POS).First().POS;
                                 GuardarCartaPCategorias(db, v, item2.MATKL, pos, ref indexp, fact, item2.VIGENCIA_DE.Value, item2.VIGENCIA_AL.Value);
                             }
-                            DOCUMENTOP_MOD docmod = new DOCUMENTOP_MOD();
-                            docmod = v.DOCUMENTOP.Where(x => x.MATKL_ID == item2.MATKL).FirstOrDefault();
-                            armadoCuerpoTabStr.Add("");
-                            armadoCuerpoTabStr.Add(item2.MATKL);
-                            //armadoCuerpoTab.Add(item2.TXT50);
-                            MATERIALGP mt = db.MATERIALGPs.Where(x => x.ID == item2.MATKL).FirstOrDefault();//RSG 03.10.2018
-                            if (mt != null)
-                                armadoCuerpoTabStr.Add(mt.DESCRIPCION);//RSG 03.10.2018
-                            else
+                           
+                            if (v != null)
+                            {
+                                DOCUMENTOP_MOD docmod = new DOCUMENTOP_MOD();
+                                docmod = v.DOCUMENTOP.Where(x => x.MATKL_ID == item2.MATKL).FirstOrDefault();
+
                                 armadoCuerpoTabStr.Add("");
+                                armadoCuerpoTabStr.Add(item2.MATKL);
+                                //armadoCuerpoTab.Add(item2.TXT50);
+                                MATERIALGP mt = db.MATERIALGPs.Where(x => x.ID == item2.MATKL).FirstOrDefault();//RSG 03.10.2018
+                                if (mt != null)
+                                    armadoCuerpoTabStr.Add(mt.DESCRIPCION);//RSG 03.10.2018
+                                else
+                                    armadoCuerpoTabStr.Add("");
 
-                            if (v.costoun_x == true)
-                            {
-                                armadoCuerpoTabStr.Add(format.toShow(Math.Round(docmod.MONTO, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
-                            }
-                            if (v.apoyo_x == true)
-                            {
-                                armadoCuerpoTabStr.Add(format.toShowPorc(Math.Round(docmod.PORC_APOYO, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
-                            }
-                            if (v.apoyop_x == true)
-                            {
-                                armadoCuerpoTabStr.Add(format.toShow(Math.Round(docmod.MONTO_APOYO, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
-                            }
+                                if (v.costoun_x == true)
+                                {
+                                    armadoCuerpoTabStr.Add(format.toShow(Math.Round(docmod.MONTO, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
+                                }
+                                if (v.apoyo_x == true)
+                                {
+                                    armadoCuerpoTabStr.Add(format.toShowPorc(Math.Round(docmod.PORC_APOYO, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
+                                }
+                                if (v.apoyop_x == true)
+                                {
+                                    armadoCuerpoTabStr.Add(format.toShow(Math.Round(docmod.MONTO_APOYO, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
+                                }
 
-                            if (v.costoap_x == true)
-                            {
-                                armadoCuerpoTabStr.Add(format.toShow(Math.Round((docmod.MONTO - docmod.MONTO_APOYO), 2), decimales));//B20180730 MGC 2018.07.30 Formatos
-                            }
-                            if (v.precio_x == true)
-                            {
-                                armadoCuerpoTabStr.Add(format.toShow(Math.Round(docmod.PRECIO_SUG, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
-                            }
+                                if (v.costoap_x == true)
+                                {
+                                    armadoCuerpoTabStr.Add(format.toShow(Math.Round((docmod.MONTO - docmod.MONTO_APOYO), 2), decimales));//B20180730 MGC 2018.07.30 Formatos
+                                }
+                                if (v.precio_x == true)
+                                {
+                                    armadoCuerpoTabStr.Add(format.toShow(Math.Round(docmod.PRECIO_SUG, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
+                                }
 
-                            //Volumen
-                            //B20180726 MGC 2018.07.26
-                            if (v.volumen_x == true)
+                                //Volumen
+                                //B20180726 MGC 2018.07.26
+                                if (v.volumen_x == true)
+                                {
+                                    if (fact)
+                                    {
+                                        armadoCuerpoTabStr.Add(format.toShowNum(Math.Round(Convert.ToDecimal(docmod.VOLUMEN_REAL), 2), decimales));//B20180730 MGC 2018.07.30 Formatos
+                                                                                                                                                   //carp.VOLUMEN_REAL = docmod.VOLUMEN_REAL;
+                                    }
+                                    else
+                                    {
+                                        armadoCuerpoTabStr.Add(format.toShowNum(Math.Round(Convert.ToDecimal(docmod.VOLUMEN_EST), 2), decimales));//B20180730 MGC 2018.07.30 Formatos
+                                                                                                                                                  //carp.VOLUMEN_EST = docmod.VOLUMEN_EST;
+                                    }
+                                }
+
+                                //Apoyo
+                                //B20180726 MGC 2018.07.26
+                                if (v.apoyototal_x == true)
+                                {
+                                    if (fact)
+                                    {
+                                        armadoCuerpoTabStr.Add(format.toShow(Math.Round(Convert.ToDecimal(docmod.APOYO_REAL), 2), decimales));//B20180730 MGC 2018.07.30 Formatos
+                                    }
+                                    else
+                                    {
+                                        armadoCuerpoTabStr.Add(format.toShow(Math.Round(Convert.ToDecimal(docmod.APOYO_EST), 2), decimales));//B20180730 MGC 2018.07.30 Formatos
+                                    }
+                                }
+                            }
+                            else
                             {
+                                armadoCuerpoTabStr.Add("");
+                                armadoCuerpoTabStr.Add(item2.MATKL);
+                                armadoCuerpoTabStr.Add(item2.TXT50);
+                                armadoCuerpoTabStr.Add(format.toShow(Math.Round(item2.MONTO, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
+                                armadoCuerpoTabStr.Add(format.toShowPorc(Math.Round(item2.PORC_APOYO, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
+                                armadoCuerpoTabStr.Add(format.toShow(Math.Round(item2.MONTO_APOYO, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
+                                armadoCuerpoTabStr.Add(format.toShow(Math.Round(item2.resta, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
+                                armadoCuerpoTabStr.Add(format.toShow(Math.Round(item2.PRECIO_SUG, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
+                                //B20180726 MGC 2018.07.26
                                 if (fact)
                                 {
-                                    armadoCuerpoTabStr.Add(format.toShowNum(Math.Round(Convert.ToDecimal(docmod.VOLUMEN_REAL), 2), decimales));//B20180730 MGC 2018.07.30 Formatos
-                                                                                                                                               //carp.VOLUMEN_REAL = docmod.VOLUMEN_REAL;
+                                    armadoCuerpoTabStr.Add(format.toShowNum(Math.Round(Convert.ToDecimal(item2.VOLUMEN_REAL), 2), decimales));//B20180730 MGC 2018.07.30 Formatos
+                                    armadoCuerpoTabStr.Add(format.toShow(Math.Round(Convert.ToDecimal(item2.APOYO_REAL), 2), decimales));//B20180730 MGC 2018.07.30 Formatos
                                 }
                                 else
                                 {
-                                    armadoCuerpoTabStr.Add(format.toShowNum(Math.Round(Convert.ToDecimal(docmod.VOLUMEN_EST), 2), decimales));//B20180730 MGC 2018.07.30 Formatos
-                                                                                                                                              //carp.VOLUMEN_EST = docmod.VOLUMEN_EST;
+                                     armadoCuerpoTabStr.Add(format.toShowNum(Math.Round(Convert.ToDecimal(item2.VOLUMEN_EST), 2), decimales));//B20180730 MGC 2018.07.30 Formatos
+                                    armadoCuerpoTabStr.Add(format.toShow(Math.Round(Convert.ToDecimal(item2.APOYO_EST), 2), decimales));//B20180730 MGC 2018.07.30 Formatos
                                 }
-                            }
 
-                            //Apoyo
-                            //B20180726 MGC 2018.07.26
-                            if (v.apoyototal_x == true)
-                            {
-                                if (fact)
-                                {
-                                    armadoCuerpoTabStr.Add(format.toShow(Math.Round(Convert.ToDecimal(docmod.APOYO_REAL), 2), decimales));//B20180730 MGC 2018.07.30 Formatos
-                                }
-                                else
-                                {
-                                    armadoCuerpoTabStr.Add(format.toShow(Math.Round(Convert.ToDecimal(docmod.APOYO_EST), 2), decimales));//B20180730 MGC 2018.07.30 Formatos
-                                }
                             }
 
                             contadorTabla++;

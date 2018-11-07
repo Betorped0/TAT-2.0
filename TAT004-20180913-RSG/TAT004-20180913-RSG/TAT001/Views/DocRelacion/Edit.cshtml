@@ -22,11 +22,9 @@
     {
         @Html.AntiForgeryToken()
         <div class="row right-align">
-            <div class="row">
-                <div class="col l12 m12">
-                    <a href="@Url.Action("Index", "DocRelacion")" class="btn btn-default">Lista</a>
-                    <input type="submit" value="Guardar" class="btn btn-default" />
-                </div>
+            <div class="col l12 m12">
+                <a href="@Url.Action("Index", "DocRelacion")" id="btnLista" class="btn btn-default">Lista</a>
+                <input type="submit" value="Guardar" id="btnGuardar" class="btn btn-default" />
             </div>
         </div>
         <div class="col 12 s12">

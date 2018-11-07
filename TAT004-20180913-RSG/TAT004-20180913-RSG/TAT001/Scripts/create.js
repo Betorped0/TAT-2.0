@@ -1188,6 +1188,7 @@ $(document).ready(function () {
         var checkf = $('#check_factura').is(':checked');
         if (checkf) {
             var monto = parseFloat(toNum($('#monto_dis').val()));
+            importe_fac = parseFloat(importe_fac.toFixed(2));
             if (importe_fac !== monto) {
                 msg += ', Informacion: Importet total de las facturas sea igual al monto en Distribucion';
                 res = false;
@@ -2700,7 +2701,8 @@ $('body').on('keydown', '.input_oper.numberd', function (e) {
 });
 
 $('body').on('focusout', '.input_oper', function () {
-
+    if (!materialesExist)
+        return;
     var t = $('#table_dis').DataTable();
     var tr = $(this).closest('tr'); //Obtener el row 
 
@@ -3219,7 +3221,7 @@ function GetMaterialesCatDetalle(jsval, catid, total, m_base) {
 
     var materiales = [];
 
-    if ($("#select_dis").val() !== "P") {//ADD RSG 03.11.2018
+    if ($("#select_neg").val() !== "P") {//ADD RSG 03.11.2018
         $.each(jsval, function (i, d) {
             var len = jsval.length;
             d.VAL = 100 / len;
@@ -3238,7 +3240,7 @@ function GetMaterialesCatDetalle(jsval, catid, total, m_base) {
             var por = 0;
 
             try {
-                if ($("#select_dis").val() !== "P") //ADD RSG 03.11.2018
+                if ($("#select_neg").val() !== "P") //ADD RSG 03.11.2018
                     por = d.VAL;
                 else
                     por = ((d.VAL * 100) / total);
@@ -3514,7 +3516,7 @@ function format(catid, idate, fdate, tot) {
         var total = 0;
         var categorias = GetCategoriasTableCat();
         //total = GetTotalTableCat(categorias);
-        if ($("#select_dis").val() === "P")
+        if ($("#select_neg").val() === "P")
             total = GetTotalTableCat(categorias);
         else
             total = toNum($('#monto_dis').val());
@@ -3522,7 +3524,7 @@ function format(catid, idate, fdate, tot) {
         //var m_base = $('#monto_dis').val();//RSG 09.07.2018
         var m_base = toNum($('#monto_dis').val());
         //m_base = parseFloat(m_base) | 0;
-        if ($("#select_dis").val() === "P")
+        if ($("#select_neg").val() === "P")
             m_base = parseFloat(m_base) | 0;
         else
             m_base = tot;
@@ -3828,8 +3830,9 @@ function loadExcelSop(file) {
                         //jemo 25-17-2018 inicio
                         dataj.PAYER,
                         dataj.DESCRIPCION,
-                        "$" + dataj.IMPORTE_FACT.toString().replace(/\D/g, "")//jemo 31-17-2018 inicio
-                            .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ","),//jemo 31-17-2018 fin
+                        //"$" + dataj.IMPORTE_FACT.toString().replace(/\D/g, "")//jemo 31-17-2018 inicio
+                        //    .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ","),//jemo 31-17-2018 fin
+                        toShow(dataj.IMPORTE_FACT.toString()),
                         dataj.BELNR
                         //jemo 25-17-2018 fin
                     ]).draw(false).node();
@@ -4013,7 +4016,7 @@ function addRowCatl(t, cat, exp, sel, ddate, adate, opt, porcentaje, total) {
         ddate + "", //col3
         adate + "",
         "", //Material
-        opt + "",
+        opt + "",//opt + "",//RSG 06.11.2018
         opt + "",
         //"<input class=\"" + reversa + " input_oper numberd input_dc\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
         //"<input class=\"" + reversa + " input_oper numberd input_dc\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
@@ -4763,6 +4766,7 @@ function evaluarDisTable() {
 
                     if (valp.ID == null || valp.ID == "") {
                         $(this).find('td').eq((5 + indext)).addClass("errorMaterial");
+                        res = "Error con el material";
                         return false;
                     } else if (trimStart('0', valp.ID) == val) {//RSG 07.06.2018
 
@@ -6057,5 +6061,28 @@ function cambiaLigada(campo) {
         $("#btnRango").css("display", "none");
         $("#btnDelRango").css("display", "none");
     }
+}
+function descargarArchivo(me) {
+    var form = document.createElement("form"),
+        Archivo = document.createElement("input");
+    form.method = "POST";
+    form.action = root + 'Solicitudes/Descargar';
+    Archivo.value = me.value;
+    Archivo.name = "archivo";
+    form.appendChild(Archivo);
+    document.body.appendChild(form);
+    form.submit();
+}
+
+function descargarArchivo(me) {
+    var form = document.createElement("form"),
+        Archivo = document.createElement("input");
+    form.method = "POST";
+    form.action = root + 'Solicitudes/Descargar';
+    Archivo.value = me.value;
+    Archivo.name = "archivo";
+    form.appendChild(Archivo);
+    document.body.appendChild(form);
+    form.submit();
 }
 

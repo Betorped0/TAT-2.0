@@ -14,7 +14,7 @@
         <div class="row right">
             <div class="col l12 m12 right">
                 @* <a href="@Url.Action("Details", "TSol", new { id = ViewBag.IdTsol })" class="waves-effect waves-light btn">REGRESAR</a>*@
-                <a href="@Url.Action("Create", "Consoporte", new { tsol = ViewBag.IdTsol })" class="waves-effect waves-light btn">AGREGAR</a>
+                <a href="@Url.Action("Create", "Consoporte", new { tsol = ViewBag.IdTsol })" id="btnCrear" class="waves-effect waves-light btn">AGREGAR</a>
             </div>
         </div>
     </div>
@@ -51,16 +51,16 @@
     <table class="table mdl-data-table striped" id="table" style="width:100%;">
         <thead>
             <tr class="header">
-                <th>
+                <th id="lblTSoporte">
                     Tipo de Soporte
                 </th>
-                <th>
+                <th id="idTSolicitud">
                     Tipo de Solicitud
                 </th>
                 @*<th>
                         @Html.DisplayNameFor(model => model.OBLIGATORIO)
                     </th>*@
-                <th>Activo</th>
+                <th id="idActivo">Activo</th>
                 <th></th>
             </tr>
         </thead>

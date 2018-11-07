@@ -13,7 +13,6 @@
 
     <link t href="~/Content/dropdowntree.css" rel="stylesheet" />
     <script src="~/Scripts/dropdowntree.js"></script>
-    <script src="~/Scripts/formatos.js"></script>
     <script src="~/Scripts/materialize2.js"></script>
     <input id="miles" name="miles" type="hidden" value="@ViewBag.miles">//LEJ 09.07.18
     <input id="dec" name="dec" type="hidden" value="@ViewBag.dec">//LEJ 09.07.18
@@ -49,7 +48,7 @@
                 </div>
                 @* ---DRS 3.10.2018--- *@
                 <div class="input-field col s2">
-                    @Html.EditorFor(model => model.D.USUARIO.BUNIT, "BU", new { htmlAttributes = new { @disabled = "disabled",@Value = Model.D.SOCIEDAD_ID } })
+                    @Html.EditorFor(model => model.D.USUARIO.BUNIT, "BU", new { htmlAttributes = new { @disabled = "disabled", @Value = Model.D.SOCIEDAD_ID } })
                     @Html.LabelFor(model => model.D.USUARIO.BUNIT, "BU", new { @class = "lbl_bu" })
                 </div>
                 @* ---DRS 3.10.2018--- *@
@@ -96,7 +95,7 @@
                                 var instance = M.FloatingActionButton.init(elem, options);
                             </script>
                             @*<a id="lbl_wfa" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="A" })">Aprobar</a>
-                    <a id="lbl_wfr" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="R" })">Rechazar</a>*@
+                                <a id="lbl_wfr" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="R" })">Rechazar</a>*@
                             <a class="btn-small modal-trigger" href="#modal1" onclick="aprobar()">Aprobar</a>
                             <a class="btn-small modal-trigger" href="#modal1" onclick="rechazar()">Rechazar</a>
                         }
@@ -199,7 +198,7 @@
                             }
                         }
                     }
-                    else if ((Model.D.ESTATUS.Equals("A") | Model.D.ESTATUS.Equals("R")) && (Model.D.TSOL.PADRE) /*&& Model.D.DOCUMENTORECs.Count < 1 && Model.D.DOCUMENTOLs.Count < 1*/)//RSG 20181002
+                    else if ((Model.D.ESTATUS.Equals("A") /*| Model.D.ESTATUS.Equals("R")*/) && (Model.D.TSOL.PADRE) /*&& Model.D.DOCUMENTORECs.Count < 1 && Model.D.DOCUMENTOLs.Count < 1*/)//RSG 20181002
                     {
 
                         using (TAT001Entities db = new TAT001Entities())
@@ -211,7 +210,7 @@
                                 if (Model.D.USUARIOC_ID == ViewBag.usuario.ID & Model.D.DOCUMENTO_SAP != null)
                                 {
                                     <div id="div_drop" class="col">
-                                        <a href="@Url.Action("Create", "Solicitudes", new { id_d = Model.D.NUM_DOC.ToString(), tsol = "CPR" })" class="btn-small">Reversar</a>
+                                        <a href="@Url.Action("Create", "Solicitudes", new { id_d = Model.D.NUM_DOC.ToString(), tsol = Model.D.TSOL.TSOLR })" class="btn-small">Reversar</a>
                                         @*<button type="button" class="btn-small  " id="btn_cancel">Cancelar</button>*@
                                         <button type="button" class="btn-small dropdown-trigger">Crear solicitud relacionada</button>
                                         <div id="list_rela" class="dropdowntree"></div>
@@ -269,7 +268,7 @@
                         }
                     }
                     @*//else
-            //{*@
+                        //{*@
                     if (Model.D.TSOL.CARTA)
                     {
                         @* ---DRS 13.10.2018--- *@
@@ -280,34 +279,37 @@
                         <ul id='list_carta' class='dropdown-content'>
                             @*
 
-                    <li><a href="@Url.Action(" Index", "CartaF" , new { id=Model.D.NUM_DOC })" id="lbl_list">Lista de cartas</a></li>*@ @*//B20180720P MGC Guardar Carta*@
-                    @* ---DRS 14.10.2018--- *@
-                    <li><a href="@Url.Action("Lista", "CartaV", new { id = Model.D.NUM_DOC, swf = Model.D.ESTATUS_WF })" id="lbl_list">Lista de cartas</a></li> @*//B20180720P MGC Guardar Carta*@
-                    @if (Model.D.ESTATUS_WF.Equals("S") && (Model.D.USUARIOD_ID == User.Identity.Name))
-                    {
-                        <li><a href="@Url.Action("Create", "CartaV", new { id = Model.D.NUM_DOC })" id="lbl_genc">Generar carta</a></li>
+                                <li><a href="@Url.Action(" Index", "CartaF" , new { id=Model.D.NUM_DOC })" id="lbl_list">Lista de cartas</a></li>*@ @*//B20180720P MGC Guardar Carta*@
+                                @* ---DRS 14.10.2018--- *@
+                                <li><a href="@Url.Action("Lista", "CartaV", new { id = Model.D.NUM_DOC, swf = Model.D.ESTATUS_WF })" id="lbl_list">Lista de cartas</a></li> @*//B20180720P MGC Guardar Carta*@
+                                @if (Model.D.ESTATUS_WF.Equals("S") && (Model.D.USUARIOD_ID == User.Identity.Name))
+                                {
+                                    <li><a href="@Url.Action("Create", "CartaV", new { id = Model.D.NUM_DOC })" id="lbl_genc">Generar carta</a></li>
+                                }
+                                else if (Model.D.ESTATUS_WF.Equals("F") || Model.D.ESTATUS_WF.Equals("S") || Model.D.ESTATUS_WF.Equals("R"))
+                                {
+                                    <li><a href="@Url.Action("Create", "CartaD", new { id = Model.D.NUM_DOC })" id="lbl_genc">Imprimir</a></li>
+                                }
+                                else
+                                {
+                                    <li><a href="@Url.Action("Create", "CartaD", new { id = Model.D.NUM_DOC })" id="lbl_genc">Imprimir draft</a></li>
+                                }
+                            </ul>
+                            <script>
+                                var elem = document.getElementById('btn_carta');
+                                var options = {
+                                    constrainWidth: false
+                                    //,hover: true
+                                };
+                                var instance = M.Dropdown.init(elem, options);
+                            </script>
+                        }
+                        @* } *@
                     }
-                    else if (Model.D.ESTATUS_WF.Equals("F") || Model.D.ESTATUS_WF.Equals("S") || Model.D.ESTATUS_WF.Equals("R"))
-                    {
-                        <li><a href="@Url.Action("Create", "CartaD", new { id = Model.D.NUM_DOC })" id="lbl_genc">Imprimir</a></li>
-                    }
-                    else
-                    {
-                        <li><a href="@Url.Action("Create", "CartaD", new { id = Model.D.NUM_DOC })" id="lbl_genc">Imprimir draft</a></li>
-                    }
-                </ul>
-                <script>
-                    var elem = document.getElementById('btn_carta');
-                    var options = {
-                        constrainWidth: false
-                        //,hover: true
-                    };
-                    var instance = M.Dropdown.init(elem, options);
-                </script>
-            }
-            @* } *@
-        }
-
+                @if (Model.D.FLUJOes.Count == 0)
+                {
+                    <a class="btn-small" href="@Url.Action("Nuevo", "Flujos", new { id = Model.D.NUM_DOC })">Enviar</a>
+                }
             </div>
         </div>
     </div>
@@ -362,10 +364,10 @@
             var instance = M.Tabs.init(el, options);
         </script>
     </div>
-                                                                if (ViewBag.acciones != null)
-                                                                {
-                                                                    using (Html.BeginForm("Procesa", "Flujos"))
-                                                                    {
+    if (ViewBag.acciones != null)
+    {
+        using (Html.BeginForm("Procesa", "Flujos"))
+        {
             <div id="modal1" class="modal  bottom-sheet">
                 @Html.AntiForgeryToken()
                 <div class="modal-content">
@@ -407,8 +409,8 @@
                     @*<a class="btn-small btn-default" href="@Url.Action("Details", "Solicitudes" , new { id=Model.F.NUM_DOC})">Cancelar</a>*@
                 </div>
             </div>
-                                                                        if (ViewBag.accion == "R")
-                                                                        {
+            if (ViewBag.accion == "R")
+            {
                 <div class="row" style="font-size:12px;">
                     <div class="col s12">
                         <div class="row" style="margin-bottom:0">
@@ -444,7 +446,7 @@
                         </div>
                     </div>
                 </div>
-                                                                        }
+            }
             <script>
 
                 var elem = document.getElementById('modal1');
@@ -487,10 +489,10 @@
                     document.getElementById("wf_estatus").value = 'A';
                 }
             </script>
-                                                                    }
-                                                                }
-                                                                if (ViewBag.tts.Count != 0)
-                                                                {
+        }
+    }
+    if (ViewBag.tts.Count != 0)
+    {
 
         <div class="row" style="font-size:12px;">
             <div class="col s12">
@@ -534,9 +536,9 @@
                 </div>
             </div>
         </div>
-                                                                }
-                                                                if (ViewBag.workflow.Count != 0)
-                                                                {
+    }
+    if (ViewBag.workflow.Count != 0)
+    {
         <div class="row" style="font-size:12px;">
             <div class="col s12">
                 <div class="card-panel">
@@ -591,7 +593,7 @@
                                         </td>
                                         <td width="30%"> @Html.DisplayFor(modelItem => f.COMENTARIO) </td>
                                     </tr>
-                                                }
+                                }
                             </tbody>
                         </table>
                     </div>
@@ -603,7 +605,7 @@
 }
 catch (Exception ee)
 {
-    TAT001.Common.Log.ErrorLogApp(ee,"View-Details","");
+    TAT001.Common.Log.ErrorLogApp(ee, "View-Details", "");
     Session["error"] = ee.Message.ToString();
     <script>
         document.location.replace(root + "Home/Index");
@@ -632,7 +634,7 @@ catch (Exception ee)
             type: "POST",
             url: root + 'Listas/getPresupuesto',
             dataType: "json",
-            data: { "kunnr": kunnr,periodo: periodo},
+            data: { "kunnr": kunnr, periodo: periodo },
 
             success: function (data) {
 
@@ -719,3 +721,5 @@ catch (Exception ee)
     }
 </script>
 
+
+<script src="~/Scripts/formatos.js"></script>
