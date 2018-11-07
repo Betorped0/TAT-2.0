@@ -1,4 +1,10 @@
 ﻿var tsols = "";
+var cargaInicialSpin = [];
+cargaInicialSpin[0] = false;
+cargaInicialSpin[1] = false;
+cargaInicialSpin[2] = false;
+cargaInicialSpin[3] = false;
+cargaInicialSpin[4] = false;
 //LEEMOS EL ARCHIVO UNA VEZ CARGADO AL ELEMENTO FILE INPUT
 $("#miMas").change(function () {
     var filenum = $('#miMas').get(0).files.length;
@@ -88,9 +94,7 @@ function procesarHoja1() {
 
                     //INICIO DEL CICLO FOR
                     $.each(data, function (i, dataj) {
-                        //if (i % 2 == 0) {
-                        //    var addedRow = addRowH1(table, dataj.NUM_DOC, dataj.TSOL_ID, dataj.GALL_ID, dataj.SOCIEDAD_ID, dataj.PAIS_ID, dataj.ESTADO, dataj.CIUDAD, dataj.CONCEPTO, dataj.NOTAS, dataj.PAYER_ID, dataj.PAYER_NOMBRE, dataj.CONTACTO_NOMBRE, dataj.CONTACTO_EMAIL, dataj.FECHAI_VIG, dataj.FECHAF_VIG, dataj.MONEDA_ID, dataj.VKORG, dataj.VTWEG);
-                        //}
+                        //if (i % 2 == 0) {//}  CONDICION PARA SOLO PARES
                         var addedRow = addRowH1(table, dataj.NUM_DOC, dataj.TSOL_ID, dataj.GALL_ID, dataj.SOCIEDAD_ID, dataj.PAIS_ID, dataj.ESTADO, dataj.CIUDAD, dataj.CONCEPTO, dataj.NOTAS, dataj.PAYER_ID, dataj.PAYER_NOMBRE, dataj.CONTACTO_NOMBRE, dataj.CONTACTO_EMAIL, dataj.FECHAI_VIG, dataj.FECHAF_VIG, dataj.MONEDA_ID, dataj.VKORG, dataj.VTWEG, errores[i], dataj.PAIS_NAME);
                         tsols += "." + dataj.NUM_DOC + "-" + dataj.TSOL_ID;//ADD RSG 05.11.2018
                     }); //FIN DEL FOR
@@ -102,15 +106,20 @@ function procesarHoja1() {
                     M.toast({ html: data });
                 }
             }
+            cargaInicialSpin[0] = true;
+            if (jQuery.inArray(false, cargaInicialSpin) == -1) {
+                checkRelacionada();
+                checkRelacionadaMat();
+                clearErrors();
+                document.getElementById("loader").style.display = "none";
+            }
         },
 
-        complete: function (data) {
-            //document.getElementById("loader").style.display = "none";
-            //document.getElementById("loader").style.display = "initial";
-        },
+        complete: function (data) { },
 
         error: function (xhr, httpStatusMessage, customErrorMessage) {
-            alert("Request couldn't be processed. Please try again later. the reason " + xhr.status + " : " + httpStatusMessage + " : " + customErrorMessage);
+            document.getElementById("loader").style.display = "none";
+            M.toast({ html: 'La solicitud no pudo ser procesada. Favor de intentarlo mas tarde. La causa ' + xhr.status + " : " + httpStatusMessage + " : " + customErrorMessage });
         }
     });
 }
@@ -781,6 +790,7 @@ $("#tab_info").click(function () {
 
 /////////////////////////////////////////////////////////HOJA 2 FUNCIONES Y ASIGNACIONES////////////////////////////////////////////////////////
 function procesarHoja2() {
+    //document.getElementById("loader").style.display = "initial";
     var table = $('#tab_test2').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" } });
     table.clear().draw();
 
@@ -802,7 +812,7 @@ function procesarHoja2() {
                     //INICIO DEL CICLO FOR
                     $.each(data, function (i, dataj) {
                         if (dataj.NUM_DOC != undefined)
-                        var addedRow = addRowH2(table, dataj.NUM_DOC, dataj.FACTURA, dataj.FECHA, dataj.PROVEEDOR, dataj.PROVEEDOR_NOMBRE, dataj.AUTORIZACION, dataj.VENCIMIENTO, dataj.FACTURAK, dataj.EJERCICIOK, errores[i], warnings[i]);
+                            var addedRow = addRowH2(table, dataj.NUM_DOC, dataj.FACTURA, dataj.FECHA, dataj.PROVEEDOR, dataj.PROVEEDOR_NOMBRE, dataj.AUTORIZACION, dataj.VENCIMIENTO, dataj.FACTURAK, dataj.EJERCICIOK, errores[i], warnings[i]);
 
                     }); //FIN DEL FOR
 
@@ -813,14 +823,21 @@ function procesarHoja2() {
                     M.toast({ html: data });
                 }
             }
+            cargaInicialSpin[1] = true;
+            if (jQuery.inArray(false, cargaInicialSpin) == -1) {
+                checkRelacionada();
+                checkRelacionadaMat();
+                clearErrors();
+                document.getElementById("loader").style.display = "none";
+            }
         },
-        complete: function (data) {
-            //validarErrores("tab_test2");
-        },
+
+        complete: function (data) { },
+
         error: function (xhr, httpStatusMessage, customErrorMessage) {
-            alert("Request couldn't be processed. Please try again later. the reason " + xhr.status + " : " + httpStatusMessage + " : " + customErrorMessage);
-        },
-        //async: false
+            document.getElementById("loader").style.display = "none";
+            M.toast({ html: 'La solicitud no pudo ser procesada. Favor de intentarlo mas tarde. La causa ' + xhr.status + " : " + httpStatusMessage + " : " + customErrorMessage });
+        }
     });
 
     //Actualizar los valores en la tabla
@@ -1182,14 +1199,21 @@ function procesarHoja3() {
                     M.toast({ html: data });
                 }
             }
+            cargaInicialSpin[2] = true;
+            if (jQuery.inArray(false, cargaInicialSpin) == -1) {
+                checkRelacionada();
+                checkRelacionadaMat();
+                clearErrors();
+                document.getElementById("loader").style.display = "none";
+            }
         },
-        complete: function (data) {
-            //validarErrores("tab_test3");
-        },
+
+        complete: function (data) { },
+
         error: function (xhr, httpStatusMessage, customErrorMessage) {
-            alert("Request couldn't be processed. Please try again later. the reason " + xhr.status + " : " + httpStatusMessage + " : " + customErrorMessage);
-        },
-        //async: false
+            document.getElementById("loader").style.display = "none";
+            M.toast({ html: 'La solicitud no pudo ser procesada. Favor de intentarlo mas tarde. La causa ' + xhr.status + " : " + httpStatusMessage + " : " + customErrorMessage });
+        }
     });
 
     //Actualizar los valores en la tabla
@@ -1467,14 +1491,21 @@ function procesarHoja4() {
                     M.toast({ html: data });
                 }
             }
+            cargaInicialSpin[3] = true;
+            if (jQuery.inArray(false, cargaInicialSpin) == -1) {
+                checkRelacionada();
+                checkRelacionadaMat();
+                clearErrors();
+                document.getElementById("loader").style.display = "none";
+            }
         },
-        complete: function (data) {
-            //validarErrores("tab_test4");
-        },
+
+        complete: function (data) { },
+
         error: function (xhr, httpStatusMessage, customErrorMessage) {
-            alert("Request couldn't be processed. Please try again later. the reason " + xhr.status + " : " + httpStatusMessage + " : " + customErrorMessage);
-        },
-        //async: false
+            document.getElementById("loader").style.display = "none";
+            M.toast({ html: 'La solicitud no pudo ser procesada. Favor de intentarlo mas tarde. La causa ' + xhr.status + " : " + httpStatusMessage + " : " + customErrorMessage });
+        }
     });
 
     //Actualizar los valores en la tabla
@@ -1531,8 +1562,11 @@ $('#tab_test4').on('keydown.autocomplete', '.input_material', function () {
     var col_index = $(this).parent().index();
     col_index = col_index + 2;
 
-    $(tr.find("td:eq(" + col_index + ")").children().addClass('' + row_index + 'materialDes' + col_index));
-    var materialDes = '.' + row_index + 'materialDes' + col_index;
+    //$(tr.find("td:eq(" + (col_index - 1) + ")").children().addClass('' + row_index + 'categoria' + (col_index - 1)));
+    var categoria = '.input_categoria';
+
+    $(tr.find("td:eq(" + col_index + ")").children().addClass('' + row_index + 'descripcion' + col_index));
+    var materialDes = '.' + row_index + 'descripcion' + col_index;
 
     auto(this).autocomplete({
         source: function (request, response) {
@@ -1543,7 +1577,7 @@ $('#tab_test4').on('keydown.autocomplete', '.input_material', function () {
                 data: { "Prefix": request.term },
                 success: function (data) {
                     response(auto.map(data, function (item) {
-                        return { label: trimStart('0', item.ID) + '-' + item.DESCRIPCION, value: trimStart('0', item.ID) };
+                        return { label: trimStart('0', item.ID) + '-' + item.CATEGORIA + '-' + item.DESCRIPCION, value: trimStart('0', item.ID) };
                     }))
                 }
             })
@@ -1557,6 +1591,7 @@ $('#tab_test4').on('keydown.autocomplete', '.input_material', function () {
         change: function (e, ui) {
             if (!(ui.item)) {
                 $(this).addClass("red white-text rojo");
+                $(tr.find("td:eq(" + (col_index - 1) + ")").children().val(""));
                 $(tr.find("td:eq(" + col_index + ")").children().val(""));
                 clearErrors();
                 //validarErrores("tab_test4");
@@ -1567,7 +1602,8 @@ $('#tab_test4').on('keydown.autocomplete', '.input_material', function () {
         select: function (event, ui) {
             var label = ui.item.label;
             label = label.split('-');
-            $(materialDes).val(label[1]);
+            $(categoria).val(label[1]);
+            $(materialDes).val(label[2]);
             $(this).removeClass("red white-text rojo");
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
             clearErrors();
@@ -1580,6 +1616,7 @@ $('#tab_test4').on('keydown.autocomplete', '.input_categoria', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
+    var num_doc = tr.find("td:eq(1)").children().val();
 
     $(tr.find("td:eq(" + col_index + ")").children().addClass('' + row_index + 'categoriaDes' + col_index));
 
@@ -1605,14 +1642,20 @@ $('#tab_test4').on('keydown.autocomplete', '.input_categoria', function () {
 
         change: function (e, ui) {
             if (!(ui.item)) {
+                $(tr.find("td:eq(" + (col_index - 1) + ")").children().val(""));
+                $(tr.find("td:eq(" + (col_index + 1) + ")").children().val(""));
                 $(this).addClass("red white-text rojo");
+                healtyCategoria(num_doc);
                 clearErrors();
                 e.target.value = "";
             }
         },
 
         select: function (event, ui) {
+            $(tr.find("td:eq(" + (col_index - 1) + ")").children().val(""));
+            $(tr.find("td:eq(" + (col_index + 1) + ")").children().val(""));
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+            healtyCategoria(num_doc);
             clearErrors();
         }
     });
@@ -1922,6 +1965,55 @@ $('#tab_test4').on('keydown', '.input_apoyo', function (e) {
     });
 });
 
+function healtyCategoria(num_doc) {
+    var tablaH4 = $('#tab_test4').DataTable();
+    var rowsCategoria = [];
+    var contador = 0;
+
+    for (var a = 0; a < tablaH4.rows().data().length; a++) {
+        var rowH4 = tablaH4.row(a).node();
+        var num_docH4 = $(rowH4).children().eq(1).children().val();
+        var categoria = $(rowH4).children().eq(6).children().val();
+
+        if (num_doc == num_docH4) {
+            rowsCategoria[contador] = categoria;
+            contador++;
+        }
+    }
+
+    $.ajax({
+        type: "POST",
+        url: 'getHealtCategoria',
+        dataType: "json",
+        data: { "categorias": rowsCategoria },
+        async: true,
+        success: function (data) {
+            if (data !== null | data !== "") {
+                var tablaH4 = $('#tab_test4').DataTable();
+                var pintaRojos = false;
+
+                if (jQuery.inArray(true, data) != -1) {
+                    if (jQuery.inArray(false, data) != -1) {
+                        pintaRojos = true;
+                    }
+                }
+
+                if (pintaRojos) {
+                    for (var a = 0; a < tablaH4.rows().data().length; a++) {
+                        var rowH4 = tablaH4.row(a).node();
+                        var num_docH4 = $(rowH4).children().eq(1).children().val();
+                        
+
+                        if (num_doc == num_docH4) {
+                            $(rowH4).children().eq(6).children().addClass('red white-text rojo');
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
 function validaApoyo(apoyo, colApoyo) {
     var tr = $(colApoyo).closest('tr'); //Obtener el row
     var errorSumMateriales = tr.find('td:eq(14) input').hasClass("errorCantidades");
@@ -2060,10 +2152,16 @@ function procesarHoja5() {
                 $('#tab_test5').css("font-size", "10px");
                 $('#tab_test5').css("display", "table");
             }
-            document.getElementById("loader").style.display = "none";
+            cargaInicialSpin[4] = true;
+            if (jQuery.inArray(false, cargaInicialSpin) == -1) {
+                checkRelacionada();
+                checkRelacionadaMat();
+                clearErrors();
+                document.getElementById("loader").style.display = "none";
+            }
         },
+
         complete: function (data) {
-            //validarErrores("tab_test5"); //RMG
             $(document).ready(function () {
                 $('#global_filter').removeAttr('disabled');
                 var tablaH5 = $('#tab_test5').DataTable();
@@ -2098,10 +2196,11 @@ function procesarHoja5() {
                 $("#tablesToexcel").removeAttr("disabled");
             });
         },
+
         error: function (xhr, httpStatusMessage, customErrorMessage) {
-            alert("Request couldn't be processed. Please try again later. the reason " + xhr.status + " : " + httpStatusMessage + " : " + customErrorMessage);
-        },
-        //async: false
+            document.getElementById("loader").style.display = "none";
+            M.toast({ html: 'La solicitud no pudo ser procesada. Favor de intentarlo mas tarde. La causa ' + xhr.status + " : " + httpStatusMessage + " : " + customErrorMessage });
+        }
     });
 }
 
@@ -2930,8 +3029,10 @@ function guardaDatos() {
             var err = "Error " + " " + status + " " + p3 + " " + p4;
             if (xhr.responseText && xhr.responseText[0] == "{")
                 err = JSON.parse(xhr.responseText).Message;
+            document.getElementById("loader").style.display = "none";
             //console.log(err);
         },
+
         async: true
     });
 
@@ -3042,6 +3143,11 @@ function guardaDatos() {
                 //    location.reload();
                 //}
             }
+        },
+
+        error: function (xhr, httpStatusMessage, customErrorMessage) {
+            document.getElementById("loader").style.display = "none";
+            M.toast({ html: 'Error al guardar archivo ' + xhr.status + " : " + httpStatusMessage + " : " + customErrorMessage });
         }
     });
 }
