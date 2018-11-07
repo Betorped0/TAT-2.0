@@ -46,107 +46,109 @@ namespace TAT001.Controllers
                 if (user.PUESTO_ID == 14)
                 {
                     pagina = 1101;
+                    //}
+                    foreach (var pais in user.SOCIEDADs)
+                    {
+                        db.Configuration.LazyLoadingEnabled = false;
+                        List<DOCUMENTO> documentos = db.DOCUMENTOes
+                    //.Where(d => comcodessplit.Contains(d.SOCIEDAD_ID) && periodsplit.Contains(d.PERIODO.ToString()) && yearsplit.Contains(d.EJERCICIO))
+                    .Include(d => d.CLIENTE)
+                    .Include(d => d.CARTAs)
+                    .Include(d => d.CUENTAGL)
+                    .Include(d => d.CUENTAGL1)
+                    .Include(d => d.GALL)
+                    .Include(d => d.PAI)
+                    .Include(d => d.SOCIEDAD)
+                    .Include(d => d.TALL)
+                    .Include(d => d.TSOL)
+                    .Include(d => d.USUARIO)
+                    .Include(d => d.DOCUMENTOAs)
+                    .Include(d => d.DOCUMENTOFs)
+                    .Include(d => d.DOCUMENTOLs)
+                    .Include(d => d.DOCUMENTONs)
+                    .Include(d => d.DOCUMENTOR)
+                    .Include(d => d.DOCUMENTOPs)
+                    .Include(d => d.DOCUMENTORECs)
+                    .Include(d => d.DOCUMENTOTS)
+                    .Include(d => d.FLUJOes).ToList();
+                        if (!string.IsNullOrEmpty(pais.ToString()))
+                        {
+                            documentos = documentos.Where(d => d.SOCIEDAD_ID.Equals(pais.BUKRS)).ToList();
+                        }
+
+                        foreach (DOCUMENTO dOCUMENTO in documentos)
+                        {
+                            Concentrado r1 = new Concentrado();
+                            r1.documento = dOCUMENTO;
+                            if (dOCUMENTO.PAYER_ID == null) continue;
+                            //dOCUMENTO.CLIENTE = db.CLIENTEs.Where(a => a.VKORG.Equals(dOCUMENTO.VKORG)
+                            //                                        & a.VTWEG.Equals(dOCUMENTO.VTWEG)
+                            //                                        & a.SPART.Equals(dOCUMENTO.SPART)
+                            //                                        & a.KUNNR.Equals(dOCUMENTO.PAYER_ID)).First();
+                            r1.CANAL = db.CANALs.Where(a => a.CANAL1.Equals(dOCUMENTO.CLIENTE.CANAL)).FirstOrDefault();
+                            var cuentas = (from C in db.CUENTAs
+                                           join cgl in db.CUENTAGLs on C.CARGO equals cgl.ID
+                                           where C.SOCIEDAD_ID == dOCUMENTO.SOCIEDAD_ID
+                                           & C.PAIS_ID == dOCUMENTO.PAIS_ID
+                                           & C.TALL_ID == dOCUMENTO.TALL_ID
+                                           & C.EJERCICIO.ToString() == dOCUMENTO.EJERCICIO
+                                           select new { C.ABONO, C.CARGO, C.CLEARING, C.LIMITE, cgl.NOMBRE }).FirstOrDefault();
+                            if (cuentas != null)
+                            {
+                                r1.CUENTA_ABONO = Convert.ToDecimal(cuentas.GetType().GetProperty("ABONO").GetValue(cuentas, null)); // Convertir a decimal por si es null
+                                r1.CUENTA_CARGO = Convert.ToDecimal(cuentas.GetType().GetProperty("CARGO").GetValue(cuentas, null));
+                                r1.CUENTA_CLEARING = Convert.ToDecimal(cuentas.GetType().GetProperty("CLEARING").GetValue(cuentas, null));
+                                r1.CUENTA_LIMITE = Convert.ToDecimal(cuentas.GetType().GetProperty("LIMITE").GetValue(cuentas, null));
+                                r1.CUENTA_CARGO_NOMBRE = cuentas.GetType().GetProperty("NOMBRE").GetValue(cuentas, null).ToString();
+                            }
+                            var proveedor = dOCUMENTO.DOCUMENTOFs.Select(df => df.PROVEEDOR).FirstOrDefault();
+                            r1.PROVEEDOR_NOMBRE = db.PROVEEDORs.Where(x => x.ID.Equals(proveedor)).Select(p => p.NOMBRE).FirstOrDefault();
+
+                            //r1.SEMANA = System.Globalization.CultureInfo.InvariantCulture.Calendar.GetWeekOfYear((DateTime)r1.documento.FECHAC, System.Globalization.CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+                            r1.SEMANA = (((DateTime)r1.documento.FECHAC).Day + ((int)((DateTime)r1.documento.FECHAC).DayOfWeek)) / 7 + 1;
+
+                            r1.STATUS = dOCUMENTO.ESTATUS_WF;
+                            r1.STATUSS1 = (dOCUMENTO.ESTATUS ?? " ") + (dOCUMENTO.ESTATUS_C ?? " ") + (dOCUMENTO.ESTATUS_SAP ?? " ") + (dOCUMENTO.ESTATUS_WF ?? " ");
+                            r1.STATUSS3 = (dOCUMENTO.TSOL.PADRE ? "P" : " ");
+                            var queryFlujo = (from f in db.FLUJOes
+                                              join wfp in db.WORKFPs on new { f.WORKF_ID, f.WF_VERSION, f.WF_POS } equals new { WORKF_ID = wfp.ID, WF_VERSION = wfp.VERSION, WF_POS = wfp.POS }
+                                              join ac in db.ACCIONs on wfp.ACCION_ID equals ac.ID
+                                              orderby f.POS descending
+                                              where f.NUM_DOC == dOCUMENTO.NUM_DOC
+                                              select ac.TIPO
+                                              ).FirstOrDefault();
+                            r1.STATUSS2 = ((queryFlujo == null) ? " " : queryFlujo.ToString());
+                            r1.STATUSS4 = ((from dr in db.DOCUMENTORECs
+                                            where dr.NUM_DOC == dOCUMENTO.NUM_DOC
+                                            select dr.NUM_DOC
+                                              ).ToList().Count > 0 ? "R" : " ");
+
+                            string estatuss = r1.STATUSS1 + r1.STATUSS2 + r1.STATUSS3 + r1.STATUSS4;
+                            if (r1.STATUS == "R")
+                            {
+                                r1.STATUSS = estatuss.Substring(0, 6);
+                                r1.STATUSS += db.USUARIOs.Where(y => y.ID == db.FLUJOes.Where(x => x.NUM_DOC == dOCUMENTO.NUM_DOC & x.ESTATUS == "R").OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID).FirstOrDefault().PUESTO_ID.ToString();
+                                r1.STATUSS += estatuss.Substring(6, 1);
+                            }
+                            else
+                            {
+                                r1.STATUSS = estatuss.Substring(0, 6) + " " + estatuss.Substring(6, 1); ;
+                            }
+                            Estatus e = new Estatus();
+                            r1.ESTATUS_STRING = e.getText(r1.STATUSS, dOCUMENTO.NUM_DOC);
+
+                            r1.DOCSREFREVERSOS = (from d in db.DOCUMENTOes
+                                                  join dr in db.DOCUMENTORs on d.NUM_DOC equals dr.NUM_DOC
+                                                  join tr in db.TREVERSATs on dr.TREVERSA_ID equals tr.TREVERSA_ID
+                                                  where tr.SPRAS_ID == user.SPRAS_ID
+                                                  where d.DOCUMENTO_REF == r1.documento.NUM_DOC
+                                                  select new { d, dr, tr }).FirstOrDefault();
+
+                            reporte.Add(r1);
+                        }
+                    }
+                    ViewBag.lista_reporte = reporte;
                 }
-                foreach (var pais in user.SOCIEDADs) {
-                    db.Configuration.LazyLoadingEnabled = false;
-                    List<DOCUMENTO> documentos = db.DOCUMENTOes
-                //.Where(d => comcodessplit.Contains(d.SOCIEDAD_ID) && periodsplit.Contains(d.PERIODO.ToString()) && yearsplit.Contains(d.EJERCICIO))
-                .Include(d => d.CLIENTE)
-                .Include(d => d.CARTAs)
-                .Include(d => d.CUENTAGL)
-                .Include(d => d.CUENTAGL1)
-                .Include(d => d.GALL)
-                .Include(d => d.PAI)
-                .Include(d => d.SOCIEDAD)
-                .Include(d => d.TALL)
-                .Include(d => d.TSOL)
-                .Include(d => d.USUARIO)
-                .Include(d => d.DOCUMENTOAs)
-                .Include(d => d.DOCUMENTOFs)
-                .Include(d => d.DOCUMENTOLs)
-                .Include(d => d.DOCUMENTONs)
-                .Include(d => d.DOCUMENTOR)
-                .Include(d => d.DOCUMENTOPs)
-                .Include(d => d.DOCUMENTORECs)
-                .Include(d => d.DOCUMENTOTS)
-                .Include(d => d.FLUJOes).ToList();
-                    if (!string.IsNullOrEmpty(pais.ToString()))
-                    {
-                        documentos = documentos.Where(d => d.SOCIEDAD_ID.Equals(pais.BUKRS)).ToList();
-                    }
-
-                    foreach (DOCUMENTO dOCUMENTO in documentos)
-                {
-                    Concentrado r1 = new Concentrado();
-                    r1.documento = dOCUMENTO;
-                    if (dOCUMENTO.PAYER_ID == null) continue;
-                    //dOCUMENTO.CLIENTE = db.CLIENTEs.Where(a => a.VKORG.Equals(dOCUMENTO.VKORG)
-                    //                                        & a.VTWEG.Equals(dOCUMENTO.VTWEG)
-                    //                                        & a.SPART.Equals(dOCUMENTO.SPART)
-                    //                                        & a.KUNNR.Equals(dOCUMENTO.PAYER_ID)).First();
-                    r1.CANAL = db.CANALs.Where(a => a.CANAL1.Equals(dOCUMENTO.CLIENTE.CANAL)).FirstOrDefault();
-                    var cuentas = (from C in db.CUENTAs
-                                   join cgl in db.CUENTAGLs on C.CARGO equals cgl.ID
-                                   where C.SOCIEDAD_ID == dOCUMENTO.SOCIEDAD_ID
-                                   & C.PAIS_ID == dOCUMENTO.PAIS_ID
-                                   & C.TALL_ID == dOCUMENTO.TALL_ID
-                                   & C.EJERCICIO.ToString() == dOCUMENTO.EJERCICIO
-                                   select new { C.ABONO, C.CARGO, C.CLEARING, C.LIMITE, cgl.NOMBRE }).FirstOrDefault();
-                    if (cuentas != null)
-                    {
-                        r1.CUENTA_ABONO = Convert.ToDecimal(cuentas.GetType().GetProperty("ABONO").GetValue(cuentas, null)); // Convertir a decimal por si es null
-                        r1.CUENTA_CARGO = Convert.ToDecimal(cuentas.GetType().GetProperty("CARGO").GetValue(cuentas, null));
-                        r1.CUENTA_CLEARING = Convert.ToDecimal(cuentas.GetType().GetProperty("CLEARING").GetValue(cuentas, null));
-                        r1.CUENTA_LIMITE = Convert.ToDecimal(cuentas.GetType().GetProperty("LIMITE").GetValue(cuentas, null));
-                        r1.CUENTA_CARGO_NOMBRE = cuentas.GetType().GetProperty("NOMBRE").GetValue(cuentas, null).ToString();
-                    }
-                    var proveedor = dOCUMENTO.DOCUMENTOFs.Select(df => df.PROVEEDOR).FirstOrDefault();
-                    r1.PROVEEDOR_NOMBRE = db.PROVEEDORs.Where(x => x.ID.Equals(proveedor)).Select(p => p.NOMBRE).FirstOrDefault();
-
-                    //r1.SEMANA = System.Globalization.CultureInfo.InvariantCulture.Calendar.GetWeekOfYear((DateTime)r1.documento.FECHAC, System.Globalization.CalendarWeekRule.FirstDay, DayOfWeek.Monday);
-                    r1.SEMANA = (((DateTime)r1.documento.FECHAC).Day + ((int)((DateTime)r1.documento.FECHAC).DayOfWeek)) / 7 + 1;
-
-                    r1.STATUS = dOCUMENTO.ESTATUS_WF;
-                    r1.STATUSS1 = (dOCUMENTO.ESTATUS ?? " ") + (dOCUMENTO.ESTATUS_C ?? " ") + (dOCUMENTO.ESTATUS_SAP ?? " ") + (dOCUMENTO.ESTATUS_WF ?? " ");
-                    r1.STATUSS3 = (dOCUMENTO.TSOL.PADRE ? "P" : " ");
-                    var queryFlujo = (from f in db.FLUJOes
-                                      join wfp in db.WORKFPs on new { f.WORKF_ID, f.WF_VERSION, f.WF_POS } equals new { WORKF_ID = wfp.ID, WF_VERSION = wfp.VERSION, WF_POS = wfp.POS }
-                                      join ac in db.ACCIONs on wfp.ACCION_ID equals ac.ID
-                                      orderby f.POS descending
-                                      where f.NUM_DOC == dOCUMENTO.NUM_DOC
-                                      select ac.TIPO
-                                      ).FirstOrDefault();
-                    r1.STATUSS2 = ((queryFlujo == null) ? " " : queryFlujo.ToString());
-                    r1.STATUSS4 = ((from dr in db.DOCUMENTORECs
-                                    where dr.NUM_DOC == dOCUMENTO.NUM_DOC
-                                    select dr.NUM_DOC
-                                      ).ToList().Count > 0 ? "R" : " ");
-
-                    string estatuss = r1.STATUSS1 + r1.STATUSS2 + r1.STATUSS3 + r1.STATUSS4;
-                    if (r1.STATUS == "R")
-                    {
-                        r1.STATUSS = estatuss.Substring(0, 6);
-                        r1.STATUSS += db.USUARIOs.Where(y => y.ID == db.FLUJOes.Where(x => x.NUM_DOC == dOCUMENTO.NUM_DOC & x.ESTATUS == "R").OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID).FirstOrDefault().PUESTO_ID.ToString();
-                        r1.STATUSS += estatuss.Substring(6, 1);
-                    }
-                    else
-                    {
-                        r1.STATUSS = estatuss.Substring(0, 6) + " " + estatuss.Substring(6, 1); ;
-                    }
-                    Estatus e = new Estatus();
-                    r1.ESTATUS_STRING = e.getText(r1.STATUSS, dOCUMENTO.NUM_DOC);
-
-                    r1.DOCSREFREVERSOS = (from d in db.DOCUMENTOes
-                                          join dr in db.DOCUMENTORs on d.NUM_DOC equals dr.NUM_DOC
-                                          join tr in db.TREVERSATs on dr.TREVERSA_ID equals tr.TREVERSA_ID
-                                          where tr.SPRAS_ID == user.SPRAS_ID
-                                          where d.DOCUMENTO_REF == r1.documento.NUM_DOC
-                                          select new { d, dr, tr }).FirstOrDefault();
-
-                    reporte.Add(r1);
-                }
-                }
-                ViewBag.lista_reporte = reporte;
                 try
                 {
                     string p = Session["pais"].ToString();
