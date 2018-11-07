@@ -984,6 +984,7 @@
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\sideMenu.css" />
     <Content Include="Content\subfilters\jquery.tablesorter.pager.css" />
+    <Content Include="Archivos\readme.txt" />
     <Content Include="Entities\TAT001.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>TAT001.edmx</DependentUpon>
