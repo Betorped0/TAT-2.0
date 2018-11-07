@@ -46,107 +46,120 @@ namespace TAT001.Controllers
                 if (user.PUESTO_ID == 14)
                 {
                     pagina = 1101;
-                }
-                foreach (var pais in user.SOCIEDADs) {
+                    //}
                     db.Configuration.LazyLoadingEnabled = false;
-                    List<DOCUMENTO> documentos = db.DOCUMENTOes
-                //.Where(d => comcodessplit.Contains(d.SOCIEDAD_ID) && periodsplit.Contains(d.PERIODO.ToString()) && yearsplit.Contains(d.EJERCICIO))
-                .Include(d => d.CLIENTE)
-                .Include(d => d.CARTAs)
-                .Include(d => d.CUENTAGL)
-                .Include(d => d.CUENTAGL1)
-                .Include(d => d.GALL)
-                .Include(d => d.PAI)
-                .Include(d => d.SOCIEDAD)
-                .Include(d => d.TALL)
-                .Include(d => d.TSOL)
-                .Include(d => d.USUARIO)
-                .Include(d => d.DOCUMENTOAs)
-                .Include(d => d.DOCUMENTOFs)
-                .Include(d => d.DOCUMENTOLs)
-                .Include(d => d.DOCUMENTONs)
-                .Include(d => d.DOCUMENTOR)
-                .Include(d => d.DOCUMENTOPs)
-                .Include(d => d.DOCUMENTORECs)
-                .Include(d => d.DOCUMENTOTS)
-                .Include(d => d.FLUJOes).ToList();
-                    if (!string.IsNullOrEmpty(pais.ToString()))
-                    {
-                        documentos = documentos.Where(d => d.SOCIEDAD_ID.Equals(pais.BUKRS)).ToList();
-                    }
-
-                    foreach (DOCUMENTO dOCUMENTO in documentos)
-                {
-                    Concentrado r1 = new Concentrado();
-                    r1.documento = dOCUMENTO;
-                    if (dOCUMENTO.PAYER_ID == null) continue;
-                    //dOCUMENTO.CLIENTE = db.CLIENTEs.Where(a => a.VKORG.Equals(dOCUMENTO.VKORG)
-                    //                                        & a.VTWEG.Equals(dOCUMENTO.VTWEG)
-                    //                                        & a.SPART.Equals(dOCUMENTO.SPART)
-                    //                                        & a.KUNNR.Equals(dOCUMENTO.PAYER_ID)).First();
-                    r1.CANAL = db.CANALs.Where(a => a.CANAL1.Equals(dOCUMENTO.CLIENTE.CANAL)).FirstOrDefault();
-                    var cuentas = (from C in db.CUENTAs
+                    List<DOCUMENTO> documentoS = db.DOCUMENTOes
+                    //.Where(d => comcodessplit.Contains(d.SOCIEDAD_ID) && periodsplit.Contains(d.PERIODO.ToString()) && yearsplit.Contains(d.EJERCICIO))
+                    .Include(d => d.CLIENTE)
+                    .Include(d => d.CARTAs)
+                    .Include(d => d.CUENTAGL)
+                    .Include(d => d.CUENTAGL1)
+                    .Include(d => d.GALL)
+                    .Include(d => d.PAI)
+                    .Include(d => d.SOCIEDAD)
+                    .Include(d => d.TALL)
+                    .Include(d => d.TSOL)
+                    .Include(d => d.USUARIO)
+                    .Include(d => d.DOCUMENTOAs)
+                    .Include(d => d.DOCUMENTOFs)
+                    .Include(d => d.DOCUMENTOLs)
+                    .Include(d => d.DOCUMENTONs)
+                    .Include(d => d.DOCUMENTOR)
+                    .Include(d => d.DOCUMENTOPs)
+                    .Include(d => d.DOCUMENTORECs)
+                    .Include(d => d.DOCUMENTOTS)
+                    .Include(d => d.FLUJOes).ToList();
+                    var cuentass = (from C in db.CUENTAs
                                    join cgl in db.CUENTAGLs on C.CARGO equals cgl.ID
-                                   where C.SOCIEDAD_ID == dOCUMENTO.SOCIEDAD_ID
-                                   & C.PAIS_ID == dOCUMENTO.PAIS_ID
-                                   & C.TALL_ID == dOCUMENTO.TALL_ID
-                                   & C.EJERCICIO.ToString() == dOCUMENTO.EJERCICIO
-                                   select new { C.ABONO, C.CARGO, C.CLEARING, C.LIMITE, cgl.NOMBRE }).FirstOrDefault();
-                    if (cuentas != null)
+                                   //where C.SOCIEDAD_ID == dOCUMENTO.SOCIEDAD_ID
+                                   //& C.PAIS_ID == dOCUMENTO.PAIS_ID
+                                   //& C.TALL_ID == dOCUMENTO.TALL_ID
+                                   //& C.EJERCICIO.ToString() == dOCUMENTO.EJERCICIO
+                                   select new {C.SOCIEDAD_ID, C.PAIS_ID, C.TALL_ID, C.EJERCICIO, C.ABONO, C.CARGO, C.CLEARING, C.LIMITE, cgl.NOMBRE }).ToList();
+                    foreach (var pais in user.SOCIEDADs)
                     {
-                        r1.CUENTA_ABONO = Convert.ToDecimal(cuentas.GetType().GetProperty("ABONO").GetValue(cuentas, null)); // Convertir a decimal por si es null
-                        r1.CUENTA_CARGO = Convert.ToDecimal(cuentas.GetType().GetProperty("CARGO").GetValue(cuentas, null));
-                        r1.CUENTA_CLEARING = Convert.ToDecimal(cuentas.GetType().GetProperty("CLEARING").GetValue(cuentas, null));
-                        r1.CUENTA_LIMITE = Convert.ToDecimal(cuentas.GetType().GetProperty("LIMITE").GetValue(cuentas, null));
-                        r1.CUENTA_CARGO_NOMBRE = cuentas.GetType().GetProperty("NOMBRE").GetValue(cuentas, null).ToString();
+                        List<DOCUMENTO> documentos = new List<DOCUMENTO>();
+                        if (!string.IsNullOrEmpty(pais.ToString()))
+                        {
+                            documentos = documentoS.Where(d => d.SOCIEDAD_ID.Equals(pais.BUKRS)).ToList();
+                        }
+
+                        foreach (DOCUMENTO dOCUMENTO in documentos)
+                        {
+                            Concentrado r1 = new Concentrado();
+                            r1.documento = dOCUMENTO;
+                            if (dOCUMENTO.PAYER_ID == null) continue;
+                            //dOCUMENTO.CLIENTE = db.CLIENTEs.Where(a => a.VKORG.Equals(dOCUMENTO.VKORG)
+                            //                                        & a.VTWEG.Equals(dOCUMENTO.VTWEG)
+                            //                                        & a.SPART.Equals(dOCUMENTO.SPART)
+                            //                                        & a.KUNNR.Equals(dOCUMENTO.PAYER_ID)).First();
+                            r1.CANAL = db.CANALs.Where(a => a.CANAL1.Equals(dOCUMENTO.CLIENTE.CANAL)).FirstOrDefault();
+                            //var cuentas = (from C in db.CUENTAs
+                            //               join cgl in db.CUENTAGLs on C.CARGO equals cgl.ID
+                            var cuentas = (from C in cuentass
+                                           where C.SOCIEDAD_ID == dOCUMENTO.SOCIEDAD_ID
+                                           & C.PAIS_ID == dOCUMENTO.PAIS_ID
+                                           & C.TALL_ID == dOCUMENTO.TALL_ID
+                                           & C.EJERCICIO.ToString() == dOCUMENTO.EJERCICIO
+                                           select new { C.ABONO, C.CARGO, C.CLEARING, C.LIMITE, C.NOMBRE }).FirstOrDefault();
+                            if (cuentas != null)
+                            {
+                                r1.CUENTA_ABONO = Convert.ToDecimal(cuentas.GetType().GetProperty("ABONO").GetValue(cuentas, null)); // Convertir a decimal por si es null
+                                r1.CUENTA_CARGO = Convert.ToDecimal(cuentas.GetType().GetProperty("CARGO").GetValue(cuentas, null));
+                                r1.CUENTA_CLEARING = Convert.ToDecimal(cuentas.GetType().GetProperty("CLEARING").GetValue(cuentas, null));
+                                r1.CUENTA_LIMITE = Convert.ToDecimal(cuentas.GetType().GetProperty("LIMITE").GetValue(cuentas, null));
+                                r1.CUENTA_CARGO_NOMBRE = cuentas.GetType().GetProperty("NOMBRE").GetValue(cuentas, null).ToString();
+                            }
+                            var proveedor = dOCUMENTO.DOCUMENTOFs.Select(df => df.PROVEEDOR).FirstOrDefault();
+                            r1.PROVEEDOR_NOMBRE = db.PROVEEDORs.Where(x => x.ID.Equals(proveedor)).Select(p => p.NOMBRE).FirstOrDefault();
+
+                            //r1.SEMANA = System.Globalization.CultureInfo.InvariantCulture.Calendar.GetWeekOfYear((DateTime)r1.documento.FECHAC, System.Globalization.CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+                            r1.SEMANA = (((DateTime)r1.documento.FECHAC).Day + ((int)((DateTime)r1.documento.FECHAC).DayOfWeek)) / 7 + 1;
+
+                            r1.STATUS = dOCUMENTO.ESTATUS_WF;
+                            r1.STATUSS1 = (dOCUMENTO.ESTATUS ?? " ") + (dOCUMENTO.ESTATUS_C ?? " ") + (dOCUMENTO.ESTATUS_SAP ?? " ") + (dOCUMENTO.ESTATUS_WF ?? " ");
+                            r1.STATUSS3 = (dOCUMENTO.TSOL.PADRE ? "P" : " ");
+                            //var queryFlujo = (from f in db.FLUJOes
+                            var queryFlujo = (from f in dOCUMENTO.FLUJOes
+                                              join wfp in db.WORKFPs on new { f.WORKF_ID, f.WF_VERSION, f.WF_POS } equals new { WORKF_ID = wfp.ID, WF_VERSION = wfp.VERSION, WF_POS = wfp.POS }
+                                              join ac in db.ACCIONs on wfp.ACCION_ID equals ac.ID
+                                              orderby f.POS descending
+                                              where f.NUM_DOC == dOCUMENTO.NUM_DOC
+                                              select ac.TIPO
+                                              ).FirstOrDefault();
+                            r1.STATUSS2 = ((queryFlujo == null) ? " " : queryFlujo.ToString());
+                            //r1.STATUSS4 = ((from dr in db.DOCUMENTORECs
+                            r1.STATUSS4 = ((from dr in dOCUMENTO.DOCUMENTORECs
+                                            where dr.NUM_DOC == dOCUMENTO.NUM_DOC
+                                            select dr.NUM_DOC
+                                              ).ToList().Count > 0 ? "R" : " ");
+
+                            string estatuss = r1.STATUSS1 + r1.STATUSS2 + r1.STATUSS3 + r1.STATUSS4;
+                            if (r1.STATUS == "R")
+                            {
+                                r1.STATUSS = estatuss.Substring(0, 6);
+                                r1.STATUSS += db.USUARIOs.Where(y => y.ID == db.FLUJOes.Where(x => x.NUM_DOC == dOCUMENTO.NUM_DOC & x.ESTATUS == "R").OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID).FirstOrDefault().PUESTO_ID.ToString();
+                                r1.STATUSS += estatuss.Substring(6, 1);
+                            }
+                            else
+                            {
+                                r1.STATUSS = estatuss.Substring(0, 6) + " " + estatuss.Substring(6, 1); ;
+                            }
+                            Estatus e = new Estatus();
+                            r1.ESTATUS_STRING = e.getText(r1.STATUSS, dOCUMENTO.NUM_DOC);
+
+                            r1.DOCSREFREVERSOS = (from d in db.DOCUMENTOes
+                                                  join dr in db.DOCUMENTORs on d.NUM_DOC equals dr.NUM_DOC
+                                                  join tr in db.TREVERSATs on dr.TREVERSA_ID equals tr.TREVERSA_ID
+                                                  where tr.SPRAS_ID == user.SPRAS_ID
+                                                  where d.DOCUMENTO_REF == r1.documento.NUM_DOC
+                                                  select new { d, dr, tr }).FirstOrDefault();
+
+                            reporte.Add(r1);
+                        }
                     }
-                    var proveedor = dOCUMENTO.DOCUMENTOFs.Select(df => df.PROVEEDOR).FirstOrDefault();
-                    r1.PROVEEDOR_NOMBRE = db.PROVEEDORs.Where(x => x.ID.Equals(proveedor)).Select(p => p.NOMBRE).FirstOrDefault();
-
-                    //r1.SEMANA = System.Globalization.CultureInfo.InvariantCulture.Calendar.GetWeekOfYear((DateTime)r1.documento.FECHAC, System.Globalization.CalendarWeekRule.FirstDay, DayOfWeek.Monday);
-                    r1.SEMANA = (((DateTime)r1.documento.FECHAC).Day + ((int)((DateTime)r1.documento.FECHAC).DayOfWeek)) / 7 + 1;
-
-                    r1.STATUS = dOCUMENTO.ESTATUS_WF;
-                    r1.STATUSS1 = (dOCUMENTO.ESTATUS ?? " ") + (dOCUMENTO.ESTATUS_C ?? " ") + (dOCUMENTO.ESTATUS_SAP ?? " ") + (dOCUMENTO.ESTATUS_WF ?? " ");
-                    r1.STATUSS3 = (dOCUMENTO.TSOL.PADRE ? "P" : " ");
-                    var queryFlujo = (from f in db.FLUJOes
-                                      join wfp in db.WORKFPs on new { f.WORKF_ID, f.WF_VERSION, f.WF_POS } equals new { WORKF_ID = wfp.ID, WF_VERSION = wfp.VERSION, WF_POS = wfp.POS }
-                                      join ac in db.ACCIONs on wfp.ACCION_ID equals ac.ID
-                                      orderby f.POS descending
-                                      where f.NUM_DOC == dOCUMENTO.NUM_DOC
-                                      select ac.TIPO
-                                      ).FirstOrDefault();
-                    r1.STATUSS2 = ((queryFlujo == null) ? " " : queryFlujo.ToString());
-                    r1.STATUSS4 = ((from dr in db.DOCUMENTORECs
-                                    where dr.NUM_DOC == dOCUMENTO.NUM_DOC
-                                    select dr.NUM_DOC
-                                      ).ToList().Count > 0 ? "R" : " ");
-
-                    string estatuss = r1.STATUSS1 + r1.STATUSS2 + r1.STATUSS3 + r1.STATUSS4;
-                    if (r1.STATUS == "R")
-                    {
-                        r1.STATUSS = estatuss.Substring(0, 6);
-                        r1.STATUSS += db.USUARIOs.Where(y => y.ID == db.FLUJOes.Where(x => x.NUM_DOC == dOCUMENTO.NUM_DOC & x.ESTATUS == "R").OrderByDescending(a => a.POS).FirstOrDefault().USUARIOA_ID).FirstOrDefault().PUESTO_ID.ToString();
-                        r1.STATUSS += estatuss.Substring(6, 1);
-                    }
-                    else
-                    {
-                        r1.STATUSS = estatuss.Substring(0, 6) + " " + estatuss.Substring(6, 1); ;
-                    }
-                    Estatus e = new Estatus();
-                    r1.ESTATUS_STRING = e.getText(r1.STATUSS, dOCUMENTO.NUM_DOC);
-
-                    r1.DOCSREFREVERSOS = (from d in db.DOCUMENTOes
-                                          join dr in db.DOCUMENTORs on d.NUM_DOC equals dr.NUM_DOC
-                                          join tr in db.TREVERSATs on dr.TREVERSA_ID equals tr.TREVERSA_ID
-                                          where tr.SPRAS_ID == user.SPRAS_ID
-                                          where d.DOCUMENTO_REF == r1.documento.NUM_DOC
-                                          select new { d, dr, tr }).FirstOrDefault();
-
-                    reporte.Add(r1);
-                }
-                }
-                ViewBag.lista_reporte = reporte;
+                    ViewBag.lista_reporte = reporte;
+                }//ADD RSG 07.11.2018
                 try
                 {
                     string p = Session["pais"].ToString();
@@ -241,7 +254,7 @@ namespace TAT001.Controllers
                     {
                         FLUJO flujo = db.FLUJOes.Include("USUARIO").Where(x => x.NUM_DOC == item.NUM_DOC & x.ESTATUS == "R").OrderByDescending(a => a.POS).FirstOrDefault();
                         item.ESTATUSS = item.ESTATUSS.Substring(0, 6) +
-                                        (flujo.USUARIO!=null? flujo.USUARIO.PUESTO_ID.ToString():"") +
+                                        (flujo.USUARIO != null ? flujo.USUARIO.PUESTO_ID.ToString() : "") +
                                         item.ESTATUSS.Substring(6, 2);
                     }
                     else
@@ -280,7 +293,7 @@ namespace TAT001.Controllers
                     }
                     catch { }
                     ld.CONCEPTO = item.CONCEPTO;
-                    ld.MONTO_DOC_ML =item.MONTO_DOC_MD!=null? Convert.ToDecimal(item.MONTO_DOC_MD).ToString("C"):"";
+                    ld.MONTO_DOC_ML = item.MONTO_DOC_MD != null ? Convert.ToDecimal(item.MONTO_DOC_MD).ToString("C") : "";
 
                     ld.FACTURA = item.FACTURA;
                     ld.FACTURAK = item.FACTURAK;
@@ -338,7 +351,7 @@ namespace TAT001.Controllers
             }
         }
         [HttpGet]
-        public ActionResult SelPais(string pais, string returnUrl,string sociedad_id)
+        public ActionResult SelPais(string pais, string returnUrl, string sociedad_id)
         {
             Session["pais"] = pais.ToUpper();
             Session["sociedad_id"] = sociedad_id;
@@ -374,14 +387,14 @@ namespace TAT001.Controllers
                 ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
                 ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
 
-               
+
                 var p = (from P in db.PAIS.ToList()
-                        join C in db.CLIENTEs.Where(x => x.ACTIVO == true).ToList()
-                        on P.LAND equals C.LAND
-                        join U in db.USUARIOFs.Where(x => x.USUARIO_ID == u & x.ACTIVO == true)
-                        on new { C.VKORG, C.VTWEG, C.SPART, C.KUNNR } equals new { U.VKORG, U.VTWEG, U.SPART, U.KUNNR }
-                        where P.ACTIVO == true
-                        select  P).DistinctBy(x=>x.LAND);
+                         join C in db.CLIENTEs.Where(x => x.ACTIVO == true).ToList()
+                         on P.LAND equals C.LAND
+                         join U in db.USUARIOFs.Where(x => x.USUARIO_ID == u & x.ACTIVO == true)
+                         on new { C.VKORG, C.VTWEG, C.SPART, C.KUNNR } equals new { U.VKORG, U.VTWEG, U.SPART, U.KUNNR }
+                         where P.ACTIVO == true
+                         select P).DistinctBy(x => x.LAND);
 
                 List<Delegados> delegados = new List<Delegados>();
                 DateTime fecha = DateTime.Now.Date;
@@ -389,7 +402,7 @@ namespace TAT001.Controllers
                 //List<TAT001.Entities.DELEGAR> del = db.DELEGARs.Where(a => a.USUARIOD_ID.Equals(u)).ToList();
                 foreach (DELEGAR de in del)
                 {
-                  
+
                     var pd = (from P in db.PAIS.ToList()
                               join C in db.CLIENTEs.Where(x => x.ACTIVO == true).ToList()
                               on P.LAND equals C.LAND
@@ -449,8 +462,8 @@ namespace TAT001.Controllers
             string u = User.Identity.Name;
             var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
 
-            string us = "";            
-                us = User.Identity.Name;
+            string us = "";
+            us = User.Identity.Name;
 
             List<CSP_DOCUMENTOSXUSER_Result> dOCUMENTOes = db.CSP_DOCUMENTOSXUSER(us, user.SPRAS_ID).ToList();
 
@@ -482,7 +495,7 @@ namespace TAT001.Controllers
                 }
                 Estatus e = new Estatus();
                 ld.ESTATUS = e.getText(item.ESTATUSS, ld.NUM_DOC);
-                ld.ESTATUS_CLASS =  e.getClass(item.ESTATUSS, ld.NUM_DOC);
+                ld.ESTATUS_CLASS = e.getClass(item.ESTATUSS, ld.NUM_DOC);
                 //ld.ESTATUS = e.getText(item.ESTATUSS);
                 //ld.ESTATUS_CLASS = e.getClass(item.ESTATUSS);
 
@@ -565,7 +578,7 @@ namespace TAT001.Controllers
 
                 listaDocs.Add(ld);
             }
-            generarExcelHome(listaDocs.OrderByDescending(t=>t.FECHAD).ThenByDescending(t=>t.HORAC).ThenByDescending(t=>t.NUM_DOC).ToList(), Server.MapPath("~/pdfTemp/"));
+            generarExcelHome(listaDocs.OrderByDescending(t => t.FECHAD).ThenByDescending(t => t.HORAC).ThenByDescending(t => t.NUM_DOC).ToList(), Server.MapPath("~/pdfTemp/"));
             return File(Server.MapPath("~/pdfTemp/Doc" + DateTime.Now.ToShortDateString() + ".xlsx"), "application /vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Doc" + DateTime.Now.ToShortDateString() + ".xlsx");
         }
 
@@ -796,7 +809,7 @@ namespace TAT001.Controllers
                       },
                     };
                     //Verdes
-                    if (lst[i - 2].ESTATUS_CLASS == "new badge green darken-1 white-text " || lst[i - 2].ESTATUS_CLASS == "lbl_txt new badge green darken-1 white-text"|| lst[i - 2].ESTATUS_CLASS == "lbl_rev new badge green darken-1 white-text")
+                    if (lst[i - 2].ESTATUS_CLASS == "new badge green darken-1 white-text " || lst[i - 2].ESTATUS_CLASS == "lbl_txt new badge green darken-1 white-text" || lst[i - 2].ESTATUS_CLASS == "lbl_rev new badge green darken-1 white-text")
                     {
                         worksheet.Cell("G" + i).Value = new[]
                     {
@@ -818,7 +831,7 @@ namespace TAT001.Controllers
                 };
                         worksheet.Range("G" + i + ":G" + i).Style.Font.SetFontColor(XLColor.White).Fill.SetBackgroundColor(XLColor.FromHtml("#616161")).Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center).Font.SetBold(true);
                     }
-                    else if (lst[i - 2].ESTATUS_CLASS == "new badge yellow darken-1 white-text " || lst[i - 2].ESTATUS_CLASS == "lbl_ts yellow darken-2 white-text new badge" || lst[i-2].ESTATUS_CLASS== "lbl_soporte new badge yellow darken-2 white-text ")
+                    else if (lst[i - 2].ESTATUS_CLASS == "new badge yellow darken-1 white-text " || lst[i - 2].ESTATUS_CLASS == "lbl_ts yellow darken-2 white-text new badge" || lst[i - 2].ESTATUS_CLASS == "lbl_soporte new badge yellow darken-2 white-text ")
                     {
                         worksheet.Cell("G" + i).Value = new[]
               {
@@ -840,7 +853,7 @@ namespace TAT001.Controllers
                 };
                         worksheet.Range("G" + i + ":G" + i).Style.Font.SetFontColor(XLColor.White).Fill.SetBackgroundColor(XLColor.FromHtml("#f57c00")).Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center).Font.SetBold(true);
                     }//Rojos
-                    else if (lst[i - 2].ESTATUS_CLASS == "new badge red darken-1 white-text " || lst[i-2].ESTATUS_CLASS== "lbl_txt new badge red darken-1 white-text " || lst[i - 2].ESTATUS_CLASS == "lbl_cancelled new badge red darken-1 white-text")
+                    else if (lst[i - 2].ESTATUS_CLASS == "new badge red darken-1 white-text " || lst[i - 2].ESTATUS_CLASS == "lbl_txt new badge red darken-1 white-text " || lst[i - 2].ESTATUS_CLASS == "lbl_cancelled new badge red darken-1 white-text")
                     {
                         worksheet.Cell("G" + i).Value = new[]
                     {
@@ -858,16 +871,16 @@ namespace TAT001.Controllers
                         },
                       };
                     //Para sacar el Nombre "I" y "J"
-                            worksheet.Cell("I" + i).Value = new[]
-                            {
+                    worksheet.Cell("I" + i).Value = new[]
+                    {
                                 //List Clientes y for para sacar su name 
                                 new {
                                     BANNER = lst[i-2].CLIENTE
                                 },
                             };
-                            
-                            worksheet.Cell("J" + i).Value = new[]
-                            {
+
+                    worksheet.Cell("J" + i).Value = new[]
+                    {
                                 //   List Clientes y for para sacar su name
                                 new
                                 {
@@ -887,8 +900,8 @@ namespace TAT001.Controllers
                         },
                     };
 
-                            worksheet.Cell("M" + i).Value = new[]
-                            {
+                    worksheet.Cell("M" + i).Value = new[]
+                    {
                                 new {
                                     BANNER       = lst[i-2].CUENTAP
                                 },
@@ -918,15 +931,15 @@ namespace TAT001.Controllers
                             BANNER       = lst[i-2].MONTO_DOC_ML
                         },
                     };
-                            worksheet.Cell("R" + i).Value = new[]
-                            {
+                    worksheet.Cell("R" + i).Value = new[]
+                    {
                                 new {
                                     BANNER       =lst[i-2].FACTURA
                                 },
                             };
 
-                            worksheet.Cell("S" + i).Value = new[]
-                            {
+                    worksheet.Cell("S" + i).Value = new[]
+                    {
                                 new {
                                     BANNER       = lst[i-2].FACTURAK
                                 },
