@@ -95,7 +95,7 @@
                                 var instance = M.FloatingActionButton.init(elem, options);
                             </script>
                             @*<a id="lbl_wfa" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="A" })">Aprobar</a>
-                                <a id="lbl_wfr" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="R" })">Rechazar</a>*@
+                    <a id="lbl_wfr" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="R" })">Rechazar</a>*@
                             <a class="btn-small modal-trigger" href="#modal1" onclick="aprobar()">Aprobar</a>
                             <a class="btn-small modal-trigger" href="#modal1" onclick="rechazar()">Rechazar</a>
                         }
@@ -267,8 +267,9 @@
                             <a class="btn-small" id="lbl_wfn" href="@Url.Action("Edit", "Solicitudes", new { id_d = Model.D.NUM_DOC })">Editar</a>
                         }
                     }
+                    <a class="btn-small" id="lbl_dupp" href="@Url.Action("Create", "Solicitudes", new { id_d = Model.D.NUM_DOC, tsol = Model.D.TSOL_ID, dp = "X" })">Duplicar</a><!--RSG 31.10.2018-->
                     @*//else
-                        //{*@
+            //{*@
                     if (Model.D.TSOL.CARTA)
                     {
                         @* ---DRS 13.10.2018--- *@
@@ -279,33 +280,33 @@
                         <ul id='list_carta' class='dropdown-content'>
                             @*
 
-                                <li><a href="@Url.Action(" Index", "CartaF" , new { id=Model.D.NUM_DOC })" id="lbl_list">Lista de cartas</a></li>*@ @*//B20180720P MGC Guardar Carta*@
-                                @* ---DRS 14.10.2018--- *@
-                                <li><a href="@Url.Action("Lista", "CartaV", new { id = Model.D.NUM_DOC, swf = Model.D.ESTATUS_WF })" id="lbl_list">Lista de cartas</a></li> @*//B20180720P MGC Guardar Carta*@
-                                @if (Model.D.ESTATUS_WF.Equals("S") && (Model.D.USUARIOD_ID == User.Identity.Name))
-                                {
-                                    <li><a href="@Url.Action("Create", "CartaV", new { id = Model.D.NUM_DOC })" id="lbl_genc">Generar carta</a></li>
-                                }
-                                else if (Model.D.ESTATUS_WF.Equals("F") || Model.D.ESTATUS_WF.Equals("S") || Model.D.ESTATUS_WF.Equals("R"))
-                                {
-                                    <li><a href="@Url.Action("Create", "CartaD", new { id = Model.D.NUM_DOC })" id="lbl_genc">Imprimir</a></li>
-                                }
-                                else
-                                {
-                                    <li><a href="@Url.Action("Create", "CartaD", new { id = Model.D.NUM_DOC })" id="lbl_genc">Imprimir draft</a></li>
-                                }
-                            </ul>
-                            <script>
-                                var elem = document.getElementById('btn_carta');
-                                var options = {
-                                    constrainWidth: false
-                                    //,hover: true
-                                };
-                                var instance = M.Dropdown.init(elem, options);
-                            </script>
-                        }
-                        @* } *@
+                    <li><a href="@Url.Action(" Index", "CartaF" , new { id=Model.D.NUM_DOC })" id="lbl_list">Lista de cartas</a></li>*@ @*//B20180720P MGC Guardar Carta*@
+                    @* ---DRS 14.10.2018--- *@
+                    <li><a href="@Url.Action("Lista", "CartaV", new { id = Model.D.NUM_DOC, swf = Model.D.ESTATUS_WF })" id="lbl_list">Lista de cartas</a></li> @*//B20180720P MGC Guardar Carta*@
+                    @if (Model.D.ESTATUS_WF.Equals("S") && (Model.D.USUARIOD_ID == User.Identity.Name))
+                    {
+                        <li><a href="@Url.Action("Create", "CartaV", new { id = Model.D.NUM_DOC })" id="lbl_genc">Generar carta</a></li>
                     }
+                    else if (Model.D.ESTATUS_WF.Equals("F") || Model.D.ESTATUS_WF.Equals("S") || Model.D.ESTATUS_WF.Equals("R"))
+                    {
+                        <li><a href="@Url.Action("Create", "CartaD", new { id = Model.D.NUM_DOC })" id="lbl_genc">Imprimir</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="@Url.Action("Create", "CartaD", new { id = Model.D.NUM_DOC })" id="lbl_genc">Imprimir draft</a></li>
+                    }
+                </ul>
+                <script>
+                    var elem = document.getElementById('btn_carta');
+                    var options = {
+                        constrainWidth: false
+                        //,hover: true
+                    };
+                    var instance = M.Dropdown.init(elem, options);
+                </script>
+            }
+            @* } *@
+        }
                 @if (Model.D.FLUJOes.Count == 0)
                 {
                     <a class="btn-small" href="@Url.Action("Nuevo", "Flujos", new { id = Model.D.NUM_DOC })">Enviar</a>
