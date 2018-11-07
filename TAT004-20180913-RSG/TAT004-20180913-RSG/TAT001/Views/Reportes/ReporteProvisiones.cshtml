@@ -40,8 +40,9 @@
 @using (Html.BeginForm("ReporteProvisiones", "Reportes", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
+    System.Globalization.TextInfo myTI = new System.Globalization.CultureInfo("en-US", false).TextInfo;
+    System.Globalization.DateTimeFormatInfo formatoFecha = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat;
     DateTime newDate = DateTime.Now;
-
     int yeard = newDate.Year;
     int year1 = yeard + 1;
     int year2 = yeard + 2;
@@ -208,8 +209,28 @@
                 });
 
                 $("#id_excel").click(function () {
+                    $("#table").trigger("filterReset");
                     $('#table').trigger('destroyPager');
+                    $('#table').trigger('destroy');
+                    var pager = $('#table tfoot').html();
+                    $('#table tfoot').html("");
                     tableToExcel('table', 'Reporte de Provisiones Abiertas');
+                    $('#table tfoot').html(pager);
+                    $('#table').tablesorter({
+                        theme: "materialize",
+                        widthFixed: true,
+                        widgets: ["filter", "zebra"],
+                        widgetOptions: {
+                            zebra: ["even", "odd"],
+                            filter_reset: ".reset",
+                            filter_cssFilter: ["", "", "browser-default"]
+                        }
+                    }).tablesorterPager({
+                        container: $(".ts-pager"),
+                        cssGoto: ".pagenum",
+                        removeRows: true,
+                        output: '{startRow} - {endRow} / {filteredRows} ({totalRows})'
+                    });
                 });
             });
 
@@ -257,7 +278,7 @@
             });
             var tableToExcel = (function () {
                 var uri = 'data:application/vnd.ms-excel;base64,'
-                    , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+                    , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
                     , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
                     , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
                 return function (table, name) {
@@ -269,7 +290,7 @@
         </script>
 
         <br />
-        <span id="titulo2" style="color:deeppink; font-family:Tahoma; font-size:15px;">REPORTE DE PROVISIONES ABIERTAS 2.0</span>
+        <span id="titulo2" style="color:deeppink; font-family:Tahoma; font-size:15px;">REPORTE DE PROVISIONES ABIERTAS</span>
 
         @*@System.DateTime.Now.ToString("dd/MM/yyyy")*@
 
@@ -278,7 +299,7 @@
             foreach (var consulta in multi)
             {
 
-                <span style="color:deeppink; font-size:15px; margin-left:15px">
+                <span style="color:deeppink; font-size:15px; margin-left:8px">
                     @{
                         int ejercicio = Int32.Parse(consulta.GetType().GetProperty("EJERCICIO").GetValue(consulta, null));
                         int periodo = Int32.Parse(consulta.GetType().GetProperty("PERIODO").GetValue(consulta, null).ToString());
@@ -957,10 +978,6 @@
         </div>
     }
 
-
-    <script>
-
-    </script>
     <style>
         .dataTables_length {
             display: none;
