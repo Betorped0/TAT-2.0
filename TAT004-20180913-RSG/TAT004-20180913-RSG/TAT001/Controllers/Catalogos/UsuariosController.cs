@@ -3115,20 +3115,20 @@ namespace TAT001.Controllers.Catalogos
             TAT001Entities db = new TAT001Entities();
 
             var c = (from x in db.USUARIOs
-                     where x.ID.Contains(Prefix)
+                     where x.ID.Contains(Prefix) && x.ACTIVO == true
                      select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
 
             if (c.Count == 0)
             {
                 var c2 = (from x in db.USUARIOs
-                          where x.NOMBRE.Contains(Prefix)
+                          where x.NOMBRE.Contains(Prefix) && x.ACTIVO == true
                           select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
                 c.AddRange(c2);
             }
             else
             {
                 var c3 = (from x in db.USUARIOs
-                          where x.APELLIDO_P.Contains(Prefix)
+                          where x.APELLIDO_P.Contains(Prefix) && x.ACTIVO == true
                           select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
                 c.AddRange(c3);
             }
@@ -3145,13 +3145,13 @@ namespace TAT001.Controllers.Catalogos
             TAT001Entities db = new TAT001Entities();
 
             var c = (from x in db.CLIENTEs
-                     where x.KUNNR.Contains(Prefix)
+                     where x.KUNNR.Contains(Prefix) && x.ACTIVO == true
                      select new { x.KUNNR, x.NAME1 }).ToList();
 
             if (c.Count == 0)
             {
                 var c2 = (from x in db.CLIENTEs
-                          where x.NAME1.Contains(Prefix)
+                          where x.NAME1.Contains(Prefix) && x.ACTIVO == true
                           select new { x.KUNNR, x.NAME1 }).ToList();
                 c.AddRange(c2);
             }
@@ -3169,13 +3169,13 @@ namespace TAT001.Controllers.Catalogos
             var pa = (from x in db.PAIS where x.ACTIVO == true & x.SOCIEDAD_ID == BUKRS select x.LAND).FirstOrDefault();
 
             var c = (from x in db.CLIENTEs
-                     where x.KUNNR.Contains(Prefix) & x.LAND.Equals(pa)
+                     where x.KUNNR.Contains(Prefix) && x.LAND.Equals(pa) && x.ACTIVO == true
                      select new { x.KUNNR, x.NAME1 }).ToList();
 
             if (c.Count == 0)
             {
                 var c2 = (from x in db.CLIENTEs
-                          where x.NAME1.Contains(Prefix) & x.LAND.Equals(pa)
+                          where x.NAME1.Contains(Prefix) && x.LAND.Equals(pa) && x.ACTIVO == true
                           select new { x.KUNNR, x.NAME1 }).ToList();
                 c.AddRange(c2);
             }
@@ -3215,13 +3215,13 @@ namespace TAT001.Controllers.Catalogos
             TAT001Entities db = new TAT001Entities();
 
             var c = (from x in db.SOCIEDADs
-                     where x.BUKRS.Contains(Prefix)
+                     where x.BUKRS.Contains(Prefix) && x.ACTIVO == true
                      select new { x.BUKRS, x.BUTXT }).ToList();
 
             if (c.Count == 0)
             {
                 var c2 = (from x in db.SOCIEDADs
-                          where x.BUTXT.Contains(Prefix)
+                          where x.BUTXT.Contains(Prefix) && x.ACTIVO == true
                           select new { x.BUKRS, x.BUTXT }).ToList();
                 c.AddRange(c2);
             }
