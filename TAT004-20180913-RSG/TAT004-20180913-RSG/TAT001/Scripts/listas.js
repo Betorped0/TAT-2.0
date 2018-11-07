@@ -197,7 +197,7 @@ function asignarSolicitud(num, num2) {
                             document.getElementById("a4").classList.remove("red");
                             document.getElementById("a4").classList.remove("white-text");
                         }
-                        $('#s_impa').text(data.S_IMPA);
+                        $('#s_impa').text(toShow(data.S_IMPA);
                         $('#s_impb').text(data.S_IMPB);
                         $('#s_impc').text(data.S_IMPC);
                         $('#s_ret').text(toShow(data.S_RET));

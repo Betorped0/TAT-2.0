@@ -58,7 +58,7 @@ namespace TAT001.Services
             string ex = "";
             //string exdir = "";
             // Get the name of the file to upload.
-            string fileName = file.FileName; // must be declared in the class above
+            string fileName = Path.GetFileName(file.FileName); // must be declared in the class above
 
             // Specify the path to save the uploaded file to.
             //string savePath = path + documento + "\\";//RSG 01.08.2018
