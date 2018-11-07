@@ -1466,6 +1466,7 @@ $(document).ready(function () {
 //Cuando se termina de cargar la página
 $(window).on('load', function () {
 
+    selectCliente($("#payer_id").val());
     $('#tipo_cambio').val(toShow5($('#tipo_cambio').val()));
 
     //B20180625 MGC 2018.06.26 Verificar si hay algún borrador mostrar la sección de facturas
@@ -5478,11 +5479,12 @@ function selectCliente(valu) {
     if (valu != "") {
         document.getElementById("loader").style.display = "flex";//RSG 03.07.2018
         var esBorrador = $('#borradore').val() == "true";
-
+        var num = $('#duplicate').val();//RSG 07.11.2018
         $.ajax({
             type: "POST",
-            url: root + 'Listas/SelectCliente',
-            data: { "kunnr": valu, esBorrador: esBorrador },
+            //url: root + 'Listas/SelectCliente',
+            url: root + 'Listas/SelectClienteDup',
+            data: { "kunnr": valu, esBorrador: esBorrador, num_doc: num },
             success: function (data) {
 
                 document.getElementById("loader").style.display = "none";//RSG 03.07.2018
