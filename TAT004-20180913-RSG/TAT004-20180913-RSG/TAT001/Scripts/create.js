@@ -2700,7 +2700,8 @@ $('body').on('keydown', '.input_oper.numberd', function (e) {
 });
 
 $('body').on('focusout', '.input_oper', function () {
-
+    if (!materialesExist)
+        return;
     var t = $('#table_dis').DataTable();
     var tr = $(this).closest('tr'); //Obtener el row 
 
@@ -2828,6 +2829,7 @@ $('body').on('focusout', '#bmonto_apoyo', function () {
     var select_neg = $('#select_neg').val();
     if (ligada() || select_neg==="P") {
         (this.value === "0" || this.value === "0.00%") ? file.prop('disabled', true) : file.prop('disabled', false);
+        cambiaRec();
     } else {
         file.prop('disabled', false);
     }
@@ -4012,7 +4014,7 @@ function addRowCatl(t, cat, exp, sel, ddate, adate, opt, porcentaje, total) {
         ddate + "", //col3
         adate + "",
         "", //Material
-        opt + "",
+        opt + "",//opt + "",//RSG 06.11.2018
         opt + "",
         //"<input class=\"" + reversa + " input_oper numberd input_dc\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
         //"<input class=\"" + reversa + " input_oper numberd input_dc\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
@@ -4762,6 +4764,7 @@ function evaluarDisTable() {
 
                     if (valp.ID == null || valp.ID == "") {
                         $(this).find('td').eq((5 + indext)).addClass("errorMaterial");
+                        res = "Error con el material";
                         return false;
                     } else if (trimStart('0', valp.ID) == val) {//RSG 07.06.2018
 
@@ -6028,5 +6031,56 @@ function categoriaUnica(cat) {
     });
 
     return res;
+}
+function cambiaLigada(campo) {
+
+    var f = $("#file_dis")
+    if (campo.checked) {
+        $("#select_neg").val("P");
+        $("#select_negi").val("P");
+        $("#select_neg").prop("disabled", "disabled");
+        $("#select_neg").change();
+        $("#select_neg").formSelect();
+        $("#div_objq").removeClass("hide");
+        $("#txt_ligada").val("X");
+        var monto = $('#bmonto_apoyo').val();
+        (monto === "0" || monto === "0.00%") ? f.prop('disabled', true) : f.prop('disabled', false)
+        //Actualización de vista recurrentes
+        cambiaRec();
+    } else {
+        $("#select_neg").prop("disabled", false);
+        $("#select_neg").change();
+        $("#div_objq").addClass("hide");
+        $("#txt_ligada").val("");
+        f.prop('disabled', false);
+        //Actualización de vista recurrentes
+        cambiaCheckRec();
+        $(".table_rangos").css("display", "none");
+        $("#btnRango").css("display", "none");
+        $("#btnDelRango").css("display", "none");
+    }
+}
+function descargarArchivo(me) {
+    var form = document.createElement("form"),
+        Archivo = document.createElement("input");
+    form.method = "POST";
+    form.action = root + 'Solicitudes/Descargar';
+    Archivo.value = me.value;
+    Archivo.name = "archivo";
+    form.appendChild(Archivo);
+    document.body.appendChild(form);
+    form.submit();
+}
+
+function descargarArchivo(me) {
+    var form = document.createElement("form"),
+        Archivo = document.createElement("input");
+    form.method = "POST";
+    form.action = root + 'Solicitudes/Descargar';
+    Archivo.value = me.value;
+    Archivo.name = "archivo";
+    form.appendChild(Archivo);
+    document.body.appendChild(form);
+    form.submit();
 }
 

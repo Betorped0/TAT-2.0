@@ -1,4 +1,4 @@
-﻿
+﻿var materialesExist=false;
 $('body').on('keydown.autocomplete', '.input_material', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var vk = '0152';
@@ -16,6 +16,7 @@ $('body').on('keydown.autocomplete', '.input_material', function () {
                 dataType: "json",
                 data: { "Prefix": request.term, vkorg: vk, vtweg: vt, spras: sp },
                 success: function (data) {
+                    materialesExist = (data.length > 0);
                     response(auto.map(data, function (item) {
                         return { label: trimStart('0', item.ID) + " - " + item.MAKTX, value: trimStart('0', item.ID) };//RSG 07.06.2018
                     }))

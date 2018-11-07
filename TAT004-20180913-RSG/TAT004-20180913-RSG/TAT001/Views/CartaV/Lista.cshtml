@@ -1,31 +1,19 @@
 ﻿@model IEnumerable<TAT001.Entities.CARTA>
-
 @{
-                /**/
-
-                //ViewBag.Title = "Index";
-                Layout = "~/Views/Shared/_Layout.cshtml";
-                ViewBag.pagina_r = 201;
-                ViewBag.carpeta_r = 200;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.pagina_r = 201;
+    ViewBag.carpeta_r = 200;
 }
-
-@*<p>
-           <a href="@Url.Action("Details", "Solicitudes", new { id = TempData["id"].ToString()})" class="btn btn-default">Regresar</a>
-        <a href="@Url.Action("Create", new { id = TempData["id"].ToString()})" class="btn-floating right">
-            <i class="material-icons">add</i>
-        </a>
-    </p>*@
 <div class="row">
     <div class="row right">
         <div class="col l12 m12 right">
             <a href="@Url.Action("Details", "Solicitudes", new { id = TempData["id"].ToString()})" class="btn btn-default">Regresar</a>
             @{ string swf = TempData["ESTATUS_WF"].ToString();}
-            @*<a href="@Url.Action("Create", new { id = TempData["id"].ToString()})" class="btn btn-default">Genererar Carta</a>*@
-            @if (swf.Equals("S"))
+            @if (swf.Equals("S") && (Model.Count()>0 && Model.First().DOCUMENTO.USUARIOD_ID == User.Identity.Name))
             {
                 <a href="@Url.Action("Create", "CartaV", new { id = TempData["id"].ToString()})" class="btn btn-default">Genererar Carta</a>
             }
-            else
+            else if(Model.Count() > 0 && Model.First().DOCUMENTO.USUARIOD_ID == User.Identity.Name)
             {
                 <a href="@Url.Action("Create", "CartaD", new { id = TempData["id"].ToString()})" class="btn btn-default">Genererar Carta</a>
             }

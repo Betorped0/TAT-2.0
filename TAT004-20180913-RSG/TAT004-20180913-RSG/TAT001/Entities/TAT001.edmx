@@ -12113,12 +12113,12 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Property Type="DateTime" Name="FECHAD" Nullable="true" Precision="23" />
           <Property Type="Time" Name="HORAC" Nullable="true" />
           <Property Type="Int32" Name="PERIODO" Nullable="true" />
-          <Property Type="String" Name="ESTATUSS" Nullable="false" MaxLength="7" />
+          <Property Type="String" Name="ESTATUSS" Nullable="false" MaxLength="8" />
           <Property Type="String" Name="PAYER_ID" Nullable="true" MaxLength="10" />
           <Property Type="String" Name="NAME1" Nullable="true" MaxLength="100" />
           <Property Type="String" Name="CANAL" Nullable="true" MaxLength="10" />
           <Property Type="String" Name="TXT020" Nullable="true" MaxLength="20" />
-          <Property Type="String" Name="TXT50" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="TXT50" Nullable="true" MaxLength="62" />
           <Property Type="String" Name="CONCEPTO" Nullable="true" MaxLength="100" />
           <Property Type="Decimal" Name="MONTO_DOC_MD" Nullable="true" Precision="13" Scale="2" />
           <Property Type="String" Name="FACTURA" Nullable="true" MaxLength="50" />
@@ -12131,6 +12131,9 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Property Type="Decimal" Name="IMPORTE" Nullable="true" Precision="13" Scale="5" />
           <Property Type="String" Name="CUENTA_C" Nullable="true" MaxLength="10" />
           <Property Type="Decimal" Name="CARGO" Nullable="true" Precision="10" Scale="0" />
+          <Property Type="Decimal" Name="CUENTAP" Nullable="true" Precision="10" Scale="0" />
+          <Property Type="Decimal" Name="CUENTAPL" Nullable="true" Precision="10" Scale="0" />
+          <Property Type="Decimal" Name="CUENTACL" Nullable="true" Precision="10" Scale="0" />
         </ComplexType>
         <ComplexType Name="CSP_PERMISO_Result">
           <Property Type="String" Name="ID" Nullable="false" MaxLength="16" />
@@ -14651,6 +14654,9 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
                 <ScalarProperty Name="IMPORTE" ColumnName="IMPORTE" />
                 <ScalarProperty Name="CUENTA_C" ColumnName="CUENTA_C" />
                 <ScalarProperty Name="CARGO" ColumnName="CARGO" />
+                <ScalarProperty Name="CUENTAP" ColumnName="CUENTAP" />
+                <ScalarProperty Name="CUENTAPL" ColumnName="CUENTAPL" />
+                <ScalarProperty Name="CUENTACL" ColumnName="CUENTACL" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
