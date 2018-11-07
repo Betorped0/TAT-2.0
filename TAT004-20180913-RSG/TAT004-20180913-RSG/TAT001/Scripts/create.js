@@ -1188,6 +1188,7 @@ $(document).ready(function () {
         var checkf = $('#check_factura').is(':checked');
         if (checkf) {
             var monto = parseFloat(toNum($('#monto_dis').val()));
+            importe_fac = parseFloat(importe_fac.toFixed(2));
             if (importe_fac !== monto) {
                 msg += ', Informacion: Importet total de las facturas sea igual al monto en Distribucion';
                 res = false;
@@ -3828,8 +3829,9 @@ function loadExcelSop(file) {
                         //jemo 25-17-2018 inicio
                         dataj.PAYER,
                         dataj.DESCRIPCION,
-                        "$" + dataj.IMPORTE_FACT.toString().replace(/\D/g, "")//jemo 31-17-2018 inicio
-                            .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ","),//jemo 31-17-2018 fin
+                        //"$" + dataj.IMPORTE_FACT.toString().replace(/\D/g, "")//jemo 31-17-2018 inicio
+                        //    .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ","),//jemo 31-17-2018 fin
+                        toShow(dataj.IMPORTE_FACT.toString()),
                         dataj.BELNR
                         //jemo 25-17-2018 fin
                     ]).draw(false).node();
