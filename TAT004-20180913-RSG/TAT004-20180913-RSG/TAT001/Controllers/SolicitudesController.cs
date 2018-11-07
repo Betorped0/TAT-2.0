@@ -2506,12 +2506,15 @@ namespace TAT001.Controllers
                     //if (dOCUMENTO.DOCUMENTO_REF > 0)
                     if (dOCUMENTO.DOCUMENTO_REF > 0 & txt_flujo != "B")//ADD RSG 02.11.2018
                     {
-                        if (dOCUMENTO.TSOL_ID != "CPR")
+                        //if (dOCUMENTO.TSOL_ID != "CPR")
+                        if (!dOCUMENTO.TSOL.REVERSO)
                         {
-                            List<DOCUMENTO> dd = db.DOCUMENTOes.Where(a => a.DOCUMENTO_REF == (dOCUMENTO.DOCUMENTO_REF)).ToList();
+                            DOCUMENTO docPadre = db.DOCUMENTOes.Find(dOCUMENTO.DOCUMENTO_REF);
+                            List<DOCUMENTO> dd = db.DOCUMENTOes.Where(a => a.DOCUMENTO_REF == (dOCUMENTO.DOCUMENTO_REF) & a.ESTATUS_C != "C").ToList();
                             List<DOCUMENTOP> ddr = db.DOCUMENTOPs.Where(a => a.NUM_DOC == (dOCUMENTO.DOCUMENTO_REF)).ToList();
                             ////decimal total = 0;
                             decimal[] totales = new decimal[ddr.Count()];
+                            decimal totalRes = new decimal();
                             foreach (DOCUMENTOP dr in ddr)
                             {
                                 //totales[(int)dr.POS - 1] = dr.VOLUMEN_EST * dr.MONTO_APOYO;
@@ -2526,8 +2529,10 @@ namespace TAT001.Controllers
                                             var suma2 = dp.APOYO_REAL;
 
                                             totales[(int)dr.POS - 1] = totales[(int)dr.POS - 1] - (decimal)suma2;
+                                            totalRes += (decimal)suma2;
                                         }
                                     }
+
                                 }
                             }
                             //RSG 14.06.2018----------------------
@@ -2536,12 +2541,15 @@ namespace TAT001.Controllers
                             {
                                 resto += dec;
                             }
-                            //RSG 14.06.2018----------------------
-                            foreach (decimal dec in totales)
-                            {
-                                if (dec > 0)
-                                    return RedirectToAction("Reversa", new { id = dOCUMENTO.DOCUMENTO_REF, resto = resto });
-                            }
+                            //////RSG 14.06.2018----------------------
+                            ////foreach (decimal dec in totales)
+                            ////{
+                            ////    if (dec > 0 | (totalRes - docPadre.MONTO_DOC_MD) > 0)
+                            ////        return RedirectToAction("Reversa", new { id = dOCUMENTO.DOCUMENTO_REF, resto = resto });
+                            ////}
+                            if (docPadre.MONTO_DOC_MD - totalRes > 0)
+                                return RedirectToAction("Reversa", new { id = dOCUMENTO.DOCUMENTO_REF, resto = resto });
+
                         }
                         using (TAT001Entities db1 = new TAT001Entities())
                         {
@@ -5860,16 +5868,32 @@ namespace TAT001.Controllers
                         doc.BELNR = null;
                     }
 
+                    doc.DESCRIPCION = "";
                     ld.Add(doc);
                     pos++;
                 }
                 //jemo 10-17-2018 inicio
-                List<CLIENTE> cli = db.CLIENTEs.ToList();
-                var c = cli.Join(ld, s => s.KUNNR, l => l.PAYER, (s, l) => new { ku = s.KUNNR, na = s.NAME1 }).ToList();
+                Cadena cad = new Cadena();
                 for (int i = 0; i < ld.Count; i++)
                 {
-                    ld[i].DESCRIPCION = c.Where(x => x.ku == ld[i].PAYER).Select(x => x.na).ToList()[0].ToString();
+                    ld[i].PAYER = cad.completaCliente(ld[i].PAYER);
                 }
+                    List<CLIENTE> cli = db.CLIENTEs.ToList();
+                List<CLIENTE> c = (from cl in db.CLIENTEs.ToList()
+                                      join v in ld
+                                      on cl.KUNNR equals v.PAYER
+                                      select cl).ToList();
+                //var c = cli.Join(ld, s => s.KUNNR, l => l.PAYER, (s, l) => new { ku = s.KUNNR, na = s.NAME1 }).ToList();
+                if (c.Count > 0)
+                    for (int i = 0; i < ld.Count; i++)
+                    {
+                        ld[i].DESCRIPCION = c.Where(x => x.KUNNR == ld[i].PAYER).Select(x => x.NAME1).ToList().FirstOrDefault().ToString();
+                    }
+                else
+                    for (int i = 0; i < ld.Count; i++)
+                    {
+                        ld[i].DESCRIPCION = "";
+                    }
                 //jemo 10-17-2018 fin
                 reader.Close();
 
@@ -7338,7 +7362,7 @@ namespace TAT001.Controllers
                             {
                                 SPRAS_ID = ct.SPRAS_ID.ToString(),
                                 CATEGORIA_ID = ct.MATERIALGP_ID.ToString(),//B20180625 MGC 2018.06.28
-                        TXT50 = ct.TXT50.ToString()
+                                TXT50 = ct.TXT50.ToString()
                             })
                         .FirstOrDefault();
             }
