@@ -159,11 +159,11 @@ namespace TAT001.Controllers.Catalogos
             //    Session["spras"] = user.SPRAS_ID;
             //}
             string spra = Session["spras"].ToString();
-            ViewBag.PUESTO_ID = new SelectList(db.PUESTOTs.Where(a => a.SPRAS_ID.Equals(spra)), "PUESTO_ID", "TXT50");
-            ViewBag.ROLs = new SelectList(db.ROLTs.Where(a => a.SPRAS_ID.Equals(spra)), "ROL_ID", "TXT50");
-            ViewBag.ROLs = new SelectList(db.ROLs, "ID", "ID");
-            ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION");
-            ViewBag.BUNIT = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS");
+            //ViewBag.PUESTO_ID = new SelectList(db.PUESTOTs.Where(a => a.SPRAS_ID.Equals(spra)), "PUESTO_ID", "TXT50");
+            //ViewBag.ROLs = new SelectList(db.ROLTs.Where(a => a.SPRAS_ID.Equals(spra)), "ROL_ID", "TXT50");
+            //ViewBag.ROLs = new SelectList(db.ROLs, "ID", "ID");
+            //ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION");
+            //ViewBag.BUNIT = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS");
             return View();
         }
 
@@ -203,7 +203,7 @@ namespace TAT001.Controllers.Catalogos
                                 List<USUARIO> ss = db.USUARIOs.ToList();
                                 USUARIO usu = new USUARIO();
 
-                                if (u.ID != null && !db.USUARIOs.Any(x => x.ID == u.ID))
+                                if (uSUARIO.ID != null && !db.USUARIOs.Any(x => x.ID == uSUARIO.ID))
                                 {
                                     try
                                     {
@@ -216,8 +216,8 @@ namespace TAT001.Controllers.Catalogos
                                         u.SPRAS_ID = uSUARIO.SPRAS_ID;
                                         u.ACTIVO = true;
                                         u.PUESTO_ID = uSUARIO.PUESTO_ID;
-                                        u.MANAGER = null;
-                                        u.BACKUP_ID = null;
+                                        u.MANAGER = uSUARIO.MANAGER;
+                                        u.BACKUP_ID = uSUARIO.BACKUP_ID;
                                         u.BUNIT = uSUARIO.BUNIT;
 
                                         db.USUARIOs.Add(u);
@@ -394,15 +394,15 @@ namespace TAT001.Controllers.Catalogos
             {
                 sociedad[i] = sociedades[i].BUKRS;
             }
-            ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION", uSUARIO.SPRAS_ID);
-            ViewBag.PUESTO_ID = new SelectList(db.PUESTOTs.Where(a => a.SPRAS_ID.Equals(spra)), "PUESTO_ID", "TXT50", uSUARIO.PUESTO_ID);
-            ViewBag.BUNIT = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS", uSUARIO.BUNIT);
-            ViewBag.ROLES = db.ROLTs.Where(a => a.SPRAS_ID.Equals(spra));
+            //ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION", uSUARIO.SPRAS_ID);
+            //ViewBag.PUESTO_ID = new SelectList(db.PUESTOTs.Where(a => a.SPRAS_ID.Equals(spra)), "PUESTO_ID", "TXT50", uSUARIO.PUESTO_ID);
+            //ViewBag.BUNIT = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS", uSUARIO.BUNIT);
+            //ViewBag.ROLES = db.ROLTs.Where(a => a.SPRAS_ID.Equals(spra));
             ViewBag.SOCIEDADES = db.SOCIEDADs;
             ViewBag.sociedad = JsonConvert.SerializeObject(sociedad, Formatting.Indented);
-            ViewBag.PAISES = db.PAIS;
-            ViewBag.sociedad = JsonConvert.SerializeObject(sociedad, Formatting.Indented);
-            ViewBag.APROBADORES = db.DET_APROB.Where(a => a.BUKRS.Equals("KCMX") & a.PUESTOC_ID == uSUARIO.PUESTO_ID).ToList();
+            //ViewBag.PAISES = db.PAIS;
+            //ViewBag.sociedad = JsonConvert.SerializeObject(sociedad, Formatting.Indented);
+            //ViewBag.APROBADORES = db.DET_APROB.Where(a => a.BUKRS.Equals("KCMX") & a.PUESTOC_ID == uSUARIO.PUESTO_ID).ToList();
             return View(uSUARIO);
         }
 
