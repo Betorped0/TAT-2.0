@@ -1188,6 +1188,7 @@ $(document).ready(function () {
         var checkf = $('#check_factura').is(':checked');
         if (checkf) {
             var monto = parseFloat(toNum($('#monto_dis').val()));
+            importe_fac = parseFloat(importe_fac.toFixed(2));
             if (importe_fac !== monto) {
                 msg += ', Informacion: Importet total de las facturas sea igual al monto en Distribucion';
                 res = false;
@@ -3220,7 +3221,7 @@ function GetMaterialesCatDetalle(jsval, catid, total, m_base) {
 
     var materiales = [];
 
-    if ($("#select_dis").val() !== "P") {//ADD RSG 03.11.2018
+    if ($("#select_neg").val() !== "P") {//ADD RSG 03.11.2018
         $.each(jsval, function (i, d) {
             var len = jsval.length;
             d.VAL = 100 / len;
@@ -3239,7 +3240,7 @@ function GetMaterialesCatDetalle(jsval, catid, total, m_base) {
             var por = 0;
 
             try {
-                if ($("#select_dis").val() !== "P") //ADD RSG 03.11.2018
+                if ($("#select_neg").val() !== "P") //ADD RSG 03.11.2018
                     por = d.VAL;
                 else
                     por = ((d.VAL * 100) / total);
@@ -3515,7 +3516,7 @@ function format(catid, idate, fdate, tot) {
         var total = 0;
         var categorias = GetCategoriasTableCat();
         //total = GetTotalTableCat(categorias);
-        if ($("#select_dis").val() === "P")
+        if ($("#select_neg").val() === "P")
             total = GetTotalTableCat(categorias);
         else
             total = toNum($('#monto_dis').val());
@@ -3523,7 +3524,7 @@ function format(catid, idate, fdate, tot) {
         //var m_base = $('#monto_dis').val();//RSG 09.07.2018
         var m_base = toNum($('#monto_dis').val());
         //m_base = parseFloat(m_base) | 0;
-        if ($("#select_dis").val() === "P")
+        if ($("#select_neg").val() === "P")
             m_base = parseFloat(m_base) | 0;
         else
             m_base = tot;
@@ -3829,8 +3830,9 @@ function loadExcelSop(file) {
                         //jemo 25-17-2018 inicio
                         dataj.PAYER,
                         dataj.DESCRIPCION,
-                        "$" + dataj.IMPORTE_FACT.toString().replace(/\D/g, "")//jemo 31-17-2018 inicio
-                            .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ","),//jemo 31-17-2018 fin
+                        //"$" + dataj.IMPORTE_FACT.toString().replace(/\D/g, "")//jemo 31-17-2018 inicio
+                        //    .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ","),//jemo 31-17-2018 fin
+                        toShow(dataj.IMPORTE_FACT.toString()),
                         dataj.BELNR
                         //jemo 25-17-2018 fin
                     ]).draw(false).node();
