@@ -100,6 +100,20 @@ namespace TAT001.Controllers
 
         }
         [HttpGet]
+        public JsonResult Solicitudes(string Prefix)
+        {
+            var solicitudes = FnCommon.ObtenerSolicitudes(db, Prefix);
+            JsonResult cc = Json(solicitudes, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+        [HttpGet]
+        public JsonResult Usuarios(string Prefix)
+        {
+            var usuarios = FnCommon.ObtenerUsuarios(db, Prefix);
+            JsonResult cc = Json(usuarios, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+        [HttpGet]
         public JsonResult Estados(string pais, string Prefix)
         {
             if (Prefix == null)
@@ -877,6 +891,105 @@ namespace TAT001.Controllers
             if (id_cl != null && db.CLIENTEFs.Any(x => x.KUNNR == id_cl.KUNNR && x.ACTIVO))
             {
                 id_cl.MANAGER = db.CLIENTEFs.Where(x => x.KUNNR == id_cl.KUNNR &&  x.ACTIVO).First().USUARIO1_ID;
+            }
+            JsonResult jc = Json(id_cl, JsonRequestBehavior.AllowGet);
+            return jc;
+        }
+
+
+        [HttpPost]
+        [AllowAnonymous]
+        public JsonResult SelectClienteDup(string kunnr, bool? esBorrador, string num_doc)
+        {
+            Cadena cad = new Cadena();
+            kunnr = cad.completaCliente(kunnr);
+
+            CLIENTE_MOD id_cl = (from c in db.CLIENTEs
+                                 join co in db.CONTACTOCs
+                                 on new { c.VKORG, c.VTWEG, c.SPART, c.KUNNR } equals new { co.VKORG, co.VTWEG, co.SPART, co.KUNNR } into jjcont
+                                 from co in jjcont.DefaultIfEmpty()
+                                 where (c.KUNNR == kunnr & co.DEFECTO == true)
+                                 select new CLIENTE_MOD
+                                 {
+                                     VKORG = c.VKORG,
+                                     VTWEG = c.VTWEG,
+                                     VTWEG2 = c.VTWEG,//RSG 05.07.2018
+                                     SPART = c.SPART,//RSG 28.05.2018-------------------
+                                     NAME1 = c.NAME1,
+                                     KUNNR = c.KUNNR,
+                                     STCD1 = c.STCD1,
+                                     PARVW = c.PARVW,
+                                     BANNER = c.BANNER,
+                                     CANAL = c.CANAL,
+                                     PAYER_NOMBRE = co == null ? String.Empty : co.NOMBRE,
+                                     PAYER_EMAIL = co == null ? String.Empty : co.EMAIL,
+                                 }).FirstOrDefault();
+
+            if (id_cl == null)
+            {
+                id_cl = (from c in db.CLIENTEs
+                         where (c.KUNNR == kunnr)
+                         select new CLIENTE_MOD
+                         {
+                             VKORG = c.VKORG,
+                             VTWEG = c.VTWEG,
+                             VTWEG2 = c.VTWEG,//RSG 05.07.2018
+                             SPART = c.SPART,//RSG 28.05.2018-------------------
+                             NAME1 = c.NAME1,
+                             KUNNR = c.KUNNR,
+                             STCD1 = c.STCD1,
+                             PARVW = c.PARVW,
+                             BANNER = c.BANNER,
+                             CANAL = c.CANAL,
+                             PAYER_NOMBRE = String.Empty,
+                             PAYER_EMAIL = String.Empty,
+                         }).FirstOrDefault();
+            }
+
+            if (id_cl != null)
+            {
+                //Obtener el cliente
+                CANAL canal = db.CANALs.Where(ca => ca.CANAL1 == id_cl.CANAL).FirstOrDefault();
+                id_cl.VTWEG = "";
+
+                if (canal != null)
+                {
+                    id_cl.VTWEG = canal.CANAL1 + " - " + canal.CDESCRIPCION;
+                }
+
+                //Obtener el tipo de cliente
+                var clientei = (from c in db.TCLIENTEs
+                                join ct in db.TCLIENTETs
+                                on c.ID equals ct.PARVW_ID
+                                where c.ID == id_cl.PARVW && c.ACTIVO == true
+                                select ct).FirstOrDefault();
+                id_cl.PARVW = "";
+                if (clientei != null)
+                {
+                    id_cl.PARVW = clientei.TXT50;
+                }
+
+            }
+            //Si es borrador asignar datos de contacto a cliente
+            if (id_cl != null && esBorrador != null && esBorrador.Value)
+            {
+                DOCUMENTBORR doc = db.DOCUMENTBORRs.Where(x => x.USUARIOC_ID == User.Identity.Name && x.PAYER_ID == kunnr).FirstOrDefault();
+                if (doc != null)
+                {
+                    id_cl.PAYER_EMAIL = doc.PAYER_EMAIL;
+                    id_cl.PAYER_NOMBRE = doc.PAYER_NOMBRE;
+                }
+                else//ADD RSG 01.11.2018
+                {
+                    DOCUMENTO dp = db.DOCUMENTOes.Find(decimal.Parse(num_doc));
+                    id_cl.PAYER_EMAIL = dp.PAYER_EMAIL;
+                    id_cl.PAYER_NOMBRE = dp.PAYER_NOMBRE;
+                }
+            }
+            //Asignar Manager
+            if (id_cl != null && db.CLIENTEFs.Any(x => x.KUNNR == id_cl.KUNNR && x.ACTIVO))
+            {
+                id_cl.MANAGER = db.CLIENTEFs.Where(x => x.KUNNR == id_cl.KUNNR && x.ACTIVO).First().USUARIO1_ID;
             }
             JsonResult jc = Json(id_cl, JsonRequestBehavior.AllowGet);
             return jc;

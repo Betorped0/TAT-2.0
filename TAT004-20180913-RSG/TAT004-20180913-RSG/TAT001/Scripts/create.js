@@ -1466,6 +1466,7 @@ $(document).ready(function () {
 //Cuando se termina de cargar la página
 $(window).on('load', function () {
 
+    selectCliente($("#payer_id").val());
     $('#tipo_cambio').val(toShow5($('#tipo_cambio').val()));
 
     //B20180625 MGC 2018.06.26 Verificar si hay algún borrador mostrar la sección de facturas
@@ -3613,7 +3614,7 @@ function loadFilesf() {
 
 function loadExcelDis(file) {
 
-    document.getElementById("loader").style.display = "initial";//RSG 24.05.2018
+    document.getElementById("loader").style.display = "flex";//RSG 24.05.2018
     var formData = new FormData();
 
     formData.append("FileUpload", file);
@@ -3791,7 +3792,7 @@ function loadExcelDis(file) {
 function loadExcelSop(file) {
 
     var formData = new FormData();
-
+    document.getElementById("loader").style.display = 'flex';
     formData.append("FileUpload", file);
     importe_fac = 0;//jemo 25-17-2018
     var table = $('#table_sop').DataTable();
@@ -3841,6 +3842,7 @@ function loadExcelSop(file) {
                         $(addedRow).find('td.PROVEEDOR').addClass("errorProveedor");
                     }
                     importe_fac += parseFloat(toNum(dataj.IMPORTE_FACT));//jemo inicio 25-07-2018
+                    document.getElementById("loader").style.display = 'none';
                 });
                 //Aplicar configuración de columnas en las tablas
                 ocultarColumnasTablaSoporteDatos();
@@ -3850,8 +3852,9 @@ function loadExcelSop(file) {
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             alert("Request couldn't be processed. Please try again later. the reason        " + xhr.status + " : " + httpStatusMessage + " : " + customErrorMessage);
+            document.getElementById("loader").style.display = 'none';
         },
-        async: false
+        async: true
     });
 
 }
@@ -5478,11 +5481,12 @@ function selectCliente(valu) {
     if (valu != "") {
         document.getElementById("loader").style.display = "flex";//RSG 03.07.2018
         var esBorrador = $('#borradore').val() == "true";
-
+        var num = $('#duplicate').val();//RSG 07.11.2018
         $.ajax({
             type: "POST",
-            url: root + 'Listas/SelectCliente',
-            data: { "kunnr": valu, esBorrador: esBorrador },
+            //url: root + 'Listas/SelectCliente',
+            url: root + 'Listas/SelectClienteDup',
+            data: { "kunnr": valu, esBorrador: esBorrador, num_doc: num },
             success: function (data) {
 
                 document.getElementById("loader").style.display = "none";//RSG 03.07.2018
@@ -6062,18 +6066,6 @@ function cambiaLigada(campo) {
         $("#btnDelRango").css("display", "none");
     }
 }
-function descargarArchivo(me) {
-    var form = document.createElement("form"),
-        Archivo = document.createElement("input");
-    form.method = "POST";
-    form.action = root + 'Solicitudes/Descargar';
-    Archivo.value = me.value;
-    Archivo.name = "archivo";
-    form.appendChild(Archivo);
-    document.body.appendChild(form);
-    form.submit();
-}
-
 function descargarArchivo(me) {
     var form = document.createElement("form"),
         Archivo = document.createElement("input");

@@ -40,7 +40,9 @@ namespace TAT001.Controllers.Reportes
             ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
             ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
             ViewBag.sociedad = db.SOCIEDADs.ToList();
-            ViewBag.cuentagl = db.CUENTAGLs.ToList();
+            //ViewBag.cuentagl = db.CUENTAGLs.ToList();
+            ViewBag.cuentagl = (from c in db.CUENTAGLs join d in db.DOCUMENTOes on c.ID equals d.CUENTAP select c).Union(from c in db.CUENTAGLs join d in db.DOCUMENTOes on c.ID equals d.CUENTAPL select c).
+                Union(from c in db.CUENTAGLs join d in db.DOCUMENTOes on c.ID equals d.CUENTACL select c).DistinctBy(x=>x.ID).ToList();
             ViewBag.periodo = db.PERIODOes.ToList();
 
             try

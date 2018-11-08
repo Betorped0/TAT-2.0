@@ -1,6 +1,7 @@
 
 $(document).ready(function () {
     $('#btn_guardarBorr').on("click", function (e) {
+        document.getElementById("loader").style.display = "flex";
         var _miles = $("#miles").val(); //LEJ 09.07.18
         var _decimales = $("#dec").val(); //LEJ 09.07.18
         var msg = 'Verificar valores en los campos de ';
