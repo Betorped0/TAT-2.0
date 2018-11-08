@@ -1186,11 +1186,11 @@ namespace TAT001.Controllers
             if (con.Count == 0)
             {
                 var con2 = (from a in db.MATERIALs
-                           join b in db.MATERIALGPs on a.MATERIALGP_ID equals b.ID
-                           join c in db.MATERIALTs on a.ID equals c.MATERIAL_ID
-                           where c.MAKTG.Contains(Prefix) && c.SPRAS == idioma && b.ACTIVO == true && a.ACTIVO == true
-                           group c by new { b.DESCRIPCION, c.MATERIAL_ID, c.MAKTG } into g
-                           select new { ID = g.Key.MATERIAL_ID, CATEGORIA = g.Key.DESCRIPCION, DESCRIPCION = g.Key.MAKTG }).ToList();
+                            join b in db.MATERIALGPs on a.MATERIALGP_ID equals b.ID
+                            join c in db.MATERIALTs on a.ID equals c.MATERIAL_ID
+                            where c.MAKTG.Contains(Prefix) && c.SPRAS == idioma && b.ACTIVO == true && a.ACTIVO == true
+                            group c by new { b.DESCRIPCION, c.MATERIAL_ID, c.MAKTG } into g
+                            select new { ID = g.Key.MATERIAL_ID, CATEGORIA = g.Key.DESCRIPCION, DESCRIPCION = g.Key.MAKTG }).ToList();
                 con.AddRange(con2);
             }
 
@@ -1275,7 +1275,7 @@ namespace TAT001.Controllers
             return cc;
         }
 
-        //COSULTA DE AJAX PARA EL TIPO DE 
+        //COSULTA DE AJAX PARA EL TIPO DE HEALTYDRINKS EN CATEGORIA       
         public JsonResult getHealtCategoria(object[] categorias)
         {
             List<object> tieneHealtty = new List<object>();
@@ -1286,14 +1286,14 @@ namespace TAT001.Controllers
                 {
                     string categoriaDes = categorias[i].ToString();
                     var con = (from t in db.MATERIALGPs
-                             where t.DESCRIPCION.Contains(categoriaDes)
-                             select new { t.DESCRIPCION }).FirstOrDefault();
+                               where t.DESCRIPCION.Contains(categoriaDes)
+                               select new { t.DESCRIPCION }).FirstOrDefault();
 
                     if (con == null)
                     {
                         var con2 = (from t in db.MATERIALGPs
-                                   where t.ID.Contains(categoriaDes)
-                                   select new { t.DESCRIPCION }).FirstOrDefault();
+                                    where t.ID.Contains(categoriaDes)
+                                    select new { t.DESCRIPCION }).FirstOrDefault();
 
                         categoriaDes = con2.DESCRIPCION;
                     }
@@ -1302,7 +1302,7 @@ namespace TAT001.Controllers
                         categoriaDes = con.DESCRIPCION;
                     }
 
-                    
+
 
                     var unica = db.MATERIALGPs.Where(x => x.DESCRIPCION == categoriaDes).FirstOrDefault();
 
@@ -1325,6 +1325,72 @@ namespace TAT001.Controllers
             }
 
             JsonResult cc = Json(tieneHealtty, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+
+        //COSULTA DE AJAX PARA EL TIPO DE HEALTYDRINKS EN MASIVA     
+        public JsonResult getHealtMaterial(object[] materiales)
+        {
+            List<object> tieneHealty = new List<object>();
+            List<object> matIDList = new List<object>();
+            string idioma = Session["spras"].ToString();
+
+            if (materiales.Length > 0)
+            {
+                for (int i = 0; i < materiales.Length; i++)
+                {
+                    string materialID = materiales[i].ToString();
+                    if (materialID.Length < 18) { materialID = cad.completaMaterial(materialID); }
+                    string num_mat = "";
+
+                    var con = (from mat1 in db.MATERIALs
+                               join mat2 in db.MATERIALTs on mat1.ID equals mat2.MATERIAL_ID
+                               where mat2.MATERIAL_ID.Contains(materialID) && mat2.SPRAS == idioma && mat1.ACTIVO == true
+                               group mat2 by new { mat2.MATERIAL_ID, mat2.MAKTG, mat1.MATERIALGP_ID } into g
+                               select new { ID = g.Key.MATERIAL_ID, MATERIALGP_ID = g.Key.MATERIALGP_ID }).FirstOrDefault();
+
+                    if (con == null)
+                    {
+                        var con2 = (from mat1 in db.MATERIALs
+                                    join mat2 in db.MATERIALTs on mat1.ID equals mat2.MATERIAL_ID
+                                    where mat2.MAKTG.Contains(materialID) && mat2.SPRAS == idioma && mat1.ACTIVO == true
+                                    group mat2 by new { mat2.MATERIAL_ID, mat2.MAKTG, mat1.MATERIALGP_ID } into g
+                                    select new { ID = g.Key.MATERIAL_ID, MATERIALGP_ID = g.Key.MATERIALGP_ID }).FirstOrDefault();
+
+                        materialID = con2.MATERIALGP_ID;
+                        num_mat = con2.ID;
+                    }
+                    else
+                    {
+                        materialID = con.MATERIALGP_ID;
+                        num_mat = con.ID;
+                    }
+
+                    var unica = db.MATERIALGPs.Where(x => x.ID == materialID).FirstOrDefault();
+
+                    if (unica != null)
+                    {
+                        if (unica.UNICA)
+                        {
+                            tieneHealty.Add(unica.UNICA);
+                            matIDList.Add(num_mat);
+                        }
+                        else
+                        {
+                            tieneHealty.Add(unica.UNICA);
+                            matIDList.Add(num_mat);
+                        }
+                    }
+                }
+                tieneHealty.Add(matIDList);
+            }
+            else
+            {
+                tieneHealty.Clear();
+                matIDList.Clear();
+            }
+
+            JsonResult cc = Json(tieneHealty, JsonRequestBehavior.AllowGet);
             return cc;
         }
 

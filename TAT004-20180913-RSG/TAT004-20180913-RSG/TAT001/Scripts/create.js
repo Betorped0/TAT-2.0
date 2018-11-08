@@ -3614,7 +3614,7 @@ function loadFilesf() {
 
 function loadExcelDis(file) {
 
-    document.getElementById("loader").style.display = "initial";//RSG 24.05.2018
+    document.getElementById("loader").style.display = "flex";//RSG 24.05.2018
     var formData = new FormData();
 
     formData.append("FileUpload", file);
@@ -3792,7 +3792,7 @@ function loadExcelDis(file) {
 function loadExcelSop(file) {
 
     var formData = new FormData();
-
+    document.getElementById("loader").style.display = 'flex';
     formData.append("FileUpload", file);
     importe_fac = 0;//jemo 25-17-2018
     var table = $('#table_sop').DataTable();
@@ -3842,6 +3842,7 @@ function loadExcelSop(file) {
                         $(addedRow).find('td.PROVEEDOR').addClass("errorProveedor");
                     }
                     importe_fac += parseFloat(toNum(dataj.IMPORTE_FACT));//jemo inicio 25-07-2018
+                    document.getElementById("loader").style.display = 'none';
                 });
                 //Aplicar configuración de columnas en las tablas
                 ocultarColumnasTablaSoporteDatos();
@@ -3851,8 +3852,9 @@ function loadExcelSop(file) {
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             alert("Request couldn't be processed. Please try again later. the reason        " + xhr.status + " : " + httpStatusMessage + " : " + customErrorMessage);
+            document.getElementById("loader").style.display = 'none';
         },
-        async: false
+        async: true
     });
 
 }
@@ -6064,18 +6066,6 @@ function cambiaLigada(campo) {
         $("#btnDelRango").css("display", "none");
     }
 }
-function descargarArchivo(me) {
-    var form = document.createElement("form"),
-        Archivo = document.createElement("input");
-    form.method = "POST";
-    form.action = root + 'Solicitudes/Descargar';
-    Archivo.value = me.value;
-    Archivo.name = "archivo";
-    form.appendChild(Archivo);
-    document.body.appendChild(form);
-    form.submit();
-}
-
 function descargarArchivo(me) {
     var form = document.createElement("form"),
         Archivo = document.createElement("input");

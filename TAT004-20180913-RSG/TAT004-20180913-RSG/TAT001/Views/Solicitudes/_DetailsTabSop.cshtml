@@ -26,7 +26,7 @@
                             {
                                 nombrefile = archivos[i].PATH.Split('\\');
 
-                                @archivos[i].CLASE
+                                @archivos[i].TSOPORTE.TSOPORTETs.Where(x=>x.SPRAS_ID == Session["spras"].ToString()).FirstOrDefault().TXT50
                                 <div class="file-field input-field">
                                     <button id="lbl_cargar" name="archivo" class="btn" type="submit" value="@archivos[i].PATH">DESCARGAR</button>
                                     <div class="file-path-wrapper">

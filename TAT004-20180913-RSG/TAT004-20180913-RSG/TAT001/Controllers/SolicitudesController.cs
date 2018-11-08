@@ -841,7 +841,7 @@ namespace TAT001.Controllers
                         }
                         ViewBag.TSOL_IDI = tsmod.TXT50.ToString();
                         ViewBag.TALL_IDI = id_clas.Where(c => c.TALL_ID == d.TALL_ID).FirstOrDefault().TXT50; //B20180618 v1 MGC 2018.06.18
-                        archivos = db.DOCUMENTOAs.Where(x => x.NUM_DOC.Equals(d.NUM_DOC)).ToList();
+                        archivos = db.DOCUMENTOAs.Where(x => x.NUM_DOC.Equals(d.NUM_DOC)).Include(x=>x.TSOPORTE).ToList();
 
                         List<DOCUMENTOP> docpl = db.DOCUMENTOPs.Where(docp => docp.NUM_DOC == d.NUM_DOC).ToList();//Documentos que se obtienen de la provisión
 
@@ -1278,7 +1278,10 @@ namespace TAT001.Controllers
             for (int i = 0; i < mas; i++)
             {
                 //anios.Add((DateTime.Now.Year + i).ToString());
-                anios.Add((d.FECHAI_VIG.Value.Year + i).ToString());
+                if (dp == "X")
+                    anios.Add((d.FECHAI_VIG.Value.Year + i).ToString());
+                else
+                    anios.Add((DateTime.Now.Year + i).ToString());
             }
             string selYear1 = "";//ADD RSG 04.11.2018-------------------------------
             string selYear2 = "";
@@ -1292,8 +1295,12 @@ namespace TAT001.Controllers
                 selYear1 = d.FECHAI_VIG.Value.Year.ToString();//ADD RSG 04.11.2018-------------------------------
                 selYear2 = d.FECHAF_VIG.Value.Year.ToString();
             }
-            if (cal.anioMas(d.FECHAI_VIG.Value)) selYear1 = (d.FECHAI_VIG.Value.Year + 1).ToString();
-            if (cal.anioMas(d.FECHAF_VIG.Value)) selYear2 = (d.FECHAF_VIG.Value.Year + 1).ToString();//ADD RSG 04.11.2018-------------------------------
+
+            if (dp == "X")
+            {
+                if (cal.anioMas(d.FECHAI_VIG.Value)) selYear1 = (d.FECHAI_VIG.Value.Year + 1).ToString();
+                if (cal.anioMas(d.FECHAF_VIG.Value)) selYear2 = (d.FECHAF_VIG.Value.Year + 1).ToString();//ADD RSG 04.11.2018-------------------------------
+            }
             //ViewBag.ANIOS = new SelectList(anios, DateTime.Now.Year.ToString());
             ViewBag.ANIOS = new SelectList(anios, selYear1);//ADD RSG 31.10.2018
             ViewBag.ANIOSF = new SelectList(anios, selYear2);//ADD RSG 31.10.2018
