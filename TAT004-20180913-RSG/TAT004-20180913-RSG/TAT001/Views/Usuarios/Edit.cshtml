@@ -10,6 +10,9 @@
 
 @using (Html.BeginForm())
 {
+    <script src="~/Scripts/autocomplete1.10.2.js"></script>
+    <script src="~/Scripts/autocomplete1.11.4.js"></script>
+    <link href="~/Content/autocomplete.css" rel="stylesheet" />
     @Html.AntiForgeryToken()
     <div class="row">
         <div class="col s12 l12 right-align">
@@ -190,9 +193,7 @@
             </div>*@
     </div>
     //OCG 11/10/18 Validacion de email
-    <script src="~/Scripts/autocomplete1.10.2.js"></script>
-    <script src="~/Scripts/autocomplete1.11.4.js"></script>
-    <link href="~/Content/autocomplete.css" rel="stylesheet" />
+
     <script>
         var admin = "@ViewBag.admin";
         var sociedad = $("#SELECT_SOCIEDADES").val();
@@ -238,7 +239,7 @@
                 source: function (request, response) {
                     auto.ajax({
                         type: "POST",
-                        url: 'Idioma',
+                        url: '../Idioma',
                         dataType: "json",
                         data: { "Prefix": request.term },
                         success: function (data) {
@@ -271,7 +272,7 @@
                 source: function (request, response) {
                     auto.ajax({
                         type: "POST",
-                        url: 'Sociedad',
+                        url: '../Sociedad',
                         dataType: "json",
                         data: { "Prefix": request.term },
                         success: function (data) {
@@ -304,7 +305,7 @@
                 source: function (request, response) {
                     auto.ajax({
                         type: "POST",
-                        url: 'Nivel',
+                        url: '../Nivel',
                         dataType: "json",
                         data: { "Prefix": request.term },
                         success: function (data) {
