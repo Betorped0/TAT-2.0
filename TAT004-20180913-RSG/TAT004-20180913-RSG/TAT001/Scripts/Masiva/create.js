@@ -1561,9 +1561,10 @@ $('#tab_test4').on('keydown.autocomplete', '.input_material', function () {
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
     col_index = col_index + 2;
+    var num_doc = tr.find("td:eq(1)").children().val();
 
-    //$(tr.find("td:eq(" + (col_index - 1) + ")").children().addClass('' + row_index + 'categoria' + (col_index - 1)));
-    var categoria = '.input_categoria';
+    $(tr.find("td:eq(" + (col_index - 1) + ")").children().addClass('' + row_index + 'categoria' + (col_index - 1)));
+    var categoria = '.' + row_index + 'categoria' + (col_index - 1);
 
     $(tr.find("td:eq(" + col_index + ")").children().addClass('' + row_index + 'descripcion' + col_index));
     var materialDes = '.' + row_index + 'descripcion' + col_index;
@@ -1592,9 +1593,10 @@ $('#tab_test4').on('keydown.autocomplete', '.input_material', function () {
             if (!(ui.item)) {
                 $(this).addClass("red white-text rojo");
                 $(tr.find("td:eq(" + (col_index - 1) + ")").children().val(""));
+                $(tr.find("td:eq(" + (col_index - 1) + ")").children().removeClass("red white-text rojo"));
                 $(tr.find("td:eq(" + col_index + ")").children().val(""));
+                $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
                 clearErrors();
-                //validarErrores("tab_test4");
                 e.target.value = "";
             }
         },
@@ -1603,11 +1605,12 @@ $('#tab_test4').on('keydown.autocomplete', '.input_material', function () {
             var label = ui.item.label;
             label = label.split('-');
             $(categoria).val(label[1]);
+            $(categoria).removeClass("red white-text rojo");
             $(materialDes).val(label[2]);
             $(this).removeClass("red white-text rojo");
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+            healtyMaterial(num_doc, label[0], row_index);
             clearErrors();
-            //validarErrores("tab_test4");
         }
     });
 });
@@ -1645,7 +1648,6 @@ $('#tab_test4').on('keydown.autocomplete', '.input_categoria', function () {
                 $(tr.find("td:eq(" + (col_index - 1) + ")").children().val(""));
                 $(tr.find("td:eq(" + (col_index + 1) + ")").children().val(""));
                 $(this).addClass("red white-text rojo");
-                healtyCategoria(num_doc);
                 clearErrors();
                 e.target.value = "";
             }
@@ -1993,22 +1995,108 @@ function healtyCategoria(num_doc) {
                 var pintaRojos = false;
 
                 if (jQuery.inArray(true, data) != -1) {
+                    if (data.length > 1) {
+                        pintaRojos = true;
+                    }
+                }
+
+                ////if (jQuery.inArray(true, data) != -1) {
+                ////    if (jQuery.inArray(false, data) != -1) {
+                ////        pintaRojos = true;
+                ////    }
+                ////}
+
+                for (var a = 0; a < tablaH4.rows().data().length; a++) {
+                    var rowH4 = tablaH4.row(a).node();
+                    var num_docH4 = $(rowH4).children().eq(1).children().val();
+
+                    if (num_doc == num_docH4) {
+                        if (pintaRojos) {
+                            $(rowH4).children().eq(6).children().addClass('red white-text rojo');
+                        }
+                        else {
+                            $(rowH4).children().eq(6).children().removeClass('red white-text rojo');
+                        }
+                    }
+                }
+
+            }
+        }
+    });
+}
+
+function healtyMaterial(num_doc, id, rowIndex) {
+    var tablaH4 = $('#tab_test4').DataTable();
+    var rowsMaterial = [];
+    var contador = 0;
+
+    for (var a = 0; a < tablaH4.rows().data().length; a++) {
+        var rowH4 = tablaH4.row(a).node();
+        var num_docH4 = $(rowH4).children().eq(1).children().val();
+        var material = $(rowH4).children().eq(5).children().val();
+
+        if (num_doc == num_docH4) {
+            if (a == rowIndex) {
+                rowsMaterial[contador] = id;
+                contador++;
+            }
+            else {
+                rowsMaterial[contador] = material;
+                contador++;
+            }
+        }
+    }
+
+    $.ajax({
+        type: "POST",
+        url: 'getHealtMaterial',
+        dataType: "json",
+        data: { "materiales": rowsMaterial },
+        async: true,
+        success: function (data) {
+            if (data !== null | data !== "") {
+                var tablaH4 = $('#tab_test4').DataTable();
+                var pintaRojos = false, num_mat = false;
+                var arrMatId = data.pop();
+                var recipienteMAteriales = arrMatId.sort();
+
+                var recipienteClone = [];
+                for (var i = 0; i < recipienteMAteriales.length - 1; i++) {
+                    if (recipienteMAteriales[i + 1] == recipienteMAteriales[i]) {
+                        recipienteClone.push(recipienteMAteriales[i]);
+                    }
+                }
+
+                if (jQuery.inArray(true, data) != -1) {
                     if (jQuery.inArray(false, data) != -1) {
                         pintaRojos = true;
                     }
                 }
 
-                if (pintaRojos) {
-                    for (var a = 0; a < tablaH4.rows().data().length; a++) {
-                        var rowH4 = tablaH4.row(a).node();
-                        var num_docH4 = $(rowH4).children().eq(1).children().val();
-                        
+                for (var a = 0; a < tablaH4.rows().data().length; a++) {
+                    var rowH4 = tablaH4.row(a).node();
+                    var num_docH4 = $(rowH4).children().eq(1).children().val();
 
-                        if (num_doc == num_docH4) {
-                            $(rowH4).children().eq(6).children().addClass('red white-text rojo');
+                    if (num_doc == num_docH4) {
+                        if (recipienteClone.length > 0) {
+                            if (pintaRojos) {
+                                $(rowH4).children().eq(5).children().addClass('red white-text rojo');
+                            }
+                            else {
+                                $(rowH4).children().eq(5).children().addClass('red white-text rojo');
+                            }
+                        }
+                        else {
+                            if (pintaRojos) {
+                                $(rowH4).children().eq(5).children().addClass('red white-text rojo');
+                            }
+                            else {
+                                $(rowH4).children().eq(5).children().removeClass('red white-text rojo');
+                            }
                         }
                     }
                 }
+
             }
         }
     });
