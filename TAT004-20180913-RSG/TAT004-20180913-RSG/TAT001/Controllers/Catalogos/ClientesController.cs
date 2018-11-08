@@ -274,12 +274,12 @@ namespace TAT001.Controllers.Catalogos
             {
                 return HttpNotFound();
             }
-            ViewBag.LAND = new SelectList(db.PAIS, "LAND", "LANDX", cLIENTE.LAND);
-            ViewBag.PARVW = new SelectList(db.TCLIENTEs, "ID", "ID", cLIENTE.PARVW);
-            var canales = db.CANALs.Select(x => new { x.CANAL1, DESCRIPCION = x.CANAL1 + "-" + x.CDESCRIPCION });
-            ViewBag.CANAL = new SelectList(canales, "CANAL1", "DESCRIPCION", cLIENTE.CANAL != null ? cLIENTE.CANAL.TrimEnd() : "");
-            var proveedores = db.PROVEEDORs.Select(x => new { x.ID, NOMBRE = x.ID + "-" + x.NOMBRE });
-            ViewBag.PROVEEDOR_ID = new SelectList(proveedores, "ID", "NOMBRE", cLIENTE.PROVEEDOR_ID != null ? cLIENTE.PROVEEDOR_ID.TrimEnd() : "");
+            //ViewBag.LAND = new SelectList(db.PAIS, "LAND", "LANDX", cLIENTE.LAND);
+            //ViewBag.PARVW = new SelectList(db.TCLIENTEs, "ID", "ID", cLIENTE.PARVW);
+            //var canales = db.CANALs.Select(x => new { x.CANAL1, DESCRIPCION = x.CANAL1 + "-" + x.CDESCRIPCION });
+            //ViewBag.CANAL = new SelectList(canales, "CANAL1", "DESCRIPCION", cLIENTE.CANAL != null ? cLIENTE.CANAL.TrimEnd() : "");
+            //var proveedores = db.PROVEEDORs.Select(x => new { x.ID, NOMBRE = x.ID + "-" + x.NOMBRE });
+            //ViewBag.PROVEEDOR_ID = new SelectList(proveedores, "ID", "NOMBRE", cLIENTE.PROVEEDOR_ID != null ? cLIENTE.PROVEEDOR_ID.TrimEnd() : "");
              return View(cLIENTE);
         }
 
@@ -1773,14 +1773,14 @@ namespace TAT001.Controllers.Catalogos
             TAT001Entities db = new TAT001Entities();
 
             var c = (from x in db.CLIENTEs
-                     where x.KUNNR.Contains(Prefix)
+                     where x.KUNNR.Contains(Prefix) && x.ACTIVO == true
                      select new { x.KUNNR, x.NAME1 }).ToList();
 
             if (c.Count == 0)
             {
                 var c2 = (from x in db.CLIENTEs
-                         where x.NAME1.Contains(Prefix)
-                         select new { x.KUNNR, x.NAME1 }).ToList();
+                          where x.NAME1.Contains(Prefix) && x.ACTIVO == true
+                          select new { x.KUNNR, x.NAME1 }).ToList();
                 c.AddRange(c2);
             }
             
@@ -1796,20 +1796,20 @@ namespace TAT001.Controllers.Catalogos
             TAT001Entities db = new TAT001Entities();
 
             var c = (from x in db.USUARIOs
-                     where x.ID.Contains(Prefix)
+                     where x.ID.Contains(Prefix) && x.ACTIVO == true
                      select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
 
             if (c.Count == 0)
             {
                 var c2 = (from x in db.USUARIOs
-                          where x.NOMBRE.Contains(Prefix)
+                          where x.NOMBRE.Contains(Prefix) && x.ACTIVO == true
                           select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
                 c.AddRange(c2);
             }
             else
             {
                 var c3 = (from x in db.USUARIOs
-                          where x.APELLIDO_P.Contains(Prefix)
+                          where x.APELLIDO_P.Contains(Prefix) && x.ACTIVO == true
                           select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
                 c.AddRange(c3);
             }
@@ -1826,16 +1826,53 @@ namespace TAT001.Controllers.Catalogos
             TAT001Entities db = new TAT001Entities();
 
             var c = (from x in db.SOCIEDADs
-                     where x.BUKRS.Contains(Prefix)
+                     where x.BUKRS.Contains(Prefix) && x.ACTIVO == true
                      select new { x.BUKRS, x.NAME1 }).ToList();
 
             if (c.Count == 0)
             {
                 var c2 = (from x in db.SOCIEDADs
-                          where x.NAME1.Contains(Prefix)
+                          where x.NAME1.Contains(Prefix) && x.ACTIVO == true
                           select new { x.BUKRS, x.NAME1 }).ToList();
                 c.AddRange(c2);
             }
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+
+        public JsonResult Idioma(string Prefix)
+        {
+            if (Prefix == null)
+                Prefix = "";
+
+            TAT001Entities db = new TAT001Entities();
+
+            var c = (from x in db.SPRAS
+                     where x.ID.Contains(Prefix)
+                     select new { x.ID, x.DESCRIPCION }).ToList();
+
+            if (c.Count == 0)
+            {
+                var c2 = (from x in db.SPRAS
+                          where x.DESCRIPCION.Contains(Prefix)
+                          select new { x.ID, x.DESCRIPCION }).ToList();
+                c.AddRange(c2);
+            }
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+
+        public JsonResult TCliente(string Prefix)
+        {
+            if (Prefix == null)
+                Prefix = "";
+
+            TAT001Entities db = new TAT001Entities();
+
+            var c = (from x in db.TCLIENTEs
+                     where x.ID.Contains(Prefix) && x.ACTIVO == true
+                     select new { x.ID }).ToList();
+
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
             return cc;
         }

@@ -535,7 +535,7 @@ namespace TAT001.Controllers
         }
         // GET: Solicitudes/Create
         [HttpGet]
-        public ActionResult Create(string id_d, string tsol)
+        public ActionResult Create(string id_d, string tsol, string dp = null)
         {
 
             Models.PresupuestoModels carga = new Models.PresupuestoModels();
@@ -588,6 +588,17 @@ namespace TAT001.Controllers
                     rel = Convert.ToDecimal(id_d);
                     ViewBag.relacionada = "prelacionada";
                     ViewBag.relacionadan = rel + "";
+                    if (dp != "X")//ADD 31.10.2018
+                    {
+                        rel = Convert.ToDecimal(id_d);
+                        ViewBag.relacionada = "prelacionada";
+                        ViewBag.relacionadan = rel + "";
+                    }
+                    else//ADD 31.10.2018----------------------------i
+                    {
+                        ViewBag.relacionada = "";
+                        ViewBag.relacionadan = "";
+                    }//ADD 31.10.2018-------------------------------f
 
                 }
                 catch
@@ -679,6 +690,11 @@ namespace TAT001.Controllers
                 if (tmp != null)
                     Session["pais"] = tmp.PAIS_ID;
 
+                if (dp == "X")//ADD 31.10.2018-------------------
+                {
+                    rel = decimal.Parse(id_d);
+                    ViewBag.duplicate = rel;
+                }//ADD 31.10.2018----------------------------
                 if (rel == 0)
                 {
                     try//RSG 15.05.2018
@@ -702,6 +718,14 @@ namespace TAT001.Controllers
                     tipS = "SD";
                     //directa SD
                 }
+                else if (dp == "X")//ADD RSG 07.11.2018
+                {
+                    DOCUMENTO duo = db.DOCUMENTOes.Find(decimal.Parse(id_d));
+                    if (duo.DOCUMENTO_REF == null)
+                        tipS = "SD";
+                    else
+                        tipS = "SR";
+                }
                 else
                 {
                     tipS = "SR";
@@ -712,6 +736,11 @@ namespace TAT001.Controllers
                     d = db.DOCUMENTOes.Where(doc => doc.NUM_DOC == rel).FirstOrDefault();
                     sociedad_id = d.SOCIEDAD_ID;
                 }
+                if (dp == "X")//ADD 31.10.2018-------------------
+                {
+                    pais_id = db.DOCUMENTOes.Find(rel).PAIS_ID;
+                    rel = 0;
+                }//ADD 31.10.2018----------------------------
                 if (ViewBag.reversa == "preversa")
                 {
                     list_sol = FnCommon.ObtenerCmbTiposSolicitud(db, user.SPRAS_ID, null, true)
@@ -988,8 +1017,17 @@ namespace TAT001.Controllers
                     id_bukrs = db.SOCIEDADs.Where(soc => soc.BUKRS.Equals(sociedad_id) && soc.ACTIVO == true).FirstOrDefault();//RSG 15.05.2018 //MGC B20180625 MGC 
                     DET_APROBH dah = id_bukrs.DET_APROBH.Where(x => x.PUESTOC_ID == user.PUESTO_ID & x.ACTIVO == true).FirstOrDefault();
                     if (dah == null) { Session["error"] = "Verifique el flujo de la sociedad: " + id_pais.SOCIEDAD_ID; Session["pais"] = null; return RedirectToAction("Index", "Home"); }
-                    if (docb != null)
+                    //if (docb != null)
+                    if (docb != null | dp == "X")//ADD 31.10.2018
                     {
+
+                        if (dp == "X")
+                        {
+                            rel = Convert.ToDecimal(id_d);
+                            Duplicado dup = new Duplicado();
+                            docb = dup.llenaDuplicado(db, rel, user.ID);
+                            ViewBag.duplicado = true;
+                        }
                         //Hay borrador 
                         borrador = "true";
                         d.TSOL_ID = docb.TSOL_ID;
@@ -1239,9 +1277,26 @@ namespace TAT001.Controllers
             int mas = 10;
             for (int i = 0; i < mas; i++)
             {
-                anios.Add((DateTime.Now.Year + i).ToString());
+                //anios.Add((DateTime.Now.Year + i).ToString());
+                anios.Add((d.FECHAI_VIG.Value.Year + i).ToString());
             }
-            ViewBag.ANIOS = new SelectList(anios, DateTime.Now.Year.ToString());
+            string selYear1 = "";//ADD RSG 04.11.2018-------------------------------
+            string selYear2 = "";
+            if (dp != "X")
+            {
+                selYear1 = DateTime.Now.Year.ToString();//ADD RSG 04.11.2018-------------------------------
+                selYear2 = DateTime.Now.Year.ToString();
+            }
+            else
+            {
+                selYear1 = d.FECHAI_VIG.Value.Year.ToString();//ADD RSG 04.11.2018-------------------------------
+                selYear2 = d.FECHAF_VIG.Value.Year.ToString();
+            }
+            if (cal.anioMas(d.FECHAI_VIG.Value)) selYear1 = (d.FECHAI_VIG.Value.Year + 1).ToString();
+            if (cal.anioMas(d.FECHAF_VIG.Value)) selYear2 = (d.FECHAF_VIG.Value.Year + 1).ToString();//ADD RSG 04.11.2018-------------------------------
+            //ViewBag.ANIOS = new SelectList(anios, DateTime.Now.Year.ToString());
+            ViewBag.ANIOS = new SelectList(anios, selYear1);//ADD RSG 31.10.2018
+            ViewBag.ANIOSF = new SelectList(anios, selYear2);//ADD RSG 31.10.2018
             d.SOCIEDAD = db.SOCIEDADs.Find(d.SOCIEDAD_ID);
             //----------------------------RSG 18.05.2018
             //----------------------------RSG 12.06.2018
@@ -2787,7 +2842,6 @@ namespace TAT001.Controllers
             {
                 anios.Add((DateTime.Now.Year + i).ToString());
             }
-            ViewBag.ANIOS = new SelectList(anios, DateTime.Now.Year.ToString());
             dOCUMENTO.SOCIEDAD = db.SOCIEDADs.Find(dOCUMENTO.SOCIEDAD_ID);
             //----------------------------RSG 18.05.2018
 

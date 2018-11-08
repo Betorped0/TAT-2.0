@@ -836,7 +836,7 @@ $('body').on('keydown.autocomplete', '.input_can', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item) && $(".input_").val() === "") {
+            if (!(ui.item) && $(".input_can").val() === "") {
                 e.target.value = "";
             }
         },
@@ -935,7 +935,7 @@ $('body').on('keydown.autocomplete', '.input_ni0', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item)) {
+            if (!(ui.item) && $(".input_ni0").val() === "") {
                 e.target.value = "";
             }
         },

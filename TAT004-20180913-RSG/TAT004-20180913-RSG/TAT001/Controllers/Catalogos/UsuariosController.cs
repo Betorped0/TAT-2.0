@@ -159,11 +159,11 @@ namespace TAT001.Controllers.Catalogos
             //    Session["spras"] = user.SPRAS_ID;
             //}
             string spra = Session["spras"].ToString();
-            ViewBag.PUESTO_ID = new SelectList(db.PUESTOTs.Where(a => a.SPRAS_ID.Equals(spra)), "PUESTO_ID", "TXT50");
-            ViewBag.ROLs = new SelectList(db.ROLTs.Where(a => a.SPRAS_ID.Equals(spra)), "ROL_ID", "TXT50");
-            ViewBag.ROLs = new SelectList(db.ROLs, "ID", "ID");
-            ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION");
-            ViewBag.BUNIT = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS");
+            //ViewBag.PUESTO_ID = new SelectList(db.PUESTOTs.Where(a => a.SPRAS_ID.Equals(spra)), "PUESTO_ID", "TXT50");
+            //ViewBag.ROLs = new SelectList(db.ROLTs.Where(a => a.SPRAS_ID.Equals(spra)), "ROL_ID", "TXT50");
+            //ViewBag.ROLs = new SelectList(db.ROLs, "ID", "ID");
+            //ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION");
+            //ViewBag.BUNIT = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS");
             return View();
         }
 
@@ -203,7 +203,7 @@ namespace TAT001.Controllers.Catalogos
                                 List<USUARIO> ss = db.USUARIOs.ToList();
                                 USUARIO usu = new USUARIO();
 
-                                if (u.ID != null && !db.USUARIOs.Any(x => x.ID == u.ID))
+                                if (uSUARIO.ID != null && !db.USUARIOs.Any(x => x.ID == uSUARIO.ID))
                                 {
                                     try
                                     {
@@ -216,8 +216,8 @@ namespace TAT001.Controllers.Catalogos
                                         u.SPRAS_ID = uSUARIO.SPRAS_ID;
                                         u.ACTIVO = true;
                                         u.PUESTO_ID = uSUARIO.PUESTO_ID;
-                                        u.MANAGER = null;
-                                        u.BACKUP_ID = null;
+                                        u.MANAGER = uSUARIO.MANAGER;
+                                        u.BACKUP_ID = uSUARIO.BACKUP_ID;
                                         u.BUNIT = uSUARIO.BUNIT;
 
                                         db.USUARIOs.Add(u);
@@ -394,15 +394,15 @@ namespace TAT001.Controllers.Catalogos
             {
                 sociedad[i] = sociedades[i].BUKRS;
             }
-            ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION", uSUARIO.SPRAS_ID);
-            ViewBag.PUESTO_ID = new SelectList(db.PUESTOTs.Where(a => a.SPRAS_ID.Equals(spra)), "PUESTO_ID", "TXT50", uSUARIO.PUESTO_ID);
-            ViewBag.BUNIT = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS", uSUARIO.BUNIT);
-            ViewBag.ROLES = db.ROLTs.Where(a => a.SPRAS_ID.Equals(spra));
+            //ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION", uSUARIO.SPRAS_ID);
+            //ViewBag.PUESTO_ID = new SelectList(db.PUESTOTs.Where(a => a.SPRAS_ID.Equals(spra)), "PUESTO_ID", "TXT50", uSUARIO.PUESTO_ID);
+            //ViewBag.BUNIT = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS", uSUARIO.BUNIT);
+            //ViewBag.ROLES = db.ROLTs.Where(a => a.SPRAS_ID.Equals(spra));
             ViewBag.SOCIEDADES = db.SOCIEDADs;
             ViewBag.sociedad = JsonConvert.SerializeObject(sociedad, Formatting.Indented);
-            ViewBag.PAISES = db.PAIS;
-            ViewBag.sociedad = JsonConvert.SerializeObject(sociedad, Formatting.Indented);
-            ViewBag.APROBADORES = db.DET_APROB.Where(a => a.BUKRS.Equals("KCMX") & a.PUESTOC_ID == uSUARIO.PUESTO_ID).ToList();
+            //ViewBag.PAISES = db.PAIS;
+            //ViewBag.sociedad = JsonConvert.SerializeObject(sociedad, Formatting.Indented);
+            //ViewBag.APROBADORES = db.DET_APROB.Where(a => a.BUKRS.Equals("KCMX") & a.PUESTOC_ID == uSUARIO.PUESTO_ID).ToList();
             return View(uSUARIO);
         }
 
@@ -3115,20 +3115,20 @@ namespace TAT001.Controllers.Catalogos
             TAT001Entities db = new TAT001Entities();
 
             var c = (from x in db.USUARIOs
-                     where x.ID.Contains(Prefix)
+                     where x.ID.Contains(Prefix) && x.ACTIVO == true
                      select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
 
             if (c.Count == 0)
             {
                 var c2 = (from x in db.USUARIOs
-                          where x.NOMBRE.Contains(Prefix)
+                          where x.NOMBRE.Contains(Prefix) && x.ACTIVO == true
                           select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
                 c.AddRange(c2);
             }
             else
             {
                 var c3 = (from x in db.USUARIOs
-                          where x.APELLIDO_P.Contains(Prefix)
+                          where x.APELLIDO_P.Contains(Prefix) && x.ACTIVO == true
                           select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
                 c.AddRange(c3);
             }
@@ -3145,13 +3145,13 @@ namespace TAT001.Controllers.Catalogos
             TAT001Entities db = new TAT001Entities();
 
             var c = (from x in db.CLIENTEs
-                     where x.KUNNR.Contains(Prefix)
+                     where x.KUNNR.Contains(Prefix) && x.ACTIVO == true
                      select new { x.KUNNR, x.NAME1 }).ToList();
 
             if (c.Count == 0)
             {
                 var c2 = (from x in db.CLIENTEs
-                          where x.NAME1.Contains(Prefix)
+                          where x.NAME1.Contains(Prefix) && x.ACTIVO == true
                           select new { x.KUNNR, x.NAME1 }).ToList();
                 c.AddRange(c2);
             }
@@ -3169,13 +3169,13 @@ namespace TAT001.Controllers.Catalogos
             var pa = (from x in db.PAIS where x.ACTIVO == true & x.SOCIEDAD_ID == BUKRS select x.LAND).FirstOrDefault();
 
             var c = (from x in db.CLIENTEs
-                     where x.KUNNR.Contains(Prefix) & x.LAND.Equals(pa)
+                     where x.KUNNR.Contains(Prefix) && x.LAND.Equals(pa) && x.ACTIVO == true
                      select new { x.KUNNR, x.NAME1 }).ToList();
 
             if (c.Count == 0)
             {
                 var c2 = (from x in db.CLIENTEs
-                          where x.NAME1.Contains(Prefix) & x.LAND.Equals(pa)
+                          where x.NAME1.Contains(Prefix) && x.LAND.Equals(pa) && x.ACTIVO == true
                           select new { x.KUNNR, x.NAME1 }).ToList();
                 c.AddRange(c2);
             }
@@ -3215,13 +3215,13 @@ namespace TAT001.Controllers.Catalogos
             TAT001Entities db = new TAT001Entities();
 
             var c = (from x in db.SOCIEDADs
-                     where x.BUKRS.Contains(Prefix)
+                     where x.BUKRS.Contains(Prefix) && x.ACTIVO == true
                      select new { x.BUKRS, x.BUTXT }).ToList();
 
             if (c.Count == 0)
             {
                 var c2 = (from x in db.SOCIEDADs
-                          where x.BUTXT.Contains(Prefix)
+                          where x.BUTXT.Contains(Prefix) && x.ACTIVO == true
                           select new { x.BUKRS, x.BUTXT }).ToList();
                 c.AddRange(c2);
             }
