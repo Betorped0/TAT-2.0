@@ -3372,11 +3372,12 @@ namespace TAT001.Controllers
                 esDocRef = true;
                 montoApli = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == D.NUM_DOC && x.ESTATUS_C == null).Sum(x => x.MONTO_DOC_MD.Value);
             }
-            else if (D.DOCUMENTO_REF != null)
+            else if (D.DOCUMENTO_REF != null )
             {
                 esDocRef = true;
-                montoApli = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == D.DOCUMENTO_REF && x.ESTATUS_C == null).Sum(x => x.MONTO_DOC_MD.Value);
-
+                if (db.DOCUMENTOes.Any(x => x.DOCUMENTO_REF == D.DOCUMENTO_REF && x.ESTATUS_C == null)) {
+                    montoApli = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == D.DOCUMENTO_REF && x.ESTATUS_C == null).Sum(x => x.MONTO_DOC_MD.Value);
+                }
             }
             if (montoProv > 0 && montoApli > 0)
             {
