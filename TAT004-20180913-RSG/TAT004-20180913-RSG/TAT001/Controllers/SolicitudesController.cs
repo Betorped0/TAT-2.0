@@ -1027,6 +1027,7 @@ namespace TAT001.Controllers
                             Duplicado dup = new Duplicado();
                             docb = dup.llenaDuplicado(db, rel, user.ID);
                             ViewBag.duplicado = true;
+                            ViewBag.ligada = docb.LIGADA;
                         }
                         //Hay borrador 
                         borrador = "true";
@@ -1087,6 +1088,7 @@ namespace TAT001.Controllers
                         d.DOCUMENTOF = docfl;
 
                         //RSG add 20.09.2018------------------------------------------
+                        d.DOCUMENTOREC = new List<DOCUMENTOREC>();
                         foreach (DOCUMENTOBORRREC drec in docb.DOCUMENTOBORRRECs)
                         {
                             DOCUMENTOREC dbp = new DOCUMENTOREC();
@@ -1106,7 +1108,7 @@ namespace TAT001.Controllers
                             dbp.PERIODO = drec.PERIODO;
                             dbp.PORC = drec.PORC;
 
-                            d.DOCUMENTORECs.Add(dbp);
+                            d.DOCUMENTOREC.Add(dbp);
                         }
                         //RSG add 20.09.2018------------------------------------------
 
@@ -1165,6 +1167,22 @@ namespace TAT001.Controllers
                     ViewBag.GALL_IDI = "";
                     ViewBag.TALL_IDI = ""; //B20180618 v1 MGC 2018.06.18
                 }
+                //ADD RSG 09.11.2018---------------------------------------------I
+                if (dp != null)
+                {
+                    List<DOCUMENTOP> docpl = db.DOCUMENTOPs.Where(docp => docp.NUM_DOC == d.NUM_DOC).ToList();//Documentos que se obtienen de la provisión     
+                    List<DOCUMENTOM> docml = new List<DOCUMENTOM>();//MGC B20180611----------------------------                   
+                    if (docpl.Count > 0)
+                    {
+                        docml = db.DOCUMENTOMs.Where(docm => docm.NUM_DOC == d.NUM_DOC).ToList();
+                    }
+                    //MGC B20180611 Obtener las categorias con el detalle de cada material
+                    if (docml.Count > 0)
+                    {
+                        res = grupoMaterialesRel(docpl, docml);
+                    }
+                }
+                //ADD RSG 09.11.2018---------------------------------------------F
 
                 ViewBag.files = archivos;
 
