@@ -1123,6 +1123,7 @@ namespace TAT001.Controllers.Reportes
                   ,[NETLB]
                  */
                 alls.Add(all);
+
             }
 
             ViewBag.reporte = alls.ToList();
