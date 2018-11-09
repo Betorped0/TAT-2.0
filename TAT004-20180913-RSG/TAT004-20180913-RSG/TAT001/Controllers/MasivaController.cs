@@ -3019,7 +3019,16 @@ namespace TAT001.Controllers
                             else
                             {
                                 docup.MATNR = "";
-                                docup.MATKL = matkl;
+                                var categoria = db.MATERIALGPs.Where(x => x.DESCRIPCION == matkl).FirstOrDefault();
+                                if (categoria != null)
+                                {
+                                    docup.MATKL = categoria.ID;
+                                }
+                                else
+                                {
+                                    docup.MATKL = null;
+                                }
+                                
                             }
                             docup.CANTIDAD = 0;
                             docup.MONTO = Convert.ToDecimal(monto);
@@ -3039,6 +3048,7 @@ namespace TAT001.Controllers
                                 dop.MONTO_DOC_ML = tcambio.getValSoc(sociedad.WAERS, moneda_id, Convert.ToDecimal(apoyo), out errorString);
                                 dop.TIPO_CAMBIOL = tcambio.getUkurs(sociedad.WAERS, moneda_id, out errorString);
                                 dop.TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
+                                dop.TIPO_CAMBIO = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
                                 dop.MONTO_DOC_ML2 = (dop.MONTO_DOC_MD / dop.TIPO_CAMBIOL2);
                                 //var TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
                                 //dop.MONTO_DOC_ML2 = (TIPO_CAMBIOL2 * dop.MONTO_DOC_MD);
@@ -3053,6 +3063,7 @@ namespace TAT001.Controllers
                                 dop.MONTO_DOC_ML = tcambio.getValSoc(sociedad.WAERS, moneda_id, Convert.ToDecimal(apoyo), out errorString);
                                 dop.TIPO_CAMBIOL = tcambio.getUkurs(sociedad.WAERS, moneda_id, out errorString);
                                 dop.TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
+                                dop.TIPO_CAMBIO = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
                                 dop.MONTO_DOC_ML2 = (dop.MONTO_DOC_MD / dop.TIPO_CAMBIOL2);
                                 //var TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
                                 //dop.MONTO_DOC_ML2 = (TIPO_CAMBIOL2 * dop.MONTO_DOC_MD);
