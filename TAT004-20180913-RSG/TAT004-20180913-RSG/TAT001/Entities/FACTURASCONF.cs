@@ -32,5 +32,7 @@ namespace TAT001.Entities
         public bool DESCRIPCION { get; set; }
         public bool SOCIEDAD { get; set; }
         public bool ACTIVO { get; set; }
+    
+        public virtual SOCIEDAD SOCIEDAD1 { get; set; }
     }
 }

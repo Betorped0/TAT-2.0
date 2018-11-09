@@ -678,6 +678,32 @@
           <Property Name="USUARIOA_ID" Type="nvarchar" MaxLength="16" Nullable="false" />
           <Property Name="ACTIVO" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="DOCTOAYUDA">
+          <Key>
+            <PropertyRef Name="ID_DOCUMENTO" />
+          </Key>
+          <Property Name="ID_DOCUMENTO" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="NOMBRE" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ID_CLASIFICACION" Type="int" Nullable="false" />
+          <Property Name="ACTIVO" Type="bit" Nullable="false" />
+          <Property Name="RUTA_DOCUMENTO" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DOCTOCLASIF">
+          <Key>
+            <PropertyRef Name="ID_CLASIFICACION" />
+          </Key>
+          <Property Name="ID_CLASIFICACION" Type="int" Nullable="false" />
+          <Property Name="CLASIFICACION_DSC" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DOCTOCLASIFT">
+          <Key>
+            <PropertyRef Name="ID_CLASIFICACION" />
+            <PropertyRef Name="SPRAS_ID" />
+          </Key>
+          <Property Name="ID_CLASIFICACION" Type="int" Nullable="false" />
+          <Property Name="SPRAS_ID" Type="nvarchar" MaxLength="2" Nullable="false" />
+          <Property Name="TEXTO" Type="nvarchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="DOCUMENTBORR">
           <Key>
             <PropertyRef Name="USUARIOC_ID" />
@@ -1217,6 +1243,17 @@
           </Key>
           <Property Name="MWSKZ" Type="nchar" MaxLength="2" Nullable="false" />
           <Property Name="ACTIVO" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="LAYOUT_CARGA">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LAND" Type="nchar" MaxLength="2" Nullable="false" />
+          <Property Name="SOCIEDAD_ID" Type="nchar" MaxLength="4" Nullable="false" />
+          <Property Name="RUTA" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="FECHAC" Type="datetime" Nullable="false" />
+          <Property Name="TIPO" Type="nchar" MaxLength="10" Nullable="false" />
         </EntityType>
         <EntityType Name="LEYENDA">
           <Key>
@@ -3159,6 +3196,42 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_DET_TAXEOC_PAIS">
+          <End Role="PAIS" Type="Self.PAIS" Multiplicity="1" />
+          <End Role="DET_TAXEOC" Type="Self.DET_TAXEOC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PAIS">
+              <PropertyRef Name="LAND" />
+            </Principal>
+            <Dependent Role="DET_TAXEOC">
+              <PropertyRef Name="PAIS_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DOCTOAYUDA_DOCTOCLASIF">
+          <End Role="DOCTOCLASIF" Type="Self.DOCTOCLASIF" Multiplicity="1" />
+          <End Role="DOCTOAYUDA" Type="Self.DOCTOAYUDA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DOCTOCLASIF">
+              <PropertyRef Name="ID_CLASIFICACION" />
+            </Principal>
+            <Dependent Role="DOCTOAYUDA">
+              <PropertyRef Name="ID_CLASIFICACION" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DOCTOCLASIFT_DOCTOCLASIF">
+          <End Role="DOCTOCLASIF" Type="Self.DOCTOCLASIF" Multiplicity="1" />
+          <End Role="DOCTOCLASIFT" Type="Self.DOCTOCLASIFT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DOCTOCLASIF">
+              <PropertyRef Name="ID_CLASIFICACION" />
+            </Principal>
+            <Dependent Role="DOCTOCLASIFT">
+              <PropertyRef Name="ID_CLASIFICACION" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_DOCUMENTO_CLIENTE">
           <End Role="CLIENTE" Type="Self.CLIENTE" Multiplicity="0..1" />
           <End Role="DOCUMENTO" Type="Self.DOCUMENTO" Multiplicity="*" />
@@ -3507,6 +3580,18 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_FACTURASCONF_SOCIEDAD">
+          <End Role="SOCIEDAD" Type="Self.SOCIEDAD" Multiplicity="1" />
+          <End Role="FACTURASCONF" Type="Self.FACTURASCONF" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SOCIEDAD">
+              <PropertyRef Name="BUKRS" />
+            </Principal>
+            <Dependent Role="FACTURASCONF">
+              <PropertyRef Name="SOCIEDAD_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_FLUJO_DOCUMENTO">
           <End Role="DOCUMENTO" Type="Self.DOCUMENTO" Multiplicity="1" />
           <End Role="FLUJO" Type="Self.FLUJO" Multiplicity="*" />
@@ -3616,6 +3701,30 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
             </Principal>
             <Dependent Role="IIMPUESTO">
               <PropertyRef Name="LAND" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LAYOUT_CARGA_PAIS">
+          <End Role="PAIS" Type="Self.PAIS" Multiplicity="1" />
+          <End Role="LAYOUT_CARGA" Type="Self.LAYOUT_CARGA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PAIS">
+              <PropertyRef Name="LAND" />
+            </Principal>
+            <Dependent Role="LAYOUT_CARGA">
+              <PropertyRef Name="LAND" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LAYOUT_CARGA_SOCIEDAD">
+          <End Role="SOCIEDAD" Type="Self.SOCIEDAD" Multiplicity="1" />
+          <End Role="LAYOUT_CARGA" Type="Self.LAYOUT_CARGA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SOCIEDAD">
+              <PropertyRef Name="BUKRS" />
+            </Principal>
+            <Dependent Role="LAYOUT_CARGA">
+              <PropertyRef Name="SOCIEDAD_ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -4947,6 +5056,9 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <EntitySet Name="DET_TAX" EntityType="Self.DET_TAX" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DET_TAXEO" EntityType="Self.DET_TAXEO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DET_TAXEOC" EntityType="Self.DET_TAXEOC" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DOCTOAYUDA" EntityType="Self.DOCTOAYUDA" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DOCTOCLASIF" EntityType="Self.DOCTOCLASIF" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DOCTOCLASIFT" EntityType="Self.DOCTOCLASIFT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DOCUMENTBORR" EntityType="Self.DOCUMENTBORR" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DOCUMENTO" EntityType="Self.DOCUMENTO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DOCUMENTOA" EntityType="Self.DOCUMENTOA" Schema="dbo" store:Type="Tables" />
@@ -4975,6 +5087,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <EntitySet Name="GrupoCat" EntityType="Self.GrupoCat" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="IIMPUESTO" EntityType="Self.IIMPUESTO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="IMPUESTO" EntityType="Self.IMPUESTO" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LAYOUT_CARGA" EntityType="Self.LAYOUT_CARGA" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LEYENDA" EntityType="Self.LEYENDA" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MATERIAL" EntityType="Self.MATERIAL" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MATERIALGP" EntityType="Self.MATERIALGP" Schema="dbo" store:Type="Tables" />
@@ -5454,6 +5567,18 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
             <End Role="USUARIO" EntitySet="USUARIO" />
             <End Role="DET_TAXEO" EntitySet="DET_TAXEO" />
           </AssociationSet>
+          <AssociationSet Name="FK_DET_TAXEOC_PAIS" Association="Self.FK_DET_TAXEOC_PAIS">
+            <End Role="PAIS" EntitySet="PAIS" />
+            <End Role="DET_TAXEOC" EntitySet="DET_TAXEOC" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DOCTOAYUDA_DOCTOCLASIF" Association="Self.FK_DOCTOAYUDA_DOCTOCLASIF">
+            <End Role="DOCTOCLASIF" EntitySet="DOCTOCLASIF" />
+            <End Role="DOCTOAYUDA" EntitySet="DOCTOAYUDA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DOCTOCLASIFT_DOCTOCLASIF" Association="Self.FK_DOCTOCLASIFT_DOCTOCLASIF">
+            <End Role="DOCTOCLASIF" EntitySet="DOCTOCLASIF" />
+            <End Role="DOCTOCLASIFT" EntitySet="DOCTOCLASIFT" />
+          </AssociationSet>
           <AssociationSet Name="FK_DOCUMENTO_CLIENTE" Association="Self.FK_DOCUMENTO_CLIENTE">
             <End Role="CLIENTE" EntitySet="CLIENTE" />
             <End Role="DOCUMENTO" EntitySet="DOCUMENTO" />
@@ -5566,6 +5691,10 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
             <End Role="TS_CAMPO" EntitySet="TS_CAMPO" />
             <End Role="DOCUMENTOTS" EntitySet="DOCUMENTOTS" />
           </AssociationSet>
+          <AssociationSet Name="FK_FACTURASCONF_SOCIEDAD" Association="Self.FK_FACTURASCONF_SOCIEDAD">
+            <End Role="SOCIEDAD" EntitySet="SOCIEDAD" />
+            <End Role="FACTURASCONF" EntitySet="FACTURASCONF" />
+          </AssociationSet>
           <AssociationSet Name="FK_FLUJO_DOCUMENTO" Association="Self.FK_FLUJO_DOCUMENTO">
             <End Role="DOCUMENTO" EntitySet="DOCUMENTO" />
             <End Role="FLUJO" EntitySet="FLUJO" />
@@ -5601,6 +5730,14 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <AssociationSet Name="FK_IIMPUESTO_PAIS" Association="Self.FK_IIMPUESTO_PAIS">
             <End Role="PAIS" EntitySet="PAIS" />
             <End Role="IIMPUESTO" EntitySet="IIMPUESTO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LAYOUT_CARGA_PAIS" Association="Self.FK_LAYOUT_CARGA_PAIS">
+            <End Role="PAIS" EntitySet="PAIS" />
+            <End Role="LAYOUT_CARGA" EntitySet="LAYOUT_CARGA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LAYOUT_CARGA_SOCIEDAD" Association="Self.FK_LAYOUT_CARGA_SOCIEDAD">
+            <End Role="SOCIEDAD" EntitySet="SOCIEDAD" />
+            <End Role="LAYOUT_CARGA" EntitySet="LAYOUT_CARGA" />
           </AssociationSet>
           <AssociationSet Name="FK_LEYENDA_PAIS" Association="Self.FK_LEYENDA_PAIS">
             <End Role="PAIS" EntitySet="PAIS" />
@@ -6757,6 +6894,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Property Name="VERSION" Type="Int32" Nullable="false" />
           <Property Name="USUARIOA_ID" Type="String" MaxLength="16" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ACTIVO" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="PAI" Relationship="TAT001Model.FK_DET_TAXEOC_PAIS" FromRole="DET_TAXEOC" ToRole="PAI" />
         </EntityType>
         <EntityType Name="DOCUMENTBORR">
           <Key>
@@ -7241,6 +7379,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Property Name="DESCRIPCION" Type="Boolean" Nullable="false" />
           <Property Name="SOCIEDAD" Type="Boolean" Nullable="false" />
           <Property Name="ACTIVO" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="SOCIEDAD1" Relationship="TAT001Model.FK_FACTURASCONF_SOCIEDAD" FromRole="FACTURASCONF" ToRole="SOCIEDAD" />
         </EntityType>
         <EntityType Name="FLUJNEGO">
           <Key>
@@ -7534,6 +7673,8 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <NavigationProperty Name="TAX_LAND" Relationship="Self.FK_TAX_LAND_PAIS" FromRole="PAIS" ToRole="TAX_LAND" />
           <NavigationProperty Name="TAXEOHs" Relationship="Self.FK_TAXEOH_PAIS" FromRole="PAIS" ToRole="TAXEOH" />
           <NavigationProperty Name="TS_FORM" Relationship="Self.FK_TS_FORM_PAIS" FromRole="PAIS" ToRole="TS_FORM" />
+          <NavigationProperty Name="DET_TAXEOC" Relationship="TAT001Model.FK_DET_TAXEOC_PAIS" FromRole="PAI" ToRole="DET_TAXEOC" />
+          <NavigationProperty Name="LAYOUT_CARGA" Relationship="TAT001Model.FK_LAYOUT_CARGA_PAIS" FromRole="PAI" ToRole="LAYOUT_CARGA" />
         </EntityType>
         <EntityType Name="PERIODO">
           <Key>
@@ -7833,6 +7974,8 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <NavigationProperty Name="TS_FORM" Relationship="Self.FK_TS_FORM_SOCIEDAD" FromRole="SOCIEDAD" ToRole="TS_FORM" />
           <NavigationProperty Name="USUARIOs" Relationship="Self.FK_USUARIO_SOCIEDAD" FromRole="SOCIEDAD" ToRole="USUARIO" />
           <NavigationProperty Name="USUARIOs1" Relationship="TAT001Model.USUARIOSOC" FromRole="SOCIEDAD" ToRole="USUARIO" />
+          <NavigationProperty Name="FACTURASCONFs" Relationship="TAT001Model.FK_FACTURASCONF_SOCIEDAD" FromRole="SOCIEDAD" ToRole="FACTURASCONF" />
+          <NavigationProperty Name="LAYOUT_CARGA" Relationship="TAT001Model.FK_LAYOUT_CARGA_SOCIEDAD" FromRole="SOCIEDAD" ToRole="LAYOUT_CARGA" />
         </EntityType>
         <EntityType Name="SPRA">
           <Key>
@@ -12051,6 +12194,34 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
             <End Role="USUARIO" EntitySet="USUARIOs" />
             <End Role="USUARIOLOG" EntitySet="USUARIOLOGs" />
           </AssociationSet>
+          <EntitySet Name="DOCTOAYUDAs" EntityType="TAT001Model.DOCTOAYUDA" />
+          <EntitySet Name="DOCTOCLASIFs" EntityType="TAT001Model.DOCTOCLASIF" />
+          <EntitySet Name="DOCTOCLASIFTs" EntityType="TAT001Model.DOCTOCLASIFT" />
+          <EntitySet Name="LAYOUT_CARGA" EntityType="TAT001Model.LAYOUT_CARGA" />
+          <AssociationSet Name="FK_DET_TAXEOC_PAIS" Association="TAT001Model.FK_DET_TAXEOC_PAIS">
+            <End Role="PAI" EntitySet="PAIS" />
+            <End Role="DET_TAXEOC" EntitySet="DET_TAXEOC" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DOCTOAYUDA_DOCTOCLASIF" Association="TAT001Model.FK_DOCTOAYUDA_DOCTOCLASIF">
+            <End Role="DOCTOCLASIF" EntitySet="DOCTOCLASIFs" />
+            <End Role="DOCTOAYUDA" EntitySet="DOCTOAYUDAs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DOCTOCLASIFT_DOCTOCLASIF" Association="TAT001Model.FK_DOCTOCLASIFT_DOCTOCLASIF">
+            <End Role="DOCTOCLASIF" EntitySet="DOCTOCLASIFs" />
+            <End Role="DOCTOCLASIFT" EntitySet="DOCTOCLASIFTs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FACTURASCONF_SOCIEDAD" Association="TAT001Model.FK_FACTURASCONF_SOCIEDAD">
+            <End Role="SOCIEDAD" EntitySet="SOCIEDADs" />
+            <End Role="FACTURASCONF" EntitySet="FACTURASCONFs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LAYOUT_CARGA_PAIS" Association="TAT001Model.FK_LAYOUT_CARGA_PAIS">
+            <End Role="PAI" EntitySet="PAIS" />
+            <End Role="LAYOUT_CARGA" EntitySet="LAYOUT_CARGA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LAYOUT_CARGA_SOCIEDAD" Association="TAT001Model.FK_LAYOUT_CARGA_SOCIEDAD">
+            <End Role="SOCIEDAD" EntitySet="SOCIEDADs" />
+            <End Role="LAYOUT_CARGA" EntitySet="LAYOUT_CARGA" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="CPS_LISTA_CLI_PRO_Result">
           <Property Type="String" Name="KUNNR" Nullable="false" MaxLength="10" />
@@ -12286,6 +12457,121 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
             </Principal>
             <Dependent Role="USUARIOLOG">
               <PropertyRef Name="USUARIO_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="DOCTOAYUDA">
+          <Key>
+            <PropertyRef Name="ID_DOCUMENTO" />
+          </Key>
+          <Property Name="ID_DOCUMENTO" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="NOMBRE" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ID_CLASIFICACION" Type="Int32" Nullable="false" />
+          <Property Name="ACTIVO" Type="Boolean" Nullable="false" />
+          <Property Name="RUTA_DOCUMENTO" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="DOCTOCLASIF" Relationship="TAT001Model.FK_DOCTOAYUDA_DOCTOCLASIF" FromRole="DOCTOAYUDA" ToRole="DOCTOCLASIF" />
+        </EntityType>
+        <EntityType Name="DOCTOCLASIF">
+          <Key>
+            <PropertyRef Name="ID_CLASIFICACION" />
+          </Key>
+          <Property Name="ID_CLASIFICACION" Type="Int32" Nullable="false" />
+          <Property Name="CLASIFICACION_DSC" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="DOCTOAYUDAs" Relationship="TAT001Model.FK_DOCTOAYUDA_DOCTOCLASIF" FromRole="DOCTOCLASIF" ToRole="DOCTOAYUDA" />
+          <NavigationProperty Name="DOCTOCLASIFTs" Relationship="TAT001Model.FK_DOCTOCLASIFT_DOCTOCLASIF" FromRole="DOCTOCLASIF" ToRole="DOCTOCLASIFT" />
+        </EntityType>
+        <EntityType Name="DOCTOCLASIFT">
+          <Key>
+            <PropertyRef Name="ID_CLASIFICACION" />
+            <PropertyRef Name="SPRAS_ID" />
+          </Key>
+          <Property Name="ID_CLASIFICACION" Type="Int32" Nullable="false" />
+          <Property Name="SPRAS_ID" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="TEXTO" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="DOCTOCLASIF" Relationship="TAT001Model.FK_DOCTOCLASIFT_DOCTOCLASIF" FromRole="DOCTOCLASIFT" ToRole="DOCTOCLASIF" />
+        </EntityType>
+        <EntityType Name="LAYOUT_CARGA">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LAND" Type="String" Nullable="false" MaxLength="2" FixedLength="true" Unicode="true" />
+          <Property Name="SOCIEDAD_ID" Type="String" Nullable="false" MaxLength="4" FixedLength="true" Unicode="true" />
+          <Property Name="RUTA" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FECHAC" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="TIPO" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="PAI" Relationship="TAT001Model.FK_LAYOUT_CARGA_PAIS" FromRole="LAYOUT_CARGA" ToRole="PAI" />
+          <NavigationProperty Name="SOCIEDAD" Relationship="TAT001Model.FK_LAYOUT_CARGA_SOCIEDAD" FromRole="LAYOUT_CARGA" ToRole="SOCIEDAD" />
+        </EntityType>
+        <Association Name="FK_DET_TAXEOC_PAIS">
+          <End Type="TAT001Model.PAI" Role="PAI" Multiplicity="1" />
+          <End Type="TAT001Model.DET_TAXEOC" Role="DET_TAXEOC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PAI">
+              <PropertyRef Name="LAND" />
+            </Principal>
+            <Dependent Role="DET_TAXEOC">
+              <PropertyRef Name="PAIS_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DOCTOAYUDA_DOCTOCLASIF">
+          <End Type="TAT001Model.DOCTOCLASIF" Role="DOCTOCLASIF" Multiplicity="1" />
+          <End Type="TAT001Model.DOCTOAYUDA" Role="DOCTOAYUDA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DOCTOCLASIF">
+              <PropertyRef Name="ID_CLASIFICACION" />
+            </Principal>
+            <Dependent Role="DOCTOAYUDA">
+              <PropertyRef Name="ID_CLASIFICACION" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DOCTOCLASIFT_DOCTOCLASIF">
+          <End Type="TAT001Model.DOCTOCLASIF" Role="DOCTOCLASIF" Multiplicity="1" />
+          <End Type="TAT001Model.DOCTOCLASIFT" Role="DOCTOCLASIFT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DOCTOCLASIF">
+              <PropertyRef Name="ID_CLASIFICACION" />
+            </Principal>
+            <Dependent Role="DOCTOCLASIFT">
+              <PropertyRef Name="ID_CLASIFICACION" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FACTURASCONF_SOCIEDAD">
+          <End Type="TAT001Model.SOCIEDAD" Role="SOCIEDAD" Multiplicity="1" />
+          <End Type="TAT001Model.FACTURASCONF" Role="FACTURASCONF" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SOCIEDAD">
+              <PropertyRef Name="BUKRS" />
+            </Principal>
+            <Dependent Role="FACTURASCONF">
+              <PropertyRef Name="SOCIEDAD_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LAYOUT_CARGA_PAIS">
+          <End Type="TAT001Model.PAI" Role="PAI" Multiplicity="1" />
+          <End Type="TAT001Model.LAYOUT_CARGA" Role="LAYOUT_CARGA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PAI">
+              <PropertyRef Name="LAND" />
+            </Principal>
+            <Dependent Role="LAYOUT_CARGA">
+              <PropertyRef Name="LAND" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LAYOUT_CARGA_SOCIEDAD">
+          <End Type="TAT001Model.SOCIEDAD" Role="SOCIEDAD" Multiplicity="1" />
+          <End Type="TAT001Model.LAYOUT_CARGA" Role="LAYOUT_CARGA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SOCIEDAD">
+              <PropertyRef Name="BUKRS" />
+            </Principal>
+            <Dependent Role="LAYOUT_CARGA">
+              <PropertyRef Name="SOCIEDAD_ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -14827,6 +15113,46 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
                 <ScalarProperty Name="SESION" ColumnName="SESION" />
                 <ScalarProperty Name="POS" ColumnName="POS" />
                 <ScalarProperty Name="USUARIO_ID" ColumnName="USUARIO_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DOCTOAYUDAs">
+            <EntityTypeMapping TypeName="TAT001Model.DOCTOAYUDA">
+              <MappingFragment StoreEntitySet="DOCTOAYUDA">
+                <ScalarProperty Name="RUTA_DOCUMENTO" ColumnName="RUTA_DOCUMENTO" />
+                <ScalarProperty Name="ACTIVO" ColumnName="ACTIVO" />
+                <ScalarProperty Name="ID_CLASIFICACION" ColumnName="ID_CLASIFICACION" />
+                <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+                <ScalarProperty Name="ID_DOCUMENTO" ColumnName="ID_DOCUMENTO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DOCTOCLASIFs">
+            <EntityTypeMapping TypeName="TAT001Model.DOCTOCLASIF">
+              <MappingFragment StoreEntitySet="DOCTOCLASIF">
+                <ScalarProperty Name="CLASIFICACION_DSC" ColumnName="CLASIFICACION_DSC" />
+                <ScalarProperty Name="ID_CLASIFICACION" ColumnName="ID_CLASIFICACION" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DOCTOCLASIFTs">
+            <EntityTypeMapping TypeName="TAT001Model.DOCTOCLASIFT">
+              <MappingFragment StoreEntitySet="DOCTOCLASIFT">
+                <ScalarProperty Name="TEXTO" ColumnName="TEXTO" />
+                <ScalarProperty Name="SPRAS_ID" ColumnName="SPRAS_ID" />
+                <ScalarProperty Name="ID_CLASIFICACION" ColumnName="ID_CLASIFICACION" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LAYOUT_CARGA">
+            <EntityTypeMapping TypeName="TAT001Model.LAYOUT_CARGA">
+              <MappingFragment StoreEntitySet="LAYOUT_CARGA">
+                <ScalarProperty Name="TIPO" ColumnName="TIPO" />
+                <ScalarProperty Name="FECHAC" ColumnName="FECHAC" />
+                <ScalarProperty Name="RUTA" ColumnName="RUTA" />
+                <ScalarProperty Name="SOCIEDAD_ID" ColumnName="SOCIEDAD_ID" />
+                <ScalarProperty Name="LAND" ColumnName="LAND" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
