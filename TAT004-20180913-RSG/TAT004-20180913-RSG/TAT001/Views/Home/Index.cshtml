@@ -88,21 +88,24 @@
             }
         </script>
     }
-    <div class="col s8 right-align right">
-        @if (ViewBag.nivelUsuario == 14)
-        {
-            <button id="btnExport1" name="excel" class="btn-small"></button>
-        }
-        else
-        {
-            @Html.ActionLink("Crear Solicitud", "Create", "Solicitudes", null, new { @class = "btn-small", @id = "btn_create" });
-            using (Html.BeginForm("Descargar", "Home", FormMethod.Post, new { @style = "display:inline;" }))
+        <div class="col s8 right-align right">
+            @if (ViewBag.nivelUsuario == 14)
             {
-                <button id="btnExport" name="excel" class="btn-small" type="submit" value="Excel"></button>
+                using (Html.BeginForm("DescargarEx", "Home", FormMethod.Post, new { @style = "display:inline;" }))
+                {
+                    <button id="btnExport" name="excel" class="btn-small"></button>
+                }
             }
-        }
-        @*@Html.ActionLink("Enviar Negociaciones", "Edit", "Negociaciones", null, new { @class = "btn-small red", @onclick = "document.getElementById('loader').style.display = 'initial';" })*@
-    </div>
+            else
+            {
+                @Html.ActionLink("Crear Solicitud", "Create", "Solicitudes", null, new { @class = "btn-small", @id = "btn_create" });
+                using (Html.BeginForm("Descargar", "Home", FormMethod.Post, new { @style = "display:inline;" }))
+                {
+                    <button id="btnExport" name="excel" class="btn-small" type="submit" value="Excel"></button>
+                }
+            }
+            @*@Html.ActionLink("Enviar Negociaciones", "Edit", "Negociaciones", null, new { @class = "btn-small red", @onclick = "document.getElementById('loader').style.display = 'initial';" })*@
+        </div>
     <div class="col s12 right-align" style="margin-top:5px;">
 
     </div>

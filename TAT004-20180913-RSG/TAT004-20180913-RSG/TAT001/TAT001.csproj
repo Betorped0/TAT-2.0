@@ -265,6 +265,7 @@
     <Compile Include="Controllers\Catalogos\PaginasController.cs" />
     <Compile Include="Controllers\Catalogos\PaisController.cs" />
     <Compile Include="Controllers\MasivaController.cs" />
+    <Compile Include="Controllers\ModificacionesGlobalesController.cs" />
     <Compile Include="Controllers\NegociacionesController.cs" />
     <Compile Include="Controllers\Configuracion\NegsController.cs" />
     <Compile Include="Controllers\PresupuestoController.cs" />
@@ -841,6 +842,7 @@
     <Compile Include="Models\Masiva\Multiple.cs" />
     <Compile Include="Models\Masiva\Relacionada.cs" />
     <Compile Include="Models\MaterialViewModel.cs" />
+    <Compile Include="Models\ModificacionesGlobalesViewModel.cs" />
     <Compile Include="Models\ProveedorViewModel.cs" />
     <Compile Include="Models\ReportesModel.cs" />
     <Compile Include="Models\SelectTreeItem.cs" />
@@ -1377,6 +1379,9 @@
     <Content Include="Entities\TAT001.edmx.diagram">
       <DependentUpon>TAT001.edmx</DependentUpon>
     </Content>
+    <Content Include="PdfTemp\Solicitudes_Consulta\Solicitudes_Consulta09\11\2018.xlsx" />
+    <Content Include="PdfTemp\Solicitudes_Consulta\Solicitudes_Consulta\09\11\2018.xlsx" />
+    <Content Include="PdfTemp\Solicitudes_Consulta\09\11\2018.xlsx" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\borrador.js" />
     <Content Include="Scripts\dropdowntree.js" />

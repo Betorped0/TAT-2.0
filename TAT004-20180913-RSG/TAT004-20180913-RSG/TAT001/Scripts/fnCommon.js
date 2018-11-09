@@ -192,7 +192,7 @@
             document.getElementById("loader").style.display = "none";
         }
     },
-    autoAjax: function (url,params,fnData) {
+    autoAjax: function (url,response,params,fnData) {
         return auto.ajax({
             url: url,
             type: "GET",
