@@ -1597,6 +1597,7 @@ $(window).on('load', function () {
     copiarTableVistaSop();
     //Valores en  distribución    
     copiarTableVista("", borr, ne); //B20180625 MGC 2018.07.02 //Add MGC B20180705 2018.07.05 ne no eliminar
+    copiarTableVistaRec();
 
     updateFooter();
     //Pasar el total de la tabla al total en monto
@@ -1712,11 +1713,13 @@ function _ff() {
             success: function (data) {
                 var _xd = data;
                 var pp = parseInt(data);
-                if (pp != 0) {
+                if (pp !== 0) {
                     $("#periodoi_id").val(pp);
                     document.getElementById("btn-peri").checked = true;
                     $("#btn-peri").trigger("change");
-                    $("#anioi_id").val(_anoi);
+                    if (!isDuplicado()) {
+                        $("#anioi_id").val(_anoi);
+                    }
                 } else {
                     document.getElementById("btn-date").checked = true;
                     $("#btn-date").trigger("change");
@@ -1743,7 +1746,9 @@ function _ff() {
                     $("#periodof_id").val(pp);
                     document.getElementById("btn-peri").checked = true;
                     $("#btn-peri").trigger("change");
-                    $("#aniof_id").val(_anof);
+                    if (!isDuplicado()) {
+                        $("#aniof_id").val(_anof);
+                    }
                 } else {
                     document.getElementById("btn-date").checked = true;
                     $("#btn-date").trigger("change");
@@ -2829,7 +2834,7 @@ $('body').on('focusout', '#bmonto_apoyo', function () {
     updateTableValIndex(9, this.value);
     var file = $("#file_dis");
     var select_neg = $('#select_neg').val();
-    if (ligada() || select_neg==="P") {
+    if (ligada() || select_neg === "P") {
         (this.value === "0" || this.value === "0.00%") ? file.prop('disabled', true) : file.prop('disabled', false);
         cambiaRec();
     } else {
@@ -3725,7 +3730,7 @@ function loadExcelDis(file) {
                     }
                     //LEJ 09.07.2018---------------------------------Termina
                     //var addedRow = addRowMat(table, dataj.POS, dataj.MATNR, dataj.MATKL, dataj.DESC, dataj.MONTO, dataj.PORC_APOYO, dataj.MONTO_APOYO, dataj.MONTOC_APOYO, dataj.PRECIO_SUG, dataj.VOLUMEN_EST, dataj.APOYO_EST, relacionada, reversa, date_de, date_al, calculo, pm);//RSG 24.05.2018
-                    var addedRow; 
+                    var addedRow;
                     if (ligada()) {
                         addedRow = addRowMat(table, dataj.POS, dataj.MATNR, dataj.MATKL, dataj.DESC, "", toShowPorc(dataj.PORC_APOYO), "", "", "", "", "", relacionada, "", reversa, date_de, date_al, calculo, pm, "");
                     }
@@ -3755,7 +3760,7 @@ function loadExcelDis(file) {
                 if (!ligada()) {
                     updateTable();
                 }
-                
+
 
                 if (pm == "pm") {
                     $(".pm").prop('disabled', true);
