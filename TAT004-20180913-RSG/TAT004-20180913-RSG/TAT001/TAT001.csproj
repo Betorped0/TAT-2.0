@@ -265,6 +265,7 @@
     <Compile Include="Controllers\Catalogos\PaginasController.cs" />
     <Compile Include="Controllers\Catalogos\PaisController.cs" />
     <Compile Include="Controllers\MasivaController.cs" />
+    <Compile Include="Controllers\ModificacionesGlobalesController.cs" />
     <Compile Include="Controllers\NegociacionesController.cs" />
     <Compile Include="Controllers\Configuracion\NegsController.cs" />
     <Compile Include="Controllers\PresupuestoController.cs" />
@@ -841,6 +842,7 @@
     <Compile Include="Models\Masiva\Multiple.cs" />
     <Compile Include="Models\Masiva\Relacionada.cs" />
     <Compile Include="Models\MaterialViewModel.cs" />
+    <Compile Include="Models\ModificacionesGlobalesViewModel.cs" />
     <Compile Include="Models\ProveedorViewModel.cs" />
     <Compile Include="Models\ReportesModel.cs" />
     <Compile Include="Models\SelectTreeItem.cs" />
@@ -2007,6 +2009,7 @@
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->
     <Folder Include="App_Data\" />
+    <Folder Include="Archivos\DoctosAyuda\" />
     <Folder Include="files\Ayuda\" />
     <Folder Include="PdfTemp\" />
   </ItemGroup>

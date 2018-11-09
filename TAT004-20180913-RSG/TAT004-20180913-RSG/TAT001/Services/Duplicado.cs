@@ -79,12 +79,12 @@ namespace TAT001.Services
             docb.TIPO_CAMBIOL2 = docPadre.TIPO_CAMBIOL2;
             docb.TIPO_RECURRENTE = docPadre.TIPO_RECURRENTE;
             docb.TIPO_TECNICO = docPadre.TIPO_TECNICO;
-            //docb.TIPO_TECNICO2  = docPadre. ;
-            ////TSOL tsol = db1.TSOLs.Where(x => x.TSOLM == docPadre.TSOL_ID).FirstOrDefault();
-            ////if (tsol == null)
+            //docb.TIPO_TECNICO2 = docPadre. ;
+            TSOL tsol = db1.TSOLs.Where(x => x.TSOLM == docPadre.TSOL_ID).FirstOrDefault();
+            if (tsol == null)
                 docb.TSOL_ID = docPadre.TSOL_ID;
-            ////else
-            ////    docb.TSOL_ID = tsol.ID;
+            else
+                docb.TSOL_ID = tsol.ID;
             docb.USUARIOC_ID = docPadre.USUARIOC_ID;
             docb.VKORG = docPadre.VKORG;
             docb.VTWEG = docPadre.VTWEG;
