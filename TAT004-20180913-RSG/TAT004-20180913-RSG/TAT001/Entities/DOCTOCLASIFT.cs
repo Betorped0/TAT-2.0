@@ -12,18 +12,12 @@ namespace TAT001.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class DET_TAXEOC
+    public partial class DOCTOCLASIFT
     {
-        public string USUARIOC_ID { get; set; }
-        public string PAIS_ID { get; set; }
-        public string VKORG { get; set; }
-        public string VTWEG { get; set; }
-        public string SPART { get; set; }
-        public string KUNNR { get; set; }
-        public int VERSION { get; set; }
-        public string USUARIOA_ID { get; set; }
-        public bool ACTIVO { get; set; }
+        public int ID_CLASIFICACION { get; set; }
+        public string SPRAS_ID { get; set; }
+        public string TEXTO { get; set; }
     
-        public virtual PAI PAI { get; set; }
+        public virtual DOCTOCLASIF DOCTOCLASIF { get; set; }
     }
 }
