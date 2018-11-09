@@ -87,7 +87,8 @@ $(document).ready(function () {
         input[readonly] {
             color: gray;
         }
-            .dataTables_wrapper {
+
+        .dataTables_wrapper {
             overflow: auto;
         }
 
@@ -254,3 +255,14 @@ $(document).ready(function () {
     var el = document.querySelector(".tabs");
     var instance = M.Tabs.init(el, []);
 </script>
+@if (ViewBag.duplicado != null){
+    <script>
+        var dd = false;
+        $('#tab_dis').on("click", function (e) {
+            if (isDuplicado() & !dd & isRecurrente()) {
+                $("#tabs_rec").removeClass("disabled");
+                dd = true;
+            }
+        });
+    </script>
+}
