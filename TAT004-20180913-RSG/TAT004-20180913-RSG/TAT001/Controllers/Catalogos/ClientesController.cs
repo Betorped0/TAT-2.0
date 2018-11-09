@@ -1876,5 +1876,27 @@ namespace TAT001.Controllers.Catalogos
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
             return cc;
         }
+
+        public JsonResult Pais(string Prefix)
+        {
+            if (Prefix == null)
+                Prefix = "";
+
+            TAT001Entities db = new TAT001Entities();
+
+            var c = (from x in db.PAIS
+                     where x.LAND.Contains(Prefix) && x.ACTIVO == true
+                     select new { x.LAND, x.LANDX }).ToList();
+
+            if (c.Count == 0)
+            {
+                var c2 = (from x in db.PAIS
+                          where x.LANDX.Contains(Prefix) && x.ACTIVO == true
+                          select new { x.LAND, x.LANDX}).ToList();
+                c.AddRange(c2);
+            }
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
     }
 }
