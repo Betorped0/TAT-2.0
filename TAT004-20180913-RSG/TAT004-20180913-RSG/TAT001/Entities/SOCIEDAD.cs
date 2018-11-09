@@ -30,6 +30,8 @@ namespace TAT001.Entities
             this.TS_FORM = new HashSet<TS_FORM>();
             this.USUARIOs = new HashSet<USUARIO>();
             this.USUARIOs1 = new HashSet<USUARIO>();
+            this.FACTURASCONFs = new HashSet<FACTURASCONF>();
+            this.LAYOUT_CARGA = new HashSet<LAYOUT_CARGA>();
         }
     
         public string BUKRS { get; set; }
@@ -72,5 +74,9 @@ namespace TAT001.Entities
         public virtual ICollection<USUARIO> USUARIOs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<USUARIO> USUARIOs1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<FACTURASCONF> FACTURASCONFs { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<LAYOUT_CARGA> LAYOUT_CARGA { get; set; }
     }
 }

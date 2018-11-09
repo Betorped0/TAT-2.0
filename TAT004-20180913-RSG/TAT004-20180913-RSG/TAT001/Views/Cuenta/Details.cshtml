@@ -8,7 +8,7 @@
 <div class="row">
     <div class="row right">
         <div class="col l12 m12 right">
-            <button type="submit" id="btn_editar" value="Agregar" class="btn btn-default" />
+            <a href="@Url.Action("Edit", "Cuenta", new { soc = Model.SOCIEDAD_ID, pai = Model.PAIS_ID, tal = Model.TALL_ID, eje = Model.EJERCICIO })" id="lblEditar" class="waves-effect waves-light btn">Editar</a>
         </div>
     </div>
 </div>

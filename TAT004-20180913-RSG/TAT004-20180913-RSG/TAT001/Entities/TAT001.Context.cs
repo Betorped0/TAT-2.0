@@ -185,6 +185,10 @@ namespace TAT001.Entities
         public virtual DbSet<Grupo> Grupoes { get; set; }
         public virtual DbSet<GrupoCat> GrupoCats { get; set; }
         public virtual DbSet<USUARIOLOG> USUARIOLOGs { get; set; }
+        public virtual DbSet<DOCTOAYUDA> DOCTOAYUDAs { get; set; }
+        public virtual DbSet<DOCTOCLASIF> DOCTOCLASIFs { get; set; }
+        public virtual DbSet<DOCTOCLASIFT> DOCTOCLASIFTs { get; set; }
+        public virtual DbSet<LAYOUT_CARGA> LAYOUT_CARGA { get; set; }
     
         [DbFunction("TAT001Entities", "split")]
         public virtual IQueryable<split_Result> split(string delimited, string delimiter)

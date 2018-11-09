@@ -81,10 +81,7 @@ namespace TAT001.Controllers
                             Concentrado r1 = new Concentrado();
                             r1.documento = dOCUMENTO;
                             if (dOCUMENTO.PAYER_ID == null) continue;
-                            //dOCUMENTO.CLIENTE = db.CLIENTEs.Where(a => a.VKORG.Equals(dOCUMENTO.VKORG)
-                            //                                        & a.VTWEG.Equals(dOCUMENTO.VTWEG)
-                            //                                        & a.SPART.Equals(dOCUMENTO.SPART)
-                            //                                        & a.KUNNR.Equals(dOCUMENTO.PAYER_ID)).First();
+                            
                             r1.CANAL = db.CANALs.Where(a => a.CANAL1.Equals(dOCUMENTO.CLIENTE.CANAL)).FirstOrDefault();
                             var cuentas = (from C in db.CUENTAs
                                            join cgl in db.CUENTAGLs on C.CARGO equals cgl.ID
@@ -148,6 +145,7 @@ namespace TAT001.Controllers
                         }
                     }
                     ViewBag.lista_reporte = reporte;
+
                 }
                 try
                 {
@@ -1030,6 +1028,48 @@ namespace TAT001.Controllers
                      select new { N.KUNNR, N.NAME1 });
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
             return cc;
+        }
+        [HttpPost]
+        public FileResult DescargarEx()
+        {
+            var cLiente = db.CLIENTEs.ToList();
+            generarExcelHome(cLiente, Server.MapPath("~/pdfTemp/"));
+            return File(Server.MapPath("~/pdfTemp/Clientes_" + DateTime.Now.ToShortDateString() + ".xlsx"), "application /vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Clientes_" + DateTime.Now.ToShortDateString() + ".xlsx");
+        }
+
+        public void generarExcelHome(List<CLIENTE> lst, string ruta)
+        {
+            var workbook = new XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("Sheet 1");
+            try
+            {
+                worksheet.Cell("A1").Value = new[] { new { BANNER = "Id Cliente" }, };
+                worksheet.Cell("B1").Value = new[] { new { BANNER = "Nombre" }, };
+                worksheet.Cell("C1").Value = new[] { new { BANNER = "Región" }, };
+                worksheet.Cell("D1").Value = new[] { new { BANNER = "País" }, };
+                worksheet.Cell("E1").Value = new[] { new { BANNER = "Tipo de Cliente" }, };
+                worksheet.Cell("F1").Value = new[] { new { BANNER = "Payer" }, };
+                worksheet.Cell("G1").Value = new[] { new { BANNER = "Canal" }, };
+
+                for (int i = 2; i <= (lst.Count + 1); i++)
+                {
+                    var pais = lst[i - 2].LAND;
+                    var pais2 = db.PAIS.Where(X => X.LAND.Equals(pais)).Select(x => x.LANDX).FirstOrDefault();
+                    worksheet.Cell("A" + i).Value = new[] { new { BANNER = lst[i - 2].KUNNR.TrimStart('0') }, };
+                    worksheet.Cell("B" + i).Value = new[] { new { BANNER = lst[i - 2].NAME1 }, };
+                    worksheet.Cell("C" + i).Value = new[] { new { BANNER = lst[i - 2].SUBREGION }, };
+                    worksheet.Cell("D" + i).Value = new[] { new { BANNER = pais2 }, };
+                    worksheet.Cell("E" + i).Value = new[] { new { BANNER = lst[i - 2].PARVW }, };
+                    worksheet.Cell("F" + i).Value = new[] { new { BANNER = lst[i - 2].PAYER.TrimStart('0') }, };
+                    worksheet.Cell("G" + i).Value = new[] { new { BANNER = lst[i - 2].CANAL }, };
+                }
+                var rt = ruta + @"\Clientes_" + DateTime.Now.ToShortDateString() + ".xlsx";
+                workbook.SaveAs(rt);
+            }
+            catch (Exception e)
+            {
+                var ex = e.ToString();
+            }
         }
     }
 }

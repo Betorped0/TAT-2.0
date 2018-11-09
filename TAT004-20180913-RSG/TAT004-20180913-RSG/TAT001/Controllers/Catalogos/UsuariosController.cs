@@ -512,8 +512,8 @@ namespace TAT001.Controllers.Catalogos
                             }
                         }
                     }
-                    return RedirectToAction("Details", new { id = uSUARIO.ID });
-                    //return RedirectToAction("Index");
+                    //return RedirectToAction("Details", new { id = uSUARIO.ID });
+                    return RedirectToAction("Index");
                 }
                 else
                 {
@@ -2139,6 +2139,10 @@ namespace TAT001.Controllers.Catalogos
             var idi = Request["idi"];
             var pas = Request["pas"];
 
+            if (cli == null && com == null && niv == null && usc == null && nom == null && app == null && apm == null && ema == null && idi == null && pas == null)
+            {
+                cli = "";com = "";niv = "";usc = "";nom = "";app = "";apm = "";ema = "";idi = "";pas = "";
+            }
             rowst = cli.Split(',').Length;
             string[,] tablas = new string[rowst, 11];
             string[,] client = new string[rowst, 2];

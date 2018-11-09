@@ -228,61 +228,112 @@
                 <a class='collapsible-header waves-effect waves-teal'><i class='material-icons'>@c.ICON</i>@c.TXT50</a>
                 <div class='collapsible-body'>
                     <ul class="collapsible" data-collapsible="accordion">
-                        @{bool submenu1 = true;
+                        @{bool submenucatalogos = true, submenuayuda = true;
                             foreach (TAT001.Entities.PAGINAV p in ViewBag.permisos)
                             {
-                                if (c.ID.Equals(p.CARPETA_ID) && p.CARPETA_ID == 500 && submenu1)
+                                if (c.ID.Equals(p.CARPETA_ID) && p.CARPETA_ID == 500 && submenucatalogos)
                                 {
                                     var manttos = new List<PAGINAV>(ViewBag.permisos).Where(t => t.Mantenimiento != null).Select(t => t.Mantenimiento).Distinct();
                                     //var manttos = new TAT001Entities().Grupoes.Where(t=>t.SPRAS_ID==p.SPRAS_ID).ToList();
-                                    foreach (var manto in manttos.OrderBy(t=>t.Value))
+                                    foreach (var manto in manttos.OrderBy(t => t.Value))
                                     {
                                         var mant = new TAT001Entities().Grupoes.Where(t => t.SPRAS_ID == p.SPRAS_ID && t.Grupo_ID == manto.Value).SingleOrDefault();
-                        <li class="collection">
-                            <a class='collapsible-header collection-item' href='#' data-target='@mant.Grupo_ID@mant.SPRAS_ID'>@mant.Descripcion<i class="material-icons right">details</i></a>
-                            <div class='collapsible-body collapsible-body1'>
-                                <ul id='@mant.Grupo_ID@mant.SPRAS_ID' class="collapsible" data-collapsible="accordion">
-                                    @{ var grupos = new List<PAGINAV>(ViewBag.permisos).Where(t => t.Mantenimiento == mant.Grupo_ID).Select(t => t.Grupo).Distinct();
-                                        foreach (var g in grupos.OrderBy(t=>t.Value))
-                                        {
-                                            var grupo = new TAT001Entities().GrupoCats.Where(t => t.SPRAS_ID == p.SPRAS_ID && t.Grupo_ID == g).SingleOrDefault();
-                                            var paginasxgrupo = new List<PAGINAV>(ViewBag.permisos).Where(t => t.Grupo == g).ToList();
-                                    <li class="collection">
-                                        @if (paginasxgrupo.Count > 1)
-                                        {
-                                            <a class='collapsible-header' href='#' data-target='@grupo.Grupo_ID@grupo.Descripcion.TrimEnd()'>@grupo.Descripcion<i class="material-icons right">arrow_drop_down</i></a>
-                                            <div class='collapsible-body'>
+                                        <li class="collection">
+                                            <a class='collapsible-header collection-item' href='#' data-target='@mant.Grupo_ID@mant.SPRAS_ID'>@mant.Descripcion<i class="material-icons right">details</i></a>
+                                            <div class='collapsible-body collapsible-body1'>
+                                                <ul id='@mant.Grupo_ID@mant.SPRAS_ID' class="collapsible" data-collapsible="accordion">
+                                                    @{ var grupos = new List<PAGINAV>(ViewBag.permisos).Where(t => t.Mantenimiento == mant.Grupo_ID).Select(t => t.Grupo).Distinct();
+                                                        foreach (var g in grupos.OrderBy(t => t.Value))
+                                                        {
+                                                            var grupo = new TAT001Entities().GrupoCats.Where(t => t.SPRAS_ID == p.SPRAS_ID && t.Grupo_ID == g).SingleOrDefault();
+                                                            var paginasxgrupo = new List<PAGINAV>(ViewBag.permisos).Where(t => t.Grupo == g).ToList();
+                                                            <li class="collection">
+                                                                @if (paginasxgrupo.Count > 1)
+                                                                {
+                                                                    <a class='collapsible-header' href='#' data-target='@grupo.Grupo_ID@grupo.Descripcion.TrimEnd()'>@grupo.Descripcion<i class="material-icons right">arrow_drop_down</i></a>
+                                                                    <div class='collapsible-body'>
 
-                                                <ul id='@grupo.Grupo_ID@grupo.Descripcion.TrimEnd()' class="collapsible" data-collapsible="accordion">
-                                                    @foreach (var pa in paginasxgrupo)
-                                                    {
-                                                        <li class="classcatalogos">
-                                                            <a href="@Url.Action(pa.PAGINA_URL, c.URL)">@pa.TXT50</a>
-                                                        </li>
+                                                                        <ul id='@grupo.Grupo_ID@grupo.Descripcion.TrimEnd()' class="collapsible" data-collapsible="accordion">
+                                                                            @foreach (var pa in paginasxgrupo)
+                                                                            {
+                                                                                <li class="classcatalogos">
+                                                                                    <a href="@Url.Action(pa.PAGINA_URL, c.URL)">@pa.TXT50</a>
+                                                                                </li>
+                                                                            }
+                                                                        </ul>
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a href="@Url.Action(paginasxgrupo.First().PAGINA_URL, c.URL)">@paginasxgrupo.First().TXT50</a>
+                                                                }
+                                                            </li>
+                                                        }
                                                     }
-                                                </ul>                                            
+                                                </ul>
                                             </div>
-                                        }
-                                        else
-                                        {
-                                            <a href="@Url.Action(paginasxgrupo.First().PAGINA_URL, c.URL)">@paginasxgrupo.First().TXT50</a>
-                                        }
                                         </li>
-                                        }
-                                    }
-                                </ul>
-                            </div>
-                        </li>
-                                        submenu1 = false;
+                                        submenucatalogos = false;
                                     }
                                 }
-                                if (c.ID.Equals(p.CARPETA_ID) && p.CARPETA_ID == 500 && p.Grupo==null && submenu1==false)
+                                if (c.ID.Equals(p.CARPETA_ID) && p.CARPETA_ID == 500 && p.Grupo == null && submenucatalogos == false)
                                 {
                                     <li>
                                         <a class="classcatalogos" href="@Url.Action(p.PAGINA_URL, c.URL)">@p.TXT50</a>
                                     </li>
                                 }
-                                else if (c.ID.Equals(p.CARPETA_ID)&& p.CARPETA_ID!=500)
+                                if (c.ID.Equals(p.CARPETA_ID) && p.CARPETA_ID == 1200 && submenuayuda)
+                                {
+                                    //var manttos = new List<PAGINAV>(ViewBag.permisos).Where(t => t.Mantenimiento == 5).Select(t => t.Mantenimiento).Distinct();
+                                    //var manttos = new TAT001Entities().Grupoes.Where(t=>t.SPRAS_ID==p.SPRAS_ID).ToList();
+                                    //foreach (var manto in manttos.OrderBy(t => t.Value))
+                                    //{
+                                        //var mant = new TAT001Entities().Grupoes.Where(t => t.SPRAS_ID == p.SPRAS_ID && t.Grupo_ID == manto.Value).SingleOrDefault();
+                                        //<li class="collection">
+                                            //<a class='collapsible-header collection-item' href='#' data-target='@mant.Grupo_ID@mant.SPRAS_ID'>@mant.Descripcion<i class="material-icons right">details</i></a>
+                                            //<div class='collapsible-body collapsible-body1'>
+                                                //<ul id='@mant.Grupo_ID@mant.SPRAS_ID' class="collapsible" data-collapsible="accordion">
+                                                     var grupos = new List<PAGINAV>(ViewBag.permisos).Where(t => t.Grupo >= 20 && t.Grupo<25).Select(t => t.Grupo).Distinct();
+                                                        foreach (var g in grupos.OrderBy(t => t.Value))
+                                                        {
+                                                            var grupo = new TAT001Entities().GrupoCats.Where(t => t.SPRAS_ID == p.SPRAS_ID && t.Grupo_ID == g).SingleOrDefault();
+                                                            var paginasxgrupo = new List<PAGINAV>(ViewBag.permisos).Where(t => t.Grupo == g).ToList();
+                                                            <li class="collection">
+                                                                @if (paginasxgrupo.Count > 1)
+                                                                {
+                                                                    <a class='collapsible-header collection-item' href='#' data-target='@grupo.Grupo_ID@grupo.Descripcion.TrimEnd()'>@grupo.Descripcion<i class="material-icons right">arrow_drop_down</i></a>
+                                                                    <div class='collapsible-body'>
+
+                                                                        <ul id='@grupo.Grupo_ID@grupo.Descripcion.TrimEnd()' class="collapsible" data-collapsible="accordion">
+                                                                            @foreach (var pa in paginasxgrupo)
+                                                                            {
+                                                                                <li class="classcatalogos">
+                                                                                    <a href="@Url.Action(pa.PAGINA_URL, c.URL)">@pa.TXT50</a>
+                                                                                </li>
+                                                                            }
+                                                                        </ul>
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a href="@Url.Action(paginasxgrupo.First().PAGINA_URL, c.URL)">@paginasxgrupo.First().TXT50</a>
+                                                                }
+                                                            </li>
+                                                        }
+                                                    
+                                                //</ul>
+                                            //</div>
+                                        //</li>
+                                        submenuayuda = false;
+                                    //}
+                                }
+                                if (c.ID.Equals(p.CARPETA_ID) && p.CARPETA_ID == 1200 && p.Grupo == null && submenuayuda == false)
+                                {
+                                    <li>
+                                        <a class="classcatalogos" href="@Url.Action(p.PAGINA_URL, c.URL)">@p.TXT50</a>
+                                    </li>
+                                }
+                                else if (c.ID.Equals(p.CARPETA_ID) && p.CARPETA_ID != 500 && c.ID.Equals(p.CARPETA_ID) && p.CARPETA_ID != 1200)
                                 {
                                     ////////DRS 26.09.18//////
                                     <li>
