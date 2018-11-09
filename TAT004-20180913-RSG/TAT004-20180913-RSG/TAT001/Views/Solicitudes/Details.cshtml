@@ -267,7 +267,10 @@
                             <a class="btn-small" id="lbl_wfn" href="@Url.Action("Edit", "Solicitudes", new { id_d = Model.D.NUM_DOC })">Editar</a>
                         }
                     }
+                    if (Model.D.USUARIOC_ID == ViewBag.usuario.ID | Model.D.USUARIOD_ID == ViewBag.usuario.ID)
+                    {
                     <a class="btn-small" id="lbl_dupp" href="@Url.Action("Create", "Solicitudes", new { id_d = Model.D.NUM_DOC, tsol = Model.D.TSOL_ID, dp = "X" })">Duplicar</a><!--RSG 31.10.2018-->
+                    }
                     @*//else
             //{*@
                     if (Model.D.TSOL.CARTA)

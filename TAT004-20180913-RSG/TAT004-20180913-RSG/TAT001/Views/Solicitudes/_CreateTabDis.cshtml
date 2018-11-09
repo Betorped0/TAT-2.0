@@ -40,9 +40,16 @@
                         </div>
                     }
                     <input type="text" id="select_negi" name="select_negi" value="@ViewBag.SEL_NEG" disabled="disabled" hidden />
-                    @if (Model.DOCUMENTOPs.FirstOrDefault().MATNR == null | Model.DOCUMENTOPs.FirstOrDefault().MATNR == "")
+                    @if (Model.DOCUMENTOPs != null & Model.DOCUMENTOPs.Count>0)
                     {
-                        <input type="text" id="select_disi" name="select_disi" value="C" disabled="disabled" hidden />
+                        if (Model.DOCUMENTOPs.FirstOrDefault().MATNR == null | Model.DOCUMENTOPs.FirstOrDefault().MATNR == "")
+                        {
+                            <input type="text" id="select_disi" name="select_disi" value="C" disabled="disabled" hidden />
+                        }
+                        else
+                        {
+                            <input type="text" id="select_disi" name="select_disi" value="@ViewBag.SEL_DIS" disabled="disabled" hidden />
+                        }
                     }
                     else
                     {
@@ -65,9 +72,15 @@
                     <div class="input-field col s6">
                         <select id="select_dis" name="select_dis" onchange="selectMonto(this.value,'X')">
                             <option id="opt_dism" value="M">Material</option>@*B20180801 MGC Textos*@
-                            @if (Model.DOCUMENTOPs.FirstOrDefault().MATNR == null | Model.DOCUMENTOPs.FirstOrDefault().MATNR == "")
+                            @if (Model.DOCUMENTOPs != null & Model.DOCUMENTOPs.Count > 0)
                             {
-                                <option id="opt_disc" value="C" selected="selected">Categoría</option>@*B20180801 MGC Textos*@
+                                if (Model.DOCUMENTOPs.FirstOrDefault().MATNR == null | Model.DOCUMENTOPs.FirstOrDefault().MATNR == "")
+                                {
+                                    <option id="opt_disc" value="C" selected="selected">Categoría</option>@*B20180801 MGC Textos*@
+                                }
+                                else
+                                {
+                                    <option id="opt_disc" value="C">Categoría</option>@*B20180801 MGC Textos*@}
                             }
                             else
                             {
