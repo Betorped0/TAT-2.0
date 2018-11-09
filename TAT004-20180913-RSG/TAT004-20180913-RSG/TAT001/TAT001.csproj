@@ -214,6 +214,7 @@
     <Compile Include="Common\FnCommonCarta.cs" />
     <Compile Include="Common\Log.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AyudaController.cs" />
     <Compile Include="Controllers\CartaDController.cs" />
     <Compile Include="Controllers\CartaVController.cs" />
     <Compile Include="Controllers\Catalogos\AlertasController.cs" />
@@ -264,6 +265,7 @@
     <Compile Include="Controllers\Catalogos\PaginasController.cs" />
     <Compile Include="Controllers\Catalogos\PaisController.cs" />
     <Compile Include="Controllers\MasivaController.cs" />
+    <Compile Include="Controllers\ModificacionesGlobalesController.cs" />
     <Compile Include="Controllers\NegociacionesController.cs" />
     <Compile Include="Controllers\Configuracion\NegsController.cs" />
     <Compile Include="Controllers\PresupuestoController.cs" />
@@ -444,6 +446,15 @@
     <Compile Include="Entities\DET_TAXEOC.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\DOCTOAYUDA.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DOCTOCLASIF.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DOCTOCLASIFT.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\DOCUMENTBORR.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
@@ -529,6 +540,9 @@
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\IMPUESTO.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\LAYOUT_CARGA.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\LEYENDA.cs">
@@ -828,6 +842,7 @@
     <Compile Include="Models\Masiva\Multiple.cs" />
     <Compile Include="Models\Masiva\Relacionada.cs" />
     <Compile Include="Models\MaterialViewModel.cs" />
+    <Compile Include="Models\ModificacionesGlobalesViewModel.cs" />
     <Compile Include="Models\ProveedorViewModel.cs" />
     <Compile Include="Models\ReportesModel.cs" />
     <Compile Include="Models\SelectTreeItem.cs" />
@@ -1364,6 +1379,9 @@
     <Content Include="Entities\TAT001.edmx.diagram">
       <DependentUpon>TAT001.edmx</DependentUpon>
     </Content>
+    <Content Include="PdfTemp\Solicitudes_Consulta\Solicitudes_Consulta09\11\2018.xlsx" />
+    <Content Include="PdfTemp\Solicitudes_Consulta\Solicitudes_Consulta\09\11\2018.xlsx" />
+    <Content Include="PdfTemp\Solicitudes_Consulta\09\11\2018.xlsx" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\borrador.js" />
     <Content Include="Scripts\dropdowntree.js" />
@@ -1984,10 +2002,18 @@
     <Content Include="Views\Solicitudes\_DetailsTabSop.cshtml" />
     <Content Include="Views\Clientes\VerFlujo.cshtml" />
     <Content Include="Views\Account\ValidateLoginView.cshtml" />
+    <Content Include="Views\Ayuda\Create.cshtml" />
+    <Content Include="Views\Ayuda\Delete.cshtml" />
+    <Content Include="Views\Ayuda\Details.cshtml" />
+    <Content Include="Views\Ayuda\Edit.cshtml" />
+    <Content Include="Views\Ayuda\Index.cshtml" />
+    <Content Include="Views\Ayuda\Consulta.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->
     <Folder Include="App_Data\" />
+    <Folder Include="Archivos\DoctosAyuda\" />
+    <Folder Include="files\Ayuda\" />
     <Folder Include="PdfTemp\" />
   </ItemGroup>
   <ItemGroup>

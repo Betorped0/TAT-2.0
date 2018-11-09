@@ -338,18 +338,18 @@ namespace TAT001.Services
         }
         public string getClass(string estatus, decimal num_doc)
         {
-            TAT001Entities db = new TAT001Entities();
 
             decimal doc = num_doc;
             bool rev = false;
-            var estatusPar = (from docs in db.DOCUMENTOes where docs.DOCUMENTO_REF == doc select docs).ToList();
-            foreach (var childDoc in estatusPar)
-            {
-                if (childDoc.ESTATUS == "N" && childDoc.ESTATUS_C == null && childDoc.ESTATUS_SAP == null && childDoc.ESTATUS_WF == "P")
-                {
-                    //rev = true;
-                }
-            }
+            //TAT001Entities db = new TAT001Entities();
+            //var estatusPar = (from docs in db.DOCUMENTOes where docs.DOCUMENTO_REF == doc select docs).ToList();
+            //foreach (var childDoc in estatusPar)
+            //{
+            //    if (childDoc.ESTATUS == "N" && childDoc.ESTATUS_C == null && childDoc.ESTATUS_SAP == null && childDoc.ESTATUS_WF == "P")
+            //    {
+            //        //rev = true;
+            //    }
+            //}
 
             //DOCUMENTO d = db.DOCUMENTOes.Find(num_doc);
             //string estatus = getEstatus(d);
