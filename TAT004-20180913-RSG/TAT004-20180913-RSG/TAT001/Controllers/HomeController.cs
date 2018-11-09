@@ -1280,8 +1280,8 @@ namespace TAT001.Controllers
                     {
                         String.Format("{0:C}", lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null), null).GetType().GetProperty("MONTO_DOC_MD").GetValue(lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null), null), null));
                     }
-                    worksheet.Cell("AK" + i).Value = new[] { new { BANNER = lst[i - 2].documento. }, };
-                    worksheet.Cell("AL" + i).Value = new[] { new { BANNER = lst[i - 2].documento. }, };
+                    worksheet.Cell("AK" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("AL" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
                     worksheet.Cell("AM" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
                     worksheet.Cell("AN" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
                     worksheet.Cell("AO" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
