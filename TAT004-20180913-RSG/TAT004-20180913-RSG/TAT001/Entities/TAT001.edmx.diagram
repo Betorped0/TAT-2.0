@@ -356,6 +356,16 @@
         <EntityTypeShape EntityType="TAT001Model.GrupoCat" Width="1.5" PointX="2.75" PointY="19.75" />
         <EntityTypeShape EntityType="TAT001Model.USUARIOLOG" Width="1.5" PointX="14.25" PointY="102.875" />
         <AssociationConnector Association="TAT001Model.FK_USUARIOLOG_USUARIO" />
+        <EntityTypeShape EntityType="TAT001Model.DOCTOAYUDA" Width="1.5" PointX="10.625" PointY="22.625" />
+        <EntityTypeShape EntityType="TAT001Model.DOCTOCLASIF" Width="1.5" PointX="8.375" PointY="21.5" />
+        <EntityTypeShape EntityType="TAT001Model.DOCTOCLASIFT" Width="1.5" PointX="10.625" PointY="20" />
+        <EntityTypeShape EntityType="TAT001Model.LAYOUT_CARGA" Width="1.5" PointX="17" PointY="70.25" />
+        <AssociationConnector Association="TAT001Model.FK_DET_TAXEOC_PAIS" />
+        <AssociationConnector Association="TAT001Model.FK_DOCTOAYUDA_DOCTOCLASIF" />
+        <AssociationConnector Association="TAT001Model.FK_DOCTOCLASIFT_DOCTOCLASIF" />
+        <AssociationConnector Association="TAT001Model.FK_FACTURASCONF_SOCIEDAD" />
+        <AssociationConnector Association="TAT001Model.FK_LAYOUT_CARGA_PAIS" />
+        <AssociationConnector Association="TAT001Model.FK_LAYOUT_CARGA_SOCIEDAD" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

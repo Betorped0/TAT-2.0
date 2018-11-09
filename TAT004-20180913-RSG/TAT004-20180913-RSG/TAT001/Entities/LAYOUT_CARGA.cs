@@ -12,18 +12,16 @@ namespace TAT001.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class DET_TAXEOC
+    public partial class LAYOUT_CARGA
     {
-        public string USUARIOC_ID { get; set; }
-        public string PAIS_ID { get; set; }
-        public string VKORG { get; set; }
-        public string VTWEG { get; set; }
-        public string SPART { get; set; }
-        public string KUNNR { get; set; }
-        public int VERSION { get; set; }
-        public string USUARIOA_ID { get; set; }
-        public bool ACTIVO { get; set; }
+        public int ID { get; set; }
+        public string LAND { get; set; }
+        public string SOCIEDAD_ID { get; set; }
+        public string RUTA { get; set; }
+        public System.DateTime FECHAC { get; set; }
+        public string TIPO { get; set; }
     
         public virtual PAI PAI { get; set; }
+        public virtual SOCIEDAD SOCIEDAD { get; set; }
     }
 }

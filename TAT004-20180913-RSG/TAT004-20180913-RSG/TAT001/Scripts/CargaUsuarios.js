@@ -308,6 +308,7 @@ function Borrar() {
         table.row(num).remove().draw();
     }
     Comprobar();
+    checkoff();
 }
 
 function Actualizar() {

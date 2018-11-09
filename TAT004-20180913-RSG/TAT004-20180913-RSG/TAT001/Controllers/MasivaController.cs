@@ -1278,28 +1278,33 @@ namespace TAT001.Controllers
         //COSULTA DE AJAX PARA EL TIPO DE HEALTYDRINKS EN CATEGORIA       
         public JsonResult getHealtCategoria(object[] categorias)
         {
-            List<object> tieneHealtty = new List<object>();
+            List<object> tieneHealty = new List<object>();
+            List<object> catIDList = new List<object>();
 
             if (categorias.Length > 0)
             {
                 for (int i = 0; i < categorias.Length; i++)
                 {
                     string categoriaDes = categorias[i].ToString();
+                    string num_cat = "";
+
                     var con = (from t in db.MATERIALGPs
                                where t.DESCRIPCION.Contains(categoriaDes)
-                               select new { t.DESCRIPCION }).FirstOrDefault();
+                               select new { t.ID, t.DESCRIPCION }).FirstOrDefault();
 
                     if (con == null)
                     {
                         var con2 = (from t in db.MATERIALGPs
                                     where t.ID.Contains(categoriaDes)
-                                    select new { t.DESCRIPCION }).FirstOrDefault();
+                                    select new { t.ID, t.DESCRIPCION }).FirstOrDefault();
 
                         categoriaDes = con2.DESCRIPCION;
+                        num_cat = con2.ID;
                     }
                     else
                     {
                         categoriaDes = con.DESCRIPCION;
+                        num_cat = con.ID;
                     }
 
 
@@ -1310,21 +1315,25 @@ namespace TAT001.Controllers
                     {
                         if (unica.UNICA)
                         {
-                            tieneHealtty.Add(unica.UNICA);
+                            tieneHealty.Add(unica.UNICA);
+                            catIDList.Add(num_cat);
                         }
                         else
                         {
-                            tieneHealtty.Add(unica.UNICA);
+                            tieneHealty.Add(unica.UNICA);
+                            catIDList.Add(num_cat);
                         }
                     }
                 }
+                tieneHealty.Add(catIDList);
             }
             else
             {
-                tieneHealtty.Clear();
+                tieneHealty.Clear();
+                catIDList.Clear();
             }
 
-            JsonResult cc = Json(tieneHealtty, JsonRequestBehavior.AllowGet);
+            JsonResult cc = Json(tieneHealty, JsonRequestBehavior.AllowGet);
             return cc;
         }
 
@@ -2278,8 +2287,14 @@ namespace TAT001.Controllers
         public List<object> cargaInicialH4(DataRow fila)
         {
             DataSet ds1 = (DataSet)Session["ds1"];
+            DataSet ds4 = (DataSet)Session["ds4"];
             string idioma = Session["spras"].ToString();
             List<object> regresaRowH4 = new List<object>();
+            List<string> categoriasHealty = new List<string>();
+            List<string> categoriasNum = new List<string>();
+            List<bool> materialesHealty = new List<bool>();
+            List<string> materialesNum = new List<string>();
+            List<object> id = new List<object>();
 
             string num_doc = fila[0].ToString().Trim();
             string ligada = fila[1].ToString().Trim();
@@ -2329,9 +2344,61 @@ namespace TAT001.Controllers
 
                     if ((matnr != "" & matkl != "") | (matnr != "" & matkl == ""))
                     {
-                        if (db.MATERIALs.Where(x => x.ID == matnr & x.ACTIVO == true).Count() > 0)
+                        for (int j = 2; j < ds4.Tables[0].Rows.Count; j++)
                         {
-                            regresaRowH4.Add("");
+                            string miNum_docH4 = ds4.Tables[0].Rows[j][0].ToString().Trim();
+                            string miMaterialH4 = ds4.Tables[0].Rows[j][4].ToString().Trim();
+                            if (miMaterialH4.Length < 18) { miMaterialH4 = cad.completaMaterial(miMaterialH4); }
+                            string num_material = "";
+                            bool materiall = false;
+
+                            if (miNum_docH4 != "" & miNum_docH4 == num_doc)
+                            {
+                                //MATERIALES
+                                try
+                                {
+                                    var miMaterial = db.MATERIALs.Where(x => x.ID == miMaterialH4).FirstOrDefault();
+                                    num_material = miMaterial.ID.ToString();
+                                    var paso = db.MATERIALGPs.Where(x => x.ID == miMaterial.MATERIALGP_ID).FirstOrDefault();
+                                    materiall = paso.UNICA;
+                                }
+                                catch
+                                {
+                                    num_material = "";
+                                    miMaterialH4 = "";
+                                }
+
+                                //id.Add(miNum_docH4);
+                                materialesNum.Add(num_material);
+                                materialesHealty.Add(materiall);
+                            }
+                        }
+
+                        var material = db.MATERIALs.Where(x => x.ID == matnr & x.ACTIVO == true).FirstOrDefault();
+                        bool tieneHealty = false;
+                        List<object> num_mat = new List<object>();
+
+                        if (material != null)
+                        {
+                            for (int k = 0; k < materialesNum.Count; k++)
+                            {
+                                if (materialesNum[k].Contains(material.ID.ToString()))
+                                    num_mat.Add(materialesNum[k]);
+                            }
+
+                            if (materialesHealty.Distinct().Skip(1).Any())
+                            {
+                                tieneHealty = true;
+                            }
+
+                            if (tieneHealty | num_mat.Count() > 1)
+                            {
+                                regresaRowH4.Add("red white-text rojo");
+                            }
+                            else
+                            {
+                                regresaRowH4.Add("");
+                            }
                         }
                         else
                         {
@@ -2345,13 +2412,59 @@ namespace TAT001.Controllers
                     {
                         regresaRowH4.Add("");
 
-                        var categoria = (from cat in db.MATERIALGPs
-                                         where cat.DESCRIPCION == matkl
-                                         select new { ID = cat.ID, DESCRIPCION = cat.DESCRIPCION }).ToList();
-
-                        if (categoria.Count() > 0)
+                        for (int j = 2; j < ds4.Tables[0].Rows.Count; j++)
                         {
-                            regresaRowH4.Add("");
+                            string miNum_docH4 = ds4.Tables[0].Rows[j][0].ToString().Trim();
+                            string categoriaa = ds4.Tables[0].Rows[j][5].ToString().Trim();
+                            string num_categoria = "", num_material = "";
+
+                            if (miNum_docH4 != "" & miNum_docH4 == num_doc)
+                            {
+                                //CATEGORIAS
+                                try
+                                {
+                                    var miCategoria = db.MATERIALGPs.Where(x => x.DESCRIPCION == categoriaa).FirstOrDefault();
+                                    num_categoria = miCategoria.ID.ToString();
+                                    categoriaa = miCategoria.UNICA.ToString();
+                                }
+                                catch
+                                {
+                                    num_categoria = "";
+                                    categoriaa = "";
+                                }
+
+                                //id.Add(miNum_docH4);
+                                categoriasNum.Add(num_categoria);
+                                categoriasHealty.Add(categoriaa);
+                            }
+                        }
+
+                        var categoria = db.MATERIALGPs.Where(x => x.DESCRIPCION == matkl & x.ACTIVO == true).FirstOrDefault();
+                        List<object> tieneHealty = new List<object>();
+                        List<object> num_cat = new List<object>();
+
+                        if (categoria != null)
+                        {
+                            for (int j = 0; j < categoriasHealty.Count; j++)
+                            {
+                                if (categoriasHealty[j].Contains(categoria.UNICA.ToString()))
+                                    tieneHealty.Add(categoriasHealty[j]);
+                            }
+
+                            for (int k = 0; k < categoriasNum.Count; k++)
+                            {
+                                if (categoriasNum[k].Contains(categoria.ID.ToString()))
+                                    num_cat.Add(categoriasNum[k]);
+                            }
+
+                            if (tieneHealty.Count() > 1 | num_cat.Count() > 1)
+                            {
+                                regresaRowH4.Add("red white-text rojo");
+                            }
+                            else
+                            {
+                                regresaRowH4.Add("");
+                            }
                         }
                         else
                         {
@@ -2906,7 +3019,16 @@ namespace TAT001.Controllers
                             else
                             {
                                 docup.MATNR = "";
-                                docup.MATKL = matkl;
+                                var categoria = db.MATERIALGPs.Where(x => x.DESCRIPCION == matkl).FirstOrDefault();
+                                if (categoria != null)
+                                {
+                                    docup.MATKL = categoria.ID;
+                                }
+                                else
+                                {
+                                    docup.MATKL = null;
+                                }
+                                
                             }
                             docup.CANTIDAD = 0;
                             docup.MONTO = Convert.ToDecimal(monto);
@@ -2926,6 +3048,7 @@ namespace TAT001.Controllers
                                 dop.MONTO_DOC_ML = tcambio.getValSoc(sociedad.WAERS, moneda_id, Convert.ToDecimal(apoyo), out errorString);
                                 dop.TIPO_CAMBIOL = tcambio.getUkurs(sociedad.WAERS, moneda_id, out errorString);
                                 dop.TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
+                                dop.TIPO_CAMBIO = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
                                 dop.MONTO_DOC_ML2 = (dop.MONTO_DOC_MD / dop.TIPO_CAMBIOL2);
                                 //var TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
                                 //dop.MONTO_DOC_ML2 = (TIPO_CAMBIOL2 * dop.MONTO_DOC_MD);
@@ -2940,6 +3063,7 @@ namespace TAT001.Controllers
                                 dop.MONTO_DOC_ML = tcambio.getValSoc(sociedad.WAERS, moneda_id, Convert.ToDecimal(apoyo), out errorString);
                                 dop.TIPO_CAMBIOL = tcambio.getUkurs(sociedad.WAERS, moneda_id, out errorString);
                                 dop.TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
+                                dop.TIPO_CAMBIO = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
                                 dop.MONTO_DOC_ML2 = (dop.MONTO_DOC_MD / dop.TIPO_CAMBIOL2);
                                 //var TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
                                 //dop.MONTO_DOC_ML2 = (TIPO_CAMBIOL2 * dop.MONTO_DOC_MD);
