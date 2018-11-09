@@ -5512,11 +5512,7 @@ function selectCliente(valu) {
                         $("#payer_nombre").trigger('change');
                         $('#payer_email').val(data.PAYER_EMAIL);
                         $("label[for='payer_email']").addClass("active");
-                        $("#payer_email").trigger('change');
-                        if (data.PAYER_EMAIL != "") {
-                            $("#payer_email").removeClass("invalid");
-                            $("#payer_email").addClass("valid");
-                        }
+                        $("#payer_email").trigger('focusout');
                     }
                     $("#txt_vkorg").val(data.VKORG);//RSG 05.07.2018
                     $("#txt_vtweg").val(data.VTWEG2);//RSG 05.07.2018

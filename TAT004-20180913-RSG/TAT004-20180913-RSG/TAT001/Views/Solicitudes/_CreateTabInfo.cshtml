@@ -399,7 +399,7 @@
                                             var value = ui.item.value;
                                             var email = ui.item.mail;
                                             document.getElementById('payer_email').value = email;
-                                           
+                                            $("#payer_email").trigger('focusout');
                                         }
                                     });
                                 })
