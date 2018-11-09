@@ -308,6 +308,7 @@ namespace TAT001.Controllers
                             string ejerciciok = ds2.Tables[0].Rows[i][8].ToString().Trim();
 
                             doc.NUM_DOC = num_doc;
+                            doc.FACTURA = factura;
                             doc.FECHA = fecha_factura2[0];
                             doc.PROVEEDOR = proveedor.TrimStart('0');
                             doc.PROVEEDOR_NOMBRE = proveedor_nombre;
@@ -337,7 +338,7 @@ namespace TAT001.Controllers
                             doc.VENCIMIENTO = "";
                             doc.FACTURAK = "";
                             doc.EJERCICIOK = "";
-                            lp.Add(doc);
+                            //lp.Add(doc);
                             List<string> err = new List<string>();
                             for (int i = 0; i < 9; i++)
                             {
@@ -348,8 +349,8 @@ namespace TAT001.Controllers
                             {
                                 war.Add("");
                             }
-                            errores.Add(err);
-                            warnings.Add(war);
+                            //errores.Add(err);
+                            //warnings.Add(war);
                         }
                     }
                 }
