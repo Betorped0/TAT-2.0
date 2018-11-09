@@ -1993,6 +1993,15 @@ function healtyCategoria(num_doc) {
             if (data !== null | data !== "") {
                 var tablaH4 = $('#tab_test4').DataTable();
                 var pintaRojos = false;
+                var arrCatId = data.pop();
+                var recipienteCategorias = arrCatId.sort();
+
+                var recipienteClone = [];
+                for (var i = 0; i < recipienteCategorias.length - 1; i++) {
+                    if (recipienteCategorias[i + 1] == recipienteCategorias[i]) {
+                        recipienteClone.push(recipienteCategorias[i]);
+                    }
+                }
 
                 if (jQuery.inArray(true, data) != -1) {
                     if (data.length > 1) {
@@ -2011,12 +2020,28 @@ function healtyCategoria(num_doc) {
                     var num_docH4 = $(rowH4).children().eq(1).children().val();
 
                     if (num_doc == num_docH4) {
-                        if (pintaRojos) {
-                            $(rowH4).children().eq(6).children().addClass('red white-text rojo');
+                        if (recipienteClone.length > 0) {
+                            if (pintaRojos) {
+                                $(rowH4).children().eq(6).children().addClass('red white-text rojo');
+                            }
+                            else {
+                                $(rowH4).children().eq(6).children().addClass('red white-text rojo');
+                            }
                         }
                         else {
-                            $(rowH4).children().eq(6).children().removeClass('red white-text rojo');
+                            if (pintaRojos) {
+                                $(rowH4).children().eq(6).children().addClass('red white-text rojo');
+                            }
+                            else {
+                                $(rowH4).children().eq(6).children().removeClass('red white-text rojo');
+                            }
                         }
+                        //if (pintaRojos) {
+                        //    $(rowH4).children().eq(6).children().addClass('red white-text rojo');
+                        //}
+                        //else {
+                        //    $(rowH4).children().eq(6).children().removeClass('red white-text rojo');
+                        //}
                     }
                 }
 

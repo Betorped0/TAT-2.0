@@ -91,10 +91,10 @@ namespace TAT001.Controllers
 
                         var fileName = Path.GetFileName(Ruta_Documento.FileName);
                         dOCTOAYUDA.RUTA_DOCUMENTO = Path.Combine(
-                            Server.MapPath("~/files/Ayuda"), fileName);
+                            Server.MapPath("~/Archivos/DoctosAyuda"), fileName);
                         Ruta_Documento.SaveAs(dOCTOAYUDA.RUTA_DOCUMENTO);
 
-                        dOCTOAYUDA.RUTA_DOCUMENTO = "/files/Ayuda/" + Ruta_Documento.FileName;
+                        dOCTOAYUDA.RUTA_DOCUMENTO = "/Archivos/DoctosAyuda/" + Ruta_Documento.FileName;
                         db.DOCTOAYUDAs.Add(dOCTOAYUDA);
                         db.SaveChanges();
                         return RedirectToAction("Index");
@@ -151,16 +151,16 @@ namespace TAT001.Controllers
                         {
                             //Elimina el anterior
                             var eliminar = Path.Combine(
-                                Server.MapPath("~/files/Ayuda"), actdOCTOAYUDA.RUTA_DOCUMENTO.Split('/').Last());
+                                Server.MapPath("~/Archivos/DoctosAyuda"), actdOCTOAYUDA.RUTA_DOCUMENTO.Split('/').Last());
                             FileInfo file = new FileInfo(eliminar);
                             file.Delete();
                             //Guarda el nuevo archivo
                             var fileName = Path.GetFileName(Ruta_Documento.FileName);
                             dOCTOAYUDA.RUTA_DOCUMENTO = Path.Combine(
-                                Server.MapPath("~/files/Ayuda"), fileName);
+                                Server.MapPath("~/Archivos/DoctosAyuda"), fileName);
                             Ruta_Documento.SaveAs(dOCTOAYUDA.RUTA_DOCUMENTO);
 
-                            actdOCTOAYUDA.RUTA_DOCUMENTO = "/files/Ayuda/" + Ruta_Documento.FileName;
+                            actdOCTOAYUDA.RUTA_DOCUMENTO = "/Archivos/DoctosAyuda/" + Ruta_Documento.FileName;
                             actdOCTOAYUDA.NOMBRE = dOCTOAYUDA.NOMBRE;
                             actdOCTOAYUDA.ACTIVO = dOCTOAYUDA.ACTIVO;
                             db.SaveChanges();
@@ -208,7 +208,7 @@ namespace TAT001.Controllers
             db.SaveChanges();
             //Ahora remueve el archivo
             var eliminar = Path.Combine(
-                            Server.MapPath("~/files/Ayuda"), dOCTOAYUDA.RUTA_DOCUMENTO.Split('/').Last());
+                            Server.MapPath("~/Archivos/DoctosAyuda"), dOCTOAYUDA.RUTA_DOCUMENTO.Split('/').Last());
             FileInfo file = new FileInfo(eliminar);
             file.Delete();
             return RedirectToAction("Index");
