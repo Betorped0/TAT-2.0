@@ -10,6 +10,9 @@
 
 @using (Html.BeginForm())
 {
+    <script src="~/Scripts/autocomplete1.10.2.js"></script>
+    <script src="~/Scripts/autocomplete1.11.4.js"></script>
+    <link href="~/Content/autocomplete.css" rel="stylesheet" />
     @Html.AntiForgeryToken()
     <div class="row">
         <div class="col s12 l12 right-align">
@@ -59,9 +62,11 @@
                         @Html.ValidationMessageFor(model => model.EMAIL, "", new { @class = "text-danger" })
                     </div>
                     <div class="input-field col s6">
-                        @Html.DropDownList("SPRAS_ID", null, htmlAttributes: new { @class = "select", required = true })
-                        <label id="lbl_spras">SPRAS</label>
-                        @Html.ValidationMessageFor(model => model.SPRAS_ID, "", new { @class = "text-danger" })
+                        @*@Html.DropDownList("SPRAS_ID", null, htmlAttributes: new { @class = "select", required = true })*@
+                        @*<label id="lbl_spras">SPRAS</label>*@
+                        @Html.EditorFor(model => model.SPRAS_ID, new { htmlAttributes = new { @class = "form-control", @id = "input_idioma" } })
+                        @Html.LabelFor(model => model.SPRAS_ID, htmlAttributes: new { @id = "lbl_spras" })
+                        @*@Html.ValidationMessageFor(model => model.SPRAS_ID, "", new { @class = "text-danger" })*@
                     </div>
                 </div>
             </div>
@@ -70,8 +75,9 @@
             <div class="card-panel">
                 <div class="row">
                     <div class="input-field col s12">
-                        @Html.DropDownList("PUESTO_ID", null, htmlAttributes: new { @class = "select", @id = "txt_puestoid" })
-                        @Html.LabelFor(model => model.PUESTO_ID, "PUESTO_ID", htmlAttributes: new { @id = "lbl_puesto" })
+                        @*@Html.DropDownList("PUESTO_ID", null, htmlAttributes: new { @class = "select", @id = "txt_puestoid" })*@
+                        @Html.EditorFor(model => model.PUESTO_ID, new { htmlAttributes = new { @class = "text", @id = "input_puesto" } })
+                        @Html.LabelFor(model => model.PUESTO_ID, htmlAttributes: new { @id = "lbl_puesto" })
                         @Html.ValidationMessageFor(model => model.PUESTO_ID, "", new { @class = "text-danger" })
                     </div>
                     @*<div class="input-field col s4">
@@ -86,7 +92,7 @@
                             @Html.ValidationMessageFor(model => model.BACKUP_ID, "", new { @class = "text-danger" })
                         </div>*@
                     @if (ViewBag.PUESTO_ID1 == null || ViewBag.PUESTO_ID1 == "")
-                    {                        
+                    {
                         <div class="input-field col s12">
                             @Html.HiddenFor(model => model.SOCIEDADs)
                             @{string jval2 = ViewBag.sociedad;
@@ -111,7 +117,8 @@
                     else
                     {
                         <div class="input-field col s12">
-                            @Html.DropDownList("BUNIT", null, htmlAttributes: new { @class = "select", required = true })
+                            @*@Html.DropDownList("BUNIT", null, htmlAttributes: new { @class = "select", required = true })*@
+                            @Html.EditorFor(model => model.BUNIT, new { htmlAttributes = new { @class = "form-control", @id = "input_sociedad" } })
                             @Html.LabelFor(model => model.BUNIT, htmlAttributes: new { @id = "lbl_bukrs" })
                             @Html.ValidationMessageFor(model => model.BUNIT, "", new { @class = "text-danger" })
                         </div>
@@ -186,26 +193,28 @@
             </div>*@
     </div>
     //OCG 11/10/18 Validacion de email
+
     <script>
-        $(document).ready(function () {
-            var admin = "@ViewBag.admin";
-            var sociedad = $("#SELECT_SOCIEDADES").val();
+        var admin = "@ViewBag.admin";
+        var sociedad = $("#SELECT_SOCIEDADES").val();
+        if (sociedad != null) {
             var jsval = $.parseJSON(sociedad);
             for (var i = 0; i < jsval.length; i++) {
                 var ids = "#" + jsval[i] + "";
                 $(ids).prop('selected', true);
             }
+        }
+        $("input.select-dropdown").trigger("click");
+        $("input.select-dropdown").trigger("click");
 
-            $("input.select-dropdown").trigger("click");
-            $("input.select-dropdown").trigger("click");
+        if (admin == "no") {
+            $("#txt_puestoid").prop("disabled", true);
+            $("#selectcocode").prop("disabled", true);
+            var elem = document.querySelectorAll('select');
+            var instance = M.FormSelect.init(elem, []);
+        }
 
-            if (admin == "no") {
-                $("#txt_puestoid").prop("disabled", true);
-                $("#selectcocode").prop("disabled", true);
-                var elem = document.querySelectorAll('select');
-                var instance = M.FormSelect.init(elem, []);
-            }
-        });
+        $("#input_puesto").attr("type", "text");
 
         $('#EMAIL').on("focusout", function () {
             var email = $('#EMAIL').val();
@@ -223,23 +232,130 @@
             var re = /^(([^<>()\[\]\\.,;:\s@@"]+(\.[^<>()\[\]\\.,;:\s@@"]+)*)|(".+"))@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             return re.test(String(email).toLowerCase());
         }
+
+        $('body').on('keydown.autocomplete', '#input_idioma', function () {
+
+            auto(this).autocomplete({
+                source: function (request, response) {
+                    auto.ajax({
+                        type: "POST",
+                        url: '../Idioma',
+                        dataType: "json",
+                        data: { "Prefix": request.term },
+                        success: function (data) {
+                            response(auto.map(data, function (item) {
+                                return { label: item.ID + " | " + item.DESCRIPCION, value: item.ID };
+                            }))
+                        }
+                    })
+                },
+
+                messages: {
+                    noResults: '',
+                    results: function (resultsCount) { }
+                },
+
+                change: function (e, ui) {
+                    if (!(ui.item)) {
+                        e.target.value = "";
+                    }
+                },
+
+                select: function (event, ui) {
+                }
+            });
+        });
+
+        $('body').on('keydown.autocomplete', '#input_sociedad', function () {
+
+            auto(this).autocomplete({
+                source: function (request, response) {
+                    auto.ajax({
+                        type: "POST",
+                        url: '../Sociedad',
+                        dataType: "json",
+                        data: { "Prefix": request.term },
+                        success: function (data) {
+                            response(auto.map(data, function (item) {
+                                return { label: item.BUKRS + " | " + item.BUTXT, value: item.BUKRS };
+                            }))
+                        }
+                    })
+                },
+
+                messages: {
+                    noResults: '',
+                    results: function (resultsCount) { }
+                },
+
+                change: function (e, ui) {
+                    if (!(ui.item)) {
+                        e.target.value = "";
+                    }
+                },
+
+                select: function (event, ui) {
+                }
+            });
+        });
+
+        $('body').on('keydown.autocomplete', '#input_puesto', function () {
+
+            auto(this).autocomplete({
+                source: function (request, response) {
+                    auto.ajax({
+                        type: "POST",
+                        url: '../Nivel',
+                        dataType: "json",
+                        data: { "Prefix": request.term },
+                        success: function (data) {
+                            response(auto.map(data, function (item) {
+                                return { label: item.ID + " | " + item.TEXTO, value: item.ID };
+                            }))
+                        }
+                    })
+                },
+
+                messages: {
+                    noResults: '',
+                    results: function (resultsCount) { }
+                },
+
+                change: function (e, ui) {
+                    if (!(ui.item)) {
+                        e.target.value = "";
+                    }
+                },
+
+                select: function (event, ui) {
+                }
+            });
+        });
+
+
+    </script>
+    <script>
+        var auto = $.noConflict();
+        $("#files").on("click", function () {
+            $("#files").val('');
+        });
     </script>
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index",null,new { id="lbl_regresar"})
+    @Html.ActionLink("Back to List", "Index", null, new { id = "lbl_regresar" })
 </div>
 <script>
 </script>
 @if (ViewBag.Error != null)
 {
-@*<div class="row red-text">
-        @ViewBag.Error
-    </div>*@
+    @*<div class="row red-text">
+            @ViewBag.Error
+        </div>*@
 
-<script>
+    <script>
             M.toast({ html: '@ViewBag.Error', classes: 'red' });
-</script>
+    </script>
 }
 
 

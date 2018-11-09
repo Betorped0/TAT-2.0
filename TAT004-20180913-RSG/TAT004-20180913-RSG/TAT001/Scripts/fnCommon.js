@@ -191,6 +191,19 @@
         } else {
             document.getElementById("loader").style.display = "none";
         }
+    },
+    autoAjax: function (url,params,fnData) {
+        return auto.ajax({
+            url: url,
+            type: "GET",
+            dataType: "json",
+            data: params,
+            success: function (data) {
+                response(auto.map(data, function (item) {
+                    return fnData(item);
+                }))
+            }
+        })
     }
 
 

@@ -241,7 +241,7 @@ namespace TAT001.Controllers.Catalogos
         // GET: Clientes/Edit/5
         public ActionResult Edit(string vko, string vtw, string spa, string kun)
         {
-            int pagina = 632; //ID EN BASE DE DATOS PARA EL TITULO
+            int pagina = 635; //ID EN BASE DE DATOS PARA EL TITULO
             string u = User.Identity.Name;
             var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
             ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
@@ -249,7 +249,7 @@ namespace TAT001.Controllers.Catalogos
             ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
             ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
             ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            pagina = 632; //ID EN BASE DE DATOS
+            pagina = 635; //ID EN BASE DE DATOS
             ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
             ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
 
@@ -274,12 +274,12 @@ namespace TAT001.Controllers.Catalogos
             {
                 return HttpNotFound();
             }
-            ViewBag.LAND = new SelectList(db.PAIS, "LAND", "LANDX", cLIENTE.LAND);
-            ViewBag.PARVW = new SelectList(db.TCLIENTEs, "ID", "ID", cLIENTE.PARVW);
-            var canales = db.CANALs.Select(x => new { x.CANAL1, DESCRIPCION = x.CANAL1 + "-" + x.CDESCRIPCION });
-            ViewBag.CANAL = new SelectList(canales, "CANAL1", "DESCRIPCION", cLIENTE.CANAL != null ? cLIENTE.CANAL.TrimEnd() : "");
-            var proveedores = db.PROVEEDORs.Select(x => new { x.ID, NOMBRE = x.ID + "-" + x.NOMBRE });
-            ViewBag.PROVEEDOR_ID = new SelectList(proveedores, "ID", "NOMBRE", cLIENTE.PROVEEDOR_ID != null ? cLIENTE.PROVEEDOR_ID.TrimEnd() : "");
+            //ViewBag.LAND = new SelectList(db.PAIS, "LAND", "LANDX", cLIENTE.LAND);
+            //ViewBag.PARVW = new SelectList(db.TCLIENTEs, "ID", "ID", cLIENTE.PARVW);
+            //var canales = db.CANALs.Select(x => new { x.CANAL1, DESCRIPCION = x.CANAL1 + "-" + x.CDESCRIPCION });
+            //ViewBag.CANAL = new SelectList(canales, "CANAL1", "DESCRIPCION", cLIENTE.CANAL != null ? cLIENTE.CANAL.TrimEnd() : "");
+            //var proveedores = db.PROVEEDORs.Select(x => new { x.ID, NOMBRE = x.ID + "-" + x.NOMBRE });
+            //ViewBag.PROVEEDOR_ID = new SelectList(proveedores, "ID", "NOMBRE", cLIENTE.PROVEEDOR_ID != null ? cLIENTE.PROVEEDOR_ID.TrimEnd() : "");
              return View(cLIENTE);
         }
 
@@ -1773,14 +1773,14 @@ namespace TAT001.Controllers.Catalogos
             TAT001Entities db = new TAT001Entities();
 
             var c = (from x in db.CLIENTEs
-                     where x.KUNNR.Contains(Prefix)
+                     where x.KUNNR.Contains(Prefix) && x.ACTIVO == true
                      select new { x.KUNNR, x.NAME1 }).ToList();
 
             if (c.Count == 0)
             {
                 var c2 = (from x in db.CLIENTEs
-                         where x.NAME1.Contains(Prefix)
-                         select new { x.KUNNR, x.NAME1 }).ToList();
+                          where x.NAME1.Contains(Prefix) && x.ACTIVO == true
+                          select new { x.KUNNR, x.NAME1 }).ToList();
                 c.AddRange(c2);
             }
             
@@ -1796,20 +1796,20 @@ namespace TAT001.Controllers.Catalogos
             TAT001Entities db = new TAT001Entities();
 
             var c = (from x in db.USUARIOs
-                     where x.ID.Contains(Prefix)
+                     where x.ID.Contains(Prefix) && x.ACTIVO == true
                      select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
 
             if (c.Count == 0)
             {
                 var c2 = (from x in db.USUARIOs
-                          where x.NOMBRE.Contains(Prefix)
+                          where x.NOMBRE.Contains(Prefix) && x.ACTIVO == true
                           select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
                 c.AddRange(c2);
             }
             else
             {
                 var c3 = (from x in db.USUARIOs
-                          where x.APELLIDO_P.Contains(Prefix)
+                          where x.APELLIDO_P.Contains(Prefix) && x.ACTIVO == true
                           select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
                 c.AddRange(c3);
             }
@@ -1826,16 +1826,53 @@ namespace TAT001.Controllers.Catalogos
             TAT001Entities db = new TAT001Entities();
 
             var c = (from x in db.SOCIEDADs
-                     where x.BUKRS.Contains(Prefix)
+                     where x.BUKRS.Contains(Prefix) && x.ACTIVO == true
                      select new { x.BUKRS, x.NAME1 }).ToList();
 
             if (c.Count == 0)
             {
                 var c2 = (from x in db.SOCIEDADs
-                          where x.NAME1.Contains(Prefix)
+                          where x.NAME1.Contains(Prefix) && x.ACTIVO == true
                           select new { x.BUKRS, x.NAME1 }).ToList();
                 c.AddRange(c2);
             }
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+
+        public JsonResult Idioma(string Prefix)
+        {
+            if (Prefix == null)
+                Prefix = "";
+
+            TAT001Entities db = new TAT001Entities();
+
+            var c = (from x in db.SPRAS
+                     where x.ID.Contains(Prefix)
+                     select new { x.ID, x.DESCRIPCION }).ToList();
+
+            if (c.Count == 0)
+            {
+                var c2 = (from x in db.SPRAS
+                          where x.DESCRIPCION.Contains(Prefix)
+                          select new { x.ID, x.DESCRIPCION }).ToList();
+                c.AddRange(c2);
+            }
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+
+        public JsonResult TCliente(string Prefix)
+        {
+            if (Prefix == null)
+                Prefix = "";
+
+            TAT001Entities db = new TAT001Entities();
+
+            var c = (from x in db.TCLIENTEs
+                     where x.ID.Contains(Prefix) && x.ACTIVO == true
+                     select new { x.ID }).ToList();
+
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
             return cc;
         }

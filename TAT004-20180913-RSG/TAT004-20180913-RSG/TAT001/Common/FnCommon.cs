@@ -341,12 +341,14 @@ namespace TAT001.Common
         public static List<MATERIAL> ObtenerMateriales(TAT001Entities db,string prefix, string vkorg, string vtweg, string user_id)
         {
             string spras_id = ObtenerSprasId(db, user_id);
+            if (prefix == null) { prefix = ""; }
+
             List<MATERIAL> materiales = new List<MATERIAL>();
                 materiales = db.Database.SqlQuery<MATERIAL>("CPS_LISTA_MATERIALES @SPRAS_ID,@VKORG,@VTWEG,@PREFIX",
                 new SqlParameter("@SPRAS_ID", spras_id),
                 new SqlParameter("@VKORG", vkorg),
                 new SqlParameter("@VTWEG", vtweg),
-                new SqlParameter("@PREFIX",  (prefix==null?"":prefix))).ToList();
+                new SqlParameter("@PREFIX", prefix)).ToList();
             
             return materiales;
         }
@@ -408,29 +410,58 @@ namespace TAT001.Common
 
         public static List<CLIENTE> ObtenerClientes(TAT001Entities db, string prefix, string usuario_id, string pais)
         {
+            if (prefix==null) { prefix = ""; }
+
+            List<object> paramsCSP = new List<object>();
+
+            if (usuario_id != null){ paramsCSP.Add(new SqlParameter("@USUARIO_ID", usuario_id));}
+            else{ paramsCSP.Add(new SqlParameter("@USUARIO_ID", DBNull.Value));}
+
+            if (pais != null){ paramsCSP.Add(new SqlParameter("@PAIS", pais));}
+            else {paramsCSP.Add(new SqlParameter("@PAIS", DBNull.Value));}
+
+            paramsCSP.Add(new SqlParameter("@PREFIX", prefix));
+           
             List<CLIENTE> clientes = db.Database.SqlQuery<CLIENTE>("CPS_LISTA_CLIENTES @USUARIO_ID,@PAIS,@PREFIX",
-            new SqlParameter("@USUARIO_ID", (usuario_id == null ? "" : usuario_id)),
-            new SqlParameter("@PAIS", (pais == null ? "" : pais)),
-            new SqlParameter("@PREFIX", (prefix==null?"":prefix))).ToList();
+            paramsCSP.ToArray()).ToList();
             return clientes;
         }
 
         public static List<CONTACTOC> ObtenerContactos(TAT001Entities db, string prefix, string vkorg, string vtweg, string kunnr)
         {
+            if (prefix == null) { prefix = ""; }
+
             List<CONTACTOC> contactos = db.Database.SqlQuery<CONTACTOC>("CPS_LISTA_CONTACTOS @KUNNR,@VKORG,@VTWEG,@PREFIX",
             new SqlParameter("@KUNNR", kunnr),
             new SqlParameter("@VKORG", vkorg),
             new SqlParameter("@VTWEG", vtweg),
-            new SqlParameter("@PREFIX", (prefix == null ? "" : prefix))).ToList();
+            new SqlParameter("@PREFIX", prefix)).ToList();
             return contactos;
         }
 
         public static List<CSP_PRESU_CLIENT_Result> ObtenerPresupuestoCliente(TAT001Entities db, string kunnr,  string periodo)
         {
             List<CSP_PRESU_CLIENT_Result> presupuesto = db.Database.SqlQuery<CSP_PRESU_CLIENT_Result>("CSP_PRESU_CLIENT @CLIENTE, @PERIODO",
-            new SqlParameter("@CLIENTE", (kunnr == null ? "" : kunnr)),
-            new SqlParameter("@PERIODO", (periodo == null ? "" : periodo))).ToList();
+            new SqlParameter("@CLIENTE", kunnr),
+            new SqlParameter("@PERIODO", periodo)).ToList();
             return presupuesto;
+        }
+
+        public static List<DOCUMENTO> ObtenerSolicitudes(TAT001Entities db, string prefix)
+        {
+            if (prefix == null) { prefix = ""; }
+
+            List<DOCUMENTO> solicitudes = db.Database.SqlQuery<DOCUMENTO>("CPS_LISTA_SOLICITUDES @PREFIX",
+                 new SqlParameter("@PREFIX", prefix)).ToList(); 
+            return solicitudes;
+        }
+        public static List<USUARIO> ObtenerUsuarios(TAT001Entities db, string prefix)
+        {
+            if (prefix == null) { prefix = ""; }
+
+            List<USUARIO> usuarios = db.Database.SqlQuery<USUARIO>("CPS_LISTA_USUARIOS @PREFIX",
+                 new SqlParameter("@PREFIX", prefix)).ToList();
+            return usuarios;
         }
 
     }

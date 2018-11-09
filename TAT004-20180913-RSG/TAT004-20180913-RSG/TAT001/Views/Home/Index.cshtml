@@ -88,11 +88,18 @@
             }
         </script>
     }
-    <div class="col s12 right-align right" id="botones">
-        @Html.ActionLink("Crear Solicitud", "Create", "Solicitudes", null, new { @class = "btn-small", @id = "btn_create" })
-        @using (Html.BeginForm("Descargar", "Home", FormMethod.Post, new { @style = "display:inline;" }))
+    <div class="col s8 right-align right">
+        @if (ViewBag.nivelUsuario == 14)
         {
-            <button id="btnExport" name="excel" class="btn-small" type="submit" value="Excel"></button>
+            <button id="btnExport1" name="excel" class="btn-small"></button>
+        }
+        else
+        {
+            @Html.ActionLink("Crear Solicitud", "Create", "Solicitudes", null, new { @class = "btn-small", @id = "btn_create" });
+            using (Html.BeginForm("Descargar", "Home", FormMethod.Post, new { @style = "display:inline;" }))
+            {
+                <button id="btnExport" name="excel" class="btn-small" type="submit" value="Excel"></button>
+            }
         }
         @*@Html.ActionLink("Enviar Negociaciones", "Edit", "Negociaciones", null, new { @class = "btn-small red", @onclick = "document.getElementById('loader').style.display = 'initial';" })*@
     </div>
@@ -143,6 +150,9 @@
                 // do drop down loic
                 docMessage(message);
             }
+            $("#btnExport1").click(function () {
+                tableToExcel("table4exc","solicitudes");
+            });
         });
             </script>
         }
@@ -164,7 +174,9 @@
                     // do drop down loic
                     docMessage('Documento ' + message+' fue creado');
                 }
-
+                $("#btnExport1").click(function () {
+                    tableToExcel("table4exc", "solicitudes");
+                });
             });
             </script>
         }
@@ -193,6 +205,9 @@
                         docMessage('Documento ' + messages + ' fue creado');
                     }
                 }
+                $("#btnExport1").click(function () {
+                    tableToExcel("table4exc", "solicitudes");
+                });
             });
             </script>
         }
@@ -256,460 +271,863 @@
         <link href="~/Content/formatos.css" rel="stylesheet" />
         @*<link href="~/Content/dataTables.material.min.css" rel="stylesheet" />*@
         <link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
+        @*RMG 05-11-19 Vista para usuario consulta*@
+        @if (ViewBag.nivelUsuario == 14)
+        {
+            <div style="width:100%;height:50vh;overflow:scroll;">
+                <table class="table mdl-data-table striped grid centered table" id="table" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th id="head_campo_1">Co. Code</th>
+                            <th id="head_campo_2">País</th>
+                            <th id="head_campo_3">Subregión</th>
+                            <th id="head_campo_4">Estado</th>
+                            <th id="head_campo_5">Ciudad</th>
+                            <th id="head_campo_6">Número solicitud</th>
+                            <th id="head_campo_7">Fecha Solicitud</th>
+                            <th id="head_campo_8">Hora solicitud</th>
+                            <th id="head_campo_9">Semana del periodo</th>
+                            <th id="head_campo_10">Periodo contable</th>
+                            <th id="head_campo_11">Año</th>
+                            <th id="head_campo_12">Tipo Solicitud</th>
+                            <th id="head_campo_13">Tipo Provisión</th>
+                            <th id="head_campo_14">Tipo NC</th>
+                            <th id="head_campo_15">Tipo OP</th>
+                            <th id="head_campo_16">Status</th>
+                            <th id="head_campo_17">Concepto</th>
+                            <th id="head_campo_18">Mecánica</th>
+                            <th id="head_campo_19">De</th>
+                            <th id="head_campo_20">A</th>
+                            <th id="head_campo_21">De</th>
+                            <th id="head_campo_22">A</th>
+                            <th id="head_campo_23">Clasificación</th>
+                            <th id="head_campo_24">Cuenta Contable Gasto</th>
+                            <th id="head_campo_25">Nombre de la cuenta</th>
+                            <th id="head_campo_26">Cliente</th>
+                            <th id="head_campo_27">Nombre</th>
+                            <th id="head_campo_28">Tipo de Cliente</th>
+                            <th id="head_campo_29">Organización de Ventas</th>
+                            <th id="head_campo_30">Tax ID</th>
+                            <th id="head_campo_31">Canal</th>
+                            <th id="head_campo_32">Descripción</th>
+                            <th id="head_campo_33">Nombre de Contacto</th>
+                            <th id="head_campo_34">Email de Contacto</th>
+                            <th id="head_campo_35">$ Monto Original de Provisión</th>
+                            <th id="head_campo_36">$ Monto NC/OP</th>
+                            <th id="head_campo_37">$Monto Aplicado</th>
+                            <th id="head_campo_38">Saldo Remanente Provisión</th>
+                            <th id="head_campo_39">$ Monto Reverso Provisión</th>
+                            <th id="head_campo_40">% Reverso</th>
+                            <th id="head_campo_41">$ Exceso/(Insuficiencia) Provisión</th>
+                            <th id="head_campo_42">% Exceso/(Insuficiencia) Provisión</th>
+                            <th id="head_campo_43">Impactos / Beneficios en el gasto del Periodo</th>
+                            <th id="head_campo_44">Núm. Registro Provisión</th>
+                            <th id="head_campo_45">Núm. Registro NC/OP</th>
+                            <th id="head_campo_46">Núm. Registro Reverso</th>
+                            <th id="head_campo_47">Fecha Reverso Provisión</th>
+                            <th id="head_campo_48">Periodo Contable Reverso</th>
+                            <th id="head_campo_49">Razón Reverso</th>
+                            <th id="head_campo_50">Comentario Reverso</th>
+                            <th id="head_campo_51">Usuario</th>
+                            <th id="head_campo_52">Back Up</th>
+                            <th id="head_campo_53">Creado Por</th>
+                            <th id="head_campo_54">Creado Por ID</th>
+                            <th id="head_campo_55">Solicitado Por</th>
+                            <th id="head_campo_56">Solicitado Por ID</th>
+                            <th id="head_campo_57">Modificado Por</th>
+                            <th id="head_campo_58">Modificado Por ID</th>
+                            <th id="head_campo_59">Aprobador Nivel 1</th>
+                            <th id="head_campo_60">Aprobador Nivel 2</th>
+                            <th id="head_campo_61">Aprobador Nivel 3</th>
+                            <th id="head_campo_62">Aprobador Nivel 4</th>
+                            <th id="head_campo_63">Aprobador Nivel 5</th>
+                            <th id="head_campo_64">Proveedor</th>
+                            <th id="head_campo_65">Nombre Proveedor</th>
+                            <th id="head_campo_66">Número Factura Proveedor</th>
+                            <th id="head_campo_67">Número Factura Kellogg´s</th>
+                            <th id="head_campo_68">Número NC </th>
+                            <th id="head_campo_69">Numero Orden de Pago</th>
+                            <th id="head_campo_70">Expense Recognition en periodo</th>
+                            <th id="head_campo_71">Expense Recognition Ejercicio</th>
+                            <th id="head_campo_72">Soporte Incorrecto</th>
+                            <th id="head_campo_73">Soporte validado con base variable pendiente</th>
+                            <th id="head_campo_74">Carta</th>
+                            <th id="head_campo_75">Contrato</th>
+                            <th id="head_campo_76">JBP</th>
+                            <th id="head_campo_77">Factura</th>
+                            <th id="head_campo_78">Otros</th>
+                            <th id="head_campo_79">Negociación por monto</th>
+                            <th id="head_campo_80">Negociación por %</th>
+                            <th id="head_campo_81">Distribución por material</th>
+                            <th id="head_campo_82">Distribución categoría</th>
+                            <th id="head_campo_83">Monto Base</th>
+                            <th id="head_campo_84">Monto %</th>
+                            <th id="head_campo_85">Recurrente</th>
+                            <th id="head_campo_86">Recurrente por porcentaje</th>
+                            <th id="head_campo_87">Recurrente por Monto</th>
+                            <th id="head_campo_88">Recurrente Cancelada</th>
+                            <th id="head_campo_89">Objetivo Inicio</th>
+                            <th id="head_campo_90">Objetivo Límite</th>
+                            <th id="head_campo_91">Estatus</th>
+                            <th id="head_campo_92">Venta del Periodo</th>
+                            <th id="head_campo_93">Monto Provisión</th>
+                            <th id="head_campo_94">Back Order</th>
+                            <th id="head_campo_95">Venta Real + BO</th>
+                            <th id="head_campo_96">NC / OP o Reverso</th>
+                            <th id="head_campo_97">Monto</th>
+                        </tr>
+                    </thead>
 
-        @* ----DRS 24.09.18---- *@
-        <table class="encabezados table mdl-data-table striped" id="table" style="width:100%;">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th class="lbl_num">
-                        @Html.DisplayNameFor(model => model.NUM_DOC)
-                    </th>
-                    <th class="lblSociedad">
-                        @Html.DisplayNameFor(model => model.SOCIEDAD_ID)
-                    </th>
-                    <th class="lblPais">
-                        @Html.DisplayNameFor(model => model.PAIS_ID)
-                    </th>
-                    <th id="lbl_fechadd">
-                        @Html.DisplayNameFor(model => model.FECHAD)
-                    </th>
-                    <th id="lbl_fechad">
-                        @Html.DisplayNameFor(model => model.FECHAD)
-                    </th>
-                    <th id="lbl_horac">
-                        @Html.DisplayNameFor(model => model.HORAC)
-                    </th>
-                    <th id="lblPC">
-                        @Html.DisplayName("Periodo Contable")
-                    </th>
-                    <th id="lbl_estatus">
-                        @Html.DisplayNameFor(model => model.ESTATUS)
-                    </th>
-                    <th class="lblPayId">
-                        @Html.DisplayNameFor(model => model.PAYER_ID)
-                    </th>
-                    <th class="lblCliente">
-                        @Html.DisplayName("Cliente")
-                    </th>
-                    <th id="lblCanal">
-                        @Html.DisplayName("Canal")
-                    </th>
-                    <th id="lbl_tsol">
-                        @Html.DisplayNameFor(model => model.TSOL)
-                    </th>
-                    <th id="lbl_tall">
-                        @Html.DisplayNameFor(model => model.TALL)
-                    </th>
-                    @*<th id="lblCuentas">
-                        @Html.DisplayName("Cuentas")
-                    </th>*@
-                    <th class="lblCCG">
-                        @Html.DisplayName("Cuenta Contable Gasto")
-                    </th>
-                    <th id="lblCCP">
-                        @Html.DisplayName("Cuenta Contable Pasivo")
-                    </th>
-                    <th id="lblCCC">
-                        @Html.DisplayName("Cuenta Contable Clearing")
-                    </th>
-                    <th id="lbl_concepto">
-                        @Html.DisplayNameFor(model => model.CONCEPTO)
-                    </th>
-                    <th id="lblMo">
-                        @Html.DisplayNameFor(model => model.MONTO_DOC_ML)
-                    </th>
-                    <th id="lblFac">
-                        @Html.DisplayName("Factura")
-                    </th>
-                    <th id="lblFack">
-                        @Html.DisplayName("FacturaK")
-                    </th>
-                    <th id="lblUC">
-                        @Html.DisplayNameFor(model => model.USUARIOC_ID)
-                    </th>
-                    <th id="lblUM">
-                        @Html.DisplayName("Modificado por")
-                    </th>
-                    @*<th id="lblNC">
-                        @Html.DisplayName("Número Nota Crédito/Orden de Pago")
-                    </th>*@
-                    <th id="lblRP" style="background-color:lightgrey">
-                        @Html.DisplayName("Núm. Registro Provisión")
-                    </th>
-                    <th id="lblRnc" style="background-color:lightgrey">
-                        @Html.DisplayName("Núm. Registro NC/OP")
-                    </th>
-                    <th id="lblRap" style="background-color:lightgrey">
-                        @Html.DisplayName("Núm Registro AP")
-                    </th>
-                    <th id="lblRR" style="background-color:lightgrey">
-                        @Html.DisplayName("Núm. Registro Reverso")
-                    </th>
-                    <th id="lblTDoc" style="background-color:lightgrey">
-                        @Html.DisplayName("Tipo Documento")
-                    </th>
-                    <th class="lblPayId" style="background-color:lightgrey">
-                        @Html.DisplayName("Payer")
-                    </th>
-                    <th id="lblCl" style="background-color:lightgrey">
-                        @Html.DisplayName("Cliente")
-                    </th>
-                    <th id="lblIL" style="background-color:lightgrey">
-                        @Html.DisplayName("$ Importe Moneda Local")
-                    </th>
-                    <th class="lblCCG" style="background-color:lightgrey">
-                        @Html.DisplayName("Cuenta Contable Gasto")
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model@*.Where(x=>x.NUM_DOC == 0)*@)
+                    <tbody>
+
+                        @foreach (TAT001.Models.ReportesModel.Concentrado item in ViewBag.lista_reporte)
+                        {
+                            <tr>
+
+                                <td>@(item.documento.SOCIEDAD_ID)</td>
+                                <td>@(item.documento.PAIS_ID)</td>
+                                <td>@(item.documento.CLIENTE.REGION)</td>
+                                <td>@(item.documento.ESTADO)</td>
+                                <td>@(item.documento.CIUDAD)</td>
+                                <td>@(item.documento.NUM_DOC)</td>
+                                <td>@(((DateTime)item.documento.FECHAC).ToShortDateString())</td>
+                                <td>@(((DateTime)item.documento.FECHAC).ToString("HH:mm:ss"))</td>
+                                <td>@(item.SEMANA)</td>
+                                <td>@(item.documento.PERIODO)</td>
+                                <td>@(item.documento.EJERCICIO)</td>
+                                @try
+                                {
+                                    <td>@(item.documento.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(item.documento.USUARIO.SPRAS_ID)).FirstOrDefault().TXT020)</td>
+                                }
+                                catch { }
+                                <td>
+                                    @if (item.documento.TSOL_ID.StartsWith("PR"))
+                                    {
+                                        try
+                                        {
+                                            @(item.documento.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(item.documento.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50)
+                                        }
+                                        catch { }
+                                    }
+                                </td>
+                                <td>
+                                    @try
+                                    {
+                                        if (item.documento.TSOL_ID.StartsWith("NC"))
+                                        {
+                                            @(item.documento.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(item.documento.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50)
+                                        }
+                                    }
+                                    catch { }
+                                </td>
+                                <td>
+                                    @if (item.documento.TSOL_ID.StartsWith("OP"))
+                                    {
+                                        @(item.documento.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(item.documento.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50)
+                                    }
+                                </td>
+                                <td>@(item.ESTATUS_STRING)</td>
+                                <td>@(item.documento.CONCEPTO)</td>
+                                <td>@(item.documento.NOTAS)</td>
+                                <td>@(item.documento.FECHAI_VIG.Value.ToShortDateString())</td>
+                                <td>@(item.documento.FECHAF_VIG.Value.ToShortDateString())</td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    @try
+                                    {
+                                        @(item.documento.GALL.GALLTs.FirstOrDefault().TXT50)
+                                    }
+                                    catch { }
+                                </td>
+                                <td>@(item.CUENTA_CARGO)</td>
+                                <td>@(item.CUENTA_CARGO_NOMBRE)</td>
+                                <td>@(item.documento.CLIENTE.KUNNR)</td>
+                                <td>@(item.documento.CLIENTE.NAME1)</td>
+                                @if (item.documento.SOLD_TO_ID != null)
+                                {
+                                    <td>Sold To</td>
+                                }
+                                else
+                                {
+                                    <td>Payer</td>
+                                }
+
+                                <td>@(item.documento.CLIENTE.VKORG)</td>
+                                <td>@(item.documento.CLIENTE.STCD1)</td>
+                                <td>@(item.documento.CLIENTE.CANAL)</td>
+                                <td>@((item.CANAL == null) ? "" : item.CANAL.CDESCRIPCION)</td>
+                                <td>@(item.documento.PAYER_NOMBRE)</td>
+                                <td>@(item.documento.PAYER_EMAIL)</td>
+                                <td>
+                                    @if (item.documento.TSOL_ID.StartsWith("PR"))
+                                    {
+                                        @(String.Format("{0:C}", item.documento.MONTO_DOC_MD))
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.documento.TSOL_ID.StartsWith("NC") || item.documento.TSOL_ID.StartsWith("OP"))
+                                    {
+                                        @(String.Format("({0:C})", item.documento.MONTO_DOC_MD))
+                                    }
+                                </td>
+                                <td>
+                                    @try
+                                    {
+                                        @((item.PRESUPUESTO.PC_T == 0) ? string.Empty : String.Format("({0:C})", item.PRESUPUESTO.PC_T))
+                                    }
+                                    catch { }
+                                </td>
+                                <td>
+                                    @try
+                                    {
+                                        @((item.PRESUPUESTO.CONSU == 0) ? string.Empty : String.Format("{0:C}", item.PRESUPUESTO.CONSU))
+                                    }
+                                    catch { }
+                                </td>
+                                <td>
+                                    @if (item.DOCSREFREVERSOS != null)
+                                    {
+                                        @(String.Format("{0:C}", item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null).GetType().GetProperty("MONTO_DOC_MD").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null), null)))
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.DOCSREFREVERSOS != null)
+                                    {
+                                        @((Convert.ToDecimal(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null).GetType().GetProperty("MONTO_DOC_MD").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null), null)) * 100) / item.documento.MONTO_DOC_MD)
+                                    }
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>@((item.documento.DOCUMENTOSAP != null) ? item.documento.DOCUMENTOSAP.NUM_DOC.ToString() : "")</td>
+                                <td>
+                                    @if (item.documento.TSOL_ID.StartsWith("NC") || item.documento.TSOL_ID.StartsWith("OP"))
+                                    {
+                                        @(item.documento.NUM_DOC)
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.DOCSREFREVERSOS != null)
+                                    {
+                                        @(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("NUM_DOC").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null))
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.DOCSREFREVERSOS != null)
+                                    {
+                                        @(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("FECHAC").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null))
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.DOCSREFREVERSOS != null)
+                                    {
+                                        @(item.DOCSREFREVERSOS.GetType().GetProperty("d").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("PERIODO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("d").GetValue(item.DOCSREFREVERSOS, null), null))
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.DOCSREFREVERSOS != null)
+                                    {
+                                        @(item.DOCSREFREVERSOS.GetType().GetProperty("tr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("TXT100").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("tr").GetValue(item.DOCSREFREVERSOS, null), null))
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.DOCSREFREVERSOS != null)
+                                    {
+                                        @(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("COMENTARIO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null))
+                                    }
+                                </td>
+                                <td>@(item.documento.USUARIO.NOMBRE + " " + item.documento.USUARIO.APELLIDO_P)</td>
+                                <td>@(item.documento.USUARIO.BACKUP_ID)</td>
+                                <td>@(item.documento.USUARIO.NOMBRE + " " + item.documento.USUARIO.APELLIDO_P)</td>
+                                <td>@(item.documento.USUARIO.ID)</td>
+                                <td>@(item.documento.USUARIO.NOMBRE + " " + item.documento.USUARIO.APELLIDO_P)</td>
+                                <td>@(item.documento.USUARIO.ID)</td>
+                                <td>@(item.documento.USUARIOD_ID)</td>
+                                <td>@(item.documento.USUARIOD_ID)</td>
+                                <td>
+                                    @try
+                                    {
+                                        @(item.documento.FLUJOes.Where(u => u.WF_POS == 1).Select(u => u.USUARIO.NOMBRE + " " + u.USUARIO.APELLIDO_P).FirstOrDefault())
+                                    }
+                                    catch { }
+                                </td>
+                                <td>
+                                    @try
+                                    {
+                                        @(item.documento.FLUJOes.Where(u => u.WF_POS == 2).Select(u => u.USUARIO.NOMBRE + " " + u.USUARIO.APELLIDO_P).FirstOrDefault())
+                                    }
+                                    catch { }
+                                </td>
+                                <td>
+                                    @try
+                                    {
+                                        @(item.documento.FLUJOes.Where(u => u.WF_POS == 3).Select(u => u.USUARIO.NOMBRE + " " + u.USUARIO.APELLIDO_P).FirstOrDefault())
+                                    }
+                                    catch { }
+                                </td>
+                                <td>
+                                    @try
+                                    {
+                                        @(item.documento.FLUJOes.Where(u => u.WF_POS == 4).Select(u => u.USUARIO.NOMBRE + " " + u.USUARIO.APELLIDO_P).FirstOrDefault())
+                                    }
+                                    catch { }
+                                </td>
+                                <td>
+                                    @try
+                                    {
+                                        @(item.documento.FLUJOes.Where(u => u.WF_POS == 5).Select(u => u.USUARIO.NOMBRE + " " + u.USUARIO.APELLIDO_P).FirstOrDefault())
+                                    }
+                                    catch { }
+                                </td>
+                                <td>@(item.documento.DOCUMENTOFs.Select(df => df.PROVEEDOR).FirstOrDefault())</td>
+                                <td>@(item.PROVEEDOR_NOMBRE)</td>
+                                <td>@(item.documento.DOCUMENTOFs.Select(df => df.BILL_DOC).FirstOrDefault())</td>
+                                <td>@(item.documento.DOCUMENTOFs.Select(df => df.FACTURAK).FirstOrDefault())</td>
+                                <td></td>
+                                <td></td>
+                                <td>@((item.documento.DOCUMENTOTS.Where(x => x.TSFORM_ID == 1 && (bool)x.CHECKS).Count() > 0) ? "X" : "") </td>
+                                <td>@((item.documento.DOCUMENTOTS.Where(x => x.TSFORM_ID == 2 && (bool)x.CHECKS).Count() > 0) ? "X" : "")</td>
+                                <td>@((item.documento.DOCUMENTOTS.Where(x => x.TSFORM_ID == 3 && (bool)x.CHECKS).Count() > 0) ? "X" : "")</td>
+                                <td>@((item.documento.DOCUMENTOTS.Where(x => x.TSFORM_ID == 4 && (bool)x.CHECKS).Count() > 0) ? "X" : "")</td>
+                                <td>@((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("CAR")).Count() > 0) ? "X" : "")</td>
+                                <td>@((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("CON")).Count() > 0) ? "X" : "")</td>
+                                <td>@((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("JBP")).Count() > 0) ? "X" : "")</td>
+                                <td>@((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("FAC")).Count() > 0) ? "X" : "")</td>
+                                <td>@((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("OTR")).Count() > 0) ? "X" : "")</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>@((item.documento.TIPO_RECURRENTE != null) ? "Si" : "No")</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>@(item.ESTATUS_STRING)</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div style="width:100%;height:50vh;overflow:scroll;display:none;">
+                <table class="table mdl-data-table striped grid centered table" id="table4exc" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th id="head_campo_1_1">Co. Code</th>
+                            <th id="head_campo_2_1">Pa&iacute;s</th>
+                            <th id="head_campo_3_1">Subregi&oacute;n</th>
+                            <th id="head_campo_4_1">Estado</th>
+                            <th id="head_campo_5_1">Ciudad</th>
+                            <th id="head_campo_6_1">N&uacute; solicitud</th>
+                            <th id="head_campo_7_1">Fecha Solicitud</th>
+                            <th id="head_campo_8_1">Hora solicitud</th>
+                            <th id="head_campo_9_1">Semana del periodo</th>
+                            <th id="head_campo_10_1">Periodo contable</th>
+                            <th id="head_campo_11_1">A&ntilde;o</th>
+                            <th id="head_campo_12_1">Tipo Solicitud</th>
+                            <th id="head_campo_13_1">Tipo Provisión</th>
+                            <th id="head_campo_14_1">Tipo NC</th>
+                            <th id="head_campo_15_1">Tipo OP</th>
+                            <th id="head_campo_16_1">Status</th>
+                            <th id="head_campo_17_1">Concepto</th>
+                            <th id="head_campo_18_1">Mecánica</th>
+                            <th id="head_campo_19_1">De</th>
+                            <th id="head_campo_20_1">A</th>
+                            <th id="head_campo_21_1">De</th>
+                            <th id="head_campo_22_1">A</th>
+                            <th id="head_campo_23_1">Clasificaci&oacute;n</th>
+                            <th id="head_campo_24_1">Cuenta Contable Gasto</th>
+                            <th id="head_campo_25_1">Nombre de la cuenta</th>
+                            <th id="head_campo_26_1">Cliente</th>
+                            <th id="head_campo_27_1">Nombre</th>
+                            <th id="head_campo_28_1">Tipo de Cliente</th>
+                            <th id="head_campo_29_1">Organización de Ventas</th>
+                            <th id="head_campo_30_1">Tax ID</th>
+                            <th id="head_campo_31_1">Canal</th>
+                            <th id="head_campo_32_1">Descripción</th>
+                            <th id="head_campo_33_1">Nombre de Contacto</th>
+                            <th id="head_campo_34_1">Email de Contacto</th>
+                            <th id="head_campo_35_1">$ Monto Original de Provisión</th>
+                            <th id="head_campo_36_1">$ Monto NC/OP</th>
+                            <th id="head_campo_37_1">$Monto Aplicado</th>
+                            <th id="head_campo_38_1">Saldo Remanente Provisión</th>
+                            <th id="head_campo_39_1">$ Monto Reverso Provisión</th>
+                            <th id="head_campo_40_1">% Reverso</th>
+                            <th id="head_campo_41_1">$ Exceso/(Insuficiencia) Provisión</th>
+                            <th id="head_campo_42_1">% Exceso/(Insuficiencia) Provisión</th>
+                            <th id="head_campo_43_1">Impactos / Beneficios en el gasto del Periodo</th>
+                            <th id="head_campo_44_1">Núm. Registro Provisión</th>
+                            <th id="head_campo_45_1">Núm. Registro NC/OP</th>
+                            <th id="head_campo_46_1">Núm. Registro Reverso</th>
+                            <th id="head_campo_47_1">Fecha Reverso Provisión</th>
+                            <th id="head_campo_48_1">Periodo Contable Reverso</th>
+                            <th id="head_campo_49_1">Razón Reverso</th>
+                            <th id="head_campo_50_1">Comentario Reverso</th>
+                            <th id="head_campo_51_1">Usuario</th>
+                            <th id="head_campo_52_1">Back Up</th>
+                            <th id="head_campo_53_1">Creado Por</th>
+                            <th id="head_campo_54_1">Creado Por ID</th>
+                            <th id="head_campo_55_1">Solicitado Por</th>
+                            <th id="head_campo_56_1">Solicitado Por ID</th>
+                            <th id="head_campo_57_1">Modificado Por</th>
+                            <th id="head_campo_58_1">Modificado Por ID</th>
+                            <th id="head_campo_59_1">Aprobador Nivel 1</th>
+                            <th id="head_campo_60_1">Aprobador Nivel 2</th>
+                            <th id="head_campo_61_1">Aprobador Nivel 3</th>
+                            <th id="head_campo_62_1">Aprobador Nivel 4</th>
+                            <th id="head_campo_63_1">Aprobador Nivel 5</th>
+                            <th id="head_campo_64_1">Proveedor</th>
+                            <th id="head_campo_65_1">Nombre Proveedor</th>
+                            <th id="head_campo_66_1">Número Factura Proveedor</th>
+                            <th id="head_campo_67_1">Número Factura Kellogg´s</th>
+                            <th id="head_campo_68_1">Número NC </th>
+                            <th id="head_campo_69_1">Numero Orden de Pago</th>
+                            <th id="head_campo_70_1">Expense Recognition en periodo</th>
+                            <th id="head_campo_71_1">Expense Recognition Ejercicio</th>
+                            <th id="head_campo_72_1">Soporte Incorrecto</th>
+                            <th id="head_campo_73_1">Soporte validado con base variable pendiente</th>
+                            <th id="head_campo_74_1">Carta</th>
+                            <th id="head_campo_75_1">Contrato</th>
+                            <th id="head_campo_76_1">JBP</th>
+                            <th id="head_campo_77_1">Factura</th>
+                            <th id="head_campo_78_1">Otros</th>
+                            <th id="head_campo_79_1">Negociación por monto</th>
+                            <th id="head_campo_80_1">Negociación por %</th>
+                            <th id="head_campo_81_1">Distribución por material</th>
+                            <th id="head_campo_82_1">Distribución categoría</th>
+                            <th id="head_campo_83_1">Monto Base</th>
+                            <th id="head_campo_84_1">Monto %</th>
+                            <th id="head_campo_85_1">Recurrente</th>
+                            <th id="head_campo_86_1">Recurrente por porcentaje</th>
+                            <th id="head_campo_87_1">Recurrente por Monto</th>
+                            <th id="head_campo_88_1">Recurrente Cancelada</th>
+                            <th id="head_campo_89_1">Objetivo Inicio</th>
+                            <th id="head_campo_90_1">Objetivo Límite</th>
+                            <th id="head_campo_91_1">Estatus</th>
+                            <th id="head_campo_92_1">Venta del Periodo</th>
+                            <th id="head_campo_93_1">Monto Provisión</th>
+                            <th id="head_campo_94_1">Back Order</th>
+                            <th id="head_campo_95_1">Venta Real + BO</th>
+                            <th id="head_campo_96_1">NC / OP o Reverso</th>
+                            <th id="head_campo_97_1">Monto</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (TAT001.Models.ReportesModel.Concentrado item in ViewBag.lista_reporte)
+                        {
+                            <tr>
+
+                                <td>@(item.documento.SOCIEDAD_ID)</td>
+                                <td>@(item.documento.PAIS_ID)</td>
+                                <td>@(item.documento.CLIENTE.REGION)</td>
+                                <td>@(item.documento.ESTADO)</td>
+                                <td>@(item.documento.CIUDAD)</td>
+                                <td>@(item.documento.NUM_DOC)</td>
+                                <td>@(((DateTime)item.documento.FECHAC).ToShortDateString())</td>
+                                <td>@(((DateTime)item.documento.FECHAC).ToString("HH:mm:ss"))</td>
+                                <td>@(item.SEMANA)</td>
+                                <td>@(item.documento.PERIODO)</td>
+                                <td>@(item.documento.EJERCICIO)</td>
+                                @try
+                                {
+                                    <td>@(item.documento.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(item.documento.USUARIO.SPRAS_ID)).FirstOrDefault().TXT020)</td>
+                                }
+                                catch { }
+                                <td>
+                                    @if (item.documento.TSOL_ID.StartsWith("PR"))
+                                    {
+                                        try
+                                        {
+                                            @(item.documento.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(item.documento.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50)
+                                        }
+                                        catch { }
+                                    }
+                                </td>
+                                <td>
+                                    @try
+                                    {
+                                        if (item.documento.TSOL_ID.StartsWith("NC"))
+                                        {
+                                            @(item.documento.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(item.documento.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50)
+                                        }
+                                    }
+                                    catch { }
+                                </td>
+                                <td>
+                                    @if (item.documento.TSOL_ID.StartsWith("OP"))
+                                    {
+                                        @(item.documento.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(item.documento.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50)
+                                    }
+                                </td>
+                                <td>@(item.ESTATUS_STRING)</td>
+                                <td>@(item.documento.CONCEPTO)</td>
+                                <td>@(item.documento.NOTAS)</td>
+                                <td>@(item.documento.FECHAI_VIG.Value.ToShortDateString())</td>
+                                <td>@(item.documento.FECHAF_VIG.Value.ToShortDateString())</td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    @try
+                                    {
+                                        @(item.documento.GALL.GALLTs.FirstOrDefault().TXT50)
+                                    }
+                                    catch { }
+                                </td>
+                                <td>@(item.CUENTA_CARGO)</td>
+                                <td>@(item.CUENTA_CARGO_NOMBRE)</td>
+                                <td>@(item.documento.CLIENTE.KUNNR)</td>
+                                <td>@(item.documento.CLIENTE.NAME1)</td>
+                                @if (item.documento.SOLD_TO_ID != null)
+                                {
+                                    <td>Sold To</td>
+                                }
+                                else
+                                {
+                                    <td>Payer</td>
+                                }
+
+                                <td>@(item.documento.CLIENTE.VKORG)</td>
+                                <td>@(item.documento.CLIENTE.STCD1)</td>
+                                <td>@(item.documento.CLIENTE.CANAL)</td>
+                                <td>@((item.CANAL == null) ? "" : item.CANAL.CDESCRIPCION)</td>
+                                <td>@(item.documento.PAYER_NOMBRE)</td>
+                                <td>@(item.documento.PAYER_EMAIL)</td>
+                                <td>
+                                    @if (item.documento.TSOL_ID.StartsWith("PR"))
+                                    {
+                                        @(String.Format("{0:C}", item.documento.MONTO_DOC_MD))
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.documento.TSOL_ID.StartsWith("NC") || item.documento.TSOL_ID.StartsWith("OP"))
+                                    {
+                                        @(String.Format("({0:C})", item.documento.MONTO_DOC_MD))
+                                    }
+                                </td>
+                                <td>
+                                    @try
+                                    {
+                                        @((item.PRESUPUESTO.PC_T == 0) ? string.Empty : String.Format("({0:C})", item.PRESUPUESTO.PC_T))
+                                    }
+                                    catch { }
+                                </td>
+                                <td>
+                                    @try
+                                    {
+                                        @((item.PRESUPUESTO.CONSU == 0) ? string.Empty : String.Format("{0:C}", item.PRESUPUESTO.CONSU))
+                                    }
+                                    catch { }
+                                </td>
+                                <td>
+                                    @if (item.DOCSREFREVERSOS != null)
+                                    {
+                                        @(String.Format("{0:C}", item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null).GetType().GetProperty("MONTO_DOC_MD").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null), null)))
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.DOCSREFREVERSOS != null)
+                                    {
+                                        @((Convert.ToDecimal(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null).GetType().GetProperty("MONTO_DOC_MD").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null), null)) * 100) / item.documento.MONTO_DOC_MD)
+                                    }
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>@((item.documento.DOCUMENTOSAP != null) ? item.documento.DOCUMENTOSAP.NUM_DOC.ToString() : "")</td>
+                                <td>
+                                    @if (item.documento.TSOL_ID.StartsWith("NC") || item.documento.TSOL_ID.StartsWith("OP"))
+                                    {
+                                        @(item.documento.NUM_DOC)
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.DOCSREFREVERSOS != null)
+                                    {
+                                        @(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("NUM_DOC").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null))
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.DOCSREFREVERSOS != null)
+                                    {
+                                        @(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("FECHAC").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null))
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.DOCSREFREVERSOS != null)
+                                    {
+                                        @(item.DOCSREFREVERSOS.GetType().GetProperty("d").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("PERIODO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("d").GetValue(item.DOCSREFREVERSOS, null), null))
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.DOCSREFREVERSOS != null)
+                                    {
+                                        @(item.DOCSREFREVERSOS.GetType().GetProperty("tr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("TXT100").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("tr").GetValue(item.DOCSREFREVERSOS, null), null))
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.DOCSREFREVERSOS != null)
+                                    {
+                                        @(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("COMENTARIO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null))
+                                    }
+                                </td>
+                                <td>@(item.documento.USUARIO.NOMBRE + " " + item.documento.USUARIO.APELLIDO_P)</td>
+                                <td>@(item.documento.USUARIO.BACKUP_ID)</td>
+                                <td>@(item.documento.USUARIO.NOMBRE + " " + item.documento.USUARIO.APELLIDO_P)</td>
+                                <td>@(item.documento.USUARIO.ID)</td>
+                                <td>@(item.documento.USUARIO.NOMBRE + " " + item.documento.USUARIO.APELLIDO_P)</td>
+                                <td>@(item.documento.USUARIO.ID)</td>
+                                <td>@(item.documento.USUARIOD_ID)</td>
+                                <td>@(item.documento.USUARIOD_ID)</td>
+                                <td>
+                                    @try
+                                    {
+                                        @(item.documento.FLUJOes.Where(u => u.WF_POS == 1).Select(u => u.USUARIO.NOMBRE + " " + u.USUARIO.APELLIDO_P).FirstOrDefault())
+                                    }
+                                    catch { }
+                                </td>
+                                <td>
+                                    @try
+                                    {
+                                        @(item.documento.FLUJOes.Where(u => u.WF_POS == 2).Select(u => u.USUARIO.NOMBRE + " " + u.USUARIO.APELLIDO_P).FirstOrDefault())
+                                    }
+                                    catch { }
+                                </td>
+                                <td>
+                                    @try
+                                    {
+                                        @(item.documento.FLUJOes.Where(u => u.WF_POS == 3).Select(u => u.USUARIO.NOMBRE + " " + u.USUARIO.APELLIDO_P).FirstOrDefault())
+                                    }
+                                    catch { }
+                                </td>
+                                <td>
+                                    @try
+                                    {
+                                        @(item.documento.FLUJOes.Where(u => u.WF_POS == 4).Select(u => u.USUARIO.NOMBRE + " " + u.USUARIO.APELLIDO_P).FirstOrDefault())
+                                    }
+                                    catch { }
+                                </td>
+                                <td>
+                                    @try
+                                    {
+                                        @(item.documento.FLUJOes.Where(u => u.WF_POS == 5).Select(u => u.USUARIO.NOMBRE + " " + u.USUARIO.APELLIDO_P).FirstOrDefault())
+                                    }
+                                    catch { }
+                                </td>
+                                <td>@(item.documento.DOCUMENTOFs.Select(df => df.PROVEEDOR).FirstOrDefault())</td>
+                                <td>@(item.PROVEEDOR_NOMBRE)</td>
+                                <td>@(item.documento.DOCUMENTOFs.Select(df => df.BILL_DOC).FirstOrDefault())</td>
+                                <td>@(item.documento.DOCUMENTOFs.Select(df => df.FACTURAK).FirstOrDefault())</td>
+                                <td></td>
+                                <td></td>
+                                <td>@((item.documento.DOCUMENTOTS.Where(x => x.TSFORM_ID == 1 && (bool)x.CHECKS).Count() > 0) ? "X" : "") </td>
+                                <td>@((item.documento.DOCUMENTOTS.Where(x => x.TSFORM_ID == 2 && (bool)x.CHECKS).Count() > 0) ? "X" : "")</td>
+                                <td>@((item.documento.DOCUMENTOTS.Where(x => x.TSFORM_ID == 3 && (bool)x.CHECKS).Count() > 0) ? "X" : "")</td>
+                                <td>@((item.documento.DOCUMENTOTS.Where(x => x.TSFORM_ID == 4 && (bool)x.CHECKS).Count() > 0) ? "X" : "")</td>
+                                <td>@((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("CAR")).Count() > 0) ? "X" : "")</td>
+                                <td>@((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("CON")).Count() > 0) ? "X" : "")</td>
+                                <td>@((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("JBP")).Count() > 0) ? "X" : "")</td>
+                                <td>@((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("FAC")).Count() > 0) ? "X" : "")</td>
+                                <td>@((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("OTR")).Count() > 0) ? "X" : "")</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>@((item.documento.TIPO_RECURRENTE != null) ? "Si" : "No")</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>@(item.ESTATUS_STRING)</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        }
+        else
+        {
+            @* ----DRS 24.09.18---- *@
+            <table class="encabezados table mdl-data-table striped" id="table" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th class="lbl_num">
+                            @Html.DisplayNameFor(model => model.NUM_DOC)
+                        </th>
+                        <th class="lblSociedad">
+                            @Html.DisplayNameFor(model => model.SOCIEDAD_ID)
+                        </th>
+                        <th class="lblPais">
+                            @Html.DisplayNameFor(model => model.PAIS_ID)
+                        </th>
+                        <th id="lbl_fechadd">
+                            @Html.DisplayNameFor(model => model.FECHAD)
+                        </th>
+                        <th id="lbl_fechad">
+                            @Html.DisplayNameFor(model => model.FECHAD)
+                        </th>
+                        <th id="lbl_horac">
+                            @Html.DisplayNameFor(model => model.HORAC)
+                        </th>
+                        <th id="lblPC">
+                            @Html.DisplayName("Periodo Contable")
+                        </th>
+                        <th id="lbl_estatus">
+                            @Html.DisplayNameFor(model => model.ESTATUS)
+                        </th>
+                        <th class="lblPayId">
+                            @Html.DisplayNameFor(model => model.PAYER_ID)
+                        </th>
+                        <th class="lblCliente">
+                            @Html.DisplayName("Cliente")
+                        </th>
+                        <th id="lblCanal">
+                            @Html.DisplayName("Canal")
+                        </th>
+                        <th id="lbl_tsol">
+                            @Html.DisplayNameFor(model => model.TSOL)
+                        </th>
+                        <th id="lbl_tall">
+                            @Html.DisplayNameFor(model => model.TALL)
+                        </th>
+                        @*<th id="lblCuentas">
+                                @Html.DisplayName("Cuentas")
+                            </th>*@
+                        <th class="lblCCG">
+                            @Html.DisplayName("Cuenta Contable Gasto")
+                        </th>
+                        <th id="lblCCP">
+                            @Html.DisplayName("Cuenta Contable Pasivo")
+                        </th>
+                        <th id="lblCCC">
+                            @Html.DisplayName("Cuenta Contable Clearing")
+                        </th>
+                        <th id="lbl_concepto">
+                            @Html.DisplayNameFor(model => model.CONCEPTO)
+                        </th>
+                        <th id="lblMo">
+                            @Html.DisplayNameFor(model => model.MONTO_DOC_ML)
+                        </th>
+                        <th id="lblFac">
+                            @Html.DisplayName("Factura")
+                        </th>
+                        <th id="lblFack">
+                            @Html.DisplayName("FacturaK")
+                        </th>
+                        <th id="lblUC">
+                            @Html.DisplayNameFor(model => model.USUARIOC_ID)
+                        </th>
+                        <th id="lblUM">
+                            @Html.DisplayName("Modificado por")
+                        </th>
+                        @*<th id="lblNC">
+                                @Html.DisplayName("Número Nota Crédito/Orden de Pago")
+                            </th>*@
+                        <th id="lblRP" style="background-color:lightgrey">
+                            @Html.DisplayName("Núm. Registro Provisión")
+                        </th>
+                        <th id="lblRnc" style="background-color:lightgrey">
+                            @Html.DisplayName("Núm. Registro NC/OP")
+                        </th>
+                        <th id="lblRap" style="background-color:lightgrey">
+                            @Html.DisplayName("Núm Registro AP")
+                        </th>
+                        <th id="lblRR" style="background-color:lightgrey">
+                            @Html.DisplayName("Núm. Registro Reverso")
+                        </th>
+                        <th id="lblTDoc" style="background-color:lightgrey">
+                            @Html.DisplayName("Tipo Documento")
+                        </th>
+                        <th class="lblPayId" style="background-color:lightgrey">
+                            @Html.DisplayName("Payer")
+                        </th>
+                        <th id="lblCl" style="background-color:lightgrey">
+                            @Html.DisplayName("Cliente")
+                        </th>
+                        <th id="lblIL" style="background-color:lightgrey">
+                            @Html.DisplayName("$ Importe Moneda Local")
+                        </th>
+                        <th class="lblCCG" style="background-color:lightgrey">
+                            @Html.DisplayName("Cuenta Contable Gasto")
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model@*.Where(x=>x.NUM_DOC == 0)*@)
 {
-    @*<tr>
-        @if (item.TSOL.PADRE)
-        {
-            if (item.DOCUMENTORECs.Count > 0)
-            {
-                <td class=" details-control" style="cursor:pointer">
-                    <i class="material-icons">expand_more</i>
-                </td>
-            }
-            else
-            {
-                <td class=" details-control" style="cursor:pointer">
-                    <i class="material-icons">add</i>
-                </td>
-            }
-        }
-        else
-        {
-            if (item.DOCUMENTORECs.Count > 0)
-            {
-                <td class=" details-control" style="cursor:pointer">
-                    <i class="material-icons">expand_more</i>
-                </td>
-            }
-            else
-            {
-                <td></td>
-            }
-        }
 
-        @if (item.FLUJOes.Count > 0)
-        {
-            if (item.ESTATUS_WF == "R" & ViewBag.usuario.ID == item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIOD_ID)
-            {
-                <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id_d = item.NUM_DOC })'" style="cursor:pointer">
-                    @item.NUM_DOC
-                </td>
-            }
-            else
-            {
-                <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
-                    @item.NUM_DOC
-                </td>
-            }
-        }
-        else
-        {
-            <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC })'" style="cursor:pointer">
-                @item.NUM_DOC
-            </td>
-        }
-        <td>
-            @Html.DisplayFor(modelItem => item.SOCIEDAD_ID)
+<tr>
+    <td class="details-control" style="cursor:pointer"><i class='material-icons'>@item.BUTTON</i></td>
+    @if (item.NUM_DOC_TEXT == "Edit")
+    {
+        <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id_d = item.NUM_DOC })'" style="cursor:pointer">
+            @item.NUM_DOC
         </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PAIS_ID)
+    }
+    else
+    {
+        <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC, pais = item.PAIS_ID })'" style="cursor:pointer">
+            @item.NUM_DOC
         </td>
-        <td>
-            @item.FECHAD.Value.Year/@item.FECHAD.Value.Month/@item.FECHAD.Value.Day
-        </td>
-        <td>
-            @item.HORAC.Value.ToString().Split('.')[0]
-        </td>
-        <td>
-            @item.FECHAC.Value.Month
-        </td>
-        @{
-            string estatus = "";
-            if (item.ESTATUS != null) { estatus += item.ESTATUS; } else { estatus += " "; }
-            if (item.ESTATUS_C != null) { estatus += item.ESTATUS_C; } else { estatus += " "; }
-            if (item.ESTATUS_SAP != null) { estatus += item.ESTATUS_SAP; } else { estatus += " "; }
-            if (item.ESTATUS_WF != null) { estatus += item.ESTATUS_WF; } else { estatus += " "; }
-            if (item.FLUJOes.Count > 0)
-            {
-                estatus += item.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().WORKFP.ACCION.TIPO;
-            }
-            else
-            {
-                estatus += " ";
-            }
-            if (item.TSOL.PADRE) { estatus += "P"; } else { estatus += " "; }
-            if (item.FLUJOes.Where(x => x.ESTATUS == "R").ToList().Count > 0)
-            {
-                estatus += item.FLUJOes.Where(x => x.ESTATUS == "R").OrderByDescending(a => a.POS).FirstOrDefault().USUARIO.PUESTO_ID;
-            }
-            else
-            {
-                estatus += " ";
-            }
-            // "XCXXXX" ----------->CANCELADA
-            // "XXXPRX" ----------->PENDIENTE TS
-            // "XXXPAX" ----------->PENDIENTE APROBADOR
-            // "CXXAXX" ----------->PENDIENTE APROBADOR
-        }
-
-        @if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "^.[C]"))
-        {
-            <td class="">
-                <span class="lbl_cancelled new badge red darken-1 white-text" data-badge-caption=" ">Cancelada</span>
-            </td>
-        }
-        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[P][R].."))
-        {
-            <td class="">
-                <span class="lbl_ts yellow darken-2 white-text new badge" data-badge-caption=" ">Pendiente validación TS</span>
-            </td>
-        }
-        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[P][A].."))
-        {
-            <td class="">
-                <span class="new badge yellow darken-2 white-text" data-badge-caption=" "><span class="lbl_pending">Pendiente aprobador </span></span>
-            </td>
-        }
-        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[N]..[A]..."))
-        {
-            <td class="">
-                <span class="lbl_txt new badge green darken-1 white-text" data-badge-caption=" ">Por gen .txt</span>
-            </td>
-        }
-        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[C]..[A]..."))
-        {
-            <td class="">
-                <span class="lbl_txt new badge green darken-1 white-text" data-badge-caption=" ">Cerrada</span>
-            </td>
-        }
-        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[P]..[A]..."))
-        {
-            <td class="">
-                <span class="lbl_contab new badge green darken-1 white-text" data-badge-caption=" ">Por contabilizar</span>
-            </td>
-        }
-        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[P][A]..."))
-        {
-            <td class="">
-                <span class="lbl_txt new badge green darken-1 white-text" data-badge-caption=" ">Por contabilizar</span>
-            </td>
-        }
-        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[E][A]..."))
-        {
-            <td class="">
-                <span class="lbl_txt new badge red darken-1 white-text" data-badge-caption=" ">Error en contabiización</span>
-            </td>
-        }
-        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A].[P]."))
-        {
-            <td class="">
-                <span class="new badge green darken-1 white-text" data-badge-caption=" ">@item.TSOL.TSOLTs.Where(x => x.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50 <span class="lbl_approved">Abierta</span></span>
-            </td>
-        }
-        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A]..."))
-        {
-            <td class="">
-                <span class="new badge green darken-1 white-text" data-badge-caption=" ">Registrada en SAP</span>
-            </td>
-        }
-        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[R]..[8]"))
-        {
-            <td class="">
-                <span class="new badge red darken-1 white-text" data-badge-caption=" "><span class="lbl_rejecte">Pendiente corrección usuario TS </span></span>
-            </td>
-        }
-        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[R]..."))
-        {
-            <td class="">
-                <span class="new badge red darken-1 white-text" data-badge-caption=" "><span class="lbl_rejected">Pendiente corrección usuario </span></span>
-            </td>
-        }
-        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[S]..."))
-        {
-            <td class="">
-                <span class="lbl_soporte new badge yellow darken-2 white-text" data-badge-caption=" ">Pendiente firma</span>
-            </td>
-        }
-        else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[T]..."))
-        {
-            <td class="">
-                <span class="lbl_tax new badge yellow darken-2 white-text" data-badge-caption=" ">Pendiente tax</span>
-            </td>
-        }
-        else
-        {
-            <td></td>
-        }
-        <td>
-            @Html.DisplayFor(modelItem => item.PAYER_ID)
-        </td>
-        <td>
-            @for (int i = 0; i < lst.Count; i++)
-            {
-                if (lst[i].KUNNR == item.PAYER_ID)
-                {
-                    @Html.Label(lst[i].NAME1)
-                }
-            }
-        </td>
-        <td>
-            @for (int i = 0; i < lst.Count; i++)
-            {
-                if (lst[i].KUNNR == item.PAYER_ID)
-                {
-                    @Html.Label(lst[i].CANAL)
-                }
-            }
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT020)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TALL.TALLTs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50)
-        </td>
-        <td>
-            @for (int i = 0; i < lstC.Count; i++)
-            {
-                if (item.TALL != null)
-                {
-                    if (lstC[i].SOCIEDAD_ID == item.SOCIEDAD_ID && lstC[i].TALL_ID == item.TALL.ID)
-                    {
-                        @Html.Label(lstC[i].CARGO.ToString())
-                    }
-                }
-            }
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CONCEPTO)
-        </td>
-        <td class="precio">
-            @Html.DisplayFor(modelItem => item.MONTO_DOC_ML)
-        </td>
-        <td>
-            @for (int i = 0; i < lstD.Count; i++)
-            {
-                if (lstD[i].NUM_DOC == item.NUM_DOC & lstD[i].FACTURA != null)
-                {
-                    @Html.Label(lstD[i].FACTURA)
-                }
-            }
-        </td>
-        <td>
-            @for (int i = 0; i < lstD.Count; i++)
-            {
-                if (lstD[i].NUM_DOC == item.NUM_DOC & lstD[i].FACTURAK != null)
-                {
-                    @Html.Label(lstD[i].FACTURAK)
-                }
-            }
-        </td>
-        <td>
-            @item.USUARIOC_ID
-        </td>
-        <td></td><!--USUARIO QUE MODIFICA-->
-        @if (item.DOCUMENTOSAP != null)
-        {
-            <!--NUM_SAP-->
-
-            if (item.TSOL.PADRE)
-            {
-                <td>@item.DOCUMENTO_SAP</td> <!--PROVISION-->
-                <td></td>
-                <td></td>
-                <td></td>
-            }
-            else if (item.TSOL.REVERSO)
-            {
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>@item.DOCUMENTO_SAP</td>
-            }
-            else
-            {
-                <td></td>
-                <td></td>
-                <td>@item.DOCUMENTO_SAP</td>
-                <td></td>
-            }
-            <!--NUM_SAP-->
-            <td>@item.DOCUMENTOSAP.BLART</td><!--BLART-->
-            <td>@item.DOCUMENTOSAP.KUNNR</td><!--KUNNR-->
-            <td>@item.DOCUMENTOSAP.DESCR</td><!--DESCR-->
-            <td class="precio">@item.DOCUMENTOSAP.IMPORTE</td><!--IMPORTE-->
-            <td>@item.DOCUMENTOSAP.CUENTA_C</td><!--CUENTA_CONTABLE-->
-        }
-        else
-        {
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        }
-    </tr>*@
-    <tr>
-        <td class="details-control" style="cursor:pointer"><i class='material-icons'>@item.BUTTON</i></td>
-        @if (item.NUM_DOC_TEXT == "Edit")
-        {
-            <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id_d = item.NUM_DOC })'" style="cursor:pointer">
-                @item.NUM_DOC
-            </td>
-        }
-        else
-        {
-            <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC,pais=item.PAIS_ID })'" style="cursor:pointer">
-                @item.NUM_DOC
-            </td>
-        }
-        <td>@item.SOCIEDAD_ID</td>
-        <td>@item.PAIS_ID</td>
-        <td>@item.FECHAD</td>
-        <td>@item.FECHADD</td>
-        <td>@item.HORAC</td>
-        <td>@item.PERIODO</td>
-        <td><span class="@item.ESTATUS_CLASS" data-badge-caption=" ">@item.ESTATUS</span></td>
-        <td>@item.PAYER_ID</td>
-        <td>@item.CLIENTE</td>
-        <td>@item.CANAL</td>
-        <td>@item.TSOL</td>
-        <td>@item.TALL</td>
-        @*<td>@item.CUENTAS</td>*@
-        <td>@item.CUENTAP</td>
-        <td>@item.CUENTAPL</td>
-        <td>@item.CUENTACL</td>
-        <td>@item.CONCEPTO</td>
-        <td>@item.MONTO_DOC_ML</td>
-        <td>@item.FACTURA</td>
-        <td>@item.FACTURAK</td>
-        <td>@item.USUARIOC_ID</td>
-        <td>@item.USUARIOM_ID</td>
-        <td>@item.NUM_PRO</td>
-        <td>@item.NUM_NC</td>
-        <td>@item.NUM_AP</td>
-        <td>@item.NUM_REV</td>
-        <td>@item.BLART</td>
-        <td>@item.NUM_PAYER</td>
-        <td>@item.NUM_CLIENTE</td>
-        <td>@item.NUM_IMPORTE</td>
-        <td>@item.NUM_CUENTA</td>
-    </tr>
+    }
+    <td>@item.SOCIEDAD_ID</td>
+    <td>@item.PAIS_ID</td>
+    <td>@item.FECHAD</td>
+    <td>@item.FECHADD</td>
+    <td>@item.HORAC</td>
+    <td>@item.PERIODO</td>
+    <td><span class="@item.ESTATUS_CLASS" data-badge-caption=" ">@item.ESTATUS</span></td>
+    <td>@item.PAYER_ID</td>
+    <td>@item.CLIENTE</td>
+    <td>@item.CANAL</td>
+    <td>@item.TSOL</td>
+    <td>@item.TALL</td>
+    @*<td>@item.CUENTAS</td>*@
+    <td>@item.CUENTAP</td>
+    <td>@item.CUENTAPL</td>
+    <td>@item.CUENTACL</td>
+    <td>@item.CONCEPTO</td>
+    <td>@item.MONTO_DOC_ML</td>
+    <td>@item.FACTURA</td>
+    <td>@item.FACTURAK</td>
+    <td>@item.USUARIOC_ID</td>
+    <td>@item.USUARIOM_ID</td>
+    <td>@item.NUM_PRO</td>
+    <td>@item.NUM_NC</td>
+    <td>@item.NUM_AP</td>
+    <td>@item.NUM_REV</td>
+    <td>@item.BLART</td>
+    <td>@item.NUM_PAYER</td>
+    <td>@item.NUM_CLIENTE</td>
+    <td>@item.NUM_IMPORTE</td>
+    <td>@item.NUM_CUENTA</td>
+</tr>
 }
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        }
 
         <input id="miles" name="miles" type="hidden" value="@ViewBag.miles">
         <input id="dec" name="dec" type="hidden" value="@ViewBag.dec">
@@ -720,6 +1138,19 @@
         <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
         <script>
     $(document).ready(function () {
+        var table2 = $('#table4exc').DataTable({
+            //"ajax": 'ViewBag.documentos.Data[0]',
+            paging: false,
+            //searching: false
+            //stateSave: true,
+            scrollX: "50vh",
+            scrollY: "50vh",
+            scrollCollapse: true
+        });
+        $("#btnExport1").click(function () {
+            tableToExcel("table4exc", "solicitudes");
+        });
+
         var table = $('#table').DataTable({
             //"ajax": 'ViewBag.documentos.Data[0]',
             //paging: false,
@@ -810,7 +1241,7 @@
                         }
                     });
                 }
-            }],
+            }]
         });
         //table.buttons().container()
         //    .appendTo($('#botones'));
@@ -837,6 +1268,7 @@
                 // Open this row
                 var child = format(row.data(), row, tr);
                 if (child != undefined) {
+
                 }
             }
         });
@@ -858,7 +1290,7 @@
             success: function (data) {
                 var uu = ($.map(data, function (item) {
                     return { label: item.NUM_DOC, value: item };
-                }))
+                }));
                 var ret = "<table class='table mdl-data-table striped'>";
                 for (var i = 0; i < uu.length; i++) {
                     var sum = 0;
@@ -906,13 +1338,24 @@
                     paramPais = "?pais=" + pais_id;
                 }
                 document.location = root+"Solicitudes/Details/" + num + paramPais;
-    }
+            }
+            var tableToExcel = (function () {
+                var uri = 'data:application/vnd.ms-excel;base64,'
+                    , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+                    , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+                    , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+                return function (table, name) {
+                    if (!table.nodeType) table = document.getElementById(table)
+                    var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
+                    window.location.href = uri + base64(format(template, ctx))
+                }
+            })()
         </script>
         <style>
-            .dt-buttons
-            {
-                display:inline !important;
+            .dt-buttons {
+                display: inline !important;
             }
+
             .dataTables_length {
                 display: none;
             }

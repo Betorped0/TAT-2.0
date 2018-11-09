@@ -272,7 +272,7 @@ namespace TAT001.Controllers
                 string tsol = ds1.Tables[0].Rows[i][1].ToString().Trim();
                 string bukrs = ds1.Tables[0].Rows[i][3].ToString().Trim();
                 string land = ds1.Tables[0].Rows[i][4].ToString().Trim();
-                
+
                 PAI p = pp.Where(a => a.LANDX == land).FirstOrDefault();
 
                 DOCUMENTO d = new DOCUMENTO();
@@ -308,7 +308,6 @@ namespace TAT001.Controllers
                             string ejerciciok = ds2.Tables[0].Rows[i][8].ToString().Trim();
 
                             doc.NUM_DOC = num_doc;
-                            doc.FACTURA = factura;
                             doc.FECHA = fecha_factura2[0];
                             doc.PROVEEDOR = proveedor.TrimStart('0');
                             doc.PROVEEDOR_NOMBRE = proveedor_nombre;
@@ -488,22 +487,25 @@ namespace TAT001.Controllers
                             doc.LIGADA = ligada;
                             doc.VIGENCIA_DE = vigencia_de2[0];
                             doc.VIGENCIA_AL = vigencia_al2[0];
-                            if (matnr != "" & matkl == "")
+
+
+                            if (matnr != "" & matkl != "")
+                            {
+                                doc.MATNR = "";
+                                doc.MATKL = matkl;
+                                doc.DESCRIPCION = "";
+                            }
+                            else if (matnr == "" & matkl != "")
+                            {
+                                doc.MATNR = "";
+                                doc.MATKL = matkl;
+                                doc.DESCRIPCION = "";
+                            }
+                            else if (matnr != "" & matkl == "")
                             {
                                 doc.MATNR = matnr.TrimStart('0');
                                 var idMat = db.MATERIALs.Where(y => y.ID == matnr).FirstOrDefault().MATERIALGP_ID;
                                 doc.MATKL = db.MATERIALGPTs.Where(x => x.MATERIALGP_ID == idMat & x.SPRAS_ID == "EN").FirstOrDefault().TXT50;
-                            }
-                            else
-                            {
-                                doc.MATNR = matnr.TrimStart('0');
-                                doc.MATKL = matkl;
-                            }
-
-                            var existMaterial = db.MATERIALs.Where(x => x.ID == matnr).FirstOrDefault();
-
-                            if (existMaterial != null)
-                            {
                                 var desMaterial = (from mat1 in db.MATERIALs
                                                    join mat2 in db.MATERIALTs on mat1.ID equals mat2.MATERIAL_ID
                                                    where mat2.MATERIAL_ID == matnr & mat1.ACTIVO == true
@@ -512,10 +514,36 @@ namespace TAT001.Controllers
 
                                 doc.DESCRIPCION = desMaterial.DESCRIPCION;
                             }
-                            else
-                            {
-                                doc.DESCRIPCION = "";
-                            }
+
+
+                            //if (matnr != "" & matkl == "")
+                            //{
+                            //    doc.MATNR = matnr.TrimStart('0');
+                            //    var idMat = db.MATERIALs.Where(y => y.ID == matnr).FirstOrDefault().MATERIALGP_ID;
+                            //    doc.MATKL = db.MATERIALGPTs.Where(x => x.MATERIALGP_ID == idMat & x.SPRAS_ID == "EN").FirstOrDefault().TXT50;
+                            //}
+                            //else
+                            //{
+                            //    doc.MATNR = matnr.TrimStart('0');
+                            //    doc.MATKL = matkl;
+                            //}
+
+                            //var existMaterial = db.MATERIALs.Where(x => x.ID == matnr).FirstOrDefault();
+
+                            //if (existMaterial != null)
+                            //{
+                            //    var desMaterial = (from mat1 in db.MATERIALs
+                            //                       join mat2 in db.MATERIALTs on mat1.ID equals mat2.MATERIAL_ID
+                            //                       where mat2.MATERIAL_ID == matnr & mat1.ACTIVO == true
+                            //                       group mat2 by new { mat2.MATERIAL_ID, mat2.MAKTG } into g
+                            //                       select new { DESCRIPCION = g.Key.MAKTG }).FirstOrDefault();
+
+                            //    doc.DESCRIPCION = desMaterial.DESCRIPCION;
+                            //}
+                            //else
+                            //{
+                            //    doc.DESCRIPCION = "";
+                            //}
 
                             if (IsNumeric(monto) == false) { monto = "0"; }
                             if (IsNumeric(porc_apoyo) == false) { porc_apoyo = "0"; } else { porc_apoyo = (Convert.ToDecimal(porc_apoyo) * 100).ToString(); }
@@ -1148,22 +1176,41 @@ namespace TAT001.Controllers
             if (Prefix == null)
                 Prefix = "";
 
-            var c = (from mat1 in db.MATERIALs
-                     join mat2 in db.MATERIALTs on mat1.ID equals mat2.MATERIAL_ID
-                     where mat2.MATERIAL_ID.Contains(Prefix) && mat2.SPRAS == idioma && mat1.ACTIVO == true
-                     group mat2 by new { mat2.MATERIAL_ID, mat2.MAKTG } into g
-                     select new { ID = g.Key.MATERIAL_ID, DESCRIPCION = g.Key.MAKTG }).ToList();
+            var con = (from a in db.MATERIALs
+                       join b in db.MATERIALGPs on a.MATERIALGP_ID equals b.ID
+                       join c in db.MATERIALTs on a.ID equals c.MATERIAL_ID
+                       where c.MATERIAL_ID.Contains(Prefix) && c.SPRAS == idioma && b.ACTIVO == true && a.ACTIVO == true
+                       group c by new { b.DESCRIPCION, c.MATERIAL_ID, c.MAKTG } into g
+                       select new { ID = g.Key.MATERIAL_ID, CATEGORIA = g.Key.DESCRIPCION, DESCRIPCION = g.Key.MAKTG }).ToList();
 
-            if (c.Count == 0)
+            if (con.Count == 0)
             {
-                var c2 = (from mat1 in db.MATERIALs
-                          join mat2 in db.MATERIALTs on mat1.ID equals mat2.MATERIAL_ID
-                          where mat2.MAKTG.Contains(Prefix) && mat2.SPRAS == idioma && mat1.ACTIVO == true
-                          group mat2 by new { mat2.MATERIAL_ID, mat2.MAKTG } into g
-                          select new { ID = g.Key.MATERIAL_ID, DESCRIPCION = g.Key.MAKTG }).ToList();
-                c.AddRange(c2);
+                var con2 = (from a in db.MATERIALs
+                            join b in db.MATERIALGPs on a.MATERIALGP_ID equals b.ID
+                            join c in db.MATERIALTs on a.ID equals c.MATERIAL_ID
+                            where c.MAKTG.Contains(Prefix) && c.SPRAS == idioma && b.ACTIVO == true && a.ACTIVO == true
+                            group c by new { b.DESCRIPCION, c.MATERIAL_ID, c.MAKTG } into g
+                            select new { ID = g.Key.MATERIAL_ID, CATEGORIA = g.Key.DESCRIPCION, DESCRIPCION = g.Key.MAKTG }).ToList();
+                con.AddRange(con2);
             }
-            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+
+            //var c = (from mat1 in db.MATERIALs
+            //         join mat2 in db.MATERIALTs on mat1.ID equals mat2.MATERIAL_ID
+
+            //         where mat2.MATERIAL_ID.Contains(Prefix) && mat2.SPRAS == idioma && mat1.ACTIVO == true
+            //         group mat2 by new { mat2.MATERIAL_ID, mat2.MAKTG } into g
+            //         select new { ID = g.Key.MATERIAL_ID, DESCRIPCION = g.Key.MAKTG }).ToList();
+
+            //if (c.Count == 0)
+            //{
+            //    var c2 = (from mat1 in db.MATERIALs
+            //              join mat2 in db.MATERIALTs on mat1.ID equals mat2.MATERIAL_ID
+            //              where mat2.MAKTG.Contains(Prefix) && mat2.SPRAS == idioma && mat1.ACTIVO == true
+            //              group mat2 by new { mat2.MATERIAL_ID, mat2.MAKTG } into g
+            //              select new { ID = g.Key.MATERIAL_ID, DESCRIPCION = g.Key.MAKTG }).ToList();
+            //    c.AddRange(c2);
+            //}
+            JsonResult cc = Json(con, JsonRequestBehavior.AllowGet);
             return cc;
         }
 
@@ -1225,6 +1272,125 @@ namespace TAT001.Controllers
             c.Add(dec.DECIMAL);
 
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+
+        //COSULTA DE AJAX PARA EL TIPO DE HEALTYDRINKS EN CATEGORIA       
+        public JsonResult getHealtCategoria(object[] categorias)
+        {
+            List<object> tieneHealtty = new List<object>();
+
+            if (categorias.Length > 0)
+            {
+                for (int i = 0; i < categorias.Length; i++)
+                {
+                    string categoriaDes = categorias[i].ToString();
+                    var con = (from t in db.MATERIALGPs
+                               where t.DESCRIPCION.Contains(categoriaDes)
+                               select new { t.DESCRIPCION }).FirstOrDefault();
+
+                    if (con == null)
+                    {
+                        var con2 = (from t in db.MATERIALGPs
+                                    where t.ID.Contains(categoriaDes)
+                                    select new { t.DESCRIPCION }).FirstOrDefault();
+
+                        categoriaDes = con2.DESCRIPCION;
+                    }
+                    else
+                    {
+                        categoriaDes = con.DESCRIPCION;
+                    }
+
+
+
+                    var unica = db.MATERIALGPs.Where(x => x.DESCRIPCION == categoriaDes).FirstOrDefault();
+
+                    if (unica != null)
+                    {
+                        if (unica.UNICA)
+                        {
+                            tieneHealtty.Add(unica.UNICA);
+                        }
+                        else
+                        {
+                            tieneHealtty.Add(unica.UNICA);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                tieneHealtty.Clear();
+            }
+
+            JsonResult cc = Json(tieneHealtty, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+
+        //COSULTA DE AJAX PARA EL TIPO DE HEALTYDRINKS EN MASIVA     
+        public JsonResult getHealtMaterial(object[] materiales)
+        {
+            List<object> tieneHealty = new List<object>();
+            List<object> matIDList = new List<object>();
+            string idioma = Session["spras"].ToString();
+
+            if (materiales.Length > 0)
+            {
+                for (int i = 0; i < materiales.Length; i++)
+                {
+                    string materialID = materiales[i].ToString();
+                    if (materialID.Length < 18) { materialID = cad.completaMaterial(materialID); }
+                    string num_mat = "";
+
+                    var con = (from mat1 in db.MATERIALs
+                               join mat2 in db.MATERIALTs on mat1.ID equals mat2.MATERIAL_ID
+                               where mat2.MATERIAL_ID.Contains(materialID) && mat2.SPRAS == idioma && mat1.ACTIVO == true
+                               group mat2 by new { mat2.MATERIAL_ID, mat2.MAKTG, mat1.MATERIALGP_ID } into g
+                               select new { ID = g.Key.MATERIAL_ID, MATERIALGP_ID = g.Key.MATERIALGP_ID }).FirstOrDefault();
+
+                    if (con == null)
+                    {
+                        var con2 = (from mat1 in db.MATERIALs
+                                    join mat2 in db.MATERIALTs on mat1.ID equals mat2.MATERIAL_ID
+                                    where mat2.MAKTG.Contains(materialID) && mat2.SPRAS == idioma && mat1.ACTIVO == true
+                                    group mat2 by new { mat2.MATERIAL_ID, mat2.MAKTG, mat1.MATERIALGP_ID } into g
+                                    select new { ID = g.Key.MATERIAL_ID, MATERIALGP_ID = g.Key.MATERIALGP_ID }).FirstOrDefault();
+
+                        materialID = con2.MATERIALGP_ID;
+                        num_mat = con2.ID;
+                    }
+                    else
+                    {
+                        materialID = con.MATERIALGP_ID;
+                        num_mat = con.ID;
+                    }
+
+                    var unica = db.MATERIALGPs.Where(x => x.ID == materialID).FirstOrDefault();
+
+                    if (unica != null)
+                    {
+                        if (unica.UNICA)
+                        {
+                            tieneHealty.Add(unica.UNICA);
+                            matIDList.Add(num_mat);
+                        }
+                        else
+                        {
+                            tieneHealty.Add(unica.UNICA);
+                            matIDList.Add(num_mat);
+                        }
+                    }
+                }
+                tieneHealty.Add(matIDList);
+            }
+            else
+            {
+                tieneHealty.Clear();
+                matIDList.Clear();
+            }
+
+            JsonResult cc = Json(tieneHealty, JsonRequestBehavior.AllowGet);
             return cc;
         }
 
@@ -2117,7 +2283,6 @@ namespace TAT001.Controllers
 
             string num_doc = fila[0].ToString().Trim();
             string ligada = fila[1].ToString().Trim();
-
             string matnr = fila[4].ToString().Trim();
             if (matnr.Length < 18) { matnr = cad.completaMaterial(matnr); }
             string matkl = fila[5].ToString().Trim();
@@ -2161,6 +2326,7 @@ namespace TAT001.Controllers
                         regresaRowH4.Add("red white-text rojo");
                     }
 
+
                     if ((matnr != "" & matkl != "") | (matnr != "" & matkl == ""))
                     {
                         if (db.MATERIALs.Where(x => x.ID == matnr & x.ACTIVO == true).Count() > 0)
@@ -2173,32 +2339,12 @@ namespace TAT001.Controllers
                         }
 
                         regresaRowH4.Add("");
-
-                        var desMaterial = (from mat1 in db.MATERIALs
-                                           join mat2 in db.MATERIALTs on mat1.ID equals mat2.MATERIAL_ID
-                                           where mat2.MATERIAL_ID == matnr & mat2.SPRAS == idioma & mat2.MAKTG == descripcion & mat1.ACTIVO == true
-                                           group mat2 by new { mat2.MATERIAL_ID, mat2.MAKTG } into g
-                                           select new { ID = g.Key.MATERIAL_ID, DESCRIPCION = g.Key.MAKTG }).ToList();
-
                         regresaRowH4.Add("");
-                        //if (desMaterial.Count() > 0)
-                        //{
-                        //    regresaRowH4.Add("");
-                        //}
-                        //else
-                        //{
-                        //    regresaRowH4.Add("red white-text rojo");
-                        //}
                     }
                     else if (matnr == "" & matkl != "")
                     {
                         regresaRowH4.Add("");
 
-                        //var categoria = (from mat1 in db.MATERIALs
-                        //                 join cat in db.MATERIALGPTs on mat1.MATERIALGP_ID equals cat.MATERIALGP_ID
-                        //                 where cat.TXT50 == matkl & cat.SPRAS_ID == "EN" & mat1.ACTIVO == true
-                        //                 group cat by new { cat.MATERIALGP_ID, cat.TXT50 } into g
-                        //                 select new { ID = g.Key.MATERIALGP_ID, DESCRIPCION = g.Key.TXT50 }).ToList();
                         var categoria = (from cat in db.MATERIALGPs
                                          where cat.DESCRIPCION == matkl
                                          select new { ID = cat.ID, DESCRIPCION = cat.DESCRIPCION }).ToList();
@@ -2220,6 +2366,65 @@ namespace TAT001.Controllers
                         regresaRowH4.Add("red white-text rojo");
                         regresaRowH4.Add("");
                     }
+                    //if ((matnr != "" & matkl != "") | (matnr != "" & matkl == ""))
+                    //{
+                    //    if (db.MATERIALs.Where(x => x.ID == matnr & x.ACTIVO == true).Count() > 0)
+                    //    {
+                    //        regresaRowH4.Add("");
+                    //    }
+                    //    else
+                    //    {
+                    //        regresaRowH4.Add("red white-text rojo");
+                    //    }
+
+                    //    regresaRowH4.Add("");
+
+                    //    var desMaterial = (from mat1 in db.MATERIALs
+                    //                       join mat2 in db.MATERIALTs on mat1.ID equals mat2.MATERIAL_ID
+                    //                       where mat2.MATERIAL_ID == matnr & mat2.SPRAS == idioma & mat2.MAKTG == descripcion & mat1.ACTIVO == true
+                    //                       group mat2 by new { mat2.MATERIAL_ID, mat2.MAKTG } into g
+                    //                       select new { ID = g.Key.MATERIAL_ID, DESCRIPCION = g.Key.MAKTG }).ToList();
+
+                    //    regresaRowH4.Add("");
+                    //    //if (desMaterial.Count() > 0)
+                    //    //{
+                    //    //    regresaRowH4.Add("");
+                    //    //}
+                    //    //else
+                    //    //{
+                    //    //    regresaRowH4.Add("red white-text rojo");
+                    //    //}
+                    //}
+                    //else if (matnr == "" & matkl != "")
+                    //{
+                    //    regresaRowH4.Add("");
+
+                    //    //var categoria = (from mat1 in db.MATERIALs
+                    //    //                 join cat in db.MATERIALGPTs on mat1.MATERIALGP_ID equals cat.MATERIALGP_ID
+                    //    //                 where cat.TXT50 == matkl & cat.SPRAS_ID == "EN" & mat1.ACTIVO == true
+                    //    //                 group cat by new { cat.MATERIALGP_ID, cat.TXT50 } into g
+                    //    //                 select new { ID = g.Key.MATERIALGP_ID, DESCRIPCION = g.Key.TXT50 }).ToList();
+                    //    var categoria = (from cat in db.MATERIALGPs
+                    //                     where cat.DESCRIPCION == matkl
+                    //                     select new { ID = cat.ID, DESCRIPCION = cat.DESCRIPCION }).ToList();
+
+                    //    if (categoria.Count() > 0)
+                    //    {
+                    //        regresaRowH4.Add("");
+                    //    }
+                    //    else
+                    //    {
+                    //        regresaRowH4.Add("red white-text rojo");
+                    //    }
+
+                    //    regresaRowH4.Add("");
+                    //}
+                    //else
+                    //{
+                    //    regresaRowH4.Add("red white-text rojo");
+                    //    regresaRowH4.Add("red white-text rojo");
+                    //    regresaRowH4.Add("");
+                    //}
 
                     if (apoyo != "")
                     {
@@ -3020,7 +3225,7 @@ namespace TAT001.Controllers
                 }
             }
 
-            TempData["docs_masiva"] = li;
+            //TempData["docs_masiva"] = li;
 
             iDs.Add(li);
 

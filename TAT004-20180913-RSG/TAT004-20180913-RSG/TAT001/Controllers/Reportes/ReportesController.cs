@@ -40,7 +40,9 @@ namespace TAT001.Controllers.Reportes
             ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
             ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
             ViewBag.sociedad = db.SOCIEDADs.ToList();
-            ViewBag.cuentagl = db.CUENTAGLs.ToList();
+            //ViewBag.cuentagl = db.CUENTAGLs.ToList();
+            ViewBag.cuentagl = (from c in db.CUENTAGLs join d in db.DOCUMENTOes on c.ID equals d.CUENTAP select c).Union(from c in db.CUENTAGLs join d in db.DOCUMENTOes on c.ID equals d.CUENTAPL select c).
+                Union(from c in db.CUENTAGLs join d in db.DOCUMENTOes on c.ID equals d.CUENTACL select c).DistinctBy(x=>x.ID).ToList();
             ViewBag.periodo = db.PERIODOes.ToList();
 
             try
@@ -301,17 +303,18 @@ namespace TAT001.Controllers.Reportes
             var anio = Request["filtroAnio"];
             //var cocode = code.Request["filtroCode"];
             string[] cocodesplit = code.Split(',');
-
+            
             List<object> lista = new List<object>();
             List<object> rema = new List<object>();
             List<object> perio = new List<object>();
             List<object> comen = new List<object>();
             List<object> cuenta = new List<object>();
+            List<object> periodo445 = new List<object>();
 
             ViewBag.miles = ",";
             ViewBag.decimales = ".";
 
-
+            
             foreach (string item in cocodesplit)
             {
                 var miConsulta = (from x in db.DOCUMENTOes
@@ -353,6 +356,9 @@ namespace TAT001.Controllers.Reportes
                                                  join CUENTAGL in db.CUENTAGLs on a.CUENTAPL equals CUENTAGL.ID                               
                                                  select new { CUENTAGL.ID, CUENTAGL.NOMBRE }).Distinct().ToList();
 
+                var per445 = (from p in db.DOCUMENTOes
+                              select new { p.EJERCICIO, p.PERIODO }).FirstOrDefault();
+
                 var montos = (from doc in db.DOCUMENTOes.ToList()
                               join refe in miConsulta on doc.DOCUMENTO_REF equals refe.NUM_DOC
                               select new { refe.NUM_DOC, refe.MONTO_DOC_MD, doc.DOCUMENTO_REF }).ToList();
@@ -371,17 +377,20 @@ namespace TAT001.Controllers.Reportes
                                                   on new { ff.NUM_DOC, ff.POS } equals new { j.NUM_DOC, j.POS }
                                                  select new Comentarios { NUM_DOC = ff.NUM_DOC, COMENTARIOS = ff.COMENTARIO }).ToList();
 
+                
                 lista.Add(miConsulta);
                 rema.Add(montos);
                 perio.Add(period);
                 comen.Add(comentarios);
                 cuenta.AddRange(nombregl);
+                periodo445.Add(per445);
             }
-            ViewBag.miConsulSplit = lista;
+            ViewBag.miConsulSplit = lista;                 
             ViewBag.remanente = rema;
             ViewBag.peri = perio;
             ViewBag.ultimo = comen;
             ViewBag.cuenta = cuenta;
+            ViewBag.perio445 = periodo445;
 
             //CONSULTA DEL FILTRO AÑO
             var consultaAnio = (from a in db.DOCUMENTOes select new { a.EJERCICIO }).Distinct().ToList();
