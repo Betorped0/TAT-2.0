@@ -1364,6 +1364,9 @@
     <Content Include="Entities\TAT001.edmx.diagram">
       <DependentUpon>TAT001.edmx</DependentUpon>
     </Content>
+    <Content Include="PdfTemp\Solicitudes_Consulta\Solicitudes_Consulta09\11\2018.xlsx" />
+    <Content Include="PdfTemp\Solicitudes_Consulta\Solicitudes_Consulta\09\11\2018.xlsx" />
+    <Content Include="PdfTemp\Solicitudes_Consulta\09\11\2018.xlsx" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\borrador.js" />
     <Content Include="Scripts\dropdowntree.js" />
@@ -1988,7 +1991,6 @@
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->
     <Folder Include="App_Data\" />
-    <Folder Include="PdfTemp\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
