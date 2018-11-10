@@ -4,6 +4,15 @@ ViewBag.pagina_r = 631;
 ViewBag.carpeta_r = 500;
 Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<style>
+    #list {
+        overflow-x: auto;
+    }
+
+    th {
+        min-width: 120px;
+    }
+</style>
 <div class="row">
     <div class="col s12 right-align">
         <a class="btn-small" href="@Url.Action("Carga")">Cargar Clientes</a>

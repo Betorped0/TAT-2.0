@@ -109,7 +109,7 @@
             if (fechaFMaxM) { fechaFMaxM.options.maxDate = date; }
         }
     },
-    configurarTable: function (idTable, scrollY, scrollX, urlLanguage,idSelectPag,idGFilter) {
+    configurarTable: function (idTable, scrollY, scrollX, urlLanguage,idSelectPag,idGFilter,targets) {
         var table =  $('#'+idTable).DataTable({
             scrollY: scrollY,
             scrollX: scrollX,
@@ -118,7 +118,7 @@
                 url: urlLanguage
             },
             columnDefs: [{
-                targets: [0, 1, 2,4,5,6],
+                targets: (targets ? targets:[0, 1, 2,4,5,6]),
                 className: 'mdl-data-table__cell--non-numeric'
             }]
         });
