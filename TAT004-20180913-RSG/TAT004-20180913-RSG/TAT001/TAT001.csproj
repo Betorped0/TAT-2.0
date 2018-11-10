@@ -17,7 +17,7 @@
     <AssemblyName>TAT001</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -2021,7 +2021,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="Archivos\DoctosAyuda\" />
     <Folder Include="files\Ayuda\" />
-    <Folder Include="PdfTemp\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -2132,7 +2131,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>64497</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost/TAT001</IISUrl>
+          <IISUrl>http://localhost:64497/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
