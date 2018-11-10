@@ -384,7 +384,7 @@
                             {
                                 <tr>
                                     <td width="">@Html.DisplayFor(modelItem => f.USUARIOA_ID) - @Html.DisplayFor(modelItem => f.USUARIO.NOMBRE) @Html.DisplayFor(modelItem => f.USUARIO.APELLIDO_P) @Html.DisplayFor(modelItem => f.USUARIO.APELLIDO_M)</td>
-                                    <td width="">@Html.DisplayFor(modelItem => f.WORKFP.ACCION.DESCCRIPCION)</td>
+                                    <td width="">@Html.DisplayFor(modelItem => f.WORKFP.ACCION.ACCIONTs.Where(a => a.SPRAS_ID == Session["spras"].ToString()).FirstOrDefault().TXT050)</td>
                                     <td width="">@Html.DisplayFor(modelItem => f.FECHAC)</td>
                                     <td width="">@Html.DisplayFor(modelItem => f.FECHAM)</td>
                                     <td width="">@Html.DisplayFor(modelItem => f.ESTATUS)</td>

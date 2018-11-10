@@ -257,6 +257,7 @@
     <Compile Include="Controllers\FlujosController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\Catalogos\ImpuestoController.cs" />
+    <Compile Include="Controllers\LayoutCargaMasivaController.cs" />
     <Compile Include="Controllers\ListasController2.cs" />
     <Compile Include="Controllers\ListasController.cs" />
     <Compile Include="Controllers\MailsController.cs" />
@@ -836,6 +837,7 @@
     <Compile Include="Models\Delegados.cs" />
     <Compile Include="Models\DOCUMENTO_MOD.cs" />
     <Compile Include="Models\HeaderFooterD.cs" />
+    <Compile Include="Models\LayoutCargaMasivaViewModels.cs" />
     <Compile Include="Models\listacuerpoc.cs" />
     <Compile Include="Models\Masiva\Distribucion.cs" />
     <Compile Include="Models\Masiva\Encabezado.cs" />
@@ -986,6 +988,7 @@
     <Content Include="bin\TAT001.dll" />-->
     <!--<Content Include="bin\TAT001.pdb" />-->
     <!--<Content Include="bin\WebGrease.dll" />-->
+    <Content Include="Archivos\LayoutCargaMasiva\readme.txt" />
     <Content Include="Content\autocomplete.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -2008,13 +2011,16 @@
     <Content Include="Views\Ayuda\Edit.cshtml" />
     <Content Include="Views\Ayuda\Index.cshtml" />
     <Content Include="Views\Ayuda\Consulta.cshtml" />
+    <Content Include="Views\LayoutCargaMasiva\Create.cshtml" />
+    <Content Include="Views\LayoutCargaMasiva\Index.cshtml" />
+    <Content Include="Views\Calendario445\List.cshtml" />
+    <Content Include="Views\Calendario445\ListEx.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->
     <Folder Include="App_Data\" />
     <Folder Include="Archivos\DoctosAyuda\" />
     <Folder Include="files\Ayuda\" />
-    <Folder Include="PdfTemp\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

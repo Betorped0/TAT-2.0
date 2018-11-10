@@ -576,27 +576,27 @@
                             <tbody>
                                 @foreach (TAT001.Entities.FLUJO f in ViewBag.workflow)
                                 {
-                                    <tr>
-                                        <td width=""> @Html.DisplayFor(modelItem => f.USUARIOA_ID) - @Html.DisplayFor(modelItem => f.USUARIO.NOMBRE) @Html.DisplayFor(modelItem => f.USUARIO.APELLIDO_P) @Html.DisplayFor(modelItem => f.USUARIO.APELLIDO_M) </td>
-                                        <td width=""> @Html.DisplayFor(modelItem => f.WORKFP.ACCION.DESCCRIPCION) </td>
-                                        <td width=""> @f.FECHAC.Value.ToShortDateString() </td>
-                                        <td width=""> @f.FECHAC.Value.TimeOfDay.ToString().Split('.')[0] </td>
-                                        <td width=""> @f.FECHAM.Value.ToShortDateString() </td>
-                                        <td width=""> @f.FECHAM.Value.TimeOfDay.ToString().Split('.')[0] </td>
-                                        <td width=""> @Html.DisplayFor(modelItem => f.ESTATUS) </td>
-                                        @* ------DRS 24.09.18------ *@
-                                        <td width="">
-                                            @{
-                                                string est = (Html.DisplayFor(modelItem => f.STATUS)).ToString();
+                                <tr>
+                                    <td width=""> @Html.DisplayFor(modelItem => f.USUARIOA_ID) - @Html.DisplayFor(modelItem => f.USUARIO.NOMBRE) @Html.DisplayFor(modelItem => f.USUARIO.APELLIDO_P) @Html.DisplayFor(modelItem => f.USUARIO.APELLIDO_M) </td>
+                                    <td width=""> @Html.DisplayFor(modelItem => f.WORKFP.ACCION.ACCIONTs.Where(a=>a.SPRAS_ID == Session["spras"].ToString()).FirstOrDefault().TXT050)</td>
+                                    <td width=""> @f.FECHAC.Value.ToShortDateString() </td>
+                                    <td width=""> @f.FECHAC.Value.TimeOfDay.ToString().Split('.')[0] </td>
+                                    <td width=""> @f.FECHAM.Value.ToShortDateString() </td>
+                                    <td width=""> @f.FECHAM.Value.TimeOfDay.ToString().Split('.')[0] </td>
+                                    <td width=""> @Html.DisplayFor(modelItem => f.ESTATUS) </td>
+                                    @* ------DRS 24.09.18------ *@
+                                    <td width="">
+                                        @{
+                                            string est = (Html.DisplayFor(modelItem => f.STATUS)).ToString();
 
-                                                TAT001.Services.Estatus c = new TAT001.Services.Estatus();
-                                                c.getText(est, Model.D.NUM_DOC);
-                                            }
-                                            @c.getText(est, Model.D.NUM_DOC)
+                                            TAT001.Services.Estatus c = new TAT001.Services.Estatus();
+                                            c.getText(est, Model.D.NUM_DOC);
+                                        }
+                                        @c.getText(est, Model.D.NUM_DOC)
 
-                                        </td>
-                                        <td width="30%"> @Html.DisplayFor(modelItem => f.COMENTARIO) </td>
-                                    </tr>
+                                    </td>
+                                    <td width="30%"> @Html.DisplayFor(modelItem => f.COMENTARIO) </td>
+                                </tr>
                                 }
                             </tbody>
                         </table>
