@@ -1061,8 +1061,8 @@ namespace TAT001.Controllers
         public string cierre(string sociedad_id, string tsol_id, string periodo_id, string usuario_id)
         {
             int periodo = int.Parse(periodo_id);
-            bool a = FnCommon.ValidarPeriodoEnCalendario445(db, sociedad_id, tsol_id, periodo, "PRE", usuario_id) |
-                FnCommon.ValidarPeriodoEnCalendario445(db, sociedad_id, tsol_id, periodo, "CI", usuario_id);
+            bool a = FnCommon.ValidarPeriodoEnCalendario445(db, sociedad_id, tsol_id, periodo, "PRE", usuario_id) ||
+                FnCommon.ValidarPeriodoEnCalendario445(db, sociedad_id, tsol_id, periodo, "CI");
             if (a)
                 return "X";
             else

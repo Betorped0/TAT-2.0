@@ -31,11 +31,11 @@ namespace TAT001.Controllers
                 //return RedirectToAction("Pais", "Home");
             }
 
-            var soportes = db.TSOPORTETs.ToList();
+            var soportesES = db.TSOPORTETs.Where(x=>x.SPRAS_ID=="ES").ToList();
 
-           // ViewBag.conSoporte = conSoporte.ToList();
-           
-            return View(soportes);
+            ViewBag.soportesEN = db.TSOPORTETs.Where(x => x.SPRAS_ID == "EN").ToList();
+
+            return View(soportesES);
         }
 
         // GET: Soporte/Details/5
@@ -83,7 +83,13 @@ namespace TAT001.Controllers
             {
                 //return RedirectToAction("Pais", "Home");
             }
-            return View();
+            TSOPORTE soporte = new TSOPORTE();
+            soporte.ACTIVO = true;
+            soporte.TSOPORTETs = new List<TSOPORTET>();
+            soporte.TSOPORTETs.Add(new TSOPORTET { SPRAS_ID="ES"});
+            soporte.TSOPORTETs.Add(new TSOPORTET { SPRAS_ID = "EN" });
+
+            return View(soporte);
         }
 
         // POST: Soporte/Create
@@ -91,22 +97,27 @@ namespace TAT001.Controllers
         // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,DESCRIPCION,ACTIVO")] TSOPORTE tSOPORTE)
+        public ActionResult Create([Bind(Include = "ID,DESCRIPCION,ACTIVO")] TSOPORTE tSOPORTE, FormCollection collection)
         {
             if (ModelState.IsValid)
             {
                 db.TSOPORTEs.Add(tSOPORTE);
                 db.SaveChanges();
-                List<SPRA> ss = db.SPRAS.ToList();
-
-                foreach (SPRA s in ss)
+                List<TSOPORTET> listTextos = new List<TSOPORTET>();
+                if (collection.AllKeys.Contains("EN") && !String.IsNullOrEmpty(collection["EN"]))
                 {
-                    TSOPORTET pt = new TSOPORTET();
-                    pt.TSOPORTE_ID = tSOPORTE.ID;
-                    pt.SPRAS_ID = s.ID;
-                    pt.TXT50 = tSOPORTE.DESCRIPCION;
-                    db.TSOPORTETs.Add(pt);
+
+                    TSOPORTET m = new TSOPORTET { SPRAS_ID = "EN", TSOPORTE_ID = tSOPORTE.ID, TXT50 = collection["EN"].ToUpper() };
+                    listTextos.Add(m);
+
                 }
+                if (collection.AllKeys.Contains("ES") && !String.IsNullOrEmpty(collection["ES"]))
+                {
+                    TSOPORTET m = new TSOPORTET { SPRAS_ID = "ES", TSOPORTE_ID = tSOPORTE.ID, TXT50 = collection["ES"].ToUpper() };
+                    listTextos.Add(m);
+                }
+                db.TSOPORTETs.AddRange(listTextos);
+
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -166,8 +177,6 @@ namespace TAT001.Controllers
                         ViewBag.EN = e.TXT50;
                     if (e.SPRAS_ID == "ES")
                         ViewBag.ES = e.TXT50;
-                    if (e.SPRAS_ID == "PT")
-                        ViewBag.PT = e.TXT50;
                 }
             else
             {
@@ -189,34 +198,22 @@ namespace TAT001.Controllers
             {
                 db.Entry(tSOPORTE).State = EntityState.Modified;
                 db.SaveChanges();
-
-                TSOPORTE mATERIAL1 = db.TSOPORTEs.Find(tSOPORTE.ID);
-                var materialtextos = db.TSOPORTETs.Where(t => t.TSOPORTE_ID == tSOPORTE.ID).ToList();
-                db.TSOPORTETs.RemoveRange(materialtextos);
-                List<TSOPORTET> ListmATERIALTs = new List<TSOPORTET>();
-                if (collection.AllKeys.Contains("EN"))
-                {
-                    if (!String.IsNullOrEmpty(collection["EN"]))
-                    {
+                
+                var textos = db.TSOPORTETs.Where(t => t.TSOPORTE_ID == tSOPORTE.ID).ToList();
+                db.TSOPORTETs.RemoveRange(textos);
+                List<TSOPORTET> listTextos = new List<TSOPORTET>();
+                if (collection.AllKeys.Contains("EN") && !String.IsNullOrEmpty(collection["EN"])) { 
+                    
                         TSOPORTET m = new TSOPORTET { SPRAS_ID = "EN", TSOPORTE_ID = tSOPORTE.ID, TXT50 = collection["EN"].ToUpper() };
-                        ListmATERIALTs.Add(m);
-                    }
-                    if (mATERIAL1.DESCRIPCION != collection["EN"])
-                    {
-                        mATERIAL1.DESCRIPCION = collection["EN"];
-                    }
+                    listTextos.Add(m);
+                    
                 }
                 if (collection.AllKeys.Contains("ES") && !String.IsNullOrEmpty(collection["ES"]))
                 {
-                    TSOPORTET m = new TSOPORTET { SPRAS_ID = "ES", TSOPORTE_ID = tSOPORTE.ID, TXT50 = collection["ES"]/*, MAKTG = Convert.ToString(collection["ES"])*/.ToUpper() };
-                    ListmATERIALTs.Add(m);
+                    TSOPORTET m = new TSOPORTET { SPRAS_ID = "ES", TSOPORTE_ID = tSOPORTE.ID, TXT50 = collection["ES"].ToUpper() };
+                    listTextos.Add(m);
                 }
-                if (collection.AllKeys.Contains("PT") && !String.IsNullOrEmpty(collection["PT"]))
-                {
-                    TSOPORTET m = new TSOPORTET { SPRAS_ID = "PT", TSOPORTE_ID = tSOPORTE.ID, TXT50 = collection["PT"]/*, MAKTG = Convert.ToString(collection["PT"])*/.ToUpper() };
-                    ListmATERIALTs.Add(m);
-                }
-                db.TSOPORTETs.AddRange(ListmATERIALTs);
+                db.TSOPORTETs.AddRange(listTextos);
 
                 db.SaveChanges();
                 return RedirectToAction("Index");
