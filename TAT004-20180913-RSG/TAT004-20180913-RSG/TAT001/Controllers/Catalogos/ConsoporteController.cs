@@ -16,13 +16,11 @@ namespace TAT001.Controllers
         readonly TAT001Entities db = new TAT001Entities();
 
         // GET: Consoporte
-        public ActionResult Index(string tsol)
+        public ActionResult Index()
         {
             int pagina_id = 841; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
-
-            ViewBag.IdTsol = tsol;
-
+        
             try
             {
                 string p = Session["pais"].ToString();
@@ -33,7 +31,7 @@ namespace TAT001.Controllers
                 //return RedirectToAction("Pais", "Home");
             }
 
-            var cONSOPORTEs = db.CONSOPORTEs.Include(c => c.TSOL).Include(c => c.TSOPORTE);
+            var cONSOPORTEs = db.CONSOPORTEs.Include(c => c.TSOL.TSOLTs).Include(c => c.TSOPORTE.TSOPORTETs);
             return View(cONSOPORTEs.ToList());
         }
 
@@ -56,7 +54,7 @@ namespace TAT001.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            CONSOPORTE cONSOPORTE = db.CONSOPORTEs.Where(x => x.TSOL_ID == tsol && x.TSOPORTE_ID == tsopo).First();
+            CONSOPORTE cONSOPORTE = db.CONSOPORTEs.Include(c => c.TSOL.TSOLTs).Include(c => c.TSOPORTE.TSOPORTETs).Where(x => x.TSOL_ID == tsol && x.TSOPORTE_ID == tsopo).First();
             if (cONSOPORTE == null)
             {
                 return HttpNotFound();
@@ -65,14 +63,11 @@ namespace TAT001.Controllers
         }
 
         // GET: Consoporte/Create
-        public ActionResult Create(string tsol)
+        public ActionResult Create()
         {
             int pagina_id = 843; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
-
-            ViewBag.IdTsol = tsol;
-            ViewBag.activo = true;
-
+            
             try
             {
                 string p = Session["pais"].ToString();
@@ -82,11 +77,10 @@ namespace TAT001.Controllers
             {
                 //return RedirectToAction("Pais", "Home");
             }
-
-            var list = db.CONSOPORTEs.Where(x => x.TSOL_ID == tsol).Select(x => x.TSOPORTE_ID).ToList();
-            ViewBag.TSOPORTE_ID = new SelectList(db.TSOPORTEs.Where(x => !list.Contains(x.ID)).ToList(), "ID", "DESCRIPCION");
-            ViewBag.TSOL_ID = new SelectList(db.TSOLs.Where(x => !list.Contains(x.ID)).ToList(), "ID", "DESCRIPCION");
-            return View();
+            CONSOPORTE consoporte = new CONSOPORTE();
+            consoporte.ACTIVO = true;
+            consoporte.OBLIGATORIO = true;
+             return View(consoporte);
         }
 
         // POST: Consoporte/Create
@@ -98,10 +92,18 @@ namespace TAT001.Controllers
         {
             if (ModelState.IsValid)
             {
-                cONSOPORTE.ACTIVO = true;
-                db.CONSOPORTEs.Add(cONSOPORTE);
+                if (db.CONSOPORTEs.Any(x => x.TSOPORTE_ID == cONSOPORTE.TSOPORTE_ID && x.TSOL_ID == cONSOPORTE.TSOL_ID))
+                {
+                    CONSOPORTE cONSOPORTEAux = db.CONSOPORTEs.First(x => x.TSOPORTE_ID == cONSOPORTE.TSOPORTE_ID && x.TSOL_ID == cONSOPORTE.TSOL_ID);
+                    cONSOPORTEAux.ACTIVO = cONSOPORTE.ACTIVO;
+                    cONSOPORTEAux.OBLIGATORIO = cONSOPORTE.OBLIGATORIO;
+                    db.Entry(cONSOPORTEAux).State = EntityState.Modified;
+                }
+                else {
+                    db.CONSOPORTEs.Add(cONSOPORTE);
+                }
                 db.SaveChanges();
-                return RedirectToAction("Index", new { tsol = cONSOPORTE.TSOL_ID });
+                return RedirectToAction("Index");
             }
 
             ViewBag.TSOL_ID = new SelectList(db.TSOLs, "ID", "DESCRIPCION", cONSOPORTE.TSOL_ID);
@@ -132,13 +134,11 @@ namespace TAT001.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            CONSOPORTE cONSOPORTE = db.CONSOPORTEs.Where(x => x.TSOL_ID == tsol && x.TSOPORTE_ID == tsopo).First();
+            CONSOPORTE cONSOPORTE = db.CONSOPORTEs.Include(c => c.TSOL.TSOLTs).Include(c => c.TSOPORTE.TSOPORTETs).Where(x => x.TSOL_ID == tsol && x.TSOPORTE_ID == tsopo).First();
             if (cONSOPORTE == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.TSOL_ID = new SelectList(db.TSOLs, "ID", "DESCRIPCION", cONSOPORTE.TSOL_ID);
-            ViewBag.TSOPORTE_ID = new SelectList(db.TSOPORTEs, "ID", "DESCRIPCION", cONSOPORTE.TSOPORTE_ID);
             return View(cONSOPORTE);
         }
 
@@ -153,24 +153,14 @@ namespace TAT001.Controllers
             {
                 db.Entry(cONSOPORTE).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index", new { tsol = cONSOPORTE.TSOL_ID });
+                return RedirectToAction("Index");
             }
-            ViewBag.TSOL_ID = new SelectList(db.TSOLs, "ID", "DESCRIPCION", cONSOPORTE.TSOL_ID);
-            ViewBag.TSOPORTE_ID = new SelectList(db.TSOPORTEs, "ID", "DESCRIPCION", cONSOPORTE.TSOPORTE_ID);
-            return View(cONSOPORTE.TSOL_ID, cONSOPORTE.TSOPORTE_ID);
+            cONSOPORTE = db.CONSOPORTEs.Include(c => c.TSOL.TSOLTs).Include(c => c.TSOPORTE.TSOPORTETs).Where(x => x.TSOL_ID == cONSOPORTE.TSOL_ID && x.TSOPORTE_ID == cONSOPORTE.TSOPORTE_ID).First();
+
+            return View(cONSOPORTE);
         }
         
-
-        // POST: Consoporte/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        public ActionResult Delete(string tsol, string tsopo)
-        {
-            CONSOPORTE cONSOPORTE = db.CONSOPORTEs.Where(x => x.TSOL_ID == tsol && x.TSOPORTE_ID == tsopo).First();
-            db.CONSOPORTEs.Remove(cONSOPORTE);
-            db.SaveChanges();
-            return RedirectToAction("Index", new { tsol = cONSOPORTE.TSOL_ID });
-        }
+        
 
         protected override void Dispose(bool disposing)
         {

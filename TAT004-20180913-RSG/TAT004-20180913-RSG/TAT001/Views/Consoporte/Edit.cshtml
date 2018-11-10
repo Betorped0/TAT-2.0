@@ -8,6 +8,16 @@
 
 @using (Html.BeginForm())
 {
+    string tipoSoporte = Model.TSOPORTE.DESCRIPCION;
+    string tipoSolicitud = Model.TSOL.ID + " - " + Model.TSOL.DESCRIPCION;
+    if (Model.TSOPORTE.TSOPORTETs.Any(x => x.SPRAS_ID == "ES"))
+    {
+        tipoSoporte = Model.TSOPORTE.TSOPORTETs.First(x => x.SPRAS_ID == "ES").TXT50;
+    }
+    if (Model.TSOL.TSOLTs.Any(x => x.SPRAS_ID == "ES"))
+    {
+        tipoSolicitud = Model.TSOL.ID + " - " + Model.TSOL.TSOLTs.First(x => x.SPRAS_ID == "ES").TXT50;
+    }
     @Html.AntiForgeryToken()
     <div class="row">
         <div class="row right">
@@ -16,51 +26,45 @@
             </div>
         </div>
     </div>
-
-    <div class="form-horizontal">
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.TSOL_ID)
         @Html.HiddenFor(model => model.TSOPORTE_ID)
-
-        <div class="col 12 s12">
+        <div class="col s12">
             <div class="card-panel">
                 <div class="row">
-                    <div class="row">
-                        <div class="input-field col l6 m6" style="margin-bottom:0;">
-                            @Html.EditorFor(model => model.TSOL.DESCRIPCION, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                            @Html.LabelFor(model => model.TSOL.DESCRIPCION, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblTipoSol" })
+                    <div class="col s6">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TSOL.DESCRIPCION, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblTipoSol" })
+                                @Html.EditorFor(model => model.TSOL.DESCRIPCION, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @Value = tipoSoporte } })
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TSOPORTE.DESCRIPCION, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblTipoSop" })
+                                @Html.EditorFor(model => model.TSOPORTE.DESCRIPCION, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @Value = tipoSolicitud } })
+                              </div>
+                        </div>
+                        <div class="input-field col l4 m10 right" style="margin-bottom:0;">
+                            <label>
+                                <input type="checkbox" name="ACTIVO" value="true" id="activo" @Html.Raw((Model.ACTIVO) ? "checked=\"checked\"" : "") />
+                                <span id="lblActivo"></span>
+                            </label>
+                        </div>
+                        <div class="input-field col l4 m10 right" style="margin-bottom:0;">
+                            <label>
+                                <input type="checkbox" name="OBLIGATORIO" value="true" @Html.Raw((Model.OBLIGATORIO) ? "checked=\"checked\"" : "") />
+                                <span id="lblObliga"></span>
+                            </label>
                         </div>
 
-                        <div class="input-field col l6 m6" style="margin-bottom:0;">
-                            @Html.EditorFor(model => model.TSOPORTE.DESCRIPCION, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                            @Html.LabelFor(model => model.TSOPORTE.DESCRIPCION, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblTipoSop" })
-                        </div>
+                        <br />
+                        <br />
                     </div>
-
-
-                    <div class="input-field col s6 m6" style="margin-top:1px;">
-                        <label>
-                            <input type="checkbox" name="activo" value="true" id="activo" @Html.Raw((Model.ACTIVO) ? "checked=\"checked\"" : "") />
-                            <span style="height:0"></span>
-                        </label>
-                        @Html.LabelFor(model => model.ACTIVO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblActivo" })
-                    </div>
-                    @*<div class="input-field col l10 m10" style="margin-bottom:0;">
-            <label>
-                <input type="checkbox" name="obligatorio" value="true" id="obligatorio" @Html.Raw((Model.ACTIVO) ? "checked=\"checked\"" : "") />
-                <span style="height:0"></span>
-            </label>
-            @Html.LabelFor(model => model.ACTIVO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblObliga" })
-        </div>*@
-                    <br />
-                    <br />
                 </div>
             </div>
         </div>
-    </div>
-}
-<br />
-<br />
-<div class="col s12">
-    <a id="btnRegresar" href="@Url.Action("Index")"></a>
-</div>
+        }
+        <br />
+        <br />
+        <div class="col s12">
+            <a id="btnRegresar" href="@Url.Action("Index")"></a>
+        </div>
