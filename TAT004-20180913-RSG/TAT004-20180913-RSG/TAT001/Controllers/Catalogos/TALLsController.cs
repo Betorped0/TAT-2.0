@@ -237,11 +237,12 @@ namespace TAT001.Controllers.Catalogos
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,GALL_ID,ACTIVO")] TALL tALL, string txtN, string sp, string[] txval)
+        public ActionResult Edit([Bind(Include = "ID,GALL_ID,DESCRIPCION,ACTIVO")] TALL tALL, string txtN, string sp, string[] txval)
         {
             if (ModelState.IsValid)
             {
-                tALL.ACTIVO = tALL.ACTIVO;
+                tALL.ACTIVO = tALL.ACTIVO == null ? false : tALL.ACTIVO;
+                //tALL.ACTIVO = tALL.ACTIVO;
                 var fecha = from a in db.TALLs where a.ID == tALL.ID select a.FECHAI;
                 tALL.FECHAI = fecha.FirstOrDefault();
                 tALL.FECHAF = DateTime.MaxValue;
@@ -256,10 +257,7 @@ namespace TAT001.Controllers.Catalogos
                     db.SaveChanges();
 
                 }
-                TALL t = db.TALLs.Where(x => x.ID == tALL.ID).FirstOrDefault() ;
-                t.GALL_ID = tALL.GALL_ID;
-                try { t.DESCRIPCION = Request.Form["AEN"]; } catch { }
-                db.Entry(t).State = EntityState.Modified;
+                db.Entry(tALL).State = EntityState.Modified;
                 db.SaveChanges();
                 
                 if (txval != null)
