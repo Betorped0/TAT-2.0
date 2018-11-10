@@ -230,6 +230,7 @@
     <Compile Include="Controllers\Catalogos\IimpuestoController.cs" />
     <Compile Include="Controllers\Catalogos\ImpuestosController.cs" />
     <Compile Include="Controllers\Catalogos\MonedaController.cs" />
+    <Compile Include="Controllers\Catalogos\RegionController.cs" />
     <Compile Include="Controllers\Catalogos\SociedadesController.cs" />
     <Compile Include="Controllers\Catalogos\SoporteController.cs" />
     <Compile Include="Controllers\Catalogos\TALLsController.cs" />
@@ -2003,6 +2004,11 @@
     <Content Include="Views\Ayuda\Edit.cshtml" />
     <Content Include="Views\Ayuda\Index.cshtml" />
     <Content Include="Views\Ayuda\Consulta.cshtml" />
+    <Content Include="Views\Region\Create.cshtml" />
+    <Content Include="Views\Region\Delete.cshtml" />
+    <Content Include="Views\Region\Details.cshtml" />
+    <Content Include="Views\Region\Edit.cshtml" />
+    <Content Include="Views\Region\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->
