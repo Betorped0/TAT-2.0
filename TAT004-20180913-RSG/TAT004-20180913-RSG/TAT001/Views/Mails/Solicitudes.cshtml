@@ -631,7 +631,7 @@
                                 {
                                     <tr style="border-bottom: 1px solid rgba(0, 0, 0, 0.12);">
                                         <td style="padding: 15px 5px;display: table-cell;text-align: left;vertical-align: middle;border-radius: 2px;">@Html.DisplayFor(modelItem => f.USUARIOA_ID) - @Html.DisplayFor(modelItem => f.USUARIO.NOMBRE) @Html.DisplayFor(modelItem => f.USUARIO.APELLIDO_P) @Html.DisplayFor(modelItem => f.USUARIO.APELLIDO_M)</td>
-                                        <td style="padding: 15px 5px;display: table-cell;text-align: left;vertical-align: middle;border-radius: 2px;">@Html.DisplayFor(modelItem => f.WORKFP.ACCION.DESCCRIPCION)</td>
+                                        <td style="padding: 15px 5px;display: table-cell;text-align: left;vertical-align: middle;border-radius: 2px;">@Html.DisplayFor(modelItem => f.WORKFP.ACCION.ACCIONTs.Where(a => a.SPRAS_ID == Session["spras"].ToString()).FirstOrDefault().TXT050)</td>
                                         <td style="padding: 15px 5px;display: table-cell;text-align: left;vertical-align: middle;border-radius: 2px;">@Html.DisplayFor(modelItem => f.FECHAC)</td>
                                         <td style="padding: 15px 5px;display: table-cell;text-align: left;vertical-align: middle;border-radius: 2px;">@Html.DisplayFor(modelItem => f.FECHAM)</td>
                                         <td style="padding: 15px 5px;display: table-cell;text-align: left;vertical-align: middle;border-radius: 2px;">@Html.DisplayFor(modelItem => f.ESTATUS)</td>
