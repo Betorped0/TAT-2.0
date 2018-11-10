@@ -19,16 +19,16 @@ $(document).ready(function () {
                     res = false;
                 }
             }
-            if (res & lista[i].ID === "payer_id") {
+            if (lista[i].ID === "payer_id") {
                 var payer = $("#payer_id").val();
                 if (!warning(payer, "!=", "")) {
                     toast(lista[i].ID, 1000000, "error", lista[i].MSG, "red");
                     res = false;
                 }
             }
-            if (res & lista[i].ID === "tall_id") {
+            if (lista[i].ID === "tall_id") {
                 var tall = $("#tall_id").val();
-                if (!warning(payer, "!=", "")) {
+                if (!warning(tall, "!=", "")) {
                     toast(lista[i].ID, 1000000, "error", lista[i].MSG, "red");
                     res = false;
                 }
