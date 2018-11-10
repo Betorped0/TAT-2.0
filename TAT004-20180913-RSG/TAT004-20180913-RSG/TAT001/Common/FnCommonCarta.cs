@@ -11,7 +11,7 @@ namespace TAT001.Common
     {
        public static string ObtenerTexto(TAT001Entities db, string spras_id, string campo)
         {
-            return db.TEXTOCVs.Where(x => x.SPRAS_ID == spras_id & x.CAMPO == campo).Select(x => x.TEXTO).FirstOrDefault();
+            return db.TEXTOCVs.Where(x => x.SPRAS_ID == spras_id && x.CAMPO == campo).Select(x => x.TEXTO).FirstOrDefault();
         }
 
         public static void ObtenerCartaProductos(TAT001Entities db, DOCUMENTO d,CartaV v, string spras_id,bool guardar,
@@ -40,34 +40,12 @@ namespace TAT001.Common
                     DateTime a1 = DateTime.Parse(lista[i].Remove(lista[i].Length / 2));
                     DateTime a2 = DateTime.Parse(lista[i].Remove(0, lista[i].Length / 2));
 
-                    var con2 = db.DOCUMENTOPs
-                                            .Join(db.MATERIALs, x => x.MATNR, y => y.ID, (x, y) => new { x, y })
-                                            .Join(db.MATERIALTs, t => t.x.MATNR, z => z.MATERIAL_ID, (t, z) => new { t, z })
-                                            .Where(xy => xy.t.x.NUM_DOC.Equals(d.NUM_DOC) & xy.t.x.VIGENCIA_DE == a1 && xy.t.x.VIGENCIA_AL == a2 & xy.z.SPRAS == spras_id)
-                                            .Select(xyz => new
-                                            {
-                                                xyz.t.x.NUM_DOC,
-                                                xyz.t.x.MATNR,
-                                                xyz.t.y.MATERIALGP.DESCRIPCION,
-                                                xyz.z.MAKTG,
-                                                xyz.t.x.MONTO,
-                                                xyz.t.y.PUNIT,
-                                                xyz.t.x.PORC_APOYO,
-                                                xyz.t.x.MONTO_APOYO,
-                                                resta = (xyz.t.x.MONTO - xyz.t.x.MONTO_APOYO),
-                                                xyz.t.x.PRECIO_SUG,
-                                                xyz.t.x.APOYO_EST,
-                                                xyz.t.x.APOYO_REAL,
-                                                xyz.t.x.VOLUMEN_EST,
-                                                xyz.t.x.VOLUMEN_REAL,
-                                                xyz.t.x.VIGENCIA_DE,
-                                                xyz.t.x.VIGENCIA_AL
-                                            }).ToList();
+                var con2 = FnCommon.ObtenerDocumentoP(db, spras_id,d.NUM_DOC,a1,a2);
 
 
 
-                    //Definición si la distribución es monto o porcentaje
-                    string porclass = "";//B20180710 MGC 2018.07.18 total es input o text
+                //Definición si la distribución es monto o porcentaje
+                string porclass = "";//B20180710 MGC 2018.07.18 total es input o text
                     string totalm = "";//B20180710 MGC 2018.07.18 total es input o text
                
                 if (d.TIPO_TECNICO == "M")
@@ -99,7 +77,7 @@ namespace TAT001.Common
                             armadoCuerpoTab.Add(lc2);
 
                             listacuerpoc lc3 = new listacuerpoc();
-                            lc3.val = item2.MAKTG;
+                            lc3.val = item2.MAKTX;
                             lc3.clase = "ni";
                             armadoCuerpoTab.Add(lc3);
 
@@ -123,7 +101,7 @@ namespace TAT001.Common
 
                             //Costo con apoyo
                             listacuerpoc lc7 = new listacuerpoc();
-                            lc7.val = format.toShow(Math.Round(item2.resta, 2), decimales);//B20180730 MGC 2018.07.30 Formatos
+                            lc7.val = format.toShow(Math.Round(item2.RESTA, 2), decimales);//B20180730 MGC 2018.07.30 Formatos
                             lc7.clase = "input_oper numberd costoa input_dc mon" + porclass;//Importante costoa para validación en vista
                             armadoCuerpoTab.Add(lc7);
 
@@ -174,19 +152,17 @@ namespace TAT001.Common
                             }
                             armadoCuerpoTabStr.Add(item2.MATNR.TrimStart('0'));
                             armadoCuerpoTabStr.Add(item2.DESCRIPCION);
-                            armadoCuerpoTabStr.Add(item2.MAKTG);
+                            armadoCuerpoTabStr.Add(item2.MAKTX);
                             armadoCuerpoTabStr.Add(format.toShow(Math.Round(item2.MONTO, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
                                                                                                          //armadoCuerpoTab.Add(Math.Round(item2.PORC_APOYO, 2).ToString());//B20180730 MGC 2018.07.30 Formatos
                             armadoCuerpoTabStr.Add(format.toShowPorc(Math.Round(item2.PORC_APOYO, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
                                                                                                                   //armadoCuerpoTab.Add(Math.Round(item2.MONTO_APOYO, 2).ToString());//B20180730 MGC 2018.07.30 Formatos
                             armadoCuerpoTabStr.Add(format.toShow(Math.Round(item2.MONTO_APOYO, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
                                                                                                                //armadoCuerpoTab.Add(Math.Round(item2.resta, 2).ToString());//B20180730 MGC 2018.07.30 Formatos
-                            armadoCuerpoTabStr.Add(format.toShow(Math.Round(item2.resta, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
+                            armadoCuerpoTabStr.Add(format.toShow(Math.Round(item2.RESTA, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
                                                                                                          //armadoCuerpoTab.Add(Math.Round(item2.PRECIO_SUG, 2).ToString());//B20180730 MGC 2018.07.30 Formatos
                             armadoCuerpoTabStr.Add(format.toShow(Math.Round(item2.PRECIO_SUG, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
                                                                                                            //B20180726 MGC 2018.07.26
-                                                                                                           //armadoCuerpoTab.Add(Math.Round(Convert.ToDouble(item2.APOYO_EST), 2).ToString());
-                                                                                                           //armadoCuerpoTab.Add(Math.Round(Convert.ToDouble(item2.APOYO_REAL), 2).ToString());
                                                                                                            //Volumen y apoyo
                             if (fact)
                             {
@@ -205,7 +181,7 @@ namespace TAT001.Common
                     else
                     {
                         var con3 = db.DOCUMENTOPs
-                                            .Where(x => x.NUM_DOC.Equals(d.NUM_DOC) & x.VIGENCIA_DE == a1 && x.VIGENCIA_AL == a2)
+                                            .Where(x => x.NUM_DOC.Equals(d.NUM_DOC) && x.VIGENCIA_DE == a1 && x.VIGENCIA_AL == a2)
                                             .Join(db.MATERIALGPs, x => x.MATKL, y => y.ID, (x, y) => new
                                             {
                                                 x.NUM_DOC,
@@ -294,14 +270,8 @@ namespace TAT001.Common
 
                             //Volumen
                             listacuerpoc lc9 = new listacuerpoc();
-                            if (fact)
-                            {
-                                lc9.val = format.toShowNum(0, decimales); //B20180730 MGC 2018.07.30 Formatos
-                            }
-                            else
-                            {
-                                lc9.val = format.toShowNum(0, decimales); //B20180730 MGC 2018.07.30 Formatos
-                            }
+                            lc9.val = format.toShowNum(0, decimales); //B20180730 MGC 2018.07.30 Formatos
+                         
                             lc9.clase = "ni";
                             armadoCuerpoTab.Add(lc9);
 

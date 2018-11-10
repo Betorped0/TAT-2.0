@@ -834,6 +834,7 @@
     <Compile Include="Models\Documento.cs" />
     <Compile Include="Models\DOCUMENTOM_MOD.cs" />
     <Compile Include="Models\Delegados.cs" />
+    <Compile Include="Models\DOCUMENTOP_SP.cs" />
     <Compile Include="Models\DOCUMENTO_MOD.cs" />
     <Compile Include="Models\HeaderFooterD.cs" />
     <Compile Include="Models\listacuerpoc.cs" />
@@ -2014,7 +2015,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="Archivos\DoctosAyuda\" />
     <Folder Include="files\Ayuda\" />
-    <Folder Include="PdfTemp\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

@@ -1,17 +1,15 @@
-﻿@model IEnumerable<TAT001.Entities.TSOPORTE>
+﻿@model IEnumerable<TAT001.Entities.TSOPORTET>
 
 @{
     ViewBag.pagina_r = 1314;
     ViewBag.carpeta_r = 500;
-    //ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
     List<string> vb = ViewBag.conSoporte as List<string>;
 }
 
 <div class="row right-align">
     <div class="col s12 right-align">
-        @*<a href="@Url.Action("Details", "Soporte", new { id = ViewBag.IdTsol })" class="waves-effect waves-light btn">REGRESAR</a>*@
-        <a href="@Url.Action("Create", "Soporte", new { tsol = ViewBag.IdTsol })" id="btnCrear" class="waves-effect waves-light btn">AGREGAR</a>
+         <a href="@Url.Action("Create", "Soporte")" id="btnCrear" class="waves-effect waves-light btn"></a>
     </div>
 </div>
 
@@ -45,17 +43,13 @@
 
 <table class="table mdl-data-table striped" id="table" style="width:100%;">
     <thead>
-        <tr>
-            <th id="lblId">
-                Idioma
+<tr>
+            <th id="lblTipSop"></th>
+            <th >IDIOMA
             </th>
-            <th id="lblTipSop">Tipo de Soporte</th>
-            @*<th>Tipo de Solicitud</th>*@
-            <th id="lblDes">
-                @Html.DisplayNameFor(model => model.DESCRIPCION)
+            <th class="lblDes">
             </th>
             <th id="lblAct">
-                @Html.DisplayNameFor(model => model.ACTIVO)
             </th>
             <th></th>
         </tr>
@@ -65,23 +59,15 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.TSOPORTETs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().SPRAS_ID)
+                    @Html.DisplayFor(modelItem => item.TSOPORTE_ID)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ID)
+                    @Html.DisplayFor(modelItem => item.SPRAS_ID)
                 </td>
-                @*@foreach (var tsol in vb)
-                    {*@
-                @*<td>*@
-                @*@tsol*@
-                @*@tsol.Where(modelItem => item.ID.Equals(id)).FirstOrDefault()*@
-                @*@Html.DisplayFor(modelItem => item.CONSOPORTEs.Where(a => a.TSOL_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TSOL_ID)*@
-                @*</td>*@
-                @*}*@
                 <td>
-                    @Html.DisplayFor(modelItem => item.TSOPORTETs.Where(x => x.TSOPORTE_ID.Equals(item.ID) && x.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50)
+                    @Html.DisplayFor(modelItem => item.TXT50)
                 </td>
-                @if ((bool)item.ACTIVO == true)
+                @if ((bool)item.TSOPORTE.ACTIVO == true)
                 {
                     <td style="align-items:center"><i class='material-icons green-text'>check</i></td>
                 }
@@ -91,10 +77,10 @@
                 }
 
                 <td>
-                    <a href="@Url.Action("Edit", "Soporte", new { id = item.ID})">
+                    <a href="@Url.Action("Edit", "Soporte", new { id = item.TSOPORTE_ID})">
                         <i class='material-icons green-text'>edit</i>
                     </a>
-                    <a href="@Url.Action("Details", "Soporte", new { id = item.ID})">
+                    <a href="@Url.Action("Details", "Soporte", new { id = item.TSOPORTE_ID})">
                         <i class='material-icons blue-text'>search</i>
                     </a>
                 </td>

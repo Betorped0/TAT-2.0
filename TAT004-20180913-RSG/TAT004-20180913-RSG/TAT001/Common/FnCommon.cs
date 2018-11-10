@@ -41,8 +41,8 @@ namespace TAT001.Common
             controller.ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
             controller.ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
             controller.ViewBag.usuario = user;
-            controller.ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            controller.ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina_id)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            controller.ViewBag.rol = user.PUESTO.PUESTOTs.FirstOrDefault(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).TXT50;
+            controller.ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina_id)).FirstOrDefault().PAGINATs.FirstOrDefault(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).TXT50;
             if (pagina_id_textos != null)
             {
                 pagina_id = pagina_id_textos.Value;
@@ -75,7 +75,7 @@ namespace TAT001.Common
         public static List<SelectListItem> ObtenerCmbUsuario(TAT001Entities db, string id)
         {
             return db.USUARIOs
-                .Where(x => (x.ID == id || id == null) && (x.ACTIVO == null ? false : x.ACTIVO.Value))
+                .Where(x => (x.ID == id || id == null) && (x.ACTIVO != null && x.ACTIVO.Value))
                 .Select(x => new SelectListItem
                 {
                     Value = x.ID,
@@ -108,9 +108,8 @@ namespace TAT001.Common
         }
         public static List<SelectListItem> ObtenerCmbTiposSolicitud(TAT001Entities db, string spras_id, string id,bool? esReversa = false)
         {
-            List<TSOL> tiposSolicitudes = new List<TSOL>();
             return  db.TSOLs
-                .Where(x => ((esReversa.Value == true && x.TSOLR == null) || esReversa.Value == false) && (id == null || x.ID == id)&& (x.ACTIVO==null?false: x.ACTIVO.Value))
+                .Where(x => ((esReversa.Value && x.TSOLR == null) || !esReversa.Value) && (id == null || x.ID == id)&& (x.ACTIVO!=null && x.ACTIVO.Value))
                 .Join(db.TSOLTs, s => s.ID, st => st.TSOL_ID, (s, st) => st)
                 .Where(x => x.SPRAS_ID == spras_id)
                 .Select(x => new SelectListItem
@@ -172,13 +171,13 @@ namespace TAT001.Common
                     item.text = x.DESCRIPCION;
                     item.expanded = false;
                     item.items = ObtenerItemsSelectTree(db, x.ID, x.TIPO, spras_id);
-                    if (item.items.Count() == 0)
+                    if (!item.items.Any())
                     {
                         item.items=ObtenerItemsTSOLT(db, x.ID, x.TIPO, spras_id);
                     }
                     items.Add(item);
                 });
-            if (items.Count() == 0)
+            if (!items.Any())
             {
                items = ObtenerItemsTSOLT(db, id_padre, tipo_padre, spras_id);
             }
@@ -190,7 +189,7 @@ namespace TAT001.Common
             if (esReversa.Value)
             {
                 items = db.TSOLs
-                    .Where(x=>x.TSOLR==null && (x.ACTIVO == null ? false : x.ACTIVO.Value))
+                    .Where(x=>x.TSOLR==null && (x.ACTIVO != null && x.ACTIVO.Value))
                     .Join(db.TSOLTs, s => s.ID, st => st.TSOL_ID, (s, st) => st)
                     .Where(x=>x.SPRAS_ID == spras_id)
                     .Select(x=> new SelectTreeItem
@@ -206,7 +205,7 @@ namespace TAT001.Common
                 db.TSOL_TREE
                            .Where(y => y.TSOL_GROUP_ID == id_padre && y.TSOL_GROUP_TIPO == tipo_padre)
                            .Join(db.TSOLTs, tst => tst.TSOL_ID, st => st.TSOL_ID, (tst, st) => st)
-                           .Where(y => y.SPRAS_ID == spras_id && (y.TSOL.ACTIVO == null ? false : y.TSOL.ACTIVO.Value))
+                           .Where(y => y.SPRAS_ID == spras_id && (y.TSOL.ACTIVO != null && y.TSOL.ACTIVO.Value))
                            .ToList().ForEach(y =>
                            {
                                items.Add(new SelectTreeItem
@@ -230,7 +229,7 @@ namespace TAT001.Common
             CALENDARIO_EX calendarioEx = null;
 
             calendarioAc = db.CALENDARIO_AC.FirstOrDefault(x =>
-            x.ACTIVO == true &&
+            x.ACTIVO &&
             x.SOCIEDAD_ID == sociedad_id &&
             x.TSOL_ID == tsol_id &&
             x.EJERCICIO == ejercicio &&
@@ -240,10 +239,10 @@ namespace TAT001.Common
             {
                 return calendarioAc.PERIODO;
             }
-            if (calendarioAc==null && usuario_id != null)
+            if (usuario_id != null)
             {
                 calendarioEx = db.CALENDARIO_EX.FirstOrDefault(x =>
-                    x.ACTIVO == true &&
+                    x.ACTIVO &&
                     x.SOCIEDAD_ID == sociedad_id &&
                     x.TSOL_ID == tsol_id &&
                     x.USUARIO_ID == usuario_id &&
@@ -257,7 +256,7 @@ namespace TAT001.Common
             }
              
                 calendarioAc = db.CALENDARIO_AC.FirstOrDefault(x =>
-                x.ACTIVO == true &&
+                x.ACTIVO &&
                 x.SOCIEDAD_ID == sociedad_id &&
                 x.TSOL_ID == tsol_id &&
                 x.EJERCICIO == ejercicio &&
@@ -283,7 +282,7 @@ namespace TAT001.Common
             {
                 case "PRE":
                     esPeriodoAbierto = db.CALENDARIO_AC.Any(x =>
-                    x.ACTIVO == true &&
+                    x.ACTIVO &&
                     x.SOCIEDAD_ID == sociedad_id && 
                     x.TSOL_ID == tsol_id && 
                     x.PERIODO == periodo_id &&
@@ -293,7 +292,7 @@ namespace TAT001.Common
                     if (!esPeriodoAbierto && usuario_id != null)
                     {
                         esPeriodoAbierto = db.CALENDARIO_EX.Any(x =>
-                          x.ACTIVO == true &&
+                          x.ACTIVO &&
                           x.SOCIEDAD_ID == sociedad_id &&
                           x.TSOL_ID == tsol_id &&
                           x.PERIODO == periodo_id &&
@@ -305,7 +304,7 @@ namespace TAT001.Common
                     break;
                 case "CI":
                     esPeriodoAbierto = db.CALENDARIO_AC.Any(x=>
-                        x.ACTIVO == true &&
+                        x.ACTIVO &&
                         x.SOCIEDAD_ID == sociedad_id &&
                         x.TSOL_ID == tsol_id &&
                         x.PERIODO == periodo_id  &&
@@ -343,8 +342,7 @@ namespace TAT001.Common
             string spras_id = ObtenerSprasId(db, user_id);
             if (prefix == null) { prefix = ""; }
 
-            List<MATERIAL> materiales = new List<MATERIAL>();
-                materiales = db.Database.SqlQuery<MATERIAL>("CPS_LISTA_MATERIALES @SPRAS_ID,@VKORG,@VTWEG,@PREFIX",
+            List<MATERIAL> materiales =  db.Database.SqlQuery<MATERIAL>("CPS_LISTA_MATERIALES @SPRAS_ID,@VKORG,@VTWEG,@PREFIX",
                 new SqlParameter("@SPRAS_ID", spras_id),
                 new SqlParameter("@VKORG", vkorg),
                 new SqlParameter("@VTWEG", vtweg),
@@ -462,6 +460,17 @@ namespace TAT001.Common
             List<USUARIO> usuarios = db.Database.SqlQuery<USUARIO>("CPS_LISTA_USUARIOS @PREFIX",
                  new SqlParameter("@PREFIX", prefix)).ToList();
             return usuarios;
+        }
+
+        public static List<DOCUMENTOP_SP> ObtenerDocumentoP(TAT001Entities db, string spras_id, decimal num_doc, DateTime vigencia_de, DateTime vigencia_al)
+        {
+            List<DOCUMENTOP_SP> documentop = db.Database.SqlQuery<DOCUMENTOP_SP>("CPS_LISTA_DOCUMENTOP @NUM_DOC,@SPRAS_ID,@VIGENCIA_DE,@VIGENCIA_AL",
+                new SqlParameter("@NUM_DOC", num_doc),
+                new SqlParameter("@SPRAS_ID", spras_id),
+                new SqlParameter("@VIGENCIA_DE", vigencia_de),
+                new SqlParameter("@VIGENCIA_AL", vigencia_al)).ToList();
+
+            return documentop;
         }
 
     }
