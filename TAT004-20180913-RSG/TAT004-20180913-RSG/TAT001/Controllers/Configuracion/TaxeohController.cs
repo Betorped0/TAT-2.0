@@ -50,7 +50,7 @@ namespace TAT001.Controllers.Configuracion
             ViewBag.vko = vko;
             ViewBag.vtw = vtw;
             ViewBag.spa = spa;
-            return View(tAXEOHs.Where(x => x.VKORG == vko && x.VTWEG == vtw && x.KUNNR == kun && x.SPART == spa).ToList());
+            return View(tAXEOHs.Where(x => x.VKORG == vko && x.VTWEG == vtw && x.KUNNR == kun && x.SPART == spa && x.ACTIVO == true).ToList());
         }
 
         // GET: Taxeoh/Details/5
@@ -156,7 +156,14 @@ namespace TAT001.Controllers.Configuracion
                     tx.VKORG = vko;
                     tx.VTWEG = vtw;
                     tx.SPART = spa;
-                    tx.PAY_T = tx.PAY_T.ToUpper();
+                    if (tx.PAY_T != null && tx.PAY_T != "")
+                    {
+                        tx.PAY_T = tx.PAY_T.ToUpper();
+                    }
+                    else
+                    {
+                        tx.PAY_T = "";
+                    }
                     tx.PAIS_ID = pa.LAND;
                     tx.ACTIVO = true;
                     tx.FECHAC = DateTime.Now;
@@ -359,7 +366,7 @@ namespace TAT001.Controllers.Configuracion
                 tAXEOH.ACTIVO = false;
                 db.Entry(tAXEOH).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { vko = tAXEOH.VKORG, vtw = tAXEOH.VTWEG, kun = tAXEOH.KUNNR, spa = tAXEOH.SPART });
             }
             catch (Exception e)
             {
@@ -514,6 +521,82 @@ namespace TAT001.Controllers.Configuracion
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public JsonResult Sociedad(string Prefix)
+        {
+            if (Prefix == null)
+                Prefix = "";
+
+            TAT001Entities db = new TAT001Entities();
+
+            var c = (from x in db.SOCIEDADs
+                     where x.BUKRS.Contains(Prefix) && x.ACTIVO == true
+                     select new { x.BUKRS, x.BUTXT }).ToList();
+
+            if (c.Count == 0)
+            {
+                var c2 = (from x in db.SOCIEDADs
+                          where x.BUTXT.Contains(Prefix) && x.ACTIVO == true
+                          select new { x.BUKRS, x.BUTXT }).ToList();
+                c.AddRange(c2);
+            }
+
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+
+            return cc;
+        }
+
+        public JsonResult Concepto(string Prefix)
+        {
+            if (Prefix == null)
+                Prefix = "";
+            string p = Session["spras"].ToString();
+            TAT001Entities db = new TAT001Entities();
+
+            var c = (from x in db.TX_CONCEPTOT
+                     join a in db.TX_CONCEPTO on x.CONCEPTO_ID equals a.ID
+                     where x.TXT50.Contains(Prefix) & x.SPRAS_ID.Equals(p) & a.ACTIVO == true
+                     group x by new { x.CONCEPTO_ID, x.TXT50 } into g
+                     select new { ID = g.Key.CONCEPTO_ID, TEXTO = g.Key.TXT50 }).ToList();
+
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+
+            return cc;
+        }
+
+        public JsonResult Tnota(string Prefix)
+        {
+            if (Prefix == null)
+                Prefix = "";
+            string p = Session["spras"].ToString();
+            TAT001Entities db = new TAT001Entities();
+
+            var c = (from x in db.TX_NOTAT
+                     join a in db.TX_TNOTA on x.TNOTA_ID equals a.ID
+                     where x.TXT50.Contains(Prefix) & x.SPRAS_ID.Equals(p) & a.ACTIVO == true
+                     group x by new { x.TNOTA_ID, x.TXT50 } into g
+                     select new { ID = g.Key.TNOTA_ID, TEXTO = g.Key.TXT50 }).ToList();
+
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+
+            return cc;
+        }
+
+        public JsonResult Impuesto(string Prefix)
+        {
+            if (Prefix == null)
+                Prefix = "";
+
+            TAT001Entities db = new TAT001Entities();
+
+            var c = (from x in db.IMPUESTOes
+                     where x.MWSKZ.Contains(Prefix) && x.ACTIVO == true
+                     select new { x.MWSKZ }).ToList();
+
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+
+            return cc;
         }
     }
 }

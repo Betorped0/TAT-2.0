@@ -176,7 +176,11 @@ function asignarSolicitud(num, num2) {
                         $('#s_montoa').text("-");
                         $('#s_rema').text(num2);
                         $('#s_rema').text("-");//RSG 09.07.2018
-                        $('#s_impa').text(toShow(data.S_IMPA));
+                        if (data.S_IMPA!=null){
+                            $('#s_impa').text(toShow(data.S_IMPA));
+                        } else {
+                            $('#s_impa').text("-");
+                        }
                         $('#s_impb').text("-");
                         $('#s_impc').text("-");
                         $('#s_ret').text("-");

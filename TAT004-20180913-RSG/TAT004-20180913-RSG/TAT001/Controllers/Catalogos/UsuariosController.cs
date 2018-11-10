@@ -2834,8 +2834,18 @@ namespace TAT001.Controllers.Catalogos
 
             USUARIOF uf = new USUARIOF();
 
-            var cli = Request["cli"];
-            var usc = Request["usc"];
+            var clis = Request["cli"];
+            var uscs = Request["usc"];
+            string cli = "";
+            string usc = "";
+            if (clis != null)
+            {
+                cli = clis.Split(',')[0].ToString();
+            }
+            if (uscs != null)
+            {
+                usc = uscs.Split(',')[0].ToString();
+            }
             var uscx = true;
             int rowst = 0;
             //Busqueda de clientes

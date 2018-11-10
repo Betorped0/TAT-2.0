@@ -296,9 +296,7 @@
         var xx = $(this).val();
         if (xx != "") {
             if (isDate(xx) === true) {
-                //alert("true");
             } else {
-                alert("Fecha Erronea");
                 //$(this).val("");
             }
         } else {

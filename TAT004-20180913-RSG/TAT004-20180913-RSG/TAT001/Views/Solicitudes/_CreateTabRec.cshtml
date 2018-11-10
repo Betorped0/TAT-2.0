@@ -165,7 +165,7 @@
                         <input id="check_objetivoq" name="check_objetivoq" type="checkbox" onchange="objetivoQ(this.checked);" />
                         <span id="span_objq">Objetivo Q</span> @*B20180801 MGC Textos*@
                     </label>
-                    @if (Model.OBJETIVOQ == true)
+                    @if (Model.OBJETIVOQ == true & ViewBag.duplicate == null)
                     {
                         <script>
                                     document.getElementById("check_objetivoq").checked = true;

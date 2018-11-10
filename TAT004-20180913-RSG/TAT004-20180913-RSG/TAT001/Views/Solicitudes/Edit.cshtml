@@ -2094,7 +2094,7 @@
                             {
                                 <tr>
                                     <td width=""> @Html.DisplayFor(modelItem => f.USUARIOA_ID) - @Html.DisplayFor(modelItem => f.USUARIO.NOMBRE) @Html.DisplayFor(modelItem => f.USUARIO.APELLIDO_P) @Html.DisplayFor(modelItem => f.USUARIO.APELLIDO_M) </td>
-                                    <td width=""> @Html.DisplayFor(modelItem => f.WORKFP.ACCION.DESCCRIPCION) </td>
+                                    <td width=""> @Html.DisplayFor(modelItem => f.WORKFP.ACCION.ACCIONTs.Where(a => a.SPRAS_ID == Session["spras"].ToString()).FirstOrDefault().TXT050) </td>
                                     <td width=""> @f.FECHAC.Value.ToShortDateString() </td>
                                     <td width=""> @f.FECHAC.Value.TimeOfDay.ToString().Split('.')[0] </td>
                                     <td width=""> @f.FECHAM.Value.ToShortDateString() </td>
