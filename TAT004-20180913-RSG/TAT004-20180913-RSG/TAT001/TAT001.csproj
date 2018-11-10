@@ -1934,7 +1934,6 @@
     <Content Include="Views\Sociedades\Edit.cshtml" />
     <Content Include="Views\Sociedades\Index.cshtml" />
     <Content Include="Views\Consoporte\Create.cshtml" />
-    <Content Include="Views\Consoporte\Delete.cshtml" />
     <Content Include="Views\Consoporte\Details.cshtml" />
     <Content Include="Views\Consoporte\Edit.cshtml" />
     <Content Include="Views\Consoporte\Index.cshtml" />
@@ -2023,6 +2022,7 @@
     <Content Include="Views\Region\Details.cshtml" />
     <Content Include="Views\Region\Edit.cshtml" />
     <Content Include="Views\Region\Index.cshtml" />
+    <Content Include="Views\ModificacionesGlobales\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->

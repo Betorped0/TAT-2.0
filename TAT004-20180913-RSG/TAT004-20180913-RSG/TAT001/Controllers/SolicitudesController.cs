@@ -2595,32 +2595,33 @@ namespace TAT001.Controllers
                             ////decimal total = 0;
                             decimal[] totales = new decimal[ddr.Count()];
                             decimal totalRes = new decimal();
-                            foreach (DOCUMENTOP dr in ddr)
-                            {
+                            ////foreach (DOCUMENTOP dr in ddr)
+                            ////{
                                 //totales[(int)dr.POS - 1] = dr.VOLUMEN_EST * dr.MONTO_APOYO;
-                                totales[(int)dr.POS - 1] = (decimal)dr.APOYO_EST;
+                                ////totales[(int)dr.POS - 1] = (decimal)dr.APOYO_EST;
                                 foreach (DOCUMENTO d1 in dd)
                                 {
-                                    foreach (DOCUMENTOP dp in d1.DOCUMENTOPs)
-                                    {
-                                        if (dr.POS == dp.POS)
-                                        {
-                                            //var suma2 = dp.VOLUMEN_REAL * dp.MONTO_APOYO;
-                                            var suma2 = dp.APOYO_REAL;
+                                    //foreach (DOCUMENTOP dp in d1.DOCUMENTOPs)
+                                    //{
+                                    //    if (dr.POS == dp.POS)
+                                    //    {
+                                    //        //var suma2 = dp.VOLUMEN_REAL * dp.MONTO_APOYO;
+                                    //        var suma2 = dp.APOYO_REAL;
 
-                                            totales[(int)dr.POS - 1] = totales[(int)dr.POS - 1] - (decimal)suma2;
-                                            totalRes += (decimal)suma2;
-                                        }
-                                    }
-
+                                    //        totales[(int)dr.POS - 1] = totales[(int)dr.POS - 1] - (decimal)suma2;
+                                    //        totalRes += (decimal)suma2;
+                                    //    }
+                                    //}
+                                    totalRes += (decimal)d1.MONTO_DOC_MD;
                                 }
-                            }
+                            ////}
                             //RSG 14.06.2018----------------------
                             decimal resto = decimal.Parse("0.00");
-                            foreach (decimal dec in totales)
-                            {
-                                resto += dec;
-                            }
+                            ////foreach (decimal dec in totales)
+                            ////{
+                            ////    resto += dec;
+                            ////}
+                            resto = (decimal)docPadre.MONTO_DOC_MD - totalRes;
                             //////RSG 14.06.2018----------------------
                             ////foreach (decimal dec in totales)
                             ////{

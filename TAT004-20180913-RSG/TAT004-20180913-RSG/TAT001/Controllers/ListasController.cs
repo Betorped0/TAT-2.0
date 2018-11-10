@@ -1045,17 +1045,26 @@ namespace TAT001.Controllers
 
 
         [HttpGet]
-        public JsonResult TiposSolicitud(string spras_id)
+        public JsonResult tiposSolicitud(string Prefix)
         {
-            if (!string.IsNullOrEmpty(spras_id))
-            {
-                var tsr = (from ts in db.TSOLTs
-                           where spras_id == ts.SPRAS_ID
-                           select new { ts.TSOL_ID, ts.TXT50 }).ToList();
-                JsonResult jr = Json(tsr, JsonRequestBehavior.AllowGet);
-                return jr;
-            }
-            return Json(string.Empty, JsonRequestBehavior.AllowGet);
+            string spras_id = FnCommon.ObtenerSprasId(db,User.Identity.Name);
+            
+            var tsr = (from ts in db.TSOLTs
+                        where spras_id == ts.SPRAS_ID && (ts.TSOL_ID.Contains(Prefix)|| ts.TXT50.Contains(Prefix))
+                        select new { TSOL_ID=ts.TSOL_ID, TXT50=(ts.TSOL_ID+" - "+ts.TXT50) }).ToList();
+          
+            return Json(tsr, JsonRequestBehavior.AllowGet);
+        }
+        [HttpGet]
+        public JsonResult soportes(string Prefix)
+        {
+            string spras_id = FnCommon.ObtenerSprasId(db, User.Identity.Name);
+
+            var c = (from st in db.TSOPORTETs
+                     where st.SPRAS_ID == spras_id && (st.TXT50.Contains(Prefix) || st.TSOPORTE_ID.Contains(Prefix))
+                     select new { TSOPORTE_ID=st.TSOPORTE_ID, TXT50=(st.TSOPORTE_ID + " - "+st.TXT50) });
+
+            return Json(c, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
         public string cierre(string sociedad_id, string tsol_id, string periodo_id, string usuario_id)
