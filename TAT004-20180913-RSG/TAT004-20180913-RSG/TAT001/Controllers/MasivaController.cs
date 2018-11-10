@@ -308,6 +308,7 @@ namespace TAT001.Controllers
                             string ejerciciok = ds2.Tables[0].Rows[i][8].ToString().Trim();
 
                             doc.NUM_DOC = num_doc;
+                            doc.FACTURA = factura;
                             doc.FECHA = fecha_factura2[0];
                             doc.PROVEEDOR = proveedor.TrimStart('0');
                             doc.PROVEEDOR_NOMBRE = proveedor_nombre;
@@ -337,7 +338,7 @@ namespace TAT001.Controllers
                             doc.VENCIMIENTO = "";
                             doc.FACTURAK = "";
                             doc.EJERCICIOK = "";
-                            lp.Add(doc);
+                            //lp.Add(doc);
                             List<string> err = new List<string>();
                             for (int i = 0; i < 9; i++)
                             {
@@ -348,8 +349,8 @@ namespace TAT001.Controllers
                             {
                                 war.Add("");
                             }
-                            errores.Add(err);
-                            warnings.Add(war);
+                            //errores.Add(err);
+                            //warnings.Add(war);
                         }
                     }
                 }
@@ -2921,7 +2922,19 @@ namespace TAT001.Controllers
 
                             if (num_docH3 == num_doc)
                             {
-                                var facturasConf = db.FACTURASCONFs.Where(x => x.SOCIEDAD_ID == bukrs & x.PAIS_ID == land & x.TSOL == t_sol).FirstOrDefault();
+                                var confMultiple = db.TSOLs.Where(x => x.ID == dop.TSOL_ID).FirstOrDefault();
+                                string tsolMultiple = "";
+
+                                if (confMultiple != null)
+                                {
+                                    tsolMultiple = confMultiple.TSOLM;
+                                }
+                                else
+                                {
+                                    tsolMultiple = t_sol;
+                                }
+
+                                var facturasConf = db.FACTURASCONFs.Where(x => x.SOCIEDAD_ID == bukrs & x.PAIS_ID == land & x.TSOL == tsolMultiple).FirstOrDefault();
                                 if (facturasConf != null)
                                 {
                                     docupF.NUM_DOC = Convert.ToDecimal(num_docH3);
@@ -3019,7 +3032,16 @@ namespace TAT001.Controllers
                             else
                             {
                                 docup.MATNR = "";
-                                docup.MATKL = matkl;
+                                var categoria = db.MATERIALGPs.Where(x => x.DESCRIPCION == matkl).FirstOrDefault();
+                                if (categoria != null)
+                                {
+                                    docup.MATKL = categoria.ID;
+                                }
+                                else
+                                {
+                                    docup.MATKL = null;
+                                }
+                                
                             }
                             docup.CANTIDAD = 0;
                             docup.MONTO = Convert.ToDecimal(monto);
@@ -3039,6 +3061,7 @@ namespace TAT001.Controllers
                                 dop.MONTO_DOC_ML = tcambio.getValSoc(sociedad.WAERS, moneda_id, Convert.ToDecimal(apoyo), out errorString);
                                 dop.TIPO_CAMBIOL = tcambio.getUkurs(sociedad.WAERS, moneda_id, out errorString);
                                 dop.TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
+                                dop.TIPO_CAMBIO = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
                                 dop.MONTO_DOC_ML2 = (dop.MONTO_DOC_MD / dop.TIPO_CAMBIOL2);
                                 //var TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
                                 //dop.MONTO_DOC_ML2 = (TIPO_CAMBIOL2 * dop.MONTO_DOC_MD);
@@ -3053,6 +3076,7 @@ namespace TAT001.Controllers
                                 dop.MONTO_DOC_ML = tcambio.getValSoc(sociedad.WAERS, moneda_id, Convert.ToDecimal(apoyo), out errorString);
                                 dop.TIPO_CAMBIOL = tcambio.getUkurs(sociedad.WAERS, moneda_id, out errorString);
                                 dop.TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
+                                dop.TIPO_CAMBIO = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
                                 dop.MONTO_DOC_ML2 = (dop.MONTO_DOC_MD / dop.TIPO_CAMBIOL2);
                                 //var TIPO_CAMBIOL2 = tcambio.getUkursUSD(moneda_id, "USD", out errorString);
                                 //dop.MONTO_DOC_ML2 = (TIPO_CAMBIOL2 * dop.MONTO_DOC_MD);

@@ -160,7 +160,9 @@ $(document).ready(function () {
         }
     });
 
-    cambiaCheckRec();
+    if (!isDuplicado()) {
+        cambiaCheckRec();
+    }
 
     $('body').on('focusout', '#objPORC', function () {
         updateObjQ();
@@ -599,28 +601,27 @@ function copiarTableVistaRec() {
             //    bill_doc = "<input class=\"BILL_DOC input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + bill_doc + "\">";
             //    belnr = "<input class=\"BELNR input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + belnr + "\">"
 
-            //}
-            if (tipo === "P") {
-                if (pos.trim() === "1") {
-                    monto = monto.trim();
-                } else {
-                    monto = "<input class=\"MONTO input_rec numberd input_dc monto \" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + monto.trim() + "\">";
-                }
+            //////}
+            ////if (tipo === "P") {
+            ////    if (pos.trim() === "1") {
+            ////        monto = monto.trim();
+            ////    } else {
+            ////        monto = "<input class=\"MONTO input_rec numberd input_dc monto \" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + monto.trim() + "\">";
+            ////    }
 
-                porc = "<input class=\"PORCENTAJE input_rec numberd input_dc\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + porc.trim() + "\">";
-            } else {
+            ////    porc = "<input class=\"PORCENTAJE input_rec numberd input_dc\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + porc.trim() + "\">";
+            ////} else {
                 monto = monto.trim();
                 porc = porc.trim();
-            }
+            ////}
             var t = $('#table_rec').DataTable();
 
-            addRowRecl(t, pos.trim(), sol.trim(), ffecha[0], monto, porc, per);
+            addRowRecl(t, pos.trim(), sol.trim(), ffecha[0], toShow(monto), toShowPorc(porc), per);
+            var o = { POS: parseInt(pos.trim()), LIN: 1, PERIODO: per, OBJ1: monto, OBJ2: 0, PORC: porc };
+            listaRangos.push(o);
 
             //Quitar el row
             $(this).remove();
-            if (i > rowsn) {
-
-            }
         });
         ////Hide columns
         //ocultarColumnasTablaSoporteDatos();
@@ -823,3 +824,9 @@ function isRecurrente() {
     return ($("#check_recurrente").is(":checked"));
 }
 
+function isDuplicado() {
+    if (($("#duplicate").val() !== ""))
+        return true;
+    else
+        return false;
+}

@@ -81,7 +81,7 @@ namespace TAT001.Controllers
                             Concentrado r1 = new Concentrado();
                             r1.documento = dOCUMENTO;
                             if (dOCUMENTO.PAYER_ID == null) continue;
-                            
+
                             r1.CANAL = db.CANALs.Where(a => a.CANAL1.Equals(dOCUMENTO.CLIENTE.CANAL)).FirstOrDefault();
                             var cuentas = (from C in db.CUENTAs
                                            join cgl in db.CUENTAGLs on C.CARGO equals cgl.ID
@@ -145,6 +145,7 @@ namespace TAT001.Controllers
                         }
                     }
                     ViewBag.lista_reporte = reporte;
+                    Session.Add("excelUsuariosConsulta", reporte);
 
                 }
                 try
@@ -241,7 +242,7 @@ namespace TAT001.Controllers
                     {
                         FLUJO flujo = db.FLUJOes.Include("USUARIO").Where(x => x.NUM_DOC == item.NUM_DOC & x.ESTATUS == "R").OrderByDescending(a => a.POS).FirstOrDefault();
                         item.ESTATUSS = item.ESTATUSS.Substring(0, 6) +
-                                        (flujo.USUARIO!=null? flujo.USUARIO.PUESTO_ID.ToString():"") +
+                                        (flujo.USUARIO != null ? flujo.USUARIO.PUESTO_ID.ToString() : "") +
                                         item.ESTATUSS.Substring(6, 2);
                     }
                     else
@@ -280,7 +281,7 @@ namespace TAT001.Controllers
                     }
                     catch { }
                     ld.CONCEPTO = item.CONCEPTO;
-                    ld.MONTO_DOC_ML =item.MONTO_DOC_MD!=null? Convert.ToDecimal(item.MONTO_DOC_MD).ToString("C"):"";
+                    ld.MONTO_DOC_ML = item.MONTO_DOC_MD != null ? Convert.ToDecimal(item.MONTO_DOC_MD).ToString("C") : "";
 
                     ld.FACTURA = item.FACTURA;
                     ld.FACTURAK = item.FACTURAK;
@@ -338,7 +339,7 @@ namespace TAT001.Controllers
             }
         }
         [HttpGet]
-        public ActionResult SelPais(string pais, string returnUrl,string sociedad_id)
+        public ActionResult SelPais(string pais, string returnUrl, string sociedad_id)
         {
             Session["pais"] = pais.ToUpper();
             Session["sociedad_id"] = sociedad_id;
@@ -374,14 +375,14 @@ namespace TAT001.Controllers
                 ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
                 ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
 
-               
+
                 var p = (from P in db.PAIS.ToList()
-                        join C in db.CLIENTEs.Where(x => x.ACTIVO == true).ToList()
-                        on P.LAND equals C.LAND
-                        join U in db.USUARIOFs.Where(x => x.USUARIO_ID == u & x.ACTIVO == true)
-                        on new { C.VKORG, C.VTWEG, C.SPART, C.KUNNR } equals new { U.VKORG, U.VTWEG, U.SPART, U.KUNNR }
-                        where P.ACTIVO == true
-                        select  P).DistinctBy(x=>x.LAND);
+                         join C in db.CLIENTEs.Where(x => x.ACTIVO == true).ToList()
+                         on P.LAND equals C.LAND
+                         join U in db.USUARIOFs.Where(x => x.USUARIO_ID == u & x.ACTIVO == true)
+                         on new { C.VKORG, C.VTWEG, C.SPART, C.KUNNR } equals new { U.VKORG, U.VTWEG, U.SPART, U.KUNNR }
+                         where P.ACTIVO == true
+                         select P).DistinctBy(x => x.LAND);
 
                 List<Delegados> delegados = new List<Delegados>();
                 DateTime fecha = DateTime.Now.Date;
@@ -389,7 +390,7 @@ namespace TAT001.Controllers
                 //List<TAT001.Entities.DELEGAR> del = db.DELEGARs.Where(a => a.USUARIOD_ID.Equals(u)).ToList();
                 foreach (DELEGAR de in del)
                 {
-                  
+
                     var pd = (from P in db.PAIS.ToList()
                               join C in db.CLIENTEs.Where(x => x.ACTIVO == true).ToList()
                               on P.LAND equals C.LAND
@@ -449,8 +450,8 @@ namespace TAT001.Controllers
             string u = User.Identity.Name;
             var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
 
-            string us = "";            
-                us = User.Identity.Name;
+            string us = "";
+            us = User.Identity.Name;
 
             List<CSP_DOCUMENTOSXUSER_Result> dOCUMENTOes = db.CSP_DOCUMENTOSXUSER(us, user.SPRAS_ID).ToList();
 
@@ -482,7 +483,7 @@ namespace TAT001.Controllers
                 }
                 Estatus e = new Estatus();
                 ld.ESTATUS = e.getText(item.ESTATUSS, ld.NUM_DOC);
-                ld.ESTATUS_CLASS =  e.getClass(item.ESTATUSS, ld.NUM_DOC);
+                ld.ESTATUS_CLASS = e.getClass(item.ESTATUSS, ld.NUM_DOC);
                 //ld.ESTATUS = e.getText(item.ESTATUSS);
                 //ld.ESTATUS_CLASS = e.getClass(item.ESTATUSS);
 
@@ -565,7 +566,7 @@ namespace TAT001.Controllers
 
                 listaDocs.Add(ld);
             }
-            generarExcelHome(listaDocs.OrderByDescending(t=>t.FECHAD).ThenByDescending(t=>t.HORAC).ThenByDescending(t=>t.NUM_DOC).ToList(), Server.MapPath("~/pdfTemp/"));
+            generarExcelHome(listaDocs.OrderByDescending(t => t.FECHAD).ThenByDescending(t => t.HORAC).ThenByDescending(t => t.NUM_DOC).ToList(), Server.MapPath("~/PdfTemp/"));
             return File(Server.MapPath("~/pdfTemp/Doc" + DateTime.Now.ToShortDateString() + ".xlsx"), "application /vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Doc" + DateTime.Now.ToShortDateString() + ".xlsx");
         }
 
@@ -796,7 +797,7 @@ namespace TAT001.Controllers
                       },
                     };
                     //Verdes
-                    if (lst[i - 2].ESTATUS_CLASS == "new badge green darken-1 white-text " || lst[i - 2].ESTATUS_CLASS == "lbl_txt new badge green darken-1 white-text"|| lst[i - 2].ESTATUS_CLASS == "lbl_rev new badge green darken-1 white-text")
+                    if (lst[i - 2].ESTATUS_CLASS == "new badge green darken-1 white-text " || lst[i - 2].ESTATUS_CLASS == "lbl_txt new badge green darken-1 white-text" || lst[i - 2].ESTATUS_CLASS == "lbl_rev new badge green darken-1 white-text")
                     {
                         worksheet.Cell("G" + i).Value = new[]
                     {
@@ -818,7 +819,7 @@ namespace TAT001.Controllers
                 };
                         worksheet.Range("G" + i + ":G" + i).Style.Font.SetFontColor(XLColor.White).Fill.SetBackgroundColor(XLColor.FromHtml("#616161")).Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center).Font.SetBold(true);
                     }
-                    else if (lst[i - 2].ESTATUS_CLASS == "new badge yellow darken-1 white-text " || lst[i - 2].ESTATUS_CLASS == "lbl_ts yellow darken-2 white-text new badge" || lst[i-2].ESTATUS_CLASS== "lbl_soporte new badge yellow darken-2 white-text ")
+                    else if (lst[i - 2].ESTATUS_CLASS == "new badge yellow darken-1 white-text " || lst[i - 2].ESTATUS_CLASS == "lbl_ts yellow darken-2 white-text new badge" || lst[i - 2].ESTATUS_CLASS == "lbl_soporte new badge yellow darken-2 white-text ")
                     {
                         worksheet.Cell("G" + i).Value = new[]
               {
@@ -840,7 +841,7 @@ namespace TAT001.Controllers
                 };
                         worksheet.Range("G" + i + ":G" + i).Style.Font.SetFontColor(XLColor.White).Fill.SetBackgroundColor(XLColor.FromHtml("#f57c00")).Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center).Font.SetBold(true);
                     }//Rojos
-                    else if (lst[i - 2].ESTATUS_CLASS == "new badge red darken-1 white-text " || lst[i-2].ESTATUS_CLASS== "lbl_txt new badge red darken-1 white-text " || lst[i - 2].ESTATUS_CLASS == "lbl_cancelled new badge red darken-1 white-text")
+                    else if (lst[i - 2].ESTATUS_CLASS == "new badge red darken-1 white-text " || lst[i - 2].ESTATUS_CLASS == "lbl_txt new badge red darken-1 white-text " || lst[i - 2].ESTATUS_CLASS == "lbl_cancelled new badge red darken-1 white-text")
                     {
                         worksheet.Cell("G" + i).Value = new[]
                     {
@@ -858,16 +859,16 @@ namespace TAT001.Controllers
                         },
                       };
                     //Para sacar el Nombre "I" y "J"
-                            worksheet.Cell("I" + i).Value = new[]
-                            {
+                    worksheet.Cell("I" + i).Value = new[]
+                    {
                                 //List Clientes y for para sacar su name 
                                 new {
                                     BANNER = lst[i-2].CLIENTE
                                 },
                             };
-                            
-                            worksheet.Cell("J" + i).Value = new[]
-                            {
+
+                    worksheet.Cell("J" + i).Value = new[]
+                    {
                                 //   List Clientes y for para sacar su name
                                 new
                                 {
@@ -887,8 +888,8 @@ namespace TAT001.Controllers
                         },
                     };
 
-                            worksheet.Cell("M" + i).Value = new[]
-                            {
+                    worksheet.Cell("M" + i).Value = new[]
+                    {
                                 new {
                                     BANNER       = lst[i-2].CUENTAP
                                 },
@@ -918,15 +919,15 @@ namespace TAT001.Controllers
                             BANNER       = lst[i-2].MONTO_DOC_ML
                         },
                     };
-                            worksheet.Cell("R" + i).Value = new[]
-                            {
+                    worksheet.Cell("R" + i).Value = new[]
+                    {
                                 new {
                                     BANNER       =lst[i-2].FACTURA
                                 },
                             };
 
-                            worksheet.Cell("S" + i).Value = new[]
-                            {
+                    worksheet.Cell("S" + i).Value = new[]
+                    {
                                 new {
                                     BANNER       = lst[i-2].FACTURAK
                                 },
@@ -1032,38 +1033,347 @@ namespace TAT001.Controllers
         [HttpPost]
         public FileResult DescargarEx()
         {
-            var cLiente = db.CLIENTEs.ToList();
-            generarExcelHome(cLiente, Server.MapPath("~/pdfTemp/"));
-            return File(Server.MapPath("~/pdfTemp/Clientes_" + DateTime.Now.ToShortDateString() + ".xlsx"), "application /vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Clientes_" + DateTime.Now.ToShortDateString() + ".xlsx");
+
+            generarExcelCons((List<Concentrado>)Session["excelUsuariosConsulta"], Server.MapPath("~/PdfTemp/"));
+            return File(Server.MapPath("~/PdfTemp/Solicitudes_Consulta/" + DateTime.Now.ToShortDateString() + ".xlsx"), "application /vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Solicitudes_Consulta" + DateTime.Now.ToShortDateString() + ".xlsx");
         }
 
-        public void generarExcelHome(List<CLIENTE> lst, string ruta)
+        public void generarExcelCons(List<Concentrado> lst, string ruta)
         {
             var workbook = new XLWorkbook();
-            var worksheet = workbook.Worksheets.Add("Sheet 1");
+            var worksheet = workbook.Worksheets.Add("Solicitudes");
             try
             {
-                worksheet.Cell("A1").Value = new[] { new { BANNER = "Id Cliente" }, };
-                worksheet.Cell("B1").Value = new[] { new { BANNER = "Nombre" }, };
-                worksheet.Cell("C1").Value = new[] { new { BANNER = "Región" }, };
-                worksheet.Cell("D1").Value = new[] { new { BANNER = "País" }, };
-                worksheet.Cell("E1").Value = new[] { new { BANNER = "Tipo de Cliente" }, };
-                worksheet.Cell("F1").Value = new[] { new { BANNER = "Payer" }, };
-                worksheet.Cell("G1").Value = new[] { new { BANNER = "Canal" }, };
+                worksheet.Cell("A1").Value = new[] { new { BANNER = "Co. Code" }, };
+                worksheet.Cell("B1").Value = new[] { new { BANNER = "País" }, };
+                worksheet.Cell("C1").Value = new[] { new { BANNER = "Subregión" }, };
+                worksheet.Cell("D1").Value = new[] { new { BANNER = "Estado" }, };
+                worksheet.Cell("E1").Value = new[] { new { BANNER = "Ciudad" }, };
+                worksheet.Cell("F1").Value = new[] { new { BANNER = "Número solicitud" }, };
+                worksheet.Cell("G1").Value = new[] { new { BANNER = "Fecha Solicitud" }, };
+                worksheet.Cell("H1").Value = new[] { new { BANNER = "Hora solicitud" }, };
+                worksheet.Cell("I1").Value = new[] { new { BANNER = "Semana del periodo" }, };
+                worksheet.Cell("J1").Value = new[] { new { BANNER = "Periódo contable" }, };
+                worksheet.Cell("K1").Value = new[] { new { BANNER = "Año" }, };
+                worksheet.Cell("L1").Value = new[] { new { BANNER = "Tipo Solicitud" }, };
+                worksheet.Cell("M1").Value = new[] { new { BANNER = "Tipo Provisión" }, };
+                worksheet.Cell("N1").Value = new[] { new { BANNER = "Tipo NC" }, };
+                worksheet.Cell("O1").Value = new[] { new { BANNER = "Tipo OP" }, };
+                worksheet.Cell("P1").Value = new[] { new { BANNER = "Status" }, };
+                worksheet.Cell("Q1").Value = new[] { new { BANNER = "Concepto" }, };
+                worksheet.Cell("R1").Value = new[] { new { BANNER = "Mecánica" }, };
+                worksheet.Cell("S1").Value = new[] { new { BANNER = "De" }, };
+                worksheet.Cell("T1").Value = new[] { new { BANNER = "A" }, };
+                worksheet.Cell("U1").Value = new[] { new { BANNER = "De" }, };
+                worksheet.Cell("V1").Value = new[] { new { BANNER = "A" }, };
+                worksheet.Cell("W1").Value = new[] { new { BANNER = "Clasificación" }, };
+                worksheet.Cell("X1").Value = new[] { new { BANNER = "Cuenta Contable Gasto" }, };
+                worksheet.Cell("Y1").Value = new[] { new { BANNER = "Nombre de la cuenta" }, };
+                worksheet.Cell("Z1").Value = new[] { new { BANNER = "Cliente" }, };
+                worksheet.Cell("AA1").Value = new[] { new { BANNER = "Nombre" }, };
+                worksheet.Cell("AB1").Value = new[] { new { BANNER = "Tipo de Cliente" }, };
+                worksheet.Cell("AC1").Value = new[] { new { BANNER = "Organización de Ventas" }, };
+                worksheet.Cell("AD1").Value = new[] { new { BANNER = "Tax ID" }, };
+                worksheet.Cell("AE1").Value = new[] { new { BANNER = "Canal" }, };
+                worksheet.Cell("AF1").Value = new[] { new { BANNER = "Descripción" }, };
+                worksheet.Cell("AG1").Value = new[] { new { BANNER = "Nombre de Contacto" }, };
+                worksheet.Cell("AH1").Value = new[] { new { BANNER = "Email de Contacto" }, };
+                worksheet.Cell("AI1").Value = new[] { new { BANNER = "$ Monto Original de Provisión" }, };
+                worksheet.Cell("AJ1").Value = new[] { new { BANNER = "$ Monto NC/OP" }, };
+                worksheet.Cell("AK1").Value = new[] { new { BANNER = "$Monto Aplicado" }, };
+                worksheet.Cell("AL1").Value = new[] { new { BANNER = "Saldo Remanente Provisión" }, };
+                worksheet.Cell("AM1").Value = new[] { new { BANNER = "$ Monto Reverso Provisión" }, };
+                worksheet.Cell("AN1").Value = new[] { new { BANNER = "% Reverso" }, };
+                worksheet.Cell("AO1").Value = new[] { new { BANNER = "$ Exceso/(Insuficiencia) Provisión" }, };
+                worksheet.Cell("AP1").Value = new[] { new { BANNER = "% Exceso/(Insuficiencia) Provisión" }, };
+                worksheet.Cell("AQ1").Value = new[] { new { BANNER = "Impactos / Beneficios en el gasto del Periodo" }, };
+                worksheet.Cell("AR1").Value = new[] { new { BANNER = "Núm. Registro Provisión" }, };
+                worksheet.Cell("AS1").Value = new[] { new { BANNER = "Núm. Registro NC/OP" }, };
+                worksheet.Cell("AT1").Value = new[] { new { BANNER = "Núm. Registro Reverso" }, };
+                worksheet.Cell("AU1").Value = new[] { new { BANNER = "Fecha Reverso Provisión" }, };
+                worksheet.Cell("AV1").Value = new[] { new { BANNER = "Periodo Contable Reverso" }, };
+                worksheet.Cell("AW1").Value = new[] { new { BANNER = "Razón Reverso" }, };
+                worksheet.Cell("AX1").Value = new[] { new { BANNER = "Comentario Reverso" }, };
+                worksheet.Cell("AY1").Value = new[] { new { BANNER = "Usuario" }, };
+                worksheet.Cell("AZ1").Value = new[] { new { BANNER = "Back Up" }, };
+                worksheet.Cell("BA1").Value = new[] { new { BANNER = "Creado Por" }, };
+                worksheet.Cell("BB1").Value = new[] { new { BANNER = "Creado Por ID" }, };
+                worksheet.Cell("BC1").Value = new[] { new { BANNER = "Solicitado Por" }, };
+                worksheet.Cell("BD1").Value = new[] { new { BANNER = "Solicitado Por ID" }, };
+                worksheet.Cell("BE1").Value = new[] { new { BANNER = "Modificado Por" }, };
+                worksheet.Cell("BF1").Value = new[] { new { BANNER = "Modificado Por ID" }, };
+                worksheet.Cell("BG1").Value = new[] { new { BANNER = "Payer" }, };
+                worksheet.Cell("BH1").Value = new[] { new { BANNER = "Aprobador Nivel 1" }, };
+                worksheet.Cell("BI1").Value = new[] { new { BANNER = "Aprobador Nivel 2" }, };
+                worksheet.Cell("BJ1").Value = new[] { new { BANNER = "Aprobador Nivel 3" }, };
+                worksheet.Cell("BK1").Value = new[] { new { BANNER = "Aprobador Nivel 4" }, };
+                worksheet.Cell("BL1").Value = new[] { new { BANNER = "Aprobador Nivel 5" }, };
+                worksheet.Cell("BM1").Value = new[] { new { BANNER = "Proveedor" }, };
+                worksheet.Cell("BN1").Value = new[] { new { BANNER = "Nombre Proveedor" }, };
+                worksheet.Cell("BO1").Value = new[] { new { BANNER = "Número Factura Proveedor" }, };
+                worksheet.Cell("BP1").Value = new[] { new { BANNER = "Número Factura Kellogg´s" }, };
+                worksheet.Cell("BQ1").Value = new[] { new { BANNER = "Número NC" }, };
+                worksheet.Cell("BR1").Value = new[] { new { BANNER = "Numero Orden de Pago" }, };
+                worksheet.Cell("BS1").Value = new[] { new { BANNER = "Expense Recognition en periodo" }, };
+                worksheet.Cell("BT1").Value = new[] { new { BANNER = "Expense Recognition Ejercicio" }, };
+                worksheet.Cell("BU1").Value = new[] { new { BANNER = "Soporte Incorrecto" }, };
+                worksheet.Cell("BV1").Value = new[] { new { BANNER = "Soporte validado con base variable pendiente" }, };
+                worksheet.Cell("BW1").Value = new[] { new { BANNER = "Carta" }, };
+                worksheet.Cell("BX1").Value = new[] { new { BANNER = "Contrato" }, };
+                worksheet.Cell("BY1").Value = new[] { new { BANNER = "JBP" }, };
+                worksheet.Cell("BZ1").Value = new[] { new { BANNER = "Factura" }, };
+                worksheet.Cell("CA1").Value = new[] { new { BANNER = "Otros" }, };
+                worksheet.Cell("CB1").Value = new[] { new { BANNER = "Negociación por monto" }, };
+                worksheet.Cell("CC1").Value = new[] { new { BANNER = "Negociación por %" }, };
+                worksheet.Cell("CD1").Value = new[] { new { BANNER = "Distribución por material" }, };
+                worksheet.Cell("CE1").Value = new[] { new { BANNER = "Distribución categoría" }, };
+                worksheet.Cell("CF1").Value = new[] { new { BANNER = "Monto Base" }, };
+                worksheet.Cell("CG1").Value = new[] { new { BANNER = "Monto %" }, };
+                worksheet.Cell("CH1").Value = new[] { new { BANNER = "Recurrente" }, };
+                worksheet.Cell("CI1").Value = new[] { new { BANNER = "Recurrente por porcentaje" }, };
+                worksheet.Cell("CJ1").Value = new[] { new { BANNER = "Recurrente por Monto" }, };
+                worksheet.Cell("CK1").Value = new[] { new { BANNER = "Recurrente Cancelada" }, };
+                worksheet.Cell("CL1").Value = new[] { new { BANNER = "Objetivo Inicio" }, };
+                worksheet.Cell("CM1").Value = new[] { new { BANNER = "Objetivo Límite" }, };
+                worksheet.Cell("CN1").Value = new[] { new { BANNER = "Estatus" }, };
+                worksheet.Cell("CO1").Value = new[] { new { BANNER = "Venta del Periodo" }, };
+                worksheet.Cell("CP1").Value = new[] { new { BANNER = "Monto Provisión" }, };
+                worksheet.Cell("CQ1").Value = new[] { new { BANNER = "Back Order" }, };
+                worksheet.Cell("CR1").Value = new[] { new { BANNER = "Venta Real + BO" }, };
+                worksheet.Cell("CS1").Value = new[] { new { BANNER = "NC / OP o Reverso" }, };
+                worksheet.Cell("CT1").Value = new[] { new { BANNER = "Monto" }, };
+
+
 
                 for (int i = 2; i <= (lst.Count + 1); i++)
                 {
-                    var pais = lst[i - 2].LAND;
-                    var pais2 = db.PAIS.Where(X => X.LAND.Equals(pais)).Select(x => x.LANDX).FirstOrDefault();
-                    worksheet.Cell("A" + i).Value = new[] { new { BANNER = lst[i - 2].KUNNR.TrimStart('0') }, };
-                    worksheet.Cell("B" + i).Value = new[] { new { BANNER = lst[i - 2].NAME1 }, };
-                    worksheet.Cell("C" + i).Value = new[] { new { BANNER = lst[i - 2].SUBREGION }, };
-                    worksheet.Cell("D" + i).Value = new[] { new { BANNER = pais2 }, };
-                    worksheet.Cell("E" + i).Value = new[] { new { BANNER = lst[i - 2].PARVW }, };
-                    worksheet.Cell("F" + i).Value = new[] { new { BANNER = lst[i - 2].PAYER.TrimStart('0') }, };
-                    worksheet.Cell("G" + i).Value = new[] { new { BANNER = lst[i - 2].CANAL }, };
+                    DateTime fechac = (DateTime)lst[i - 2].documento.FECHAC;
+                    DateTime horac = (DateTime)lst[i - 2].documento.FECHAC;
+                    string monotdocmd = String.Format("{0:C}", lst[i - 2].documento.MONTO_DOC_MD);
+                    string monotodocmd2 = String.Format("({0:C})", lst[i - 2].documento.MONTO_DOC_MD);
+                    string prepupuestoptc = "";
+                    string presupestoconsu = "";
+                    try
+                    {
+                        prepupuestoptc = String.Format("({0:C})", lst[i - 2].PRESUPUESTO.PC_T);
+                        presupestoconsu = String.Format("{0:C}", lst[i - 2].PRESUPUESTO.CONSU);
+                    }
+                    catch { }
+                    worksheet.Cell("A" + i).Value = new[] { new { BANNER = lst[i - 2].documento.SOCIEDAD_ID }, };
+                    worksheet.Cell("B" + i).Value = new[] { new { BANNER = lst[i - 2].documento.PAIS_ID }, };
+                    worksheet.Cell("C" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.REGION }, };
+                    worksheet.Cell("D" + i).Value = new[] { new { BANNER = lst[i - 2].documento.ESTADO }, };
+                    worksheet.Cell("E" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CIUDAD }, };
+                    worksheet.Cell("F" + i).Value = new[] { new { BANNER = lst[i - 2].documento.NUM_DOC }, };
+                    worksheet.Cell("G" + i).Value = new[] { new { BANNER = fechac.ToShortDateString() }, };
+                    worksheet.Cell("H" + i).Value = new[] { new { BANNER = horac.ToString("HH:mm:ss") }, };
+                    worksheet.Cell("I" + i).Value = new[] { new { BANNER = lst[i - 2].SEMANA }, };
+                    worksheet.Cell("J" + i).Value = new[] { new { BANNER = lst[i - 2].documento.PERIODO }, };
+                    worksheet.Cell("K" + i).Value = new[] { new { BANNER = lst[i - 2].documento.EJERCICIO }, };
+                    try
+                    {
+                        worksheet.Cell("L" + i).Value = new[] { new { BANNER = lst[i - 2].documento.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(lst[i - 2].documento.USUARIO.SPRAS_ID)).FirstOrDefault().TXT020 }, };
+                    }
+                    catch { }
+
+                    if (lst[i - 2].documento.TSOL_ID.StartsWith("PR"))
+                    {
+                        try
+                        {
+                            worksheet.Cell("M" + i).Value = new[] { new { BANNER = lst[i - 2].documento.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(lst[i - 2].documento.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50 }, };
+                        }
+                        catch { }
+                    }
+
+                    try
+                    {
+                        if (lst[i - 2].documento.TSOL_ID.StartsWith("NC"))
+                        {
+                            worksheet.Cell("N" + i).Value = new[] { new { BANNER = lst[i - 2].documento.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(lst[i - 2].documento.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50 }, };
+                        }
+                    }
+                    catch { }
+
+                    if (lst[i - 2].documento.TSOL_ID.StartsWith("OP"))
+                    {
+                        worksheet.Cell("O" + i).Value = new[] { new { BANNER = lst[i - 2].documento.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(lst[i - 2].documento.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50 }, };
+                    }
+
+
+                    worksheet.Cell("P" + i).Value = new[] { new { BANNER = lst[i - 2].ESTATUS_STRING }, };
+                    worksheet.Cell("Q" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CONCEPTO }, };
+                    worksheet.Cell("R" + i).Value = new[] { new { BANNER = lst[i - 2].documento.NOTAS }, };
+                    worksheet.Cell("S" + i).Value = new[] { new { BANNER = lst[i - 2].documento.FECHAI_VIG.Value.ToShortDateString() }, };
+                    worksheet.Cell("T" + i).Value = new[] { new { BANNER = lst[i - 2].documento.FECHAF_VIG.Value.ToShortDateString() }, };
+                    try
+                    {
+                        worksheet.Cell("U" + i).Value = new[] { new { BANNER = lst[i - 2].documento.GALL.GALLTs.FirstOrDefault().TXT50 }, };
+                    }
+                    catch { }
+
+                    worksheet.Cell("V" + i).Value = new[] { new { BANNER = lst[i - 2].CUENTA_CARGO }, };
+                    worksheet.Cell("W" + i).Value = new[] { new { BANNER = lst[i - 2].CUENTA_CARGO_NOMBRE }, };
+                    worksheet.Cell("X" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.KUNNR }, };
+                    worksheet.Cell("Y" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.NAME1 }, };
+                    worksheet.Cell("Z" + i).Value = new[] { new { BANNER = lst[i - 2].CANAL }, };
+
+                    if (lst[i - 2].documento.SOLD_TO_ID != null)
+                    {
+                        worksheet.Cell("AA" + i).Value = new[] { new { BANNER = "Sold To" }, };
+                    }
+                    else
+                    {
+                        worksheet.Cell("AA" + i).Value = new[] { new { BANNER = "Payer" }, };
+                    }
+                    worksheet.Cell("AB" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("AC" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.STCD1 }, };
+                    worksheet.Cell("AD" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.CANAL }, };
+
+
+                    if (lst[i - 2].CANAL == null)
+                    {
+                        worksheet.Cell("AE" + i).Value = new[] { new { BANNER = "" }, };
+                    }
+                    else
+                    {
+                        worksheet.Cell("AE" + i).Value = new[] { new { BANNER = lst[i - 2].CANAL.CDESCRIPCION }, };
+                    }
+                    worksheet.Cell("AF" + i).Value = new[] { new { BANNER = lst[i - 2].documento.PAYER_NOMBRE }, };
+                    worksheet.Cell("AG" + i).Value = new[] { new { BANNER = lst[i - 2].documento.PAYER_EMAIL }, };
+
+                    if (lst[i - 2].documento.TSOL_ID.StartsWith("PR"))
+                    {
+                        worksheet.Cell("AH" + i).Value = new[] { new { BANNER = monotdocmd }, };
+                    }
+                    if (lst[i - 2].documento.TSOL_ID.StartsWith("NC") || lst[i - 2].documento.TSOL_ID.StartsWith("OP"))
+                    {
+                        worksheet.Cell("AI" + i).Value = new[] { new { BANNER = monotodocmd2 }, };
+                    }
+
+                    try
+                    {
+                        if (lst[i - 2].PRESUPUESTO.PC_T == 0)
+                        {
+                            worksheet.Cell("AJ" + i).Value = new[] { new { BANNER = string.Empty }, };
+
+                        }
+                        else
+                        {
+                            worksheet.Cell("AJ" + i).Value = new[] { new { BANNER = prepupuestoptc }, };
+                        }
+                    }
+                    catch { }
+                    try
+                    {
+                        if (lst[i - 2].PRESUPUESTO.CONSU == 0)
+                        {
+                            worksheet.Cell("AK" + i).Value = new[] { new { BANNER = string.Empty }, };
+
+                        }
+                        else
+                        {
+                            worksheet.Cell("AK" + i).Value = new[] { new { BANNER = presupestoconsu }, };
+                        }
+                    }
+                    catch { }
+                    if (lst[i - 2].DOCSREFREVERSOS != null)
+                    {
+                        worksheet.Cell("AL" + i).Value = new[] { new { BANNER = String.Format("{0:C}", lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null), null).GetType().GetProperty("MONTO_DOC_MD").GetValue(lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null), null), null)) }, };
+                    }
+                    if (lst[i - 2].DOCSREFREVERSOS != null)
+                    {
+                        worksheet.Cell("AM" + i).Value = new[] { new { BANNER = (Convert.ToDecimal(lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null), null).GetType().GetProperty("MONTO_DOC_MD").GetValue(lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null), null), null)) * 100) / lst[i - 2].documento.MONTO_DOC_MD }, };
+                    }
+                    worksheet.Cell("AN" + i).Value = new[] { new { BANNER = "" }, };
+                    worksheet.Cell("AO" + i).Value = new[] { new { BANNER = "" }, };
+                    worksheet.Cell("AP" + i).Value = new[] { new { BANNER = "" }, };
+                    if (lst[i - 2].documento.DOCUMENTOSAP != null)
+                    {
+                        worksheet.Cell("AQ" + i).Value = new[] { new { BANNER = lst[i - 2].documento.DOCUMENTOSAP.NUM_DOC.ToString() }, };
+                    }
+                    else
+                    {
+                        worksheet.Cell("AQ" + i).Value = new[] { new { BANNER = "" }, };
+                    }
+                    if (lst[i - 2].documento.TSOL_ID.StartsWith("NC") || lst[i - 2].documento.TSOL_ID.StartsWith("OP"))
+                    {
+                        worksheet.Cell("AR" + i).Value = new[] { new { BANNER = lst[i - 2].documento.NUM_DOC }, };
+                    }
+                    if (lst[i - 2].DOCSREFREVERSOS != null)
+                    {
+                        worksheet.Cell("AS" + i).Value = new[] { new { BANNER = lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null).GetType().GetProperty("NUM_DOC").GetValue(lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null), null) }, };
+                    }
+                    if (lst[i - 2].DOCSREFREVERSOS != null)
+                    {
+                        worksheet.Cell("AT" + i).Value = new[] { new { BANNER = lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null).GetType().GetProperty("FECHAC").GetValue(lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null), null) }, };
+                    }
+                    if (lst[i - 2].DOCSREFREVERSOS != null)
+                    {
+                        worksheet.Cell("AU" + i).Value = new[] { new { BANNER = lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("d").GetValue(lst[i - 2].DOCSREFREVERSOS, null).GetType().GetProperty("PERIODO").GetValue(lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("d").GetValue(lst[i - 2].DOCSREFREVERSOS, null), null) }, };
+                    }
+                    if (lst[i - 2].DOCSREFREVERSOS != null)
+                    {
+                        worksheet.Cell("AV" + i).Value = new[] { new { BANNER = lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("tr").GetValue(lst[i - 2].DOCSREFREVERSOS, null).GetType().GetProperty("TXT100").GetValue(lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("tr").GetValue(lst[i - 2].DOCSREFREVERSOS, null), null) }, };
+                    }
+                    if (lst[i - 2].DOCSREFREVERSOS != null)
+                    {
+                        worksheet.Cell("AW" + i).Value = new[] { new { BANNER = lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null).GetType().GetProperty("COMENTARIO").GetValue(lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null), null) }, };
+                    }
+                    worksheet.Cell("AX" + i).Value = new[] { new { BANNER = lst[i - 2].documento.USUARIO.NOMBRE + " " + lst[i - 2].documento.USUARIO.APELLIDO_P }, };
+                    worksheet.Cell("AY" + i).Value = new[] { new { BANNER = lst[i - 2].documento.USUARIO.BACKUP_ID }, };
+                    worksheet.Cell("AZ" + i).Value = new[] { new { BANNER = lst[i - 2].documento.USUARIO.NOMBRE + " " + lst[i - 2].documento.USUARIO.APELLIDO_P }, };
+                    worksheet.Cell("BA" + i).Value = new[] { new { BANNER = lst[i - 2].documento.USUARIO.ID }, };
+                    worksheet.Cell("BB" + i).Value = new[] { new { BANNER = lst[i - 2].documento.USUARIO.NOMBRE + " " + lst[i - 2].documento.USUARIO.APELLIDO_P }, };
+                    worksheet.Cell("BC" + i).Value = new[] { new { BANNER = lst[i - 2].documento.USUARIO.ID }, };
+                    worksheet.Cell("BD" + i).Value = new[] { new { BANNER = lst[i - 2].documento.USUARIOD_ID }, };
+                    worksheet.Cell("BE" + i).Value = new[] { new { BANNER = lst[i - 2].documento.USUARIOD_ID }, };
+                    try
+                                    {
+                        worksheet.Cell("BF" + i).Value = new[] { new { BANNER = lst[i - 2].documento.FLUJOes.Where(u => u.WF_POS == 1).Select(u => u.USUARIO.NOMBRE + " " + u.USUARIO.APELLIDO_P).FirstOrDefault() }, };
+                                    }
+                                    catch { }
+
+
+                    worksheet.Cell("BG" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("BH" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("BI" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("BJ" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("BK" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("BL" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("BM" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("BN" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("BO" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("BP" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("BQ" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("BR" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("BS" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("BT" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("BU" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("BV" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("BW" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("BX" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("BY" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("BZ" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("CA" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("CB" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("CC" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("CD" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("CE" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("CF" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("CG" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("CH" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("CI" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("CJ" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("CK" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("CL" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("CM" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("CN" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("CO" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("CP" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("CQ" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("CR" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
                 }
-                var rt = ruta + @"\Clientes_" + DateTime.Now.ToShortDateString() + ".xlsx";
+                var rt = ruta + @"\Solicitudes_Consulta/" + DateTime.Now.ToShortDateString() + ".xlsx";
                 workbook.SaveAs(rt);
             }
             catch (Exception e)

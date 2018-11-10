@@ -73,7 +73,7 @@
                                 @Html.DisplayFor(modelItem => item.POS)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.ACCION.DESCCRIPCION)
+                                @Html.DisplayFor(modelItem => item.ACCION.ACCIONTs.Where(a => a.SPRAS_ID == Session["spras"].ToString()).FirstOrDefault().TXT050)
                             </td>
                             <td>
                                 @if (item.NEXT_STEP != null)

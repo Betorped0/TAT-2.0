@@ -28,7 +28,7 @@
 @Html.HiddenFor(model => model.KUNNR)
 <div class="row right-align">
     <div class="col s12">
-        <a href="@Url.Action("Index", "Taxeoh", new {vko = Model.VKORG, vtw = Model.VTWEG,  kun = Model.KUNNR,  spa = Model.SPART})" class="btn-small">Taxeo</a>
+        <a href="@Url.Action("Index", "Taxeoh", new {vko = Model.VKORG, vtw = Model.VTWEG,  kun = Model.KUNNR,  spa = Model.SPART})" class="btn-small" id="taxeo">Taxeo</a>
         <a href="@Url.Action("Edit", "Clientes", new {vko = Model.VKORG, vtw = Model.VTWEG,  kun = Model.KUNNR,  spa = Model.SPART})" class="btn-small">Editar</a>
     </div>
 </div>
@@ -37,6 +37,11 @@
     <div class="col s12 m6">
         <div class="card-panel">
             <div class="row">
+                <div class="input-field col s12" style="margin-bottom:0;">
+                    @Html.EditorFor(model => model.KUNNR, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @Value = Model.KUNNR.TrimStart('0') } })
+                    @Html.LabelFor(model => model.KUNNR, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_KUNNR" })
+                </div>
+
                 <div class="input-field col s12" style="margin-bottom:0;">
                     @Html.EditorFor(model => model.NAME1, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
                     @Html.LabelFor(model => model.NAME1, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_nombre" })
@@ -58,7 +63,7 @@
         <div class="card-panel">
             <div class="row">
                 <div class="input-field col s12" style="margin-bottom:0;">
-                    @Html.EditorFor(model => model.PAI.LANDX, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                    @Html.EditorFor(model => model.PAI.LANDX, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @id= "input_pais" } })
                     @Html.LabelFor(model => model.PAI.LANDX, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_pais" })
                 </div>
                 
@@ -118,7 +123,7 @@
                 </div>
 
                 <div class="input-field col s12" style="margin-bottom:0;">
-                    @Html.EditorFor(model => model.PAYER, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                    @Html.EditorFor(model => model.PAYER, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @Value = Model.PAYER.TrimStart('0') } })
                     @Html.LabelFor(model => model.PAYER, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_payer" })
                 </div>
 
@@ -188,3 +193,10 @@
     @Html.ActionLink("Back to List", "Index", null, new { id = "lbl_regresar" })
 </p>
 
+<script>
+    var pais = $("#input_pais").val();
+    if (pais != "Colombia") {
+        $("#taxeo").hide();
+    }
+
+</script>

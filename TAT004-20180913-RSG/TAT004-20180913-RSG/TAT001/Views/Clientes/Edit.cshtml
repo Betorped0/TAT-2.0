@@ -14,9 +14,9 @@
     <div class="form-horizontal">
         <div class="row right-align">
             <div class="col l12 m12 right">
-                <a href="@Url.Action("Index", "Taxeoh", new {vko = Model.VKORG, vtw = Model.VTWEG,  kun = Model.KUNNR,  spa = Model.SPART})" class="btn-small">Taxeo</a>
+                <a href="@Url.Action("Index", "Taxeoh", new {vko = Model.VKORG, vtw = Model.VTWEG,  kun = Model.KUNNR,  spa = Model.SPART})" class="btn-small" id="taxeo">Taxeo</a>
                 <a href="@Url.Action("Index", "Clientes")" class="btn-small">Lista</a>
-                <input type="submit" value="Enviar" class="btn-small" />
+                <input type="submit" value="Guardar" class="btn-small" />
             </div>
         </div>
 
@@ -44,17 +44,22 @@
                 <div class="card-panel">
                     <div class="row">
                         <div class="input-field col s12" style="margin-bottom:0;">
-                            @Html.EditorFor(model => model.NAME1, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.EditorFor(model => model.KUNNR, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @Value = Model.KUNNR.TrimStart('0') } })
+                            @Html.LabelFor(model => model.KUNNR, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_KUNNR" })
+                        </div>
+
+                        <div class="input-field col s12" style="margin-bottom:0;">
+                            @Html.EditorFor(model => model.NAME1, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
                             @Html.LabelFor(model => model.NAME1, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_nombre" })
                         </div>
 
                         <div class="input-field col s12" style="margin-bottom:0;">
-                            @Html.EditorFor(model => model.STCD1, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.EditorFor(model => model.STCD1, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
                             @Html.LabelFor(model => model.STCD1, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_identificador" })
                         </div>
 
                         <div class="input-field col s12" style="margin-bottom:0;">
-                            @Html.EditorFor(model => model.STCD2, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.EditorFor(model => model.STCD2, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
                             @Html.LabelFor(model => model.STCD2, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_identificador2" })
                         </div>
                     </div>
@@ -65,15 +70,15 @@
                     <div class="row">
                         <div class="input-field col s12" style="margin-bottom:0;">
                             @*@Html.DropDownList("LAND", null, htmlAttributes: new { @id = "sel-land", @readonly = "readonly" })*@
-                            @Html.EditorFor(model => model.LAND, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            @Html.EditorFor(model => model.LAND, new { htmlAttributes = new { @class = "form-control", @id = "input_pais" } })
                             @Html.LabelFor(model => model.LAND, "LAND", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_pais" })
                             @Html.ValidationMessageFor(model => model.LAND, "", new { @class = "text-danger" })
                         </div>
-                        <script>
+                        @*<script>
                             var elem = document.getElementById('sel-land');
                             var options = [];
                             var instance = M.FormSelect.init(elem, options);
-                        </script>
+                        </script>*@
 
                         <div class="input-field col s12" style="margin-bottom:0;">
                             @Html.EditorFor(model => model.REGION, new { htmlAttributes = new { @class = "form-control" } })
@@ -86,22 +91,22 @@
                         </div>
 
                         <div class="input-field col s12" style="margin-bottom:0;">
-                            @Html.EditorFor(model => model.REGIO, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.EditorFor(model => model.REGIO, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
                             @Html.LabelFor(model => model.REGIO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_estado" })
                         </div>
 
                         <div class="input-field col s12" style="margin-bottom:0;">
-                            @Html.EditorFor(model => model.ORT01, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.EditorFor(model => model.ORT01, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
                             @Html.LabelFor(model => model.ORT01, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_ciudad" })
                         </div>
 
                         <div class="input-field col s12" style="margin-bottom:0;">
-                            @Html.EditorFor(model => model.STRAS_GP, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.EditorFor(model => model.STRAS_GP, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
                             @Html.LabelFor(model => model.STRAS_GP, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_direccion" })
                         </div>
 
                         <div class="input-field col s12" style="margin-bottom:0;">
-                            @Html.EditorFor(model => model.PSTLZ, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.EditorFor(model => model.PSTLZ, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
                             @Html.LabelFor(model => model.PSTLZ, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_cp" })
                         </div>
                     </div>
@@ -127,7 +132,7 @@
                     <div class="row">
                         <div class="input-field col s12" style="margin-bottom:0;">
                             @*@Html.DropDownList("PARVW", null, htmlAttributes: new { @id = "sel-par" })*@
-                            @Html.EditorFor(model => model.PARVW, new { htmlAttributes = new { @class = "form-control", @id = "input_tcliente" } })
+                            @Html.EditorFor(model => model.PARVW, new { htmlAttributes = new { @class = "form-control", @id = "input_tcliente", @readonly = "readonly" } })
                             @Html.LabelFor(model => model.PARVW, "PARVW", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_tipocli" })
                             @Html.ValidationMessageFor(model => model.PARVW, "", new { @class = "text-danger" })
                         </div>
@@ -148,7 +153,7 @@
                         </div>*@
 
                         <div class="input-field col s12" style="margin-bottom:0;">
-                            @Html.EditorFor(model => model.SPRAS, new { htmlAttributes = new { @class = "form-control", @id = "input_idioma" } })
+                            @Html.EditorFor(model => model.SPRAS, new { htmlAttributes = new { @class = "form-control", @id = "input_idioma", @readonly = "readonly" } })
                             @Html.LabelFor(model => model.SPRAS, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_idioma" })
                         </div>
 
@@ -229,6 +234,11 @@
 <script src="~/Scripts/autocomplete1.11.4.js"></script>
 <link href="~/Content/autocomplete.css" rel="stylesheet" />
 <script>
+    var pais = $("#input_pais").val();
+    if (pais != "CO") {
+        $("#taxeo").hide();
+    }
+
     $('body').on('keydown.autocomplete', '#input_proveedor', function () {
 
         auto(this).autocomplete({
@@ -359,6 +369,39 @@
         });
     });
 
+    $('body').on('keydown.autocomplete', '#input_pais', function () {
+
+        auto(this).autocomplete({
+            source: function (request, response) {
+                auto.ajax({
+                    type: "POST",
+                    url: 'Pais',
+                    dataType: "json",
+                    data: { "Prefix": request.term },
+                    success: function (data) {
+                        response(auto.map(data, function (item) {
+                            return { label: item.LAND + " | " + item.LANDX, value: item.LAND };
+                        }))
+                    }
+                })
+            },
+
+            messages: {
+                noResults: '',
+                results: function (resultsCount) { }
+            },
+
+            change: function (e, ui) {
+                if (!(ui.item) && $("#input_pais").val() === "") {
+                    e.target.value = "";
+                }
+            },
+
+            select: function (event, ui) {
+            }
+        });
+    });
+    
 </script>
 <script>
     var auto = $.noConflict();
