@@ -28,5 +28,6 @@ namespace TAT001.Entities
         public string ManttoText { get; set; }
         public Nullable<int> Grupo { get; set; }
         public string GrupoText { get; set; }
+        public Nullable<int> Orden { get; set; }
     }
 }
