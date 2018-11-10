@@ -66,7 +66,7 @@ namespace TAT001.Controllers.Catalogos
                 ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(790) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(791) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
 
                 try
                 {
@@ -89,6 +89,8 @@ namespace TAT001.Controllers.Catalogos
             {
                 return HttpNotFound();
             }
+            var rangos = db.RANGOes.Select(x => new { x.ID, DESCRIPCION = x.INICIO + "-" + x.FIN });
+            ViewBag.RANGO_ID = new SelectList(rangos, "ID", "DESCRIPCION", tSOL.RANGO_ID);
             ViewBag.SPRAS = db.SPRAS.ToList();
             return View(tSOL);
         }
@@ -97,9 +99,11 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Create()
         {   
             TSOL tsol = new TSOL();
-            ViewBag.RANGO_ID = new SelectList(db.RANGOes, "ID", "ID");
+            var rangos = db.RANGOes.Select(x => new { x.ID, DESCRIPCION = x.INICIO + "-" + x.FIN });
+            ViewBag.RANGO_ID = new SelectList(rangos, "ID", "DESCRIPCION");
             int pagina_id = 791;//ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
+            ViewBag.SPRAS = db.SPRAS.ToList();
             return View(tsol);
         }
 
@@ -108,7 +112,7 @@ namespace TAT001.Controllers.Catalogos
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,DESCRIPCION,RANGO_ID,ESTATUS,FACTURA,PADRE,REVERSO,NEGO,CARTA,ADICIONA")] TSOL tSOL, FormCollection collection)
+        public ActionResult Create([Bind(Include = "ID,DESCRIPCION,RANGO_ID,ESTATUS,FACTURA,PADRE,REVERSO,NEGO,CARTA,ADICIONA")] TSOL tSOL, FormCollection collection, string[] txval)
         {
             if (ModelState.IsValid)
             {
@@ -118,7 +122,6 @@ namespace TAT001.Controllers.Catalogos
                         tSOL.ESTATUS = "M";
                     else
                         tSOL.ESTATUS = "X";
-                    tSOL.ACTIVO = true;
                     var radio = collection["group1"];
                     if (radio == "FACTURA")
                         tSOL.FACTURA = true;
@@ -128,6 +131,31 @@ namespace TAT001.Controllers.Catalogos
                         tSOL.REVERSO = true;
                     db.TSOLs.Add(tSOL);
                     db.SaveChanges();
+                    List<SPRA> ss = db.SPRAS.ToList();
+                    List<TSOLT> lstc = db.TSOLTs.Where(i => i.TSOL_ID == tSOL.ID).ToList();
+                    if (lstc.Count == 0)
+                    {
+                        var j = 0;
+                        foreach (SPRA s in ss)
+                        {
+
+                            try
+                            {
+                                TSOLT p = new TSOLT();
+                                p.TSOL_ID = tSOL.ID;
+                                p.SPRAS_ID = s.ID;
+                                //p.TXT020 = txval[j].ToString();
+                                p.TXT50 = txval[j].ToString();
+                                db.Entry(p).State = EntityState.Added;
+                                db.SaveChanges();
+                                j++;
+                            }
+                            catch (Exception e)
+                            {
+                                var x = e.ToString();
+                            }
+                        }
+                    }
                     return RedirectToAction("Index");
                 }
                 else
@@ -165,7 +193,7 @@ namespace TAT001.Controllers.Catalogos
                 ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(790) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(791) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
 
                 try
                 {
@@ -189,6 +217,8 @@ namespace TAT001.Controllers.Catalogos
                 return HttpNotFound();
             }
             ViewBag.SPRAS = db.SPRAS.ToList();
+            var rangos = db.RANGOes.Select(x => new { x.ID, DESCRIPCION = x.INICIO + "-" + x.FIN });
+            ViewBag.RANGO_ID = new SelectList(rangos, "ID", "DESCRIPCION",tSOL.RANGO_ID);
             //ViewBag.RANGO_ID = new SelectList(db.RANGOes, "ID", "ID", tSOL.RANGO_ID);
             //ViewBag.TSOLR = new SelectList(db.TSOLs, "ID", "DESCRIPCION", tSOL.TSOLR);
             return View(tSOL);
@@ -199,12 +229,13 @@ namespace TAT001.Controllers.Catalogos
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,DESCRIPCION,ACTIVO")] TSOL tSOL, string[] txval)
+        public ActionResult Edit([Bind(Include = "ID,ACTIVO,CARTA,NEGO,ADICIONA")] TSOL tSOL, FormCollection collection, string[] txval)
         {
             if (ModelState.IsValid)
             {
                 List<SPRA> ss = db.SPRAS.ToList();
                 List<TSOLT> lstc = db.TSOLTs.Where(i => i.TSOL_ID == tSOL.ID).ToList();
+                var TSOL = db.TSOLs.Where(t => t.ID == tSOL.ID).SingleOrDefault();
                 if (lstc.Count == 0)
                 {
                     var j = 0;
@@ -216,7 +247,7 @@ namespace TAT001.Controllers.Catalogos
                             TSOLT p = new TSOLT();
                             p.TSOL_ID = tSOL.ID;
                             p.SPRAS_ID = s.ID;
-                            p.TXT020 = txval[j].ToString();
+                            //p.TXT020 = txval[j].ToString();
                             p.TXT50 = txval[j].ToString();
                             db.Entry(p).State = EntityState.Added;
                             db.SaveChanges();
@@ -235,7 +266,7 @@ namespace TAT001.Controllers.Catalogos
                     {
                         try
                         {
-                            texto.TXT020 = txval[j].ToString();
+                            //texto.TXT020 = txval[j].ToString();
                             texto.TXT50 = txval[j].ToString();
                             db.Entry(texto).State = EntityState.Modified;
                             db.SaveChanges();
@@ -248,7 +279,10 @@ namespace TAT001.Controllers.Catalogos
                     }
                 }
                 
-                tSOL.ACTIVO = tSOL.ACTIVO;
+                TSOL.ACTIVO = tSOL.ACTIVO;
+                TSOL.CARTA = tSOL.CARTA;
+                TSOL.NEGO = tSOL.NEGO;
+                TSOL.ADICIONA = tSOL.ADICIONA;
                 db.SaveChanges();
                 //if (txval != null)
                 //{

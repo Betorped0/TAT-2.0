@@ -1278,30 +1278,62 @@ namespace TAT001.Controllers
                     catch { }
                     if (lst[i - 2].DOCSREFREVERSOS != null)
                     {
-                        String.Format("{0:C}", lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null), null).GetType().GetProperty("MONTO_DOC_MD").GetValue(lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null), null), null));
+                        worksheet.Cell("AL" + i).Value = new[] { new { BANNER = String.Format("{0:C}", lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null), null).GetType().GetProperty("MONTO_DOC_MD").GetValue(lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null), null), null)) }, };
                     }
-                    worksheet.Cell("AK" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
-                    worksheet.Cell("AL" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
-                    worksheet.Cell("AM" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
-                    worksheet.Cell("AN" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
-                    worksheet.Cell("AO" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
-                    worksheet.Cell("AP" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
-                    worksheet.Cell("AQ" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
-                    worksheet.Cell("AR" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
-                    worksheet.Cell("AS" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
-                    worksheet.Cell("AT" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
-                    worksheet.Cell("AU" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
-                    worksheet.Cell("AV" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
-                    worksheet.Cell("AW" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
-                    worksheet.Cell("AX" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
-                    worksheet.Cell("AY" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
-                    worksheet.Cell("AZ" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
-                    worksheet.Cell("BA" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
-                    worksheet.Cell("BB" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
-                    worksheet.Cell("BC" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
-                    worksheet.Cell("BD" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
-                    worksheet.Cell("BE" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
-                    worksheet.Cell("BF" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    if (lst[i - 2].DOCSREFREVERSOS != null)
+                    {
+                        worksheet.Cell("AM" + i).Value = new[] { new { BANNER = (Convert.ToDecimal(lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null), null).GetType().GetProperty("MONTO_DOC_MD").GetValue(lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null), null), null)) * 100) / lst[i - 2].documento.MONTO_DOC_MD }, };
+                    }
+                    worksheet.Cell("AN" + i).Value = new[] { new { BANNER = "" }, };
+                    worksheet.Cell("AO" + i).Value = new[] { new { BANNER = "" }, };
+                    worksheet.Cell("AP" + i).Value = new[] { new { BANNER = "" }, };
+                    if (lst[i - 2].documento.DOCUMENTOSAP != null)
+                    {
+                        worksheet.Cell("AQ" + i).Value = new[] { new { BANNER = lst[i - 2].documento.DOCUMENTOSAP.NUM_DOC.ToString() }, };
+                    }
+                    else
+                    {
+                        worksheet.Cell("AQ" + i).Value = new[] { new { BANNER = "" }, };
+                    }
+                    if (lst[i - 2].documento.TSOL_ID.StartsWith("NC") || lst[i - 2].documento.TSOL_ID.StartsWith("OP"))
+                    {
+                        worksheet.Cell("AR" + i).Value = new[] { new { BANNER = lst[i - 2].documento.NUM_DOC }, };
+                    }
+                    if (lst[i - 2].DOCSREFREVERSOS != null)
+                    {
+                        worksheet.Cell("AS" + i).Value = new[] { new { BANNER = lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null).GetType().GetProperty("NUM_DOC").GetValue(lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null), null) }, };
+                    }
+                    if (lst[i - 2].DOCSREFREVERSOS != null)
+                    {
+                        worksheet.Cell("AT" + i).Value = new[] { new { BANNER = lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null).GetType().GetProperty("FECHAC").GetValue(lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null), null) }, };
+                    }
+                    if (lst[i - 2].DOCSREFREVERSOS != null)
+                    {
+                        worksheet.Cell("AU" + i).Value = new[] { new { BANNER = lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("d").GetValue(lst[i - 2].DOCSREFREVERSOS, null).GetType().GetProperty("PERIODO").GetValue(lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("d").GetValue(lst[i - 2].DOCSREFREVERSOS, null), null) }, };
+                    }
+                    if (lst[i - 2].DOCSREFREVERSOS != null)
+                    {
+                        worksheet.Cell("AV" + i).Value = new[] { new { BANNER = lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("tr").GetValue(lst[i - 2].DOCSREFREVERSOS, null).GetType().GetProperty("TXT100").GetValue(lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("tr").GetValue(lst[i - 2].DOCSREFREVERSOS, null), null) }, };
+                    }
+                    if (lst[i - 2].DOCSREFREVERSOS != null)
+                    {
+                        worksheet.Cell("AW" + i).Value = new[] { new { BANNER = lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null).GetType().GetProperty("COMENTARIO").GetValue(lst[i - 2].DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(lst[i - 2].DOCSREFREVERSOS, null), null) }, };
+                    }
+                    worksheet.Cell("AX" + i).Value = new[] { new { BANNER = lst[i - 2].documento.USUARIO.NOMBRE + " " + lst[i - 2].documento.USUARIO.APELLIDO_P }, };
+                    worksheet.Cell("AY" + i).Value = new[] { new { BANNER = lst[i - 2].documento.USUARIO.BACKUP_ID }, };
+                    worksheet.Cell("AZ" + i).Value = new[] { new { BANNER = lst[i - 2].documento.USUARIO.NOMBRE + " " + lst[i - 2].documento.USUARIO.APELLIDO_P }, };
+                    worksheet.Cell("BA" + i).Value = new[] { new { BANNER = lst[i - 2].documento.USUARIO.ID }, };
+                    worksheet.Cell("BB" + i).Value = new[] { new { BANNER = lst[i - 2].documento.USUARIO.NOMBRE + " " + lst[i - 2].documento.USUARIO.APELLIDO_P }, };
+                    worksheet.Cell("BC" + i).Value = new[] { new { BANNER = lst[i - 2].documento.USUARIO.ID }, };
+                    worksheet.Cell("BD" + i).Value = new[] { new { BANNER = lst[i - 2].documento.USUARIOD_ID }, };
+                    worksheet.Cell("BE" + i).Value = new[] { new { BANNER = lst[i - 2].documento.USUARIOD_ID }, };
+                    try
+                                    {
+                        worksheet.Cell("BF" + i).Value = new[] { new { BANNER = lst[i - 2].documento.FLUJOes.Where(u => u.WF_POS == 1).Select(u => u.USUARIO.NOMBRE + " " + u.USUARIO.APELLIDO_P).FirstOrDefault() }, };
+                                    }
+                                    catch { }
+
+
                     worksheet.Cell("BG" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
                     worksheet.Cell("BH" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
                     worksheet.Cell("BI" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };

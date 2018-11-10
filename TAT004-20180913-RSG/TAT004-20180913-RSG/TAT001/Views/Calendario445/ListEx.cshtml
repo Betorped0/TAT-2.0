@@ -1,84 +1,79 @@
 ﻿@using TAT001.Entities;
 @using PagedList.Mvc
-@model TAT001.Models.ClienteViewModel
+@model TAT001.Models.Calendario445ViewModel
 <link href="~/Content/PagedList.css" rel="stylesheet" />
 <table class="table mdl-data-table striped" id="table" style="width:100%;">
     <thead>
         <tr class="header">
             <th>
-                @Html.ActionLink("KUNNR", "List", new { colOrden = "KUNNR", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar=Model.buscar })
+                @Html.ActionLink("SOCIEDAD_ID", "List", new { colOrden = "SOCIEDAD_ID", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
             </th>
             <th>
-                @Html.ActionLink("NAME1", "List", new { colOrden = "NAME1", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
+                @Html.ActionLink("PERIODO", "List", new { colOrden = "PERIODO", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
             </th>
             <th>
-                @Html.ActionLink("SUBREGION", "List", new { colOrden = "SUBREGION", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
+                @Html.ActionLink("TSOL_ID", "List", new { colOrden = "TSOL_ID", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
             </th>
             <th>
-                @Html.ActionLink("LAND", "List", new { colOrden = "LAND", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
+                @Html.ActionLink("USUARIO_ID", "List", new { colOrden = "USUARIO_ID", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
             </th>
             <th>
-                @Html.ActionLink("PARVW", "List", new { colOrden = "PARVW", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
+                @Html.ActionLink("EX_FROMF", "List", new { colOrden = "EX_FROMF", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
             </th>
             <th>
-                @Html.ActionLink("PAYER", "List", new { colOrden = "PAYER", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
+                @Html.ActionLink("EX_FROMH", "List", new { colOrden = "EX_FROMH", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
             </th>
             <th>
-                @Html.ActionLink("CANAL", "List", new { colOrden = "CANAL", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
+                @Html.ActionLink("EX_TOF", "List", new { colOrden = "EX_TOF", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
             </th>
+            <th>
+                @Html.ActionLink("EX_TOH", "List", new { colOrden = "EX_TOH", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
+            </th>
+           
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.clientes)
+        @foreach (var item in Model.calendariosEx445)
         {
-            <tr>
-                <td>
-                    @item.KUNNR.TrimStart('0')
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NAME1)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SUBREGION)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PAI.LANDX)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PARVW)
-                </td>
-                <td>
-                    @item.PAYER.TrimStart('0')
-                </td>
-                <td>
-                    @item.CANAL
-                </td>
-                <td>
-                    <a href="@Url.Action("Edit", "Clientes", new { vko = item.VKORG, vtw = item.VTWEG, spa = item.SPART, kun = item.KUNNR })">
-                        <i class='material-icons green-text'>edit</i>
-                    </a>
-                    <a href="@Url.Action("Details", "Clientes", new { vko = item.VKORG, vtw = item.VTWEG, spa = item.SPART, kun = item.KUNNR })">
-                        <i class='material-icons blue-text'>search</i>
-                    </a>
-                    <a data-form-method="post" href="@Url.Action("Index", "Contacto", new { vko = item.VKORG, vtw = item.VTWEG, kun = item.KUNNR, spa = item.SPART })">
-                        <i class='material-icons orange-text'>contacts</i>
-                    </a>
-                    @*<a data-form-method="post" href="@Url.Action("Index", "Iimpuesto", new { vko = item.VKORG, vtw = item.VTWEG, kun = item.KUNNR, spa = item.SPART })">
-                        <i class='material-icons yellow-text'>monetization_on</i>
-                    </a>*@
-                </td>
-            </tr>
+        <tr class="text-left">
+            <td>
+                @Html.DisplayFor(modelItem => item.SOCIEDAD_ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PERIODO)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TSOL_ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.USUARIO.ID)
+            </td>
+            <td>
+                @Convert.ToDateTime(item.EX_FROMF).ToString("dd/MM/yyyy")
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EX_FROMH)
+            </td>
+            <td>
+                @Convert.ToDateTime(item.EX_TOF).ToString("dd/MM/yyyy")
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EX_TOH)
+            </td>
+            <td>
+                <a href="@Url.Action("Edit", "CalendarioEx445", new { ejercicio=item.EJERCICIO,  periodo= item.PERIODO,  sociedad_id= item.SOCIEDAD_ID,  tsol_id= item.TSOL_ID,usuario_id=item.USUARIO_ID , paginaIndex = "Calendario445"})"><i class='material-icons green-text'>edit</i></a>
+            </td>
+        </tr>
         }
     </tbody>
 </table>
 <div id='Paging' style="text-align: center">
-    @(Model.clientes.PageCount < Model.clientes.PageNumber ? 0 : Model.clientes.PageNumber)
-    - @Model.clientes.PageCount
+    @(Model.calendariosEx445.PageCount < Model.calendariosEx445.PageNumber ? 0 : Model.calendariosEx445.PageNumber)
+    - @Model.calendariosEx445.PageCount
 
-    @Html.PagedListPager(Model.clientes, page => Url.Action("List", new { pagina = page, numRegistros = Model.numRegistros, buscar = Model.buscar, colOrden=Model.ordenActual }))
+    @Html.PagedListPager(Model.calendariosEx445, page => Url.Action("List", new { pagina = page, numRegistros = Model.numRegistros, buscar = Model.buscar, colOrden = Model.ordenActual }))
 </div>
-
 <script>
     //-----Sort
     function sort() {

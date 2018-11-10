@@ -828,11 +828,14 @@ $(document).ready(function () {
             //$('#monto_doc_md').val(mt);
             //LEJ 09.07.18---------------------------------------------------------------------Inicia
             if (_decimales === '.') {
-                $('#monto_doc_md').val("$" + mt.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                //$('#monto_doc_md').val("$" + mt.toString().replace(/\B(?=(?=\d*\.)(\d{3})+(?!\d))/g, ","));
+                //$('#monto_doc_md').val(toShow(mt.toString()));
+                $('#monto_doc_md').val(toShow(mt.toString()));
             }
             else if (_decimales === ',') {
-                var _mtx = mt.replace('.', ',').toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-                $('#monto_doc_md').val("$" + _mtx);
+                //var _mtx = mt.replace('.', ',').toString().replace(/\B(?=(?=\d*\,)(\d{3})+(?!\d))/g, ".");
+                //$('#monto_doc_md').val("$" + _mtx);
+                $('#monto_doc_md').val(toShow(mt.toString()));
             }
             //LEJ 09.07.18---------------------------------------------------------------------Termina
             //selectTcambio(MONEDA_ID, mt);
@@ -841,24 +844,31 @@ $(document).ready(function () {
             //var tc = parseFloat(tipo_cambio.replace(',', '')).toFixed(2);
             var tc = 0;//LEJ 09.07.18
             if (_decimales === ',') {
-                tc = parseFloat(tipo_cambio.replace(',', '.')).toFixed(5);
-                tipo_cambio = tipo_cambio.replace('.', '');
-                tipo_cambio = tipo_cambio.replace(',', '.');
+                //tc = parseFloat(tipo_cambio.replace(',', '.')).toFixed(5);
+                //tipo_cambio = tipo_cambio.replace('.', '');
+                //tipo_cambio = tipo_cambio.replace(',', '.');
+                tc = parseFloat(toNum(tipo_cambio));
+                tipo_cambio = toNum(tipo_cambio);
             }//LEJ 09.07.18
             else if (_decimales === '.') {
-                tc = parseFloat(tipo_cambio.replace(',', '')).toFixed(5);//LEJ 09.07.18
+                //tc = parseFloat(tipo_cambio.replace(',', '')).toFixed(2);//LEJ 09.07.18
+                tc = parseFloat(toNum(tipo_cambio));
             }
             //Validar el monto en tipo de cambio
             var is_num2 = $.isNumeric(tipo_cambio);
             if (tc > 0 & is_num2 == true) {
                 // $('#tipo_cambio').val(tc);
                 //LEJ 09.07.18--------------------
-                if (_decimales === '.') {
-                    $('#tipo_cambio').val("$" + tc);
-                }
-                else if (_decimales === ',') {
-                    $('#tipo_cambio').val("$" + tc.replace('.', ','));
-                }
+                //if (_decimales === '.') {
+                //    $('#tipo_cambio').val("$" + tc);
+                //}
+                //else if (_decimales === ',') {
+                //    $('#tipo_cambio').val("$" + tc.replace('.', ','));
+                //}
+
+                //$('#tipo_cambio').val(toShow(tc));
+                $('#tipo_cambio').val(toShow5(tc));
+
                 var monto = mt / tc;
                 monto = parseFloat(monto).toFixed(2);
                 //$('#monto_doc_ml2').val(monto);
@@ -866,14 +876,15 @@ $(document).ready(function () {
                 //$("label[for='montos_doc_ml2']").addClass("active");
                 //LEJ 09.07.18-------------------------------------------------------------------------------------------Inicia
                 if (_decimales === '.') {
-                    $('#monto_doc_ml2').val("$" + monto.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-                    $('#montos_doc_ml2').val("$" + monto.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                    //$('#monto_doc_ml2').val("$" + monto.toString().replace(/\B(?=(?=\d*\.)(\d{3})+(?!\d))/g, ","));
+                    //$('#montos_doc_ml2').val("$" + monto.toString().replace(/\B(?=(?=\d*\.)(\d{3})+(?!\d))/g, ","));
+                    $('#montos_doc_ml2').val(toShow(monto.toString()));
                 }
                 else if (_decimales === ',') {
-                    $('#monto_doc_ml2').val("$" + monto.replace('.', ',').toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."));
-                    $('#montos_doc_ml2').val("$" + monto.replace('.', ',').toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."));
+                    //$('#monto_doc_ml2').val("$" + monto.replace('.', ',').toString().replace(/\B(?=(?=\d*\,)(\d{3})+(?!\d))/g, "."));
+                    //$('#montos_doc_ml2').val("$" + monto.replace('.', ',').toString().replace(/\B(?=(?=\d*\,)(\d{3})+(?!\d))/g, "."));
+                    $('#montos_doc_ml2').val(toShow(monto.toString()));
                 }
-                $("label[for='montos_doc_ml2']").addClass("active");//LEJ 26.07.18
                 //LEJ 09.07.18-------------------------------------------------------------------------------------------Termina
             } else {
                 $('#monto_doc_ml2').val(monto);
@@ -905,7 +916,10 @@ $(document).ready(function () {
                 }
             }
             else {  // Allow: backspace, delete, tab, escape, enter and .
-                if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+                if (e.keyCode === 13) {
+                    $("#tipo_cambio").focusout();  //OCG Se agrega para quitar el focus y no redireccionar a la pestaña de informacioin
+                }
+                if ($.inArray(e.keyCode, [46, 8, 9, 27, /*13,*/ 110, 190]) !== -1 ||
                     // Allow: Ctrl+A, Command+A
                     (e.keyCode === 65 && (e.ctrlKey === true || e.metaKey === true)) ||
                     // Allow: home, end, left, right, down, up
@@ -928,7 +942,10 @@ $(document).ready(function () {
                 }
             }
             else {  // Allow: backspace, delete, tab, escape, enter and ','
-                if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 188]) !== -1 ||
+                if (e.keyCode === 13) {
+                    $("#tipo_cambio").focusout(); //OCG Se agrega para quitar el focus y no redireccionar a la pestaña de informacioin
+                }
+                if ($.inArray(e.keyCode, [46, 8, 9, 27, /*13,*/ 188]) !== -1 ||
                     // Allow: Ctrl+A, Command+A
                     (e.keyCode === 65 && (e.ctrlKey === true || e.metaKey === true)) ||
                     // Allow: home, end, left, right, down, up
@@ -948,49 +965,54 @@ $(document).ready(function () {
 
     //LEJ 09.07.18---------------------------------------------Inicia
     //--Cambio de formato monetario
-    var _Tc = $("#tipo_cambio").val().replace('$', '');
+    var _Tc = toNum($("#tipo_cambio").val());
     var _mil = $("#miles").val();
     var _dec = $("#dec").val();
-    if (_dec === '.') {
-        $("#tipo_cambio").val("$" + _Tc);
-    }
-    else if (_dec === ',') {
-        var _xtc = _Tc.replace('.', ',');
-        _Tc = _xtc;
-        $("#tipo_cambio").val("$" + _Tc);
-    }
+    //if (_dec === '.') {
+    //    $("#tipo_cambio").val("$" + _Tc);
+    //}
+    //else if (_dec === ',') {
+    //    var _xtc = _Tc.replace('.', ',');
+    //    _Tc = _xtc;
+    //    $("#tipo_cambio").val("$" + _Tc);
+    //}
+    $("#tipo_cambio").val(toShow(_Tc));
     //LEJ 09.07.18---------------------------------------------Termina
 
     $('#tipo_cambio').focusout(function (e) {
         var _miles = $("#miles").val(); //LEJ 09.07.18
         var _decimales = $("#dec").val(); //LEJ 09.07.18
         //var tipo_cambio = $('#tipo_cambio').val();
-        var tipo_cambio = $('#tipo_cambio').val().replace('$', ''); //LEJ 09.07.18
+        var tipo_cambio = $('#tipo_cambio').val().replace('$', '').replace(_miles, ''); //LEJ 09.07.18
+        tipo_cambio = tipo_cambio.replace(',', '.');
         if (tipo_cambio != "") {
             //LEJ 09.07.18------------------------I
-            if (_decimales === '.') {
-                tipo_cambio = tipo_cambio.replace(',', '');
-            }
-            else if (_decimales === ',') {
-                var _xtc = tipo_cambio.replace('.', '');
-                _xtc = _xtc.replace(',', '.');
-                tipo_cambio = _xtc;
-            }
+            //if (_decimales === '.') {
+            //    tipo_cambio = tipo_cambio.replace(',', '');
+            //}
+            //else if (_decimales === ',') {
+            //    var _xtc = tipo_cambio.replace('.', '');
+            //    _xtc = _xtc.replace(',', '.');
+            //    tipo_cambio = _xtc;
+            //}
+            //////////////tipo_cambio = toNum(tipo_cambio);
             //LEJ 09.07.18------------------------T
             var is_num = $.isNumeric(tipo_cambio);
-            var tc = parseFloat(tipo_cambio.replace(',', '')).toFixed(5);
+            //var tc = parseFloat(tipo_cambio.replace(',', '')).toFixed(2);
+            var tc = parseFloat(tipo_cambio);
             //Validar el monto en tipo de cambio
             if (tc > 0 & is_num == true) {
                 //Validar el monto
                 // $('#tipo_cambio').val(tc)
                 //LEJ 10.07.18----------------------------------I
-                if (_decimales === '.') {
-                    $('#tipo_cambio').val("$" + tc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-                }
-                else if (_decimales === ',') {
-                    tc = tc.replace('.', ',');
-                    $('#tipo_cambio').val("$" + tc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."));
-                }
+                //if (_decimales === '.') {
+                //    $('#tipo_cambio').val("$" + tc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                //}
+                //else if (_decimales === ',') {
+                //    tc = tc.replace('.', ',');
+                //    $('#tipo_cambio').val("$" + tc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."));
+                //}
+                $('#tipo_cambio').val(toShow5(tc.toString()));
                 //LEJ 10.07.18----------------------------------T
                 // var monto_doc_md = $('#monto_doc_md').val();
                 //var mt = parseFloat(monto_doc_md.replace(',', '')).toFixed(2);
@@ -1025,21 +1047,22 @@ $(document).ready(function () {
                         var monto = mt / tipo_cambio;
                         monto = parseFloat(monto).toFixed(2);
                         //LEJ 09.07.18----------------------------I
-                        if (_decimales === '.') {
-                            monto = monto;
-                        }
-                        else if (_decimales === ',') {
-                            var _xmonto = monto.replace('.', ',');
-                            //compruebo los millares
-                            var _arrM = _xmonto.split(',');
-                            _arrM[0] = _arrM[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-                            _xmonto = _arrM[0] + ',' + _arrM[1];
-                            monto = _xmonto;
-                        }
-                        //$('#monto_doc_ml2').val(monto);
-                        //$('#montos_doc_ml2').val(monto);
-                        $('#monto_doc_ml2').val("$" + monto);
-                        $('#montos_doc_ml2').val("$" + monto);
+                        //if (_decimales === '.') {
+                        //    monto = monto;
+                        //}
+                        //else if (_decimales === ',') {
+                        //    var _xmonto = monto.replace('.', ',');
+                        //    //compruebo los millares
+                        //    var _arrM = _xmonto.split(',');
+                        //    _arrM[0] = _arrM[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                        //    _xmonto = _arrM[0] + ',' + _arrM[1];
+                        //    monto = _xmonto;
+                        //}
+                        ////$('#monto_doc_ml2').val(monto);
+                        ////$('#montos_doc_ml2').val(monto);
+                        //$('#monto_doc_ml2').val("$" + monto);
+                        //$('#montos_doc_ml2').val("$" + monto);
+                        $('#montos_doc_ml2').val(toShow(monto));
                         //LEJ 09.07.18-----------------------------T
                         $("label[for='montos_doc_ml2']").addClass("active");
                     }
@@ -1049,10 +1072,12 @@ $(document).ready(function () {
                         // $('#monto_doc_ml2').val(monto);
                         // $('#montos_doc_ml2').val(monto);
                         //LEJ 09.07.18
-                        $('#monto_doc_ml2').val("$" + monto);
-                        $('#montos_doc_ml2').val("$" + monto);
+                        //$('#monto_doc_ml2').val("$" + monto);
+                        $('#monto_doc_ml2').val(toShow(monto));
+                        //$('#montos_doc_ml2').val("$" + monto);
+                        $('#montos_doc_ml2').val(toShow(monto));
                         var msg = 'Moneda incorrecta';
-                        M.toast({ html: msg })
+                        M.toast({ html: msg });
                     }
                 } else {
                     $('#monto_doc_md').val();
@@ -1069,22 +1094,27 @@ $(document).ready(function () {
             } else {
                 //$('#monto_doc_ml2').val(monto);
                 // $('#montos_doc_ml2').val(monto);
-                $('#monto_doc_ml2').val("$" + monto);//LEJ 09.07.18
-                $('#montos_doc_ml2').val("$" + monto);//LEJ 09.07.18
+                //$('#monto_doc_ml2').val("$" + monto);//LEJ 09.07.18
+                //$('#montos_doc_ml2').val("$" + monto);//LEJ 09.07.18
+                $('#monto_doc_ml2').val(toShow(monto));
+                $('#montos_doc_ml2').val(toShow(monto));
                 $("label[for='montos_doc_ml2']").addClass("active");
                 var msg = 'Tipo de cambio incorrecto';
                 M.toast({ html: msg });
                 e.preventDefault();
             }
         } else {
-            $('#monto_doc_ml2').val("$0.00");//LEJ 09.07.18
-            $('#montos_doc_ml2').val("$0.00");//LEJ 09.07.18
+            //$('#monto_doc_ml2').val("$0.00");//LEJ 09.07.18
+            //$('#montos_doc_ml2').val("$0.00");//LEJ 09.07.18
+            $('#monto_doc_ml2').val(toShow(0));
+            $('#montos_doc_ml2').val(toShow(0));
         }
     });
 
     var monto_doc_md = $('#monto_doc_md').val();
     var is_num = $.isNumeric(monto_doc_md);
-    var mt = parseFloat(monto_doc_md.replace(',', '')).toFixed(2);
+    //var mt = parseFloat(monto_doc_md.replace(',', '')).toFixed(2);
+    var mt = parseFloat(toNum(monto_doc_md)).toFixed(2);
     if (mt > 0 & is_num == true) {
         //Obtener la moneda en la lista
         //var MONEDA_ID = $('#moneda_id').val();
@@ -1092,25 +1122,30 @@ $(document).ready(function () {
 
         //selectTcambio(MONEDA_ID, mt);
         var tipo_cambio = $('#tipo_cambio').val();
-        var tc = parseFloat(tipo_cambio.replace(',', '')).toFixed(5);
+        //var tc = parseFloat(tipo_cambio.replace(',', '')).toFixed(2);
+        var tc = parseFloat(toNum(tipo_cambio));
         //Validar el monto en tipo de cambio
         var is_num2 = $.isNumeric(tipo_cambio);
         if (tc > 0 & is_num2 == true) {
             $('#tipo_cambio').val(tc);
             var monto = mt / tc;
             monto = parseFloat(monto).toFixed(2);
-            $('#monto_doc_ml2').val(monto);
-            $('#montos_doc_ml2').val(monto);
+            $('#monto_doc_ml2').val(toShow(monto));
+            $('#montos_doc_ml2').val(toShow(monto));
             $("label[for='montos_doc_ml2']").addClass("active");
         } else {
-            $('#monto_doc_ml2').val(monto);
-            $('#montos_doc_ml2').val(monto);
+            //$('#monto_doc_ml2').val(monto);
+            //$('#montos_doc_ml2').val(monto);
+            $('#monto_doc_ml2').val(toShow(monto));
+            $('#montos_doc_ml2').val(toShow(monto));
             $("label[for='montos_doc_ml2']").addClass("active");
         }
 
     } else {
-        $('#monto_doc_ml2').val(monto_doc_md);
-        $('#montos_doc_ml2').val(monto_doc_md);
+        //$('#monto_doc_ml2').val(monto_doc_md);
+        //$('#montos_doc_ml2').val(monto_doc_md);
+        $('#monto_doc_ml2').val(toShow(monto_doc_md));
+        $('#montos_doc_ml2').val(toShow(monto_doc_md));
         $("label[for='montos_doc_ml2']").addClass("active");
     }
     /**
@@ -1185,7 +1220,7 @@ $(document).ready(function () {
             $('#tipo_cambio').val(tipo_cambio);
             ////var tipo_cambio = $('#tipo_cambio').val();
             //var iNum = parseFloat(tipo_cambio.replace(',', '.')).toFixed(2);
-            var iNum = parseFloat(toNum(tipo_cambio).replace(',', ''));
+            var iNum = parseFloat(tipo_cambio);
 
             if (iNum > 0) {
                 //var num = "" + iNum;
@@ -1197,15 +1232,16 @@ $(document).ready(function () {
             }
             //var tipo_cambio = $('#monto_doc_ml2').val();
             //LEJ 10.07.18---------------------------------------------------
-            var tipo_cambiod = $('#monto_doc_ml2').val().replace('$', '');
-            if (_decimales === '.') {
-                tipo_cambiod = tipo_cambiod.replace(',', '');
-            }
-            else if (_decimales === ',') {
-                var tc = tipo_cambiod.replace('.', '');
-                tc = tc.replace(',', '.');
-                tipo_cambiod = tc;
-            }
+            //var tipo_cambiod = $('#monto_doc_ml2').val().replace('$', '');
+            var tipo_cambiod = toNum($('#monto_doc_ml2').val());
+            //if (_decimales === '.') {
+            //    tipo_cambiod = tipo_cambiod.replace(',', '');
+            //}
+            //else if (_decimales === ',') {
+            //    var tc = tipo_cambiod.replace('.', '');
+            //    tc = tc.replace(',', '.');
+            //    tipo_cambiod = tc;
+            //}
             //LEJ 10.07.18--------------------------------------------------
             //Para que el controlador no tenga problema
             $('#monto_doc_ml2').val(tipo_cambiod);
@@ -1222,6 +1258,8 @@ $(document).ready(function () {
                 $('#monto_doc_ml2').val(0);
             }
 
+            $('#monto_doc_ml2').val(toNum($('#montos_doc_ml2').val()));
+
             //Monto
             var monto = $('#monto_doc_md').val();
             //var numm = parseFloat(monto.replace(',', '.')).toFixed(2);   
@@ -1234,7 +1272,7 @@ $(document).ready(function () {
                 $('#monto_doc_md').val(0);
             }
 
-            $("#bmonto_apoyo").val(toNum($("#bmonto_apoyo").val())); //RSG 09.07.2018
+            $('#bmonto_apoyo').val(toNum($('#bmonto_apoyo').val()));
 
             //objq
             $('#objPORC').val(toNum($('#objPORC').val()));//RSG 01.08.2018
@@ -1304,7 +1342,8 @@ $(document).ready(function () {
             //Provisional
             var tipo_cambio = $('#tipo_cambio').val();
             //var iNum = parseFloat(tipo_cambio.replace(',', '.')).toFixed(2);
-            var iNum = parseFloat(tipo_cambio.replace(',', ''));
+            //var iNum = parseFloat(tipo_cambio.replace(',', ''));
+            var iNum = parseFloat(toNum(tipo_cambio));
 
             if (iNum > 0) {
                 //var num = "" + iNum;
@@ -1316,7 +1355,8 @@ $(document).ready(function () {
             }
             var tipo_cambio = $('#monto_doc_ml2').val();
             //var iNum2 = parseFloat(tipo_cambio.replace(',', '.')).toFixed(2);
-            var iNum2 = parseFloat(tipo_cambio.replace(',', ''));
+            //var iNum2 = parseFloat(tipo_cambio.replace(',', ''));
+            var iNum2 = parseFloat(toNum(tipo_cambio));
             //var iNum2 = parseFloat(tipo_cambio.replace('.', ','));
             if (iNum2 > 0) {
                 //var nums = "" + iNum2;
@@ -1329,8 +1369,8 @@ $(document).ready(function () {
 
             //Monto
             var monto = $('#monto_doc_md').val();
-            //var numm = parseFloat(monto.replace(',', '.')).toFixed(2);   
-            var numm = parseFloat(monto.replace(',', ''));
+            //var numm = parseFloat(monto.replace(',', '.')).toFixed(2); 
+            var numm = parseFloat(toNum(monto));
             if (numm > 0) {
                 $('#MONTO_DOC_MD').val(numm);
             } else {
@@ -1656,7 +1696,8 @@ $(window).on('load', function () {
     }
     var mt = parseFloat(toNum(tipocambio)) //B20180625 MGC 2018.07.02
     if (mt > 0) { //B20180625 MGC 2018.07.02
-        $('#tipo_cambio').val(mt); //B20180625 MGC 2018.07.02
+        //$('#tipo_cambio').val(toShow(mt)); //B20180625 MGC 2018.07.02
+        $('#tipo_cambio').val(toShow5(mt)); //B20180625 MGC 2018.07.02
     }
     copiarTableVistaRan(); //ADD RSG 30.10.2018
 });
@@ -1905,7 +1946,8 @@ function focusoutmonto(directo) {
             //Validar el monto en tipo de cambio
             var is_num2 = $.isNumeric(tipo_cambio);
             if (tc > 0 & is_num2 == true) {
-                $('#tipo_cambio').val(tc);
+                //$('#tipo_cambio').val(toShow(tc));
+                $('#tipo_cambio').val(toShow5(tc));
                 var monto = mt / tc;
                 monto = parseFloat(monto).toFixed(2);
                 $('#monto_doc_ml2').val(monto);

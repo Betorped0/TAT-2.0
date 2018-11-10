@@ -1071,7 +1071,7 @@ $(document).ready(function () {
                         //$('#montos_doc_ml2').val("$" + monto);
                         $('#montos_doc_ml2').val(toShow(monto));
                         var msg = 'Moneda incorrecta';
-                        M.toast({ html: msg })
+                        M.toast({ html: msg });
                     }
                 } else {
                     $('#monto_doc_md').val();
