@@ -40,7 +40,7 @@
         <table class="table mdl-data-table striped" id="table" style="width:100%;">
             <thead>
                 <tr>
-                    <th class="lblRegion">
+                    <th class="lblRegion" style="text-align:left !important">
                     </th>
                     <th class="lblCoCode">
                     </th>
@@ -51,7 +51,7 @@
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td>
+                        <td style="text-align:left !important">
                             @Html.DisplayFor(modelItem => item.REGION1)
                         </td>
                         <td>
