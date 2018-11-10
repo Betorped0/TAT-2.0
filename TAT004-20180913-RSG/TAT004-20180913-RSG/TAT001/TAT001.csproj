@@ -836,6 +836,8 @@
     <Compile Include="Models\Documento.cs" />
     <Compile Include="Models\DOCUMENTOM_MOD.cs" />
     <Compile Include="Models\Delegados.cs" />
+    <Compile Include="Models\DOCUMENTOP_CAT.cs" />
+    <Compile Include="Models\DOCUMENTOP_SP.cs" />
     <Compile Include="Models\DOCUMENTO_MOD.cs" />
     <Compile Include="Models\HeaderFooterD.cs" />
     <Compile Include="Models\LayoutCargaMasivaViewModels.cs" />

@@ -123,7 +123,7 @@ namespace TAT001.Controllers
                 var cabeza = new List<string>();
                 List<string> armadoCuerpoTabStr = null;
                 bool varligada = Convert.ToBoolean(d.LIGADA);
-                if (varligada != true)
+                if (!varligada)
                 {
                     FnCommonCarta.ObtenerCartaProductos(db,  d,null,spras_id,false,
                     ref lista,
@@ -359,6 +359,7 @@ namespace TAT001.Controllers
                 try
                 {
                     montod = Convert.ToDecimal(monto_enviar);
+                    ca.MONTO = montod.ToString();
                 }
                 catch (Exception e)
                 {
@@ -366,7 +367,7 @@ namespace TAT001.Controllers
                 }
 
                 v.monto = format.toShow(montod, decimales);
-
+                
 
                 var cartas = db.CARTAs.Where(a => a.NUM_DOC.Equals(ca.NUM_DOC)).ToList();
                 if (cartas.Count > 0)
@@ -398,7 +399,7 @@ namespace TAT001.Controllers
                 List<listacuerpoc> armadoCuerpoTab = null;
                 bool varligada = Convert.ToBoolean(d.LIGADA);
                 bool editmonto = false;
-                if (varligada != true)
+                if (!varligada)
                 {
                     FnCommonCarta.ObtenerCartaProductos(db, d, v, spras_id, (guardar_param == "guardar_param"),
                    ref encabezadoFech,
@@ -418,7 +419,7 @@ namespace TAT001.Controllers
 
                 //MARCA DE AGUA
                 bool aprob = false;
-                aprob = (d.ESTATUS_WF.Equals("A") | d.ESTATUS_WF.Equals("S"));
+                aprob = (d.ESTATUS_WF.Equals("A") || d.ESTATUS_WF.Equals("S"));
 
                 //PARA LA TABLA 1 MATERIALES
                 v.numColEncabezado = cabeza;
@@ -530,9 +531,8 @@ namespace TAT001.Controllers
                 CartaV cv = new CartaV();
 
                 //B20180720P MGC 2018.07.23
-                CARTA cs = new CARTA();
-                cs = db.CARTAs.Where(a => a.NUM_DOC.Equals(id) & a.POS.Equals(pos)).First();
-                ViewBag.legal = db.CARTAs.Where(a => a.NUM_DOC.Equals(id) & a.POS.Equals(pos)).First().LEGAL;
+                CARTA cs  = db.CARTAs.Where(a => a.NUM_DOC.Equals(id) && a.POS.Equals(pos)).First();
+                ViewBag.legal = db.CARTAs.Where(a => a.NUM_DOC.Equals(id) && a.POS.Equals(pos)).First().LEGAL;
 
 
                 /////////////////////////////////////////////DATOS PARA LA TABLA 1 MATERIALES EN LA VISTA///////////////////////////////////////
@@ -561,7 +561,7 @@ namespace TAT001.Controllers
                     //B20180720P MGC 2018.07.23
                   
                     var con2 = db.CARTAPs
-                                          .Where(x => x.NUM_DOC.Equals(id) & x.POS_ID.Equals(pos) & x.VIGENCIA_DE == a1 && x.VIGENCIA_AL == a2)
+                                          .Where(x => x.NUM_DOC.Equals(id) & x.POS_ID.Equals(pos) && x.VIGENCIA_DE == a1 && x.VIGENCIA_AL == a2)
                                           .Join(db.MATERIALs, x => x.MATNR, y => y.ID, (x, y) => new
                                           {
                                               x.NUM_DOC,
@@ -762,16 +762,9 @@ namespace TAT001.Controllers
 
                             //Volumen
                             listacuerpoc lc9 = new listacuerpoc();
-                            if (fact)
-                            {
-                                lc9.val = "";//B20180730 MGC 2018.07.30 Formatos
-                                lc9.val = format.toShowNum(0, decimales);//B20180730 MGC 2018.07.30 Formatos
-                            }
-                            else
-                            {
-                                lc9.val = "";//B20180730 MGC 2018.07.30 Formatos
-                                lc9.val = format.toShowNum(0, decimales);//B20180730 MGC 2018.07.30 Formatos
-                            }
+                            lc9.val = "";//B20180730 MGC 2018.07.30 Formatos
+                            lc9.val = format.toShowNum(0, decimales);//B20180730 MGC 2018.07.30 Formatos
+                           
                             lc9.clase = "ni";
                             armadoCuerpoTab.Add(lc9);
 
@@ -921,7 +914,7 @@ namespace TAT001.Controllers
 
                 //TABLA 2 RECURRENCIAS
                 cv.numColEncabezado2 = cabeza2;////////NUMERO DE COLUMNAS PARA LAS TABLAS
-                cv.numfilasTabla2 = con4.Count();//////NUMERO FILAS TOTAL PARA LA TABLA
+                cv.numfilasTabla2 = con4.Count;//////NUMERO FILAS TOTAL PARA LA TABLA
                 cv.listaCuerpoRec = armadoCuerpoTab2;//NUMERO TOTAL DE FILAS CON LA INFO CORRESPONDIENTE
                 ///////////////////////////////
 
@@ -1045,7 +1038,6 @@ namespace TAT001.Controllers
                 }
 
                 DOCUMENTO d = new DOCUMENTO();
-                PUESTOT pp = new PUESTOT();
 
                 d = db.DOCUMENTOes.Include("SOCIEDAD").Include("USUARIO").Where(a => a.NUM_DOC.Equals(id)).First();
 
@@ -1187,7 +1179,7 @@ namespace TAT001.Controllers
                     DateTime a2 = DateTime.Parse(encabezadoFech[i].Remove(0, encabezadoFech[i].Length / 2));
 
                     var con2 = db.CARTAPs
-                                          .Where(x => x.NUM_DOC.Equals(id) & x.POS_ID.Equals(pos) & x.VIGENCIA_DE == a1 && x.VIGENCIA_AL == a2)
+                                          .Where(x => x.NUM_DOC.Equals(id) & x.POS_ID.Equals(pos) && x.VIGENCIA_DE == a1 && x.VIGENCIA_AL == a2)
                                           .Join(db.MATERIALs, x => x.MATNR, y => y.ID, (x, y) => new
                                           {
                                               x.NUM_DOC,
@@ -1217,30 +1209,30 @@ namespace TAT001.Controllers
                             armadoCuerpoTab.Add(item2.MATKL);
                             armadoCuerpoTab.Add(item2.MAKTX);
 
-                            if (v.costoun_x == true)
+                            if (v.costoun_x)
                             {
                                 armadoCuerpoTab.Add(format.toShow(Math.Round(item2.MONTO, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
                             }
-                            if (v.apoyo_x == true)
+                            if (v.apoyo_x)
                             {
                                 armadoCuerpoTab.Add(format.toShowPorc(Math.Round(item2.PORC_APOYO, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
                             }
-                            if (v.apoyop_x == true)
+                            if (v.apoyop_x)
                             {
                                 armadoCuerpoTab.Add(format.toShow(Math.Round(item2.MONTO_APOYO, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
                             }
 
-                            if (v.costoap_x == true)
+                            if (v.costoap_x)
                             {
                                 armadoCuerpoTab.Add(format.toShow(Math.Round((item2.MONTO - item2.MONTO_APOYO), 2), decimales));//B20180730 MGC 2018.07.30 Formatos
                             }
-                            if (v.precio_x == true)
+                            if (v.precio_x)
                             {
                                 armadoCuerpoTab.Add(format.toShow(Math.Round(item2.PRECIO_SUG, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
                             }
 
                             //B20180726 MGC 2018.07.26
-                            if (v.volumen_x == true)
+                            if (v.volumen_x )
                             {
                                 if (fact)
                                 {
@@ -1254,7 +1246,7 @@ namespace TAT001.Controllers
 
                             //Apoyo
                             //B20180726 MGC 2018.07.26
-                            if (v.apoyototal_x == true)
+                            if (v.apoyototal_x )
                             {
                                 if (fact)
                                 {
@@ -1302,31 +1294,31 @@ namespace TAT001.Controllers
                             armadoCuerpoTab.Add(item2.MATKL);
                             armadoCuerpoTab.Add(item2.TXT50);
 
-                            if (v.costoun_x == true)
+                            if (v.costoun_x )
                             {
                                 armadoCuerpoTab.Add(format.toShow(Math.Round(item2.MONTO, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
                             }
-                            if (v.apoyo_x == true)
+                            if (v.apoyo_x )
                             {
                                 armadoCuerpoTab.Add(format.toShowPorc(Math.Round(item2.PORC_APOYO, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
                             }
-                            if (v.apoyop_x == true)
+                            if (v.apoyop_x )
                             {
                                 armadoCuerpoTab.Add(format.toShow(Math.Round(item2.MONTO_APOYO, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
                             }
 
-                            if (v.costoap_x == true)
+                            if (v.costoap_x )
                             {
                                 armadoCuerpoTab.Add(format.toShow(Math.Round((item2.MONTO - item2.MONTO_APOYO), 2), decimales));//B20180730 MGC 2018.07.30 Formatos
                             }
-                            if (v.precio_x == true)
+                            if (v.precio_x )
                             {
                                 armadoCuerpoTab.Add(format.toShow(Math.Round(item2.PRECIO_SUG, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
                             }
 
                             //Volumen
                             //B20180726 MGC 2018.07.26
-                            if (v.volumen_x == true)
+                            if (v.volumen_x )
                             {
                                 if (fact)
                                 {
@@ -1340,7 +1332,7 @@ namespace TAT001.Controllers
 
                             //Apoyo
                             //B20180726 MGC 2018.07.26
-                            if (v.apoyototal_x == true)
+                            if (v.apoyototal_x )
                             {
                                 if (fact)
                                 {
@@ -1362,16 +1354,16 @@ namespace TAT001.Controllers
                 cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "materialC"));
                 cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "categoriaC"));
                 cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "descripcionC"));
-                if (v.costoun_x == true) { cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "costouC")); }
-                if (v.apoyo_x == true) { cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "apoyopoC")); }
-                if (v.apoyop_x == true) { cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "apoyopiC")); }
-                if (v.costoap_x == true) { cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "costoaC")); }
-                if (v.precio_x == true) { cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "preciosC")); }
+                if (v.costoun_x ) { cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "costouC")); }
+                if (v.apoyo_x ) { cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "apoyopoC")); }
+                if (v.apoyop_x ) { cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "apoyopiC")); }
+                if (v.costoap_x ) { cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "costoaC")); }
+                if (v.precio_x ) { cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "preciosC")); }
                 //B20180710 MGC 2018.07.12 Apoyo es real o es estimado
                 //fact = true es real
                 //Volumen
                 //B20180726 MGC 2018.07.26
-                if (v.volumen_x == true)
+                if (v.volumen_x )
                 {
                     if (fact)
                     {
@@ -1384,7 +1376,7 @@ namespace TAT001.Controllers
                 }
                 //Apoyo
                 //B20180726 MGC 2018.07.26
-                if (v.apoyototal_x == true)
+                if (v.apoyototal_x )
                 {
                     if (fact)
                     {
@@ -1463,7 +1455,7 @@ namespace TAT001.Controllers
 
                 //TABLA 2 RECURRENCIAS
                 v.numColEncabezado2 = cabeza2;////////NUMERO DE COLUMNAS PARA LAS TABLAS
-                v.numfilasTabla2 = con4.Count();//////NUMERO FILAS TOTAL PARA LA TABLA
+                v.numfilasTabla2 = con4.Count;//////NUMERO FILAS TOTAL PARA LA TABLA
                 v.listaCuerpoRec = armadoCuerpoTab2;//NUMERO TOTAL DE FILAS CON LA INFO CORRESPONDIENTE
                                                     ///////////////////////////////
 
