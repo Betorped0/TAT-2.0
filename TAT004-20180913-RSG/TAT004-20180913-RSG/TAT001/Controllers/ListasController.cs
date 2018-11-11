@@ -1084,5 +1084,53 @@ namespace TAT001.Controllers
         }
 
 
+        [HttpGet]
+        public JsonResult sociedades(string Prefix)
+        {
+            var c = (from st in db.SOCIEDADs
+                     where (st.BUKRS.Contains(Prefix) || st.BUTXT.Contains(Prefix))
+                     select new { BUKRS = st.BUKRS, TXT50 = (st.BUKRS + " - " + st.BUTXT) });
+
+            return Json(c, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult paises_(string Prefix)
+        {
+            var c = (from sp in db.PAIS
+                     where (sp.LAND.Contains(Prefix)|| sp.LANDX.Contains(Prefix))
+                     select new { LAND = sp.LAND, TXT50 = (sp.LANDX) });
+
+            return Json(c, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult tipoAllowance(string Prefix)
+        {
+            var c = (from st in db.TALLs
+                     where (st.ID.Contains(Prefix)|| st.DESCRIPCION.Contains(Prefix))
+                     select new { ID = st.ID, TXT50 = (st.DESCRIPCION) });
+
+            return Json(c, JsonRequestBehavior.AllowGet);
+        }
+        [HttpGet]
+        public JsonResult cuentas(string Prefix)
+        {
+            var c = (from st in db.CUENTAGLs
+                     where st.ACTIVO==true && (st.ID.ToString().Contains(Prefix)||st.NOMBRE.Contains(Prefix))
+                     select new { ID = st.ID, TXT50 = (st.ID + " - " + st.NOMBRE) });
+
+            return Json(c, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult impuestos(string Prefix)
+        {
+            var c = (from st in db.IMPUESTOes
+                     where st.ACTIVO == true && (st.MWSKZ.Contains(Prefix))
+                     select new { ID = st.MWSKZ, TXT50 = (st.MWSKZ) });
+
+            return Json(c, JsonRequestBehavior.AllowGet);
+        }
     }
 }
