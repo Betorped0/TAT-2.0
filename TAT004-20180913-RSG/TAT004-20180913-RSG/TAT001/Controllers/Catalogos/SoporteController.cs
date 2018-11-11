@@ -39,7 +39,7 @@ namespace TAT001.Controllers
         }
 
         // GET: Soporte/Details/5
-        public ActionResult Details(string id)
+        public ActionResult Details(string tsoporte_id)
         {
             int pagina_id = 1315; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
@@ -53,13 +53,13 @@ namespace TAT001.Controllers
                 //return RedirectToAction("Pais", "Home");
             }
 
-            if (id == null)
+            if (tsoporte_id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var sopor = db.TSOPORTEs.Where(x => x.ID == id).FirstOrDefault();
-            if (id == null)
+            var sopor = db.TSOPORTEs.Where(x => x.ID == tsoporte_id).FirstOrDefault();
+            if (tsoporte_id == null)
             {
                 return HttpNotFound();
             }
@@ -143,7 +143,7 @@ namespace TAT001.Controllers
         }
 
         // GET: Soporte/Edit/5
-        public ActionResult Edit(string id)
+        public ActionResult Edit(string tsoporte_id)
         {
             int pagina_id = 1317; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
@@ -160,16 +160,16 @@ namespace TAT001.Controllers
                 //return RedirectToAction("Pais", "Home");
             }
 
-            if (id == null)
+            if (tsoporte_id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var des = db.TSOPORTEs.Where(x => x.ID == id).FirstOrDefault();
+            var des = db.TSOPORTEs.Where(x => x.ID == tsoporte_id).FirstOrDefault();
             if (des == null)
             {
                 return HttpNotFound();
             }
-            TSOPORTE tSOPORTE = db.TSOPORTEs.Find(id);
+            TSOPORTE tSOPORTE = db.TSOPORTEs.Find(tsoporte_id);
             if (tSOPORTE.TSOPORTETs.Count > 0)
                 foreach (var e in tSOPORTE.TSOPORTETs)
                 {
@@ -241,16 +241,6 @@ namespace TAT001.Controllers
         }
 
         
-        // POST: Soporte/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        public ActionResult Delete(string tsol, string tsopo)
-        {
-            CONSOPORTE cONSOPORTE = db.CONSOPORTEs.Where(x => x.TSOL_ID == tsol && x.TSOPORTE_ID == tsopo).First();
-            db.CONSOPORTEs.Remove(cONSOPORTE);
-            db.SaveChanges();
-            return RedirectToAction("Index", new { tsol = cONSOPORTE.TSOL_ID });
-        }
 
         protected override void Dispose(bool disposing)
         {

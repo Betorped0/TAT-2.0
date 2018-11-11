@@ -246,7 +246,7 @@ int idn = 0;
                                             else
                                             {
                                                 <td class="precio">
-                                                    @Math.Round((decimal)mat.APOYO_REAL, 2)
+                                                    @Math.Round(mat.APOYO_REAL!=null?(decimal)mat.APOYO_REAL:0.0M, 2)
                                                 </td>
                                             }
                                         </tr>

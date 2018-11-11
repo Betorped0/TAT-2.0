@@ -10,6 +10,8 @@
     }
     th {
         min-width: 125px;
+        color: gray;
+        text-align: center;
     }
    
 </style>
@@ -95,7 +97,6 @@
     //------Actualizar numero de registros en paginación
     $('#numRegistrosEx').change(function () {
         fnCommon.showProcess(true);
-        debugger
         $.ajax({
             url: root + 'Calendario445/ListadoEx?numRegistros=' + $('#numRegistros').val() + '&&buscar=' + $('input.global_filter').val(),
             success: function (resultView) {
@@ -122,7 +123,7 @@
 
   //-----Pagination
     function pagination(list) {
-        var paginationLink = $('.pagination>li>a');
+        var paginationLink = $(list+'.pagination>li>a');
         for (var i = 0; i < paginationLink.length; i++) {
             var url = paginationLink.get(i).getAttribute("href");
             var id = 'link_p' + i;
@@ -148,13 +149,13 @@
     pagination('#ListExt');
     //-----Sort
     function sort(list) {
-        var sortLink = $('.header>th>a');
+        var sortLink = $(list+'.header>th>a');
         for (var i = 0; i < sortLink.length; i++) {
             var url = sortLink.get(i).getAttribute("href");
             var id = 'link_h' + i;
             if (url) {
                 sortLink.get(i).setAttribute("id", id);
-                sortLink.get(i).setAttribute("url", url);
+                sortLink.get(i).setAttribute("id", id);
                 $('#' + id).click(function (me) {
                     fnCommon.showProcess(true);
                     $.ajax({
