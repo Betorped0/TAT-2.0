@@ -6,14 +6,11 @@
     ViewBag.pagina_r = 1311;
     ViewBag.carpeta_r = 500;
 }
-
 <div class="row">
     <div class="col s12 right-align">
-        @*<a href="@Url.Action("Edit", "DesviacionesTS")" class="btn-small">Editar</a>*@
-        <a href="@Url.Action("Index", "DesviacionesTS")" id="btnLista" class="btn btn-default">Lista</a>
+        <a href="@Url.Action("Edit", "DesviacionesTS", new { id = Model.ID })" id="lblEditar" class="btn btn-default">Editar</a>
     </div>
 </div>
-
 
 <div class="row">
     @using (Html.BeginForm())
@@ -67,7 +64,6 @@
 
                 </div>
                 <div>
-                    @Html.LabelFor(model => model.ACTIVO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblObliga" })
 
                     @if ((bool)Model.ACTIVO == true)
                     {
@@ -75,6 +71,7 @@
                     else
                     {
                         <i class='material-icons red-text'>clear</i>}
+                    @Html.LabelFor(model => model.ACTIVO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblObliga" })
 
                 </div>
             </div>
@@ -83,6 +80,6 @@
     }
 </div>
 <p>
-    @Html.ActionLink("Back to List", "Index", null, new { id = "lblRegresar" })
+    @Html.ActionLink("Regresar", "Index", null, new { id = "lblRegresar" })
 </p>
 
