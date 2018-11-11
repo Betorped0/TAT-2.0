@@ -30,6 +30,7 @@
                 </div>
                 <div class="input-field col s3 m3 l3">
                     @Html.DropDownListFor(model => model.numRegistros, Model.pageSizes, "")
+                    <label id="btn_length"></label>
                 </div>
                 <div class="input-field col s5 m3 l3 offset-l6 offset-m6 offset-s4">
                     @Html.TextBoxFor(model => model.buscar, new { @class = "global_filter", @id = "global_filter", @maxlength = 50 })
@@ -52,7 +53,7 @@
                     <label for="global_filter" id="lbl_search">Buscar</label>
                 </div>
             </div>
-            <div id="list">
+            <div id="listEx">
                 @Html.Partial("ListEx", Model)
             </div>
         </div>
@@ -101,9 +102,9 @@
             url: root + 'Calendario445/ListadoEx?numRegistros=' + $('#numRegistros').val() + '&&buscar=' + $('input.global_filter').val(),
             success: function (resultView) {
                 fnCommon.showProcess(false);
-                $('#ListExt').html(resultView);
-                paginationEx('#ListExt');
-                sortEx('#ListExt');
+                $('#listEx').html(resultView);
+                paginationEx('#listEx');
+                sortEx('#listEx');
             }
         });
     });
@@ -114,19 +115,19 @@
         $.ajax({
             url: root + 'Calendario445/ListadoEx?numRegistros=' + $('#numRegistros').val() + '&&buscar=' + $('input.global_filter').val(),
             success: function (resultView) {
-                $('#ListExt').html(resultView);
-                paginationEx('#ListExt');
-                sortEx('#ListExt');
+                $('#listEx').html(resultView);
+                paginationEx('#listEx');
+                sortEx('#listEx');
             }
         });
     });
 
   //-----Pagination
     function pagination(list) {
-        var paginationLink = $(list+'.pagination>li>a');
+        var paginationLink = $(list).find('.pagination>li>a');
         for (var i = 0; i < paginationLink.length; i++) {
             var url = paginationLink.get(i).getAttribute("href");
-            var id = 'link_p' + i;
+            var id = (list == '#listEx' ? 'link_hEx' : 'link_h') + i;
             if (url) {
                 paginationLink.get(i).setAttribute("id", id);
                 paginationLink.get(i).setAttribute("url", url);
@@ -146,13 +147,13 @@
         }
     }
     pagination('#list');
-    pagination('#ListExt');
+    pagination('#listEx');
     //-----Sort
     function sort(list) {
-        var sortLink = $(list+'.header>th>a');
+        var sortLink = $(list).find('.header>th>a');
         for (var i = 0; i < sortLink.length; i++) {
             var url = sortLink.get(i).getAttribute("href");
-            var id = 'link_h' + i;
+            var id = (list =='#listEx'?'link_hEx':'link_h') + i;
             if (url) {
                 sortLink.get(i).setAttribute("id", id);
                 sortLink.get(i).setAttribute("id", id);
@@ -172,5 +173,5 @@
         }
     }
     sort('#list');
-    sort('#ListExt');
+    sort('#listEx');
 </script>

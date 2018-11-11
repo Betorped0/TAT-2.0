@@ -123,7 +123,7 @@ namespace TAT001.Common
                     numfilasTabla.Add(contadorTabla);
                 }
 
-                //var cabeza = new List<string>(); //B20180720P MGC 2018.07.25
+            if (v==null) {
                 cabeza.Add(ObtenerTexto(db, spras_id, "materialC"));
                 cabeza.Add(ObtenerTexto(db, spras_id, "categoriaC"));
                 cabeza.Add(ObtenerTexto(db, spras_id, "descripcionC"));
@@ -132,9 +132,21 @@ namespace TAT001.Common
                 cabeza.Add(ObtenerTexto(db, spras_id, "apoyopiC"));
                 cabeza.Add(ObtenerTexto(db, spras_id, "costoaC"));
                 cabeza.Add(ObtenerTexto(db, spras_id, "preciosC"));
-                //B20180710 MGC 2018.07.12 Apoyo es real o es estimado
-                //Volumen
-                if (fact)
+            }
+            else
+            {
+                cabeza.Add(ObtenerTexto(db, spras_id, "materialC"));
+                cabeza.Add(ObtenerTexto(db, spras_id, "categoriaC"));
+                cabeza.Add(ObtenerTexto(db, spras_id, "descripcionC"));
+                if (v.costoun_x) { cabeza.Add(ObtenerTexto(db, spras_id, "costouC")); }
+                if (v.apoyo_x) { cabeza.Add(ObtenerTexto(db, spras_id, "apoyopoC")); }
+                if (v.apoyop_x) { cabeza.Add(ObtenerTexto(db, spras_id, "apoyopiC")); }
+                if (v.costoap_x) { cabeza.Add(ObtenerTexto(db, spras_id, "costoaC")); }
+                if (v.precio_x ) { cabeza.Add(ObtenerTexto(db, spras_id, "preciosC")); }
+
+            }
+            //Volumen
+            if (fact)
                 {
                     cabeza.Add(ObtenerTexto(db, spras_id, "volumenrC"));
                 }

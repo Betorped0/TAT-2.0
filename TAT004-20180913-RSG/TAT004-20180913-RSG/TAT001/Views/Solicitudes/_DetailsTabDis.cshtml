@@ -208,7 +208,7 @@ int idn = 0;
                                             else
                                             {
                                                 <td id="dsVR-@idn">@Math.Round((decimal)item.VOLUMEN_REAL, 2)</td>
-                                                            <td id="dsAR-@idn">@Math.Round(((decimal)item.APOYO_REAL), 2)</td>
+                                                            <td id="dsAR-@idn">@Math.Round((item.APOYO_REAL!=null?(decimal)item.APOYO_REAL:0.0M), 2)</td>
                                             }
                                         </tr>
                                                     @*LEJ 12.07.18 Añadi un identificador para modificarse dinamicamente*@

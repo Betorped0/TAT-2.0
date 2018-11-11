@@ -6,28 +6,28 @@
     <thead>
         <tr class="header">
             <th>
-                @Html.ActionLink("SOCIEDAD_ID", "List", new { colOrden = "SOCIEDAD_ID", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
+                @Html.ActionLink("SOCIEDAD_ID", "ListEx", new { colOrden = "SOCIEDAD_ID", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
             </th>
             <th>
-                @Html.ActionLink("PERIODO", "List", new { colOrden = "PERIODO", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
+                @Html.ActionLink("PERIODO", "ListEx", new { colOrden = "PERIODO", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
             </th>
             <th>
-                @Html.ActionLink("TSOL_ID", "List", new { colOrden = "TSOL_ID", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
+                @Html.ActionLink("TSOL_ID", "ListEx", new { colOrden = "TSOL_ID", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
             </th>
             <th>
-                @Html.ActionLink("USUARIO_ID", "List", new { colOrden = "USUARIO_ID", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
+                @Html.ActionLink("USUARIO_ID", "ListEx", new { colOrden = "USUARIO_ID", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
             </th>
             <th>
-                @Html.ActionLink("EX_FROMF", "List", new { colOrden = "EX_FROMF", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
+                @Html.ActionLink("EX_FROMF", "ListEx", new { colOrden = "EX_FROMF", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
             </th>
             <th>
-                @Html.ActionLink("EX_FROMH", "List", new { colOrden = "EX_FROMH", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
+                @Html.ActionLink("EX_FROMH", "ListEx", new { colOrden = "EX_FROMH", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
             </th>
             <th>
-                @Html.ActionLink("EX_TOF", "List", new { colOrden = "EX_TOF", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
+                @Html.ActionLink("EX_TOF", "ListEx", new { colOrden = "EX_TOF", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
             </th>
             <th>
-                @Html.ActionLink("EX_TOH", "List", new { colOrden = "EX_TOH", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
+                @Html.ActionLink("EX_TOH", "ListEx", new { colOrden = "EX_TOH", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
             </th>
            
             <th></th>
@@ -72,15 +72,15 @@
     @(Model.calendariosEx445.PageCount < Model.calendariosEx445.PageNumber ? 0 : Model.calendariosEx445.PageNumber)
     - @Model.calendariosEx445.PageCount
 
-    @Html.PagedListPager(Model.calendariosEx445, page => Url.Action("List", new { pagina = page, numRegistros = Model.numRegistros, buscar = Model.buscar, colOrden = Model.ordenActual }))
+    @Html.PagedListPager(Model.calendariosEx445, page => Url.Action("ListEx", new { pagina = page, numRegistros = Model.numRegistros, buscar = Model.buscar, colOrden = Model.ordenActual }))
 </div>
 <script>
     //-----Sort
     function sort() {
-        var sortLink = $('.header>th>a');
+        var sortLink = $('#listEx').find('.header>th>a');
         for (var i = 0; i < sortLink.length; i++) {
             var url = sortLink.get(i).getAttribute("href");
-            var id = 'link_h' + i;
+            var id = 'link_hEx' + i;
             if (url) {
                 sortLink.get(i).setAttribute("id", id);
                 sortLink.get(i).setAttribute("url", url);
@@ -90,7 +90,7 @@
                         url: me.toElement.getAttribute('url'),
                         success: function (resultView) {
                             fnCommon.showProcess(false);
-                            $('#list').html(resultView);
+                            $('#listEx').html(resultView);
                             sort();
                         }
                     });
@@ -102,10 +102,10 @@
     sort();
         //-----Pagination
     function pagination() {
-        var paginationLink = $('.pagination>li>a');
+        var paginationLink = $('#listEx').find('.pagination>li>a');
         for (var i = 0; i < paginationLink.length; i++) {
             var url = paginationLink.get(i).getAttribute("href");
-            var id = 'link_p' + i;
+            var id = 'link_hEx' + i;
             if (url) {
                 paginationLink.get(i).setAttribute("id", id);
                 paginationLink.get(i).setAttribute("url", url);
@@ -115,7 +115,7 @@
                         url: me.toElement.getAttribute('url'),
                         success: function (resultView) {
                             fnCommon.showProcess(false);
-                            $('#list').html(resultView);
+                            $('#listEx').html(resultView);
                             pagination();
                         }
                     });

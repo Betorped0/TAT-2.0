@@ -1161,7 +1161,6 @@ namespace TAT001.Controllers
 
                 /////////////////////////////////////////////DATOS PARA LA TABLA 1 MATERIALES EN LA VISTA///////////////////////////////////////
                 //B20180720P MGC 2018.07.23
-                //var con = db.DOCUMENTOPs.Select(x => new { x.NUM_DOC, x.VIGENCIA_DE, x.VIGENCIA_AL }).Where(a => a.NUM_DOC.Equals(id)).GroupBy(f => new { f.VIGENCIA_DE, f.VIGENCIA_AL }).ToList();
                 var con = db.CARTAPs.Select(x => new { x.NUM_DOC, x.POS_ID, x.VIGENCIA_DE, x.VIGENCIA_AL }).Where(a => a.NUM_DOC.Equals(id) & a.POS_ID.Equals(pos)).GroupBy(f => new { f.VIGENCIA_DE, f.VIGENCIA_AL }).ToList();
 
                
@@ -1179,12 +1178,12 @@ namespace TAT001.Controllers
                     DateTime a2 = DateTime.Parse(encabezadoFech[i].Remove(0, encabezadoFech[i].Length / 2));
 
                     var con2 = db.CARTAPs
-                                          .Where(x => x.NUM_DOC.Equals(id) & x.POS_ID.Equals(pos) && x.VIGENCIA_DE == a1 && x.VIGENCIA_AL == a2)
+                                          .Where(x => x.NUM_DOC.Equals(id) && x.POS_ID.Equals(pos) && x.VIGENCIA_DE == a1 && x.VIGENCIA_AL == a2)
                                           .Join(db.MATERIALs, x => x.MATNR, y => y.ID, (x, y) => new
                                           {
                                               x.NUM_DOC,
                                               x.MATNR,
-                                              x.MATKL,
+                                              MATKL = db.MATERIALGPs.FirstOrDefault(j => j.ID == (db.MATERIALs.FirstOrDefault(k => k.ID == x.MATNR).MATERIALGP_ID)).DESCRIPCION,
                                               y.MAKTX,
                                               x.MONTO,
                                               y.PUNIT,

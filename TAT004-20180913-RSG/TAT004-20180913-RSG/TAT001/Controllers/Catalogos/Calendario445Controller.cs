@@ -44,7 +44,7 @@ namespace TAT001.Controllers.Catalogos
             return View(modelView);
         }
 
-        public ActionResult ListadoEx(string colOrden, string ordenActual, int? numRegistros = 10, int? pagina = 1, string buscar = "")
+        public ActionResult ListEx(string colOrden, string ordenActual, int? numRegistros = 10, int? pagina = 1, string buscar = "")
         {
             int pagina_id = 530; //ID EN BASE DE DATOS
             Calendario445ViewModel modelView = new Calendario445ViewModel();

@@ -103,7 +103,7 @@
 <script>
     //-----Sort
     function sort() {
-        var sortLink = $('.header>th>a');
+        var sortLink = $('#list').find('.header>th>a');
         for (var i = 0; i < sortLink.length; i++) {
             var url = sortLink.get(i).getAttribute("href");
             var id = 'link_h' + i;
@@ -128,7 +128,7 @@
     sort();
         //-----Pagination
     function pagination() {
-        var paginationLink = $('.pagination>li>a');
+        var paginationLink = $('#list').find('.pagination>li>a');
         for (var i = 0; i < paginationLink.length; i++) {
             var url = paginationLink.get(i).getAttribute("href");
             var id = 'link_p' + i;
