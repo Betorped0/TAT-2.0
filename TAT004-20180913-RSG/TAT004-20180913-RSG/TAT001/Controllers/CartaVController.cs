@@ -1192,8 +1192,7 @@ namespace TAT001.Controllers
                                               resta = (x.MONTO - x.MONTO_APOYO),
                                               x.PRECIO_SUG,
                                               x.APOYO_EST,
-                                              x.APOYO_REAL
-                                          ,
+                                              x.APOYO_REAL,
                                               x.VOLUMEN_EST,
                                               x.VOLUMEN_REAL
                                           }) //B20180710 MGC 2018.07.10 Se agregó x.VOLUMEN_EST, x.VOLUMEN_REAL

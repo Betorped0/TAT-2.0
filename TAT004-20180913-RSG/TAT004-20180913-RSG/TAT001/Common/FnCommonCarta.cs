@@ -123,7 +123,8 @@ namespace TAT001.Common
                     numfilasTabla.Add(contadorTabla);
                 }
 
-            if (v==null) {
+            if (v == null)
+            {
                 cabeza.Add(ObtenerTexto(db, spras_id, "materialC"));
                 cabeza.Add(ObtenerTexto(db, spras_id, "categoriaC"));
                 cabeza.Add(ObtenerTexto(db, spras_id, "descripcionC"));
@@ -132,6 +133,12 @@ namespace TAT001.Common
                 cabeza.Add(ObtenerTexto(db, spras_id, "apoyopiC"));
                 cabeza.Add(ObtenerTexto(db, spras_id, "costoaC"));
                 cabeza.Add(ObtenerTexto(db, spras_id, "preciosC"));
+                //Volumen
+                if (fact) { cabeza.Add(ObtenerTexto(db, spras_id, "volumenrC")); }
+                else { cabeza.Add(ObtenerTexto(db, spras_id, "volumeneC")); }
+                //Apoyo
+                if (fact) { cabeza.Add(ObtenerTexto(db, spras_id, "apoyorC")); }
+                else { cabeza.Add(ObtenerTexto(db, spras_id, "apoyoeC")); }
             }
             else
             {
@@ -142,27 +149,18 @@ namespace TAT001.Common
                 if (v.apoyo_x) { cabeza.Add(ObtenerTexto(db, spras_id, "apoyopoC")); }
                 if (v.apoyop_x) { cabeza.Add(ObtenerTexto(db, spras_id, "apoyopiC")); }
                 if (v.costoap_x) { cabeza.Add(ObtenerTexto(db, spras_id, "costoaC")); }
-                if (v.precio_x ) { cabeza.Add(ObtenerTexto(db, spras_id, "preciosC")); }
-
+                if (v.precio_x) { cabeza.Add(ObtenerTexto(db, spras_id, "preciosC")); }
+                if (v.volumen_x)
+                {
+                    if (fact) { cabeza.Add(ObtenerTexto(db, spras_id, "volumenrC")); }
+                    else { cabeza.Add(ObtenerTexto(db, spras_id, "volumeneC")); }
+                }
+                if (v.apoyototal_x)
+                {
+                    if (fact) { cabeza.Add(ObtenerTexto(db, spras_id, "apoyorC")); }
+                    else { cabeza.Add(ObtenerTexto(db, spras_id, "apoyoeC")); }
+                }
             }
-            //Volumen
-            if (fact)
-                {
-                    cabeza.Add(ObtenerTexto(db, spras_id, "volumenrC"));
-                }
-                else
-                {
-                    cabeza.Add(ObtenerTexto(db, spras_id, "volumeneC"));
-                }
-                //Apoyo
-                if (fact)
-                {
-                    cabeza.Add(ObtenerTexto(db, spras_id, "apoyorC"));
-                }
-                else
-                {
-                    cabeza.Add(ObtenerTexto(db, spras_id, "apoyoeC"));
-                }
             
         }
 
