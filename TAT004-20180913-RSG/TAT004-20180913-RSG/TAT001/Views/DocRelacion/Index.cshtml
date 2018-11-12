@@ -21,8 +21,12 @@
 
 <div class="row">
     <div class="col s12 right-align">
-        <a href="@Url.Action("Create", "DocRelacion")" id="btnAdd" class="waves-effect waves-light btn"></a>
 
+        <a href="@Url.Action("Create", "DocRelacion")" id="btnAdd" class="waves-effect waves-light btn"></a>
+        @using (Html.BeginForm("Descargar", "DocRelacion", FormMethod.Post, new { @style = "display:initial;" }))
+        {
+            <button id="btnExcel" name="excel" class="waves-effect waves-light btn" type="submit"></button>
+        }
     </div>
 </div>
 <div class="row" style="margin-bottom:0;">
