@@ -1,5 +1,6 @@
 ﻿@model TAT001.Entities.FACTURASCONF
-
+@using TAT001.Entities
+@using System.Data.Entity
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.pagina_r = 1213;
@@ -20,21 +21,34 @@
                 <div class="row">
                     <div class="form-horizontal">
                         <div class="row">
-                            <div class="input-field col s4" style="margin-bottom:0;">
-                                @Html.LabelFor(model => model.SOCIEDAD_ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblSociedadId" })
-                                @Html.EditorFor(model => model.SOCIEDAD_ID, new { htmlAttributes = new { @class = "form-control txtIDP", @maxlength = "10", @readonly = "readonly" } })
-                                @Html.ValidationMessageFor(model => model.SOCIEDAD_ID, "", new { @class = "text-danger" })
-                            </div>
-                            <div class="input-field col s4" style="margin-bottom:0;">
-                                @Html.LabelFor(model => model.PAIS_ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblPais" })
-                                @Html.EditorFor(model => model.PAIS_ID, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @readonly = "readonly" } })
-                                @Html.ValidationMessageFor(model => model.PAIS_ID, "", new { @class = "text-danger" })
-                            </div>
-                            <div class="input-field col s4" style="margin-bottom:0;">
-                                @Html.LabelFor(model => model.TSOL, "TSOL", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblTsol" })
-                                @Html.EditorFor(model => model.TSOL, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @readonly = "readonly" } })
-                                @Html.ValidationMessageFor(model => model.TSOL, "", new { @class = "text-danger" })
-                            </div>
+                            @Html.HiddenFor(x=>x.TSOL)
+                            @Html.HiddenFor(x=>x.SOCIEDAD_ID)
+                            @{
+                                using (TAT001Entities db = new TAT001Entities())
+                                {
+                                    string spras_id = ViewBag.spras_id;
+                                    SOCIEDAD sociedad = db.SOCIEDADs.First(x => x.BUKRS == Model.SOCIEDAD_ID);
+                                    TSOL tSol = db.TSOLs.Include(x=>x.TSOLTs).First(x => x.ID == Model.TSOL);
+
+                                    string sociedadTxt = (sociedad.BUKRS + " - " + sociedad.BUTXT);
+                                    string tSolTxt = (tSol.ID + " - " + (tSol.TSOLTs.Any(x => x.SPRAS_ID == spras_id) ? tSol.TSOLTs.First(x => x.SPRAS_ID == spras_id).TXT50 : tSol.DESCRIPCION));
+
+
+                                    <div class="input-field col s4" style="margin-bottom:0;">
+                                        @Html.Editor("SOCIEDAD_ID_TXT", new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @Value = sociedadTxt } })
+                                        @Html.LabelFor(model => model.SOCIEDAD_ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblSociedadId" })
+                                    </div>
+                                    <div class="input-field col s4" style="margin-bottom:0;">
+                                        @Html.EditorFor(model => model.PAIS_ID, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        @Html.LabelFor(model => model.PAIS_ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblPais" })
+                                    </div>
+
+                                    <div class="input-field col s4" style="margin-bottom:0;">
+                                        @Html.Editor("TSOL_TXT", new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @Value = tSolTxt } })
+                                        @Html.LabelFor(model => model.TSOL, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblTsol" })
+                                    </div>
+                                }
+                            }
                         </div>
 
                         <br />

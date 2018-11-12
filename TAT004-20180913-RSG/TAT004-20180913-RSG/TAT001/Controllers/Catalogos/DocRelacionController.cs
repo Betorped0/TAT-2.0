@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClosedXML.Excel;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -167,9 +168,117 @@ namespace TAT001.Controllers.Catalogos
             return View(fACTURASCONF);
         }
 
-      
+        [HttpPost]
+        public FileResult Descargar()
+        {
+            var fc = db.FACTURASCONFs.ToList();
+           generarExcelHome(fc, Server.MapPath("~/PdfTemp/"));
+            return File(Server.MapPath("~/PdfTemp/DocRel" + DateTime.Now.ToShortDateString() + ".xlsx"), "application /vnd.openxmlformats-officedocument.spreadsheetml.sheet", "DocPr" + DateTime.Now.ToShortDateString() + ".xlsx");
+        }
 
-      
+        public void generarExcelHome(List<FACTURASCONF> lst, string ruta)
+        {
+            string spras_id = FnCommon.ObtenerSprasId(db,User.Identity.Name);
+            var workbook = new XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("Sheet 1");
+            try
+            {
+                //Creamos el encabezado
+                worksheet.Cell("A1").Value = new[]
+                {new {COL = "CO. CODE"} };
+                worksheet.Cell("B1").Value = new[]
+                {new {COL = "PAÍS"}};
+                worksheet.Cell("C1").Value = new[]
+                {new {COL = "TIPO SOLICITUD"}};
+                worksheet.Cell("D1").Value = new[]
+                {new {COL = "FACTURA"}};
+                worksheet.Cell("E1").Value = new[]
+                {new {COL = "FECHA"}};
+                worksheet.Cell("F1").Value = new[]
+               {new {COL = "PROVEEDOR"}};
+                worksheet.Cell("G1").Value = new[]
+               {new {COL = "CONTROL"}};
+                worksheet.Cell("H1").Value = new[]
+               {new {COL = "AUTORIZACIÓN"}};
+                worksheet.Cell("I1").Value = new[]
+              {new {COL = "VENCIMIENTO"}};
+                worksheet.Cell("J1").Value = new[]
+              {new {COL = "FACTURA KELLOGG"}};
+                worksheet.Cell("K1").Value = new[]
+             {new {COL = "AÑO"}};
+                worksheet.Cell("L1").Value = new[]
+             {new {COL = "DOC. FACTURA"}};
+                worksheet.Cell("M1").Value = new[]
+             {new {COL = "FOLIO"}};
+                worksheet.Cell("N1").Value = new[]
+             {new {COL = "IMPORTE"}};
+                worksheet.Cell("O1").Value = new[]
+             {new {COL = "CLIENTE"}};
+                worksheet.Cell("P1").Value = new[]
+             {new {COL = "DESCRIPCIÓN"}};
+                worksheet.Cell("Q1").Value = new[]
+             {new {COL = "CO. CODE"}};
+                worksheet.Cell("R1").Value = new[]
+             {new {COL = "ACTIVO"}};
+
+                for (int i = 2; i <= (lst.Count + 1); i++)
+                {
+                    string sociedad_id = lst[i - 2].SOCIEDAD_ID;
+                    string tsol_id = lst[i - 2].TSOL;
+                    SOCIEDAD sociedad = db.SOCIEDADs.First(x=>x.BUKRS== sociedad_id);
+                    TSOL tSol = db.TSOLs.Include(x=>x.TSOLTs).First(x => x.ID == tsol_id);
+
+                    worksheet.Cell("A" + i).Value = new[]
+                    {new { COL       = (sociedad.BUKRS+" - "+sociedad.BUTXT)}};
+                    worksheet.Cell("B" + i).Value = new[]
+                    {new {COL       = lst[i-2].PAIS_ID}};
+                    worksheet.Cell("C" + i).Value = new[]
+                    {new {COL       = (tSol.ID+" - "+(tSol.TSOLTs.Any(x=>x.SPRAS_ID==spras_id)?tSol.TSOLTs.First(x=>x.SPRAS_ID==spras_id).TXT50:tSol.DESCRIPCION))}};
+                    worksheet.Cell("D" + i).Value = new[]
+                    { new {COL       = ObtenerTextoSINO(lst[i-2].FACTURA)}};
+                    worksheet.Cell("E" + i).Value = new[]
+                     { new {COL      = ObtenerTextoSINO(lst[i-2].FECHA)}};
+                    worksheet.Cell("F" + i).Value = new[]
+                   { new {COL      = ObtenerTextoSINO(lst[i-2].PROVEEDOR)}};
+                    worksheet.Cell("G" + i).Value = new[]
+                   { new {COL      = ObtenerTextoSINO(lst[i-2].CONTROL)}};
+                    worksheet.Cell("H" + i).Value = new[]
+                   { new {COL      = ObtenerTextoSINO(lst[i-2].AUTORIZACION)}};
+                    worksheet.Cell("I" + i).Value = new[]
+                   { new {COL      = ObtenerTextoSINO(lst[i-2].VENCIMIENTO)}};
+                    worksheet.Cell("J" + i).Value = new[]
+                   { new {COL      = ObtenerTextoSINO(lst[i-2].FACTURAK)}};
+                    worksheet.Cell("K" + i).Value = new[]
+                   { new {COL      = ObtenerTextoSINO(lst[i-2].EJERCICIOK)}};
+                    worksheet.Cell("L" + i).Value = new[]
+                   { new {COL      = ObtenerTextoSINO(lst[i-2].BILL_DOC)}};
+                    worksheet.Cell("M" + i).Value = new[]
+                   { new {COL      = ObtenerTextoSINO(lst[i-2].IMPORTE_FAC)}};
+                    worksheet.Cell("N" + i).Value = new[]
+                  { new {COL      = ObtenerTextoSINO(lst[i-2].BELNR)}};
+                    worksheet.Cell("O" + i).Value = new[]
+                  { new {COL      = ObtenerTextoSINO(lst[i-2].DESCRIPCION)}};
+                    worksheet.Cell("P" + i).Value = new[]
+                  { new {COL      = ObtenerTextoSINO(lst[i-2].BELNR)}};
+                    worksheet.Cell("Q" + i).Value = new[]
+                  { new {COL      = ObtenerTextoSINO(lst[i-2].SOCIEDAD)}};
+                    worksheet.Cell("R" + i).Value = new[]
+                 { new {COL      = ObtenerTextoSINO(lst[i-2].ACTIVO)}};
+                }
+                var rt = ruta + @"\DocRel" + DateTime.Now.ToShortDateString() + ".xlsx";
+                workbook.SaveAs(rt);
+            }
+            catch (Exception e)
+            {
+                Log.ErrorLogApp(e,"DocRelacion","generarExcelHome");
+            }
+
+        }
+
+        string ObtenerTextoSINO(bool val)
+        {
+            return (val?"SI":"NO");
+        }
 
         protected override void Dispose(bool disposing)
         {
