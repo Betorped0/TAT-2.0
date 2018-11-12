@@ -28,6 +28,7 @@
     });
 }
 function cuentas() {
+    var bool = false
     clearing = [];
     var bukrs = $("#sociedad_id").val(),
         land = $("#pais_id").val(),
@@ -50,7 +51,7 @@ function cuentas() {
                 clearing.push(data.CLEARING);
                 clearing.push(data.LIMITE);
                 //RSG 26.04.2018----------------
-                
+                bool = true;
             } else {
                 M.toast({
                     classes: "cWarnning",
@@ -58,6 +59,7 @@ function cuentas() {
                     html: '<span style="padding-right:15px;"><i class="material-icons yellow-text">info</i></span> Sin Cuentas relacionadas '
                     + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'cWarnning\')">Aceptar</button>'
                 });
+                bool = false
             }
 
         },
@@ -66,6 +68,14 @@ function cuentas() {
         },
         async: false
     });
+    if (bool) {
+        $("#btn_guardarBorr").removeClass("disabled");
+        $("#btn_guardarh").removeClass("disabled");
+    }
+    else {
+        $("#btn_guardarBorr").addClass("disabled");
+        $("#btn_guardarh").addClass("disabled");
+    }
 }
 function asignarPresupuesto(kunnr) {
     var periodo= $("#periodo").val();

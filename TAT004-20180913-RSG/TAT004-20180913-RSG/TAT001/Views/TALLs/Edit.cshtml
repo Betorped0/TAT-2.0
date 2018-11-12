@@ -29,91 +29,90 @@
 }
 
 
-@using (Html.BeginForm())
+<script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
+@using (Html.BeginForm("Edit", "TALLs", FormMethod.Post, new { @id = "tallsForm" }))
 {
     @Html.AntiForgeryToken()
-    
-<div class="row">
-    <div class="col s12 right-align">
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Guardar" id="btnGuardar" class="btn btn-default" />
-            </div>
-        </div>
-    </div>
-   
-    <div class="col s12 m12 l6">
-        <div class="card-panel">
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            @Html.HiddenFor(model => model.ID)
-            
-            <div class="row">
-                <div class="input-field col s12">
-                    @Html.LabelFor(model => model.DESCRIPCION, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblDes" })
-                    @Html.EditorFor(model => model.DESCRIPCION, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled"} })
-                </div>
-                <div class="input-field col s12">
-                    @Html.DropDownList("GALL_ID", null, htmlAttributes: new { @class = "form-control", @id = "dpGall"})
-                    @Html.LabelFor(model => model.GALL_ID, "Grupos de Allowance", htmlAttributes: new { @class = "control-label col-md-2", @disabled = "disabled", @id = "lblGall" })
+
+    <div class="row">
+        <div class="col s12 right-align">
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Guardar" id="btnGuardar" class="btn btn-default" />
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col s12 l6 ">
-        <div class="card-panel">
-            <div class="row">
-                @foreach (var item in Model.TALLTs)
-                {
-                    <div class=" input-field col s12">
-                        @Html.EditorFor(modelItem => item.TXT50, null, "A" + item.SPRAS_ID, new { htmlAttributes = new { maxlength = "50", @id = "A" + item.SPRAS_ID, @name = "A" + item.SPRAS_ID } })
-                        <label for="@("A"+item.SPRAS_ID)">@item.SPRA.DESCRIPCION</label>
-                    </div>
-                    //Escondo el spraid para insertarlo posteriormente
-                    <div class=" input-field col 12">
-                        @Html.EditorFor(modelItem => item.SPRAS_ID, null, "sp", new { htmlAttributes = new { @id = item.SPRAS_ID, style = "display:none" } })
-                        @Html.HiddenFor(modelItem => item.SPRAS_ID)
-                    </div>
-                }
-                @foreach (var item in spras2)
-                {
-                    <div class=" input-field col s12 pr1">
-                        @Html.Editor("Editor", null, "txval", new { htmlAttributes = new { } })
-                        <label for="Editor">@item.DESCRIPCION</label>
-                    </div>
-                }
 
-                    <div class="input-field col s4 right" style="margin-bottom:0;">
-                        @Html.LabelFor(model => model.ACTIVO, "ACTIVO", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblActivo" })
-                        @Html.ValidationMessageFor(model => model.ACTIVO, "", new { @class = "text-danger" })
-                        @Html.EditorFor(model => model.ACTIVO, new { htmlAttributes = new { @class = "form-control pname material-icons green-text", @maxlength = "230", @hidden = "hidden", id = "idact" } })
+        <div class="col s12 m12 l6">
+            <div class="card-panel">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.ID)
 
-                        @*@if ((bool)Model.ACTIVO == true)
-                        {
-                            <label>
-                                <input type="checkbox" name="selectedCustomers" value="true" id="act" onclick="check()" checked />
-                                <span style="height:0"></span>
-                            </label>
-                        }
-                        else
-                        {
-                            <label>
-                                <input type="checkbox" name="selectedCustomers" value="true" id="act" onclick="check()" />
-                                <span style="height:0"></span>
-                            </label>
-                        }*@
+                <div class="row">
+                    <div class="input-field col s12">
+                        @Html.LabelFor(model => model.ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblID" })
+                        @Html.EditorFor(model => model.ID, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                     </div>
+                    <div class="input-field col s12">
+                        @Html.LabelFor(model => model.DESCRIPCION, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblDes" })
+                        @Html.EditorFor(model => model.DESCRIPCION, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
                     </div>
+                    <div class="input-field col s12">
+                        @Html.DropDownList("GALL_ID", null, htmlAttributes: new { @class = "form-control", @id = "dpGall" })
+                        @Html.LabelFor(model => model.GALL_ID, "Grupos de Allowance", htmlAttributes: new { @class = "control-label col-md-2", @readonly = "readonly", @id = "lblGall" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col s12 l6 ">
+            <div class="card-panel">
+                <div class="row">
+                    @foreach (var item in Model.TALLTs)
+                    {
+                        <div class=" input-field col s12">
+                            @Html.EditorFor(modelItem => item.TXT50, null, "A" + item.SPRAS_ID, new { htmlAttributes = new { maxlength = "50", @id = "A" + item.SPRAS_ID, @name = "A" + item.SPRAS_ID, @required = "" } })
+                            <label for="@("A"+item.SPRAS_ID)">@item.SPRA.DESCRIPCION</label>
+                        </div>
+                        //Escondo el spraid para insertarlo posteriormente
+                        <div class=" input-field col 12">
+                            @Html.EditorFor(modelItem => item.SPRAS_ID, null, "sp", new { htmlAttributes = new { @id = item.SPRAS_ID, style = "display:none" } })
+                            @Html.HiddenFor(modelItem => item.SPRAS_ID)
+                        </div>
+                    }
+                    @foreach (var item in spras2)
+                    {
+                        <div class=" input-field col s12 pr1">
+                            @Html.Editor("Editor", null, "txval", new { htmlAttributes = new {} })
+                            <label for="Editor">@item.DESCRIPCION</label>
+                        </div>
+                    }
+
+                    <div class="input-field col l4 m10 right" style="margin-bottom:0;">
+                        <label>
+                            @if (Model.ACTIVO != null && (bool)Model.ACTIVO == true)
+                            {
+                                <input type="checkbox" name="ACTIVO" value="true" id="fac" onclick="check()" checked />
+                                <span style="height:0" id="lblActivo"></span>
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="ACTIVO" value="true" id="fac" onclick="check()" />
+                                <span id="lblActivo"></span>
+                            }
+                        </label>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
 }
 
 <script>
     function check() {
-    if ($("#act").prop('checked'))
-        $("#idact").prop('checked', true);
-    else
-        $("#idact").prop('checked', false);
+        if ($("#act").prop('checked'))
+            $("#idact").prop('checked', true);
+        else
+            $("#idact").prop('checked', false);
     }
 
     var elem = document.querySelectorAll('select');
@@ -122,6 +121,11 @@
 </script>
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Regresar", "Index")
 </div>
+
+<script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
+<script>
+    fnCommon.formValidation('tallsForm');
+</script>
 

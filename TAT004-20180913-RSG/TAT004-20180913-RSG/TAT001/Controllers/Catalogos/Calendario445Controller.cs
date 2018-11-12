@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PagedList;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -27,12 +28,30 @@ namespace TAT001.Controllers.Catalogos
             FnCommon.ObtenerConfPage(db,pagina_id,User.Identity.Name, this.ControllerContext.Controller);
 
             Calendario445ViewModel modelView = new Calendario445ViewModel();
-            modelView.calendarios445 = db.CALENDARIO_AC.ToList();
-            modelView.calendariosEx445 = db.CALENDARIO_EX.ToList();
+            modelView.pageSizes = FnCommon.ObtenerCmbPageSize();
+            ObtenerListado(ref modelView);
+            ObtenerListadoEx(ref modelView);
 
             return View(modelView);
         }
 
+        public ActionResult List(string colOrden, string ordenActual, int? numRegistros = 10, int? pagina = 1, string buscar = "")
+        {
+            int pagina_id = 530; //ID EN BASE DE DATOS
+            Calendario445ViewModel modelView = new Calendario445ViewModel();
+            ObtenerListado(ref modelView, colOrden, ordenActual, numRegistros, pagina, buscar);
+            FnCommon.ObtenerTextos(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
+            return View(modelView);
+        }
+
+        public ActionResult ListEx(string colOrden, string ordenActual, int? numRegistros = 10, int? pagina = 1, string buscar = "")
+        {
+            int pagina_id = 530; //ID EN BASE DE DATOS
+            Calendario445ViewModel modelView = new Calendario445ViewModel();
+            ObtenerListadoEx(ref modelView, colOrden, ordenActual, numRegistros, pagina, buscar);
+            FnCommon.ObtenerTextos(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
+            return View(modelView);
+        }
         // GET: Calendario445/Create
         public ActionResult Create()
         {
@@ -253,6 +272,182 @@ namespace TAT001.Controllers.Catalogos
                 }
             }
         }
+        public void ObtenerListado(ref Calendario445ViewModel viewModel, string colOrden = "", string ordenActual = "", int? numRegistros = 10, int? pagina = 1, string buscar = "")
+        {
+            int pageIndex = pagina.Value;
+            List<CALENDARIO_AC> calendarios445 = db.CALENDARIO_AC.ToList();
 
+            viewModel.ordenActual = colOrden;
+            viewModel.numRegistros = numRegistros.Value;
+            viewModel.buscar = buscar;
+
+            if (!String.IsNullOrEmpty(buscar))
+            {
+                calendarios445 = calendarios445.Where(x =>
+                String.Concat(x.SOCIEDAD_ID, x.PERIODO.ToString(), x.TSOL_ID,
+                x.PRE_FROMF.ToString("dd/MM/yyyy"), x.PRE_FROMH, x.PRE_TOF.ToString("dd/MM/yyyy"), x.PRE_TOH,
+                x.CIE_FROMF.ToString("dd/MM/yyyy"), x.CIE_FROMH, x.CIE_TOF.ToString("dd/MM/yyyy"), x.CIE_TOH)
+                .ToLower().Contains(buscar.ToLower()))
+                .ToList();
+            }
+            switch (colOrden)
+            {
+                case "SOCIEDAD_ID":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.calendarios445 = calendarios445.OrderByDescending(m => m.SOCIEDAD_ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.calendarios445 = calendarios445.OrderBy(m => m.SOCIEDAD_ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+                case "PERIODO":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.calendarios445 = calendarios445.OrderByDescending(m => m.PERIODO).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.calendarios445 = calendarios445.OrderBy(m => m.PERIODO).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+
+                case "TSOL_ID":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.calendarios445 = calendarios445.OrderByDescending(m => m.TSOL_ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.calendarios445 = calendarios445.OrderBy(m => m.TSOL_ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+
+                case "PRE_FROMF":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.calendarios445 = calendarios445.OrderByDescending(m => m.PRE_FROMF).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.calendarios445 = calendarios445.OrderBy(m => m.PRE_FROMF).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+
+                case "PRE_FROMH":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.calendarios445 = calendarios445.OrderByDescending(m => m.PRE_FROMH).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.calendarios445 = calendarios445.OrderBy(m => m.PRE_FROMH).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+
+                case "PRE_TOF":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.calendarios445 = calendarios445.OrderByDescending(m => m.PRE_TOF).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.calendarios445 = calendarios445.OrderBy(m => m.PRE_TOF).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+
+                case "PRE_TOH":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.calendarios445 = calendarios445.OrderByDescending(m => m.PRE_TOH).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.calendarios445 = calendarios445.OrderBy(m => m.PRE_TOH).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+
+                case "CIE_FROMF":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.calendarios445 = calendarios445.OrderByDescending(m => m.CIE_FROMF).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.calendarios445 = calendarios445.OrderBy(m => m.CIE_FROMF).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+                case "CIE_FROMH":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.calendarios445 = calendarios445.OrderByDescending(m => m.CIE_FROMH).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.calendarios445 = calendarios445.OrderBy(m => m.CIE_FROMH).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+                case "CIE_TOF":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.calendarios445 = calendarios445.OrderByDescending(m => m.CIE_TOF).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.calendarios445 = calendarios445.OrderBy(m => m.CIE_TOF).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+                case "CIE_TOH":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.calendarios445 = calendarios445.OrderByDescending(m => m.CIE_TOH).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.calendarios445 = calendarios445.OrderBy(m => m.CIE_TOH).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+
+                default:
+                    viewModel.calendarios445 = calendarios445.OrderBy(m => m.SOCIEDAD_ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+            }
+        }
+        public void ObtenerListadoEx(ref Calendario445ViewModel viewModel, string colOrden = "", string ordenActual = "", int? numRegistros = 10, int? pagina = 1, string buscar = "")
+        {
+            int pageIndex = pagina.Value;
+            List<CALENDARIO_EX> calendariosEx445 = db.CALENDARIO_EX.ToList();
+
+            viewModel.ordenActual = colOrden;
+            viewModel.numRegistrosEx = numRegistros.Value;
+            viewModel.buscar = buscar;
+
+            if (!String.IsNullOrEmpty(buscar))
+            {
+                calendariosEx445 = calendariosEx445.Where(x =>
+                String.Concat(x.SOCIEDAD_ID, x.PERIODO.ToString(), x.TSOL_ID,x.USUARIO_ID,
+                x.EX_FROMF.ToString("dd/MM/yyyy"), x.EX_FROMH, x.EX_TOF.ToString("dd/MM/yyyy"), x.EX_TOH)
+                .ToLower().Contains(buscar.ToLower()))
+                .ToList();
+            }
+            switch (colOrden)
+            {
+                case "SOCIEDAD_ID":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.calendariosEx445 = calendariosEx445.OrderByDescending(m => m.SOCIEDAD_ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.calendariosEx445 = calendariosEx445.OrderBy(m => m.SOCIEDAD_ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+                case "PERIODO":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.calendariosEx445 = calendariosEx445.OrderByDescending(m => m.PERIODO).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.calendariosEx445 = calendariosEx445.OrderBy(m => m.PERIODO).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+
+                case "TSOL_ID":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.calendariosEx445 = calendariosEx445.OrderByDescending(m => m.TSOL_ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.calendariosEx445 = calendariosEx445.OrderBy(m => m.TSOL_ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+
+                case "USUARIO_ID":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.calendariosEx445 = calendariosEx445.OrderByDescending(m => m.USUARIO.ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.calendariosEx445 = calendariosEx445.OrderBy(m => m.USUARIO.ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+
+                case "EX_FROMF":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.calendariosEx445 = calendariosEx445.OrderByDescending(m => m.EX_FROMF).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.calendariosEx445 = calendariosEx445.OrderBy(m => m.EX_FROMF).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+
+                case "EX_FROMH":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.calendariosEx445 = calendariosEx445.OrderByDescending(m => m.EX_FROMH).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.calendariosEx445 = calendariosEx445.OrderBy(m => m.EX_FROMH).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+
+                case "EX_TOF":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.calendariosEx445 = calendariosEx445.OrderByDescending(m => m.EX_TOF).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.calendariosEx445 = calendariosEx445.OrderBy(m => m.EX_TOF).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+
+                case "EX_TOH":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.calendariosEx445 = calendariosEx445.OrderByDescending(m => m.EX_TOH).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.calendariosEx445 = calendariosEx445.OrderBy(m => m.EX_TOH).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+               
+                default:
+                    viewModel.calendariosEx445 = calendariosEx445.OrderBy(m => m.SOCIEDAD_ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+            }
+        }
     }
 }

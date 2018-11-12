@@ -2922,7 +2922,19 @@ namespace TAT001.Controllers
 
                             if (num_docH3 == num_doc)
                             {
-                                var facturasConf = db.FACTURASCONFs.Where(x => x.SOCIEDAD_ID == bukrs & x.PAIS_ID == land & x.TSOL == t_sol).FirstOrDefault();
+                                var confMultiple = db.TSOLs.Where(x => x.ID == dop.TSOL_ID).FirstOrDefault();
+                                string tsolMultiple = "";
+
+                                if (confMultiple != null)
+                                {
+                                    tsolMultiple = confMultiple.TSOLM;
+                                }
+                                else
+                                {
+                                    tsolMultiple = t_sol;
+                                }
+
+                                var facturasConf = db.FACTURASCONFs.Where(x => x.SOCIEDAD_ID == bukrs & x.PAIS_ID == land & x.TSOL == tsolMultiple).FirstOrDefault();
                                 if (facturasConf != null)
                                 {
                                     docupF.NUM_DOC = Convert.ToDecimal(num_docH3);

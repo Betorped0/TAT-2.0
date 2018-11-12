@@ -106,14 +106,6 @@ namespace TAT001.Controllers
                 //return RedirectToAction("Pais", "Home");
             }
             Session["spras"] = user.SPRAS_ID;
-
-            ViewBag.TALL_ID = new SelectList(db.TALLs, "ID", "DESCRIPCION");
-            ViewBag.PAIS_ID = new SelectList(db.PAIS, "LAND", "LANDX");
-            ViewBag.SOCIEDAD_ID = new SelectList(db.SOCIEDADs, "BUKRS", "BUTXT");
-            ViewBag.ABONO = new SelectList(db.CUENTAGLs.Where(t=>t.ACTIVO==true).ToList(), "ID", "NOMBRE");
-            ViewBag.CARGO = new SelectList(db.CUENTAGLs.Where(t => t.ACTIVO == true).ToList(), "ID", "NOMBRE");
-            ViewBag.CLEARING = new SelectList(db.CUENTAGLs.Where(t => t.ACTIVO == true).ToList(), "ID", "NOMBRE");
-            ViewBag.IMPUESTO = new SelectList(db.IMPUESTOes.Where(t => t.ACTIVO == true).ToList(), "MWSKZ", "MWSKZ");
             return View();
         }
 
@@ -124,17 +116,19 @@ namespace TAT001.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "SOCIEDAD_ID,PAIS_ID,TALL_ID,EJERCICIO,ABONO,CARGO,CLEARING,LIMITE,IMPUESTO")] CUENTA cUENTA)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.CUENTAs.Add(cUENTA);
-                db.SaveChanges();
+                if (ModelState.IsValid)
+                {
+                    db.CUENTAs.Add(cUENTA);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                return View(cUENTA);
+            }catch(Exception e)
+            {
                 return RedirectToAction("Index");
             }
-
-            ViewBag.TALL_ID = new SelectList(db.TALLs, "ID", "DESCRIPCION", cUENTA.TALL_ID);
-            ViewBag.PAIS_ID = new SelectList(db.PAIS, "LAND", "LANDX", cUENTA.PAIS_ID);
-            ViewBag.SOCIEDAD_ID = new SelectList(db.SOCIEDADs, "BUKRS", "BUTXT", cUENTA.SOCIEDAD_ID);
-            return View(cUENTA);
         }
 
         // GET: Cuenta/Edit/5
@@ -171,14 +165,7 @@ namespace TAT001.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.TALL_ID = new SelectList(db.TALLs, "ID", "DESCRIPCION", cUENTA.TALL_ID);
-            ViewBag.PAIS_ID = new SelectList(db.PAIS, "LAND", "LANDX", cUENTA.PAIS_ID);
-            ViewBag.SOCIEDAD_ID = new SelectList(db.SOCIEDADs, "BUKRS", "BUTXT", cUENTA.SOCIEDAD_ID);
-            ViewBag.ABONO = new SelectList(db.CUENTAGLs.Where(t => t.ACTIVO == true).ToList(), "ID", "NOMBRE", cUENTA.ABONO);
-            ViewBag.CARGO = new SelectList(db.CUENTAGLs.Where(t => t.ACTIVO == true).ToList(), "ID", "NOMBRE",cUENTA.CARGO);
-            ViewBag.CLEARING = new SelectList(db.CUENTAGLs.Where(t => t.ACTIVO == true).ToList(), "ID", "NOMBRE", cUENTA.CLEARING);
-            ViewBag.IMPUESTO = new SelectList(db.IMPUESTOes.Where(t => t.ACTIVO == true).ToList(), "MWSKZ", "MWSKZ", cUENTA.IMPUESTO);
-            return View(cUENTA);
+           return View(cUENTA);
         }
 
         // POST: Cuenta/Edit/5
@@ -202,16 +189,13 @@ namespace TAT001.Controllers
                 if (c.Length > 10) { c = c.Remove(10); }
                 if (d.Length > 10) { d = d.Remove(10); }
 
-                cUENTA.ABONO = Convert.ToDecimal(a);
+               /* cUENTA.ABONO = Convert.ToDecimal(a);
                 cUENTA.CARGO = Convert.ToDecimal(b); 
                 cUENTA.CLEARING = Convert.ToDecimal(c);
-                cUENTA.LIMITE = Convert.ToDecimal(d);
+                cUENTA.LIMITE = Convert.ToDecimal(d);*/
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.TALL_ID = new SelectList(db.TALLs, "ID", "DESCRIPCION", cUENTA.TALL_ID);
-            ViewBag.PAIS_ID = new SelectList(db.PAIS, "LAND", "LANDX", cUENTA.PAIS_ID);
-            ViewBag.SOCIEDAD_ID = new SelectList(db.SOCIEDADs, "BUKRS", "BUTXT", cUENTA.SOCIEDAD_ID);
             return View(cUENTA);
         }
 

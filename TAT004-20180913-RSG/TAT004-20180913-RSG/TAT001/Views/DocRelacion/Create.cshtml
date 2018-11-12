@@ -1,20 +1,19 @@
 ﻿@model TAT001.Entities.FACTURASCONF
 
 @{
-    //ViewBag.Title = "Create";
-    Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.pagina_r = 1211;
     ViewBag.carpeta_r = 500;
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@using (Html.BeginForm())
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+@using (Html.BeginForm("Create", "DocRelacion", FormMethod.Post, new { @id = "docRelacionForm" }))
 {
     @Html.AntiForgeryToken()
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     <div class="row">
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <button id="btnGC" type="submit" value="Create" style="float:right;" class="btn btn-default">Crear</button>
+                <button id="btnGuardar" type="submit"  style="float:right;" class="btn btn-default"></button>
             </div>
         </div>
     </div>
@@ -22,325 +21,316 @@
         <div class="card-panel">
             <div class="row">
                 <div class="form-horizontal">
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.SOCIEDAD_ID, "Co. Code", htmlAttributes: new { @class = "control-label col-md-2 active", @id = "lblSociedadId" })
-                        @Html.DropDownList("SOCIEDAD_ID", null, htmlAttributes: new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.SOCIEDAD_ID, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.PAIS_ID, "PAIS_ID", htmlAttributes: new { @class = "control-label col-md-2 active", @id = "lblPais" })
-                        @Html.DropDownList("PAIS_ID", null, htmlAttributes: new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.PAIS_ID, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.TSOL, "TSOL", htmlAttributes: new { @class = "control-label col-md-2 active", @id = "lblTsol" })
-                        @Html.DropDownList("TSOL", null, htmlAttributes: new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.TSOL, "", new { @class = "text-danger" })
-                    </div>
-                    <br />
-                    <br />
                     <div class="row">
-                        <div class="row col l6 m6" style="margin-bottom:0;">
-
-                            <div class="row col s3 m3">
-                                @Html.LabelFor(model => model.FACTURA, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblFactura" })
-                                @Html.EditorFor(model => model.FACTURA, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idfac" } })
+                        <div class="form-group col s4">
+                            @Html.LabelFor(model => model.SOCIEDAD_ID, "Co. Code", htmlAttributes: new { @class = "control-label col-md-2 active", @id = "lblSociedadId" })
+                            @Html.EditorFor(model => model.SOCIEDAD_ID, new { htmlAttributes = new { @class = "form-control", @required = "", @maxlength = 50 } })
+                        </div>
+                        <div class="form-group col s4">
+                            @Html.LabelFor(model => model.PAIS_ID, "PAIS_ID", htmlAttributes: new { @class = "control-label col-md-2 active", @id = "lblPais" })
+                            @Html.EditorFor(model => model.PAIS_ID, new { htmlAttributes = new { @class = "form-control", @required = "", @maxlength = 50 } })
+                        </div>
+                        <div class="form-group col s4">
+                            @Html.LabelFor(model => model.TSOL, "TSOL", htmlAttributes: new { @class = "control-label col-md-2 active", @id = "lblTsol" })
+                            @Html.EditorFor(model => model.TSOL, new { htmlAttributes = new { @class = "form-control", @required = "", @maxlength = 50 } })
+                        </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col s4" style="margin-bottom:0;">
+                                @Html.HiddenFor(model => model.FACTURA, new { @id = "idfac" } )
+                                    <label>
+                                        <input type="checkbox" name="selectedCustomers" value="true" id="fac" onclick="check()" />
+                                        <span id="lblFactura"></span>
+                                    </label>
                             </div>
-                            <div class="row col s3 m3">
-                                <label>
-                                    <input type="checkbox" name="selectedCustomers" value="true" id="fac" onclick="check()" />
-                                    <span style="height:0"></span>
-                                </label>
+                            <div class="col s4" style="margin-bottom:0;">
+                                @Html.HiddenFor(model => model.FECHA, new { @id = "idfec" })
+                                    <label>
+                                        <input type="checkbox" name="selectedCustomers" value="true" id="fec" onclick="check()" />
+                                        <span id = "lblFecha"></span>
+                                    </label>
+                            </div>
+                            <div class="col s4" style="margin-bottom:0;">
+                                @Html.HiddenFor(model => model.ACTIVO, new { @id = "idact" })
+                                    <label>
+                                        <input type="checkbox" name="selectedCustomers" value="true" id="act" onclick="check()" />
+                                        <span id = "lblActivo"></span>
+                                    </label>
                             </div>
                         </div>
-                       
-                        <div class="row col l6 m6" style="margin-bottom:0;">
-                            <div class="row col s3 m3">
-                                @Html.LabelFor(model => model.FECHA, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblFecha" })
-                                @Html.EditorFor(model => model.FECHA, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idfec" } })
+
+                        <div class="row">
+                            <div class="col s4" style="margin-bottom:0;">
+                                @Html.HiddenFor(model => model.PROVEEDOR, new { @id = "idprov" })
+                                    <label>
+                                        <input type="checkbox" name="selectedCustomers" value="true" id="prov" onclick="check()" />
+                                        <span id = "lblProveedor"></span>
+                                    </label>
                             </div>
-                          
-                            <div class="row col s3 m3">
-                                <label>
-                                    <input type="checkbox" name="selectedCustomers" value="true" id="fec" onclick="check()" />
-                                    <span style="height:0"></span>
-                                </label>
+
+                            <div class="col s4" style="margin-bottom:0;">
+                                @Html.HiddenFor(model => model.CONTROL, new { @id = "idcon" })
+                                    <label>
+                                        <input type="checkbox" name="selectedCustomers" value="true" id="con" onclick="check()" />
+                                        <span id = "lblControl"></span>
+                                    </label>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col l6 m6" style="margin-bottom:0;">
-                            <div class="row col s3 m3">
-                                @Html.LabelFor(model => model.PROVEEDOR, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblProveedor" })
-                                @Html.EditorFor(model => model.PROVEEDOR, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idprov" } })
+
+                        <div class="row">
+                            <div class="col s4" style="margin-bottom:0;">
+                                @Html.HiddenFor(model => model.AUTORIZACION, new { @id = "idauto" })
+                                    <label>
+                                        <input type="checkbox" name="selectedCustomers" value="true" id="auto" onclick="check()" />
+                                        <span id = "lblAutorizacion"></span>
+                                    </label>
                             </div>
 
-                            <div class="row col s3 m3">
-                                <label>
-                                    <input type="checkbox" name="selectedCustomers" value="true" id="prov" onclick="check()" />
-                                    <span style="height:0"></span>
-                                </label>
-                                </div>
-                            </div>
-
-                        <div class="col l6 m6" style="margin-bottom:0;">
-                            <div class="row col s3 m3">
-                                @Html.LabelFor(model => model.CONTROL, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblControl" })
-                                @Html.EditorFor(model => model.CONTROL, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idcon" } })
-                            </div>
-
-                            <div class="row col s3 m3">
-                                <label>
-                                    <input type="checkbox" name="selectedCustomers" value="true" id="con" onclick="check()" />
-                                    <span style="height:0"></span>
-                                </label>
-                                </div>
+                            <div class="col s4" style="margin-bottom:0;">
+                                @Html.HiddenFor(model => model.VENCIMIENTO, new { @id = "idvenc" })
+                                    <label>
+                                        <input type="checkbox" name="selectedCustomers" value="true" id="venc" onclick="check()" />
+                                        <span id = "lblVenc"></span>
+                                    </label>
                             </div>
                         </div>
-           
-                    <div class="row">
-                        <div class="col l6 m6" style="margin-bottom:0;">
-                            <div class="row col s3 m3">
-                                @Html.LabelFor(model => model.AUTORIZACION, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblAutorizacion" })
-                                @Html.EditorFor(model => model.AUTORIZACION, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idauto" } })
-                            </div>
-                            <div class="row col s3 m3">
-                                <label>
-                                    <input type="checkbox" name="selectedCustomers" value="true" id="auto" onclick="check()" />
-                                    <span style="height:0"></span>
-                                </label>
-                                </div>
+
+
+                        <div class="row">
+                            <div class="col s4" style="margin-bottom:0;">
+                                @Html.HiddenFor(model => model.FACTURAK, new { @id = "idfactk" })
+                                    <label>
+                                        <input type="checkbox" name="selectedCustomers" value="true" id="factk" onclick="check()" />
+                                        <span id="lblFactK"></span>
+                                    </label>
                             </div>
 
-                        <div class="col l6 m6" style="margin-bottom:0;">
-                            <div class="row col s3 m3">
-                                @Html.LabelFor(model => model.VENCIMIENTO, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblVenc" })
-                                @Html.EditorFor(model => model.VENCIMIENTO, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idvenc" } })
-                            </div>
-                            <div class="row col s3 m3">
-                                <label>
-                                    <input type="checkbox" name="selectedCustomers" value="true" id="venc" onclick="check()" />
-                                    <span style="height:0"></span>
-                                </label>
-                                </div>
+                            <div class="col s4" style="margin-bottom:0;">
+                                @Html.HiddenFor(model => model.EJERCICIOK, new { @id = "idejek" })
+                                    <label>
+                                        <input type="checkbox" name="selectedCustomers" value="true" id="ejek" onclick="check()" />
+                                        <span id="lblEjeK"></span>
+                                    </label>
                             </div>
                         </div>
-                  
-                    <div class="row">
-                        <div class="col l6 m6" style="margin-bottom:0;">
-                            <div class="row col s3 m3">
-                                @Html.LabelFor(model => model.FACTURAK, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblFactK" })
-                                @Html.EditorFor(model => model.FACTURAK, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idfactk" } })
-                            </div>
-                            <div class="row col s3 m3">
-                                <label>
-                                    <input type="checkbox" name="selectedCustomers" value="true" id="factk" onclick="check()" />
-                                    <span style="height:0"></span>
-                                </label>
-                                </div>
+
+
+                        <div class="row">
+                            <div class="col s4" style="margin-bottom:0;">
+                                @Html.HiddenFor(model => model.BILL_DOC, new { @id = "idbill" })
+                                    <label>
+                                        <input type="checkbox" name="selectedCustomers" value="true" id="bill" onclick="check()" />
+                                        <span id = "lblBill"></span>
+                                    </label>
                             </div>
 
-                        <div class="col l6 m6" style="margin-bottom:0;">
-                            <div class="row col s3 m3">
-                                @Html.LabelFor(model => model.EJERCICIOK, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblEjeK" })
-                                @Html.EditorFor(model => model.EJERCICIOK, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idejek" } })
-                            </div>
-                            <div class="row col s3 m3">
-                                <label>
-                                    <input type="checkbox" name="selectedCustomers" value="true" id="ejek" onclick="check()" />
-                                    <span style="height:0"></span>
-                                </label>
-                                </div>
+                            <div class="col s4" style="margin-bottom:0;">
+                                @Html.HiddenFor(model => model.BELNR, new { @id = "idbellnr" })
+                                    <label>
+                                        <input type="checkbox" name="selectedCustomers" value="true" id="bellnr" onclick="check()" />
+                                        <span id = "lblBell"></span>
+                                    </label>
                             </div>
                         </div>
-               
-                    <div class="row">
-                        <div class="col l6 m6" style="margin-bottom:0;">
-                            <div class="row col s3 m3">
-                                @Html.LabelFor(model => model.BILL_DOC, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblBill" })
-                                @Html.EditorFor(model => model.BILL_DOC, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idbill" } })
-                            </div>
 
-                            <div class="row col s3 m3">
-                                <label>
-                                    <input type="checkbox" name="selectedCustomers" value="true" id="bill" onclick="check()" />
-                                    <span style="height:0"></span>
-                                </label>
-                                </div>
-                            </div>
 
-                        <div class="col l6 m6" style="margin-bottom:0;">
-                            <div class="row col s3 m3">
-                                @Html.LabelFor(model => model.BELNR, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblBell" })
-                                @Html.EditorFor(model => model.BELNR, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idbellnr" } })
+                        <div class="row">
+                            <div class="col s4" style="margin-bottom:0;">
+                                @Html.HiddenFor(model => model.IMPORTE_FAC, new { @id = "idimpo" })
+                                    <label>
+                                        <input type="checkbox" name="selectedCustomers" value="true" id="impo" onclick="check()" />
+                                        <span id = "lblImporte"></span>
+                                    </label>
                             </div>
-                            <div class="row col s3 m3">
-                                <label>
-                                    <input type="checkbox" name="selectedCustomers" value="true" id="bellnr" onclick="check()" />
-                                    <span style="height:0"></span>
-                                </label>
-                                </div>
-                            </div>
-                        </div>
-          
-                    <div class="row">
-                        <div class="col l6 m6" style="margin-bottom:0;">
-                            <div class="row col s3 m3">
-                                @Html.LabelFor(model => model.IMPORTE_FAC, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblImporte" })
-                                @Html.EditorFor(model => model.IMPORTE_FAC, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idimpo" } })
-                            </div>
-                            <div class="row col s3 m3">
-                                <label>
-                                    <input type="checkbox" name="selectedCustomers" value="true" id="impo" onclick="check()" />
-                                    <span style="height:0"></span>
-                                </label>
-                                </div>
-                            </div>
-                        <div class="col l6 m6" style="margin-bottom:0;">
-                            <div class="row col s3 m3">
-                                @Html.LabelFor(model => model.PAYER, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblPayer" })
-                                @Html.EditorFor(model => model.PAYER, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idpay" } })
-                            </div>
-                            <div class="row col s3 m3">
-                                <label>
-                                    <input type="checkbox" name="selectedCustomers" value="true" id="pay" onclick="check()" />
-                                    <span style="height:0"></span>
-                                </label>
-                                </div>
+                            <div class="col s4" style="margin-bottom:0;">
+                                @Html.HiddenFor(model => model.PAYER, new { @id = "idpay" })
+                                    <label>
+                                        <input type="checkbox" name="selectedCustomers" value="true" id="pay" onclick="check()" />
+                                        <span id = "lblPayer"></span>
+                                    </label>
                             </div>
                         </div>
-          
-                    <div class="row">
-                        <div class="col l6 m6" style="margin-bottom:0;">
-                            <div class="row col s3 m3">
-                                @Html.LabelFor(model => model.DESCRIPCION, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblDesc" })
-                                @Html.EditorFor(model => model.DESCRIPCION, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "iddes" } })
-                            </div>
-                            <div class="row col s3 m3">
-                                <label>
-                                    <input type="checkbox" name="selectedCustomers" value="true" id="des" onclick="check()" />
-                                    <span style="height:0"></span>
-                                </label>
-                                </div>
+
+
+                        <div class="row">
+                            <div class="col s4" style="margin-bottom:0;">
+                                @Html.HiddenFor(model => model.DESCRIPCION, new { @id = "iddes" })
+                                    <label>
+                                        <input type="checkbox" name="selectedCustomers" value="true" id="des" onclick="check()" />
+                                        <span id = "lblDesc"></span>
+                                    </label>
                             </div>
                             @*input-field*@
-                        <div class="col l6 m6" style="margin-bottom:0;">
-                            <div class="row col s3 m3">
-                                @Html.LabelFor(model => model.SOCIEDAD, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblSoci" })
-                                @Html.EditorFor(model => model.SOCIEDAD, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idsoc" } })
-                            </div>
-                            <div class="row col s3 m3">
-                                <label>
-                                    <input type="checkbox" name="selectedCustomers" value="true" id="soc" onclick="check()" />
-                                    <span style="height:0"></span>
-                                </label>
-                                </div>
+                            <div class="col s4" style="margin-bottom:0;">
+                                @Html.HiddenFor(model => model.SOCIEDAD, new { @id = "idsoc" })
+                                    <label>
+                                        <input type="checkbox" name="selectedCustomers" value="true" id="soc" onclick="check()" />
+                                        <span id="lblSoci" ></span>
+                                    </label>
                             </div>
                         </div>
-                
-                    <div class="row">
-                        <div class="col l6 m6" style="margin-bottom:0;">
-                            <div class="row col s3 m3">
-                                @Html.LabelFor(model => model.ACTIVO, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblActivo" })
-                                @Html.EditorFor(model => model.ACTIVO, new { htmlAttributes = new { @class = "form-control pname", @maxlength = "230", @hidden = "hidden", id = "idact" } })
-                            </div>
 
-                            <div class="row col s3 m3">
-                                <label>
-                                    <input type="checkbox" name="selectedCustomers" value="true" id="act" onclick="check()" />
-                                    <span style="height:0"></span>
-                                </label>
-                                </div>
-                            </div>
-                        </div>
-                </div>
+                       
+                    </div>
             </div>
         </div>
     </div>
 }
+<div class="col s12">
+    <a id="btnRegresar" href="@Url.Action("Index")"></a>
+</div>
+
 <script>
     function check() {
         if ($("#fac").prop('checked'))
-            $("#idfac").prop('checked', true);
+            $("#idfac").prop('value', true);
         else
-            $("#idfac").prop('checked', false);
+            $("#idfac").prop('value', false);
 
         if ($("#fec").prop('checked'))
-            $("#idfec").prop('checked', true);
+            $("#idfec").prop('value', true);
         else
-            $("#idfec").prop('checked', false);
+            $("#idfec").prop('value', false);
 
         if ($("#prov").prop('checked'))
-            $("#idprov").prop('checked', true);
+            $("#idprov").prop('value', true);
         else
-            $("#idprov").prop('checked', false);
+            $("#idprov").prop('value', false);
 
         if ($("#con").prop('checked'))
-            $("#idcon").prop('checked', true);
+            $("#idcon").prop('value', true);
         else
-            $("#idcon").prop('checked', false);
+            $("#idcon").prop('value', false);
 
         if ($("#auto").prop('checked'))
-            $("#idauto").prop('checked', true);
+            $("#idauto").prop('value', true);
         else
-            $("#idauto").prop('checked', false);
+            $("#idauto").prop('value', false);
 
         if ($("#venc").prop('checked'))
-            $("#idvenc").prop('checked', true);
+            $("#idvenc").prop('value', true);
         else
-            $("#idvenc").prop('checked', false);
+            $("#idvenc").prop('value', false);
 
         if ($("#factk").prop('checked'))
-            $("#idfactk").prop('checked', true);
+            $("#idfactk").prop('value', true);
         else
-            $("#idfactk").prop('checked', false);
+            $("#idfactk").prop('value', false);
 
         if ($("#ejek").prop('checked'))
-            $("#idejek").prop('checked', true);
+            $("#idejek").prop('value', true);
         else
-            $("#idejek").prop('checked', false);
+            $("#idejek").prop('value', false);
 
         if ($("#bill").prop('checked'))
-            $("#idbill").prop('checked', true);
+            $("#idbill").prop('value', true);
         else
-            $("#idbill").prop('checked', false);
+            $("#idbill").prop('value', false);
 
         if ($("#bellnr").prop('checked'))
-            $("#idbellnr").prop('checked', true);
+            $("#idbellnr").prop('value', true);
         else
-            $("#idbellnr").prop('checked', false);
+            $("#idbellnr").prop('value', false);
 
         if ($("#impo").prop('checked'))
-            $("#idimpo").prop('checked', true);
+            $("#idimpo").prop('value', true);
         else
-            $("#idimpo").prop('checked', false);
+            $("#idimpo").prop('value', false);
 
         if ($("#pay").prop('checked'))
-            $("#idpay").prop('checked', true);
+            $("#idpay").prop('value', true);
         else
-            $("#idpay").prop('checked', false);
+            $("#idpay").prop('value', false);
 
         if ($("#des").prop('checked'))
-            $("#iddes").prop('checked', true);
+            $("#iddes").prop('value', true);
         else
-            $("#iddes").prop('checked', false);
+            $("#iddes").prop('value', false);
 
         if ($("#soc").prop('checked'))
-            $("#idsoc").prop('checked', true);
+            $("#idsoc").prop('value', true);
         else
-            $("#idsoc").prop('checked', false);
+            $("#idsoc").prop('value', false);
 
         if ($("#act").prop('checked'))
-            $("#idact").prop('checked', true);
+            $("#idact").prop('value', true);
         else
-            $("#idact").prop('checked', false);
+            $("#idact").prop('value', false);
     }
-
-    var elem = document.querySelectorAll('select');
-    var instance = M.FormSelect.init(elem, []);
 </script>
-<div>
-    @Html.ActionLink("Back to List", "Index", null, new { id = "lblRegresar" })
+<script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
+<script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
+<script>
+    var root = "@Url.Content("~")";
+    fnCommon.formValidation('docRelacionForm');
+</script>
 
-</div>
+<link href="~/Content/autocomplete.css" rel="stylesheet" />
+<script src="~/Scripts/autocomplete1.11.4.js"></script>
+        <script>
+    var auto = $.noConflict(true);
+        auto(document).ready(function () {
+            auto("#SOCIEDAD_ID").autocomplete({
+                source: function (request, response) {
+                    fnCommon.autoAjax(root + "Listas/sociedades", response, { Prefix: request.term }, function (item) { return { label: item.TXT50, value: item.BUKRS }; });
+                },
+                messages: {
+                    noResults: '',
+                    results: function (resultsCount) { }
+                },
+                select: function (event, ui) {
+                    var label = ui.item.label;
+                    var value = ui.item.value;
+                },
+                change: function (e, ui) {
+                    if (!(ui.item)) {
+                        e.target.value = "";
+                    }
+                }
+            });
+        })
+        auto(document).ready(function () {
+            auto("#TSOL").autocomplete({
+                source: function (request, response) {
+                    fnCommon.autoAjax(root + "Listas/tiposSolicitud", response, { Prefix: request.term }, function (item) { return { label: item.TXT50, value: item.TSOL_ID }; });
+                },
+                messages: {
+                    noResults: '',
+                    results: function (resultsCount) { }
+                },
+                select: function (event, ui) {
+                    var label = ui.item.label;
+                    var value = ui.item.value;
+                },
+                change: function (e, ui) {
+                    if (!(ui.item)) {
+                        e.target.value = "";
+                    }
+                }
+            });
+        })
+        auto(document).ready(function () {
+            auto("#PAIS_ID").autocomplete(
+                {
+                    source: function (request, response) {
+                        fnCommon.autoAjax(root + "Listas/paises_", response, { Prefix: request.term }, function (item) { return { label: item.TXT50, value: item.LAND }; });
+                    },
+                    messages: {
+                        noResults: '',
+                        results: function (resultsCount) { }
+                    },
+                    select: function (event, ui) {
+                        var label = ui.item.label;
+                        var value = ui.item.value;
+                    },
+                    change: function (e, ui) {
+                        if (!(ui.item)) {
+                            e.target.value = "";
+                        }
+                    }
+                });
+        })
+</script>

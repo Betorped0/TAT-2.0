@@ -246,7 +246,7 @@
                                                         foreach (var g in grupos.OrderBy(t => t.Value))
                                                         {
                                                             var grupo = new TAT001Entities().GrupoCats.Where(t => t.SPRAS_ID == p.SPRAS_ID && t.Grupo_ID == g).SingleOrDefault();
-                                                            var paginasxgrupo = new List<PAGINAV>(ViewBag.permisos).Where(t => t.Grupo == g).ToList();
+                                                            var paginasxgrupo = new List<PAGINAV>(ViewBag.permisos).Where(t => t.Grupo == g).OrderBy(t=>t.Orden).ToList();
                                                             <li class="collection">
                                                                 @if (paginasxgrupo.Count > 1)
                                                                 {
@@ -446,6 +446,21 @@ var elems = document.querySelectorAll('.collapsible');
             color: rgba(0, 0, 0, 0.87);
             font-family: Tahoma;
             text-transform: uppercase;
+            display: block;
+            font-size: 11px;
+            font-weight: 500;
+            height: 48px;
+            line-height: 48px;
+            padding: 0 32px;
+            text-indent: 1cm
+        }
+        .collection a {
+            text-transform: capitalize !important;
+        }
+        .classcatalogos a {
+            color: rgba(0, 0, 0, 0.87);
+            font-family: Tahoma;
+            text-transform: capitalize !important;
             display: block;
             font-size: 11px;
             font-weight: 500;

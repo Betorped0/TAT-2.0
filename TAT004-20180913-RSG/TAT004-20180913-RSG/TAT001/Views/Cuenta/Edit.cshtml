@@ -5,29 +5,24 @@
     //ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
+<link href="~/Content/autocomplete.css" rel="stylesheet" />
+<script src="~/Scripts/autocomplete1.11.4.js"></script>
 
-@using (Html.BeginForm())
+
+@using (Html.BeginForm("Edit", "Cuenta", FormMethod.Post, new { @id = "cuentasForm" }))
 {
+    string abono = Model.ABONO.ToString();
+    string cargo = Model.CARGO.ToString();
+    string clearing = Model.CLEARING.ToString();
     @Html.AntiForgeryToken()
-    <div class="row">
+                <div class="row">
         <div class="row right">
             <div class="col l12 m12 right">
                 <button type="submit" id="btn_guardar" value="Agregar" class="btn btn-default" />
             </div>
         </div>
     </div>
-
-    @*<div class="row">
-            <div class="row" style="height:10px;width:100%;">
-                <div class="col l7 pink darken-1" style="height:10px;padding:0;"></div>
-                <div class="col l3 pink darken-4" style="height:10px;padding:0;">
-                    <div class="col l3 pink darken-4" style="height:10px;padding:0;"></div>
-                    <div class="col l8 orange" style="height:10px;padding:0;"></div>
-                    <div class="col l1 red" style="height:10px;padding:0;"></div>
-                </div>
-                <div class="col l2 yellow" style="height:10px;padding:0;"></div>
-            </div>
-        </div>*@
     @Html.HiddenFor(model => model.SOCIEDAD_ID)
     @Html.HiddenFor(model => model.PAIS_ID)
     @Html.HiddenFor(model => model.TALL_ID)
@@ -37,67 +32,39 @@
             <div class="row">
                 <div class="form-group col m6" style="margin-bottom:0;">
                     @Html.LabelFor(model => model.SOCIEDAD_ID, "Co. Code", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_sociedad" })
-                    @Html.DropDownList("SOCIEDAD_ID", null, htmlAttributes: new { @class = "form-control", @id = "sel-soc", disabled = true })
-                    @Html.ValidationMessageFor(model => model.SOCIEDAD_ID, "", new { @class = "text-danger" })
-                </div>
-                <script>
-                    var elem = document.getElementById('sel-soc');
-                    var options = [];
-                    var instance = M.Select.init(elem, options);
-                </script>
+                    @Html.EditorFor(model => model.SOCIEDAD_ID, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
 
+                </div>
                 <div class="form-group col m4" style="margin-bottom:0;">
                     @Html.LabelFor(model => model.PAIS_ID, "PAIS_ID", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_pais" })
-                    @Html.DropDownList("PAIS_ID", null, htmlAttributes: new { @class = "form-control", @id = "sel-pai", disabled = true })
-                    @Html.ValidationMessageFor(model => model.PAIS_ID, "", new { @class = "text-danger" })
+                    @Html.EditorFor(model => model.PAIS_ID, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
                 </div>
-                <script>
-                    var elem = document.getElementById('sel-pai');
-                    var options = [];
-                    var instance = M.Select.init(elem, options);
-                </script>
             </div>
             <div class="row">
                 <div class="form-group col m6" style="margin-bottom:0;">
                     @Html.LabelFor(model => model.TALL_ID, "TALL_ID", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_gal" })
-                    @Html.DropDownList("TALL_ID", null, htmlAttributes: new { @class = "form-control", @id = "sel-tal", disabled=true })
-                    @Html.ValidationMessageFor(model => model.TALL_ID, "", new { @class = "text-danger" })
+                    @Html.EditorFor(model => model.TALL_ID, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
                 </div>
                 <div class="form-group col m4" style="margin-bottom:0;">
                     @Html.LabelFor(model => model.EJERCICIO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_ejercicio" })
-                    @Html.DropDownList("EJERCICIO", new SelectList(Enumerable.Range(DateTime.Now.Year, 10).ToList()), htmlAttributes: new { @class = "form-control", @id = "sel-ano", disabled=true })
+                    @Html.DropDownList("EJERCICIO", new SelectList(Enumerable.Range(DateTime.Now.Year, 10).ToList()), htmlAttributes: new { @class = "form-control", @id = "sel-ano", disabled = true })
                 </div>
-                <script>
-                    var elem = document.getElementById('sel-ano');
-                    var options = [];
-                    var instance = M.Select.init(elem, options);
-                </script>
             </div>
             <div class="row">
                 <div class="form-group col m4" style="margin-bottom:0;">
                     @Html.LabelFor(model => model.ABONO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_abono" })
-                    @Html.DropDownList("ABONO", null, htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.ABONO, "", new { @class = "text-danger" })
+                    @Html.EditorFor(model => model.ABONO, new { htmlAttributes = new { @class = "form-control", @required = "", @maxlength = 50, @Value= abono } })
                 </div>
 
                 <div class="form-group col m4" style="margin-bottom:0;">
                     @Html.LabelFor(model => model.CARGO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_cargo" })
-                    @Html.DropDownList("CARGO", null, htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.CARGO, "", new { @class = "text-danger" })
+                    @Html.EditorFor(model => model.CARGO, new { htmlAttributes = new { @class = "form-control", @required = "", @maxlength = 50, @Value=cargo } })
                 </div>
 
                 <div class="form-group col m4" style="margin-bottom:0;">
                     @Html.LabelFor(model => model.CLEARING, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_cargofv" })
-                    @Html.DropDownList("CLEARING", null, htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.CLEARING, "", new { @class = "text-danger" })
+                    @Html.EditorFor(model => model.CLEARING, new { htmlAttributes = new { @class = "form-control",  @maxlength = 50, @Value = clearing } })
                 </div>
-
-
-                <script>
-                    var elem = document.getElementById('sel-tal');
-                    var options = [];
-                    var instance = M.Select.init(elem, options);
-                </script>
             </div>
             <div class="row">
                 <div class="form-group col m4" style="margin-bottom:0;">
@@ -107,8 +74,7 @@
                 </div>
                 <div class="form-group col m4" style="margin-bottom:0;">
                     @Html.LabelFor(model => model.IMPUESTO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_impuesto" })
-                    @Html.DropDownList("IMPUESTO", null, htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.CLEARING, "", new { @class = "text-danger" })
+                    @Html.EditorFor(model => model.IMPUESTO, new { htmlAttributes = new { @class = "form-control", @required = "", @maxlength = 50 } })
                 </div>
             </div>
         </div>
@@ -116,7 +82,7 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index", new { }, new { id = "lblRegresar" })
+    @Html.ActionLink("Regresar", "Index", new { }, new { id = "lblRegresar" })
 </div>
 
 <script type="text/javascript">
@@ -136,4 +102,92 @@
         var key = window.Event ? e.which : e.keyCode
         return (key >= 48 && key <= 57)
     }
+</script>
+<script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
+<script>
+    var root = "@Url.Content("~")";
+
+    fnCommon.formValidation('cuentasForm');
+
+    var auto = $.noConflict(true);
+    auto(document).ready(function () {
+        auto("#ABONO").autocomplete({
+            source: function (request, response) {
+                fnCommon.autoAjax(root + "Listas/cuentas", response, { Prefix: request.term }, function (item) { return { label: item.TXT50, value: item.ID }; });
+            },
+            messages: {
+                noResults: '',
+                results: function (resultsCount) { }
+            },
+            select: function (event, ui) {
+                var label = ui.item.label;
+                var value = ui.item.value;
+            },
+            change: function (e, ui) {
+                if (!(ui.item)) {
+                    e.target.value = "";
+                }
+            }
+        });
+    })
+    auto(document).ready(function () {
+        auto("#CARGO").autocomplete({
+            source: function (request, response) {
+                fnCommon.autoAjax(root + "Listas/cuentas", response, { Prefix: request.term }, function (item) { return { label: item.TXT50, value: item.ID }; });
+            },
+            messages: {
+                noResults: '',
+                results: function (resultsCount) { }
+            },
+            select: function (event, ui) {
+                var label = ui.item.label;
+                var value = ui.item.value;
+            },
+            change: function (e, ui) {
+                if (!(ui.item)) {
+                    e.target.value = "";
+                }
+            }
+        });
+    })
+    auto(document).ready(function () {
+        auto("#CLEARING").autocomplete({
+            source: function (request, response) {
+                fnCommon.autoAjax(root + "Listas/cuentas", response, { Prefix: request.term }, function (item) { return { label: item.TXT50, value: item.ID }; });
+            },
+            messages: {
+                noResults: '',
+                results: function (resultsCount) { }
+            },
+            select: function (event, ui) {
+                var label = ui.item.label;
+                var value = ui.item.value;
+            },
+            change: function (e, ui) {
+                if (!(ui.item)) {
+                    e.target.value = "";
+                }
+            }
+        });
+    })
+    auto(document).ready(function () {
+        auto("#IMPUESTO").autocomplete({
+            source: function (request, response) {
+                fnCommon.autoAjax(root + "Listas/impuestos", response, { Prefix: request.term }, function (item) { return { label: item.TXT50, value: item.ID }; });
+            },
+            messages: {
+                noResults: '',
+                results: function (resultsCount) { }
+            },
+            select: function (event, ui) {
+                var label = ui.item.label;
+                var value = ui.item.value;
+            },
+            change: function (e, ui) {
+                if (!(ui.item)) {
+                    e.target.value = "";
+                }
+            }
+        });
+    })
 </script>

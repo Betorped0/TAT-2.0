@@ -1387,6 +1387,7 @@
           <Property Name="ACTIVO" Type="bit" Nullable="false" />
           <Property Name="Mantenimiento" Type="int" />
           <Property Name="Grupo" Type="int" />
+          <Property Name="Orden" Type="int" />
         </EntityType>
         <EntityType Name="PAGINAT">
           <Key>
@@ -2392,6 +2393,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.PAGINAV' no tiene definida ningun
           <Property Name="ManttoText" Type="nvarchar" MaxLength="50" />
           <Property Name="Grupo" Type="int" />
           <Property Name="GrupoText" Type="nvarchar" MaxLength="25" />
+          <Property Name="Orden" Type="int" />
         </EntityType>
         <!--Errores durante la generación:
 advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
@@ -5304,7 +5306,8 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
     [PAGINAV].[Mantenimiento] AS [Mantenimiento], 
     [PAGINAV].[ManttoText] AS [ManttoText], 
     [PAGINAV].[Grupo] AS [Grupo], 
-    [PAGINAV].[GrupoText] AS [GrupoText]
+    [PAGINAV].[GrupoText] AS [GrupoText], 
+    [PAGINAV].[Orden] AS [Orden]
     FROM [dbo].[PAGINAV] AS [PAGINAV]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="WARNINGV" EntityType="Self.WARNINGV" store:Type="Views" store:Schema="dbo">
@@ -7638,6 +7641,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <NavigationProperty Name="PERMISO_PAGINA" Relationship="Self.FK_PERMISO_PAGINA_PAGINA" FromRole="PAGINA" ToRole="PERMISO_PAGINA" />
           <Property Name="Mantenimiento" Type="Int32" />
           <Property Name="Grupo" Type="Int32" />
+          <Property Name="Orden" Type="Int32" />
         </EntityType>
         <EntityType Name="PAGINAT">
           <Key>
@@ -8780,6 +8784,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Property Name="ManttoText" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Grupo" Type="Int32" />
           <Property Name="GrupoText" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="Orden" Type="Int32" />
         </EntityType>
         <EntityType Name="WARNINGV">
           <Key>
@@ -13866,6 +13871,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <EntitySetMapping Name="PAGINAs">
             <EntityTypeMapping TypeName="TAT001Model.PAGINA">
               <MappingFragment StoreEntitySet="PAGINA">
+                <ScalarProperty Name="Orden" ColumnName="Orden" />
                 <ScalarProperty Name="Grupo" ColumnName="Grupo" />
                 <ScalarProperty Name="Mantenimiento" ColumnName="Mantenimiento" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
@@ -14788,6 +14794,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <EntitySetMapping Name="PAGINAVs">
             <EntityTypeMapping TypeName="TAT001Model.PAGINAV">
               <MappingFragment StoreEntitySet="PAGINAV">
+                <ScalarProperty Name="Orden" ColumnName="Orden" />
                 <ScalarProperty Name="GrupoText" ColumnName="GrupoText" />
                 <ScalarProperty Name="Grupo" ColumnName="Grupo" />
                 <ScalarProperty Name="ManttoText" ColumnName="ManttoText" />

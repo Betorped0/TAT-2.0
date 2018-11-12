@@ -1045,24 +1045,33 @@ namespace TAT001.Controllers
 
 
         [HttpGet]
-        public JsonResult TiposSolicitud(string spras_id)
+        public JsonResult tiposSolicitud(string Prefix)
         {
-            if (!string.IsNullOrEmpty(spras_id))
-            {
-                var tsr = (from ts in db.TSOLTs
-                           where spras_id == ts.SPRAS_ID
-                           select new { ts.TSOL_ID, ts.TXT50 }).ToList();
-                JsonResult jr = Json(tsr, JsonRequestBehavior.AllowGet);
-                return jr;
-            }
-            return Json(string.Empty, JsonRequestBehavior.AllowGet);
+            string spras_id = FnCommon.ObtenerSprasId(db,User.Identity.Name);
+            
+            var tsr = (from ts in db.TSOLTs
+                        where spras_id == ts.SPRAS_ID && (ts.TSOL_ID.Contains(Prefix)|| ts.TXT50.Contains(Prefix))
+                        select new { TSOL_ID=ts.TSOL_ID, TXT50=(ts.TSOL_ID+" - "+ts.TXT50) }).ToList();
+          
+            return Json(tsr, JsonRequestBehavior.AllowGet);
+        }
+        [HttpGet]
+        public JsonResult soportes(string Prefix)
+        {
+            string spras_id = FnCommon.ObtenerSprasId(db, User.Identity.Name);
+
+            var c = (from st in db.TSOPORTETs
+                     where st.SPRAS_ID == spras_id && (st.TXT50.Contains(Prefix) || st.TSOPORTE_ID.Contains(Prefix))
+                     select new { TSOPORTE_ID=st.TSOPORTE_ID, TXT50=(st.TSOPORTE_ID + " - "+st.TXT50) });
+
+            return Json(c, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
         public string cierre(string sociedad_id, string tsol_id, string periodo_id, string usuario_id)
         {
             int periodo = int.Parse(periodo_id);
-            bool a = FnCommon.ValidarPeriodoEnCalendario445(db, sociedad_id, tsol_id, periodo, "PRE", usuario_id) |
-                FnCommon.ValidarPeriodoEnCalendario445(db, sociedad_id, tsol_id, periodo, "CI", usuario_id);
+            bool a = FnCommon.ValidarPeriodoEnCalendario445(db, sociedad_id, tsol_id, periodo, "PRE", usuario_id) ||
+                FnCommon.ValidarPeriodoEnCalendario445(db, sociedad_id, tsol_id, periodo, "CI");
             if (a)
                 return "X";
             else
@@ -1075,5 +1084,53 @@ namespace TAT001.Controllers
         }
 
 
+        [HttpGet]
+        public JsonResult sociedades(string Prefix)
+        {
+            var c = (from st in db.SOCIEDADs
+                     where (st.BUKRS.Contains(Prefix) || st.BUTXT.Contains(Prefix))
+                     select new { BUKRS = st.BUKRS, TXT50 = (st.BUKRS + " - " + st.BUTXT) });
+
+            return Json(c, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult paises_(string Prefix)
+        {
+            var c = (from sp in db.PAIS
+                     where (sp.LAND.Contains(Prefix)|| sp.LANDX.Contains(Prefix))
+                     select new { LAND = sp.LAND, TXT50 = (sp.LANDX) });
+
+            return Json(c, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult tipoAllowance(string Prefix)
+        {
+            var c = (from st in db.TALLs
+                     where (st.ID.Contains(Prefix)|| st.DESCRIPCION.Contains(Prefix))
+                     select new { ID = st.ID, TXT50 = (st.DESCRIPCION) });
+
+            return Json(c, JsonRequestBehavior.AllowGet);
+        }
+        [HttpGet]
+        public JsonResult cuentas(string Prefix)
+        {
+            var c = (from st in db.CUENTAGLs
+                     where st.ACTIVO==true && (st.ID.ToString().Contains(Prefix)||st.NOMBRE.Contains(Prefix))
+                     select new { ID = st.ID, TXT50 = (st.ID + " - " + st.NOMBRE) });
+
+            return Json(c, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult impuestos(string Prefix)
+        {
+            var c = (from st in db.IMPUESTOes
+                     where st.ACTIVO == true && (st.MWSKZ.Contains(Prefix))
+                     select new { ID = st.MWSKZ, TXT50 = (st.MWSKZ) });
+
+            return Json(c, JsonRequestBehavior.AllowGet);
+        }
     }
 }

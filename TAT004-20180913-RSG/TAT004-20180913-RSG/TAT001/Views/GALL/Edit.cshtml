@@ -5,32 +5,10 @@
     ViewBag.carpeta_r = 500;
     //ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
-
-    //var lan = ViewBag.lan;
-    //List<TAT001.Entities.SPRA> spras = ViewBag.SPRAS as List<TAT001.Entities.SPRA>;
-    //List<TAT001.Entities.GALLT> lstTXT = new List<TAT001.Entities.GALLT>();
-
-    //List<TAT001.Entities.SPRA> spras2 = new List<TAT001.Entities.SPRA>();
-    //foreach (var item in Model.GALLTs)
-    //{
-    //TAT001.Entities.GALLT txt = new TAT001.Entities.GALLT();
-    //txt.SPRAS_ID = item.SPRAS_ID;
-    //txt.GALL_ID = item.GALL_ID;
-    //txt.TXT50 = item.TXT50;
-    //lstTXT.Add(txt);
-    //}
-    //for (int i = 0; i < spras.Count; i++)
-    //{
-    //TAT001.Entities.GALLT x2 = lstTXT.Where(a => a.SPRAS_ID == spras[i].ID).FirstOrDefault();
-    //if (x2 == null)
-    //{
-    //spras2.Add(spras[i]);
-    //}
-    //}
 }
-
+<script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
 <div class="row">
-    @using (Html.BeginForm())
+    @using (Html.BeginForm("Edit", "GALL", FormMethod.Post, new { @id = "gallForm" }))
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -58,55 +36,6 @@
             </div>
         </div>
 
-        @*<div class="col s6 ">
-            <div class="card-panel">*@
-        @*<div class="row">
-                    @foreach (var item in Model.GALLTs)
-                    {
-                        <div class=" input-field col s12">
-                            @Html.EditorFor(modelItem => item.TXT50, null, "txtN", new { htmlAttributes = new { maxlength = "50", @id = "A" + item.SPRAS_ID } })
-                            <label for="@("A"+item.SPRAS_ID)">@item.SPRA.DESCRIPCION</label>
-                        </div>
-                        //Escondo el spraid para insertarlo posteriormente
-                        <div class=" input-field col s12">
-                            @Html.EditorFor(modelItem => item.SPRAS_ID, null, "sp", new { htmlAttributes = new { @id = item.SPRAS_ID, style = "display:none" } })
-                            @Html.HiddenFor(modelItem => item.SPRAS_ID)
-                        </div>
-                    }
-                    @foreach (var item in spras2)
-                    {
-                        <div class=" input-field col s12 pr1">
-                            @Html.Editor("Editor", null, "txval", new { htmlAttributes = new { } })
-                            <label for="Editor">@item.DESCRIPCION</label>
-                        </div>
-                    }
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <button id="btnGEdit" type="submit" value="Submit" class="btn btn-default"></button>
-                        </div>
-                    </div>
-                    @Html.LabelFor(model => model.ACTIVO, "ACTIVO", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblPais" })
-                    @Html.ValidationMessageFor(model => model.ACTIVO, "", new { @class = "text-danger" })
-                    @Html.EditorFor(model => model.ACTIVO, new { htmlAttributes = new { @class = "form-control pname material-icons green-text", @maxlength = "230", @hidden = "hidden", id = "idfac" } })
-
-                    @if ((bool)Model.ACTIVO == true)
-                    {
-                        <label>
-                            <input type="checkbox" name="selectedCustomers" value="true" id="fac" onclick="check()" checked />
-                            <span style="height:0"></span>
-                        </label>
-
-                    }
-                    else
-                    {
-                        <label>
-                            <input type="checkbox" name="selectedCustomers" value="true" id="fac" onclick="check()" />
-                            <span style="height:0"></span>
-                        </label>
-                    }
-                </div>
-            </div>*@
-
         <div class="col s6">
 
             <div class="card-panel">
@@ -116,71 +45,55 @@
                     @*@foreach (var item in Model.GALLTs)
         {*@
                     <div class="input-field col l10 m10" style="margin-bottom:0;">
-                        @Html.Editor("EN", new { htmlAttributes = new { @class = "form-control", @maxlength = "50" } })
+                        @Html.Editor("EN", new { htmlAttributes = new { @class = "form-control", @maxlength = "50", @required = "" } })
                         @*@Html.LabelFor(model => item.TXT100, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_DscEN" })*@
                         <label id="lblIngles"></label>
                     </div>
 
 
                     <div class="input-field col l10 m10" style="margin-bottom:0;">
-                        @Html.Editor("ES", new { htmlAttributes = new { @class = "form-control", @maxlength = "50" } })
+                        @Html.Editor("ES", new { htmlAttributes = new { @class = "form-control", @maxlength = "50", @required = "" } })
                         @*@Html.LabelFor(model => item.TXT100, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_DscES" })*@
                         <label id="lblEspa"></label>
                         @*<label for="@("A" + Model.TS_FORMT.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().SPRAS_ID)"> @Model.TS_FORMT.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().SPRA.DESCRIPCION</label>*@
                     </div>
-
-                    <div class="input-field col l10 m10" style="margin-bottom:0;">
-                        @Html.Editor("PT", new { htmlAttributes = new { @class = "form-control", @maxlength = "50" } })
-                        @*@Html.LabelFor(model => item.TXT100, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_DscPT" })*@
-                        <label id="lblPortugues"></label>
-                    </div>
                     @*}*@
                     <br />
-                    <div class="input-field col l6 m6 right" style="margin-bottom:0;">
-                        @Html.LabelFor(model => model.ACTIVO, "ACTIVO", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblActivo" })
-                        @Html.ValidationMessageFor(model => model.ACTIVO, "", new { @class = "text-danger" })
-                        @Html.EditorFor(model => model.ACTIVO, new { htmlAttributes = new { @class = "form-control pname material-icons green-text", @maxlength = "230", @hidden = "hidden", id = "idac" } })
-                        @*@Html.HiddenFor(model => model.ACTIVO)*@
-                        @*@if ((bool)Model.ACTIVO == true)
-                        {
-                            <label>
-                                <input type="checkbox" name="selectedCustomers" value="true" id="ac" onclick="check()" checked />
-                                <span style="height:0"></span>
-                            </label>
-
-                        }
-                        else
-                        {
-                            <label>
-                                <input type="checkbox" name="selectedCustomers" value="true" id="ac" onclick="check()" />
-                                <span style="height:0"></span>
-                            </label>
-                        }*@
+                    <div class="input-field col l4 m10 right" style="margin-bottom:0;">
+                        <label>
+                            @if (Model.ACTIVO != null && (bool)Model.ACTIVO == true)
+                            {
+                                <input type="checkbox" name="ACTIVO" value="true" id="fac" onclick="check()" checked />
+                                <span style="height:0" id="lblActivo"></span>
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="ACTIVO" value="true" id="fac" onclick="check()" />
+                                <span id="lblActivo"></span>
+                            }
+                        </label>
                     </div>
-
-
 
                 </div>
 
-               
-              
+
+
             </div>
         </div>
-        @*</div>*@
 
     }
 </div>
+<script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
 <script>
     function check() {
-        if ($("#ac").prop('checked'))
-            $("#idac").prop('checked', true);
+        if ($("#fac").prop('checked'))
+            $("#idfac").prop('checked', true);
         else
             $("#idfac").prop('checked', false);
     }
-    var elem = document.querySelectorAll('select');
-    var instance = M.FormSelect.init(elem, []);
+        fnCommon.formValidation('gallForm');
 </script>
 
 <div>
-    @Html.ActionLink("Back to List", "Index", null, new { id = "lblRegresar" })
+    @Html.ActionLink("Regresar", "Index", null, new { id = "lblRegresar" })
 </div>

@@ -31,7 +31,7 @@ namespace TAT001.Controllers.Catalogos
             modelView.calendarioEx445.SOCIEDAD_ID = sociedad_id;
             modelView.calendarioEx445.TSOL_ID = tsol_id;
 
-            modelView.calendariosEx445 = ObtenerExcepciones(ejercicio,periodo,sociedad_id,tsol_id);
+            modelView.calendariosEx445List = ObtenerExcepciones(ejercicio,periodo,sociedad_id,tsol_id);
 
             modelView.calendario445 = ObtenerCalendario445(ejercicio, periodo, sociedad_id, tsol_id);
 
@@ -76,7 +76,7 @@ namespace TAT001.Controllers.Catalogos
             {
                 FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
 
-                modelView.calendariosEx445 = ObtenerExcepciones(calendarioEx.EJERCICIO, calendarioEx.PERIODO, calendarioEx.SOCIEDAD_ID, calendarioEx.TSOL_ID); 
+                modelView.calendariosEx445List = ObtenerExcepciones(calendarioEx.EJERCICIO, calendarioEx.PERIODO, calendarioEx.SOCIEDAD_ID, calendarioEx.TSOL_ID); 
                 modelView.calendario445 = ObtenerCalendario445(calendarioEx.EJERCICIO, calendarioEx.PERIODO, calendarioEx.SOCIEDAD_ID, calendarioEx.TSOL_ID);
 
                 CargarSelectList(ref modelView, new string[] {
