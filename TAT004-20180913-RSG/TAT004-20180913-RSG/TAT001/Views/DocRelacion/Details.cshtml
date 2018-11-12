@@ -1,57 +1,76 @@
 ﻿@model TAT001.Entities.FACTURASCONF
-
+@using TAT001.Entities
+@using System.Data.Entity
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.pagina_r = 1212;
     ViewBag.carpeta_r = 500;
 }
+<style>
+    .control-label {
+        color: gray;
+    }
+</style>
 <div class="col s12 right-align">
-    <a href="@Url.Action("Edit", "DocRelacion", new { id = Model.SOCIEDAD_ID, pais = Model.PAIS_ID, tsol = Model.TSOL})" id="btnEditar" class="btn btn-default"></a>
+    <a href="@Url.Action("Edit", "DocRelacion", new { id = Model.SOCIEDAD_ID, pais = Model.PAIS_ID, tsol = Model.TSOL })" id="btnEditar" class="btn btn-default"></a>
 </div>
+
 <div class="row">
     <div class="card-panel">
         <div class="row">
             <div class="row">
-                <div class="input-field col s4" style="margin-bottom:0;">
-                    @Html.EditorFor(model => model.SOCIEDAD_ID, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                    @Html.LabelFor(model => model.SOCIEDAD_ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblSociedadId" })
-                </div>
-                <div class="input-field col s4" style="margin-bottom:0;">
-                    @Html.EditorFor(model => model.PAIS_ID, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                    @Html.LabelFor(model => model.PAIS_ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblPais" })
-                </div>
+                @Html.HiddenFor(x => x.TSOL)
+                @Html.HiddenFor(x => x.SOCIEDAD_ID)
+                @{
+                    using (TAT001Entities db = new TAT001Entities())
+                    {
+                        string spras_id = ViewBag.spras_id;
+                        TAT001.Entities.SOCIEDAD sociedad = db.SOCIEDADs.First(x => x.BUKRS == Model.SOCIEDAD_ID);
+                        TAT001.Entities.TSOL tSol = db.TSOLs.Include(x => x.TSOLTs).First(x => x.ID == Model.TSOL);
 
-                <div class="input-field col s4" style="margin-bottom:0;">
-                    @Html.EditorFor(model => model.TSOL, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                    @Html.LabelFor(model => model.TSOL, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblTsol" })
-                </div>
+                        string sociedadTxt = (sociedad.BUKRS + " - " + sociedad.BUTXT);
+                        string tSolTxt = (tSol.ID + " - " + (tSol.TSOLTs.Any(x => x.SPRAS_ID == spras_id) ? tSol.TSOLTs.First(x => x.SPRAS_ID == spras_id).TXT50 : tSol.DESCRIPCION));
+
+
+                        <div class="input-field col s4" style="margin-bottom:0;">
+                           @Html.Editor("SOCIEDAD_ID_TXT", new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @Value = sociedadTxt } })
+                           @Html.LabelFor(model => model.SOCIEDAD_ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblSociedadId" })
+                        </div>
+                        <div class="input-field col s4" style="margin-bottom:0;">
+                            @Html.EditorFor(model => model.PAIS_ID, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            @Html.LabelFor(model => model.PAIS_ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblPais" })
+                        </div>
+
+                        <div class="input-field col s4" style="margin-bottom:0;">
+                            @Html.Editor("TSOL_TXT", new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @Value = tSolTxt } })
+                            @Html.LabelFor(model => model.TSOL, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblTsol" })
+                        </div>
+                    }
+                }
             </div>
             <div class="row">
 
-                <div class="input-field col s4" style="margin-bottom:0;">
-                    @*@Html.EditorFor(model => model.FACTURA, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })*@
-                    @Html.LabelFor(model => model.FACTURA, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblFactura" })
+                <div class="    col s4" style="margin-bottom:0;">
                     @if ((bool)Model.FACTURA == true)
                     {
                         <i class='material-icons green-text'>check</i>}
                     else
                     {
                         <i class='material-icons red-text'>clear</i>}
+                    @Html.LabelFor(model => model.FACTURA, htmlAttributes: new { @class = "  control-label col-md-2", @id = "lblFactura" })
+
+
                 </div>
-                <div class="input-field col s4" style="margin-bottom:0;">
-                    @*@Html.EditorFor(model => model.FECHA, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })*@
-                    @Html.LabelFor(model => model.FECHA, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblFecha" })
+                <div class=" col s4" style="margin-bottom:0;">
                     @if ((bool)Model.FECHA == true)
                     {
                         <i class='material-icons green-text'>check</i>}
                     else
                     {
-                        <i class='material-icons red-text'>clear</i>}
+                        <i class='material-icons red-text'>clear</i>}               
+                    @Html.LabelFor(model => model.FECHA, htmlAttributes: new { @class = "  control-label col-md-2", @id = "lblFecha" })
                 </div>
-                <div class="input-field col s4" style="margin-bottom:0;">
-
-                    @Html.LabelFor(model => model.ACTIVO, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblActivo" })
-
+                <div class=" col s4" style="margin-bottom:0;">
 
                     @if ((bool)Model.ACTIVO == true)
                     {
@@ -59,105 +78,112 @@
                     else
                     {
                         <i class='material-icons red-text'>clear</i>}
+                    @Html.LabelFor(model => model.ACTIVO, htmlAttributes: new { @class = "  control-label col-md-2", @id = "lblActivo" })
+
 
                 </div>
                 </div>
             <div class="row">
-                <div class="input-field col s4" style="margin-bottom:0;">
-                    @*@Html.EditorFor(model => model.PROVEEDOR, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })*@
-                    @Html.LabelFor(model => model.PROVEEDOR, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblProveedor" })
+                <div class=" col s4" style="margin-bottom:0;">
                     @if ((bool)Model.PROVEEDOR == true)
                     {
                         <i class='material-icons green-text'>check</i>}
                     else
                     {
                         <i class='material-icons red-text'>clear</i>}
+                    @Html.LabelFor(model => model.PROVEEDOR, htmlAttributes: new { @class = "  control-label col-md-2", @id = "lblProveedor" })
+
+
                 </div>
 
-                <div class="input-field col s4" style="margin-bottom:0;">
-                    @*@Html.EditorFor(model => model.CONTROL, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })*@
-                    @Html.LabelFor(model => model.CONTROL, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblControl" })
+                <div class=" col s4" style="margin-bottom:0;">
                     @if ((bool)Model.CONTROL == true)
                     {
                         <i class='material-icons green-text'>check</i>}
                     else
                     {
                         <i class='material-icons red-text'>clear</i>}
+                    @Html.LabelFor(model => model.CONTROL, htmlAttributes: new { @class = "  control-label col-md-2", @id = "lblControl" })
+
+
                 </div>
             </div>
             <div class="row">
-                <div class="input-field col s4" style="margin-bottom:0;">
-                    @*@Html.EditorFor(model => model.AUTORIZACION, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })*@
-                    @Html.LabelFor(model => model.AUTORIZACION, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblAutorizacion" })
+                <div class=" col s4" style="margin-bottom:0;">
                     @if ((bool)Model.AUTORIZACION == true)
                     {
                         <i class='material-icons green-text'>check</i>}
                     else
                     {
                         <i class='material-icons red-text'>clear</i>}
+                    @Html.LabelFor(model => model.AUTORIZACION, htmlAttributes: new { @class = "  control-label col-md-2", @id = "lblAutorizacion" })
+
+
                 </div>
 
-                <div class="input-field col s4" style="margin-bottom:0;">
-                    @*@Html.EditorFor(model => model.VENCIMIENTO, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })*@
-                    @Html.LabelFor(model => model.VENCIMIENTO, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblVenc" })
+                <div class=" col s4" style="margin-bottom:0;">
                     @if ((bool)Model.VENCIMIENTO == true)
                     {
                         <i class='material-icons green-text'>check</i>}
                     else
                     {
                         <i class='material-icons red-text'>clear</i>}
+                    @Html.LabelFor(model => model.VENCIMIENTO, htmlAttributes: new { @class = "  control-label col-md-2", @id = "lblVenc" })
+
+
                 </div>
             </div>
             <div class="row">
-                <div class="input-field col s4" style="margin-bottom:0;">
-                    @*@Html.EditorFor(model => model.FACTURAK, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })*@
-                    @Html.LabelFor(model => model.FACTURAK, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblFactK" })
+                <div class=" col s4" style="margin-bottom:0;">
                     @if ((bool)Model.FACTURAK == true)
                     {
                         <i class='material-icons green-text'>check</i>}
                     else
                     {
-                        <i class='material-icons red-text'>clear</i>}
+                        <i class='material-icons red-text'>clear</i>} 
+                    @Html.LabelFor(model => model.FACTURAK, htmlAttributes: new { @class = "  control-label col-md-2", @id = "lblFactK" })
+
+
                 </div>
 
-                <div class="input-field col s4" style="margin-bottom:0;">
-                    @*@Html.EditorFor(model => model.EJERCICIOK, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })*@
-                    @Html.LabelFor(model => model.EJERCICIOK, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblEjeK" })
+                <div class=" col s4" style="margin-bottom:0;">
                     @if ((bool)Model.EJERCICIOK == true)
                     {
                         <i class='material-icons green-text'>check</i>}
                     else
                     {
                         <i class='material-icons red-text'>clear</i>}
+                    @Html.LabelFor(model => model.EJERCICIOK, htmlAttributes: new { @class = "  control-label col-md-2", @id = "lblEjeK" })
+
+
                 </div>
             </div>
             <div class="row">
-                <div class="input-field col s4" style="margin-bottom:0;">
-                    @*@Html.EditorFor(model => model.BILL_DOC, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })*@
-                    @Html.LabelFor(model => model.BILL_DOC, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblBill" })
+                <div class=" col s4" style="margin-bottom:0;">
                     @if ((bool)Model.BILL_DOC == true)
                     {
                         <i class='material-icons green-text'>check</i>}
                     else
                     {
                         <i class='material-icons red-text'>clear</i>}
+                    @Html.LabelFor(model => model.BILL_DOC, htmlAttributes: new { @class = "  control-label col-md-2", @id = "lblBill" })
+
+
                 </div>
-                <div class="input-field col s4" style="margin-bottom:0;">
-                    @*@Html.EditorFor(model => model.BELNR, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })*@
-                    @Html.LabelFor(model => model.BELNR, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblBell" })
+                <div class=" col s4" style="margin-bottom:0;">
                     @if ((bool)Model.BELNR == true)
                     {
                         <i class='material-icons green-text'>check</i>}
                     else
                     {
                         <i class='material-icons red-text'>clear</i>}
+                    @Html.LabelFor(model => model.BELNR, htmlAttributes: new { @class = "  control-label col-md-2", @id = "lblBell" })
+
+
                 </div>
             </div>
             <div class="row">
-                <div class="input-field col s4" style="margin-bottom:0;">
-
-                    @Html.LabelFor(model => model.IMPORTE_FAC, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblImporte" })
-
+                <div class=" col s4" style="margin-bottom:0;">
 
                     @if ((bool)Model.IMPORTE_FAC == true)
                     {
@@ -165,42 +191,45 @@
                     else
                     {
                         <i class='material-icons red-text'>clear</i>}
+                    @Html.LabelFor(model => model.IMPORTE_FAC, htmlAttributes: new { @class = "  control-label col-md-2", @id = "lblImporte" })
 
                 </div>
-                <div class="input-field col s4" style="margin-bottom:0;">
-                    @*@Html.EditorFor(model => model.BELNR, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })*@
-                    @Html.LabelFor(model => model.PAYER, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblPayer" })
+                <div class=" col s4" style="margin-bottom:0;">
                     @if ((bool)Model.PAYER == true)
                     {
                         <i class='material-icons green-text'>check</i>}
                     else
                     {
                         <i class='material-icons red-text'>clear</i>}
+                    @Html.LabelFor(model => model.PAYER, htmlAttributes: new { @class = "  control-label col-md-2", @id = "lblPayer" })
+
+
                 </div>
             </div>
             <div class="row">
-                <div class="input-field col s4" style="margin-bottom:0;">
+                <div class=" col s4" style="margin-bottom:0;">
 
-                    @Html.LabelFor(model => model.DESCRIPCION, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblDesc" })
-
-
-                    @if ((bool)Model.DESCRIPCION == true)
+                     @if ((bool)Model.DESCRIPCION == true)
                     {
                         <i class='material-icons green-text'>check</i>}
                     else
                     {
                         <i class='material-icons red-text'>clear</i>}
+                    @Html.LabelFor(model => model.DESCRIPCION, htmlAttributes: new { @class = "  control-label col-md-2", @id = "lblDesc" })
+
+
 
                 </div>
-                <div class="input-field col s4" style="margin-bottom:0;">
-                    @*@Html.EditorFor(model => model.BELNR, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })*@
-                    @Html.LabelFor(model => model.SOCIEDAD, htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblSoci" })
+                <div class=" col s4" style="margin-bottom:0;">
                     @if ((bool)Model.SOCIEDAD == true)
                     {
                         <i class='material-icons green-text'>check</i>}
                     else
                     {
                         <i class='material-icons red-text'>clear</i>}
+                    @Html.LabelFor(model => model.SOCIEDAD, htmlAttributes: new { @class = "  control-label col-md-2", @id = "lblSoci" })
+
+
                 </div>
                
             </div>

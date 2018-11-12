@@ -1008,12 +1008,12 @@
           <Property Name="POS_ID" Type="numeric" Precision="5" Scale="0" Nullable="false" />
           <Property Name="POS" Type="int" Nullable="false" />
           <Property Name="MATNR" Type="nvarchar" MaxLength="18" />
-          <Property Name="PORC_APOYO" Type="decimal" Precision="13" Scale="5" />
-          <Property Name="APOYO_EST" Type="decimal" Precision="13" Scale="5" />
-          <Property Name="APOYO_REAL" Type="decimal" Precision="13" Scale="5" />
+          <Property Name="PORC_APOYO" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="APOYO_EST" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="APOYO_REAL" Type="decimal" Precision="18" Scale="5" />
           <Property Name="VIGENCIA_DE" Type="date" />
           <Property Name="VIGENCIA_A" Type="date" />
-          <Property Name="VALORH" Type="decimal" Precision="13" Scale="5" />
+          <Property Name="VALORH" Type="decimal" Precision="18" Scale="5" />
         </EntityType>
         <EntityType Name="DOCUMENTON">
           <Key>
@@ -7237,12 +7237,12 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Property Name="POS_ID" Type="Decimal" Precision="5" Scale="0" Nullable="false" />
           <Property Name="POS" Type="Int32" Nullable="false" />
           <Property Name="MATNR" Type="String" MaxLength="18" FixedLength="false" Unicode="true" />
-          <Property Name="PORC_APOYO" Type="Decimal" Precision="13" Scale="5" />
-          <Property Name="APOYO_EST" Type="Decimal" Precision="13" Scale="5" />
-          <Property Name="APOYO_REAL" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="PORC_APOYO" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="APOYO_EST" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="APOYO_REAL" Type="Decimal" Precision="18" Scale="5" />
           <Property Name="VIGENCIA_DE" Type="DateTime" Precision="0" />
           <Property Name="VIGENCIA_A" Type="DateTime" Precision="0" />
-          <Property Name="VALORH" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="VALORH" Type="Decimal" Precision="18" Scale="5" />
           <NavigationProperty Name="DOCUMENTOP" Relationship="Self.FK_DOCUMENTOM_DOCUMENTOP" FromRole="DOCUMENTOM" ToRole="DOCUMENTOP" />
         </EntityType>
         <EntityType Name="DOCUMENTON">
