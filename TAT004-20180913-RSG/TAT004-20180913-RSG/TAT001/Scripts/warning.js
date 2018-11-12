@@ -611,3 +611,29 @@ function validateEmail(email) {
 //    }
 //    return valid;
 //}
+
+
+$('body').on('focusout', '.input_sop_f', function () {
+    var t = $('#table_dis').DataTable();
+    var tr = $(this).closest('tr'); //Obtener el row 
+    
+    if ($(this).hasClass("FECHA")) {
+        var date = $(this).val();
+
+        for (var i = 0; i < lista.length; i++) {
+            if (lista[i].ID === "FECHA") {
+                if (!warning(date, "d", "")) {
+                    toast(lista[i].ID + "_f", 1000000, "error", lista[i].MSG, "red");
+                    $(this).addClass("invalid");
+                    $(this).removeClass("valid");
+                    res = false;
+                } else {
+                    dismiss("FECHA_f");
+                    $(this).addClass("valid");
+                    $(this).removeClass("invalid");
+                }
+            }
+        }
+    }
+
+});
