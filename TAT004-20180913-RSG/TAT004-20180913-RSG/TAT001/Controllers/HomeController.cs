@@ -1378,13 +1378,13 @@ namespace TAT001.Controllers
                     worksheet.Cell("CE" + i).Value = new[] { new { BANNER = "" }, };
                     worksheet.Cell("CF" + i).Value = new[] { new { BANNER = "" }, };
                     worksheet.Cell("CG" + i).Value = new[] { new { BANNER = (lst[i - 2].documento.TIPO_RECURRENTE != null) ? "Si" : "No" }, };
-                    worksheet.Cell("CH" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CLIENTE.VKORG }, };
+                    worksheet.Cell("CH" + i).Value = new[] { new { BANNER = "" }, };
                     worksheet.Cell("CI" + i).Value = new[] { new { BANNER = "" }, };
                     worksheet.Cell("CJ" + i).Value = new[] { new { BANNER = "" }, };
                     worksheet.Cell("CK" + i).Value = new[] { new { BANNER = "" }, };
                     worksheet.Cell("CL" + i).Value = new[] { new { BANNER = "" }, };
-                    worksheet.Cell("CM" + i).Value = new[] { new { BANNER = "" }, };
-                    worksheet.Cell("CN" + i).Value = new[] { new { BANNER = lst[i - 2].ESTATUS_STRING }, };
+                    worksheet.Cell("CM" + i).Value = new[] { new { BANNER = lst[i - 2].ESTATUS_STRING }, };
+                    worksheet.Cell("CN" + i).Value = new[] { new { BANNER = "" }, };
                     worksheet.Cell("CO" + i).Value = new[] { new { BANNER = "" }, };
                     worksheet.Cell("CP" + i).Value = new[] { new { BANNER = "" }, };
                     worksheet.Cell("CQ" + i).Value = new[] { new { BANNER = "" }, };
