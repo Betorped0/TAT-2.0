@@ -68,13 +68,11 @@ function cuentas() {
         },
         async: false
     });
-    if (bool) {
-        $("#btn_guardarBorr").removeClass("disabled");
-        $("#btn_guardarh").removeClass("disabled");
-    }
-    else {
+    if (!bool) {
         $("#btn_guardarBorr").addClass("disabled");
         $("#btn_guardarh").addClass("disabled");
+    } else {
+        $("#btn_guardarBorr").removeClass("disabled");
     }
 }
 function asignarPresupuesto(kunnr) {
