@@ -5,11 +5,12 @@
     ViewBag.pagina_r = 606;
     ViewBag.carpeta_r = 500;
 }
-
-<link href="~/Content/materialize.clockpicker.css" rel="stylesheet" />
-<script type="text/javascript" src="~/Scripts/materialize.clockpicker.js"></script>
+<script src="~/Scripts/autocomplete1.10.2.js"></script>
+<script src="~/Scripts/autocomplete1.11.4.js"></script>
+<link href="~/Content/autocomplete.css" rel="stylesheet" />
+@*<link href="~/Content/materialize.clockpicker.css" rel="stylesheet" />
+    <script type="text/javascript" src="~/Scripts/materialize.clockpicker.js"></script>*@
 <script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
-<script type="text/javascript" src="~/Scripts/moment.min.js"></script>
 @using (Html.BeginForm("AddBackup", "Usuarios", FormMethod.Post, new { @id = "addbackup" }))
 {
     @Html.AntiForgeryToken()
@@ -22,7 +23,7 @@
         <div class="col l6 s12">
             <div class="card-panel">
                 <div class="row">
-                    @if(TempData["MessageBackupRepetido"]!=null)
+                    @if (TempData["MessageBackupRepetido"] != null)
                     {
                         <label class="alert-danger" id="MessageBackupRepetido"></label>
                     }
@@ -33,7 +34,7 @@
                         @Html.LabelFor(model => model.USUARIOD_ID, htmlAttributes: new { id = "lbl_usrbackup" })
 
                         <div class="col-md-10">
-                            @Html.DropDownListFor(model => model.USUARIOD_ID, null, "", new { required = true })
+                            @Html.EditorFor(model => model.USUARIOD_ID, new { htmlAttributes = new { required = true } })
                             @Html.ValidationMessageFor(model => model.USUARIOD_ID, "", new { @class = "text-danger" })
                         </div>
                     </div>
@@ -54,7 +55,7 @@
                     </div>
                     <div class="form-group">
                         <label>
-                            @Html.CheckBoxFor(model=>model.ACTIVO)
+                            @Html.CheckBoxFor(model => model.ACTIVO)
                             <span id="lbl_activo"></span>
                         </label>
                     </div>
@@ -66,11 +67,42 @@
 }
 
 <div>
-    <a id="lbl_regresar" href="@Url.Action("Details",new { id=Model.USUARIO_ID})"></a>
+    <a id="lbl_regresar" href="@Url.Action("Edit",new { id=Model.USUARIO_ID})"></a>
 </div>
 <script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
 <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
 <script>
+    $('body').on('keydown.autocomplete', '#USUARIOD_ID', function () {
+        auto(this).autocomplete({
+            source: function (request, response) {
+                auto.ajax({
+                    type: "POST",
+                    url: '../getUsuarios',
+                    dataType: "json",
+                    data: { "Prefix": request.term, "ID": $("#USUARIO_ID").val() },
+                    success: function (data) {
+                        response(auto.map(data, function (item) {
+                            return { label: item.DESCRIPCION, value: item.ID };
+                        }))
+                    }
+                })
+            },
+
+            messages: {
+                noResults: '',
+                results: function (resultsCount) { }
+            },
+
+            change: function (e, ui) {
+                if (!(ui.item)) {
+                    e.target.value = "";
+                }
+            },
+
+            select: function (event, ui) {
+            }
+        });
+    });
     $("input[type='hidden']").each(function (index, element) {
         $(this).appendTo($(element).parent());
     });
@@ -105,6 +137,9 @@
         var mnjError = '@ViewBag.mnjError';
         if (mnjError) {
             M.toast({ html: mnjError });
-        }
+    }
+</script>
+<script>
+    var auto = $.noConflict();
 </script>
 

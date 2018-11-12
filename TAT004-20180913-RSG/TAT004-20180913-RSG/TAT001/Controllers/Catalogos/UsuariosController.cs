@@ -3220,6 +3220,37 @@ namespace TAT001.Controllers.Catalogos
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
             return cc;
         }
+        public JsonResult getUsuarios(string Prefix, string ID)
+        {
+            var usuario = db.USUARIOs.Where(t => t.ID == ID).SingleOrDefault();
+            //Se comenta el filtro de puesto y sociedad, solo buscara los usuarios activos
+            var usuarios = db.USUARIOs.Where(x => x.ACTIVO == true /*&& x.PUESTO_ID == usuario.PUESTO_ID && x.BUNIT == usuario.BUNIT*/).ToList();
+            usuarios.Remove(usuario);
+            var backups = db.DELEGARs.Where(t => t.USUARIO_ID == usuario.ID && t.ACTIVO == true).ToList();
+            foreach (var b in backups)
+            {
+                var usr = db.USUARIOs.Where(t => t.ID == b.USUARIOD_ID).SingleOrDefault();
+                usuarios.Remove(usr);
+            }
+            //var ac_usuarios = usuarios.Select(x => new { x.ID, DESCRIPCION = x.ID + "-" + x.NOMBRE+" "+x.APELLIDO_P });
+            if (Prefix == null)
+                Prefix = "";
+
+            var c = (from x in usuarios
+                     where x.ID.Contains(Prefix)
+                     select new { x.ID, DESCRIPCION=x.ID+" - "+x.NOMBRE +" "+x.APELLIDO_P }).ToList();
+
+            if (c.Count == 0)
+            {
+                var c2 = (from x in db.USUARIOs
+                          where x.NOMBRE.Contains(Prefix)
+                          select new { x.ID, DESCRIPCION = x.ID + " - " + x.NOMBRE + " " + x.APELLIDO_P }).ToList();
+                c.AddRange(c2);
+            }
+
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
 
         public JsonResult Sociedad(string Prefix)
         {
@@ -3284,6 +3315,7 @@ namespace TAT001.Controllers.Catalogos
             //else
               //  ViewBag.USUARIOD_ID = new SelectList(new List<string> { "No data" });
             DELEGAR usuarioback = new DELEGAR();
+            usuarioback.ACTIVO = true;
             usuarioback.USUARIO_ID = ID;
             return View(usuarioback);
         }
