@@ -2376,7 +2376,7 @@ namespace TAT001.Controllers
                         }
 
                         var material = db.MATERIALs.Where(x => x.ID == matnr & x.ACTIVO == true).FirstOrDefault();
-                        bool tieneHealty = false;
+                        bool tieneHealtyMat = false;
                         List<object> num_mat = new List<object>();
 
                         if (material != null)
@@ -2389,10 +2389,10 @@ namespace TAT001.Controllers
 
                             if (materialesHealty.Distinct().Skip(1).Any())
                             {
-                                tieneHealty = true;
+                                tieneHealtyMat = true;
                             }
 
-                            if (tieneHealty | num_mat.Count() > 1)
+                            if (tieneHealtyMat | num_mat.Count() > 1)
                             {
                                 regresaRowH4.Add("red white-text rojo");
                             }
@@ -2417,7 +2417,7 @@ namespace TAT001.Controllers
                         {
                             string miNum_docH4 = ds4.Tables[0].Rows[j][0].ToString().Trim();
                             string categoriaa = ds4.Tables[0].Rows[j][5].ToString().Trim();
-                            string num_categoria = "", num_material = "";
+                            string num_categoria = "";
 
                             if (miNum_docH4 != "" & miNum_docH4 == num_doc)
                             {
@@ -2443,6 +2443,7 @@ namespace TAT001.Controllers
                         var categoria = db.MATERIALGPs.Where(x => x.DESCRIPCION == matkl & x.ACTIVO == true).FirstOrDefault();
                         List<object> tieneHealty = new List<object>();
                         List<object> num_cat = new List<object>();
+                        bool tieneHealtyCat = false;
 
                         if (categoria != null)
                         {
@@ -2458,7 +2459,12 @@ namespace TAT001.Controllers
                                     num_cat.Add(categoriasNum[k]);
                             }
 
-                            if (tieneHealty.Count() > 1 | num_cat.Count() > 1)
+                            if (categoriasHealty.Distinct().Skip(1).Any())
+                            {
+                                tieneHealtyCat = true;
+                            }
+
+                            if (tieneHealty.Count() > 1 | num_cat.Count() > 1 | tieneHealtyCat)
                             {
                                 regresaRowH4.Add("red white-text rojo");
                             }
@@ -2779,7 +2785,7 @@ namespace TAT001.Controllers
                     docu.ESTATUS_EXT = null;
                     docu.SOLD_TO_ID = null;
                     docu.PAYER_ID = payer_id;
-                    docu.PAYER_NOMBRE = payer_nombre;
+                    docu.PAYER_NOMBRE = contacto_nombre;
                     docu.PAYER_EMAIL = contacto_email;
                     docu.GRUPO_CTE_ID = null;
                     docu.CANAL_ID = null;
@@ -2996,7 +3002,9 @@ namespace TAT001.Controllers
 
                             string ligada = ds4.Tables[0].Rows[k][1].ToString().Trim();
                             string vigencia_de = ds4.Tables[0].Rows[k][2].ToString().Trim();
+                            vigencia_de = validaPeriodoFecha(vigencia_de, "x");
                             string vigencia_al = ds4.Tables[0].Rows[k][3].ToString().Trim();
+                            vigencia_al = validaPeriodoFecha(vigencia_al, "");
                             string matnr = ds4.Tables[0].Rows[k][4].ToString().Trim();
                             if (matnr.Length < 18) { matnr = cad.completaMaterial(matnr); }
                             string matkl = ds4.Tables[0].Rows[k][5].ToString().Trim();
