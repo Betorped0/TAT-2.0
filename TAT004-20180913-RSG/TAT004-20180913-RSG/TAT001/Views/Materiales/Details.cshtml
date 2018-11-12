@@ -33,7 +33,7 @@
                         @Html.EditorFor(model => model.MATERIALGP.DESCRIPCION, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
                         @Html.LabelFor(model => model.MATERIALGP.DESCRIPCION, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_MatGroup" })
                     </div>
-                    <div class="input-field col l10 m10" style="margin-bottom:0;">
+                    @*<div class="input-field col l10 m10" style="margin-bottom:0;">
                         @if ((bool)Model.ACTIVO == true)
                         {
                             <i class='material-icons green-text'>check</i>}
@@ -41,7 +41,7 @@
                         {
                             <i class='material-icons red-text'>clear</i>}
                         @Html.LabelFor(model => model.ACTIVO, htmlAttributes: new { @class = "control-label col-md-2 active", @id = "lbl_Activo" })
-                    </div>
+                    </div>*@
                 </div>
             </div>
 
