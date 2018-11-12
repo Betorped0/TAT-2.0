@@ -1103,6 +1103,12 @@ namespace TAT001.Controllers.Catalogos
                     com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) select x.EXPORTACION).FirstOrDefault();
                     if (com != null)
                         cl.EXPORTACION = com;
+                    com = (from x in db.CONTACTOCs where x.KUNNR.Equals(cli) & x.DEFECTO == true select x.NOMBRE).FirstOrDefault();
+                    if (com != null)
+                        cl.CONTACTO = com;
+                    com = (from x in db.CONTACTOCs where x.KUNNR.Equals(cli) & x.DEFECTO == true select x.EMAIL).FirstOrDefault();
+                    if (com != null)
+                        cl.CONTACTOE = com;
                 }
                 if (!cl.KUNNRX)
                 {
@@ -1198,6 +1204,12 @@ namespace TAT001.Controllers.Catalogos
                         com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) select x.EXPORTACION).FirstOrDefault();
                         if (com != null)
                             cl.EXPORTACION = com;
+                        com = (from x in db.CONTACTOCs where x.KUNNR.Equals(cli) & x.DEFECTO == true select x.NOMBRE).FirstOrDefault();
+                        if (com != null)
+                            cl.CONTACTO = com;
+                        com = (from x in db.CONTACTOCs where x.KUNNR.Equals(cli) & x.DEFECTO == true select x.EMAIL).FirstOrDefault();
+                        if (com != null)
+                            cl.CONTACTOE = com;
 
                         cc.Add(cl);
                     }

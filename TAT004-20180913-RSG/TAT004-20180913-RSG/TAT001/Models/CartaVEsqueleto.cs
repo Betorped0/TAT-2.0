@@ -202,7 +202,7 @@ namespace TAT001.Models
                     pdfDoc.Add(new Chunk("\n"));
                     Phrase miFrase = new Phrase();
 
-                    if (v.mecanica_x == true)
+                    if (v.mecanica_x)
                     {
                         miFrase.Add(new Paragraph(v.mecanica, normalPeque));
                     }

@@ -3,110 +3,83 @@
 @{
     ViewBag.pagina_r = 1317;
     ViewBag.carpeta_r = 500;
-    //ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<script src="~/Scripts/ValidarProv.js"></script>
-@*<div class="row">
-        <div class="col s6 right-align">
-            <a href="@Url.Action("Index", "Soporte")" class="btn-small">Lista</a>
-        </div>
-    </div>*@
+<script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
 <div class="row">
-    @using (Html.BeginForm())
+    @using (Html.BeginForm("Edit", "Soporte", FormMethod.Post, new { @id = "soporteForm" }))
     {
         @Html.AntiForgeryToken()
         <div class="row" style="margin-bottom:0%;">
             <div class="row right">
                 <div class="col l12 m12">
-                    <input type="submit" value="Guardar" id="btnGuardar" class="btn btn-default" />
+                    <button type="submit" id="btnGuardar" class="btn btn-default" ></button>
                 </div>
             </div>
         </div>
-
         <div class="col s6">
             <div class="card-panel">
-                @*@Html.HiddenFor(model => model.ID)
-                    @Html.HiddenFor(model => model.DESCRIPCION)
-                    @Html.HiddenFor(model => model.ACTIVO)*@
                 <div class="row">
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="input-field col s12">
+                        @Html.EditorFor(model => model.ID, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.LabelFor(model => model.ID, htmlAttributes: new { @class = "control-label col-md-2" })
+                    </div>
                     <div class=" input-field col s12">
-                        @Html.EditorFor(model => model.DESCRIPCION, new { htmlAttributes = new { @class = "form-control", @disabled = "@disabled" } })
-                        @Html.LabelFor(model => model.DESCRIPCION, new { @id = "idDes" })
+                        @Html.EditorFor(model => model.DESCRIPCION, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.LabelFor(model => model.DESCRIPCION)
                     </div>
                 </div>
             </div>
         </div>
-
         <div class="form-horizontal">
             <div class="col s6">
                 <div class="card-panel">
                     <h5>Traducciones</h5>
                     <div class="row">
                         <div class="input-field col l10 m10" style="margin-bottom:0;">
-                            @Html.Editor("EN", new { htmlAttributes = new { @class = "form-control", @maxlength = "50" } })
-                            @* @Html.LabelFor(model => model.DESCRIPCION, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_DscEN" })*@
+                            @Html.Editor("EN", new { htmlAttributes = new { @class = "form-control", @maxlength = "50", @required = "" } })
                             <label id="lblIngles">Ingles</label>
 
                         </div>
                         <div class="input-field col l10 m10" style="margin-bottom:0;">
-                            @Html.Editor("ES", new { htmlAttributes = new { @class = "form-control", @maxlength = "50" } })
-                            @*@Html.LabelFor(model => model.DESCRIPCION, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_DscES" })*@
+                            @Html.Editor("ES", new { htmlAttributes = new { @class = "form-control", @maxlength = "50", @required = "" } })
                             <label id="lblEspa">Español</label>
 
                         </div>
-                        <div class="input-field col l10 m10" style="margin-bottom:0;">
-                            @Html.Editor("PT", new { htmlAttributes = new { @class = "form-control", @maxlength = "50" } })
-                            @* @Html.LabelFor(model => model.DESCRIPCION, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_DscPT" })*@
-                            <label id="lblPortugues">Portugues</label>
+                        <div class="input-field col l4 m10 right" style="margin-bottom:0;">
+                            <label>
+                                @if (Model.ACTIVO != null && (bool)Model.ACTIVO == true)
+                                {
+                                    <input type="checkbox" name="ACTIVO" value="true" id="fac" onclick="check()" checked />
+                                    <span style="height:0" id="lblActivo"></span>
+                                }
+                                else
+                                {
+                                    <input type="checkbox" name="ACTIVO" value="true" id="fac" onclick="check()" />
+                                    <span id="lblActivo"></span>
+                                }
+                            </label>
                         </div>
-                    </div>
-                    <div class="input-field col s6 m6 right" style="margin-bottom:0;">
-                        @Html.LabelFor(model => model.ACTIVO, "ACTIVO", htmlAttributes: new { @class = "active control-label col-md-2", @id = "lblActivo" })
-                        @Html.ValidationMessageFor(model => model.ACTIVO, "", new { @class = "text-danger" })
-                        @Html.EditorFor(model => model.ACTIVO, new { htmlAttributes = new { @class = "form-control pname material-icons green-text", @maxlength = "230", @hidden = "hidden", id = "idfac" } })
 
-                        @*@if ((bool)Model.ACTIVO == true)
-                            {
-                                <label>
-                                    <input type="checkbox" name="selectedCustomers" value="true" id="fac" onclick="check()" checked />
-                                    <span style="height:0"></span>
-                                </label>
-
-                            }
-                            else
-                            {
-                                <label>
-                                    <input type="checkbox" name="selectedCustomers" value="true" id="fac" onclick="check()" />
-                                    <span style="height:0"></span>
-                                </label>
-                            }*@
                     </div>
-                    <br />
-                    <br />
-                    <br />
+                    </div>
                 </div>
             </div>
-        </div>
     }
 </div>
+<div class="col s12">
+    <a id="btnRegresar" href="@Url.Action("Index")"></a>
+</div>
 
+<script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
 <script>
     function check() {
         if ($("#fac").prop('checked'))
             $("#idfac").prop('checked', true);
         else
             $("#idfac").prop('checked', false);
-
-        console.log($("#fac").val());
-        console.log($("#idfac").val());
     }
-    var elem = document.querySelectorAll('select');
-    var instance = M.FormSelect.init(elem, []);
-
+    fnCommon.formValidation('soporteForm');
 </script>
 
-<div>
-    @Html.ActionLink("Back to List", "Index"@*, new { tsol = Model.ID, tsopo = Model.DESCRIPCION }*@)
-</div>

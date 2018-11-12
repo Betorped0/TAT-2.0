@@ -435,7 +435,7 @@ namespace TAT001.Controllers.Catalogos
                 worksheet.Cell("C1").Value = new[]
             {
                   new {
-                      BANNER = "Sociedad ID"
+                      BANNER = "CO. CODE"
                       },
                     };
                 worksheet.Cell("D1").Value = new[]
@@ -452,6 +452,7 @@ namespace TAT001.Controllers.Catalogos
                     };
                 for (int i = 2; i <= (lst.Count + 1); i++)
                 {
+                    string activo = lst[i - 2].ACTIVO ? "SI" : "NO";
                     worksheet.Cell("A" + i).Value = new[]
                {
                   new {
@@ -479,7 +480,7 @@ namespace TAT001.Controllers.Catalogos
                     worksheet.Cell("E" + i).Value = new[]
 {
                     new {
-                        BANNER       = lst[i-2].ACTIVO
+                        BANNER =activo 
                         },
                       };
                 }

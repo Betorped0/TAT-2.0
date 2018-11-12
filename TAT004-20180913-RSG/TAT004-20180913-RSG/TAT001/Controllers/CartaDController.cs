@@ -251,9 +251,7 @@ namespace TAT001.Controllers
                 List<int> numfilasTab = new List<int>();
 
                 DOCUMENTO d = db.DOCUMENTOes.Find(v.num_doc);
-
-                //B20180726 MGC 2018.07.26
-                bool fact =  db.TSOLs.Where(ts => ts.ID == d.TSOL_ID).FirstOrDefault().FACTURA;
+                
 
                 //Formatos para numeros
                 d.PAI = db.PAIS.Where(a => a.LAND.Equals(d.PAIS_ID)).FirstOrDefault();
@@ -268,7 +266,7 @@ namespace TAT001.Controllers
                 var cabeza = new List<string>();
                 List<listacuerpoc> armadoCuerpoTab = null;
                 bool varligada = Convert.ToBoolean(d.LIGADA);
-                if (varligada != true)
+                if (varligada)
                 {
                     FnCommonCarta.ObtenerCartaProductos(db, d, null, spras_id, false,
                     ref encabezadoFech,

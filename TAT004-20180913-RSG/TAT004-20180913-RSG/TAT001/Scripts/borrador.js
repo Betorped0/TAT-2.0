@@ -10,11 +10,39 @@ $(document).ready(function () {
         var instance = M.Tabs.getInstance(elem);
         var index = instance.index;
 
+
+        for (var i = 0; i < lista.length; i++) {
+            if (lista[i].ID === "tsol_id") {
+                var tsol = $("#TSOL_ID").val();
+                if (!warning(tsol, "!=", "")) {
+                    toast(lista[i].ID, 1000000, "error", lista[i].MSG, "red");
+                    res = false;
+                }
+            }
+            if (lista[i].ID === "payer_id") {
+                var payer = $("#payer_id").val();
+                if (!warning(payer, "!=", "")) {
+                    toast(lista[i].ID, 1000000, "error", lista[i].MSG, "red");
+                    res = false;
+                }
+            }
+            if (lista[i].ID === "tall_id") {
+                var tall = $("#tall_id").val();
+                if (!warning(tall, "!=", "")) {
+                    toast(lista[i].ID, 1000000, "error", lista[i].MSG, "red");
+                    res = false;
+                }
+            }
+        }
+
+
         //Evaluar TabInfo values
-        var InfoTab = evalInfoTab(true, e);
-        if (!InfoTab) {
-            msg += 'Información';
-            res = InfoTab;
+        if (index > 0) {
+            var InfoTab = evalInfoTab(true, e);
+            if (!InfoTab) {
+                msg += 'Información';
+                res = InfoTab;
+            }
         }
 
         if (index > 0) {
@@ -160,12 +188,12 @@ $(document).ready(function () {
             //Termina provisional
             $('#btn_guardar').click();
         } else {
-            M.toast({
-                classes: "guardarWarnning",
-                displayLength: 1000000,
-                html: '<span style="padding-right:15px;"><i class="material-icons yellow-text">info</i></span>  ' + msg
-                    + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'guardarWarnning\')">Aceptar</button>'
-            });
+            //M.toast({
+            //    classes: "guardarWarnning",
+            //    displayLength: 1000000,
+            //    html: '<span style="padding-right:15px;"><i class="material-icons yellow-text">info</i></span>  ' + msg
+            //        + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'guardarWarnning\')">Aceptar</button>'
+            //});
             document.getElementById("loader").style.display = "none";//RSG 26.04.2018
         }
 

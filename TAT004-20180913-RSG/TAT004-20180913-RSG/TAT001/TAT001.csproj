@@ -230,6 +230,7 @@
     <Compile Include="Controllers\Catalogos\IimpuestoController.cs" />
     <Compile Include="Controllers\Catalogos\ImpuestosController.cs" />
     <Compile Include="Controllers\Catalogos\MonedaController.cs" />
+    <Compile Include="Controllers\Catalogos\RegionController.cs" />
     <Compile Include="Controllers\Catalogos\SociedadesController.cs" />
     <Compile Include="Controllers\Catalogos\SoporteController.cs" />
     <Compile Include="Controllers\Catalogos\TALLsController.cs" />
@@ -835,6 +836,8 @@
     <Compile Include="Models\Documento.cs" />
     <Compile Include="Models\DOCUMENTOM_MOD.cs" />
     <Compile Include="Models\Delegados.cs" />
+    <Compile Include="Models\DOCUMENTOP_CAT.cs" />
+    <Compile Include="Models\DOCUMENTOP_SP.cs" />
     <Compile Include="Models\DOCUMENTO_MOD.cs" />
     <Compile Include="Models\HeaderFooterD.cs" />
     <Compile Include="Models\LayoutCargaMasivaViewModels.cs" />
@@ -1067,6 +1070,7 @@
     <Content Include="images\flags\4x3\as.svg" />
     <Content Include="images\flags\4x3\at.png" />
     <Content Include="images\flags\4x3\be.png" />
+    <Content Include="images\flags\4x3\bo.png" />
     <Content Include="images\flags\4x3\br.png" />
     <Content Include="images\flags\4x3\bs.png" />
     <Content Include="images\flags\4x3\bz.png" />
@@ -1931,7 +1935,6 @@
     <Content Include="Views\Sociedades\Edit.cshtml" />
     <Content Include="Views\Sociedades\Index.cshtml" />
     <Content Include="Views\Consoporte\Create.cshtml" />
-    <Content Include="Views\Consoporte\Delete.cshtml" />
     <Content Include="Views\Consoporte\Details.cshtml" />
     <Content Include="Views\Consoporte\Edit.cshtml" />
     <Content Include="Views\Consoporte\Index.cshtml" />
@@ -2015,6 +2018,12 @@
     <Content Include="Views\LayoutCargaMasiva\Index.cshtml" />
     <Content Include="Views\Calendario445\List.cshtml" />
     <Content Include="Views\Calendario445\ListEx.cshtml" />
+    <Content Include="Views\Region\Create.cshtml" />
+    <Content Include="Views\Region\Delete.cshtml" />
+    <Content Include="Views\Region\Details.cshtml" />
+    <Content Include="Views\Region\Edit.cshtml" />
+    <Content Include="Views\Region\Index.cshtml" />
+    <Content Include="Views\ModificacionesGlobales\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->

@@ -2044,7 +2044,7 @@ function healtyCategoria(num_doc) {
                         //}
                     }
                 }
-
+                clearErrors();
             }
         }
     });
@@ -2121,7 +2121,7 @@ function healtyMaterial(num_doc, id, rowIndex) {
                         }
                     }
                 }
-
+                clearErrors();
             }
         }
     });

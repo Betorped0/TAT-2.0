@@ -184,7 +184,8 @@ namespace TAT001.Controllers.Catalogos
             {
                 var GALLID = from a in db.GALLs where a.ID == gALL.ID select a.GRUPO_ALL;
                 gALL.GRUPO_ALL = GALLID.FirstOrDefault();
-                gALL.ACTIVO = gALL.ACTIVO;
+                gALL.ACTIVO =gALL.ACTIVO == null?false :gALL.ACTIVO;
+                //gALL.ACTIVO = gALL.ACTIVO;
                 db.Entry(gALL).State = EntityState.Modified;
                 //db.SaveChanges();
 
@@ -198,11 +199,6 @@ namespace TAT001.Controllers.Catalogos
                     {
                         GALLT m = new GALLT { SPRAS_ID = "EN", GALL_ID = gALL.ID, TXT50 = collection["EN"].ToUpper() };
                         ListmATERIALTs.Add(m);
-                    }
-                    if (mATERIAL1.DESCRIPCION != collection["EN"])
-                    {
-                        mATERIAL1.DESCRIPCION = collection["EN"];
-                        //mATERIAL1.MAKTG = Convert.ToString(collection["EN"]).ToUpper();
                     }
                 }
                 if (collection.AllKeys.Contains("ES") && !String.IsNullOrEmpty(collection["ES"]))
@@ -416,34 +412,48 @@ namespace TAT001.Controllers.Catalogos
             try
             {
                 //Creamos el encabezado
-                worksheet.Cell("A1").Value = new[]
-             {
+                worksheet.Cell("A1").Value = new[]{
+                  new {
+                      BANNER = "ID GRUPO ALLOWANCE"
+                      },
+                    };
+                worksheet.Cell("B1").Value = new[]{
                   new {
                       BANNER = "DESCRIPCION"
                       },
                     };
-                worksheet.Cell("B1").Value = new[]
-            {
+                worksheet.Cell("C1").Value = new[]{
                   new {
                       BANNER = "GRUPO"
                       },
                     };
-                worksheet.Cell("C1").Value = new[]
-            {
+                worksheet.Cell("D1").Value = new[]{
                   new {
                       BANNER = "TEXTO"
                       },
                     };
+                worksheet.Cell("E1").Value = new[]{
+                  new {
+                      BANNER = "ACTIVO"
+                      },
+                    };
                 for (int i = 2; i <= (lst.Count + 1); i++)
                 {
+                    string activo = lst[i - 2].ACTIVO==true ? "SI" : "NO";
                     worksheet.Cell("A" + i).Value = new[]
-               {
+                    {
+                  new {
+                      BANNER       = lst[i-2].ID
+                      },
+                    };
+                    worksheet.Cell("B" + i).Value = new[]
+                    {
                   new {
                       BANNER       = lst[i-2].DESCRIPCION
                       },
                     };
-                    worksheet.Cell("B" + i).Value = new[]
-                {
+                    worksheet.Cell("C" + i).Value = new[]
+                    {
                   new {
                       BANNER       = lst[i-2].GRUPO_ALL
                       },
@@ -452,11 +462,17 @@ namespace TAT001.Controllers.Catalogos
                     string u = User.Identity.Name;
                     var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
                     var tslt = tst.Where(x => x.SPRAS_ID == user.SPRAS_ID).FirstOrDefault();
-                    worksheet.Cell("C" + i).Value = new[]
+                    worksheet.Cell("D" + i).Value = new[]
                     {
                         new {
                             BANNER       = tslt.TXT50
                         },
+                    };
+                    worksheet.Cell("E" + i).Value = new[]
+                   {
+                  new {
+                      BANNER       = activo
+                      },
                     };
                 }
                 var rt = ruta + @"\DocGall" + DateTime.Now.ToShortDateString() + ".xlsx";

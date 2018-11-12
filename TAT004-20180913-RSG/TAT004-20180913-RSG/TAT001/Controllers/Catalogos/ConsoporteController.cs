@@ -6,29 +6,21 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using TAT001.Common;
 using TAT001.Entities;
 
 namespace TAT001.Controllers
 {
     public class ConsoporteController : Controller
     {
-        private TAT001Entities db = new TAT001Entities();
+        readonly TAT001Entities db = new TAT001Entities();
 
         // GET: Consoporte
-        public ActionResult Index(string tsol)
+        public ActionResult Index()
         {
-            int pagina = 841; //ID EN BASE DE DATOS
-            string u = User.Identity.Name;
-            var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-            ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-            ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-            ViewBag.usuario = user;
-            ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-            ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-            ViewBag.IdTsol = tsol;
-
+            int pagina_id = 841; //ID EN BASE DE DATOS
+            FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
+        
             try
             {
                 string p = Session["pais"].ToString();
@@ -38,26 +30,16 @@ namespace TAT001.Controllers
             {
                 //return RedirectToAction("Pais", "Home");
             }
-            Session["spras"] = user.SPRAS_ID;
 
-            var cONSOPORTEs = db.CONSOPORTEs.Include(c => c.TSOL).Include(c => c.TSOPORTE)/*.Where(c => c.TSOL_ID == tsol)*/;
+            var cONSOPORTEs = db.CONSOPORTEs.Include(c => c.TSOL.TSOLTs).Include(c => c.TSOPORTE.TSOPORTETs);
             return View(cONSOPORTEs.ToList());
         }
 
         // GET: Consoporte/Details/5
         public ActionResult Details(string tsol, string tsopo)
         {
-            int pagina = 843; //ID EN BASE DE DATOS
-            string u = User.Identity.Name;
-            var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-            ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-            ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-            ViewBag.usuario = user;
-            ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(842)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID) && b.ID == 842).FirstOrDefault().TXT50;
-            ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-            ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-
+            int pagina_id = 843; //ID EN BASE DE DATOS
+            FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
             try
             {
                 string p = Session["pais"].ToString();
@@ -67,13 +49,12 @@ namespace TAT001.Controllers
             {
                 //return RedirectToAction("Pais", "Home");
             }
-            Session["spras"] = user.SPRAS_ID;
 
-            if (tsol == null | tsopo == null)
+            if (tsol == null || tsopo == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            CONSOPORTE cONSOPORTE = db.CONSOPORTEs.Where(x => x.TSOL_ID == tsol && x.TSOPORTE_ID == tsopo).First();
+            CONSOPORTE cONSOPORTE = db.CONSOPORTEs.Include(c => c.TSOL.TSOLTs).Include(c => c.TSOPORTE.TSOPORTETs).Where(x => x.TSOL_ID == tsol && x.TSOPORTE_ID == tsopo).First();
             if (cONSOPORTE == null)
             {
                 return HttpNotFound();
@@ -82,21 +63,11 @@ namespace TAT001.Controllers
         }
 
         // GET: Consoporte/Create
-        public ActionResult Create(string tsol)
+        public ActionResult Create()
         {
-            int pagina = 843; //ID EN BASE DE DATOS
-            string u = User.Identity.Name;
-            var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-            ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-            ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-            ViewBag.usuario = user;
-            ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-            ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-            ViewBag.IdTsol = tsol;
-            ViewBag.activo = true;
-
+            int pagina_id = 843; //ID EN BASE DE DATOS
+            FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
+            
             try
             {
                 string p = Session["pais"].ToString();
@@ -106,13 +77,10 @@ namespace TAT001.Controllers
             {
                 //return RedirectToAction("Pais", "Home");
             }
-            Session["spras"] = user.SPRAS_ID;
-
-            var list = db.CONSOPORTEs.Where(x => x.TSOL_ID == tsol).Select(x => x.TSOPORTE_ID).ToList();
-            ViewBag.TSOPORTE_ID = new SelectList(db.TSOPORTEs.Where(x => !list.Contains(x.ID)).ToList(), "ID", "DESCRIPCION");
-            ViewBag.TSOL_ID = new SelectList(db.TSOLs.Where(x => !list.Contains(x.ID)).ToList(), "ID", "DESCRIPCION");
-            //ViewBag.TSOPORTE_ID = new SelectList(db.TSOPORTEs, "ID", "DESCRIPCION");
-            return View();
+            CONSOPORTE consoporte = new CONSOPORTE();
+            consoporte.ACTIVO = true;
+            consoporte.OBLIGATORIO = true;
+             return View(consoporte);
         }
 
         // POST: Consoporte/Create
@@ -124,10 +92,18 @@ namespace TAT001.Controllers
         {
             if (ModelState.IsValid)
             {
-                cONSOPORTE.ACTIVO = true;
-                db.CONSOPORTEs.Add(cONSOPORTE);
+                if (db.CONSOPORTEs.Any(x => x.TSOPORTE_ID == cONSOPORTE.TSOPORTE_ID && x.TSOL_ID == cONSOPORTE.TSOL_ID))
+                {
+                    CONSOPORTE cONSOPORTEAux = db.CONSOPORTEs.First(x => x.TSOPORTE_ID == cONSOPORTE.TSOPORTE_ID && x.TSOL_ID == cONSOPORTE.TSOL_ID);
+                    cONSOPORTEAux.ACTIVO = cONSOPORTE.ACTIVO;
+                    cONSOPORTEAux.OBLIGATORIO = cONSOPORTE.OBLIGATORIO;
+                    db.Entry(cONSOPORTEAux).State = EntityState.Modified;
+                }
+                else {
+                    db.CONSOPORTEs.Add(cONSOPORTE);
+                }
                 db.SaveChanges();
-                return RedirectToAction("Index", new { tsol = cONSOPORTE.TSOL_ID });
+                return RedirectToAction("Index");
             }
 
             ViewBag.TSOL_ID = new SelectList(db.TSOLs, "ID", "DESCRIPCION", cONSOPORTE.TSOL_ID);
@@ -138,16 +114,9 @@ namespace TAT001.Controllers
         // GET: Consoporte/Edit/5
         public ActionResult Edit(string tsol, string tsopo)
         {
-            int pagina = 843; //ID EN BASE DE DATOS
-            string u = User.Identity.Name;
-            var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-            ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-            ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-            ViewBag.usuario = user;
-            ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(844)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID) && b.ID == 844).FirstOrDefault().TXT50;
-            ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-            ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            int pagina_id = 843; //ID EN BASE DE DATOS
+            FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
+
             ViewBag.IdTsol = tsol;
             ViewBag.activo = true;
 
@@ -160,19 +129,16 @@ namespace TAT001.Controllers
             {
                 //return RedirectToAction("Pais", "Home");
             }
-            Session["spras"] = user.SPRAS_ID;
 
-            if (tsol == null | tsopo == null)
+            if (tsol == null || tsopo == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            CONSOPORTE cONSOPORTE = db.CONSOPORTEs.Where(x => x.TSOL_ID == tsol && x.TSOPORTE_ID == tsopo).First();
+            CONSOPORTE cONSOPORTE = db.CONSOPORTEs.Include(c => c.TSOL.TSOLTs).Include(c => c.TSOPORTE.TSOPORTETs).Where(x => x.TSOL_ID == tsol && x.TSOPORTE_ID == tsopo).First();
             if (cONSOPORTE == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.TSOL_ID = new SelectList(db.TSOLs, "ID", "DESCRIPCION", cONSOPORTE.TSOL_ID);
-            ViewBag.TSOPORTE_ID = new SelectList(db.TSOPORTEs, "ID", "DESCRIPCION", cONSOPORTE.TSOPORTE_ID);
             return View(cONSOPORTE);
         }
 
@@ -185,41 +151,16 @@ namespace TAT001.Controllers
         {
             if (ModelState.IsValid)
             {
-                //cONSOPORTE.ACTIVO = true;
                 db.Entry(cONSOPORTE).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index", new { tsol = cONSOPORTE.TSOL_ID });
+                return RedirectToAction("Index");
             }
-            ViewBag.TSOL_ID = new SelectList(db.TSOLs, "ID", "DESCRIPCION", cONSOPORTE.TSOL_ID);
-            ViewBag.TSOPORTE_ID = new SelectList(db.TSOPORTEs, "ID", "DESCRIPCION", cONSOPORTE.TSOPORTE_ID);
-            return View(cONSOPORTE.TSOL_ID, cONSOPORTE.TSOPORTE_ID);
-        }
+            cONSOPORTE = db.CONSOPORTEs.Include(c => c.TSOL.TSOLTs).Include(c => c.TSOPORTE.TSOPORTETs).Where(x => x.TSOL_ID == cONSOPORTE.TSOL_ID && x.TSOPORTE_ID == cONSOPORTE.TSOPORTE_ID).First();
 
-        // GET: Consoporte/Delete/5
-        //public ActionResult Delete(string id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    CONSOPORTE cONSOPORTE = db.CONSOPORTEs.Find(id);
-        //    if (cONSOPORTE == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(cONSOPORTE);
-        //}
-
-        // POST: Consoporte/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        public ActionResult Delete(string tsol, string tsopo)
-        {
-            CONSOPORTE cONSOPORTE = db.CONSOPORTEs.Where(x => x.TSOL_ID == tsol && x.TSOPORTE_ID == tsopo).First();
-            db.CONSOPORTEs.Remove(cONSOPORTE);
-            db.SaveChanges();
-            return RedirectToAction("Index", new { tsol = cONSOPORTE.TSOL_ID });
+            return View(cONSOPORTE);
         }
+        
+        
 
         protected override void Dispose(bool disposing)
         {

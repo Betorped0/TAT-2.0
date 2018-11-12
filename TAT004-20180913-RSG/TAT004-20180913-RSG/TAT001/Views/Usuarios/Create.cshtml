@@ -46,8 +46,16 @@
                     <div class="input-field col s12">
                         @Html.PasswordFor(model => model.MANAGER, new { @id = "txt_pass2", required = true, @maxlength = 16, @minlength = 5 })
                         @Html.LabelFor(model => model.MANAGER, "Confirmar contraseña", htmlAttributes: new { @id = "lbl_conf" })
-                        @Html.ValidationMessageFor(model => model.MANAGER, "", new { @class = "text-danger", id = "lbl_mensajepass" })
+                        @*@Html.ValidationMessageFor(model => model.MANAGER, "", new { @class = "text-danger", id = "lbl_mensajepass" })*@
                         @*<span class="helper-text" id="lbl_mensajepass" data-error="No coinciden" data-success=""></span>*@
+                    </div>
+                    <div class="row">
+                        <div class="col s12 left-align">
+                            @if (@TempData["MensajePass"] != null)
+                            {
+                                <label class="alert-dismissable" id="lbl_confirpass"></label>
+                            }
+                        </div>
                     </div>
                 </div>
                 <script>

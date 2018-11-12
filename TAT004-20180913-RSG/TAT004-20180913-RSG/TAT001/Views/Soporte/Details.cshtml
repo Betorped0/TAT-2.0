@@ -3,13 +3,11 @@
 @{
     ViewBag.pagina_r = 1315;
     ViewBag.carpeta_r = 500;
-    //ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="row">
     <div class="col s12 right-align">
         <a href="@Url.Action("Edit", "Soporte", new { id = Model.ID })" id="btnEditar" class="btn btn-default">Editar</a>
-        <a href="@Url.Action("Index", "Soporte")" id="btnLista" class="btn btn-default">Lista</a>
     </div>
 </div>
 
@@ -23,18 +21,14 @@
                 <div class="col s6">
                     <div class="card-panel">
                         <div class="row">
-
                             <div class="input-field col s12">
                                 @Html.EditorFor(model => model.ID, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
                                 @Html.LabelFor(model => model.ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblID" })
                             </div>
-
                             <div class="input-field col s12">
                                 @Html.EditorFor(model => model.DESCRIPCION, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
                                 @Html.LabelFor(model => model.DESCRIPCION, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblDes" })
                             </div>
-
-
                         </div>
                     </div>
                 </div>
@@ -47,26 +41,20 @@
                             @foreach (var item in Model.TSOPORTETs)
                             {
                                 <div class=" input-field col s12">
-                                    @Html.EditorFor(modelItem => modelItem.ID, new { htmlAttributes = new { @disabled = "disabled" } })
-                                    <label for="">@item.SPRA.DESCRIPCION</label>
-                                </div>
-                                <div class=" input-field col s12">
                                     @Html.EditorFor(modelItem => modelItem.DESCRIPCION, new { htmlAttributes = new { @disabled = "disabled" } })
-                                    <label for="TXT50">@item.SPRA.DESCRIPCION</label>
+                                    <label for="">@item.SPRA.DESCRIPCION</label>
                                 </div>
                             }
 
                         </div>
                         <div class="right">
-                            @Html.LabelFor(model => model.ACTIVO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblObliga" })
-
-
                             @if ((bool)Model.ACTIVO == true)
                             {
                                 <i class='material-icons green-text'>check</i>}
                             else
                             {
                                 <i class='material-icons red-text'>clear</i>}
+                            @Html.LabelFor(model => model.ACTIVO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblObliga" })
                         </div>
                         <br />
                         <br />
@@ -77,6 +65,6 @@
     }
 </div>
 
-<p>
-    @Html.ActionLink("Back to List", "Index", new { tsol = Model.ID })
-</p>
+<div class="col s12">
+    <a id="btnRegresar" href="@Url.Action("Index")"></a>
+</div>

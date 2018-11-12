@@ -135,7 +135,7 @@ namespace TAT001.Controllers
             ViewBag.pais = dOCUMENTO.PAIS_ID + ".png"; //RSG 29.09.2018
             DF.F = db.FLUJOes.Where(a => a.NUM_DOC.Equals(id)).OrderByDescending(a => a.POS).FirstOrDefault();
             //DF.F.ESTATUS = "";
-            ViewBag.ts = db.TS_FORM.Where(a => a.BUKRS_ID.Equals(DF.D.SOCIEDAD_ID) & a.LAND_ID.Equals(DF.D.PAIS_ID)).ToList();
+            ViewBag.ts = db.TS_FORM.Where(a => a.BUKRS_ID.Equals(DF.D.SOCIEDAD_ID) && a.LAND_ID.Equals(DF.D.PAIS_ID)).ToList();
             ViewBag.tts = db.DOCUMENTOTS.Where(a => a.NUM_DOC.Equals(DF.D.NUM_DOC)).ToList();
 
             if (DF.D.DOCUMENTO_REF != null)
@@ -1476,6 +1476,7 @@ namespace TAT001.Controllers
         {
             string errorString = "";
             SOCIEDAD id_bukrs = new SOCIEDAD();
+            Calendario445 cal = new Calendario445();
             string p = "";
             string rele = ""; //Add MGC B20180705 2018.07.05 relacionadaed editar el material en los nuevos renglones
             decimal monto_ret = Convert.ToDecimal(dOCUMENTO.MONTO_DOC_MD);
@@ -2308,7 +2309,6 @@ namespace TAT001.Controllers
                                     dOCUMENTO.TIPO_RECURRENTE = "3";
                                 //RSG 29.07.2018-add----------------------------------
                                 drec.FECHAV = drec.FECHAF;
-                                Calendario445 cal = new Calendario445();
                                 if (dOCUMENTO.TIPO_RECURRENTE == "1")
                                     drec.FECHAF = cal.getNextViernes((DateTime)drec.FECHAF);
                                 else
@@ -2352,7 +2352,6 @@ namespace TAT001.Controllers
                             dOCUMENTO.TIPO_RECURRENTE = "2";
                         if (dOCUMENTO.TIPO_RECURRENTE != "1" & dOCUMENTO.OBJETIVOQ == true)
                             dOCUMENTO.TIPO_RECURRENTE = "3";
-                        Calendario445 cal = new Calendario445();
                         drec.FECHAF = cal.getUltimoDia(dOCUMENTO.FECHAF_VIG.Value.Year, cal.getPeriodo(dOCUMENTO.FECHAF_VIG.Value));
                         drec.FECHAV = drec.FECHAF;
 
@@ -2595,32 +2594,33 @@ namespace TAT001.Controllers
                             ////decimal total = 0;
                             decimal[] totales = new decimal[ddr.Count()];
                             decimal totalRes = new decimal();
-                            foreach (DOCUMENTOP dr in ddr)
-                            {
+                            ////foreach (DOCUMENTOP dr in ddr)
+                            ////{
                                 //totales[(int)dr.POS - 1] = dr.VOLUMEN_EST * dr.MONTO_APOYO;
-                                totales[(int)dr.POS - 1] = (decimal)dr.APOYO_EST;
+                                ////totales[(int)dr.POS - 1] = (decimal)dr.APOYO_EST;
                                 foreach (DOCUMENTO d1 in dd)
                                 {
-                                    foreach (DOCUMENTOP dp in d1.DOCUMENTOPs)
-                                    {
-                                        if (dr.POS == dp.POS)
-                                        {
-                                            //var suma2 = dp.VOLUMEN_REAL * dp.MONTO_APOYO;
-                                            var suma2 = dp.APOYO_REAL;
+                                    //foreach (DOCUMENTOP dp in d1.DOCUMENTOPs)
+                                    //{
+                                    //    if (dr.POS == dp.POS)
+                                    //    {
+                                    //        //var suma2 = dp.VOLUMEN_REAL * dp.MONTO_APOYO;
+                                    //        var suma2 = dp.APOYO_REAL;
 
-                                            totales[(int)dr.POS - 1] = totales[(int)dr.POS - 1] - (decimal)suma2;
-                                            totalRes += (decimal)suma2;
-                                        }
-                                    }
-
+                                    //        totales[(int)dr.POS - 1] = totales[(int)dr.POS - 1] - (decimal)suma2;
+                                    //        totalRes += (decimal)suma2;
+                                    //    }
+                                    //}
+                                    totalRes += (decimal)d1.MONTO_DOC_MD;
                                 }
-                            }
+                            ////}
                             //RSG 14.06.2018----------------------
                             decimal resto = decimal.Parse("0.00");
-                            foreach (decimal dec in totales)
-                            {
-                                resto += dec;
-                            }
+                            ////foreach (decimal dec in totales)
+                            ////{
+                            ////    resto += dec;
+                            ////}
+                            resto = (decimal)docPadre.MONTO_DOC_MD - totalRes;
                             //////RSG 14.06.2018----------------------
                             ////foreach (decimal dec in totales)
                             ////{
@@ -2859,17 +2859,44 @@ namespace TAT001.Controllers
             ViewBag.MONTO_DIS = monto_ret;
 
             //----------------------------RSG 18.05.2018
+            if (dOCUMENTO.FECHAI_VIG == null)
+                dOCUMENTO.FECHAI_VIG = DateTime.Now;
+            if (dOCUMENTO.FECHAF_VIG == null)
+                dOCUMENTO.FECHAF_VIG = DateTime.Now;
+            //----------------------------RSG 18.05.2018
             string spras = FnCommon.ObtenerSprasId(db, User.Identity.Name);
             ViewBag.PERIODOS = new SelectList(db.PERIODOTs.Where(a => a.SPRAS_ID == spras).ToList(), "PERIODO_ID", "TXT50", DateTime.Now.Month);
             List<string> anios = new List<string>();
             int mas = 10;
             for (int i = 0; i < mas; i++)
             {
-                anios.Add((DateTime.Now.Year + i).ToString());
+                if (!string.IsNullOrEmpty(id_d))
+                    anios.Add((dOCUMENTO.FECHAI_VIG.Value.Year + i).ToString());
+                else
+                    anios.Add((DateTime.Now.Year + i).ToString());
             }
+            string selYear1 = "";//ADD RSG 04.11.2018-------------------------------
+            string selYear2 = "";
+            if (string.IsNullOrEmpty(id_d))
+            {
+                selYear1 = DateTime.Now.Year.ToString();//ADD RSG 04.11.2018-------------------------------
+                selYear2 = DateTime.Now.Year.ToString();
+            }
+            else
+            {
+                selYear1 = dOCUMENTO.FECHAI_VIG.Value.Year.ToString();//ADD RSG 04.11.2018-------------------------------
+                selYear2 = dOCUMENTO.FECHAF_VIG.Value.Year.ToString();
+            }
+
+            if (!string.IsNullOrEmpty(id_d))
+            {
+                if (cal.anioMas(dOCUMENTO.FECHAI_VIG.Value)) selYear1 = (dOCUMENTO.FECHAI_VIG.Value.Year + 1).ToString();
+                if (cal.anioMas(dOCUMENTO.FECHAF_VIG.Value)) selYear2 = (dOCUMENTO.FECHAF_VIG.Value.Year + 1).ToString();//ADD RSG 04.11.2018-------------------------------
+            }
+            ViewBag.ANIOS = new SelectList(anios, selYear1);//ADD RSG 31.10.2018
+            ViewBag.ANIOSF = new SelectList(anios, selYear2);//ADD RSG 31.10.2018         
             dOCUMENTO.SOCIEDAD = db.SOCIEDADs.Find(dOCUMENTO.SOCIEDAD_ID);
             //----------------------------RSG 18.05.2018
-
 
             ViewBag.borrador = "error"; //MGC B20180625 MGC
             ViewBag.borradore = borrador_param; //B20180625 MGC2 2018.07.04 
@@ -3357,6 +3384,9 @@ namespace TAT001.Controllers
                 Models.PresupuestoModels carga = new Models.PresupuestoModels();
                 string nombre = "", contentyp = "";
                 carga.contDescarga(archivo, ref contentyp, ref nombre);
+                Log.Info("Solicitudes-Descargar: nombre->" + nombre);
+                Log.Info("Solicitudes-Descargar: contentyp->" + contentyp);
+                Log.Info("Solicitudes-Descargar: archivo->" + archivo);
                 FilePathResult file = File(archivo, contentyp, nombre);
                 return file;
             }
