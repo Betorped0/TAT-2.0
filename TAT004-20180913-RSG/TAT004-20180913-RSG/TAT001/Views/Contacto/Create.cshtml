@@ -1,6 +1,6 @@
 ﻿@model TAT001.Models.Contactoc
 @{
-    ViewBag.pagina_r = 642;
+    ViewBag.pagina_r = 643;
     ViewBag.carpeta_r = 500;
     //ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -13,7 +13,7 @@
     <div class="row">
         <div class="row right">
             <div class="col l12 m12 right">
-                <input type="submit" value="Agregar2" class="btn btn-default" />
+                <input type="submit" value="Guardar" class="btn btn-default" />
             </div>
         </div>
     </div>
@@ -71,7 +71,7 @@
     </div>
 
     <div>
-        @Html.ActionLink("Back to List", "Index")
+        @Html.ActionLink("Back to List", "Index", new { vko = Model.vkorg, vtw = Model.vtweg, kun = Model.kunnr, spa = Model.spart }, new { id = "lblRegresar" })
     </div>
 }
 

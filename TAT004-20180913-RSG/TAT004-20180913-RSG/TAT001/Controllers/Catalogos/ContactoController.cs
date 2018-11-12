@@ -137,7 +137,7 @@ namespace TAT001.Controllers.Catalogos
         [HttpGet]
         public ActionResult Create(string vko, string vtw, string kun, string spa)
         {
-            int pagina = 642; //ID EN BASE DE DATOS
+            int pagina = 643; //ID EN BASE DE DATOS
             using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
@@ -201,7 +201,7 @@ namespace TAT001.Controllers.Catalogos
         // GET: Contacto/Edit/5
         public ActionResult Edit(string vko, string vtw, string kun, string spa, int id)
         {
-            int pagina = 642; //ID EN BASE DE DATOS
+            int pagina = 644; //ID EN BASE DE DATOS
             using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
@@ -296,7 +296,8 @@ namespace TAT001.Controllers.Catalogos
                 var con = db.CONTACTOCs.Where(x => x.ID == id).First();
                 con.ACTIVO = false;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                //return RedirectToAction("Index");
+                return RedirectToAction("Index", new { vko = con.VKORG, vtw = con.VTWEG, kun = con.KUNNR, spa = con.SPART });
             }
         }
 
