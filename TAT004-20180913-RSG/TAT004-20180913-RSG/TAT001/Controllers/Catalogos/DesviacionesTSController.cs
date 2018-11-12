@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using TAT001.Common;
 using TAT001.Entities;
 using TAT001.Models;
 
@@ -21,17 +22,7 @@ namespace TAT001.Controllers.Catalogos
             int pagina = 1310; //ID EN BASE DE DATOS
             using (TAT001Entities db = new TAT001Entities())
             {
-                string u = User.Identity.Name;
-                //string u = "admin";
-                var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
-                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-
+                FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
                 try
                 {
                     string p = Session["pais"].ToString();
@@ -42,10 +33,10 @@ namespace TAT001.Controllers.Catalogos
                     //ViewBag.pais = "mx.png";
                     //return RedirectToAction("Pais", "Home");
                 }
-                Session["spras"] = user.SPRAS_ID;
             }
-            var tS_FORMT = db.TS_FORMT.Include(t => t.SPRA).Include(t => t.TS_CAMPO);
-            return View(tS_FORMT.ToList());
+
+            var campos = db.TS_CAMPO.ToList();
+            return View(campos);
         }
 
         // GET: DesviacionesTS/Details/5
@@ -54,17 +45,7 @@ namespace TAT001.Controllers.Catalogos
             int pagina = 1311; //ID EN BASE DE DATOS
             using (TAT001Entities db = new TAT001Entities())
             {
-                string u = User.Identity.Name;
-                //string u = "admin";
-                var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
-                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-
+                FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
                 try
                 {
                     string p = Session["pais"].ToString();
@@ -75,7 +56,6 @@ namespace TAT001.Controllers.Catalogos
                     //ViewBag.pais = "mx.png";
                     //return RedirectToAction("Pais", "Home");
                 }
-                Session["spras"] = user.SPRAS_ID;
             }
             if (id == null)
             {
@@ -102,17 +82,7 @@ namespace TAT001.Controllers.Catalogos
             int pagina = 1312; //ID EN BASE DE DATOS
             using (TAT001Entities db = new TAT001Entities())
             {
-                string u = User.Identity.Name;
-                //string u = "admin";
-                var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
-                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-
+                FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
                 try
                 {
                     string p = Session["pais"].ToString();
@@ -123,7 +93,6 @@ namespace TAT001.Controllers.Catalogos
                     //ViewBag.pais = "mx.png";
                     //return RedirectToAction("Pais", "Home");
                 }
-                Session["spras"] = user.SPRAS_ID;
             }
             //ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION");
             //ViewBag.TSFORM_ID = new SelectList(db.TS_CAMPO, "ID", "ID");
@@ -135,64 +104,78 @@ namespace TAT001.Controllers.Catalogos
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "SPRAS_ID,TSFORM_ID,TXT100")] TS_FORMT tS_FORMT)
+        public ActionResult Create([Bind(Include = "ID,BUKRS_ID,LAND_ID")] TS_FORM TSFORM, FormCollection collection)
         {
 
-            if (ModelState.IsValid)
-            {
-                TS_CAMPO TS = new TS_CAMPO();
-                TS.ACTIVO = true;
-                db.TS_CAMPO.Add(TS);
-                db.SaveChanges();
-                List<SPRA> ss = db.SPRAS.ToList();
-
-                foreach (SPRA s in ss)
-                {
-                    TS_FORMT pt = new TS_FORMT();
-                    pt.TSFORM_ID = TS.ID;
-                    pt.SPRAS_ID = s.ID;
-                    pt.TXT100 = tS_FORMT.TXT100;
-                    db.TS_FORMT.Add(pt);
-                }
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
             int pagina = 1312; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            try
             {
-                string u = User.Identity.Name;
-                //string u = "admin";
-                var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
-                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
 
-                try
+                if (ModelState.IsValid)
                 {
-                    string p = Session["pais"].ToString();
-                    ViewBag.pais = p + ".png";
+                    TS_CAMPO TS = new TS_CAMPO();
+                    TS.ACTIVO = true;
+                    TS.ID = TSFORM.ID;
+                    db.TS_CAMPO.Add(TS);
+                    db.SaveChanges();
+
+                    TSFORM.POS = TS.ID;
+                    TSFORM.CAMPO = TS.ID.ToString();
+                    TSFORM.ID = TS.ID;
+                    db.TS_FORM.Add(TSFORM);
+                    db.SaveChanges();
+
+                    List<SPRA> ss = db.SPRAS.ToList();
+                    List<TS_FORMT> listTextos = new List<TS_FORMT>();
+                    if (collection.AllKeys.Contains("EN") && !String.IsNullOrEmpty(collection["EN"]))
+                    {
+
+                        TS_FORMT m = new TS_FORMT { SPRAS_ID = "EN", TSFORM_ID = TS.ID, TXT100 = collection["EN"].ToUpper() };
+                        listTextos.Add(m);
+
+                    }
+                    if (collection.AllKeys.Contains("ES") && !String.IsNullOrEmpty(collection["ES"]))
+                    {
+                        TS_FORMT m = new TS_FORMT { SPRAS_ID = "ES", TSFORM_ID = TS.ID, TXT100 = collection["ES"].ToUpper() };
+                        listTextos.Add(m);
+                    }
+                    db.TS_FORMT.AddRange(listTextos);
+
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
                 }
-                catch
+                using (TAT001Entities db = new TAT001Entities())
                 {
-                    //ViewBag.pais = "mx.png";
-                    //return RedirectToAction("Pais", "Home");
+                    string u = User.Identity.Name;
+                    //string u = "admin";
+                    FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
+
+                    try
+                    {
+                        string p = Session["pais"].ToString();
+                        ViewBag.pais = p + ".png";
+                    }
+                    catch
+                    {
+                        //ViewBag.pais = "mx.png";
+                        //return RedirectToAction("Pais", "Home");
+                    }
                 }
-                Session["spras"] = user.SPRAS_ID;
+                //if (ModelState.IsValid)
+                //{
+                //    db.TS_FORMT.Add(tS_FORMT);
+                //    db.SaveChanges();
+                //    return RedirectToAction("Index");
+                //}
+
+                //ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION", tS_FORMT.SPRAS_ID);
+                //ViewBag.TSFORM_ID = new SelectList(db.TS_CAMPO, "ID", "ID", tS_FORMT.TSFORM_ID);
+                return View(TSFORM);
+            }catch(Exception e)
+            {
+                FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
+                return View(TSFORM);
             }
-            //if (ModelState.IsValid)
-            //{
-            //    db.TS_FORMT.Add(tS_FORMT);
-            //    db.SaveChanges();
-            //    return RedirectToAction("Index");
-            //}
-
-            //ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION", tS_FORMT.SPRAS_ID);
-            //ViewBag.TSFORM_ID = new SelectList(db.TS_CAMPO, "ID", "ID", tS_FORMT.TSFORM_ID);
-            return View(tS_FORMT);
         }
 
         // GET: DesviacionesTS/Edit/5
@@ -201,17 +184,7 @@ namespace TAT001.Controllers.Catalogos
             int pagina = 1313; //ID EN BASE DE DATOS
             using (TAT001Entities db = new TAT001Entities())
             {
-                string u = User.Identity.Name;
-                //string u = "admin";
-                var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
-                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-
+                FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
                 try
                 {
                     string p = Session["pais"].ToString();
@@ -222,7 +195,6 @@ namespace TAT001.Controllers.Catalogos
                     //ViewBag.pais = "mx.png";
                     //return RedirectToAction("Pais", "Home");
                 }
-                Session["spras"] = user.SPRAS_ID;
             }
             if (id == null)
             {
@@ -235,6 +207,7 @@ namespace TAT001.Controllers.Catalogos
                 return HttpNotFound();
             }
             TS_CAMPO tSOPORTE = db.TS_CAMPO.Find(id);
+            tSOPORTE.TS_FORM=db.TS_FORM.Where(x => x.ID == id).ToList();
             if (tSOPORTE.TS_FORMT.Count > 0)
                 foreach (var e in tSOPORTE.TS_FORMT)
                 {
@@ -245,8 +218,6 @@ namespace TAT001.Controllers.Catalogos
                     if (e.SPRAS_ID == "PT")
                         ViewBag.PT = e.TXT100;
                 }
-            else
-            { }
             //ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION", tS_FORMT.SPRAS_ID);
             //ViewBag.TSFORM_ID = new SelectList(db.TS_CAMPO, "ID", "ID", tS_FORMT.TSFORM_ID);
             ViewBag.SPRAS = db.SPRAS.ToList();          
@@ -305,17 +276,7 @@ namespace TAT001.Controllers.Catalogos
             int pagina = 1313; //ID EN BASE DE DATOS
             using (TAT001Entities db = new TAT001Entities())
             {
-                string u = User.Identity.Name;
-                //string u = "admin";
-                var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
-                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-
+                FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
                 try
                 {
                     string p = Session["pais"].ToString();
@@ -326,7 +287,6 @@ namespace TAT001.Controllers.Catalogos
                     //ViewBag.pais = "mx.png";
                     //return RedirectToAction("Pais", "Home");
                 }
-                Session["spras"] = user.SPRAS_ID;
             }
             ViewBag.des = db.TSOLTs.ToList();
             //ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION", tS_FORMT.SPRAS_ID);

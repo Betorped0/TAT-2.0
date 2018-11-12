@@ -1,4 +1,4 @@
-﻿@model TAT001.Entities.TS_FORMT
+﻿@model TAT001.Entities.TS_FORM
 
 @{
     //ViewBag.Title = "Create";
@@ -7,16 +7,12 @@
     ViewBag.carpeta_r = 500;
 }
 <script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
+<link href="~/Content/autocomplete.css" rel="stylesheet" />
+<script src="~/Scripts/autocomplete1.11.4.js"></script>
 <div class="row">
     @using (Html.BeginForm("Create", "DesviacionesTS", FormMethod.Post, new { @id = "desviacionesForm" }))
     {
         @Html.AntiForgeryToken()
-        @*<div class="form-group">
-                <div class="row right">
-                    <input type="submit" value="Crear" class="btn btn-default" style=""/>
-                </div>
-            </div>*@
-
         <div class="row">
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
@@ -24,20 +20,19 @@
                 </div>
             </div>
         </div>
-        <div class="col s6">
-            <div class="card-panel">
-                <div class="row">
-                    @Html.LabelFor(model => model.TXT100, htmlAttributes: new { @class = "control-label col-md-2", @id = "idDescr" })
-                    @Html.EditorFor(model => model.TXT100, new { htmlAttributes = new { @class = "form-control", @required = "", @maxlength = "100" } })
-                </div>
-            </div>
-
-        </div>
         <div class="form-horizontal">
             <div class="col s6">
                 <div class="card-panel">
                     <h5>Traducciones</h5>
                     <div class="row">
+                        <div class="input-field col l10 m10" style="margin-bottom:0;">
+                            @Html.LabelFor(model => model.LAND_ID, "LAND_ID", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_pais" })
+                            @Html.EditorFor(model => model.LAND_ID, new { htmlAttributes = new { @class = "form-control", @required = "", @maxlength = 50 } })
+                        </div>
+                        <div class="input-field col l10 m10" style="margin-bottom:0;">
+                            @Html.LabelFor(model => model.BUKRS_ID, "BUKRS_ID", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_sociedad" })
+                            @Html.EditorFor(model => model.BUKRS_ID, new { htmlAttributes = new { @class = "form-control", @required = "", @maxlength = 50 } })
+                        </div>
                         <div class="input-field col l10 m10" style="margin-bottom:0;">
                             @Html.Editor("EN", new { htmlAttributes = new { @class = "form-control", @maxlength = "50", @required = "" } })
                             <label id="lblIngles">Ingles</label>
@@ -61,12 +56,59 @@
             </div>
         </div>
     }
-    </div>
-    <div>
-        @Html.ActionLink("Regresar", "Index")
-    </div>
+</div>
+<div>
+    @Html.ActionLink("Regresar", "Index")
+</div>
 
-    <script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
-    <script>
-        fnCommon.formValidation('desviacionesForm');
-    </script>
+<script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
+<script>
+     var root = "@Url.Content("~")";
+    //----  Se agrega validaciones al formulario----
+    fnCommon.formValidation('desviacionesForm');
+    function activarSociedad(me) {
+        debugger
+    }
+    var auto = $.noConflict(true);
+    auto(document).ready(function () {
+        auto("#BUKRS_ID").autocomplete({
+            source: function (request, response) {
+                fnCommon.autoAjax(root + "Listas/sociedades", response, { Prefix: request.term }, function (item) { return { label: item.TXT50, value: item.BUKRS }; });
+            },
+            messages: {
+                noResults: '',
+                results: function (resultsCount) { }
+            },
+            select: function (event, ui) {
+                var label = ui.item.label;
+                var value = ui.item.value;
+            },
+            change: function (e, ui) {
+                if (!(ui.item)) {
+                    e.target.value = "";
+                }
+            }
+        });
+    })
+    auto(document).ready(function () {
+        auto("#LAND_ID").autocomplete({
+            source: function (request, response) {
+                fnCommon.autoAjax(root + "Listas/paises_", response, { Prefix: request.term }, function (item) { return { label: item.TXT50, value: item.LAND }; });
+            },
+            messages: {
+                noResults: '',
+                results: function (resultsCount) { }
+            },
+            select: function (event, ui) {
+                var label = ui.item.label;
+                var value = ui.item.value;
+            },
+            change: function (e, ui) {
+                if (!(ui.item)) {
+                    e.target.value = "";
+                }
+               
+            }
+        });
+    })
+</script>
