@@ -22,35 +22,22 @@
         {
             @Html.HiddenFor(model => item.SPRAS_ID)
         }
-
-
-        <div class="col s6 ">
-            <div class="card-panel">
-                <div class="row">
-                    @*@foreach (var item in Model.TS_FORMT)
-                        {*@
-                    <div class="form-horizontal">
-
-                        <div class="form-group">
-                            @Html.LabelFor(model => Model.TS_FORMT.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT100, new { @id = "lblDesc" })
-
-                            @Html.EditorFor(model => Model.TS_FORMT.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT100, new { htmlAttributes = new { @class = "form-control", @disabled = "@disabled" } })
-
-
-                        </div>
-
-                    </div>
-                    @*}*@
-                </div>
-            </div>
-        </div>
-
-
         <div class="col s6 ">
             <div class="card-panel">
                 <h5 id="hdTr">Traducciones</h5>
                 <br />
                 <div class="row">
+                    @foreach (var item in Model.TS_FORM)
+                    {
+                        <div class="input-field col l10 m10" style="margin-bottom:0;">
+                            @Html.LabelFor(model => item.LAND_ID, "LAND_ID", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_pais" })
+                            @Html.EditorFor(model => item.PAI.LANDX, new { htmlAttributes = new { @class = "form-control", @required = "", @maxlength = 50, @readonly = "readonly" } })
+                        </div>
+                        <div class="input-field col l10 m10" style="margin-bottom:0;">
+                            @Html.LabelFor(model => item.BUKRS_ID, "BUKRS_ID", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_sociedad" })
+                            @Html.EditorFor(model => item.SOCIEDAD.BUTXT, new { htmlAttributes = new { @class = "form-control", @required = "", @maxlength = 50, @readonly = "readonly" } })
+                        </div>
+                    }
 
                     @foreach (var item in Model.TS_FORMT)
                     {

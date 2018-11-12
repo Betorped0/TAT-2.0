@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TAT001.Entities.TS_FORMT>
+﻿@model IEnumerable<TAT001.Entities.TS_CAMPO>
 
 @{
     //ViewBag.Title = "Index";
@@ -42,52 +42,76 @@
         <table class="table mdl-data-table striped" id="table" style="width:100%;">
             <thead>
                 <tr>
-                    <th id="lblIdioma">
-                        @Html.DisplayNameFor(model => model.SPRAS_ID)
+                    <th id="lbl_pais">
+
                     </th>
-                    <th id="lblIdTS">
-                        @Html.DisplayNameFor(model => model.TSFORM_ID)
+                    <th id="lbl_sociedad">
+
                     </th>
-                    <th id="lbl100">
-                        @Html.DisplayNameFor(model => model.TXT100)
+                    <th id="lbl_DesES">
+
+                    </th>
+                    <th id="lbl_DesEN">
+
+                    </th>
+                    <th id="lblAct">
                     </th>
                     <th></th>
                 </tr>
             </thead>
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.SPRAS_ID)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TSFORM_ID)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TXT100)
-                    </td>
-                    <td>
-                        <a data-form-method="post" href="@Url.Action("Edit", "DesviacionesTS", new { id = item.TSFORM_ID})">
-                            <i class='material-icons green-text'>edit</i>
-                        </a>
-                        <a data-form-method="post" href="@Url.Action("Details", "DesviacionesTS", new { id = item.TSFORM_ID})">
-                            <i class='material-icons blue-text'>search</i>
-                        </a>
+                string dexEs = item.TS_FORMT.Any(x => x.SPRAS_ID == "ES") ? item.TS_FORMT.First(x => x.SPRAS_ID == "ES").TXT100 : "";
+                string dexEN = item.TS_FORMT.Any(x => x.SPRAS_ID == "EN") ? item.TS_FORMT.First(x => x.SPRAS_ID == "EN").TXT100 : "";
 
-                    </td>
-                </tr>
+                string pais = item.TS_FORM.Any(x => x.ID == item.ID) ? item.TS_FORM.First(x => x.ID == item.ID).PAI.LANDX : "";
+                string code = item.TS_FORM.Any(x => x.ID == item.ID) ? item.TS_FORM.First(x => x.ID == item.ID).SOCIEDAD.BUTXT : "";
+            <tr>
+                <td>
+                    @pais
+                </td>
+                <td>
+                    @code
+                </td>
+                <td>
+                    @dexEs
+                </td>
+                <td>
+                    @dexEN
+                </td>
+                @if (item.ACTIVO != null && (bool)item.ACTIVO == true)
+                {
+                    <td style="align-items:center"><i class='material-icons green-text'>check</i></td>
+                }
+                else
+                {
+                    <td style="align-items:center;"><i class='material-icons red-text'>clear</i></td>
+                }
+                <td>
+                    <a data-form-method="post" href="@Url.Action("Edit", "DesviacionesTS", new { id = item.ID})">
+                        <i class='material-icons green-text'>edit</i>
+                    </a>
+                    <a data-form-method="post" href="@Url.Action("Details", "DesviacionesTS", new { id = item.ID})">
+                        <i class='material-icons blue-text'>search</i>
+                    </a>
+
+                </td>
+            </tr>
             }
 
         </table>
     </div>
     <script>
-    $(document).ready(function () {
+        $(document).ready(function () {
+        
+        var spras_id = "@ViewBag.spras_id";
+        var root = "@Url.Content("~")";
         var table = $('#table').DataTable({
             scrollX: "50vh",
             scrollY: "50vh",
             scrollCollapse: true,
             language: {
-                "url": "../Scripts/lang/@Session["spras"].ToString()"+".json"
+                "url": root + "/Scripts/lang/" + spras_id + ".json"
             }, columnDefs: [
                 {
                     targets: [1],
