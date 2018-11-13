@@ -43,6 +43,10 @@ namespace TAT001.Controllers
                 }
                 Session["spras"] = user.SPRAS_ID;
             }
+            Session["sociedad"] = null;
+            Session["cambio"] = null;
+            Session["periodoconsu"] = null;
+            Session["anioconsu"] = null;
             Models.PresupuestoModels carga = new Models.PresupuestoModels();
             ViewBag.ultMod = carga.consultarUCarga();
             ViewBag.anio = "20" + carga.consultaAnio();
