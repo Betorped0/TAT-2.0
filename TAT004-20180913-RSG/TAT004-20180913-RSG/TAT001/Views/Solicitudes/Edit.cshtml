@@ -1977,41 +1977,41 @@
                                                     </div>
                                                 </div>
                                             </li>
-                                           @{bool esNeg = ViewBag.remanente.Contains("("); }
-                                                @if (esNeg)
-                                                {
-                                                    <li class="collection-item" id="a4" style="background-color:red; color:white;">
-                                                                                        
-                                                        <div class="row" style="margin-bottom:0;padding-bottom:0;">
-                                                            <div id="div_remanente" class="col s6">
-                                                                @*B20180801 MGC Textos*@
-                                                                Remanente/(Exceso)
-                                                            </div>
+                                            @{bool esNeg = ViewBag.remanente.Contains("("); }
+                                            @if (esNeg)
+                                            {
+                                                <li class="collection-item" id="a4" style="background-color:red; color:white;">
 
-                                                            <div class="col s6 right-align">
-                                                                <span id="s_rema">@ViewBag.remanente</span>
-                                                            </div>
-
+                                                    <div class="row" style="margin-bottom:0;padding-bottom:0;">
+                                                        <div id="div_remanente" class="col s6">
+                                                            @*B20180801 MGC Textos*@
+                                                            Remanente/(Exceso)
                                                         </div>
-                                                    </li>
-                                        }
-                                        else
-                                        {
-                                            <li class="collection-item" id="a4">
 
-                                                <div class="row" style="margin-bottom:0;padding-bottom:0;">
-                                                    <div id="div_remanente" class="col s6">
-                                                        @*B20180801 MGC Textos*@
-                                                        Remanente/(Exceso)
+                                                        <div class="col s6 right-align">
+                                                            <span id="s_rema">@ViewBag.remanente</span>
+                                                        </div>
+
                                                     </div>
+                                                </li>
+                                            }
+                                            else
+                                            {
+                                                <li class="collection-item" id="a4">
 
-                                                    <div class="col s6 right-align">
-                                                        <span id="s_rema">@ViewBag.remanente</span>
+                                                    <div class="row" style="margin-bottom:0;padding-bottom:0;">
+                                                        <div id="div_remanente" class="col s6">
+                                                            @*B20180801 MGC Textos*@
+                                                            Remanente/(Exceso)
+                                                        </div>
+
+                                                        <div class="col s6 right-align">
+                                                            <span id="s_rema">@ViewBag.remanente</span>
+                                                        </div>
+
                                                     </div>
-
-                                                </div>
-                                            </li>
-                                        }
+                                                </li>
+                                            }
                                             <li class="collection-item" id="a5">
                                                 <div class="row" style="margin-bottom:0;padding-bottom:0;">
                                                     <div id="div_impuesto" class="col s6">
@@ -2225,3 +2225,16 @@
     <script src="~/Scripts/warning.js"></script>
 </div>
 @Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @id = "payer_id", @disabled = "disabled ", @onchange = @"selectCliente(this.value)", @style = "visibility:hidden" } }) @*OCG 15-10-18 Se inserta aqui para no afectar la vista*@
+
+@*@if (ViewBag.duplicado != null)
+{*@
+    <script>
+        var dd = false;
+        $('#tab_dis').on("click", function (e) {
+            if (!dd & isRecurrente()) {
+                $("#tabs_rec").removeClass("disabled");
+                dd = true;
+            }
+        });
+    </script>
+    @*}*@

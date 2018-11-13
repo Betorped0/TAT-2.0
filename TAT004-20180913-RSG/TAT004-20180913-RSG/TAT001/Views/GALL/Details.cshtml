@@ -64,15 +64,14 @@
                 }
             </div>
             <div class="right">
-                @Html.LabelFor(model => model.ACTIVO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblObliga" })
-
-
                 @if ((bool)Model.ACTIVO == true)
                 {
                     <i class='material-icons green-text'>check</i>}
                 else
                 {
                     <i class='material-icons red-text'>clear</i>}
+                @Html.LabelFor(model => model.ACTIVO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblObliga" })
+
             </div>
             <br />
             <br />

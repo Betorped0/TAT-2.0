@@ -2707,7 +2707,7 @@ $('body').on('keydown', '.input_oper.numberd', function (e) {
 });
 
 $('body').on('focusout', '.input_oper', function () {
-    if (!materialesExist)
+    if (!materialesExist && this.className.indexOf("input_material")>-1)
         return;
     var t = $('#table_dis').DataTable();
     var tr = $(this).closest('tr'); //Obtener el row 

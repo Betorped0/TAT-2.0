@@ -130,13 +130,13 @@ namespace TAT001.Controllers.Catalogos
                     if (collection.AllKeys.Contains("EN") && !String.IsNullOrEmpty(collection["EN"]))
                     {
 
-                        TS_FORMT m = new TS_FORMT { SPRAS_ID = "EN", TSFORM_ID = TS.ID, TXT100 = collection["EN"].ToUpper() };
+                        TS_FORMT m = new TS_FORMT { SPRAS_ID = "EN", TSFORM_ID = TS.ID, TXT100 = collection["EN"] };
                         listTextos.Add(m);
 
                     }
                     if (collection.AllKeys.Contains("ES") && !String.IsNullOrEmpty(collection["ES"]))
                     {
-                        TS_FORMT m = new TS_FORMT { SPRAS_ID = "ES", TSFORM_ID = TS.ID, TXT100 = collection["ES"].ToUpper() };
+                        TS_FORMT m = new TS_FORMT { SPRAS_ID = "ES", TSFORM_ID = TS.ID, TXT100 = collection["ES"] };
                         listTextos.Add(m);
                     }
                     db.TS_FORMT.AddRange(listTextos);
@@ -246,7 +246,7 @@ namespace TAT001.Controllers.Catalogos
                 {
                     if (!String.IsNullOrEmpty(collection["EN"]))
                     {
-                        TS_FORMT m = new TS_FORMT { SPRAS_ID = "EN", TSFORM_ID = tc.ID, TXT100 = collection["EN"].ToUpper() };
+                        TS_FORMT m = new TS_FORMT { SPRAS_ID = "EN", TSFORM_ID = tc.ID, TXT100 = collection["EN"] };
                         ListmATERIALTs.Add(m);
                     }
                     //if (mATERIAL1.DESCRIPCION != collection["EN"])
@@ -257,12 +257,12 @@ namespace TAT001.Controllers.Catalogos
                 }
                 if (collection.AllKeys.Contains("ES") && !String.IsNullOrEmpty(collection["ES"]))
                 {
-                    TS_FORMT m = new TS_FORMT { SPRAS_ID = "ES", TSFORM_ID = tc.ID, TXT100 = collection["ES"]/*, MAKTG = Convert.ToString(collection["ES"])*/.ToUpper() };
+                    TS_FORMT m = new TS_FORMT { SPRAS_ID = "ES", TSFORM_ID = tc.ID, TXT100 = collection["ES"]};
                     ListmATERIALTs.Add(m);
                 }
                 if (collection.AllKeys.Contains("PT") && !String.IsNullOrEmpty(collection["PT"]))
                 {
-                    TS_FORMT m = new TS_FORMT { SPRAS_ID = "PT", TSFORM_ID = tc.ID, TXT100 = collection["PT"]/*, MAKTG = Convert.ToString(collection["PT"])*/.ToUpper() };
+                    TS_FORMT m = new TS_FORMT { SPRAS_ID = "PT", TSFORM_ID = tc.ID, TXT100 = collection["PT"]};
                     ListmATERIALTs.Add(m);
                 }
                 db.TS_FORMT.AddRange(ListmATERIALTs);

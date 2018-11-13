@@ -841,7 +841,7 @@ namespace TAT001.Controllers
                         }
                         ViewBag.TSOL_IDI = tsmod.TXT50.ToString();
                         ViewBag.TALL_IDI = id_clas.Where(c => c.TALL_ID == d.TALL_ID).FirstOrDefault().TXT50; //B20180618 v1 MGC 2018.06.18
-                        archivos = db.DOCUMENTOAs.Where(x => x.NUM_DOC.Equals(d.NUM_DOC)).Include(x=>x.TSOPORTE).ToList();
+                        archivos = db.DOCUMENTOAs.Where(x => x.NUM_DOC.Equals(d.NUM_DOC)).Include(x => x.TSOPORTE).ToList();
 
                         List<DOCUMENTOP> docpl = db.DOCUMENTOPs.Where(docp => docp.NUM_DOC == d.NUM_DOC).ToList();//Documentos que se obtienen de la provisión
 
@@ -1889,7 +1889,7 @@ namespace TAT001.Controllers
                                         {
                                             docmod.MATKL = "";
                                         }
-                                        //docP.MATKL = docmod.MATKL;
+                                        try { docP.MATKL = docmod.MATKL_ID; } catch { }
                                         docP.CANTIDAD = 1;
                                         docP.MONTO = docmod.MONTO;
                                         docP.PORC_APOYO = docmod.PORC_APOYO;
@@ -2596,23 +2596,23 @@ namespace TAT001.Controllers
                             decimal totalRes = new decimal();
                             ////foreach (DOCUMENTOP dr in ddr)
                             ////{
-                                //totales[(int)dr.POS - 1] = dr.VOLUMEN_EST * dr.MONTO_APOYO;
-                                ////totales[(int)dr.POS - 1] = (decimal)dr.APOYO_EST;
-                                foreach (DOCUMENTO d1 in dd)
-                                {
-                                    //foreach (DOCUMENTOP dp in d1.DOCUMENTOPs)
-                                    //{
-                                    //    if (dr.POS == dp.POS)
-                                    //    {
-                                    //        //var suma2 = dp.VOLUMEN_REAL * dp.MONTO_APOYO;
-                                    //        var suma2 = dp.APOYO_REAL;
+                            //totales[(int)dr.POS - 1] = dr.VOLUMEN_EST * dr.MONTO_APOYO;
+                            ////totales[(int)dr.POS - 1] = (decimal)dr.APOYO_EST;
+                            foreach (DOCUMENTO d1 in dd)
+                            {
+                                //foreach (DOCUMENTOP dp in d1.DOCUMENTOPs)
+                                //{
+                                //    if (dr.POS == dp.POS)
+                                //    {
+                                //        //var suma2 = dp.VOLUMEN_REAL * dp.MONTO_APOYO;
+                                //        var suma2 = dp.APOYO_REAL;
 
-                                    //        totales[(int)dr.POS - 1] = totales[(int)dr.POS - 1] - (decimal)suma2;
-                                    //        totalRes += (decimal)suma2;
-                                    //    }
-                                    //}
-                                    totalRes += (decimal)d1.MONTO_DOC_MD;
-                                }
+                                //        totales[(int)dr.POS - 1] = totales[(int)dr.POS - 1] - (decimal)suma2;
+                                //        totalRes += (decimal)suma2;
+                                //    }
+                                //}
+                                totalRes += (decimal)d1.MONTO_DOC_MD;
+                            }
                             ////}
                             //RSG 14.06.2018----------------------
                             decimal resto = decimal.Parse("0.00");
@@ -3427,10 +3427,11 @@ namespace TAT001.Controllers
                 esDocRef = true;
                 montoApli = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == D.NUM_DOC && x.ESTATUS_C == null).Sum(x => x.MONTO_DOC_MD.Value);
             }
-            else if (D.DOCUMENTO_REF != null )
+            else if (D.DOCUMENTO_REF != null)
             {
                 esDocRef = true;
-                if (db.DOCUMENTOes.Any(x => x.DOCUMENTO_REF == D.DOCUMENTO_REF && x.ESTATUS_C == null)) {
+                if (db.DOCUMENTOes.Any(x => x.DOCUMENTO_REF == D.DOCUMENTO_REF && x.ESTATUS_C == null))
+                {
                     montoApli = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == D.DOCUMENTO_REF && x.ESTATUS_C == null).Sum(x => x.MONTO_DOC_MD.Value);
                 }
             }
@@ -3438,7 +3439,7 @@ namespace TAT001.Controllers
             {
                 remanente = montoProv - montoApli;
             }
-            string[] tsolImp = new string []{ "NC", "NCA", "NCAS","NCAM", "NCASM", "NCS", "NCI", "NCIA", "NCIAS", "NCIS" };
+            string[] tsolImp = new string[] { "NC", "NCA", "NCAS", "NCAM", "NCASM", "NCS", "NCI", "NCIA", "NCIAS", "NCIS" };
             if (tsolImp.Contains(D.TSOL_ID))
             {
                 decimal KBETR = 0.0M;
@@ -5255,40 +5256,47 @@ namespace TAT001.Controllers
                 {
                     if (d.TSOL.REVERSO == true)
                     {
+                        DOCUMENTO docPadre = db.DOCUMENTOes.Find(d.DOCUMENTO_REF);
                         List<DOCUMENTO> dd = db.DOCUMENTOes.Where(a => a.DOCUMENTO_REF == (d.DOCUMENTO_REF)).ToList();
                         List<DOCUMENTOP> ddr = db.DOCUMENTOPs.Where(a => a.NUM_DOC == (d.DOCUMENTO_REF)).ToList();
                         ////decimal total = 0;
                         decimal[] totales = new decimal[ddr.Count()];
-                        foreach (DOCUMENTOP dr in ddr)
+                        decimal totalRes = new decimal();
+                        //foreach (DOCUMENTOP dr in ddr)
+                        //{
+                        //    //totales[(int)dr.POS - 1] = dr.VOLUMEN_EST * dr.MONTO_APOYO;
+                        //    totales[(int)dr.POS - 1] = (decimal)dr.APOYO_EST;
+                        foreach (DOCUMENTO d1 in dd)
                         {
-                            //totales[(int)dr.POS - 1] = dr.VOLUMEN_EST * dr.MONTO_APOYO;
-                            totales[(int)dr.POS - 1] = (decimal)dr.APOYO_EST;
-                            foreach (DOCUMENTO d1 in dd)
-                            {
-                                foreach (DOCUMENTOP dp in d1.DOCUMENTOPs)
-                                {
-                                    if (dr.POS == dp.POS)
-                                    {
-                                        //var suma2 = dp.VOLUMEN_REAL * dp.MONTO_APOYO;
-                                        var suma2 = dp.APOYO_REAL;
+                            //foreach (DOCUMENTOP dp in d1.DOCUMENTOPs)
+                            //{
+                            //    if (dr.POS == dp.POS)
+                            //    {
+                            //        //var suma2 = dp.VOLUMEN_REAL * dp.MONTO_APOYO;
+                            //        var suma2 = dp.APOYO_REAL;
 
-                                        totales[(int)dr.POS - 1] = totales[(int)dr.POS - 1] - (decimal)suma2;
-                                    }
-                                }
-                            }
+                            //        totales[(int)dr.POS - 1] = totales[(int)dr.POS - 1] - (decimal)suma2;
+                            //    }
+                            //}
+                            totalRes += (decimal)d1.MONTO_DOC_MD;
+                            //}
                         }
                         //RSG 14.06.2018----------------------
                         decimal resto = decimal.Parse("0.00");
-                        foreach (decimal dec in totales)
-                        {
-                            resto += dec;
-                        }
-                        //RSG 14.06.2018----------------------
-                        foreach (decimal dec in totales)
-                        {
-                            if (dec > 0)
-                                return RedirectToAction("Reversa", new { id = dOCUMENTO.DOCUMENTO_REF, resto = resto });
-                        }
+                        //foreach (decimal dec in totales)
+                        //{
+                        //    resto += dec;
+                        //}
+                        resto = (decimal)docPadre.MONTO_DOC_MD - totalRes;
+                        ////RSG 14.06.2018----------------------
+                        //foreach (decimal dec in totales)
+                        //{
+                        //    if (dec > 0)
+                        //        return RedirectToAction("Reversa", new { id = dOCUMENTO.DOCUMENTO_REF, resto = resto });
+                        //}
+                        if (docPadre.MONTO_DOC_MD - totalRes > 0)
+                            return RedirectToAction("Reversa", new { id = dOCUMENTO.DOCUMENTO_REF, resto = resto });
+
                     }
                     using (TAT001Entities db1 = new TAT001Entities())
                     {
@@ -5988,11 +5996,11 @@ namespace TAT001.Controllers
                 {
                     ld[i].PAYER = cad.completaCliente(ld[i].PAYER);
                 }
-                    List<CLIENTE> cli = db.CLIENTEs.ToList();
+                List<CLIENTE> cli = db.CLIENTEs.ToList();
                 List<CLIENTE> c = (from cl in db.CLIENTEs.ToList()
-                                      join v in ld
-                                      on cl.KUNNR equals v.PAYER
-                                      select cl).ToList();
+                                   join v in ld
+                                   on cl.KUNNR equals v.PAYER
+                                   select cl).ToList();
                 //var c = cli.Join(ld, s => s.KUNNR, l => l.PAYER, (s, l) => new { ku = s.KUNNR, na = s.NAME1 }).ToList();
                 if (c.Count > 0)
                     for (int i = 0; i < ld.Count; i++)
