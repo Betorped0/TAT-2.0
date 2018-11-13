@@ -345,11 +345,11 @@
                             <table>
                                 <thead>
                                     <tr>
-                                        <th>Pos</th>
-                                        <th>Periodo</th>
-                                        <th>Tipo</th>
-                                        <th>Documento</th>
-                                        <th>Fecha</th>
+                                        <th id="lbl_rec_pos">Pos</th>
+                                        <th id="lbl_rec_periodo">Periodo</th>
+                                        <th id="lbl_rec_tipo">Tipo</th>
+                                        <th id="lbl_rec_numsol">No solicitud TAT</th>
+                                        <th id="lbl_rec_fecha">Fecha</th>
                                         <th>%</th>
                                         <th>Objetivo</th>
                                         <th>Estatus</th>
@@ -366,7 +366,7 @@
                                             <td>Q @iteem.POS</td>
                                             <td>@periodoE</td>
                                             <td>@Model.D.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(ViewBag.spras_id)).FirstOrDefault().TXT50</td>
-                                            <td></td>
+                                            <td>No generado</td>
                                             <td>@fechaE</td>
                                             <td class="porcentaje">@Model.D.OBJQ_PORC</td>
 

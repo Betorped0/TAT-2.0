@@ -511,7 +511,59 @@
                             </div>
                         </div>
                     }
+                <br />
+                <br />
+                @if (Model.numfilasTabla3 > 0)
+                {
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="col l1 s1">
+                                <label>
+                                    <input type="checkbox" name="tercerTab_x" value="true" id="tercerTab_x" @Html.Raw((Model.tercerTab_x) ? "checked=\"checked\"" : "") />
+                                    <span style="height:0"></span>
+                                </label>
+                            </div>
+                            <div class="input-field col l11 m11" style="margin-bottom:0;">
+                                <table class="table" style="font-size: 12px;">
+                                    <thead>
+                                        <tr><b style="font-size:x-large" id="lbl_TituloObjQ"></b></tr>
+                                    </thead>
+                                    <tr style="background-color:#CCCCCC;">
+                                        <th style="text-align:center">
+                                            <b>@Model.numColEncabezado3[0]</b>
+                                        </th>
+                                        <th style="text-align:center">
+                                            <b>@Model.numColEncabezado3[1]</b>
+                                        </th>
+                                        <th style="text-align:center">
+                                            <b>@Model.numColEncabezado3[2]</b>
+                                        </th>
+                                        <th style="text-align:center">
+                                            <b>@Model.numColEncabezado3[3]</b>
+                                        </th>
+                                        <th style="text-align:center">
+                                            <b>@Model.numColEncabezado3[4]</b>
+                                        </th>
+                                    </tr>
+                                    @{int cols3 = Model.numColEncabezado3.Count(); }
+                                    @{int pos3 = 0; }
+                                    @for (int i = 0; i < Model.numfilasTabla3; i++)
+                                    {
+                                        <tr>
+                                            @for (int j = 0; j < cols3; j++)
+                                            {
+                                                <td style='text-align:center;'>@Model.listaCuerpoObjQ[pos3]</td>
+                                                pos3++;
+                                            }
+                                        </tr>
+                                    }
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                                        }
                     <br />
+                <br />
                     <div class="row">
                         <div class="col l6 m6">
                             <div class="row">
