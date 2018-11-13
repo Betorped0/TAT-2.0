@@ -16,6 +16,7 @@
     @Html.AntiForgeryToken()
     <div class="row">
         <div class="col s12 l12 right-align">
+            <a class="btn" id="btn_agregarbackup" href="@Url.Action("AddBackup", new { id = Model.ID})"></a>
             <a class="btn" href="@Url.Action("Pass", new { id = Model.ID})">Cambiar contraseña</a>
             <input type="submit" value="Guardar" class="btn" />
         </div>

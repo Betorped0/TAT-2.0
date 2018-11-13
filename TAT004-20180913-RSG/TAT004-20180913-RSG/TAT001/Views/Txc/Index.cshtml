@@ -1,6 +1,5 @@
 ﻿@model IEnumerable<TAT001.Entities.TX_CONCEPTO>
 @{
-    //ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.pagina_r = 801;
     ViewBag.carpeta_r = 500;
@@ -9,12 +8,13 @@
     <div class="col s12 right-align">
         @* Texto, pagina a ligar "NOMBRE", View *@
         @Html.ActionLink("Crear Nuevo", "Create", "Txc", null, new { @class = "btn-small", @id = "btnCrear" })
-        @using (Html.BeginForm("Descargar", "Txc", FormMethod.Post, new { @style = "display:initial;" }))
+        @*@using (Html.BeginForm("Descargar", "Txc", FormMethod.Post, new { @style = "display:initial;" }))
         {
             <button id="btnExport" name="excel" class="btn-small" type="submit" value="Excel"></button>
-        }
+        }*@
     </div>
 </div>
+<div class="card-panel">
 <div class="row" style="margin-bottom:0;">
     <div class="input-field col s3 m3 l3">
         <select id="selecc">
@@ -49,34 +49,44 @@
             <th id="lblDescripcion" style="text-align:center;">
                 @Html.DisplayNameFor(model => model.DESCRIPCION)
             </th>
+            <th class="lblActivo">
+
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td style="text-align:left;">
-                    @Html.DisplayFor(modelItem => item.ID)
-                </td>
-                <td style="text-align:center;">
-                    @Html.DisplayFor(modelItem => item.DESCRIPCION)
-                </td>
-                <td>
-                    <a data-form-method="post" href="@Url.Action("Edit", "Txc", new { id = item.ID })">
-                        <i class='material-icons green-text'>edit</i>
-                    </a>
-                    <a data-form-method="post" href="@Url.Action("Details", "Txc", new { id = item.ID })">
-                        <i class='material-icons blue-text'>search</i>
-                    </a>
-                    <a data-form-method="post" href="@Url.Action("Delete", "Txc", new { id = item.ID })">
-                        <i class='material-icons red-text'>delete</i>
-                    </a>
-                </td>
-            </tr>
+        <tr>
+            <td style="text-align:left;">
+                @Html.DisplayFor(modelItem => item.ID)
+            </td>
+            <td style="text-align:center;">
+                @Html.DisplayFor(modelItem => item.DESCRIPCION)
+            </td>
+            @if ((bool)item.ACTIVO == true)
+            {
+                <td style="align-items:center"><i class='material-icons green-text'>check</i></td>}
+            else
+            {
+                <td style="align-items:center;"><i class='material-icons red-text'>clear</i></td>}
+            <td>
+                <a data-form-method="post" href="@Url.Action("Edit", "Txc", new { id = item.ID })">
+                    <i class='material-icons green-text'>edit</i>
+                </a>
+                <a data-form-method="post" href="@Url.Action("Details", "Txc", new { id = item.ID })">
+                    <i class='material-icons blue-text'>search</i>
+                </a>
+                @*<a data-form-method="post" href="@Url.Action("Delete", "Txc", new { id = item.ID })">
+                    <i class='material-icons red-text'>delete</i>
+                </a>*@
+            </td>
+        </tr>
         }
     </tbody>
 </table>
+    </div>
 <script>
     $(document).ready(function () {
         var table = $('#table').DataTable({
@@ -86,7 +96,7 @@
             language: {
                 "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
             },
-            order: [[2, "asc"]],
+            order: [[1, "asc"]],
             initComplete: function () {
                 this.api().columns().every(function () {
                     var column = this;

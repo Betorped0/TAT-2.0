@@ -1748,8 +1748,16 @@ $('#tab_test4').on('focusout', '.input_cantidades', function () {
                     colPorApoyo.removeClass("red white-text rojo");
                 }
                 else {
-                    colPorApoyo.val(toShowPorc(porApoyo, getDec));
-                    colPorApoyo.removeClass("red white-text rojo");
+                    var validaLigada = tr.find('td:eq(2) input').prop('checked');
+
+                    if (validaLigada) {
+                        colPorApoyo.val(toShowPorc(porApoyo, getDec));
+                        colPorApoyo.addClass("red white-text rojo");
+                    }
+                    else {
+                        colPorApoyo.val(toShowPorc(porApoyo, getDec));
+                        colPorApoyo.removeClass("red white-text rojo");
+                    }
                 }
             }
             else if (porApoyo == '') {
@@ -1759,6 +1767,25 @@ $('#tab_test4').on('focusout', '.input_cantidades', function () {
             else {
                 colPorApoyo.addClass("red white-text rojo");
             }
+
+            ////VISTA PARA EL PORCENTAJE DE APOYO
+            //if ($.isNumeric(porApoyo)) {
+            //    if (porApoyo > 0) {
+            //        colPorApoyo.val(toShowPorc(porApoyo, getDec));
+            //        colPorApoyo.removeClass("red white-text rojo");
+            //    }
+            //    else {
+            //        colPorApoyo.val(toShowPorc(porApoyo, getDec));
+            //        colPorApoyo.removeClass("red white-text rojo");
+            //    }
+            //}
+            //else if (porApoyo == '') {
+            //    colPorApoyo.val(toShowPorc('0', getDec));
+            //    colPorApoyo.removeClass("red white-text rojo");
+            //}
+            //else {
+            //    colPorApoyo.addClass("red white-text rojo");
+            //}
 
             //VISTA PARA EL APOYO POR PIEZA
             if ($.isNumeric(pieApoyo)) {
@@ -2130,15 +2157,27 @@ function healtyMaterial(num_doc, id, rowIndex) {
 function validaApoyo(apoyo, colApoyo) {
     var tr = $(colApoyo).closest('tr'); //Obtener el row
     var errorSumMateriales = tr.find('td:eq(14) input').hasClass("errorCantidades");
+    //var validaLigada = tr.find('td:eq(2) input').attr('checked');
+    var validaLigada = tr.find('td:eq(2) input').prop('checked');
 
-    if (apoyo !== "") {
-        if ($.isNumeric(apoyo)) {
-            if (apoyo !== '0.00' & apoyo > '0.00') {
-                //if (!errorSumMateriales) {
+    if (validaLigada) {
+        colApoyo.removeClass("red white-text rojo");
+        clearErrors();
+    }
+    else {
+        if (apoyo !== "") {
+            if ($.isNumeric(apoyo)) {
+                if (apoyo !== '0.00' & apoyo > '0.00') {
+                    //if (!errorSumMateriales) {
 
-                //}
-                colApoyo.removeClass("red white-text rojo");
-                clearErrors();
+                    //}
+                    colApoyo.removeClass("red white-text rojo");
+                    clearErrors();
+                }
+                else {
+                    colApoyo.addClass("red white-text rojo");
+                    clearErrors();
+                }
             }
             else {
                 colApoyo.addClass("red white-text rojo");
@@ -2150,10 +2189,6 @@ function validaApoyo(apoyo, colApoyo) {
             clearErrors();
         }
     }
-    else {
-        colApoyo.addClass("red white-text rojo");
-        clearErrors();
-    }
 
     checkRelacionadaMat();
 }
@@ -2164,6 +2199,7 @@ function ligada(check) {
 
     var num_docH1 = null, pais = null, getDec = null;
     var colMonto = tr.find('td:eq(8) input');
+    var colPorcentaje = tr.find('td:eq(9) input');
     var colPieApoyo = tr.find('td:eq(10) input');
     var colCosApoyo = tr.find('td:eq(11) input');
     var colPreSugerido = tr.find('td:eq(12) input');
@@ -2195,6 +2231,20 @@ function ligada(check) {
                 apoyo = tr.find('td:eq(14) input').val().replace('$', '').replace('.', '').replace(',', '.');
             }
 
+            var porcentajeApoyo = colPorcentaje.val().replace('%', '');
+
+            if ($.isNumeric(porcentajeApoyo)) {
+                if (porcentajeApoyo > 0) {
+                    colPorcentaje.val(toShowPorc(porcentajeApoyo, getDec));
+                }
+                else {
+                    colPorcentaje.addClass("red white-text rojo");
+                }
+            }
+            else {
+                colPorcentaje.addClass("red white-text rojo");
+            }
+
             if ($(check).is(":checked")) {
                 colMonto.val(toShow('0', getDec)).attr("disabled", true);
                 colPieApoyo.val(toShow('0', getDec)).attr("disabled", true);
@@ -2202,13 +2252,18 @@ function ligada(check) {
                 colPreSugerido.val(toShow('0', getDec)).attr("disabled", true);
                 colVolReal.val(toShowNum('0', getDec)).attr("disabled", true);
                 colApoyo.val(toShow('0', getDec)).attr("disabled", true);
+                colApoyo.removeClass("red white-text rojo");
+                clearErrors();
             } else {
                 colMonto.val(toShow('0', getDec)).attr("disabled", false);
+                colPorcentaje.removeClass("red white-text rojo");
                 colPieApoyo.val(toShow('0', getDec)).attr("disabled", false);
                 colCosApoyo.val(toShow('0', getDec)).attr("disabled", false);
                 colPreSugerido.val(toShow('0', getDec)).attr("disabled", false);
                 colVolReal.val(toShowNum('0', getDec)).attr("disabled", false);
                 colApoyo.val(toShow('0', getDec)).attr("disabled", false);
+                colApoyo.addClass("red white-text rojo");
+                clearErrors();
             }
         },
         async: false

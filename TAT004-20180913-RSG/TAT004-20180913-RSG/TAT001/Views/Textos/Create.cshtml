@@ -13,50 +13,51 @@
 
     <div class="row">
         <div class="col s12 right-align">
-            @Html.ActionLink("Cancelar", "Index", new { id = Model.PAGINA_ID }, new { @class = "btn-small" })
-            <button type="submit" class="btn-small">Crear<i class="material-icons right">send</i></button>
+            <button type="submit" class="btn-small" id="btn_create">Crear</button>
         </div>
     </div>
-    <div class="row">
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @*<div class="form-group">
-            @Html.LabelFor(model => model.PAGINA_ID, "PAGINA_ID", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">*@
-        @Html.HiddenFor(model => model.PAGINA_ID, new { htmlAttributes = new { @class = "form-control" } })
-        @*@Html.DropDownList("PAGINA_ID", null, htmlAttributes: new { @class = "form-control" })*@
-        @*@Html.ValidationMessageFor(model => model.PAGINA_ID, "", new { @class = "text-danger" })
+
+    <div class="card-panel">
+        <div class="row">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @*<div class="form-group">
+                @Html.LabelFor(model => model.PAGINA_ID, "PAGINA_ID", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">*@
+            @Html.HiddenFor(model => model.PAGINA_ID, new { htmlAttributes = new { @class = "form-control" } })
+            @*@Html.DropDownList("PAGINA_ID", null, htmlAttributes: new { @class = "form-control" })*@
+            @*@Html.ValidationMessageFor(model => model.PAGINA_ID, "", new { @class = "text-danger" })
+                    </div>
+                </div>*@
+
+            <div class="input-field col s6">
+                @Html.DropDownList("CAMPO_ID", null, htmlAttributes: new { @id = "sel-campo" })
+                @Html.LabelFor(model => model.CAMPO_ID, null, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_campo" })
+                @Html.ValidationMessageFor(model => model.CAMPO_ID, "", new { @class = "text-danger" })
+            </div>
+            <script>
+                var elem = document.getElementById('sel-campo');
+                var options = [];
+                var instance = M.FormSelect.init(elem, options);
+            </script>
+
+            @*<div class="input-field col s6">
+                    @Html.DropDownList("SPRAS_ID", null, htmlAttributes: new { @id = "sel-spras" })
+                    @Html.LabelFor(model => model.SPRAS_ID, "SPRAS_ID", htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.ValidationMessageFor(model => model.SPRAS_ID, "", new { @class = "text-danger" })
                 </div>
-            </div>*@
+                <script>
+                    var elem = document.getElementById('sel-spras');
+                    var options = [];
+                    var instance = M.FormSelect.init(elem, options);
+                </script>*@
 
-        <div class="input-field col s6">
-            @Html.DropDownList("CAMPO_ID", null, htmlAttributes: new { @id = "sel-campo" })
-            @Html.LabelFor(model => model.CAMPO_ID, "CAMPO_ID", htmlAttributes: new { @class = "control-label col-md-2" })
-            @Html.ValidationMessageFor(model => model.CAMPO_ID, "", new { @class = "text-danger" })
-        </div>
-        <script>
-            var elem = document.getElementById('sel-campo');
-            var options = [];
-            var instance = M.FormSelect.init(elem, options);
-        </script>
-
-        <div class="input-field col s6">
-            @Html.DropDownList("SPRAS_ID", null, htmlAttributes: new { @id = "sel-spras" })
-            @Html.LabelFor(model => model.SPRAS_ID, "SPRAS_ID", htmlAttributes: new { @class = "control-label col-md-2" })
-            @Html.ValidationMessageFor(model => model.SPRAS_ID, "", new { @class = "text-danger" })
-        </div>
-        <script>
-            var elem = document.getElementById('sel-spras');
-            var options = [];
-            var instance = M.FormSelect.init(elem, options);
-        </script>
-
-        <div class="input-field col s6">
-            @Html.EditorFor(model => model.TEXTOS, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.LabelFor(model => model.TEXTOS, htmlAttributes: new { @class = "control-label col-md-2" })
-            @Html.ValidationMessageFor(model => model.TEXTOS, "", new { @class = "text-danger" })
+            <div class="input-field col s6">
+                @Html.EditorFor(model => model.TEXTOS, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.LabelFor(model => model.TEXTOS, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_texto" })
+                @Html.ValidationMessageFor(model => model.TEXTOS, "", new { @class = "text-danger" })
+            </div>
         </div>
     </div>
-
     if (ViewBag.Error != null)
     {
         @*<div class="row red-text">
@@ -67,23 +68,7 @@
             M.toast({ html: '@ViewBag.Error', classes: 'red' });
         </script>
     }
-    @*<div class="form-group">
-            @Html.LabelFor(model => model.ACTIVO, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.ACTIVO)
-                    @Html.ValidationMessageFor(model => model.ACTIVO, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>*@
-
-    @*<div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </div>*@
 }
 
-@*<div>
-        @Html.ActionLink("Back to List", "Index")
-    </div>*@
+
+@Html.ActionLink("Cancelar", "Index", new { id = Model.PAGINA_ID }, new { @class = "", @id = "btn_return" })

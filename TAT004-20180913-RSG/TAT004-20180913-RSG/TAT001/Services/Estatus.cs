@@ -190,7 +190,7 @@ namespace TAT001.Services
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[C]..[A]...."))
                 ret = "Cerrada";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]....[0]"))
-                ret = ">Pendiente reverso";
+                ret = "Pendiente reverso";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]....[1]"))
                 ret = "Reversado";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[P]..[A]...."))
