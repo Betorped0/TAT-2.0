@@ -48,11 +48,20 @@
                             </div>
 
                             <div class="input-field col l10 m10" style="margin-bottom:0;">
+                                <div class="col l10 m10 text-center">
+                                    <label>
+                                        <input type="checkbox" name="defecto" value="true" disabled="disabled" id="defecto" @Html.Raw((Model.defecto) ? "checked=\"checked\"" : "") />
+                                        <span style="height:0; position: relative;top: -18px;"></span>
+                                    </label>
+                                    @Html.LabelFor(model => model.defecto, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_defecto" })
+                                </div>
+                            <div class="col l10 m10 text-center">
                                 <label>
-                                    <input type="checkbox" name="defecto" value="true" disabled="disabled" id="defecto" @Html.Raw((Model.defecto) ? "checked=\"checked\"" : "") />
-                                    <span style="height:0"></span>
+                                    <input type="checkbox" name="carta" value="true" disabled="disabled" id="carta" @Html.Raw((Model.carta) ? "checked=\"checked\"" : "") />
+                                    <span style="height:0; position: relative;top: -18px;"></span>
                                 </label>
-                                @Html.LabelFor(model => model.defecto, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_defecto" })
+                                @Html.LabelFor(model => model.carta, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_carta" })
+                            </div>
                             </div>
                         </div>
                     </div>

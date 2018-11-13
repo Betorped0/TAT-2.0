@@ -128,6 +128,7 @@ namespace TAT001.Controllers.Catalogos
                 cl.telefono = cli.PHONE;
                 cl.correo = cli.EMAIL;
                 cl.defecto = Convert.ToBoolean(cli.DEFECTO);
+                cl.carta = Convert.ToBoolean(cli.CARTA);
                 return View(cl);
             }
         }
@@ -185,13 +186,13 @@ namespace TAT001.Controllers.Catalogos
                     db.SaveChanges();
 
                     var con = db.CONTACTOCs
-                            .Add(new CONTACTOC { NOMBRE = conC.nombre, PHONE = conC.telefono, EMAIL = conC.correo, VKORG = vko, VTWEG = vtw, KUNNR = kun, SPART = spa, ACTIVO = true, DEFECTO = conC.defecto });
+                            .Add(new CONTACTOC { NOMBRE = conC.nombre, PHONE = conC.telefono, EMAIL = conC.correo, VKORG = vko, VTWEG = vtw, KUNNR = kun, SPART = spa, ACTIVO = true, DEFECTO = conC.defecto, CARTA = conC.carta });
                     db.SaveChanges();
                 }
                 else
                 {
                     var con = db.CONTACTOCs
-                            .Add(new CONTACTOC { NOMBRE = conC.nombre, PHONE = conC.telefono, EMAIL = conC.correo, VKORG = vko, VTWEG = vtw, KUNNR = kun, SPART = spa, ACTIVO = true, DEFECTO = conC.defecto });
+                            .Add(new CONTACTOC { NOMBRE = conC.nombre, PHONE = conC.telefono, EMAIL = conC.correo, VKORG = vko, VTWEG = vtw, KUNNR = kun, SPART = spa, ACTIVO = true, DEFECTO = conC.defecto, CARTA = conC.carta });
                     db.SaveChanges();
                 }
                 return RedirectToAction("Index", new { vko = vko, vtw = vtw, kun = kun, spa = spa });
@@ -232,6 +233,7 @@ namespace TAT001.Controllers.Catalogos
                 co.telefono = con.PHONE;
                 co.correo = con.EMAIL;
                 co.defecto = Convert.ToBoolean(con.DEFECTO);
+                co.carta = Convert.ToBoolean(con.CARTA);
                 return View(co);
             }
         }
@@ -265,6 +267,7 @@ namespace TAT001.Controllers.Catalogos
                         con.PHONE = co.telefono;
                         con.EMAIL = co.correo;
                         con.DEFECTO = co.defecto;
+                        con.CARTA = co.carta; 
                         db.SaveChanges();
                     }
                     else
