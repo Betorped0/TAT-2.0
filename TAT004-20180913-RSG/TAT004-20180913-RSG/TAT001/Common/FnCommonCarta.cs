@@ -194,7 +194,10 @@ namespace TAT001.Common
                             MONTO_APOYO = item2.MONTO_APOYO,
                             PRECIO_SUG = item2.PRECIO_SUG,
                             VOLUMEN_REAL = item2.VOLUMEN_REAL,
-                            VOLUMEN_EST = item2.VOLUMEN_EST
+                            VOLUMEN_EST = item2.VOLUMEN_EST,
+                            APOYO_REAL=item2.APOYO_REAL,
+                            APOYO_EST=item2.APOYO_EST
+
                         };
                     }
                     armadoCuerpoTabStr.Add(item2.MATNR.TrimStart('0'));
