@@ -324,13 +324,13 @@ $(document).ready(function () {
         //Add MGC B20180705 2018.07.05 permitir editar el material 
         var relacionadaed = "";
         if (isAddt()) {
-            relacionadaed = "prelacionadaed"
+            relacionadaed = "prelacionadaed";
         }
 
         var reversa = "";
         if ($("#txt_rev").length) {
             var vreversa = $('#txt_rev').val();
-            if (vreversa == "preversa") {
+            if (vreversa === "preversa") {
                 reversa = vreversa;
             }
         }
@@ -338,7 +338,7 @@ $(document).ready(function () {
         //Obtener el tipo de negociación
         var neg = $("#select_neg").val();
 
-        if (neg != "") {
+        if (neg !== "") {
             //Obtener los valores que se van a utilizar
             var t = $('#table_dis').DataTable();
             //Obtener las fechas de temporalidad para agregarlas a los items
@@ -4063,7 +4063,7 @@ function addRowMat(t, POS, MATNR, MATKL, DESC, MONTO, PORC_APOYO, MONTO_APOYO, M
         MATKL,
         DESC,
         "<input class=\"" + reversa + " input_oper numberd input_dc\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + MONTO + "\">",
-        "<input class=\"" + reversa + " input_oper numberd input_dcp " + porcentaje_mat + "\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + PORC_APOYO + "\">",
+        "<input class=\"" + reversa + " input_oper numberd input_dcp " + porcentaje_mat + "\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + toShowPorc(PORC_APOYO) + "\">",
         "<input class=\"" + reversa + " input_oper numberd\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + MONTO_APOYO + "\">",
         MONTOC_APOYO,
         "<input class=\"" + reversa + " input_oper numberd input_dc\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + PRECIO_SUG + "\">",
@@ -4217,7 +4217,7 @@ function loadFile(f_carta) {//, f_contratos, f_factura, f_jbp) {
         success: function (data) {
 
             if (data !== null || data !== "") {
-                alert("success" + data);
+                ////alert("success" + data);
 
             }
         },
@@ -4253,7 +4253,7 @@ function loadFiles(files) {
         success: function (data) {
 
             if (data !== null || data !== "") {
-                alert("success" + data);
+                ////alert("success" + data);
 
             }
         },

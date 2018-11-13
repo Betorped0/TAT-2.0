@@ -66,7 +66,7 @@
                             <tr class="text-left">
                                 <th id="lbl_pais"></th>
                                 <th id="lbl_sociedad"></th>
-                                <th></th>
+                                @*<th></th>*@
                             </tr>
                         </thead>
                         <tbody>
@@ -74,68 +74,71 @@
                             {
                                 string spras_id = ViewBag.spras_id;
 
-                                <tr class="text-left">
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.LAND)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.SOCIEDAD_ID)
-                                    </td>
-                                    <td>
-                                        @if (item.ID != null)
-                                        {
-                                            var root = @Url.Content("~");
-                                            /*<a class="modal-trigger" href="#modal1"><i class='material-icons red-text'>delete</i></a>
-                                           /* <a onclick="descargar()"><i class='material-icons green-text'>archive</i></a>*/
-                                            /*<a id="actionDelete_@item.ID" href="@Url.Action("Delete", "LayoutCargaMasiva", new { layout_id = item.ID})"></a>
-                                            <!-- Modal Delete -->
-                                            <div id="modal1" class="modal">
-                                                <div class="modal-content">
-                                                    <p style="color: white;font-size: 16px;" class="lbl_eliminar"></p>
+                            <tr class="text-left">
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PAI.LANDX)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.SOCIEDAD.BUTXT)
+                                </td>
+                                @*<td>
+                                                @if (item.ID != null)
+                                                {
+                                                    var root = @Url.Content("~");
+                                                   var ruta = item.RUTA;
+                                                    var f= ruta.IndexOf("Archivo");
+                                                    var Path =ruta.Substring(f,ruta.Length-f);
+
+                                                <a href=@Path><i class='material-icons green-text'>archive</i></a>
+                                                <a class="modal-trigger" href="#modal1"><i class='material-icons red-text'>delete</i></a>
+                                                <a id="actionDelete_@item.ID" href="@Url.Action("Delete", "LayoutCargaMasiva", new { layout_id = item.ID})"></a>
+                                                <!-- Modal Delete -->
+                                                <div id="modal1" class="modal">
+                                                    <div class="modal-content">
+                                                        <p style="color: white;font-size: 16px;" class="lbl_eliminar"></p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <a class="modal-close waves-effect  btn-flat"><label class="lbl_eliminarNo"></label></a>
+                                                        <a onclick="eliminarLayout('actionDelete_@item.ID')" class="modal-close waves-effect  btn-flat"><label class="lbl_eliminarSi"></label></a>
+                                                    </div>
                                                 </div>
-                                                <div class="modal-footer">
-                                                    <a class="modal-close waves-effect  btn-flat"><label class="lbl_eliminarNo"></label></a>
-                                                    <a onclick="eliminarLayout('actionDelete_@item.ID')" class="modal-close waves-effect  btn-flat"><label class="lbl_eliminarSi"></label></a>
-                                                </div>
-                                            </div>*/
-                                        }
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                                                }
+                                            </td>*@
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-
         </div>
-    </div>
-</div>
 
-<script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
-<script>
+        <script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
+        <script>
 
-    //---- Inicializador de componentes Materialize----
-    fnCommon.materializeInit('select');
-    fnCommon.materializeInit( 'modal');
+            //---- Inicializador de componentes Materialize----
+            fnCommon.materializeInit('select');
+            fnCommon.materializeInit( 'modal');
 
-    function eliminarLayout(idLink) {
-        $('#' + idLink).get(0).click().click();
-    }
-    
-    function dismiss(classe) {
-        var toastElement = document.querySelectorAll('.' + classe);
-        for (var i = 0; i < toastElement.length; i++) {
-            var toastInstance = M.Toast.getInstance(toastElement[i]);
-            toastInstance.dismiss();
-        }
-    }
-    //----- Configuracion de Tablas-----
-    $(document).ready(function () {
-        var root = "@Url.Content("~")",
-        spras_id = "@ViewBag.spras_id",
-        urlLanguage = root + "/Scripts/lang/" + spras_id + ".json";
-        fnCommon.configurarTable('tableLayouts', '50vh', '50vh', urlLanguage, 'cmbPagLayouts','gfilterLayouts',[0,1]);
-    });
+            function eliminarLayout(idLink) {
+                $('#' + idLink).get(0).click().click();
+            }
 
-</script>
+            function dismiss(classe) {
+                var toastElement = document.querySelectorAll('.' + classe);
+                for (var i = 0; i < toastElement.length; i++) {
+                    var toastInstance = M.Toast.getInstance(toastElement[i]);
+                    toastInstance.dismiss();
+                }
+            }
+            //----- Configuracion de Tablas-----
+            $(document).ready(function () {
+                var root = "@Url.Content("~")",
+                spras_id = "@ViewBag.spras_id",
+                urlLanguage = root + "/Scripts/lang/" + spras_id + ".json";
+                fnCommon.configurarTable('tableLayouts', '50vh', '50vh', urlLanguage, 'cmbPagLayouts','gfilterLayouts',[0,1]);
+            });
+        </script>
 
