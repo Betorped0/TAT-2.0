@@ -517,7 +517,7 @@ $('body').on('keydown.autocomplete', '.input_cli1', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item)) {
+            if (!(ui.item) && $(".input_cli1").val() === "") {
                 e.target.value = "";
             }
         },
@@ -564,7 +564,7 @@ $('body').on('keydown.autocomplete', '.input_cli', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item)) {
+            if (!(ui.item) && $(".input_cli").val() === "") {
                 e.target.value = "";
             }
         },
@@ -597,7 +597,7 @@ $('body').on('keydown.autocomplete', '.input_usc', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item)) {
+            if (!(ui.item) && $(".input_usc").val() === "") {
                 e.target.value = "";
             }
         },
@@ -630,7 +630,7 @@ $('body').on('keydown.autocomplete', '.input_idi', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item)) {
+            if (!(ui.item) && $(".input_idi").val() === "") {
                 e.target.value = "";
             }
         },
@@ -663,7 +663,7 @@ $('body').on('keydown.autocomplete', '.input_com', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item)) {
+            if (!(ui.item) && $(".input_com").val() === "") {
                 e.target.value = "";
             }
         },
@@ -696,7 +696,7 @@ $('body').on('keydown.autocomplete', '.input_niv', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item)) {
+            if (!(ui.item) && $(".input_niv").val() === "") {
                 e.target.value = "";
             }
         },
