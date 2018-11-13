@@ -9,7 +9,7 @@
 <div class="row">
     <div class="row right">
         <div class="col l12 m12 right">
-            @Html.ActionLink("Edit", "Edit", new { id = Model.SPRAS_ID }, new { @class = "btn btn-default", id = "lblEditar" })
+            <a href="@Url.Action("Edit", "Textocv", new { id = Model.ID })" id="lblEditar" class="btn btn-default">Editar</a>
         </div>
     </div>
 </div>
