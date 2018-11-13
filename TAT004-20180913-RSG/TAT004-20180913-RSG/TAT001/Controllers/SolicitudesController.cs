@@ -2566,11 +2566,21 @@ namespace TAT001.Controllers
                                     c = "";
                                 }
                             }
-                            Estatus es = new Estatus();//RSG 18.09.2018
-                            DOCUMENTO doc = db.DOCUMENTOes.Find(f.NUM_DOC);
-                            conta.STATUS = es.getEstatus(doc);
-                            db.Entry(conta).State = EntityState.Modified;
-                            db.SaveChanges();
+                            //Estatus es = new Estatus();//RSG 18.09.2018
+                            //DOCUMENTO doc = db.DOCUMENTOes.Find(dOCUMENTO.NUM_DOC);
+                            //conta.STATUS = es.getEstatus(doc);
+                            //db.Entry(conta).State = EntityState.Modified;
+                            //db.SaveChanges();
+
+                            using (TAT001Entities db1 = new TAT001Entities())
+                            {
+                                FLUJO ff = db1.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+                                Estatus es = new Estatus();//RSG 18.09.2018
+                                DOCUMENTO ddoc = db1.DOCUMENTOes.Find(f.NUM_DOC);
+                                ff.STATUS = es.getEstatus(ddoc);
+                                db1.Entry(ff).State = EntityState.Modified;
+                                db1.SaveChanges();
+                            }
                         }
                     }
                     catch (Exception ee)
