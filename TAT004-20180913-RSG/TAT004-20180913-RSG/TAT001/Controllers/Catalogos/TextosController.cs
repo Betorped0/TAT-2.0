@@ -25,7 +25,7 @@ namespace TAT001.Controllers.Catalogos
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
                 ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
                 ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
+                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
                 ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
@@ -43,11 +43,12 @@ namespace TAT001.Controllers.Catalogos
                     //return RedirectToAction("Pais", "Home");
                 }
                 Session["spras"] = user.SPRAS_ID;
+
             }
             try
             {
                 int idi = Int32.Parse(id);
-                var tEXTOes = db.TEXTOes.Where(a => a.PAGINA_ID.Equals(idi)).Include(t => t.CAMPOS).Include(t => t.SPRA);
+                var tEXTOes = db.TEXTOes.Where(a => a.PAGINA_ID.Equals(idi) & a.SPRAS_ID == "ES").Include(t => t.CAMPOS).Include(t => t.SPRA);
                 return View(tEXTOes.ToList());
             }
             catch
@@ -67,7 +68,7 @@ namespace TAT001.Controllers.Catalogos
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
                 ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
                 ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
+                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
                 ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
@@ -87,11 +88,15 @@ namespace TAT001.Controllers.Catalogos
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TEXTO tEXTO = db.TEXTOes.Find(pagina_id, campo_id, spras_id);
+            //TEXTO tEXTO = db.TEXTOes.Find(pagina_id, campo_id, spras_id);
+            List<TEXTO> tEXTO = db.TEXTOes.Where(x => x.PAGINA_ID == pagina_id & x.CAMPO_ID == campo_id).ToList(); ;
             if (tEXTO == null)
             {
                 return HttpNotFound();
             }
+            //ViewBag.PAGINA_ID = new SelectList(db.CAMPOS, "PAGINA_ID", "DESCRIPCION", tEXTO.First().PAGINA_ID);
+            //ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION", tEXTO.First().SPRAS_ID);
+            ViewBag.SPRAS = db.SPRAS.ToList();
             return View(tEXTO);
         }
 
@@ -105,7 +110,7 @@ namespace TAT001.Controllers.Catalogos
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
                 ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
                 ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
+                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
                 ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
@@ -125,7 +130,7 @@ namespace TAT001.Controllers.Catalogos
             }
             int ids = Int32.Parse(id);
             //ViewBag.PAGINA_ID = new SelectList(db.CAMPOS, "PAGINA_ID", "DESCRIPCION");
-            ViewBag.CAMPO_ID = new SelectList(db.CAMPOS.Where(a => a.PAGINA_ID.Equals(ids) && a.TIPO.Equals("label")), "ID", "ID");
+            ViewBag.CAMPO_ID = new SelectList(db.CAMPOS.Where(a => a.PAGINA_ID.Equals(ids) && (a.TIPO.Equals("label") | a.TIPO.Equals("btn")) & a.TEXTOes.Count == 0), "ID", "ID");
             ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "ID");
 
             TEXTO w = new TEXTO();
@@ -142,14 +147,28 @@ namespace TAT001.Controllers.Catalogos
         {
             if (ModelState.IsValid)
             {
-                var obj = db.TEXTOes.Where(a => a.PAGINA_ID.Equals(tEXTO.PAGINA_ID) && a.CAMPO_ID.Equals(tEXTO.CAMPO_ID) && a.SPRAS_ID.Equals(tEXTO.SPRAS_ID)).FirstOrDefault();
-                if (obj == null)
+                List<SPRA> lan = db.SPRAS.ToList();
+                foreach (SPRA l in lan)
                 {
-                    tEXTO.ACTIVO = true;
-                    db.TEXTOes.Add(tEXTO);
-                    db.SaveChanges();
-                    return RedirectToAction("Index", new { id = tEXTO.PAGINA_ID });
+                    try
+                    {
+                        var obj = db.TEXTOes.Where(a => a.PAGINA_ID.Equals(tEXTO.PAGINA_ID) && a.CAMPO_ID.Equals(tEXTO.CAMPO_ID) && a.SPRAS_ID.Equals(l.ID)).FirstOrDefault();
+                        if (obj == null)
+                        {
+                            TEXTO t = new TEXTO();
+                            t.ACTIVO = true;
+                            t.CAMPO_ID = tEXTO.CAMPO_ID;
+                            t.PAGINA_ID = tEXTO.PAGINA_ID;
+                            t.TEXTOS = tEXTO.TEXTOS;
+                            t.SPRAS_ID = l.ID;
+
+                            db.TEXTOes.Add(t);
+                            db.SaveChanges();
+                        }
+                    }
+                    catch { }
                 }
+                return RedirectToAction("Index", new { id = tEXTO.PAGINA_ID });
             }
             int pagina = 511; //ID EN BASE DE DATOS
             using (TAT001Entities db = new TAT001Entities())
@@ -158,7 +177,7 @@ namespace TAT001.Controllers.Catalogos
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
                 ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
                 ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
+                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
                 ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
@@ -191,7 +210,7 @@ namespace TAT001.Controllers.Catalogos
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
                 ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
                 ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
+                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
                 ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
@@ -211,13 +230,15 @@ namespace TAT001.Controllers.Catalogos
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TEXTO tEXTO = db.TEXTOes.Find(pagina_id, campo_id, spras_id);
+            //TEXTO tEXTO = db.TEXTOes.Find(pagina_id, campo_id, spras_id);
+            List<TEXTO> tEXTO = db.TEXTOes.Where(x => x.PAGINA_ID == pagina_id & x.CAMPO_ID == campo_id).ToList(); ;
             if (tEXTO == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.PAGINA_ID = new SelectList(db.CAMPOS, "PAGINA_ID", "DESCRIPCION", tEXTO.PAGINA_ID);
-            ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION", tEXTO.SPRAS_ID);
+            //ViewBag.PAGINA_ID = new SelectList(db.CAMPOS, "PAGINA_ID", "DESCRIPCION", tEXTO.First().PAGINA_ID);
+            //ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION", tEXTO.First().SPRAS_ID);
+            ViewBag.SPRAS = db.SPRAS.ToList();
             return View(tEXTO);
         }
 
@@ -226,15 +247,40 @@ namespace TAT001.Controllers.Catalogos
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "PAGINA_ID,CAMPO_ID,SPRAS_ID,TEXTOS,ACTIVO")] TEXTO tEXTO)
+        public ActionResult Edit([Bind(Include = "PAGINA_ID,CAMPO_ID,SPRAS_ID,TEXTOS,ACTIVO")] TEXTO tEXTO, string[] txval)
         {
             if (ModelState.IsValid)
             {
                 tEXTO.ACTIVO = true;
-                db.Entry(tEXTO).State = EntityState.Modified;
-                db.SaveChanges();
+
+                foreach (SPRA spr in db.SPRAS.ToList())
+                {
+                    string val = Request.Form["A" + spr.ID];
+                    TEXTO tt = db.TEXTOes.Where(x => x.SPRAS_ID == spr.ID & x.PAGINA_ID == tEXTO.PAGINA_ID & x.CAMPO_ID == tEXTO.CAMPO_ID).FirstOrDefault();
+                    if (tt != null)
+                    {
+                        tt.TEXTOS = val;
+                        db.Entry(tt).State = EntityState.Modified;
+                        db.SaveChanges();
+                    }
+                    else
+                    {
+                        TEXTO t = new TEXTO();
+                        t.ACTIVO = true;
+                        t.CAMPO_ID = tEXTO.CAMPO_ID;
+                        t.PAGINA_ID = tEXTO.PAGINA_ID;
+                        t.SPRAS_ID = spr.ID;
+                        t.TEXTOS = val;
+                        db.TEXTOes.Add(t);
+                        db.SaveChanges();
+                    }
+
+                }
+
                 return RedirectToAction("Index", new { id = tEXTO.PAGINA_ID });
             }
+
+
             int pagina = 522; //ID EN BASE DE DATOS
             using (TAT001Entities db = new TAT001Entities())
             {
@@ -242,7 +288,7 @@ namespace TAT001.Controllers.Catalogos
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
                 ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
                 ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
+                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
                 ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
