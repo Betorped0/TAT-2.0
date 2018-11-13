@@ -63,15 +63,15 @@
             {
                 <td style="align-items:center;"><i class='material-icons red-text'>clear</i></td>}*@
             <td>
-                @*<a href="@Url.Action("Edit", "Materiales", new { id = item.ID })">
+                <a href="@Url.Action("Edit", "Materiales", new { id = item.MATERIAL_ID, vkorg=item.VKORG, vtweg=item.VTWEG })">
                 <i class='material-icons green-text'>edit</i>
             </a>&nbsp
-            <a href="@Url.Action("Details", "Materiales", new { id = item.ID })">
+            <a href="@Url.Action("Details", "Materiales", new { id = item.MATERIAL_ID, vkorg=item.VKORG, vtweg=item.VTWEG })">
                 <i class='material-icons blue-text'>search</i>
-            </a>*@
-                <a class="confirmation" href="@Url.Action("Delete", "Materiales", new { id = item.MATERIAL_ID, vkorg=item.VKORG, vtweg=item.VTWEG })">
+            </a>
+                @*<a class="confirmation" href="@Url.Action("Delete", "Materiales", new { id = item.MATERIAL_ID, vkorg=item.VKORG, vtweg=item.VTWEG })">
                     <i class='material-icons red-text'>delete</i>
-                </a>
+                </a>*@
             </td>
         </tr>
         }

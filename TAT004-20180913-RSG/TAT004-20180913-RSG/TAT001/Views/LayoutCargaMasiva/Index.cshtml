@@ -84,9 +84,10 @@
                                     <td>
                                         @if (item.ID != null)
                                         {
-                                            <a class="modal-trigger" href="#modal1"><i class='material-icons red-text'>delete</i></a>
+                                            var root = @Url.Content("~");
+                                            /*<a class="modal-trigger" href="#modal1"><i class='material-icons red-text'>delete</i></a>
                                            /* <a onclick="descargar()"><i class='material-icons green-text'>archive</i></a>*/
-                                            <a id="actionDelete_@item.ID" href="@Url.Action("Delete", "LayoutCargaMasiva", new { layout_id = item.ID})"></a>
+                                            /*<a id="actionDelete_@item.ID" href="@Url.Action("Delete", "LayoutCargaMasiva", new { layout_id = item.ID})"></a>
                                             <!-- Modal Delete -->
                                             <div id="modal1" class="modal">
                                                 <div class="modal-content">
@@ -96,7 +97,7 @@
                                                     <a class="modal-close waves-effect  btn-flat"><label class="lbl_eliminarNo"></label></a>
                                                     <a onclick="eliminarLayout('actionDelete_@item.ID')" class="modal-close waves-effect  btn-flat"><label class="lbl_eliminarSi"></label></a>
                                                 </div>
-                                            </div>
+                                            </div>*/
                                         }
                                     </td>
                                 </tr>

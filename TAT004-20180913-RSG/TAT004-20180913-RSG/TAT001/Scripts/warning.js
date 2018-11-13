@@ -28,19 +28,19 @@ for (var i = 0; i < lista.length; i++) {
         app += ";e.preventDefault(); e.stopPropagation();});";
     }
 }''
-app += "$('#tab_soporte').on('click', function (e) {var ban = validarTab(e, 'tab_info','Informacion_cont'); }); ";
-app += "$('#tab_dis').on('click', function (e) { var ban = validarTab(e, 'tab_info', 'Informacion_cont');" +
-    " if(ban){ ban = validarTab(e, 'tab_soporte', 'Soporte_cont');} }); ";
-app += "$('#tab_rec').on('click', function (e) { var ban = validarTab(e, 'tab_info', 'Informacion_cont');" +
-    " if(ban){ ban = validarTab(e, 'tab_soporte', 'Soporte_cont');} " +
-    " if(ban){ ban = validarTab(e, 'tab_dis', 'Distribucion_cont');} }); ";
-app += "$('#tab_fin').on('click', function (e) { var ban = validarTab(e, 'tab_info', 'Informacion_cont');" +
-    " if(ban){ ban = validarTab(e, 'tab_soporte', 'Soporte_cont');} " +
-    " if(ban){ ban = validarTab(e, 'tab_dis', 'Distribucion_cont');} " +
+app += "$('#tab_soporte').on('click', function (e) {var ban = validarTab(e, 'tab_info','Informacion_cont',0); }); ";
+app += "$('#tab_dis').on('click', function (e) { var ban = validarTab(e, 'tab_info', 'Informacion_cont',0);" +
+    " if(ban){ ban = validarTab(e, 'tab_soporte', 'Soporte_cont',0);} }); ";
+app += "$('#tab_rec').on('click', function (e) { var ban = validarTab(e, 'tab_info', 'Informacion_cont',0);" +
+    " if(ban){ ban = validarTab(e, 'tab_soporte', 'Soporte_cont',0);} " +
+    " if(ban){ ban = validarTab(e, 'tab_dis', 'Distribucion_cont',0);} }); ";
+app += "$('#tab_fin').on('click', function (e) { var ban = validarTab(e, 'tab_info', 'Informacion_cont',0);" +
+    " if(ban){ ban = validarTab(e, 'tab_soporte', 'Soporte_cont',0);} " +
+    " if(ban){ ban = validarTab(e, 'tab_dis', 'Distribucion_cont',0);} " +
     " if(isRecurrente()){ " +
-    " if(ban){ ban = validarTab(e, 'tab_rec', 'Recurrente_cont');}}if(ban){activaSubmit('Financiera_cont')} }); ";
+    " if(ban){ ban = validarTab(e, 'tab_rec', 'Recurrente_cont',1);}}if(ban){activaSubmit('Financiera_cont')} }); ";
 
-app += "function validarTab(e, tabid, div) {";
+app += "function validarTab(e, tabid, div, rec) {";
 app += "var ban = true;";
 for (var i = 0; i < lista.length; i++) {
     app += "ban = true;";
@@ -103,6 +103,7 @@ for (var i = 0; i < lista.length; i++) {
         tabb = "Distribucion_cont";
     }
     app += "if(!ban){selectTab('" + tabb + "', e);} activaSubmit('" + tabb + "');}";
+    app += "if(rec>0 & !ban){return ban;}";
 }
 app += " return ban;}";
 

@@ -33,15 +33,17 @@
                 <div class="row">
                     <div class="col s6">
                         <div class="form-horizontal">
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.TSOL.DESCRIPCION, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblTipoSol" })
-                                @Html.EditorFor(model => model.TSOL.DESCRIPCION, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @Value = tipoSoporte } })
-                            </div>
 
                             <div class="form-group">
                                 @Html.LabelFor(model => model.TSOPORTE.DESCRIPCION, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblTipoSop" })
-                                @Html.EditorFor(model => model.TSOPORTE.DESCRIPCION, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @Value = tipoSolicitud } })
+                                @Html.EditorFor(model => model.TSOPORTE.DESCRIPCION, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @Value = tipoSoporte } })
                               </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TSOL.DESCRIPCION, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblTipoSol" })
+                                @Html.EditorFor(model => model.TSOL.DESCRIPCION, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @Value = tipoSolicitud } })
+                            </div>
+
                         </div>
                         <div class="input-field col l4 m10 right" style="margin-bottom:0;">
                             <label>
