@@ -1,5 +1,5 @@
-﻿@*@model TAT001.Entities.TEXTO*@ 
-    @model IEnumerable<TAT001.Entities.TEXTO>
+﻿@*@model TAT001.Entities.TEXTO*@
+@model IEnumerable<TAT001.Entities.TEXTO>
 
 @{
     //ViewBag.Title = "Edit";
@@ -36,7 +36,6 @@
 
         <div class="row">
             <div class="col s12 right-align">
-                @Html.ActionLink("Cancelar", "Index", new { id = Model.First().PAGINA_ID }, new { @class = "btn-small", @id = "btn_return" })
                 <button type="submit" class="btn-small" id="btn_create">Guardar</button>
             </div>
         </div>
@@ -55,14 +54,14 @@
                         @Html.LabelFor(model => model.First().CAMPO_ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_campo" })
                     </div>
                     @*<div class="input-field col s12">
-                        @Html.EditorFor(model => model.SPRAS_ID, new { htmlAttributes = new { @disabled = "disabled" } })
-                        @Html.LabelFor(model => model.SPRAS_ID, htmlAttributes: new { @class = "control-label col-md-2" })
-                    </div>
-                    <div class="input-field col s12 l12">
-                        @Html.EditorFor(model => model.TEXTOS, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.LabelFor(model => model.TEXTOS, htmlAttributes: new { @class = "control-label col-md-2" })
-                        @Html.ValidationMessageFor(model => model.TEXTOS, "", new { @class = "text-danger" })
-                    </div>*@
+                            @Html.EditorFor(model => model.SPRAS_ID, new { htmlAttributes = new { @disabled = "disabled" } })
+                            @Html.LabelFor(model => model.SPRAS_ID, htmlAttributes: new { @class = "control-label col-md-2" })
+                        </div>
+                        <div class="input-field col s12 l12">
+                            @Html.EditorFor(model => model.TEXTOS, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.LabelFor(model => model.TEXTOS, htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.ValidationMessageFor(model => model.TEXTOS, "", new { @class = "text-danger" })
+                        </div>*@
 
                 </div>
             </div>
@@ -96,3 +95,4 @@
 </div>
 
 
+@Html.ActionLink("Cancelar", "Index", new { id = Model.First().PAGINA_ID }, new { @class = "", @id = "btn_return" })
