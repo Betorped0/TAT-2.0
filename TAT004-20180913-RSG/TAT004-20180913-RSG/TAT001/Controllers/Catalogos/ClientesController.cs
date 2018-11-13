@@ -110,6 +110,13 @@ namespace TAT001.Controllers.Catalogos
                         viewModel.clientes = clientes.OrderBy(m => m.CANAL).ToPagedList(pageIndex, viewModel.numRegistros);
                     break;
 
+                case "ACTIVO":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.clientes = clientes.OrderByDescending(m => m.ACTIVO).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.clientes = clientes.OrderBy(m => m.ACTIVO).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+
                 default:
                     viewModel.clientes = clientes.OrderBy(m => m.KUNNR).ToPagedList(pageIndex, viewModel.numRegistros);
                     break;
@@ -485,11 +492,19 @@ namespace TAT001.Controllers.Catalogos
                     if (ids[i] != null && ids[i] != "")
                     {
                         var usuario = ids[i];
-                            if (!db.USUARIOs.Any(x => x.ID==usuario & x.ACTIVO==true))
-                                idsx[i] = false;
-                            else if (string.IsNullOrEmpty(ids[i]) && (i == 1 || i == 6))
-                                idsx[i] = false;
-                        
+                        if (!db.USUARIOs.Any(x => x.ID==usuario & x.ACTIVO==true))
+                            idsx[i] = false;
+                        else if (string.IsNullOrEmpty(ids[i]) && (i == 1 || i == 6))
+                            idsx[i] = false;
+                        var puesto = db.USUARIOs.Where(x => x.ID == usuario & x.ACTIVO == true).Select(x => x.PUESTO_ID).FirstOrDefault();
+                        if (puesto == 1 || puesto == 14)
+                        {
+                            idsx[i] = false;
+                        }
+                        if ((puesto != 8 && i == 6) || (puesto != 9 && i == 7))
+                        {
+                            idsx[i] = false;
+                        }
                     }
                     if (!idsx[i])
                     {
@@ -921,16 +936,18 @@ namespace TAT001.Controllers.Catalogos
                     if (ids[i] != null && ids[i] != "")
                     {
                         var usuario = ids[i];
-                        USUARIO u = usuarios.Where(x => x.ID.Equals(usuario)).FirstOrDefault();
-                        if (u == null)
+                        if (!db.USUARIOs.Any(x => x.ID == usuario & x.ACTIVO == true))
+                            idsx[i] = false;
+                        else if (string.IsNullOrEmpty(ids[i]) && (i == 1 || i == 6))
+                            idsx[i] = false;
+                        var puesto = db.USUARIOs.Where(x => x.ID == usuario & x.ACTIVO == true).Select(x => x.PUESTO_ID).FirstOrDefault();
+                        if (puesto == 1 || puesto == 14)
                         {
-                            u = db.USUARIOs.Where(x => x.ID.Equals(usuario) & x.ACTIVO == true).FirstOrDefault();
-                            if (u == null)
-                                idsx[i] = false;
-                            else
-                                usuarios.Add(u);
-                            if ((ids[i] == "" && ids[i] == null) && (i == 1 || i == 6))
-                                idsx[i] = false;
+                            idsx[i] = false;
+                        }
+                        if ((puesto != 8 && i == 6) || (puesto != 9 && i == 7))
+                        {
+                            idsx[i] = false;
                         }
                     }
                     if (!idsx[i])
@@ -1268,6 +1285,7 @@ namespace TAT001.Controllers.Catalogos
                 worksheet.Cell("E1").Value = new[] { new { BANNER = "Tipo de Cliente" }, };
                 worksheet.Cell("F1").Value = new[] { new { BANNER = "Payer" }, };
                 worksheet.Cell("G1").Value = new[] { new { BANNER = "Canal" }, };
+                worksheet.Cell("H1").Value = new[] { new { BANNER = "Estatus" }, };
 
                 for (int i = 2; i <= (lst.Count + 1); i++)
                 {
@@ -1280,6 +1298,7 @@ namespace TAT001.Controllers.Catalogos
                     worksheet.Cell("E" + i).Value = new[] { new { BANNER = lst[i - 2].PARVW }, };
                     worksheet.Cell("F" + i).Value = new[] { new { BANNER = lst[i - 2].PAYER.TrimStart('0') }, };
                     worksheet.Cell("G" + i).Value = new[] { new { BANNER = lst[i - 2].CANAL }, };
+                    worksheet.Cell("H" + i).Value = new[] { new { BANNER = lst[i - 2].ACTIVO? "Activo":"Inactivo" }, };
                 }
                 var rt = ruta + @"\Clientes_" + DateTime.Now.ToShortDateString() + ".xlsx";
                 workbook.SaveAs(rt);
@@ -1808,22 +1827,82 @@ namespace TAT001.Controllers.Catalogos
             TAT001Entities db = new TAT001Entities();
 
             var c = (from x in db.USUARIOs
-                     where x.ID.Contains(Prefix) && x.ACTIVO == true
+                     where x.ID.Contains(Prefix) && x.ACTIVO == true && x.PUESTO_ID != 1 && x.PUESTO_ID != 14
                      select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
 
             if (c.Count == 0)
             {
                 var c2 = (from x in db.USUARIOs
-                          where x.NOMBRE.Contains(Prefix) && x.ACTIVO == true
+                          where x.NOMBRE.Contains(Prefix) && x.ACTIVO == true && x.PUESTO_ID != 1 && x.PUESTO_ID != 14
                           select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
                 c.AddRange(c2);
+                if (c2.Count == 0)
+                {
+                    var c3 = (from x in db.USUARIOs
+                              where x.APELLIDO_P.Contains(Prefix) && x.ACTIVO == true && x.PUESTO_ID != 1 && x.PUESTO_ID != 14
+                              select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
+                    c.AddRange(c3);
+                }
             }
-            else
+
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+
+        public JsonResult Usuario8(string Prefix)
+        {
+            if (Prefix == null)
+                Prefix = "";
+
+            TAT001Entities db = new TAT001Entities();
+
+            var c = (from x in db.USUARIOs
+                     where x.ID.Contains(Prefix) && x.ACTIVO == true && x.PUESTO_ID == 8
+                     select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
+
+            if (c.Count == 0)
             {
-                var c3 = (from x in db.USUARIOs
-                          where x.APELLIDO_P.Contains(Prefix) && x.ACTIVO == true
+                var c2 = (from x in db.USUARIOs
+                          where x.NOMBRE.Contains(Prefix) && x.ACTIVO == true && x.PUESTO_ID == 8
                           select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
-                c.AddRange(c3);
+                c.AddRange(c2);
+                if (c2.Count == 0)
+                {
+                    var c3 = (from x in db.USUARIOs
+                              where x.APELLIDO_P.Contains(Prefix) && x.ACTIVO == true && x.PUESTO_ID == 8
+                              select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
+                    c.AddRange(c3);
+                }
+            }
+
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+
+        public JsonResult Usuario9(string Prefix)
+        {
+            if (Prefix == null)
+                Prefix = "";
+
+            TAT001Entities db = new TAT001Entities();
+
+            var c = (from x in db.USUARIOs
+                     where x.ID.Contains(Prefix) && x.ACTIVO == true && x.PUESTO_ID == 9
+                     select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
+
+            if (c.Count == 0)
+            {
+                var c2 = (from x in db.USUARIOs
+                          where x.NOMBRE.Contains(Prefix) && x.ACTIVO == true && x.PUESTO_ID == 9
+                          select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
+                c.AddRange(c2);
+                if (c2.Count == 0)
+                {
+                    var c3 = (from x in db.USUARIOs
+                              where x.APELLIDO_P.Contains(Prefix) && x.ACTIVO == true && x.PUESTO_ID == 9
+                              select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
+                    c.AddRange(c3);
+                }
             }
 
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);

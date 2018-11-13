@@ -391,12 +391,22 @@ function jsConsulta(idioma) {
             //$('[name="filtro"]').trigger('change');
         }
     );
-    $(".g > .select-wrapper > .select-dropdown").prepend(
-        '<li style="display:none" class="toggle selectnone"><span><label></label>Ninguno</span></li>'
-    );
-    $(".g > .select-wrapper > .select-dropdown").prepend(
-        '<li  class="toggle selectall"><span><label></label>Todos</span></li>'
-    );
+    if ($(".g option:selected").length) {
+        $(".g > .select-wrapper > .select-dropdown").prepend(
+            '<li  class="toggle selectnone"><span><label></label>Ninguno</span></li>'
+        );
+        $(".g > .select-wrapper > .select-dropdown").prepend(
+            '<li style="display:none" class="toggle selectall"><span><label></label>Todos</span></li>'
+        );
+    } else {
+        $(".g > .select-wrapper > .select-dropdown").prepend(
+            '<li style="display:none" class="toggle selectnone"><span><label></label>Ninguno</span></li>'
+        );
+        $(".g > .select-wrapper > .select-dropdown").prepend(
+            '<li  class="toggle selectall"><span><label></label>Todos</span></li>'
+        );
+    }
+    
     $(".g > .select-wrapper > .select-dropdown .selectall").on(
         "click",
         function () {

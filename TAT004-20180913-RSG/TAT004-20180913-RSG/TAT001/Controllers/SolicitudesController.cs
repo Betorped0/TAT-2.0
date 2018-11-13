@@ -5640,10 +5640,9 @@ namespace TAT001.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public JsonResult LoadExcel()
+        public JsonResult LoadExcel(string vkorg, string vtweg, string spras)
         {
             List<DOCUMENTOP_MOD> ld = new List<DOCUMENTOP_MOD>();
-
 
             if (Request.Files.Count > 0)
             {
@@ -5725,6 +5724,11 @@ namespace TAT001.Controllers
                     {
                         doc.MATNR = dt.Rows[i][2].ToString(); //Material
                         MATERIAL mat = material(doc.MATNR);
+                        if (mat != null)
+                        {
+                            List<MATERIAL> materiales = FnCommon.ObtenerMateriales(db, doc.MATNR, vkorg, vtweg, User.Identity.Name);
+                            mat = materiales.Where(x => x.ID == mat.ID).FirstOrDefault();
+                        }
                         if (mat != null & ld.Where(x => x.MATNR.Equals(doc.MATNR)).Count() == 0)//Validar si el material existe
                         {
                             //doc.MATKL = (string)dt.Rows[i][4]; //Categoría se toma de la bd
