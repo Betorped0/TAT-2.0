@@ -1889,7 +1889,7 @@ namespace TAT001.Controllers
                                         {
                                             docmod.MATKL = "";
                                         }
-                                        //docP.MATKL = docmod.MATKL;
+                                        try { docP.MATKL = docmod.MATKL_ID; } catch { }
                                         docP.CANTIDAD = 1;
                                         docP.MONTO = docmod.MONTO;
                                         docP.PORC_APOYO = docmod.PORC_APOYO;
