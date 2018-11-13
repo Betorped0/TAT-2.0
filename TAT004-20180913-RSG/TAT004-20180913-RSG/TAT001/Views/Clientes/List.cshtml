@@ -26,49 +26,57 @@
             <th>
                 @Html.ActionLink("CANAL", "List", new { colOrden = "CANAL", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
             </th>
+            <th>
+                @Html.ActionLink("ACTIVO", "List", new { colOrden = "ACTIVO", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model.clientes)
         {
-            <tr>
-                <td>
-                    @item.KUNNR.TrimStart('0')
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NAME1)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SUBREGION)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PAI.LANDX)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PARVW)
-                </td>
-                <td>
-                    @item.PAYER.TrimStart('0')
-                </td>
-                <td>
-                    @item.CANAL
-                </td>
-                <td>
-                    <a href="@Url.Action("Edit", "Clientes", new { vko = item.VKORG, vtw = item.VTWEG, spa = item.SPART, kun = item.KUNNR })">
-                        <i class='material-icons green-text'>edit</i>
-                    </a>
-                    <a href="@Url.Action("Details", "Clientes", new { vko = item.VKORG, vtw = item.VTWEG, spa = item.SPART, kun = item.KUNNR })">
-                        <i class='material-icons blue-text'>search</i>
-                    </a>
-                    <a data-form-method="post" href="@Url.Action("Index", "Contacto", new { vko = item.VKORG, vtw = item.VTWEG, kun = item.KUNNR, spa = item.SPART })">
-                        <i class='material-icons orange-text'>contacts</i>
-                    </a>
-                    @*<a data-form-method="post" href="@Url.Action("Index", "Iimpuesto", new { vko = item.VKORG, vtw = item.VTWEG, kun = item.KUNNR, spa = item.SPART })">
-                        <i class='material-icons yellow-text'>monetization_on</i>
-                    </a>*@
-                </td>
-            </tr>
+        <tr>
+            <td>
+                @item.KUNNR.TrimStart('0')
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NAME1)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SUBREGION)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PAI.LANDX)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PARVW)
+            </td>
+            <td>
+                @item.PAYER.TrimStart('0')
+            </td>
+            <td>
+                @item.CANAL
+            </td>
+            @if ((bool)item.ACTIVO == true)
+            {
+                <td style="align-items:center"><i class='material-icons green-text'>check</i></td>}
+            else
+            {
+                <td style="align-items:center;"><i class='material-icons red-text'>clear</i></td>}
+            <td>
+                <a href="@Url.Action("Edit", "Clientes", new { vko = item.VKORG, vtw = item.VTWEG, spa = item.SPART, kun = item.KUNNR })">
+                    <i class='material-icons green-text'>edit</i>
+                </a>
+                <a href="@Url.Action("Details", "Clientes", new { vko = item.VKORG, vtw = item.VTWEG, spa = item.SPART, kun = item.KUNNR })">
+                    <i class='material-icons blue-text'>search</i>
+                </a>
+                <a data-form-method="post" href="@Url.Action("Index", "Contacto", new { vko = item.VKORG, vtw = item.VTWEG, kun = item.KUNNR, spa = item.SPART })">
+                    <i class='material-icons orange-text'>contacts</i>
+                </a>
+                @*<a data-form-method="post" href="@Url.Action("Index", "Iimpuesto", new { vko = item.VKORG, vtw = item.VTWEG, kun = item.KUNNR, spa = item.SPART })">
+                <i class='material-icons yellow-text'>monetization_on</i>
+            </a>*@
+            </td>
+        </tr>
         }
     </tbody>
 </table>

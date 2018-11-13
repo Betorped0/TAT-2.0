@@ -110,6 +110,13 @@ namespace TAT001.Controllers.Catalogos
                         viewModel.clientes = clientes.OrderBy(m => m.CANAL).ToPagedList(pageIndex, viewModel.numRegistros);
                     break;
 
+                case "ACTIVO":
+                    if (colOrden.Equals(ordenActual))
+                        viewModel.clientes = clientes.OrderByDescending(m => m.ACTIVO).ToPagedList(pageIndex, viewModel.numRegistros);
+                    else
+                        viewModel.clientes = clientes.OrderBy(m => m.ACTIVO).ToPagedList(pageIndex, viewModel.numRegistros);
+                    break;
+
                 default:
                     viewModel.clientes = clientes.OrderBy(m => m.KUNNR).ToPagedList(pageIndex, viewModel.numRegistros);
                     break;
@@ -1278,6 +1285,7 @@ namespace TAT001.Controllers.Catalogos
                 worksheet.Cell("E1").Value = new[] { new { BANNER = "Tipo de Cliente" }, };
                 worksheet.Cell("F1").Value = new[] { new { BANNER = "Payer" }, };
                 worksheet.Cell("G1").Value = new[] { new { BANNER = "Canal" }, };
+                worksheet.Cell("H1").Value = new[] { new { BANNER = "Estatus" }, };
 
                 for (int i = 2; i <= (lst.Count + 1); i++)
                 {
@@ -1290,6 +1298,7 @@ namespace TAT001.Controllers.Catalogos
                     worksheet.Cell("E" + i).Value = new[] { new { BANNER = lst[i - 2].PARVW }, };
                     worksheet.Cell("F" + i).Value = new[] { new { BANNER = lst[i - 2].PAYER.TrimStart('0') }, };
                     worksheet.Cell("G" + i).Value = new[] { new { BANNER = lst[i - 2].CANAL }, };
+                    worksheet.Cell("H" + i).Value = new[] { new { BANNER = lst[i - 2].ACTIVO? "Activo":"Inactivo" }, };
                 }
                 var rt = ruta + @"\Clientes_" + DateTime.Now.ToShortDateString() + ".xlsx";
                 workbook.SaveAs(rt);
