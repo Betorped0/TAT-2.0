@@ -1203,7 +1203,7 @@ namespace TAT001.Controllers.Catalogos
                         else if (IDs.Contains(us.ID))
                         {
                             us.IDX = false;
-                            err = ". El ID de usuario esta duplicado";
+                            err = ". ID de usuario duplicado<br/>";
                         }
                         else
                         {
@@ -1402,7 +1402,7 @@ namespace TAT001.Controllers.Catalogos
                         else if (IDs.Contains(us.ID))
                         {
                             us.IDX = false;
-                            err = ". El ID de usuario esta duplicado";
+                            err = ". ID de usuario duplicado<br/>";
                         }
                         else
                         {
@@ -2346,7 +2346,7 @@ namespace TAT001.Controllers.Catalogos
                             else if (IDs.Contains(us.ID))
                             {
                                 us.IDX = false;
-                                err = ". El ID de usuario esta duplicado";
+                                err = ". ID de usuario duplicado<br/>";
                             }
                             else
                             {
@@ -2545,7 +2545,7 @@ namespace TAT001.Controllers.Catalogos
                             else if (IDs.Contains(us.ID))
                             {
                                 us.IDX = false;
-                                err = ". El ID de usuario esta duplicado";
+                                err = ". ID de usuario duplicado<br/>";
                             }
                             else
                             {

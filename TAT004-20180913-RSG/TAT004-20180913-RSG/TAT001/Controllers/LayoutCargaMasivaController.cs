@@ -33,12 +33,20 @@ namespace TAT001.Controllers
             FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
             LayoutCargaMasivaViewModels modelView = new LayoutCargaMasivaViewModels();
             modelView.paises = db.PAIS
-                            .Where(x => x.ACTIVO == true)
+                            .Where(x => x.ACTIVO)
                             .Select(x => new SelectListItem
                             {
                                 Value = x.LAND,
-                                Text = x.LANDX+"-"+x.SOCIEDAD_ID 
+                                Text = x.LAND + "-"+x.LANDX 
                             }).ToList();
+            modelView.sociedades=db.SOCIEDADs
+                 .Where(x => x.ACTIVO )
+                 .Select(x => new SelectListItem
+                 {
+                     Value = x.BUKRS,
+                     Text = x.BUKRS + "-" + x.BUTXT
+                 }).ToList();
+
             return View(modelView);
 
         }
@@ -50,10 +58,11 @@ namespace TAT001.Controllers
             int pagina_id = 551;//ID EN BASE DE DATOS
             try
             {
+                FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
                 LAYOUT_CARGA layou = modelView.Layout;
                 layou.FECHAC = DateTime.Now;
                 layou.TIPO = "Solicitud";
-                layou.SOCIEDAD_ID = db.PAIS.FirstOrDefault(x => x.LAND == layou.LAND).SOCIEDAD_ID;
+                //layou.SOCIEDAD_ID = db.PAIS.FirstOrDefault(x => x.LAND == layou.LAND).SOCIEDAD_ID;
                 if (PathArchivo != null)
                 {
                     var path = Path.Combine(Server.MapPath("~/Archivos/LayoutCargaMasiva"));
@@ -81,12 +90,19 @@ namespace TAT001.Controllers
             {
                 FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
                 modelView.paises = db.PAIS
-                            .Where(x => x.ACTIVO == true)
-                            .Select(x => new SelectListItem
-                            {
-                                Value = x.LAND,
-                                Text = x.LANDX + "-" + x.SOCIEDAD_ID
-                            }).ToList();
+                          .Where(x => x.ACTIVO)
+                          .Select(x => new SelectListItem
+                          {
+                              Value = x.LAND,
+                              Text = x.LAND + "-" + x.LANDX
+                          }).ToList();
+                modelView.sociedades = db.SOCIEDADs
+                     .Where(x => x.ACTIVO)
+                     .Select(x => new SelectListItem
+                     {
+                         Value = x.BUKRS,
+                         Text = x.BUKRS + "-" + x.BUTXT
+                     }).ToList();
                 ViewBag.mnjError = FnCommon.ObtenerTextoMnj(db, pagina_id, "lbl_mnjErrorGuardar", User.Identity.Name);
                 return View(modelView);
             }

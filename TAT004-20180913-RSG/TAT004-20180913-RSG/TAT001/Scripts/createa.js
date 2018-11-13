@@ -79,8 +79,8 @@ function selectMaterial(val, desc, tr) {
     var index = getIndex();
     var cat = getCategoria(val);    
     desc = $.trim(desc);
-    if (val!=""){ tr.find('td').eq((5 + index)).removeClass("errorMaterial");}
-    if (index == -2) {
+    if (val!==""){ tr.find('td').eq((5 + index)).removeClass("errorMaterial");}
+    if (index === -2) {
         unica1 = false;
         if (cat.UNICA)
         {
@@ -111,7 +111,7 @@ function selectMaterial(val, desc, tr) {
     //Remove background a celda de material
     //Add MGC B20180705 2018.07.09 Validar que los materiales no existan duplicados en la tabla
     if (matExist) {
-        M.toast({ html: 'Ya hay un material con ese mismo identificador' });
+        //M.toast({ html: 'Ya hay un material con ese mismo identificador' });
         tr.find('td').eq((5 + index)).addClass("errorMaterial");
     } else {
         tr.find('td').eq((5 + index)).removeClass("errorMaterial");

@@ -2767,7 +2767,7 @@ $('body').on('focusout', '.input_oper', function () {
             var total_val = $(this).val();
             updateTotalRow(t, tr, "", "", 0);
         }
-
+        $("#monto_dis").trigger('focusout');
 
     }
 

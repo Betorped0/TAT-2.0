@@ -1751,7 +1751,6 @@
     <Content Include="Views\Solicitudes\CreateNew.cshtml" />
     <Content Include="Views\CartaV\Details.cshtml" />
     <Content Include="Views\CartaV\Index.cshtml" />
-    <Content Include="Views\CartaV\Create1.cshtml" />
     <Content Include="Views\Solicitudes\DetailsF.cshtml" />
     <Content Include="Views\Puestos\Create.cshtml" />
     <Content Include="Views\Puestos\Delete.cshtml" />
@@ -1854,7 +1853,6 @@
     <Content Include="Views\ccat\Delete.cshtml" />
     <Content Include="Views\ccat\Details.cshtml" />
     <Content Include="Views\ccat\Edit.cshtml" />
-    <Content Include="Views\CartaV\Create2.cshtml" />
     <Content Include="Views\CartaV\Create.cshtml" />
     <Content Include="Views\Solicitudes\Create3.cshtml" />
     <Content Include="Views\Listas\getPeriodo.cshtml" />
@@ -1894,8 +1892,6 @@
     <Content Include="Views\Negs\Edit.cshtml" />
     <Content Include="Views\Flujos\Carga.cshtml" />
     <Content Include="Views\CartaD\Create.cshtml" />
-    <Content Include="Views\CartaD\Create1.cshtml" />
-    <Content Include="Views\CartaD\Create2.cshtml" />
     <Content Include="Views\CartaD\Details.cshtml" />
     <Content Include="Views\CartaD\Index.cshtml" />
     <Content Include="Views\CartaV\_PartialMatTr.cshtml" />

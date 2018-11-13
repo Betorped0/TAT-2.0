@@ -3387,8 +3387,22 @@ namespace TAT001.Controllers
                 Log.Info("Solicitudes-Descargar: nombre->" + nombre);
                 Log.Info("Solicitudes-Descargar: contentyp->" + contentyp);
                 Log.Info("Solicitudes-Descargar: archivo->" + archivo);
-                FilePathResult file = File(archivo, contentyp, nombre);
-                return file;
+
+                string saveFileDev = ConfigurationManager.AppSettings["saveFileDev"];
+                if (saveFileDev == "1")
+                {
+                    return File(archivo, contentyp, nombre);
+                } else
+                {
+                    string serverDocs = ConfigurationManager.AppSettings["serverDocs"],
+                    serverDocsUser = ConfigurationManager.AppSettings["serverDocsUser"],
+                    serverDocsPass = ConfigurationManager.AppSettings["serverDocsPass"];
+                    using (Impersonation.LogonUser(serverDocs, serverDocsUser, serverDocsPass, LogonType.NewCredentials))
+                    {
+                        return File(archivo, contentyp, nombre);
+                    }
+                }
+            
             }
             catch (Exception e)
             {
