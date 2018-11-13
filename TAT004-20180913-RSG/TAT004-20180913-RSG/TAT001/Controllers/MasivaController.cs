@@ -545,63 +545,82 @@ namespace TAT001.Controllers
                             //{
                             //    doc.DESCRIPCION = "";
                             //}
-
-                            if (IsNumeric(monto) == false) { monto = "0"; }
-                            if (IsNumeric(porc_apoyo) == false) { porc_apoyo = "0"; } else { porc_apoyo = (Convert.ToDecimal(porc_apoyo) * 100).ToString(); }
-                            if (IsNumeric(apoyo_pieza) == false) { apoyo_pieza = "0"; }
-                            if (IsNumeric(costo_apoyo) == false) { costo_apoyo = "0"; }
-                            if (IsNumeric(precio_sug) == false) { precio_sug = "0"; }
-                            if (IsNumeric(volumen_real) == false) { volumen_real = "0"; }
-                            if (IsNumeric(apoyo) == false) { apoyo = "0"; }
-
-                            if (apoyo != "" & apoyo != "0")
+                            if (ligada != "")
                             {
-                                if ((monto != "" & monto != "0") & (porc_apoyo != "" & porc_apoyo != "0") & (volumen_real != "" & volumen_real != "0"))
+                                doc.MONTO = fc.toShow(Convert.ToDecimal(0), decimales);
+                                if (IsNumeric(porc_apoyo))
                                 {
-                                    doc.MONTO = fc.toShow(Convert.ToDecimal(monto), decimales);
-                                    doc.PORC_APOYO = fc.toShowPorc(Convert.ToDecimal(porc_apoyo), decimales);
-                                    doc.APOYO_PIEZA = fc.toShow(Convert.ToDecimal(apoyo_pieza), decimales);
-                                    doc.COSTO_APOYO = fc.toShow(Convert.ToDecimal(costo_apoyo), decimales);
-                                    doc.PRECIO_SUG = fc.toShow(Convert.ToDecimal(precio_sug), decimales);
-                                    doc.VOLUMEN_REAL = fc.toShowNum(Convert.ToDecimal(volumen_real), decimales);
-                                    doc.APOYO = fc.toShow(Convert.ToDecimal(apoyo), decimales);
+                                    doc.PORC_APOYO = fc.toShowPorc(Convert.ToDecimal(porc_apoyo) * 100, decimales);
                                 }
                                 else
                                 {
-                                    doc.MONTO = "";
-                                    doc.PORC_APOYO = "";
-                                    doc.APOYO_PIEZA = "";
-                                    doc.COSTO_APOYO = "";
-                                    doc.PRECIO_SUG = "";
-                                    doc.VOLUMEN_REAL = "";
-                                    doc.APOYO = fc.toShow(Convert.ToDecimal(apoyo), decimales);
+                                    doc.PORC_APOYO = fc.toShowPorc(Convert.ToDecimal(0), decimales);
                                 }
-
+                                doc.APOYO_PIEZA = fc.toShow(Convert.ToDecimal(0), decimales);
+                                doc.COSTO_APOYO = fc.toShow(Convert.ToDecimal(0), decimales);
+                                doc.PRECIO_SUG = fc.toShow(Convert.ToDecimal(0), decimales);
+                                doc.VOLUMEN_REAL = fc.toShowNum(Convert.ToDecimal(0), decimales);
+                                doc.APOYO = fc.toShow(Convert.ToDecimal(0), decimales);
                             }
                             else
                             {
-                                if ((monto != "" & monto != "0") & (porc_apoyo != "" & porc_apoyo != "0") & (volumen_real != "" & volumen_real != "0"))
-                                {
-                                    doc.MONTO = fc.toShow(Convert.ToDecimal(monto), decimales);
-                                    doc.PORC_APOYO = fc.toShowPorc(Convert.ToDecimal(porc_apoyo), decimales);
-                                    doc.APOYO_PIEZA = fc.toShow(Convert.ToDecimal(apoyo_pieza), decimales);
-                                    doc.COSTO_APOYO = fc.toShow(Convert.ToDecimal(costo_apoyo), decimales);
-                                    doc.PRECIO_SUG = fc.toShow(Convert.ToDecimal(precio_sug), decimales);
-                                    doc.VOLUMEN_REAL = fc.toShowNum(Convert.ToDecimal(volumen_real), decimales);
+                                if (IsNumeric(monto) == false) { monto = "0"; }
+                                if (IsNumeric(porc_apoyo) == false) { porc_apoyo = "0"; } else { porc_apoyo = (Convert.ToDecimal(porc_apoyo) * 100).ToString(); }
+                                if (IsNumeric(apoyo_pieza) == false) { apoyo_pieza = "0"; }
+                                if (IsNumeric(costo_apoyo) == false) { costo_apoyo = "0"; }
+                                if (IsNumeric(precio_sug) == false) { precio_sug = "0"; }
+                                if (IsNumeric(volumen_real) == false) { volumen_real = "0"; }
+                                if (IsNumeric(apoyo) == false) { apoyo = "0"; }
 
-                                    decimal total = (Convert.ToDecimal(monto) * (Convert.ToDecimal(porc_apoyo) / 100));
-                                    total = total * Convert.ToDecimal(volumen_real);
-                                    doc.APOYO = fc.toShow(total, decimales);
+                                if (apoyo != "" & apoyo != "0")
+                                {
+                                    if ((monto != "" & monto != "0") & (porc_apoyo != "" & porc_apoyo != "0") & (volumen_real != "" & volumen_real != "0"))
+                                    {
+                                        doc.MONTO = fc.toShow(Convert.ToDecimal(monto), decimales);
+                                        doc.PORC_APOYO = fc.toShowPorc(Convert.ToDecimal(porc_apoyo), decimales);
+                                        doc.APOYO_PIEZA = fc.toShow(Convert.ToDecimal(apoyo_pieza), decimales);
+                                        doc.COSTO_APOYO = fc.toShow(Convert.ToDecimal(costo_apoyo), decimales);
+                                        doc.PRECIO_SUG = fc.toShow(Convert.ToDecimal(precio_sug), decimales);
+                                        doc.VOLUMEN_REAL = fc.toShowNum(Convert.ToDecimal(volumen_real), decimales);
+                                        doc.APOYO = fc.toShow(Convert.ToDecimal(apoyo), decimales);
+                                    }
+                                    else
+                                    {
+                                        doc.MONTO = "";
+                                        doc.PORC_APOYO = "";
+                                        doc.APOYO_PIEZA = "";
+                                        doc.COSTO_APOYO = "";
+                                        doc.PRECIO_SUG = "";
+                                        doc.VOLUMEN_REAL = "";
+                                        doc.APOYO = fc.toShow(Convert.ToDecimal(apoyo), decimales);
+                                    }
+
                                 }
                                 else
                                 {
-                                    doc.MONTO = "";
-                                    doc.PORC_APOYO = "";
-                                    doc.APOYO_PIEZA = "";
-                                    doc.COSTO_APOYO = "";
-                                    doc.PRECIO_SUG = "";
-                                    doc.VOLUMEN_REAL = "";
-                                    doc.APOYO = "";
+                                    if ((monto != "" & monto != "0") & (porc_apoyo != "" & porc_apoyo != "0") & (volumen_real != "" & volumen_real != "0"))
+                                    {
+                                        doc.MONTO = fc.toShow(Convert.ToDecimal(monto), decimales);
+                                        doc.PORC_APOYO = fc.toShowPorc(Convert.ToDecimal(porc_apoyo), decimales);
+                                        doc.APOYO_PIEZA = fc.toShow(Convert.ToDecimal(apoyo_pieza), decimales);
+                                        doc.COSTO_APOYO = fc.toShow(Convert.ToDecimal(costo_apoyo), decimales);
+                                        doc.PRECIO_SUG = fc.toShow(Convert.ToDecimal(precio_sug), decimales);
+                                        doc.VOLUMEN_REAL = fc.toShowNum(Convert.ToDecimal(volumen_real), decimales);
+
+                                        decimal total = (Convert.ToDecimal(monto) * (Convert.ToDecimal(porc_apoyo) / 100));
+                                        total = total * Convert.ToDecimal(volumen_real);
+                                        doc.APOYO = fc.toShow(total, decimales);
+                                    }
+                                    else
+                                    {
+                                        doc.MONTO = "";
+                                        doc.PORC_APOYO = "";
+                                        doc.APOYO_PIEZA = "";
+                                        doc.COSTO_APOYO = "";
+                                        doc.PRECIO_SUG = "";
+                                        doc.VOLUMEN_REAL = "";
+                                        doc.APOYO = "";
+                                    }
                                 }
                             }
 
@@ -2545,74 +2564,20 @@ namespace TAT001.Controllers
                     //    regresaRowH4.Add("red white-text rojo");
                     //    regresaRowH4.Add("");
                     //}
-
-                    if (apoyo != "")
+                    if (ligada != "")
                     {
                         regresaRowH4.Add("");
-                        regresaRowH4.Add("");
-                        regresaRowH4.Add("");
-                        regresaRowH4.Add("");
-                        regresaRowH4.Add("");
-                        regresaRowH4.Add("");
-                        if (IsNumeric(apoyo))
-                        {
-                            regresaRowH4.Add("");
-                        }
-                        else
-                        {
-                            regresaRowH4.Add("red white-text rojo");
-                        }
-                    }
-                    else
-                    {
-                        if (IsNumeric(monto))
-                        {
-                            regresaRowH4.Add("");
-                        }
-                        else
-                        {
-                            regresaRowH4.Add("red white-text rojo");
-                        }
 
                         if (IsNumeric(porc_apoyo))
                         {
-                            regresaRowH4.Add("");
-                        }
-                        else
-                        {
-                            regresaRowH4.Add("red white-text rojo");
-                        }
-
-                        if (IsNumeric(apoyo_pieza))
-                        {
-                            regresaRowH4.Add("");
-                        }
-                        else
-                        {
-                            regresaRowH4.Add("red white-text rojo");
-                        }
-
-                        if (IsNumeric(costo_apoyo))
-                        {
-                            regresaRowH4.Add("");
-                        }
-                        else
-                        {
-                            regresaRowH4.Add("red white-text rojo");
-                        }
-
-                        if (IsNumeric(precio_sug))
-                        {
-                            regresaRowH4.Add("");
-                        }
-                        else
-                        {
-                            regresaRowH4.Add("red white-text rojo");
-                        }
-
-                        if (IsNumeric(volumen_real))
-                        {
-                            regresaRowH4.Add("");
+                            if (Convert.ToDecimal(porc_apoyo) > 0)
+                            {
+                                regresaRowH4.Add("");
+                            }
+                            else
+                            {
+                                regresaRowH4.Add("red white-text rojo");
+                            }
                         }
                         else
                         {
@@ -2620,6 +2585,88 @@ namespace TAT001.Controllers
                         }
 
                         regresaRowH4.Add("");
+                        regresaRowH4.Add("");
+                        regresaRowH4.Add("");
+                        regresaRowH4.Add("");
+                        regresaRowH4.Add("");
+                    }
+                    else
+                    {
+                        if (apoyo != "")
+                        {
+                            regresaRowH4.Add("");
+                            regresaRowH4.Add("");
+                            regresaRowH4.Add("");
+                            regresaRowH4.Add("");
+                            regresaRowH4.Add("");
+                            regresaRowH4.Add("");
+                            if (IsNumeric(apoyo))
+                            {
+                                regresaRowH4.Add("");
+                            }
+                            else
+                            {
+                                regresaRowH4.Add("red white-text rojo");
+                            }
+                        }
+                        else
+                        {
+                            if (IsNumeric(monto))
+                            {
+                                regresaRowH4.Add("");
+                            }
+                            else
+                            {
+                                regresaRowH4.Add("red white-text rojo");
+                            }
+
+                            if (IsNumeric(porc_apoyo))
+                            {
+                                regresaRowH4.Add("");
+                            }
+                            else
+                            {
+                                regresaRowH4.Add("red white-text rojo");
+                            }
+
+                            if (IsNumeric(apoyo_pieza))
+                            {
+                                regresaRowH4.Add("");
+                            }
+                            else
+                            {
+                                regresaRowH4.Add("red white-text rojo");
+                            }
+
+                            if (IsNumeric(costo_apoyo))
+                            {
+                                regresaRowH4.Add("");
+                            }
+                            else
+                            {
+                                regresaRowH4.Add("red white-text rojo");
+                            }
+
+                            if (IsNumeric(precio_sug))
+                            {
+                                regresaRowH4.Add("");
+                            }
+                            else
+                            {
+                                regresaRowH4.Add("red white-text rojo");
+                            }
+
+                            if (IsNumeric(volumen_real))
+                            {
+                                regresaRowH4.Add("");
+                            }
+                            else
+                            {
+                                regresaRowH4.Add("red white-text rojo");
+                            }
+
+                            regresaRowH4.Add("");
+                        }
                     }
                 }
             }
@@ -3049,7 +3096,7 @@ namespace TAT001.Controllers
                                 {
                                     docup.MATKL = null;
                                 }
-                                
+
                             }
                             docup.CANTIDAD = 0;
                             docup.MONTO = Convert.ToDecimal(monto);

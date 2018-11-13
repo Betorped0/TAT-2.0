@@ -197,18 +197,18 @@ namespace TAT001.Controllers.Catalogos
                 {
                     if (!String.IsNullOrEmpty(collection["EN"]))
                     {
-                        GALLT m = new GALLT { SPRAS_ID = "EN", GALL_ID = gALL.ID, TXT50 = collection["EN"].ToUpper() };
+                        GALLT m = new GALLT { SPRAS_ID = "EN", GALL_ID = gALL.ID, TXT50 = collection["EN"]};
                         ListmATERIALTs.Add(m);
                     }
                 }
                 if (collection.AllKeys.Contains("ES") && !String.IsNullOrEmpty(collection["ES"]))
                 {
-                    GALLT m = new GALLT { SPRAS_ID = "ES", GALL_ID = gALL.ID, TXT50 = collection["ES"]/*, MAKTG = Convert.ToString(collection["ES"])*/.ToUpper() };
+                    GALLT m = new GALLT { SPRAS_ID = "ES", GALL_ID = gALL.ID, TXT50 = collection["ES"]};
                     ListmATERIALTs.Add(m);
                 }
                 if (collection.AllKeys.Contains("PT") && !String.IsNullOrEmpty(collection["PT"]))
                 {
-                    GALLT m = new GALLT { SPRAS_ID = "PT", GALL_ID = gALL.ID, TXT50 = collection["PT"]/*, MAKTG = Convert.ToString(collection["PT"])*/.ToUpper() };
+                    GALLT m = new GALLT { SPRAS_ID = "PT", GALL_ID = gALL.ID, TXT50 = collection["PT"]};
                     ListmATERIALTs.Add(m);
                 }
                 db.GALLTs.AddRange(ListmATERIALTs);

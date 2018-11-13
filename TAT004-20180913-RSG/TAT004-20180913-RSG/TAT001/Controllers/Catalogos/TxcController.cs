@@ -46,7 +46,7 @@ namespace TAT001.Controllers.Catalogos
                 Session["spras"] = user.SPRAS_ID;
                 ViewBag.lan = user.SPRAS_ID;
             }
-            return View(db.TX_CONCEPTO.Where(a => a.ACTIVO == true).ToList());
+            return View(db.TX_CONCEPTO.ToList());
         }
 
         // GET: Txc/Details/5
@@ -124,7 +124,10 @@ namespace TAT001.Controllers.Catalogos
                 Session["spras"] = user.SPRAS_ID;
                 ViewBag.lan = user.SPRAS_ID;
             }
-            return View();
+            ViewBag.SPRAS = db.SPRAS.ToList();
+            TX_CONCEPTO concepto = new TX_CONCEPTO();
+            concepto.ACTIVO = true;
+            return View(concepto);
         }
 
         // POST: Txc/Create
@@ -132,7 +135,7 @@ namespace TAT001.Controllers.Catalogos
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,DESCRIPCION,ACTIVO")] TX_CONCEPTO tX_CONCEPTO)
+        public ActionResult Create([Bind(Include = "ID,DESCRIPCION,ACTIVO")] TX_CONCEPTO tX_CONCEPTO, string[] txval)
         {
             try
             {
@@ -140,23 +143,26 @@ namespace TAT001.Controllers.Catalogos
                 {
                     if (ModelState.IsValid)
                     {
-                        tX_CONCEPTO.ACTIVO = true;
                         db.TX_CONCEPTO.Add(tX_CONCEPTO);
                         db.SaveChanges();
-                        //Posterior a la insercion del registro, insertar en treversat
-                        TX_CONCEPTO trvi = db.TX_CONCEPTO.Where(x => x.DESCRIPCION == tX_CONCEPTO.DESCRIPCION).FirstOrDefault();
-                        //si trae registros entra
-                        if (trvi != null)
+                        //Recuperamos todas las descripciones en sus lenguajes
+                        List<SPRA> ss = db.SPRAS.ToList();
+                        var i = 0;
+                        foreach (SPRA s in ss)
                         {
-                            List<SPRA> ss = db.SPRAS.ToList();
-                            foreach (SPRA s in ss)
+                            try
                             {
-                                TX_CONCEPTOT trvt = new TX_CONCEPTOT();
-                                trvt.SPRAS_ID = s.ID;
-                                trvt.CONCEPTO_ID = trvi.ID;
-                                trvt.TXT50 = tX_CONCEPTO.DESCRIPCION;
-                                db.TX_CONCEPTOT.Add(trvt);
+                                TX_CONCEPTOT txt = new TX_CONCEPTOT();
+                                txt.SPRAS_ID = s.ID;
+                                txt.TXT50 = txval[i];
+                                txt.CONCEPTO_ID = tX_CONCEPTO.ID;
+                                db.Entry(txt).State = EntityState.Added;
                                 db.SaveChanges();
+                                i++;
+                            }
+                            catch (Exception e)
+                            {
+                                var ex = e.ToString();
                             }
                         }
                         return RedirectToAction("Index");
@@ -487,6 +493,8 @@ namespace TAT001.Controllers.Catalogos
                         }
                     }
                 }
+                db.Entry(tX_CONCEPTO).State = EntityState.Modified;
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(tX_CONCEPTO);

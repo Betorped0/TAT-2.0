@@ -46,7 +46,7 @@ namespace TAT001.Controllers.Catalogos
                 Session["spras"] = user.SPRAS_ID;
                 ViewBag.lan = user.SPRAS_ID;
             }
-            return View(db.TX_TNOTA.Where(a => a.ACTIVO == true).ToList());
+            return View(db.TX_TNOTA.ToList());
         }
 
         // GET: Txn/Details/5
@@ -124,7 +124,10 @@ namespace TAT001.Controllers.Catalogos
                 Session["spras"] = user.SPRAS_ID;
                 ViewBag.lan = user.SPRAS_ID;
             }
-            return View();
+            ViewBag.SPRAS = db.SPRAS.ToList();
+            TX_TNOTA concepto = new TX_TNOTA();
+            concepto.ACTIVO = true;
+            return View(concepto);
         }
 
         // POST: Txn/Create
@@ -132,27 +135,35 @@ namespace TAT001.Controllers.Catalogos
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,DESCRIPCION,ACTIVO")] TX_TNOTA tX_TNOTA)
+        public ActionResult Create([Bind(Include = "ID,DESCRIPCION,ACTIVO")] TX_TNOTA tX_TNOTA, string[] txval)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    tX_TNOTA.ACTIVO = true;
                     db.TX_TNOTA.Add(tX_TNOTA);
                     db.SaveChanges();
                     TX_TNOTA txn = db.TX_TNOTA.Where(x => x.DESCRIPCION == tX_TNOTA.DESCRIPCION).FirstOrDefault();
                     if (txn != null)
                     {
                         List<SPRA> ss = db.SPRAS.ToList();
+                        var i = 0;
                         foreach (SPRA s in ss)
                         {
-                            TX_NOTAT txt = new TX_NOTAT();
-                            txt.SPRAS_ID = s.ID;
-                            txt.TNOTA_ID = txn.ID;
-                            txt.TXT50 = txn.DESCRIPCION;
-                            db.TX_NOTAT.Add(txt);
-                            db.SaveChanges();
+                            try
+                            {
+                                TX_NOTAT txt = new TX_NOTAT();
+                                txt.SPRAS_ID = s.ID;
+                                txt.TXT50 = txval[i];
+                                txt.TNOTA_ID = txn.ID;
+                                db.Entry(txt).State = EntityState.Added;
+                                db.SaveChanges();
+                                i++;
+                            }
+                            catch (Exception e)
+                            {
+                                var ex = e.ToString();
+                            }
                         }
                     }
                     return RedirectToAction("Index");
@@ -403,6 +414,8 @@ namespace TAT001.Controllers.Catalogos
                         }
                     }
                 }
+                db.Entry(tX_TNOTA).State = EntityState.Modified;
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(tX_TNOTA);
