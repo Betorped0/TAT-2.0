@@ -342,7 +342,7 @@ namespace TAT001.Services
             }
 
             //Tipo técnico
-            dOCUMENTO.TIPO_TECNICO = "";
+            dOCUMENTO.TIPO_TECNICO = relacionada_neg;
 
             USUARIO u = db.USUARIOs.Find(d.USUARIOC_ID);//RSG 02/05/2018
             Rangos rangos = new Rangos();//RSG 01.08.2018

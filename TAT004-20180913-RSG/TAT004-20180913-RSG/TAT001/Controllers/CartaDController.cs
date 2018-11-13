@@ -118,7 +118,7 @@ namespace TAT001.Controllers
                 var cabeza = new List<string>();
                 List<listacuerpoc> armadoCuerpoTab = null;
                 bool varligada = Convert.ToBoolean(d.LIGADA);
-                if (varligada != true)
+                if (!varligada)
                 {
                     FnCommonCarta.ObtenerCartaProductos(db, d, null, spras_id, false,
                     ref lista,
@@ -266,7 +266,7 @@ namespace TAT001.Controllers
                 var cabeza = new List<string>();
                 List<listacuerpoc> armadoCuerpoTab = null;
                 bool varligada = Convert.ToBoolean(d.LIGADA);
-                if (varligada)
+                if (!varligada)
                 {
                     FnCommonCarta.ObtenerCartaProductos(db, d, null, spras_id, false,
                     ref encabezadoFech,

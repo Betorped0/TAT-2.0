@@ -2047,7 +2047,6 @@
     <Content Include="Views\Shared\_LayoutLogin.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <Content Include="Views\Warnings\Create.cshtml" />
-    <Content Include="Views\Warnings\Delete.cshtml" />
     <Content Include="Views\Warnings\Details.cshtml" />
     <Content Include="Views\Warnings\Edit.cshtml" />
     <Content Include="Views\Warnings\Index.cshtml" />

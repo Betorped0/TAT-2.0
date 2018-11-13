@@ -9,9 +9,6 @@
 <div class="row">
     <div class="col s12 right-align">
         @*@Html.ActionLink("Create New", "Create")*@
-        <a href="@Url.Action("Index", "Paginas", new { @*id =TempData["id"].ToString()*@})" class="btn-small">
-            <span id="btn_return">Regresar</span>
-        </a>
         <a href="@Url.Action("Create", "Textos", new { id = TempData["id"].ToString()})" class="btn-small">
             <span id="btn_create">Crear</span>
         </a>
@@ -90,8 +87,8 @@
                             <i class="material-icons grey-text">description</i>
                         </a>
                         @*<a href="@Url.Action("Delete", "Textos", new { SPRAS_ID = item.SPRAS_ID, PAGINA_ID = item.PAGINA_ID, CAMPO_ID = item.CAMPO_ID })">
-                            <i class="material-icons grey-text">delete</i>
-                        </a>*@
+                                <i class="material-icons grey-text">delete</i>
+                            </a>*@
                     </td>
                 </tr>
             }
@@ -128,3 +125,6 @@
     }
 </style>
 
+<a href="@Url.Action("Index", "Paginas", new { @*id =TempData["id"].ToString()*@})" class="">
+    <span id="btn_return">Regresar</span>
+</a>
