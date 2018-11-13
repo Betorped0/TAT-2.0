@@ -5280,77 +5280,77 @@ namespace TAT001.Controllers
                             //}
                             totalRes += (decimal)d1.MONTO_DOC_MD;
                             //}
-                            //}
-                            //RSG 14.06.2018----------------------
-                            decimal resto = decimal.Parse("0.00");
-                            //foreach (decimal dec in totales)
-                            //{
-                            //    resto += dec;
-                            //}
-                            resto = (decimal)docPadre.MONTO_DOC_MD - totalRes;
-                            ////RSG 14.06.2018----------------------
-                            //foreach (decimal dec in totales)
-                            //{
-                            //    if (dec > 0)
-                            //        return RedirectToAction("Reversa", new { id = dOCUMENTO.DOCUMENTO_REF, resto = resto });
-                            //}
-                            if (docPadre.MONTO_DOC_MD - totalRes > 0)
-                                return RedirectToAction("Reversa", new { id = dOCUMENTO.DOCUMENTO_REF, resto = resto });
+                        }
+                        //RSG 14.06.2018----------------------
+                        decimal resto = decimal.Parse("0.00");
+                        //foreach (decimal dec in totales)
+                        //{
+                        //    resto += dec;
+                        //}
+                        resto = (decimal)docPadre.MONTO_DOC_MD - totalRes;
+                        ////RSG 14.06.2018----------------------
+                        //foreach (decimal dec in totales)
+                        //{
+                        //    if (dec > 0)
+                        //        return RedirectToAction("Reversa", new { id = dOCUMENTO.DOCUMENTO_REF, resto = resto });
+                        //}
+                        if (docPadre.MONTO_DOC_MD - totalRes > 0)
+                            return RedirectToAction("Reversa", new { id = dOCUMENTO.DOCUMENTO_REF, resto = resto });
 
-                        }
-                        using (TAT001Entities db1 = new TAT001Entities())
-                        {
-                            decimal num_ref = (decimal)d.DOCUMENTO_REF;
-                            DOCUMENTO referencia = db1.DOCUMENTOes.Find(num_ref);
-                            referencia.ESTATUS = "R";
-                            db1.Entry(referencia).State = EntityState.Modified;
-                            db1.SaveChanges();
-                        }
                     }
-
-                    return RedirectToAction("Index", "Home");
+                    using (TAT001Entities db1 = new TAT001Entities())
+                    {
+                        decimal num_ref = (decimal)d.DOCUMENTO_REF;
+                        DOCUMENTO referencia = db1.DOCUMENTOes.Find(num_ref);
+                        referencia.ESTATUS = "R";
+                        db1.Entry(referencia).State = EntityState.Modified;
+                        db1.SaveChanges();
+                    }
                 }
-                ViewBag.TALL_ID = new SelectList(db.TALLs, "ID", "DESCRIPCION", dOCUMENTO.TALL_ID);
-                ViewBag.TSOL_ID = new SelectList(db.TSOLs, "ID", "DESCRIPCION", dOCUMENTO.TSOL_ID);
-                ViewBag.USUARIOC_ID = new SelectList(db.USUARIOs, "ID", "PASS", dOCUMENTO.USUARIOC_ID);
-                ViewBag.VKORG = new SelectList(db.CLIENTEs, "VKORG", "NAME1", dOCUMENTO.VKORG);
-                ViewBag.PAIS_ID = new SelectList(db.PAIS, "LAND", "SPRAS", dOCUMENTO.PAIS_ID);
-                ViewBag.SOCIEDAD_ID = new SelectList(db.SOCIEDADs, "BUKRS", "BUTXT", dOCUMENTO.SOCIEDAD_ID);
 
-                //LEJ 24.07.2018------------------------------------------------------------
-                DOCUMENTO dOCUMENTO_ = db.DOCUMENTOes.Find(dOCUMENTO.NUM_DOC);
-                if (dOCUMENTO_ == null)
-                {
-                    return HttpNotFound();
-                }
-                dOCUMENTO_.CLIENTE = db.CLIENTEs.Where(a => a.VKORG.Equals(dOCUMENTO.VKORG)
-                                                        & a.VTWEG.Equals(dOCUMENTO.VTWEG)
-                                                        & a.SPART.Equals(dOCUMENTO.SPART)
-                                                        & a.KUNNR.Equals(dOCUMENTO.PAYER_ID)).First();
-                dOCUMENTO_.DOCUMENTOF = db.DOCUMENTOFs.Where(a => a.NUM_DOC.Equals(dOCUMENTO.NUM_DOC)).ToList();
-                DocumentoFlujo DF = new DocumentoFlujo();
-                DF.D = dOCUMENTO_;
-                ViewBag.df = DF;
-                //LEJ 24.07.2018------------------------------------------------------------
-                ViewBag.horaServer = DateTime.Now.Date.ToString().Split(new[] { ' ' }, 2)[1];//RSG 01.08.2018
-
-                return View(dOCUMENTO);
+                return RedirectToAction("Index", "Home");
             }
+            ViewBag.TALL_ID = new SelectList(db.TALLs, "ID", "DESCRIPCION", dOCUMENTO.TALL_ID);
+            ViewBag.TSOL_ID = new SelectList(db.TSOLs, "ID", "DESCRIPCION", dOCUMENTO.TSOL_ID);
+            ViewBag.USUARIOC_ID = new SelectList(db.USUARIOs, "ID", "PASS", dOCUMENTO.USUARIOC_ID);
+            ViewBag.VKORG = new SelectList(db.CLIENTEs, "VKORG", "NAME1", dOCUMENTO.VKORG);
+            ViewBag.PAIS_ID = new SelectList(db.PAIS, "LAND", "SPRAS", dOCUMENTO.PAIS_ID);
+            ViewBag.SOCIEDAD_ID = new SelectList(db.SOCIEDADs, "BUKRS", "BUTXT", dOCUMENTO.SOCIEDAD_ID);
 
-            // GET: Solicitudes/Delete/5
-            public ActionResult Delete(decimal id)
+            //LEJ 24.07.2018------------------------------------------------------------
+            DOCUMENTO dOCUMENTO_ = db.DOCUMENTOes.Find(dOCUMENTO.NUM_DOC);
+            if (dOCUMENTO_ == null)
             {
-                if (id == 0)
-                {
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-                }
-                DOCUMENTO dOCUMENTO = db.DOCUMENTOes.Find(id);
-                if (dOCUMENTO == null)
-                {
-                    return HttpNotFound();
-                }
-                return View(dOCUMENTO);
+                return HttpNotFound();
             }
+            dOCUMENTO_.CLIENTE = db.CLIENTEs.Where(a => a.VKORG.Equals(dOCUMENTO.VKORG)
+                                                    & a.VTWEG.Equals(dOCUMENTO.VTWEG)
+                                                    & a.SPART.Equals(dOCUMENTO.SPART)
+                                                    & a.KUNNR.Equals(dOCUMENTO.PAYER_ID)).First();
+            dOCUMENTO_.DOCUMENTOF = db.DOCUMENTOFs.Where(a => a.NUM_DOC.Equals(dOCUMENTO.NUM_DOC)).ToList();
+            DocumentoFlujo DF = new DocumentoFlujo();
+            DF.D = dOCUMENTO_;
+            ViewBag.df = DF;
+            //LEJ 24.07.2018------------------------------------------------------------
+            ViewBag.horaServer = DateTime.Now.Date.ToString().Split(new[] { ' ' }, 2)[1];//RSG 01.08.2018
+
+            return View(dOCUMENTO);
+        }
+
+        // GET: Solicitudes/Delete/5
+        public ActionResult Delete(decimal id)
+        {
+            if (id == 0)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            DOCUMENTO dOCUMENTO = db.DOCUMENTOes.Find(id);
+            if (dOCUMENTO == null)
+            {
+                return HttpNotFound();
+            }
+            return View(dOCUMENTO);
+        }
 
         // POST: Solicitudes/Delete/5
         [HttpPost, ActionName("Delete")]
