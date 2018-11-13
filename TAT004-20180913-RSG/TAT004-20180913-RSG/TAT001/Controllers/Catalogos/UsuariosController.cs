@@ -26,6 +26,9 @@ namespace TAT001.Controllers.Catalogos
         // GET: Usuarios
         public ActionResult Index()
         {
+            string us = User.Identity.Name;
+            var user = db.USUARIOs.Where(a => a.ID.Equals(us)).FirstOrDefault();
+            ViewBag.nivelUsuario = user.PUESTO_ID;
             int pagina = 601; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
             //using (TAT001Entities db = new TAT001Entities())
