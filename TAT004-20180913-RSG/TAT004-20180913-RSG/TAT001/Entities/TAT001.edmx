@@ -434,6 +434,7 @@
           <Property Name="BASE_UNIT" Type="nchar" MaxLength="3" />
           <Property Name="MATERIALGP" Type="nvarchar" MaxLength="30" />
           <Property Name="TAXCODEGP" Type="nchar" MaxLength="2" />
+          <Property Name="ASIGNACIONTXT" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="CONSOPORTE">
           <Key>
@@ -6614,6 +6615,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Property Name="BASE_UNIT" Type="String" MaxLength="3" FixedLength="true" Unicode="true" />
           <Property Name="MATERIALGP" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Name="TAXCODEGP" Type="String" MaxLength="2" FixedLength="true" Unicode="true" />
+          <Property Name="ASIGNACIONTXT" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="CONSOPORTE">
           <Key>
@@ -12975,6 +12977,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <EntitySetMapping Name="CONPOSAPPs">
             <EntityTypeMapping TypeName="TAT001Model.CONPOSAPP">
               <MappingFragment StoreEntitySet="CONPOSAPP">
+                <ScalarProperty Name="ASIGNACIONTXT" ColumnName="ASIGNACIONTXT" />
                 <ScalarProperty Name="CONSECUTIVO" ColumnName="CONSECUTIVO" />
                 <ScalarProperty Name="POSICION" ColumnName="POSICION" />
                 <ScalarProperty Name="RELACION" ColumnName="RELACION" />
