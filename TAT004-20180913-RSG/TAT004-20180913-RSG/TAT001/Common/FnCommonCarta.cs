@@ -607,7 +607,7 @@ namespace TAT001.Common
                     {
                         if (fact)
                         {
-                            carp.VOLUMEN_REAL = docmod.VOLUMEN_REAL;
+                            carp.VOLUMEN_REAL = (docmod.VOLUMEN_REAL==null?0.0M: docmod.VOLUMEN_REAL);
                             carp.VOLUMEN_EST = 0;
                         }
                         else
@@ -623,12 +623,12 @@ namespace TAT001.Common
                     {
                         if (fact)
                         {
-                            carp.APOYO_REAL = docmod.APOYO_REAL;
+                            carp.APOYO_REAL = (docmod.APOYO_REAL == null ? 0.0M : docmod.APOYO_REAL);
                             carp.APOYO_EST = 0;
                         }
                         else
                         {
-                            carp.APOYO_EST = docmod.APOYO_EST;
+                            carp.APOYO_EST = (docmod.APOYO_EST == null ? 0.0M : docmod.APOYO_EST);
                             carp.APOYO_REAL = 0;
                         }
                     }
@@ -686,7 +686,7 @@ namespace TAT001.Common
                     {
                         if (fact)
                         {
-                            carp.VOLUMEN_REAL = docmod.VOLUMEN_REAL;
+                            carp.VOLUMEN_REAL = (docmod.VOLUMEN_REAL == null ? 0.0M : docmod.VOLUMEN_REAL);
                             carp.VOLUMEN_EST = 0;
                         }
                         else
@@ -702,13 +702,13 @@ namespace TAT001.Common
                     {
                         if (fact)
                         {
-                            carp.APOYO_REAL = docmod.APOYO_REAL;
+                            carp.APOYO_REAL = (docmod.APOYO_REAL == null ? 0.0M : docmod.APOYO_REAL);
                             carp.APOYO_EST = 0;
                         }
                         else
                         {
                             carp.APOYO_REAL = 0;
-                            carp.APOYO_EST = docmod.APOYO_EST;
+                            carp.APOYO_EST = (docmod.APOYO_EST == null ? 0.0M : docmod.APOYO_EST);
                         }
                     }
 
