@@ -18,6 +18,7 @@ namespace TAT001.Models
         public string kunnr { get; set; }
         public bool activo { get; set; }
         public bool defecto { get; set; }
+        public bool carta { get; set; }
         public string spras { get; set; }
         public IEnumerable<CONTACTOC> tabContacto { get; set; }
     }
