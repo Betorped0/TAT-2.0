@@ -334,6 +334,20 @@ namespace TAT001.Controllers
 
                     listaDocs.Add(ld);
                 }
+                ////List<DOCUMENTO> dss = db.DOCUMENTOes.Where(x => x.DOCUMENTO_SAP != null & x.DOCUMENTOSAP == null).ToList();
+                ////foreach(DOCUMENTO ds in dss)
+                ////{
+                ////    DOCUMENTOSAP dos = new DOCUMENTOSAP();
+                ////    dos.NUM_DOC = ds.NUM_DOC;
+                ////    dos.BLART = "SA";
+                ////    dos.BUKRS = ds.SOCIEDAD_ID;
+                ////    dos.CUENTA_A = "0000000001";
+                ////    dos.EJERCICIO = 2018;
+                ////    dos.FECHAC = DateTime.Now;
+                ////    dos.IMPORTE = 10000;
+                ////    db.DOCUMENTOSAPs.Add(dos);
+                ////}
+                ////db.SaveChanges();
                 return View(listaDocs);
 
             }
