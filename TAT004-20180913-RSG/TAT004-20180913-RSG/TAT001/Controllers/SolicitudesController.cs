@@ -1515,7 +1515,7 @@ namespace TAT001.Controllers
                         dOCUMENTO.CIUDAD = d.CIUDAD;
                         dOCUMENTO.PAYER_ID = d.PAYER_ID;
                         dOCUMENTO.CONCEPTO = d.CONCEPTO;
-                        dOCUMENTO.NOTAS = d.NOTAS;
+                        //dOCUMENTO.NOTAS = d.NOTAS;
                         dOCUMENTO.FECHAI_VIG = d.FECHAI_VIG;
                         dOCUMENTO.FECHAF_VIG = d.FECHAF_VIG;
                         dOCUMENTO.PAYER_NOMBRE = d.PAYER_NOMBRE;
@@ -4384,7 +4384,7 @@ namespace TAT001.Controllers
                         d.CIUDAD = dr.CIUDAD;
                         d.PAYER_ID = dr.PAYER_ID;
                         d.CONCEPTO = dr.CONCEPTO;
-                        d.NOTAS = dr.NOTAS;
+                        //d.NOTAS = dr.NOTAS;
                         d.FECHAI_VIG = dr.FECHAI_VIG;
                         d.FECHAF_VIG = dr.FECHAF_VIG;
                         //d.PAYER_NOMBRE = dr.PAYER_NOMBRE;
