@@ -484,7 +484,7 @@ function Comprobar() {
     var datos = $('#tabla').serializeArray();
     creart('Comprobar', datos);
     //M.toast({ html: 'Registros Actualizados' });
-    mostrarAlerta("info", "A", "Registro Actualizado");
+    mostrarAlerta("info", "A", "Vista Actualizada");
 }
 
 function Borrar() {

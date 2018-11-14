@@ -299,7 +299,7 @@
                                                 results: function (resultsCount) { }
                                             },
                                             change: function (e, ui) {
-                                                if (!(ui.item)) {
+                                                if (!(ui.item) && $("#payer_id").val() === "") {
                                                     e.target.value = "";
                                                 }
                                             },

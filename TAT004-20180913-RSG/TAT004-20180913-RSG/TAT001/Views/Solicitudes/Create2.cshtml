@@ -516,11 +516,11 @@
                         noResults: '',
                         results: function (resultsCount) { }
                     },
-                    change: function (e, ui) {
-                        if (!(ui.item)) {
-                            e.target.value = "";
-                        }
-                    },
+                                    change: function (e, ui) {
+                                        if (!(ui.item) && $("#payer_id").val() === "") {
+                                            e.target.value = "";
+                                        }
+                                    },
 
                     select: function (event, ui) {
 
