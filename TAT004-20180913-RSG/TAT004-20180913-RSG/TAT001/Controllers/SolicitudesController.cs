@@ -5497,29 +5497,34 @@ namespace TAT001.Controllers
         public ActionResult GuardarComentario(decimal num_docu, string comentario)
         {
             DOCUMENTO d = db.DOCUMENTOes.Find(num_docu);
-            FLUJO actual = db.FLUJOes.Where(a => a.NUM_DOC == num_docu).OrderByDescending(a => a.POS).FirstOrDefault();
-            db.Entry(d).State = EntityState.Modified;
-
-            if (actual != null)
+            if (d.DOCUMENTO_REF == null)
             {
-                FLUJO nuevo = new FLUJO();
-                nuevo.COMENTARIO = comentario;
-                nuevo.DETPOS = actual.DETPOS;
-                nuevo.DETVER = actual.DETVER;
-                nuevo.ESTATUS = actual.ESTATUS;
-                nuevo.FECHAC = DateTime.Now;
-                nuevo.FECHAM = nuevo.FECHAC;
-                nuevo.LOOP = 0;
-                nuevo.NUM_DOC = actual.NUM_DOC;
-                nuevo.POS = actual.POS + 1;
-                nuevo.USUARIOA_ID = User.Identity.Name;
-                nuevo.WF_POS = actual.WF_POS + 1;
-                nuevo.WF_VERSION = actual.WF_VERSION;
-                nuevo.WORKF_ID = actual.WORKF_ID;
-                db.FLUJOes.Add(nuevo);
+                FLUJO actual = db.FLUJOes.Where(a => a.NUM_DOC == d.NUM_DOC).OrderByDescending(a => a.POS).FirstOrDefault();
+                //db.Entry(d).State = EntityState.Modified;
 
+                if (actual != null)
+                {
+                    FLUJO nuevo = new FLUJO();
+                    nuevo.COMENTARIO = comentario;
+                    nuevo.DETPOS = actual.DETPOS;
+                    nuevo.DETVER = actual.DETVER;
+                    nuevo.ESTATUS = "";
+                    nuevo.FECHAC = DateTime.Now;
+                    nuevo.FECHAM = DateTime.Now;
+                    nuevo.LOOP = 0;
+                    nuevo.NUM_DOC = actual.NUM_DOC;
+                    nuevo.POS = actual.POS + 1;
+                    nuevo.USUARIOA_ID = User.Identity.Name;
+                    nuevo.WF_POS = actual.WF_POS;
+                    nuevo.WF_VERSION = actual.WF_VERSION;
+                    nuevo.WORKF_ID = actual.WORKF_ID;
+                    db.FLUJOes.Add(nuevo);
+                    ////actual.COMENTARIO = comentario;
+                    ////db.Entry(actual).State = EntityState.Modified;
+                    db.SaveChanges();
+
+                }
             }
-            db.SaveChanges();
 
             return RedirectToAction("Index", "Home");
         }
