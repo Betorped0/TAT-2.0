@@ -1515,7 +1515,7 @@ namespace TAT001.Controllers
                         dOCUMENTO.CIUDAD = d.CIUDAD;
                         dOCUMENTO.PAYER_ID = d.PAYER_ID;
                         dOCUMENTO.CONCEPTO = d.CONCEPTO;
-                        dOCUMENTO.NOTAS = d.NOTAS;
+                        //dOCUMENTO.NOTAS = d.NOTAS;
                         dOCUMENTO.FECHAI_VIG = d.FECHAI_VIG;
                         dOCUMENTO.FECHAF_VIG = d.FECHAF_VIG;
                         dOCUMENTO.PAYER_NOMBRE = d.PAYER_NOMBRE;
@@ -3402,17 +3402,22 @@ namespace TAT001.Controllers
                 if (saveFileDev == "1")
                 {
                     return File(archivo, contentyp, nombre);
-                } else
+                }
+                else
                 {
                     string serverDocs = ConfigurationManager.AppSettings["serverDocs"],
                     serverDocsUser = ConfigurationManager.AppSettings["serverDocsUser"],
                     serverDocsPass = ConfigurationManager.AppSettings["serverDocsPass"];
                     using (Impersonation.LogonUser(serverDocs, serverDocsUser, serverDocsPass, LogonType.NewCredentials))
                     {
-                        return File(archivo, contentyp, nombre);
+                        Log.Info("Solicitudes-Descargar: Loggin->" + archivo);
+                        FileStream fs = new FileStream(archivo, FileMode.Open, FileAccess.Read);
+                        byte[] filebytes = new byte[fs.Length];
+                        fs.Read(filebytes, 0, Convert.ToInt32(fs.Length));
+                        fs.Dispose();
+                        return File(filebytes, contentyp, nombre);
                     }
                 }
-            
             }
             catch (Exception e)
             {
@@ -4379,7 +4384,7 @@ namespace TAT001.Controllers
                         d.CIUDAD = dr.CIUDAD;
                         d.PAYER_ID = dr.PAYER_ID;
                         d.CONCEPTO = dr.CONCEPTO;
-                        d.NOTAS = dr.NOTAS;
+                        //d.NOTAS = dr.NOTAS;
                         d.FECHAI_VIG = dr.FECHAI_VIG;
                         d.FECHAF_VIG = dr.FECHAF_VIG;
                         //d.PAYER_NOMBRE = dr.PAYER_NOMBRE;
@@ -4814,15 +4819,16 @@ namespace TAT001.Controllers
                         d.DOCUMENTORECs.Remove(dree);
                     }
 
+                    if (chk_ligada == "on")
+                        d.LIGADA = true;
+                    else
+                        d.LIGADA = false;
+
                     db.Entry(d).State = EntityState.Modified;
                     db.SaveChanges();
 
 
                     //Guardar registros de recurrencias  RSG 01.08.2018------------------
-                    if (chk_ligada == "on")
-                        d.LIGADA = true;
-                    else
-                        d.LIGADA = false;
 
                     if (dOCUMENTO.DOCUMENTOREC != null)
                         if (dOCUMENTO.DOCUMENTOREC.Count > 0)
@@ -5278,7 +5284,7 @@ namespace TAT001.Controllers
 
                 if (d.DOCUMENTO_REF > 0 & txt_flujo != "B")//ADD RSG 02.11.2018
                 {
-                    if (d.TSOL.REVERSO == true)
+                    if (!d.TSOL.REVERSO)
                     {
                         DOCUMENTO docPadre = db.DOCUMENTOes.Find(d.DOCUMENTO_REF);
                         List<DOCUMENTO> dd = db.DOCUMENTOes.Where(a => a.DOCUMENTO_REF == (d.DOCUMENTO_REF)).ToList();
@@ -5847,6 +5853,18 @@ namespace TAT001.Controllers
                         doc.APOYO_EST = 0;
                     }
                     //RSG 24.05.2018----------------------------------
+                    if (doc.PORC_APOYO == 0 || doc.MONTO==0)
+                    {
+                        try
+                        {
+                            string apoyoTotal = dt.Rows[i][8].ToString();
+                            doc.APOYO_REAL = (decimal.Parse(apoyoTotal));//Apoyo Total
+                        }
+                        catch
+                        {
+                            doc.APOYO_REAL = 0;
+                        }
+                    }
                     ld.Add(doc);
                     pos++;
                 }

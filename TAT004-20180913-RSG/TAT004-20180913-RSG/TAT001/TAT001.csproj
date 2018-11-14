@@ -514,6 +514,15 @@
     <Compile Include="Entities\DOCUMENTOV.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\ESTATU.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ESTATUSR.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ESTATUST.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\FACTURASCONF.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
