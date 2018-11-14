@@ -3402,17 +3402,22 @@ namespace TAT001.Controllers
                 if (saveFileDev == "1")
                 {
                     return File(archivo, contentyp, nombre);
-                } else
+                }
+                else
                 {
                     string serverDocs = ConfigurationManager.AppSettings["serverDocs"],
                     serverDocsUser = ConfigurationManager.AppSettings["serverDocsUser"],
                     serverDocsPass = ConfigurationManager.AppSettings["serverDocsPass"];
                     using (Impersonation.LogonUser(serverDocs, serverDocsUser, serverDocsPass, LogonType.NewCredentials))
                     {
-                        return File(archivo, contentyp, nombre);
+                        Log.Info("Solicitudes-Descargar: Loggin->" + archivo);
+                        FileStream fs = new FileStream(archivo, FileMode.Open, FileAccess.Read);
+                        byte[] filebytes = new byte[fs.Length];
+                        fs.Read(filebytes, 0, Convert.ToInt32(fs.Length));
+                        fs.Dispose();
+                        return File(filebytes, contentyp, nombre);
                     }
                 }
-            
             }
             catch (Exception e)
             {
