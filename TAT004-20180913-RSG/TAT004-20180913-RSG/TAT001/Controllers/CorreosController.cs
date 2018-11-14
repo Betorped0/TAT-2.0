@@ -162,7 +162,74 @@ namespace TAT001.Controllers
 
             //B20180803 MGC Presupuesto............
 
+            ObtenerAnalisisSolicitud(dOCUMENTO);//ADD RSG 13.11.2018
             return View(dOCUMENTO);
+        }
+
+        void ObtenerAnalisisSolicitud(DOCUMENTO D)
+        {
+            FormatosC format = new FormatosC();
+            decimal montoProv = 0.0M;
+            decimal montoApli = 0.0M;
+            decimal remanente = 0.0M;
+            decimal impuesto = 0.0M;
+            bool esDocRef = false;
+            bool esProv = false;
+            bool esNC = false;
+
+
+            if (D.DOCUMENTO_REF != null)
+            {//Es hijo
+                esProv = true;
+                montoProv = db.DOCUMENTOes.First(x => x.NUM_DOC == D.DOCUMENTO_REF).MONTO_DOC_MD.Value;
+            }
+            else if (db.DOCUMENTOes.Any(x => x.DOCUMENTO_REF == D.NUM_DOC && x.ESTATUS_C == null))
+            {
+                //Es padre
+                esProv = true;
+                montoProv = D.MONTO_DOC_MD.Value;
+            }
+
+            if (db.DOCUMENTOes.Any(x => x.DOCUMENTO_REF == D.NUM_DOC && x.ESTATUS_C == null))
+            {
+                esDocRef = true;
+                montoApli = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == D.NUM_DOC && x.ESTATUS_C == null).Sum(x => x.MONTO_DOC_MD.Value);
+            }
+            else if (D.DOCUMENTO_REF != null)
+            {
+                esDocRef = true;
+                if (db.DOCUMENTOes.Any(x => x.DOCUMENTO_REF == D.DOCUMENTO_REF && x.ESTATUS_C == null))
+                {
+                    montoApli = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == D.DOCUMENTO_REF && x.ESTATUS_C == null).Sum(x => x.MONTO_DOC_MD.Value);
+                }
+            }
+            if (montoProv > 0 && montoApli > 0)
+            {
+                remanente = montoProv - montoApli;
+            }
+            string[] tsolImp = new string[] { "NC", "NCA", "NCAS", "NCAM", "NCASM", "NCS", "NCI", "NCIA", "NCIAS", "NCIS" };
+            if (tsolImp.Contains(D.TSOL_ID))
+            {
+                decimal KBETR = 0.0M;
+                esNC = true;
+                if (db.DOCUMENTOPs.Any(x => (x.MATKL == "605" || x.MATKL == "207") && x.NUM_DOC == D.NUM_DOC))
+                {
+                    KBETR = db.IIMPUESTOes.First(x => x.MWSKZ == "A0").KBETR.Value;
+                }
+                else
+                {
+                    decimal concecutivo = db.CONPOSAPHs.First(x => x.TIPO_SOL == "NC" && x.SOCIEDAD == D.SOCIEDAD_ID && (x.TIPO_DOC == "YG" || x.TIPO_DOC == "DG")).CONSECUTIVO;
+                    string tax_code = db.CONPOSAPPs.First(x => x.CONSECUTIVO == concecutivo).TAX_CODE;
+                    KBETR = db.IIMPUESTOes.First(x => x.MWSKZ == tax_code).KBETR.Value;
+                }
+                impuesto = (D.MONTO_DOC_MD.Value * KBETR);
+            }
+            ViewBag.montoSol = format.toShow(D.MONTO_DOC_MD.Value, ".");
+            ViewBag.montoProv = (esProv ? format.toShow(montoProv, ".") : "-");
+            ViewBag.montoApli = (esDocRef ? format.toShow(montoApli, ".") : "-");
+            ViewBag.remanente = ((montoProv > 0 && montoApli > 0) ? format.toShow(remanente, ".") : "-");
+            ViewBag.impuesto = (esNC ? format.toShow(impuesto, ".") : "-");
+            ViewBag.montoTotal = format.toShow(D.MONTO_DOC_MD.Value, ".");
         }
 
         // GET: Correos/Details/5

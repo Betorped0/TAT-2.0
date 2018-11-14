@@ -175,7 +175,7 @@
                         {
                             if (Model.D.USUARIOC_ID == ViewBag.usuario.ID | Model.D.USUARIOD_ID == ViewBag.usuario.ID)
                             {
-                                <a class="col btn-small modal-trigger" id="btn_cancel" href="#modal2"></a>
+                                <a class="btn-small modal-trigger" id="btn_cancel" href="#modal2"></a>
                                 <div id="modal2" class="modal">
                                     <div class="modal-content">
                                         <div class="row">
@@ -227,16 +227,14 @@
                         }
                         if (ViewBag.usuario.PUESTO_ID == 8 & Model.D.DOCUMENTOLs.Count > 0)
                         {
-                            <div id="div_drop" class="col">
                                 <a href="@Url.Action("Backorder", "Recurrencias", new { id_d = Model.D.NUM_DOC.ToString() })" class="btn-small">Backorder</a>
-                            </div>
                         }
                     }
                     else if (!Model.D.ESTATUS.Equals("A"))
                     {
                         if (Model.D.USUARIOC_ID == ViewBag.usuario.ID | Model.D.USUARIOD_ID == ViewBag.usuario.ID)
                         {
-                            <a class="col btn-small modal-trigger" id="btn_cancel" href="#modal3"></a>
+                            <a class="btn-small modal-trigger" id="btn_cancel" href="#modal3"></a>
                             <div id="modal3" class="modal">
                                 <div class="modal-content">
                                     <div class="row">
@@ -269,18 +267,16 @@
                     }
                     if (Model.D.USUARIOC_ID == ViewBag.usuario.ID | Model.D.USUARIOD_ID == ViewBag.usuario.ID)
                     {
-                        <div class="col">
                             <a class="btn-small" id="lbl_dupp" href="@Url.Action("Create", "Solicitudes", new { id_d = Model.D.NUM_DOC, tsol = Model.D.TSOL_ID, dp = "X" })">Duplicar</a><!--RSG 31.10.2018-->
-                        </div>
                     }
                     @*//else
             //{*@
                     if (Model.D.TSOL.CARTA)
                     {
                         @* ---DRS 13.10.2018--- *@
-                        <div class="col">
-                            <button type="button" class="btn-small" data-target="list_carta" style="width:100%;" id="btn_carta">Carta</button>
-                        </div>
+                            <div class="col">
+                                <button type="button" class="btn-small" data-target="list_carta" style="width:100%;" id="btn_carta">Carta</button>
+                            </div>
                         @*<button type="button" class="btn-small  " id="btn_cancel">Cancelar</button>*@
                         <ul id='list_carta' class='dropdown-content'>
                             @*

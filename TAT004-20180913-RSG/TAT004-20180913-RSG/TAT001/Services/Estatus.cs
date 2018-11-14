@@ -8,7 +8,7 @@ namespace TAT001.Services
 {
     public class Estatus
     {
-        
+
         public string getEstatus(DOCUMENTO d)
         {
             TAT001Entities db = new TAT001Entities();
@@ -20,10 +20,11 @@ namespace TAT001.Services
             if (d.ESTATUS_C != null) { estatus += d.ESTATUS_C; } else { estatus += " "; }
             if (d.ESTATUS_SAP != null) { estatus += d.ESTATUS_SAP; } else { estatus += " "; }
             if (d.ESTATUS_WF != null) { estatus += d.ESTATUS_WF; } else { estatus += " "; }
-            foreach (var childDoc in estatusPar) {
+            foreach (var childDoc in estatusPar)
+            {
                 if (childDoc.ESTATUS == "N" && childDoc.ESTATUS_C == null && childDoc.ESTATUS_SAP == null && childDoc.ESTATUS_WF == "P")
                 {
-                    rev=false;
+                    rev = false;
                 }
             }
             if (d.FLUJOes.Count > 0)
@@ -40,13 +41,13 @@ namespace TAT001.Services
             if (d.FLUJOes.Where(x => x.ESTATUS == "R").ToList().Count > 0)
             {
                 FLUJO flujo = d.FLUJOes.Where(x => x.ESTATUS == "R").OrderByDescending(a => a.POS).FirstOrDefault();
-                estatus += db.USUARIOs.First(x=>x.ID==flujo.USUARIOA_ID).PUESTO_ID;
+                estatus += db.USUARIOs.First(x => x.ID == flujo.USUARIOA_ID).PUESTO_ID;
             }
             else
             {
                 estatus += " ";
             }
-            if (d.DOCUMENTORECs.Count>0)
+            if (d.DOCUMENTORECs.Count > 0)
             {
                 estatus += "R";
             }
@@ -54,26 +55,45 @@ namespace TAT001.Services
             {
                 estatus += " ";
             }
-            if (estatusPar.Where(a => a.TSOL.REVERSO == true & a.DOCUMENTO_SAP != null).Count()>0)
+            if (estatusPar.Where(a => a.TSOL.REVERSO == true & a.DOCUMENTO_SAP != null).Count() > 0)
                 estatus += "1";
             else
                 estatus += "0";
             return estatus;
         }
+
         public string getHtml(decimal num_doc)
         {
             TAT001Entities db = new TAT001Entities();
 
+            List<ESTATU> ee = db.ESTATUS.Where(x => x.ACTIVO == true).ToList();
+
             DOCUMENTO d = db.DOCUMENTOes.Find(num_doc);
             string estatus = getEstatus(d);
-            
-            string ret = "";
 
+            string ret = "";
+            foreach (ESTATU e in ee)
+            {
+                foreach (ESTATUSR reg in e.ESTATUSRs)
+                {
+                    if (System.Text.RegularExpressions.Regex.IsMatch(estatus, reg.REGEX))
+                    {
+                        ESTATUST t = e.ESTATUSTs.Where(x => x.SPRAS_ID == "ES").FirstOrDefault();
+                        if (t != null)
+                            ret = "<span class='" + e.CLASS + "' data-badge-caption=''>" + t.TXT050 + "</span>";
+                        else
+                            ret = "<span class='" + e.CLASS + "' data-badge-caption=''>" + e.DESCRIPCION + "</span>";
+                        if (ret != "")
+                            return ret;
+                    }
+                }
+            }
+            #region oculta1
             if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "^.[C]"))
                 ret = "<span class='lbl_cancelled new badge red darken-1 white-text' data-badge-caption=' '>Cancelada</span>";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[P][R]..."))
                 ret = "<span class='lbl_ts yellow darken-2 white-text new badge' data-badge-caption=' '>Pendiente validación TS</span>";
-            else if(System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A].[P]..") && estatus.Contains("NCOp"))
+            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A].[P]..") && estatus.Contains("NCOp"))
                 ret = "<span class='new badge grey darken-2 white-text' data-badge-caption=' '><span class='lbl_pending'>Pendiente reverso</span></span>";
             else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[P][A]..."))
                 ret = "<span class='new badge grey darken-2 white-text' data-badge-caption=' '><span class='lbl_pending'>Pendiente aprobador</span></span>";
@@ -111,9 +131,10 @@ namespace TAT001.Services
                 ret = "<span class='lbl_borr new badge orange darken-2 white-text' data-badge-caption=' '>Borrador</span>";
             else
                 ret = "<td></td>";
-
+            #endregion
             return ret;
         }
+
         public string getHtml(DOCUMENTO d)
         {
             TAT001Entities db = new TAT001Entities();
@@ -273,6 +294,7 @@ namespace TAT001.Services
 
             return ret;
         }
+
         public string getText(string estatus, decimal num_doc)
         {
             TAT001Entities db = new TAT001Entities();
@@ -398,6 +420,77 @@ namespace TAT001.Services
             else
                 ret = " ";
 
+            return ret;
+        }
+
+        public string getHtml(decimal num_doc, string spras, List<ESTATU> ee)
+        {
+            TAT001Entities db = new TAT001Entities();
+
+            DOCUMENTO d = db.DOCUMENTOes.Find(num_doc);
+            string estatus = getEstatus(d);
+
+            string ret = "";
+            foreach (ESTATU e in ee)
+            {
+                foreach (ESTATUSR reg in e.ESTATUSRs)
+                {
+                    if (System.Text.RegularExpressions.Regex.IsMatch(estatus, reg.REGEX))
+                    {
+                        ESTATUST t = e.ESTATUSTs.Where(x => x.SPRAS_ID == spras).FirstOrDefault();
+                        if (t != null)
+                            ret = "<span class='" + e.CLASS + "' data-badge-caption=''>" + t.TXT050 + "</span>";
+                        else
+                            ret = "<span class='" + e.CLASS + "' data-badge-caption=''>" + e.DESCRIPCION + "</span>";
+                        if (ret != "")
+                            return ret;
+                    }
+                }
+            }
+            return ret;
+        }
+        public string getText(string estatus, decimal num_doc, string spras, List<ESTATU> ee)
+        {
+            TAT001Entities db = new TAT001Entities();
+
+            decimal doc = num_doc;
+            string ret = "";
+
+            foreach (ESTATU e in ee)
+            {
+                foreach (ESTATUSR reg in e.ESTATUSRs)
+                {
+                    if (System.Text.RegularExpressions.Regex.IsMatch(estatus, reg.REGEX))
+                    {
+                        ESTATUST t = e.ESTATUSTs.Where(x => x.SPRAS_ID == spras).FirstOrDefault();
+                        if (t != null)
+                            ret = t.TXT050;
+                        else
+                            ret = e.DESCRIPCION;
+                        return ret;
+                    }
+                }
+            }
+            return ret;
+        }
+        public string getClass(string estatus, decimal num_doc, string spras, List<ESTATU> ee)
+        {
+            TAT001Entities db = new TAT001Entities();
+
+            decimal doc = num_doc;
+            string ret = "";
+
+            foreach (ESTATU e in ee)
+            {
+                foreach (ESTATUSR reg in e.ESTATUSRs)
+                {
+                    if (System.Text.RegularExpressions.Regex.IsMatch(estatus, reg.REGEX))
+                    {
+                        ret = e.CLASS;
+                        return ret;
+                    }
+                }
+            }
             return ret;
         }
     }
