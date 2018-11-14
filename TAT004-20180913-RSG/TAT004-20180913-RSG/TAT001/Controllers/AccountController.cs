@@ -74,7 +74,7 @@ namespace TAT001.Controllers
 
             }
             LoginViewModel m = new LoginViewModel();
-            m.ID = "admin";
+            //m.ID = "admin";
             //m.Password = "admin";
             ViewBag.ReturnUrl = returnUrl;
             return View(m);
@@ -235,6 +235,8 @@ namespace TAT001.Controllers
             ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
             ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
             var checkUser = db.USUARIOLOGs.SingleOrDefault(x => x.USUARIO_ID == USUARIO_ID);
+            if (returnUrl == "/Account/validateLoginView")
+                returnUrl = "/";
             ViewBag.returnUrl = returnUrl;
 
             return View(checkUser);
