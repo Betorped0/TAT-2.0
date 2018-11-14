@@ -5284,7 +5284,7 @@ namespace TAT001.Controllers
 
                 if (d.DOCUMENTO_REF > 0 & txt_flujo != "B")//ADD RSG 02.11.2018
                 {
-                    if (d.TSOL.REVERSO == true)
+                    if (!d.TSOL.REVERSO)
                     {
                         DOCUMENTO docPadre = db.DOCUMENTOes.Find(d.DOCUMENTO_REF);
                         List<DOCUMENTO> dd = db.DOCUMENTOes.Where(a => a.DOCUMENTO_REF == (d.DOCUMENTO_REF)).ToList();

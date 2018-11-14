@@ -61,6 +61,7 @@ namespace TAT001.Services
                 estatus += "0";
             return estatus;
         }
+
         public string getHtml(decimal num_doc)
         {
             TAT001Entities db = new TAT001Entities();
@@ -133,6 +134,7 @@ namespace TAT001.Services
             #endregion
             return ret;
         }
+
         public string getHtml(DOCUMENTO d)
         {
             TAT001Entities db = new TAT001Entities();
@@ -292,6 +294,7 @@ namespace TAT001.Services
 
             return ret;
         }
+
         public string getText(string estatus, decimal num_doc)
         {
             TAT001Entities db = new TAT001Entities();
@@ -419,6 +422,7 @@ namespace TAT001.Services
 
             return ret;
         }
+
         public string getHtml(decimal num_doc, string spras, List<ESTATU> ee)
         {
             TAT001Entities db = new TAT001Entities();
@@ -445,7 +449,6 @@ namespace TAT001.Services
             }
             return ret;
         }
-
         public string getText(string estatus, decimal num_doc, string spras, List<ESTATU> ee)
         {
             TAT001Entities db = new TAT001Entities();
@@ -470,7 +473,6 @@ namespace TAT001.Services
             }
             return ret;
         }
-
         public string getClass(string estatus, decimal num_doc, string spras, List<ESTATU> ee)
         {
             TAT001Entities db = new TAT001Entities();
