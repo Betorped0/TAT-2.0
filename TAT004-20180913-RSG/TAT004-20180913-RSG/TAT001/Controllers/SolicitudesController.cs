@@ -4819,15 +4819,16 @@ namespace TAT001.Controllers
                         d.DOCUMENTORECs.Remove(dree);
                     }
 
+                    if (chk_ligada == "on")
+                        d.LIGADA = true;
+                    else
+                        d.LIGADA = false;
+
                     db.Entry(d).State = EntityState.Modified;
                     db.SaveChanges();
 
 
                     //Guardar registros de recurrencias  RSG 01.08.2018------------------
-                    if (chk_ligada == "on")
-                        d.LIGADA = true;
-                    else
-                        d.LIGADA = false;
 
                     if (dOCUMENTO.DOCUMENTOREC != null)
                         if (dOCUMENTO.DOCUMENTOREC.Count > 0)
@@ -5852,6 +5853,18 @@ namespace TAT001.Controllers
                         doc.APOYO_EST = 0;
                     }
                     //RSG 24.05.2018----------------------------------
+                    if (doc.PORC_APOYO == 0 || doc.MONTO==0)
+                    {
+                        try
+                        {
+                            string apoyoTotal = dt.Rows[i][8].ToString();
+                            doc.APOYO_REAL = (decimal.Parse(apoyoTotal));//Apoyo Total
+                        }
+                        catch
+                        {
+                            doc.APOYO_REAL = 0;
+                        }
+                    }
                     ld.Add(doc);
                     pos++;
                 }

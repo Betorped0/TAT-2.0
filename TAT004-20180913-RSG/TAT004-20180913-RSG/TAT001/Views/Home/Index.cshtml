@@ -88,24 +88,24 @@
             }
         </script>
     }
-        <div class="col s8 right-align right">
-            @if (ViewBag.nivelUsuario == 14)
+    <div class="col s8 right-align right">
+        @if (ViewBag.nivelUsuario == 14)
+        {
+            using (Html.BeginForm("DescargarEx", "Home", FormMethod.Post, new { @style = "display:inline;" }))
             {
-                using (Html.BeginForm("DescargarEx", "Home", FormMethod.Post, new { @style = "display:inline;" }))
-                {
-                    <button id="btnExport" name="excel" class="btn-small"></button>
-                }
+                <button id="btnExport" name="excel" class="btn-small"></button>
             }
-            else
+        }
+        else
+        {
+            @Html.ActionLink("Crear Solicitud", "Create", "Solicitudes", null, new { @class = "btn-small", @id = "btn_create" });
+            using (Html.BeginForm("Descargar", "Home", FormMethod.Post, new { @style = "display:inline;" }))
             {
-                @Html.ActionLink("Crear Solicitud", "Create", "Solicitudes", null, new { @class = "btn-small", @id = "btn_create" });
-                using (Html.BeginForm("Descargar", "Home", FormMethod.Post, new { @style = "display:inline;" }))
-                {
-                    <button id="btnExport" name="excel" class="btn-small" type="submit" value="Excel"></button>
-                }
+                <button id="btnExport" name="excel" class="btn-small" type="submit" value="Excel"></button>
             }
-            @*@Html.ActionLink("Enviar Negociaciones", "Edit", "Negociaciones", null, new { @class = "btn-small red", @onclick = "document.getElementById('loader').style.display = 'initial';" })*@
-        </div>
+        }
+        @*@Html.ActionLink("Enviar Negociaciones", "Edit", "Negociaciones", null, new { @class = "btn-small red", @onclick = "document.getElementById('loader').style.display = 'initial';" })*@
+    </div>
     <div class="col s12 right-align" style="margin-top:5px;">
 
     </div>
@@ -432,10 +432,20 @@
                                 <td>@(item.ESTATUS_STRING)</td>
                                 <td>@(item.documento.CONCEPTO)</td>
                                 <td>@(item.documento.NOTAS)</td>
-                                <td>@(item.documento.FECHAI_VIG.Value.ToShortDateString())</td>
-                                <td>@(item.documento.FECHAF_VIG.Value.ToShortDateString())</td>
+                                @try
+                                {
+                                    <td>@(item.documento.FECHAI_VIG.Value.ToShortDateString())</td>
+                                }
+                                catch { }
+                                @try
+                                {
+                                    <td>@(item.documento.FECHAF_VIG.Value.ToShortDateString())</td>
+                                }
+                                catch { }
                                 <td></td>
+
                                 <td></td>
+
                                 <td>
                                     @try
                                     {

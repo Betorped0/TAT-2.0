@@ -221,7 +221,7 @@ namespace TAT001.Controllers
                 //ViewBag.DOCF = db.DOCUMENTOFs.ToList();
                 //jemo inicio 4/07/2018
                 ViewBag.imgnoticia = db.NOTICIAs.Where(x => x.FECHAI <= DateTime.Now && x.FECHAF >= DateTime.Now && x.ACTIVO == true).Select(x => x.PATH).FirstOrDefault();
-
+                List<ESTATU> ee = db.ESTATUS.Where(x => x.ACTIVO == true).ToList();
 
                 List<Documento> listaDocs = new List<Documento>();
                 foreach (CSP_DOCUMENTOSXUSER_Result item in dOCUMENTOes)
@@ -250,8 +250,8 @@ namespace TAT001.Controllers
                         item.ESTATUSS = item.ESTATUSS.Substring(0, 6) + " " + item.ESTATUSS.Substring(6, 2); ;
                     }
                     Estatus e = new Estatus();
-                    ld.ESTATUS = e.getText(item.ESTATUSS, ld.NUM_DOC);
-                    ld.ESTATUS_CLASS = e.getClass(item.ESTATUSS, ld.NUM_DOC);
+                    ld.ESTATUS = e.getText(item.ESTATUSS, ld.NUM_DOC, user.SPRAS_ID, ee);
+                    ld.ESTATUS_CLASS = e.getClass(item.ESTATUSS, ld.NUM_DOC, user.SPRAS_ID, ee);
                     //ld.ESTATUS = e.getText(item.ESTATUSS);
                     //ld.ESTATUS_CLASS = e.getClass(item.ESTATUSS);
 
