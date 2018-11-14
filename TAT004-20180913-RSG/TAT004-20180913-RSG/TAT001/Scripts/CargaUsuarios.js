@@ -297,7 +297,7 @@ function Carga() {
 function Comprobar() {
     var datos = $('#tabla').serializeArray();
     creart('Comprobar', datos); 
-    mostrarAlerta("info", "A", "Registro Actualizado");
+    mostrarAlerta("info", "A", "Vista Actualizada");
 }
 
 function Borrar() {
