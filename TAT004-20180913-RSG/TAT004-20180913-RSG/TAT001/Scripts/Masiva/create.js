@@ -846,6 +846,7 @@ function procesarHoja2() {
 
 function addRowH2(t, NUM_DOC, FACTURA, FECHA, PROVEEDOR, PROVEEDOR_NOMBRE, AUTORIZACION, VENCIMIENTO, FACTURAK, EJERCICIOK, ERRORES, WARNINGS) {
     var icono, clase = null;
+    var bloqueo = [];
 
     if (jQuery.inArray('red white-text rojo', ERRORES) !== -1) {
         icono = 'close';
@@ -856,17 +857,41 @@ function addRowH2(t, NUM_DOC, FACTURA, FECHA, PROVEEDOR, PROVEEDOR_NOMBRE, AUTOR
         clase = 'green white-text';
     }
 
+    if (WARNINGS[1] == "") { bloqueo[1] = "disabled"; }
+    else { bloqueo[1] = ""; }
+
+    if (WARNINGS[2] == "") { bloqueo[2] = "disabled"; }
+    else { bloqueo[2] = ""; }
+
+    if (WARNINGS[3] == "") { bloqueo[3] = "disabled"; }
+    else { bloqueo[3] = ""; }
+
+    if (WARNINGS[4] == "") { bloqueo[4] = "disabled"; }
+    else { bloqueo[4] = ""; }
+
+    if (WARNINGS[5] == "") { bloqueo[5] = "disabled"; }
+    else { bloqueo[5] = ""; }
+
+    if (WARNINGS[6] == "") { bloqueo[6] = "disabled"; }
+    else { bloqueo[6] = ""; }
+
+    if (WARNINGS[7] == "") { bloqueo[7] = "disabled"; }
+    else { bloqueo[7] = ""; }
+
+    if (WARNINGS[8] == "") { bloqueo[8] = "disabled"; }
+    else { bloqueo[8] = ""; }
+
     var r = t.row.add([
         "<span class='" + clase + " material-icons'>" + icono + "</span>",
         "<input class='" + ERRORES[0] + WARNINGS[0] + " input_numdoc' style='font-size:12px; text-align:center;' type='text' id='' name='' disabled value='" + NUM_DOC + "'><span hidden>" + NUM_DOC + "</span>",
-        "<input class='" + ERRORES[1] + WARNINGS[1] + " input_factura' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + FACTURA + "'><span hidden>" + FACTURA + "</span>",
-        "<input class='" + ERRORES[2] + WARNINGS[2] + " input_fechaH2' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + FECHA + "'><span hidden>" + FECHA + "</span>",
-        "<input class='" + ERRORES[3] + WARNINGS[3] + " input_proveedor' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + PROVEEDOR + "'><span hidden>" + PROVEEDOR + "</span>",
-        "<input class='" + ERRORES[4] + WARNINGS[4] + "' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + PROVEEDOR_NOMBRE + "'><span hidden>" + PROVEEDOR_NOMBRE + "</span>",
-        "<input class='" + ERRORES[5] + WARNINGS[5] + " input_autorizacion' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + AUTORIZACION + "'><span hidden>" + AUTORIZACION + "</span>",
-        "<input class='" + ERRORES[6] + WARNINGS[6] + " input_fechaH2' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + VENCIMIENTO + "'><span hidden>" + VENCIMIENTO + "</span>",
-        "<input class='" + ERRORES[7] + WARNINGS[7] + " input_facturak' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + FACTURAK + "'><span hidden>" + FACTURAK + "</span>",
-        "<input class='" + ERRORES[8] + WARNINGS[8] + " input_ejerciciok' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + EJERCICIOK + "'><span hidden>" + EJERCICIOK + "</span>"
+        "<input class='" + ERRORES[1] + WARNINGS[1] + " input_factura' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo[1] + " value='" + FACTURA + "'><span hidden>" + FACTURA + "</span>",
+        "<input class='" + ERRORES[2] + WARNINGS[2] + " input_fechaH2' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo[2] + " value='" + FECHA + "'><span hidden>" + FECHA + "</span>",
+        "<input class='" + ERRORES[3] + WARNINGS[3] + " input_proveedor' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo[3] + " value='" + PROVEEDOR + "'><span hidden>" + PROVEEDOR + "</span>",
+        "<input class='" + ERRORES[4] + WARNINGS[4] + "' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo[4] + " value='" + PROVEEDOR_NOMBRE + "'><span hidden>" + PROVEEDOR_NOMBRE + "</span>",
+        "<input class='" + ERRORES[5] + WARNINGS[5] + " input_autorizacion' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo[5] + " value='" + AUTORIZACION + "'><span hidden>" + AUTORIZACION + "</span>",
+        "<input class='" + ERRORES[6] + WARNINGS[6] + " input_fechaH2' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo[6] + " value='" + VENCIMIENTO + "'><span hidden>" + VENCIMIENTO + "</span>",
+        "<input class='" + ERRORES[7] + WARNINGS[7] + " input_facturak' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo[7] + " value='" + FACTURAK + "'><span hidden>" + FACTURAK + "</span>",
+        "<input class='" + ERRORES[8] + WARNINGS[8] + " input_ejerciciok' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo[8] + " value='" + EJERCICIOK + "'><span hidden>" + EJERCICIOK + "</span>"
     ]).draw(false).node();
 
     var td = $(r).children()[0];
@@ -900,10 +925,12 @@ $('#tab_test2').on('keydown.autocomplete', '.input_factura', function () {
                 success: function (data) {
                     if (data) {
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                         $(tr.find("td:eq(" + col_index + ")").children().addClass(amarillo));
                     }
                     else {
                         $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass(amarillo));
                     }
                     clearErrors();
@@ -938,10 +965,12 @@ $('#tab_test2').on('keydown.autocomplete', '.input_fechaH2', function () {
                 success: function (data) {
                     if (data) {
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                         $(tr.find("td:eq(" + col_index + ")").children().addClass(amarillo));
                     }
                     else {
                         $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass(amarillo));
                     }
                     clearErrors();
@@ -1008,6 +1037,7 @@ $('#tab_test2').on('keydown.autocomplete', '.input_proveedor', function () {
         change: function (e, ui) {
             if (!(ui.item)) {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                 $(tr.find("td:eq(" + col_index + ")").children().removeClass(amarillo));
                 clearErrors();
                 e.target.value = "";
@@ -1019,6 +1049,7 @@ $('#tab_test2').on('keydown.autocomplete', '.input_proveedor', function () {
             label = label.split('-');
             $(clase2).val(label[1]);
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+            $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
             $(tr.find("td:eq(" + col_index + ")").children().addClass(amarillo));
             clearErrors();
         }
@@ -1050,10 +1081,12 @@ $('#tab_test2').on('keydown.autocomplete', '.input_autorizacion', function () {
                 success: function (data) {
                     if (data) {
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                         $(tr.find("td:eq(" + col_index + ")").children().addClass(amarillo));
                     }
                     else {
                         $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass(amarillo));
                     }
                     clearErrors();
@@ -1088,10 +1121,12 @@ $('#tab_test2').on('keydown.autocomplete', '.input_facturak', function () {
                 success: function (data) {
                     if (data) {
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                         $(tr.find("td:eq(" + col_index + ")").children().addClass(amarillo));
                     }
                     else {
                         $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass(amarillo));
                     }
                     clearErrors();
@@ -1126,9 +1161,11 @@ $('#tab_test2').on('keydown.autocomplete', '.input_ejerciciok', function () {
                 success: function (data) {
                     if (data) {
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                         $(tr.find("td:eq(" + col_index + ")").children().addClass(amarillo));
                     } else {
                         $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass(amarillo));
                     }
                     clearErrors();
@@ -1139,6 +1176,7 @@ $('#tab_test2').on('keydown.autocomplete', '.input_ejerciciok', function () {
         change: function () {
             if ($(this).val() === "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                 $(tr.find("td:eq(" + col_index + ")").children().removeClass(amarillo));
             }
             clearErrors();

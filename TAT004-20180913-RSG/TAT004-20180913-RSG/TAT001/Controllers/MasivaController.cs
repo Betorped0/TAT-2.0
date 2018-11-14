@@ -307,15 +307,48 @@ namespace TAT001.Controllers
                             string facturak = ds2.Tables[0].Rows[i][7].ToString().Trim();
                             string ejerciciok = ds2.Tables[0].Rows[i][8].ToString().Trim();
 
-                            doc.NUM_DOC = num_doc;
-                            doc.FACTURA = factura;
-                            doc.FECHA = fecha_factura2[0];
-                            doc.PROVEEDOR = proveedor.TrimStart('0');
-                            doc.PROVEEDOR_NOMBRE = proveedor_nombre;
-                            doc.AUTORIZACION = autorizacion;
-                            doc.VENCIMIENTO = vencimiento2[0];
-                            doc.FACTURAK = facturak;
-                            doc.EJERCICIOK = ejerciciok;
+                            var con = db.FACTURASCONFs.Where(x => x.SOCIEDAD_ID == d.SOCIEDAD_ID & x.PAIS_ID == d.PAIS_ID & x.TSOL == d.TSOL_ID).FirstOrDefault();
+
+                            if (con != null)
+                            {
+                                doc.NUM_DOC = num_doc;
+
+                                if (con.FACTURA) { doc.FACTURA = factura; }
+                                else { doc.FACTURA = ""; }
+
+                                if (con.FECHA) { doc.FECHA = fecha_factura2[0]; }
+                                else { doc.FECHA = ""; }
+
+                                if (con.PROVEEDOR) { doc.PROVEEDOR = proveedor.TrimStart('0'); }
+                                else { doc.PROVEEDOR = ""; }
+
+                                if (con.PROVEEDOR) { doc.PROVEEDOR_NOMBRE = proveedor_nombre; }
+                                else { doc.PROVEEDOR_NOMBRE = ""; }
+
+                                if (con.AUTORIZACION) { doc.AUTORIZACION = autorizacion; }
+                                else { doc.AUTORIZACION = ""; }
+
+                                if (con.VENCIMIENTO) { doc.VENCIMIENTO = vencimiento2[0]; }
+                                else { doc.VENCIMIENTO = ""; }
+
+                                if (con.FACTURAK) { doc.FACTURAK = facturak; }
+                                else { doc.FACTURAK = ""; }
+
+                                if (con.EJERCICIOK) { doc.EJERCICIOK = ejerciciok; }
+                                else { doc.EJERCICIOK = ""; }
+                            }
+                            else
+                            {
+                                doc.NUM_DOC = num_doc;
+                                doc.FACTURA = factura;
+                                doc.FECHA = fecha_factura2[0];
+                                doc.PROVEEDOR = proveedor.TrimStart('0');
+                                doc.PROVEEDOR_NOMBRE = proveedor_nombre;
+                                doc.AUTORIZACION = autorizacion;
+                                doc.VENCIMIENTO = vencimiento2[0];
+                                doc.FACTURAK = facturak;
+                                doc.EJERCICIOK = ejerciciok;
+                            }
 
                             rel.Add(doc);
                             lp.Add(doc);
@@ -506,7 +539,16 @@ namespace TAT001.Controllers
                             {
                                 doc.MATNR = matnr.TrimStart('0');
                                 var idMat = db.MATERIALs.Where(y => y.ID == matnr).FirstOrDefault().MATERIALGP_ID;
-                                doc.MATKL = db.MATERIALGPTs.Where(x => x.MATERIALGP_ID == idMat & x.SPRAS_ID == "EN").FirstOrDefault().TXT50;
+
+                                if (idMat != null)
+                                {
+                                    doc.MATKL = db.MATERIALGPTs.Where(x => x.MATERIALGP_ID == idMat & x.SPRAS_ID == "EN").FirstOrDefault().TXT50;
+                                }
+                                else
+                                {
+                                    doc.MATKL = null;
+                                }
+
                                 var desMaterial = (from mat1 in db.MATERIALs
                                                    join mat2 in db.MATERIALTs on mat1.ID equals mat2.MATERIAL_ID
                                                    where mat2.MATERIAL_ID == matnr & mat1.ACTIVO == true
@@ -1715,21 +1757,22 @@ namespace TAT001.Controllers
                     }
                     else
                     {
-                        if (factura == "")
-                        {
-                            regresaRowH2.Add("");
-                        }
-                        else
-                        {
-                            if (factura.Length <= 50)
-                            {
-                                regresaRowH2.Add("");
-                            }
-                            else
-                            {
-                                regresaRowH2.Add("red white-text rojo");
-                            }
-                        }
+                        regresaRowH2.Add("");
+                        //if (factura == "")
+                        //{
+
+                        //}
+                        //else
+                        //{
+                        //    if (factura.Length <= 50)
+                        //    {
+                        //        regresaRowH2.Add("");
+                        //    }
+                        //    else
+                        //    {
+                        //        regresaRowH2.Add("red white-text rojo");
+                        //    }
+                        //}
                     }
 
                     //if (fecha_factura.Length <= 10)
@@ -1768,28 +1811,29 @@ namespace TAT001.Controllers
                     }
                     else
                     {
-                        if (fecha_factura == "")
-                        {
-                            regresaRowH2.Add("");
-                        }
-                        else
-                        {
-                            if (fecha_factura.Length <= 10)
-                            {
-                                if (validaFormatoFecha(fecha_factura))
-                                {
-                                    regresaRowH2.Add("");
-                                }
-                                else
-                                {
-                                    regresaRowH2.Add("red white-text rojo");
-                                }
-                            }
-                            else
-                            {
-                                regresaRowH2.Add("red white-text rojo");
-                            }
-                        }
+                        regresaRowH2.Add("");
+                        //if (fecha_factura == "")
+                        //{
+                        //    regresaRowH2.Add("");
+                        //}
+                        //else
+                        //{
+                        //    if (fecha_factura.Length <= 10)
+                        //    {
+                        //        if (validaFormatoFecha(fecha_factura))
+                        //        {
+                        //            regresaRowH2.Add("");
+                        //        }
+                        //        else
+                        //        {
+                        //            regresaRowH2.Add("red white-text rojo");
+                        //        }
+                        //    }
+                        //    else
+                        //    {
+                        //        regresaRowH2.Add("red white-text rojo");
+                        //    }
+                        //}
                     }
 
                     //if (proveedor.Length <= 10)
@@ -1828,29 +1872,29 @@ namespace TAT001.Controllers
                     }
                     else
                     {
-                        if (proveedor == "")
-                        {
-                            regresaRowH2.Add("");
-                        }
-                        else
-                        {
-                            if (proveedor.Length <= 10)
-                            {
-                                if (db.PROVEEDORs.Where(x => x.ID == proveedor & x.SOCIEDAD_ID == sociedad).Count() > 0)
-                                {
-                                    regresaRowH2.Add("");
-                                }
-                                else
-                                {
-                                    regresaRowH2.Add("red white-text rojo");
-                                }
-                            }
-                            else
-                            {
-                                regresaRowH2.Add("red white-text rojo");
-                            }
-                        }
-
+                        regresaRowH2.Add("");
+                        //if (proveedor == "")
+                        //{
+                        //    regresaRowH2.Add("");
+                        //}
+                        //else
+                        //{
+                        //    if (proveedor.Length <= 10)
+                        //    {
+                        //        if (db.PROVEEDORs.Where(x => x.ID == proveedor & x.SOCIEDAD_ID == sociedad).Count() > 0)
+                        //        {
+                        //            regresaRowH2.Add("");
+                        //        }
+                        //        else
+                        //        {
+                        //            regresaRowH2.Add("red white-text rojo");
+                        //        }
+                        //    }
+                        //    else
+                        //    {
+                        //        regresaRowH2.Add("red white-text rojo");
+                        //    }
+                        //}
                     }
 
                     regresaRowH2.Add("");//DEBAJO ESTA LA VALIDACION DEL PROOVEDOR
@@ -1899,21 +1943,22 @@ namespace TAT001.Controllers
                     }
                     else
                     {
-                        if (autorizacion == "")
-                        {
-                            regresaRowH2.Add("");
-                        }
-                        else
-                        {
-                            if (autorizacion.Length <= 50)
-                            {
-                                regresaRowH2.Add("");
-                            }
-                            else
-                            {
-                                regresaRowH2.Add("red white-text rojo");
-                            }
-                        }
+                        regresaRowH2.Add("");
+                        //if (autorizacion == "")
+                        //{
+                        //    regresaRowH2.Add("");
+                        //}
+                        //else
+                        //{
+                        //    if (autorizacion.Length <= 50)
+                        //    {
+                        //        regresaRowH2.Add("");
+                        //    }
+                        //    else
+                        //    {
+                        //        regresaRowH2.Add("red white-text rojo");
+                        //    }
+                        //}
                     }
 
                     //if (fecha_vencimiento.Length <= 10)
@@ -1952,28 +1997,29 @@ namespace TAT001.Controllers
                     }
                     else
                     {
-                        if (fecha_vencimiento == "")
-                        {
-                            regresaRowH2.Add("");
-                        }
-                        else
-                        {
-                            if (fecha_vencimiento.Length <= 10)
-                            {
-                                if (validaFormatoFecha(fecha_vencimiento))
-                                {
-                                    regresaRowH2.Add("");
-                                }
-                                else
-                                {
-                                    regresaRowH2.Add("red white-text rojo");
-                                }
-                            }
-                            else
-                            {
-                                regresaRowH2.Add("red white-text rojo");
-                            }
-                        }
+                        regresaRowH2.Add("");
+                        //if (fecha_vencimiento == "")
+                        //{
+                        //    regresaRowH2.Add("");
+                        //}
+                        //else
+                        //{
+                        //    if (fecha_vencimiento.Length <= 10)
+                        //    {
+                        //        if (validaFormatoFecha(fecha_vencimiento))
+                        //        {
+                        //            regresaRowH2.Add("");
+                        //        }
+                        //        else
+                        //        {
+                        //            regresaRowH2.Add("red white-text rojo");
+                        //        }
+                        //    }
+                        //    else
+                        //    {
+                        //        regresaRowH2.Add("red white-text rojo");
+                        //    }
+                        //}
                     }
 
                     //if (facturak.Length <= 4000)
@@ -1998,21 +2044,22 @@ namespace TAT001.Controllers
                     }
                     else
                     {
-                        if (facturak == "")
-                        {
-                            regresaRowH2.Add("");
-                        }
-                        else
-                        {
-                            if (facturak.Length <= 4000)
-                            {
-                                regresaRowH2.Add("");
-                            }
-                            else
-                            {
-                                regresaRowH2.Add("red white-text rojo");
-                            }
-                        }
+                        regresaRowH2.Add("");
+                        //if (facturak == "")
+                        //{
+                        //    regresaRowH2.Add("");
+                        //}
+                        //else
+                        //{
+                        //    if (facturak.Length <= 4000)
+                        //    {
+                        //        regresaRowH2.Add("");
+                        //    }
+                        //    else
+                        //    {
+                        //        regresaRowH2.Add("red white-text rojo");
+                        //    }
+                        //}
                     }
 
                     //if (ejerciciok.Length == 4)
@@ -2051,28 +2098,29 @@ namespace TAT001.Controllers
                     }
                     else
                     {
-                        if (ejerciciok == "")
-                        {
-                            regresaRowH2.Add("");
-                        }
-                        else
-                        {
-                            if (ejerciciok.Length <= 4)
-                            {
-                                if (IsNumeric(ejerciciok))
-                                {
-                                    regresaRowH2.Add("");
-                                }
-                                else
-                                {
-                                    regresaRowH2.Add("red white-text rojo");
-                                }
-                            }
-                            else
-                            {
-                                regresaRowH2.Add("red white-text rojo");
-                            }
-                        }
+                        regresaRowH2.Add("");
+                        //if (ejerciciok == "")
+                        //{
+                        //    regresaRowH2.Add("");
+                        //}
+                        //else
+                        //{
+                        //    if (ejerciciok.Length <= 4)
+                        //    {
+                        //        if (IsNumeric(ejerciciok))
+                        //        {
+                        //            regresaRowH2.Add("");
+                        //        }
+                        //        else
+                        //        {
+                        //            regresaRowH2.Add("red white-text rojo");
+                        //        }
+                        //    }
+                        //    else
+                        //    {
+                        //        regresaRowH2.Add("red white-text rojo");
+                        //    }
+                        //}
                     }
                 }
             }
@@ -2425,7 +2473,18 @@ namespace TAT001.Controllers
                             regresaRowH4.Add("red white-text rojo");
                         }
 
-                        regresaRowH4.Add("");
+                        if (material != null)
+                        {
+                            if (material.MATERIALGP_ID != null)
+                            {
+                                regresaRowH4.Add("");
+                            }
+                            else
+                            {
+                                regresaRowH4.Add("red white-text rojo");
+                            }
+                        }
+                        
                         regresaRowH4.Add("");
                     }
                     else if (matnr == "" & matkl != "")
@@ -3079,6 +3138,12 @@ namespace TAT001.Controllers
 
                             docup.NUM_DOC = Convert.ToDecimal(num_docH4);
                             docup.POS = k;
+
+                            if (ligada.Trim() != "false")
+                            {
+                                dop.PORC_APOYO = Convert.ToDecimal(porc_apoyo);
+                            }
+
                             if (matnr != "")
                             {
                                 docup.MATNR = matnr;
@@ -3323,6 +3388,7 @@ namespace TAT001.Controllers
             {
                 if (doc.DOCUMENTOPs.Count() != 0)
                 {
+                    var num_docTemp = doc.NUM_DOC;
                     decimal N_DOC = getSolID(doc.TSOL_ID);
                     doc.NUM_DOC = N_DOC;
                     db.DOCUMENTOes.Add(doc);
@@ -3374,7 +3440,15 @@ namespace TAT001.Controllers
                             f.FECHAM = DateTime.Now;
                             try
                             {
-                                f.COMENTARIO = ds6.Tables[0].Rows[contadorNotas][1].ToString().Trim();
+                                for (int j = 0; j < ds6.Tables[0].Rows.Count; j++)
+                                {
+                                    string num_docNotas = ds6.Tables[0].Rows[j][0].ToString();
+
+                                    if (num_docTemp.ToString() == num_docNotas)
+                                    {
+                                        f.COMENTARIO = ds6.Tables[0].Rows[j][1].ToString().Trim();
+                                    }
+                                }
                             }
                             catch { f.COMENTARIO = ""; }
                             string c = pf.procesa(f, "");
