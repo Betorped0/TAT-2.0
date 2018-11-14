@@ -5847,6 +5847,18 @@ namespace TAT001.Controllers
                         doc.APOYO_EST = 0;
                     }
                     //RSG 24.05.2018----------------------------------
+                    if (doc.PORC_APOYO == 0 || doc.MONTO==0)
+                    {
+                        try
+                        {
+                            string apoyoTotal = dt.Rows[i][8].ToString();
+                            doc.APOYO_REAL = (decimal.Parse(apoyoTotal));//Apoyo Total
+                        }
+                        catch
+                        {
+                            doc.APOYO_REAL = 0;
+                        }
+                    }
                     ld.Add(doc);
                     pos++;
                 }
