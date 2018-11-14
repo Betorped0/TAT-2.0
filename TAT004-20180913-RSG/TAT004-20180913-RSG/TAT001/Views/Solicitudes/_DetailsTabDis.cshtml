@@ -131,6 +131,7 @@ int idn = 0;
                                         <th id="thead_discoustou">Precio unitario</th>
                                         <th id="thead_disporc">% apoyo</th>
                                         <th id="thead_disapoyop">Apoyo por pieza</th>
+                                        <th id="thead_discosto">Costo con apoyo</th>
                                         <th id="thead_dispsug">Precio sugerido</th>
                                         @if (Model.D.TSOL.FACTURA == false)
                                         {
@@ -199,6 +200,7 @@ int idn = 0;
                                             <td id="dsMn-@idn">@Math.Round(item.MONTO, 2)</td>
                                             <td id="dsPAp-@idn">@Math.Round(item.PORC_APOYO, 2)</td>
                                             <td id="dsApo-@idn">@Math.Round(item.MONTO_APOYO, 2)</td>
+                                            <td id="dsRes-@idn">@Math.Round((item.MONTO-item.MONTO_APOYO), 2)</td>
                                             <td id="dsPS-@idn">@Math.Round(item.PRECIO_SUG, 2)</td>
                                             @if (Model.D.TSOL.FACTURA == false)
                                             {

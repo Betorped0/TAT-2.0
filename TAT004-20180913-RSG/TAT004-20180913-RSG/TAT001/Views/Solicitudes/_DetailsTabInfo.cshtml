@@ -67,7 +67,8 @@
                     <div class="input-field col s6">
                         @Html.EditorFor(model => model.D.PAI.LANDX, new { htmlAttributes = new { @disabled = "disabled" } })
                         @Html.LabelFor(model => model.D.PAI.LANDX, "País", new { @id = "lbl_paiss" })
-                    </div>
+                      </div>
+                    @Html.EditorFor(model => model.D.PAIS_ID, new { htmlAttributes = new { @id = "pais_id", @style = "display:none;" } })
                 </div>
                 <div class="row" style="margin-bottom:0">
                     <div class="input-field col s6">

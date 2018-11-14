@@ -213,77 +213,52 @@
                         </div>
                     </div>
                     <script>
-                            var clearing = [];
-                            function getClearing(gall) {
-                            $("#div_clearing").empty();
-                            clearing = [];
-                            var bukrs = '@Model.D.SOCIEDAD_ID';
-                            var land = '@Model.D.PAIS_ID';
-                            var ejercicio = '@Model.D.EJERCICIO';
-                            $.ajax({
-                                type: "POST",
-                                url: root +'Listas/clearing',
-                                dataType: "json",
-                                data: { bukrs: bukrs, land: land, gall: gall, ejercicio: ejercicio },
 
-                                success: function (data) {
-                                    if (data !== null || data !== "") {
-                                        //RSG 26.04.2018----------------
-                                        clearing.push(data.ABONO);
-                                        clearing.push(data.CARGO);
-                                        clearing.push(data.CLEARING);
-                                        clearing.push(data.LIMITE);
-                                        //RSG 26.04.2018----------------
-                                    }
-
-                                },
-                                error: function (xhr, httpStatusMessage, customErrorMessage) {
-                                    M.toast({ html: httpStatusMessage });
-                                },
-                                async: false
-                            });
-
-                        }
-                        function formaClearing() {
-                            getClearing(document.getElementById("tall_id").value);
-                            $("#div_clearing").empty();
-                            var monto = document.getElementById("monto_dis").value;
-                            //DRS 24.09.18---------------------------------------------
-                            var nombreC = document.getElementById("cuentaNombre").value;
-                            var nombreC2 = document.getElementById("cuentaNombre2").value;
-
-                            //LEJ 09.07.18---------------------------------------------
-                            var _monto = monto.split('.');
-                            var _miles = document.getElementById("miles").value;
-                            var _decimales = document.getElementById("dec").value;
-                            var _millesMonto = _monto[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, _miles);
-                            var div = "<ul class='collection'><li class='collection-item'>";
-                            //DRS 24.09.18
-                            div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>Abono</div><div class='col s3'>" + nombreC + "</div><div class='col s3'>" + clearing[0] + "</div><div class='col s3 right-align'>$" + _millesMonto + _decimales + _monto[1] + "</div>";
-                            div += "</li><li class='collection-item'>";
-                            if (clearing[3] == null) {
-                                div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>Cargo</div><div class='col s3'>" + nombreC2 + "</div><div class='col s3'>" + clearing[1] + "</div><div class='col s3 right-align'>$" + _millesMonto + _decimales + _monto[1] + "</div>";
-                            }
-                            else {
-                                if (clearing[2] != null) {
-                                    if (monto <= clearing[3]) {
-                                        div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>Cargo</div><div class='col s4'>" + clearing[1] + "</div><div class='col s4 right-align'>$" + _millesMonto + _decimales + _monto[1] + "</div></div>";
-                                        div += "</li><li class='collection-item'>                                        ";
-                                        div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>Clearing</div><div class='col s4'>" + clearing[2] + "</div><div class='col s4 right-align'>$0.00</div></div>";
-                                        div += "    </li>";
-                                    }
-                                    else {
-                                        div += "  <div class='row' style='margin-bottom:0;'><div class='col s4'>Cargo</div><div class='col s4'>" + clearing[1] + "</div><div class='col s4 right-align'>$" + clearing[3] + "</div></div>";
-                                        div += "</li><li class='collection-item'>                                     ";
-                                        div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>Clearing</div><div class='col s4'>" + clearing[2] + "</div><div class='col s4 right-align'>$" + (monto - clearing[3]) + "</div></div>";
-                                        div += "          </li>";
-                                    }
+                                var clearing = [];
+                                function getClearing() {
+                                    $("#div_clearing").empty();
+                                    cuentas();
                                 }
-                            }
-                            div += "</li>";
-                            div += "       </ul>";
-                            $("#div_clearing").append(div);
-                        }
+                                function formaClearing() {
+                                    var tex_abono = document.querySelector(".lbl_cabono").innerHTML;
+                                    var tex_cargo = document.querySelector(".lbl_ccargo").innerHTML;
+                                    var tex_clearing = document.querySelector(".lbl_cclear").innerHTML;
+
+                                    getClearing();
+                                    $("#div_clearing").empty();
+                                    var monto = document.getElementById("D_MONTO_DOC_MD").value;
+
+                                    var div = "<ul class='collection'><li class='collection-item'>";
+                                    //DRS 24.09.18---------------------------------------------+
+                                    div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_abono + "</div><div class='col s3'>" + clearing[1] + "</div><div class='col s3'>" + clearing[0] + "</div><div class='col s3 right-align'>" + monto + "</div></div>";
+                                    div += "</li><li class='collection-item'>";
+
+                                    if (clearing[5] == null) {
+                                        //DRS 24.09.18---------------------------------------------
+                                        div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + clearing[3] + "</div><div class='col s3'>" + clearing[2] + "</div><div class='col s3 right-align'>" + monto + "</div></div></div>";
+                                    } else {
+                                        if (clearing[2] != null) {
+                                            if (monto <= clearing[3]) {
+
+                                                div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + clearing[3] + "</div><div class='col s3'>" + clearing[2] + "</div><div class='col s3 right-align'>" + monto + "</div></div>";
+                                                div += "</li><li class='collection-item'>";
+                                                div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>" + tex_clearing + "</div><div class='col s4'>" + clearing[4] + "</div><div class='col s4'>0.00</div></div>";
+                                                div += "</li>";
+                                            } else {
+                                                div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + clearing[3] + "</div><div class='col s3'>" + clearing[2] + "</div><div class='col s3'>" + clearing[5] + "</div></div>";
+                                                div += "</li><li class='collection-item'>";
+                                                div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>" + tex_clearing + "</div><div class='col s4'>" + clearing[4] + "</div><div class='col s4'>" + (monto - clearing[5]) + "</div></div>";
+                                                div += "</li>";
+                                            }
+                                        }
+                                    }
+                                    div += "</li>";
+                                    div += "</ul>";
+                                    $("#div_clearing").append(div);
+                                }
+                                $('#tab_fin').click(function () {
+                                    formaClearing();
+                                });
                     </script>
                 </div>
                 <div class="row">
