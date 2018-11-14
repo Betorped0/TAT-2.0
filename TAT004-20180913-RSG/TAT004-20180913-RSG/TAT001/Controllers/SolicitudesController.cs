@@ -4814,15 +4814,16 @@ namespace TAT001.Controllers
                         d.DOCUMENTORECs.Remove(dree);
                     }
 
+                    if (chk_ligada == "on")
+                        d.LIGADA = true;
+                    else
+                        d.LIGADA = false;
+
                     db.Entry(d).State = EntityState.Modified;
                     db.SaveChanges();
 
 
                     //Guardar registros de recurrencias  RSG 01.08.2018------------------
-                    if (chk_ligada == "on")
-                        d.LIGADA = true;
-                    else
-                        d.LIGADA = false;
 
                     if (dOCUMENTO.DOCUMENTOREC != null)
                         if (dOCUMENTO.DOCUMENTOREC.Count > 0)

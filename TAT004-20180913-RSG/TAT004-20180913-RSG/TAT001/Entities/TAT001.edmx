@@ -1119,6 +1119,34 @@
           <Property Name="TSFORM_ID" Type="int" Nullable="false" />
           <Property Name="CHECKS" Type="bit" />
         </EntityType>
+        <EntityType Name="ESTATUS">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="DESCRIPCION" Type="nvarchar" MaxLength="50" />
+          <Property Name="CLASS" Type="nvarchar" MaxLength="100" />
+          <Property Name="ACTIVO" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ESTATUSR">
+          <Key>
+            <PropertyRef Name="ESTATUS_ID" />
+            <PropertyRef Name="POS" />
+          </Key>
+          <Property Name="ESTATUS_ID" Type="int" Nullable="false" />
+          <Property Name="POS" Type="int" Nullable="false" />
+          <Property Name="REGEX" Type="nvarchar" MaxLength="100" />
+          <Property Name="ACTIVO" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ESTATUST">
+          <Key>
+            <PropertyRef Name="SPRAS_ID" />
+            <PropertyRef Name="ESTATUS_ID" />
+          </Key>
+          <Property Name="SPRAS_ID" Type="nchar" MaxLength="2" Nullable="false" />
+          <Property Name="ESTATUS_ID" Type="int" Nullable="false" />
+          <Property Name="TXT050" Type="nvarchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="FACTURASCONF">
           <Key>
             <PropertyRef Name="SOCIEDAD_ID" />
@@ -3584,6 +3612,42 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ESTATUSR_ESTATUS">
+          <End Role="ESTATUS" Type="Self.ESTATUS" Multiplicity="1" />
+          <End Role="ESTATUSR" Type="Self.ESTATUSR" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ESTATUS">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ESTATUSR">
+              <PropertyRef Name="ESTATUS_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ESTATUST_ESTATUS">
+          <End Role="ESTATUS" Type="Self.ESTATUS" Multiplicity="1" />
+          <End Role="ESTATUST" Type="Self.ESTATUST" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ESTATUS">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ESTATUST">
+              <PropertyRef Name="ESTATUS_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ESTATUST_SPRAS">
+          <End Role="SPRAS" Type="Self.SPRAS" Multiplicity="1" />
+          <End Role="ESTATUST" Type="Self.ESTATUST" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SPRAS">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ESTATUST">
+              <PropertyRef Name="SPRAS_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_FACTURASCONF_SOCIEDAD">
           <End Role="SOCIEDAD" Type="Self.SOCIEDAD" Multiplicity="1" />
           <End Role="FACTURASCONF" Type="Self.FACTURASCONF" Multiplicity="*" />
@@ -5081,6 +5145,9 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <EntitySet Name="DOCUMENTOREC" EntityType="Self.DOCUMENTOREC" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DOCUMENTOSAP" EntityType="Self.DOCUMENTOSAP" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DOCUMENTOTS" EntityType="Self.DOCUMENTOTS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ESTATUS" EntityType="Self.ESTATUS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ESTATUSR" EntityType="Self.ESTATUSR" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ESTATUST" EntityType="Self.ESTATUST" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FACTURASCONF" EntityType="Self.FACTURASCONF" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FLUJNEGO" EntityType="Self.FLUJNEGO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FLUJO" EntityType="Self.FLUJO" Schema="dbo" store:Type="Tables" />
@@ -5695,6 +5762,18 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <AssociationSet Name="FK_DOCUMENTOTS_TS_CAMPO" Association="Self.FK_DOCUMENTOTS_TS_CAMPO">
             <End Role="TS_CAMPO" EntitySet="TS_CAMPO" />
             <End Role="DOCUMENTOTS" EntitySet="DOCUMENTOTS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ESTATUSR_ESTATUS" Association="Self.FK_ESTATUSR_ESTATUS">
+            <End Role="ESTATUS" EntitySet="ESTATUS" />
+            <End Role="ESTATUSR" EntitySet="ESTATUSR" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ESTATUST_ESTATUS" Association="Self.FK_ESTATUST_ESTATUS">
+            <End Role="ESTATUS" EntitySet="ESTATUS" />
+            <End Role="ESTATUST" EntitySet="ESTATUST" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ESTATUST_SPRAS" Association="Self.FK_ESTATUST_SPRAS">
+            <End Role="SPRAS" EntitySet="SPRAS" />
+            <End Role="ESTATUST" EntitySet="ESTATUST" />
           </AssociationSet>
           <AssociationSet Name="FK_FACTURASCONF_SOCIEDAD" Association="Self.FK_FACTURASCONF_SOCIEDAD">
             <End Role="SOCIEDAD" EntitySet="SOCIEDAD" />
@@ -8020,6 +8099,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <NavigationProperty Name="WARNINGs" Relationship="Self.FK_WARNING_SPRAS" FromRole="SPRAS" ToRole="WARNING" />
           <NavigationProperty Name="WARNINGPTs" Relationship="Self.FK_WARNINGPT_SPRAS" FromRole="SPRAS" ToRole="WARNINGPT" />
           <NavigationProperty Name="WORKFTs" Relationship="Self.FK_WORKFT_SPRAS" FromRole="SPRAS" ToRole="WORKFT" />
+          <NavigationProperty Name="ESTATUSTs" Relationship="TAT001Model.FK_ESTATUST_SPRAS" FromRole="SPRA" ToRole="ESTATUST" />
         </EntityType>
         <EntityType Name="STATE">
           <Key>
@@ -12231,6 +12311,21 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
             <End Role="SOCIEDAD" EntitySet="SOCIEDADs" />
             <End Role="LAYOUT_CARGA" EntitySet="LAYOUT_CARGA" />
           </AssociationSet>
+          <EntitySet Name="ESTATUS" EntityType="TAT001Model.ESTATU" />
+          <EntitySet Name="ESTATUSRs" EntityType="TAT001Model.ESTATUSR" />
+          <EntitySet Name="ESTATUSTs" EntityType="TAT001Model.ESTATUST" />
+          <AssociationSet Name="FK_ESTATUSR_ESTATUS" Association="TAT001Model.FK_ESTATUSR_ESTATUS">
+            <End Role="ESTATU" EntitySet="ESTATUS" />
+            <End Role="ESTATUSR" EntitySet="ESTATUSRs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ESTATUST_ESTATUS" Association="TAT001Model.FK_ESTATUST_ESTATUS">
+            <End Role="ESTATU" EntitySet="ESTATUS" />
+            <End Role="ESTATUST" EntitySet="ESTATUSTs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ESTATUST_SPRAS" Association="TAT001Model.FK_ESTATUST_SPRAS">
+            <End Role="SPRA" EntitySet="SPRAS" />
+            <End Role="ESTATUST" EntitySet="ESTATUSTs" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="CPS_LISTA_CLI_PRO_Result">
           <Property Type="String" Name="KUNNR" Nullable="false" MaxLength="10" />
@@ -12581,6 +12676,75 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
             </Principal>
             <Dependent Role="LAYOUT_CARGA">
               <PropertyRef Name="SOCIEDAD_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ESTATU">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="DESCRIPCION" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CLASS" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ACTIVO" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="ESTATUSRs" Relationship="TAT001Model.FK_ESTATUSR_ESTATUS" FromRole="ESTATU" ToRole="ESTATUSR" />
+          <NavigationProperty Name="ESTATUSTs" Relationship="TAT001Model.FK_ESTATUST_ESTATUS" FromRole="ESTATU" ToRole="ESTATUST" />
+        </EntityType>
+        <EntityType Name="ESTATUSR">
+          <Key>
+            <PropertyRef Name="ESTATUS_ID" />
+            <PropertyRef Name="POS" />
+          </Key>
+          <Property Name="ESTATUS_ID" Type="Int32" Nullable="false" />
+          <Property Name="POS" Type="Int32" Nullable="false" />
+          <Property Name="REGEX" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ACTIVO" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="ESTATU" Relationship="TAT001Model.FK_ESTATUSR_ESTATUS" FromRole="ESTATUSR" ToRole="ESTATU" />
+        </EntityType>
+        <EntityType Name="ESTATUST">
+          <Key>
+            <PropertyRef Name="SPRAS_ID" />
+            <PropertyRef Name="ESTATUS_ID" />
+          </Key>
+          <Property Name="SPRAS_ID" Type="String" Nullable="false" MaxLength="2" FixedLength="true" Unicode="true" />
+          <Property Name="ESTATUS_ID" Type="Int32" Nullable="false" />
+          <Property Name="TXT050" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ESTATU" Relationship="TAT001Model.FK_ESTATUST_ESTATUS" FromRole="ESTATUST" ToRole="ESTATU" />
+          <NavigationProperty Name="SPRA" Relationship="TAT001Model.FK_ESTATUST_SPRAS" FromRole="ESTATUST" ToRole="SPRA" />
+        </EntityType>
+        <Association Name="FK_ESTATUSR_ESTATUS">
+          <End Type="TAT001Model.ESTATU" Role="ESTATU" Multiplicity="1" />
+          <End Type="TAT001Model.ESTATUSR" Role="ESTATUSR" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ESTATU">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ESTATUSR">
+              <PropertyRef Name="ESTATUS_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ESTATUST_ESTATUS">
+          <End Type="TAT001Model.ESTATU" Role="ESTATU" Multiplicity="1" />
+          <End Type="TAT001Model.ESTATUST" Role="ESTATUST" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ESTATU">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ESTATUST">
+              <PropertyRef Name="ESTATUS_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ESTATUST_SPRAS">
+          <End Type="TAT001Model.SPRA" Role="SPRA" Multiplicity="1" />
+          <End Type="TAT001Model.ESTATUST" Role="ESTATUST" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SPRA">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ESTATUST">
+              <PropertyRef Name="SPRAS_ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -15166,6 +15330,35 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
                 <ScalarProperty Name="SOCIEDAD_ID" ColumnName="SOCIEDAD_ID" />
                 <ScalarProperty Name="LAND" ColumnName="LAND" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ESTATUS">
+            <EntityTypeMapping TypeName="TAT001Model.ESTATU">
+              <MappingFragment StoreEntitySet="ESTATUS">
+                <ScalarProperty Name="ACTIVO" ColumnName="ACTIVO" />
+                <ScalarProperty Name="CLASS" ColumnName="CLASS" />
+                <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ESTATUSRs">
+            <EntityTypeMapping TypeName="TAT001Model.ESTATUSR">
+              <MappingFragment StoreEntitySet="ESTATUSR">
+                <ScalarProperty Name="ACTIVO" ColumnName="ACTIVO" />
+                <ScalarProperty Name="REGEX" ColumnName="REGEX" />
+                <ScalarProperty Name="POS" ColumnName="POS" />
+                <ScalarProperty Name="ESTATUS_ID" ColumnName="ESTATUS_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ESTATUSTs">
+            <EntityTypeMapping TypeName="TAT001Model.ESTATUST">
+              <MappingFragment StoreEntitySet="ESTATUST">
+                <ScalarProperty Name="TXT050" ColumnName="TXT050" />
+                <ScalarProperty Name="ESTATUS_ID" ColumnName="ESTATUS_ID" />
+                <ScalarProperty Name="SPRAS_ID" ColumnName="SPRAS_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

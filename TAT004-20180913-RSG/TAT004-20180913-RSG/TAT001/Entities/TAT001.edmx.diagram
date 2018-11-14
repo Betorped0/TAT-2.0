@@ -366,6 +366,12 @@
         <AssociationConnector Association="TAT001Model.FK_FACTURASCONF_SOCIEDAD" />
         <AssociationConnector Association="TAT001Model.FK_LAYOUT_CARGA_PAIS" />
         <AssociationConnector Association="TAT001Model.FK_LAYOUT_CARGA_SOCIEDAD" />
+        <EntityTypeShape EntityType="TAT001Model.ESTATU" Width="1.5" PointX="3.75" PointY="115" />
+        <EntityTypeShape EntityType="TAT001Model.ESTATUSR" Width="1.5" PointX="6" PointY="115.125" />
+        <EntityTypeShape EntityType="TAT001Model.ESTATUST" Width="1.5" PointX="6" PointY="112.125" />
+        <AssociationConnector Association="TAT001Model.FK_ESTATUSR_ESTATUS" />
+        <AssociationConnector Association="TAT001Model.FK_ESTATUST_ESTATUS" />
+        <AssociationConnector Association="TAT001Model.FK_ESTATUST_SPRAS" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

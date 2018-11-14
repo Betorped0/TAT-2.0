@@ -189,6 +189,9 @@ namespace TAT001.Entities
         public virtual DbSet<DOCTOCLASIF> DOCTOCLASIFs { get; set; }
         public virtual DbSet<DOCTOCLASIFT> DOCTOCLASIFTs { get; set; }
         public virtual DbSet<LAYOUT_CARGA> LAYOUT_CARGA { get; set; }
+        public virtual DbSet<ESTATU> ESTATUS { get; set; }
+        public virtual DbSet<ESTATUSR> ESTATUSRs { get; set; }
+        public virtual DbSet<ESTATUST> ESTATUSTs { get; set; }
     
         [DbFunction("TAT001Entities", "split")]
         public virtual IQueryable<split_Result> split(string delimited, string delimiter)
