@@ -160,7 +160,7 @@ namespace TAT001.Controllers
                         }
                         else
                         {
-                            return RedirectToAction("validateLoginView", new { USUARIO_ID = user.ID });
+                            return RedirectToAction("validateLoginView", new { USUARIO_ID = user.ID, returnUrl = returnUrl });
                             //checkUser.USUARIO_ID = user.ID;
                             //checkUser.POS = 1;
                             //checkUser.SESION = System.Web.HttpContext.Current.Session.SessionID;
@@ -222,7 +222,7 @@ namespace TAT001.Controllers
             }
         }
 
-        public ActionResult validateLoginView(string USUARIO_ID)
+        public ActionResult validateLoginView(string USUARIO_ID, string returnUrl)
         {
             int pagina = 221; //ID EN BASE DE DATOS
             string u = User.Identity.Name;
@@ -235,14 +235,14 @@ namespace TAT001.Controllers
             ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
             ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
             var checkUser = db.USUARIOLOGs.SingleOrDefault(x => x.USUARIO_ID == USUARIO_ID);
-
+            ViewBag.returnUrl = returnUrl;
 
             return View(checkUser);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult validateLoginView([Bind(Include = "USUARIO_ID,POS,SESION,NAVEGADOR,UBICACION,FECHA,LOGIN")] USUARIOLOG uSUARIOLOG)
+        public ActionResult validateLoginView([Bind(Include = "USUARIO_ID,POS,SESION,NAVEGADOR,UBICACION,FECHA,LOGIN")] USUARIOLOG uSUARIOLOG, string returnUrl)
         {
             if (ModelState.IsValid)
             {
@@ -259,7 +259,7 @@ namespace TAT001.Controllers
                     Session["userlog"] = uSUARIOLOG;
                 }
                 catch { }
-                return RedirectToAction("Index", "Home");
+                return Redirect(returnUrl);
             }
 
             return View();
