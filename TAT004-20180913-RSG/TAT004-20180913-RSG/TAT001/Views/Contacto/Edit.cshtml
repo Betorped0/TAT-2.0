@@ -55,12 +55,17 @@
                                 @Html.LabelFor(model => model.correo, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_correo" })
                             </div>
 
-                            <div class="input-field col l10 m10" style="margin-bottom:0;">
-                                <label>
+                            <div class="input-field col l10 m10" style="margin-bottom:0px;">
+                                <div class="col l10 m10 text-center">
                                     <input type="checkbox" name="defecto" value="true" id="defecto" @Html.Raw((Model.defecto) ? "checked=\"checked\"" : "") />
-                                    <span style="height:0"></span>
-                                </label>
-                                @Html.LabelFor(model => model.defecto, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_defecto" })
+                                    <span style="height:0; position: relative;top: -18px;"></span>
+                                @Html.LabelFor(model => model.defecto, htmlAttributes: new { @class = "control-label col-md-1 text-left", @id = "lbl_defecto" })
+                                </div>
+                                <div class="col l10 m10 text-center">
+                                        <input type="checkbox" name="carta" value="true" id="carta" @Html.Raw((Model.carta) ? "checked=\"checked\"" : "") />
+                                        <span style="height:0; position: relative;top: -18px;"></span>
+                                    @Html.LabelFor(model => model.carta, htmlAttributes: new { @class = "control-label col-md-1 text-center", @id = "lbl_carta" })
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -73,4 +78,5 @@
     <div>
         @Html.ActionLink("Regresar", "Index", new { vko = Model.vkorg, vtw = Model.vtweg, kun = Model.kunnr, spa = Model.spart }, new { id = "lblRegresar" })
     </div>
+    
 }

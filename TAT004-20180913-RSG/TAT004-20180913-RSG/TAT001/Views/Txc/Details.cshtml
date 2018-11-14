@@ -46,6 +46,14 @@
                     </div>
                 </div>
             </div>
+            <div class="form-group">
+                <label>
+                    @{ bool activo = Convert.ToBoolean(Model.ACTIVO);
+                        @Html.CheckBox("ACTIVO", activo,new { @disabled="disabled"})
+                    }
+                    <span id="lblActivo"></span>
+                </label>
+            </div>
         </div>
     </div>
     <div class="col s6 ">
@@ -71,6 +79,11 @@
     </div>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }, new { id = "lblEditar" }) |
+    @*@Html.ActionLink("Edit", "Edit", new { id = Model.ID }, new { id = "lblEditar" }) |*@
     @Html.ActionLink("Back to List", "Index", null, new { id = "lblRegresar" })
 </p>
+<script>
+    $("input[type='hidden']").each(function (index, element) {
+        $(this).appendTo($(element).parent());
+    });
+</script>

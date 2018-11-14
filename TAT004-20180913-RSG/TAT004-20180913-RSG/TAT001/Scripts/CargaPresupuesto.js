@@ -206,12 +206,21 @@ $(document).ready(function () {
     });
 
     $('select').select();
-    $(".f > .select-wrapper > .select-dropdown").prepend(
-        '<li style="display:none" class="toggle selectnone"><span><label></label>Ninguno</span></li>'
-    );
-    $(".f > .select-wrapper > .select-dropdown").prepend(
-        '<li  class="toggle selectall"><span><label></label>Todos</span></li>'
-    );
+    if ($(".f option:selected").length) {
+        $(".f > .select-wrapper > .select-dropdown").prepend(
+            '<li  class="toggle selectnone"><span><label></label>Ninguno</span></li>'
+        );
+        $(".f > .select-wrapper > .select-dropdown").prepend(
+            '<li style="display:none" class="toggle selectall"><span><label></label>Todos</span></li>'
+        );
+    } else {
+        $(".f > .select-wrapper > .select-dropdown").prepend(
+            '<li style="display:none" class="toggle selectnone"><span><label></label>Ninguno</span></li>'
+        );
+        $(".f > .select-wrapper > .select-dropdown").prepend(
+            '<li  class="toggle selectall"><span><label></label>Todos</span></li>'
+        );
+    }
     $(".f > .select-wrapper > .select-dropdown .selectall").on(
         "click",
         function () {

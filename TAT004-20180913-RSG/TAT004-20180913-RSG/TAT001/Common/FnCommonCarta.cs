@@ -14,7 +14,7 @@ namespace TAT001.Common
             return db.TEXTOCVs.Where(x => x.SPRAS_ID == spras_id && x.CAMPO == campo).Select(x => x.TEXTO).FirstOrDefault();
         }
 
-        public static void ObtenerCartaProductos(TAT001Entities db, DOCUMENTO d,CartaV v, string spras_id,bool guardar,
+        public static void ObtenerCartaProductos(TAT001Entities db, DOCUMENTO d,CartaD cd, CartaV cv, string spras_id,bool guardar,
             ref List<string> lista,
             ref List<listacuerpoc> armadoCuerpoTab,
             ref List<string> armadoCuerpoTabStr,  
@@ -58,72 +58,73 @@ namespace TAT001.Common
                         totalm = " ni";
                     }
 
-                    if (con2.Count > 0)
+                if (con2.Count > 0)
+                {
+                    //Listado para html CartaV
+                    if (armadoCuerpoTab != null)
                     {
-                    //Listado para html
-                    if (armadoCuerpoTab!=null) {
-                        ObtenerCartaProductosHtml(con2,decimales,porclass,totalm,fact, 
-                            ref armadoCuerpoTab, 
+                        ObtenerCartaProductosHtml(con2, decimales, porclass, totalm, fact,
+                            ref armadoCuerpoTab,
                             ref contadorTabla);
                     }
-                    //Listado para pdf
+                    //Listado para html CartaD y Listado Pdf CartaD y CartaV
                     if (armadoCuerpoTabStr != null)
                     {
-                        ObtenerCartaProductosPdf(db,v,con2, decimales, porclass, totalm, fact,guardar,
-                            ref indexp, 
-                            ref armadoCuerpoTabStr, 
+                        ObtenerCartaProductosPdf(db, cd, cv, con2, decimales, porclass, totalm, fact, guardar,
+                            ref indexp,
+                            ref armadoCuerpoTabStr,
                             ref contadorTabla);
                     }
-                    }
-                    else
-                    {
-                        List<DOCUMENTOP_CAT> con3 = db.DOCUMENTOPs
-                                            .Where(x => x.NUM_DOC.Equals(d.NUM_DOC) && x.VIGENCIA_DE == a1 && x.VIGENCIA_AL == a2)
-                                            .Join(db.MATERIALGPs, x => x.MATKL, y => y.ID, (x, y) => new DOCUMENTOP_CAT
-                                            {
-                                               NUM_DOC= x.NUM_DOC,
-                                                MATNR= x.MATNR,
-                                                MATKL= x.MATKL,
-                                                ID=y.ID,
-                                                MONTO=x.MONTO,
-                                                PORC_APOYO=x.PORC_APOYO,
-                                                TXT50 = y.DESCRIPCION,//RSG 03.10.2018
-                                                MONTO_APOYO=x.MONTO_APOYO,
-                                                RESTA = (x.MONTO - x.MONTO_APOYO),
-                                                PRECIO_SUG=x.PRECIO_SUG,
-                                                APOYO_EST=x.APOYO_EST,
-                                                APOYO_REAL=x.APOYO_REAL,
-                                                VOLUMEN_EST = x.VOLUMEN_EST,
-                                                VOLUMEN_REAL=x.VOLUMEN_REAL,
-                                                VIGENCIA_DE=x.VIGENCIA_DE,
-                                                VIGENCIA_AL=x.VIGENCIA_AL
-                                            }) //B20180710 MGC 2018.07.10 Se agregó x.VOLUMEN_EST, x.VOLUMEN_REAL})
-                                            .ToList();
+                }
+                else
+                {
+                    List<DOCUMENTOP_CAT> con3 = db.DOCUMENTOPs
+                                        .Where(x => x.NUM_DOC.Equals(d.NUM_DOC) && x.VIGENCIA_DE == a1 && x.VIGENCIA_AL == a2)
+                                        .Join(db.MATERIALGPs, x => x.MATKL, y => y.ID, (x, y) => new DOCUMENTOP_CAT
+                                        {
+                                            NUM_DOC = x.NUM_DOC,
+                                            MATNR = x.MATNR,
+                                            MATKL = x.MATKL,
+                                            ID = y.ID,
+                                            MONTO = x.MONTO,
+                                            PORC_APOYO = x.PORC_APOYO,
+                                            TXT50 = y.DESCRIPCION,//RSG 03.10.2018
+                                                MONTO_APOYO = x.MONTO_APOYO,
+                                            RESTA = (x.MONTO - x.MONTO_APOYO),
+                                            PRECIO_SUG = x.PRECIO_SUG,
+                                            APOYO_EST = x.APOYO_EST,
+                                            APOYO_REAL = x.APOYO_REAL,
+                                            VOLUMEN_EST = x.VOLUMEN_EST,
+                                            VOLUMEN_REAL = x.VOLUMEN_REAL,
+                                            VIGENCIA_DE = x.VIGENCIA_DE,
+                                            VIGENCIA_AL = x.VIGENCIA_AL
+                                        }) //B20180710 MGC 2018.07.10 Se agregó x.VOLUMEN_EST, x.VOLUMEN_REAL})
+                                        .ToList();
                     if (d.TIPO_TECNICO == "P")
                     {
                         editmonto = true;
                     }
 
-                    //Listado para Html 
+                    //Listado para Html CartaV
                     if (armadoCuerpoTab != null)
                     {
-                        ObtenerCartaCategoriasHtml(con3, decimales, fact,d.TIPO_TECNICO, 
-                            ref armadoCuerpoTab, 
+                        ObtenerCartaCategoriasHtml(con3, decimales, fact, d.TIPO_TECNICO,
+                            ref armadoCuerpoTab,
                             ref contadorTabla);
                     }
-                    //Listado para Pdf
+                    //Listado para html CartaD y Listado Pdf CartaD y CartaV
                     if (armadoCuerpoTabStr != null)
                     {
-                        ObtenerCartaCategoriasPdf(db, v, con3, decimales, fact, guardar,
-                            ref indexp, 
+                        ObtenerCartaCategoriasPdf(db, cd, cv, con3, decimales, fact, guardar,
+                            ref indexp,
                             ref armadoCuerpoTabStr,
                             ref contadorTabla);
                     }
-                    }
+                }
                     numfilasTabla.Add(contadorTabla);
                 }
 
-            if (v == null)
+            if (cd == null && cv==null)
             {
                 cabeza.Add(ObtenerTexto(db, spras_id, "materialC"));
                 cabeza.Add(ObtenerTexto(db, spras_id, "categoriaC"));
@@ -145,17 +146,17 @@ namespace TAT001.Common
                 cabeza.Add(ObtenerTexto(db, spras_id, "materialC"));
                 cabeza.Add(ObtenerTexto(db, spras_id, "categoriaC"));
                 cabeza.Add(ObtenerTexto(db, spras_id, "descripcionC"));
-                if (v.costoun_x) { cabeza.Add(ObtenerTexto(db, spras_id, "costouC")); }
-                if (v.apoyo_x) { cabeza.Add(ObtenerTexto(db, spras_id, "apoyopoC")); }
-                if (v.apoyop_x) { cabeza.Add(ObtenerTexto(db, spras_id, "apoyopiC")); }
-                if (v.costoap_x) { cabeza.Add(ObtenerTexto(db, spras_id, "costoaC")); }
-                if (v.precio_x) { cabeza.Add(ObtenerTexto(db, spras_id, "preciosC")); }
-                if (v.volumen_x)
+                if ((cd != null && cd.costoun_x) || (cv != null && cv.costoun_x)) { cabeza.Add(ObtenerTexto(db, spras_id, "costouC")); }
+                if ((cd != null && cd.apoyo_x) || (cv != null && cv.apoyo_x)) { cabeza.Add(ObtenerTexto(db, spras_id, "apoyopoC")); }
+                if ((cd != null && cd.apoyop_x) || (cv != null && cv.apoyop_x)) { cabeza.Add(ObtenerTexto(db, spras_id, "apoyopiC")); }
+                if ((cd != null && cd.costoap_x) || (cv != null && cv.costoap_x)) { cabeza.Add(ObtenerTexto(db, spras_id, "costoaC")); }
+                if ((cd != null && cd.precio_x) || (cv != null && cv.precio_x)) { cabeza.Add(ObtenerTexto(db, spras_id, "preciosC")); }
+                if ((cd != null && cd.volumen_x) || (cv != null && cv.volumen_x))
                 {
                     if (fact) { cabeza.Add(ObtenerTexto(db, spras_id, "volumenrC")); }
                     else { cabeza.Add(ObtenerTexto(db, spras_id, "volumeneC")); }
                 }
-                if (v.apoyototal_x)
+                if ((cd != null && cd.apoyototal_x) || (cv != null && cv.apoyototal_x))
                 {
                     if (fact) { cabeza.Add(ObtenerTexto(db, spras_id, "apoyorC")); }
                     else { cabeza.Add(ObtenerTexto(db, spras_id, "apoyoeC")); }
@@ -164,7 +165,7 @@ namespace TAT001.Common
             
         }
 
-        public static void ObtenerCartaProductosPdf(TAT001Entities db, CartaV v,List<DOCUMENTOP_SP> con2, string decimales, string porclass, string totalm, bool fact,bool guardar,
+        public static void ObtenerCartaProductosPdf(TAT001Entities db, CartaD cd, CartaV cv, List<DOCUMENTOP_SP> con2, string decimales, string porclass, string totalm, bool fact,bool guardar,
             ref int indexp,
             ref List<string> armadoCuerpoTabStr,
             ref int contadorTabla)
@@ -174,37 +175,56 @@ namespace TAT001.Common
             {
                 if (guardar)
                 {
-                    int pos = db.CARTAs.Where(a => a.NUM_DOC.Equals(v.num_doc)).OrderByDescending(a => a.POS).First().POS;
-                    GuardarCartaPMateriales(db, v, item2.MATNR, pos, ref indexp, fact, item2.VIGENCIA_DE.Value, item2.VIGENCIA_AL.Value);
+                    int pos = db.CARTAs.Where(a => a.NUM_DOC.Equals(cv.num_doc)).OrderByDescending(a => a.POS).First().POS;
+                    GuardarCartaPMateriales(db, cv, item2.MATNR, pos, ref indexp, fact, item2.VIGENCIA_DE.Value, item2.VIGENCIA_AL.Value);
                 }
-                if (v != null)
+                if (cd != null || cv != null)
                 {
-                    DOCUMENTOP_MOD docmod = v.DOCUMENTOP.FirstOrDefault(x => x.MATNR == item2.MATNR.TrimStart('0'));
+                    DOCUMENTOP_MOD docmod = new DOCUMENTOP_MOD();
+                    if (cv != null)
+                    {
+                        docmod = cv.DOCUMENTOP.FirstOrDefault(x => x.MATNR == item2.MATNR.TrimStart('0'));
+                    }
+                    if (cd != null)
+                    {
+                        docmod = new DOCUMENTOP_MOD
+                        {
+                            MONTO = item2.MONTO,
+                            PORC_APOYO= item2.PORC_APOYO,
+                            MONTO_APOYO = item2.MONTO_APOYO,
+                            PRECIO_SUG = item2.PRECIO_SUG,
+                            VOLUMEN_REAL = item2.VOLUMEN_REAL,
+                            VOLUMEN_EST = item2.VOLUMEN_EST,
+                            APOYO_REAL=item2.APOYO_REAL,
+                            APOYO_EST=item2.APOYO_EST
+
+                        };
+                    }
                     armadoCuerpoTabStr.Add(item2.MATNR.TrimStart('0'));
                     armadoCuerpoTabStr.Add(item2.DESCRIPCION);
                     armadoCuerpoTabStr.Add(item2.MAKTX);
 
-                    if (v.costoun_x)
+                    if ((cd!=null && cd.costoun_x) || (cv != null && cv.costoun_x))
                     {
                         armadoCuerpoTabStr.Add(format.toShow(Math.Round(docmod.MONTO, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
                     }
-                    if (v.apoyo_x)
+                    if ((cd != null && cd.apoyo_x) || (cv != null && cv.apoyo_x))
                     {
                         armadoCuerpoTabStr.Add(format.toShowPorc(Math.Round(docmod.PORC_APOYO, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
                     }
-                    if (v.apoyop_x)
+                    if ((cd != null && cd.apoyop_x) || (cv != null && cv.apoyop_x))
                     {
                         armadoCuerpoTabStr.Add(format.toShow(Math.Round(docmod.MONTO_APOYO, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
                     }
-                    if (v.costoap_x)
+                    if ((cd != null && cd.costoap_x) || (cv != null && cv.costoap_x))
                     {
                         armadoCuerpoTabStr.Add(format.toShow(Math.Round((docmod.MONTO - docmod.MONTO_APOYO), 2), decimales));//B20180730 MGC 2018.07.30 Formatos
                     }
-                    if (v.precio_x)
+                    if ((cd != null && cd.precio_x) || (cv != null && cv.precio_x))
                     {
                         armadoCuerpoTabStr.Add(format.toShow(Math.Round(docmod.PRECIO_SUG, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
                     }
-                    if (v.volumen_x)
+                    if ((cd != null && cd.volumen_x) || (cv != null && cv.volumen_x))
                     {
                         if (fact)
                         {
@@ -218,7 +238,7 @@ namespace TAT001.Common
 
                     //Apoyo
                     //B20180726 MGC 2018.07.26
-                    if (v.apoyototal_x)
+                    if ((cd != null && cd.apoyototal_x) || (cv != null && cv.apoyototal_x))
                     {
                         if (fact)
                         {
@@ -229,7 +249,7 @@ namespace TAT001.Common
                             armadoCuerpoTabStr.Add(format.toShow(Math.Round(Convert.ToDecimal(docmod.APOYO_EST), 2), decimales));//B20180730 MGC 2018.07.30 Formatos
                         }
                     }
-                }
+               }
                 else
                 {
                     armadoCuerpoTabStr.Add(item2.MATNR.TrimStart('0'));
@@ -343,7 +363,7 @@ namespace TAT001.Common
             }
         }
 
-        public  static void ObtenerCartaCategoriasPdf(TAT001Entities db, CartaV v, List<DOCUMENTOP_CAT> con3, string decimales, bool fact, bool guardar,
+        public  static void ObtenerCartaCategoriasPdf(TAT001Entities db, CartaD cd,CartaV cv, List<DOCUMENTOP_CAT> con3, string decimales, bool fact, bool guardar,
             ref int indexp,
             ref List<string> armadoCuerpoTabStr,
             ref int contadorTabla)
@@ -353,14 +373,30 @@ namespace TAT001.Common
             {
                 if (guardar)
                 {
-                    int pos = db.CARTAs.Where(a => a.NUM_DOC.Equals(v.num_doc)).OrderByDescending(a => a.POS).First().POS;
-                    GuardarCartaPCategorias(db, v, item2.MATKL, pos, ref indexp, fact, item2.VIGENCIA_DE.Value, item2.VIGENCIA_AL.Value);
+                    int pos = db.CARTAs.Where(a => a.NUM_DOC.Equals(cv.num_doc)).OrderByDescending(a => a.POS).First().POS;
+                    GuardarCartaPCategorias(db, cv, item2.MATKL, pos, ref indexp, fact, item2.VIGENCIA_DE.Value, item2.VIGENCIA_AL.Value);
                 }
-
-                if (v != null)
+                if (cd != null || cv != null)
                 {
-                    DOCUMENTOP_MOD docmod = v.DOCUMENTOP.FirstOrDefault(x => x.MATKL_ID == item2.MATKL);
-
+                    DOCUMENTOP_MOD docmod = new DOCUMENTOP_MOD();
+                if (cv != null)
+                {
+                     docmod = cv.DOCUMENTOP.FirstOrDefault(x => x.MATKL_ID == item2.MATKL);
+                }
+                if (cd != null)
+                {
+                    docmod = new DOCUMENTOP_MOD
+                    {
+                        MONTO=item2.MONTO,
+                        PORC_APOYO= item2.PORC_APOYO,
+                        MONTO_APOYO = item2.MONTO_APOYO,
+                        PRECIO_SUG = item2.PRECIO_SUG,
+                        VOLUMEN_REAL = item2.VOLUMEN_REAL,
+                        VOLUMEN_EST = item2.VOLUMEN_EST,
+                        APOYO_REAL = item2.APOYO_REAL,
+                        APOYO_EST = item2.APOYO_EST
+                    };
+                }
                     armadoCuerpoTabStr.Add("");
                     armadoCuerpoTabStr.Add(item2.MATKL);
                     MATERIALGP mt = db.MATERIALGPs.Where(x => x.ID == item2.MATKL).FirstOrDefault();//RSG 03.10.2018
@@ -369,31 +405,31 @@ namespace TAT001.Common
                     else
                         armadoCuerpoTabStr.Add("");
 
-                    if (v.costoun_x)
+                    if ((cd != null && cd.costoun_x) || (cv != null && cv.costoun_x))
                     {
                         armadoCuerpoTabStr.Add(format.toShow(Math.Round(docmod.MONTO, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
                     }
-                    if (v.apoyo_x)
+                    if ((cd != null && cd.apoyo_x) || (cv != null && cv.apoyo_x))
                     {
                         armadoCuerpoTabStr.Add(format.toShowPorc(Math.Round(docmod.PORC_APOYO, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
                     }
-                    if (v.apoyop_x)
+                    if ((cd != null && cd.apoyop_x) || (cv != null && cv.apoyop_x))
                     {
                         armadoCuerpoTabStr.Add(format.toShow(Math.Round(docmod.MONTO_APOYO, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
                     }
 
-                    if (v.costoap_x)
+                    if ((cd != null && cd.costoap_x) || (cv != null && cv.costoap_x))
                     {
                         armadoCuerpoTabStr.Add(format.toShow(Math.Round((docmod.MONTO - docmod.MONTO_APOYO), 2), decimales));//B20180730 MGC 2018.07.30 Formatos
                     }
-                    if (v.precio_x )
+                    if ((cd != null && cd.precio_x) || (cv != null && cv.precio_x ))
                     {
                         armadoCuerpoTabStr.Add(format.toShow(Math.Round(docmod.PRECIO_SUG, 2), decimales));//B20180730 MGC 2018.07.30 Formatos
                     }
 
                     //Volumen
                     //B20180726 MGC 2018.07.26
-                    if (v.volumen_x)
+                    if ((cd != null && cd.volumen_x) || (cv != null && cv.volumen_x))
                     {
                         if (fact)
                         {
@@ -407,7 +443,7 @@ namespace TAT001.Common
 
                     //Apoyo
                     //B20180726 MGC 2018.07.26
-                    if (v.apoyototal_x)
+                    if ((cd != null && cd.apoyototal_x) || (cv != null && cv.apoyototal_x))
                     {
                         if (fact)
                         {
@@ -418,7 +454,7 @@ namespace TAT001.Common
                             armadoCuerpoTabStr.Add(format.toShow(Math.Round(Convert.ToDecimal(docmod.APOYO_EST), 2), decimales));//B20180730 MGC 2018.07.30 Formatos
                         }
                     }
-                }
+               }
                 else
                 {
                     armadoCuerpoTabStr.Add("");
@@ -571,7 +607,7 @@ namespace TAT001.Common
                     {
                         if (fact)
                         {
-                            carp.VOLUMEN_REAL = docmod.VOLUMEN_REAL;
+                            carp.VOLUMEN_REAL = (docmod.VOLUMEN_REAL==null?0.0M: docmod.VOLUMEN_REAL);
                             carp.VOLUMEN_EST = 0;
                         }
                         else
@@ -587,12 +623,12 @@ namespace TAT001.Common
                     {
                         if (fact)
                         {
-                            carp.APOYO_REAL = docmod.APOYO_REAL;
+                            carp.APOYO_REAL = (docmod.APOYO_REAL == null ? 0.0M : docmod.APOYO_REAL);
                             carp.APOYO_EST = 0;
                         }
                         else
                         {
-                            carp.APOYO_EST = docmod.APOYO_EST;
+                            carp.APOYO_EST = (docmod.APOYO_EST == null ? 0.0M : docmod.APOYO_EST);
                             carp.APOYO_REAL = 0;
                         }
                     }
@@ -650,7 +686,7 @@ namespace TAT001.Common
                     {
                         if (fact)
                         {
-                            carp.VOLUMEN_REAL = docmod.VOLUMEN_REAL;
+                            carp.VOLUMEN_REAL = (docmod.VOLUMEN_REAL == null ? 0.0M : docmod.VOLUMEN_REAL);
                             carp.VOLUMEN_EST = 0;
                         }
                         else
@@ -666,13 +702,13 @@ namespace TAT001.Common
                     {
                         if (fact)
                         {
-                            carp.APOYO_REAL = docmod.APOYO_REAL;
+                            carp.APOYO_REAL = (docmod.APOYO_REAL == null ? 0.0M : docmod.APOYO_REAL);
                             carp.APOYO_EST = 0;
                         }
                         else
                         {
                             carp.APOYO_REAL = 0;
-                            carp.APOYO_EST = docmod.APOYO_EST;
+                            carp.APOYO_EST = (docmod.APOYO_EST == null ? 0.0M : docmod.APOYO_EST);
                         }
                     }
 
@@ -702,76 +738,74 @@ namespace TAT001.Common
                  ref List<string> cabeza2,
                  ref List<string> armadoCuerpoTab2,
                  ref int rowsRecs,
+                 ref List<string> cabeza3,
+                 ref List<string> armadoCuerpoTab3,
+                 ref int rowsObjQs,
                  bool esPdf)
         {
             FormatosC format = new FormatosC();
             string decimales = d.PAI.DECIMAL; //B20180730 MGC 2018.07.30 Formatos
             bool varligada = Convert.ToBoolean(d.LIGADA);
-
+            bool conRan = db.DOCUMENTORANs.Any(x => x.LIN == 1 && x.NUM_DOC == d.NUM_DOC);
+            int rowRan = 0;
             cabeza2.Add(ObtenerTexto(db, spras_id, "posC2"));
+            cabeza2.Add(ObtenerTexto(db, spras_id, "periodoC"));
             cabeza2.Add(ObtenerTexto(db, spras_id, "tipoC2"));
-            cabeza2.Add(ObtenerTexto(db, spras_id, "fechaC2"));
             if (varligada)
             {
-                if (db.DOCUMENTORANs.Any(x => x.LIN == 1 && x.NUM_DOC == d.NUM_DOC))
-                {
-                    cabeza2.Add(ObtenerTexto(db, spras_id, "objetivo"));
-                }
-                else
-                {
-                    if (!esPdf)
-                    {
-                        cabeza2.Add("");
-                    }
-                }
                 cabeza2.Add(ObtenerTexto(db, spras_id, "porcentajeC2"));
+               if (conRan){cabeza2.Add(ObtenerTexto(db, spras_id, "objetivo")); }
+                else if (!esPdf) { cabeza3.Add(""); }
+                
             }
             else
             {
                 if (d.TIPO_TECNICO == "P")
                 {
-                    if (!esPdf)
-                    {
-                        cabeza2.Add("");
-                    }
                     cabeza2.Add(ObtenerTexto(db, spras_id, "porcentajeC2"));
+                    if (!esPdf){ cabeza2.Add("");}
                 }
                 else
                 {
                     cabeza2.Add(ObtenerTexto(db, spras_id, "montoC2"));
-                    if (!esPdf)
-                    {
-                        cabeza2.Add("");
-                    }
+                    if (!esPdf) { cabeza2.Add(""); }
                 }
             }
 
             var con4 = db.DOCUMENTORECs
                                     .Where(x => x.NUM_DOC.Equals(d.NUM_DOC))
-                                    .Join(db.DOCUMENTOes, x => x.NUM_DOC, y => y.NUM_DOC, (x, y) => new { x.POS, y.TSOL_ID, x.FECHAF, x.MONTO_BASE, x.PORC })
+                                    .Join(db.DOCUMENTOes, x => x.NUM_DOC, y => y.NUM_DOC, (x, y) => new { x.POS, y.TSOL_ID, x.MONTO_BASE, x.PORC,x.PERIODO,x.EJERCICIO })
                                     .ToList();
           
             foreach (var item in con4)
             {
-                DateTime a = Convert.ToDateTime(item.FECHAF);
+                string periodo = "P" + item.PERIODO + "-" + item.EJERCICIO;
+                string tsol = FnCommon.ObtenerCmbTiposSolicitud(db, spras_id, item.TSOL_ID).First().Text;
+                string posStr = item.POS.ToString() + "/" + con4.Count.ToString();
 
-                armadoCuerpoTab2.Add(item.POS.ToString());
-                armadoCuerpoTab2.Add(db.TSOLs.Where(x => x.ID == item.TSOL_ID).Select(x => x.DESCRIPCION).First());
-                armadoCuerpoTab2.Add(a.ToShortDateString());
+                armadoCuerpoTab2.Add(posStr);
+                armadoCuerpoTab2.Add(periodo);
+                armadoCuerpoTab2.Add(tsol);
                 if (varligada)
                 {
-                    if (db.DOCUMENTORANs.Any(x => x.LIN == 1 && x.NUM_DOC == d.NUM_DOC && x.POS == item.POS)) {
+                    if (conRan) {
                         DOCUMENTORAN docRan = db.DOCUMENTORANs.First(x => x.LIN == 1 && x.NUM_DOC == d.NUM_DOC && x.POS == item.POS);
+
+                        armadoCuerpoTab2.Add(format.toShowPorc(docRan.PORCENTAJE.Value, decimales));
                         armadoCuerpoTab2.Add(format.toShow(Math.Round(docRan.OBJETIVOI.Value, 2), decimales));
-                        armadoCuerpoTab2.Add(docRan.PORCENTAJE.Value.ToString("##.00"));
+
+                        foreach (DOCUMENTORAN itemTan in db.DOCUMENTORANs.Where(x => x.LIN != 1 && x.NUM_DOC == d.NUM_DOC && x.POS == item.POS))
+                        {
+                            armadoCuerpoTab2.AddRange(new List<string>{ "","",""});
+                            armadoCuerpoTab2.Add(format.toShowPorc(itemTan.PORCENTAJE.Value, decimales));
+                            armadoCuerpoTab2.Add(format.toShow(Math.Round(itemTan.OBJETIVOI.Value, 2), decimales));
+                            rowRan++;
+                        }
                     }
                     else
                     {
-                        if (!esPdf)
-                        {
-                            armadoCuerpoTab2.Add("");
-                        }
-                        armadoCuerpoTab2.Add(item.PORC.Value.ToString("##.00"));
+                        armadoCuerpoTab2.Add(format.toShowPorc(item.PORC.Value, decimales));
+                        if (!esPdf){ armadoCuerpoTab2.Add("");}
                     }
                    
                 }
@@ -779,11 +813,8 @@ namespace TAT001.Common
                 {
                     if (d.TIPO_TECNICO == "P")
                     {
-                        if (!esPdf)
-                        {
-                            armadoCuerpoTab2.Add("");
-                        }
-                        armadoCuerpoTab2.Add(item.PORC.Value.ToString("##.00"));
+                        armadoCuerpoTab2.Add(format.toShowPorc(item.PORC.Value,decimales));
+                        if (!esPdf){ armadoCuerpoTab2.Add(""); }
                     }
                     else
                     {
@@ -795,7 +826,49 @@ namespace TAT001.Common
                     }
                 }
             }
-            rowsRecs = con4.Count;
+            rowsRecs = (con4.Count+ rowRan);
+
+
+            bool conObjetivoQ = (d.OBJETIVOQ != null && d.OBJETIVOQ.Value);
+            ///TABLA OBJETIVO Q
+            if (conObjetivoQ)
+            {
+                cabeza3.Add(ObtenerTexto(db, spras_id, "posC2"));
+                cabeza3.Add(ObtenerTexto(db, spras_id, "periodoC"));
+                cabeza3.Add(ObtenerTexto(db, spras_id, "tipoC2"));
+
+
+                cabeza3.Add(ObtenerTexto(db, spras_id, "porcentajeC2"));
+                if (conRan)
+                { cabeza3.Add(ObtenerTexto(db, spras_id, "objetivo")); }
+                else if (!esPdf) { cabeza3.Add(""); }
+
+                foreach (var item in con4)
+                {
+                    string periodo = "P" + item.PERIODO + "-" + item.EJERCICIO;
+                    string tsol = FnCommon.ObtenerCmbTiposSolicitud(db, spras_id, item.TSOL_ID).First().Text;
+                    string posStr = item.POS.ToString() + "/" + con4.Count.ToString();
+                    armadoCuerpoTab3.Add(posStr);
+                    armadoCuerpoTab3.Add(periodo);
+                    armadoCuerpoTab3.Add(tsol);
+
+                    if (conRan)
+                    {
+                        DOCUMENTORAN docRan = db.DOCUMENTORANs.First(x => x.LIN == 1 && x.NUM_DOC == d.NUM_DOC && x.POS == item.POS);
+
+                        armadoCuerpoTab3.Add(format.toShowPorc(d.OBJQ_PORC.Value, decimales));
+                        armadoCuerpoTab3.Add(format.toShow(Math.Round(docRan.OBJETIVOI.Value, 2), decimales));
+                    }
+                    else
+                    {
+                        armadoCuerpoTab3.Add(format.toShowPorc(d.OBJQ_PORC.Value, decimales));
+                        if (!esPdf) { armadoCuerpoTab2.Add(""); }
+                    }
+
+
+                }
+                rowsObjQs = con4.Count;
+            }
         }
     }
 }

@@ -434,6 +434,7 @@
           <Property Name="BASE_UNIT" Type="nchar" MaxLength="3" />
           <Property Name="MATERIALGP" Type="nvarchar" MaxLength="30" />
           <Property Name="TAXCODEGP" Type="nchar" MaxLength="2" />
+          <Property Name="ASIGNACIONTXT" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="CONSOPORTE">
           <Key>
@@ -459,6 +460,7 @@
           <Property Name="KUNNR" Type="nchar" MaxLength="10" />
           <Property Name="ACTIVO" Type="bit" />
           <Property Name="DEFECTO" Type="bit" />
+          <Property Name="CARTA" Type="bit" />
         </EntityType>
         <EntityType Name="COUNTRIES">
           <Key>
@@ -6613,6 +6615,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Property Name="BASE_UNIT" Type="String" MaxLength="3" FixedLength="true" Unicode="true" />
           <Property Name="MATERIALGP" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Name="TAXCODEGP" Type="String" MaxLength="2" FixedLength="true" Unicode="true" />
+          <Property Name="ASIGNACIONTXT" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="CONSOPORTE">
           <Key>
@@ -6641,6 +6644,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Property Name="ACTIVO" Type="Boolean" />
           <Property Name="DEFECTO" Type="Boolean" />
           <NavigationProperty Name="CLIENTE" Relationship="Self.FK_CONTACTOC_CLIENTE" FromRole="CONTACTOC" ToRole="CLIENTE" />
+          <Property Name="CARTA" Type="Boolean" />
         </EntityType>
         <EntityType Name="COUNTRy">
           <Key>
@@ -12973,6 +12977,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <EntitySetMapping Name="CONPOSAPPs">
             <EntityTypeMapping TypeName="TAT001Model.CONPOSAPP">
               <MappingFragment StoreEntitySet="CONPOSAPP">
+                <ScalarProperty Name="ASIGNACIONTXT" ColumnName="ASIGNACIONTXT" />
                 <ScalarProperty Name="CONSECUTIVO" ColumnName="CONSECUTIVO" />
                 <ScalarProperty Name="POSICION" ColumnName="POSICION" />
                 <ScalarProperty Name="RELACION" ColumnName="RELACION" />
@@ -13023,6 +13028,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <EntitySetMapping Name="CONTACTOCs">
             <EntityTypeMapping TypeName="TAT001Model.CONTACTOC">
               <MappingFragment StoreEntitySet="CONTACTOC">
+                <ScalarProperty Name="CARTA" ColumnName="CARTA" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
                 <ScalarProperty Name="PHONE" ColumnName="PHONE" />

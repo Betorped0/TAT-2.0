@@ -286,7 +286,7 @@
                         }
                     </script>
                 </div>
-                <div class="card-panel">
+                <div class="row">
                     <h5 id="head_solicitudanalisis">Análisis Solicitud</h5>@*B20180801 MGC Textos*@
                     <div class="row" style="margin-bottom:0">
                         <div class="col s12">
@@ -324,61 +324,63 @@
                                         </div>
                                     </div>
                                 </li>
-                                        @{bool esNeg = ViewBag.remanente.Contains("("); }
-                                @if (esNeg) { 
-                                        <li class="collection-item" id="a4" style="background-color:red; color:white;">
+                                @{bool esNeg = ViewBag.remanente.Contains("("); }
+                                @if (esNeg)
+                                {
+                                    @*<li class="collection-item" id="a4" style="background-color:red; color:white;">
+                                    *@<li class="collection-item red white-text" id="a4">
 
-                                            <div class="row" style="margin-bottom:0;padding-bottom:0;">
-                                                <div id="div_remanente" class="col s6">
-                                                    @*B20180801 MGC Textos*@
-                                                    Remanente/(Exceso)
-                                                </div>
-
-                                                <div class="col s6 right-align">
-                                                    <span id="s_rema">@ViewBag.remanente</span>
-                                                </div>
-
+                                        <div class="row" style="margin-bottom:0;padding-bottom:0;">
+                                            <div id="div_remanente" class="col s6">
+                                                @*B20180801 MGC Textos*@
+                                                Remanente/(Exceso)
                                             </div>
-                                        </li>
-                                }else{
-                                <li class="collection-item" id="a4" >
 
-                                    <div class="row" style="margin-bottom:0;padding-bottom:0;">
-                                        <div id="div_remanente" class="col s6">
-                                            @*B20180801 MGC Textos*@
-                                            Remanente/(Exceso)
-                                        </div>
+                                            <div class="col s6 right-align">
+                                                <span id="s_rema">@ViewBag.remanente</span>
+                                            </div>
 
-                                        <div class="col s6 right-align">
-                                            <span id="s_rema">@ViewBag.remanente</span>
                                         </div>
+                                    </li>
+                                    }else{
+                                    <li class="collection-item" id="a4">
 
-                                    </div>
-                                </li>
-                                }
-                                <li class="collection-item" id="a5">
-                                    <div class="row" style="margin-bottom:0;padding-bottom:0;">
-                                        <div id="div_impuesto" class="col s6">
-                                            @*B20180801 MGC Textos*@
-                                            Impuesto
+                                        <div class="row" style="margin-bottom:0;padding-bottom:0;">
+                                            <div id="div_remanente" class="col s6">
+                                                @*B20180801 MGC Textos*@
+                                                Remanente/(Exceso)
+                                            </div>
+
+                                            <div class="col s6 right-align">
+                                                <span id="s_rema">@ViewBag.remanente</span>
+                                            </div>
+
                                         </div>
-                                        <div class="col s6 right-align">
-                                            <span id="s_impa">@ViewBag.impuesto</span>
+                                    </li>
+                                    }
+                                    <li class="collection-item" id="a5">
+                                        <div class="row" style="margin-bottom:0;padding-bottom:0;">
+                                            <div id="div_impuesto" class="col s6">
+                                                @*B20180801 MGC Textos*@
+                                                Impuesto
+                                            </div>
+                                            <div class="col s6 right-align">
+                                                <span id="s_impa">@ViewBag.impuesto</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                </li>
-                                <li class="collection-item" id="a5">
-                                    <div class="row" style="margin-bottom:0;padding-bottom:0;">
-                                        <div id="div_montototal" class="col s6">
-                                            @*B20180801 MGC Textos*@
-                                            Monto total
+                                    </li>
+                                    <li class="collection-item" id="a5">
+                                        <div class="row" style="margin-bottom:0;padding-bottom:0;">
+                                            <div id="div_montototal" class="col s6">
+                                                @*B20180801 MGC Textos*@
+                                                Monto total
+                                            </div>
+                                            <div class="col s6 right-align">
+                                                <span id="s_total">@ViewBag.montoTotal</span>
+                                            </div>
                                         </div>
-                                        <div class="col s6 right-align">
-                                            <span id="s_total">@ViewBag.montoTotal</span>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
+                                    </li>
+                                </ul>
                         </div>
                     </div>
                 </div>

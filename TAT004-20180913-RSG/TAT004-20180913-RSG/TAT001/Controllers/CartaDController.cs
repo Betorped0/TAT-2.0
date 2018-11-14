@@ -90,7 +90,6 @@ namespace TAT001.Controllers
 
                 List<string> lista = new List<string>();
                 List<string> armadoCuerpoTabStr = new List<string>();
-                List<string> armadoCuerpoTab2 = new List<string>();
                 List<int> numfilasTabla = new List<int>();
                 HeaderFooter hfc = new HeaderFooter();
                 hfc.eliminaArchivos();
@@ -99,9 +98,9 @@ namespace TAT001.Controllers
                 if (d != null)
                 {
                     d.CLIENTE = db.CLIENTEs.Where(a => a.VKORG.Equals(d.VKORG)
-                                                              & a.VTWEG.Equals(d.VTWEG)
-                                                            & a.SPART.Equals(d.SPART)
-                                                            & a.KUNNR.Equals(d.PAYER_ID)).First();
+                                                              && a.VTWEG.Equals(d.VTWEG)
+                                                            && a.SPART.Equals(d.SPART)
+                                                            && a.KUNNR.Equals(d.PAYER_ID)).First();
                     pp = db.PUESTOTs.Where(a => a.SPRAS_ID.Equals(spras_id) && a.PUESTO_ID == d.USUARIO.PUESTO_ID).FirstOrDefault();
                 }
                 ViewBag.legal = db.LEYENDAs.Where(a => a.PAIS_ID.Equals(d.PAIS_ID) && a.ACTIVO == true).FirstOrDefault();
@@ -118,9 +117,9 @@ namespace TAT001.Controllers
                 var cabeza = new List<string>();
                 List<listacuerpoc> armadoCuerpoTab = null;
                 bool varligada = Convert.ToBoolean(d.LIGADA);
-                if (varligada != true)
+                if (!varligada)
                 {
-                    FnCommonCarta.ObtenerCartaProductos(db, d, null, spras_id, false,
+                    FnCommonCarta.ObtenerCartaProductos(db, d, null,null, spras_id, false,
                     ref lista,
                     ref armadoCuerpoTab,
                     ref armadoCuerpoTabStr,
@@ -132,8 +131,19 @@ namespace TAT001.Controllers
                 }
                 /////////////////////////////////////////////DATOS PARA LA TABLA 2 RECURRENCIAS EN LA VISTA///////////////////////////////////////
                 var cabeza2 = new List<string>();
+                var cabeza3 = new List<string>();
+                List<string> armadoCuerpoTab2 = new List<string>();
+                List<string> armadoCuerpoTab3 = new List<string>();
                 int rowsRecs = 0;
-                FnCommonCarta.ObtenerCartaRecurrentes(db, d, spras_id, ref cabeza2, ref armadoCuerpoTab2, ref rowsRecs,false);
+                int rowsObjQs = 0;
+                FnCommonCarta.ObtenerCartaRecurrentes(db, d, spras_id, 
+                    ref cabeza2, 
+                    ref armadoCuerpoTab2, 
+                    ref rowsRecs,
+                    ref cabeza3, 
+                    ref armadoCuerpoTab3,
+                    ref rowsObjQs,
+                    false);
 
                 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -143,6 +153,7 @@ namespace TAT001.Controllers
                 cv.listaCuerpo = armadoCuerpoTabStr;////NUMERO TOTAL DE FILAS CON LA INFO CORRESPONDIENTE QUE POSTERIORMENTE ES DISTRIBUIDA EN LAS TABLAS
                 cv.numColEncabezado = cabeza;////////NUMERO DE COLUMNAS PARA LAS TABLAS
                 cv.secondTab_x = true;
+                cv.tercerTab_x = true;
                 cv.costoun_x = true;
                 cv.apoyo_x = true;
                 cv.apoyop_x = true;
@@ -159,6 +170,12 @@ namespace TAT001.Controllers
                 cv.numColEncabezado2 = cabeza2;////////NUMERO DE COLUMNAS PARA LAS TABLAS
                 cv.numfilasTabla2 = rowsRecs;//////NUMERO FILAS TOTAL PARA LA TABLA
                 cv.listaCuerpoRec = armadoCuerpoTab2;//NUMERO TOTAL DE FILAS CON LA INFO CORRESPONDIENTE
+                                                     ///////////////////////////////
+
+                //TABLA 3 OBJECTIVO Q
+                cv.numColEncabezado3 = cabeza3;////////NUMERO DE COLUMNAS PARA LAS TABLAS
+                cv.numfilasTabla3 = rowsObjQs;//////NUMERO FILAS TOTAL PARA LA TABLA
+                cv.listaCuerpoObjQ = armadoCuerpoTab3;//NUMERO TOTAL DE FILAS CON LA INFO CORRESPONDIENTE
                 ///////////////////////////////
 
                 cv.num_doc = id;
@@ -247,7 +264,6 @@ namespace TAT001.Controllers
 
                 List<string> encabezadoFech = new List<string>();
                 List<string> armadoCuerpoTabStr = new List<string>();
-                List<string> armadoCuerpoTab2 = new List<string>();
                 List<int> numfilasTab = new List<int>();
 
                 DOCUMENTO d = db.DOCUMENTOes.Find(v.num_doc);
@@ -266,9 +282,9 @@ namespace TAT001.Controllers
                 var cabeza = new List<string>();
                 List<listacuerpoc> armadoCuerpoTab = null;
                 bool varligada = Convert.ToBoolean(d.LIGADA);
-                if (varligada)
+                if (!varligada)
                 {
-                    FnCommonCarta.ObtenerCartaProductos(db, d, null, spras_id, false,
+                    FnCommonCarta.ObtenerCartaProductos(db, d, v,null, spras_id, false,
                     ref encabezadoFech,
                     ref armadoCuerpoTab,
                     ref armadoCuerpoTabStr,
@@ -280,8 +296,19 @@ namespace TAT001.Controllers
                 }
                 /////////////////////////////////////////////DATOS PARA LA TABLA 2 RECURRENCIAS EN LA VISTA///////////////////////////////////////
                 var cabeza2 = new List<string>();
+                var cabeza3 = new List<string>();
+                List<string> armadoCuerpoTab2 = new List<string>();
+                List<string> armadoCuerpoTab3 = new List<string>();
                 int rowsRecs = 0;
-                FnCommonCarta.ObtenerCartaRecurrentes(db, d, spras_id, ref cabeza2, ref armadoCuerpoTab2, ref rowsRecs,true);
+                int rowsObjQs = 0;
+                FnCommonCarta.ObtenerCartaRecurrentes(db, d, spras_id, 
+                    ref cabeza2, 
+                    ref armadoCuerpoTab2, 
+                    ref rowsRecs,
+                     ref cabeza3,
+                    ref armadoCuerpoTab3,
+                    ref rowsObjQs,
+                    true);
 
                 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -299,6 +326,11 @@ namespace TAT001.Controllers
                 v.numfilasTabla2 = rowsRecs;
                 v.listaCuerpoRec = armadoCuerpoTab2;
 
+                //TABLA 3 OBJECTIVO Q
+                v.numColEncabezado3 = cabeza3;////////NUMERO DE COLUMNAS PARA LAS TABLAS
+                v.numfilasTabla3 = rowsObjQs;//////NUMERO FILAS TOTAL PARA LA TABLA
+                v.listaCuerpoObjQ = armadoCuerpoTab3;//NUMERO TOTAL DE FILAS CON LA INFO CORRESPONDIENTE
+                ///////////////////////////////
                 //B20180801 MGC Formato
                 decimal montod = 0;
                 try

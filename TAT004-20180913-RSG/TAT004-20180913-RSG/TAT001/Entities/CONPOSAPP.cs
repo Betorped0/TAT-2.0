@@ -48,5 +48,6 @@ namespace TAT001.Entities
         public string BASE_UNIT { get; set; }
         public string MATERIALGP { get; set; }
         public string TAXCODEGP { get; set; }
+        public string ASIGNACIONTXT { get; set; }
     }
 }

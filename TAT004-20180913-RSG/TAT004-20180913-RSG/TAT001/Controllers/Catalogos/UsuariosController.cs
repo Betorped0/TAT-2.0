@@ -26,6 +26,9 @@ namespace TAT001.Controllers.Catalogos
         // GET: Usuarios
         public ActionResult Index()
         {
+            string us = User.Identity.Name;
+            var user = db.USUARIOs.Where(a => a.ID.Equals(us)).FirstOrDefault();
+            ViewBag.nivelUsuario = user.PUESTO_ID;
             int pagina = 601; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
             //using (TAT001Entities db = new TAT001Entities())
@@ -101,6 +104,7 @@ namespace TAT001.Controllers.Catalogos
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             USUARIO uSUARIO = db.USUARIOs.Find(id);
+            ViewBag.nivelUsuario = uSUARIO.PUESTO_ID;
             string spra = Session["spras"].ToString();
             if (uSUARIO == null)
             {
@@ -364,6 +368,7 @@ namespace TAT001.Controllers.Catalogos
             //}
             var usu = User.Identity.Name;
             USUARIO usu2 = db.USUARIOs.Where(x => x.ID.Equals(usu)).FirstOrDefault();
+            ViewBag.nivelUsuario = usu2.PUESTO_ID;
             if (usu2.PUESTO_ID == 1 || usu2.PUESTO_ID == 8)
             {
                 ViewBag.admin = "si";
@@ -1003,6 +1008,7 @@ namespace TAT001.Controllers.Catalogos
             }
             return View();
         }
+
         [HttpPost]
         public ActionResult Carga(IEnumerable<HttpPostedFileBase> files)
         {
@@ -1195,7 +1201,10 @@ namespace TAT001.Controllers.Catalogos
                         if (us.ID == null || us.ID == "")
                             us.IDX = false;
                         else if (IDs.Contains(us.ID))
+                        {
                             us.IDX = false;
+                            err = ". ID de usuario duplicado<br/>";
+                        }
                         else
                         {
                             USUARIO u = db.USUARIOs.Where(xu => xu.ID.Equals(us.ID)).FirstOrDefault();
@@ -1391,7 +1400,10 @@ namespace TAT001.Controllers.Catalogos
                         if (us.ID == null || us.ID == "")
                             us.IDX = false;
                         else if (IDs.Contains(us.ID))
+                        {
                             us.IDX = false;
+                            err = ". ID de usuario duplicado<br/>";
+                        }
                         else
                         {
                             USUARIO u = db.USUARIOs.Where(xu => xu.ID.Equals(us.ID)).FirstOrDefault();
@@ -1530,6 +1542,7 @@ namespace TAT001.Controllers.Catalogos
             JsonResult jl = Json(uu, JsonRequestBehavior.AllowGet);
             return jl;
         }
+
         public bool ExisteUsuario(string user)
         {
             var existeusuario = db.USUARIOs.Where(t => t.ID == user).SingleOrDefault();
@@ -1538,6 +1551,7 @@ namespace TAT001.Controllers.Catalogos
             else
                 return true;
         }
+
         public static bool ComprobarEmail(string email)
         {
             String sFormato;
@@ -2330,7 +2344,10 @@ namespace TAT001.Controllers.Catalogos
                             if (us.ID == null || us.ID == "")
                                 us.IDX = false;
                             else if (IDs.Contains(us.ID))
+                            {
                                 us.IDX = false;
+                                err = ". ID de usuario duplicado<br/>";
+                            }
                             else
                             {
                                 USUARIO u = db.USUARIOs.Where(xu => xu.ID.Equals(us.ID)).FirstOrDefault();
@@ -2526,7 +2543,10 @@ namespace TAT001.Controllers.Catalogos
                             if (us.ID == null || us.ID == "")
                                 us.IDX = false;
                             else if (IDs.Contains(us.ID))
+                            {
                                 us.IDX = false;
+                                err = ". ID de usuario duplicado<br/>";
+                            }
                             else
                             {
                                 USUARIO u = db.USUARIOs.Where(xu => xu.ID.Equals(us.ID)).FirstOrDefault();
@@ -3220,37 +3240,6 @@ namespace TAT001.Controllers.Catalogos
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
             return cc;
         }
-        public JsonResult getUsuarios(string Prefix, string ID)
-        {
-            var usuario = db.USUARIOs.Where(t => t.ID == ID).SingleOrDefault();
-            //Se comenta el filtro de puesto y sociedad, solo buscara los usuarios activos
-            var usuarios = db.USUARIOs.Where(x => x.ACTIVO == true /*&& x.PUESTO_ID == usuario.PUESTO_ID && x.BUNIT == usuario.BUNIT*/).ToList();
-            usuarios.Remove(usuario);
-            var backups = db.DELEGARs.Where(t => t.USUARIO_ID == usuario.ID && t.ACTIVO == true).ToList();
-            foreach (var b in backups)
-            {
-                var usr = db.USUARIOs.Where(t => t.ID == b.USUARIOD_ID).SingleOrDefault();
-                usuarios.Remove(usr);
-            }
-            //var ac_usuarios = usuarios.Select(x => new { x.ID, DESCRIPCION = x.ID + "-" + x.NOMBRE+" "+x.APELLIDO_P });
-            if (Prefix == null)
-                Prefix = "";
-
-            var c = (from x in usuarios
-                     where x.ID.Contains(Prefix)
-                     select new { x.ID, DESCRIPCION=x.ID+" - "+x.NOMBRE +" "+x.APELLIDO_P }).ToList();
-
-            if (c.Count == 0)
-            {
-                var c2 = (from x in db.USUARIOs
-                          where x.NOMBRE.Contains(Prefix)
-                          select new { x.ID, DESCRIPCION = x.ID + " - " + x.NOMBRE + " " + x.APELLIDO_P }).ToList();
-                c.AddRange(c2);
-            }
-
-            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
-            return cc;
-        }
 
         public JsonResult Sociedad(string Prefix)
         {
@@ -3294,6 +3283,38 @@ namespace TAT001.Controllers.Catalogos
             return cc;
         }
 
+        public JsonResult getUsuarios(string Prefix, string ID)
+        {
+            var usuario = db.USUARIOs.Where(t => t.ID == ID).SingleOrDefault();
+            //Se comenta el filtro de puesto y sociedad, solo buscara los usuarios activos
+            var usuarios = db.USUARIOs.Where(x => x.ACTIVO == true /*&& x.PUESTO_ID == usuario.PUESTO_ID && x.BUNIT == usuario.BUNIT*/).ToList();
+            usuarios.Remove(usuario);
+            var backups = db.DELEGARs.Where(t => t.USUARIO_ID == usuario.ID && t.ACTIVO == true).ToList();
+            foreach (var b in backups)
+            {
+                var usr = db.USUARIOs.Where(t => t.ID == b.USUARIOD_ID).SingleOrDefault();
+                usuarios.Remove(usr);
+            }
+            //var ac_usuarios = usuarios.Select(x => new { x.ID, DESCRIPCION = x.ID + "-" + x.NOMBRE+" "+x.APELLIDO_P });
+            if (Prefix == null)
+                Prefix = "";
+
+            var c = (from x in usuarios
+                     where x.ID.Contains(Prefix)
+                     select new { x.ID, DESCRIPCION = x.ID + " - " + x.NOMBRE + " " + x.APELLIDO_P }).ToList();
+
+            if (c.Count == 0)
+            {
+                var c2 = (from x in db.USUARIOs
+                          where x.NOMBRE.Contains(Prefix)
+                          select new { x.ID, DESCRIPCION = x.ID + " - " + x.NOMBRE + " " + x.APELLIDO_P }).ToList();
+                c.AddRange(c2);
+            }
+
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+
         public ActionResult AddBackup(string ID)
         {
             int pagina = 606; //ID EN BASE DE DATOS
@@ -3319,8 +3340,8 @@ namespace TAT001.Controllers.Catalogos
             usuarioback.USUARIO_ID = ID;
             return View(usuarioback);
         }
-        [HttpPost]
 
+        [HttpPost]
         public ActionResult AddBackup([Bind(Include = "USUARIO_ID,USUARIOD_ID,FECHAI,FECHAF,ACTIVO")]DELEGAR delegar)
         {
             int pagina = 606; //ID EN BASE DE DATOS
@@ -3390,6 +3411,7 @@ namespace TAT001.Controllers.Catalogos
                 return View(delegar);
             }
         }
+
         public ActionResult EditBackup(string id,string idd, string fi, string ff)
         {
             int pagina = 607; //ID EN BASE DE DATOS
@@ -3430,6 +3452,7 @@ namespace TAT001.Controllers.Catalogos
             return View(deledit);
 
         }
+
         [HttpPost]
         public ActionResult EditBackup([Bind(Include = "USUARIO_ID,USUARIOD_ID,FECHAI,FECHAF,ACTIVO")]DELEGAR delegar)
         {
@@ -3444,6 +3467,7 @@ namespace TAT001.Controllers.Catalogos
                 return View(delegar);
             }
         }
+
         public ActionResult DeleteBackup(string id, string idd, string fi, string ff)
         {
             //Para las version de las fechas

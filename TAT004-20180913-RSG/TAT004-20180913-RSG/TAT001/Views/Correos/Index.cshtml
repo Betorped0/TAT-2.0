@@ -738,7 +738,7 @@
                                             <span>Monto solicitud</span>
                                         </td>
                                         <td class="tg-yw4l" style="text-align:right">
-                                            <label id="p_vtweg" style="color: #9e9e9e;">@ViewBag.S_MONTOB</label>
+                                            <label id="p_vtweg" style="color: #9e9e9e;">@ViewBag.montoSol</label>
                                         </td>
                                     </tr>
                                     <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
@@ -746,7 +746,7 @@
                                             <span>Monto provisión original</span>
                                         </td>
                                         <td class="tg-yw4l" style="text-align:right">
-                                            <label id="p_kunnr" style="color: #9e9e9e;">@ViewBag.S_MONTOP</label>
+                                            <label id="p_kunnr" style="color: #9e9e9e;">@ViewBag.montoProv</label>
                                         </td>
                                     </tr>
                                     <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
@@ -754,7 +754,7 @@
                                             <span>Monto aplicado</span>
                                         </td>
                                         <td class="tg-yw4l" style="text-align:right">
-                                            <label id="p_kunnr" style="color: #9e9e9e;">@ViewBag.S_MONTOA</label>
+                                            <label id="p_kunnr" style="color: #9e9e9e;">@ViewBag.montoApli</label>
                                         </td>
                                     </tr>
                                     <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
@@ -762,7 +762,15 @@
                                             <span>Remanente</span>
                                         </td>
                                         <td style="background-color:@ViewBag.rema_color;text-align:right;">
-                                            <label id="p_kunnr" style="color: #9e9e9e;">@ViewBag.S_REMA</label>
+                                            <label id="p_kunnr" style="color: #9e9e9e;">@ViewBag.remanente</label>
+                                        </td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                        <td class="tg-yw4l">
+                                            <span>Impuesto</span>
+                                        </td>
+                                        <td style="text-align:right;">
+                                            <label id="p_imp" style="color: #9e9e9e;">@ViewBag.impuesto</label>
                                         </td>
                                     </tr>
                                     <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
@@ -770,7 +778,7 @@
                                             <span>Total</span>
                                         </td>
                                         <td style="text-align:right">
-                                            <label id="p_kunnr" style="color: #9e9e9e;">@ViewBag.S_TOTAL</label>
+                                            <label id="p_kunnr" style="color: #9e9e9e;">@ViewBag.montoTotal</label>
                                         </td>
                                     </tr>
                                 </table>

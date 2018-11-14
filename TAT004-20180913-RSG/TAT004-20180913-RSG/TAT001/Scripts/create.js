@@ -2767,7 +2767,7 @@ $('body').on('focusout', '.input_oper', function () {
             var total_val = $(this).val();
             updateTotalRow(t, tr, "", "", 0);
         }
-
+        $("#monto_dis").trigger('focusout');
 
     }
 
@@ -3623,6 +3623,9 @@ function loadExcelDis(file) {
     var formData = new FormData();
 
     formData.append("FileUpload", file);
+    formData.append("vkorg", $("#txt_vkorg").val());
+    formData.append("vtweg", $("#txt_vtweg").val());
+    formData.append("spras", $("#txt_spras").val());
 
     //Obtener el tipo de negociación
     var neg = $("#select_neg").val();

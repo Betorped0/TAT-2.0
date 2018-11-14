@@ -1116,7 +1116,7 @@ $('body').on('keydown.autocomplete', '.input_ni6', function () {
         source: function (request, response) {
             auto.ajax({
                 type: "POST",
-                url: 'Usuario',
+                url: 'Usuario8',
                 dataType: "json",
                 data: { "Prefix": request.term },
                 success: function (data) {
@@ -1149,7 +1149,7 @@ $('body').on('keydown.autocomplete', '.input_ni7', function () {
         source: function (request, response) {
             auto.ajax({
                 type: "POST",
-                url: 'Usuario',
+                url: 'Usuario9',
                 dataType: "json",
                 data: { "Prefix": request.term },
                 success: function (data) {

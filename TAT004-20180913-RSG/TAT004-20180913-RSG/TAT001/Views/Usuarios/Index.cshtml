@@ -103,19 +103,26 @@
                                     @Html.DisplayFor(modelItem => item.PUESTO.PUESTOTs.FirstOrDefault().)
                                 </td>*@
                             <td>
-                                <a href="@Url.Action("Edit", "Usuarios", new { id = item.ID })">
-                                    <i class='material-icons green-text'>edit</i>
-                                </a>&nbsp;
+                                @if (ViewBag.nivelUsuario == 1 || ViewBag.nivelUsuario == 8)
+                                {
+                                    <a href="@Url.Action("Edit", "Usuarios", new { id = item.ID })">
+                                        <i class='material-icons green-text'>edit</i>
+                                    </a>
+                                }
+                                &nbsp;
                                 <a href="@Url.Action("Details", new { id = item.ID })">
                                     <i class='material-icons blue-text'>search</i>
                                 </a>&nbsp;
-                                <a href="" onclick="DELETE('@item.ID')">
-                                    <span id="borrar" hidden>
-                                        @item.ID
-                                    </span>
-                                    <i class='material-icons red-text'>delete</i>
-                                </a>
-                            </td>
+                                @if (ViewBag.nivelUsuario == 1 || ViewBag.nivelUsuario == 8)
+                                {
+                                    <a href="" onclick="DELETE('@item.ID')">
+                                        <span id="borrar" hidden>
+                                            @item.ID
+                                        </span>
+                                        <i class='material-icons red-text'>delete</i>
+                                    </a>
+                                }
+                                </td>
                         </tr>
                     }
                 </tbody>

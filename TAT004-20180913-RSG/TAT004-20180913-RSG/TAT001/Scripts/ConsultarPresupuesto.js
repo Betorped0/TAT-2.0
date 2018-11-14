@@ -95,14 +95,14 @@ function jsConsulta(idioma) {
                         console.log(e);
                     }
                 }
-                $("select").select();
+                $("[name=filtro]").select();
 
                 //if (ban) {
                     $(".f > .select-wrapper > .select-dropdown").prepend(
-                        '<li class="toggle selectnone"><span><label></label>Select none</span></li>'
+                        '<li class="toggle selectnone"><span><label></label>Ninguno</span></li>'
                     );
                     $(".f > .select-wrapper > .select-dropdown").prepend(
-                        '<li class="toggle selectall"><span><label></label>Select all</span></li>'
+                        '<li class="toggle selectall"><span><label></label>Todo</span></li>'
                     );
 
                     ban = !ban;
@@ -391,12 +391,22 @@ function jsConsulta(idioma) {
             //$('[name="filtro"]').trigger('change');
         }
     );
-    $(".g > .select-wrapper > .select-dropdown").prepend(
-        '<li style="display:none" class="toggle selectnone"><span><label></label>Ninguno</span></li>'
-    );
-    $(".g > .select-wrapper > .select-dropdown").prepend(
-        '<li  class="toggle selectall"><span><label></label>Todos</span></li>'
-    );
+    if ($(".g option:selected").length) {
+        $(".g > .select-wrapper > .select-dropdown").prepend(
+            '<li  class="toggle selectnone"><span><label></label>Ninguno</span></li>'
+        );
+        $(".g > .select-wrapper > .select-dropdown").prepend(
+            '<li style="display:none" class="toggle selectall"><span><label></label>Todos</span></li>'
+        );
+    } else {
+        $(".g > .select-wrapper > .select-dropdown").prepend(
+            '<li style="display:none" class="toggle selectnone"><span><label></label>Ninguno</span></li>'
+        );
+        $(".g > .select-wrapper > .select-dropdown").prepend(
+            '<li  class="toggle selectall"><span><label></label>Todos</span></li>'
+        );
+    }
+    
     $(".g > .select-wrapper > .select-dropdown .selectall").on(
         "click",
         function () {

@@ -120,7 +120,15 @@ namespace TAT001.Models
         public string montoR { get; set; }//PARA MOSTRAR O NO LA COLUMNA
         public string porcentajeR { get; set; }//PARA MOSTRAR O NO LA COLUMNA
         public string aplicado { get; set; }//PARA MOSTRAR O NO LA COLUMNA
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //[Key, Column(Order = 2)]
+                                            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                            //[Key, Column(Order = 2)]
+
+         
+        /////////////////////////////TABLA OBJETIVOS Q/////////////////////////////////////
+        public List<string> numColEncabezado3 { get; set; }//NUMERO DE COLUMNAS PARA EL ENCABEZADO
+        public int numfilasTabla3 { get; set; }//NUMERO DE FILAS TOTAL DE LA TABLA
+        public List<string> listaCuerpoObjQ { get; set; }//NUMERO TOTAL DE FILAS CON LA INFO CORRESPONDIENTE
+
+        public bool tercerTab_x { get; set; }
     }
 }

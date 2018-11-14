@@ -2372,7 +2372,7 @@ function procesarHoja5() {
                 $('#global_filter').removeAttr('disabled');
                 var tablaH5 = $('#tab_test5').DataTable();
                 $("#excelBtn").removeAttr("disabled");
-                cloneTables();
+                
                 $("#tab_test5").on("change", ".requiredfile", function () {
                     var data = table.row(this).data();
                     var val = $(this).val();
@@ -3371,9 +3371,7 @@ function cloneTables() {
     $('#tab_test1 > thead > tr > th').each(function () {
         if ($(this).text() !== "LABEL" && $(this).text() !== "ESTATUS") {
             $('#titles1d').append("<th>" + $(this).text() + "</th>");
-        } else {
         }
-
     });
     $('#tabclon1bd').append("<tr><td colspan='16'></td></tr>");
     for (var aa = 0; aa < tablaH1c.rows().data().length; aa++) {
@@ -3393,9 +3391,7 @@ function cloneTables() {
     $('#tab_test2 > thead > tr > th').each(function () {
         if ($(this).text() !== "LABEL" && $(this).text() !== "ESTATUS") {
             $('#titles2').append("<th>" + $(this).text() + "</th>");
-        } else {
         }
-
     });
     $('#tabclon2b').append("<tr><td colspan='9'></td></tr>");
     for (var bb = 0; bb < tablaH2c.rows().data().length; bb++) {
@@ -3414,9 +3410,7 @@ function cloneTables() {
     $('#tab_test3 > thead > tr > th').each(function () {
         if ($(this).text() !== "LABEL" && $(this).text() !== "ESTATUS") {
             $('#titles3').append("<th>" + $(this).text() + "</th>");
-        } else {
         }
-
     });
     $('#tabclon3b').append("<tr><td colspan='8'></td></tr>");
     for (var cc = 0; cc < tablaH3c.rows().data().length; cc++) {
@@ -3435,9 +3429,7 @@ function cloneTables() {
     $('#tab_test4 > thead > tr > th').each(function () {
         if ($(this).text() !== "LABEL" && $(this).text() !== "ESTATUS") {
             $('#titles4').append("<th>" + $(this).text() + "</th>");
-        } else {
         }
-
     });
     $('#tabclon4b').append("<tr><td colspan='14'></td></tr>");
     for (var dd = 0; dd < tablaH4c.rows().data().length; dd++) {

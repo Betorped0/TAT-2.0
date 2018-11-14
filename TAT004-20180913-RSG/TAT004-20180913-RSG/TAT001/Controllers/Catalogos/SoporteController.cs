@@ -107,13 +107,13 @@ namespace TAT001.Controllers
                 if (collection.AllKeys.Contains("EN") && !String.IsNullOrEmpty(collection["EN"]))
                 {
 
-                    TSOPORTET m = new TSOPORTET { SPRAS_ID = "EN", TSOPORTE_ID = tSOPORTE.ID, TXT50 = collection["EN"].ToUpper() };
+                    TSOPORTET m = new TSOPORTET { SPRAS_ID = "EN", TSOPORTE_ID = tSOPORTE.ID, TXT50 = collection["EN"] };
                     listTextos.Add(m);
 
                 }
                 if (collection.AllKeys.Contains("ES") && !String.IsNullOrEmpty(collection["ES"]))
                 {
-                    TSOPORTET m = new TSOPORTET { SPRAS_ID = "ES", TSOPORTE_ID = tSOPORTE.ID, TXT50 = collection["ES"].ToUpper() };
+                    TSOPORTET m = new TSOPORTET { SPRAS_ID = "ES", TSOPORTE_ID = tSOPORTE.ID, TXT50 = collection["ES"] };
                     listTextos.Add(m);
                 }
                 db.TSOPORTETs.AddRange(listTextos);

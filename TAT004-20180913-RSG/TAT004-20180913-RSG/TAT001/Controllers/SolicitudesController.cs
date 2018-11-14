@@ -2566,11 +2566,21 @@ namespace TAT001.Controllers
                                     c = "";
                                 }
                             }
-                            Estatus es = new Estatus();//RSG 18.09.2018
-                            DOCUMENTO doc = db.DOCUMENTOes.Find(f.NUM_DOC);
-                            conta.STATUS = es.getEstatus(doc);
-                            db.Entry(conta).State = EntityState.Modified;
-                            db.SaveChanges();
+                            //Estatus es = new Estatus();//RSG 18.09.2018
+                            //DOCUMENTO doc = db.DOCUMENTOes.Find(dOCUMENTO.NUM_DOC);
+                            //conta.STATUS = es.getEstatus(doc);
+                            //db.Entry(conta).State = EntityState.Modified;
+                            //db.SaveChanges();
+
+                            using (TAT001Entities db1 = new TAT001Entities())
+                            {
+                                FLUJO ff = db1.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+                                Estatus es = new Estatus();//RSG 18.09.2018
+                                DOCUMENTO ddoc = db1.DOCUMENTOes.Find(f.NUM_DOC);
+                                ff.STATUS = es.getEstatus(ddoc);
+                                db1.Entry(ff).State = EntityState.Modified;
+                                db1.SaveChanges();
+                            }
                         }
                     }
                     catch (Exception ee)
@@ -3387,8 +3397,22 @@ namespace TAT001.Controllers
                 Log.Info("Solicitudes-Descargar: nombre->" + nombre);
                 Log.Info("Solicitudes-Descargar: contentyp->" + contentyp);
                 Log.Info("Solicitudes-Descargar: archivo->" + archivo);
-                FilePathResult file = File(archivo, contentyp, nombre);
-                return file;
+
+                string saveFileDev = ConfigurationManager.AppSettings["saveFileDev"];
+                if (saveFileDev == "1")
+                {
+                    return File(archivo, contentyp, nombre);
+                } else
+                {
+                    string serverDocs = ConfigurationManager.AppSettings["serverDocs"],
+                    serverDocsUser = ConfigurationManager.AppSettings["serverDocsUser"],
+                    serverDocsPass = ConfigurationManager.AppSettings["serverDocsPass"];
+                    using (Impersonation.LogonUser(serverDocs, serverDocsUser, serverDocsPass, LogonType.NewCredentials))
+                    {
+                        return File(archivo, contentyp, nombre);
+                    }
+                }
+            
             }
             catch (Exception e)
             {
@@ -5626,10 +5650,9 @@ namespace TAT001.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public JsonResult LoadExcel()
+        public JsonResult LoadExcel(string vkorg, string vtweg, string spras)
         {
             List<DOCUMENTOP_MOD> ld = new List<DOCUMENTOP_MOD>();
-
 
             if (Request.Files.Count > 0)
             {
@@ -5711,6 +5734,11 @@ namespace TAT001.Controllers
                     {
                         doc.MATNR = dt.Rows[i][2].ToString(); //Material
                         MATERIAL mat = material(doc.MATNR);
+                        if (mat != null)
+                        {
+                            List<MATERIAL> materiales = FnCommon.ObtenerMateriales(db, doc.MATNR, vkorg, vtweg, User.Identity.Name);
+                            mat = materiales.Where(x => x.ID == mat.ID).FirstOrDefault();
+                        }
                         if (mat != null & ld.Where(x => x.MATNR.Equals(doc.MATNR)).Count() == 0)//Validar si el material existe
                         {
                             //doc.MATKL = (string)dt.Rows[i][4]; //Categoría se toma de la bd
