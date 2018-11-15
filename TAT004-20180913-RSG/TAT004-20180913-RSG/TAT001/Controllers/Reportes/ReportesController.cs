@@ -94,23 +94,40 @@ namespace TAT001.Controllers.Reportes
 
 
 
-            foreach (string companyCode in comcodessplit)
-            {
+            
                 foreach (string account in accntssplit)
+                {
+                foreach (string companyCode in comcodessplit)
                 {
                     decimal numDoc;
                     decimal montoDoc;
 
                     Decimal.TryParse(account, out decAccnt);
-                    var queryP = (from cu in db.CUENTAs
-                                  join cg in db.CUENTAGLs on cu.ABONO equals cg.ID
+                    var queryP = (from cg in db.CUENTAGLs
                                   join doc in db.DOCUMENTOes on cg.ID equals doc.CUENTAP  //NUM_DOC + DOCUMENTO_SAP PAYER_ID + CLIENTE-NAME1 + TALLT-TXT050 + DOCUMENTO-CONCEPTO --DOCUMENTO-USUARIOD
-                                  join docsap in db.DOCUMENTOSAPs on doc.NUM_DOC equals docsap.NUM_DOC
+                                  join docsap in db.DOCUMENTOSAPs on doc.NUM_DOC equals docsap.NUM_DOC 
                                   join ta in db.TALLTs on doc.TALL_ID equals ta.TALL_ID
                                   join cli in db.CLIENTEs on new { doc.VKORG, doc.VTWEG, doc.SPART, doc.PAYER_ID } equals new { cli.VKORG, cli.VTWEG, cli.SPART, PAYER_ID = cli.KUNNR }   // NAME1
                                   join fl in db.FLUJOes on doc.NUM_DOC equals fl.NUM_DOC  //FLUJO-COMENTARIO -- FLUJO-USUARIOA
-                                  where cu.SOCIEDAD_ID == companyCode.ToString() && doc.PERIODO == period && cg.ID == decAccnt && doc.EJERCICIO == year
-                                  select new { cg.ID, cg.NOMBRE, doc.NUM_DOC, doc.DOCUMENTO_SAP, doc.PAYER_ID, doc.CONCEPTO, doc.USUARIOD_ID, cli.NAME1, fl.COMENTARIO, fl.USUARIOA_ID, ta.TALL_ID, ta.TXT50, docsap.FECHAC, doc.MONTO_DOC_MD, doc.PERIODO, doc.EJERCICIO }).Distinct().ToList();
+                                  where doc.SOCIEDAD_ID == companyCode.ToString() && doc.PERIODO == period && cg.ID == decAccnt && doc.EJERCICIO == year
+                                  select new {
+                                      cg.ID, cg.NOMBRE,
+                                      doc.NUM_DOC,
+                                      doc.DOCUMENTO_SAP,
+                                      doc.PAYER_ID,
+                                      doc.CONCEPTO,
+                                      doc.USUARIOD_ID,
+                                      cli.NAME1,
+                                      fl.COMENTARIO,
+                                      fl.USUARIOA_ID,
+                                      ta.TALL_ID,
+                                      ta.TXT50,
+                                      //FECHAC = dsap.FirstOrDefault().FECHAC,
+                                      docsap.FECHAC,
+                                      doc.MONTO_DOC_MD,
+                                      doc.PERIODO,
+                                      doc.EJERCICIO
+                                  }).Distinct().ToList();
 
 
 
@@ -324,7 +341,7 @@ namespace TAT001.Controllers.Reportes
                                   join CUENTAGL in db.CUENTAGLs on x.CUENTAP equals CUENTAGL.ID                          
                                   join DOCUMENTOSAP in db.DOCUMENTOSAPs on x.NUM_DOC equals DOCUMENTOSAP.NUM_DOC
 
-                                  where x.SOCIEDAD_ID == item.ToString() && x.PERIODO == filtroPeriodo && x.EJERCICIO == year /*&& FLUJO.POS == 2*/
+                                  where x.SOCIEDAD_ID == item.ToString() && x.PERIODO == filtroPeriodo && x.EJERCICIO == year && FLUJO.POS == 2
 
                                   select new
                                   {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -14,6 +15,8 @@ namespace TAT001.Controllers
     public class LayoutCargaMasivaController : Controller
     {
         readonly TAT001Entities db = new TAT001Entities();
+        const string CMB_SOCIEDADES = "SOC";
+        const string CMB_PAIS = "PAIS";
 
         // GET: LayoutCargaMasiva
         public ActionResult Index()
@@ -21,10 +24,11 @@ namespace TAT001.Controllers
             int pagina_id = 550;//ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
             LayoutCargaMasivaViewModels viewModel = new LayoutCargaMasivaViewModels();
-            viewModel.Layouts = db.LAYOUT_CARGA.ToList();
+            viewModel.layouts = db.LAYOUT_CARGA.ToList();
 
             return View(viewModel);
         }
+
 
         // GET: LayoutCargaMasiva/Create
         public ActionResult Create()
@@ -32,20 +36,7 @@ namespace TAT001.Controllers
             int pagina_id = 551;//ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
             LayoutCargaMasivaViewModels modelView = new LayoutCargaMasivaViewModels();
-            modelView.paises = db.PAIS
-                            .Where(x => x.ACTIVO)
-                            .Select(x => new SelectListItem
-                            {
-                                Value = x.LAND,
-                                Text = x.LAND + "-"+x.LANDX 
-                            }).ToList();
-            modelView.sociedades=db.SOCIEDADs
-                 .Where(x => x.ACTIVO )
-                 .Select(x => new SelectListItem
-                 {
-                     Value = x.BUKRS,
-                     Text = x.BUKRS + "-" + x.BUTXT
-                 }).ToList();
+            CargarSelectList(ref modelView, new string[] { CMB_PAIS, CMB_SOCIEDADES });
 
             return View(modelView);
 
@@ -53,29 +44,37 @@ namespace TAT001.Controllers
 
         // POST: LayoutCargaMasiva/Create
         [HttpPost]
-        public ActionResult Create(HttpPostedFileBase PathArchivo,LayoutCargaMasivaViewModels modelView)
+        public ActionResult Create(HttpPostedFileBase PathArchivo, LayoutCargaMasivaViewModels modelView)
         {
             int pagina_id = 551;//ID EN BASE DE DATOS
+            string msj = "lbl_mnjErrorGuardar";
             try
             {
                 FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
-                LAYOUT_CARGA layou = modelView.Layout;
-                layou.FECHAC = DateTime.Now;
-                layou.TIPO = "Solicitud";
-                //layou.SOCIEDAD_ID = db.PAIS.FirstOrDefault(x => x.LAND == layou.LAND).SOCIEDAD_ID;
+                var layoutExistente =  db.LAYOUT_CARGA.FirstOrDefault(x => x.LAND == modelView.layoutMasiva.LAND && x.SOCIEDAD_ID == modelView.layoutMasiva.SOCIEDAD_ID);
+                if (layoutExistente!=null)
+                {
+                    msj = "lbl_LayoutExistente";
+                    throw new Exception();
+                }
+
+
+                LAYOUT_CARGA layout = modelView.layoutMasiva;
+                layout.FECHAC = DateTime.Now;
+                layout.TIPO = "Solicitud";
                 if (PathArchivo != null)
                 {
                     var path = Path.Combine(Server.MapPath("~/Archivos/LayoutCargaMasiva"));
-                    var ruta = path + "/" + modelView.Layout.LAND + "-" + PathArchivo.FileName;
+                    var ruta = path + "/" + modelView.layoutMasiva.LAND + modelView.layoutMasiva.SOCIEDAD_ID + "-" + PathArchivo.FileName;
                     if (!Directory.Exists(path))
                     {
                         DirectoryInfo di = Directory.CreateDirectory(path);
                     }
                     PathArchivo.SaveAs(ruta);
-                    layou.RUTA = ruta;
+                    layout.RUTA = ruta;
 
 
-                    db.LAYOUT_CARGA.Add(modelView.Layout);
+                    db.LAYOUT_CARGA.Add(modelView.layoutMasiva);
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
@@ -84,26 +83,11 @@ namespace TAT001.Controllers
                     throw new Exception();
                 }
             }
-#pragma warning disable CS0168 // The variable 'ex' is declared but never used
             catch (Exception ex)
-#pragma warning restore CS0168 // The variable 'ex' is declared but never used
             {
                 FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
-                modelView.paises = db.PAIS
-                          .Where(x => x.ACTIVO)
-                          .Select(x => new SelectListItem
-                          {
-                              Value = x.LAND,
-                              Text = x.LAND + "-" + x.LANDX
-                          }).ToList();
-                modelView.sociedades = db.SOCIEDADs
-                     .Where(x => x.ACTIVO)
-                     .Select(x => new SelectListItem
-                     {
-                         Value = x.BUKRS,
-                         Text = x.BUKRS + "-" + x.BUTXT
-                     }).ToList();
-                ViewBag.mnjError = FnCommon.ObtenerTextoMnj(db, pagina_id, "lbl_mnjErrorGuardar", User.Identity.Name);
+                CargarSelectList(ref modelView, new string[] { CMB_PAIS, CMB_SOCIEDADES });
+                ViewBag.mnjError = FnCommon.ObtenerTextoMnj(db, pagina_id, msj, User.Identity.Name);
                 return View(modelView);
             }
         }
@@ -112,11 +96,140 @@ namespace TAT001.Controllers
         {
             LAYOUT_CARGA layout = db.LAYOUT_CARGA.Where(x => x.ID == layout_id).FirstOrDefault();
             if (layout == null) { return RedirectToAction("Index"); }
-           
+
+            string RutaAnterior = layout.RUTA;
             db.LAYOUT_CARGA.Remove(layout);
             db.SaveChanges();
-
+            System.IO.File.Delete(RutaAnterior);
             return RedirectToAction("Index");
+        }
+
+        public ActionResult Edit(int Id)
+        {
+            int pagina_id = 552;//ID EN BASE DE DATOS
+            FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
+            LayoutCargaMasivaViewModels modelView = new LayoutCargaMasivaViewModels();
+            modelView.layoutMasiva = db.LAYOUT_CARGA.Where(x => x.ID == Id).FirstOrDefault();
+            CargarSelectList(ref modelView, new string[]{
+                CMB_SOCIEDADES+","+modelView.layoutMasiva.SOCIEDAD_ID,
+                CMB_PAIS+","+modelView.layoutMasiva.LAND
+            });
+            string[] ruta = modelView.layoutMasiva.RUTA.Split(new string[] { "LayoutCargaMasiva/" }, StringSplitOptions.None);
+            if (ruta.Length > 0)
+                ViewBag.NombreArchivo = ruta[1];
+            
+            return View(modelView);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(HttpPostedFileBase PathArchivo, LayoutCargaMasivaViewModels modelView)
+        {
+            int pagina_id = 552;//ID EN BASE DE DATOS
+            try
+            {
+                LAYOUT_CARGA layout = modelView.layoutMasiva;
+                string rutaAnterior = modelView.layoutMasiva.RUTA;
+                if (PathArchivo != null)
+                {
+                    var path = Path.Combine(Server.MapPath("~/Archivos/LayoutCargaMasiva"));
+                    var ruta = path + "/" + modelView.layoutMasiva.LAND+modelView.layoutMasiva.SOCIEDAD_ID+ "-" + PathArchivo.FileName;
+                    if (!Directory.Exists(path))
+                    {
+                        DirectoryInfo di = Directory.CreateDirectory(path);
+                    }
+                    PathArchivo.SaveAs(ruta);
+                    layout.RUTA = ruta;
+                    db.Entry(layout).State = EntityState.Modified;
+                    db.SaveChanges();
+
+                    System.IO.File.Delete(rutaAnterior);
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    throw new Exception();
+                }
+            }
+            catch (Exception e)
+            {
+                FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
+                CargarSelectList(ref modelView, new string[]{
+                CMB_SOCIEDADES+","+modelView.layoutMasiva.SOCIEDAD_ID,
+                CMB_PAIS+","+modelView.layoutMasiva.LAND
+            });
+                ViewBag.mnjError = FnCommon.ObtenerTextoMnj(db, pagina_id, "lbl_mnjErrorGuardar", User.Identity.Name);
+
+                return View(modelView);
+            }
+        }
+        public ActionResult Details(int Id)
+        {
+            int pagina_id = 553;//ID EN BASE DE DATOS
+            FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
+            LayoutCargaMasivaViewModels modelView = new LayoutCargaMasivaViewModels();
+            modelView.layoutMasiva = db.LAYOUT_CARGA.Where(x => x.ID == Id).FirstOrDefault();
+
+            CargarSelectList(ref modelView, new string[]{
+                CMB_SOCIEDADES+","+modelView.layoutMasiva.SOCIEDAD_ID,
+                CMB_PAIS+","+modelView.layoutMasiva.LAND
+            });
+
+            string[] ruta = modelView.layoutMasiva.RUTA.Split(new string[] { "LayoutCargaMasiva/" }, StringSplitOptions.None);
+            if (ruta.Length > 0)
+                ViewBag.NombreArchivo = ruta[1];
+
+            return View(modelView);
+        }
+        void CargarSelectList(ref LayoutCargaMasivaViewModels modelView, string[] combos)
+        {
+            for (int i = 0; i < combos.Length; i++)
+            {
+                string[] combosSplit = combos[i].Split(',');
+                string combo = combosSplit[0];
+                string id = combosSplit.Length > 1 ? combosSplit[1] : null;
+
+                switch (combo)
+                {
+                    case CMB_SOCIEDADES:
+                        modelView.sociedades = db.SOCIEDADs
+                            .Where(x => (x.BUKRS == id || id == null) && x.ACTIVO)
+                            .Select(x => new SelectListItem{
+                                Value = x.BUKRS,
+                                Text = x.BUKRS + "-" + x.BUTXT
+                            }).ToList();
+                        break;
+                    case CMB_PAIS:
+                        modelView.paises = db.PAIS
+                          .Where(x => (x.LAND == id || id == null) && x.ACTIVO)
+                          .Select(x => new SelectListItem
+                          {
+                              Value = x.LAND,
+                              Text = x.LAND + "-" + x.LANDX
+                          }).ToList();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        [HttpPost]
+        public FileResult Descargar(int idLayout)
+        {
+            try
+            {
+                Models.PresupuestoModels carga = new Models.PresupuestoModels();
+                string archivo = db.LAYOUT_CARGA.FirstOrDefault(x => x.ID == idLayout).RUTA;
+                string nombre = "", contentyp = "";
+                carga.contDescarga(archivo, ref contentyp, ref nombre);
+                return File(archivo, contentyp, nombre);
+            }
+            catch (Exception e)
+            {
+                Log.ErrorLogApp(e, "Layout", "Descargar");
+                return null;
+            }
+
         }
     }
 }

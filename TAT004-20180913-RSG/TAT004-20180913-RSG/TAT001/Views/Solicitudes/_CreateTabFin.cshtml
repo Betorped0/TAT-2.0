@@ -169,12 +169,10 @@
                                     function formaClearing() {
                                         var tex_abono = document.querySelector(".lbl_cabono").innerHTML;
                                         var tex_cargo = document.querySelector(".lbl_ccargo").innerHTML;
-                                        //DRS 24.09.18---------------------------------------------
-                                        var nombreC = document.querySelector(".cuenta_Nombre").innerHTML;
                                         var tex_clearing = document.querySelector(".lbl_cclear").innerHTML;
-                                        getClearing(document.getElementById("tall_id").value);
+                                       
+                                        getClearing();
                                         $("#div_clearing").empty();
-                                        //var monto = document.getElementById("monto_dis").value;
                                         var monto = $('#monto_doc_md').val();
 
                                         var div = "<ul class='collection'><li class='collection-item'>";

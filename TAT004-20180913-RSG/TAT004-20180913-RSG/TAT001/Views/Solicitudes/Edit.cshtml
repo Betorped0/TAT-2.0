@@ -459,7 +459,7 @@
                                     }
                                     else
                                     {
-                                        @Html.TextAreaFor(model => model.NOTAS, new { @class = "materialize-textarea ", @id = "notas_txt", onkeyup = "maxchar();", @disabled = "disabled" })
+                                        @Html.TextAreaFor(model => model.NOTAS, new { @class = "materialize-textarea ", @id = "notas_txt", onkeyup = "maxchar();"})
                                     }
                                     @Html.LabelFor(model => model.NOTAS, "Mecánica de negociación", htmlAttributes: new { @class = "active", @for = "notas_txt" })
                                 </div>
@@ -1458,9 +1458,19 @@
                                                 <input type="checkbox" name="chk_ligada" id="chk_ligada" onchange="cambiaLigada(this);" disabled="disabled" />
                                             }
                                         }
-                                        <span>Solicitud ligada a facturación </span>
+                                        <span id="span_ligada">Solicitud ligada a facturación </span>
                                     </label>
-
+                                    <script>
+                                          var elem = document.getElementById("span_ligada");
+                                          if (elem != undefined) {
+                                              var wa = "Se calcula al cierre del periodo.";
+                                              var options = {
+                                                  html: wa,
+                                                  position: "right"
+                                              };
+                                              var instance = M.Tooltip.init(elem, options);
+                                          }
+                                    </script>
 
                                     @if (Model.DOCUMENTO_REF == null)
                                     {
@@ -1519,14 +1529,14 @@
                                         <option value="M">Monto</option>
                                         <option value="P">Porcentaje</option>
                                     </select>
-                                    <label>Tipo de negociación</label>
+                                    <label id= "lbl_tiponeg">Tipo de negociación</label>
                                 </div>
                                 <div class="input-field col s6">
                                     <select id="select_dis" name="select_dis" onchange="selectMonto(this.value,'X')">
                                         <option value="M">Material</option>
                                         <option value="C">Categoría</option>
                                     </select>
-                                    <label>Distribución</label>
+                                    <label id="lbl_tipodis">Distribución</label>
                                 </div>
                                 <div id="div_categoria" class="form-group col s6 div_categoria" style="display:none">
                                     @Html.LabelFor(model => model.TSOL_ID, "Categoría", htmlAttributes: new { @class = "control-label col-md-2" })
@@ -1595,7 +1605,7 @@
                                 @*@if (ViewBag.relacionadan == "")*@
                                 @if (ViewBag.relacionadan != "" & ViewBag.reversan != "X" & (Model.DOCUMENTO_REF == null | Model.TSOL.ADICIONA))
                                 {
-                                    <input type="text" id="txt_addrowt" name="txt_addrowt" value="@ViewBag.addrowt" disabled="disabled" hidden /> @*//Add RSG 2018.11.05*@
+                                    <input type="hidden" id="txt_addrowt" name="txt_addrowt" value="@ViewBag.addrowt" hidden /> @*//Add RSG 2018.11.05*@
                                     <div class="file-field input-field" id="cargar_excel" style="display:none">
                                         <div class="btn">
                                             <span>Examinar</span>
@@ -1879,67 +1889,48 @@
                                     </div>
                                 </div>
                                 <script>
-                            var clearing = [];
-                            function getClearing(gall) {
-                                $("#div_clearing").empty();
-                                clearing = [];
-                                var bukrs = '@Model.SOCIEDAD_ID';
-                            var land = '@Model.PAIS_ID';
-                            var ejercicio = '@Model.EJERCICIO';
-                            $.ajax({
-                                type: "POST",
-                                url: '../Listas/clearing',
-                                dataType: "json",
-                                data: { bukrs: bukrs, land: land, gall: gall, ejercicio: ejercicio },
-
-                                success: function (data) {
-                                    if (data !== null || data !== "") {
-                                        //RSG 26.04.2018----------------
-                                        clearing.push(data.ABONO);
-                                        clearing.push(data.CARGO);
-                                        clearing.push(data.CLEARING);
-                                        clearing.push(data.LIMITE);
-                                        //RSG 26.04.2018----------------
+                                    var clearing = [];
+                                    function getClearing() {
+                                        $("#div_clearing").empty();
+                                        cuentas();
                                     }
+                                    function formaClearing() {
+                                        var tex_abono = document.querySelector(".lbl_cabono").innerHTML;
+                                        var tex_cargo = document.querySelector(".lbl_ccargo").innerHTML;
+                                        var tex_clearing = document.querySelector(".lbl_cclear").innerHTML;
 
-                                },
-                                error: function (xhr, httpStatusMessage, customErrorMessage) {
-                                    //M.toast({ html: httpStatusMessage });
-                                },
-                                async: false
-                            });
+                                        getClearing();
+                                        $("#div_clearing").empty();
+                                        var monto = $('#monto_doc_md').val();
 
-                        }
-                        function formaClearing() {
-                            getClearing(document.getElementById("tall_id").value);
-                            $("#div_clearing").empty();
-                                //var monto = document.getElementById("monto_dis").value;
-                                var monto = $('#monto_doc_md').val();
-                            var div = "<ul class='collection'><li class='collection-item'>";
-                            div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>Abono</div><div class='col s4'>" + clearing[0] + "</div><div class='col s4'>" + monto + "</div></div>";
-                            div += "</li><li class='collection-item'>";
-
-                            if (clearing[3] == null) {
-                                div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>Cargo</div><div class='col s4'>" + clearing[1] + "</div><div class='col s4'>" + monto + "</div></div>";
-                            } else {
-                                if (clearing[2] != null) {
-                                    if (monto <= clearing[3]) {
-                                        div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>Cargo</div><div class='col s4'>" + clearing[1] + "</div><div class='col s4'>" + monto + "</div></div>";
+                                        var div = "<ul class='collection'><li class='collection-item'>";
+                                        //DRS 24.09.18---------------------------------------------+
+                                        div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_abono + "</div><div class='col s3'>" + clearing[1] + "</div><div class='col s3'>" + clearing[0] + "</div><div class='col s3 right-align'>" + monto + "</div></div>";
                                         div += "</li><li class='collection-item'>";
-                                        div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>Clearing</div><div class='col s4'>" + clearing[2] + "</div><div class='col s4'>0.00</div></div>";
+
+                                        if (clearing[5] == null) {
+                                            //DRS 24.09.18---------------------------------------------
+                                            div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + clearing[3] + "</div><div class='col s3'>" + clearing[2] + "</div><div class='col s3 right-align'>" + monto + "</div></div></div>";
+                                        } else {
+                                            if (clearing[2] != null) {
+                                                if (monto <= clearing[3]) {
+
+                                                    div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + clearing[3] + "</div><div class='col s3'>" + clearing[2] + "</div><div class='col s3 right-align'>" + monto + "</div></div>";
+                                                    div += "</li><li class='collection-item'>";
+                                                    div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>" + tex_clearing + "</div><div class='col s4'>" + clearing[4] + "</div><div class='col s4'>0.00</div></div>";
+                                                    div += "</li>";
+                                                } else {
+                                                    div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + clearing[3] + "</div><div class='col s3'>" + clearing[2] + "</div><div class='col s3'>" + clearing[5] + "</div></div>";
+                                                    div += "</li><li class='collection-item'>";
+                                                    div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>" + tex_clearing + "</div><div class='col s4'>" + clearing[4] + "</div><div class='col s4'>" + (monto - clearing[5]) + "</div></div>";
+                                                    div += "</li>";
+                                                }
+                                            }
+                                        }
                                         div += "</li>";
-                                    } else {
-                                        div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>Cargo</div><div class='col s4'>" + clearing[1] + "</div><div class='col s4'>" + clearing[3] + "</div></div>";
-                                        div += "</li><li class='collection-item'>";
-                                        div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>Clearing</div><div class='col s4'>" + clearing[2] + "</div><div class='col s4'>" + (monto - clearing[3]) + "</div></div>";
-                                        div += "</li>";
+                                        div += "</ul>";
+                                        $("#div_clearing").append(div);
                                     }
-                                }
-                            }
-                            div += "</li>";
-                            div += "</ul>";
-                            $("#div_clearing").append(div);
-                        }
                                 </script>
                             </div>
                             <div class="card-panel">

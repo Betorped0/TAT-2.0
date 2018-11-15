@@ -3555,13 +3555,7 @@ namespace TAT001.Controllers
                 string p = "";
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
-                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+                FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller,202);
 
                 List<TREVERSAT> ldocr = new List<TREVERSAT>();
                 decimal rel = 0;
@@ -3605,7 +3599,26 @@ namespace TAT001.Controllers
                 }
                 //var tsols_valbdjs = JsonConvert.SerializeObject(tsols_valbd, Formatting.Indented);//RSG 13.06.2018
                 //ViewBag.TSOL_VALUES = tsols_valbdjs;
+                //Add MGC B20180705 2018.07.05 conocer si se puede agregar renglones a la relacionada
+                string addrowst = "X";
+                bool addon = true;
+                try
+                {
+                    addon = d.TSOL.ADICIONA;
+                }
+                catch (Exception)
+                {
 
+                }
+                if (addon == true)
+                {
+                    addrowst = "X";
+                }
+                else
+                {
+                    addrowst = "";
+                }
+                ViewBag.addrowt = addrowst; //Add MGC B20180705 2018.07.05 conocer si se puede agregar renglones a la relacionada
                 //Validar si es una reversa
                 string tsol = "";
                 string isrn = "";
@@ -4456,6 +4469,46 @@ namespace TAT001.Controllers
                         if (dOCUMENTO.DOCUMENTO_REF > 0)
                         {
                             docpl = db.DOCUMENTOPs.Where(docp => docp.NUM_DOC == dOCUMENTO.DOCUMENTO_REF).ToList();
+
+                            //Add MGC B20180705 2018.07.05 Agregar materiales agregados en la vista
+                            if (d.TSOL.ADICIONA == true && select_disi == "M" && select_negi == "M")
+                            {
+                                List<DOCUMENTOP_MOD> listvista = new List<DOCUMENTOP_MOD>();
+
+                                for (int h = 0; h < dOCUMENTO.DOCUMENTOP.Count; h++)
+                                {
+                                    DOCUMENTOP docmode = new DOCUMENTOP();
+
+                                    string mmatnr = dOCUMENTO.DOCUMENTOP[h].MATNR.TrimStart('0');
+                                    docmode = docpl.Where(dcp => dcp.MATNR.TrimStart('0') == mmatnr).FirstOrDefault();
+
+                                    //Agregarlo a la lista
+                                    if (docmode == null)
+                                    {
+                                        DOCUMENTOP docadd = new DOCUMENTOP();
+
+                                        docadd.MATNR = dOCUMENTO.DOCUMENTOP[h].MATNR;
+                                        if (dOCUMENTO.DOCUMENTOP[h].MATKL_ID == null)
+                                        {
+                                            dOCUMENTO.DOCUMENTOP[h].MATKL_ID = "";
+                                        }
+                                        docadd.MATKL = dOCUMENTO.DOCUMENTOP[h].MATKL_ID;
+                                        docadd.CANTIDAD = 1;
+                                        docadd.MONTO = dOCUMENTO.DOCUMENTOP[h].MONTO;
+                                        docadd.PORC_APOYO = dOCUMENTO.DOCUMENTOP[h].PORC_APOYO;
+                                        docadd.MONTO_APOYO = dOCUMENTO.DOCUMENTOP[h].MONTO_APOYO;
+                                        docadd.PRECIO_SUG = dOCUMENTO.DOCUMENTOP[h].PRECIO_SUG;
+                                        docadd.VOLUMEN_EST = dOCUMENTO.DOCUMENTOP[h].VOLUMEN_EST;
+                                        docadd.VOLUMEN_REAL = dOCUMENTO.DOCUMENTOP[h].VOLUMEN_REAL;
+                                        docadd.VIGENCIA_DE = dOCUMENTO.DOCUMENTOP[h].VIGENCIA_DE;
+                                        docadd.VIGENCIA_AL = dOCUMENTO.DOCUMENTOP[h].VIGENCIA_AL;
+                                        docadd.APOYO_EST = dOCUMENTO.DOCUMENTOP[h].APOYO_EST;
+                                        docadd.APOYO_REAL = dOCUMENTO.DOCUMENTOP[h].APOYO_REAL;
+
+                                        docpl.Add(docadd);
+                                    }
+                                }
+                            }
 
                             for (int j = 0; j < docpl.Count; j++)
                             {
@@ -5497,29 +5550,34 @@ namespace TAT001.Controllers
         public ActionResult GuardarComentario(decimal num_docu, string comentario)
         {
             DOCUMENTO d = db.DOCUMENTOes.Find(num_docu);
-            FLUJO actual = db.FLUJOes.Where(a => a.NUM_DOC == num_docu).OrderByDescending(a => a.POS).FirstOrDefault();
-            db.Entry(d).State = EntityState.Modified;
-
-            if (actual != null)
+            if (d.DOCUMENTO_REF == null)
             {
-                FLUJO nuevo = new FLUJO();
-                nuevo.COMENTARIO = comentario;
-                nuevo.DETPOS = actual.DETPOS;
-                nuevo.DETVER = actual.DETVER;
-                nuevo.ESTATUS = actual.ESTATUS;
-                nuevo.FECHAC = DateTime.Now;
-                nuevo.FECHAM = nuevo.FECHAC;
-                nuevo.LOOP = 0;
-                nuevo.NUM_DOC = actual.NUM_DOC;
-                nuevo.POS = actual.POS + 1;
-                nuevo.USUARIOA_ID = User.Identity.Name;
-                nuevo.WF_POS = actual.WF_POS + 1;
-                nuevo.WF_VERSION = actual.WF_VERSION;
-                nuevo.WORKF_ID = actual.WORKF_ID;
-                db.FLUJOes.Add(nuevo);
+                FLUJO actual = db.FLUJOes.Where(a => a.NUM_DOC == d.NUM_DOC).OrderByDescending(a => a.POS).FirstOrDefault();
+                //db.Entry(d).State = EntityState.Modified;
 
+                if (actual != null)
+                {
+                    FLUJO nuevo = new FLUJO();
+                    nuevo.COMENTARIO = comentario;
+                    nuevo.DETPOS = actual.DETPOS;
+                    nuevo.DETVER = actual.DETVER;
+                    nuevo.ESTATUS = "";
+                    nuevo.FECHAC = DateTime.Now;
+                    nuevo.FECHAM = DateTime.Now;
+                    nuevo.LOOP = 0;
+                    nuevo.NUM_DOC = actual.NUM_DOC;
+                    nuevo.POS = actual.POS + 1;
+                    nuevo.USUARIOA_ID = User.Identity.Name;
+                    nuevo.WF_POS = actual.WF_POS;
+                    nuevo.WF_VERSION = actual.WF_VERSION;
+                    nuevo.WORKF_ID = actual.WORKF_ID;
+                    db.FLUJOes.Add(nuevo);
+                    ////actual.COMENTARIO = comentario;
+                    ////db.Entry(actual).State = EntityState.Modified;
+                    db.SaveChanges();
+
+                }
             }
-            db.SaveChanges();
 
             return RedirectToAction("Index", "Home");
         }
