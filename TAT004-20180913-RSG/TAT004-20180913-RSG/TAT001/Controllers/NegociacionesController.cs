@@ -158,6 +158,7 @@ namespace TAT001.Controllers
                     }
                     ViewBag.clCorreo = clUsu.EMAIL;
                     var cl = db.CLIENTEs.Where(a => a.KUNNR == pay & a.VKORG == vkorg).FirstOrDefault();
+                    ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(905)) && a.SPRAS_ID.Equals(cl.SPRAS)).ToList();
                     ViewBag.clCon = cl.CONTAC;
                     ViewBag.clName = cl.NAME1;
                     ViewBag.clDir = cl.STRAS_GP;

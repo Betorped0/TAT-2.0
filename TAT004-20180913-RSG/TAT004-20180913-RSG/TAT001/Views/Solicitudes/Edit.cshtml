@@ -459,7 +459,7 @@
                                     }
                                     else
                                     {
-                                        @Html.TextAreaFor(model => model.NOTAS, new { @class = "materialize-textarea ", @id = "notas_txt", onkeyup = "maxchar();", @disabled = "disabled" })
+                                        @Html.TextAreaFor(model => model.NOTAS, new { @class = "materialize-textarea ", @id = "notas_txt", onkeyup = "maxchar();"})
                                     }
                                     @Html.LabelFor(model => model.NOTAS, "Mecánica de negociación", htmlAttributes: new { @class = "active", @for = "notas_txt" })
                                 </div>
@@ -1521,8 +1521,8 @@
                                     }
                                 </div>
                                 @*<input type="button" id="matcat" value="Get materiales cat" />*@
-                                <input type="text" id="select_negi" name="select_negi" value="@ViewBag.SEL_NEG" disabled="disabled" hidden />
-                                <input type="text" id="select_disi" name="select_disi" value="@ViewBag.SEL_DIS" disabled="disabled" hidden />
+                                <input type="hidden" id="select_negi" name="select_negi" value="@ViewBag.SEL_NEG"/>
+                                <input type="hidden" id="select_disi" name="select_disi" value="@ViewBag.SEL_DIS"/>
 
                                 <div class="input-field col s6">
                                     <select id="select_neg" name="select_neg" onchange="selectDis(this.value)" disabled>
@@ -1605,7 +1605,7 @@
                                 @*@if (ViewBag.relacionadan == "")*@
                                 @if (ViewBag.relacionadan != "" & ViewBag.reversan != "X" & (Model.DOCUMENTO_REF == null | Model.TSOL.ADICIONA))
                                 {
-                                    <input type="text" id="txt_addrowt" name="txt_addrowt" value="@ViewBag.addrowt" disabled="disabled" hidden /> @*//Add RSG 2018.11.05*@
+                                    <input type="hidden" id="txt_addrowt" name="txt_addrowt" value="@ViewBag.addrowt" hidden /> @*//Add RSG 2018.11.05*@
                                     <div class="file-field input-field" id="cargar_excel" style="display:none">
                                         <div class="btn">
                                             <span>Examinar</span>
@@ -1722,6 +1722,9 @@
                                             </td>
                                             <td>
                                                 @Html.EditorFor(m => m.DOCUMENTOP[i].APOYO_REAL)
+                                            </td>
+                                            <td>
+                                                @Html.EditorFor(m => m.DOCUMENTOP[i].ORIGINAL)
                                             </td>
                                         </tr>
                                     }

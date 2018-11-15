@@ -323,7 +323,7 @@ namespace TAT001.Common
             DateTime fechaActual = DateTime.Now;
             int anio = fechaActual.Year;
             return new List<SelectListItem> {
-                    new SelectListItem{Text=(anio).ToString(),Value=(anio).ToString()},
+                    new SelectListItem{Text=(anio).ToString(),Value=(anio).ToString(), Selected=true},
                     new SelectListItem{Text=(anio+1).ToString(),Value=(anio+1).ToString()},
             };
         }

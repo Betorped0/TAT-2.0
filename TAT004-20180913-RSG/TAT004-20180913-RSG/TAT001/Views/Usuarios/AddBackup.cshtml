@@ -122,8 +122,7 @@
     var fechaI = $('#FECHAI'),
         fechaIM = M.Datepicker.getInstance(fechaI);
     fechaIM.options.minDate = date;
-    fechaIM.options.defaultDate = date;
-    fechaIM.options.setDefaultDate = true;
+    fechaIM.setDate(date._d,true);
 
     var fechaF = $('#FECHAF'),
         fechaFM = M.Datepicker.getInstance(fechaF);

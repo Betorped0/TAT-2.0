@@ -44,7 +44,7 @@
     <div style="height:48px; background-color:#d11d53; width:76%; z-index:1000;top:0px;left:0px; position:fixed; margin-bottom:30px;">
     </div>
     <div style="text-align:right; margin-top:65px; width:75%">
-        <p>@ViewBag.cd,@ViewBag.edo,@ViewBag.FechaH</p>
+        <p>@ViewBag.cd, @ViewBag.edo, @ViewBag.FechaH</p>
     </div>
     <div style="width:75%;">
         <div style="width:60%; float:left;">
@@ -57,7 +57,7 @@
             <table style="width:100%;" id="table2;" class="table borde;">
                 <thead>
                     <tr>
-                        <th class="th borde" style="text-align:center;">Para Control Interno Kellogg’s</th>
+                        <th class="th borde" style="text-align:center;" id="lbl_control">Para Control Interno Kellogg’s</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -72,11 +72,13 @@
         <div style="margin-top:20px; width:100%">
             <br />
             <p align="justify">
-                Estimado/a @ViewBag.clCon,<br /><br />
+                <span id="lbl_dear">Estimado/a </span>@ViewBag.clCon,<br /><br />
                 A continuación compartimos listado de las negociaciones de descuentos vigentes y comprometidas con usted por parte de Kellogg’s al @ViewBag.ff.<br />
                 <br />
                 <br />
-                La presente conciliación se comparte con fines de validación y aprobación de su parte. En caso de detectar alguna omisión o desviación, le solicitamos que nos envíe sus comentarios en un plazo no mayor de 3 días hábiles contados a partir de la fecha de recepción del presente correo. Le pedimos que los comentarios estén relacionados con las negociaciones comerciales detalladas en el presente comunicado. En el supuesto de no recibir ningún comentario, se entenderá que usted está de acuerdo con la información señalada.
+                <span id="lbl_pres">
+                    La presente conciliación se comparte con fines de validación y aprobación de su parte. En caso de detectar alguna omisión o desviación, le solicitamos que nos envíe sus comentarios en un plazo no mayor de 3 días hábiles contados a partir de la fecha de recepción del presente correo. Le pedimos que los comentarios estén relacionados con las negociaciones comerciales detalladas en el presente comunicado. En el supuesto de no recibir ningún comentario, se entenderá que usted está de acuerdo con la información señalada.
+                </span>
             </p>
         </div>
         <div style="margin-top:90px; width:100%; margin-left:20px;">
@@ -113,7 +115,7 @@
                             <td class="borde">
                                 @{
                                     int cont = 1;
-                                    int cont2 = item.DOCUMENTOAs.Where(x=>x.ACTIVO).Count();
+                                    int cont2 = item.DOCUMENTOAs.Where(x => x.ACTIVO).Count();
                                     foreach (TAT001.Entities.DOCUMENTOA a in item.DOCUMENTOAs.Where(x => x.ACTIVO))
                                     {
                                         string spras = ViewBag.spras;
@@ -122,7 +124,7 @@
                                         {
                                             if (cont == cont2)
                                             {
-                                            <span>@t.TXT50</span>
+                                                <span>@t.TXT50</span>
                                             }
                                             else if (cont2 > 1)
                                             {
@@ -197,5 +199,30 @@
             </a>
         </div>
     </div>
+
+    @if (ViewBag.textos != null)
+    {
+        foreach (TAT001.Entities.TEXTO t in ViewBag.textos)
+        {
+            <script>
+                try {
+                    var elem = document.getElementById("@t.CAMPO_ID");
+                    if (elem.nodeName != 'INPUT' & elem.nodeName != 'SELECT' & elem.nodeName != 'TABLE' & elem.nodeName != 'TEXTAREA')
+                    elem.innerHTML = "@t.TEXTOS";
+                } catch (e) {
+                    try {
+                        var divs = document.getElementsByClassName("@t.CAMPO_ID");
+                        [].slice.call(divs).forEach(function (div) {
+                            if (div.nodeName != 'INPUT' & div.nodeName != 'SELECT' & div.nodeName != 'TABLE' & div.nodeName != 'TEXTAREA')
+                            div.innerHTML = "@t.TEXTOS";
+                        });
+                    }
+                    catch (ee) {
+
+                    }
+                 }
+            </script>
+        }
+    }
 </body>
 </html>
