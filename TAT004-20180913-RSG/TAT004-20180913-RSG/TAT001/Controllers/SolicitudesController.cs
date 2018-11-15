@@ -3856,6 +3856,7 @@ namespace TAT001.Controllers
                             }
 
                         }
+                        DOCUMENTO dPadre = db.DOCUMENTOes.Find(d.DOCUMENTO_REF);
                         d.NUM_DOC = 0;
                         List<TAT001.Models.DOCUMENTOP_MOD> docsp = new List<DOCUMENTOP_MOD>();
                         var dis = "";
@@ -3889,6 +3890,9 @@ namespace TAT001.Controllers
                                 docP.VIGENCIA_AL = docpl[j].VIGENCIA_AL;
                                 docP.APOYO_EST = docpl[j].APOYO_EST;
                                 docP.APOYO_REAL = docpl[j].APOYO_REAL;
+                                docP.ORIGINAL = "";
+                                if (dPadre.DOCUMENTOPs.Where(x => x.MATNR == docP.MATNR).ToList().Count > 0)
+                                    docP.ORIGINAL = "X";
 
                                 //Verificar si hay materiales en las relacionadas
                                 if (docsrelp.Count > 0)

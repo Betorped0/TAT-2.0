@@ -2109,6 +2109,7 @@ function copiarTableVista(update, borr, ne) { //Add MGC B20180705 2018.07.05 Cam
 
             var apoyo_est = toShow($(this).find("td:eq(" + 12 + ") input").val());
             var apoyo_real = toShow($(this).find("td:eq(" + 13 + ") input").val());
+            var original = toShow($(this).find("td:eq(" + 14 + ") input").val());
 
             var vol = 0;
             var total = 0;
@@ -2162,13 +2163,21 @@ function copiarTableVista(update, borr, ne) { //Add MGC B20180705 2018.07.05 Cam
                 //Se mostrara nada más el total
                 calculo = "sc";
             }
+
+            var net = "";
+            if (ne === "ne")
+                if (original === "X")
+                    net = "";
+                else
+                    net = ne;
+
             var addedRow = "";
             //Si la distribución es por material
             if (dis == "M") {
                 //addedRow = addRowMat(t, matkl_id, matnr, matkl, matkl, costo_unitario, porc_apoyo, monto_apoyo, "", precio_sug, vol, total, relacionada, reversa, $.trim(ddate[0]), $.trim(adate[0]),
                 //    calculo, pm);
                 addedRow = addRowMat(t, matkl_id, matnr, matkl, matkl, costo_unitario,
-                    porc_apoyo, monto_apoyo, "", precio_sug, vol, total, relacionada, "", reversa, $.trim(ddate[0]), $.trim(adate[0]), calculo, pm, ne);//Add MGC B20180705 2018.07.05 ne //Add MGC B20180705 2018.07.05 relacionadaed editar el material en los nuevos renglones
+                    porc_apoyo, monto_apoyo, "", precio_sug, vol, total, relacionada, "", reversa, $.trim(ddate[0]), $.trim(adate[0]), calculo, pm, net);//Add MGC B20180705 2018.07.05 ne //Add MGC B20180705 2018.07.05 relacionadaed editar el material en los nuevos renglones
 
 
 
