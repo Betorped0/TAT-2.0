@@ -148,7 +148,8 @@ namespace TAT001.Services
                     if (docsrel.Count > 0)
                     {
                         docsrelp = docsrel
-                            .Join(
+                            .Where(x => x.ESTATUS_C != "C" & x.ESTATUS_WF != "B")//ADD RSG 15.11.2018
+                                .Join(
                             db.DOCUMENTOPs,
                             docsl => docsl.NUM_DOC,
                             docspl => docspl.NUM_DOC,
@@ -172,6 +173,7 @@ namespace TAT001.Services
                             }).ToList();
                     }
                     List<TAT001.Models.DOCUMENTOP_MOD> docsp = new List<DOCUMENTOP_MOD>();
+                    decimal resta = 0;//ADD RSG 15.11.2018
                     var dis = "";
                     for (int j = 0; j < docpl.Count; j++)
                     {
@@ -239,6 +241,7 @@ namespace TAT001.Services
                             }
                             if (docP.APOYO_EST < 0)
                             {
+                                resta += (decimal)docP.APOYO_EST;//ADD RSG 15.11.2018
                                 docP.APOYO_EST = 0;
                             }
 
@@ -251,6 +254,37 @@ namespace TAT001.Services
                         }
                     }
 
+                    //ADD RSG 15.11.2018------------------------------------I
+                    for (int j = 0; j < docsrelp.Count; j++)
+                    {
+                        List<DOCUMENTOP> docrel = new List<DOCUMENTOP>();
+                        docrel = docpl.Where(docrell => docrell.MATNR == docsrelp[j].MATNR).ToList();
+                        if (docrel.Count == 0)
+                        {
+                            resta -= Convert.ToDecimal(docsrelp[j].APOYO_REAL);
+                        }
+                    }
+                    
+                    //if ((docsp.Count - mayores) > 0)
+                    //    resta = resta / (docsp.Count - mayores);
+                    while (resta != 0)
+                    {
+                        foreach (DOCUMENTOP_MOD ddp in docsp)
+                        {
+                            if (ddp.APOYO_EST > 0)
+                            {
+                                ddp.APOYO_EST += resta;
+                                if (ddp.APOYO_EST <= 0)
+                                {
+                                    resta = (decimal)ddp.APOYO_EST;
+                                    ddp.APOYO_EST = 0;
+                                }
+                                else
+                                    resta = 0;
+                            }
+                        }
+                    }
+                    //ADD RSG 15.11.2018------------------------------------F
                     dOCUMENTO.DOCUMENTOP = docsp;
                 }
             }
@@ -315,7 +349,7 @@ namespace TAT001.Services
 
             foreach (DOCUMENTOP dpp in dOCpADRE.DOCUMENTOPs)
             {
-               
+
             }
             ////HTTPPOST
             DOCUMENTO d = new DOCUMENTO();

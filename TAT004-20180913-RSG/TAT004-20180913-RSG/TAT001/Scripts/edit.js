@@ -2109,7 +2109,7 @@ function copiarTableVista(update, borr, ne) { //Add MGC B20180705 2018.07.05 Cam
 
             var apoyo_est = toShow($(this).find("td:eq(" + 12 + ") input").val());
             var apoyo_real = toShow($(this).find("td:eq(" + 13 + ") input").val());
-            var original = toShow($(this).find("td:eq(" + 14 + ") input").val());
+            var original = $(this).find("td:eq(" + 14 + ") input").val();
 
             var vol = 0;
             var total = 0;
@@ -2140,6 +2140,9 @@ function copiarTableVista(update, borr, ne) { //Add MGC B20180705 2018.07.05 Cam
                 relacionada = "prelacionada";
                 //}
             }
+            if (relacionada !== "")
+                if (original === "")
+                    relacionada = "";
 
             var reversa = "";
             ////if ($("#txt_rev").length) {//MGC B20180611
@@ -2167,9 +2170,9 @@ function copiarTableVista(update, borr, ne) { //Add MGC B20180705 2018.07.05 Cam
             var net = "";
             if (ne === "ne")
                 if (original === "X")
-                    net = "";
-                else
                     net = ne;
+                else
+                    net = "";
 
             var addedRow = "";
             //Si la distribución es por material
