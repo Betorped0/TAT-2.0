@@ -755,7 +755,7 @@ namespace TAT001.Common
             {
                 cabeza2.Add(ObtenerTexto(db, spras_id, "porcentajeC2"));
                if (conRan){cabeza2.Add(ObtenerTexto(db, spras_id, "objetivo")); }
-                else if (!esPdf) { cabeza3.Add(""); }
+                else if (!esPdf) { cabeza2.Add(""); }
                 
             }
             else
