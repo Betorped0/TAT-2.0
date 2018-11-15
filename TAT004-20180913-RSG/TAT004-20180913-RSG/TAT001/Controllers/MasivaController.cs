@@ -3355,6 +3355,9 @@ namespace TAT001.Controllers
                                 }//LLAVE FOREACH
                             }
                         }
+
+                        dop.DOCUMENTOAs = docupA;
+
                         List<object> archivosToSave = (List<object>)Session["archivosSave"];
 
                         if (archivosToSave == null)

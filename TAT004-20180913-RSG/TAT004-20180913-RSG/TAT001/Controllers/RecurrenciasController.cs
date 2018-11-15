@@ -3502,10 +3502,17 @@ namespace TAT001.Controllers
 
             foreach (DOCUMENTOREC drec in ddrec)
             {
-                Recurrente r = new Recurrente();
-                bool ban = true;
-                if (ban)
-                    r.creaRecurrente(drec.NUM_DOC, drec.DOCUMENTO.TSOL_ID, hoy, drec.POS);
+                try
+                {
+                    Recurrente r = new Recurrente();
+                    bool ban = true;
+                    if (ban)
+                        r.creaRecurrente(drec.NUM_DOC, drec.DOCUMENTO.TSOL_ID, hoy, drec.POS);
+                }
+                catch
+                {
+
+                }
             }
             return RedirectToAction("Ejecutar");
         }
