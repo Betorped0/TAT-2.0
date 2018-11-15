@@ -147,6 +147,8 @@ function addRowH1(t, NUM_DOC, TSOL_ID, GALL_ID, SOCIEDAD_ID, PAIS_ID, ESTADO, CI
         clase = 'green white-text';
     }
 
+    NOTAS = NOTAS.replace("'", '&#39;');
+
     var r = t.row.add([
         "<span class='" + clase + " material-icons'>" + icono + "</span>",
         "<input class='" + ERRORES[0] + " input_numdoc' style='font-size:10px; text-align:center;' type='text' id='' name='' disabled value='" + NUM_DOC + "'><span hidden>" + NUM_DOC + "</span>",

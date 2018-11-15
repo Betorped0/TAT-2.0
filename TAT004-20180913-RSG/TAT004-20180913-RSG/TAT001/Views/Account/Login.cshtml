@@ -19,7 +19,7 @@
                         @Html.AntiForgeryToken()
                         <div class="row">
                             <div class="input-field col s12">
-                                @Html.TextBoxFor(m => m.ID)
+                                @Html.TextBoxFor(m => m.ID, new { @autofocus = "autofocus" })
                                 @Html.LabelFor(m => m.ID)
                                 @Html.ValidationMessageFor(m => m.ID, "", new { @id = "msg-id", @class = "red-text" })
                                 <script>

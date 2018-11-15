@@ -30,10 +30,10 @@
 function cuentas() {
     var bool = false
     clearing = [];
-    var bukrs = $("#sociedad_id").val(),
+    var bukrs = ($("#sociedad_id").val() ? $("#sociedad_id").val():$("#D_SOCIEDAD_ID").val()),
         land = $("#pais_id").val(),
         gall = $("#tall_id").val(),
-        ejercicio = $("#ejercicio").val();
+        ejercicio = ($("#ejercicio").val() ? $("#ejercicio").val():$("#D_EJERCICIO").val());
     $.ajax({
         type: "POST",
         url: root+'Listas/clearing',
