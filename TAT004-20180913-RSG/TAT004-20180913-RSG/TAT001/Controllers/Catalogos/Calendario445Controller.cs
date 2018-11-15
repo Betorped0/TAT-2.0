@@ -143,6 +143,7 @@ namespace TAT001.Controllers.Catalogos
             CargarSelectList(ref modelView, new string[] {
                 CMB_SOCIEDADES +","+ modelView.calendario445.SOCIEDAD_ID,
                 CMB_PERIODOS + "," + modelView.calendario445.PERIODO,
+                CMB_EJERCICIO + "," + modelView.calendario445.EJERCICIO,
                 CMB_TIPOSSOLICITUD + "," + modelView.calendario445.TSOL_ID});
 
             return View(modelView);
