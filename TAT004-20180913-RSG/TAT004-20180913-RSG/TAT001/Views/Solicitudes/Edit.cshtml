@@ -1521,8 +1521,8 @@
                                     }
                                 </div>
                                 @*<input type="button" id="matcat" value="Get materiales cat" />*@
-                                <input type="text" id="select_negi" name="select_negi" value="@ViewBag.SEL_NEG" disabled="disabled" hidden />
-                                <input type="text" id="select_disi" name="select_disi" value="@ViewBag.SEL_DIS" disabled="disabled" hidden />
+                                <input type="hidden" id="select_negi" name="select_negi" value="@ViewBag.SEL_NEG"/>
+                                <input type="hidden" id="select_disi" name="select_disi" value="@ViewBag.SEL_DIS"/>
 
                                 <div class="input-field col s6">
                                     <select id="select_neg" name="select_neg" onchange="selectDis(this.value)" disabled>
@@ -1722,6 +1722,9 @@
                                             </td>
                                             <td>
                                                 @Html.EditorFor(m => m.DOCUMENTOP[i].APOYO_REAL)
+                                            </td>
+                                            <td>
+                                                @Html.EditorFor(m => m.DOCUMENTOP[i].ORIGINAL)
                                             </td>
                                         </tr>
                                     }

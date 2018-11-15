@@ -1,5 +1,4 @@
 ﻿@model TAT001.Entities.DOCUMENTO
-
 @if (Model.DOCUMENTOP != null)
 {
     for (var i = 0; i < Model.DOCUMENTOP.Count; i++)
@@ -46,6 +45,9 @@
             </td>
             <td>
                 @Html.EditorFor(m => m.DOCUMENTOP[i].APOYO_REAL)
+            </td>
+            <td>
+                @Html.EditorFor(m => m.DOCUMENTOP[i].ORIGINAL)
             </td>
         </tr>
     }
