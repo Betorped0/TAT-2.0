@@ -66,79 +66,88 @@
                             <tr class="text-left">
                                 <th id="lbl_pais"></th>
                                 <th id="lbl_sociedad"></th>
-                                @*<th></th>*@
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model.Layouts)
+                            @foreach (var item in Model.layouts)
                             {
                                 string spras_id = ViewBag.spras_id;
 
-                            <tr class="text-left">
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.PAI.LANDX)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.SOCIEDAD.BUTXT)
-                                </td>
-                                @*<td>
-                                                @if (item.ID != null)
-                                                {
-                                                    var root = @Url.Content("~");
-                                                   var ruta = item.RUTA;
-                                                    var f= ruta.IndexOf("Archivo");
-                                                    var Path =ruta.Substring(f,ruta.Length-f);
+                                <tr class="text-left">
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PAI.LANDX)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.SOCIEDAD.BUTXT)
+                                    </td>
+                                    <td style="text-align: right !important;">
+                                        <a href="@Url.Action("Edit", "LayoutCargaMasiva", new { Id = item.ID})">
+                                            <i class='material-icons green-text'>edit</i>
+                                        </a>
+                                        <a href="@Url.Action("Details", "LayoutCargaMasiva", new { Id = item.ID})">
+                                            <i class='material-icons blue-text'>search</i>
+                                        </a>
 
-                                                <a href=@Path><i class='material-icons green-text'>archive</i></a>
-                                                <a class="modal-trigger" href="#modal1"><i class='material-icons red-text'>delete</i></a>
-                                                <a id="actionDelete_@item.ID" href="@Url.Action("Delete", "LayoutCargaMasiva", new { layout_id = item.ID})"></a>
-                                                <!-- Modal Delete -->
-                                                <div id="modal1" class="modal">
-                                                    <div class="modal-content">
-                                                        <p style="color: white;font-size: 16px;" class="lbl_eliminar"></p>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <a class="modal-close waves-effect  btn-flat"><label class="lbl_eliminarNo"></label></a>
-                                                        <a onclick="eliminarLayout('actionDelete_@item.ID')" class="modal-close waves-effect  btn-flat"><label class="lbl_eliminarSi"></label></a>
-                                                    </div>
-                                                </div>
-                                                }
-                                            </td>*@
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
+                                        <a id="@item.ID" href="#" onclick="descargarArchivo(this)"><i class='material-icons green-text'>archive</i></a>
+                                        @* <a class="modal-trigger" href="#modal1"><i class='material-icons red-text'>delete</i></a>
+                                        <a id="actionDelete_@item.ID" href="@Url.Action("Delete", "LayoutCargaMasiva", new { layout_id = item.ID})"></a>
+                                        <!-- Modal Delete -->
+                                        <div id="modal1" class="modal">
+                                            <div class="modal-content">
+                                                <p style="color: white;font-size: 16px;" class="lbl_eliminar"></p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a class="modal-close waves-effect  btn-flat"><label class="lbl_eliminarNo"></label></a>
+                                                <a onclick="eliminarLayout('actionDelete_@item.ID')" class="modal-close waves-effect  btn-flat"><label class="lbl_eliminarSi"></label></a>
+                                            </div>
+                                        </div>*@
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
+    </div>
+</div>
+<script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
+<script>
+     //---- Inicializador de componentes Materialize----
+    fnCommon.materializeInit('select');
+    fnCommon.materializeInit('modal');
 
-        <script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
-        <script>
+    function eliminarLayout(idLink) {
+        $('#' + idLink).get(0).click().click();
+    }
 
-            //---- Inicializador de componentes Materialize----
-            fnCommon.materializeInit('select');
-            fnCommon.materializeInit( 'modal');
+    function dismiss(classe) {
+        var toastElement = document.querySelectorAll('.' + classe);
+        for (var i = 0; i < toastElement.length; i++) {
+            var toastInstance = M.Toast.getInstance(toastElement[i]);
+            toastInstance.dismiss();
+        }
+    }
+    //----- Configuracion de Tablas-----
+    $(document).ready(function () {
+        var root = "@Url.Content("~")",
+        spras_id = "@ViewBag.spras_id",
+        urlLanguage = root + "/Scripts/lang/" + spras_id + ".json";
+        fnCommon.configurarTable('tableLayouts', '50vh', '50vh', urlLanguage, 'cmbPagLayouts','gfilterLayouts',[0,1]);
+    });
 
-            function eliminarLayout(idLink) {
-                $('#' + idLink).get(0).click().click();
-            }
+    var root = "@Url.Content("~")";
 
-            function dismiss(classe) {
-                var toastElement = document.querySelectorAll('.' + classe);
-                for (var i = 0; i < toastElement.length; i++) {
-                    var toastInstance = M.Toast.getInstance(toastElement[i]);
-                    toastInstance.dismiss();
-                }
-            }
-            //----- Configuracion de Tablas-----
-            $(document).ready(function () {
-                var root = "@Url.Content("~")",
-                spras_id = "@ViewBag.spras_id",
-                urlLanguage = root + "/Scripts/lang/" + spras_id + ".json";
-                fnCommon.configurarTable('tableLayouts', '50vh', '50vh', urlLanguage, 'cmbPagLayouts','gfilterLayouts',[0,1]);
-            });
-        </script>
-
+    function descargarArchivo(me) {
+        var form = document.createElement("form"),
+            Id = document.createElement("input");
+        form.method = "POST";
+        form.action = root + 'LayoutCargaMasiva/Descargar';
+        Id.value = me.id * 1;
+        Id.name = "idLayout";
+        form.appendChild(Id);
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>

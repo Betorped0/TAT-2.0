@@ -30,7 +30,7 @@
                 <div class="form-group">
                     <label id="lbl_pais"></label>
                     <div class="col-md-10">
-                        @Html.DropDownListFor(model => model.Layout.LAND, Model.paises, "")
+                        @Html.DropDownListFor(model => model.layoutMasiva.LAND, Model.paises, "")
                     </div>
                 </div>
             </div>
@@ -38,7 +38,7 @@
                 <div class="form-group">
                     <label id="lbl_sociedad"></label>
                     <div class="col-md-10">
-                        @Html.DropDownListFor(model => model.Layout.SOCIEDAD_ID, Model.sociedades, "")
+                        @Html.DropDownListFor(model => model.layoutMasiva.SOCIEDAD_ID, Model.sociedades, "")
                     </div>
                 </div>
             </div>
@@ -47,7 +47,7 @@
             <div class="file-field input-field col s12 m12 l6">
                 <div class="btn-small" style="float:left;">
                     <span id="lblArchivo">Examinar</span>
-                    <input type="file" id="PathArchivo" name="PathArchivo">
+                    <input type="file" accept=".xltx,.xlsx,.xlsm,.xltm,.xlam,.xlsb,.xls,.xlt,.xla"  id="PathArchivo" name="PathArchivo">
                 </div>
                 <div class="file-path-wrapper">
                     <input class="file-path validate" type="text" required>
@@ -69,11 +69,6 @@
     //----  Se agrega validaciones al formulario----
     fnCommon.selectRequired();
     fnCommon.formValidation('layoutForm');
-
-     //Mostrar process
-            $('#calendario445Form').submit(function () {
-            document.getElementById("loader").style.display = "flex";
-        });
 
         // Valida si ocurrio un error al intentar crear el periodo y otro.
         var mnjError = '@ViewBag.mnjError';

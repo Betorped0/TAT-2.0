@@ -189,7 +189,10 @@ $(document).ready(function () {
             <input type="text" id="duplicate" name="duplicate" value="@ViewBag.duplicate" hidden /><!--RSG 01.11.2018-->
         }
         <a href="@Url.Action("Index", "Home" )" class="btn btn-small" id="btn_cancel">Cancelar</a>
-        <a id="btn_guardarBorr" class="btn btn-small">Guardar</a><!--ADD RSG 30.10.2018-->
+        @if (ViewBag.reversan != "X")
+        {
+            <a id="btn_guardarBorr" class="btn btn-small">Guardar</a><!--ADD RSG 30.10.2018-->
+        }
         <a id="btn_guardarh" class="btn btn-small disabled" onclick="guardah()">Enviar</a>
         <script>
             function guardah() {
