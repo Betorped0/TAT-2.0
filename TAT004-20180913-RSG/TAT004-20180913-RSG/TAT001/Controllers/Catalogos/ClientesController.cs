@@ -10,10 +10,12 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using System.Web.UI;
 using TAT001.Common;
 using TAT001.Entities;
 using TAT001.Models;
+using TAT001.Services;
 
 namespace TAT001.Controllers.Catalogos
 {
@@ -21,10 +23,18 @@ namespace TAT001.Controllers.Catalogos
     public class ClientesController : Controller
     {
         private TAT001Entities db = new TAT001Entities();
+        private UsuarioLogin usuValidateLogin = new UsuarioLogin();
 
         // GET: Clientes       
         public ActionResult Index()
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
             int pagina_id = 631; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
             ViewBag.pais = Session["pais"]!=null? Session["pais"].ToString() + ".png" :null;
@@ -39,6 +49,13 @@ namespace TAT001.Controllers.Catalogos
 
         public ActionResult List(string colOrden, string ordenActual, int? numRegistros = 10, int? pagina = 1, string buscar = "")
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
             int pagina_id = 631; //ID EN BASE DE DATOS
             ClienteViewModel viewModel = new ClienteViewModel();
             ObtenerListado(ref viewModel,colOrden,ordenActual,numRegistros,pagina,buscar);
@@ -124,6 +141,13 @@ namespace TAT001.Controllers.Catalogos
         }
         public ActionResult VerFlujo(string vko, string vtw, string spa, string kun, int version)
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
             int pagina_id = 604; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
             var flujo = db.CLIENTEFs.Find(vko, vtw, spa, kun, version);
@@ -167,6 +191,13 @@ namespace TAT001.Controllers.Catalogos
         // GET: Clientes/Details/5
         public ActionResult Details(string vko, string vtw, string spa, string kun)
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
             int pagina = 632; //ID EN BASE DE DATOS
             string u = User.Identity.Name;
             var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -221,6 +252,13 @@ namespace TAT001.Controllers.Catalogos
         // GET: Clientes/Create
         public ActionResult Create()
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
             ViewBag.LAND = new SelectList(db.PAIS, "LAND", "SPRAS");
             ViewBag.PARVW = new SelectList(db.TCLIENTEs, "ID", "ID");
             return View();
@@ -233,6 +271,13 @@ namespace TAT001.Controllers.Catalogos
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "VKORG,VTWEG,SPART,KUNNR,NAME1,STCD1,STCD2,LAND,REGION,SUBREGION,REGIO,ORT01,STRAS_GP,PSTLZ,CONTAC,CONT_EMAIL,PARVW,PAYER,GRUPO,SPRAS,ACTIVO,BDESCRIPCION,BANNER,CANAL,BZIRK,KONDA,VKGRP,VKBUR,BANNERG")] CLIENTE cLIENTE)
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
             if (ModelState.IsValid)
             {
                 db.CLIENTEs.Add(cLIENTE);
@@ -248,6 +293,13 @@ namespace TAT001.Controllers.Catalogos
         // GET: Clientes/Edit/5
         public ActionResult Edit(string vko, string vtw, string spa, string kun)
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
             int pagina = 635; //ID EN BASE DE DATOS PARA EL TITULO
             string u = User.Identity.Name;
             var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -297,6 +349,13 @@ namespace TAT001.Controllers.Catalogos
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "VKORG,VTWEG,SPART,KUNNR,NAME1,STCD1,STCD2,LAND,REGION,SUBREGION,REGIO,ORT01,STRAS_GP,PSTLZ,CONTAC,CONT_EMAIL,PARVW,PAYER,GRUPO,SPRAS,ACTIVO,BDESCRIPCION,BANNER, PROVEEDOR_ID,CANAL,BZIRK,KONDA,VKGRP,VKBUR,BANNERG")] CLIENTE cLIENTE)
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
             if (ModelState.IsValid)
             {
                 db.Entry(cLIENTE).State = EntityState.Modified;
@@ -311,6 +370,13 @@ namespace TAT001.Controllers.Catalogos
         // GET: Clientes/Delete/5
         public ActionResult Delete(string id)
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -328,6 +394,13 @@ namespace TAT001.Controllers.Catalogos
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
             CLIENTE cLIENTE = db.CLIENTEs.Find(id);
             db.CLIENTEs.Remove(cLIENTE);
             db.SaveChanges();
@@ -345,6 +418,13 @@ namespace TAT001.Controllers.Catalogos
 
         public ActionResult Carga()
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
             int pagina = 631; //ID EN BASE DE DATOS PARA EL TITULO
             string u = User.Identity.Name;
             var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
@@ -382,12 +462,30 @@ namespace TAT001.Controllers.Catalogos
         [HttpPost]
         public ActionResult Carga(IEnumerable<HttpPostedFileBase> files)
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
         [HttpPost]
         [AllowAnonymous]
         public JsonResult LoadExcel()
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return Json(new
+                {
+                    redirectUrl = Url.Action("Index", "Home"),
+                    isRedirect = true
+                });
+            }
             List<DET_AGENTE1> ld = new List<DET_AGENTE1>();
 
             if (Request.Files.Count > 0)
@@ -569,6 +667,17 @@ namespace TAT001.Controllers.Catalogos
         [HttpPost]
         public JsonResult Agregar()
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return Json(new
+                {
+                    redirectUrl = Url.Action("Index", "Home"),
+                    isRedirect = true
+                });
+            }
             List<DET_AGENTE1> ld = new List<DET_AGENTE1>();
 
             var coc = Request["coc"].Split(',');
@@ -755,6 +864,17 @@ namespace TAT001.Controllers.Catalogos
         [HttpPost]
         public JsonResult Comprobar()
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return Json(new
+                {
+                    redirectUrl = Url.Action("Index", "Home"),
+                    isRedirect = true
+                });
+            }
             List<DET_AGENTE1> ld = new List<DET_AGENTE1>();
 
             var coc = Request["coc"].Split(',');
@@ -1031,6 +1151,17 @@ namespace TAT001.Controllers.Catalogos
         [HttpPost]
         public JsonResult Actualizar()
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return Json(new
+                {
+                    redirectUrl = Url.Action("Index", "Home"),
+                    isRedirect = true
+                });
+            }
             List<Clientes> cc = new List<Clientes>();
             
             CLIENTEF cf = new CLIENTEF();
@@ -1267,6 +1398,13 @@ namespace TAT001.Controllers.Catalogos
         [HttpPost]
         public FileResult Descargar()
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return null;
+            }
             var cLiente = db.CLIENTEs.ToList();
             generarExcelHome(cLiente, Server.MapPath("~/pdfTemp/"));
             return File(Server.MapPath("~/pdfTemp/Clientes_" + DateTime.Now.ToShortDateString() + ".xlsx"), "application /vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Clientes_" + DateTime.Now.ToShortDateString() + ".xlsx");

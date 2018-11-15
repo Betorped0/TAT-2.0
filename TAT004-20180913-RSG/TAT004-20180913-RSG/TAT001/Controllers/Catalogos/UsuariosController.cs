@@ -10,6 +10,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using System.Web.UI.HtmlControls;
 using TAT001.Common;
 using TAT001.Entities;
@@ -22,10 +23,18 @@ namespace TAT001.Controllers.Catalogos
     public class UsuariosController : Controller
     {
         private TAT001Entities db = new TAT001Entities();
+        private UsuarioLogin usuValidateLogin = new UsuarioLogin();
 
         // GET: Usuarios
         public ActionResult Index()
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
             string us = User.Identity.Name;
             var user = db.USUARIOs.Where(a => a.ID.Equals(us)).FirstOrDefault();
             ViewBag.nivelUsuario = user.PUESTO_ID;
@@ -71,6 +80,13 @@ namespace TAT001.Controllers.Catalogos
         // GET: Usuarios/Details/5
         public ActionResult Details(string id)
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
             int pagina = 604; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
             //using (TAT001Entities db = new TAT001Entities())
@@ -135,6 +151,13 @@ namespace TAT001.Controllers.Catalogos
         // GET: Usuarios/Create
         public ActionResult Create()
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
             int pagina = 602; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
             //using (TAT001Entities db = new TAT001Entities())
@@ -178,6 +201,13 @@ namespace TAT001.Controllers.Catalogos
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,PASS,NOMBRE,APELLIDO_P,APELLIDO_M,EMAIL,SPRAS_ID,ACTIVO,PUESTO_ID,MANAGER,BACKUP_ID,BUNIT,ROL")] Usuario uSUARIO)
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
             int pagina = 602; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
             ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION");
@@ -338,6 +368,13 @@ namespace TAT001.Controllers.Catalogos
         // GET: Usuarios/Edit/5
         public ActionResult Edit(string id)
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
             int pagina = 603; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
             //using (TAT001Entities db = new TAT001Entities())
@@ -418,6 +455,13 @@ namespace TAT001.Controllers.Catalogos
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,PASS,NOMBRE,APELLIDO_P,APELLIDO_M,EMAIL,SPRAS_ID,ACTIVO,PUESTO_ID,MANAGER,BACKUP_ID,BUNIT")] USUARIO uSUARIO)
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
             string spra = Session["spras"].ToString();
             if (ModelState.IsValid)
             {
@@ -563,6 +607,13 @@ namespace TAT001.Controllers.Catalogos
         // GET: Usuarios/Delete/5
         public ActionResult Delete(string id)
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
             //int pagina = 603; //ID EN BASE DE DATOS
             //using (TAT001Entities db = new TAT001Entities())
             //{
@@ -607,6 +658,13 @@ namespace TAT001.Controllers.Catalogos
         //[ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
             USUARIO uSUARIO = db.USUARIOs.Find(id);
             uSUARIO.ACTIVO = false;
             db.Entry(uSUARIO).State = EntityState.Modified;
@@ -617,6 +675,13 @@ namespace TAT001.Controllers.Catalogos
         // GET: Usuarios/Edit/5
         public ActionResult Pass(string id)
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
             int pagina = 605; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
             //using (TAT001Entities db = new TAT001Entities())
@@ -666,6 +731,13 @@ namespace TAT001.Controllers.Catalogos
         //[ValidateAntiForgeryToken]
         public ActionResult Pass(/*[Bind(Include = "ID,pass,npass1,npass2")] */Pass pp)
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
             var usu = User.Identity.Name;
             USUARIO usu2 = db.USUARIOs.Where(x => x.ID.Equals(usu)).FirstOrDefault();
             Pass pass = new Pass();
@@ -728,6 +800,13 @@ namespace TAT001.Controllers.Catalogos
         }
         public ActionResult AgregarRol(string id)
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
             int pagina = 603; //ID EN BASE DE DATOS
             using (TAT001Entities db = new TAT001Entities())
             {
@@ -778,6 +857,13 @@ namespace TAT001.Controllers.Catalogos
         [ValidateAntiForgeryToken]
         public ActionResult AgregarRol(USUARIO u)
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
             int rol = Int32.Parse(Request.Form["txt_rol"].ToString());
             string pais = Request.Form["txt_pai"].ToString().Split('-')[0];
             string vkorg = Request.Form["txt_vkor"].ToString();
@@ -908,6 +994,13 @@ namespace TAT001.Controllers.Catalogos
         [ValidateAntiForgeryToken]
         public ActionResult ModificarRol(USUARIO u)
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
             //int rol = Int32.Parse(Request.Form["txt_rol"].ToString());
             string pais = Request.Form["item.PAIS_ID"].ToString();
             string vkorg = Request.Form["item.VKORG"].ToString();
@@ -980,6 +1073,13 @@ namespace TAT001.Controllers.Catalogos
 
         public ActionResult Carga()
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
             int pagina = 608;
             using (TAT001Entities db = new TAT001Entities())
             {
@@ -1012,6 +1112,13 @@ namespace TAT001.Controllers.Catalogos
         [HttpPost]
         public ActionResult Carga(IEnumerable<HttpPostedFileBase> files)
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
 
@@ -1019,6 +1126,17 @@ namespace TAT001.Controllers.Catalogos
         [AllowAnonymous]
         public JsonResult LoadExcel()
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return Json(new
+                {
+                    redirectUrl = Url.Action("Index", "Home"),
+                    isRedirect = true
+                });
+            }
             List<DET_AGENTE1> ld = new List<DET_AGENTE1>();
 
             if (Request.Files.Count > 0)
@@ -1759,6 +1877,17 @@ namespace TAT001.Controllers.Catalogos
         [HttpPost]
         public JsonResult Agregar()
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return Json(new
+                {
+                    redirectUrl = Url.Action("Index", "Home"),
+                    isRedirect = true
+                });
+            }
             string[,] tablas = (string[,])Session["tablas"];
             int rowst = (int)Session["rowst"];
             string[,] tabla1 = (string[,])Session["tabla1"];
@@ -2139,6 +2268,17 @@ namespace TAT001.Controllers.Catalogos
         [HttpPost]
         public JsonResult Comprobar()
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return Json(new
+                {
+                    redirectUrl = Url.Action("Index", "Home"),
+                    isRedirect = true
+                });
+            }
             int rowst = (int)Session["rowst"];
             List<DET_AGENTE1> ld = new List<DET_AGENTE1>();
 
@@ -2690,6 +2830,17 @@ namespace TAT001.Controllers.Catalogos
         [HttpPost]
         public JsonResult Actualizar()
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return Json(new
+                {
+                    redirectUrl = Url.Action("Index", "Home"),
+                    isRedirect = true
+                });
+            }
             string[,] tablas = (string[,])Session["tablas"];
             string[,] client = (string[,])Session["client"];
             string[,] tabla1 = (string[,])Session["tabla1"];
@@ -2850,6 +3001,17 @@ namespace TAT001.Controllers.Catalogos
         [HttpPost]
         public JsonResult AgregarT()
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return Json(new
+                {
+                    redirectUrl = Url.Action("Index", "Home"),
+                    isRedirect = true
+                });
+            }
             List<Usuarios> cc = new List<Usuarios>();
 
             USUARIOF uf = new USUARIOF();
@@ -3106,6 +3268,13 @@ namespace TAT001.Controllers.Catalogos
         [HttpPost]
         public FileResult Descargar()
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return null;
+            }
             var uSuario = db.USUARIOs.ToList();
             generarExcelHome(uSuario, Server.MapPath("~/pdfTemp/"));
             return File(Server.MapPath("~/pdfTemp/Usuarios_" + DateTime.Now.ToShortDateString() + ".xlsx"), "application /vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Usuarios_" + DateTime.Now.ToShortDateString() + ".xlsx");
@@ -3344,6 +3513,13 @@ namespace TAT001.Controllers.Catalogos
         [HttpPost]
         public ActionResult AddBackup([Bind(Include = "USUARIO_ID,USUARIOD_ID,FECHAI,FECHAF,ACTIVO")]DELEGAR delegar)
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
             int pagina = 606; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
             var usuario = db.USUARIOs.Where(t => t.ID == delegar.USUARIO_ID).SingleOrDefault();
@@ -3414,6 +3590,13 @@ namespace TAT001.Controllers.Catalogos
 
         public ActionResult EditBackup(string id,string idd, string fi, string ff)
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
             int pagina = 607; //ID EN BASE DE DATOS
             using (TAT001Entities db = new TAT001Entities())
             {
@@ -3456,6 +3639,13 @@ namespace TAT001.Controllers.Catalogos
         [HttpPost]
         public ActionResult EditBackup([Bind(Include = "USUARIO_ID,USUARIOD_ID,FECHAI,FECHAF,ACTIVO")]DELEGAR delegar)
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
             if (ModelState.IsValid)
             {
                 db.Entry(delegar).State = EntityState.Modified;
@@ -3470,6 +3660,13 @@ namespace TAT001.Controllers.Catalogos
 
         public ActionResult DeleteBackup(string id, string idd, string fi, string ff)
         {
+            string uz = User.Identity.Name;
+            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+            if (!usuValidateLogin.validaUsuario(userz.ID))
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
             //Para las version de las fechas
             var arrF = fi.Split('/');
             var dtgd = arrF[1] + '/' + arrF[0] + '/' + arrF[2];
@@ -3484,6 +3681,21 @@ namespace TAT001.Controllers.Catalogos
             return RedirectToAction("Details", new { id=id});
 
         }
+
+        //public ActionResult ComprobarLog()
+        //{
+        //    string uz = User.Identity.Name;
+        //    var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
+        //    if (!usuValidateLogin.validaUsuario(userz.ID))
+        //    {
+        //        FormsAuthentication.SignOut();
+        //        return RedirectToAction("Index", "Home");
+        //    }
+        //    else
+        //    {
+        //        return null;
+        //    }
+        //}
     }
 }
 

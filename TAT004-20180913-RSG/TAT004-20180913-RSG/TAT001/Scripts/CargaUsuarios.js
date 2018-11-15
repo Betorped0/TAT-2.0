@@ -124,8 +124,7 @@ function loadExcelDis(file) {
         processData: false,
         success: function (data) {
 
-            if (data !== null || data !== "") {
-
+            if ((data !== null || data !== "") && !data.isRedirect) {
                 $.each(data, function (i, dataj) {
 
                     var cli = dataj.KUNNR;
@@ -205,6 +204,9 @@ function loadExcelDis(file) {
                 $('#tfoot_dis').css("display", "table-footer-group");
                 document.getElementById("loader").style.display = "none";
             }
+            else {
+                window.location.href = data.redirectUrl;
+            }
         },
         complete: function () {
 
@@ -273,8 +275,10 @@ function Carga() {
                 url: 'Agregar',
                 data: null,
                 dataType: "json",
-                success: function () {
-
+                success: function (data) {
+                    if (data.isRedirect) {
+                        window.location.href = data.redirectUrl;
+                    }
                 },
                 error: function (request, status, error) {
                     //alert(request.responseText);
@@ -319,8 +323,10 @@ function Actualizar() {
             url: 'Actualizar',
             data: null,
             dataType: "json",
-            success: function () {
-
+            success: function (data) {
+                if (data.isRedirect) {
+                    window.location.href = data.redirectUrl;
+                }
             },
             error: function (request, status, error) {
                 //alert(request.responseText);
@@ -343,7 +349,7 @@ function creart(metodo, datos) {
         dataType: "json",
         data: datos,
         success: function (data) {
-            if (data !== null || data !== "") {
+            if ((data !== null || data !== "") && !data.isRedirect) {
 
                 table.clear().draw();
 
@@ -426,6 +432,9 @@ function creart(metodo, datos) {
                 $('#table_dis').css("display", "table");
                 $('#tfoot_dis').css("display", "table-footer-group");
                 document.getElementById("loader").style.display = "none";
+            }
+            else {
+                window.location.href = data.redirectUrl;
             }
         },
         complete: function () {
