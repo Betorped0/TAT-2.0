@@ -474,7 +474,9 @@
                                 <td>
                                     @if (item.GetType().GetProperty("FECHAC").GetValue(item, null) != null)
                                     {
-                                        item.GetType().GetProperty("FECHAC").GetValue(item, null);
+                                        var dt=item.GetType().GetProperty("FECHAC").GetValue(item, null) ?? DateTime.Now;
+                                        var datetime = dt;
+                                        @datetime
                                     }
                                     else
                                     {
