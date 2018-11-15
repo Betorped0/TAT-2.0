@@ -3599,7 +3599,26 @@ namespace TAT001.Controllers
                 }
                 //var tsols_valbdjs = JsonConvert.SerializeObject(tsols_valbd, Formatting.Indented);//RSG 13.06.2018
                 //ViewBag.TSOL_VALUES = tsols_valbdjs;
+                //Add MGC B20180705 2018.07.05 conocer si se puede agregar renglones a la relacionada
+                string addrowst = "X";
+                bool addon = true;
+                try
+                {
+                    addon = d.TSOL.ADICIONA;
+                }
+                catch (Exception)
+                {
 
+                }
+                if (addon == true)
+                {
+                    addrowst = "X";
+                }
+                else
+                {
+                    addrowst = "";
+                }
+                ViewBag.addrowt = addrowst; //Add MGC B20180705 2018.07.05 conocer si se puede agregar renglones a la relacionada
                 //Validar si es una reversa
                 string tsol = "";
                 string isrn = "";
@@ -4450,6 +4469,46 @@ namespace TAT001.Controllers
                         if (dOCUMENTO.DOCUMENTO_REF > 0)
                         {
                             docpl = db.DOCUMENTOPs.Where(docp => docp.NUM_DOC == dOCUMENTO.DOCUMENTO_REF).ToList();
+
+                            //Add MGC B20180705 2018.07.05 Agregar materiales agregados en la vista
+                            if (d.TSOL.ADICIONA == true && select_disi == "M" && select_negi == "M")
+                            {
+                                List<DOCUMENTOP_MOD> listvista = new List<DOCUMENTOP_MOD>();
+
+                                for (int h = 0; h < dOCUMENTO.DOCUMENTOP.Count; h++)
+                                {
+                                    DOCUMENTOP docmode = new DOCUMENTOP();
+
+                                    string mmatnr = dOCUMENTO.DOCUMENTOP[h].MATNR.TrimStart('0');
+                                    docmode = docpl.Where(dcp => dcp.MATNR.TrimStart('0') == mmatnr).FirstOrDefault();
+
+                                    //Agregarlo a la lista
+                                    if (docmode == null)
+                                    {
+                                        DOCUMENTOP docadd = new DOCUMENTOP();
+
+                                        docadd.MATNR = dOCUMENTO.DOCUMENTOP[h].MATNR;
+                                        if (dOCUMENTO.DOCUMENTOP[h].MATKL_ID == null)
+                                        {
+                                            dOCUMENTO.DOCUMENTOP[h].MATKL_ID = "";
+                                        }
+                                        docadd.MATKL = dOCUMENTO.DOCUMENTOP[h].MATKL_ID;
+                                        docadd.CANTIDAD = 1;
+                                        docadd.MONTO = dOCUMENTO.DOCUMENTOP[h].MONTO;
+                                        docadd.PORC_APOYO = dOCUMENTO.DOCUMENTOP[h].PORC_APOYO;
+                                        docadd.MONTO_APOYO = dOCUMENTO.DOCUMENTOP[h].MONTO_APOYO;
+                                        docadd.PRECIO_SUG = dOCUMENTO.DOCUMENTOP[h].PRECIO_SUG;
+                                        docadd.VOLUMEN_EST = dOCUMENTO.DOCUMENTOP[h].VOLUMEN_EST;
+                                        docadd.VOLUMEN_REAL = dOCUMENTO.DOCUMENTOP[h].VOLUMEN_REAL;
+                                        docadd.VIGENCIA_DE = dOCUMENTO.DOCUMENTOP[h].VIGENCIA_DE;
+                                        docadd.VIGENCIA_AL = dOCUMENTO.DOCUMENTOP[h].VIGENCIA_AL;
+                                        docadd.APOYO_EST = dOCUMENTO.DOCUMENTOP[h].APOYO_EST;
+                                        docadd.APOYO_REAL = dOCUMENTO.DOCUMENTOP[h].APOYO_REAL;
+
+                                        docpl.Add(docadd);
+                                    }
+                                }
+                            }
 
                             for (int j = 0; j < docpl.Count; j++)
                             {
