@@ -191,115 +191,124 @@ namespace TAT001.Controllers
             Models.CargarModel carga = new Models.CargarModel();
             pRESUPUESTOP = carga.consultSociedad(User.Identity.Name);
             string nombref = "", nombre = "";
-            if (String.IsNullOrEmpty(enviar) == false || String.IsNullOrEmpty(guardar) == false)
+            try
             {
-                if (fileCPT != null || fileSAP != null)
+                if (String.IsNullOrEmpty(enviar) == false || String.IsNullOrEmpty(guardar) == false)
                 {
-                    string mensajeC = "", mensajeS = "";
-                    try
+                    if (fileCPT != null || fileSAP != null)
                     {
-                        if (fileCPT != null)
-                        {
-                            nombref += "CPT_BUDGET_" + DateTime.Today.Year.ToString().Substring(2, 2);
-                            nombre = fileCPT.FileName.Remove(11, 4).Substring(0, 13);
-                            if (nombre == nombref)
-                            {
-                                pRESUPUESTOP.presupuestoCPT = carga.cargarPresupuestoCPT(fileCPT, sociedadcpt, periodocpt, aniocpt, ref mensajeC, user.SPRAS_ID);
-                                Session["Presupuesto"] = pRESUPUESTOP;
-                                Session["Sociedadcpt"] = sociedadcpt;
-                                Session["Aniocpt"] = aniocpt;
-                                Session["Periodocpt"] = periodocpt;
-                                ViewBag.sociedadcpt = 1;
-                            }
-                            else
-                            {
-                                ViewBag.MensajeGE = carga.mensajes(16, user.SPRAS_ID);
-                            }
-                        }
-                        if (fileSAP[0] != null)
-                        {
-                            nombref += "OUTBOUND_BUDG_" + DateTime.Today.Year.ToString() + string.Format("{0:000}", periodosap[0].PadLeft(3, '0'));
-                            nombre = fileSAP[0].FileName.Remove(14, 5).Remove(16, 2).Substring(0, 18); nombre = fileSAP[0].FileName.Remove(14, 5).Substring(0, 21);
-                            if (nombre == nombref)
-                            {
-                                pRESUPUESTOP.presupuestoSAP = carga.cargarPresupuestoSAP(fileSAP, sociedadsap, periodosap, aniosap, ref mensajeS, user.SPRAS_ID);
-                                Session["Presupuesto"] = pRESUPUESTOP;
-                                Session["Sociedadsap"] = sociedadsap;
-                                Session["Aniosap"] = aniosap;
-                                Session["Periodosap"] = periodosap;
-                                ViewBag.sociedadsap = 1;
-                            }
-                            else
-                            {
-                                ViewBag.MensajeGE = carga.mensajes(16, user.SPRAS_ID);
-                            }
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        ViewBag.MensajeGE = carga.mensajes(1, user.SPRAS_ID);//"Error en la carga de archivo CPT y/o SAP";
-                        //ViewBag.MensajeG = e.Message;
-                    }
-                    ViewBag.MensajeC = mensajeC;
-                    ViewBag.MensajeS = mensajeS;
-                    return View(pRESUPUESTOP);
-                }
-                else
-                {
-                    if (String.IsNullOrEmpty(guardar) == false)
-                    {
+                        string mensajeC = "", mensajeS = "";
                         try
                         {
-                            pRESUPUESTOP = Session["Presupuesto"] as DatosPresupuesto;
-                            if (pRESUPUESTOP.presupuestoCPT.Count > 0 || pRESUPUESTOP.presupuestoSAP.Count > 0)
+                            if (fileCPT != null)
                             {
-                                ViewBag.MensajeC = carga.guardarPresupuesto(ref pRESUPUESTOP, Session["Sociedadcpt"] as string[], Session["Periodocpt"] as string[], Session["Sociedadsap"] as string[], Session["Periodosap"] as string[], User.Identity.Name, opciong, user.SPRAS_ID);
-                                if (pRESUPUESTOP.bannerscanal.Count > 0)
+                                nombref += "CPT_BUDGET_" + DateTime.Today.Year.ToString().Substring(2, 2);
+                                nombre = fileCPT.FileName.Remove(11, 4).Substring(0, 13);
+                                if (nombre == nombref)
                                 {
-                                    ViewBag.MensajeGI = carga.mensajes(3, user.SPRAS_ID);//"Se encontraron banners sin canal asignados";
+                                    pRESUPUESTOP.presupuestoCPT = carga.cargarPresupuestoCPT(fileCPT, sociedadcpt, periodocpt, aniocpt, ref mensajeC, user.SPRAS_ID);
+                                    Session["Presupuesto"] = pRESUPUESTOP;
+                                    Session["Sociedadcpt"] = sociedadcpt;
+                                    Session["Aniocpt"] = aniocpt;
+                                    Session["Periodocpt"] = periodocpt;
+                                    ViewBag.sociedadcpt = 1;
+                                }
+                                else
+                                {
+                                    ViewBag.MensajeGE = carga.mensajes(16, user.SPRAS_ID);
                                 }
                             }
-                            else
+                            if (fileSAP[0] != null)
                             {
-                                ViewBag.MensajeGE = carga.mensajes(6, user.SPRAS_ID);//"Ocurrio algo intente de nuevo cargar el/los archivo/s";
+                                nombref += "OUTBOUND_BUDG_" + DateTime.Today.Year.ToString() + string.Format("{0:000}", periodosap[0].PadLeft(3, '0'));
+                                nombre = fileSAP[0].FileName.Remove(14, 5).Remove(16, 2).Substring(0, 18); nombre = fileSAP[0].FileName.Remove(14, 5).Substring(0, 21);
+                                if (nombre == nombref)
+                                {
+                                    pRESUPUESTOP.presupuestoSAP = carga.cargarPresupuestoSAP(fileSAP, sociedadsap, periodosap, aniosap, ref mensajeS, user.SPRAS_ID);
+                                    Session["Presupuesto"] = pRESUPUESTOP;
+                                    Session["Sociedadsap"] = sociedadsap;
+                                    Session["Aniosap"] = aniosap;
+                                    Session["Periodosap"] = periodosap;
+                                    ViewBag.sociedadsap = 1;
+                                }
+                                else
+                                {
+                                    ViewBag.MensajeGE = carga.mensajes(16, user.SPRAS_ID);
+                                }
                             }
-                            }
+                        }
                         catch (Exception e)
                         {
-                            ViewBag.MensajeGE = carga.mensajes(6, user.SPRAS_ID);//"Ocurrio algo, intenté de nuevo cargar el/los archivo/s";
-                            //ViewBag.MensajeG = e.InnerException.Message;
+                            ViewBag.MensajeGE = carga.mensajes(1, user.SPRAS_ID);//"Error en la carga de archivo CPT y/o SAP";
+                                                                                 //ViewBag.MensajeG = e.Message;
                         }
+                        ViewBag.MensajeC = mensajeC;
+                        ViewBag.MensajeS = mensajeS;
+                        return View(pRESUPUESTOP);
                     }
                     else
                     {
-                        ViewBag.MensajeGE = carga.mensajes(2, user.SPRAS_ID);//"Cargue algún archivo";
+                        if (String.IsNullOrEmpty(guardar) == false)
+                        {
+                            try
+                            {
+                                pRESUPUESTOP = Session["Presupuesto"] as DatosPresupuesto;
+                                if (pRESUPUESTOP.presupuestoCPT.Count > 0 || pRESUPUESTOP.presupuestoSAP.Count > 0)
+                                {
+                                    ViewBag.MensajeC = carga.guardarPresupuesto(ref pRESUPUESTOP, Session["Sociedadcpt"] as string[], Session["Periodocpt"] as string[], Session["Sociedadsap"] as string[], Session["Periodosap"] as string[], User.Identity.Name, opciong, user.SPRAS_ID);
+                                    if (pRESUPUESTOP.bannerscanal.Count > 0)
+                                    {
+                                        ViewBag.MensajeGI = carga.mensajes(3, user.SPRAS_ID);//"Se encontraron banners sin canal asignados";
+                                    }
+                                }
+                                else
+                                {
+                                    ViewBag.MensajeGE = carga.mensajes(6, user.SPRAS_ID);//"Ocurrio algo intente de nuevo cargar el/los archivo/s";
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                ViewBag.MensajeGE = carga.mensajes(6, user.SPRAS_ID);//"Ocurrio algo, intenté de nuevo cargar el/los archivo/s";
+                                                                                     //ViewBag.MensajeG = e.InnerException.Message;
+                            }
+                        }
+                        else
+                        {
+                            ViewBag.MensajeGE = carga.mensajes(2, user.SPRAS_ID);//"Cargue algún archivo";
+                        }
+                        Session["Presupuesto"] = null;
+                        Session["Sociedadsap"] = null;
+                        Session["Periodosap"] = null;
+                        //Session["Sociedadcpt"] = null;
+                        Session["Periodocpt"] = null;
+                        Session["Aniocpt"] = null;
+                        Session["Aniosap"] = null;
+                        pRESUPUESTOP.presupuestoCPT = new List<PRESUPUESTOP>();
+                        pRESUPUESTOP.presupuestoSAP = new List<PRESUPSAPP>();
+                        return View(pRESUPUESTOP);
                     }
+                }
+                else
+                {
                     Session["Presupuesto"] = null;
                     Session["Sociedadsap"] = null;
                     Session["Periodosap"] = null;
-                    //Session["Sociedadcpt"] = null;
+                    Session["Sociedadcpt"] = null;
                     Session["Periodocpt"] = null;
                     Session["Aniocpt"] = null;
                     Session["Aniosap"] = null;
                     pRESUPUESTOP.presupuestoCPT = new List<PRESUPUESTOP>();
                     pRESUPUESTOP.presupuestoSAP = new List<PRESUPSAPP>();
+                    ViewBag.MensajeGI = carga.mensajes(4, user.SPRAS_ID);//"Carga cancelada";
                     return View(pRESUPUESTOP);
                 }
             }
-            else
+            catch (Exception)
             {
-                Session["Presupuesto"] = null;
-                Session["Sociedadsap"] = null;
-                Session["Periodosap"] = null;
-                Session["Sociedadcpt"] = null;
-                Session["Periodocpt"] = null;
-                Session["Aniocpt"] = null;
-                Session["Aniosap"] = null;
-                pRESUPUESTOP.presupuestoCPT = new List<PRESUPUESTOP>();
-                pRESUPUESTOP.presupuestoSAP = new List<PRESUPSAPP>();
-                ViewBag.MensajeGI = carga.mensajes(4, user.SPRAS_ID);//"Carga cancelada";
+                ViewBag.MensajeGI = carga.mensajes(1, user.SPRAS_ID);
                 return View(pRESUPUESTOP);
             }
+            
         }
         [HttpPost]
         public FileResult Descargar(string excel)
