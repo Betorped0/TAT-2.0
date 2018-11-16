@@ -119,7 +119,7 @@ namespace TAT001.Controllers.Catalogos
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            USUARIO uSUARIO = db.USUARIOs.Find(id);
+            USUARIO uSUARIO = db.USUARIOs.Find(uz);
             ViewBag.nivelUsuario = uSUARIO.PUESTO_ID;
             string spra = Session["spras"].ToString();
             if (uSUARIO == null)
@@ -561,8 +561,14 @@ namespace TAT001.Controllers.Catalogos
                             }
                         }
                     }
-                    //return RedirectToAction("Details", new { id = uSUARIO.ID });
-                    return RedirectToAction("Index");
+                    if (userz.PUESTO_ID == 1 || userz.PUESTO_ID == 8)
+                    {
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        return RedirectToAction("Details", new { id = uSUARIO.ID });
+                    }
                 }
                 else
                 {
