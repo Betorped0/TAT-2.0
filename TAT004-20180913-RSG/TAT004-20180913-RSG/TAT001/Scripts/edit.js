@@ -264,7 +264,7 @@ $(document).ready(function () {
         }
     });
 
-    $('#delRow').click(function (e) {
+    $('#delRowB').click(function (e) {
         var t = $('#table_dis').DataTable();
         t.rows('.selected').remove().draw(false);
         //Validar si es categoría por porcentaje
@@ -310,7 +310,7 @@ $(document).ready(function () {
         }
     });
 
-    $('#addRow').on('click', function () {
+    $('#addRowB').on('click', function () {
 
         var relacionada = "";
 
@@ -2548,7 +2548,7 @@ function copiarTableControl(borrador) { //B20180625 MGC 2018.07.03
 
                     $("table#table_dish tbody").append(data);
                     if (borrador != "X") { //B20180625 MGC 2018.07.03
-                        $('#delRow').click();
+                        $('#delRowB').click();
                     }
                 }
 

@@ -3462,7 +3462,7 @@ namespace TAT001.Controllers
 
         }
 
-        void ObtenerAnalisisSolicitud(DOCUMENTO D)
+        void ObtenerAnalisisSolicitud(DOCUMENTO D,decimal? monto=null)
         {
             FormatosC format = new FormatosC();
             decimal montoProv = 0.0M;
@@ -3473,6 +3473,10 @@ namespace TAT001.Controllers
             bool esProv = false;
             bool esNC = false;
 
+            if (monto!=null)
+            {
+                D.MONTO_DOC_MD = monto;
+            }
 
             if (D.DOCUMENTO_REF != null)
             {//Es hijo
@@ -3926,7 +3930,7 @@ namespace TAT001.Controllers
                                 docP.APOYO_EST = docpl[j].APOYO_EST;
                                 docP.APOYO_REAL = docpl[j].APOYO_REAL;
                                 docP.ORIGINAL = "";
-                                if (dPadre.DOCUMENTOPs.Where(x => x.MATNR == docP.MATNR).ToList().Count > 0)
+                                if (dPadre!= null && dPadre.DOCUMENTOPs.Where(x => x.MATNR == docP.MATNR).ToList().Count > 0)
                                     docP.ORIGINAL = "X";
 
                                 //Verificar si hay materiales en las relacionadas
@@ -3978,7 +3982,7 @@ namespace TAT001.Controllers
                             }
                             catch (Exception e)
                             {
-
+                                Log.ErrorLogApp(e,"Solicitudes","Edit");
                             }
                         }
                         //MGC B20180611 Obtener las categorias con el detalle de cada material
@@ -7726,21 +7730,36 @@ namespace TAT001.Controllers
         }
 
         [HttpPost]
-        public JsonResult getSolicitud(string num, string monto, string tsol_id, string sociedad_id, bool esCategoriaUnica)//RSG 07.06.2018---------------------------------------------
+        public JsonResult getSolicitud(string num, string monto, string tsol_id, string sociedad_id, bool esCategoriaUnica,bool edit=false)//RSG 07.06.2018---------------------------------------------
         {
             SOLICITUD_MOD sm = new SOLICITUD_MOD();
 
             //Obtener info solicitud
-            if (num == null | num == "" | num == "0.00")
+            if (num == null || num == "" || num == "0.00")
             {
                 sm.S_NUM = num = "";
+            }else if (edit)
+            {
+                decimal num_doc = Convert.ToDecimal(num);
+                DOCUMENTO D = db.DOCUMENTOes.First(x=>x.NUM_DOC== num_doc);
+                ObtenerAnalisisSolicitud(D, Convert.ToDecimal(monto));
+
+                sm.S_MONTOB = ViewBag.montoSol;
+                sm.S_MONTOP = ViewBag.montoProv;
+                sm.S_MONTOA = ViewBag.montoApli;
+                sm.S_REMA = ViewBag.remanente;
+                sm.S_IMPA = ViewBag.impuesto;
+                sm.S_IMPB = "-";
+                sm.S_IMPC = "-";
+                sm.S_RET = "-";
+                sm.S_TOTAL = ViewBag.montoTotal;
             }
             else
             {
                 decimal num_doc = Convert.ToDecimal(num);
                 var rev = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == num_doc && x.ESTATUS_C == null).ToList();
 
-                if (rev.Count() == 0)
+                if (rev.Count == 0)
                 {
                     //CON UN RELACIONADO 
                     var rev2 = db.DOCUMENTOes.Where(x => x.NUM_DOC == num_doc).FirstOrDefault();
@@ -7756,7 +7775,7 @@ namespace TAT001.Controllers
                     sm.S_RET = "-";
                     sm.S_TOTAL = monto;
                 }
-                else if (rev.Count() == 1)
+                else if (rev.Count == 1)
                 {
                     //CON DOS RELACIONADOS
                     var rev3 = db.DOCUMENTOes.Where(x => x.NUM_DOC == num_doc).FirstOrDefault();
@@ -7773,7 +7792,7 @@ namespace TAT001.Controllers
                     sm.S_RET = "-";
                     sm.S_TOTAL = monto;
                 }
-                else if (rev.Count() > 1)
+                else if (rev.Count > 1)
                 {
                     var rev4 = db.DOCUMENTOes.Where(x => x.NUM_DOC == num_doc).FirstOrDefault();
                     var rev44 = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == num_doc && x.ESTATUS_C == null).Select(x => x.MONTO_DOC_MD);
