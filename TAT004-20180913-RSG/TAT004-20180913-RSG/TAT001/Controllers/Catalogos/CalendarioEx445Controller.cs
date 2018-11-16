@@ -5,11 +5,13 @@ using System.Linq;
 using System.Web.Mvc;
 using TAT001.Common;
 using TAT001.Entities;
+using TAT001.Filters;
 using TAT001.Models;
 
 namespace TAT001.Controllers.Catalogos
 {
     [Authorize]
+    [LoginActive]
     public class CalendarioEx445Controller : Controller
     {
         readonly TAT001Entities db = new TAT001Entities();
