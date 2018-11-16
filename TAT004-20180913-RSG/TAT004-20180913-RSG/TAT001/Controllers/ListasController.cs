@@ -100,9 +100,9 @@ namespace TAT001.Controllers
 
         }
         [HttpGet]
-        public JsonResult Solicitudes(string Prefix)
+        public JsonResult Solicitudes(string Prefix,decimal? num_doci,decimal? num_docf)
         {
-            var solicitudes = FnCommon.ObtenerSolicitudes(db, Prefix);
+            var solicitudes = FnCommon.ObtenerSolicitudes(db, Prefix, num_doci, num_docf,null,null,null,null);
             JsonResult cc = Json(solicitudes, JsonRequestBehavior.AllowGet);
             return cc;
         }

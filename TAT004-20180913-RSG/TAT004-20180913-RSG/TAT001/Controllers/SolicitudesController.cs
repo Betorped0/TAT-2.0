@@ -858,7 +858,8 @@ namespace TAT001.Controllers
                         if (docsrel.Count > 0)
                         {
                             docsrelp = docsrel
-                                .Where(x => x.ESTATUS_C != "C")
+                                //.Where(x => x.ESTATUS_C != "C")//ADD RSG 15.11.2018
+                                .Where(x => x.ESTATUS_C != "C" & x.ESTATUS_WF != "B")//ADD RSG 15.11.2018
                                 .Join(
                                 db.DOCUMENTOPs,
                                 docsl => docsl.NUM_DOC,
@@ -905,8 +906,9 @@ namespace TAT001.Controllers
                             }
 
                         }
-                        d.NUM_DOC = 0;
+                        //d.NUM_DOC = 0;
                         List<TAT001.Models.DOCUMENTOP_MOD> docsp = new List<DOCUMENTOP_MOD>();
+                        decimal resta = 0;//ADD RSG 15.11.2018
                         var dis = "";
                         for (int j = 0; j < docpl.Count; j++)
                         {
@@ -964,6 +966,9 @@ namespace TAT001.Controllers
                                             //decimal docr_vr = Convert.ToDecimal(docrel[k].);
                                             //decimal docr_ar = Convert.ToDecimal(docrel[k].APOYO_REAL);
                                         }
+                                        else if (tsmod.TSOL.REVERSO)
+                                            totalcatrel += Convert.ToDecimal(docrel[k].APOYO_REAL); //MGC B20180611
+
 
                                     }
                                 }
@@ -975,6 +980,7 @@ namespace TAT001.Controllers
                                 }
                                 if (docP.APOYO_EST < 0)
                                 {
+                                    resta += (decimal)docP.APOYO_EST;//ADD RSG 15.11.2018
                                     docP.APOYO_EST = 0;
                                 }
 
@@ -986,7 +992,17 @@ namespace TAT001.Controllers
 
                             }
                         }
-                        //MGC B20180611 Obtener las categorias con el detalle de cada material
+                        //ADD RSG 15.11.2018------------------------------------I
+                        for (int j = 0; j < docsrelp.Count; j++)
+                        {
+                            List<DOCUMENTOP> docrel = new List<DOCUMENTOP>();
+                            docrel = docpl.Where(docrell => docrell.MATNR == docsrelp[j].MATNR).ToList();
+                            if (docrel.Count == 0)
+                            {
+                                resta -= Convert.ToDecimal(docsrelp[j].APOYO_REAL);
+                            }
+                        }
+                            //MGC B20180611 Obtener las categorias con el detalle de cada material
                         if (docml.Count > 0)
                         {
                             res = grupoMaterialesRel(docpl, docml);
@@ -994,7 +1010,26 @@ namespace TAT001.Controllers
 
                         //Restar el valor del documento menos los relacionados
                         d.MONTO_DOC_MD = d.MONTO_DOC_MD - totalcatrel;//MGC B20180611
-
+                        //if ((docsp.Count - mayores) > 0)
+                        //    resta = resta / (docsp.Count - mayores);
+                        while (resta != 0)
+                        {
+                            foreach (DOCUMENTOP_MOD ddp in docsp)
+                            {
+                                if (ddp.APOYO_EST > 0)
+                                {
+                                    ddp.APOYO_EST += resta;
+                                    if (ddp.APOYO_EST <= 0)
+                                    {
+                                        resta = (decimal)ddp.APOYO_EST;
+                                        ddp.APOYO_EST = 0;
+                                    }
+                                    else
+                                        resta = 0;
+                                }
+                            }
+                        }
+                        //ADD RSG 15.11.2018------------------------------------F
                         d.DOCUMENTOP = docsp;
                     }
                 }
@@ -3427,7 +3462,7 @@ namespace TAT001.Controllers
 
         }
 
-        void ObtenerAnalisisSolicitud(DOCUMENTO D)
+        void ObtenerAnalisisSolicitud(DOCUMENTO D,decimal? monto=null)
         {
             FormatosC format = new FormatosC();
             decimal montoProv = 0.0M;
@@ -3438,6 +3473,10 @@ namespace TAT001.Controllers
             bool esProv = false;
             bool esNC = false;
 
+            if (monto!=null)
+            {
+                D.MONTO_DOC_MD = monto;
+            }
 
             if (D.DOCUMENTO_REF != null)
             {//Es hijo
@@ -3555,7 +3594,7 @@ namespace TAT001.Controllers
                 string p = "";
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-                FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller,202);
+                FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller, 202);
 
                 List<TREVERSAT> ldocr = new List<TREVERSAT>();
                 decimal rel = 0;
@@ -3856,6 +3895,7 @@ namespace TAT001.Controllers
                             }
 
                         }
+                        DOCUMENTO dPadre = db.DOCUMENTOes.Find(d.DOCUMENTO_REF);
                         d.NUM_DOC = 0;
                         List<TAT001.Models.DOCUMENTOP_MOD> docsp = new List<DOCUMENTOP_MOD>();
                         var dis = "";
@@ -3889,6 +3929,9 @@ namespace TAT001.Controllers
                                 docP.VIGENCIA_AL = docpl[j].VIGENCIA_AL;
                                 docP.APOYO_EST = docpl[j].APOYO_EST;
                                 docP.APOYO_REAL = docpl[j].APOYO_REAL;
+                                docP.ORIGINAL = "";
+                                if (dPadre!= null && dPadre.DOCUMENTOPs.Where(x => x.MATNR == docP.MATNR).ToList().Count > 0)
+                                    docP.ORIGINAL = "X";
 
                                 //Verificar si hay materiales en las relacionadas
                                 if (docsrelp.Count > 0)
@@ -3939,7 +3982,7 @@ namespace TAT001.Controllers
                             }
                             catch (Exception e)
                             {
-
+                                Log.ErrorLogApp(e,"Solicitudes","Edit");
                             }
                         }
                         //MGC B20180611 Obtener las categorias con el detalle de cada material
@@ -5339,46 +5382,49 @@ namespace TAT001.Controllers
                 {
                     if (!d.TSOL.REVERSO)
                     {
-                        DOCUMENTO docPadre = db.DOCUMENTOes.Find(d.DOCUMENTO_REF);
-                        List<DOCUMENTO> dd = db.DOCUMENTOes.Where(a => a.DOCUMENTO_REF == (d.DOCUMENTO_REF)).ToList();
-                        List<DOCUMENTOP> ddr = db.DOCUMENTOPs.Where(a => a.NUM_DOC == (d.DOCUMENTO_REF)).ToList();
-                        ////decimal total = 0;
-                        decimal[] totales = new decimal[ddr.Count()];
-                        decimal totalRes = new decimal();
-                        //foreach (DOCUMENTOP dr in ddr)
-                        //{
-                        //    //totales[(int)dr.POS - 1] = dr.VOLUMEN_EST * dr.MONTO_APOYO;
-                        //    totales[(int)dr.POS - 1] = (decimal)dr.APOYO_EST;
-                        foreach (DOCUMENTO d1 in dd)
+                        using (TAT001Entities db1 = new TAT001Entities())
                         {
-                            //foreach (DOCUMENTOP dp in d1.DOCUMENTOPs)
+                            DOCUMENTO docPadre = db1.DOCUMENTOes.Find(d.DOCUMENTO_REF);
+                            List<DOCUMENTO> dd = db1.DOCUMENTOes.Where(a => a.DOCUMENTO_REF == (d.DOCUMENTO_REF)).ToList();
+                            List<DOCUMENTOP> ddr = db1.DOCUMENTOPs.Where(a => a.NUM_DOC == (d.DOCUMENTO_REF)).ToList();
+                            ////decimal total = 0;
+                            decimal[] totales = new decimal[ddr.Count()];
+                            decimal totalRes = new decimal();
+                            //foreach (DOCUMENTOP dr in ddr)
                             //{
-                            //    if (dr.POS == dp.POS)
-                            //    {
-                            //        //var suma2 = dp.VOLUMEN_REAL * dp.MONTO_APOYO;
-                            //        var suma2 = dp.APOYO_REAL;
+                            //    //totales[(int)dr.POS - 1] = dr.VOLUMEN_EST * dr.MONTO_APOYO;
+                            //    totales[(int)dr.POS - 1] = (decimal)dr.APOYO_EST;
+                            foreach (DOCUMENTO d1 in dd)
+                            {
+                                //foreach (DOCUMENTOP dp in d1.DOCUMENTOPs)
+                                //{
+                                //    if (dr.POS == dp.POS)
+                                //    {
+                                //        //var suma2 = dp.VOLUMEN_REAL * dp.MONTO_APOYO;
+                                //        var suma2 = dp.APOYO_REAL;
 
-                            //        totales[(int)dr.POS - 1] = totales[(int)dr.POS - 1] - (decimal)suma2;
-                            //    }
+                                //        totales[(int)dr.POS - 1] = totales[(int)dr.POS - 1] - (decimal)suma2;
+                                //    }
+                                //}
+                                totalRes += (decimal)d1.MONTO_DOC_MD;
+                                //}
+                            }
+                            //RSG 14.06.2018----------------------
+                            decimal resto = decimal.Parse("0.00");
+                            //foreach (decimal dec in totales)
+                            //{
+                            //    resto += dec;
                             //}
-                            totalRes += (decimal)d1.MONTO_DOC_MD;
+                            resto = (decimal)docPadre.MONTO_DOC_MD - totalRes;
+                            ////RSG 14.06.2018----------------------
+                            //foreach (decimal dec in totales)
+                            //{
+                            //    if (dec > 0)
+                            //        return RedirectToAction("Reversa", new { id = dOCUMENTO.DOCUMENTO_REF, resto = resto });
                             //}
+                            if (docPadre.MONTO_DOC_MD - totalRes > 0)
+                                return RedirectToAction("Reversa", new { id = dOCUMENTO.DOCUMENTO_REF, resto = resto });
                         }
-                        //RSG 14.06.2018----------------------
-                        decimal resto = decimal.Parse("0.00");
-                        //foreach (decimal dec in totales)
-                        //{
-                        //    resto += dec;
-                        //}
-                        resto = (decimal)docPadre.MONTO_DOC_MD - totalRes;
-                        ////RSG 14.06.2018----------------------
-                        //foreach (decimal dec in totales)
-                        //{
-                        //    if (dec > 0)
-                        //        return RedirectToAction("Reversa", new { id = dOCUMENTO.DOCUMENTO_REF, resto = resto });
-                        //}
-                        if (docPadre.MONTO_DOC_MD - totalRes > 0)
-                            return RedirectToAction("Reversa", new { id = dOCUMENTO.DOCUMENTO_REF, resto = resto });
 
                     }
                     using (TAT001Entities db1 = new TAT001Entities())
@@ -5911,7 +5957,7 @@ namespace TAT001.Controllers
                         doc.APOYO_EST = 0;
                     }
                     //RSG 24.05.2018----------------------------------
-                    if (doc.PORC_APOYO == 0 || doc.MONTO==0)
+                    if (doc.PORC_APOYO == 0 || doc.MONTO == 0)
                     {
                         try
                         {
@@ -7684,21 +7730,36 @@ namespace TAT001.Controllers
         }
 
         [HttpPost]
-        public JsonResult getSolicitud(string num, string monto, string tsol_id, string sociedad_id, bool esCategoriaUnica)//RSG 07.06.2018---------------------------------------------
+        public JsonResult getSolicitud(string num, string monto, string tsol_id, string sociedad_id, bool esCategoriaUnica,bool edit=false)//RSG 07.06.2018---------------------------------------------
         {
             SOLICITUD_MOD sm = new SOLICITUD_MOD();
 
             //Obtener info solicitud
-            if (num == null | num == "" | num == "0.00")
+            if (num == null || num == "" || num == "0.00")
             {
                 sm.S_NUM = num = "";
+            }else if (edit)
+            {
+                decimal num_doc = Convert.ToDecimal(num);
+                DOCUMENTO D = db.DOCUMENTOes.First(x=>x.NUM_DOC== num_doc);
+                ObtenerAnalisisSolicitud(D, Convert.ToDecimal(monto));
+
+                sm.S_MONTOB = ViewBag.montoSol;
+                sm.S_MONTOP = ViewBag.montoProv;
+                sm.S_MONTOA = ViewBag.montoApli;
+                sm.S_REMA = ViewBag.remanente;
+                sm.S_IMPA = ViewBag.impuesto;
+                sm.S_IMPB = "-";
+                sm.S_IMPC = "-";
+                sm.S_RET = "-";
+                sm.S_TOTAL = ViewBag.montoTotal;
             }
             else
             {
                 decimal num_doc = Convert.ToDecimal(num);
                 var rev = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == num_doc && x.ESTATUS_C == null).ToList();
 
-                if (rev.Count() == 0)
+                if (rev.Count == 0)
                 {
                     //CON UN RELACIONADO 
                     var rev2 = db.DOCUMENTOes.Where(x => x.NUM_DOC == num_doc).FirstOrDefault();
@@ -7714,7 +7775,7 @@ namespace TAT001.Controllers
                     sm.S_RET = "-";
                     sm.S_TOTAL = monto;
                 }
-                else if (rev.Count() == 1)
+                else if (rev.Count == 1)
                 {
                     //CON DOS RELACIONADOS
                     var rev3 = db.DOCUMENTOes.Where(x => x.NUM_DOC == num_doc).FirstOrDefault();
@@ -7731,7 +7792,7 @@ namespace TAT001.Controllers
                     sm.S_RET = "-";
                     sm.S_TOTAL = monto;
                 }
-                else if (rev.Count() > 1)
+                else if (rev.Count > 1)
                 {
                     var rev4 = db.DOCUMENTOes.Where(x => x.NUM_DOC == num_doc).FirstOrDefault();
                     var rev44 = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == num_doc && x.ESTATUS_C == null).Select(x => x.MONTO_DOC_MD);

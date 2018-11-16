@@ -164,7 +164,7 @@ function loadExcelDis(file) {
                     html: "Archivo con numero de columnas incorrecto"
                 });
                 document.getElementById("loader").style.display = "none";
-            }else if (data !== null || data !== "") {
+            } else if ((data !== null || data !== "") && !data.isRedirect) {
                // $('#table tbody').html(data);
                 $.each(data, function (i, dataj) {
 
@@ -373,6 +373,9 @@ function loadExcelDis(file) {
                 $('#table').css("display", "table");
                 document.getElementById("loader").style.display = "none";
             }
+            else {
+                window.location.href = data.redirectUrl;
+            }
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             M.toast({
@@ -459,10 +462,13 @@ function Carga() {
                     url: 'Agregar',
                     data: datos,
                     dataType: "json",
-                    success: function () {
-                        console.log(datos);
-                        location.reload();
-                        mostrarAlerta("info", "A", "Se agregaron los nuevos registros");
+                    success: function (data) {
+                        if (data.isRedirect) {
+                            window.location.href = data.redirectUrl;
+                        }
+                        else {
+                            mostrarAlerta("info", "A", "Se agregaron los nuevos registros");
+                        }
                     },
                     error: function (request, status, error) {
                         console.log(request.responseText);
@@ -511,7 +517,7 @@ function creart(metodo, datos) {
         dataType: "json",
         data: datos,
         success: function (data) {
-            if (data !== null || data !== "") {
+            if ((data !== null || data !== "") && !data.isRedirect) {
 
                 table.clear().draw();
 
@@ -721,6 +727,9 @@ function creart(metodo, datos) {
                 $('#table').css("font-size", "12px");
                 $('#table').css("display", "table");
                 document.getElementById("loader").style.display = "none";
+            }
+            else {
+                window.location.href = data.redirectUrl;
             }
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {

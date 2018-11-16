@@ -1521,8 +1521,8 @@
                                     }
                                 </div>
                                 @*<input type="button" id="matcat" value="Get materiales cat" />*@
-                                <input type="text" id="select_negi" name="select_negi" value="@ViewBag.SEL_NEG" disabled="disabled" hidden />
-                                <input type="text" id="select_disi" name="select_disi" value="@ViewBag.SEL_DIS" disabled="disabled" hidden />
+                                <input type="hidden" id="select_negi" name="select_negi" value="@ViewBag.SEL_NEG"/>
+                                <input type="hidden" id="select_disi" name="select_disi" value="@ViewBag.SEL_DIS"/>
 
                                 <div class="input-field col s6">
                                     <select id="select_neg" name="select_neg" onchange="selectDis(this.value)" disabled>
@@ -1616,8 +1616,8 @@
                                         </div>
                                     </div>
                                     <div id="div_btns_row" style="display:none">
-                                        <a class="btn" id="addRow"><i class="material-icons left">add</i>Registro</a>
-                                        <a class="btn" id="delRow"><i class="material-icons left">clear</i>Registro</a>
+                                        <a class="btn" id="addRowB"><i class="material-icons left">add</i><span id="addRow">Registros</span></a>  @*B20180801 MGC Textos*@
+                                        <a class="btn" id="delRowB"><i class="material-icons left">clear</i><span id="delRow">Registro</span></a>  @*B20180801 MGC Textos*@
                                     </div>
                                 }
                                 <div id="div_picker"></div>
@@ -1722,6 +1722,9 @@
                                             </td>
                                             <td>
                                                 @Html.EditorFor(m => m.DOCUMENTOP[i].APOYO_REAL)
+                                            </td>
+                                            <td>
+                                                @Html.EditorFor(m => m.DOCUMENTOP[i].ORIGINAL)
                                             </td>
                                         </tr>
                                     }
@@ -1893,6 +1896,8 @@
                                     function getClearing() {
                                         $("#div_clearing").empty();
                                         cuentas();
+
+                                        asignarSolicitud($('#NUM_DOC').val(),$('#monto_doc_md').val(),true);
                                     }
                                     function formaClearing() {
                                         var tex_abono = document.querySelector(".lbl_cabono").innerHTML;

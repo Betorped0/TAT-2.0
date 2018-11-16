@@ -2030,6 +2030,7 @@
     <Content Include="Views\Region\Edit.cshtml" />
     <Content Include="Views\Region\Index.cshtml" />
     <Content Include="Views\ModificacionesGlobales\Index.cshtml" />
+    <Content Include="Views\ModificacionesGlobales\ListModAutorizador.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->

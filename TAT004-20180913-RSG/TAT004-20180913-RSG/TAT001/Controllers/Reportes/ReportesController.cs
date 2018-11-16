@@ -1569,7 +1569,7 @@ namespace TAT001.Controllers.Reportes
                               CO_CODE = d.SOCIEDAD_ID,
                               PAIS = p.LANDX,
                               NUMERO_SOLICITUD = d.NUM_DOC,
-                              FECHA_SOLICITUD = (DateTime)d.FECHAC,
+                              FECHA_SOLICITUD = ((d.FECHAC == null)? new DateTime() : (DateTime)d.FECHAC),
                               PERIODO_CONTABLE = (Int32)d.PERIODO,
                               ANIO_CONTABLE = d.EJERCICIO,
                               NUMERO_DOCUMENTO_SAP = d.DOCUMENTO_SAP,
@@ -1584,8 +1584,8 @@ namespace TAT001.Controllers.Reportes
                               STATUSS1 = (d.ESTATUS ?? " ") + (d.ESTATUS_C ?? " ") + (d.ESTATUS_SAP ?? " ") + (d.ESTATUS_WF ?? " "),
                               STATUSS3 = (ts.PADRE ? "P" : " "),
                               CONCEPTO_SOLICITUD = d.CONCEPTO,
-                              DE = (DateTime)d.FECHAI_VIG,
-                              A = (DateTime)d.FECHAF_VIG,
+                              DE = ((d.FECHAI_VIG == null) ? new DateTime() : (DateTime)d.FECHAI_VIG),
+                              A = ((d.FECHAF_VIG == null) ? new DateTime() : (DateTime)d.FECHAF_VIG),
                               CLASIFICACION = gt.TXT50,
                               NUMERO_CLIENTE = d.PAYER_ID,
                               CLIENTE = c.NAME1,
@@ -1613,7 +1613,7 @@ namespace TAT001.Controllers.Reportes
                 else
                 {
                     renglon.ES_REVERSO = true;
-                    renglon.FECHA_REVERSO = (DateTime)queryReverso.FECHAC;
+                    renglon.FECHA_REVERSO = ((queryReverso.FECHAC == null) ? new DateTime() : (DateTime)queryReverso.FECHAC);
                     renglon.COMENTARIOS_REVERSO_PROVISION = queryReverso.COMENTARIO;
                 }
 
@@ -1794,7 +1794,7 @@ namespace TAT001.Controllers.Reportes
         {
             TrackingTS ultimo = grupo.Last();
             TrackingTS primero = grupo.First();
-            ultimo.NUMERO_CORRECCIONES = grupo.Count();
+            ultimo.NUMERO_CORRECCIONES = grupo.Where(c => c.ESTATUS.Equals("R")).Count();
             ultimo.TIEMPO_TRANSCURRIDO = (ultimo.FECHA - primero.FECHA).TotalHours; // ToDo: Restar sábados, domingos y días feriados
             ultimo.SEMANA = System.Globalization.CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(primero.FECHA, System.Globalization.CalendarWeekRule.FirstDay, DayOfWeek.Monday);
             return ultimo;
