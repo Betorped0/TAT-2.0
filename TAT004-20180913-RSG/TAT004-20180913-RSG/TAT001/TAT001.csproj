@@ -832,6 +832,7 @@
     <Compile Include="Entities\ZCTGR.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
+    <Compile Include="Filters\LoginActiveFilter.cs" />
     <Compile Include="Models\AlertaViewModel.cs" />
     <Compile Include="Models\Calendario445ViewModel.cs" />
     <Compile Include="Models\CargaMasivaModels.cs" />

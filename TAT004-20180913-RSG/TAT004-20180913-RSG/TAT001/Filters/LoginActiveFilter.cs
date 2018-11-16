@@ -1,0 +1,59 @@
+﻿using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Mvc.Filters;
+using System.Web.Security;
+using TAT001.Entities;
+
+namespace TAT001.Filters
+{
+    public class LoginActiveAttribute : FilterAttribute, IAuthenticationFilter
+        {
+            public void OnAuthentication(AuthenticationContext context)
+            {
+                if (context.HttpContext.User.Identity.IsAuthenticated) {
+                    if(validUserSession(context.HttpContext.User.Identity.Name))
+                    {
+                        // do nothing
+                    }
+                    else
+                    {
+                        FormsAuthentication.SignOut();
+                        context.Result = new HttpUnauthorizedResult(); // mark unauthorized
+                    }
+                }
+                else
+                {
+                    context.Result = new HttpUnauthorizedResult();
+                }
+            }
+            public void OnAuthenticationChallenge(AuthenticationChallengeContext context)
+            {
+                if (context.Result == null || context.Result is HttpUnauthorizedResult)
+                {
+                    context.Result = new RedirectToRouteResult("Default",
+                    new System.Web.Routing.RouteValueDictionary{
+                {"controller", "Account"},
+                {"action", "Login"},
+                {"returnUrl", context.HttpContext.Request.RawUrl}
+                    });
+                }
+            }
+        public bool validUserSession(string username)
+        {
+            using (TAT001Entities db = new TAT001Entities())
+            {
+                var existeSession = db.USUARIOLOGs.FirstOrDefault(x => x.USUARIO_ID == username);
+
+                if (existeSession != null && HttpContext.Current.Session.SessionID != existeSession.SESION)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        }
+    }
+}
