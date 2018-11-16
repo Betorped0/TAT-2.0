@@ -456,7 +456,7 @@
                         <td>@item.ROL </td>
                         <td>@item.USUARIO_ACCION </td>
                         <td>@item.COMENTARIO </td>
-                        <td>@(item.NUMERO_CORRECCIONES - 1 == 0 ? "" : (item.NUMERO_CORRECCIONES - 1).ToString()) </td>
+                        <td>@(item.NUMERO_CORRECCIONES == 0 ? "" : item.NUMERO_CORRECCIONES.ToString()) </td>
                     </tr>
                     }
                 </tbody>
