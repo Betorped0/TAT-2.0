@@ -390,10 +390,10 @@ $(document).ready(function () {
                     } else {
                         if (catExist == 1) {
                             //M.toast({ html: 'La categoría ya había sido agregada' });
-                            M.toast({ html: 'La categoría no puede ser agregada en la misma solicitud' });
+                            msj("toast", 'La categoría no puede ser agregada en la misma solicitud');//16-11-2018
                         } else {
                             var catt = categoriaUnica(cat);
-                            M.toast({ html: catt + ' no pueden mezclarse con otras categorías y/ o materiales' });
+                            msj("toast", catt + ' no pueden mezclarse con otras categorías y/ o materiales'); //16-11-2018
                         }
                     }
 
@@ -451,14 +451,14 @@ $(document).ready(function () {
                         } else {
                             if (catExist == 1) {
                                 //M.toast({ html: 'La categoría ya había sido agregada' });
-                                M.toast({ html: 'La categoría no puede ser agregada en la misma solicitud' });
+                                msj("toast", 'La categoría no puede ser agregada en la misma solicitud'); //16-11-2018
                             } else {
                                 var catt = categoriaUnica(cat);
-                                M.toast({ html: catt + ' no pueden mezclarse con otras categorías y/ o materiales' });
+                                msj("toast", catt + ' no pueden mezclarse con otras categorías y/ o materiales');//16-11-2018
                             }
                         }
                     } else {
-                        M.toast({ html: 'El monto base debe de ser mayor a cero' });
+                        msj("toast",'El monto base debe de ser mayor a cero' ); //16-11-2018
                     }
                 } else if (dis == "M") {
                     //Distribución por material  
@@ -476,7 +476,7 @@ $(document).ready(function () {
                         //eliminarRowsDistribucion(por_apoyo);
                     } else {
                         //Si el porcentage es 0 desbloquear la columna de porcentaje de apoyo
-                        M.toast({ html: 'Porcentaje de apoyo base debe de ser mayor a cero' });
+                        msj("toast",'Porcentaje de apoyo base debe de ser mayor a cero');//16-11-2018
                         return false;
                     }
 
@@ -780,7 +780,7 @@ $(document).ready(function () {
             asignarSolicitud(num, num2.replace("$", ""));//RSG 12.06.2018 //LEJ 09.07.18
 
         } else {
-            M.toast({ html: 'Verificar valores en los campos de Distribución!' });
+             msj("toast",'Verificar valores en los campos de Distribución!'); //16-11-2018
             e.preventDefault();
             e.stopPropagation();
             //var active = $('ul.tabs .active').attr('href');
@@ -893,7 +893,7 @@ $(document).ready(function () {
             $('#montos_doc_ml2').val(monto_doc_md);
             $("label[for='montos_doc_ml2']").addClass("active");
             var msg = 'Monto incorrecto';
-            M.toast({ html: msg });
+            msj("toast",msg ); //16-11-2018
             e.preventDefault();
         }
 
@@ -4422,7 +4422,7 @@ function evalDistribucionTab(ret, e) {
         return res;
     } else {
         if (!res) {
-            M.toast({ html: msg });
+            msj("toast", msg ); //16-11-2018
             e.preventDefault();
             e.stopPropagation();
             //var active = $('ul.tabs .active').attr('href');
@@ -5858,7 +5858,7 @@ function valMaterial(mat, message) {
             },
             error: function (xhr, httpStatusMessage, customErrorMessage) {
                 if (message == "X") {
-                    M.toast({ html: "Valor no encontrado" });
+                    msj("toast","Valor no encontrado" ); //16-11-2018
                 }
             },
             async: false
@@ -6086,3 +6086,11 @@ function descargarArchivo(me) {
     form.submit();
 }
 
+function msj(clase, msj) {
+    M.toast({
+        classes: clase,
+        displayLength: 1000000,
+        html: '<span style="padding-right:15px;"><i class="material-icons yellow-text">info</i></span>  ' + msj
+            + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'' + clase + '\')">Aceptar</button>'
+    });
+}
