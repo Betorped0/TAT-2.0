@@ -14,11 +14,14 @@ using System.Web.Security;
 using System.Web.UI;
 using TAT001.Common;
 using TAT001.Entities;
+using TAT001.Filters;
 using TAT001.Models;
 using TAT001.Services;
 
 namespace TAT001.Controllers.Catalogos
 {
+    [Authorize]
+    [LoginActive]
     [Authorize]
     public class ClientesController : Controller
     {
