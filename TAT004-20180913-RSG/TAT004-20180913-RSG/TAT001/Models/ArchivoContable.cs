@@ -178,7 +178,7 @@ namespace TAT001.Models
                 }
                 if (tab.TIPO_DOC == "KR")
                 {
-                    padre = Convert.ToInt32(tab.RELACION);
+                    padre = Convert.ToInt32(tab.CONSECUTIVO);
                 }
                 //if (padre == tab.RELACION && relacion != 0)
                 //{
@@ -544,17 +544,17 @@ namespace TAT001.Models
                             {
                                 if (doc.PAIS_ID == "CO")
                                 {
-                                    conta.BALANCE = Conversion(Convert.ToDecimal(doc.MONTO_DOC_MD + (doc.MONTO_DOC_MD * taxh.PORC / 100)), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                    conta.BALANCE = Conversion(Convert.ToDecimal(doc.MONTO_DOC_MD + (doc.MONTO_DOC_MD * taxh.PORC)), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
                                 }
                                 else
                                 {
                                     if (unico)
                                     {
-                                        conta.BALANCE = Conversion(Convert.ToDecimal(docf[pos].IMPORTE_FAC + (docf[pos].IMPORTE_FAC * impu.KBETR / 100)), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                        conta.BALANCE = Conversion(Convert.ToDecimal(docf[pos].IMPORTE_FAC + (docf[pos].IMPORTE_FAC * impu.KBETR)), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
                                     }
                                     else
                                     {
-                                        conta.BALANCE = Conversion(Convert.ToDecimal(doc.MONTO_DOC_MD + (doc.MONTO_DOC_MD * impu.KBETR / 100)), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                        conta.BALANCE = Conversion(Convert.ToDecimal(doc.MONTO_DOC_MD + (doc.MONTO_DOC_MD * impu.KBETR)), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
                                         conta.ASSIGNMENT = Referencia(conp[i].ASIGNACIONTXT, doc, docf, clien, pos); //docf[0].FACTURA;
                                     }
                                     enca.CALC_TAXT = false;
@@ -568,8 +568,8 @@ namespace TAT001.Models
                             }
                             else
                             {
-                                conta.REF_KEY1 = conp[i].REF_KEY1;
-                                conta.REF_KEY3 = conp[i].REF_KEY3;
+                                //conta.REF_KEY1 = conp[i].REF_KEY1;
+                                //conta.REF_KEY3 = conp[i].REF_KEY3;
                                 if (unico)
                                 {
                                     conta.BALANCE = docf[pos].IMPORTE_FAC.ToString();
@@ -591,11 +591,11 @@ namespace TAT001.Models
                                 {
                                     if (unico)
                                     {
-                                        conta.BALANCE = Conversion(Convert.ToDecimal(docf[pos].IMPORTE_FAC + (docf[pos].IMPORTE_FAC * taxh.PORC / 100)), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                        conta.BALANCE = Conversion(Convert.ToDecimal(docf[pos].IMPORTE_FAC + (docf[pos].IMPORTE_FAC * taxh.PORC)), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
                                     }
                                     else
                                     {
-                                        conta.BALANCE = Conversion(Convert.ToDecimal(doc.MONTO_DOC_MD + (doc.MONTO_DOC_MD * impu.KBETR / 100)), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                        conta.BALANCE = Conversion(Convert.ToDecimal(doc.MONTO_DOC_MD + (doc.MONTO_DOC_MD * impu.KBETR)), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
                                     }
                                 }
                             }
@@ -603,11 +603,11 @@ namespace TAT001.Models
                             {
                                 if (doc.PAIS_ID == "CO")
                                 {
-                                    conta.BALANCE = Conversion(Convert.ToDecimal(doc.MONTO_DOC_MD + (doc.MONTO_DOC_MD * taxh.PORC / 100)), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                    conta.BALANCE = Conversion(Convert.ToDecimal(doc.MONTO_DOC_MD + (doc.MONTO_DOC_MD * taxh.PORC)), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
                                 }
                                 else //if(unico)
                                 {
-                                    conta.BALANCE = Conversion(Convert.ToDecimal(docf[pos].IMPORTE_FAC + (docf[pos].IMPORTE_FAC * impu.KBETR / 100)), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                    conta.BALANCE = Conversion(Convert.ToDecimal(docf[pos].IMPORTE_FAC + (docf[pos].IMPORTE_FAC * impu.KBETR)), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
                                 }
                             }
                         }
@@ -622,7 +622,7 @@ namespace TAT001.Models
                                 }
                                 else
                                 {
-                                    conta.BALANCE = Conversion(Convert.ToDecimal(doc.MONTO_DOC_MD + (doc.MONTO_DOC_MD * impu.KBETR / 100)), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                    conta.BALANCE = Conversion(Convert.ToDecimal(doc.MONTO_DOC_MD + (doc.MONTO_DOC_MD * impu.KBETR)), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
                                     conta.TAX_CODE = conp[i].TAX_CODE;
                                 }
                             }
@@ -659,397 +659,424 @@ namespace TAT001.Models
                     else
                     {
                         List<DOCUMENTOM> docm = db.DOCUMENTOMs.Where(x => x.NUM_DOC == doc.NUM_DOC).ToList();
-                        for (int j = 0; j < docm.Count; j++)
+                        List<DOCUMENTOP> docp = db.DOCUMENTOPs.Where(x => x.NUM_DOC == doc.NUM_DOC).ToList();
+                        if (docp.Count == 0)
                         {
-                            DetalleContab conta = new DetalleContab();
-                            conta.POS_TYPE = conp[i].KEY;
-                            conta.COMP_CODE = doc.SOCIEDAD_ID;
-                            conta.BUS_AREA = conp[i].BUS_AREA;
-                            conta.POST_KEY = conp[i].POSTING_KEY;
-                            conta.TEXT = doc.CONCEPTO;
-                            conta.REF_KEY1 = clien.STCD1;
-                            conta.REF_KEY3 = clien.NAME1;
-                            conta.SALES_ORG = clien.VKORG;
-                            conta.DIST_CHANEL = clien.VTWEG;
-                            conta.DIVISION = clien.SPART;
-                            if (enca.TIPO_DOC != "RN" && doc.PAIS_ID != "CO")
+                            for (int j = 0; j < docm.Count; j++)
                             {
-                                conta.CUSTOMER = doc.PAYER_ID;
-                                conta.PRODUCT = docm[j].MATNR;
-                                if (conp[i].QUANTITY != null && conp[i].QUANTITY != 0)
+                                DetalleContab conta = new DetalleContab();
+                                conta.POS_TYPE = conp[i].KEY;
+                                conta.COMP_CODE = doc.SOCIEDAD_ID;
+                                conta.BUS_AREA = conp[i].BUS_AREA;
+                                conta.POST_KEY = conp[i].POSTING_KEY;
+                                conta.TEXT = doc.CONCEPTO;
+                                //conta.REF_KEY1 = clien.STCD1;
+                                //conta.REF_KEY3 = clien.NAME1;
+                                conta.SALES_ORG = clien.VKORG;
+                                conta.DIST_CHANEL = clien.VTWEG;
+                                conta.DIVISION = clien.SPART;
+                                if (enca.TIPO_DOC != "RN" && doc.PAIS_ID != "CO")
                                 {
-                                    conta.QTY = conp[i].QUANTITY.ToString();
-                                }
-                                conta.AMOUNT_LC = conp[i].BASE_UNIT;
-                                conta.ACCOUNT = cuent.CARGO.ToString();
-                                //conta.BALANCE = (docp[j].MONTO_APOYO * docp[j].VOLUMEN_EST).ToString();
-
-                                //conta.BALANCE = docp[j].APOYO_REAL.ToString();
-                                if (enca.TIPO_DOC == "BB" || enca.TIPO_DOC == "DG")
-                                {
-                                    //conta.BALANCE = docm[j].APOYO_REAL.ToString(); //KCMX notacredito
-                                    if (unico)
-                                    {
-                                        conta.BALANCE = docf[pos].IMPORTE_FAC.ToString();
-                                        if (enca.TIPO_DOC == "DG")
-                                        {
-                                            conta.REF_KEY2 = docf[pos].BELNR;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        conta.BALANCE = Conversion(Convert.ToDecimal(docm[j].APOYO_REAL), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
-                                        conta.ASSIGNMENT = Referencia(conp[i].ASIGNACIONTXT, doc, docf, clien, pos); //docf[0].FACTURA;
-                                    }
-                                }
-                                else if (enca.TIPO_DOC == "SA" && hijo)
-                                {
-                                    conta.BALANCE = Conversion(Convert.ToDecimal(docm[j].APOYO_REAL), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
-                                }
-                                if (enca.TIPO_DOC == "KG")
-                                {
-                                    conta.CUSTOMER =
-                                    conta.PRODUCT = "";
-                                    if (unico)
-                                    {
-                                        conta.BALANCE = docf[pos].IMPORTE_FAC.ToString();
-                                    }
-                                    else
-                                    {
-                                        conta.BALANCE = Conversion(Convert.ToDecimal(doc.MONTO_DOC_MD + (doc.MONTO_DOC_MD * taxh.PORC / 100)), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
-                                    }
-                                    conta.ACCOUNT = cuent.CLEARING.ToString();
-                                    conta.PRODUCT = docm[j].MATNR;
                                     conta.CUSTOMER = doc.PAYER_ID;
-                                }
-                                //else
-                                //{
-                                //    //conta.BALANCE = docm[j].APOYO_EST.ToString(); //KCMX solic
-                                //    conta.BALANCE = Conversion(Convert.ToDecimal(docm[j].APOYO_EST), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
-                                //}
-                            }
-                            else
-                            {
-                                //conta.SALES_ORG =
-                                //conta.DIST_CHANEL =
-                                //conta.DIVISION =
-                                conta.CUSTOMER =
-                                conta.PRODUCT = "";
-                                conta.ACCOUNT = cuent.ABONO.ToString();
-                                conta.BALANCE = Conversion(Convert.ToDecimal(docm[j].APOYO_REAL), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
-                                if (enca.TIPO_DOC == "BB" || enca.TIPO_DOC == "SA")
-                                {
-                                    if (doc.PAIS_ID == "CO")
+                                    conta.PRODUCT = docm[j].MATNR;
+                                    if (conp[i].QUANTITY != null && conp[i].QUANTITY != 0)
                                     {
-                                        //conta.SALES_ORG = clien.VKORG;
-                                        //conta.DIST_CHANEL = clien.VTWEG;
-                                        //conta.DIVISION = clien.SPART;
-                                        conta.SALES_DIST = clien.BZIRK;
-                                        conta.CUSTOMER = doc.PAYER_ID;
-                                        conta.PRODUCT = docm[j].MATNR;
-                                        //conta.REF_KEY1 = clien.STCD1;
-                                        //conta.REF_KEY3 = clien.NAME1;
-                                        conta.ACCOUNT = cuent.CARGO.ToString();
-                                        if (enca.TIPO_DOC == "SA")
+                                        conta.QTY = conp[i].QUANTITY.ToString();
+                                    }
+                                    conta.AMOUNT_LC = conp[i].BASE_UNIT;
+                                    conta.ACCOUNT = cuent.CARGO.ToString();
+                                    //conta.BALANCE = (docp[j].MONTO_APOYO * docp[j].VOLUMEN_EST).ToString();
+
+                                    //conta.BALANCE = docp[j].APOYO_REAL.ToString();
+                                    if (enca.TIPO_DOC == "BB" || enca.TIPO_DOC == "DG")
+                                    {
+                                        //conta.BALANCE = docm[j].APOYO_REAL.ToString(); //KCMX notacredito
+                                        if (unico)
                                         {
-                                            conta.BALANCE = Conversion(Convert.ToDecimal(docm[j].APOYO_EST), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
-                                            conta.ASSIGNMENT = Referencia(conp[i].ASIGNACIONTXT, doc, docf, clien, pos); //doc.PAYER_ID;
+                                            conta.BALANCE = docf[pos].IMPORTE_FAC.ToString();
+                                            if (enca.TIPO_DOC == "DG")
+                                            {
+                                                conta.REF_KEY2 = docf[pos].BELNR;
+                                                conta.REF_KEY1 = clien.STCD1;
+                                                conta.REF_KEY3 = clien.NAME1;
+                                            }
                                         }
-                                        if (enca.TIPO_DOC == "BB")
+                                        else
                                         {
                                             conta.BALANCE = Conversion(Convert.ToDecimal(docm[j].APOYO_REAL), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                            conta.ASSIGNMENT = Referencia(conp[i].ASIGNACIONTXT, doc, docf, clien, pos); //docf[0].FACTURA;
                                         }
-                                    }
-
-                                }
-                                //if (enca.TIPO_DOC != "KG" && doc.PAIS_ID == "CO")
-                                //{
-                                //    //conta.BALANCE = docm[j].APOYO_EST.ToString();
-                                //    conta.BALANCE = Conversion(Convert.ToDecimal(docm[j].APOYO_EST), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
-                                //}
-                                if (enca.TIPO_DOC == "KG" && doc.PAIS_ID == "CO")
-                                {
-                                    //conta.BALANCE = (doc.MONTO_DOC_MD + (doc.MONTO_DOC_MD * tax.PORC / 100)).ToString();
-                                    conta.BALANCE = Conversion(Convert.ToDecimal(doc.MONTO_DOC_MD + (doc.MONTO_DOC_MD * taxh.PORC / 100)), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
-                                    conta.ACCOUNT = cuent.CLEARING.ToString();
-                                    conta.PRODUCT = docm[j].MATNR;
-                                    conta.CUSTOMER = doc.PAYER_ID;
-                                }
-                                if (enca.TIPO_DOC == "DG" && doc.PAIS_ID == "CO")
-                                {
-                                    conta.ACCOUNT = cuent.CARGO.ToString();
-                                    conta.BALANCE = Conversion(Convert.ToDecimal(docm[j].APOYO_REAL), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
-                                    conta.PRODUCT = docm[j].MATNR;
-                                    conta.CUSTOMER = doc.PAYER_ID;
-                                    conta.REF_KEY1 = factura;
-                                    conta.REF_KEY3 = clien.NAME1;
-                                }
-                                if (enca.TIPO_DOC == "RN")
-                                {
-                                    conta.ACCOUNT = cuent.CLEARING.ToString();
-                                }
-                            }
-                            if (enca.TIPO_DOC == "KR")
-                            {
-                                if (enca.CALC_TAXT == false)
-                                {
-                                    conta.TAX_CODE = taxh.IMPUESTO_ID;
-                                }
-                                if (unico)
-                                {
-                                    conta.BALANCE = docf[pos].IMPORTE_FAC.ToString();
-                                }
-                                conta.ASSIGNMENT = Referencia(conp[i].ASIGNACIONTXT, doc, docf, clien, pos); //clien.PAYER;
-                                conta.PRODUCT = docm[j].MATNR;
-                                conta.CUSTOMER = doc.PAYER_ID;
-                                conta.ACCOUNT = cuent.CLEARING.ToString();
-                            }
-                            else
-                            {
-                                if (enca.CALC_TAXT == false)
-                                {
-                                    materi = docm[j].MATNR;
-                                    if (!String.IsNullOrEmpty(materi))//ADD RSG 26.10.2018
-                                    {
-                                        material = db.MATERIALs.Where(y => y.ID == materi).Single();
-                                        grupos = conp[i].MATERIALGP.Split('+');
-                                        grupo = grupos.Where(x => x == material.MATERIALGP_ID).FirstOrDefault();
-                                    }
-                                    if (String.IsNullOrEmpty(grupo) == false)
-                                    {
-                                        conta.TAX_CODE = conp[i].TAXCODEGP;
-                                    }
-                                    else
-                                    {
-                                        conta.TAX_CODE = conp[i].TAX_CODE;
-                                    }
-                                }
-                            }
-                            if (enca.TIPO_DOC == "DG")// || enca.TIPO_DOC == "BB")
-                            {
-                                if (doc.PAIS_ID != "CO")
-                                {
-                                    conta.REF_KEY1 = conp[i].REF_KEY1;
-                                    conta.REF_KEY3 = conp[i].REF_KEY3;
-                                }
-                                else if (unico)
-                                {
-                                    conta.BALANCE = docf[pos].IMPORTE_FAC.ToString();
-                                }
-                            }
-                            contas.Add(conta);
-                            if (enca.TIPO_DOC == "RN" || enca.TIPO_DOC == "KR" || enca.TIPO_DOC == "KG")
-                            {
-                                break;
-                            }
-                        }
-                        List<DOCUMENTOP> docp = db.DOCUMENTOPs.Where(x => x.NUM_DOC == doc.NUM_DOC).ToList();
-                        for (int j = 0; j < docp.Count; j++)
-                        {
-                            DetalleContab conta = new DetalleContab();
-                            conta.POS_TYPE = conp[i].KEY;
-                            conta.COMP_CODE = doc.SOCIEDAD_ID;
-                            conta.BUS_AREA = conp[i].BUS_AREA;
-                            conta.POST_KEY = conp[i].POSTING_KEY;
-                            conta.TEXT = doc.CONCEPTO;
-                            conta.REF_KEY1 = clien.STCD1;
-                            conta.REF_KEY3 = clien.NAME1;
-                            conta.SALES_ORG = clien.VKORG;
-                            conta.DIST_CHANEL = clien.VTWEG;
-                            conta.DIVISION = clien.SPART;
-
-                            if (enca.TIPO_DOC != "RN" && doc.PAIS_ID != "CO")
-                            {
-                                conta.CUSTOMER = doc.PAYER_ID;
-                                conta.PRODUCT = docp[j].MATNR;
-                                if (conp[i].QUANTITY != null && conp[i].QUANTITY != 0)
-                                {
-                                    conta.QTY = conp[i].QUANTITY.ToString();
-                                }
-                                conta.AMOUNT_LC = conp[i].BASE_UNIT;
-                                conta.ACCOUNT = cuent.CARGO.ToString();
-                                //conta.BALANCE = (docp[j].MONTO_APOYO * docp[j].VOLUMEN_EST).ToString();
-                                conta.BALANCE = Conversion(Convert.ToDecimal(docp[j].APOYO_EST), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
-                                //conta.BALANCE = docp[j].APOYO_REAL.ToString();
-                                if (enca.TIPO_DOC == "BB" || enca.TIPO_DOC == "DG")
-                                {
-                                    //conta.BALANCE = docp[j].APOYO_REAL.ToString(); //KCMX notacredito                                    
-                                    if (unico)
-                                    {
-                                        conta.BALANCE = docf[pos].IMPORTE_FAC.ToString();
-                                        if (enca.TIPO_DOC == "DG")
-                                        {
-                                            conta.REF_KEY2 = docf[pos].BELNR;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        conta.BALANCE = Conversion(Convert.ToDecimal(docp[j].APOYO_REAL), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
-                                        conta.ASSIGNMENT = Referencia(conp[i].ASIGNACIONTXT, doc, docf, clien, pos); //docf[pos].FACTURAK;
-                                    }
-                                }
-                                else if (enca.TIPO_DOC == "SA")
-                                {
-                                    //conta.BALANCE = docp[j].APOYO_EST.ToString(); //KCMX solic
-                                    if (hijo)
-                                    {
-                                        conta.BALANCE = Conversion(Convert.ToDecimal(docp[j].APOYO_REAL), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
-                                    }
-                                    if (docp[j].APOYO_EST == 0)
-                                    {
-                                        conta.BALANCE = Conversion(Convert.ToDecimal(docp[j].APOYO_REAL), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
-                                    }
-                                    conta.ASSIGNMENT = Referencia(conp[i].ASIGNACIONTXT, doc, docf, clien, pos); //doc.PAYER_ID;
-                                    conta.REF_KEY1 = "";
-                                    conta.REF_KEY3 = "";
-                                }
-                                if (enca.TIPO_DOC == "KG")
-                                {
-                                    conta.CUSTOMER =
-                                    conta.PRODUCT = "";
-                                    conta.ACCOUNT = cuent.ABONO.ToString();
-                                    if (unico)
-                                    {
-                                        conta.BALANCE = docf[pos].IMPORTE_FAC.ToString();
-                                    }
-                                    else
-                                    {
-                                        conta.BALANCE = Conversion(Convert.ToDecimal(doc.MONTO_DOC_MD + (doc.MONTO_DOC_MD * impu.KBETR / 100)), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
-                                    }
-                                    conta.ACCOUNT = cuent.CLEARING.ToString();
-                                    conta.PRODUCT = docp[j].MATNR;
-                                    conta.CUSTOMER = doc.PAYER_ID;
-                                }
-
-                            }
-                            else
-                            {
-                                //conta.SALES_ORG =
-                                //conta.DIST_CHANEL =
-                                //conta.DIVISION =
-                                conta.CUSTOMER =
-                                conta.PRODUCT = "";
-                                conta.ACCOUNT = cuent.ABONO.ToString();
-                                conta.BALANCE = Conversion(Convert.ToDecimal(doc.MONTO_DOC_MD), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
-                                if (enca.TIPO_DOC == "BB" || enca.TIPO_DOC == "SA")
-                                {
-                                    //if (doc.PAIS_ID == "CO")
-                                    //{
-                                    //conta.SALES_ORG = clien.VKORG;
-                                    //conta.DIST_CHANEL = clien.VTWEG;
-                                    //conta.DIVISION = clien.SPART;
-                                    conta.SALES_DIST = clien.BZIRK;
-                                    conta.CUSTOMER = doc.PAYER_ID;
-                                    conta.PRODUCT = docp[j].MATNR;
-                                    conta.ACCOUNT = cuent.CARGO.ToString();
-                                    if (enca.TIPO_DOC == "SA")
-                                    {
-                                        conta.ASSIGNMENT = Referencia(conp[i].ASIGNACIONTXT, doc, docf, clien, pos); //doc.PAYER_ID;
-                                        conta.BALANCE = Conversion(Convert.ToDecimal(docp[j].APOYO_EST), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
                                         conta.REF_KEY1 = "";
                                         conta.REF_KEY3 = "";
                                     }
-                                    if (enca.TIPO_DOC == "BB")
+                                    else if (enca.TIPO_DOC == "SA")
                                     {
-                                        conta.BALANCE = Conversion(Convert.ToDecimal(docp[j].APOYO_REAL), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
-                                    }
-                                    //}
+                                        if (hijo)
+                                        {
+                                            conta.BALANCE = Conversion(Convert.ToDecimal(docm[j].APOYO_REAL), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                        }
+                                        if (docm[j].APOYO_EST == 0)
+                                        {
+                                            conta.BALANCE = Conversion(Convert.ToDecimal(docm[j].APOYO_REAL), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                        }
+                                        conta.ASSIGNMENT = Referencia(conp[i].ASIGNACIONTXT, doc, docf, clien, pos); //doc.PAYER_ID;
+                                        conta.REF_KEY1 = "";
+                                        conta.REF_KEY3 = "";
 
+                                    }
+                                    if (enca.TIPO_DOC == "KG")
+                                    {
+                                        conta.CUSTOMER =
+                                        conta.PRODUCT = "";
+                                        if (unico)
+                                        {
+                                            conta.BALANCE = docf[pos].IMPORTE_FAC.ToString();
+                                        }
+                                        else
+                                        {
+                                            conta.BALANCE = Conversion(Convert.ToDecimal(doc.MONTO_DOC_MD + (doc.MONTO_DOC_MD * impu.KBETR)), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                        }
+                                        conta.ACCOUNT = cuent.CLEARING.ToString();
+                                        conta.PRODUCT = docm[j].MATNR;
+                                        conta.CUSTOMER = doc.PAYER_ID;
+                                    }
+                                    //else
+                                    //{
+                                    //    //conta.BALANCE = docm[j].APOYO_EST.ToString(); //KCMX solic
+                                    //    conta.BALANCE = Conversion(Convert.ToDecimal(docm[j].APOYO_EST), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                    //}
                                 }
-                                //if (enca.TIPO_DOC != "KG" && doc.PAIS_ID == "CO")
-                                //{
-                                //    //conta.BALANCE = docp[j].APOYO_EST.ToString();
-                                //    conta.BALANCE = Conversion(Convert.ToDecimal(docp[j].APOYO_EST), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
-                                //}
-                                if (enca.TIPO_DOC == "KG")
+                                else
                                 {
-                                    //conta.BALANCE = (doc.MONTO_DOC_MD + (doc.MONTO_DOC_MD * tax.PORC / 100)).ToString();
-                                    conta.BALANCE = Conversion(Convert.ToDecimal(doc.MONTO_DOC_MD + (doc.MONTO_DOC_MD * taxh.PORC / 100)), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
-                                    conta.ACCOUNT = cuent.CLEARING.ToString();
-                                    conta.PRODUCT = docp[j].MATNR;
+                                    //conta.SALES_ORG =
+                                    //conta.DIST_CHANEL =
+                                    //conta.DIVISION =
+                                    conta.CUSTOMER =
+                                    conta.PRODUCT = "";
+                                    conta.ACCOUNT = cuent.ABONO.ToString();
+                                    conta.BALANCE = Conversion(Convert.ToDecimal(docm[j].APOYO_REAL), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                    if (enca.TIPO_DOC == "BB" || enca.TIPO_DOC == "SA")
+                                    {
+                                        if (doc.PAIS_ID == "CO")
+                                        {
+                                            //conta.SALES_ORG = clien.VKORG;
+                                            //conta.DIST_CHANEL = clien.VTWEG;
+                                            //conta.DIVISION = clien.SPART;
+                                            conta.SALES_DIST = clien.BZIRK;
+                                            conta.CUSTOMER = doc.PAYER_ID;
+                                            conta.PRODUCT = docm[j].MATNR;
+                                            //conta.REF_KEY1 = clien.STCD1;
+                                            //conta.REF_KEY3 = clien.NAME1;
+                                            conta.ACCOUNT = cuent.CARGO.ToString();
+                                            if (enca.TIPO_DOC == "SA")
+                                            {
+                                                conta.BALANCE = Conversion(Convert.ToDecimal(docm[j].APOYO_EST), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                                conta.ASSIGNMENT = Referencia(conp[i].ASIGNACIONTXT, doc, docf, clien, pos); //doc.PAYER_ID;
+                                            }
+                                            if (enca.TIPO_DOC == "BB")
+                                            {
+                                                conta.BALANCE = Conversion(Convert.ToDecimal(docm[j].APOYO_REAL), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                            }
+                                        }
+
+                                    }
+                                    //if (enca.TIPO_DOC != "KG" && doc.PAIS_ID == "CO")
+                                    //{
+                                    //    //conta.BALANCE = docm[j].APOYO_EST.ToString();
+                                    //    conta.BALANCE = Conversion(Convert.ToDecimal(docm[j].APOYO_EST), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                    //}
+                                    if (enca.TIPO_DOC == "KG" && doc.PAIS_ID == "CO")
+                                    {
+                                        //conta.BALANCE = (doc.MONTO_DOC_MD + (doc.MONTO_DOC_MD * tax.PORC / 100)).ToString();
+                                        conta.BALANCE = Conversion(Convert.ToDecimal(doc.MONTO_DOC_MD + (doc.MONTO_DOC_MD * taxh.PORC)), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                        conta.ACCOUNT = cuent.CLEARING.ToString();
+                                        conta.PRODUCT = docm[j].MATNR;
+                                        conta.CUSTOMER = doc.PAYER_ID;
+                                    }
+                                    if (enca.TIPO_DOC == "DG" && doc.PAIS_ID == "CO")
+                                    {
+                                        conta.ACCOUNT = cuent.CARGO.ToString();
+                                        conta.BALANCE = Conversion(Convert.ToDecimal(docm[j].APOYO_REAL), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                        conta.PRODUCT = docm[j].MATNR;
+                                        conta.CUSTOMER = doc.PAYER_ID;
+                                        conta.REF_KEY1 = factura;
+                                        conta.REF_KEY3 = clien.NAME1;
+                                    }
+                                    if (enca.TIPO_DOC == "RN")
+                                    {
+                                        conta.ACCOUNT = cuent.CLEARING.ToString();
+                                    }
+                                }
+                                if (enca.TIPO_DOC == "KR")
+                                {
+                                    //if (enca.CALC_TAXT == false)
+                                    //{
+                                    conta.TAX_CODE = taxh.IMPUESTO_ID;
+                                    //}
+                                    if (unico)
+                                    {
+                                        conta.BALANCE = docf[pos].IMPORTE_FAC.ToString();
+                                    }
+                                    else if (doc.PAIS_ID != "CO")
+                                    {
+                                        conta.BALANCE = doc.MONTO_DOC_MD.ToString();
+                                    }
+                                    conta.ASSIGNMENT = Referencia(conp[i].ASIGNACIONTXT, doc, docf, clien, pos); //clien.PAYER;
+                                    conta.PRODUCT = docm[j].MATNR;
                                     conta.CUSTOMER = doc.PAYER_ID;
-                                }
-                                if (enca.TIPO_DOC == "DG")
-                                {
-                                    conta.ACCOUNT = cuent.CARGO.ToString();
-                                    conta.BALANCE = Conversion(Convert.ToDecimal(docp[j].APOYO_REAL), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
-                                    conta.PRODUCT = docp[j].MATNR;
-                                    conta.CUSTOMER = doc.PAYER_ID;
-                                    conta.REF_KEY1 = factura;
-                                    conta.REF_KEY3 = clien.NAME1;
-                                    //conta.SALES_ORG = clien.VKORG;
-                                    //conta.DIST_CHANEL = clien.VTWEG;
-                                    //conta.DIVISION = clien.SPART;
-                                }
-                                if (enca.TIPO_DOC == "RN")
-                                {
                                     conta.ACCOUNT = cuent.CLEARING.ToString();
                                 }
-                            }
-                            if (enca.TIPO_DOC == "KR")
-                            {
-                                //if (enca.CALC_TAXT == false)
-                                //{
-                                conta.TAX_CODE = taxh.IMPUESTO_ID;
-                                //}
-                                if (unico)
+                                else
                                 {
-                                    conta.BALANCE = docf[pos].IMPORTE_FAC.ToString();
-                                }
-                                else if (doc.PAIS_ID != "CO")
-                                {
-                                    conta.BALANCE = doc.MONTO_DOC_MD.ToString();
-                                }
-                                conta.ASSIGNMENT = Referencia(conp[i].ASIGNACIONTXT, doc, docf, clien, pos); //clien.PAYER;
-                                conta.PRODUCT = docp[j].MATNR;
-                                conta.CUSTOMER = doc.PAYER_ID;
-                                conta.ACCOUNT = cuent.CLEARING.ToString();
-                            }
-                            else
-                            {
-                                if (enca.CALC_TAXT == true)
-                                {
-                                    materi = docp[j].MATNR;
-                                    if (!String.IsNullOrEmpty(materi))//ADD RSG 26.10.2018
+                                    if (enca.CALC_TAXT == true)
                                     {
-                                        material = db.MATERIALs.Where(y => y.ID == materi).Single();
-                                        grupos = conp[i].MATERIALGP.Split('+');
-                                        grupo = grupos.Where(x => x == material.MATERIALGP_ID).FirstOrDefault();
-                                    }
-                                    else
-                                    {
-                                        grupo = docp[j].MATKL;
-                                    }
-                                    if (String.IsNullOrEmpty(grupo) == false)
-                                    {
-                                        conta.TAX_CODE = conp[i].TAXCODEGP;
-                                    }
-                                    else
-                                    {
-                                        //conta.TAX_CODE = conp[i].TAX_CODE;
-                                        if (enca.TIPO_DOC != "KG")
+                                        materi = docm[j].MATNR;
+                                        if (!String.IsNullOrEmpty(materi))//ADD RSG 26.10.2018
+                                        {
+                                            material = db.MATERIALs.Where(y => y.ID == materi).Single();
+                                            grupos = conp[i].MATERIALGP.Split('+');
+                                            grupo = grupos.Where(x => x == material.MATERIALGP_ID).FirstOrDefault();
+                                        }
+                                        if (String.IsNullOrEmpty(grupo) == false)
+                                        {
+                                            conta.TAX_CODE = conp[i].TAXCODEGP;
+                                        }
+                                        else
                                         {
                                             conta.TAX_CODE = conp[i].TAX_CODE;
                                         }
                                     }
                                 }
-                            }
-                            if (enca.TIPO_DOC == "DG")// || enca.TIPO_DOC == "BB")
-                            {
-                                if (doc.PAIS_ID != "CO")
+                                if (enca.TIPO_DOC == "DG")// || enca.TIPO_DOC == "BB")
                                 {
-                                    conta.REF_KEY1 = conp[i].REF_KEY1;
-                                    conta.REF_KEY3 = conp[i].REF_KEY3;
+                                    if (doc.PAIS_ID != "CO")
+                                    {
+                                        conta.REF_KEY1 = conp[i].REF_KEY1;
+                                        conta.REF_KEY3 = conp[i].REF_KEY3;
+                                    }
+                                    else if (unico)
+                                    {
+                                        conta.BALANCE = docf[pos].IMPORTE_FAC.ToString();
+                                    }
+                                }
+                                contas.Add(conta);
+                                if (enca.TIPO_DOC == "RN" || enca.TIPO_DOC == "KR" || enca.TIPO_DOC == "KG")
+                                {
+                                    break;
                                 }
                             }
-                            contas.Add(conta);
-                            if (enca.TIPO_DOC == "RN" || enca.TIPO_DOC == "KR" || enca.TIPO_DOC == "KG")
+                        }
+                        else
+                        {
+                            for (int j = 0; j < docp.Count; j++)
                             {
-                                break;
+                                DetalleContab conta = new DetalleContab();
+                                conta.POS_TYPE = conp[i].KEY;
+                                conta.COMP_CODE = doc.SOCIEDAD_ID;
+                                conta.BUS_AREA = conp[i].BUS_AREA;
+                                conta.POST_KEY = conp[i].POSTING_KEY;
+                                conta.TEXT = doc.CONCEPTO;
+                                //conta.REF_KEY1 = clien.STCD1;
+                                //conta.REF_KEY3 = clien.NAME1;
+                                conta.SALES_ORG = clien.VKORG;
+                                conta.DIST_CHANEL = clien.VTWEG;
+                                conta.DIVISION = clien.SPART;
+
+                                if (enca.TIPO_DOC != "RN" && doc.PAIS_ID != "CO")
+                                {
+                                    conta.CUSTOMER = doc.PAYER_ID;
+                                    conta.PRODUCT = docp[j].MATNR;
+                                    if (conp[i].QUANTITY != null && conp[i].QUANTITY != 0)
+                                    {
+                                        conta.QTY = conp[i].QUANTITY.ToString();
+                                    }
+                                    conta.AMOUNT_LC = conp[i].BASE_UNIT;
+                                    conta.ACCOUNT = cuent.CARGO.ToString();
+                                    //conta.BALANCE = (docp[j].MONTO_APOYO * docp[j].VOLUMEN_EST).ToString();
+                                    conta.BALANCE = Conversion(Convert.ToDecimal(docp[j].APOYO_EST), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                    //conta.BALANCE = docp[j].APOYO_REAL.ToString();
+                                    if (enca.TIPO_DOC == "BB" || enca.TIPO_DOC == "DG")
+                                    {
+                                        //conta.BALANCE = docp[j].APOYO_REAL.ToString(); //KCMX notacredito                                    
+                                        if (unico)
+                                        {
+                                            conta.BALANCE = docf[pos].IMPORTE_FAC.ToString();
+                                            if (enca.TIPO_DOC == "DG")
+                                            {
+                                                conta.REF_KEY2 = docf[pos].BELNR;
+                                                conta.REF_KEY1 = clien.STCD1;
+                                                conta.REF_KEY3 = clien.NAME1;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            conta.BALANCE = Conversion(Convert.ToDecimal(docp[j].APOYO_REAL), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                            conta.ASSIGNMENT = Referencia(conp[i].ASIGNACIONTXT, doc, docf, clien, pos); //docf[pos].FACTURAK;
+                                        }
+                                        conta.REF_KEY1 = "";
+                                        conta.REF_KEY3 = "";
+                                    }
+                                    else if (enca.TIPO_DOC == "SA")
+                                    {
+                                        //conta.BALANCE = docp[j].APOYO_EST.ToString(); //KCMX solic
+                                        if (hijo)
+                                        {
+                                            conta.BALANCE = Conversion(Convert.ToDecimal(docp[j].APOYO_REAL), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                        }
+                                        if (docp[j].APOYO_EST == 0)
+                                        {
+                                            conta.BALANCE = Conversion(Convert.ToDecimal(docp[j].APOYO_REAL), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                        }
+                                        conta.ASSIGNMENT = Referencia(conp[i].ASIGNACIONTXT, doc, docf, clien, pos); //doc.PAYER_ID;
+                                        conta.REF_KEY1 = "";
+                                        conta.REF_KEY3 = "";
+                                    }
+                                    if (enca.TIPO_DOC == "KG")
+                                    {
+                                        conta.CUSTOMER =
+                                        conta.PRODUCT = "";
+                                        conta.ACCOUNT = cuent.ABONO.ToString();
+                                        if (unico)
+                                        {
+                                            conta.BALANCE = docf[pos].IMPORTE_FAC.ToString();
+                                        }
+                                        else
+                                        {
+                                            conta.BALANCE = Conversion(Convert.ToDecimal(doc.MONTO_DOC_MD + (doc.MONTO_DOC_MD * impu.KBETR)), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                        }
+                                        conta.ACCOUNT = cuent.CLEARING.ToString();
+                                        conta.PRODUCT = docp[j].MATNR;
+                                        conta.CUSTOMER = doc.PAYER_ID;
+                                    }
+
+                                }
+                                else
+                                {
+                                    //conta.SALES_ORG =
+                                    //conta.DIST_CHANEL =
+                                    //conta.DIVISION =
+                                    conta.CUSTOMER =
+                                    conta.PRODUCT = "";
+                                    conta.ACCOUNT = cuent.ABONO.ToString();
+                                    conta.BALANCE = Conversion(Convert.ToDecimal(doc.MONTO_DOC_MD), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                    if (enca.TIPO_DOC == "BB" || enca.TIPO_DOC == "SA")
+                                    {
+                                        //if (doc.PAIS_ID == "CO")
+                                        //{
+                                        //conta.SALES_ORG = clien.VKORG;
+                                        //conta.DIST_CHANEL = clien.VTWEG;
+                                        //conta.DIVISION = clien.SPART;
+                                        conta.SALES_DIST = clien.BZIRK;
+                                        conta.CUSTOMER = doc.PAYER_ID;
+                                        conta.PRODUCT = docp[j].MATNR;
+                                        conta.ACCOUNT = cuent.CARGO.ToString();
+                                        if (enca.TIPO_DOC == "SA")
+                                        {
+                                            conta.ASSIGNMENT = Referencia(conp[i].ASIGNACIONTXT, doc, docf, clien, pos); //doc.PAYER_ID;
+                                            conta.BALANCE = Conversion(Convert.ToDecimal(docp[j].APOYO_EST), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                            conta.REF_KEY1 = "";
+                                            conta.REF_KEY3 = "";
+                                        }
+                                        if (enca.TIPO_DOC == "BB")
+                                        {
+                                            conta.BALANCE = Conversion(Convert.ToDecimal(docp[j].APOYO_REAL), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                        }
+                                        //}
+
+                                    }
+                                    //if (enca.TIPO_DOC != "KG" && doc.PAIS_ID == "CO")
+                                    //{
+                                    //    //conta.BALANCE = docp[j].APOYO_EST.ToString();
+                                    //    conta.BALANCE = Conversion(Convert.ToDecimal(docp[j].APOYO_EST), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                    //}
+                                    if (enca.TIPO_DOC == "KG")
+                                    {
+                                        //conta.BALANCE = (doc.MONTO_DOC_MD + (doc.MONTO_DOC_MD * tax.PORC / 100)).ToString();
+                                        conta.BALANCE = Conversion(Convert.ToDecimal(doc.MONTO_DOC_MD + (doc.MONTO_DOC_MD * taxh.PORC)), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                        conta.ACCOUNT = cuent.CLEARING.ToString();
+                                        conta.PRODUCT = docp[j].MATNR;
+                                        conta.CUSTOMER = doc.PAYER_ID;
+                                    }
+                                    if (enca.TIPO_DOC == "DG")
+                                    {
+                                        conta.ACCOUNT = cuent.CARGO.ToString();
+                                        conta.BALANCE = Conversion(Convert.ToDecimal(docp[j].APOYO_REAL), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                        conta.PRODUCT = docp[j].MATNR;
+                                        conta.CUSTOMER = doc.PAYER_ID;
+                                        //conta.REF_KEY1 = factura;
+                                        //conta.REF_KEY3 = clien.NAME1;
+                                        //conta.SALES_ORG = clien.VKORG;
+                                        //conta.DIST_CHANEL = clien.VTWEG;
+                                        //conta.DIVISION = clien.SPART;
+                                    }
+                                    if (enca.TIPO_DOC == "RN")
+                                    {
+                                        conta.ACCOUNT = cuent.CLEARING.ToString();
+                                    }
+                                }
+                                if (enca.TIPO_DOC == "KR")
+                                {
+                                    //if (enca.CALC_TAXT == false)
+                                    //{
+                                    conta.TAX_CODE = taxh.IMPUESTO_ID;
+                                    //}
+                                    if (unico)
+                                    {
+                                        conta.BALANCE = docf[pos].IMPORTE_FAC.ToString();
+                                    }
+                                    else if (doc.PAIS_ID != "CO")
+                                    {
+                                        conta.BALANCE = doc.MONTO_DOC_MD.ToString();
+                                    }
+                                    conta.ASSIGNMENT = Referencia(conp[i].ASIGNACIONTXT, doc, docf, clien, pos); //clien.PAYER;
+                                    conta.PRODUCT = docp[j].MATNR;
+                                    conta.CUSTOMER = doc.PAYER_ID;
+                                    conta.ACCOUNT = cuent.CLEARING.ToString();
+                                }
+                                else
+                                {
+                                    if (enca.CALC_TAXT == true)
+                                    {
+                                        materi = docp[j].MATNR;
+                                        if (!String.IsNullOrEmpty(materi))//ADD RSG 26.10.2018
+                                        {
+                                            material = db.MATERIALs.Where(y => y.ID == materi).Single();
+                                            grupos = conp[i].MATERIALGP.Split('+');
+                                            grupo = grupos.Where(x => x == material.MATERIALGP_ID).FirstOrDefault();
+                                        }
+                                        else
+                                        {
+                                            grupo = docp[j].MATKL;
+                                        }
+                                        if (String.IsNullOrEmpty(grupo) == false)
+                                        {
+                                            conta.TAX_CODE = conp[i].TAXCODEGP;
+                                        }
+                                        else
+                                        {
+                                            //conta.TAX_CODE = conp[i].TAX_CODE;
+                                            if (enca.TIPO_DOC != "KG")
+                                            {
+                                                conta.TAX_CODE = conp[i].TAX_CODE;
+                                            }
+                                        }
+                                    }
+                                }
+                                if (enca.TIPO_DOC == "DG")// || enca.TIPO_DOC == "BB")
+                                {
+                                    if (doc.PAIS_ID != "CO")
+                                    {
+                                        conta.REF_KEY1 = conp[i].REF_KEY1;
+                                        conta.REF_KEY3 = conp[i].REF_KEY3;
+                                    }
+                                }
+                                contas.Add(conta);
+                                if (enca.TIPO_DOC == "RN" || enca.TIPO_DOC == "KR" || enca.TIPO_DOC == "KG")
+                                {
+                                    break;
+                                }
                             }
                         }
-
-
                         if (enca.TIPO_DOC == "BB")
                         {
                             DetalleContab conta = new DetalleContab();
@@ -1057,7 +1084,7 @@ namespace TAT001.Models
                             conta.ACCOUNT = cuent.CLEARING.ToString();
                             if (unico)
                             {
-                                conta.BALANCE = (Conversion(Convert.ToDecimal(docf[pos].IMPORTE_FAC * impu.KBETR / 100), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC)).ToString();
+                                conta.BALANCE = (Conversion(Convert.ToDecimal(docf[pos].IMPORTE_FAC * impu.KBETR), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC)).ToString();
                                 conta.REF_KEY1 = clien.STCD1;
                                 conta.REF_KEY3 = clien.NAME1;
                             }
@@ -1065,11 +1092,11 @@ namespace TAT001.Models
                             {
                                 if (doc.PAIS_ID == "CO")
                                 {
-                                    conta.BALANCE = (Conversion(Convert.ToDecimal(doc.MONTO_DOC_MD + (doc.MONTO_DOC_MD * taxh.PORC / 100)), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC) - Conversion(Convert.ToDecimal(doc.MONTO_DOC_MD), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC)).ToString();
+                                    conta.BALANCE = Conversion(Convert.ToDecimal((doc.MONTO_DOC_MD * taxh.PORC)), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString(); //- Conversion(Convert.ToDecimal(doc.MONTO_DOC_MD), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC)).ToString();
                                 }
                                 else
                                 {
-                                    conta.BALANCE = (Conversion(Convert.ToDecimal(doc.MONTO_DOC_MD + (doc.MONTO_DOC_MD * impu.KBETR / 100)), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC) - Conversion(Convert.ToDecimal(doc.MONTO_DOC_MD), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC)).ToString();
+                                    conta.BALANCE = Conversion(Convert.ToDecimal((doc.MONTO_DOC_MD * impu.KBETR)), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();// - Conversion(Convert.ToDecimal(doc.MONTO_DOC_MD), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC)).ToString();
                                     conta.ASSIGNMENT = Referencia(conp[i].ASIGNACIONTXT, doc, docf, clien, pos); //docf[0].FACTURA;
                                 }
                             }
