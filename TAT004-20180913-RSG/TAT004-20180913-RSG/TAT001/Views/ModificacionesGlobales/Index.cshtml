@@ -40,41 +40,45 @@
         </div>
         <div id="modGlobales" class="col s12">
             <div class="card-panel">
-                <div class="col s12">
-                    <div class="row">
-                        <label  class="col s2"><span class="lbl_rango_sol"></span></label>
-                        <div class="col s2">
-                            @Html.EditorFor(model => model.filtros.NUM_DOCI, new { htmlAttributes = new { @maxlength = 18,@id= "NUM_DOCI_1" } })
+                <div class="row">
+                    <div class="col s12">
+                        <div class="row">
+                            <label class="col s2"><span class="lbl_rango_sol"></span></label>
+                            <div class="col s2">
+                                @Html.EditorFor(model => model.filtros.NUM_DOCI, new { htmlAttributes = new { @maxlength = 18, @id = "NUM_DOCI_1" } })
+                            </div>
+                            <div class="col s2">
+                                @Html.EditorFor(model => model.filtros.NUM_DOCF, new { htmlAttributes = new { @maxlength = 18, @id = "NUM_DOCF_1" } })
+                            </div>
                         </div>
-                        <div class="col s2">
-                            @Html.EditorFor(model => model.filtros.NUM_DOCF, new { htmlAttributes = new { @maxlength = 18, @id = "NUM_DOCF_1" } })
+                        <div class="row">
+                            <label class="col s2"><span class="lbl_rango_fecha"></span></label>
+                            <div class="col s2">
+                                @Html.EditorFor(model => model.filtros.FECHAI, new { htmlAttributes = new { @class = "datepicker", @id = "FECHAI_1" } })
+                            </div>
+                            <div class="col s2">
+                                @Html.EditorFor(model => model.filtros.FECHAF, new { htmlAttributes = new { @class = "datepicker", @id = "FECHAF_1" } })
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <label class="col s2"><span class="lbl_rango_fecha"></span></label>
-                        <div class="col s2">
-                            @Html.EditorFor(model => model.filtros.FECHAI, new { htmlAttributes = new { @class = "datepicker", @id = "FECHAI_1" } })
+                        <div class="row">
+                            <label class="col s2"><span class="lbl_agente"></span></label>
+                            <div class="col s2">
+                                @Html.EditorFor(model => model.filtros.USUARIO_ID, new { htmlAttributes = new { @maxlength = 18, @id = "USUARIO_ID_1" } })
+                            </div>
                         </div>
-                        <div class="col s2">
-                            @Html.EditorFor(model => model.filtros.FECHAF, new { htmlAttributes = new { @class = "datepicker", @id = "FECHAF_1" } })
-                        </div>
-                    </div>
-                    <div class="row">
-                        <label  class="col s2"><span class="lbl_agente"></span></label>
-                        <div class="col s2">
-                            @Html.EditorFor(model => model.filtros.USUARIO_ID, new { htmlAttributes = new { @maxlength = 18, @id = "USUARIO_ID_1" } })
-                        </div>
-                    </div>
-                    <div class="row">
-                        <label  class="col s2"><span class="lbl_cliente"></span></label>
-                        <div class="col s2">
-                            @Html.EditorFor(model => model.filtros.KUNNR, new { htmlAttributes = new { @maxlength = 10, @id = "KUNNR_1" } })
-                        </div>
-                        <div class="col s2 right-align">
-                            <button id="btn_buscar_2" class="btn btn-default"><span class="lbl_search"></span></button>
+                        <div class="row">
+                            <label class="col s2"><span class="lbl_cliente"></span></label>
+                            <div class="col s2">
+                                @Html.EditorFor(model => model.filtros.KUNNR, new { htmlAttributes = new { @maxlength = 10, @id = "KUNNR_1" } })
+                            </div>
+                            <div class="col s2">
+                                <button id="btn_buscar_1" class="btn btn-default"><span class="lbl_search"></span></button>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="card-panel">
                 <div class="row" style="margin-bottom:0;">
                     <div class="input-field col s3 m3 l3">
                         @Html.DropDownList("cmbPagModGlobales", Model.pageSizes, null, new { @id = "cmbPagModGlobales" })
@@ -88,46 +92,46 @@
                 <div id="list">
                 </div>
             </div>
-        </div>
-        <div id="modAutorizador" class="col s12">
-            <div class="card-panel">
-                <div class="row">
-                    <div class="col s12">
-                        <div class="row">
-                            <label class="col s2"><span class="lbl_rango_sol"></span></label>
-                            <div class="col s2">
-                                @Html.EditorFor(model => model.filtros.NUM_DOCI, new { htmlAttributes = new { @maxlength = 18, @id = "NUM_DOCI_2" } })
+            </div>
+            <div id="modAutorizador" class="col s12">
+                <div class="card-panel">
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="row">
+                                <label class="col s2"><span id="lbl_autorizador"></span></label>
+                                <div class="col s2">
+                                    @Html.EditorFor(model => model.filtros.USUARIO_ID, new { htmlAttributes = new { @maxlength = 18, @id = "USUARIOA_ID_2" } })
+                                </div>
                             </div>
-                            <div class="col s2">
-                                @Html.EditorFor(model => model.filtros.NUM_DOCF, new { htmlAttributes = new { @maxlength = 18, @id = "NUM_DOCF_2" } })
+                            <div class="row">
+                                <label class="col s2"><span class="lbl_rango_sol"></span></label>
+                                <div class="col s2">
+                                    @Html.EditorFor(model => model.filtros.NUM_DOCI, new { htmlAttributes = new { @maxlength = 18, @id = "NUM_DOCI_2" } })
+                                </div>
+                                <div class="col s2">
+                                    @Html.EditorFor(model => model.filtros.NUM_DOCF, new { htmlAttributes = new { @maxlength = 18, @id = "NUM_DOCF_2" } })
+                                </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <label class="col s2"><span class="lbl_rango_fecha"></span></label>
-                            <div class="col s2">
-                                @Html.EditorFor(model => model.filtros.FECHAI, new { htmlAttributes = new { @class = "datepicker", @id = "FECHAI_2" } })
+                            <div class="row">
+                                <label class="col s2"><span class="lbl_rango_fecha"></span></label>
+                                <div class="col s2">
+                                    @Html.EditorFor(model => model.filtros.FECHAI, new { htmlAttributes = new { @class = "datepicker", @id = "FECHAI_2" } })
+                                </div>
+                                <div class="col s2">
+                                    @Html.EditorFor(model => model.filtros.FECHAF, new { htmlAttributes = new { @class = "datepicker", @id = "FECHAF_2" } })
+                                </div>
                             </div>
-                            <div class="col s2">
-                                @Html.EditorFor(model => model.filtros.FECHAF, new { htmlAttributes = new { @class = "datepicker", @id = "FECHAF_2" } })
-                            </div>
-                        </div>
-                        <div class="row">
-                            <label class="col s2"><span id="lbl_autorizador"></span></label>
-                            <div class="col s2">
-                                @Html.EditorFor(model => model.filtros.USUARIO_ID, new { htmlAttributes = new { @maxlength = 18, @id = "USUARIO_ID_2" } })
-                            </div>
-                        </div>
-                        <div class="row">
-                            <label class="col s2"><span class="lbl_cliente"></span></label>
-                            <div class="col s2">
-                                @Html.EditorFor(model => model.filtros.KUNNR, new { htmlAttributes = new { @maxlength = 10, @id = "KUNNR_2" } })
-                            </div>
-                            <div class="col s2 right-align">
-                                <button id="btn_buscar_2" class="btn btn-default"><span class="lbl_search"></span></button>
+                            <div class="row">
+                                <label class="col s2"><span class="lbl_cliente"></span></label>
+                                <div class="col s2">
+                                    @Html.EditorFor(model => model.filtros.KUNNR, new { htmlAttributes = new { @maxlength = 10, @id = "KUNNR_2" } })
+                                </div>
+                                <div class="col s2">
+                                    <button id="btn_buscar_2" class="btn btn-default" onclick="ListModAutorizador()"><span class="lbl_search"></span></button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 </div>
                 <div class="card-panel">
                     <div class="row" style="margin-bottom:0;">
@@ -141,11 +145,11 @@
                         </div>
                     </div>
                     <div style="width:100%;" id="listModAutorizador">
-                        @Html.Partial("List", Model)
+                        @Html.Partial("ListModAutorizador", Model)
                     </div>
                 </div>
+            </div>
         </div>
-    </div>
 
 
 <script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
@@ -161,6 +165,8 @@
         document.querySelectorAll('.datepicker').forEach(function (datePicker) {
             if (datePicker.value.indexOf(sinFecha)>-1) { datePicker.value = ''; }
         });
+        fnCommon.setDateRange($("#FECHAI_1"), $("#FECHAI_1"), null);
+        fnCommon.setDateRange($("#FECHAI_2"), $("#FECHAI_2"), null);
 
       //----- Configuracion de Tablas-----
     $(document).ready(function () {
@@ -168,7 +174,31 @@
         spras_id = "@ViewBag.spras_id",
         urlLanguage = root + "Scripts/lang/" + spras_id + ".json";
         fnCommon.configurarTable('tableModAutorizador', '50vh', '50vh', urlLanguage, 'cmbPagModAutorizador','gfilterModAutorizador',[0,1,2]);
-     });
+        });
+
+    function ListModAutorizador() {
+        var num_doci = $("#NUM_DOCI_2").val(),
+            num_docf = $("#NUM_DOCF_2").val(),
+            fechai = $("#FECHAI_1").val(),
+            fechaf = $("#FECHAF_1").val(),
+            kunnr = $("#KUNNR_2").val(),
+            usuario_id = $("#USUARIOA_ID_2").val();
+
+        if (!usuario_id){
+            $("#USUARIOA_ID_2").addClass("invalid");
+            return;
+        }
+        $("#USUARIOA_ID_2").removeClass("invalid");
+        fnCommon.showProcess(true);
+        $.ajax({
+            url: root + 'ModificacionesGlobales/ListModAutorizador?num_doci=' + num_doci
+            + '&&num_docf=' + num_docf + '&&fechai=' + fechai + '&&fechaf=' + fechaf + '&&kunnr=' + kunnr + '&&usuarioa_id=' + usuario_id,
+            success: function (resultView) {
+                fnCommon.showProcess(false);
+                $('#listModAutorizador').html(resultView);
+            }
+        });
+    }
 </script>
 
 <script src="~/Scripts/autocomplete1.11.4.js"></script>
@@ -208,8 +238,9 @@
         auto(document).ready(function () {
             auto("#NUM_DOCI_1").autocomplete({
                 source: function (request, response) {
-                    fnCommon.autoAjax(root + "Listas/Solicitudes", response, { Prefix: request.term }, function (item) { return { label: item.NUM_DOC, value: item.NUM_DOC }; });
-                },
+                    var num_doci = $("#NUM_DOCI_1").val();
+                    fnCommon.autoAjax(root + "Listas/Solicitudes", response, { Prefix: request.term, num_doci: num_doci, num_docf: null }, function (item) { return { label: item.NUM_DOC, value: item.NUM_DOC }; });
+               },
                 messages: {
                     noResults: '',
                     results: function (resultsCount) { }
@@ -223,7 +254,8 @@
         auto(document).ready(function () {
             auto("#NUM_DOCF_1").autocomplete({
                 source: function (request, response) {
-                    fnCommon.autoAjax(root + "Listas/Solicitudes", response, { Prefix: request.term }, function (item) { return { label: item.NUM_DOC, value: item.NUM_DOC }; });
+                    var num_doci = $("#NUM_DOCI_1").val();
+                    fnCommon.autoAjax(root + "Listas/Solicitudes", response, { Prefix: request.term, num_doci: num_doci, num_docf: null }, function (item) { return { label: item.NUM_DOC, value: item.NUM_DOC }; });
                 },
                 messages: {
                     noResults: '',
@@ -252,10 +284,10 @@
             });
         })
         auto(document).ready(function () {
-            auto("#USUARIO_ID_2").autocomplete(
+            auto("#USUARIOA_ID_2").autocomplete(
                 {
                     source: function (request, response) {
-                        fnCommon.autoAjax(root + "Listas/Usuarios", response, { Prefix: request.term }, function (item) { return { label: (item.ID + " - " + item.NOMBRE + " " + item.APELLIDO_P + " " + (item.APELLIDO_M == null ? "" : item.APELLIDO_M)), value: item.ID }; });
+                        fnCommon.autoAjax(root + "Listas/Usuarios", response, { Prefix: request.term, autorizador:true }, function (item) { return { label: (item.ID + " - " + item.NOMBRE + " " + item.APELLIDO_P + " " + (item.APELLIDO_M == null ? "" : item.APELLIDO_M)), value: item.ID }; });
                     },
                     messages: {
                         noResults: '',
@@ -270,7 +302,8 @@
         auto(document).ready(function () {
             auto("#NUM_DOCI_2").autocomplete({
                 source: function (request, response) {
-                    fnCommon.autoAjax(root + "Listas/Solicitudes", response, { Prefix: request.term }, function (item) { return { label: item.NUM_DOC, value: item.NUM_DOC }; });
+                    var num_docf = $("#NUM_DOCF_2").val();
+                    fnCommon.autoAjax(root + "Listas/Solicitudes", response, { Prefix: request.term, num_doci: null, num_docf: num_docf }, function (item) { return { label: item.NUM_DOC, value: item.NUM_DOC }; });
                 },
                 messages: {
                     noResults: '',
@@ -285,7 +318,8 @@
         auto(document).ready(function () {
             auto("#NUM_DOCF_2").autocomplete({
                 source: function (request, response) {
-                    fnCommon.autoAjax(root + "Listas/Solicitudes", response, { Prefix: request.term }, function (item) { return { label: item.NUM_DOC, value: item.NUM_DOC }; });
+                    var num_doci = $("#NUM_DOCI_2").val();
+                    fnCommon.autoAjax(root + "Listas/Solicitudes", response, { Prefix: request.term, num_doci: num_doci, num_docf: null }, function (item) { return { label: item.NUM_DOC, value: item.NUM_DOC }; });
                 },
                 messages: {
                     noResults: '',
