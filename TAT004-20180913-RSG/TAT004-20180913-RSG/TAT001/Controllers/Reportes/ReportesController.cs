@@ -565,6 +565,37 @@ namespace TAT001.Controllers.Reportes
             foreach (DOCUMENTO dOCUMENTO in documentos)
             {
                 Concentrado r1 = new Concentrado();
+                dOCUMENTO.DOCUMENTORAN = db.DOCUMENTORANs.Where(d => d.NUM_DOC.Equals(dOCUMENTO.NUM_DOC)).ToList();
+
+                decimal montoProv = 0.0M;
+                decimal montoApli = 0.0M;
+                r1.remanente = 0.0M;
+                r1.porcentaje_remanente = 0;
+                if (dOCUMENTO.DOCUMENTO_REF != null)
+                {
+                    montoProv = db.DOCUMENTOes.First(x => x.NUM_DOC == dOCUMENTO.DOCUMENTO_REF).MONTO_DOC_MD.Value;
+                }
+                else if (db.DOCUMENTOes.Any(x => x.DOCUMENTO_REF == dOCUMENTO.NUM_DOC && x.ESTATUS_C == null))
+                {
+                    montoProv = dOCUMENTO.MONTO_DOC_MD.Value;
+                }
+
+                if (db.DOCUMENTOes.Any(x => x.DOCUMENTO_REF == dOCUMENTO.NUM_DOC && x.ESTATUS_C == null))
+                {
+                    montoApli = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == dOCUMENTO.NUM_DOC && x.ESTATUS_C == null).Sum(x => x.MONTO_DOC_MD.Value);
+                }
+                else if (dOCUMENTO.DOCUMENTO_REF != null)
+                {
+                    if (db.DOCUMENTOes.Any(x => x.DOCUMENTO_REF == dOCUMENTO.DOCUMENTO_REF && x.ESTATUS_C == null))
+                    {
+                        montoApli = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == dOCUMENTO.DOCUMENTO_REF && x.ESTATUS_C == null).Sum(x => x.MONTO_DOC_MD.Value);
+                    }
+                }
+                if (montoProv > 0 && montoApli > 0)
+                {
+                    r1.remanente = montoProv - montoApli;
+                    r1.porcentaje_remanente = Convert.ToInt32((r1.remanente * 100) / montoProv);
+                }
                 r1.documento = dOCUMENTO;
                 if (dOCUMENTO.PAYER_ID == null) continue;
                 //dOCUMENTO.CLIENTE = db.CLIENTEs.Where(a => a.VKORG.Equals(dOCUMENTO.VKORG)

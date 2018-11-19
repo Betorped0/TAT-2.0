@@ -922,13 +922,13 @@
                             </td>}<!--% Reverso-->
                         @if (((string[])ViewBag.campos).Contains("41"))
                         {
-                            <td></td>}<!--$ Exceso/(Insuficiencia) Provisión-->
+                            <td>@(String.Format("{0:C}", item.remanente))</td>}<!--$ Exceso/(Insuficiencia) Provisión-->
                         @if (((string[])ViewBag.campos).Contains("42"))
                         {
-                            <td></td>}<!--% Exceso/(Insuficiencia) Provisión-->
+                            <td>@(item.porcentaje_remanente)</td>}<!--% Exceso/(Insuficiencia) Provisión-->
                         @if (((string[])ViewBag.campos).Contains("43"))
                         {
-                            <td></td>}<!--Impactos / Beneficios en el gasto del Periodo-->
+                            <td>@(String.Empty)</td>}<!--Impactos / Beneficios en el gasto del Periodo-->
                         @if (((string[])ViewBag.campos).Contains("44"))
                         {
                             <td>@((item.documento.DOCUMENTOSAP != null) ? item.documento.DOCUMENTOSAP.NUM_DOC.ToString() : "")</td>}<!--Núm. Registro Provisión-->
@@ -1063,10 +1063,20 @@
                             <td>@(item.documento.DOCUMENTOFs.Select(df => df.FACTURAK).FirstOrDefault())</td>}<!--Número Factura Kellogg´s-->
                         @if (((string[])ViewBag.campos).Contains("68"))
                         {
-                            <td></td>}<!--Número NC -->
+                            <td>
+                                @if (item.documento.TSOL_ID.StartsWith("NC"))
+                                {
+                                    @(item.documento.NUM_DOC)
+                                }
+                            </td>}<!--Número NC -->
                         @if (((string[])ViewBag.campos).Contains("69"))
                         {
-                            <td></td>}<!--Número Orden de Pago-->
+                            <td>
+                                @if (item.documento.TSOL_ID.StartsWith("OP"))
+                                {
+                                    @(item.documento.NUM_DOC)
+                                }
+                            </td>}<!--Número Orden de Pago-->
                         @if (((string[])ViewBag.campos).Contains("70"))
                         {
                             <td>@((item.documento.DOCUMENTOTS.Where(x => x.TSFORM_ID == 1 && (bool)x.CHECKS).Count() > 0) ? "X" : "") </td>}<!--Expense Recognition en periodo-->
@@ -1096,61 +1106,111 @@
                             <td>@((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("OTR")).Count() > 0) ? "X" : "")</td>}<!--Otros-->
                         @if (((string[])ViewBag.campos).Contains("79"))
                         {
-                            <td></td>}<!--Negociación por monto-->
+                            <td>@((item.documento.TIPO_TECNICO == "M") ? "X" : "")</td>}<!--Negociación por monto-->
                         @if (((string[])ViewBag.campos).Contains("80"))
                         {
-                            <td></td>}<!--Negociación por %-->
+                            <td>@((item.documento.TIPO_TECNICO == "P") ? "X" : "")</td>}<!--Negociación por %-->
                         @if (((string[])ViewBag.campos).Contains("81"))
                         {
-                            <td></td>}<!--Distribución por material-->
+                            <td>
+                                @if (item.documento.DOCUMENTOPs.Count > 0)
+                                {
+                                    @((item.documento.DOCUMENTOPs.FirstOrDefault().MATNR != "") ? "X" : "")
+                                }
+                            </td>}<!--Distribución por material-->
                         @if (((string[])ViewBag.campos).Contains("82"))
                         {
-                            <td></td>}<!--Distribución categoría-->
+                            <td>
+                                @if (item.documento.DOCUMENTOPs.Count > 0)
+                                {
+                                    @((item.documento.DOCUMENTOPs.FirstOrDefault().MATNR == "") ? "X" : "")
+                                }
+                            </td>}<!--Distribución categoría-->
                         @if (((string[])ViewBag.campos).Contains("83"))
                         {
-                            <td></td>}<!--Monto Base-->
+                            <td>@((item.documento.TIPO_TECNICO == "M") ? String.Format("{0:C}", item.documento.MONTO_DOC_MD) : "")</td>}<!--Monto Base-->
                         @if (((string[])ViewBag.campos).Contains("84"))
                         {
-                            <td></td>}<!--Monto %-->
+                            <td>@((item.documento.TIPO_TECNICO == "P") ? String.Format("{0:C}", item.documento.MONTO_DOC_MD) : "")</td>}<!--Monto %-->
                         @if (((string[])ViewBag.campos).Contains("85"))
                         {
                             <td>@((item.documento.TIPO_RECURRENTE != null) ? "Si" : "No")</td>}<!--Recurrente-->
                         @if (((string[])ViewBag.campos).Contains("86"))
                         {
-                            <td></td>}<!--Recurrente por porcentaje-->
+                            <td>@((item.documento.TIPO_RECURRENTE != null) ? ((item.documento.TIPO_TECNICO == "P") ? "X" : "") : "")</td>}<!--Recurrente por porcentaje-->
                         @if (((string[])ViewBag.campos).Contains("87"))
                         {
-                            <td></td>}<!--Recurrente por Monto-->
+                            <td>@((item.documento.TIPO_RECURRENTE != null) ? ((item.documento.TIPO_TECNICO == "M") ? "X" : "") : "")</td>}<!--Recurrente por Monto-->
                         @if (((string[])ViewBag.campos).Contains("88"))
                         {
-                            <td></td>}<!--Recurrente Cancelada-->
+                            <td>
+                                @if(item.documento.DOCUMENTORECs.Count > 0)
+                                {
+                                    @((item.documento.DOCUMENTORECs.FirstOrDefault().ESTATUS == "C")? "X" : "")
+                                }
+                            </td>}<!--Recurrente Cancelada-->
                         @if (((string[])ViewBag.campos).Contains("89"))
                         {
-                            <td></td>}<!--Objetivo Inicio-->
+                            <td>
+                                @if(item.documento.DOCUMENTORAN.Count > 0)
+                                {
+                                    @(item.documento.DOCUMENTORAN.FirstOrDefault().OBJETIVOI)
+                                }
+                            </td>}<!--Objetivo Inicio-->
                         @if (((string[])ViewBag.campos).Contains("90"))
                         {
-                            <td></td>}<!--Objetivo Límite-->
+                            <td>
+                                @if (item.documento.DOCUMENTORAN.Count > 0)
+                                {
+                                    @(item.documento.DOCUMENTORAN.FirstOrDefault().PORCENTAJE)
+                                }
+                            </td>}<!--Objetivo Límite-->
                         @if (((string[])ViewBag.campos).Contains("91"))
                         {
                             <td>@(item.ESTATUS_STRING)</td>}<!--Estatus-->
                         @if (((string[])ViewBag.campos).Contains("92"))
                         {
-                            <td></td>}<!--Venta del Periodo-->
+                            <td>
+                                @if(item.documento.DOCUMENTOLs.Count > 0)
+                                {
+                                    @(String.Format("{0:C}", item.documento.DOCUMENTOLs.FirstOrDefault().MONTO_VENTA))
+                                }
+                            </td>}<!--Venta del Periodo-->
                         @if (((string[])ViewBag.campos).Contains("93"))
                         {
-                            <td></td>}<!--Monto Provisión-->
+                            <td>
+                                @if (item.documento.DOCUMENTOLs.Count > 0 && item.documento.DOCUMENTORAN.Count > 0)
+                                {
+                                    @(String.Format("{0:C}", item.documento.DOCUMENTOLs.FirstOrDefault().MONTO_VENTA * (item.documento.DOCUMENTORAN.FirstOrDefault().PORCENTAJE / 100)))
+                                }
+                            </td>}<!--Monto Provisión-->
                         @if (((string[])ViewBag.campos).Contains("94"))
                         {
-                            <td></td>}<!--Back Order-->
+                            <td>@(((item.documento.ESTATUS.Equals("A")) && (item.documento.TSOL.PADRE) && (item.documento.DOCUMENTOLs.Count > 0))? String.Format("{0:C}", item.documento.MONTO_DOC_MD) : "")</td>}<!--Back Order-->
                         @if (((string[])ViewBag.campos).Contains("95"))
                         {
-                            <td></td>}<!--Venta Real + BO-->
+                            <td>
+                                @if (item.documento.DOCUMENTOLs.Count > 0)
+                                {
+                                    @(String.Format("{0:C}", item.documento.DOCUMENTOLs.FirstOrDefault().MONTO_VENTA + item.documento.DOCUMENTOLs.FirstOrDefault().BACKORDER))
+                                }
+                            </td>}<!--Venta Real + BO-->
                         @if (((string[])ViewBag.campos).Contains("96"))
                         {
-                            <td></td>}<!--NC / OP o Reverso-->
+                            <td>
+                                @if (item.documento.TSOL_ID.StartsWith("NC") || item.documento.TSOL_ID.StartsWith("OP") || item.documento.TSOL_ID.StartsWith("RP"))
+                                {
+                                    @(item.documento.NUM_DOC)
+                                }
+                            </td>}<!--NC / OP o Reverso-->
                         @if (((string[])ViewBag.campos).Contains("97"))
                         {
-                            <td></td>}<!--Monto-->
+                            <td>
+                                @if (item.documento.DOCUMENTOLs.Count > 0 && item.documento.DOCUMENTORAN.Count > 0)
+                                {
+                                    @(String.Format("{0:C}", (item.documento.DOCUMENTOLs.FirstOrDefault().MONTO_VENTA + item.documento.DOCUMENTOLs.FirstOrDefault().BACKORDER) * (item.documento.DOCUMENTORAN.FirstOrDefault().OBJETIVOI / 100)))
+                                }
+                            </td>}<!--Monto-->
                     </tr>
                     }
                 </tbody>

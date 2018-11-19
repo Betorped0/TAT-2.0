@@ -287,6 +287,8 @@ namespace TAT001.Models
             public string miles;
             public string dec;
             public object DOCSREFREVERSOS;
+            public decimal remanente;
+            public int porcentaje_remanente;
 
             public DOCUMENTO documento { set; get; }
             public FLUJO flujo { set; get; }
