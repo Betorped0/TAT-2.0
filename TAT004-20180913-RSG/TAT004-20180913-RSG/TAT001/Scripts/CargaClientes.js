@@ -490,10 +490,8 @@ function Carga() {
 }
 
 function Comprobar() {
+    $('#table').DataTable().destroy();
     habilitar();
-    if ($.fn.DataTable.isDataTable('#table')) {
-        $('#table').DataTable().destroy();
-    }
     var datos = $('#tabla').serializeArray();
     $('#table tbody').empty();
     formato();
