@@ -1,7 +1,6 @@
 ﻿@model TAT001.Entities.PERMISO_PAGINA
 
 @{
-    //ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.pagina_r = 764;
     ViewBag.carpeta_r = 500;
@@ -12,7 +11,11 @@
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
+    <div class="row">
+        <div class="col-md-offset-2 col-md-10">
+            <button id="btn_guardar" type="submit" value="Submit" class="btn btn-default" style="float:right;"></button>
+        </div>
+    </div>
     <div class="col 12 s12 ">
         <div class="card-panel">
             <div class="row">
@@ -30,11 +33,6 @@
                     </div>
                     <input type="hidden" name="idx" value="@ViewBag.idi" />
                     @Html.Hidden("idx", idx as string)
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <button id="btnACr" type="submit" value="Submit" class="btn btn-default"></button>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

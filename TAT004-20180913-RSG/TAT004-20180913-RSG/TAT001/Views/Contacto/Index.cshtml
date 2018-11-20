@@ -82,7 +82,7 @@
                                     <a data-form-method="post" href="@Url.Action("Details", "Contacto", new { vko = item.VKORG, vtw = item.VTWEG, kun = item.KUNNR, spa = item.SPART, id = item.ID })">
                                         <i class='material-icons blue-text'>search</i>
                                     </a>
-                                    <a href="@Url.Action("Delete", "Contacto", new { id = item.ID })">
+                                    <a class="confirmation" href="@Url.Action("Delete", "Contacto", new { id = item.ID })">
                                         <i class='material-icons red-text'>delete</i>
                                     </a>
                                 </td>
@@ -142,6 +142,10 @@
         $('#table').DataTable().search(
             $('#global_filter').val()).draw();
     }
+    $('.confirmation').on('click', function (e) {
+        e.preventDefault;
+        return confirm('¿Desea eliminar el contacto?');
+    });
 </script>
 <style>
 

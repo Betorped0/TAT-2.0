@@ -1,7 +1,6 @@
 ﻿@model TAT001.Entities.PERMISO_PAGINA
 
 @{
-    //ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.pagina_r = 763;
     ViewBag.carpeta_r = 500;
@@ -18,7 +17,7 @@
     @Html.AntiForgeryToken()
     <div class="row">
         <div class="col-md-offset-2 col-md-10">
-            <button id="btnEdit" type="submit" value="Submit" class="btn btn-default" style="float:right;"></button>
+            <button id="btn_guardar" type="submit" value="Submit" class="btn btn-default" style="float:right;"></button>
         </div>
     </div>
     <div class="row">

@@ -2352,16 +2352,17 @@ namespace TAT001.Controllers
             return regresaRowH3;
         }
 
-        public List<object> cargaInicialH4(DataRow fila)
+        public List<string> cargaInicialH4(DataRow fila)
         {
             DataSet ds1 = (DataSet)Session["ds1"];
             DataSet ds4 = (DataSet)Session["ds4"];
             string idioma = Session["spras"].ToString();
-            List<object> regresaRowH4 = new List<object>();
+            List<string> regresaRowH4 = new List<string>();
             List<string> categoriasHealty = new List<string>();
             List<string> categoriasNum = new List<string>();
             List<bool> materialesHealty = new List<bool>();
             List<string> materialesNum = new List<string>();
+            List<string> listLigadas = new List<string>();
             List<object> id = new List<object>();
 
             string num_doc = fila[0].ToString().Trim();
@@ -2386,6 +2387,7 @@ namespace TAT001.Controllers
                 string[] vigencia_de2 = vigencia_de.Split(' ');
                 string vigencia_al = ds1.Tables[0].Rows[i][14].ToString().Trim();
                 string[] vigencia_al2 = vigencia_al.Split(' ');
+                string colorLigada = "";
 
                 if (num_doc == num_docH1)
                 {
@@ -2397,6 +2399,8 @@ namespace TAT001.Controllers
                     {
                         regresaRowH4.Add("red white-text rojo");
                     }
+
+                    regresaRowH4.Add("nada");
 
                     if (validaRangoFecha(vigencia_de2[0], vigencia_al2[0]))
                     {
@@ -2484,7 +2488,7 @@ namespace TAT001.Controllers
                                 regresaRowH4.Add("red white-text rojo");
                             }
                         }
-                        
+
                         regresaRowH4.Add("");
                     }
                     else if (matnr == "" & matkl != "")
@@ -2625,40 +2629,120 @@ namespace TAT001.Controllers
                     //}
                     if (ligada != "")
                     {
-                        regresaRowH4.Add("");
+                        regresaRowH4.Add("");//MONTO
 
                         if (IsNumeric(porc_apoyo))
                         {
-                            if (Convert.ToDecimal(porc_apoyo) > 0)
+                            for (int j = 2; j < ds4.Tables[0].Rows.Count; j++)
                             {
+                                string miNum_docH4 = ds4.Tables[0].Rows[j][0].ToString().Trim();
+                                string miLigadaH4 = ds4.Tables[0].Rows[j][1].ToString().Trim();
+                                string miPorc_apoyoH4 = ds4.Tables[0].Rows[j][8].ToString().Trim();
+
+                                if (miNum_docH4 != "" & miNum_docH4 == num_doc)
+                                {
+                                    listLigadas.Add(miNum_docH4 + miLigadaH4 + miPorc_apoyoH4);
+                                }
+                            }
+
+                            bool kk = listLigadas.Distinct().Skip(1).Any();
+
+                            if (Convert.ToDecimal(porc_apoyo) > 0 & !kk)
+                            {
+                                colorLigada = "";
                                 regresaRowH4.Add("");
                             }
                             else
                             {
+                                colorLigada = "red white-text rojo";
                                 regresaRowH4.Add("red white-text rojo");
                             }
                         }
                         else
                         {
-                            regresaRowH4.Add("red white-text rojo");
+                            for (int j = 2; j < ds4.Tables[0].Rows.Count; j++)
+                            {
+                                string miNum_docH4 = ds4.Tables[0].Rows[j][0].ToString().Trim();
+                                string miLigadaH4 = ds4.Tables[0].Rows[j][1].ToString().Trim();
+                                string miPorc_apoyoH4 = ds4.Tables[0].Rows[j][8].ToString().Trim();
+
+                                if (miNum_docH4 != "" & miNum_docH4 == num_doc)
+                                {
+                                    listLigadas.Add(miNum_docH4 + miLigadaH4 + miPorc_apoyoH4);
+                                }
+                            }
+
+                            bool kk = listLigadas.Distinct().Skip(1).Any();
+
+                            if (!kk & porc_apoyo != "")
+                            {
+                                colorLigada = "";
+                                regresaRowH4.Add("");
+                            }
+                            else
+                            {
+                                colorLigada = "red white-text rojo";
+                                regresaRowH4.Add("red white-text rojo");
+                            }
                         }
 
-                        regresaRowH4.Add("");
-                        regresaRowH4.Add("");
-                        regresaRowH4.Add("");
-                        regresaRowH4.Add("");
-                        regresaRowH4.Add("");
+                        regresaRowH4.Add("");//APOYO PIEZA
+                        regresaRowH4.Add("");//COSTO APOYO
+                        regresaRowH4.Add("");//PRECIO SUGERIDO
+                        regresaRowH4.Add("");//VOLUMEN
+                        regresaRowH4.Add("");//APOYO
                     }
                     else
                     {
                         if (apoyo != "")
                         {
-                            regresaRowH4.Add("");
-                            regresaRowH4.Add("");
-                            regresaRowH4.Add("");
-                            regresaRowH4.Add("");
-                            regresaRowH4.Add("");
-                            regresaRowH4.Add("");
+                            regresaRowH4.Add("");//MONTO
+
+                            for (int j = 2; j < ds4.Tables[0].Rows.Count; j++)
+                            {
+                                string miNum_docH4 = ds4.Tables[0].Rows[j][0].ToString().Trim();
+                                string miLigadaH4 = ds4.Tables[0].Rows[j][1].ToString().Trim();
+                                string miPorc_apoyoH4 = ds4.Tables[0].Rows[j][8].ToString().Trim();
+
+                                if (miNum_docH4 != "" & miNum_docH4 == num_doc)
+                                {
+                                    if (miLigadaH4 != "")
+                                    {
+                                        listLigadas.Add("true");
+                                    }
+                                    else
+                                    {
+                                        listLigadas.Add("false");
+                                    }
+                                }
+                            }
+
+                            bool validaLigadaList = listLigadas.Distinct().Skip(1).Any();
+                            bool existeLigada = listLigadas.Contains("true");
+
+                            if (existeLigada)
+                            {
+                                if (!validaLigadaList)
+                                {
+                                    colorLigada = "";
+                                    regresaRowH4.Add("");//PORCENTAJE APOYO
+                                }
+                                else
+                                {
+                                    colorLigada = "red white-text rojo";
+                                    regresaRowH4.Add("red white-text rojo");//PORCENTAJE APOYO
+                                }
+                            }
+                            else
+                            {
+                                colorLigada = "";
+                                regresaRowH4.Add("");//PORCENTAJE APOYO
+                            }
+
+                            regresaRowH4.Add("");//APOYO PIEZA
+                            regresaRowH4.Add("");//COSTO APOYO
+                            regresaRowH4.Add("");//PRECIO SUGERIDO
+                            regresaRowH4.Add("");//VOLUMEN
                             if (IsNumeric(apoyo))
                             {
                                 regresaRowH4.Add("");
@@ -2681,11 +2765,83 @@ namespace TAT001.Controllers
 
                             if (IsNumeric(porc_apoyo))
                             {
-                                regresaRowH4.Add("");
+                                for (int j = 2; j < ds4.Tables[0].Rows.Count; j++)
+                                {
+                                    string miNum_docH4 = ds4.Tables[0].Rows[j][0].ToString().Trim();
+                                    string miLigadaH4 = ds4.Tables[0].Rows[j][1].ToString().Trim();
+                                    string miPorc_apoyoH4 = ds4.Tables[0].Rows[j][8].ToString().Trim();
+
+                                    if (miLigadaH4 != "")
+                                    {
+                                        listLigadas.Add("true");
+                                    }
+                                    else
+                                    {
+                                        listLigadas.Add("false");
+                                    }
+                                }
+
+                                bool validaLigadaList = listLigadas.Distinct().Skip(1).Any();
+                                bool existeLigada = listLigadas.Contains("true");
+
+                                if (existeLigada)
+                                {
+                                    if (!validaLigadaList)
+                                    {
+                                        colorLigada = "";
+                                        regresaRowH4.Add("");//PORCENTAJE APOYO
+                                    }
+                                    else
+                                    {
+                                        colorLigada = "red white-text rojo";
+                                        regresaRowH4.Add("red white-text rojo");//PORCENTAJE APOYO
+                                    }
+                                }
+                                else
+                                {
+                                    colorLigada = "";
+                                    regresaRowH4.Add("");//PORCENTAJE APOYO
+                                }
                             }
                             else
                             {
-                                regresaRowH4.Add("red white-text rojo");
+                                for (int j = 2; j < ds4.Tables[0].Rows.Count; j++)
+                                {
+                                    string miNum_docH4 = ds4.Tables[0].Rows[j][0].ToString().Trim();
+                                    string miLigadaH4 = ds4.Tables[0].Rows[j][1].ToString().Trim();
+                                    string miPorc_apoyoH4 = ds4.Tables[0].Rows[j][8].ToString().Trim();
+
+                                    if (miLigadaH4 != "")
+                                    {
+                                        listLigadas.Add("true");
+                                    }
+                                    else
+                                    {
+                                        listLigadas.Add("false");
+                                    }
+                                }
+
+                                bool validaLigadaList = listLigadas.Distinct().Skip(1).Any();
+                                bool existeLigada = listLigadas.Contains("true");
+
+                                if (existeLigada)
+                                {
+                                    if (!validaLigadaList)
+                                    {
+                                        colorLigada = "";
+                                        regresaRowH4.Add("");//PORCENTAJE APOYO
+                                    }
+                                    else
+                                    {
+                                        colorLigada = "red white-text rojo";
+                                        regresaRowH4.Add("red white-text rojo");//PORCENTAJE APOYO
+                                    }
+                                }
+                                else
+                                {
+                                    colorLigada = "";
+                                    regresaRowH4.Add("");//PORCENTAJE APOYO
+                                }
                             }
 
                             if (IsNumeric(apoyo_pieza))
@@ -2727,8 +2883,15 @@ namespace TAT001.Controllers
                             regresaRowH4.Add("");
                         }
                     }
+
+                    for (int j = 0; j < regresaRowH4.Count; j++)
+                    {
+                        if (regresaRowH4[j].Contains("nada"))
+                            regresaRowH4[j] = colorLigada;
+                    }
                 }
             }
+
             return regresaRowH4;
         }
 
