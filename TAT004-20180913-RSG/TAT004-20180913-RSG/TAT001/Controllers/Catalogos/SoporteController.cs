@@ -146,7 +146,7 @@ namespace TAT001.Controllers
         }
 
         // GET: Soporte/Edit/5
-        public ActionResult Edit(string tsoporte_id)
+        public ActionResult Edit(string id)
         {
             int pagina_id = 1317; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
@@ -163,16 +163,16 @@ namespace TAT001.Controllers
                 //return RedirectToAction("Pais", "Home");
             }
 
-            if (tsoporte_id == null)
+            if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var des = db.TSOPORTEs.Where(x => x.ID == tsoporte_id).FirstOrDefault();
+            var des = db.TSOPORTEs.Where(x => x.ID == id).FirstOrDefault();
             if (des == null)
             {
                 return HttpNotFound();
             }
-            TSOPORTE tSOPORTE = db.TSOPORTEs.Find(tsoporte_id);
+            TSOPORTE tSOPORTE = db.TSOPORTEs.Find(id);
             if (tSOPORTE.TSOPORTETs.Count > 0)
                 foreach (var e in tSOPORTE.TSOPORTETs)
                 {
