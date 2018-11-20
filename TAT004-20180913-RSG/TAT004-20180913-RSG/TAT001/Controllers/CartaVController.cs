@@ -260,6 +260,13 @@ namespace TAT001.Controllers
         //[ValidateAntiForgeryToken] //B20180710 MGC 2018.07.16 Modificaciones para editar los campos de distribución se agrego los objetos
         public ActionResult Create(CartaV v, string monto_enviar, string guardar_param)
         {
+            if (guardar_param== "guardar_desde_visualizar")
+            {
+                v=(CartaV)TempData["v"];
+                monto_enviar=TempData["monto_enviar"] != null ? TempData["monto_enviar"].ToString() : null;
+                guardar_param = "guardar_param";
+            }
+        
             int pos = 0;//B20180720P MGC Guardar Carta
 
             //B20180726 MGC 2018.07.26
@@ -395,6 +402,13 @@ namespace TAT001.Controllers
                 {
                     db.CARTAs.Add(ca);
                     db.SaveChanges();
+                    TempData["v"] = null;
+                    TempData["monto_enviar"] = null;
+                }
+                else
+                {
+                    TempData["v"] = v;
+                    TempData["monto_enviar"] = monto_enviar;
                 }
 
 

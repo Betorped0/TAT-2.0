@@ -5,43 +5,6 @@ int idn = 0;
 }
 <div id="dist" class="col s12">
     <div class="row">
-        @if (Model.D.LIGADA != null)
-        {
-            if ((bool)Model.D.LIGADA & Model.D.DOCUMENTORECs.Count == 0)
-            {
-                @*<div class="col l6 offset-l6 m6 l6">
-                        <div class="card-panel">
-                            <h5>Base para aplicar</h5>
-                            <div class="row" style="margin-bottom:0px;">
-                                <div class="input-field col s6">
-                                    <input type="text" value="@Model.D.PORC_APOYO" class="porcentaje" disabled="disabled" id="PORC_APOYO" />
-                                    <label for="txt_porc">Porcentaje apoyo</label>
-                                </div>
-                            </div>
-                            @if (Model.D.DOCUMENTOLs.Count > 0)
-                            {
-                                <div class="row">
-                                    <div class="input-field col s6">
-
-                                        <input type="text" value="@Model.D.DOCUMENTOLs.FirstOrDefault().MONTO_VENTA" class="precio" disabled="disabled" id="txt_venta" />
-                                        <label for="txt_porc">Venta del mes</label>
-                                    </div>
-                                    <div class="input-field col s6">
-                                        <input type="text" value="@Model.D.MONTO_DOC_MD" class="precio" disabled="disabled" id="MONTO_DOC_MD" />
-                                        <label for="txt_porc">Monto base</label>
-                                    </div>
-                                    <script>
-                                        //function calcValor() {
-                                        ////var venta = ((document.getElementById("MONTO_DOC_MD").value) / (document.getElementById("PORC_APOYO").value)) * 100;
-                                        ////document.getElementById("txt_venta").value = venta;
-                                        //}
-                                    </script>
-                                </div>
-                            }
-                        </div>
-                    </div>*@
-            }
-        }
         <div class="col s12">
             <br />
             @*///////////////////////////////CAMBIOS LGPP INICIO//////////////////////////*@
@@ -91,16 +54,16 @@ int idn = 0;
                             else
                             {
                                 <h5 id="head_montob">Monto Base</h5>
-                                                    <div class="row" style="margin-bottom:0">
-                                                        <div class="input-field col s6">
-                                                            @Html.EditorFor(model => model.D.MONTO_DOC_MD, new { htmlAttributes = new { @disabled = "disabled", @id = "lbl_montodis", @class = "_vmonto" } })
-                                                            @Html.LabelFor(model => model.D.MONTO_DOC_MD, "Monto", htmlAttributes: new { @id = "lbl_montodis" })
-                                                        </div>
-                                                        <div class="input-field col s6">
-                                                            @Html.EditorFor(model => model.D.MONEDA_ID, new { htmlAttributes = new { @disabled = "disabled", @id = "lbl_monedadis" } })
-                                                            @Html.LabelFor(model => model.D.MONEDA_ID, "Moneda", htmlAttributes: new { @for = "monedadis_id", @id = "lbl_monedadis" })
-                                                        </div>
-                                                    </div>
+                                <div class="row" style="margin-bottom:0">
+                                    <div class="input-field col s6">
+                                        @Html.EditorFor(model => model.D.MONTO_DOC_MD, new { htmlAttributes = new { @disabled = "disabled", @id = "lbl_montodis", @class = "_vmonto" } })
+                                        @Html.LabelFor(model => model.D.MONTO_DOC_MD, "Monto", htmlAttributes: new { @id = "lbl_montodis" })
+                                    </div>
+                                    <div class="input-field col s6">
+                                        @Html.EditorFor(model => model.D.MONEDA_ID, new { htmlAttributes = new { @disabled = "disabled", @id = "lbl_monedadis" } })
+                                        @Html.LabelFor(model => model.D.MONEDA_ID, "Moneda", htmlAttributes: new { @for = "monedadis_id", @id = "lbl_monedadis" })
+                                    </div>
+                                </div>
                             }
 
                         </div>
@@ -136,12 +99,12 @@ int idn = 0;
                                         @if (Model.D.TSOL.FACTURA == false)
                                         {
                                             <th id="thead_disvolumen">Volumen estimado</th>
-                                                        <th id="thead_disvapoyo">Apoyo estimado</th>
+                                            <th id="thead_disvapoyo">Apoyo estimado</th>
                                         }
                                         else
                                         {
                                             <th id="thead_disvolumen">Volumen real</th>
-                                                        <th id="thead_disapoyo">Apoyo real</th>
+                                            <th id="thead_disapoyo">Apoyo real</th>
                                         }
                                     </tr>
                                 </thead>
@@ -172,26 +135,14 @@ int idn = 0;
                                                 {
                                                     if (item.MATNR != "")
                                                     {
-                                                        string spras = ViewBag.spras_id;
-                                                        var matnr = db.MATERIALTs.Where(x => x.MATERIAL_ID == item.MATNR & x.SPRAS == spras).FirstOrDefault();
-                                                        if (matnr != null)
-                                                        {
-                                                            <td>@matnr.MAKTG</td>}
-                                                        else
-                                                        {
-                                                            <td></td>
-                                                        }
+                                                        var matnr = TAT001.Common.FnCommon.ObtenerMaterial(db, User.Identity.Name, item.MATNR);
+                                                        <td>@matnr.MAKTX</td>
+                                                        
                                                     }
                                                     else
                                                     {
-                                                        var matkl = db.MATERIALGPs.Find(item.MATKL);
-                                                        if (matkl != null)
-                                                        {
-                                                            <td>@matkl.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals("EN")).FirstOrDefault().TXT50 </td>}
-                                                        else
-                                                        {
-                                                            <td></td>
-                                                        }
+                                                        var matkl = TAT001.Common.FnCommon.ObtenerMaterialGroup(db,item.MATKL);
+                                                        <td>@matkl.DESCRIPCION </td>                                                 
                                                     }
 
                                                 }
@@ -225,14 +176,8 @@ int idn = 0;
                                                 {
                                                     if (mat.MATNR != "")
                                                     {
-                                                        var matnr = db.MATERIALs.Find(mat.MATNR);
-                                                        if (matnr != null)
-                                                        {
-                                                            <td>@matnr.MAKTX</td>}
-                                                        else
-                                                        {
-                                                            <td></td>
-                                                        }
+                                                        var matnr = TAT001.Common.FnCommon.ObtenerMaterial(db, User.Identity.Name, mat.MATNR);
+                                                        <td>@matnr.MAKTX</td> 
                                                     }
                                                 }
                                             }

@@ -585,6 +585,49 @@
                                     }
                                     @Html.LabelFor(model => model.PAYER_EMAIL, "Email de contacto", htmlAttributes: new { @class = "control-label col-md-2", @for = "payer_email" })
                                 </div>
+                                <script>
+                                    auto(document).ready(function () {
+                                        auto("#payer_nombre").autocomplete({
+                                            source: function (request, response) {
+                                                var kunnr = document.getElementById("payer_id").value;
+                                                var vk = document.getElementById("txt_vkorg").value;
+                                                var vt = document.getElementById("txt_vtweg").value;
+
+
+                                                auto.ajax({
+                                                    url: root + "Listas/contactos",
+                                                    type: "POST",
+                                                    dataType: "json",
+                                                    data: { Prefix: request.term, vkorg: vk, vtweg: vt, kunnr: kunnr },
+                                                    success: function (data) {
+                                                        response(auto.map(data, function (item) {
+                                                            return { label: item.NOMBRE + " - " + item.EMAIL, value: item.NOMBRE, mail: item.EMAIL };
+                                                        }))
+                                                    }
+                                                })
+                                            },
+                                            messages: {
+                                                noResults: '',
+                                                results: function (resultsCount) { }
+                                            },
+                                            change: function (e, ui) {
+                                                if (!(ui.item)) {
+                                                    //e.target.value = "";
+                                                }
+                                            },
+
+                                            select: function (event, ui) {
+
+                                                var label = ui.item.label;
+                                                var value = ui.item.value;
+                                                var email = ui.item.mail;
+                                                document.getElementById('payer_email').value = email;
+                                                $("#payer_email").trigger('focus');
+                                                $("#payer_email").trigger('focusout');
+                                            }
+                                        });
+                                    })
+                                </script>
                             </div>
                         </div>
                     </div>
@@ -653,14 +696,14 @@
                                             @*@Html.EditorFor(model => model.FECHAI_VIG, new { htmlAttributes = new { @id = "fechai_vig", @class = "form-control datepicker " + @ViewBag.relacionada, @onkeyup = "borrar(this);" } })*@
                                             @Html.HiddenFor(model => model.FECHAI_VIG, new { @id = "fechai_vig", @class = "form-control datepicker " })
                                             <input type="text" disabled class="datepicker" id="fechai_vig2" onkeyup="borrar(this);" onchange="document.getElementById('fechai_vig').value = this.value" />
-                                            @Html.LabelFor(model => model.FECHAI_VIG, "De", htmlAttributes: new { @class = "active", @for = "fechai_vig2" })
+                                            @Html.LabelFor(model => model.FECHAI_VIG, "De", htmlAttributes: new { @class = "active", @for = "fechai_vig2", @id = "lbl_fechade" })
                                         </div>
                                         <div class="input-field col s12">
                                             <i class="material-icons prefix">date_range</i>
                                             @*@Html.EditorFor(model => model.FECHAF_VIG, new { htmlAttributes = new { @id = "fechaf_vig", @class = "form-control datepicker " + @ViewBag.relacionada, onkeyup = "borrar(this);" } })*@
                                             @Html.HiddenFor(model => model.FECHAF_VIG, new { @id = "fechaf_vig", @class = "form-control datepicker " })
                                             <input type="text" disabled class="datepicker" id="fechaf_vig2" onkeyup="borrar(this);" onchange="document.getElementById('fechaf_vig').value = this.value" />
-                                            @Html.LabelFor(model => model.FECHAF_VIG, "Hasta", htmlAttributes: new { @class = "active", @for = "fechaf_vig2" })
+                                            @Html.LabelFor(model => model.FECHAF_VIG, "Hasta", htmlAttributes: new { @class = "active", @for = "fechaf_vig2", @id = "lbl_fechahasta" })
                                         </div>
                                     </div>
                                     <script>
