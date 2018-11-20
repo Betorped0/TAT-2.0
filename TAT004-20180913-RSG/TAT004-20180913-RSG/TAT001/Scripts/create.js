@@ -4750,7 +4750,7 @@ function evaluarDisTable() {
             if (dis == "M") {
 
                 if (!checkUnicas(arrTr)) {
-                    M.toast({ html: 'Las categorías unicas no se pueden mezclar con otras categorias y/o Materiales.' });
+                    msj("toast", "Las categorías unicas no se pueden mezclar con otras categorias y/o Materiales.");
                     res = "Error con el material ";
                     return false;
                 }
