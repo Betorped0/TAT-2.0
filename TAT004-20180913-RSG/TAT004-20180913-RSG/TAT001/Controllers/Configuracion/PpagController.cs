@@ -129,7 +129,7 @@ namespace TAT001.Controllers.Configuracion
                 ViewBag.IDI = id;
             }
             List<PERMISO_PAGINA> pp = db.PERMISO_PAGINA.Where(x => x.ROL_ID == id).ToList();
-            List<PAGINA> pi = db.PAGINAs.ToList();
+            List<PAGINA> pi = db.PAGINAs.Where(t=>t.ACTIVO).ToList();
             List<PAGINA> lst = new List<PAGINA>();
             for (int y = 0; y < pi.Count; y++)
             {
@@ -139,9 +139,10 @@ namespace TAT001.Controllers.Configuracion
                     lst.Add(pi[y]);
                 }
             }
-            ViewBag.PAGINA_ID = new SelectList(lst, "ID", "ID");
-            ViewBag.ROL_ID = new SelectList(db.PUESTOes, "ID", "ID");
-            return View();
+            ViewBag.PAGINA_ID = new SelectList(lst, "ID", "URL");
+            PERMISO_PAGINA perpag = new PERMISO_PAGINA { ROL_ID = id };
+            //ViewBag.ROL_ID = new SelectList(db.PUESTOes, "ID", "ID");
+            return View(perpag);
         }
 
         // POST: Ppag/Create
@@ -160,7 +161,7 @@ namespace TAT001.Controllers.Configuracion
                     //en automatico estara activa
                     pERMISO_PAGINA.PERMISO = true;
                     db.PERMISO_PAGINA.Add(pERMISO_PAGINA);
-                    db.SaveChanges();
+                    //db.SaveChanges();
                     return RedirectToAction("Index", new { id = int.Parse(idx) });
                 }
             }
