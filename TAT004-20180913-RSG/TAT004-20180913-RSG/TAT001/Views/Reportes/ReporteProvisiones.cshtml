@@ -120,7 +120,7 @@
                 </div>
 
                 <div class="input-field col s3 m3 l3">
-                    <select multiple name="selectyear" id="selectyear" class="comcode select_all" required="">
+                    <select name="selectyear" id="selectyear" class="comcode" required="">
                         @if (yeard == DateTime.Now.Year)
                         {
 
@@ -308,7 +308,7 @@
         </script>
 
         <br />
-        <span id="titulo2" style="color:deeppink; font-family:Tahoma; font-size:15px;">REPORTE DE PROVISIONES ABIERTAS</span>
+        <b id="titulo2" style="color:rgba(0, 0, 0, 0.87); font-family:Tahoma; font-size:12px;">Al</b>
 
         @*@System.DateTime.Now.ToString("dd/MM/yyyy")*@
 
@@ -316,8 +316,7 @@
         {
             foreach (var consulta in multi)
             {
-
-                <span style="color:deeppink; font-size:15px; margin-left:8px">
+                <b id="fecha" style="color:rgba(0, 0, 0, 0.87); font-family:Tahoma; font-size:12px; margin-left:8px">
                     @{
                         int ejercicio = Int32.Parse(consulta.GetType().GetProperty("EJERCICIO").GetValue(consulta, null));
                         int periodo = Int32.Parse(consulta.GetType().GetProperty("PERIODO").GetValue(consulta, null).ToString());
@@ -325,7 +324,7 @@
                         TAT001.Services.Calendario445 c = new TAT001.Services.Calendario445();
                         @c.getUltimoDia(ejercicio, periodo).ToString().Substring(0, 10);
                     }
-                </span>
+                </b>
                 break;
             }
         }
@@ -389,60 +388,7 @@
                         <th id="id_FAUSD360" class="filter-select" data-placeholder="Todas las opciones" style="background-color:darkseagreen">A LA FECHA ACTUAL $USD Mayor a 360</th>
                     </tr>
                 </thead>
-                <tfoot>
-                    <tr>
-                        <th id="id_Bu" class="filter-select" data-placeholder="Todas las opciones">BU</th>
-                        <th id="id_Pais" class="filter-select" data-placeholder="Todas las opciones">Pais</th>
-                        <th id="id_Solicitud" class="filter-select" data-placeholder="Todas las opciones">Solicitud </th>
-                        <th id="id_Cliente" class="filter-select" data-placeholder="Todas las opciones">Cliente</th>
-                        <th id="id_NombreC" class="filter-select" data-placeholder="Todas las opciones">Nombre Cliente</th>
-                        <th id="id_Canal" class="filter-select" data-placeholder="Todas las opciones">Canal</th>
-                        <th id="id_Concepto" class="filter-select" data-placeholder="Todas las opciones">Concepto</th>
-                        <th id="id_Periodo" class="filter-select" data-placeholder="Todas las opciones">Periodo de la Solicitud</th>
-                        <th id="id_Registro" class="filter-select" data-placeholder="Todas las opciones">Fecha Registro Contable de la Provision</th>
-                        <th id="id_Cierre" class="filter-select" data-placeholder="Todas las opciones">Fecha Cierre Contable</th>
-                        <th id="id_MontoOriginal" class="filter-select" data-placeholder="Todas las opciones">Monto Original de la Provision</th>
-                        <th id="id_Remanente" class="filter-select" data-placeholder="Todas las opciones">Remanente / (exceso)</th>
-                        <th id="id_PorcentajeR" class="filter-select" data-placeholder="Todas las opciones">Porcentaje del Remanente / (exceso)</th>
-                        <th id="id_Aging" class="filter-select" data-placeholder="Todas las opciones">Aging (dias)</th>
-                        <th id="id_Cuenta" class="filter-select" data-placeholder="Todas las opciones">Cuenta Pasivo</th>
-                        <th id="id_NombreCuenta" class="filter-select" data-placeholder="Todas las opciones">Nombre Cuenta Pasivo</th>
-                        <th id="id_CuentaPL" class="filter-select" data-placeholder="Todas las opciones">Cuenta P&L</th>
-                        <th id="id_NombreCuentaPL" class="filter-select" data-placeholder="Todas las opciones">Nombre Cuenta P&L</th>
-                        <th id="id_NumRegistroC" class="filter-select" data-placeholder="Todas las opciones">Num. Registro contable</th>
-                        <th id="id_Modificado" class="filter-select" data-placeholder="Todas las opciones">Modificado por</th>
-                        <th id="id_Creador" class="filter-select" data-placeholder="Todas las opciones">Usuario creador</th>
-                        <th id="id_Manager" class="filter-select" data-placeholder="Todas las opciones">Manager</th>
-                        <th id="id_Comentarios" class="filter-select" data-placeholder="Todas las opciones">Comentarios del usuario sobre el seguimiento</th>
-                        <th id="id_FCML30" class="filter-select" data-placeholder="Todas las opciones" style="background-color:yellow">A LA FECHA CIERRE $Moneda Local Menor a 30</th>
-                        <th id="id_FCML31" class="filter-select" data-placeholder="Todas las opciones" style="background-color:yellow">A LA FECHA CIERRE $Moneda Local 31-60</th>
-                        <th id="id_FCML61" class="filter-select" data-placeholder="Todas las opciones" style="background-color:yellow">A LA FECHA CIERRE $Moneda Local 61-90</th>
-                        <th id="id_FCML91" class="filter-select" data-placeholder="Todas las opciones" style="background-color:yellow">A LA FECHA CIERRE $Moneda Local 91-120</th>
-                        <th id="id_FCML121" class="filter-select" data-placeholder="Todas las opciones" style="background-color:yellow">A LA FECHA CIERRE $Moneda Local 121-180</th>
-                        <th id="id_FCML181" class="filter-select" data-placeholder="Todas las opciones" style="background-color:yellow">A LA FECHA CIERRE $Moneda Local 181-360</th>
-                        <th id="id_FCML360" class="filter-select" data-placeholder="Todas las opciones" style="background-color:yellow">A LA FECHA CIERRE $Moneda Local Mayor a 360</th>
-                        <th id="id_FAML30" class="filter-select" data-placeholder="Todas las opciones" style="background-color:lightslategray;">A LA FECHA ACTUAL $Moneda Local Menor a 30</th>
-                        <th id="id_FAML31" class="filter-select" data-placeholder="Todas las opciones" style="background-color:lightslategray">A LA FECHA ACTUAL $Moneda Local 31-60</th>
-                        <th id="id_FAML61" class="filter-select" data-placeholder="Todas las opciones" style="background-color:lightslategray">A LA FECHA ACTUAL $Moneda Local 61-90</th>
-                        <th id="id_FAML91" class="filter-select" data-placeholder="Todas las opciones" style="background-color:lightslategray">A LA FECHA ACTUAL $Moneda Local 91-120</th>
-                        <th id="id_FAML121" class="filter-select" data-placeholder="Todas las opciones" style="background-color:lightslategray">A LA FECHA ACTUAL $Moneda Local 121-180</th>
-                        <th id="id_FAML181" class="filter-select" data-placeholder="Todas las opciones" style="background-color:lightslategray">A LA FECHA ACTUAL $Moneda Local 181-360</th>
-                        <th id="id_FAML360" class="filter-select" data-placeholder="Todas las opciones" style="background-color:lightslategray">A LA FECHA ACTUAL $Moneda Local Mayor a 360</th>
-                        <th id="id_FCUSD30" class="filter-select" data-placeholder="Todas las opciones" style="background-color:forestgreen">A LA FECHA DE CIERRE $USD Menor a 30</th>
-                        <th id="id_FCUSD31" class="filter-select" data-placeholder="Todas las opciones" style="background-color:forestgreen">A LA FECHA DE CIERRE $USD 31-60</th>
-                        <th id="id_FCUSD61" class="filter-select" data-placeholder="Todas las opciones" style="background-color:forestgreen">A LA FECHA DE CIERRE $USD 61-90</th>
-                        <th id="id_FCUSD91" class="filter-select" data-placeholder="Todas las opciones" style="background-color:forestgreen">A LA FECHA DE CIERRE $USD 91-120</th>
-                        <th id="id_FCUSD121" class="filter-select" data-placeholder="Todas las opciones" style="background-color:forestgreen">A LA FECHA DE CIERRE $USD 121-180</th>
-                        <th id="id_FCUSD181" class="filter-select" data-placeholder="Todas las opciones" style="background-color:forestgreen">A LA FECHA DE CIERRE $USD 181-360</th>
-                        <th id="id_FCUSD360" class="filter-select" data-placeholder="Todas las opciones" style="background-color:forestgreen">A LA FECHA DE CIERRE $USD Mayor a 360</th>
-                        <th id="id_FAUSD30" class="filter-select" data-placeholder="Todas las opciones" style="background-color:darkseagreen">A LA FECHA ACTUAL $USD Menor a 30</th>
-                        <th id="id_FAUSD31" class="filter-select" data-placeholder="Todas las opciones" style="background-color:darkseagreen">A LA FECHA ACTUAL $USD 31-60</th>
-                        <th id="id_FAUSD61" class="filter-select" data-placeholder="Todas las opciones" style="background-color:darkseagreen">A LA FECHA ACTUAL $USD 61-90</th>
-                        <th id="id_FAUSD91" class="filter-select" data-placeholder="Todas las opciones" style="background-color:darkseagreen">A LA FECHA ACTUAL $USD 91-120</th>
-                        <th id="id_FAUSD121" class="filter-select" data-placeholder="Todas las opciones" style="background-color:darkseagreen">A LA FECHA ACTUAL $USD 121-180</th>
-                        <th id="id_FAUSD181" class="filter-select" data-placeholder="Todas las opciones" style="background-color:darkseagreen">A LA FECHA ACTUAL $USD 181-360</th>
-                        <th id="id_FAUSD360" class="filter-select" data-placeholder="Todas las opciones" style="background-color:darkseagreen">A LA FECHA ACTUAL $USD Mayor a 360</th>
-                    </tr>
+                <tfoot>                   
                     <tr class="tablesorter-ignoreRow">
                         <th colspan="2" class="ts-pager form-horizontal">
                             <button type="button" class="btn first"><i class="small material-icons">first_page</i></button>
@@ -467,7 +413,7 @@
 
 
                         </th>
-
+                        
                     </tr>
                 </tfoot>
 
