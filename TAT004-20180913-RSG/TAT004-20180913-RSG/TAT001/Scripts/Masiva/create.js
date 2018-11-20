@@ -193,8 +193,10 @@ $('#tab_test1').on('keydown.autocomplete', '.input_numdoc', function () {
                 success: function (data) {
                     if (data) {
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                     } else {
                         $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                     }
                     clearErrors();
                 }
@@ -204,10 +206,12 @@ $('#tab_test1').on('keydown.autocomplete', '.input_numdoc', function () {
         change: function () {
             if ($(this).val() === "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
             }
             else {
                 if ($.isNumeric($(this).val())) {
                     $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+                    $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                 }
             }
             clearErrors();
@@ -244,6 +248,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_tsol', function () {
         change: function (e, ui) {
             if (!(ui.item)) {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                 clearErrors();
                 e.target.value = "";
             }
@@ -251,6 +256,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_tsol', function () {
 
         select: function (event, ui) {
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+            $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
             clearErrors();
         }
     });
@@ -284,6 +290,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_clasificacion', function () {
         change: function (e, ui) {
             if (!(ui.item)) {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                 clearErrors();
                 e.target.value = "";
             }
@@ -291,6 +298,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_clasificacion', function () {
 
         select: function (event, ui) {
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+            $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
             clearErrors();
         }
     });
@@ -326,6 +334,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_sociedad', function () {
         change: function (e, ui) {
             if (!(ui.item)) {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                 clearErrors();
                 e.target.value = "";
             }
@@ -333,6 +342,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_sociedad', function () {
 
         select: function (event, ui) {
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+            $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
             clearErrors();
         }
     });
@@ -375,6 +385,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_pais', function () {
         change: function (e, ui) {
             if (!(ui.item)) {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                 clearErrors();
                 e.target.value = "";
             }
@@ -383,6 +394,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_pais', function () {
         select: function (event, ui) {
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
             $(thisS).parent().parent().find(".span_pais").text(ui.item.label.split(' ')[0]); //ADD RSG 01.11.2018
+            $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
             clearErrors();
         }
     });
@@ -420,6 +432,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_estado', function () {
         change: function (e, ui) {
             if (!(ui.item)) {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                 clearErrors();
                 e.target.value = "";
             }
@@ -427,6 +440,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_estado', function () {
 
         select: function (event, ui) {
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+            $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
             clearErrors();
         }
     });
@@ -464,6 +478,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_ciudad', function () {
         change: function (e, ui) {
             if (!(ui.item)) {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                 clearErrors();
                 e.target.value = "";
             }
@@ -471,6 +486,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_ciudad', function () {
 
         select: function (event, ui) {
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+            $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
             clearErrors();
         }
     });
@@ -492,8 +508,10 @@ $('#tab_test1').on('keydown.autocomplete', '.input_concepto', function () {
                 success: function (data) {
                     if (data) {
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                     } else {
                         $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                     }
                     clearErrors();
                 }
@@ -524,8 +542,10 @@ $('#tab_test1').on('keydown.autocomplete', '.input_notas', function () {
                 success: function (data) {
                     if (data) {
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                     } else {
                         $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                     }
                     clearErrors();
                 }
@@ -586,6 +606,7 @@ $('body').on('keydown.autocomplete', '.input_cliente', function () {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
                 //$(tr.find("td:eq(" + col_index2 + ")").children().addClass("red white-text rojo"));
                 $(tr.find("td:eq(" + col_index2 + ")").children().val(""));
+                $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                 clearErrors();
                 e.target.value = "";
             }
@@ -597,6 +618,7 @@ $('body').on('keydown.autocomplete', '.input_cliente', function () {
             $(clase2).val(label[1]);
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
             //$(tr.find("td:eq(" + col_index2 + ")").children().removeClass("red white-text rojo"));
+            $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
             clearErrors();
         }
     });
@@ -617,8 +639,10 @@ $('#tab_test1').on('keydown.autocomplete', '.input_contacto', function () {
                 success: function (data) {
                     if (data) {
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                     } else {
                         $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                     }
                     clearErrors();
                 }
@@ -628,6 +652,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_contacto', function () {
         change: function () {
             if ($(this).val() === "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
             }
             clearErrors();
         }
@@ -649,8 +674,10 @@ $('#tab_test1').on('keydown.autocomplete', '.input_email', function () {
                 success: function (data) {
                     if (data) {
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                     } else {
                         $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                     }
                     clearErrors();
                 }
@@ -660,6 +687,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_email', function () {
         change: function () {
             if ($(this).val() === "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
             }
             clearErrors();
         }
@@ -685,9 +713,11 @@ $('#tab_test1').on('keydown.autocomplete', '.input_fechai', function () {
                     if (data) {
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
                         $(tr.find("td:eq(" + col_index2 + ")").children().removeClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                     } else {
                         $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
                         $(tr.find("td:eq(" + col_index2 + ")").children().addClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                     }
                     clearErrors();
                 }
@@ -715,9 +745,11 @@ $('#tab_test1').on('keydown.autocomplete', '.input_fechaf', function () {
                     if (data) {
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
                         $(tr.find("td:eq(" + col_index2 + ")").children().removeClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                     } else {
                         $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
                         $(tr.find("td:eq(" + col_index2 + ")").children().addClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                     }
                     clearErrors();
                 }
@@ -755,6 +787,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_moneda', function () {
         change: function (e, ui) {
             if (!(ui.item)) {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                 clearErrors();
                 e.target.value = "";
             }
@@ -762,6 +795,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_moneda', function () {
 
         select: function (event, ui) {
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+            $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
             clearErrors();
         }
     });
@@ -988,7 +1022,7 @@ $('#tab_test2').on('keydown.autocomplete', '.input_proveedor', function () {
     var col_index = $(this).parent().index();
     var col_index2 = col_index + 1;
     var num_docH1 = null;
-    var sociedadH1 = null;
+    var clienteH1 = null;
     var tablaH1 = $('#tab_test1').DataTable();
 
     var amarillo = $(tr.find("td:eq(" + col_index + ")").children());
@@ -1012,7 +1046,7 @@ $('#tab_test2').on('keydown.autocomplete', '.input_proveedor', function () {
         num_docH1 = $(rowH1).children().eq(1).children().val();
 
         if (num_docH1 === num_doc) {
-            sociedadH1 = $(rowH1).find('td:eq(4)').children().val();
+            clienteH1 = $(rowH1).find('td:eq(10)').children().val();
         }
     }
 
@@ -1022,7 +1056,7 @@ $('#tab_test2').on('keydown.autocomplete', '.input_proveedor', function () {
                 type: "POST",
                 url: 'proveedor',
                 dataType: "json",
-                data: { "Prefix": request.term, "Sociedad": sociedadH1 },
+                data: { "Prefix": request.term, "Cliente": clienteH1 },
                 success: function (data) {
                     response(auto.map(data, function (item) {
                         return { label: trimStart('0', item.ID) + '-' + item.NOMBRE, value: trimStart('0', item.ID) };
@@ -1305,10 +1339,12 @@ $('#tab_test3').on('keydown.autocomplete', '.input_facturaH3', function () {
                 success: function (data) {
                     if (data) {
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                         clearErrors();
                         //validarErrores("tab_test2");
                     } else {
                         $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                         clearErrors();
                         //validarErrores("tab_test2");
                     }
@@ -1319,6 +1355,7 @@ $('#tab_test3').on('keydown.autocomplete', '.input_facturaH3', function () {
         change: function () {
             if ($(this).val() == "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
             }
             clearErrors();
         }
@@ -1340,8 +1377,10 @@ $('#tab_test3').on('keydown.autocomplete', '.input_bill', function () {
                 success: function (data) {
                     if (data) {
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                     } else {
                         $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                     }
                     clearErrors();
                 }
@@ -1351,6 +1390,7 @@ $('#tab_test3').on('keydown.autocomplete', '.input_bill', function () {
         change: function () {
             if ($(this).val() == "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
             }
             clearErrors();
         }
@@ -1372,10 +1412,12 @@ $('#tab_test3').on('keydown.autocomplete', '.input_ejerciciokH3', function () {
                 success: function (data) {
                     if (data) {
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                         clearErrors();
                         //validarErrores("tab_test2");
                     } else {
                         $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                         clearErrors();
                         //validarErrores("tab_test2");
                     }
@@ -1386,6 +1428,7 @@ $('#tab_test3').on('keydown.autocomplete', '.input_ejerciciokH3', function () {
         change: function () {
             if ($(this).val() == "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
             }
             clearErrors();
         }
@@ -1428,8 +1471,10 @@ $('#tab_test3').on('keydown.autocomplete', '.input_importe', function () {
                     if (color) {
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
                         $(tr.find("td:eq(" + col_index + ")").children().val(data));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                     } else {
                         $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                     }
                     clearErrors();
                 }
@@ -1439,6 +1484,7 @@ $('#tab_test3').on('keydown.autocomplete', '.input_importe', function () {
         change: function () {
             if ($(this).val() == "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
             }
             clearErrors();
         }
@@ -1460,8 +1506,10 @@ $('#tab_test3').on('keydown.autocomplete', '.input_belnr', function () {
                 success: function (data) {
                     if (data) {
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                     } else {
                         $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                     }
                     clearErrors();
                 }
@@ -1471,6 +1519,7 @@ $('#tab_test3').on('keydown.autocomplete', '.input_belnr', function () {
         change: function () {
             if ($(this).val() == "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
             }
             clearErrors();
         }
@@ -1575,19 +1624,19 @@ function addRowH4(t, NUM_DOC, LIGADA, VIGENCIA_DE, VIGENCIA_AL, MATNR, MATKL, DE
     var r = t.row.add([
         "<span class='" + clase + " material-icons'>" + icono + "</span>",
         "<input class='" + ERRORES[0] + " input_numdoc' style='font-size:12px; text-align:center;' type='text' id='' name='' disabled value='" + NUM_DOC + "'><span hidden>" + NUM_DOC + "</span>",
-        "<p style='text-align:center;'><label><input type='checkbox' class='filled-in ligada' " + check + " onchange='ligada(this);'/><span></span></label></p>",
-        "<input class='" + ERRORES[1] + " input_fechai' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + VIGENCIA_DE + "'><span hidden>" + VIGENCIA_DE + "</span>",
-        "<input class='" + ERRORES[2] + " input_fechaf' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + VIGENCIA_AL + "'><span hidden>" + VIGENCIA_AL + "</span>",
-        "<input class='" + ERRORES[3] + " input_material' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + MATNR + "'><span hidden>" + MATNR + "</span>",
-        "<input class='" + ERRORES[4] + " input_categoria' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + MATKL + "'><span hidden>" + MATKL + "</span>",
-        "<input class='" + ERRORES[5] + "' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + DESCRIPCION + "'><span hidden>" + DESCRIPCION + "</span>",
-        "<input class='" + ERRORES[6] + " input_cantidades' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo + " value='" + MONTO + "'><span hidden>" + MONTO + "</span>",
-        "<input class='" + ERRORES[7] + " input_cantidades' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + PORC_APOYO + "'><span hidden>" + PORC_APOYO + "</span>",
-        "<input class='" + ERRORES[8] + " input_cantidades' style='font-size:10px; text-align:center;' type='text' id='' name='' disabled value='" + APOYO_PIEZA + "'><span hidden>" + APOYO_PIEZA + "</span>",
-        "<input class='" + ERRORES[9] + " input_cantidades' style='font-size:10px; text-align:center;' type='text' id='' name='' disabled value='" + COSTO_APOYO + "'><span hidden>" + COSTO_APOYO + "</span>",
-        "<input class='" + ERRORES[10] + " input_cantidades' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo + " value='" + PRECIO_SUG + "'><span hidden>" + PRECIO_SUG + "</span>",
-        "<input class='" + ERRORES[11] + " input_cantidades' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo + " value='" + VOLUMEN_REAL + "'><span hidden>" + VOLUMEN_REAL + "</span>",
-        "<input class='" + ERRORES[12] + " input_cantidades input_apoyo' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo + " value='" + APOYO + "'><span hidden>" + APOYO + "</span>"
+        "<p style='text-align:center;' class='" + ERRORES[1] + "'><label><input type='checkbox' class='filled-in ligada' " + check + " onchange='ligada(this);'/><span></span></label></p>",
+        "<input class='" + ERRORES[2] + " input_fechai' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + VIGENCIA_DE + "'><span hidden>" + VIGENCIA_DE + "</span>",
+        "<input class='" + ERRORES[3] + " input_fechaf' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + VIGENCIA_AL + "'><span hidden>" + VIGENCIA_AL + "</span>",
+        "<input class='" + ERRORES[4] + " input_material' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + MATNR + "'><span hidden>" + MATNR + "</span>",
+        "<input class='" + ERRORES[5] + " input_categoria' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + MATKL + "'><span hidden>" + MATKL + "</span>",
+        "<input class='" + ERRORES[6] + "' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + DESCRIPCION + "'><span hidden>" + DESCRIPCION + "</span>",
+        "<input class='" + ERRORES[7] + " input_cantidades' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo + " value='" + MONTO + "'><span hidden>" + MONTO + "</span>",
+        "<input class='" + ERRORES[8] + " input_cantidades' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + PORC_APOYO + "'><span hidden>" + PORC_APOYO + "</span>",
+        "<input class='" + ERRORES[9] + " input_cantidades' style='font-size:10px; text-align:center;' type='text' id='' name='' disabled value='" + APOYO_PIEZA + "'><span hidden>" + APOYO_PIEZA + "</span>",
+        "<input class='" + ERRORES[10] + " input_cantidades' style='font-size:10px; text-align:center;' type='text' id='' name='' disabled value='" + COSTO_APOYO + "'><span hidden>" + COSTO_APOYO + "</span>",
+        "<input class='" + ERRORES[11] + " input_cantidades' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo + " value='" + PRECIO_SUG + "'><span hidden>" + PRECIO_SUG + "</span>",
+        "<input class='" + ERRORES[12] + " input_cantidades' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo + " value='" + VOLUMEN_REAL + "'><span hidden>" + VOLUMEN_REAL + "</span>",
+        "<input class='" + ERRORES[13] + " input_cantidades input_apoyo' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo + " value='" + APOYO + "'><span hidden>" + APOYO + "</span>"
     ]).draw(false).node();
 
     var td = $(r).children()[0];
@@ -1636,6 +1685,7 @@ $('#tab_test4').on('keydown.autocomplete', '.input_material', function () {
                 $(tr.find("td:eq(" + (col_index - 1) + ")").children().removeClass("red white-text rojo"));
                 $(tr.find("td:eq(" + col_index + ")").children().val(""));
                 $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+                $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                 clearErrors();
                 e.target.value = "";
             }
@@ -1649,6 +1699,7 @@ $('#tab_test4').on('keydown.autocomplete', '.input_material', function () {
             $(materialDes).val(label[2]);
             $(this).removeClass("red white-text rojo");
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+            $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
             healtyMaterial(num_doc, label[0], row_index);
             clearErrors();
         }
@@ -1688,6 +1739,7 @@ $('#tab_test4').on('keydown.autocomplete', '.input_categoria', function () {
                 $(tr.find("td:eq(" + (col_index - 1) + ")").children().val(""));
                 $(tr.find("td:eq(" + (col_index + 1) + ")").children().val(""));
                 $(this).addClass("red white-text rojo");
+                $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                 clearErrors();
                 e.target.value = "";
             }
@@ -1697,6 +1749,7 @@ $('#tab_test4').on('keydown.autocomplete', '.input_categoria', function () {
             $(tr.find("td:eq(" + (col_index - 1) + ")").children().val(""));
             $(tr.find("td:eq(" + (col_index + 1) + ")").children().val(""));
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+            $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
             healtyCategoria(num_doc);
             clearErrors();
         }
@@ -1711,6 +1764,7 @@ $('#tab_test4').on('focusout', '.input_cantidades', function () {
     var num_docH1 = null, pais = null, getDec = null;
     var num1 = null, num2 = null;
     var tablaH1 = $('#tab_test1').DataTable();
+    var num_docGlobal = tr.find("td:eq(1)").children().val();
 
     var monto = null, porApoyo = null, pieApoyo = null, cosApoyo = null, preSugerido = null, volReal = null, apoyo = null;
 
@@ -1786,23 +1840,27 @@ $('#tab_test4').on('focusout', '.input_cantidades', function () {
                 if (porApoyo > 0) {
                     colPorApoyo.val(toShowPorc(porApoyo, getDec));
                     colPorApoyo.removeClass("red white-text rojo");
+                    validaLigada(num_docGlobal);
                 }
                 else {
-                    var validaLigada = tr.find('td:eq(2) input').prop('checked');
+                    var varValidaLigada = tr.find('td:eq(2) input').prop('checked');
 
-                    if (validaLigada) {
+                    if (varValidaLigada) {
                         colPorApoyo.val(toShowPorc(porApoyo, getDec));
                         colPorApoyo.addClass("red white-text rojo");
+                        validaLigada(num_docGlobal);
                     }
                     else {
                         colPorApoyo.val(toShowPorc(porApoyo, getDec));
                         colPorApoyo.removeClass("red white-text rojo");
+                        validaLigada(num_docGlobal);
                     }
                 }
             }
             else if (porApoyo == '') {
                 colPorApoyo.val(toShowPorc('0', getDec));
                 colPorApoyo.removeClass("red white-text rojo");
+                validaLigada(num_docGlobal);
             }
             else {
                 colPorApoyo.addClass("red white-text rojo");
@@ -2233,11 +2291,158 @@ function validaApoyo(apoyo, colApoyo) {
     checkRelacionadaMat();
 }
 
+function validaLigada(num_doc) {
+    var tablaH4 = $('#tab_test4').DataTable();
+    var contador = 0, contienePalabra = -1;;
+    var ligadaPorcentaje = [], ligadaPorcentaje2 = [];
+    var porcentaje = "";
+
+    for (var a = 0; a < tablaH4.rows().data().length; a++) {
+        var rowH4 = tablaH4.row(a).node();
+        var num_docH4 = $(rowH4).children().eq(1).children().val();
+        var check = $(rowH4).children().eq(2).children().eq(0).children().eq(0).children().eq(0);
+        porcentaje = $(rowH4).children().eq(9).children().val();
+
+        if ($(check).is(":checked") & num_docH4 == num_doc) {
+            ligadaPorcentaje[contador] = num_docH4 + true + porcentaje;
+            ligadaPorcentaje2[contador] = num_docH4 + true;
+            //ligadaPorcentaje[contador] = num_docH4 + "-" + true + "-" + porcentaje;
+            contador++;
+        }
+        else {
+            if (num_docH4 == num_doc) {
+                ligadaPorcentaje[contador] = num_docH4 + false + porcentaje;
+                ligadaPorcentaje2[contador] = num_docH4 + false;
+                //ligadaPorcentaje[contador] = num_docH4 + "-" + false + "-" + porcentaje;
+                contador++;
+            }
+        }
+    }
+
+    Array.prototype.allValuesSame = function () {
+
+        for (var i = 1; i < this.length; i++) {
+            if (this[i] !== this[0])
+                return false;
+        }
+
+        return true;
+    }
+
+    var igualesCompleto = ligadaPorcentaje.allValuesSame();
+    var igualesCompleto2 = ligadaPorcentaje2.allValuesSame();
+
+    if (ligadaPorcentaje2.length > 0) {
+        contienePalabra = ligadaPorcentaje2[0].indexOf("false");
+    }
+    
+    if (igualesCompleto) {
+        var tablaH4 = $('#tab_test4').DataTable();
+
+        for (var a = 0; a < tablaH4.rows().data().length; a++) {
+            var rowH4 = tablaH4.row(a).node();
+            var num_docH4 = $(rowH4).children().eq(1).children().val();
+            var check = $(rowH4).children().eq(2).children().eq(0).children().eq(0).children().eq(0);
+
+            if (num_docH4 == num_doc) {
+                $(rowH4).children().eq(2).children().removeClass("red white-text rojo");
+                $(rowH4).children().eq(9).children().removeClass("red white-text rojo");
+            }
+        }
+    }
+    else {
+        if (igualesCompleto2 & contienePalabra == 1) {
+            var tablaH4 = $('#tab_test4').DataTable();
+
+            for (var a = 0; a < tablaH4.rows().data().length; a++) {
+                var rowH4 = tablaH4.row(a).node();
+                var num_docH4 = $(rowH4).children().eq(1).children().val();
+                var check = $(rowH4).children().eq(2).children().eq(0).children().eq(0).children().eq(0);
+
+                if (num_docH4 == num_doc) {
+                    $(rowH4).children().eq(2).children().removeClass("red white-text rojo");
+                    $(rowH4).children().eq(9).children().removeClass("red white-text rojo");
+                }
+            }
+        }
+        else {
+            var tablaH4 = $('#tab_test4').DataTable();
+
+            for (var a = 0; a < tablaH4.rows().data().length; a++) {
+                var rowH4 = tablaH4.row(a).node();
+                var num_docH4 = $(rowH4).children().eq(1).children().val();
+                var check = $(rowH4).children().eq(2).children().eq(0).children().eq(0).children().eq(0);
+
+                if (num_docH4 == num_doc) {
+                    $(rowH4).children().eq(2).children().addClass("red white-text rojo");
+                    $(rowH4).children().eq(9).children().addClass("red white-text rojo");
+                }
+            }
+        }
+    }
+
+    //checa si la columna ligada esta bien 
+    var arrLigada = [], arrPorcentaje = [];
+    var contadorLigada = 0, contadorPorcentaje = 0;
+
+    for (var a = 0; a < tablaH4.rows().data().length; a++) {
+        var rowH4 = tablaH4.row(a).node();
+        var num_docH4 = $(rowH4).children().eq(1).children().val();
+        var check = $(rowH4).children().eq(2).children().eq(0).children().eq(0).children().eq(0);
+
+        if ($(check).is(":checked") & num_docH4 == num_doc) {
+            arrLigada[contadorLigada] = num_docH4 + true;
+            arrPorcentaje[contadorLigada] = num_docH4 + true;
+            contadorLigada++;
+        }
+        else {
+            if (num_docH4 == num_doc) {
+                arrLigada[contadorLigada] = num_docH4 + false;
+                arrPorcentaje[contadorLigada] = num_docH4 + false;
+                contadorLigada++;
+            }
+        }
+    }
+
+    var igualesLigada = arrLigada.allValuesSame();
+    var igualesPorcentaje = arrPorcentaje.allValuesSame();
+
+    if (igualesLigada) {
+        var tablaH4 = $('#tab_test4').DataTable();
+
+        for (var a = 0; a < tablaH4.rows().data().length; a++) {
+            var rowH4 = tablaH4.row(a).node();
+            var num_docH4 = $(rowH4).children().eq(1).children().val();
+            var check = $(rowH4).children().eq(2).children().eq(0).children().eq(0).children().eq(0);
+
+            if (num_docH4 == num_doc) {
+                $(rowH4).children().eq(2).children().removeClass("red white-text rojo");
+            }
+        }
+    }
+    else {
+        var tablaH4 = $('#tab_test4').DataTable();
+
+        for (var a = 0; a < tablaH4.rows().data().length; a++) {
+            var rowH4 = tablaH4.row(a).node();
+            var num_docH4 = $(rowH4).children().eq(1).children().val();
+            var check = $(rowH4).children().eq(2).children().eq(0).children().eq(0).children().eq(0);
+
+            if (num_docH4 == num_doc) {
+                $(rowH4).children().eq(2).children().addClass("red white-text rojo");
+            }
+        }
+    }
+
+    clearErrors();
+}
+
 function ligada(check) {
     var tr = $(check).closest('tr');//Obtener el row
     var tablaH1 = $('#tab_test1').DataTable();
-
     var num_docH1 = null, pais = null, getDec = null;
+    var num_docGlobal = tr.find("td:eq(1)").children().val();
+
     var colMonto = tr.find('td:eq(8) input');
     var colPorcentaje = tr.find('td:eq(9) input');
     var colPieApoyo = tr.find('td:eq(10) input');
@@ -2293,6 +2498,7 @@ function ligada(check) {
                 colVolReal.val(toShowNum('0', getDec)).attr("disabled", true);
                 colApoyo.val(toShow('0', getDec)).attr("disabled", true);
                 colApoyo.removeClass("red white-text rojo");
+                validaLigada(num_docGlobal)
                 clearErrors();
             } else {
                 colMonto.val(toShow('0', getDec)).attr("disabled", false);
@@ -2303,6 +2509,7 @@ function ligada(check) {
                 colVolReal.val(toShowNum('0', getDec)).attr("disabled", false);
                 colApoyo.val(toShow('0', getDec)).attr("disabled", false);
                 colApoyo.addClass("red white-text rojo");
+                validaLigada(num_docGlobal)
                 clearErrors();
             }
         },
@@ -3439,7 +3646,13 @@ function cloneTables() {
         $('#tabclon4b').append("<tr id='tr4" + dd + "'></tr>");
         $(rowH4c).children().each(function (td4) {
             if (td4 !== 0) {
-                $("#tr4" + dd).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
+                //$("#tr4" + dd).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
+                if (td4 == 9) {
+                    $("#tr4" + dd).append("<td>" + $(this).find('span:first').text().replace('%', '') + "</td>");
+                }
+                else {
+                    $("#tr4" + dd).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
+                }
             }
         });
     }

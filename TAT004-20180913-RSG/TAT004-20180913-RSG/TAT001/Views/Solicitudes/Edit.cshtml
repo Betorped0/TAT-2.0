@@ -212,7 +212,7 @@
                             </div>
                         }
                         <div class="card-panel">
-                            <h5>Tipo de solicitud y Clasificación</h5>
+                            <h5 id="lblTipoSol">Tipo de solicitud y Clasificación</h5>
                             <div class="row" style="margin-bottom:0">
                                 <div class="form-group col s12">
                                     @*@Html.LabelFor(model => model.TSOL_ID, "TSOL_ID", htmlAttributes: new { @class = "control-label col-md-2" })*@
@@ -279,7 +279,7 @@
                         </div>
                         @*Datos del país*@
                         <div class="card-panel">
-                            <h5>Datos del país</h5>
+                            <h5 id="lblDatosPa">Datos del país</h5>
                             <div class="row" style="margin-bottom:0">
                                 <div class="col s6">
                                     <div class="form-group">
@@ -299,7 +299,7 @@
                                         </div>
                                         <div class="input-field col-md-2">
                                             <input value="@pais.LANDX" id="pais_txt" type="text" class="" disabled="disabled" />
-                                            <label for="pais_txt">Subregión</label>
+                                            <label for="pais_txt" id="lblSubregion">Subregión</label>
                                         </div>
                                     </div>
                                 }
@@ -397,18 +397,18 @@
                         </div>
                         @*Información General*@
                         <div class="card-panel">
-                            <h5>Información General</h5>
+                            <h5 id="lblInfGene">Información General</h5>
                             <div class="row" style="margin-bottom:0">
                                 <div class="input-field col s12">
                                     <i class="material-icons prefix">date_range</i>
                                     @Html.HiddenFor(model => model.FECHAD, new { htmlAttributes = new { @class = "form-control datepicker", onkeyup = "borrar(this);" } })
                                     <input value="@ViewBag.FECHAD" id="fechad" type="text" class="" disabled="disabled" />
-                                    <label for="fechad">Fecha</label>
+                                    <label for="fechad" id="lblFec">Fecha</label>
                                 </div>
                                 <div class="input-field col s6">
                                     @Html.HiddenFor(model => model.PERIODO, new { htmlAttributes = new { @class = "form-control" } })
                                     <input value="@ViewBag.PERIODO" id="periodo" type="text" class="" disabled="disabled" />
-                                    <label for="periodo">Periodo</label>
+                                    <label for="periodo" id="lblPer">Periodo</label>
                                 </div>
                                 <script>
                                     var elemdp = document.querySelector('#fechad');
@@ -439,7 +439,7 @@
                                 <div class="input-field col s6">
                                     @Html.HiddenFor(model => model.EJERCICIO, new { htmlAttributes = new { @class = "form-control" } })
                                     <input value="@ViewBag.EJERCICIO" id="ejercicio" type="text" class="" disabled="disabled" />
-                                    <label for="ejercicio">Ejercicio</label>
+                                    <label for="ejercicio" id="lblEjer">Ejercicio</label>
                                 </div>
                                 <div class="input-field col s12">
                                     @if (!Model.TSOL.REVERSO & Model.DOCUMENTO_REF == null)
@@ -450,7 +450,7 @@
                                     {
                                         @Html.EditorFor(model => model.CONCEPTO, new { htmlAttributes = new { @id = "concepto", @class = "form-control ", @disabled = "disabled" } })
                                     }
-                                    <label for="concepto">Concepto*</label>
+                                    <label for="concepto" id="lblConcep">Concepto*</label>
                                 </div>
                                 <div class="input-field col s12">
                                     @if (!Model.TSOL.REVERSO & Model.DOCUMENTO_REF == null)
@@ -481,7 +481,7 @@
                     <div class="col s12 m6 l6">
                         @*Información Cliente*@
                         <div class="card-panel">
-                            <h5>Información del cliente</h5>
+                            <h5 id="lblInfCliente">Información del cliente</h5>
                             <div class="row" style="margin-bottom:0">
                                 <div class="input-field col s12">
                                     @Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @id = "payer_id1", @disabled = "disabled "@*, @onchange = @"selectCliente(this.value)"*@}
@@ -542,11 +542,11 @@
                                 <input type="hidden" id="txt_spras" value="@Session["spras"].ToString()" />
                                 <div class="input-field col s12">
                                     <input type="text" id="cli_name" value="@ViewBag.NAME1" disabled="disabled" />
-                                    <label for="cli_name">Nombre</label>
+                                    <label for="cli_name"id="lblNombre">Nombre</label>
                                 </div>
                                 <div class="input-field  col s12">
                                     <input value="@ViewBag.PARVW" id="parvw" type="text" class="" disabled="disabled" />
-                                    <label for="parvw">Tipo de cliente</label>
+                                    <label for="parvw" id="lblTipoCliente">Tipo de cliente</label>
                                 </div>
                                 <div class="input-field col s12">
                                     @Html.LabelFor(model => model.VKORG, "Razón Social", htmlAttributes: new { @class = "control-label col-md-2", @for = "vkorg" })
@@ -556,7 +556,7 @@
                                 </div>
                                 <div class="input-field  col s12">
                                     <input value="@ViewBag.STCD1" id="stcd1" type="text" class="" disabled="disabled" />
-                                    <label for="stcd1">Tax ID</label>
+                                    <label for="stcd1" id="lblTaxId">Tax ID</label>
                                 </div>
                                 <div class="input-field col s12">
                                     @Html.LabelFor(model => model.VTWEG, "Canal", htmlAttributes: new { @class = "control-label col-md-2", @for = "vtweg" })
@@ -633,7 +633,7 @@
                     </div>
                     <div class="col s12 m6 l6">
                         <div class="card-panel">
-                            <h5>Vigencia</h5>
+                            <h5 id="lblVigencia">Vigencia</h5>
                             <div class="row" style="margin-bottom:0">
                                 <!--RSG 22.05.2018-->
                                 <div class="col s12">
@@ -656,11 +656,11 @@
                                     <div class="col s12">
                                         <label class="col s6">
                                             <input name="group1" type="radio" checked id="btn-date" onclick="cambiaTemp(this.id)" />
-                                            <span>Por fecha</span>
+                                            <span id="sPorFecha">Por fecha</span>
                                         </label>
                                         <label class="col s6">
                                             <input name="group1" type="radio" id="btn-peri" onclick="cambiaTemp(this.id)" />
-                                            <span>Por periodo</span>
+                                            <span id="sPorPeriodo">Por periodo</span>
                                         </label>
                                     </div>
                                     <script>
@@ -726,7 +726,7 @@
                                         <div class="col s12">
                                             <div class="input-field col s6">
                                                 @Html.DropDownList("PERIODOS", null, "", htmlAttributes: new { @id = "periodoi_id", @onchange = "setDates('')" })
-                                                <label>De</label>
+                                                <label id="lblDe">De</label>
                                             </div>
                                             <div class="input-field col s3">
                                                 @Html.DropDownList("ANIOS", null, "", htmlAttributes: new { @id = "anioi_id", @onchange = "setDates('')" })
@@ -734,7 +734,7 @@
                                         </div><div class="col s12">
                                             <div class="input-field col s6">
                                                 @Html.DropDownList("PERIODOSF", null, "", htmlAttributes: new { @id = "periodof_id", @onchange = "setDates('')" })
-                                                <label>Hasta</label>
+                                                <label id="lblHasta">Hasta</label>
                                             </div>
                                             <div class="input-field col s3">
                                                 @Html.DropDownList("ANIOSF", null, "", htmlAttributes: new { @id = "aniof_id", @onchange = "setDates('')" })
@@ -822,19 +822,19 @@
                     <div id="ref_soporte" style="display:table" class="col s12">
                         @*LEJ 26.07.18----I*@
                         <div class="card-panel">
-                            <h5>Referencia de Facturas</h5>
+                            <h5 id="lblRefFacturas">Referencia de Facturas</h5>
                             <div class="row" style="margin-bottom:0;">
                                 <p>
                                     <label>
                                         <input id="check_facturas" name="unafact" type="hidden" value="@ViewBag.UNAFACTURA" />
                                         <input id="check_factura" type="checkbox" checked="checked" disabled />
-                                        <span>Multiples Facturas</span>
+                                        <span id="lblMulFacturas">Multiples Facturas</span>
                                     </label>
                                 </p>
                                 @*Cargar archivo excel soporte*@
                                 <div id="file_facturat" class="file-field input-field" style="display:none">
                                     <div class="btn">
-                                        <span>File</span>
+                                        <span id="lblArchivo">File</span>
                                         <input type="file" class="file_sop" id="file_sop">
                                     </div>
                                     <div class="file-path-wrapper">
@@ -850,22 +850,22 @@
                                         <table class="table_sop display" id="table_sop" cellspacing="0" style="width:100%;display:none">
                                             <thead>
                                                 <tr>
-                                                    <th>Pos</th>
-                                                    <th>Sociedad</th>
-                                                    <th>Factura</th>
-                                                    <th>Fecha Factura</th>
-                                                    <th>Bill Doc</th>
-                                                    <th>Proveedor</th>
-                                                    <th>Proveedor Desc</th>
-                                                    <th>Control</th>
-                                                    <th>Autorización</th>
-                                                    <th>Vencimiento</th>
-                                                    <th>Factura k</th>
-                                                    <th>Ejercicio k</th>
-                                                    <th>Payer</th>@*@18-07-2018 jemo *@
-                                                    <th>Descripcion</th>@*@18-07-2018 jemo *@
-                                                    <th>Importe Factura</th>@*@18-07-2018 jemo *@
-                                                    <th>Belnr</th>
+                                                    <th id="thPos">Pos</th>
+                                                    <th id="thCode">Sociedad</th>
+                                                    <th id="thFactura">Factura</th>
+                                                    <th id="thFechaFact">Fecha Factura</th>
+                                                    <th id="thBill">Bill Doc</th>
+                                                    <th id="thProv">Proveedor</th>
+                                                    <th id="thProvDesc">Proveedor Desc</th>
+                                                    <th id="thControl">Control</th>
+                                                    <th id="thAutoriza">Autorización</th>
+                                                    <th id="thVencimiento">Vencimiento</th>
+                                                    <th id="thFacturaK">Factura k</th>
+                                                    <th id="thEjercicioK">Ejercicio k</th>
+                                                    <th id="thPayer">Payer</th>@*@18-07-2018 jemo *@
+                                                    <th id="thDescrip">Descripcion</th>@*@18-07-2018 jemo *@
+                                                    <th id="thImporteFac">Importe Factura</th>@*@18-07-2018 jemo *@
+                                                    <th id="thBellnr">Belnr</th>
                                                 </tr>
                                             </thead>
                                             <tbody></tbody>
@@ -945,7 +945,7 @@
                 </div>
                 <div class="col s12">
                     <div class="card-panel">
-                        <h5>Recurrente</h5>
+                        <h5 id="hRecurre">Recurrente</h5>
                         <input type="hidden" id="txt_trec" />
                         <div class="row" style="margin-bottom:0;">
                             <p>
@@ -1260,8 +1260,8 @@
                         {
 
                             <div class="card-panel">
-                                <h5>Documentos de Soporte2</h5>
-                                <label>* Campos obligatorios</label>
+                                <h5 id="DocumentoSop2">Documentos de Soporte2</h5>
+                                <label id="lblCamposObli">* Campos obligatorios</label>
                                 <div class="row" style="margin-bottom:0">
                                     <div class="col s12">
                                         <form action="#">
@@ -1329,7 +1329,7 @@
                                                             <input type="text" value="@item.TXT50" name="labels_soporte" hidden />
                                                             <div class="file-field input-field">
                                                                 <div class="btn-small" style="float:left;">
-                                                                    <span>Examinar</span>
+                                                                    <span id="span_fileload">Examinar</span>
                                                                     @if (item.OBLIGATORIO)
                                                                     {
                                                                         <input class="file_soporte ne" name="files_soporte" id="file_@item.TSOPORTE_ID" type="file" onchange="changeFile(this)">
@@ -1359,7 +1359,7 @@
                                                         <input type="text" value="@item.TXT50" name="labels_soporte" hidden />
                                                         <div class="file-field input-field">
                                                             <div class="btn-small" style="float:left;">
-                                                                <span>Examinar</span>
+                                                                <span id="span_fileload">Examinar</span>
                                                                 @if (item.OBLIGATORIO)
                                                                 {
                                                                     <input class="file_soporte nec" name="files_soporte" id="file_@item.TSOPORTE_ID" type="file" onchange="changeFile(this)">
@@ -1417,14 +1417,14 @@
                         {
                             <input type="hidden" id="txt_rev" name="txt_rev" value="@ViewBag.reversa" disabled="disabled" />
                             <div class="card-panel">
-                                <h5>Soporte de reverso</h5>
+                                <h5 id="lblSoRe">Soporte de reverso</h5>
                                 <div class="row" style="margin-bottom:0">
                                     <div class="col s12">
                                         <label name="labels_soporte2" hidden>Carta</label><label class="lbl_nec" hidden></label>
-                                        <input type="text" value="Reversa" name="Sop" hidden />
+                                        <input type="text" value="Reverso" id="lblReverso" name="Sop" hidden />
                                         <div class="file-field input-field">
                                             <div class="btn-small" style="float:left;">
-                                                <span>Examinar</span>
+                                                <span id="span_fileload">Examinar</span>
                                                 <input class="file_soporte" name="files_soporte" id="file_rev" type="file">
                                             </div>
                                             <div class="file-path-wrapper">
@@ -1436,12 +1436,12 @@
                                         <i class="material-icons prefix">date_range</i>
                                         @Html.Hidden("FECHAD_REV")
                                         <input value="@ViewBag.FECHAD_REV" id="fechad" type="text" class="" disabled="disabled" />
-                                        <label for="fechad">Fecha</label>
+                                        <label for="fechad" id="lbl_rec_fecha">Fecha</label>
                                     </div>
                                     <div class="row">
                                         <div class="input-field col s12">
                                             <textarea id="notas_soporte" name="notas_soporte" class="materialize-textarea" onkeyup="maxchar_notas();">@ViewBag.notas_soporte</textarea>
-                                            <label for="notas_soporte">Razón del reverso</label>
+                                            <label for="notas_soporte" id="lblRazonRev">Razón del reverso</label>
                                         </div>
                                     </div>
                                     <script>
@@ -1475,7 +1475,7 @@
                     <div class="col s12 m6 l6">
                         <div class="card-panel">
                             <input type="text" id="catmat" name="catmat" value="@ViewBag.CATMAT" hidden />
-                            <h5>Distribución</h5>
+                            <h5 id="lbl_tipodis">Distribución</h5>
                             <div class="row" style="margin-bottom:0">
                                 <div class="col s12">
                                     <label>
@@ -1605,11 +1605,11 @@
                     </div>
                     <div id="div_montobase" class="col s12 m6 l6" style="display:none">
                         <div class="card-panel">
-                            <h5>Monto Base</h5>
+                            <h5 id="head_montob">Monto Base</h5>
                             <div class="row" style="margin-bottom:0">
                                 <div class="input-field col s6">
                                     <input value="@ViewBag.MONTO_DIS" id="monto_dis" type="text" class=" @ViewBag.reversa" />
-                                    <label for="monto_dis">Monto</label>
+                                    <label for="monto_dis" id="monto_dis">Monto</label>
                                 </div>
                                 <div class="input-field col s6">
                                     @*<div class="form-group">*@
@@ -1632,18 +1632,18 @@
                     </div>
                     <div id="div_apoyobase" class="col s12 m6 l6" style="display:none">
                         <div class="card-panel">
-                            <h5>Base para aplicar %</h5>
+                            <h5 id="head_baseaplicar">Base para aplicar %</h5>
                             <div class="row" style="margin-bottom:0">
                                 <div class="input-field col s6">
                                     <input value="@ViewBag.BMONTO_APOYO" id="bmonto_apoyo" type="text" class="" name="bmonto_apoyo" />
-                                    <label for="bmonto_apoyo">% Apoyo</label>
+                                    <label for="bmonto_apoyo" id="thead_disporc">% Apoyo</label>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col s12">
                         <div class="card-panel">
-                            <h5>Mecánica de Negociación</h5>
+                            <h5 id="head_mecnegociacion">Mecánica de Negociación</h5>
                             <div class="row" style="margin-bottom:0;overflow-x:auto;">
                                 @*@if (ViewBag.relacionadan == "")*@
                                 @if (ViewBag.relacionadan != "" & ViewBag.reversan != "X" & (Model.DOCUMENTO_REF == null | Model.TSOL.ADICIONA))
@@ -1651,7 +1651,7 @@
                                     <input type="hidden" id="txt_addrowt" name="txt_addrowt" value="@ViewBag.addrowt" hidden /> @*//Add RSG 2018.11.05*@
                                     <div class="file-field input-field" id="cargar_excel" style="display:none">
                                         <div class="btn">
-                                            <span>Examinar</span>
+                                            <span id="span_fileload">Examinar</span>
                                             <input id="file_dis" type="file">
                                         </div>
                                         <div class="file-path-wrapper">
@@ -1928,7 +1928,7 @@
                             <!--RSG 22.05.2018-->
                             <div class="card-panel">
                                 <div class="row">
-                                    <h5>Cuentas</h5>
+                                    <h5 id="headCuentas">Cuentas</h5>
                                     <div class="col s12">
                                         <div id="div_clearing">
                                         </div>
@@ -1982,7 +1982,7 @@
                                 </script>
                             </div>
                             <div class="card-panel">
-                                <h5>Análisis Solicitud</h5>
+                                <h5 id="head_solicitudanalisis">Análisis Solicitud</h5>
                                 <div class="row" style="margin-bottom:0">
                                     <div class="col s12">
                                         <ul class="collection">
