@@ -11,18 +11,34 @@
 
 @using (Html.BeginForm("Ejecutar", "Recurrencias", FormMethod.Post, null))
 {
-<div class="row">
-    <div class="col s6">
-        <div class="card-panel">
-            <div class="row right-align">
-                <div class="input-field col s12">
-                    <input type="text" name="fecha" value="@DateTime.Now.ToShortDateString()" class="datepicker"/>
+    <div class="row">
+        <div class="col s6">
+            <div class="card-panel">
+                <div class="row right-align">
+                    <div class="input-field col s12">
+                        <input type="text" name="fecha" value="@DateTime.Now.ToShortDateString()" class="datepicker" />
+                    </div>
+                    <input type="submit" value="Generar recurrencias" class="btn-small" />
                 </div>
-                <input type="submit" value="Generar recurrencias" class="btn-small" />
             </div>
         </div>
     </div>
-</div>
+}
+
+@using (Html.BeginForm("EjecutarLigada", "Recurrencias", FormMethod.Post, null))
+{
+    <div class="row">
+        <div class="col s6">
+            <div class="card-panel">
+                <div class="row right-align">
+                    <div class="input-field col s12">
+                        <input type="text" name="fecha" value="@DateTime.Now.ToShortDateString()" class="datepicker" />
+                    </div>
+                    <input type="submit" value="Contabiliza recurrencias" class="btn-small" />
+                </div>
+            </div>
+        </div>
+    </div>
 }
 <script>
     var elems = document.querySelectorAll('.datepicker');
