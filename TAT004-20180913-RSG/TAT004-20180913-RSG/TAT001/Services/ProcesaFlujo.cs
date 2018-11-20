@@ -162,7 +162,7 @@ namespace TAT001.Services
                     WORKFP next = new WORKFP();
                     //if (recurrente != "X")
                     if (!recurrent)
-                        {
+                    {
                         next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS == next_step_a).FirstOrDefault();
                     }
                     else
@@ -197,7 +197,7 @@ namespace TAT001.Services
                         {
                             //if (recurrente != "X")
                             if (!recurrent)
-                                {
+                            {
                                 FLUJO detA = determinaAgenteI(cf, dah);
                                 nuevo.USUARIOA_ID = detA.USUARIOA_ID;
                                 nuevo.USUARIOD_ID = nuevo.USUARIOA_ID;
@@ -315,7 +315,7 @@ namespace TAT001.Services
 
                                 if (d.DOCUMENTORECs.Count > 0)
                                     recurrent = true;
-                                    //recurrente = "X";
+                                //recurrente = "X";
 
                                 if (nuevo.DETPOS == 0 | nuevo.DETPOS == 99)
                                 {
@@ -338,7 +338,7 @@ namespace TAT001.Services
                                             correcto = "2";
                                         //if (recurrente == "X")
                                         if (recurrent)
-                                            {
+                                        {
                                             FLUJO nuevos = new FLUJO();
                                             nuevos.WORKF_ID = paso_a.ID;
                                             nuevos.WF_VERSION = paso_a.VERSION;
