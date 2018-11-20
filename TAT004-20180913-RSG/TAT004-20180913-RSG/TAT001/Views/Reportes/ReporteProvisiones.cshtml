@@ -247,23 +247,68 @@
                 return blob;
             }
 
-            var tableToExcel = (function () {
-                var uri = 'data:application/vnd.ms-excel;base64,'
-                   , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
-                    , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
-                    , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
-                return function (table, name) {
-                    if (!table.nodeType) table = document.getElementById(table)
-                    var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
-                    var str = base64(format(template, ctx));
-                    //window.location.href = uri + base64(format(template, ctx))
-                    var blob = b64toBlob(str, "application/vnd.ms-excel");
-                    var blobUrl = URL.createObjectURL(blob);
-                    window.location = blobUrl;
-                }
-            })()
+            //var tableToExcel = (function () {
+            //    var uri = 'data:application/vnd.ms-excel;base64,'
+            //       , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+            //        , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+            //        , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+            //    return function (table, name) {
+            //        if (!table.nodeType) table = document.getElementById(table)
+            //        var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
+            //        var str = base64(format(template, ctx));
 
+            //        //window.location.href = uri + base64(format(template, ctx))
+            //        var blob = b64toBlob(str, "application/vnd.ms-excel");                    
+            //        var blobUrl = URL.createObjectURL(blob);
+            //        window.location = blobUrl;
+            //    }
+            $("#id_excel").click(function () {
 
+                $('#table').trigger('destroyPager');
+                $('#table').parent().append('<table id="tableClon" style="display:none;border:2px;"><thead id="headclon"></thead><tbody id="bodyclon"></tbody></table>');
+
+                $('#table > thead > tr').each(function (index) {
+                    if (index === 0) {
+                        $('#headclon').append('<tr id="headc"></tr>');
+                        $(this).children().each(function () {
+                            $('#headc').append('<th>' + $(this).text().normalize('NFD').replace(/[\u0300-\u036f]/g, "") + '</th>');
+                        });
+                    }
+                });
+                $('#table > tbody > tr').each(function (indexb) {
+                    $('#bodyclon').append('<tr id="b' + indexb + '"></tr>');
+                    $(this).children().each(function () {
+                        $('#b' + indexb).append('<td style="border: 2px black;">' + $(this).text() + '</td>');
+                    });
+                });
+                var tableid = table;
+                //getting values of current time for generating the file name
+                var dt = new Date();
+                var day = dt.getDate();
+                var month = dt.getMonth() + 1;
+                var year = dt.getFullYear();
+                var hour = dt.getHours();
+                var mins = dt.getMinutes();
+                var postfix = day + "" + month + "" + year + "-" + hour + "" + mins;
+                //creating a temporary HTML link element (they support setting file names)
+                var a = document.createElement('a');
+                //getting data from our div that contains the HTML table
+                var data_type = 'data:application/vnd.ms-excel';
+                var table_div = document.getElementById('tableClon');
+                var table_html = table_div.outerHTML.replace(/ /g, '%20');
+                a.href = data_type + ', ' + table_html;
+                //setting the file name
+                a.download = 'ProvisionesAbiertasTS' + postfix + '.xls';
+                //triggering the function
+                a.click();
+                //just in case, prevent default behaviour
+                e.preventDefault();
+
+                location.refresh();
+            });
+       
+
+           
 
             $(function () {
 
@@ -308,7 +353,7 @@
         </script>
 
         <br />
-        <b id="titulo2" style="color:rgba(0, 0, 0, 0.87); font-family:Tahoma; font-size:12px;">Al</b>
+        <b id="titulo2" style="color:rgba(0, 0, 0, 0.87); font-family:Tahoma; font-size:12px; margin-left:17px">Al</b>
 
         @*@System.DateTime.Now.ToString("dd/MM/yyyy")*@
 
