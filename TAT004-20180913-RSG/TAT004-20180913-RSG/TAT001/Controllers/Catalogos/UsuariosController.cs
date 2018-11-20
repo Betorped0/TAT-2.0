@@ -121,8 +121,8 @@ namespace TAT001.Controllers.Catalogos
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            USUARIO uSUARIO = db.USUARIOs.Find(uz);
-            ViewBag.nivelUsuario = uSUARIO.PUESTO_ID;
+            USUARIO uSUARIO = db.USUARIOs.Find(id);
+            ViewBag.nivelUsuario = userz.PUESTO_ID;
             string spra = Session["spras"].ToString();
             if (uSUARIO == null)
             {
@@ -406,8 +406,8 @@ namespace TAT001.Controllers.Catalogos
             //    Session["spras"] = user.SPRAS_ID;
             //}
             var usu = User.Identity.Name;
-            USUARIO usu2 = db.USUARIOs.Where(x => x.ID.Equals(usu)).FirstOrDefault();
-            ViewBag.nivelUsuario = usu2.PUESTO_ID;
+            USUARIO usu2 = db.USUARIOs.Where(x => x.ID.Equals(id)).FirstOrDefault();
+            ViewBag.nivelUsuario = userz.PUESTO_ID;
             if (usu2.PUESTO_ID == 1 || usu2.PUESTO_ID == 8)
             {
                 ViewBag.admin = "si";

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using TAT001.Common;
 using TAT001.Entities;
 using TAT001.Models;
 using TAT001.Services;
@@ -16,7 +17,7 @@ namespace TAT001.Controllers
     [Authorize]
     public class FlujosController : Controller
     {
-        private TAT001Entities db = new TAT001Entities();
+        readonly TAT001Entities db = new TAT001Entities();
         #region ocultar
         // GET: Flujos
         public ActionResult Index()
@@ -259,17 +260,9 @@ namespace TAT001.Controllers
         public ActionResult Procesa(decimal id, string accion)
         {
             int pagina = 103; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
-            {
                 string u = User.Identity.Name;
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
-                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+                FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
 
                 try
                 {
@@ -278,11 +271,10 @@ namespace TAT001.Controllers
                 }
                 catch
                 {
-                    //ViewBag.pais = "mx.png";
                     //return RedirectToAction("Pais", "Home");
                 }
                 Session["spras"] = user.SPRAS_ID;
-            }
+            
             FLUJO f = db.FLUJOes.Where(a => a.NUM_DOC.Equals(id)).OrderByDescending(a => a.POS).FirstOrDefault();
             f.ESTATUS = accion;
             return View(f);
@@ -293,9 +285,8 @@ namespace TAT001.Controllers
             FLUJO actual = db.FLUJOes.Where(a => a.NUM_DOC.Equals(f.NUM_DOC)).OrderByDescending(a => a.POS).FirstOrDefault();
 
             DOCUMENTO d = db.DOCUMENTOes.Find(f.NUM_DOC);
-            List<TS_FORM> tts = db.TS_FORM.Where(a => a.BUKRS_ID.Equals(d.SOCIEDAD_ID) & a.LAND_ID.Equals(d.PAIS_ID)).ToList();
-
-            bool c = false;
+            List<TS_FORM> tts = db.TS_FORM.Where(a => a.BUKRS_ID.Equals(d.SOCIEDAD_ID) && a.LAND_ID.Equals(d.PAIS_ID) && a.TS_CAMPO.ACTIVO).ToList();
+            
             if (actual.WORKFP.ACCION.TIPO == "R")
             {
                 List<DOCUMENTOT> ddt = new List<DOCUMENTOT>();
@@ -309,13 +300,12 @@ namespace TAT001.Controllers
                         string temp = Request.Form["chk-" + ts.POS].ToString();
                         if (temp == "on")
                             dts.CHECKS = true;
-                        c = true;
                     }
                     catch
                     {
                         dts.CHECKS = false;
                     }
-                    int tt = db.DOCUMENTOTS.Where(a => a.NUM_DOC.Equals(f.NUM_DOC) & a.TSFORM_ID == ts.POS).Count();
+                    int tt = db.DOCUMENTOTS.Where(a => a.NUM_DOC.Equals(f.NUM_DOC) && a.TSFORM_ID == ts.POS).Count();
                     if (tt == 0)
                         ddt.Add(dts);
                     else
@@ -337,34 +327,32 @@ namespace TAT001.Controllers
             if (ModelState.IsValid)
             {
                 string res = pf.procesa(flujo, "");
-
-                using (TAT001Entities db1 = new TAT001Entities())
-                {
-                    FLUJO ff = db1.FLUJOes.Where(x => x.NUM_DOC == flujo.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
-                    Estatus es = new Estatus();//RSG 18.09.2018
-                    d = db1.DOCUMENTOes.Find(d.NUM_DOC);
-                    ff.STATUS = es.getEstatus(d);
-                    db1.Entry(ff).State = EntityState.Modified;
-                    db1.SaveChanges();
-                }
+                
+                FLUJO ff = db.FLUJOes.Where(x => x.NUM_DOC == flujo.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+                Estatus es = new Estatus();//RSG 18.09.2018
+                d = db.DOCUMENTOes.Find(d.NUM_DOC);
+                ff.STATUS = es.getEstatus(d);
+                db.Entry(ff).State = EntityState.Modified;
+                db.SaveChanges();
+                
 
                 if (res.Equals("0"))//Aprobado
                 {
                     return RedirectToAction("Details", "Solicitudes", new { id = flujo.NUM_DOC });
                 }
-                else if (res.Equals("1") | res.Equals("2") | res.Equals("3"))//CORREO
+                else if (res.Equals("1") || res.Equals("2") || res.Equals("3"))//CORREO
                 {
-                    //return RedirectToAction("Enviar", "Mails", new { id = flujo.NUM_DOC, index = false, tipo = "A" });
                     Email em = new Email();
                     string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
                     string image = Server.MapPath("~/images/logo_kellogg.png");
-                    if (res.Equals("1") | res.Equals("2"))//CORREO
+                    string spras_id = FnCommon.ObtenerSprasId(db,User.Identity.Name);
+                    if (res.Equals("1") || res.Equals("2"))//CORREO
                     {
-                        em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image);
+                        em.enviaMailC(f.NUM_DOC, true, spras_id, UrlDirectory, "Index", image);
                     }
                     else
                     {
-                        em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Details", image);
+                        em.enviaMailC(f.NUM_DOC, true, spras_id, UrlDirectory, "Details", image);
                         return RedirectToAction("Index", "Home");
                     }
                     return RedirectToAction("Details", "Solicitudes", new { id = flujo.NUM_DOC });
@@ -377,61 +365,41 @@ namespace TAT001.Controllers
             }
 
             int pagina = 103; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            string u = User.Identity.Name;
+            var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+            FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
+            try
             {
-                string u = User.Identity.Name;
-                var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
-                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-
-                try
-                {
-                    string p = Session["pais"].ToString();
-                    ViewBag.pais = p + ".png";
-                }
-                catch
-                {
-                    //ViewBag.pais = "mx.png";
-                    //return RedirectToAction("Pais", "Home");
-                }
-                Session["spras"] = user.SPRAS_ID;
+                string p = Session["pais"].ToString();
+                ViewBag.pais = p + ".png";
             }
+            catch
+            {
+                //return RedirectToAction("Pais", "Home");
+            }
+            Session["spras"] = user.SPRAS_ID;
+            
             return View(f);
         }
 
         public ActionResult Carga()
         {
             int pagina = 601; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
-            {
-                string u = User.Identity.Name;
-                //string u = "admin";
-                var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
-                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            string u = User.Identity.Name;
+            var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
 
-                try
-                {
-                    string p = Session["pais"].ToString();
-                    ViewBag.pais = p + ".png";
-                }
-                catch
-                {
-                    //ViewBag.pais = "mx.png";
-                    //return RedirectToAction("Pais", "Home");
-                }
-                Session["spras"] = user.SPRAS_ID;
+            FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
+            try
+            {
+                string p = Session["pais"].ToString();
+                ViewBag.pais = p + ".png";
             }
+            catch
+            {
+                //return RedirectToAction("Pais", "Home");
+            }
+                Session["spras"] = user.SPRAS_ID;
+            
             return View();
         }
         [HttpPost]

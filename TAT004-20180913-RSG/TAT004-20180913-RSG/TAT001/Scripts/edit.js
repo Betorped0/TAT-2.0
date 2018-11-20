@@ -426,7 +426,8 @@ $(document).ready(function () {
                             M.toast({ html: 'Seleccione una categoría' });
                         }
                     } else {
-                        M.toast({ html: 'La categoría ya había sido agregada' });
+                        //M.toast({ html: 'La categoría ya había sido agregada' });
+                        msj("toast", 'La categoría no puede ser agregada en la misma solicitud');//20-11-2018
                     }
 
                 } else if (dis == "M") {
@@ -503,10 +504,10 @@ $(document).ready(function () {
 
                             }
                         } else {
-                            M.toast({ html: 'La categoría ya había sido agregada' });
+                            msj("toast", 'La categoría no puede ser agregada en la misma solicitud'); //20-11-2018
                         }
                     } else {
-                        M.toast({ html: 'El monto base debe de ser mayor a cero' });
+                        msj("toast",'El monto base debe de ser mayor a cero');
                     }
                 } else if (dis == "M") {
                     //Distribución por material  
@@ -522,7 +523,7 @@ $(document).ready(function () {
                         //eliminarRowsDistribucion(por_apoyo);
                     } else {
                         //Si el porcentage es 0 desbloquear la columna de porcentaje de apoyo
-                        M.toast({ html: 'Porcentaje de apoyo base debe de ser mayor a cero' });
+                        msj("toast", 'Porcentaje de apoyo base debe de ser mayor a cero');//20-11-2018
                         return false;
                     }
 
@@ -563,8 +564,10 @@ $(document).ready(function () {
             var filename = file.name;
             if (evaluarExt(filename)) {
                 M.toast({ html: 'Cargando ' + filename });
+                document.getElementById("loader").style.display = "flex";
                 loadExcelDis(file);
                 updateFooter();
+                document.getElementById("loader").style.display = "none";
             } else {
                 M.toast({ html: 'Tipo de archivo incorrecto: ' + filename });
             }
@@ -797,7 +800,7 @@ $(document).ready(function () {
             asignarPresupuesto(kunnr);
 
         } else {
-            M.toast({ html: 'Verificar valores en los campos de Distribución!' });
+           msj("toast",'Verificar valores en los campos de Distribución!');
             e.preventDefault();
             e.stopPropagation();
             //var active = $('ul.tabs .active').attr('href');
@@ -910,7 +913,7 @@ $(document).ready(function () {
             $('#montos_doc_ml2').val(monto_doc_md);
             $("label[for='montos_doc_ml2']").addClass("active");
             var msg = 'Monto incorrecto';
-            M.toast({ html: msg });
+            msj("toast", msg); //20-11-2018
             e.preventDefault();
         }
 
@@ -2911,8 +2914,24 @@ $('body').on('focusout', '.input_sop_f', function () {
 
 $('body').on('focusout', '#bmonto_apoyo', function () {
     var val = $(this).val();
-    updateTableValIndex(9, val);
     $(this).val(toShowPorc(val));//RSG 09.07.2018 lej 03.08.2018
+
+    if (ligada()) {
+        val = 0;
+    }
+
+
+    updateTableValIndex(9, this.value);
+    var file = $("#file_dis");
+    var select_neg = $('#select_neg').val();
+    if (ligada() || select_neg === "P") {
+        (this.value === "0" || this.value === "0.00%") ? file.prop('disabled', true) : file.prop('disabled', false);
+        cambiaRec();
+    } else {
+        file.prop('disabled', false);
+    }
+
+
 });
 
 //$('body').on('focusout', '#monto_dis', function () {
@@ -3648,6 +3667,9 @@ function loadExcelDis(file) {
     var formData = new FormData();
 
     formData.append("FileUpload", file);
+    formData.append("vkorg", $("#txt_vkorg").val());
+    formData.append("vtweg", $("#txt_vtweg").val());
+    formData.append("spras", $("#txt_spras").val());
 
     //Obtener el tipo de negociación
     var neg = $("#select_neg").val();
@@ -3703,10 +3725,12 @@ function loadExcelDis(file) {
                     //    calculo = "X";
                     //}
                     var calculo = "";
+                    var apoyoR = "";
                     //Definir si los valores van en 0 y nada más poner el total
                     if (dataj.MONTO == "" || dataj.MONTO == "0.00" || dataj.PORC_APOYO == "" || dataj.PORC_APOYO == "0.00") {
                         //Se mostrara nada más el total
                         calculo = "sc";
+                        apoyoR = dataj.APOYO_REAL;
                     }
 
                     //RSG 24.05.2018---------------------------------
@@ -3755,8 +3779,12 @@ function loadExcelDis(file) {
                     }
                     //LEJ 09.07.2018---------------------------------Termina
                     //var addedRow = addRowMat(table, dataj.POS, dataj.MATNR, dataj.MATKL, dataj.DESC, dataj.MONTO, dataj.PORC_APOYO, dataj.MONTO_APOYO, dataj.MONTOC_APOYO, dataj.PRECIO_SUG, dataj.VOLUMEN_EST, dataj.APOYO_EST, relacionada, reversa, date_de, date_al, calculo, pm);//RSG 24.05.2018
-                    var addedRow = addRowMat(table, dataj.POS, dataj.MATNR, dataj.MATKL, dataj.DESC, dataj.MONTO, dataj.PORC_APOYO, dataj.MONTO_APOYO, dataj.MONTOC_APOYO, dataj.PRECIO_SUG, dataj.VOLUMEN_EST, dataj.APOYO_EST, relacionada, "", reversa, date_de, date_al, calculo, pm, "");//RSG 24.05.2018 //Add MGC B20180705 2018.07.05 ne parametro después de pm //Add MGC B20180705 2018.07.05 relacionadaed editar el material en los nuevos renglones
-
+                    var addedRow;
+                    if (ligada()) {
+                        addedRow = addRowMat(table, dataj.POS, dataj.MATNR, dataj.MATKL, dataj.DESC, "", toShowPorc(dataj.PORC_APOYO), "", "", "", "", "", relacionada, "", reversa, date_de, date_al, calculo, pm, "", apoyoR);
+                    } else {
+                        addedRow = addRowMat(table, dataj.POS, dataj.MATNR, dataj.MATKL, dataj.DESC, dataj.MONTO, dataj.PORC_APOYO, dataj.MONTO_APOYO, dataj.MONTOC_APOYO, dataj.PRECIO_SUG, dataj.VOLUMEN_EST, dataj.APOYO_EST, relacionada, "", reversa, date_de, date_al, calculo, pm, "", apoyoR);//RSG 24.05.2018 //Add MGC B20180705 2018.07.05 ne parametro después de pm //Add MGC B20180705 2018.07.05 relacionadaed editar el material en los nuevos renglones
+                    }
 
 
                     if (calculo != "")//RSG 24.05.2018
@@ -3777,9 +3805,9 @@ function loadExcelDis(file) {
                     table.column(0).visible(false);
                     table.column(1).visible(false);
                 }
-
-                updateTable();
-
+                if (!ligada()) {
+                    updateTable();
+                }
                 if (pm == "pm") {
                     $(".pm").prop('disabled', true);
                     $('.pm').trigger('click');
@@ -3796,7 +3824,9 @@ function loadExcelDis(file) {
     });
 
     //Actualizar los valores en la tabla
-    updateTable();
+    if (!ligada()) {
+        updateTable();
+    }
 
 }
 
@@ -4073,29 +4103,51 @@ function addRowCatl(t, cat, exp, sel, ddate, adate, opt, porcentaje, total) {
 }
 
 //function addRowMat(t, POS, MATNR, MATKL, DESC, MONTO, PORC_APOYO, MONTO_APOYO, MONTOC_APOYO, PRECIO_SUG, VOLUMEN_EST, PORC_APOYOEST, relacionada, reversa, date_de, date_al, calculo, porcentaje_mat) {
-function addRowMat(t, POS, MATNR, MATKL, DESC, MONTO, PORC_APOYO, MONTO_APOYO, MONTOC_APOYO, PRECIO_SUG, VOLUMEN_EST, PORC_APOYOEST, relacionada, relacionadaed, reversa, date_de, date_al, calculo, porcentaje_mat, ne) { //Add MGC B20180705 2018.07.05 ne no eliminar //Add MGC B20180705 2018.07.05 relacionadaed editar el material en los nuevos renglones
-
-    var r = addRowl(
-        t,
-        POS,
-        "",
-        "",
-        "<input class=\"" + relacionada + " input_oper format_date input_fe\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + date_de + "\">",
-        "<input class=\"" + relacionada + " input_oper format_date input_fe\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + date_al + "\">" + pickerFecha(".format_date"),// RSG 21.05.2018",
-        //"<input class=\"" + relacionada + " input_oper input_material number\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + MATNR + "\">",
-        "<input class=\"" + relacionada + " " + relacionadaed + " input_oper input_material number\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + MATNR + "\">", //Add MGC B20180705 2018.07.05 relacionadaed editar el material en los nuevos renglones
-        MATKL,
-        DESC,
-        "<input class=\"" + reversa + " input_oper numberd input_dc\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + MONTO + "\">",
-        "<input class=\"" + reversa + " input_oper numberd input_dcp " + porcentaje_mat + "\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + toShowPorc(PORC_APOYO) + "\">",
-        "<input class=\"" + reversa + " input_oper numberd\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + MONTO_APOYO + "\">",
-        MONTOC_APOYO,
-        "<input class=\"" + reversa + " input_oper numberd input_dc\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + PRECIO_SUG + "\">",
-        "<input class=\"" + reversa + " input_oper numberd input_dcv\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + VOLUMEN_EST + "\">",
-        "<input class=\"" + reversa + " input_oper numberd input_dc total " + calculo + "\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + PORC_APOYOEST + "\">",
-        "<input class=\"" + reversa + " input_oper numberd input_dc total " + porcentaje_mat + " " + calculo + "\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + PORC_APOYOEST + "\">"//RSG 24.05.2018
-    );
-
+function addRowMat(t, POS, MATNR, MATKL, DESC, MONTO, PORC_APOYO, MONTO_APOYO, MONTOC_APOYO, PRECIO_SUG, VOLUMEN_EST, PORC_APOYOEST, relacionada, relacionadaed, reversa, date_de, date_al, calculo, porcentaje_mat, ne, apoyoReal) { //Add MGC B20180705 2018.07.05 ne no eliminar //Add MGC B20180705 2018.07.05 relacionadaed editar el material en los nuevos renglones
+    total = apoyoReal === "" || apoyoReal === undefined ? PORC_APOYOEST : apoyoReal;
+    if (!ligada()) {
+        var r = addRowl(
+            t,
+            POS,
+            "",
+            "",
+            "<input class=\"" + relacionada + " input_oper format_date input_fe\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + date_de + "\">",
+            "<input class=\"" + relacionada + " input_oper format_date input_fe\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + date_al + "\">" + pickerFecha(".format_date"),// RSG 21.05.2018",
+            //"<input class=\"" + relacionada + " input_oper input_material number\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + MATNR + "\">",
+            "<input class=\"" + relacionada + " " + relacionadaed + " input_oper input_material number\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + MATNR + "\">", //Add MGC B20180705 2018.07.05 relacionadaed editar el material en los nuevos renglones
+            MATKL,
+            DESC,
+            "<input class=\"" + reversa + " input_oper numberd input_dc\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + MONTO + "\">",
+            "<input class=\"" + reversa + " input_oper numberd input_dcp " + porcentaje_mat + "\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + toShowPorc(PORC_APOYO) + "\">",
+            "<input class=\"" + reversa + " input_oper numberd\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + MONTO_APOYO + "\">",
+            MONTOC_APOYO,
+            "<input class=\"" + reversa + " input_oper numberd input_dc\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + PRECIO_SUG + "\">",
+            "<input class=\"" + reversa + " input_oper numberd input_dcv\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + VOLUMEN_EST + "\">",
+            "<input class=\"" + reversa + " input_oper numberd input_dc total " + calculo + "\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + PORC_APOYOEST + "\">",
+            "<input class=\"" + reversa + " input_oper numberd input_dc total " + porcentaje_mat + " " + calculo + "\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + total + "\">"//RSG 24.05.2018
+        );
+    } else {
+        var r = addRowl(
+            t,
+            POS,
+            "",
+            "",
+            "<input class=\"" + relacionada + " input_oper format_date input_fe\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + date_de + "\">",
+            "<input class=\"" + relacionada + " input_oper format_date input_fe\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + date_al + "\">" + pickerFecha(".format_date"),// RSG 21.05.2018",
+            //"<input class=\"" + relacionada + " input_oper input_material number\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + MATNR + "\">",
+            "<input class=\"" + relacionada + " " + relacionadaed + " input_oper input_material number\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + MATNR + "\">", //Add MGC B20180705 2018.07.05 relacionadaed editar el material en los nuevos renglones
+            MATKL,
+            DESC,
+            "<input class=\"" + reversa + " input_oper numberd input_dc\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + MONTO + "\"disabled='disabled' >",
+            "<input class=\"" + reversa + " input_oper numberd input_dcp " + porcentaje_mat + "\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + PORC_APOYO + "\" disabled='disabled'>",
+            "<input class=\"" + reversa + " input_oper numberd\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + MONTO_APOYO + "\" disabled='disabled' >",
+            MONTOC_APOYO,
+            "<input class=\"" + reversa + " input_oper numberd input_dc\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + PRECIO_SUG + "\" disabled='disabled'>",
+            "<input class=\"" + reversa + " input_oper numberd input_dcv\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + VOLUMEN_EST + "\" disabled='disabled'>",
+            "<input class=\"" + reversa + " input_oper numberd input_dc total " + calculo + "\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + PORC_APOYOEST + "\" disabled='disabled'>",
+            "<input class=\"" + reversa + " input_oper numberd input_dc total " + porcentaje_mat + " " + calculo + "\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + PORC_APOYOEST + "\" disabled='disabled'>"//RSG 24.05.2018
+        );
+    }
     //Add MGC B20180705 2018.07.05 ne no eliminar
     if (ne != "") {
         $(r).addClass(ne);
@@ -4422,7 +4474,7 @@ function evalDistribucionTab(ret, e) {
         return res;
     } else {
         if (!res) {
-            M.toast({ html: msg });
+            msj("toast", msg ); //20-11-2018
             e.preventDefault();
             e.stopPropagation();
             //var active = $('ul.tabs .active').attr('href');
@@ -4710,15 +4762,32 @@ function evaluarDisTable() {
 
     var dis = $("#select_dis").val();
     var indext = getIndex();
-
+    var arrTr = new Array();
     //La tabla debe de contener como mínimo un registro
     var lengthT = $("table#table_dis tbody tr[role='row']").length;
     if (lengthT > 0) {
+        $("#table_dis > tbody  > tr[role='row']").each(function () {
+            if ($(this).hasClass("unica")) {
+                arrTr.push("unica");
+            } else if ($(this).hasClass("nounica")) {
+                arrTr.push("nounica");
+            }
+            if (!checkUnicas(arrTr) && $(this).hasClass("unica")) {
+                $(this).find('td').eq((5 + indext)).addClass("errorMaterial");
+            }
+        });
 
         $("#table_dis > tbody  > tr[role='row']").each(function () {
 
             //Distribución por material
             if (dis == "M") {
+
+                if (!checkUnicas(arrTr)) {
+                    msj("toast", "Las categorías unicas no se pueden mezclar con otras categorias y/o Materiales.");
+                    res = "Error con el material ";
+                    return false;
+                }
+
                 var val = $(this).find("td:eq(" + (5 + indext) + ") input").val();
                 //Validar material
                 if (val == "") {
@@ -4730,6 +4799,7 @@ function evaluarDisTable() {
                     var valp = valMaterial(val, "X");
                     if (valp.ID == null || valp.ID == "") {
                         $(this).find('td').eq((5 + indext)).addClass("errorMaterial");
+                        res = "Error con el material";
                         return false;
                     } else if (trimStart('0', valp.ID) == val) {//RSG 07.06.2018
 
@@ -5320,9 +5390,12 @@ function selectMonto(val, message) {
         $('#div_btns_row').css("display", "inherit");
 
         if (select_neg == "M") {//Monto
+            $('#bmonto_apoyo').val("0");
             $('#div_apoyobase').css("display", "none");
             $('#div_montobase').css("display", "inherit");
         } else if (select_neg == "P") {//Porcentaje
+            $('#monto_dis').val("0");
+            $('#file_dis').prop('disabled', true);
             if (message == "X") {
                 if (disdistribucion != true) { //B20180625 MGC 2018.06.29 Evitar Mensaje al cargar página
                     M.toast({ html: '¿Desea realizar esta solicitud por porcentaje?' });//Add
@@ -5341,6 +5414,10 @@ function selectMonto(val, message) {
             }
             //RSG 09.07.2018------------------------------------
         } else {
+            //Reset los valores
+            $('#monto_dis').val("0");
+            $('#bmonto_apoyo').val("0");
+
             $('#div_montobase').css("display", "none");
             $('#div_apoyobase').css("display", "none");
         }
@@ -5779,7 +5856,7 @@ function valMaterial(mat, message) {
             },
             error: function (xhr, httpStatusMessage, customErrorMessage) {
                 if (message == "X") {
-                    M.toast({ html: "Valor no encontrado" });
+                     msj("toast","Valor no encontrado"); //20-11-2018
                 }
             },
             async: false
@@ -5920,4 +5997,22 @@ function isReversa() {
         }
     }
     return res;
+}
+function checkUnicas(arrTr) {
+    if (arrTr.length > 0) {
+        for (var i = 1; i < arrTr.length; i++) {
+            if (arrTr[i] !== arrTr[0])
+                return false;
+        }
+    }
+    return true;
+}
+
+function msj(clase, msj) {
+    M.toast({
+        classes: clase,
+        displayLength: 1000000,
+        html: '<span style="padding-right:15px;"><i class="material-icons yellow-text">info</i></span>  ' + msj
+            + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'' + clase + '\')">Aceptar</button>'
+    });
 }
