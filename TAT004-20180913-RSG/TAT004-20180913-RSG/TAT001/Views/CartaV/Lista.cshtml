@@ -20,87 +20,89 @@
         </div>
     </div>
 </div>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.FECHAC)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TIPO)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.COMPANY)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TAXID)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CONCEPTO)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CLIENTE)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PUESTO)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DIRECCION)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FOLIO)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.LUGAR)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PAYER)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ESTIMADO)
-        </th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
-        ////////DRS 14.10.2018//////
-        <tr onclick="document.location = '@Url.Action("DetailsPos", new { id = item.NUM_DOC, pos = item.POS, swf=TempData["ESTATUS_WF"] })'" style="cursor:pointer">
-            <td>
-                @Html.DisplayFor(modelItem => item.FECHAC)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TIPO)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.COMPANY)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TAXID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CONCEPTO)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CLIENTE)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PUESTO)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DIRECCION)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FOLIO)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LUGAR)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PAYER)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ESTIMADO)
-            </td>
+<div class="card-panel">
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FECHAC)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TIPO)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.COMPANY)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TAXID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CONCEPTO)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CLIENTE)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PUESTO)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DIRECCION)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FOLIO)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LUGAR)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PAYER)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ESTIMADO)
+            </th>
         </tr>
-    }
 
-</table>
+        @foreach (var item in Model)
+        {
+            ////////DRS 14.10.2018//////
+            <tr onclick="document.location = '@Url.Action("DetailsPos", new { id = item.NUM_DOC, pos = item.POS, swf=TempData["ESTATUS_WF"] })'" style="cursor:pointer">
+                <td>
+                    @Html.DisplayFor(modelItem => item.FECHAC)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TIPO)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.COMPANY)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TAXID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CONCEPTO)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CLIENTE)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PUESTO)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DIRECCION)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FOLIO)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LUGAR)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PAYER)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ESTIMADO)
+                </td>
+            </tr>
+        }
+
+    </table>
+    </div>

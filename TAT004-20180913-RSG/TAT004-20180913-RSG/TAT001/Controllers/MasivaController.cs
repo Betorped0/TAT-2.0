@@ -1075,23 +1075,42 @@ namespace TAT001.Controllers
         }
 
         //COSULTA DE AJAX PARA EL TIPO DE PROVEEDOR
-        public JsonResult proveedor(string Prefix, string Sociedad)
+        public JsonResult proveedor(string Prefix, string Cliente)
         {
             if (Prefix == null)
                 Prefix = "";
 
-            var c = (from p in db.PROVEEDORs
-                     where p.ID.Contains(Prefix) && p.SOCIEDAD_ID == Sociedad && p.ACTIVO == true
-                     select new { p.ID, p.NOMBRE }).ToList();
+            if (Cliente.Length < 10) { Cliente = cad.completaCliente(Cliente); }
 
-            if (c.Count == 0)
+            //var c = (from p in db.PROVEEDORs
+            //         where p.ID.Contains(Prefix) && p.SOCIEDAD_ID == Sociedad && p.ACTIVO == true
+            //         select new { p.ID, p.NOMBRE }).ToList();
+
+            //if (c.Count == 0)
+            //{
+            //    var c2 = (from p in db.PROVEEDORs
+            //              where p.NOMBRE.Contains(Prefix) && p.SOCIEDAD_ID == Sociedad && p.ACTIVO == true
+            //              select new { p.ID, p.NOMBRE }).ToList();
+            //    c.AddRange(c2);
+            //}
+
+            var con = (from p in db.PROVEEDORs
+                       join c in db.CLIENTEs on p.ID equals c.PROVEEDOR_ID
+                       where p.ID.Contains(Prefix) && p.ACTIVO == true && c.KUNNR == Cliente
+                       group p by new { p.ID, p.NOMBRE } into g
+                       select new { ID = g.Key.ID, NOMBRE = g.Key.NOMBRE }).ToList();
+
+            if (con.Count == 0)
             {
-                var c2 = (from p in db.PROVEEDORs
-                          where p.NOMBRE.Contains(Prefix) && p.SOCIEDAD_ID == Sociedad && p.ACTIVO == true
-                          select new { p.ID, p.NOMBRE }).ToList();
-                c.AddRange(c2);
+                var con2 = (from p in db.PROVEEDORs
+                            join c in db.CLIENTEs on p.ID equals c.PROVEEDOR_ID
+                            where p.NOMBRE.Contains(Prefix) && p.ACTIVO == true && c.KUNNR == Cliente
+                            group p by new { p.ID, p.NOMBRE } into g
+                            select new { ID = g.Key.ID, NOMBRE = g.Key.NOMBRE }).ToList();
+                con.AddRange(con2);
             }
-            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+
+            JsonResult cc = Json(con, JsonRequestBehavior.AllowGet);
             return cc;
         }
 

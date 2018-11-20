@@ -15,6 +15,8 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
+    @Html.HiddenFor(model=>model.PAGINA_ID)
+    @Html.HiddenFor(model=>model.ROL_ID)
     <div class="row">
         <div class="col-md-offset-2 col-md-10">
             <button id="btn_guardar" type="submit" value="Submit" class="btn btn-default" style="float:right;"></button>
@@ -26,20 +28,28 @@
                 <div class="row">
                     <div class="input-field col s12">
                         @Html.LabelFor(model => model.PAGINA_ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblPid" })
-                        @Html.EditorFor(model => model.PAGINA_ID, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.EditorFor(model => model.PAGINA.URL, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
                         @Html.ValidationMessageFor(model => model.PAGINA_ID, "", new { @class = "text-danger" })
                     </div>
-                    <div class="input-field col s12">
-                        @Html.LabelFor(model => model.PERMISO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblEst" })
-                        <input value="@ac" type="text" class="control-label col-md-2" disabled="disabled" />
-                        @Html.Hidden("ac", ac as string)
-                        @Html.ValidationMessageFor(model => model.PERMISO, "", new { @class = "text-danger" })
+                    <div class="col s12 l12">
+                        <label>
+                            @{ bool activo = Convert.ToBoolean(Model.PERMISO);
+                                        @Html.CheckBox("PERMISO", activo)
+                                    }
+                            <span id="lblEst"></span>
+                        </label>
                     </div>
+                    @*<div class="input-field col s12">
+            @Html.LabelFor(model => model.PERMISO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblEst" })
+            <input value="@ac" type="text" class="control-label col-md-2" disabled="disabled" />
+            @Html.Hidden("ac", ac as string)
+            @Html.ValidationMessageFor(model => model.PERMISO, "", new { @class = "text-danger" })
+        </div>*@
                 </div>
             </div>
         </div>
         <div class="col s6 ">
-            <div class="card-panel">
+            @*<div class="card-panel">
                 <div class="row">
                     <div class="input-field col s12">
                         @Html.LabelFor(model => model.ROL_ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblId" })
@@ -47,7 +57,7 @@
                         @Html.ValidationMessageFor(model => model.ROL_ID, "", new { @class = "text-danger" })
                     </div>
                 </div>
-            </div>
+            </div>*@
         </div>
     </div>
 }
@@ -55,3 +65,8 @@
 <div>
     @Html.ActionLink("Back to List", "Index", new { id = Model.ROL_ID }, new { id = "lblRegresar" })
 </div>
+<script>
+    $("input[type='hidden']").each(function (index, element) {
+        $(this).appendTo($(element).parent());
+    });
+</script>

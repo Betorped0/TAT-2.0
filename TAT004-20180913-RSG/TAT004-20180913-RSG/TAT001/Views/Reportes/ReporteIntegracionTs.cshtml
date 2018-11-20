@@ -28,7 +28,7 @@
                     return $(this).find('input').prop('checked') != select_all;
                 }).click();
             });
-                
+
         });
 
 
@@ -53,12 +53,12 @@
 
         @if (ViewBag.Display)
         {
-        <div class="col s12 right-align" id="senddiv">
-            <button class="btn waves-effect waves-light" type="submit" name="action" id="sendbtn">
-                Consultar
-            </button>
-            <a class="waves-effect waves-light btn" id="excelBtn">Generar Excel</a>
-        </div>
+            <div class="col s12 right-align" id="senddiv">
+                <button class="btn waves-effect waves-light" type="submit" name="action" id="sendbtn">
+                    Consultar
+                </button>
+                <a class="waves-effect waves-light btn" id="excelBtn" download>Generar Excel</a>
+            </div>
         }
         else
         {
@@ -184,7 +184,7 @@
     if (ViewBag.display)
     {
         <script>
-            
+
             $(document).ready(function () {
                 $("#excelBtn").click(function () {
                     $("#table").trigger("filterReset");
@@ -192,7 +192,7 @@
                     $('#table').trigger('destroy');
                     var pager = $('#table tfoot').html();
                     $('#table tfoot').html("");
-                    tableToExcel('table', 'Reporte de Integración TS');
+                    //tableToExcel('table', 'IntegraciónTS');
                     $('#table tfoot').html(pager);
                     $('#table').tablesorter({
                         theme: "materialize",
@@ -210,11 +210,11 @@
                         output: '{startRow} - {endRow} / {filteredRows} ({totalRows})'
                     });
                 });
-            $(".grid thead td").click(function () {
-                showFilterOption(this);
-            });
+                $(".grid thead td").click(function () {
+                    showFilterOption(this);
+                });
 
-            
+
 
                     @*var table = $('#table').DataTable({
                         //"ajax": 'ViewBag.documentos.Data[0]',
@@ -274,62 +274,101 @@
                         }
                     });*@
 
-        //var a = $('#selecc').val();
-        //table.page.len(a).draw();
-        //$('#selecc').on('change', function () {
-        //    table.page.len(this.value).draw();
-        //});
+                //var a = $('#selecc').val();
+                //table.page.len(a).draw();
+                //$('#selecc').on('change', function () {
+                //    table.page.len(this.value).draw();
+                //});
 
-        //$('input.global_filter').on('keyup click', function () {
-        //    filterGlobal();
-        //});
+                //$('input.global_filter').on('keyup click', function () {
+                //    filterGlobal();
+                //});
 
-        //$('#table tbody').on('click', 'td.details-control', function () {
-        //    var tr = $(this).closest('tr');
-        //    var row = table.row(tr);
+                //$('#table tbody').on('click', 'td.details-control', function () {
+                //    var tr = $(this).closest('tr');
+                //    var row = table.row(tr);
 
-        //    if (row.child.isShown()) {
-        //        // This row is already open - close it
-        //        row.child.hide();
-        //        tr.removeClass('shown');
-        //    }
-        //    else {
-        //        // Open this row
-        //        var child = format(row.data(), row, tr);
-        //        if (child != undefined) {
-        //        }
-        //    }
-        //});
+                //    if (row.child.isShown()) {
+                //        // This row is already open - close it
+                //        row.child.hide();
+                //        tr.removeClass('shown');
+                //    }
+                //    else {
+                //        // Open this row
+                //        var child = format(row.data(), row, tr);
+                //        if (child != undefined) {
+                //        }
+                //    }
+                //});
 
-            $('select.select_all').siblings('ul').prepend('<li id=sm_select_all id="filters_all"><span>Todas Las Opciones</span></li>');
-            $('li#sm_select_all').on('click', function () {
-                var jq_elem = $(this),
-                    jq_elem_span = jq_elem.find('span'),
-                    select_all = jq_elem_span.text() == 'Todas Las Opciones',
-                    set_text = select_all ? 'Borrar Selección' : 'Todas Las Opciones';
-                jq_elem_span.text(set_text);
-                jq_elem.siblings('li').filter(function () {
-                    return $(this).find('input').prop('checked') != select_all;
-                }).click();
-            });
-            $("#excelBtn").click(function () {
-                $('#table').trigger('destroyPager');
-                var tableid = table;
-                fnExcelReport();
+                $('select.select_all').siblings('ul').prepend('<li id=sm_select_all id="filters_all"><span>Todas Las Opciones</span></li>');
+                $('li#sm_select_all').on('click', function () {
+                    var jq_elem = $(this),
+                        jq_elem_span = jq_elem.find('span'),
+                        select_all = jq_elem_span.text() == 'Todas Las Opciones',
+                        set_text = select_all ? 'Borrar Selección' : 'Todas Las Opciones';
+                    jq_elem_span.text(set_text);
+                    jq_elem.siblings('li').filter(function () {
+                        return $(this).find('input').prop('checked') != select_all;
+                    }).click();
+                });
+                $("#excelBtn").click(function () {
+
+                    $('#table').trigger('destroyPager');
+                    $('#table').parent().append('<table id="tableClon" style="display:none;border:2px;"><thead id="headclon"></thead><tbody id="bodyclon"></tbody></table>');
+
+                    $('#table > thead > tr').each(function (index) {
+                        if (index === 0) {
+                        $('#headclon').append('<tr id="headc"></tr>');
+                        $(this).children().each(function () {
+                            $('#headc').append('<th>' + $(this).text().normalize('NFD').replace(/[\u0300-\u036f]/g, "") + '</th>');
+                         });
+                        }
+                    });
+                    $('#table > tbody > tr').each(function (indexb) {
+                        $('#bodyclon').append('<tr id="b' + indexb + '"></tr>');
+                        $(this).children().each(function () {
+                            $('#b' + indexb).append('<td style="border: 2px solid black;">' + $(this).text()+'</td>');
+                        });
+                    });
+                    var tableid = table;
+                    //getting values of current time for generating the file name
+                    var dt = new Date();
+                    var day = dt.getDate();
+                    var month = dt.getMonth() + 1;
+                    var year = dt.getFullYear();
+                    var hour = dt.getHours();
+                    var mins = dt.getMinutes();
+                var postfix = day + "" + month + "" + year + "-" + hour + "" +mins;
+                    //creating a temporary HTML link element (they support setting file names)
+                    var a = document.createElement('a');
+                    //getting data from our div that contains the HTML table
+                    var data_type = 'data:application/vnd.ms-excel';
+                    var table_div = document.getElementById('tableClon');
+                    var table_html = table_div.outerHTML.replace(/ /g, '%20');
+                    a.href = data_type + ', ' + table_html;
+                    //setting the file name
+                    a.download = 'IntergaciónTS' + postfix + '.xls';
+                    //triggering the function
+                    a.click();
+                    //just in case, prevent default behaviour
+                    e.preventDefault();
+
                 location.refresh();
             });
             });
-            var tableToExcel = (function () {
-                var uri = 'data:application/vnd.ms-excel;base64,'
-                    , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
-                    , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
-                    , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
-                return function (table, name) {
-                    if (!table.nodeType) table = document.getElementById(table)
-                    var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
-                    window.location.href = uri + base64(format(template, ctx))
-                }
-            })()
+            //var tableToExcel = (function () {
+            //    var uri = 'data:application/vnd.ms-excel;base64,'
+            //        , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{IntegraciónTS' + Date()+'}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+            //        , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+            //        , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+            //    return function (table, name) {
+            //        if (!table.nodeType) table = document.getElementById(table)
+            //        var ctx = { worksheet: name || 'IntegraciónTS' + Date(), table: table.innerHTML }
+            //        window.location.href = uri + base64(format(template, ctx))
+            //    }
+            //})()
+
 
 
 
@@ -460,6 +499,27 @@
                             int antiguedad = ViewBag.Calendario.getUltimoDiaNum(ejercicio, periodo);
                             var amountParent = item.GetType().GetProperty("MONTO_DOC_MD").GetValue(item, null);
                             int fechaSap = 0;
+                            DateTime registro = new DateTime();
+                            //////
+                            if (item.GetType().GetProperty("FECHAC").GetValue(item, null) != null)
+                            {
+                                registro = item.GetType().GetProperty("FECHAC").GetValue(item, null);
+                                //registro = ViewBag.Calendario.fechaAint(item.GetType().GetProperty("FECHAC").GetValue(item, null));
+                            }
+                            //var registro = item.GetType().GetProperty("FECHAC").GetValue(item, null);
+
+                            int ejercicio2 = Int32.Parse(item.GetType().GetProperty("EJERCICIO").GetValue(item, null));
+                            int periodo2 = Int32.Parse(item.GetType().GetProperty("PERIODO").GetValue(item, null).ToString());
+                            TAT001.Services.Calendario445 c2 = new TAT001.Services.Calendario445();
+                            c2.getUltimoDia(ejercicio2, periodo2);
+
+                            var cierre = c2.getUltimoDia(ejercicio2, periodo2);
+
+                            DateTime diahoy = DateTime.Now;
+                            TimeSpan agingr = diahoy - registro;
+                            int aging = agingr.Days;
+
+                            ///
                             if (item.GetType().GetProperty("FECHAC").GetValue(item, null) != null)
                             {
                                 fechaSap = ViewBag.Calendario.fechaAint(item.GetType().GetProperty("FECHAC").GetValue(item, null));
@@ -472,7 +532,7 @@
                                 <td>
                                     @if (item.GetType().GetProperty("FECHAC").GetValue(item, null) != null)
                                     {
-                                        var dt=item.GetType().GetProperty("FECHAC").GetValue(item, null) ?? DateTime.Now;
+                                        var dt = item.GetType().GetProperty("FECHAC").GetValue(item, null) ?? DateTime.Now;
                                         var datetime = dt;
                                         @datetime
                                     }
@@ -532,7 +592,7 @@
                                     @item.GetType().GetProperty("USUARIOA_ID").GetValue(item, null)
                                 </td>
                                 <td>
-                                    @antiguedad
+                                    @aging
                                 </td>
                             </tr>
                         }
