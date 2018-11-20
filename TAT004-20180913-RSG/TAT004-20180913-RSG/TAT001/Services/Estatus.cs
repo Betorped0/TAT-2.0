@@ -194,50 +194,69 @@ namespace TAT001.Services
 
             //DOCUMENTO d = db.DOCUMENTOes.Find(num_doc);
             string estatus = getEstatus(d);
+            List<ESTATU> ee = db.ESTATUS.Where(x => x.ACTIVO == true).ToList();
             string ret = "";
 
-            if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "^.[C]"))
-                ret = "Cancelada ";
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[P][R]..."))
-                ret = " Pendiente validación TS";
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[P][A]..."))
-                ret = "Pendiente aprobador";
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[P][E]..."))
-                ret = "En espera";
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A].[P]..") && estatus.Contains("NCOp"))
-                ret = "Pendiente reverso";
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[N]..[A]....") | System.Text.RegularExpressions.Regex.IsMatch(estatus, "[N]..[P][P]..."))
-                ret = "Por gen.txt ";
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[C]..[A]...."))
-                ret = "Cerrada";
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]....[0]"))
-                ret = "Pendiente reverso";
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]....[1]"))
-                ret = "Reversado";
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[P]..[A]...."))
-                ret = "Por contabilizar ";
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[P][A]...[R]"))
-                ret = "";
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[P][A]....") | System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[P][F]...."))
-                ret = "Por contabilizar ";
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[E][A]...."))
-                ret = "Error en contabiización ";
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A].[P].."))
-                ret = "abierta";
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A]...."))
-                ret = "Registrado SAP";
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[R]..[8]."))
-                ret = "Pendiente corrección usuario TS ";
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[R]...."))
-                ret = "Pendiente corrección usuario ";
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[S]...."))
-                ret = "Pendiente firma ";
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[T]...."))
-                ret = "Pendiente tax ";
-            else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[B]...."))
-                ret = "Borrador";
-            else
-                ret = " ";
+            foreach (ESTATU e in ee)
+            {
+                foreach (ESTATUSR reg in e.ESTATUSRs)
+                {
+                    if (System.Text.RegularExpressions.Regex.IsMatch(estatus, reg.REGEX))
+                    {
+                        ESTATUST t = e.ESTATUSTs.Where(x => x.SPRAS_ID == "ES").FirstOrDefault();
+                        if (t != null)
+                            ret = t.TXT050;
+                        else
+                            ret = e.DESCRIPCION;
+                        if (ret != "")
+                            return ret;
+                    }
+                }
+            }
+            #region oculta2
+            //if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "^.[C]"))
+            //    ret = "Cancelada ";
+            //else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[P][R]..."))
+            //    ret = " Pendiente validación TS";
+            //else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[P][A]..."))
+            //    ret = "Pendiente aprobador";
+            //else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[P][E]..."))
+            //    ret = "En espera";
+            //else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A].[P]..") && estatus.Contains("NCOp"))
+            //    ret = "Pendiente reverso";
+            //else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[N]..[A]....") | System.Text.RegularExpressions.Regex.IsMatch(estatus, "[N]..[P][P]..."))
+            //    ret = "Por gen.txt ";
+            //else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[C]..[A]...."))
+            //    ret = "Cerrada";
+            //else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]....[0]"))
+            //    ret = "Pendiente reverso";
+            //else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[R]..[A]....[1]"))
+            //    ret = "Reversado";
+            //else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[P]..[A]...."))
+            //    ret = "Por contabilizar ";
+            //else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[P][A]...[R]"))
+            //    ret = "";
+            //else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[P][A]....") | System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[P][F]...."))
+            //    ret = "Por contabilizar ";
+            //else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[E][A]...."))
+            //    ret = "Error en contabiización ";
+            //else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A].[P].."))
+            //    ret = "abierta";
+            //else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A]...."))
+            //    ret = "Registrado SAP";
+            //else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[R]..[8]."))
+            //    ret = "Pendiente corrección usuario TS ";
+            //else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[R]...."))
+            //    ret = "Pendiente corrección usuario ";
+            //else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[S]...."))
+            //    ret = "Pendiente firma ";
+            //else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[T]...."))
+            //    ret = "Pendiente tax ";
+            //else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[B]...."))
+            //    ret = "Borrador";
+            //else
+            //    ret = " ";
+            #endregion
 
             return ret;
         }
