@@ -94,23 +94,40 @@ namespace TAT001.Controllers.Reportes
 
 
 
-            foreach (string companyCode in comcodessplit)
-            {
+            
                 foreach (string account in accntssplit)
+                {
+                foreach (string companyCode in comcodessplit)
                 {
                     decimal numDoc;
                     decimal montoDoc;
 
                     Decimal.TryParse(account, out decAccnt);
-                    var queryP = (from cu in db.CUENTAs
-                                  join cg in db.CUENTAGLs on cu.ABONO equals cg.ID
+                    var queryP = (from cg in db.CUENTAGLs
                                   join doc in db.DOCUMENTOes on cg.ID equals doc.CUENTAP  //NUM_DOC + DOCUMENTO_SAP PAYER_ID + CLIENTE-NAME1 + TALLT-TXT050 + DOCUMENTO-CONCEPTO --DOCUMENTO-USUARIOD
-                                  join docsap in db.DOCUMENTOSAPs on doc.NUM_DOC equals docsap.NUM_DOC
+                                  join docsap in db.DOCUMENTOSAPs on doc.NUM_DOC equals docsap.NUM_DOC 
                                   join ta in db.TALLTs on doc.TALL_ID equals ta.TALL_ID
                                   join cli in db.CLIENTEs on new { doc.VKORG, doc.VTWEG, doc.SPART, doc.PAYER_ID } equals new { cli.VKORG, cli.VTWEG, cli.SPART, PAYER_ID = cli.KUNNR }   // NAME1
                                   join fl in db.FLUJOes on doc.NUM_DOC equals fl.NUM_DOC  //FLUJO-COMENTARIO -- FLUJO-USUARIOA
-                                  where cu.SOCIEDAD_ID == companyCode.ToString() && doc.PERIODO == period && cg.ID == decAccnt && doc.EJERCICIO == year
-                                  select new { cg.ID, cg.NOMBRE, doc.NUM_DOC, doc.DOCUMENTO_SAP, doc.PAYER_ID, doc.CONCEPTO, doc.USUARIOD_ID, cli.NAME1, fl.COMENTARIO, fl.USUARIOA_ID, ta.TALL_ID, ta.TXT50, docsap.FECHAC, doc.MONTO_DOC_MD, doc.PERIODO, doc.EJERCICIO }).Distinct().ToList();
+                                  where doc.SOCIEDAD_ID == companyCode.ToString() && doc.PERIODO == period && cg.ID == decAccnt && doc.EJERCICIO == year
+                                  select new {
+                                      cg.ID, cg.NOMBRE,
+                                      doc.NUM_DOC,
+                                      doc.DOCUMENTO_SAP,
+                                      doc.PAYER_ID,
+                                      doc.CONCEPTO,
+                                      doc.USUARIOD_ID,
+                                      cli.NAME1,
+                                      fl.COMENTARIO,
+                                      fl.USUARIOA_ID,
+                                      ta.TALL_ID,
+                                      ta.TXT50,
+                                      //FECHAC = dsap.FirstOrDefault().FECHAC,
+                                      docsap.FECHAC,
+                                      doc.MONTO_DOC_MD,
+                                      doc.PERIODO,
+                                      doc.EJERCICIO
+                                  }).Distinct().ToList();
 
 
 
@@ -324,7 +341,7 @@ namespace TAT001.Controllers.Reportes
                                   join CUENTAGL in db.CUENTAGLs on x.CUENTAP equals CUENTAGL.ID                          
                                   join DOCUMENTOSAP in db.DOCUMENTOSAPs on x.NUM_DOC equals DOCUMENTOSAP.NUM_DOC
 
-                                  where x.SOCIEDAD_ID == item.ToString() && x.PERIODO == filtroPeriodo && x.EJERCICIO == year /*&& FLUJO.POS == 2*/
+                                  where x.SOCIEDAD_ID == item.ToString() && x.PERIODO == filtroPeriodo && x.EJERCICIO == year && FLUJO.POS == 2
 
                                   select new
                                   {
@@ -548,6 +565,37 @@ namespace TAT001.Controllers.Reportes
             foreach (DOCUMENTO dOCUMENTO in documentos)
             {
                 Concentrado r1 = new Concentrado();
+                dOCUMENTO.DOCUMENTORAN = db.DOCUMENTORANs.Where(d => d.NUM_DOC.Equals(dOCUMENTO.NUM_DOC)).ToList();
+
+                decimal montoProv = 0.0M;
+                decimal montoApli = 0.0M;
+                r1.remanente = 0.0M;
+                r1.porcentaje_remanente = 0;
+                if (dOCUMENTO.DOCUMENTO_REF != null)
+                {
+                    montoProv = db.DOCUMENTOes.First(x => x.NUM_DOC == dOCUMENTO.DOCUMENTO_REF).MONTO_DOC_MD.Value;
+                }
+                else if (db.DOCUMENTOes.Any(x => x.DOCUMENTO_REF == dOCUMENTO.NUM_DOC && x.ESTATUS_C == null))
+                {
+                    montoProv = dOCUMENTO.MONTO_DOC_MD.Value;
+                }
+
+                if (db.DOCUMENTOes.Any(x => x.DOCUMENTO_REF == dOCUMENTO.NUM_DOC && x.ESTATUS_C == null))
+                {
+                    montoApli = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == dOCUMENTO.NUM_DOC && x.ESTATUS_C == null).Sum(x => x.MONTO_DOC_MD.Value);
+                }
+                else if (dOCUMENTO.DOCUMENTO_REF != null)
+                {
+                    if (db.DOCUMENTOes.Any(x => x.DOCUMENTO_REF == dOCUMENTO.DOCUMENTO_REF && x.ESTATUS_C == null))
+                    {
+                        montoApli = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == dOCUMENTO.DOCUMENTO_REF && x.ESTATUS_C == null).Sum(x => x.MONTO_DOC_MD.Value);
+                    }
+                }
+                if (montoProv > 0 && montoApli > 0)
+                {
+                    r1.remanente = montoProv - montoApli;
+                    r1.porcentaje_remanente = Convert.ToInt32((r1.remanente * 100) / montoProv);
+                }
                 r1.documento = dOCUMENTO;
                 if (dOCUMENTO.PAYER_ID == null) continue;
                 //dOCUMENTO.CLIENTE = db.CLIENTEs.Where(a => a.VKORG.Equals(dOCUMENTO.VKORG)
@@ -1552,7 +1600,7 @@ namespace TAT001.Controllers.Reportes
                               CO_CODE = d.SOCIEDAD_ID,
                               PAIS = p.LANDX,
                               NUMERO_SOLICITUD = d.NUM_DOC,
-                              FECHA_SOLICITUD = (DateTime)d.FECHAC,
+                              FECHA_SOLICITUD = ((d.FECHAC == null)? new DateTime() : (DateTime)d.FECHAC),
                               PERIODO_CONTABLE = (Int32)d.PERIODO,
                               ANIO_CONTABLE = d.EJERCICIO,
                               NUMERO_DOCUMENTO_SAP = d.DOCUMENTO_SAP,
@@ -1567,8 +1615,8 @@ namespace TAT001.Controllers.Reportes
                               STATUSS1 = (d.ESTATUS ?? " ") + (d.ESTATUS_C ?? " ") + (d.ESTATUS_SAP ?? " ") + (d.ESTATUS_WF ?? " "),
                               STATUSS3 = (ts.PADRE ? "P" : " "),
                               CONCEPTO_SOLICITUD = d.CONCEPTO,
-                              DE = (DateTime)d.FECHAI_VIG,
-                              A = (DateTime)d.FECHAF_VIG,
+                              DE = ((d.FECHAI_VIG == null) ? new DateTime() : (DateTime)d.FECHAI_VIG),
+                              A = ((d.FECHAF_VIG == null) ? new DateTime() : (DateTime)d.FECHAF_VIG),
                               CLASIFICACION = gt.TXT50,
                               NUMERO_CLIENTE = d.PAYER_ID,
                               CLIENTE = c.NAME1,
@@ -1596,7 +1644,7 @@ namespace TAT001.Controllers.Reportes
                 else
                 {
                     renglon.ES_REVERSO = true;
-                    renglon.FECHA_REVERSO = (DateTime)queryReverso.FECHAC;
+                    renglon.FECHA_REVERSO = ((queryReverso.FECHAC == null) ? new DateTime() : (DateTime)queryReverso.FECHAC);
                     renglon.COMENTARIOS_REVERSO_PROVISION = queryReverso.COMENTARIO;
                 }
 
@@ -1777,7 +1825,7 @@ namespace TAT001.Controllers.Reportes
         {
             TrackingTS ultimo = grupo.Last();
             TrackingTS primero = grupo.First();
-            ultimo.NUMERO_CORRECCIONES = grupo.Count();
+            ultimo.NUMERO_CORRECCIONES = grupo.Where(c => c.ESTATUS.Equals("R")).Count();
             ultimo.TIEMPO_TRANSCURRIDO = (ultimo.FECHA - primero.FECHA).TotalHours; // ToDo: Restar sábados, domingos y días feriados
             ultimo.SEMANA = System.Globalization.CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(primero.FECHA, System.Globalization.CalendarWeekRule.FirstDay, DayOfWeek.Monday);
             return ultimo;

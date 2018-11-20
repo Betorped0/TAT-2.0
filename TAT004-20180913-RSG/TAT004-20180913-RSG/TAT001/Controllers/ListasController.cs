@@ -100,16 +100,16 @@ namespace TAT001.Controllers
 
         }
         [HttpGet]
-        public JsonResult Solicitudes(string Prefix)
+        public JsonResult Solicitudes(string Prefix,decimal? num_doci,decimal? num_docf)
         {
-            var solicitudes = FnCommon.ObtenerSolicitudes(db, Prefix);
+            var solicitudes = FnCommon.ObtenerSolicitudes(db, Prefix, num_doci, num_docf);
             JsonResult cc = Json(solicitudes, JsonRequestBehavior.AllowGet);
             return cc;
         }
         [HttpGet]
-        public JsonResult Usuarios(string Prefix)
+        public JsonResult Usuarios(string Prefix,bool? autorizador)
         {
-            var usuarios = FnCommon.ObtenerUsuarios(db, Prefix);
+            var usuarios = FnCommon.ObtenerUsuarios(db, Prefix, autorizador);
             JsonResult cc = Json(usuarios, JsonRequestBehavior.AllowGet);
             return cc;
         }

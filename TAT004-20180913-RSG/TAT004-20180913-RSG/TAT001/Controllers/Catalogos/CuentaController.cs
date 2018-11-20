@@ -8,9 +8,12 @@ using System.Web;
 using System.Web.Mvc;
 using TAT001.Common;
 using TAT001.Entities;
+using TAT001.Filters;
 
 namespace TAT001.Controllers
 {
+    [Authorize]
+    [LoginActive]
     public class CuentaController : Controller
     {
         private TAT001Entities db = new TAT001Entities();
@@ -111,7 +114,7 @@ namespace TAT001.Controllers
         // GET: Cuenta/Edit/5
         public ActionResult Edit(string soc, string pai, string tal, int? eje)
         {
-            int pagina = 693; //ID EN BASE DE DATOS
+            int pagina = 692; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
             try
             {
@@ -132,6 +135,7 @@ namespace TAT001.Controllers
             {
                 return HttpNotFound();
             }
+            pagina = 692;
            return View(cUENTA);
         }
 

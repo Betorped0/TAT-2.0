@@ -43,7 +43,7 @@ namespace TAT001.Controllers
                 }
                 Session["spras"] = user.SPRAS_ID;
             }
-            return View(db.WORKFHs.ToList());
+            return View(db.WORKFHs.Where(x=>x.ESTATUS == true).ToList());
         }
 
         // GET: Workflows/Details/5

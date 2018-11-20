@@ -264,7 +264,7 @@ $(document).ready(function () {
         }
     });
 
-    $('#delRow').click(function (e) {
+    $('#delRowB').click(function (e) {
         var t = $('#table_dis').DataTable();
         t.rows('.selected').remove().draw(false);
         //Validar si es categoría por porcentaje
@@ -310,7 +310,7 @@ $(document).ready(function () {
         }
     });
 
-    $('#addRow').on('click', function () {
+    $('#addRowB').on('click', function () {
 
         var relacionada = "";
 
@@ -514,7 +514,7 @@ $(document).ready(function () {
                     por_apoyo = p_apoyo;
                     if (por_apoyo > 0) {
                         //var addedRow = addRowMat(t, "", "", "", "", "", por_apoyo, "", "", "", "", "", relacionada, reversa, ddate, adate, "", "pm");
-                        var addedRow = addRowMat(t, "", "", "", "", "", por_apoyo, "", "", "", "", "", relacionada, "", reversa, ddate, adate, "", "pm", "");//Add MGC B20180705 2018.07.05 ne no eliminar después de pm //Add MGC B20180705 2018.07.05 relacionadaed editar el material en los nuevos renglones
+                        var addedRow = addRowMat(t, "", "", "", "", "", toShowPorc(por_apoyo), "", "", "", "", "", relacionada, "", reversa, ddate, adate, "", "pm", "");//Add MGC B20180705 2018.07.05 ne no eliminar después de pm //Add MGC B20180705 2018.07.05 relacionadaed editar el material en los nuevos renglones
                         //Si el porcentaje de apoyo es mayor a cero bloquear la columna de porcentaje de apoyo
                         //Eliminar los renglones que no contienen el mismo porcentaje
                         $(".pm").prop('disabled', true);
@@ -2109,6 +2109,7 @@ function copiarTableVista(update, borr, ne) { //Add MGC B20180705 2018.07.05 Cam
 
             var apoyo_est = toShow($(this).find("td:eq(" + 12 + ") input").val());
             var apoyo_real = toShow($(this).find("td:eq(" + 13 + ") input").val());
+            var original = $(this).find("td:eq(" + 14 + ") input").val();
 
             var vol = 0;
             var total = 0;
@@ -2139,6 +2140,9 @@ function copiarTableVista(update, borr, ne) { //Add MGC B20180705 2018.07.05 Cam
                 relacionada = "prelacionada";
                 //}
             }
+            if (relacionada !== "")
+                if (original === "")
+                    relacionada = "";
 
             var reversa = "";
             ////if ($("#txt_rev").length) {//MGC B20180611
@@ -2162,13 +2166,21 @@ function copiarTableVista(update, borr, ne) { //Add MGC B20180705 2018.07.05 Cam
                 //Se mostrara nada más el total
                 calculo = "sc";
             }
+
+            var net = "";
+            if (ne === "ne")
+                if (original === "X")
+                    net = ne;
+                else
+                    net = "";
+
             var addedRow = "";
             //Si la distribución es por material
             if (dis == "M") {
                 //addedRow = addRowMat(t, matkl_id, matnr, matkl, matkl, costo_unitario, porc_apoyo, monto_apoyo, "", precio_sug, vol, total, relacionada, reversa, $.trim(ddate[0]), $.trim(adate[0]),
                 //    calculo, pm);
                 addedRow = addRowMat(t, matkl_id, matnr, matkl, matkl, costo_unitario,
-                    porc_apoyo, monto_apoyo, "", precio_sug, vol, total, relacionada, "", reversa, $.trim(ddate[0]), $.trim(adate[0]), calculo, pm, ne);//Add MGC B20180705 2018.07.05 ne //Add MGC B20180705 2018.07.05 relacionadaed editar el material en los nuevos renglones
+                    porc_apoyo, monto_apoyo, "", precio_sug, vol, total, relacionada, "", reversa, $.trim(ddate[0]), $.trim(adate[0]), calculo, pm, net);//Add MGC B20180705 2018.07.05 ne //Add MGC B20180705 2018.07.05 relacionadaed editar el material en los nuevos renglones
 
 
 
@@ -2536,7 +2548,7 @@ function copiarTableControl(borrador) { //B20180625 MGC 2018.07.03
 
                     $("table#table_dish tbody").append(data);
                     if (borrador != "X") { //B20180625 MGC 2018.07.03
-                        $('#delRow').click();
+                        $('#delRowB').click();
                     }
                 }
 

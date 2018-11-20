@@ -787,8 +787,15 @@
                                 <td>@(item.ESTATUS_STRING)</td>
                                 <td>@(item.documento.CONCEPTO)</td>
                                 <td>@(item.documento.NOTAS)</td>
-                                <td>@(item.documento.FECHAI_VIG.Value.ToShortDateString())</td>
-                                <td>@(item.documento.FECHAF_VIG.Value.ToShortDateString())</td>
+                                @try
+                                {
+                                    <td>@(item.documento.FECHAI_VIG.Value.ToShortDateString())</td>}
+                                catch { }
+
+                                @try
+                                {
+                                    <td>@(item.documento.FECHAF_VIG.Value.ToShortDateString())</td>}
+                                catch { }
                                 <td></td>
                                 <td></td>
                                 <td>
@@ -1093,18 +1100,18 @@
 
 <tr>
     <td class="details-control" style="cursor:pointer"><i class='material-icons'>@item.BUTTON</i></td>
-    @if (item.NUM_DOC_TEXT == "Edit")
-    {
-        <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id_d = item.NUM_DOC })'" style="cursor:pointer">
-            @item.NUM_DOC
-        </td>
-    }
-    else
-    {
-        <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC, pais = item.PAIS_ID })'" style="cursor:pointer">
-            @item.NUM_DOC
-        </td>
-    }
+    @*@if (item.NUM_DOC_TEXT == "Edit")
+        {
+            <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id_d = item.NUM_DOC })'" style="cursor:pointer">
+                @item.NUM_DOC
+            </td>
+        }
+        else
+        {*@
+    <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC, pais = item.PAIS_ID })'" style="cursor:pointer">
+        @item.NUM_DOC
+    </td>
+    @*}*@
     <td>@item.SOCIEDAD_ID</td>
     <td>@item.PAIS_ID</td>
     <td>@item.FECHAD</td>

@@ -30,10 +30,10 @@
 function cuentas() {
     var bool = false
     clearing = [];
-    var bukrs = $("#sociedad_id").val(),
+    var bukrs = ($("#sociedad_id").val() ? $("#sociedad_id").val():$("#D_SOCIEDAD_ID").val()),
         land = $("#pais_id").val(),
         gall = $("#tall_id").val(),
-        ejercicio = $("#ejercicio").val();
+        ejercicio = ($("#ejercicio").val() ? $("#ejercicio").val():$("#D_EJERCICIO").val());
     $.ajax({
         type: "POST",
         url: root+'Listas/clearing',
@@ -150,7 +150,7 @@ function cierre() {
     });
     return bool;
 }
-function asignarSolicitud(num, num2) {
+function asignarSolicitud(num, num2,edit) {
     num = toNum(num);
     num2 = toNum(num2);
     var soc = $("#sociedad_id").val();
@@ -172,7 +172,7 @@ function asignarSolicitud(num, num2) {
             type: "POST",
             url: 'getSolicitud',
             dataType: "json",
-            data: { num: num, monto: num2, tsol_id: tsol, sociedad_id: soc, esCategoriaUnica: esCategoriaUnica },
+            data: { num: num, monto: num2, tsol_id: tsol, sociedad_id: soc, esCategoriaUnica: esCategoriaUnica, edit: edit },
 
             success: function (data) {
 
@@ -182,9 +182,8 @@ function asignarSolicitud(num, num2) {
                         $('#s_montob').text(num2);
                         $('#s_montop').text("-");
                         $('#s_montoa').text("-");
-                        $('#s_rema').text(num2);
-                        $('#s_rema').text("-");//RSG 09.07.2018
-                        if (data.S_IMPA!=null){
+                        $('#s_rema').text("-");
+                        if (data.S_IMPA != null && data.S_IMPA != "-"){
                             $('#s_impa').text(toShow(data.S_IMPA));
                         } else {
                             $('#s_impa').text("-");
@@ -193,6 +192,20 @@ function asignarSolicitud(num, num2) {
                         $('#s_impc').text("-");
                         $('#s_ret').text("-");
                         $('#s_total').text(num2);
+                    } else if (edit) {
+                        $('#s_montob').text(data.S_MONTOB);
+                        $('#s_montop').text(data.S_MONTOP);
+                        $('#s_montoa').text(data.S_MONTOA);
+                        if (data.S_REMA.indexOf("(")>-1){
+                            document.getElementById("a4").classList.add("red");
+                            document.getElementById("a4").classList.add("white-text");
+                        }
+                        $('#s_rema').text(data.S_REMA);
+                        $('#s_impa').text(data.S_IMPA);
+                        $('#s_impb').text("-");
+                        $('#s_impc').text("-");
+                        $('#s_ret').text("-");
+                        $('#s_total').text(data.S_TOTAL);
                     }
                     else {
                         $('#s_montob').text(toShow(data.S_MONTOB));

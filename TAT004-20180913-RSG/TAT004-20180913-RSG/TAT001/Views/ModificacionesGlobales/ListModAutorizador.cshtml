@@ -1,0 +1,27 @@
+﻿@model TAT001.Models.ModificacionesGlobalesViewModel
+<table class="table mdl-data-table striped" id="tableModAutorizador" style="width:100%; overflow-x: scroll;">
+    <thead>
+        <tr class="text-left">
+            <th id="lbl_num_doc">Número Solicitud</th>
+            <th id="lbl_autorizador">Autorizador</th>
+            <th id="lbl_nuevo_autorizador">Nuevo Autorizador</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.solicitudPorAprobar)
+        {
+            <tr>
+                <td>
+                    @item.NUM_DOC
+                </td>
+                <td>
+                    @item.USUARIOA_ID - @item.USUARIOA_NOMBRE
+                </td>
+                <td>
+                   @Html.EditorFor(model => item.USUARIOA_ID_NUEVO, new { htmlAttributes = new { @maxlength = 18 } })                  
+                </td>
+                </tr>
+        }
+</tbody>
+</table>

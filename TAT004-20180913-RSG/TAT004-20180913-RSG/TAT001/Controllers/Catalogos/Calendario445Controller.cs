@@ -6,11 +6,13 @@ using System.Linq;
 using System.Web.Mvc;
 using TAT001.Common;
 using TAT001.Entities;
+using TAT001.Filters;
 using TAT001.Models;
 
 namespace TAT001.Controllers.Catalogos
 {
     [Authorize]
+    [LoginActive]
     public class Calendario445Controller : Controller
     {
         readonly TAT001Entities db = new TAT001Entities();
@@ -143,6 +145,7 @@ namespace TAT001.Controllers.Catalogos
             CargarSelectList(ref modelView, new string[] {
                 CMB_SOCIEDADES +","+ modelView.calendario445.SOCIEDAD_ID,
                 CMB_PERIODOS + "," + modelView.calendario445.PERIODO,
+                CMB_EJERCICIO + "," + modelView.calendario445.EJERCICIO,
                 CMB_TIPOSSOLICITUD + "," + modelView.calendario445.TSOL_ID});
 
             return View(modelView);
@@ -275,7 +278,7 @@ namespace TAT001.Controllers.Catalogos
         public void ObtenerListado(ref Calendario445ViewModel viewModel, string colOrden = "", string ordenActual = "", int? numRegistros = 10, int? pagina = 1, string buscar = "")
         {
             int pageIndex = pagina.Value;
-            List<CALENDARIO_AC> calendarios445 = db.CALENDARIO_AC.ToList();
+            List<CALENDARIO_AC> calendarios445 = db.CALENDARIO_AC.Where(x => x.ACTIVO == true).ToList();
 
             viewModel.ordenActual = colOrden;
             viewModel.numRegistros = numRegistros.Value;
@@ -283,7 +286,7 @@ namespace TAT001.Controllers.Catalogos
 
             if (!String.IsNullOrEmpty(buscar))
             {
-                calendarios445 = calendarios445.Where(x =>
+                calendarios445 = calendarios445.Where(x => 
                 String.Concat(x.SOCIEDAD_ID, x.PERIODO.ToString(), x.TSOL_ID,
                 x.PRE_FROMF.ToString("dd/MM/yyyy"), x.PRE_FROMH, x.PRE_TOF.ToString("dd/MM/yyyy"), x.PRE_TOH,
                 x.CIE_FROMF.ToString("dd/MM/yyyy"), x.CIE_FROMH, x.CIE_TOF.ToString("dd/MM/yyyy"), x.CIE_TOH)
