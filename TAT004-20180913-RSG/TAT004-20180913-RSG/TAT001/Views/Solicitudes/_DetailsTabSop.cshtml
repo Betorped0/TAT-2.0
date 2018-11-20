@@ -42,36 +42,31 @@
                 </div>
             </div>
         </div>
-        @if (ViewBag.acciones != null)
+        @if (ViewBag.acciones != null && Model.D.ESTATUS_C==null)
         {
             if (ViewBag.accion == "S")
             {
                 <div class="col s12 m12 l6">
                     <div class="card-panel">
                         <div class="row">
-                            <h5>Carta</h5>@*FALTA TEXTO DE LA CARTA*@
+                            <h5 id="headCarta">Carta</h5>
                         </div>
                         <div class="row">
                             @using (Html.BeginForm("Details", "Solicitudes", FormMethod.Post, new { enctype = "multipart/form-data" }))
                             {
                                 @Html.AntiForgeryToken()
                                 @Html.HiddenFor(model => model.D.NUM_DOC)
-                                @*<label>Carta</label><label class"lbl_nec">*</label>*@
-                                <label name="labels_soporte2">Acuerdo comercial</label><label class"lbl_nec"></label>
+                                <label name="labels_soporte2" id="labels_soporte2">Acuerdo comercial</label><label class"lbl_nec"></label>
                                             <input type="text" value="Carta" name="labels_soporte" hidden />
                                             <div class="file-field input-field">
                                                 <div class="btn-small  " style="float:left;">
                                                     <span>Examinar</span>
-                                                    @*<input class="file_soporte nec" name="files_soporte" id="file_carta" type="file">*@
                                                     <input class="file_soporte" name="files_soporte" id="file_carta" type="file">
                                                 </div>
                                                 <div class="file-path-wrapper">
                                                     <input class="file-path validate" type="text">
                                                 </div>
                                             </div>
-                                            @*<div class="col s12 right-align">
-                                                <input type="submit" value="Enviar" class="btn-small  " />
-                                                </div>*@
                                             <div class="col s12 right-align">
                                                 <input id="Enviar" type="button" value="Enviar" class="btn-small btnEnviar" />
                                                 <input style="display:none" id="btn_guardar" type="submit" value="Guardar" class="btn btn-default" />
@@ -113,9 +108,6 @@
                                                                 <th>Vigencia de</th>
                                                                 <th>Vigencia al </th>
                                                                 <th>Material</th>
-                                                                @*
-                                                                    <th>CANTIDAD</th>
-                                                                    <th>Monto</th>*@
                                                                 <th>Porc Apoyo</th>
                                                                 <th>Monto Apoyo</th>
                                                                 <th>Precio Sugerido</th>

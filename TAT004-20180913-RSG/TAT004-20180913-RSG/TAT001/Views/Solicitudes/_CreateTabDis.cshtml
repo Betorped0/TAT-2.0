@@ -40,7 +40,7 @@
                         </div>
                     }
                     <input type="text" id="select_negi" name="select_negi" value="@ViewBag.SEL_NEG" disabled="disabled" hidden />
-                    @if (Model.DOCUMENTOPs != null & Model.DOCUMENTOPs.Count>0)
+                    @if (Model.DOCUMENTOPs != null & Model.DOCUMENTOPs.Count > 0)
                     {
                         if (Model.DOCUMENTOPs.FirstOrDefault().MATNR == null | Model.DOCUMENTOPs.FirstOrDefault().MATNR == "")
                         {
@@ -88,12 +88,15 @@
                         </select>
                         <label id="lbl_tipodis">Distribución</label>@*B20180801 MGC Textos*@
                     </div>
+                    @if (ViewBag.relacionadan == "")
+                    {
                     <div id="div_categoria" class="form-group col s6 div_categoria" style="display:none">
                         @Html.LabelFor(model => model.TSOL_ID, "Categoría", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_tipodis2" })@*B20180801 MGC Textos*@
                         <div class="col-md-10">
                             @Html.DropDownList("CATEGORIA_ID", null, htmlAttributes: new { @id = "select_categoria", @class = "form-control" })
                         </div>
                     </div>
+                    }
                 </div>
             </div>
         </div>
@@ -172,11 +175,17 @@
                     @*//Add MGC B20180705 2018.07.05 Agregar rows a la tabla*@
                     @if (ViewBag.addrowt == "X")
                     {
-                        <input type="text" id="txt_addrowt" name="txt_addrowt" value="@ViewBag.addrowt" disabled="disabled" hidden /> @*//Add MGC B20180705 2018.07.05*@
-                        <div id="div_btns_row" style="display:none">
-                            <a class="btn" id="addRowB"><i class="material-icons left">add</i><span id="addRow">Registros</span></a>  @*B20180801 MGC Textos*@
-                            <a class="btn" id="delRowB"><i class="material-icons left">clear</i><span id="delRow">Registro</span></a>  @*B20180801 MGC Textos*@
-                        </div>
+                        if (Model.DOCUMENTOPs != null & Model.DOCUMENTOPs.Count > 0)
+                        {
+                            if (!(Model.DOCUMENTOPs.FirstOrDefault().MATNR == null | Model.DOCUMENTOPs.FirstOrDefault().MATNR == ""))
+                            {
+                                <input type="text" id="txt_addrowt" name="txt_addrowt" value="@ViewBag.addrowt" disabled="disabled" hidden /> @*//Add MGC B20180705 2018.07.05*@
+                                <div id="div_btns_row" style="display:none">
+                                    <a class="btn" id="addRowB"><i class="material-icons left">add</i><span id="addRow">Registros</span></a>  @*B20180801 MGC Textos*@
+                                    <a class="btn" id="delRowB"><i class="material-icons left">clear</i><span id="delRow">Registro</span></a>  @*B20180801 MGC Textos*@
+                                </div>
+                            }
+                        }
                     } @*//Add MGC B20180705 2018.07.05 Agregar rows a la tabla*@
                     <div id="div_picker"></div>
                     @*B20180801 MGC Textos dinamicos para la tabla.........................................*@

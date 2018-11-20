@@ -1022,7 +1022,7 @@ $('#tab_test2').on('keydown.autocomplete', '.input_proveedor', function () {
     var col_index = $(this).parent().index();
     var col_index2 = col_index + 1;
     var num_docH1 = null;
-    var sociedadH1 = null;
+    var clienteH1 = null;
     var tablaH1 = $('#tab_test1').DataTable();
 
     var amarillo = $(tr.find("td:eq(" + col_index + ")").children());
@@ -1046,7 +1046,7 @@ $('#tab_test2').on('keydown.autocomplete', '.input_proveedor', function () {
         num_docH1 = $(rowH1).children().eq(1).children().val();
 
         if (num_docH1 === num_doc) {
-            sociedadH1 = $(rowH1).find('td:eq(4)').children().val();
+            clienteH1 = $(rowH1).find('td:eq(10)').children().val();
         }
     }
 
@@ -1056,7 +1056,7 @@ $('#tab_test2').on('keydown.autocomplete', '.input_proveedor', function () {
                 type: "POST",
                 url: 'proveedor',
                 dataType: "json",
-                data: { "Prefix": request.term, "Sociedad": sociedadH1 },
+                data: { "Prefix": request.term, "Cliente": clienteH1 },
                 success: function (data) {
                     response(auto.map(data, function (item) {
                         return { label: trimStart('0', item.ID) + '-' + item.NOMBRE, value: trimStart('0', item.ID) };
@@ -2294,7 +2294,7 @@ function validaApoyo(apoyo, colApoyo) {
 function validaLigada(num_doc) {
     var tablaH4 = $('#tab_test4').DataTable();
     var contador = 0, contienePalabra = -1;;
-    var ligadaPorcentaje = [], ligadaPorcentaje2 = [];;
+    var ligadaPorcentaje = [], ligadaPorcentaje2 = [];
     var porcentaje = "";
 
     for (var a = 0; a < tablaH4.rows().data().length; a++) {
@@ -2380,6 +2380,60 @@ function validaLigada(num_doc) {
             }
         }
     }
+
+    //checa si la columna ligada esta bien 
+    var arrLigada = [], arrPorcentaje = [];
+    var contadorLigada = 0, contadorPorcentaje = 0;
+
+    for (var a = 0; a < tablaH4.rows().data().length; a++) {
+        var rowH4 = tablaH4.row(a).node();
+        var num_docH4 = $(rowH4).children().eq(1).children().val();
+        var check = $(rowH4).children().eq(2).children().eq(0).children().eq(0).children().eq(0);
+
+        if ($(check).is(":checked") & num_docH4 == num_doc) {
+            arrLigada[contadorLigada] = num_docH4 + true;
+            arrPorcentaje[contadorLigada] = num_docH4 + true;
+            contadorLigada++;
+        }
+        else {
+            if (num_docH4 == num_doc) {
+                arrLigada[contadorLigada] = num_docH4 + false;
+                arrPorcentaje[contadorLigada] = num_docH4 + false;
+                contadorLigada++;
+            }
+        }
+    }
+
+    var igualesLigada = arrLigada.allValuesSame();
+    var igualesPorcentaje = arrPorcentaje.allValuesSame();
+
+    if (igualesLigada) {
+        var tablaH4 = $('#tab_test4').DataTable();
+
+        for (var a = 0; a < tablaH4.rows().data().length; a++) {
+            var rowH4 = tablaH4.row(a).node();
+            var num_docH4 = $(rowH4).children().eq(1).children().val();
+            var check = $(rowH4).children().eq(2).children().eq(0).children().eq(0).children().eq(0);
+
+            if (num_docH4 == num_doc) {
+                $(rowH4).children().eq(2).children().removeClass("red white-text rojo");
+            }
+        }
+    }
+    else {
+        var tablaH4 = $('#tab_test4').DataTable();
+
+        for (var a = 0; a < tablaH4.rows().data().length; a++) {
+            var rowH4 = tablaH4.row(a).node();
+            var num_docH4 = $(rowH4).children().eq(1).children().val();
+            var check = $(rowH4).children().eq(2).children().eq(0).children().eq(0).children().eq(0);
+
+            if (num_docH4 == num_doc) {
+                $(rowH4).children().eq(2).children().addClass("red white-text rojo");
+            }
+        }
+    }
+
     clearErrors();
 }
 
@@ -3592,7 +3646,13 @@ function cloneTables() {
         $('#tabclon4b').append("<tr id='tr4" + dd + "'></tr>");
         $(rowH4c).children().each(function (td4) {
             if (td4 !== 0) {
-                $("#tr4" + dd).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
+                //$("#tr4" + dd).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
+                if (td4 == 9) {
+                    $("#tr4" + dd).append("<td>" + $(this).find('span:first').text().replace('%', '') + "</td>");
+                }
+                else {
+                    $("#tr4" + dd).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
+                }
             }
         });
     }

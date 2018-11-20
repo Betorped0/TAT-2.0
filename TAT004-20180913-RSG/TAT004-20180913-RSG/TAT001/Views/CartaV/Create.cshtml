@@ -677,37 +677,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                @*<div class="col l6 m8 sl2">
-                                    <div class="col l12 m12 s12">
-                                        <div class="col l1 s2">
-                                            <label>
-                                                <input type="checkbox" name="compromisok_x" value="true" id="compromisok_x" @Html.Raw((Model.compromisoK_x) ? "checked=\"checked\"" : "") />
-                                                <span style="height:0"></span>
-                                            </label>
-                                        </div>
-                                        <div class="input-field col l10 m10" style="margin-bottom:0;">
-                                            @Html.TextAreaFor(model => model.compromisoK, new { @class = "materialize-textarea" })
-                                            @Html.LabelFor(model => model.compromisoK, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_comproK" })
-                                        </div>
-                                    </div>
-                                </div>*@
                             </div>
                         </div>
                         <div class="col l12 m6">
                             <div class="row">
                                 <div class="col l6 m8 sl2">
-                                    @*<div class="col l12 m12 s12">
-                                        <div class="col l1 s2">
-                                            <label>
-                                                <input type="checkbox" name="compromisoC_x" value="true" id="compromisoC_x" @Html.Raw((Model.compromisoC_x) ? "checked=\"checked\"" : "") />
-                                                <span style="height:0"></span>
-                                            </label>
-                                        </div>
-                                        <div class="input-field col l10 m10" style="margin-bottom:0;">
-                                            @Html.TextAreaFor(model => model.compromisoC, new { @class = "materialize-textarea" })
-                                            @Html.LabelFor(model => model.compromisoC, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_comproC" })
-                                        </div>
-                                    </div>*@
                                 </div>
                             </div>
                         </div>
@@ -749,8 +723,5 @@
                     <div class="col l2 yellow" style="height:10px;padding:0;"></div>
                 </div>
             </div>
-        </div>
-        <div>
-            @Html.ActionLink("Back to List", "Index")
         </div>
     }
