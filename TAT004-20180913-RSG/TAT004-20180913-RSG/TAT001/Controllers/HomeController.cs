@@ -1217,8 +1217,12 @@ namespace TAT001.Controllers
                     worksheet.Cell("P" + i).Value = new[] { new { BANNER = lst[i - 2].ESTATUS_STRING }, };
                     worksheet.Cell("Q" + i).Value = new[] { new { BANNER = lst[i - 2].documento.CONCEPTO }, };
                     worksheet.Cell("R" + i).Value = new[] { new { BANNER = lst[i - 2].documento.NOTAS }, };
-                    worksheet.Cell("S" + i).Value = new[] { new { BANNER = lst[i - 2].documento.FECHAI_VIG.Value.ToShortDateString() }, };
-                    worksheet.Cell("T" + i).Value = new[] { new { BANNER = lst[i - 2].documento.FECHAF_VIG.Value.ToShortDateString() }, };
+                    try
+                    {
+                        worksheet.Cell("S" + i).Value = new[] { new { BANNER = lst[i - 2].documento.FECHAI_VIG.Value.ToShortDateString() }, };
+                        worksheet.Cell("T" + i).Value = new[] { new { BANNER = lst[i - 2].documento.FECHAF_VIG.Value.ToShortDateString() }, };
+                    }
+                    catch { }
                     worksheet.Cell("U" + i).Value = new[] { new { BANNER = "" }, };
                     worksheet.Cell("V" + i).Value = new[] { new { BANNER = "" }, };
                     try
