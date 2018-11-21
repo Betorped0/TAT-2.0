@@ -2038,46 +2038,69 @@ namespace TAT001.Controllers
                                             docP.APOYO_EST = 0;
                                             docP.PORC_APOYO = 0;
                                         }
-                                        //Categoría por porcentaje
-                                        for (int k = 0; k < docml.Count; k++)
+                                        foreach (DOCUMENTOP dep in d.DOCUMENTOPs.Where(x => x.POS == docpl[j].POS))
                                         {
-                                            try
+                                            foreach (DOCUMENTOM dM in dep.DOCUMENTOMs)
                                             {
                                                 DOCUMENTOM docM = new DOCUMENTOM();
-                                                docM = docml[k];
-                                                docM.POS = k + 1;
+                                                docM.POS = dM.POS;
 
-                                                if (d.LIGADA == true & d != null)
-                                                {
+                                                DOCUMENTOM dm = dep.DOCUMENTOMs.Where(x => x.POS == docM.POS).FirstOrDefault();
+                                                //docM.APOYO_EST = ;
+                                                docM.APOYO_REAL = dm.APOYO_EST;
+                                                docM.MATNR = dm.MATNR;
+                                                //dmm.NUM_DOC = dm.NUM_DOC;
+                                                docM.PORC_APOYO = dm.PORC_APOYO;
+                                                docM.POS_ID = dm.POS_ID;
+                                                docM.VALORH = dm.VALORH;
+                                                docM.VIGENCIA_A = dm.VIGENCIA_A;
+                                                docM.VIGENCIA_DE = dm.VIGENCIA_DE;
 
-                                                    foreach (DOCUMENTOP dep in d.DOCUMENTOPs.Where(x => x.POS == docM.POS_ID))
-                                                    {
-                                                        DOCUMENTOM dm = dep.DOCUMENTOMs.Where(x => x.POS == docM.POS).FirstOrDefault();
-                                                        //docM.APOYO_EST = ;
-                                                        docM.APOYO_REAL = dm.APOYO_EST;
-                                                        docM.MATNR = dm.MATNR;
-                                                        //dmm.NUM_DOC = dm.NUM_DOC;
-                                                        docM.PORC_APOYO = dm.PORC_APOYO;
-                                                        docM.POS_ID = dm.POS_ID;
-                                                        docM.VALORH = dm.VALORH;
-                                                        docM.VIGENCIA_A = dm.VIGENCIA_A;
-                                                        docM.VIGENCIA_DE = dm.VIGENCIA_DE;
-
-
-                                                        //docP.APOYO_REAL += docM.APOYO_REAL;
-                                                        //docP.APOYO_EST += docM.APOYO_EST;
-                                                        //docP.PORC_APOYO += (decimal)docM.PORC_APOYO;
-                                                    }
-                                                }
-
-                                                db.DOCUMENTOMs.Add(docM);
-                                                db.SaveChanges();//RSG
-                                            }
-                                            catch (Exception e)
-                                            {
-
+                                                docP.DOCUMENTOMs.Add(docM);
                                             }
                                         }
+
+                                        db.SaveChanges();//RSG
+                                        //////Categoría por porcentaje
+                                        ////for (int k = 0; k < docml.Count; k++)
+                                        ////{
+                                        ////    try
+                                        ////    {
+                                        ////        DOCUMENTOM docM = new DOCUMENTOM();
+                                        ////        docM = docml[k];
+                                        ////        docM.POS = k + 1;
+
+                                        ////        if (d.LIGADA == true & d != null)
+                                        ////        {
+
+                                        ////            foreach (DOCUMENTOP dep in d.DOCUMENTOPs.Where(x => x.POS == docM.POS_ID))
+                                        ////            {
+                                        ////                DOCUMENTOM dm = dep.DOCUMENTOMs.Where(x => x.POS == docM.POS).FirstOrDefault();
+                                        ////                //docM.APOYO_EST = ;
+                                        ////                docM.APOYO_REAL = dm.APOYO_EST;
+                                        ////                docM.MATNR = dm.MATNR;
+                                        ////                //dmm.NUM_DOC = dm.NUM_DOC;
+                                        ////                docM.PORC_APOYO = dm.PORC_APOYO;
+                                        ////                docM.POS_ID = dm.POS_ID;
+                                        ////                docM.VALORH = dm.VALORH;
+                                        ////                docM.VIGENCIA_A = dm.VIGENCIA_A;
+                                        ////                docM.VIGENCIA_DE = dm.VIGENCIA_DE;
+
+
+                                        ////                //docP.APOYO_REAL += docM.APOYO_REAL;
+                                        ////                //docP.APOYO_EST += docM.APOYO_EST;
+                                        ////                //docP.PORC_APOYO += (decimal)docM.PORC_APOYO;
+                                        ////            }
+                                        ////        }
+
+                                        ////        db.DOCUMENTOMs.Add(docM);
+                                        ////        db.SaveChanges();//RSG
+                                        ////    }
+                                        ////    catch (Exception e)
+                                        ////    {
+
+                                        ////    }
+                                        ////}
 
                                         if (d.LIGADA == true & d != null)
                                         {
@@ -6373,7 +6396,13 @@ namespace TAT001.Controllers
                 var cie = clil.Cast<CLIENTE>();
                 //    IEnumerable<CLIENTE> cie = clil as IEnumerable<CLIENTE>;
                 //Obtener el numero de periodos para obtener el historial
+                CONFDIST_CAT conf = getCatConf(soc_id);
                 int nummonths = 3;
+                if (conf != null)
+                {
+                    if (conf.PERIODOS != null)
+                        nummonths = (int)conf.PERIODOS;
+                }
                 int imonths = nummonths * -1;
                 //Obtener el rango de los periodos incluyendo el año
                 DateTime ff = DateTime.Today;
@@ -6565,7 +6594,8 @@ namespace TAT001.Controllers
                 var cie = clil.Cast<CLIENTE>();
                 //    IEnumerable<CLIENTE> cie = clil as IEnumerable<CLIENTE>;
                 //Obtener el numero de periodos para obtener el historial
-                int nummonths = 3;
+                int? mesesVenta = (db.CONFDIST_CAT.Any(x => x.SOCIEDAD_ID == soc_id) ? db.CONFDIST_CAT.First(x => x.SOCIEDAD_ID == soc_id).PERIODOS : null);
+                int nummonths = (mesesVenta != null ? mesesVenta.Value : DateTime.Now.Month);
                 int imonths = nummonths * -1;
                 //Obtener el rango de los periodos incluyendo el año
                 DateTime ff = DateTime.Today;

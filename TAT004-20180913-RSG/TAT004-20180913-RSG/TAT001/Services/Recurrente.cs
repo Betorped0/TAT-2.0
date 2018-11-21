@@ -27,7 +27,6 @@ namespace TAT001.Services
             string errorString = "";
             TAT001Entities db = new TAT001Entities();
 
-
             string p = "";
             List<TREVERSAT> ldocr = new List<TREVERSAT>();
             decimal rel = 0;
@@ -151,9 +150,9 @@ namespace TAT001.Services
 
             USUARIO u = db.USUARIOs.Find(d.USUARIOC_ID);//RSG 02/05/2018
             //Obtener el número de documento
-            Rangos ran = new Rangos();
-            decimal N_DOC = ran.getSolID(dOCUMENTO.TSOL_ID);
-            dOCUMENTO.NUM_DOC = N_DOC;
+            ////Rangos ran = new Rangos();
+            ////decimal N_DOC = ran.getSolID(dOCUMENTO.TSOL_ID);
+            ////dOCUMENTO.NUM_DOC = N_DOC;
 
 
             //Obtener SOCIEDAD_ID                     
@@ -242,51 +241,12 @@ namespace TAT001.Services
             }
             //ADD 04.11.2018---------------------------------------------
 
-            //Guardar el documento
-            db.DOCUMENTOes.Add(dOCUMENTO);
-            db.SaveChanges();
-
-            //Actualizar el rango
-            ran.updateRango(dOCUMENTO.TSOL_ID, dOCUMENTO.NUM_DOC);
-
-            //RSG 28.05.2018----------------------------------------------
-            string recurrente = "";
-            List<DOCUMENTOREC> ddrec = new List<DOCUMENTOREC>();
-            DOCUMENTOREC drecc = d.DOCUMENTORECs.Where(a => a.ESTATUS == "A").FirstOrDefault();
-            if (drecc == null)
-                return 0;
-            else
-            {
-                DateTime hoy = drecc.FECHAF.Value;
-                //var primer = new DateTime(hoy.Year, hoy.Month, 1);
-                //var ultimo = primer.AddMonths(1).AddDays(-1);
-                int restarMes = 0;
-                if (dOCpADRE.TIPO_RECURRENTE.Equals("2") | dOCpADRE.TIPO_RECURRENTE.Equals("3"))
-                {
-                    restarMes = 1;
-                }
-
-                Calendario445 cal = new Calendario445();
-                //var primer = cal.getPrimerDia(hoy.Year, hoy.Month - restarMes);
-                //var ultimo = cal.getUltimoDia(hoy.Year, hoy.Month - restarMes);
-                var primer = cal.getPrimerDia(hoy.Year, cal.getPeriodo(hoy) - restarMes);
-                var ultimo = cal.getUltimoDia(hoy.Year, cal.getPeriodo(hoy) - restarMes);
-
-                dOCUMENTO.FECHAI_VIG = primer;
-                dOCUMENTO.FECHAF_VIG = ultimo;
-                dOCUMENTO.MONTO_DOC_MD = drecc.MONTO_BASE;
-                dOCUMENTO.PORC_APOYO = drecc.PORC;
-                dOCUMENTO.FECHAD = DateTime.Now;
-                recurrente = "X";
-            }
-            drecc.DOC_REF = dOCUMENTO.NUM_DOC;
-            //RSG 28.05.2018----------------------------------------------
-
-            //RSG 28.05.2018----------------------------------------------
-            drecc.DOC_REF = dOCUMENTO.NUM_DOC;
-            drecc.ESTATUS = "P";
+            //Guardar el documento       
+            ////db.DOCUMENTOes.Add(dOCUMENTO);
             ////db.SaveChanges();
-            //RSG 28.05.2018----------------------------------------------
+
+            //////Actualizar el rango
+            ////ran.updateRango(dOCUMENTO.TSOL_ID, dOCUMENTO.NUM_DOC);
 
             List<CategoriaMaterial> listcatm = new List<CategoriaMaterial>();
             List<DOCUMENTOM_MOD> listmatm = new List<DOCUMENTOM_MOD>();
@@ -470,6 +430,7 @@ namespace TAT001.Services
                         //        dOCUMENTO.MONTO_DOC_MD += mats.VAL;
                         //}
                         dOCUMENTO.MONTO_DOC_MD = totalcats;
+                        bool sinO = false;
                         foreach (DOCUMENTORAN dran in dOCpADRE.DOCUMENTORECs.Where(x => x.POS == posicion).FirstOrDefault().DOCUMENTORANs)
                         {
                             if (dOCUMENTO.MONTO_DOC_MD > dran.OBJETIVOI)
@@ -603,6 +564,51 @@ namespace TAT001.Services
             }
             //RSG 26.10.2018------------------------------------------
 
+            Rangos ran = new Rangos();
+            decimal N_DOC = ran.getSolID(dOCUMENTO.TSOL_ID);
+            dOCUMENTO.NUM_DOC = N_DOC;
+            db.DOCUMENTOes.Add(dOCUMENTO);
+            ran.updateRango(dOCUMENTO.TSOL_ID, dOCUMENTO.NUM_DOC);
+            db.SaveChanges();
+
+            //RSG 28.05.2018----------------------------------------------
+            string recurrente = "";
+            List<DOCUMENTOREC> ddrec = new List<DOCUMENTOREC>();
+            DOCUMENTOREC drecc = d.DOCUMENTORECs.Where(a => a.ESTATUS == "A").FirstOrDefault();
+            if (drecc == null)
+                return 0;
+            else
+            {
+                DateTime hoy = drecc.FECHAF.Value;
+                //var primer = new DateTime(hoy.Year, hoy.Month, 1);
+                //var ultimo = primer.AddMonths(1).AddDays(-1);
+                int restarMes = 0;
+                if (dOCpADRE.TIPO_RECURRENTE.Equals("2") | dOCpADRE.TIPO_RECURRENTE.Equals("3"))
+                {
+                    restarMes = 1;
+                }
+
+                Calendario445 cal = new Calendario445();
+                //var primer = cal.getPrimerDia(hoy.Year, hoy.Month - restarMes);
+                //var ultimo = cal.getUltimoDia(hoy.Year, hoy.Month - restarMes);
+                var primer = cal.getPrimerDia(hoy.Year, cal.getPeriodo(hoy) - restarMes);
+                var ultimo = cal.getUltimoDia(hoy.Year, cal.getPeriodo(hoy) - restarMes);
+
+                dOCUMENTO.FECHAI_VIG = primer;
+                dOCUMENTO.FECHAF_VIG = ultimo;
+                drecc.MONTO_BASE = dOCUMENTO.MONTO_DOC_MD;
+                dOCUMENTO.PORC_APOYO = drecc.PORC;
+                dOCUMENTO.FECHAD = DateTime.Now;
+                recurrente = "X";
+            }
+            drecc.DOC_REF = dOCUMENTO.NUM_DOC;
+            //RSG 28.05.2018----------------------------------------------
+
+            //RSG 28.05.2018----------------------------------------------
+            drecc.DOC_REF = dOCUMENTO.NUM_DOC;
+            drecc.ESTATUS = "P";
+            db.Entry(drecc).State = EntityState.Modified;
+
             if (dOCpADRE.TIPO_RECURRENTE == "2" | dOCpADRE.TIPO_RECURRENTE == "3")
             {
                 DOCUMENTOL dl = new DOCUMENTOL();
@@ -616,89 +622,11 @@ namespace TAT001.Services
             }
 
             db.SaveChanges();//RSG
+            ////db.SaveChanges();
+            //RSG 28.05.2018----------------------------------------------
+
             decimal total = 0;
             //RSG 28.05.2018-----------------------------------------------------
-            ////foreach (DOCUMENTOP dp in dOCUMENTO.DOCUMENTOPs)
-            ////{
-            ////    dp.VIGENCIA_DE = dOCUMENTO.FECHAI_VIG;
-            ////    dp.VIGENCIA_AL = dOCUMENTO.FECHAF_VIG;
-            ////    if (dOCpADRE.TIPO_TECNICO == "P")
-            ////    {
-            ////        ////if (!dOCpADRE.TSOL.FACTURA)
-            ////        ////{
-            ////        ////    try
-            ////        ////    {
-            ////        ////        total += (decimal)dp.APOYO_EST;
-            ////        ////    }
-            ////        ////    catch { }
-            ////        ////}
-            ////        ////else
-            ////        ////{
-            ////        ////    try
-            ////        ////    {
-            ////        ////        total += (decimal)dp.APOYO_REAL;
-            ////        ////    }
-            ////        ////    catch { }
-            ////        ////}
-            ////        dp.MONTO = 0;
-            ////        dp.CANTIDAD = 0;
-            ////        dp.MONTO_APOYO = 0;
-            ////        dp.PORC_APOYO = 0;
-            ////        dp.PRECIO_SUG = 0;
-            ////        dp.VOLUMEN_EST = 0;
-            ////        dp.VOLUMEN_REAL = 0;
-            ////        try
-            ////        {
-            ////            decimal val = (decimal)(from P in db.PRESUPSAPPs
-            ////                                    where P.VKORG == dOCpADRE.VKORG
-            ////                                    & P.VTWEG == dOCpADRE.VTWEG
-            ////                                    & P.SPART == dOCpADRE.SPART
-            ////                                    & P.KUNNR == dOCpADRE.PAYER_ID
-            ////                                    & P.MATNR == dp.MATNR
-            ////                                    & P.PERIOD == DateTime.Now.Month
-            ////                                    select new { P.GRSLS }).Sum(a => a.GRSLS);
-            ////            total += val;
-            ////            dp.MONTO = val;
-            ////        }
-            ////        catch { }
-            ////    }
-
-            ////    ////db.Entry(dOCUMENTO).State = EntityState.Modified;
-            ////    ////db.SaveChanges();
-            ////}
-
-            ////if (dOCpADRE.TIPO_TECNICO == "P")
-            ////{
-            ////    foreach (DOCUMENTOP dp in dOCUMENTO.DOCUMENTOPs)
-            ////    {
-            ////        //total = 100%   200 = 100%
-            ////        //dp.MONTo = ?      50 = 25%
-            ////        decimal porcentaje = dp.MONTO / total * 100;
-            ////        decimal nuevo_total = (decimal)drecc.MONTO_BASE;
-
-            ////        if (!dOCpADRE.TSOL.FACTURA)
-            ////        {
-            ////            try
-            ////            {
-            ////                dp.APOYO_EST = nuevo_total * porcentaje / 100;
-            ////            }
-            ////            catch { }
-            ////        }
-            ////        else
-            ////        {
-            ////            try
-            ////            {
-            ////                dp.APOYO_REAL = nuevo_total * porcentaje / 100; ;
-            ////            }
-            ////            catch { }
-            ////            ////}
-            ////        }
-            ////        dp.MONTO = 0;
-
-            ////        ////db.Entry(dOCUMENTO).State = EntityState.Modified;
-            ////        ////db.SaveChanges();
-            ////    }
-            ////}
             //RSG 28.05.2018-----------------------------------------------------
 
             ProcesaFlujo pf = new ProcesaFlujo();

@@ -177,10 +177,11 @@ int idn = 0;
                                                     if (mat.MATNR != "")
                                                     {
                                                         var matnr = TAT001.Common.FnCommon.ObtenerMaterial(db, User.Identity.Name, mat.MATNR);
-                                                        <td>@matnr.MAKTX</td> 
+                                                        <td>@matnr.MAKTX</td>
                                                     }
                                                 }
                                             }
+                                            <td></td>
                                             <td></td>
                                             <td></td>
                                             <td></td>
@@ -193,7 +194,7 @@ int idn = 0;
                                             else
                                             {
                                                 <td class="precio">
-                                                    @Math.Round(mat.APOYO_REAL!=null?(decimal)mat.APOYO_REAL:0.0M, 2)
+                                                    @Math.Round(mat.APOYO_REAL != null ? (decimal)mat.APOYO_REAL : 0.0M, 2)
                                                 </td>
                                             }
                                         </tr>

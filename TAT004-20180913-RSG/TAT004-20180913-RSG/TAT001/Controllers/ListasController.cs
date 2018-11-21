@@ -32,23 +32,45 @@ namespace TAT001.Controllers
             {
                 comcodessplit = cocode.Split(',');
             }
-            
-            var c = (from cl in db.CLIENTEs
-                     join p in db.PAIS on cl.LAND equals p.LAND
-                        where cl.KUNNR.Contains(Prefix) && comcodessplit.Contains(p.SOCIEDAD_ID) && cl.ACTIVO && p.ACTIVO
-                        orderby cl.NAME1
-                        select new { cl.KUNNR, cl.NAME1 }).ToList();
-            if (c.Count == 0)
+
+            if (comcodessplit.Count() > 0)
             {
-                var c2 = (from cl in db.CLIENTEs
-                          join p in db.PAIS on cl.LAND equals p.LAND
-                          where cl.NAME1.Contains(Prefix) && comcodessplit.Contains(p.SOCIEDAD_ID) && cl.ACTIVO && p.ACTIVO
-                          orderby cl.NAME1
-                          select new { cl.KUNNR, cl.NAME1 }).ToList();
-                c.AddRange(c2);
+                var c = (from cl in db.CLIENTEs
+                         join p in db.PAIS on cl.LAND equals p.LAND
+                         where cl.KUNNR.Contains(Prefix) && comcodessplit.Contains(p.SOCIEDAD_ID) && cl.ACTIVO && p.ACTIVO
+                         orderby cl.NAME1
+                         select new { cl.KUNNR, cl.NAME1 }).ToList();
+                if (c.Count == 0)
+                {
+                    var c2 = (from cl in db.CLIENTEs
+                              join p in db.PAIS on cl.LAND equals p.LAND
+                              where cl.NAME1.Contains(Prefix) && comcodessplit.Contains(p.SOCIEDAD_ID) && cl.ACTIVO && p.ACTIVO
+                              orderby cl.NAME1
+                              select new { cl.KUNNR, cl.NAME1 }).ToList();
+                    c.AddRange(c2);
+                }
+                JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+                return cc;
             }
-            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
-            return cc;
+            else
+            {
+                var c = (from cl in db.CLIENTEs
+                         join p in db.PAIS on cl.LAND equals p.LAND
+                         where cl.KUNNR.Contains(Prefix) && cl.ACTIVO && p.ACTIVO
+                         orderby cl.NAME1
+                         select new { cl.KUNNR, cl.NAME1 }).ToList();
+                if (c.Count == 0)
+                {
+                    var c2 = (from cl in db.CLIENTEs
+                              join p in db.PAIS on cl.LAND equals p.LAND
+                              where cl.NAME1.Contains(Prefix) && cl.ACTIVO && p.ACTIVO
+                              orderby cl.NAME1
+                              select new { cl.KUNNR, cl.NAME1 }).ToList();
+                    c.AddRange(c2);
+                }
+                JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+                return cc;
+            }
         }
         [HttpGet]
         public JsonResult ReportesFiltroPaises(string cocodes)
