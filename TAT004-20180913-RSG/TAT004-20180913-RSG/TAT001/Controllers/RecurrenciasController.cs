@@ -3310,15 +3310,22 @@ namespace TAT001.Controllers
                     D.MONTO_DOC_MD = D.MONTO_DOC_MD * doc.PORC_APOYO / 100;
                     D.PORC_APOYO = doc.PORC_APOYO;
                 }
-                //doc.MONTO_DOC_MD = D.MONTO_DOC_MD;
+                doc.MONTO_DOC_MD = D.MONTO_DOC_MD;
                 doc.PORC_APOYO = D.PORC_APOYO;
-                //foreach (DOCUMENTOP dp in doc.DOCUMENTOPs)
-                //{
-                //    if (dp.APOYO_EST > 0)
-                //        dp.APOYO_EST = D.MONTO_DOC_MD * dp.PORC_APOYO / 100;
-                //    if (dp.APOYO_REAL > 0)
-                //        dp.APOYO_REAL = D.MONTO_DOC_MD * dp.PORC_APOYO / 100;
-                //}
+                foreach (DOCUMENTOP dp in doc.DOCUMENTOPs)
+                {
+                    if (dp.APOYO_EST > 0)
+                        dp.APOYO_EST = D.MONTO_DOC_MD * dp.PORC_APOYO / 100;
+                    if (dp.APOYO_REAL > 0)
+                        dp.APOYO_REAL = D.MONTO_DOC_MD * dp.PORC_APOYO / 100;
+                    foreach(DOCUMENTOM dm in dp.DOCUMENTOMs)
+                    {
+                        if (dOCpADRE.TSOL.PADRE)
+                            dm.APOYO_EST = dp.APOYO_EST * dm.PORC_APOYO / 100;
+                        else
+                            dm.APOYO_REAL = dp.APOYO_REAL * dm.PORC_APOYO / 100;
+                    }
+                }
 
 
                 db.Entry(doc).State = EntityState.Modified;
@@ -3508,6 +3515,38 @@ namespace TAT001.Controllers
                     bool ban = true;
                     if (ban)
                         r.creaRecurrente(drec.NUM_DOC, drec.DOCUMENTO.TSOL_ID, hoy, drec.POS);
+                }
+                catch
+                {
+
+                }
+            }
+            return RedirectToAction("Ejecutar");
+        }
+
+        [HttpPost]
+        public ActionResult EjecutarLigada(string fecha)
+        {
+            DateTime hoy = DateTime.Parse(fecha);
+            List <DOCUMENTOL> docs = db.DOCUMENTOLs.Where(a => a.FECHAF == hoy).ToList();
+            foreach (DOCUMENTOL drec in docs)
+            {
+                try
+                {
+                    ProcesaFlujo pf = new ProcesaFlujo();
+                    FLUJO conta = db.FLUJOes.Where(a => a.NUM_DOC.Equals(drec.NUM_DOC)).OrderByDescending(a => a.POS).FirstOrDefault();
+                    //conta.USUARIOA_ID = User.Identity.Name;
+                    conta.ESTATUS = "A";
+                    conta.FECHAM = DateTime.Now;
+                    pf.procesa(conta, "");
+
+                    conta = db.FLUJOes.Where(x => x.NUM_DOC == drec.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+                    DOCUMENTO doc = db.DOCUMENTOes.Find(drec.NUM_DOC);
+                    Estatus es = new Estatus();
+                    conta.STATUS = es.getEstatus(doc);
+                    drec.ESTATUS = true;
+                    db.Entry(conta).State = EntityState.Modified;
+                    db.SaveChanges();
                 }
                 catch
                 {

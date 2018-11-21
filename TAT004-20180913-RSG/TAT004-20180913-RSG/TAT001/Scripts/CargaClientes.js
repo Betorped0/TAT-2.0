@@ -1,18 +1,21 @@
 ﻿$(document).ready(function () {
+    formato();
+});
 
+function formato() {
     $('#table').DataTable({
-        "scrollY": "200",
-        "scrollX": "true",
-        "scrollCollapse": true,
         "order": [],
         "language": {
-            "url": root+"Scripts/lang/"+spras + ".json",
+            "url": root + "Scripts/lang/" + spras + ".json",
             "zerorecords": "no hay registros",
             "infoempty": "registros no disponibles"
         },
-        "paging": false,
+        "paging": "full_numbers",
         "info": false,
         "searching": false,
+        "scrollY": "200",
+        "scrollX": "true",
+        "scrollCollapse": true,
 
         "columns": [
             {
@@ -101,7 +104,7 @@
             },
         ]
     });
-});
+}
 
 $("#files").on('change', function() {
     var filenum = $('#files').get(0).files.length;
@@ -444,6 +447,8 @@ function addRowl(t, pos, br, cc, p, c, nc, n0, n1, n2, n3, n4, n5, n6, n7, v, b,
 }
 
 function Carga() {
+    var table = $('#table').DataTable();
+    table.destroy();
     habilitar();
     var datos = $('#tabla').serializeArray();
     var message = $('.input_mes').serialize();
@@ -454,7 +459,6 @@ function Carga() {
     var us6 = $('.input_ni6').serialize();
     var doc = sessionStorage.getItem("num");
     if (doc > 0 || cliente != null || cliente != "cli=") {
-        //Conn endsWith se valida que el final de la cadena sea mes= ya que con contains podrian pasar errores
         if (message == "" || message == null || message.endsWith('mes=')) {
             if (us1 != "" && us1 != "ni1=" && us1 != null && us6 != "" && us6 != "ni6=" && us6 != null) {
                 $.ajax({
@@ -486,8 +490,11 @@ function Carga() {
 }
 
 function Comprobar() {
+    $('#table').DataTable().destroy();
     habilitar();
     var datos = $('#tabla').serializeArray();
+    $('#table tbody').empty();
+    formato();
     creart('Comprobar', datos);
     //M.toast({ html: 'Registros Actualizados' });
     mostrarAlerta("info", "A", "Vista Actualizada");

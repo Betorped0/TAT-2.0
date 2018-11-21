@@ -112,7 +112,7 @@ namespace TAT001.Services
             dOCUMENTO.MONEDA_ID = id_bukrs.WAERS;
             dOCUMENTO.PERIODO = Convert.ToInt32(DateTime.Now.ToString("MM"));
             dOCUMENTO.EJERCICIO = Convert.ToString(DateTime.Now.Year);
-
+            dOCUMENTO.TIPO_RECURRENTE = dOCpADRE.TIPO_RECURRENTE;
             dOCUMENTO.FECHAD = theTime;
 
             //----------------------------RSG 18.05.2018
@@ -577,9 +577,9 @@ namespace TAT001.Services
 
             }
             //RSG 26.10.2018------------------------------------------
-            if(dOCpADRE.DOCUMENTOFs != null)
+            if (dOCpADRE.DOCUMENTOFs != null)
             {
-                foreach(DOCUMENTOF df in dOCpADRE.DOCUMENTOFs)
+                foreach (DOCUMENTOF df in dOCpADRE.DOCUMENTOFs)
                 {
                     DOCUMENTOF dnf = new DOCUMENTOF();
                     dnf.AUTORIZACION = df.AUTORIZACION;
@@ -608,8 +608,8 @@ namespace TAT001.Services
                 DOCUMENTOL dl = new DOCUMENTOL();
                 dl.ESTATUS = null;
                 dl.FECHAF = drecc.FECHAF.Value.AddDays(4);
-                if(dOCUMENTO.PORC_APOYO > 0)
-                dl.MONTO_VENTA = (dOCUMENTO.MONTO_DOC_MD / dOCUMENTO.PORC_APOYO) * 100;
+                if (dOCUMENTO.PORC_APOYO > 0)
+                    dl.MONTO_VENTA = (dOCUMENTO.MONTO_DOC_MD / dOCUMENTO.PORC_APOYO) * 100;
                 dl.NUM_DOC = dOCUMENTO.NUM_DOC;
                 dl.POS = 1;
                 dOCUMENTO.DOCUMENTOLs.Add(dl);
@@ -740,17 +740,20 @@ namespace TAT001.Services
                         //Email em = new Email();
                         //em.enviaMail(f.NUM_DOC, true);
                     }
-                    conta = db.FLUJOes.Where(a => a.NUM_DOC.Equals(f.NUM_DOC)).OrderByDescending(a => a.POS).FirstOrDefault();
-                    conta.USUARIOA_ID = user.ID;
-                    conta.ESTATUS = "A";
-                    conta.FECHAM = DateTime.Now;
-                    pf.procesa(conta, "");
-                    //RSG 28.05.2018 -----------------------------------
-                    conta = db.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
-                    doc = db.DOCUMENTOes.Find(f.NUM_DOC);
-                    conta.STATUS = es.getEstatus(doc);
-                    db.Entry(conta).State = EntityState.Modified;
-                    db.SaveChanges();
+                    if (dOCpADRE.TIPO_RECURRENTE == "1")
+                    {
+                        conta = db.FLUJOes.Where(a => a.NUM_DOC.Equals(f.NUM_DOC)).OrderByDescending(a => a.POS).FirstOrDefault();
+                        conta.USUARIOA_ID = user.ID;
+                        conta.ESTATUS = "A";
+                        conta.FECHAM = DateTime.Now;
+                        pf.procesa(conta, "");
+                        //RSG 28.05.2018 -----------------------------------
+                        conta = db.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+                        doc = db.DOCUMENTOes.Find(f.NUM_DOC);
+                        conta.STATUS = es.getEstatus(doc);
+                        db.Entry(conta).State = EntityState.Modified;
+                        db.SaveChanges();
+                    }
                 }
             }
             catch (Exception ee)
@@ -766,8 +769,8 @@ namespace TAT001.Services
             return 1;
         }
 
-        
-        
+
+
         public CLIENTE getCliente(string PAYER_ID)
         {
             CLIENTE payer = new CLIENTE();

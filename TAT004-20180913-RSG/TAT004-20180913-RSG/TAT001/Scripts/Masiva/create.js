@@ -3588,7 +3588,7 @@ function cloneTables() {
         $('#tabclon1bd').append("<tr id='trd" + aa + "'></tr>");
         $(rowH1c).children().each(function (td) {
             if (td !== 18 && td !== 19 && td !== 0) {
-                $("#trd" + aa).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
+                $("#trd" + aa).append("<td>" + $(this).find('input:first').val().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
             }
         });
     }
@@ -3608,7 +3608,7 @@ function cloneTables() {
         $('#tabclon2b').append("<tr id='tr2" + bb + "'></tr>");
         $(rowH2c).children().each(function (td2) {
             if (td2 !== 0) {
-                $("#tr2" + bb).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
+                $("#tr2" + bb).append("<td>" + $(this).find('input:first').val().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
             }
         });
     }
@@ -3627,7 +3627,7 @@ function cloneTables() {
         $('#tabclon3b').append("<tr id='tr3" + cc + "'></tr>");
         $(rowH3c).children().each(function (td3) {
             if (td3 !== 0) {
-                $("#tr3" + cc).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
+                $("#tr3" + cc).append("<td>" + $(this).find('input:first').val().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
             }
         });
     }
@@ -3648,10 +3648,10 @@ function cloneTables() {
             if (td4 !== 0) {
                 //$("#tr4" + dd).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
                 if (td4 == 9) {
-                    $("#tr4" + dd).append("<td>" + $(this).find('span:first').text().replace('%', '') + "</td>");
+                    $("#tr4" + dd).append("<td>" + $(this).find('input:first').val().replace('%', '') + "</td>");
                 }
                 else {
-                    $("#tr4" + dd).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
+                    $("#tr4" + dd).append("<td>" + $(this).find('input:first').val().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
                 }
             }
         });
@@ -3660,7 +3660,7 @@ function cloneTables() {
 
 var tablesToExcel = (function () {
     var uri = 'data:application/vnd.ms-excel;base64,'
-        , tmplWorkbookXML = '<?xml version="1.0"?><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">'
+        , tmplWorkbookXML = ' <xml version="1.0"><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">'
             + '<DocumentProperties xmlns="urn:schemas-microsoft-com:office:office"><Author>Axel Richter</Author><Created>{created}</Created></DocumentProperties>'
             + '<Styles>'
             + '<Style ss:ID="Currency"><NumberFormat ss:Format="Currency"></NumberFormat></Style>'
