@@ -36,14 +36,14 @@
                     <div class="form-group">
                         @Html.LabelFor(model => model.FECHAI, htmlAttributes: new { @class = "", id = "lbl_fechai" })
                         <div class="col-md-10">
-                            @Html.EditorFor(model => model.FECHAI, new { htmlAttributes = new { @class = "datepicker", required = true, @disabled = "disabled", @Value = Model.FECHAI.ToShortDateString() } })
+                            @Html.EditorFor(model => model.FECHAI, new { htmlAttributes = new { @class = "datepicker", required = true, @Value = Model.FECHAI.ToShortDateString() } })
                             @Html.ValidationMessageFor(model => model.FECHAI, "", new { @class = "text-danger" })
                         </div>
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(model => model.FECHAF, htmlAttributes: new { @class = "", id = "lbl_fechaf" })
                         <div class="col-md-10">
-                            @Html.EditorFor(model => model.FECHAF, new { htmlAttributes = new { @class = "datepicker", @disabled = "disabled", required = true, @Value = Model.FECHAF.ToShortDateString() } })
+                            @Html.EditorFor(model => model.FECHAF, new { htmlAttributes = new { @class = "datepicker", required = true, @Value = Model.FECHAF.ToShortDateString() } })
                             @Html.ValidationMessageFor(model => model.FECHAF, "", new { @class = "text-danger" })
                         </div>
                     </div>
@@ -60,9 +60,9 @@
     </div>
 }
 
-<div>
-    <a id="lbl_regresar" href="@Url.Action("Details",new { id=Model.USUARIO_ID})"></a>
-</div>
+    <div>
+        <a id="lbl_regresar" href="@Url.Action("Edit",new { id=Model.USUARIO_ID})"></a>
+    </div>
 <script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
 <script>
     $("input[type='hidden']").each(function (index, element) {

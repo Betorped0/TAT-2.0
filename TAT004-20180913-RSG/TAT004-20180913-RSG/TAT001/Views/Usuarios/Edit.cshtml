@@ -26,13 +26,13 @@
         @Html.HiddenFor(model => model.ID)
         @Html.HiddenFor(model => model.PASS)
         @*<div class="input-field col s6">
-                        @Html.PasswordFor(model => model.PASS, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.LabelFor(model => model.PASS, htmlAttributes: new { @class = "control-label col-md-2" })
-                        @Html.ValidationMessageFor(model => model.PASS, "", new { @class = "text-danger" })
-                    <div class="input-field col s6">
-                        <div style="height:54px;"></div>
-                    </div>
-            </div>*@
+                    @Html.PasswordFor(model => model.PASS, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.LabelFor(model => model.PASS, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.ValidationMessageFor(model => model.PASS, "", new { @class = "text-danger" })
+                <div class="input-field col s6">
+                    <div style="height:54px;"></div>
+                </div>
+        </div>*@
         <div class="col l6 s12">
             <div class="card-panel">
                 <div class="row">
@@ -82,16 +82,16 @@
                         @Html.ValidationMessageFor(model => model.PUESTO_ID, "", new { @class = "text-danger" })
                     </div>
                     @*<div class="input-field col s4">
-                            @Html.EditorFor(model => model.MANAGER, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.LabelFor(model => model.MANAGER, htmlAttributes: new { @class = "control-label col-md-2" })
-                            @Html.ValidationMessageFor(model => model.MANAGER, "", new { @class = "text-danger" })
-                        </div>
+                        @Html.EditorFor(model => model.MANAGER, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.LabelFor(model => model.MANAGER, htmlAttributes: new { @class = "control-label col-md-2" })
+                        @Html.ValidationMessageFor(model => model.MANAGER, "", new { @class = "text-danger" })
+                    </div>
 
-                        <div class="input-field col s4">
-                            @Html.EditorFor(model => model.BACKUP_ID, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.LabelFor(model => model.BACKUP_ID, htmlAttributes: new { @class = "control-label col-md-2" })
-                            @Html.ValidationMessageFor(model => model.BACKUP_ID, "", new { @class = "text-danger" })
-                        </div>*@
+                    <div class="input-field col s4">
+                        @Html.EditorFor(model => model.BACKUP_ID, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.LabelFor(model => model.BACKUP_ID, htmlAttributes: new { @class = "control-label col-md-2" })
+                        @Html.ValidationMessageFor(model => model.BACKUP_ID, "", new { @class = "text-danger" })
+                    </div>*@
                     @if (ViewBag.PUESTO_ID1 == null || ViewBag.PUESTO_ID1 == "")
                     {
                         <div class="input-field col s12">
@@ -132,67 +132,114 @@
             var options = [];
             var instance = M.FormSelect.init(elem, options);
         </script>
-        @*<div class="col l6 s12">
-                <div class="card-panel">
-                    <div class="row">
-                        <h5>Grupos</h5>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Clave</th>
-                                    <th>Solciedad</th>
-                                    <th>País</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.GAUTORIZACIONs)
+        <div class="col l6 s12">
+            <div class="card-panel">
+                @*<div class="row">
+                    <div class="col s12 l12 right-align">
+                        <a class="btn" id="btn_agregarbackup" href="@Url.Action("AddBackup", new { id = Model.ID})"></a>
+                    </div>
+                </div>*@
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="lbl_usrbackup">Usuario Backup</th>
+                            <th class="lbl_fechai">Fecha Inicial</th>
+                            <th class="lbl_fechaf">Fecha Final</th>
+                            <th class="lbl_activo">Activo</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var i in Model.DELEGARs.OrderByDescending(t => t.FECHAF))
+                        {
+                            <tr>
+                                <td>@i.USUARIOD_ID - @i.USUARIO1.NOMBRE @i.USUARIO1.APELLIDO_P </td>
+                                <td>@i.FECHAI.ToShortDateString()</td>
+                                <td>@i.FECHAF.ToShortDateString()</td>
+                                @if ((bool)i.ACTIVO == true)
                                 {
-                                    <tr>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.CLAVE)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.BUKRS)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.LAND)
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
+                                    <td style="align-items:center"><i class='material-icons green-text'>check</i></td>}
+                                else
+                                {
+                                    <td style="align-items:center;"><i class='material-icons red-text'>clear</i></td>}
+                                <td>
+                                    <a href="@Url.Action("EditBackup", new { id = i.USUARIO_ID, idd=i.USUARIOD_ID, fi=i.FECHAI, ff=i.FECHAF })">
+                                        <i class='material-icons green-text'>edit</i>
+                                    </a>&nbsp
+                                    @if (i.ACTIVO)
+                                    {
+                                        <a href="@Url.Action("DeleteBackup", new { id = i.USUARIO_ID, idd = i.USUARIOD_ID, fi = i.FECHAI, ff = i.FECHAF })">
+                                            <i class='material-icons red-text'>delete</i>
+                                        </a>}
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        @*<div class="col l6 s12">
+            <div class="card-panel">
+                <div class="row">
+                    <h5>Grupos</h5>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Clave</th>
+                                <th>Solciedad</th>
+                                <th>País</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.GAUTORIZACIONs)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.CLAVE)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.BUKRS)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.LAND)
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col l6 s12">
+            <div class="card-panel">
+                <div class="row">
+                    <h5>Roles</h5>
+                    <div class="col s12 right-align">
+                        <div class="row">
+                            <table class="table">
+                                <thead><tr><th>Rol</th></tr></thead>
+                                <tbody>
+                                    @foreach (var item in Model.MIEMBROS)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ROL.ROLTs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50)
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col s12 right-align">
+                        <a class="btn modal-trigger" href="#modal1">Agregar M</a>
+                        <a class="btn modal-trigger" href="@Url.Action("AgregarRol", new { id = Model.ID })">Agregar</a>
                     </div>
                 </div>
             </div>
-            <div class="col l6 s12">
-                <div class="card-panel">
-                    <div class="row">
-                        <h5>Roles</h5>
-                        <div class="col s12 right-align">
-                            <div class="row">
-                                <table class="table">
-                                    <thead><tr><th>Rol</th></tr></thead>
-                                    <tbody>
-                                        @foreach (var item in Model.MIEMBROS)
-                                        {
-                                            <tr>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.ROL.ROLTs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50)
-                                                </td>
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="col s12 right-align">
-                            <a class="btn modal-trigger" href="#modal1">Agregar M</a>
-                            <a class="btn modal-trigger" href="@Url.Action("AgregarRol", new { id = Model.ID })">Agregar</a>
-                        </div>
-                    </div>
-                </div>
-            </div>*@
+        </div>*@
     </div>
+
     //OCG 11/10/18 Validacion de email
 
     <script>

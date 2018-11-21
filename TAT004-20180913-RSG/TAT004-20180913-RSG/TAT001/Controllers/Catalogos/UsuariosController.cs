@@ -765,7 +765,7 @@ namespace TAT001.Controllers.Catalogos
                         us.PASS = c.Encrypt(pass.npass1);
                         db.Entry(us).State = EntityState.Modified;
                         db.SaveChanges();
-                        return RedirectToAction("Index");
+                        return RedirectToAction("Details", new { id = us.ID });
                     }
                 }
                 else
@@ -3657,6 +3657,7 @@ namespace TAT001.Controllers.Catalogos
             if (ModelState.IsValid)
             {
                 db.Entry(delegar).State = EntityState.Modified;
+                db.Entry(delegar).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Details", new { id = delegar.USUARIO_ID });
             }
@@ -3689,21 +3690,6 @@ namespace TAT001.Controllers.Catalogos
             return RedirectToAction("Details", new { id=id});
 
         }
-
-        //public ActionResult ComprobarLog()
-        //{
-        //    string uz = User.Identity.Name;
-        //    var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
-        //    if (!usuValidateLogin.validaUsuario(userz.ID))
-        //    {
-        //        FormsAuthentication.SignOut();
-        //        return RedirectToAction("Index", "Home");
-        //    }
-        //    else
-        //    {
-        //        return null;
-        //    }
-        //}
     }
 }
 
