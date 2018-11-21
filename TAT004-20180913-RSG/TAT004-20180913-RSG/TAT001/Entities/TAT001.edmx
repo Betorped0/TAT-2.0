@@ -996,9 +996,9 @@
           <Property Name="NUM_DOC" Type="numeric" Precision="10" Scale="0" Nullable="false" />
           <Property Name="POS" Type="int" Nullable="false" />
           <Property Name="FECHAF" Type="date" />
-          <Property Name="MONTO_VENTA" Type="decimal" Precision="13" Scale="5" />
+          <Property Name="MONTO_VENTA" Type="decimal" Precision="18" Scale="5" />
           <Property Name="ESTATUS" Type="bit" />
-          <Property Name="BACKORDER" Type="decimal" Precision="13" Scale="5" />
+          <Property Name="BACKORDER" Type="decimal" Precision="18" Scale="5" />
         </EntityType>
         <EntityType Name="DOCUMENTOM">
           <Key>
@@ -1068,8 +1068,8 @@
           <Property Name="NUM_DOC" Type="numeric" Precision="10" Scale="0" Nullable="false" />
           <Property Name="POS" Type="int" Nullable="false" />
           <Property Name="LIN" Type="int" Nullable="false" />
-          <Property Name="OBJETIVOI" Type="decimal" Precision="13" Scale="5" />
-          <Property Name="PORCENTAJE" Type="decimal" Precision="13" Scale="5" />
+          <Property Name="OBJETIVOI" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="PORCENTAJE" Type="decimal" Precision="18" Scale="5" />
         </EntityType>
         <EntityType Name="DOCUMENTOREC">
           <Key>
@@ -7305,9 +7305,9 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Property Name="NUM_DOC" Type="Decimal" Precision="10" Scale="0" Nullable="false" />
           <Property Name="POS" Type="Int32" Nullable="false" />
           <Property Name="FECHAF" Type="DateTime" Precision="0" />
-          <Property Name="MONTO_VENTA" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MONTO_VENTA" Type="Decimal" Precision="18" Scale="5" />
           <Property Name="ESTATUS" Type="Boolean" />
-          <Property Name="BACKORDER" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="BACKORDER" Type="Decimal" Precision="18" Scale="5" />
           <NavigationProperty Name="DOCUMENTO" Relationship="Self.FK_DOCUMENTOL_DOCUMENTO" FromRole="DOCUMENTOL" ToRole="DOCUMENTO" />
         </EntityType>
         <EntityType Name="DOCUMENTOM">
@@ -7384,8 +7384,8 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Property Name="NUM_DOC" Type="Decimal" Precision="10" Scale="0" Nullable="false" />
           <Property Name="POS" Type="Int32" Nullable="false" />
           <Property Name="LIN" Type="Int32" Nullable="false" />
-          <Property Name="OBJETIVOI" Type="Decimal" Precision="13" Scale="5" />
-          <Property Name="PORCENTAJE" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="OBJETIVOI" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="PORCENTAJE" Type="Decimal" Precision="18" Scale="5" />
           <NavigationProperty Name="DOCUMENTOREC" Relationship="Self.FK_DOCUMENTORAN_DOCUMENTOREC" FromRole="DOCUMENTORAN" ToRole="DOCUMENTOREC" />
         </EntityType>
         <EntityType Name="DOCUMENTOREC">
