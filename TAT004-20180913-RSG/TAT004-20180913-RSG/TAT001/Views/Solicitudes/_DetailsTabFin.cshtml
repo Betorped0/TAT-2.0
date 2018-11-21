@@ -370,34 +370,107 @@
                     <div class="row">
                         <h5>Relacionados</h5>
                         <div class="col s12">
-                            @if (inf.Count() > 0)
-                            {
-                                <table class="table striped" id="table" style="width:100%; font-size:12px;">
-                                    <thead>
-                                        <tr class="header">
-                                            <th>
-                                                @* -----------DRS 24.09.18-------- *@
-                                                @Html.LabelFor(model => model.D.TSOL.TSOLTs.First().TXT010, "Tipo")
-                                            </th>
-                                            <th>
-                                                @Html.LabelFor(model => model.D.NUM_DOC, "Documento")
-                                            </th>
-                                            <th>
-                                                @Html.LabelFor(model => model.D.DOCUMENTO_SAP, "SAP")
-                                            </th>
-                                            <th>
-                                                @Html.LabelFor(model => model.D.SOCIEDAD_ID, "Sociedad")
-                                            </th>
-                                            <th>
-                                                @Html.LabelFor(model => model.D.PERIODO, "Periodo")
-                                            </th>
-                                            <th>
-                                                @Html.LabelFor(model => model.D.EJERCICIO, "Ejercicio")
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var miCi in inf)
+                            @*@if (inf.Count() > 0)
+        {
+            <table class="table striped" id="table" style="width:100%; font-size:12px;">
+                <thead>
+                    <tr class="header">
+                        <th>
+                            @Html.LabelFor(model => model.D.TSOL.TSOLTs.First().TXT010, "Tipo")
+                        </th>
+                        <th>
+                            @Html.LabelFor(model => model.D.NUM_DOC, "Documento")
+                        </th>
+                        <th>
+                            @Html.LabelFor(model => model.D.DOCUMENTO_SAP, "SAP")
+                        </th>
+                        <th>
+                            @Html.LabelFor(model => model.D.SOCIEDAD_ID, "Sociedad")
+                        </th>
+                        <th>
+                            @Html.LabelFor(model => model.D.PERIODO, "Periodo")
+                        </th>
+                        <th>
+                            @Html.LabelFor(model => model.D.EJERCICIO, "Ejercicio")
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var miCi in inf)
+                    {
+                        <tr>
+                            <td>
+                                @miCi.TSOL.TSOLTs.Where(x => x.SPRAS_ID == ViewBag.spras_id).FirstOrDefault().TXT010
+                            </td>
+                            <td>
+                                <a href="@Url.Action("Details", new { id = miCi.NUM_DOC })">@miCi.NUM_DOC</a>
+                            </td>
+                            <td>
+                                @miCi.DOCUMENTO_SAP
+                            </td>
+                            <td>
+                                @miCi.SOCIEDAD_ID
+                            </td>
+                            <td>
+                                @miCi.PERIODO
+                            </td>
+                            <td>
+                                @miCi.EJERCICIO
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {*@
+                            <table class="table striped" id="table" style="width:100%; font-size:12px;">
+                                <thead>
+                                    <tr class="header">
+                                        <th>
+                                            @Html.LabelFor(model => model.D.TSOL_ID, "Tipo")
+                                        </th>
+                                        <th>
+                                            @Html.LabelFor(model => model.D.NUM_DOC, "Documento")
+                                        </th>
+                                        <th>
+                                            @Html.LabelFor(model => model.D.DOCUMENTO_SAP, "SAP")
+                                        </th>
+                                        <th>
+                                            @Html.LabelFor(model => model.D.SOCIEDAD_ID, "Sociedad")
+                                        </th>
+                                        <th>
+                                            @Html.LabelFor(model => model.D.PERIODO, "Periodo")
+                                        </th>
+                                        <th>
+                                            @Html.LabelFor(model => model.D.EJERCICIO, "Ejercicio")
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            @Model.D.TSOL.TSOLTs.Where(x => x.SPRAS_ID == ViewBag.spras_id).FirstOrDefault().TXT010
+                                        </td>
+                                        <td>
+                                            @Model.D.NUM_DOC
+                                        </td>
+                                        <td>
+                                            @Model.D.DOCUMENTO_SAP
+                                        </td>
+                                        <td>
+                                            @Model.D.SOCIEDAD_ID
+                                        </td>
+                                        <td>
+                                            @Model.D.PERIODO
+                                        </td>
+                                        <td>
+                                            @Model.D.EJERCICIO
+                                        </td>
+                                    </tr>
+                                    @if (inf.Count() > 0)
+                                    {
+                                        foreach (var miCi in inf)
                                         {
                                             <tr>
                                                 <td>
@@ -420,58 +493,10 @@
                                                 </td>
                                             </tr>
                                         }
-                                    </tbody>
-                                </table>
-                            }
-                            else
-                            {
-                                <table class="table striped" id="table" style="width:100%; font-size:12px;">
-                                    <thead>
-                                        <tr class="header">
-                                            <th>
-                                                @Html.LabelFor(model => model.D.TSOL_ID, "Tipo")
-                                            </th>
-                                            <th>
-                                                @Html.LabelFor(model => model.D.NUM_DOC, "Documento")
-                                            </th>
-                                            <th>
-                                                @Html.LabelFor(model => model.D.DOCUMENTO_SAP, "SAP")
-                                            </th>
-                                            <th>
-                                                @Html.LabelFor(model => model.D.SOCIEDAD_ID, "Sociedad")
-                                            </th>
-                                            <th>
-                                                @Html.LabelFor(model => model.D.PERIODO, "Periodo")
-                                            </th>
-                                            <th>
-                                                @Html.LabelFor(model => model.D.EJERCICIO, "Ejercicio")
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                @Model.D.TSOL.TSOLTs.Where(x => x.SPRAS_ID == ViewBag.spras_id).FirstOrDefault().TXT010
-                                            </td>
-                                            <td>
-                                                @Model.D.NUM_DOC
-                                            </td>
-                                            <td>
-                                                @Model.D.DOCUMENTO_SAP
-                                            </td>
-                                            <td>
-                                                @Model.D.SOCIEDAD_ID
-                                            </td>
-                                            <td>
-                                                @Model.D.PERIODO
-                                            </td>
-                                            <td>
-                                                @Model.D.EJERCICIO
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            }
+                                    }
+                                </tbody>
+                            </table>
+                            @* } *@
                         </div>
                     </div>
                 </div>
