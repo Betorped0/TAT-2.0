@@ -75,6 +75,37 @@
             <div class="row right">
                 @if (Model.D.ESTATUS_C != "C")
                 {
+                    if (Model.D.TSOL.CARTA)
+                    {
+                        @* ---DRS 13.10.2018--- *@
+                        <button type="button" class="btn-small" data-target="list_carta" id="btn_carta">Carta</button>
+                        <ul id='list_carta' class='dropdown-content'>
+                            @*
+
+                    @* ---DRS 14.10.2018--- *@
+                            <li><a href="@Url.Action("Lista", "CartaV", new { id = Model.D.NUM_DOC, swf = Model.D.ESTATUS_WF })" id="lbl_list">Lista de cartas</a></li> @*//B20180720P MGC Guardar Carta*@
+                            @if (Model.D.ESTATUS_WF.Equals("S") && (Model.D.USUARIOD_ID == User.Identity.Name))
+                            {
+                                <li><a href="@Url.Action("Create", "CartaV", new { id = Model.D.NUM_DOC })" id="lbl_genc">Generar carta</a></li>
+                            }
+                            else if (Model.D.ESTATUS_WF.Equals("F") || Model.D.ESTATUS_WF.Equals("S") || Model.D.ESTATUS_WF.Equals("R"))
+                            {
+                                <li><a href="@Url.Action("Create", "CartaD", new { id = Model.D.NUM_DOC })" id="lbl_genc">Imprimir</a></li>
+                            }
+                            else
+                            {
+                                <li><a href="@Url.Action("Create", "CartaD", new { id = Model.D.NUM_DOC })" id="lbl_genc">Imprimir draft</a></li>
+                            }
+                        </ul>
+                        <script>
+                            var elem = document.getElementById('btn_carta');
+                            var options = {
+                                constrainWidth: false
+                                //,hover: true
+                            };
+                            var instance = M.Dropdown.init(elem, options);
+                        </script>
+                    }
                     if (ViewBag.acciones != null)
                     {
                         if (ViewBag.accion == "A" | ViewBag.accion == "R")
@@ -127,7 +158,7 @@
                             </script>
                             if (Model.D.USUARIOC_ID == ViewBag.usuario.ID | Model.D.USUARIOD_ID == ViewBag.usuario.ID | true)
                             {
-                                <a class="btn-small modal-trigger" id="btn_cancel" href="#modal2"></a>
+                                <a class="btn-small modal-trigger" id="btn_cancel" href="#modal2">Cancelar</a>
                                 <div id="modal2" class="modal">
                                     <div class="modal-content">
                                         <div class="row">
@@ -184,7 +215,7 @@
                         {
                             if (Model.D.USUARIOC_ID == ViewBag.usuario.ID | Model.D.USUARIOD_ID == ViewBag.usuario.ID)
                             {
-                                <a class="btn-small modal-trigger" id="btn_cancel" href="#modal2"></a>
+                                <a class="btn-small modal-trigger" id="btn_cancel" href="#modal2">Cancelar</a>
                                 <div id="modal2" class="modal">
                                     <div class="modal-content">
                                         <div class="row">
@@ -218,7 +249,7 @@
                             {
                                 if (Model.D.USUARIOC_ID == ViewBag.usuario.ID & Model.D.DOCUMENTO_SAP != null)
                                 {
-                                    <div id="div_drop" class="col" style="padding: 0px;">
+                                    <div id="div_drop" class="col" style="padding:0 4px;">
                                         <a href="@Url.Action("Create", "Solicitudes", new { id_d = Model.D.NUM_DOC.ToString(), tsol = Model.D.TSOL.TSOLR })" class="btn-small">Reversar</a>
                                         @*<button type="button" class="btn-small  " id="btn_cancel">Cancelar</button>*@
                                         <button type="button" class="btn-small dropdown-trigger">Crear solicitud relacionada</button>
@@ -243,7 +274,7 @@
                     {
                         if (Model.D.USUARIOC_ID == ViewBag.usuario.ID | Model.D.USUARIOD_ID == ViewBag.usuario.ID)
                         {
-                            <a class="btn-small modal-trigger" id="btn_cancel" href="#modal3"></a>
+                            <a class="btn-small modal-trigger" id="btn_cancel" href="#modal3">Cancelar</a>
                             <div id="modal3" class="modal">
                                 <div class="modal-content">
                                     <div class="row">
@@ -278,42 +309,8 @@
                     {
                         <a class="btn-small" id="lbl_dupp" href="@Url.Action("Create", "Solicitudes", new { id_d = Model.D.NUM_DOC, tsol = Model.D.TSOL_ID, dp = "X" })">Duplicar</a><!--RSG 31.10.2018-->
                     }
-                    @*//else
-            //{*@
-                    if (Model.D.TSOL.CARTA)
-                    {
-                        @* ---DRS 13.10.2018--- *@
-                        <div class="col" style="padding: 0 4px;">
-                            <button type="button" class="btn-small" data-target="list_carta" style="width:100%;" id="btn_carta">Carta</button>
-                        </div>
-                        <ul id='list_carta' class='dropdown-content'>
-                            @*
 
-                    @* ---DRS 14.10.2018--- *@
-                            <li><a href="@Url.Action("Lista", "CartaV", new { id = Model.D.NUM_DOC, swf = Model.D.ESTATUS_WF })" id="lbl_list">Lista de cartas</a></li> @*//B20180720P MGC Guardar Carta*@
-                            @if (Model.D.ESTATUS_WF.Equals("S") && (Model.D.USUARIOD_ID == User.Identity.Name))
-                            {
-                                <li><a href="@Url.Action("Create", "CartaV", new { id = Model.D.NUM_DOC })" id="lbl_genc">Generar carta</a></li>
-                            }
-                            else if (Model.D.ESTATUS_WF.Equals("F") || Model.D.ESTATUS_WF.Equals("S") || Model.D.ESTATUS_WF.Equals("R"))
-                            {
-                                <li><a href="@Url.Action("Create", "CartaD", new { id = Model.D.NUM_DOC })" id="lbl_genc">Imprimir</a></li>
-                            }
-                            else
-                            {
-                                <li><a href="@Url.Action("Create", "CartaD", new { id = Model.D.NUM_DOC })" id="lbl_genc">Imprimir draft</a></li>
-                            }
-                        </ul>
-                        <script>
-                            var elem = document.getElementById('btn_carta');
-                            var options = {
-                                constrainWidth: false
-                                //,hover: true
-                            };
-                            var instance = M.Dropdown.init(elem, options);
-                        </script>
-                    }
-                    @* } *@
+
                 }
                 @if (Model.D.FLUJOes.Count == 0)
                 {

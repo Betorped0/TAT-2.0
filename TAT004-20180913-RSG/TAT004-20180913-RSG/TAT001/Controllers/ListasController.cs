@@ -451,81 +451,50 @@ namespace TAT001.Controllers
             //Validar si hay materiales
             if (db.MATERIALs.Any(x => x.MATERIALGP_ID != null && x.ACTIVO.Value))
             {
-
-                CLIENTE cli = new CLIENTE();
                 List<CLIENTE> clil = new List<CLIENTE>();
 
                 try
                 {
-                    cli = db.CLIENTEs.Where(c => c.KUNNR == kunnr & c.VKORG == vkorg & c.SPART == spart).FirstOrDefault();
-                    //Saber si el cliente es sold to, payer o un grupo
-                    if (cli != null)
+                    CLIENTE cli = db.CLIENTEs.Where(c => c.KUNNR == kunnr && c.VKORG == vkorg && c.SPART == spart).FirstOrDefault();
+                    //Saber si el cliente es sold to, payer o un grupo  //Es un soldto
+                    if (cli != null && cli.KUNNR != cli.PAYER && cli.KUNNR != cli.BANNER)
                     {
-                        //Es un soldto
-                        if (cli.KUNNR != cli.PAYER && cli.KUNNR != cli.BANNER)
-                        {
                             clil.Add(cli);
-                        }
                     }
                 }
                 catch (Exception e)
                 {
-
+                    Log.ErrorLogApp(e, "Listas", "categoriasCliente");
                 }
 
-                var cie = clil.Cast<CLIENTE>();
-                //    IEnumerable<CLIENTE> cie = clil as IEnumerable<CLIENTE>;
+                var cie = clil;
                 //Obtener el numero de periodos para obtener el historial
-                int nummonths = 3;
+                int? mesesVenta = (db.CONFDIST_CAT.Any(x => x.SOCIEDAD_ID == soc_id) ? db.CONFDIST_CAT.First(x => x.SOCIEDAD_ID == soc_id).PERIODOS:null);
+                int nummonths = (mesesVenta != null ? mesesVenta.Value : DateTime.Now.Month);
                 int imonths = nummonths * -1;
                 //Obtener el rango de los periodos incluyendo el año
                 DateTime ff = DateTime.Today;
                 DateTime fi = ff.AddMonths(imonths);
 
-                string mi = fi.Month.ToString();//.ToString("MM");
-                string ai = fi.Year.ToString();//.ToString("yyyy");
+                string mi = fi.Month.ToString();
+                string ai = fi.Year.ToString();
 
-                string mf = ff.Month.ToString();// ("MM");
-                string af = ff.Year.ToString();// "yyyy");
+                string mf = ff.Month.ToString();
+                string af = ff.Year.ToString();
 
                 int aii = 0;
-                try
-                {
-                    aii = Convert.ToInt32(ai);
-                }
-                catch (Exception e)
-                {
-
-                }
-
                 int mii = 0;
-                try
-                {
-                    mii = Convert.ToInt32(mi);
-                }
-                catch (Exception e)
-                {
-
-                }
-
                 int aff = 0;
-                try
-                {
-                    aff = Convert.ToInt32(af);
-                }
-                catch (Exception e)
-                {
-
-                }
-
                 int mff = 0;
-                try
-                {
+                try{
+                    aii = Convert.ToInt32(ai);
+                    mii = Convert.ToInt32(mi);
+                    aff = Convert.ToInt32(af);
                     mff = Convert.ToInt32(mf);
                 }
                 catch (Exception e)
                 {
-
+                    Log.ErrorLogApp(e, "Listas", "categoriasCliente-mesesVenta");
                 }
 
                 if (cie != null)
@@ -568,83 +537,52 @@ namespace TAT001.Controllers
             //Validar si hay materiales
             if (db.MATERIALs.Any(x => x.MATERIALGP_ID != null && x.ACTIVO.Value))
             {
-
-                CLIENTE cli = new CLIENTE();
                 List<CLIENTE> clil = new List<CLIENTE>();
-
                 try
                 {
-                    cli = db.CLIENTEs.Where(c => c.KUNNR == kunnr & c.VKORG == vkorg & c.SPART == spart).FirstOrDefault();
+                    CLIENTE cli = db.CLIENTEs.Where(c => c.KUNNR == kunnr && c.VKORG == vkorg && c.SPART == spart).FirstOrDefault();
 
                     //Saber si el cliente es sold to, payer o un grupo
-                    if (cli != null)
+                    if (cli != null && cli.KUNNR != cli.PAYER && cli.KUNNR != cli.BANNER)
                     {
-                        //Es un soldto
-                        if (cli.KUNNR != cli.PAYER && cli.KUNNR != cli.BANNER)
-                        {
-                            //cli.VKORG = cli.VKORG+" ";
-                            clil.Add(cli);
-                        }
+                            clil.Add(cli);                 
                     }
                 }
                 catch (Exception e)
                 {
-
+                    Log.ErrorLogApp(e,"Listas", "grupoMateriales");
                 }
-                var cie = clil.Cast<CLIENTE>();
-                //    IEnumerable<CLIENTE> cie = clil as IEnumerable<CLIENTE>;
+                var cie = clil;
                 //Obtener el numero de periodos para obtener el historial
-                int nummonths = 3;
+                int? mesesVenta = (db.CONFDIST_CAT.Any(x => x.SOCIEDAD_ID == soc_id) ? db.CONFDIST_CAT.First(x => x.SOCIEDAD_ID == soc_id).PERIODOS : null);
+                int nummonths = (mesesVenta!=null? mesesVenta.Value:DateTime.Now.Month);
                 int imonths = nummonths * -1;
                 //Obtener el rango de los periodos incluyendo el año
                 DateTime ff = DateTime.Today;
                 DateTime fi = ff.AddMonths(imonths);
 
-                string mi = fi.Month.ToString();//.ToString("MM");
-                string ai = fi.Year.ToString();//.ToString("yyyy");
+                string mi = fi.Month.ToString();
+                string ai = fi.Year.ToString();
 
-                string mf = ff.Month.ToString();// ("MM");
-                string af = ff.Year.ToString();// "yyyy");
+                string mf = ff.Month.ToString();
+                string af = ff.Year.ToString();
 
                 int aii = 0;
-                try
-                {
-                    aii = Convert.ToInt32(ai);
-                }
-                catch (Exception e)
-                {
-
-                }
-
                 int mii = 0;
-                try
-                {
-                    mii = Convert.ToInt32(mi);
-                }
-                catch (Exception e)
-                {
-
-                }
-
                 int aff = 0;
-                try
-                {
-                    aff = Convert.ToInt32(af);
-                }
-                catch (Exception e)
-                {
-
-                }
-
                 int mff = 0;
                 try
                 {
+                    aii = Convert.ToInt32(ai);
+                    mii = Convert.ToInt32(mi);
+                    aff = Convert.ToInt32(af);
                     mff = Convert.ToInt32(mf);
                 }
                 catch (Exception e)
                 {
-
+                    Log.ErrorLogApp(e, "Listas", "grupoMateriales-mesesVenta");
                 }
+                
 
                 if (cie != null)
                 {
