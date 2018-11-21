@@ -437,8 +437,14 @@ namespace TAT001.Services
                             {
                                 dOCUMENTO.MONTO_DOC_MD = dOCUMENTO.MONTO_DOC_MD * dran.PORCENTAJE / 100;
                                 dOCUMENTO.PORC_APOYO = dran.PORCENTAJE;
+                                sinO = true;
                                 break;
                             }
+                        }
+                        if (!sinO)
+                        {
+                            dOCUMENTO.MONTO_DOC_MD = 0;
+                            dOCUMENTO.PORC_APOYO = 0;
                         }
                     }
                     if (!(dOCpADRE.TIPO_RECURRENTE == "1" & listcat.Count == 0))
