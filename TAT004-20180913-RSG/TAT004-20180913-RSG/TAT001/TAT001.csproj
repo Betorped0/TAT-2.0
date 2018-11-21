@@ -391,6 +391,9 @@
     <Compile Include="Entities\CSP_CONSULTARPRESUPUESTO_Result.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\CSP_DOCUMENTOSXCOCODE_Result.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\CSP_DOCUMENTOSXUSER_Result.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
