@@ -3535,7 +3535,7 @@ namespace TAT001.Controllers
                 {
                     ProcesaFlujo pf = new ProcesaFlujo();
                     FLUJO conta = db.FLUJOes.Where(a => a.NUM_DOC.Equals(drec.NUM_DOC)).OrderByDescending(a => a.POS).FirstOrDefault();
-                    conta.USUARIOA_ID = User.Identity.Name;
+                    //conta.USUARIOA_ID = User.Identity.Name;
                     conta.ESTATUS = "A";
                     conta.FECHAM = DateTime.Now;
                     pf.procesa(conta, "");
@@ -3544,6 +3544,7 @@ namespace TAT001.Controllers
                     DOCUMENTO doc = db.DOCUMENTOes.Find(drec.NUM_DOC);
                     Estatus es = new Estatus();
                     conta.STATUS = es.getEstatus(doc);
+                    drec.ESTATUS = true;
                     db.Entry(conta).State = EntityState.Modified;
                     db.SaveChanges();
                 }
