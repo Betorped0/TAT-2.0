@@ -288,7 +288,7 @@ namespace TAT001.Services
                             next_step_r = (int)paso_a.NS_REJECT;
 
                         WORKFP next = new WORKFP();
-                        if (paso_a.ACCION.TIPO == "A" | paso_a.ACCION.TIPO == "N" | paso_a.ACCION.TIPO == "R" | paso_a.ACCION.TIPO == "T" | paso_a.ACCION.TIPO == "E" | paso_a.ACCION.TIPO == "B" | paso_a.ACCION.TIPO == "M")//Si está en proceso de aprobación
+                        if (paso_a.ACCION.TIPO == "A" | paso_a.ACCION.TIPO == "N" | paso_a.ACCION.TIPO == "R" | paso_a.ACCION.TIPO == "T" | paso_a.ACCION.TIPO == "E" | paso_a.ACCION.TIPO == "B" | paso_a.ACCION.TIPO == "M" | paso_a.ACCION.TIPO == "O")//Si está en proceso de aprobación
                         {
                             if (f.ESTATUS.Equals("A") | f.ESTATUS.Equals("N") | f.ESTATUS.Equals("M"))//APROBAR SOLICITUD
                             {
