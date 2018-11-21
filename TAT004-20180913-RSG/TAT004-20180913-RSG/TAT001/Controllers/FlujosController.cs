@@ -314,8 +314,7 @@ namespace TAT001.Controllers
                 if (ddt.Count > 0)
                     db.DOCUMENTOTS.AddRange(ddt);
                 db.SaveChanges();
-
-                db.Dispose();
+                
             }
 
             FLUJO flujo = actual;
