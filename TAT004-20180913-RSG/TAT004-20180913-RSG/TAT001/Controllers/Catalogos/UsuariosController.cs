@@ -3657,7 +3657,6 @@ namespace TAT001.Controllers.Catalogos
             if (ModelState.IsValid)
             {
                 db.Entry(delegar).State = EntityState.Modified;
-                db.Entry(delegar).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Details", new { id = delegar.USUARIO_ID });
             }
