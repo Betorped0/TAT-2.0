@@ -430,6 +430,7 @@ namespace TAT001.Services
                         //        dOCUMENTO.MONTO_DOC_MD += mats.VAL;
                         //}
                         dOCUMENTO.MONTO_DOC_MD = totalcats;
+                        bool sinO = false;
                         foreach (DOCUMENTORAN dran in dOCpADRE.DOCUMENTORECs.Where(x => x.POS == posicion).FirstOrDefault().DOCUMENTORANs)
                         {
                             if (dOCUMENTO.MONTO_DOC_MD > dran.OBJETIVOI)

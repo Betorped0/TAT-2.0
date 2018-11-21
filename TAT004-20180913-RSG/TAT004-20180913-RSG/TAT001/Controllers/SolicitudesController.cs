@@ -6396,7 +6396,13 @@ namespace TAT001.Controllers
                 var cie = clil.Cast<CLIENTE>();
                 //    IEnumerable<CLIENTE> cie = clil as IEnumerable<CLIENTE>;
                 //Obtener el numero de periodos para obtener el historial
+                CONFDIST_CAT conf = getCatConf(soc_id);
                 int nummonths = 3;
+                if (conf != null)
+                {
+                    if (conf.PERIODOS != null)
+                        nummonths = (int)conf.PERIODOS;
+                }
                 int imonths = nummonths * -1;
                 //Obtener el rango de los periodos incluyendo el año
                 DateTime ff = DateTime.Today;
@@ -6588,7 +6594,8 @@ namespace TAT001.Controllers
                 var cie = clil.Cast<CLIENTE>();
                 //    IEnumerable<CLIENTE> cie = clil as IEnumerable<CLIENTE>;
                 //Obtener el numero de periodos para obtener el historial
-                int nummonths = 3;
+                int? mesesVenta = (db.CONFDIST_CAT.Any(x => x.SOCIEDAD_ID == soc_id) ? db.CONFDIST_CAT.First(x => x.SOCIEDAD_ID == soc_id).PERIODOS : null);
+                int nummonths = (mesesVenta != null ? mesesVenta.Value : DateTime.Now.Month);
                 int imonths = nummonths * -1;
                 //Obtener el rango de los periodos incluyendo el año
                 DateTime ff = DateTime.Today;
