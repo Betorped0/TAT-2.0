@@ -211,7 +211,7 @@
                                         url: "../Listas/TiposSolicitud",
                                         type: "GET",
                                         dataType: "json",
-                                        data: { spras_id: 'ES' },
+                                        data: { Prefix: request.term }, //spras_id: 'ES'
                                         success: function (data) {
                                             response(auto.map(data, function (item) {
                                                 return { label: item.TSOL_ID + " - " + item.TXT50, value: item.TSOL_ID };

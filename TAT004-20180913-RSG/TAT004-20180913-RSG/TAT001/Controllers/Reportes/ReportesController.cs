@@ -370,8 +370,11 @@ namespace TAT001.Controllers.Reportes
                                   }).Distinct().ToList();
 
                 var nombregl = (from a in db.DOCUMENTOes
-                                                 join CUENTAGL in db.CUENTAGLs on a.CUENTAPL equals CUENTAGL.ID                               
-                                                 select new { CUENTAGL.ID, CUENTAGL.NOMBRE }).Distinct().ToList();
+                                join CUENTAGL in db.CUENTAGLs on a.CUENTAPL equals CUENTAGL.ID
+                                select new { CUENTAGL.ID, CUENTAGL.NOMBRE }).Distinct().ToList();
+                                //.GroupBy(n => new { n.ID, n.NOMBRE })
+                                //           .Select(g => g.FirstOrDefault())
+                                //           .ToList();
 
                 var per445 = (from p in db.DOCUMENTOes
                               select new { p.EJERCICIO, p.PERIODO }).FirstOrDefault();
@@ -392,7 +395,7 @@ namespace TAT001.Controllers.Reportes
                                                   group f by d.NUM_DOC into g
                                                   select new { NUM_DOC = g.Key, POS = g.Max(p => p.POS) })
                                                   on new { ff.NUM_DOC, ff.POS } equals new { j.NUM_DOC, j.POS }
-                                                 select new Comentarios { NUM_DOC = ff.NUM_DOC, COMENTARIOS = ff.COMENTARIO }).ToList();
+                                                 select new Comentarios { NUM_DOC = ff.NUM_DOC, COMENTARIOS = ff.COMENTARIO }).Distinct().ToList();
 
                 
                 lista.Add(miConsulta);
@@ -405,8 +408,8 @@ namespace TAT001.Controllers.Reportes
             ViewBag.miConsulSplit = lista;                 
             ViewBag.remanente = rema;
             ViewBag.peri = perio;
-            ViewBag.ultimo = comen;
-            ViewBag.cuenta = cuenta;
+            ViewBag.ultimo = comen.Distinct().ToList(); 
+            ViewBag.cuenta = cuenta.Distinct().ToList();
             ViewBag.perio445 = periodo445;
 
             //CONSULTA DEL FILTRO AÑO
