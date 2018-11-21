@@ -812,7 +812,7 @@ namespace TAT001.Controllers
                     id_pais = db.PAIS.Where(pais => pais.LAND.Equals(d.PAIS_ID)).FirstOrDefault();//RSG 15.05.2018
                     d.DOCUMENTO_REF = rel;
                     relacionada_neg = d.TIPO_TECNICO;
-                    if (d.DOCUMENTOLs.Count > 0 & (d.DOCUMENTOPs.First().MATNR != null | d.DOCUMENTOPs.First().MATNR != ""))
+                    if (d.DOCUMENTOLs.Count > 0 & (d.DOCUMENTOPs.First().MATNR != null & d.DOCUMENTOPs.First().MATNR != ""))
                         relacionada_neg = "M";
                     ViewBag.TSOL_ANT = d.TSOL_ID;
                     ViewBag.LIGADA = d.LIGADA;//RSG 09.07.2018

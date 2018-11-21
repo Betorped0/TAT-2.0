@@ -68,8 +68,17 @@ namespace TAT001.Services
                     }
                     else
                     {
-                        WORKFP autoriza = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.ACCION_ID == 5).FirstOrDefault();
-                        next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS == autoriza.NS_ACCEPT).FirstOrDefault();
+                        if (d.TIPO_RECURRENTE == "1")
+                        {
+                            WORKFP autoriza = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.ACCION_ID == 5).FirstOrDefault();
+                            next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS == autoriza.NS_ACCEPT).FirstOrDefault();
+                        }
+                        else
+                        {
+                            WORKFP autoriza = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.ACCION_ID == 14).FirstOrDefault();
+                            next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS == autoriza.POS).FirstOrDefault();
+                        }
+
                     }
                     if (next.NEXT_STEP.Equals(99))//--------FIN DEL WORKFLOW
                     {
@@ -115,7 +124,17 @@ namespace TAT001.Services
                             }
                             else
                             {
-                                nuevo.USUARIOA_ID = null;
+                                if (d.TIPO_RECURRENTE == "1")
+                                {
+                                    nuevo.USUARIOA_ID = null;
+                                }
+                                else
+                                {
+                                    DOCUMENTOREC docPadre = db.DOCUMENTORECs.Where(x => x.DOC_REF == actual.NUM_DOC).FirstOrDefault();
+                                    FLUJO ff = db.FLUJOes.Where(x => x.NUM_DOC == docPadre.NUM_DOC & x.WORKFP.ACCION_ID == 5).FirstOrDefault();
+                                    nuevo.USUARIOA_ID = ff.USUARIOA_ID;
+                                    nuevo.USUARIOD_ID = ff.USUARIOD_ID;
+                                }
                                 nuevo.DETPOS = 0;
                                 nuevo.DETVER = 0;
                             }
@@ -167,8 +186,19 @@ namespace TAT001.Services
                     }
                     else
                     {
-                        WORKFP autoriza = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.ACCION_ID == 5).FirstOrDefault();
-                        next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS == autoriza.NS_ACCEPT).FirstOrDefault();
+                        //    WORKFP autoriza = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.ACCION_ID == 5).FirstOrDefault();
+                        //    next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS == autoriza.NS_ACCEPT).FirstOrDefault();
+
+                        if (d.TIPO_RECURRENTE == "1")
+                        {
+                            WORKFP autoriza = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.ACCION_ID == 5).FirstOrDefault();
+                            next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS == autoriza.NS_ACCEPT).FirstOrDefault();
+                        }
+                        else
+                        {
+                            WORKFP autoriza = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.ACCION_ID == 14).FirstOrDefault();
+                            next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) & a.VERSION.Equals(actual.WF_VERSION) & a.POS == autoriza.POS).FirstOrDefault();
+                        }
                     }
                     if (next.NEXT_STEP.Equals(99))//--------FIN DEL WORKFLOW
                     {
@@ -258,7 +288,7 @@ namespace TAT001.Services
                             next_step_r = (int)paso_a.NS_REJECT;
 
                         WORKFP next = new WORKFP();
-                        if (paso_a.ACCION.TIPO == "A" | paso_a.ACCION.TIPO == "N" | paso_a.ACCION.TIPO == "R" | paso_a.ACCION.TIPO == "T" | paso_a.ACCION.TIPO == "E" | paso_a.ACCION.TIPO == "B" | paso_a.ACCION.TIPO == "M")//Si está en proceso de aprobación
+                        if (paso_a.ACCION.TIPO == "A" | paso_a.ACCION.TIPO == "N" | paso_a.ACCION.TIPO == "R" | paso_a.ACCION.TIPO == "T" | paso_a.ACCION.TIPO == "E" | paso_a.ACCION.TIPO == "B" | paso_a.ACCION.TIPO == "M" | paso_a.ACCION.TIPO == "O")//Si está en proceso de aprobación
                         {
                             if (f.ESTATUS.Equals("A") | f.ESTATUS.Equals("N") | f.ESTATUS.Equals("M"))//APROBAR SOLICITUD
                             {
