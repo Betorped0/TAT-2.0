@@ -3578,16 +3578,24 @@ namespace TAT001.Controllers.Catalogos
                 }
                 else
                 {
-                    DELEGAR delegado = new DELEGAR { ACTIVO = delegar.ACTIVO, FECHAF = delegar.FECHAF, FECHAI = delegar.FECHAI, USUARIOD_ID = delegar.USUARIOD_ID, USUARIO_ID = delegar.USUARIO_ID };
-                    var delegadosanteriores = db.DELEGARs.Where(t => t.USUARIO_ID == delegar.USUARIO_ID).ToList();
-                    foreach (var de in delegadosanteriores)
+                    try
                     {
-                        if (de.FECHAF < DateTime.Now)
-                            de.ACTIVO = false;
+                        DELEGAR delegado = new DELEGAR { ACTIVO = delegar.ACTIVO, FECHAF = delegar.FECHAF, FECHAI = delegar.FECHAI, USUARIOD_ID = delegar.USUARIOD_ID, USUARIO_ID = delegar.USUARIO_ID };
+                        var delegadosanteriores = db.DELEGARs.Where(t => t.USUARIO_ID == delegar.USUARIO_ID).ToList();
+                        foreach (var de in delegadosanteriores)
+                        {
+                            if (de.FECHAF < DateTime.Now)
+                                de.ACTIVO = false;
+                        }
+                        db.DELEGARs.Add(delegado);
+                        db.SaveChanges();
+                        return RedirectToAction("Details", new { id = delegar.USUARIO_ID });
                     }
-                    db.DELEGARs.Add(delegado);
-                    db.SaveChanges();
-                    return RedirectToAction("Details", new { id = delegar.USUARIO_ID });
+                    catch (Exception e)
+                    {
+                        TempData["MessageBackupRepetido"] = "Mensaje";
+                        return View(delegar);
+                    }
                 }
             }
             else
