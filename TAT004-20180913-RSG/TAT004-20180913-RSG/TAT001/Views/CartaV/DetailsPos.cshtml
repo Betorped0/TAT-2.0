@@ -16,8 +16,8 @@
         <div class="row">
             <div class="col l12 m12 right-align">
                 @* -----DRS 14.10.2018---- *@
-                <a href="@Url.Action("Lista", "CartaV" , new { id = Model.num_doc, swf = TempData["ESTATUS_WF"]})" class="btn btn-default">Regresar</a>
-                <button class="btn waves-effect" type="submit" name="action" id="lbl_print" >
+                <a href="@Url.Action("Lista", "CartaV" , new { id = Model.num_doc, swf = TempData["ESTATUS_WF"]})" class="btn btn-small">Regresar</a>
+                <button class="btn btn-small" type="submit" name="action" id="lbl_print" >
                     Imprimir
                     @*<i class="material-icons right">print</i>*@
                 </button>
