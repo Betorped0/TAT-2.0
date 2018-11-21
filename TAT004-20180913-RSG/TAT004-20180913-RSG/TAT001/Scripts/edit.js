@@ -1719,61 +1719,63 @@ $(window).on('load', function () {
 
 //LEJ 30.07.2018--------------------------------------I
 function _ff() {
-    var meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
     var datei = $("#fechai_vig").val().split(' ')[0];
-    var _anoi = datei.split('/')[2];
+    $("#fechai_vig").val(datei);
+    var periodoi = datei.split('/')[1];
+    var anioi = datei.split('/')[2];
 
     if (datei !== "") {
         $.ajax({
             type: "POST",
-            url: 'getPeriodo',
+            url: root + 'Listas/getPrimerDia',
             dataType: "json",
-            data: { "fecha": datei },
+            data: { ejercicio: anioi, periodo: periodoi },
             success: function (data) {
-                var _xd = data;
-                var pp = parseInt(data);
-                if (pp != 0) {
-                    $("#periodoi_id").val(pp);
+                var dd = data.split('/');
+                var dates = new Date(dd[2], dd[1] - 1, dd[0]);
+                datee = dates.getDate() + "/" + (dates.getMonth() + 1) + "/" + dates.getFullYear();
+
+                if (datei == datee){
                     document.getElementById("btn-peri").checked = true;
-                    $("#btn-peri").trigger("change");
-                    //$("#anioi_id").val(_anoi);
+                    $("#btn-peri").trigger("click");
                 } else {
                     document.getElementById("btn-date").checked = true;
-                    $("#btn-date").trigger("change");
+                    $("#btn-date").trigger("click");
                 }
             },
             error: function (xhr, httpStatusMessage, customErrorMessage) {
-                M.toast({ html: httpStatusMessage });
+               // M.toast({ html: httpStatusMessage });
             },
-            async: true
+            async: false
         });
     }
     var datef = $("#fechaf_vig").val().split(' ')[0];
-    var _anof = datef.split('/')[2];
+    $("#fechaf_vig").val(datef);
+    var periodof = datef.split('/')[1];
+    var aniof = datef.split('/')[2];
     if (datef !== "") {
         $.ajax({
             type: "POST",
-            url: 'getPeriodo',
+            url: root + 'Listas/getUltimoDia',
             dataType: "json",
-            data: { "fecha": datef },
+            data: { ejercicio: aniof, periodo: periodof },
             success: function (data) {
-                var _xd = data;
-                var pp = parseInt(data);
-                if (pp != 0) {
-                    $("#periodof_id").val(pp);
+                var dd = data.split('/');
+                var dates = new Date(dd[2], dd[1] - 1, dd[0]);
+                datee = dates.getDate() + "/" + (dates.getMonth() + 1) + "/" + dates.getFullYear();
+
+                if (datef == datee) {
                     document.getElementById("btn-peri").checked = true;
-                    $("#btn-peri").trigger("change");
-                    //$("#aniof_id").val(_anof);
+                    $("#btn-peri").trigger("click");
                 } else {
                     document.getElementById("btn-date").checked = true;
-                    $("#btn-date").trigger("change");
+                    $("#btn-date").trigger("click");
                 }
-
             },
             error: function (xhr, httpStatusMessage, customErrorMessage) {
-                M.toast({ html: httpStatusMessage });
+                //M.toast({ html: httpStatusMessage });
             },
-            async: true
+            async: false
         });
     }
 }
