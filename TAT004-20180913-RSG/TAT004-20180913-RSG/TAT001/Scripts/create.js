@@ -5532,8 +5532,8 @@ function selectCliente(valu) {
                     //MGC B20180611
                     if (!isRelacionada()) {
                         llenaCat(data.VKORG, data.VTWEG, data.SPART, valu);
+                        getCatMateriales(data.VKORG, data.VTWEG, data.SPART, valu);
                     }
-                    getCatMateriales(data.VKORG, data.VTWEG, data.SPART, valu);
                     //RSG 28.05.2018------------------------------------------
                 } else {
                     limpiarCliente();
