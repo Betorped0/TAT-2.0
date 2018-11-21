@@ -7,15 +7,15 @@
 <div class="row">
     <div class="row right">
         <div class="col l12 m12 right">
-            <a href="@Url.Action("Details", "Solicitudes", new { id = TempData["id"].ToString()})" class="btn btn-default">Regresar</a>
+            <a href="@Url.Action("Details", "Solicitudes", new { id = TempData["id"].ToString()})" class="btn btn-small">Regresar</a>
             @{ string swf = TempData["ESTATUS_WF"].ToString();}
             @if (swf.Equals("S") && (Model.Count()>0 && Model.First().DOCUMENTO.USUARIOD_ID == User.Identity.Name))
             {
-                <a href="@Url.Action("Create", "CartaV", new { id = TempData["id"].ToString()})" class="btn btn-default">Genererar Carta</a>
+                <a href="@Url.Action("Create", "CartaV", new { id = TempData["id"].ToString()})" class="btn btn-small">Genererar Carta</a>
             }
             else if(Model.Count() > 0 && Model.First().DOCUMENTO.USUARIOD_ID == User.Identity.Name)
             {
-                <a href="@Url.Action("Create", "CartaD", new { id = TempData["id"].ToString()})" class="btn btn-default">Genererar Carta</a>
+                <a href="@Url.Action("Create", "CartaD", new { id = TempData["id"].ToString()})" class="btn btn-small">Genererar Carta</a>
             }
         </div>
     </div>

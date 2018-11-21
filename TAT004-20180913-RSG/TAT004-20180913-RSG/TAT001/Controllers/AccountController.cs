@@ -150,7 +150,7 @@ namespace TAT001.Controllers
                             usuLog.POS = 1;
                             usuLog.SESION = System.Web.HttpContext.Current.Session.SessionID;
                             usuLog.NAVEGADOR = Request.Browser.Type;
-                            usuLog.UBICACION = System.Environment.MachineName + " - " + RegionInfo.CurrentRegion.DisplayName;
+                            usuLog.UBICACION = System.Environment.UserName + " - " + RegionInfo.CurrentRegion.DisplayName;
                             usuLog.FECHA = DateTime.Now;
                             usuLog.LOGIN = true;
                             db.USUARIOLOGs.Add(usuLog);
@@ -251,7 +251,8 @@ namespace TAT001.Controllers
                 uSUARIOLOG.POS = 1;
                 uSUARIOLOG.SESION = System.Web.HttpContext.Current.Session.SessionID;
                 uSUARIOLOG.NAVEGADOR = Request.Browser.Type;
-                uSUARIOLOG.UBICACION = RegionInfo.CurrentRegion.DisplayName;
+                //uSUARIOLOG.UBICACION = System.Environment.MachineName + "/" + System.Environment.UserName + " - " + RegionInfo.CurrentRegion.DisplayName;
+                uSUARIOLOG.UBICACION = System.Environment.UserName + " - " + RegionInfo.CurrentRegion.DisplayName;
                 uSUARIOLOG.FECHA = DateTime.Now;
                 uSUARIOLOG.LOGIN = true;
                 try

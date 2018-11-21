@@ -2388,53 +2388,86 @@ function validaLigada(num_doc) {
     for (var a = 0; a < tablaH4.rows().data().length; a++) {
         var rowH4 = tablaH4.row(a).node();
         var num_docH4 = $(rowH4).children().eq(1).children().val();
+        var porcentajeH4 = $(rowH4).children().eq(9).children().val();
         var check = $(rowH4).children().eq(2).children().eq(0).children().eq(0).children().eq(0);
 
         if ($(check).is(":checked") & num_docH4 == num_doc) {
             arrLigada[contadorLigada] = num_docH4 + true;
-            arrPorcentaje[contadorLigada] = num_docH4 + true;
+            arrPorcentaje[contadorLigada] = num_docH4 + porcentajeH4;
             contadorLigada++;
         }
         else {
             if (num_docH4 == num_doc) {
                 arrLigada[contadorLigada] = num_docH4 + false;
-                arrPorcentaje[contadorLigada] = num_docH4 + false;
+                arrPorcentaje[contadorLigada] = num_docH4 + porcentajeH4;
                 contadorLigada++;
             }
         }
     }
 
     var igualesLigada = arrLigada.allValuesSame();
-    var igualesPorcentaje = arrPorcentaje.allValuesSame();
 
-    if (igualesLigada) {
-        var tablaH4 = $('#tab_test4').DataTable();
+    for (var b = 0; b < tablaH4.rows().data().length; b++) {
+        var rowbH4 = tablaH4.row(b).node();
+        var num_docbH4 = $(rowbH4).children().eq(1).children().val();
+        var check = $(rowbH4).children().eq(2).children().eq(0).children().eq(0).children().eq(0);
+        var checkeado = $(check).is(":checked");
 
-        for (var a = 0; a < tablaH4.rows().data().length; a++) {
-            var rowH4 = tablaH4.row(a).node();
-            var num_docH4 = $(rowH4).children().eq(1).children().val();
-            var check = $(rowH4).children().eq(2).children().eq(0).children().eq(0).children().eq(0);
-
-            if (num_docH4 == num_doc) {
-                $(rowH4).children().eq(2).children().removeClass("red white-text rojo");
+        if (num_docbH4 == num_doc) {
+            if (igualesLigada) {
+                $(rowbH4).children().eq(2).children().removeClass("red white-text rojo");
+                revisaPorcentajeLigada(num_docbH4, checkeado);
             }
-        }
-    }
-    else {
-        var tablaH4 = $('#tab_test4').DataTable();
-
-        for (var a = 0; a < tablaH4.rows().data().length; a++) {
-            var rowH4 = tablaH4.row(a).node();
-            var num_docH4 = $(rowH4).children().eq(1).children().val();
-            var check = $(rowH4).children().eq(2).children().eq(0).children().eq(0).children().eq(0);
-
-            if (num_docH4 == num_doc) {
-                $(rowH4).children().eq(2).children().addClass("red white-text rojo");
+            else {
+                $(rowbH4).children().eq(2).children().addClass("red white-text rojo");
+                revisaPorcentajeLigada(num_docbH4, checkeado);
             }
         }
     }
 
     clearErrors();
+}
+
+function revisaPorcentajeLigada(num_doc, checked) {
+    var tablaH4 = $('#tab_test4').DataTable();
+    var arrPorcentajes = [];
+    var contador = 0;
+
+    for (var a = 0; a < tablaH4.rows().data().length; a++) {
+        var rowH4 = tablaH4.row(a).node();
+        var num_docH4 = $(rowH4).children().eq(1).children().val();
+        var porcentaje = $(rowH4).children().eq(9).children().val();
+
+        if (num_docH4 == num_doc) {
+            arrPorcentajes[contador] = porcentaje;
+            contador++;
+        }
+    }
+
+    Array.prototype.allValuesSame = function () {
+
+        for (var i = 1; i < this.length; i++) {
+            if (this[i] !== this[0])
+                return false;
+        }
+
+        return true;
+    }
+
+    var igualesPorcentaje = arrPorcentajes.allValuesSame();
+
+    for (var b = 0; b < tablaH4.rows().data().length; b++) {
+        var rowH4 = tablaH4.row(b).node();
+        var num_docH4 = $(rowH4).children().eq(1).children().val();
+        var porcentaje = $(rowH4).children().eq(9).children().val();
+
+        if (num_docH4 == num_doc & checked & igualesPorcentaje) {
+            $(rowH4).children().eq(9).children().removeClass("red white-text rojo");
+        }
+        else if (num_docH4 == num_doc & checked & !igualesPorcentaje) {
+            $(rowH4).children().eq(9).children().addClass("red white-text rojo");
+        }
+    }
 }
 
 function ligada(check) {
@@ -3646,7 +3679,6 @@ function cloneTables() {
         $('#tabclon4b').append("<tr id='tr4" + dd + "'></tr>");
         $(rowH4c).children().each(function (td4) {
             if (td4 !== 0) {
-                //$("#tr4" + dd).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
                 if (td4 == 9) {
                     $("#tr4" + dd).append("<td>" + $(this).find('input:first').val().replace('%', '') + "</td>");
                 }
