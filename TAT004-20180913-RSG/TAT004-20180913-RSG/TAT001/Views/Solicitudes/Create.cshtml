@@ -172,7 +172,7 @@ $(document).ready(function () {
         @*//B20180625 MGC 2018.06.26*@
         @if (ViewBag.relacionada == "")
         {
-            @*<a id="btn_borradorh" class="btn btn-small">Guardar borrador</a>*@@*Add MGC B20180619 2018.06.20*@
+            <a id="btn_borradorh" class="btn btn-small hide">Guardar borrador</a>@*Add MGC B20180619 2018.06.20*@
         }
         @*//B20180625 MGC2 2018.07.04*@
         @{string b = ViewBag.borradore + "";
@@ -183,7 +183,7 @@ $(document).ready(function () {
             }
             if (ViewBag.duplicado == null)
             {
-                <a id="btn_borradores" class="btn btn-small" style="display:@display">Descartar auto</a>@*//B20180625 MGC2 2018.07.04*@
+                <a id="btn_borradore" class="btn btn-small" style="display:@display">Descartar auto</a>@*//B20180625 MGC2 2018.07.04*@
             }
             <input type="text" id="borradore" name="borradore" value="@ViewBag.borradore" hidden /> @*//B20180625 MGC2 2018.07.04*@
             <input type="text" id="duplicate" name="duplicate" value="@ViewBag.duplicate" hidden /><!--RSG 01.11.2018-->
