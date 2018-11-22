@@ -215,15 +215,17 @@ function asignarSolicitud(num, num2,edit) {
                         $('#s_montop').text(toShow(data.S_MONTOP));
                         if (data.S_MONTOA !== "-")
                             $('#s_montoa').text(toShow(data.S_MONTOA));
-                        if (data.S_REMA < 0) {
-                            $('#s_rema').text(toShow(data.S_REMA));
-                            document.getElementById("a4").classList.add("red");
-                            document.getElementById("a4").classList.add("white-text");
-                        }
-                        else {
-                            $('#s_rema').text(toShow(data.S_REMA));
-                            document.getElementById("a4").classList.remove("red");
-                            document.getElementById("a4").classList.remove("white-text");
+                        if (data.S_REMA !== "-") {
+                            if (data.S_REMA < 0) {
+                                $('#s_rema').text(toShow(data.S_REMA));
+                                document.getElementById("a4").classList.add("red");
+                                document.getElementById("a4").classList.add("white-text");
+                            }
+                            else {
+                                $('#s_rema').text(toShow(data.S_REMA));
+                                document.getElementById("a4").classList.remove("red");
+                                document.getElementById("a4").classList.remove("white-text");
+                            }
                         }
                         if (data.S_IMPA !== null && data.S_IMPA !== "-") {
                             $('#s_impa').text(toShow(data.S_IMPA));
