@@ -37,62 +37,62 @@
                             <span id="span_ligada">Solicitud ligada a facturación </span>
                         </label>
                         <script>
-                                        var elem = document.getElementById("span_ligada");
-                                        if (elem != undefined) {
-                                            var wa = "Se calcula al cierre del periodo.";
-                                            var options = {
-                                                html: wa,
-                                                position: "right"
-                                            };
-                                            var instance = M.Tooltip.init(elem, options);
-                                        }
+                            var elem = document.getElementById("span_ligada");
+                            if (elem != undefined) {
+                                var wa = "Se calcula al cierre del periodo.";
+                                var options = {
+                                    html: wa,
+                                    position: "right"
+                                };
+                                var instance = M.Tooltip.init(elem, options);
+                            }
                         </script>
 
                         @if (Model.DOCUMENTO_REF == null)
                         {
                             <script>
-                                            function cambiaLigada(campo) {
-                                                if (campo.checked) {
-                                                    $("#select_neg").val("P");
-                                                    $("#select_negi").val("P");
-                                                    $("#select_neg").prop("disabled", "disabled");
-                                                    $("#select_neg").change();
-                                                    $("#div_objq").removeClass("hide");
-                                                    $("#txt_ligada").val("X");
-                                                } else {
-                                                    $("#select_neg").prop("disabled", false);
-                                                    $("#select_neg").change();
-                                                    $("#div_objq").addClass("hide");
-                                                    $("#txt_ligada").val("");
-                                                    cambiaCheckRec();
-                                                }
+                                function cambiaLigada(campo) {
+                                    if (campo.checked) {
+                                        $("#select_neg").val("P");
+                                        $("#select_negi").val("P");
+                                        $("#select_neg").prop("disabled", "disabled");
+                                        $("#select_neg").change();
+                                        $("#div_objq").removeClass("hide");
+                                        $("#txt_ligada").val("X");
+                                    } else {
+                                        $("#select_neg").prop("disabled", false);
+                                        $("#select_neg").change();
+                                        $("#div_objq").addClass("hide");
+                                        $("#txt_ligada").val("");
+                                        cambiaCheckRec();
+                                    }
 
-                                                var elem = document.getElementById('select_neg');
-                                                var instance = M.FormSelect.init(elem, []);
-                                            }
-                                            var elem = document.getElementById('select_neg');
-                                            var instance = M.FormSelect.init(elem, []);
-                                            elem = document.getElementById('select_dis');
-                                            instance = M.FormSelect.init(elem, []);
-                                            cambiaCheckRec();
+                                    var elem = document.getElementById('select_neg');
+                                    var instance = M.FormSelect.init(elem, []);
+                                }
+                                var elem = document.getElementById('select_neg');
+                                var instance = M.FormSelect.init(elem, []);
+                                elem = document.getElementById('select_dis');
+                                instance = M.FormSelect.init(elem, []);
+                                cambiaCheckRec();
                             </script>
                         }
                         else
                         {
                             <script>
-                                            function cambiaLigada(campo) {
-                                                if (campo.checked) {
-                                                    $("#select_neg").val("P");
-                                                    $("#select_dis").val("C");
-                                                    $("#select_negi").val("P");
-                                                    $("#select_disi").val("C");
-                                                    $("#div_objq").removeClass("hide");
-                                                    $("#txt_ligada").val("X");
-                                                } else {
-                                                    $("#div_objq").addClass("hide");
-                                                    $("#txt_ligada").val("");
-                                                }
-                                            }
+                                function cambiaLigada(campo) {
+                                    if (campo.checked) {
+                                        $("#select_neg").val("P");
+                                        $("#select_dis").val("C");
+                                        $("#select_negi").val("P");
+                                        $("#select_disi").val("C");
+                                        $("#div_objq").removeClass("hide");
+                                        $("#txt_ligada").val("X");
+                                    } else {
+                                        $("#div_objq").addClass("hide");
+                                        $("#txt_ligada").val("");
+                                    }
+                                }
                             </script>
                         }
                     </div>
@@ -114,26 +114,29 @@
                         </select>
                         <label id="lbl_tipodis">Distribución</label>
                     </div>
-                    <div id="div_categoria" class="form-group col s6 div_categoria" style="display:none">
-                        @Html.LabelFor(model => model.TSOL_ID, "Categoría", htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.DropDownList("CATEGORIA_ID", null, htmlAttributes: new { @id = "select_categoria", @class = "form-control" })
-                        </div>
-                    </div>
-                    @if (Model.DOCUMENTO_REF != null)
+                    @if (ViewBag.relacionadan != "" & ViewBag.reversan != "X" & Model.DOCUMENTO_REF == null)
                     {
-                        <script>
-                                        $("#select_neg").prop("disabled", "disabled");
-                                        $("#select_dis").prop("disabled", "disabled");
-                                        //$("#select_dis").change();
-
-                                        var elem = document.getElementById('select_neg');
-                                        var instance = M.FormSelect.init(elem, []);
-                                        elem = document.getElementById('select_dis');
-                                        instance = M.FormSelect.init(elem, []);
-                        </script>
+                        <div id="div_categoria" class="form-group col s6 div_categoria" style="display:none">
+                            @Html.LabelFor(model => model.TSOL_ID, "Categoría", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.DropDownList("CATEGORIA_ID", null, htmlAttributes: new { @id = "select_categoria", @class = "form-control" })
+                            </div>
+                        </div>
                     }
-                </div>
+                        @if (Model.DOCUMENTO_REF != null)
+                        {
+                            <script>
+                                $("#select_neg").prop("disabled", "disabled");
+                                $("#select_dis").prop("disabled", "disabled");
+                                //$("#select_dis").change();
+
+                                var elem = document.getElementById('select_neg');
+                                var instance = M.FormSelect.init(elem, []);
+                                elem = document.getElementById('select_dis');
+                                instance = M.FormSelect.init(elem, []);
+                            </script>
+                        }
+                    </div>
             </div>
         </div>
         <div id="div_montobase" class="col s12 m6 l6" style="display:none">

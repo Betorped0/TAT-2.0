@@ -3533,7 +3533,7 @@ namespace TAT001.Controllers
             string[] tsolImp = new string[] { "NC", "NCA", "NCAS", "NCAM", "NCASM", "NCS", "NCI", "NCIA", "NCIAS", "NCIS" };
             if (tsolImp.Contains(D.TSOL_ID))
             {
-                decimal KBETR = 0.0M;
+                decimal KBETR;
                 esNC = true;
                 if (db.DOCUMENTOPs.Any(x => (x.MATKL == "605" || x.MATKL == "207") && x.NUM_DOC == D.NUM_DOC))
                 {
@@ -3550,7 +3550,7 @@ namespace TAT001.Controllers
             ViewBag.montoSol = format.toShow(D.MONTO_DOC_MD.Value, ".");
             ViewBag.montoProv = (esProv ? format.toShow(montoProv, ".") : "-");
             ViewBag.montoApli = (esDocRef ? format.toShow(montoApli, ".") : "-");
-            ViewBag.remanente = ((montoProv > 0 && montoApli > 0) ? format.toShow(remanente, ".") : "-");
+            ViewBag.remanente = (esProv ? format.toShow(remanente, ".") : "-");
             ViewBag.impuesto = (esNC ? format.toShow(impuesto, ".") : "-");
             ViewBag.montoTotal = format.toShow(D.MONTO_DOC_MD.Value, ".");
         }
@@ -7571,7 +7571,7 @@ namespace TAT001.Controllers
             //Obtener info solicitud
             if (num == null || num == "" || num == "0.00")
             {
-                sm.S_NUM = num = "";
+                sm.S_NUM = "";
             }else if (edit)
             {
                 decimal num_doc = Convert.ToDecimal(num);
@@ -7591,18 +7591,17 @@ namespace TAT001.Controllers
             else
             {
                 decimal num_doc = Convert.ToDecimal(num);
-                var rev = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == num_doc && x.ESTATUS_C == null).ToList();
+                var rev = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == num_doc && x.ESTATUS_C == null && x.ESTATUS_WF != "B").ToList();
 
                 if (rev.Count == 0)
                 {
                     //CON UN RELACIONADO 
                     var rev2 = db.DOCUMENTOes.Where(x => x.NUM_DOC == num_doc).FirstOrDefault();
-                    decimal? rem2 = (rev2.MONTO_DOC_MD - Convert.ToDecimal(monto));
 
                     sm.S_MONTOB = monto;
                     sm.S_MONTOP = rev2.MONTO_DOC_MD.ToString();
                     sm.S_MONTOA = "-";
-                    sm.S_REMA = rem2.ToString();
+                    sm.S_REMA = "-";
                     sm.S_IMPA = "-";
                     sm.S_IMPB = "-";
                     sm.S_IMPC = "-";
@@ -7613,12 +7612,12 @@ namespace TAT001.Controllers
                 {
                     //CON DOS RELACIONADOS
                     var rev3 = db.DOCUMENTOes.Where(x => x.NUM_DOC == num_doc).FirstOrDefault();
-                    var rev33 = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == num_doc && x.ESTATUS_C == null && x.ESTATUS_WF != "B").FirstOrDefault();
-                    decimal? rem3 = ((rev3.MONTO_DOC_MD - (rev33!=null? rev33.MONTO_DOC_MD:0.00M)) - (Convert.ToDecimal(monto)));
+                    var rev33 = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == num_doc && x.ESTATUS_C == null && x.ESTATUS_WF != "B").First().MONTO_DOC_MD.Value;
+                    decimal rem3 = (rev3.MONTO_DOC_MD.Value - rev33);
 
                     sm.S_MONTOB = monto;
                     sm.S_MONTOP = rev3.MONTO_DOC_MD.ToString();
-                    sm.S_MONTOA = rev33.MONTO_DOC_MD.ToString();
+                    sm.S_MONTOA = rev33.ToString();
                     sm.S_REMA = rem3.ToString();
                     sm.S_IMPA = "-";
                     sm.S_IMPB = "-";
@@ -7636,7 +7635,7 @@ namespace TAT001.Controllers
                     {
                         sum = sum + k.Value;
                     }
-                    decimal? rem4 = ((rev4.MONTO_DOC_MD - sum) - (Convert.ToDecimal(monto)));
+                    decimal rem4 = (rev4.MONTO_DOC_MD.Value - sum);
 
                     sm.S_MONTOB = monto;
                     sm.S_MONTOP = rev4.MONTO_DOC_MD.ToString();
@@ -7653,7 +7652,7 @@ namespace TAT001.Controllers
             string[] tsolImp = new string[] { "NC", "NCA", "NCAS", "NCAM", "NCASM", "NCS", "NCI", "NCIA", "NCIAS", "NCIS" };
             if (tsolImp.Contains(tsol_id))
             {
-                decimal KBETR = 0.0M;
+                decimal KBETR;
                 if (esCategoriaUnica)
                 {
                     KBETR = db.IIMPUESTOes.First(x => x.MWSKZ == "A0").KBETR.Value;
