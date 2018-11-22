@@ -1111,7 +1111,6 @@ namespace TAT001.Controllers
         {
             List<HttpPostedFileBase> archiArr = new List<HttpPostedFileBase>();
             List<DOCUMENTOA> docupA = new List<DOCUMENTOA>();
-            SolicitudesController3 sc = new SolicitudesController3();
             int numFiles = 0;
 
             //REVISAR SI HAY ARCHIVOS POR SUBIR
