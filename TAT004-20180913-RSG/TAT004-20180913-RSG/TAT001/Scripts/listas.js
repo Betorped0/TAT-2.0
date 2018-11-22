@@ -9,7 +9,7 @@
         data: { sociedad_id: soc, tsol_id: tsol, usuario_id: user },
 
         success: function (data) {
-            if (data ==0) {
+            if (data === 0) {
                 M.toast({
                     classes: "pWarnning",
                     displayLength: 1000000,
@@ -17,7 +17,7 @@
                     + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'pWarnning\')">Aceptar</button>'
                 });
             } else {
-                $("#PERIODO").val(data)
+                $("#PERIODO").val(data);
                 $("#periodo").val(data);
             }
         },
@@ -28,7 +28,7 @@
     });
 }
 function cuentas() {
-    var bool = false
+    var bool = false;
     clearing = [];
     var bukrs = ($("#sociedad_id").val() ? $("#sociedad_id").val():$("#D_SOCIEDAD_ID").val()),
         land = $("#pais_id").val(),
@@ -59,7 +59,7 @@ function cuentas() {
                     html: '<span style="padding-right:15px;"><i class="material-icons yellow-text">info</i></span> Sin Cuentas relacionadas '
                     + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'cWarnning\')">Aceptar</button>'
                 });
-                bool = false
+                bool = false;
             }
 
         },
@@ -123,7 +123,7 @@ function cierre() {
     var tsol = (!$("#TSOL_ID").val() ? $("#tsol_id").val() : $("#TSOL_ID").val());
     var periodo = $("#periodo").val();
     var user = $("#USUARIOD_ID").val();
-    var bool = false
+    var bool = false;
     $.ajax({
         type: "POST",
         url: root + 'Listas/cierre',
@@ -156,7 +156,7 @@ function asignarSolicitud(num, num2,edit) {
     var soc = $("#sociedad_id").val();
     var tsol = (!$("#TSOL_ID").val() ? $("#tsol_id").val() : $("#TSOL_ID").val());
     var esCategoriaUnica = false;
-    if ($("#select_dis").val()=="C"){
+    if ($("#select_dis").val()==="C"){
         $("#table_dis > tbody  > tr[role='row']").each(function (indx, row) {
             var cat = row.cells.item(5).textContent;
             var _xxx = $.parseJSON($('#catmat').val());
@@ -167,7 +167,6 @@ function asignarSolicitud(num, num2,edit) {
             }
         });
     }
-    if (true) {
         $.ajax({
             type: "POST",
             url: 'getSolicitud',
@@ -177,13 +176,13 @@ function asignarSolicitud(num, num2,edit) {
             success: function (data) {
 
                 if (data !== null || data !== "") {
-                    if (data.S_NUM == "") {
+                    if (data.S_NUM === "") {
                         var num2 = $('#monto_doc_md').val();
                         $('#s_montob').text(num2);
                         $('#s_montop').text("-");
                         $('#s_montoa').text("-");
                         $('#s_rema').text("-");
-                        if (data.S_IMPA != null && data.S_IMPA != "-"){
+                        if (data.S_IMPA !== null && data.S_IMPA !== "-"){
                             $('#s_impa').text(toShow(data.S_IMPA));
                         } else {
                             $('#s_impa').text("-");
@@ -201,7 +200,11 @@ function asignarSolicitud(num, num2,edit) {
                             document.getElementById("a4").classList.add("white-text");
                         }
                         $('#s_rema').text(data.S_REMA);
-                        $('#s_impa').text(data.S_IMPA);
+                        if (data.S_IMPA !== null && data.S_IMPA !== "-") {
+                            $('#s_impa').text(toShow(data.S_IMPA));
+                        } else {
+                            $('#s_impa').text("-");
+                        }
                         $('#s_impb').text("-");
                         $('#s_impc').text("-");
                         $('#s_ret').text("-");
@@ -210,19 +213,25 @@ function asignarSolicitud(num, num2,edit) {
                     else {
                         $('#s_montob').text(toShow(data.S_MONTOB));
                         $('#s_montop').text(toShow(data.S_MONTOP));
-                        if (data.S_MONTOA != "-")
+                        if (data.S_MONTOA !== "-")
                             $('#s_montoa').text(toShow(data.S_MONTOA));
-                        if (data.S_REMA < 0) {
-                            $('#s_rema').text(toShow(data.S_REMA));
-                            document.getElementById("a4").classList.add("red");
-                            document.getElementById("a4").classList.add("white-text");
+                        if (data.S_REMA !== "-") {
+                            if (data.S_REMA < 0) {
+                                $('#s_rema').text(toShow(data.S_REMA));
+                                document.getElementById("a4").classList.add("red");
+                                document.getElementById("a4").classList.add("white-text");
+                            }
+                            else {
+                                $('#s_rema').text(toShow(data.S_REMA));
+                                document.getElementById("a4").classList.remove("red");
+                                document.getElementById("a4").classList.remove("white-text");
+                            }
                         }
-                        else {
-                            $('#s_rema').text(toShow(data.S_REMA));
-                            document.getElementById("a4").classList.remove("red");
-                            document.getElementById("a4").classList.remove("white-text");
+                        if (data.S_IMPA !== null && data.S_IMPA !== "-") {
+                            $('#s_impa').text(toShow(data.S_IMPA));
+                        } else {
+                            $('#s_impa').text("-");
                         }
-                        $('#s_impa').text(toShow(data.S_IMPA));
                         $('#s_impb').text(data.S_IMPB);
                         $('#s_impc').text(data.S_IMPC);
                         $('#s_ret').text(toShow(data.S_RET));
@@ -235,5 +244,5 @@ function asignarSolicitud(num, num2,edit) {
             },
             async: false
         });
-    }
+    
 }

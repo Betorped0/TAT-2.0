@@ -35,40 +35,39 @@
         <div class="col s12 m7">
             <div class="row" style="margin-bottom:0">
                 @* ---DRS 3.10.2018--- *@
-                <div class="input-field col s2">
+                <div class="input-field col s4 m2">
                     @Html.EditorFor(model => model.D.USUARIOC_ID, new { htmlAttributes = new { @disabled = "disabled" } })
                     @Html.LabelFor(model => model.D.USUARIOC_ID, new { @id = "lbl_userid" })
                 </div>
                 @* ---DRS 3.10.2018--- *@
-                <div class="input-field col s2">
+                <div class="input-field col s4 m2">
                     @{ string manager = Model.D.CLIENTE.CLIENTEFs.Any(x => x.ACTIVO) ? Model.D.CLIENTE.CLIENTEFs.First(x => x.ACTIVO).USUARIO1_ID : "";
                         @Html.EditorFor(model => model.D.USUARIO.MANAGER, new { htmlAttributes = new { @disabled = "disabled", @Value = manager } })
                         @Html.LabelFor(model => model.D.USUARIO.MANAGER, "Manager", new { @id = "lbl_manager" })
                     }
                 </div>
                 @* ---DRS 3.10.2018--- *@
-                <div class="input-field col s2">
+                <div class="input-field col s4 m2">
                     @Html.EditorFor(model => model.D.USUARIO.BACKUP_ID, "BACKUP", new { htmlAttributes = new { @disabled = "disabled" } })
                     @Html.LabelFor(model => model.D.USUARIO.BACKUP_ID, "Backup", new { @id = "lbl_backup" })
                 </div>
                 @* ---DRS 3.10.2018--- *@
-                <div class="input-field col s2">
+                <div class="input-field col s4 m2">
                     @Html.EditorFor(model => model.D.USUARIO.BUNIT, "BU", new { htmlAttributes = new { @disabled = "disabled", @Value = Model.D.SOCIEDAD_ID } })
                     @Html.LabelFor(model => model.D.USUARIO.BUNIT, "BU", new { @class = "lbl_bu" })
                 </div>
                 @* ---DRS 3.10.2018--- *@
-                <div class="input-field col s4">
+                <div class="input-field col s8 m4">
                     @if (Model.D.ESTATUS == "N" | Model.D.ESTATUS != "N")
                     {
                         TAT001.Services.Estatus es = new TAT001.Services.Estatus();//ADD RSG 25.10.2018
-                        string status = es.getText(Model.D);//ADD RSG 25.10.2018
+                        string status = es.getText(Model.D, Session["spras"].ToString());//ADD RSG 25.10.2018
                         <input type="text" id="txt_status" value="@status" disabled="disabled" />@*//ADD RSG 25.10.2018*@
                         <label for="txt_status" id="lbl_status">Estatus</label>
                     }
                 </div>
             </div>
         </div>
-
 
         @* ---DRS 13.10.2018--- *@
         <div class="col s12 m5">
@@ -82,7 +81,7 @@
                         <ul id='list_carta' class='dropdown-content'>
                             @*
 
-                    @* ---DRS 14.10.2018--- *@
+                                @* ---DRS 14.10.2018--- *@
                             <li><a href="@Url.Action("Lista", "CartaV", new { id = Model.D.NUM_DOC, swf = Model.D.ESTATUS_WF })" id="lbl_list">Lista de cartas</a></li> @*//B20180720P MGC Guardar Carta*@
                             @if (Model.D.ESTATUS_WF.Equals("S") && (Model.D.USUARIOD_ID == User.Identity.Name))
                             {
@@ -131,7 +130,7 @@
                                 var instance = M.FloatingActionButton.init(elem, options);
                             </script>
                             @*<a id="lbl_wfa" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="A" })">Aprobar</a>
-                    <a id="lbl_wfr" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="R" })">Rechazar</a>*@
+                                <a id="lbl_wfr" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="R" })">Rechazar</a>*@
                             <a class="btn-small modal-trigger" href="#modal1" onclick="aprobar()">Aprobar</a>
                             <a class="btn-small modal-trigger" href="#modal1" onclick="rechazar()">Rechazar</a>
                         }
@@ -317,7 +316,7 @@
                     <a class="btn-small" href="@Url.Action("Nuevo", "Flujos", new { id = Model.D.NUM_DOC })">Enviar</a>
                 }
             </div>
-            </div>
+        </div>
     </div>
 
     <div class="">
@@ -403,7 +402,7 @@
                                 @*@Html.LabelFor(model => model.F.ESTATUS, new { @id = "lbl_userid" })*@
                                 <div class="input-field col s10 offset-s1">
                                     @Html.TextAreaFor(model => model.F.COMENTARIO, new { @class = "materialize-textarea", @id = "txt_comentario", @maxlength = 255 })
-                                    @Html.LabelFor(model => model.F.COMENTARIO, new { @id = "lbl_co" })
+                                    @Html.LabelFor(model => model.F.COMENTARIO, new { @class = "lbl_co" })
                                 </div>
                             </div>
                         </div>
@@ -564,7 +563,7 @@
                                     <th width="" id="lbl_es">
                                         Estatus
                                     </th>
-                                    <th width="30%" id="lbl_co">
+                                    <th width="30%" class="lbl_co">
                                         Comentario
                                     </th>
                                 </tr>
@@ -572,27 +571,27 @@
                             <tbody>
                                 @foreach (TAT001.Entities.FLUJO f in ViewBag.workflow)
                                 {
-                                <tr>
-                                    <td width=""> @Html.DisplayFor(modelItem => f.USUARIOA_ID) - @Html.DisplayFor(modelItem => f.USUARIO.NOMBRE) @Html.DisplayFor(modelItem => f.USUARIO.APELLIDO_P) @Html.DisplayFor(modelItem => f.USUARIO.APELLIDO_M) </td>
-                                    <td width=""> @Html.DisplayFor(modelItem => f.WORKFP.ACCION.ACCIONTs.Where(a=>a.SPRAS_ID == Session["spras"].ToString()).FirstOrDefault().TXT050)</td>
-                                    <td width=""> @f.FECHAC.Value.ToShortDateString() </td>
-                                    <td width=""> @f.FECHAC.Value.TimeOfDay.ToString().Split('.')[0] </td>
-                                    <td width=""> @f.FECHAM.Value.ToShortDateString() </td>
-                                    <td width=""> @f.FECHAM.Value.TimeOfDay.ToString().Split('.')[0] </td>
-                                    <td width=""> @Html.DisplayFor(modelItem => f.ESTATUS) </td>
-                                    @* ------DRS 24.09.18------ *@
-                                    <td width="">
-                                        @{
-                                            string est = (Html.DisplayFor(modelItem => f.STATUS)).ToString();
+                                    <tr>
+                                        <td width=""> @Html.DisplayFor(modelItem => f.USUARIOA_ID) - @Html.DisplayFor(modelItem => f.USUARIO.NOMBRE) @Html.DisplayFor(modelItem => f.USUARIO.APELLIDO_P) @Html.DisplayFor(modelItem => f.USUARIO.APELLIDO_M) </td>
+                                        <td width=""> @Html.DisplayFor(modelItem => f.WORKFP.ACCION.ACCIONTs.Where(a => a.SPRAS_ID == Session["spras"].ToString()).FirstOrDefault().TXT050)</td>
+                                        <td width=""> @f.FECHAC.Value.ToShortDateString() </td>
+                                        <td width=""> @f.FECHAC.Value.TimeOfDay.ToString().Split('.')[0] </td>
+                                        <td width=""> @f.FECHAM.Value.ToShortDateString() </td>
+                                        <td width=""> @f.FECHAM.Value.TimeOfDay.ToString().Split('.')[0] </td>
+                                        <td width=""> @Html.DisplayFor(modelItem => f.ESTATUS) </td>
+                                        @* ------DRS 24.09.18------ *@
+                                        <td width="">
+                                            @{
+                                                string est = (Html.DisplayFor(modelItem => f.STATUS)).ToString();
 
-                                            TAT001.Services.Estatus c = new TAT001.Services.Estatus();
-                                            c.getText(est, Model.D.NUM_DOC);
-                                        }
-                                        @c.getText(est, Model.D.NUM_DOC)
+                                                TAT001.Services.Estatus c = new TAT001.Services.Estatus();
+                                                //c.getText(est, Model.D.NUM_DOC);
+                                            }
+                                            @c.getText(est, Model.D.NUM_DOC, Session["spras"].ToString())
 
-                                    </td>
-                                    <td width="30%"> @Html.DisplayFor(modelItem => f.COMENTARIO) </td>
-                                </tr>
+                                        </td>
+                                        <td width="30%"> @Html.Raw(f.COMENTARIO) </td>
+                                    </tr>
                                 }
                             </tbody>
                         </table>
@@ -614,6 +613,8 @@ catch (Exception ee)
 <p>
     @Html.ActionLink("Regresar", "Index")
 </p>
+
+<script src="~/Scripts/formatos.js"></script>
 
 @*///////////////////////////////L.G.P.P MODIFICACIONES INICIO*@
 <script>
@@ -686,7 +687,7 @@ catch (Exception ee)
     }
 }
 @* LEJ 09.07.18 *@
-<script src="~/Scripts/ValidarFormatosDec.js"></script>
+@*<script src="~/Scripts/ValidarFormatosDec.js"></script>*@
 <script>
     $(document).ready(function () {
         $('.collapsible').collapsible();
@@ -720,5 +721,3 @@ catch (Exception ee)
     }
 </script>
 
-
-<script src="~/Scripts/formatos.js"></script>

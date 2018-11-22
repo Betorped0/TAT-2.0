@@ -430,14 +430,21 @@ namespace TAT001.Services
                         //        dOCUMENTO.MONTO_DOC_MD += mats.VAL;
                         //}
                         dOCUMENTO.MONTO_DOC_MD = totalcats;
+                        bool sinO = false;
                         foreach (DOCUMENTORAN dran in dOCpADRE.DOCUMENTORECs.Where(x => x.POS == posicion).FirstOrDefault().DOCUMENTORANs)
                         {
                             if (dOCUMENTO.MONTO_DOC_MD > dran.OBJETIVOI)
                             {
                                 dOCUMENTO.MONTO_DOC_MD = dOCUMENTO.MONTO_DOC_MD * dran.PORCENTAJE / 100;
                                 dOCUMENTO.PORC_APOYO = dran.PORCENTAJE;
+                                sinO = true;
                                 break;
                             }
+                        }
+                        if (!sinO)
+                        {
+                            dOCUMENTO.MONTO_DOC_MD = 0;
+                            dOCUMENTO.PORC_APOYO = 0;
                         }
                     }
                     if (!(dOCpADRE.TIPO_RECURRENTE == "1" & listcat.Count == 0))
