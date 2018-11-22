@@ -441,6 +441,21 @@ namespace TAT001.Controllers.Catalogos
             {
                 sociedad[i] = sociedades[i].BUKRS;
             }
+            var usf = (from x in db.USUARIOFs
+                       where x.USUARIO_ID.Equals(uSUARIO.ID)
+                       select x.KUNNR).ToArray();
+            var ucl = (from x in db.CLIENTEFs
+                       where x.USUARIO0_ID.Equals(uSUARIO.ID) | x.USUARIO1_ID.Equals(uSUARIO.ID) | x.USUARIO2_ID.Equals(uSUARIO.ID) | x.USUARIO3_ID.Equals(uSUARIO.ID)
+                         | x.USUARIO4_ID.Equals(uSUARIO.ID) | x.USUARIO5_ID.Equals(uSUARIO.ID) | x.USUARIO6_ID.Equals(uSUARIO.ID) | x.USUARIO7_ID.Equals(uSUARIO.ID)
+                       select x.KUNNR).ToArray();
+            if (ucl.Length == 0 && usf.Length == 0)
+            {
+                ViewBag.flujo = "si";
+            }
+            else
+            {
+                ViewBag.flujo = "no";
+            }
             ViewBag.ID = uSUARIO.ID;
             //ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION", uSUARIO.SPRAS_ID);
             //ViewBag.PUESTO_ID = new SelectList(db.PUESTOTs.Where(a => a.SPRAS_ID.Equals(spra)), "PUESTO_ID", "TXT50", uSUARIO.PUESTO_ID);
