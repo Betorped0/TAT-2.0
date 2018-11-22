@@ -867,7 +867,14 @@
 
 </script>
 <div>
-    @Html.ActionLink("Back to List", "Index", null, new { id = "lbl_regresar" })
+    @if (ViewBag.nivelUsuario == 1 || ViewBag.nivelUsuario == 8)
+    {
+        @Html.ActionLink("Back to List", "Index", null, new { id = "lbl_regresar" })
+    }
+    else
+    {
+        @Html.ActionLink("Back to List", "Index","Home", null, new { id = "lbl_regresar" })
+    }
 </div>
 <!-- Modal Structure -->
 <div id="modalflujoc" class="modal">

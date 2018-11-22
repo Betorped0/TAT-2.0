@@ -399,9 +399,16 @@
     </script>
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index", null, new { id = "lbl_regresar" })
-</div>
+    <div>
+        if (ViewBag.nivelUsuario == 1 || ViewBag.nivelUsuario == 8)
+        {
+            @Html.ActionLink("Back to List", "Index", null, new { id = "lbl_regresar" })
+        }
+        else
+        {
+            @Html.ActionLink("Back to List", "Index", "Home", null, new { id = "lbl_regresar" })
+        }
+    </div>
 <script>
 </script>
 @if (ViewBag.Error != null)
