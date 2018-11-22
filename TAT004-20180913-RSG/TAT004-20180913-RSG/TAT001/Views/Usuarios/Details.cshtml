@@ -22,13 +22,13 @@
 <div class="row">
     <div class="col s12 l12 right-align">
         <a class="btn" id="btn_changepassword" href="@Url.Action("Pass", new { id = Model.ID})">Cambiar contraseña</a>
-        @if (ViewBag.nivelUsuario == 1 || ViewBag.nivelUsuario == 8)
+        @if ((ViewBag.nivelUsuario == 1 || ViewBag.nivelUsuario == 8) && ViewBag.idUsuario != ViewBag.ID)
         {
             <a class="btn" id="btn_editar" href="@Url.Action("Edit", new { id = Model.ID })">Editar</a>
         }
         else
         {
-            <a class="btn" disabled id="btn_editar" href="@Url.Action("Edit", new { id = Model.ID})">Editar</a>
+            <a class="btn" disabled id="btn_editar" href="@Url.Action("Edit", new { id = Model.ID })">Editar</a>
         }
 
     </div>

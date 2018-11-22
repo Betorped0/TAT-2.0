@@ -123,6 +123,7 @@ namespace TAT001.Controllers.Catalogos
             }
             USUARIO uSUARIO = db.USUARIOs.Find(id);
             ViewBag.nivelUsuario = userz.PUESTO_ID;
+            ViewBag.idUsuario = userz.ID;
             string spra = Session["spras"].ToString();
             if (uSUARIO == null)
             {
@@ -139,6 +140,7 @@ namespace TAT001.Controllers.Catalogos
             {
                 sociedad[i] = sociedades[i].BUKRS;
             }
+            ViewBag.ID = uSUARIO.ID;
             ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION", uSUARIO.SPRAS_ID);
             ViewBag.PUESTO_ID = new SelectList(db.PUESTOTs.Where(a => a.SPRAS_ID.Equals(spra)), "PUESTO_ID", "TXT50", uSUARIO.PUESTO_ID);
             ViewBag.BUNIT = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS", uSUARIO.BUNIT);
@@ -406,8 +408,9 @@ namespace TAT001.Controllers.Catalogos
             //    Session["spras"] = user.SPRAS_ID;
             //}
             var usu = User.Identity.Name;
-            USUARIO usu2 = db.USUARIOs.Where(x => x.ID.Equals(id)).FirstOrDefault();
-            ViewBag.nivelUsuario = userz.PUESTO_ID;
+            USUARIO usu2 = db.USUARIOs.Where(x => x.ID.Equals(usu)).FirstOrDefault();
+            ViewBag.nivelUsuario = usu2.PUESTO_ID;
+            ViewBag.idUsuario = usu2.ID;
             if (usu2.PUESTO_ID == 1 || usu2.PUESTO_ID == 8)
             {
                 ViewBag.admin = "si";
@@ -438,6 +441,7 @@ namespace TAT001.Controllers.Catalogos
             {
                 sociedad[i] = sociedades[i].BUKRS;
             }
+            ViewBag.ID = uSUARIO.ID;
             //ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION", uSUARIO.SPRAS_ID);
             //ViewBag.PUESTO_ID = new SelectList(db.PUESTOTs.Where(a => a.SPRAS_ID.Equals(spra)), "PUESTO_ID", "TXT50", uSUARIO.PUESTO_ID);
             //ViewBag.BUNIT = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS", uSUARIO.BUNIT);
