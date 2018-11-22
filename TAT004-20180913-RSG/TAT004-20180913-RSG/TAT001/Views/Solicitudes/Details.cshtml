@@ -35,29 +35,29 @@
         <div class="col s12 m7">
             <div class="row" style="margin-bottom:0">
                 @* ---DRS 3.10.2018--- *@
-                <div class="input-field col s2">
+                <div class="input-field col s4 m2">
                     @Html.EditorFor(model => model.D.USUARIOC_ID, new { htmlAttributes = new { @disabled = "disabled" } })
                     @Html.LabelFor(model => model.D.USUARIOC_ID, new { @id = "lbl_userid" })
                 </div>
                 @* ---DRS 3.10.2018--- *@
-                <div class="input-field col s2">
+                <div class="input-field col s4 m2">
                     @{ string manager = Model.D.CLIENTE.CLIENTEFs.Any(x => x.ACTIVO) ? Model.D.CLIENTE.CLIENTEFs.First(x => x.ACTIVO).USUARIO1_ID : "";
                         @Html.EditorFor(model => model.D.USUARIO.MANAGER, new { htmlAttributes = new { @disabled = "disabled", @Value = manager } })
                         @Html.LabelFor(model => model.D.USUARIO.MANAGER, "Manager", new { @id = "lbl_manager" })
                     }
                 </div>
                 @* ---DRS 3.10.2018--- *@
-                <div class="input-field col s2">
+                <div class="input-field col s4 m2">
                     @Html.EditorFor(model => model.D.USUARIO.BACKUP_ID, "BACKUP", new { htmlAttributes = new { @disabled = "disabled" } })
                     @Html.LabelFor(model => model.D.USUARIO.BACKUP_ID, "Backup", new { @id = "lbl_backup" })
                 </div>
                 @* ---DRS 3.10.2018--- *@
-                <div class="input-field col s2">
+                <div class="input-field col s4 m2">
                     @Html.EditorFor(model => model.D.USUARIO.BUNIT, "BU", new { htmlAttributes = new { @disabled = "disabled", @Value = Model.D.SOCIEDAD_ID } })
                     @Html.LabelFor(model => model.D.USUARIO.BUNIT, "BU", new { @class = "lbl_bu" })
                 </div>
                 @* ---DRS 3.10.2018--- *@
-                <div class="input-field col s4">
+                <div class="input-field col s8 m4">
                     @if (Model.D.ESTATUS == "N" | Model.D.ESTATUS != "N")
                     {
                         TAT001.Services.Estatus es = new TAT001.Services.Estatus();//ADD RSG 25.10.2018
@@ -68,7 +68,6 @@
                 </div>
             </div>
         </div>
-
 
         @* ---DRS 13.10.2018--- *@
         <div class="col s12 m5">
