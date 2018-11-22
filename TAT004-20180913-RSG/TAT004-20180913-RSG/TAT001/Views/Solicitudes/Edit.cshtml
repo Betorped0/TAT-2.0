@@ -51,7 +51,7 @@
 <div class="row" style="margin-bottom:0">
     @{TAT001.Entities.USUARIO us = ViewBag.usuario;
 
-        <div class="col s12 m5 l5">
+        <div class="col s12 m6 l5">
             <div class="row" style="margin-bottom:0">
                 <div class="input-field col s4">
                     @Html.EditorFor(model => model.USUARIOC_ID, "Usuario", new { htmlAttributes = new { @disabled = "disabled", @Value = us.ID } })
@@ -67,8 +67,8 @@
                 </div>
             </div>
         </div>
-        <div class="col s12 m4 l4">
-            <div class="input-field col s3">
+        <div class="col s12 m6 l4">
+            <div class="input-field col s3 m5">
                 @Html.EditorFor(model => model.USUARIO.BUNIT, "BU", new { htmlAttributes = new { @disabled = "disabled", @Value = Model.SOCIEDAD_ID } })
                 @Html.LabelFor(model => model.USUARIO.BUNIT, "BU", new { @id = "lbl_bu" })
             </div>
@@ -166,10 +166,10 @@
             <a id="btn_guardarh" class="btn btn-small disabled">Enviar</a>
         }
     </div>
-    <div class="div_bottom">
+    @*<div class="div_bottom">
         <hr class="hr_bw" />
         <hr class="hr_color .pink.darken-1" />
-    </div>
+    </div>*@
 </div>
 <div class="">
     <div class="row" style="background-color:#f4f4f4;">

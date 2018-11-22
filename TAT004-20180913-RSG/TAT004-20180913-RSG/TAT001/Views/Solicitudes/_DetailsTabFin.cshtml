@@ -153,11 +153,11 @@
                 <h5 id="headDetalSol">Detalle solicitud</h5>
                 <div class="row" style="margin-bottom:0">
                     <div class="input-field col s8">
-                        @if (ViewBag.accion == "N")
+                        @*@if (ViewBag.accion == "N")
                         {
                             @Html.EditorFor(model => model.D.MONTO_DOC_MD)
-                        }
-                        @Html.EditorFor(model => model.D.MONTO_DOC_MD, new { htmlAttributes = new { @disabled = "disabled", @class = "_vmonto" } })
+                        }*@
+                        @Html.EditorFor(model => model.D.MONTO_DOC_MD, new { htmlAttributes = new { @disabled = "disabled", @class = "precio" } })
                         @Html.LabelFor(model => model.D.MONTO_DOC_MD, "Monto", new { @id = "lbl_montomd" })
                     </div>
                     <div class="input-field col s4">
@@ -165,11 +165,11 @@
                         @Html.LabelFor(model => model.D.MONEDA_ID, "Moneda", new { @id = "lbl_waers" })
                     </div>
                     <div class="input-field col s6">
-                        @Html.EditorFor(model => model.D.TIPO_CAMBIO, new { htmlAttributes = new { @disabled = "disabled", @class = "_tc" } })
+                        @Html.EditorFor(model => model.D.TIPO_CAMBIO, new { htmlAttributes = new { @disabled = "disabled", @class = "precio" } })
                         @Html.LabelFor(model => model.D.TIPO_CAMBIO, "Tipo de cambio", new { @id = "lbl_tcambio" })
                     </div>
                     <div class="input-field col s6">
-                        @Html.EditorFor(model => model.D.MONTO_DOC_ML2, new { htmlAttributes = new { @disabled = "disabled", @class = "_vmonto2" } })
+                        @Html.EditorFor(model => model.D.MONTO_DOC_ML2, new { htmlAttributes = new { @disabled = "disabled", @class = "precio" } })
                         @Html.LabelFor(model => model.D.MONTO_DOC_ML2, "Monto USD", new { @id = "lbl_montoml2" })
                     </div>
                     @if (Model.D.TSOL.PADRE)
