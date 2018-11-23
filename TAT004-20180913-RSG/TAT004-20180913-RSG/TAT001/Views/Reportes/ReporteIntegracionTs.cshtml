@@ -49,6 +49,7 @@
     int year2 = yeard + 2;
     int yearback = yeard - 1;
     int yearback2 = yeard - 2;
+    var baseurl = HttpContext.Current.Request;
     <div class="row">
 
         @if (ViewBag.Display)
@@ -320,23 +321,21 @@
                     $('#table > thead > tr').each(function (index) {
                         if (index === 0) {
                         $('#headclon').append('<tr id="headc"></tr>');
-                            $(this).children().each(function () {
+                            $(this).children().each(function (indexch) {
                                 var thead = $(this).text();
-                                //    .replace("á", "&aacute;");
-                                //thead = thead.replace("é", "&eacute;");
-                                //thead = thead.replace("í", "&iacute;");
-                                //thead = thead.replace("ó", "&oacute;");
-                                //thead = thead.replace("ú", "&uacute;");
-                                //thead = thead.replace("ü", "&uuml;");
-
                             $('#headc').append('<th>' + thead + '</th>');
                          });
                         }
                     });
                     $('#table > tbody > tr').each(function (indexb) {
                         $('#bodyclon').append('<tr id="b' + indexb + '"></tr>');
-                        $(this).children().each(function () {
-                            $('#b' + indexb).append('<td style="border: 2px solid black;">' + $(this).text()+'</td>');
+                        $(this).children().each(function (indextd) {
+                            var btext = $(this).text();
+                            if (indextd == 3) {
+                                console.log("num doc: " + $(this).html());
+                                btext = $(this).html();
+                            }
+                            $('#b' + indexb).append('<td style="border: 2px solid black;">' + btext +'</td>');
                         });
                     });
                     var tableid = table;
@@ -559,7 +558,7 @@
                         </td>
                         <td> </td>
                         <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.GetType().GetProperty("NUM_DOC").GetValue(item, null), pais = "" })'" style="cursor:pointer">
-                            @item.GetType().GetProperty("NUM_DOC").GetValue(item, null)
+                            <a href="@ViewBag.baseURL/Solicitudes/Details/@item.GetType().GetProperty("NUM_DOC").GetValue(item, null)">@item.GetType().GetProperty("NUM_DOC").GetValue(item, null)</a>
                         </td>
                         
                         <td>
