@@ -1434,11 +1434,22 @@ namespace TAT001.Controllers.Catalogos
                 worksheet.Cell("F1").Value = new[] { new { BANNER = "Payer" }, };
                 worksheet.Cell("G1").Value = new[] { new { BANNER = "Canal" }, };
                 worksheet.Cell("H1").Value = new[] { new { BANNER = "Estatus" }, };
+                worksheet.Cell("I1").Value = new[] { new { BANNER = "Contacto" }, };
+                worksheet.Cell("J1").Value = new[] { new { BANNER = "Email" }, };
 
                 for (int i = 2; i <= (lst.Count + 1); i++)
                 {
+                    var NOMBRE = "";
+                    var EMAIL = "";
                     var pais = lst[i - 2].LAND;
+                    var kunnr = lst[i - 2].KUNNR;
                     var pais2 = db.PAIS.Where(X => X.LAND.Equals(pais)).Select(x => x.LANDX).FirstOrDefault();
+                    var contacto = db.CONTACTOCs.Where(x => x.KUNNR == kunnr && x.DEFECTO == true && x.ACTIVO==true).FirstOrDefault();
+                    if (contacto != null)
+                    {
+                        NOMBRE = contacto.NOMBRE;
+                        EMAIL = contacto.EMAIL;
+                    }
                     worksheet.Cell("A" + i).Value = new[] { new { BANNER = lst[i - 2].KUNNR.TrimStart('0') }, };
                     worksheet.Cell("B" + i).Value = new[] { new { BANNER = lst[i - 2].NAME1 }, };
                     worksheet.Cell("C" + i).Value = new[] { new { BANNER = lst[i - 2].SUBREGION }, };
@@ -1447,6 +1458,8 @@ namespace TAT001.Controllers.Catalogos
                     worksheet.Cell("F" + i).Value = new[] { new { BANNER = lst[i - 2].PAYER.TrimStart('0') }, };
                     worksheet.Cell("G" + i).Value = new[] { new { BANNER = lst[i - 2].CANAL }, };
                     worksheet.Cell("H" + i).Value = new[] { new { BANNER = lst[i - 2].ACTIVO? "Activo":"Inactivo" }, };
+                    worksheet.Cell("I" + i).Value = new[] { new { BANNER = NOMBRE }, };
+                    worksheet.Cell("J" + i).Value = new[] { new { BANNER = EMAIL }, };
                 }
                 var rt = ruta + @"\Clientes_" + DateTime.Now.ToShortDateString() + ".xlsx";
                 workbook.SaveAs(rt);
