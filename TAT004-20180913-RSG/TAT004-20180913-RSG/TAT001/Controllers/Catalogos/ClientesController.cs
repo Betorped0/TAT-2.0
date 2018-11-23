@@ -1444,11 +1444,22 @@ namespace TAT001.Controllers.Catalogos
                     var pais = lst[i - 2].LAND;
                     var kunnr = lst[i - 2].KUNNR;
                     var pais2 = db.PAIS.Where(X => X.LAND.Equals(pais)).Select(x => x.LANDX).FirstOrDefault();
-                    var contacto = db.CONTACTOCs.Where(x => x.KUNNR == kunnr && x.DEFECTO == true && x.ACTIVO==true).FirstOrDefault();
+                    var contacto = db.CONTACTOCs.Where(x => x.KUNNR == kunnr && x.ACTIVO == true).ToArray();
                     if (contacto != null)
                     {
-                        NOMBRE = contacto.NOMBRE;
-                        EMAIL = contacto.EMAIL;
+                        for (int j = 0; j < contacto.Length; j++)
+                        {
+                            if (contacto[j].DEFECTO == true)
+                            {
+                                NOMBRE = NOMBRE + contacto[j].NOMBRE + "*/";
+                                EMAIL = EMAIL + contacto[j].EMAIL + "*/";
+                            }
+                            else
+                            {
+                                NOMBRE = NOMBRE + contacto[j].NOMBRE + "/";
+                                EMAIL = EMAIL + contacto[j].EMAIL + "/";
+                            }
+                        }
                     }
                     worksheet.Cell("A" + i).Value = new[] { new { BANNER = lst[i - 2].KUNNR.TrimStart('0') }, };
                     worksheet.Cell("B" + i).Value = new[] { new { BANNER = lst[i - 2].NAME1 }, };
@@ -1458,8 +1469,8 @@ namespace TAT001.Controllers.Catalogos
                     worksheet.Cell("F" + i).Value = new[] { new { BANNER = lst[i - 2].PAYER.TrimStart('0') }, };
                     worksheet.Cell("G" + i).Value = new[] { new { BANNER = lst[i - 2].CANAL }, };
                     worksheet.Cell("H" + i).Value = new[] { new { BANNER = lst[i - 2].ACTIVO? "Activo":"Inactivo" }, };
-                    worksheet.Cell("I" + i).Value = new[] { new { BANNER = NOMBRE }, };
-                    worksheet.Cell("J" + i).Value = new[] { new { BANNER = EMAIL }, };
+                    worksheet.Cell("I" + i).Value = new[] { new { BANNER = NOMBRE.TrimEnd('/') }, };
+                    worksheet.Cell("J" + i).Value = new[] { new { BANNER = EMAIL.TrimEnd('/') }, };
                 }
                 var rt = ruta + @"\Clientes_" + DateTime.Now.ToShortDateString() + ".xlsx";
                 workbook.SaveAs(rt);
