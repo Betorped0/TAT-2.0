@@ -253,6 +253,7 @@
 
     <script>
         var admin = "@ViewBag.admin";
+        var flujos = "@ViewBag.flujo";
         var sociedad = $("#SELECT_SOCIEDADES").val();
         if (sociedad != null) {
             var jsval = $.parseJSON(sociedad);
@@ -269,6 +270,10 @@
             $("#selectcocode").prop("disabled", true);
             var elem = document.querySelectorAll('select');
             var instance = M.FormSelect.init(elem, []);
+        }
+
+        if (flujos == "no") {
+            $("#input_puesto").prop("disabled", true);
         }
 
         $("#input_puesto").attr("type", "text");
@@ -400,7 +405,7 @@
 }
 
     <div>
-        if (ViewBag.nivelUsuario == 1 || ViewBag.nivelUsuario == 8)
+        @if (ViewBag.nivelUsuario == 1 || ViewBag.nivelUsuario == 8)
         {
             @Html.ActionLink("Back to List", "Index", null, new { id = "lbl_regresar" })
         }

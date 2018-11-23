@@ -61,7 +61,7 @@
                     @if (Model.D.ESTATUS == "N" | Model.D.ESTATUS != "N")
                     {
                         TAT001.Services.Estatus es = new TAT001.Services.Estatus();//ADD RSG 25.10.2018
-                        string status = es.getText(Model.D);//ADD RSG 25.10.2018
+                        string status = es.getText(Model.D, Session["spras"].ToString());//ADD RSG 25.10.2018
                         <input type="text" id="txt_status" value="@status" disabled="disabled" />@*//ADD RSG 25.10.2018*@
                         <label for="txt_status" id="lbl_status">Estatus</label>
                     }
@@ -402,7 +402,7 @@
                                 @*@Html.LabelFor(model => model.F.ESTATUS, new { @id = "lbl_userid" })*@
                                 <div class="input-field col s10 offset-s1">
                                     @Html.TextAreaFor(model => model.F.COMENTARIO, new { @class = "materialize-textarea", @id = "txt_comentario", @maxlength = 255 })
-                                    @Html.LabelFor(model => model.F.COMENTARIO, new { @id = "lbl_co" })
+                                    @Html.LabelFor(model => model.F.COMENTARIO, new { @class = "lbl_co" })
                                 </div>
                             </div>
                         </div>
@@ -563,7 +563,7 @@
                                     <th width="" id="lbl_es">
                                         Estatus
                                     </th>
-                                    <th width="30%" id="lbl_co">
+                                    <th width="30%" class="lbl_co">
                                         Comentario
                                     </th>
                                 </tr>
@@ -585,9 +585,9 @@
                                                 string est = (Html.DisplayFor(modelItem => f.STATUS)).ToString();
 
                                                 TAT001.Services.Estatus c = new TAT001.Services.Estatus();
-                                                c.getText(est, Model.D.NUM_DOC);
+                                                //c.getText(est, Model.D.NUM_DOC);
                                             }
-                                            @c.getText(est, Model.D.NUM_DOC)
+                                            @c.getText(est, Model.D.NUM_DOC, Session["spras"].ToString())
 
                                         </td>
                                         <td width="30%"> @Html.Raw(f.COMENTARIO) </td>
