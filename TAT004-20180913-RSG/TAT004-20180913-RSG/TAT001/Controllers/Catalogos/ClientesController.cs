@@ -508,6 +508,7 @@ namespace TAT001.Controllers.Catalogos
             }
 
             List<Clientes> cc = new List<Clientes>();
+            List<Clientes> ccErr = new List<Clientes>();
 
             foreach (DET_AGENTE1 da in ld)
             {
@@ -661,10 +662,16 @@ namespace TAT001.Controllers.Catalogos
 
                 da.MESS = messa;
                 cl.MESS = da.MESS;
-
-                cc.Add(cl);
+                if (string.IsNullOrEmpty(messa)) {
+                    cc.Add(cl);
+                }
+                else
+                {
+                    ccErr.Add(cl);
+                }
             }
-            return Json(cc, JsonRequestBehavior.AllowGet);
+            ccErr.AddRange(cc);
+            return Json(ccErr, JsonRequestBehavior.AllowGet);
             //  return View("CargaList",cc);
         }
         [HttpPost]
