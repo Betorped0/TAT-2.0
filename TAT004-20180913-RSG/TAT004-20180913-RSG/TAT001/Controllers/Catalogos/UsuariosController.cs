@@ -1169,7 +1169,6 @@ namespace TAT001.Controllers.Catalogos
             if (Request.Files.Count > 0)
             {
                 HttpPostedFileBase file = Request.Files["FileUpload"];
-                string extension = System.IO.Path.GetExtension(file.FileName);
                 IExcelDataReader reader = ExcelReaderFactory.CreateReader(file.InputStream);
                 DataSet result = reader.AsDataSet();
                 DataTable dt = result.Tables[0];
@@ -1183,9 +1182,8 @@ namespace TAT001.Controllers.Catalogos
             List<CLIENTE> clientes = new List<CLIENTE>();
             List<PUESTO> puesto = new List<PUESTO>();
             List<SOCIEDAD> sociedad = new List<SOCIEDAD>();
-            int rowst = ld.Count();
+            int rowst = ld.Count;
             string[] IDs = new string[rowst];
-            int[] pos = new int[rowst];
             int cont2 = 0;
             int cont3 = 0;
             int cont4 = 0;
@@ -1231,10 +1229,10 @@ namespace TAT001.Controllers.Catalogos
 
                 var ni = (from x in db.PUESTOTs
                           join a in db.PUESTOes on x.PUESTO_ID equals a.ID
-                          where x.PUESTO_ID == pues & x.SPRAS_ID.Equals(p) & a.ACTIVO == true
+                          where x.PUESTO_ID == pues && x.SPRAS_ID.Equals(p) && a.ACTIVO.Value
                           select x.PUESTO_ID).FirstOrDefault();
                 bool pru = false;
-                var re = (from x in db.DET_APROBH where x.PUESTOC_ID == ni & x.ACTIVO == true select x.SOCIEDAD_ID).FirstOrDefault();
+                var re = (from x in db.DET_APROBH where x.PUESTOC_ID == ni && x.ACTIVO select x.SOCIEDAD_ID).FirstOrDefault();
 
                 if (cont2 > 0)
                 {
@@ -1248,7 +1246,7 @@ namespace TAT001.Controllers.Catalogos
                 }
                 if (cont3 > 0)
                 {
-                    //Comprobacion de la asignacion de varios clientes
+                    //Comprobacion de la asignacion de varios co code
                     if (us.BUNIT != gua1[cont3 - 1] && us.KUNNR == "" && us.PUESTO_ID == "" && us.ID == "" && us.NOMBRE == "" && us.APELLIDO_P == "" && us.APELLIDO_M == "" && us.EMAIL == "" && us.SPRAS_ID == "" && us.PASS == "")
                     {
                         vus = true;
@@ -1258,11 +1256,11 @@ namespace TAT001.Controllers.Catalogos
                 }
 
                 // Validacion del tipo de usuario
-                if ((re != null && re != "") && pru == false)
+                if ((re != null && re != "") && !pru)
                 {
                     sel = "venta";
                 }
-                else if ((re == null || re == "") && pru == false)
+                else if ((re == null || re == "") && !pru)
                 {
                     sel = "super";
                 }
@@ -1271,11 +1269,11 @@ namespace TAT001.Controllers.Catalogos
                 if (sel == "venta")
                 {
                     //Usuario nuevo con cliente
-                    if (vus == false)
+                    if (!vus)
                     {
                         ////-------------------------------CLIENTE
                         var error = "";
-                        CLIENTE k = db.CLIENTEs.Where(cc => cc.KUNNR.Equals(us.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
+                        CLIENTE k = db.CLIENTEs.Where(cc => cc.KUNNR.Equals(us.KUNNR) && cc.ACTIVO).FirstOrDefault();
                         for (int i = cont2; i >= 0; i--)
                         {
                             if (client[i, 0] == us.KUNNR && client[i, 1] == us.ID)
@@ -1304,7 +1302,7 @@ namespace TAT001.Controllers.Catalogos
                         }
 
                         ////-------------------------------COMPANY CODE
-                        SOCIEDAD b = db.SOCIEDADs.Where(x => x.BUKRS.Equals(us.BUNIT) & x.ACTIVO == true).FirstOrDefault();
+                        SOCIEDAD b = db.SOCIEDADs.Where(x => x.BUKRS.Equals(us.BUNIT) && x.ACTIVO).FirstOrDefault();
 
                         if (b == null)
                         {
@@ -1325,7 +1323,7 @@ namespace TAT001.Controllers.Catalogos
 
                         ////-------------------------------NIVEL
 
-                        PUESTO pi = db.PUESTOes.Where(x => x.ID == pues & x.ACTIVO == true).FirstOrDefault();
+                        PUESTO pi = db.PUESTOes.Where(x => x.ID == pues && x.ACTIVO.Value).FirstOrDefault();
                         if (pi == null)
                             us.PUESTO_IDX = false;
                         else
@@ -1386,7 +1384,7 @@ namespace TAT001.Controllers.Catalogos
                         }
 
                         ////-------------------------------EMAIL
-                        if (ComprobarEmail(us.EMAIL) == false)
+                        if (!ComprobarEmail(us.EMAIL))
                         {
                             us.EMAILX = false;
                         }
@@ -1405,7 +1403,7 @@ namespace TAT001.Controllers.Catalogos
                             us.SPRAS_ID = "ES";
                             da.SPRAS_ID = us.SPRAS_ID;
                         }
-                        SPRA si = db.SPRAS.Where(x => x.ID.Equals(us.SPRAS_ID) == true).FirstOrDefault();
+                        SPRA si = db.SPRAS.Where(x => x.ID.Equals(us.SPRAS_ID)).FirstOrDefault();
                         if (si == null)
                         {
                             us.SPRAS_IDX = false;
@@ -1427,10 +1425,10 @@ namespace TAT001.Controllers.Catalogos
                         tablas[cont2, 10] = messa;
                     }
                     //Asignacion de mas clientes
-                    else if (vus == true)
+                    else if (vus)
                     {
                         var error = "";
-                        CLIENTE k = db.CLIENTEs.Where(cc => cc.KUNNR.Equals(us.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
+                        CLIENTE k = db.CLIENTEs.Where(cc => cc.KUNNR.Equals(us.KUNNR) && cc.ACTIVO).FirstOrDefault();
                         for (int x = cont4; x >= 0; x--)
                         {
                             if (IDs[x] != null)
@@ -1474,7 +1472,7 @@ namespace TAT001.Controllers.Catalogos
                 else if (sel == "super")
                 {
                     //Usuario nuevo con Co Code
-                    if (vus == false)
+                    if (!vus)
                     {
                         ////-------------------------------CLIENTE
                         if (us.KUNNR != null && us.KUNNR != "")
@@ -1494,7 +1492,7 @@ namespace TAT001.Controllers.Catalogos
 
                         ////-------------------------------COMPANY CODE
                         var error = "";
-                        SOCIEDAD b = db.SOCIEDADs.Where(x => x.BUKRS.Equals(us.BUNIT) & x.ACTIVO == true).FirstOrDefault();
+                        SOCIEDAD b = db.SOCIEDADs.Where(x => x.BUKRS.Equals(us.BUNIT) && x.ACTIVO).FirstOrDefault();
                         for (int i = cont3; i >= 0; i--)
                         {
                             if (admins[i, 0] == us.BUNIT && admins[i, 1] == us.ID)
@@ -1605,7 +1603,7 @@ namespace TAT001.Controllers.Catalogos
                             us.SPRAS_ID = "ES";
                             da.SPRAS_ID = us.SPRAS_ID;
                         }
-                        SPRA si = db.SPRAS.Where(x => x.ID.Equals(us.SPRAS_ID) == true).FirstOrDefault();
+                        SPRA si = db.SPRAS.Where(x => x.ID.Equals(us.SPRAS_ID)).FirstOrDefault();
                         if (si == null)
                         {
                             us.SPRAS_IDX = false;
@@ -1630,7 +1628,7 @@ namespace TAT001.Controllers.Catalogos
                     else if (vus == true)
                     {
                         var error = "";
-                        SOCIEDAD b = db.SOCIEDADs.Where(x => x.BUKRS.Equals(us.BUNIT) & x.ACTIVO == true).FirstOrDefault();
+                        SOCIEDAD b = db.SOCIEDADs.Where(x => x.BUKRS.Equals(us.BUNIT) && x.ACTIVO).FirstOrDefault();
                         for (int x = cont4; x >= 0; x--)
                         {
                             if (IDs[x] != null)
@@ -1745,7 +1743,6 @@ namespace TAT001.Controllers.Catalogos
             List<CLIENTE> clientes = new List<CLIENTE>();
 
             var rowsc = dt.Rows.Count;
-            var columnsc = dt.Columns.Count;
             var rows = 1;
             var pos = 1;
 
@@ -1761,17 +1758,17 @@ namespace TAT001.Controllers.Catalogos
                     doc.KUNNR = dt.Rows[i][0].ToString();
                     doc.KUNNR = completa(doc.KUNNR, 10);
 
-                    CLIENTE u = clientes.Where(x => x.KUNNR.Equals(doc.KUNNR)).FirstOrDefault();
+                    CLIENTE u = clientes.FirstOrDefault(x => x.KUNNR.Equals(doc.KUNNR));
                     if (u == null)
                     {
-                        u = db.CLIENTEs.Where(cc => cc.KUNNR.Equals(doc.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
+                        u = db.CLIENTEs.FirstOrDefault(cc => cc.KUNNR.Equals(doc.KUNNR) && cc.ACTIVO);
                         if (u == null)
                             doc.VKORG = null;
                         else
                             clientes.Add(u);
                     }
 
-                    CLIENTE c = clientes.Where(cc => cc.KUNNR.Equals(doc.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
+                    CLIENTE c = clientes.FirstOrDefault(cc => cc.KUNNR.Equals(doc.KUNNR) && cc.ACTIVO);
                     if (c != null)
                     {
                         doc.VKORG = c.VKORG;
