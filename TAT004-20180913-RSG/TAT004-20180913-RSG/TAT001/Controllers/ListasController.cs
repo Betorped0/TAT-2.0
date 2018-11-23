@@ -544,7 +544,7 @@ namespace TAT001.Controllers
         [AllowAnonymous]
         public JsonResult grupoMateriales(string vkorg, string spart, string kunnr, string soc_id)
         {
-         
+
             if (kunnr == null)
             {
                 kunnr = "";
@@ -567,17 +567,17 @@ namespace TAT001.Controllers
                     //Saber si el cliente es sold to, payer o un grupo
                     if (cli != null && cli.KUNNR != cli.PAYER && cli.KUNNR != cli.BANNER)
                     {
-                            clil.Add(cli);                 
+                        clil.Add(cli);
                     }
                 }
                 catch (Exception e)
                 {
-                    Log.ErrorLogApp(e,"Listas", "grupoMateriales");
+                    Log.ErrorLogApp(e, "Listas", "grupoMateriales");
                 }
                 var cie = clil;
                 //Obtener el numero de periodos para obtener el historial
                 int? mesesVenta = (db.CONFDIST_CAT.Any(x => x.SOCIEDAD_ID == soc_id) ? db.CONFDIST_CAT.First(x => x.SOCIEDAD_ID == soc_id).PERIODOS : null);
-                int nummonths = (mesesVenta!=null? mesesVenta.Value:DateTime.Now.Month);
+                int nummonths = (mesesVenta != null ? mesesVenta.Value : DateTime.Now.Month);
                 int imonths = nummonths * -1;
                 //Obtener el rango de los periodos incluyendo el año
                 DateTime ff = DateTime.Today;
@@ -604,11 +604,11 @@ namespace TAT001.Controllers
                 {
                     Log.ErrorLogApp(e, "Listas", "grupoMateriales-mesesVenta");
                 }
-                
+
 
                 if (cie != null)
                 {
-                   jd = FnCommon.ObtenerMaterialGroupsMateriales(db, vkorg, spart, kunnr, soc_id, aii, mii, aff, mff,User.Identity.Name);
+                    jd = FnCommon.ObtenerMaterialGroupsMateriales(db, vkorg, spart, kunnr, soc_id, aii, mii, aff, mff, User.Identity.Name);
                 }
             }
 
@@ -641,9 +641,10 @@ namespace TAT001.Controllers
                         decimal val = dl.Where(y => y.MATNR == d.MATNR).Sum(x => x.VAL);
                         dcll.ID_CAT = item.Key;
                         dcll.MATNR = d.MATNR;
-                        
+
                         dcll.DESC = d.DESC;
                         dcll.VAL = val;
+                        cm.TOTALCAT += val;//ADD RSG 22.11.2018
 
                         dm.Add(dcll);
                     }
@@ -663,6 +664,7 @@ namespace TAT001.Controllers
                 nnn.ID = "000";
                 nnn.DESCRIPCION = FnCommon.ObtenerTotalProducts(db).TXT50;
                 nnn.MATERIALES = new List<DOCUMENTOM_MOD>();
+                nnn.TOTALCAT = 0;//ADD RSG 22.11.2018
                 //foreach (var item in lcatmat)//RSG 09.07.2018 ID167
                 foreach (var item in lcatmat.Where(x => x.EXCLUIR == false).ToList())
                 {
@@ -674,6 +676,7 @@ namespace TAT001.Controllers
                         dm.MATNR = ii.MATNR;
                         dm.POR = ii.POR;
                         dm.VAL = ii.VAL;
+                        nnn.TOTALCAT += ii.VAL;
                         nnn.MATERIALES.Add(dm);
                     }
                 }
