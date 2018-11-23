@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web;
+using System.Configuration;
 using System.Web.Mvc;
 using TAT001.Entities;
 using TAT001.Models;
@@ -40,7 +41,7 @@ namespace TAT001.Controllers.Reportes
             ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
             ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
             ViewBag.sociedad = db.SOCIEDADs.ToList();
-            ViewBag.baseURL = Request.Url.AbsoluteUri.ToString();
+            ViewBag.baseURL = String.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~/"));
             //ViewBag.cuentagl = db.CUENTAGLs.ToList();
             ViewBag.cuentagl = (from c in db.CUENTAGLs join d in db.DOCUMENTOes on c.ID equals d.CUENTAP select c).Union(from c in db.CUENTAGLs join d in db.DOCUMENTOes on c.ID equals d.CUENTAPL select c).
                 Union(from c in db.CUENTAGLs join d in db.DOCUMENTOes on c.ID equals d.CUENTACL select c).DistinctBy(x=>x.ID).ToList();
@@ -88,7 +89,7 @@ namespace TAT001.Controllers.Reportes
             ViewBag.periodo = db.PERIODOes.ToList();
             ViewBag.cuenta = db.CUENTAs.ToList();
             ViewBag.Consulta = "";
-            ViewBag.baseURL = Request.Url.GetLeftPart(UriPartial.Authority);
+            ViewBag.baseURL = String.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~/"));
             List<object> queryList = new List<object>();
             List<object> provitions = new List<object>();
             decimal docrefs = 0;
