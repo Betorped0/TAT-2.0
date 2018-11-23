@@ -933,7 +933,7 @@ namespace TAT001.Controllers
             //Si es borrador asignar datos de contacto a cliente
             if (id_cl != null && esBorrador != null && esBorrador.Value)
             {
-                DOCUMENTBORR doc = db.DOCUMENTBORRs.Where(x => x.USUARIOC_ID == User.Identity.Name && x.PAYER_ID == kunnr).FirstOrDefault();
+                DOCUMENTBORR doc = db.DOCUMENTBORRs.Where(x => x.USUARIOC_ID == User.Identity.Name && (x.PAYER_ID == kunnr || x.PAYER_ID == null)).FirstOrDefault();
                 if (doc != null)
                 {
                     id_cl.PAYER_EMAIL = doc.PAYER_EMAIL;
