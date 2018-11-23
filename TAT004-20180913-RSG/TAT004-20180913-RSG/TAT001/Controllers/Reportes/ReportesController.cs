@@ -656,7 +656,7 @@ namespace TAT001.Controllers.Reportes
                     r1.STATUSS = estatuss.Substring(0, 6) + " " + estatuss.Substring(6, 1); ;
                 }
                 Estatus e = new Estatus();
-                r1.ESTATUS_STRING = e.getText(r1.STATUSS, dOCUMENTO.NUM_DOC);
+                r1.ESTATUS_STRING = e.getText(r1.STATUSS, dOCUMENTO.NUM_DOC, user.SPRAS_ID);
 
                 r1.DOCSREFREVERSOS = (from d in db.DOCUMENTOes
                                       join dr in db.DOCUMENTORs on d.NUM_DOC equals dr.NUM_DOC
@@ -1676,7 +1676,7 @@ namespace TAT001.Controllers.Reportes
                     renglon.STATUSS = estatuss.Substring(0, 6) + " " + estatuss.Substring(6, 1); ;
                 }
                 Estatus e = new Estatus();
-                renglon.ESTATUS_STRING = e.getText(renglon.STATUSS, renglon.NUMERO_SOLICITUD);
+                renglon.ESTATUS_STRING = e.getText(renglon.STATUSS, renglon.NUMERO_SOLICITUD, user.SPRAS_ID);
                 renglon.d = db.DOCUMENTOes.Find(renglon.NUMERO_SOLICITUD);
             }
 

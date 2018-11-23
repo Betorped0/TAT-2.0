@@ -56,11 +56,11 @@
                                 <h5 id="head_montob">Monto Base</h5>
                                 <div class="row" style="margin-bottom:0">
                                     <div class="input-field col s6">
-                                        @Html.EditorFor(model => model.D.MONTO_DOC_MD, new { htmlAttributes = new { @disabled = "disabled", @id = "lbl_montodis", @class = "precio" } })
+                                        @Html.EditorFor(model => model.D.MONTO_DOC_MD, new { htmlAttributes = new { @disabled = "disabled", @id = "txt_montodis", @class = "precio" } })
                                         @Html.LabelFor(model => model.D.MONTO_DOC_MD, "Monto", htmlAttributes: new { @id = "lbl_montodis" })
                                     </div>
                                     <div class="input-field col s6">
-                                        @Html.EditorFor(model => model.D.MONEDA_ID, new { htmlAttributes = new { @disabled = "disabled", @id = "lbl_monedadis" } })
+                                        @Html.EditorFor(model => model.D.MONEDA_ID, new { htmlAttributes = new { @disabled = "disabled", @id = "txt_monedadis" } })
                                         @Html.LabelFor(model => model.D.MONEDA_ID, "Moneda", htmlAttributes: new { @for = "monedadis_id", @id = "lbl_monedadis" })
                                     </div>
                                 </div>

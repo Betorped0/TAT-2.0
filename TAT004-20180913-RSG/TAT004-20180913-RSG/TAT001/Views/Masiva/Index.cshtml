@@ -69,16 +69,16 @@
 <div class="row">
     <div class="row left">
         <a class="btn-small" href="@Url.Action("Archivo", "Masiva", new { varArch = "X"})">
-            <i class='material-icons right'>archive</i> <span>FORMATO MASIVA</span>
+            <i class='material-icons right'>archive</i> <span id="btn_formatoMasiva">FORMATO MASIVA</span>
         </a>
         <a class="btn-small" href="@Url.Action("Archivo", "Masiva", new { varArch = "L"})">
-            <i class='material-icons right'>archive</i> <span>LISTADO CLIENTE/PROVEEDOR</span>
+            <i class='material-icons right'>archive</i> <span id="btn_listadoCP">LISTADO CLIENTE/PROVEEDOR</span>
         </a>
     </div>
     <div class="row right">
         @*<a class="waves-effect waves-light btn" href="borraTabla" onClick="window.location.reload()">Borrar</a>*@
-        <a class="btn-small modal-trigger" href="#borraTabla">Borrar</a>
-        <a class="btn-small" onclick="guardaDatos()">Enviar</a>
+        <a class="btn-small modal-trigger" href="#borraTabla" id="btn_borrar">Borrar</a>
+        <a class="btn-small" onclick="guardaDatos()" id="btn_enviar">Enviar</a>
     </div>
 </div>
 
@@ -112,7 +112,7 @@
         {
             <div class="file-field input-field col s12">
                 <div class="waves-effect waves-light btn col s12">
-                    <span>Seleccionar archivo</span>
+                    <span id="btn_archivoMasiva">Seleccionar archivo</span>
                     <input type="file" name="miMas" id="miMas" />
                 </div><div class="file-path-wrapper hide">
                     <input class="file-path validate" type="text">
@@ -137,23 +137,23 @@
             <table id="tab_test1" class="display" cellspacing="0" width="100%" style="display:none">
                 <thead>
                     <tr>
-                        <th>ESTATUS</th>
-                        <th>NUM_DOC</th>
-                        <th>T_SOL</th>
-                        <th>GALL_ID</th>
-                        <th>Co. Code</th>
-                        <th>LANDX</th>
-                        <th>ESTADO</th>
-                        <th>CIUDAD</th>
-                        <th>CONCEPTO</th>
-                        <th>NOTAS</th>
-                        <th>PAYER_ID</th>
-                        <th>PAYER_NOMBRE</th>
-                        <th>CONTACTO_NOMBRE</th>
-                        <th>CONTACTO_EMAIL</th>
-                        <th>FECHAI_VIG</th>
-                        <th>FECHAF_VIG</th>
-                        <th>MONEDA_ID</th>
+                        <th id="lbl_estatusH1">ESTATUSS</th>
+                        <th id="lbl_numDocH1">NUM_DOC</th>
+                        <th id="lbl_tipoSolicitud">T_SOL</th>
+                        <th id="lbl_clasificacion">GALL_ID</th>
+                        <th id="lbl_sociedad">Co. Code</th>
+                        <th id="lbl_pais">LANDX</th>
+                        <th id="lbl_estado">ESTADO</th>
+                        <th id="lbl_ciudad">CIUDAD</th>
+                        <th id="lbl_concepto">CONCEPTO</th>
+                        <th id="lbl_notas">NOTAS</th>
+                        <th id="lbl_payerId">PAYER_ID</th>
+                        <th id="lbl_payerNombre">PAYER_NOMBRE</th>
+                        <th id="lbl_contactoNombre">CONTACTO_NOMBRE</th>
+                        <th id="lbl_contactoEmail">CONTACTO_EMAIL</th>
+                        <th id="lbl_fechaInicio">FECHAI_VIG</th>
+                        <th id="lbl_fechaFin">FECHAF_VIG</th>
+                        <th id="lbl_moneda">MONEDA_ID</th>
                         <th hidden>LABEL</th>
                         <th hidden>LABEL</th>
                     </tr>
@@ -169,16 +169,16 @@
             <table id="tab_test2" class="display" cellspacing="0" width="100%" style="display:none">
                 <thead>
                     <tr>
-                        <th>ESTATUS</th>
-                        <th>NUM_DOC</th>
-                        <th>FACTURA</th>
-                        <th>FECHA</th>
-                        <th>PROVEEDOR</th>
-                        <th>PROVEEDOR_NOMBRE</th>
-                        <th>AUTORIZACION</th>
-                        <th>VENCIMIENTO</th>
-                        <th>FACTURAK</th>
-                        <th>EJERCICIOK</th>
+                        <th id="lbl_estatusH2">ESTATUSS</th>
+                        <th id="lbl_numDocH2">NUM_DOC</th>
+                        <th id="lbl_factura">FACTURA</th>
+                        <th id="lbl_facturaFecha">FECHA</th>
+                        <th id="lbl_proveedor">PROVEEDOR</th>
+                        <th id="lbl_proveedorNombre">PROVEEDOR_NOMBRE</th>
+                        <th id="lbl_autorizacion">AUTORIZACION</th>
+                        <th id="lbl_vencimiento">VENCIMIENTO</th>
+                        <th id="lbl_facturak">FACTURAK</th>
+                        <th id="lbl_ejerciciok">EJERCICIOK</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -192,15 +192,15 @@
             <table id="tab_test3" class="display" cellspacing="0" width="100%" style="display:none">
                 <thead>
                     <tr>
-                        <th>ESTATUS</th>
-                        <th>NUM_DOC</th>
-                        <th>FACTURA</th>
-                        <th>BILL_DOC</th>
-                        <th>EJERCICIOK</th>
-                        <th>PAYER</th>
-                        <th>PAYER_NOMBRE</th>
-                        <th>IMPORTE_FAC</th>
-                        <th>BELNR</th>
+                        <th id="lbl_estatusH3">ESTATUSS</th>
+                        <th id="lbl_numDocH3">NUM_DOC</th>
+                        <th id="lbl_facturaFiscal">FACTURA</th>
+                        <th id="lbl_bill">BILL_DOC</th>
+                        <th id="lbl_ejerciciokH3">EJERCICIOK</th>
+                        <th id="lbl_payerIdH3">PAYER</th>
+                        <th id="lbl_payerNombreH3">PAYER_NOMBRE</th>
+                        <th id="lbl_importeFac">IMPORTE_FAC</th>
+                        <th id="lbl_folio">BELNR</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -214,21 +214,21 @@
             <table id="tab_test4" class="display" cellspacing="0" width="100%" style="display:none">
                 <thead>
                     <tr>
-                        <th>ESTATUS</th>
-                        <th>NUM_DOC</th>
-                        <th>LIGADA</th>
-                        <th>VIGENCIA_DE</th>
-                        <th>VIGENCIA_AL</th>
-                        <th>MATERIAL</th>
-                        <th>CATEGORIA</th>
-                        <th>DESCRIPCION</th>
-                        <th>MONTO</th>
-                        <th>PORC_APOYO</th>
-                        <th>APOYO_PIEZA</th>
-                        <th>COSTO_APOYO</th>
-                        <th>PRECIO_SUG</th>
-                        <th>VOLUMEN_REAL</th>
-                        <th>APOYO</th>
+                        <th id="lbl_estatusH4">ESTATUSS</th>
+                        <th id="lbl_numDocH4">NUM_DOC</th>
+                        <th id="lbl_ligada">LIGADA</th>
+                        <th id="lbl_fechaInicioH4">VIGENCIA DE</th>
+                        <th id="lbl_fechaFinH4">VIGENCIA AL</th>
+                        <th id="lbl_material">MATERIAL</th>
+                        <th id="lbl_categoriaH4">CATEGORIA</th>
+                        <th id="lbl_descripcion">DESCRIPCION</th>
+                        <th id="lbl_monto">MONTO</th>
+                        <th id="lbl_porcentaje">PORC_APOYO</th>
+                        <th id="lbl_apoyoPieza">APOYO_PIEZA</th>
+                        <th id="lbl_costo">COSTO_APOYO</th>
+                        <th id="lbl_precio">PRECIO_SUG</th>
+                        <th id="lbl_volumen">VOLUMEN_REAL</th>
+                        <th id="lbl_apoyo">APOYO</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -242,11 +242,11 @@
             <table id="tab_test5" class="display" cellspacing="0" width="100%" style="display:none">
                 <thead>
                     <tr>
-                        <th style="text-align:center;">ESTATUS</th>
-                        <th style="text-align:center;">NUM_DOC</th>
-                        <th style="text-align:center;">TIPO</th>
-                        <th style="text-align:center;">ARCHIVO</th>
-                        <th style="text-align:center;">NOTAS</th>
+                        <th id="lbl_estatusH5">ESTATUSS</th>
+                        <th id="lbl_numDocH5">NUM_DOC</th>
+                        <th style="text-align:center;" id="lbl_tipo">TIPO</th>
+                        <th style="text-align:center;" id="lbl_archivo">ARCHIVO</th>
+                        <th style="text-align:center;" id="lbl_notasH5">NOTAS</th>
                         @*<th style="text-align:center;">BOTON</th>*@
                     </tr>
                 </thead>
