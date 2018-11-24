@@ -1415,6 +1415,7 @@
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\rangos.js" />
+    <Content Include="Scripts\Solicitudes\comun.js" />
     <Content Include="Scripts\subfilters\jquery.tablesorter.js" />
     <Content Include="Scripts\subfilters\jquery.tablesorter.pager.js" />
     <Content Include="Scripts\subfilters\script.js" />

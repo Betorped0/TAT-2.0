@@ -1002,7 +1002,7 @@ namespace TAT001.Controllers
                                 resta -= Convert.ToDecimal(docsrelp[j].APOYO_REAL);
                             }
                         }
-                            //MGC B20180611 Obtener las categorias con el detalle de cada material
+                        //MGC B20180611 Obtener las categorias con el detalle de cada material
                         if (docml.Count > 0)
                         {
                             res = grupoMaterialesRel(docpl, docml);
@@ -1990,7 +1990,7 @@ namespace TAT001.Controllers
                                     if (select_neg == "M")
                                     {
                                         //Obtener el apoyo real o estimado para cada material
-                                        var cantmat = docml.Count;
+                                        var cantmat = 1;
                                         try
                                         {
                                             apoyo_esti = Convert.ToDecimal(docP.APOYO_EST) / cantmat;
@@ -2018,8 +2018,28 @@ namespace TAT001.Controllers
                                                 DOCUMENTOM docM = new DOCUMENTOM();
                                                 docM = docml[k];
                                                 docM.POS = k + 1;
-                                                docM.APOYO_REAL = apoyo_real;
-                                                docM.APOYO_EST = apoyo_esti;
+                                                CategoriaMaterial cm = listcatm.Where(x => x.ID == docP.MATKL).FirstOrDefault();
+                                                decimal porc = 0;
+                                                if (cm != null)
+                                                {
+                                                    if (cm.TOTALCAT > 0) { porc = cm.MATERIALES.Where(x => x.MATNR == docM.MATNR).FirstOrDefault().VAL / cm.TOTALCAT * 100; }
+                                                    docM.PORC_APOYO = porc;
+                                                    //apoyo_real = apoyo_real * porc;
+                                                    //apoyo_esti = apoyo_esti * porc;
+                                                }
+                                                else if (docP.MATKL == "000")
+                                                {
+                                                    decimal suma = 0;
+                                                    foreach (CategoriaMaterial cam in listcatm)
+                                                        suma += cam.TOTALCAT;
+                                                    foreach (CategoriaMaterial cam in listcatm)
+                                                        foreach (DOCUMENTOM_MOD dm in cam.MATERIALES)
+                                                            if (dm.MATNR == docM.MATNR)
+                                                                if (suma > 0) { porc = dm.VAL / suma * 100; }
+                                                    docM.PORC_APOYO = porc;
+                                                }
+                                                docM.APOYO_REAL = apoyo_real * porc / 100;
+                                                docM.APOYO_EST = apoyo_esti * porc / 100;
 
                                                 db.DOCUMENTOMs.Add(docM);
                                                 db.SaveChanges();//RSG
@@ -2184,7 +2204,7 @@ namespace TAT001.Controllers
                                     if (select_neg == "M")
                                     {
                                         //Obtener el apoyo real o estimado para cada material
-                                        var cantmat = docml.Count;
+                                        var cantmat = 1;
                                         try
                                         {
                                             apoyo_esti = Convert.ToDecimal(docP.APOYO_EST) / cantmat;
@@ -2212,8 +2232,28 @@ namespace TAT001.Controllers
                                                 DOCUMENTOM docM = new DOCUMENTOM();
                                                 docM = docml[k];
                                                 docM.POS = k + 1;
-                                                docM.APOYO_REAL = apoyo_real;
-                                                docM.APOYO_EST = apoyo_esti;
+                                                CategoriaMaterial cm = listcatm.Where(x => x.ID == docP.MATKL).FirstOrDefault();
+                                                decimal porc = 0;
+                                                if (cm != null)
+                                                {
+                                                    if (cm.TOTALCAT > 0) { porc = cm.MATERIALES.Where(x => x.MATNR == docM.MATNR).FirstOrDefault().VAL / cm.TOTALCAT * 100; }
+                                                    docM.PORC_APOYO = porc;
+                                                    //apoyo_real = apoyo_real * porc;
+                                                    //apoyo_esti = apoyo_esti * porc;
+                                                }
+                                                else if (docP.MATKL == "000")
+                                                {
+                                                    decimal suma = 0;
+                                                    foreach (CategoriaMaterial cam in listcatm)
+                                                        suma += cam.TOTALCAT;
+                                                    foreach (CategoriaMaterial cam in listcatm)
+                                                        foreach (DOCUMENTOM_MOD dm in cam.MATERIALES)
+                                                            if (dm.MATNR == docM.MATNR)
+                                                                if (suma > 0) { porc = dm.VAL / suma * 100; }
+                                                    docM.PORC_APOYO = porc;
+                                                }
+                                                docM.APOYO_REAL = apoyo_real * porc / 100;
+                                                docM.APOYO_EST = apoyo_esti * porc / 100;
 
                                                 db.DOCUMENTOMs.Add(docM);
                                                 db.SaveChanges();//RSG
@@ -3485,7 +3525,7 @@ namespace TAT001.Controllers
 
         }
 
-        void ObtenerAnalisisSolicitud(DOCUMENTO D,decimal? monto=null)
+        void ObtenerAnalisisSolicitud(DOCUMENTO D, decimal? monto = null)
         {
             FormatosC format = new FormatosC();
             decimal montoProv = 0.0M;
@@ -3496,7 +3536,7 @@ namespace TAT001.Controllers
             bool esProv = false;
             bool esNC = false;
 
-            if (monto!=null)
+            if (monto != null)
             {
                 D.MONTO_DOC_MD = monto;
             }
@@ -3953,7 +3993,7 @@ namespace TAT001.Controllers
                                 docP.APOYO_EST = docpl[j].APOYO_EST;
                                 docP.APOYO_REAL = docpl[j].APOYO_REAL;
                                 docP.ORIGINAL = "";
-                                if (dPadre!= null && dPadre.DOCUMENTOPs.Where(x => x.MATNR == docP.MATNR).ToList().Count > 0)
+                                if (dPadre != null && dPadre.DOCUMENTOPs.Where(x => x.MATNR == docP.MATNR).ToList().Count > 0)
                                     docP.ORIGINAL = "X";
 
                                 //Verificar si hay materiales en las relacionadas
@@ -4005,7 +4045,7 @@ namespace TAT001.Controllers
                             }
                             catch (Exception e)
                             {
-                                Log.ErrorLogApp(e,"Solicitudes","Edit");
+                                Log.ErrorLogApp(e, "Solicitudes", "Edit");
                             }
                         }
                         //MGC B20180611 Obtener las categorias con el detalle de cada material
@@ -4795,7 +4835,7 @@ namespace TAT001.Controllers
                                     if (select_neg == "M")
                                     {
                                         //Obtener el apoyo real o estimado para cada material
-                                        var cantmat = docml.Count;
+                                        var cantmat = 1;
                                         try
                                         {
                                             apoyo_esti = Convert.ToDecimal(docP.APOYO_EST) / cantmat;
@@ -4823,8 +4863,30 @@ namespace TAT001.Controllers
                                                 DOCUMENTOM docM = new DOCUMENTOM();
                                                 docM = docml[k];
                                                 docM.POS = k + 1;
-                                                docM.APOYO_REAL = apoyo_real;
-                                                docM.APOYO_EST = apoyo_esti;
+
+                                                CategoriaMaterial cm = listcatm.Where(x => x.ID == docP.MATKL).FirstOrDefault();
+                                                decimal porc = 0;
+                                                if (cm != null)
+                                                {
+                                                    if (cm.TOTALCAT > 0) { porc = cm.MATERIALES.Where(x => x.MATNR == docM.MATNR).FirstOrDefault().VAL / cm.TOTALCAT * 100; }
+                                                    docM.PORC_APOYO = porc;
+                                                    //apoyo_real = apoyo_real * porc;
+                                                    //apoyo_esti = apoyo_esti * porc;
+                                                }
+                                                else if (docP.MATKL == "000")
+                                                {
+                                                    decimal suma = 0;
+                                                    foreach (CategoriaMaterial cam in listcatm)
+                                                        suma += cam.TOTALCAT;
+                                                    foreach (CategoriaMaterial cam in listcatm)
+                                                        foreach (DOCUMENTOM_MOD dm in cam.MATERIALES)
+                                                            if (dm.MATNR == docM.MATNR)
+                                                                if (suma > 0) { porc = dm.VAL / suma * 100; }
+                                                    docM.PORC_APOYO = porc;
+                                                }
+
+                                                docM.APOYO_REAL = apoyo_real * porc / 100;
+                                                docM.APOYO_EST = apoyo_esti * porc / 100;
 
                                                 docP.DOCUMENTOMs.Add(docM);
                                                 ////db.SaveChanges();//RSG
@@ -4872,6 +4934,15 @@ namespace TAT001.Controllers
                     {
 
                     }
+
+                    foreach (DOCUMENTOP dop in d.DOCUMENTOPs.ToList())
+                    {
+                        foreach (DOCUMENTOM dom in dop.DOCUMENTOMs.ToList())
+                        {
+                            dop.DOCUMENTOMs.Remove(dom);
+                        }
+                        d.DOCUMENTOPs.Remove(dop);
+                    }
                     foreach (DOCUMENTOP dop in dOCUMENTO.DOCUMENTOPs)
                     {
                         DOCUMENTOP dp = d.DOCUMENTOPs.Where(a => a.POS == dop.POS).FirstOrDefault();
@@ -4892,37 +4963,47 @@ namespace TAT001.Controllers
                             dp.VIGENCIA_DE = dop.VIGENCIA_DE;
                             dp.VOLUMEN_EST = dop.VOLUMEN_EST;
                             dp.VOLUMEN_REAL = dop.VOLUMEN_REAL;
+                            foreach (DOCUMENTOM dom in dop.DOCUMENTOMs.ToList())
+                            {
+                                dp.DOCUMENTOMs.Add(dom);
+                            }
                         }
                         else
-                            d.DOCUMENTOPs.Add(dop);
-
-                        foreach (DOCUMENTOM dom in dop.DOCUMENTOMs)
                         {
-                            DOCUMENTOM dm = d.DOCUMENTOPs.Where(a => a.POS == dom.POS_ID).FirstOrDefault().DOCUMENTOMs.Where(x => x.POS == dom.POS).FirstOrDefault();
-                            if (dm != null)
+                            d.DOCUMENTOPs.Add(dop);
+                            foreach (DOCUMENTOM dom in dop.DOCUMENTOMs.ToList())
                             {
-                                dm.APOYO_EST = dom.APOYO_EST;
-                                dm.APOYO_REAL = dom.APOYO_REAL;
-                                dm.NUM_DOC = dom.NUM_DOC;
-                                dm.PORC_APOYO = dom.PORC_APOYO;
-                                dm.POS = dom.POS;
-                                dm.POS_ID = dom.POS_ID;
-                                dm.VIGENCIA_A = dom.VIGENCIA_A;
-                                dm.VIGENCIA_DE = dom.VIGENCIA_DE;
-                            }
-                            else
                                 dop.DOCUMENTOMs.Add(dom);
+                            }
                         }
+
+                        //    foreach (DOCUMENTOM dom in dop.DOCUMENTOMs)
+                        //{
+                        //    DOCUMENTOM dm = d.DOCUMENTOPs.Where(a => a.POS == dom.POS_ID).FirstOrDefault().DOCUMENTOMs.Where(x => x.POS == dom.POS).FirstOrDefault();
+                        //    if (dm != null)
+                        //    {
+                        //        dm.APOYO_EST = dom.APOYO_EST;
+                        //        dm.APOYO_REAL = dom.APOYO_REAL;
+                        //        dm.NUM_DOC = dom.NUM_DOC;
+                        //        dm.PORC_APOYO = dom.PORC_APOYO;
+                        //        dm.POS = dom.POS;
+                        //        dm.POS_ID = dom.POS_ID;
+                        //        dm.VIGENCIA_A = dom.VIGENCIA_A;
+                        //        dm.VIGENCIA_DE = dom.VIGENCIA_DE;
+                        //    }
+                        //    else
+                        //        dop.DOCUMENTOMs.Add(dom);
+                        //}
                     }
                     if (dOCUMENTO.DOCUMENTOPs.Count < d.DOCUMENTOPs.Count)
                     {
                         for (int i = dOCUMENTO.DOCUMENTOPs.Count; i < d.DOCUMENTOPs.Count; i++)
                         {
-                            if (d.DOCUMENTOPs.ElementAt(i).DOCUMENTOMs.Count > 0)
-                                for (int j = 0; j < d.DOCUMENTOPs.ElementAt(i).DOCUMENTOMs.Count; j++)
-                                {
-                                    d.DOCUMENTOPs.ElementAt(i).DOCUMENTOMs.Remove(d.DOCUMENTOPs.ElementAt(i).DOCUMENTOMs.ElementAt(j));
-                                }
+                            //if (d.DOCUMENTOPs.ElementAt(i).DOCUMENTOMs.Count > 0)
+                            //    for (int j = 0; j < d.DOCUMENTOPs.ElementAt(i).DOCUMENTOMs.Count; j++)
+                            //    {
+                            //        d.DOCUMENTOPs.ElementAt(i).DOCUMENTOMs.Remove(d.DOCUMENTOPs.ElementAt(i).DOCUMENTOMs.ElementAt(j));
+                            //    }
 
                             d.DOCUMENTOPs.Remove(d.DOCUMENTOPs.ElementAt(i));
                         }
@@ -6344,7 +6425,7 @@ namespace TAT001.Controllers
             return d;
         }
 
-       
+
         public List<CategoriaMaterial> grupoMaterialesController(List<string> catstabla, string vkorg, string spart, string kunnr, string soc_id, out decimal total)
         {
             TAT001Entities db = new TAT001Entities();
@@ -6566,6 +6647,7 @@ namespace TAT001.Controllers
                         dcll.DESC = db.MATERIALs.Where(w => w.ID == d.MATNR).FirstOrDefault().MAKTG.ToString();
                         dcll.VAL = val;
                         t += val;
+                        cm.TOTALCAT += val;
                         dm.Add(dcll);
                     }
                 }
@@ -7564,7 +7646,7 @@ namespace TAT001.Controllers
         }
 
         [HttpPost]
-        public JsonResult getSolicitud(string num, string monto, string tsol_id, string sociedad_id, bool esCategoriaUnica,bool edit=false)//RSG 07.06.2018---------------------------------------------
+        public JsonResult getSolicitud(string num, string monto, string tsol_id, string sociedad_id, bool esCategoriaUnica, bool edit = false)//RSG 07.06.2018---------------------------------------------
         {
             SOLICITUD_MOD sm = new SOLICITUD_MOD();
 
@@ -7572,10 +7654,11 @@ namespace TAT001.Controllers
             if (num == null || num == "" || num == "0.00")
             {
                 sm.S_NUM = "";
-            }else if (edit)
+            }
+            else if (edit)
             {
                 decimal num_doc = Convert.ToDecimal(num);
-                DOCUMENTO D = db.DOCUMENTOes.First(x=>x.NUM_DOC== num_doc);
+                DOCUMENTO D = db.DOCUMENTOes.First(x => x.NUM_DOC == num_doc);
                 ObtenerAnalisisSolicitud(D, Convert.ToDecimal(monto));
 
                 sm.S_MONTOB = ViewBag.montoSol;
