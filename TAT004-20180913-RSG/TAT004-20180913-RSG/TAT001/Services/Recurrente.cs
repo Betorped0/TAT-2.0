@@ -452,11 +452,11 @@ namespace TAT001.Services
                         foreach (DOCUMENTOP docP in dOCUMENTO.DOCUMENTOPs)
                         {
                             string col = "";
-                            if (Convert.ToDecimal(docP.APOYO_EST) > 0)
+                            if (dOCpADRE.TSOL.PADRE == true)
                             {
                                 col = "E";
                             }
-                            else if (Convert.ToDecimal(docP.APOYO_REAL) > 0)
+                            else if (dOCpADRE.TSOL.PADRE == false)
                             {
                                 col = "R";
                             }
