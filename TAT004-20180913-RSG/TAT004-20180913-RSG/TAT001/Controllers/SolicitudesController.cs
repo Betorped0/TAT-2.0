@@ -686,7 +686,7 @@ namespace TAT001.Controllers
                 ViewBag.FECHAD_REV = freversa;
                 ViewBag.TREVERSA = new SelectList(ldocr, "TREVERSA_ID", "TXT100");
 
-                DOCUMENTBORR tmp = db.DOCUMENTBORRs.Find(user.ID);//RSG 01.08.2018
+                DOCUMENTBORR tmp = db.DOCUMENTBORRs.FirstOrDefault(x => x.USUARIOC_ID == user.ID && x.SOCIEDAD_ID == sociedad_id);//RSG 01.08.2018
                 if (tmp != null)
                     Session["pais"] = tmp.PAIS_ID;
 
@@ -785,18 +785,12 @@ namespace TAT001.Controllers
                                 }).ToList();
                 //clasificación
                 //MGC B20180611
-                List<TALLT_MOD> id_clas = new List<TALLT_MOD>();
-                //string ch = "Direct Plant ship  (\"DPS\")";
-                id_clas = db.TALLs.Where(t => t.ACTIVO == true)
-                                .Join(
-                                db.TALLTs.Where(tallt => tallt.SPRAS_ID == user.SPRAS_ID),
-                                tall => tall.ID,
-                                tallt => tallt.TALL_ID,
-                                (tall, tallt) => new TALLT_MOD
+                List<TALLT_MOD> id_clas =FnCommon.ObtenerTallsConCuenta(db,user.SPRAS_ID,pais_id,DateTime.Now.Year,sociedad_id)
+                    .Select(x=> new TALLT_MOD
                                 {
-                                    SPRAS_ID = tallt.SPRAS_ID,
-                                    TALL_ID = tallt.TALL_ID,
-                                    TXT50 = tallt == null ? "" : tallt.TXT50
+                                    SPRAS_ID = x.SPRAS_ID,
+                                    TALL_ID = x.TALL_ID,
+                                    TXT50 = x.TXT50
                                 })
                             .ToList();
                 id_clas = id_clas.OrderBy(x => x.TXT50).ToList();
@@ -1039,7 +1033,7 @@ namespace TAT001.Controllers
                     DOCUMENTBORR docb = new DOCUMENTBORR();
                     try
                     {
-                        docb = db.DOCUMENTBORRs.Find(user.ID);
+                        docb = db.DOCUMENTBORRs.FirstOrDefault(x=>x.USUARIOC_ID==user.ID && x.SOCIEDAD_ID==sociedad_id);
                         ViewBag.LIGADA = docb.LIGADA;//RSG 09.07.2018
                         pais_id = docb.PAIS_ID;//RSG 01.08.2018
                     }
@@ -3159,9 +3153,9 @@ namespace TAT001.Controllers
                             dOCUMENTO.VTWEG = payer.VTWEG;
                             dOCUMENTO.SPART = payer.SPART;
                         }
-                        catch (Exception)
+                        catch (Exception e)
                         {
-
+                            Log.ErrorLogApp(e,"Solicitudes","Borrador");
                         }
                         DOCUMENTBORR docb = new DOCUMENTBORR();
                         //docb = guardarBorrador(dOCUMENTO, id_bukrs, select_dis, monedadis, bmonto_apoyo);//RSG 09.07.2018
@@ -3226,8 +3220,7 @@ namespace TAT001.Controllers
             docb.SPART = doc.SPART;
             docb.TIPO_TECNICO2 = dis;
             docb.MONEDA_DIS = monedadis;
-            if (ligada != null)
-                if (ligada != "off")
+            if (ligada != null && ligada != "off")
                     docb.LIGADA = "X";
             try
             {
