@@ -454,9 +454,9 @@
             </div>
             <div id="dist" class="col s12">
                 <div class="row">
-                    @if (Model.D.LIGADA != null)
+                    @if (@*Model.D.LIGADA != null)
                     {
-                        if ((bool)Model.D.LIGADA & Model.D.DOCUMENTORECs.Count == 0)
+                        if ((bool)Model.D.LIGADA &*@ Model.D.DOCUMENTORECs.Count == 0)
                         {
                             <div class="col l6 offset-l6 m12 s12">
                                 <div class="card-panel">
