@@ -17,6 +17,8 @@ namespace TAT001.Controllers
         public ActionResult Index(string ruta, decimal ids)
         {
             int pagina_id = 230; //ID EN BASE DE DATOS
+            TempData["ESTATUS_WF"] = TempData["swf"];
+            TempData["lista"] = TempData["vista"];
             using (TAT001Entities db = new TAT001Entities())
             {
                 FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);           
@@ -58,9 +60,16 @@ namespace TAT001.Controllers
         }
 
         // GET: CartaV/Details/5
-        public ActionResult Create(decimal id)
+        public ActionResult Create(decimal id, bool? Viewlista)
         {
             int pagina_id = 232; //ID EN BASE DE DATOS
+
+            if (Viewlista == true)
+            {
+                TempData["return"] = "LIST";
+                TempData["ESTATUS_WF"] = TempData["swf"];
+            }
+
             using (TAT001Entities db = new TAT001Entities())
             {
                 string spras_id = FnCommon.ObtenerSprasId(db, User.Identity.Name);
@@ -404,14 +413,17 @@ namespace TAT001.Controllers
                     db.SaveChanges();
                     TempData["v"] = null;
                     TempData["monto_enviar"] = null;
+                    TempData["return"] = "SOL";
                 }
                 else
                 {
                     TempData["v"] = v;
                     TempData["monto_enviar"] = monto_enviar;
+                    TempData["return"] = "CAR";
                 }
 
-
+                TempData["lista"] = TempData["vista"];
+                TempData["ESTATUS_WF"] = TempData["swf"];
 
                 d = db.DOCUMENTOes.Find(v.num_doc);
 
@@ -530,6 +542,9 @@ namespace TAT001.Controllers
         ////DRS 14.10.2018 Se agrego la variable de swf///
         public ActionResult DetailsPos(decimal id, int pos, string swf)
         {
+            TempData["v"] = null;
+            TempData["monto_enviar"] = null;
+
             int pagina_id = 232; //ID EN BASE DE DATOS
             using (TAT001Entities db = new TAT001Entities())
             {
@@ -1059,6 +1074,8 @@ namespace TAT001.Controllers
             int pos = va.pos;
 
 
+            TempData["return"] = "LIST";
+            TempData["ESTATUS_WF"] = TempData["swf"];
             //int pagina = 231; //ID EN BASE DE DATOS
             int pagina_id = 232; //ID EN BASE DE DATOS
             using (TAT001Entities db = new TAT001Entities())
