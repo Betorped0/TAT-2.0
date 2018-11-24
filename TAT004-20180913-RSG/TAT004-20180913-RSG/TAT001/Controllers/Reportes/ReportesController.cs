@@ -213,7 +213,7 @@ namespace TAT001.Controllers.Reportes
             ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
             ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
             ViewBag.display = false;
-            ViewBag.baseURL = Request.Url.GetLeftPart(UriPartial.Authority);
+            ViewBag.baseURL = String.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~/"));
 
             try
             {
@@ -317,7 +317,7 @@ namespace TAT001.Controllers.Reportes
             ViewBag.documento = db.DOCUMENTOes.ToList();
             ViewBag.sociedad = db.SOCIEDADs.ToList();
             ViewBag.periodo = db.PERIODOes.ToList();
-            ViewBag.baseURL = Request.Url.GetLeftPart(UriPartial.Authority);
+            ViewBag.baseURL = String.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~/"));
 
             string year = Request["selectyear"];
             var code = Request["filtroCode"];
