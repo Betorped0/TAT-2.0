@@ -3,6 +3,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.pagina_r = 201;
     ViewBag.carpeta_r = 200;
+
+    TempData["swf"] = TempData["ESTATUS_WF"];
 }
 <div class="row">
     <div class="row right">
@@ -11,11 +13,11 @@
             @{ string swf = TempData["ESTATUS_WF"].ToString();}
             @if (swf.Equals("S") && (Model.Count()>0 && Model.First().DOCUMENTO.USUARIOD_ID == User.Identity.Name))
             {
-                <a href="@Url.Action("Create", "CartaV", new { id = TempData["id"].ToString()})" class="btn btn-small">Genererar Carta</a>
+                <a href="@Url.Action("Create", "CartaV", new { id = TempData["id"].ToString(), Viewlista=true})" class="btn btn-small">Generar Carta</a>
             }
             else if(Model.Count() > 0 && Model.First().DOCUMENTO.USUARIOD_ID == User.Identity.Name)
             {
-                <a href="@Url.Action("Create", "CartaD", new { id = TempData["id"].ToString()})" class="btn btn-small">Genererar Carta</a>
+                <a href="@Url.Action("Create", "CartaD", new { id = TempData["id"].ToString(), Viewlista=true})" class="btn btn-small">Generar Carta</a>
             }
         </div>
     </div>
