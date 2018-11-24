@@ -323,7 +323,7 @@ namespace TAT001.Controllers
 
                 //MARCA DE AGUA
                 bool aprob = false;
-                aprob = (d.ESTATUS_WF.Equals("A") | d.ESTATUS_WF.Equals("S"));
+                aprob = (d.ESTATUS_WF.Equals("A") || d.ESTATUS_WF.Equals("S") || d.ESTATUS_WF.Equals("P"));
 
                 //PARA LA TABLA 1 MATERIALES
                 v.numColEncabezado = cabeza;

@@ -87,7 +87,7 @@
                             {
                                 <li><a href="@Url.Action("Create", "CartaV", new { id = Model.D.NUM_DOC })" id="lbl_genc">Generar carta</a></li>
                             }
-                            else if (Model.D.ESTATUS_WF.Equals("F") || Model.D.ESTATUS_WF.Equals("S") || Model.D.ESTATUS_WF.Equals("R"))
+                            else if (Model.D.ESTATUS_WF.Equals("F")|| Model.D.ESTATUS_WF.Equals("P") || Model.D.ESTATUS_WF.Equals("S") || Model.D.ESTATUS_WF.Equals("R"))
                             {
                                 <li><a href="@Url.Action("Create", "CartaD", new { id = Model.D.NUM_DOC })" id="lbl_genc">Imprimir</a></li>
                             }
