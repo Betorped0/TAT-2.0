@@ -735,6 +735,7 @@ namespace TAT001.Controllers
                 {
                     d = db.DOCUMENTOes.Where(doc => doc.NUM_DOC == rel).FirstOrDefault();
                     sociedad_id = d.SOCIEDAD_ID;
+                    pais_id = d.PAIS_ID;
                 }
                 if (dp == "X")//ADD 31.10.2018-------------------
                 {
