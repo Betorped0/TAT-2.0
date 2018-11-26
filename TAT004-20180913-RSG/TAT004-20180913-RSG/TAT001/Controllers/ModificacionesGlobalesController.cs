@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using TAT001.Common;
 using TAT001.Entities;
 using TAT001.Models;
+using TAT001.Models.Dao;
 
 namespace TAT001.Controllers
 {
@@ -10,6 +11,7 @@ namespace TAT001.Controllers
     {
         readonly TAT001Entities db = new TAT001Entities();
 
+        readonly SolicitudesDao solicitudesDao = new SolicitudesDao();
         // GET: ModificacionesGlobales
         public ActionResult Index()
         {
@@ -23,7 +25,7 @@ namespace TAT001.Controllers
         public ActionResult ListModAutorizador(decimal? num_doci, decimal? num_docf, DateTime? fechai, DateTime? fechaf, string kunnr, string usuarioa_id)
         {
             ModificacionesGlobalesViewModel modelView = new ModificacionesGlobalesViewModel();
-            modelView.solicitudPorAprobar = FnCommon.ObtenerSolicitudesPorAprobar(db, num_doci, num_docf, fechai, fechaf, kunnr, usuarioa_id);
+            modelView.solicitudPorAprobar = solicitudesDao.ObtenerSolicitudesPorAprobar( num_doci, num_docf, fechai, fechaf, kunnr, usuarioa_id);
             return View(modelView);
         }
 

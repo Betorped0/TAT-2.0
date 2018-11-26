@@ -165,8 +165,8 @@
         document.querySelectorAll('.datepicker').forEach(function (datePicker) {
             if (datePicker.value.indexOf(sinFecha)>-1) { datePicker.value = ''; }
         });
-        fnCommon.setDateRange($("#FECHAI_1"), $("#FECHAI_1"), null);
-        fnCommon.setDateRange($("#FECHAI_2"), $("#FECHAI_2"), null);
+        fnCommon.setDateRange('FECHAI_1','FECHAF_1', null);
+        fnCommon.setDateRange('FECHAI_2', 'FECHAF_2', null);
 
       //----- Configuracion de Tablas-----
     $(document).ready(function () {
@@ -302,8 +302,9 @@
         auto(document).ready(function () {
             auto("#NUM_DOCI_2").autocomplete({
                 source: function (request, response) {
-                    var num_docf = $("#NUM_DOCF_2").val();
-                    fnCommon.autoAjax(root + "Listas/Solicitudes", response, { Prefix: request.term, num_doci: null, num_docf: num_docf }, function (item) { return { label: item.NUM_DOC, value: item.NUM_DOC }; });
+                    var num_docf = $("#NUM_DOCF_2").val(),
+                        usuario_id = $("#USUARIOA_ID_2").val();
+                    fnCommon.autoAjax(root + "Listas/Solicitudes", response, { Prefix: request.term, num_doci: null, num_docf: num_docf, autorizador: true, usuario_id:usuario_id}, function (item) { return { label: item.NUM_DOC, value: item.NUM_DOC }; });
                 },
                 messages: {
                     noResults: '',
@@ -318,8 +319,9 @@
         auto(document).ready(function () {
             auto("#NUM_DOCF_2").autocomplete({
                 source: function (request, response) {
-                    var num_doci = $("#NUM_DOCI_2").val();
-                    fnCommon.autoAjax(root + "Listas/Solicitudes", response, { Prefix: request.term, num_doci: num_doci, num_docf: null }, function (item) { return { label: item.NUM_DOC, value: item.NUM_DOC }; });
+                    var num_doci = $("#NUM_DOCI_2").val(),
+                        usuario_id = $("#USUARIOA_ID_2").val();
+                    fnCommon.autoAjax(root + "Listas/Solicitudes", response, { Prefix: request.term, num_doci: num_doci, num_docf: null, autorizador: true, usuario_id: usuario_id}, function (item) { return { label: item.NUM_DOC, value: item.NUM_DOC }; });
                 },
                 messages: {
                     noResults: '',

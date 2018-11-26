@@ -1681,7 +1681,7 @@ $(window).on('load', function () {
         var instancessd2 = M.FormSelect.init(elemdpsd2, optionsdpsd);
         $('#select_categoria').prop('disabled', 'disabled');
         var elemdpc1 = document.querySelector('#select_categoria');
-        var instancesc1 = M.FormSelect.init(elemdpc1, optionsdpc);
+        var instancesc1 = M.FormSelect.init(elemdpc1, []);// optionsdpc);
     }
     var mt = parseFloat(toNum(tipocambio)) //B20180625 MGC 2018.07.02
     if (mt > 0) { //B20180625 MGC 2018.07.02
