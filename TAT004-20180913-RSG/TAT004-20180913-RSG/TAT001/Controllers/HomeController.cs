@@ -501,9 +501,7 @@ namespace TAT001.Controllers
             var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
             string us = "";
             us = User.Identity.Name;
-            var sociedades = user.SOCIEDADs;
-            List<CSP_DOCUMENTOSXUSER_Result> dOCUMENTOes = db.CSP_DOCUMENTOSXUSER(us, user.SPRAS_ID).ToList();
-            
+            var sociedades = user.SOCIEDADs;            
 
             List<CSP_DOCUMENTOSXUSER2_Result> dOCUMENTOes = db.CSP_DOCUMENTOSXUSER2(us, user.SPRAS_ID).ToList();
 
@@ -624,7 +622,7 @@ namespace TAT001.Controllers
                 }
             }
             else { 
-            foreach (CSP_DOCUMENTOSXUSER_Result item in dOCUMENTOes)
+            foreach (CSP_DOCUMENTOSXUSER2_Result item in dOCUMENTOes)
             {
                 Documento ld = new Documento();
                 ld.BUTTON = item.BUTTON;
