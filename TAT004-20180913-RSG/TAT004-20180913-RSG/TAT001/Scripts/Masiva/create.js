@@ -1022,7 +1022,7 @@ $('#tab_test2').on('keydown.autocomplete', '.input_proveedor', function () {
     var col_index = $(this).parent().index();
     var col_index2 = col_index + 1;
     var num_docH1 = null;
-    var sociedadH1 = null;
+    var clienteH1 = null;
     var tablaH1 = $('#tab_test1').DataTable();
 
     var amarillo = $(tr.find("td:eq(" + col_index + ")").children());
@@ -1046,7 +1046,7 @@ $('#tab_test2').on('keydown.autocomplete', '.input_proveedor', function () {
         num_docH1 = $(rowH1).children().eq(1).children().val();
 
         if (num_docH1 === num_doc) {
-            sociedadH1 = $(rowH1).find('td:eq(4)').children().val();
+            clienteH1 = $(rowH1).find('td:eq(10)').children().val();
         }
     }
 
@@ -1056,7 +1056,7 @@ $('#tab_test2').on('keydown.autocomplete', '.input_proveedor', function () {
                 type: "POST",
                 url: 'proveedor',
                 dataType: "json",
-                data: { "Prefix": request.term, "Sociedad": sociedadH1 },
+                data: { "Prefix": request.term, "Cliente": clienteH1 },
                 success: function (data) {
                     response(auto.map(data, function (item) {
                         return { label: trimStart('0', item.ID) + '-' + item.NOMBRE, value: trimStart('0', item.ID) };
@@ -2294,7 +2294,7 @@ function validaApoyo(apoyo, colApoyo) {
 function validaLigada(num_doc) {
     var tablaH4 = $('#tab_test4').DataTable();
     var contador = 0, contienePalabra = -1;;
-    var ligadaPorcentaje = [], ligadaPorcentaje2 = [];;
+    var ligadaPorcentaje = [], ligadaPorcentaje2 = [];
     var porcentaje = "";
 
     for (var a = 0; a < tablaH4.rows().data().length; a++) {
@@ -2380,7 +2380,94 @@ function validaLigada(num_doc) {
             }
         }
     }
+
+    //checa si la columna ligada esta bien 
+    var arrLigada = [], arrPorcentaje = [];
+    var contadorLigada = 0, contadorPorcentaje = 0;
+
+    for (var a = 0; a < tablaH4.rows().data().length; a++) {
+        var rowH4 = tablaH4.row(a).node();
+        var num_docH4 = $(rowH4).children().eq(1).children().val();
+        var porcentajeH4 = $(rowH4).children().eq(9).children().val();
+        var check = $(rowH4).children().eq(2).children().eq(0).children().eq(0).children().eq(0);
+
+        if ($(check).is(":checked") & num_docH4 == num_doc) {
+            arrLigada[contadorLigada] = num_docH4 + true;
+            arrPorcentaje[contadorLigada] = num_docH4 + porcentajeH4;
+            contadorLigada++;
+        }
+        else {
+            if (num_docH4 == num_doc) {
+                arrLigada[contadorLigada] = num_docH4 + false;
+                arrPorcentaje[contadorLigada] = num_docH4 + porcentajeH4;
+                contadorLigada++;
+            }
+        }
+    }
+
+    var igualesLigada = arrLigada.allValuesSame();
+
+    for (var b = 0; b < tablaH4.rows().data().length; b++) {
+        var rowbH4 = tablaH4.row(b).node();
+        var num_docbH4 = $(rowbH4).children().eq(1).children().val();
+        var check = $(rowbH4).children().eq(2).children().eq(0).children().eq(0).children().eq(0);
+        var checkeado = $(check).is(":checked");
+
+        if (num_docbH4 == num_doc) {
+            if (igualesLigada) {
+                $(rowbH4).children().eq(2).children().removeClass("red white-text rojo");
+                revisaPorcentajeLigada(num_docbH4, checkeado);
+            }
+            else {
+                $(rowbH4).children().eq(2).children().addClass("red white-text rojo");
+                revisaPorcentajeLigada(num_docbH4, checkeado);
+            }
+        }
+    }
+
     clearErrors();
+}
+
+function revisaPorcentajeLigada(num_doc, checked) {
+    var tablaH4 = $('#tab_test4').DataTable();
+    var arrPorcentajes = [];
+    var contador = 0;
+
+    for (var a = 0; a < tablaH4.rows().data().length; a++) {
+        var rowH4 = tablaH4.row(a).node();
+        var num_docH4 = $(rowH4).children().eq(1).children().val();
+        var porcentaje = $(rowH4).children().eq(9).children().val();
+
+        if (num_docH4 == num_doc) {
+            arrPorcentajes[contador] = porcentaje;
+            contador++;
+        }
+    }
+
+    Array.prototype.allValuesSame = function () {
+
+        for (var i = 1; i < this.length; i++) {
+            if (this[i] !== this[0])
+                return false;
+        }
+
+        return true;
+    }
+
+    var igualesPorcentaje = arrPorcentajes.allValuesSame();
+
+    for (var b = 0; b < tablaH4.rows().data().length; b++) {
+        var rowH4 = tablaH4.row(b).node();
+        var num_docH4 = $(rowH4).children().eq(1).children().val();
+        var porcentaje = $(rowH4).children().eq(9).children().val();
+
+        if (num_docH4 == num_doc & checked & igualesPorcentaje) {
+            $(rowH4).children().eq(9).children().removeClass("red white-text rojo");
+        }
+        else if (num_docH4 == num_doc & checked & !igualesPorcentaje) {
+            $(rowH4).children().eq(9).children().addClass("red white-text rojo");
+        }
+    }
 }
 
 function ligada(check) {
@@ -3534,7 +3621,7 @@ function cloneTables() {
         $('#tabclon1bd').append("<tr id='trd" + aa + "'></tr>");
         $(rowH1c).children().each(function (td) {
             if (td !== 18 && td !== 19 && td !== 0) {
-                $("#trd" + aa).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
+                $("#trd" + aa).append("<td>" + $(this).find('input:first').val().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
             }
         });
     }
@@ -3554,7 +3641,7 @@ function cloneTables() {
         $('#tabclon2b').append("<tr id='tr2" + bb + "'></tr>");
         $(rowH2c).children().each(function (td2) {
             if (td2 !== 0) {
-                $("#tr2" + bb).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
+                $("#tr2" + bb).append("<td>" + $(this).find('input:first').val().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
             }
         });
     }
@@ -3573,7 +3660,7 @@ function cloneTables() {
         $('#tabclon3b').append("<tr id='tr3" + cc + "'></tr>");
         $(rowH3c).children().each(function (td3) {
             if (td3 !== 0) {
-                $("#tr3" + cc).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
+                $("#tr3" + cc).append("<td>" + $(this).find('input:first').val().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
             }
         });
     }
@@ -3592,7 +3679,12 @@ function cloneTables() {
         $('#tabclon4b').append("<tr id='tr4" + dd + "'></tr>");
         $(rowH4c).children().each(function (td4) {
             if (td4 !== 0) {
-                $("#tr4" + dd).append("<td>" + $(this).find('span:first').text().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
+                if (td4 == 9) {
+                    $("#tr4" + dd).append("<td>" + $(this).find('input:first').val().replace('%', '') + "</td>");
+                }
+                else {
+                    $("#tr4" + dd).append("<td>" + $(this).find('input:first').val().replace(/[^a-z0-9-/\s]/gi, '') + "</td>");
+                }
             }
         });
     }
@@ -3600,7 +3692,7 @@ function cloneTables() {
 
 var tablesToExcel = (function () {
     var uri = 'data:application/vnd.ms-excel;base64,'
-        , tmplWorkbookXML = '<?xml version="1.0"?><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">'
+        , tmplWorkbookXML = ' <xml version="1.0"><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">'
             + '<DocumentProperties xmlns="urn:schemas-microsoft-com:office:office"><Author>Axel Richter</Author><Created>{created}</Created></DocumentProperties>'
             + '<Styles>'
             + '<Style ss:ID="Currency"><NumberFormat ss:Format="Currency"></NumberFormat></Style>'

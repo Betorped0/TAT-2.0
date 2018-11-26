@@ -371,6 +371,7 @@ namespace TAT001.Common
         }
         public static List<MATERIALGPT> ObtenerMaterialGroupsCliente(TAT001Entities db, string vkorg, string spart, string kunnr, string soc_id,int aii, int mii, int aff, int mff)
         {
+            db.Database.CommandTimeout = 180;
             List<MATERIALGPT> materialgp = db.Database.SqlQuery<MATERIALGPT>("CPS_LISTA_MATERIALGP_CLIENTE @SOCIEDAD_ID,@VKORG,@SPART,@KUNNR,@aii,@mii,@aff,@mff",
                new SqlParameter("@SOCIEDAD_ID", soc_id),
               new SqlParameter("@VKORG", vkorg),
@@ -384,6 +385,7 @@ namespace TAT001.Common
         }
         public static List<DOCUMENTOM_MOD> ObtenerMaterialGroupsMateriales(TAT001Entities db, string vkorg, string spart, string kunnr, string soc_id, int aii, int mii, int aff, int mff,string user_id)
         {
+            db.Database.CommandTimeout = 180;
             string spras_id = ObtenerSprasId(db, user_id);
             List<DOCUMENTOM_MOD> materialgp = db.Database.SqlQuery<DOCUMENTOM_MOD>("CPS_LISTA_MATERIALGP_MATERIALES @SOCIEDAD_ID,@VKORG,@SPART,@KUNNR,@SPRAS_ID,@aii,@mii,@aff,@mff",
               new SqlParameter("@SOCIEDAD_ID", soc_id),
@@ -537,6 +539,17 @@ namespace TAT001.Common
             paramsCSP.ToArray()).ToList();
             return solicitudes;
 
+        }
+
+        public static List<TALLT> ObtenerTallsConCuenta(TAT001Entities db, string spras_id, string pais_id, int ejercicio, string sociedad_id)
+        {
+            List<TALLT> talls = db.Database.SqlQuery<TALLT>("CSP_LISTA_TALL_CUENTA @SPRAS_ID,@PAIS_ID,@EJERCICIO,@SOCIEDAD_ID",
+                new SqlParameter("@SPRAS_ID", spras_id),
+                new SqlParameter("@PAIS_ID", pais_id),
+                new SqlParameter("@EJERCICIO", ejercicio),
+                new SqlParameter("@SOCIEDAD_ID", sociedad_id)).ToList();
+
+            return talls;
         }
     }
 }

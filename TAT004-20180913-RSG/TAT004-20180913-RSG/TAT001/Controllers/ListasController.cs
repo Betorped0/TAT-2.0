@@ -32,23 +32,45 @@ namespace TAT001.Controllers
             {
                 comcodessplit = cocode.Split(',');
             }
-            
-            var c = (from cl in db.CLIENTEs
-                     join p in db.PAIS on cl.LAND equals p.LAND
-                        where cl.KUNNR.Contains(Prefix) && comcodessplit.Contains(p.SOCIEDAD_ID) && cl.ACTIVO && p.ACTIVO
-                        orderby cl.NAME1
-                        select new { cl.KUNNR, cl.NAME1 }).ToList();
-            if (c.Count == 0)
+
+            if (comcodessplit.Any())
             {
-                var c2 = (from cl in db.CLIENTEs
-                          join p in db.PAIS on cl.LAND equals p.LAND
-                          where cl.NAME1.Contains(Prefix) && comcodessplit.Contains(p.SOCIEDAD_ID) && cl.ACTIVO && p.ACTIVO
-                          orderby cl.NAME1
-                          select new { cl.KUNNR, cl.NAME1 }).ToList();
-                c.AddRange(c2);
+                var c = (from cl in db.CLIENTEs
+                         join p in db.PAIS on cl.LAND equals p.LAND
+                         where cl.KUNNR.Contains(Prefix) && comcodessplit.Contains(p.SOCIEDAD_ID) && cl.ACTIVO && p.ACTIVO
+                         orderby cl.NAME1
+                         select new { cl.KUNNR, cl.NAME1 }).ToList();
+                if (c.Count == 0)
+                {
+                    var c2 = (from cl in db.CLIENTEs
+                              join p in db.PAIS on cl.LAND equals p.LAND
+                              where cl.NAME1.Contains(Prefix) && comcodessplit.Contains(p.SOCIEDAD_ID) && cl.ACTIVO && p.ACTIVO
+                              orderby cl.NAME1
+                              select new { cl.KUNNR, cl.NAME1 }).ToList();
+                    c.AddRange(c2);
+                }
+                JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+                return cc;
             }
-            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
-            return cc;
+            else
+            {
+                var c = (from cl in db.CLIENTEs
+                         join p in db.PAIS on cl.LAND equals p.LAND
+                         where cl.KUNNR.Contains(Prefix) && cl.ACTIVO && p.ACTIVO
+                         orderby cl.NAME1
+                         select new { cl.KUNNR, cl.NAME1 }).ToList();
+                if (c.Count == 0)
+                {
+                    var c2 = (from cl in db.CLIENTEs
+                              join p in db.PAIS on cl.LAND equals p.LAND
+                              where cl.NAME1.Contains(Prefix) && cl.ACTIVO && p.ACTIVO
+                              orderby cl.NAME1
+                              select new { cl.KUNNR, cl.NAME1 }).ToList();
+                    c.AddRange(c2);
+                }
+                JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+                return cc;
+            }
         }
         [HttpGet]
         public JsonResult ReportesFiltroPaises(string cocodes)
@@ -122,7 +144,7 @@ namespace TAT001.Controllers
 
             string p = pais.Split('.')[0].ToUpper();
             var c = (from N in db.STATES
-                     where N.NAME.Contains(Prefix) & N.COUNTRy.SORTNAME.Equals(p)
+                     where N.NAME.Contains(Prefix) && N.COUNTRy.SORTNAME.Equals(p)
                      select new { N.NAME });
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
             return cc;
@@ -138,7 +160,7 @@ namespace TAT001.Controllers
             var c = (from N in db.CITIES
                      join St in db.STATES
                      on N.STATE_ID equals St.ID
-                     where N.NAME.Contains(Prefix) & St.NAME.Equals(estado)
+                     where N.NAME.Contains(Prefix) && St.NAME.Equals(estado)
                      select new { N.NAME });
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
             return cc;
@@ -151,7 +173,7 @@ namespace TAT001.Controllers
             var c = (from N in db.DET_APROB
                      join St in db.PUESTOTs
                      on N.PUESTOA_ID equals St.PUESTO_ID
-                     where N.BUKRS.Equals(bukrs) & N.PUESTOC_ID.Equals(p) & St.SPRAS_ID.Equals(spras)
+                     where N.BUKRS.Equals(bukrs) && N.PUESTOC_ID.Equals(p) && St.SPRAS_ID.Equals(spras)
                      //where N.BUKRS.Equals(bukrs) 
                      select new { N.PUESTOA_ID, St.TXT50 });
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
@@ -162,26 +184,26 @@ namespace TAT001.Controllers
         public JsonResult Det_Aprob2(string bukrs, string puesto, string spras)
         {
             int p = Int16.Parse(puesto);
-            DET_APROBH dh = db.DET_APROBH.Where(a => a.SOCIEDAD_ID.Equals(bukrs) & a.PUESTOC_ID == p).OrderByDescending(a => a.VERSION).FirstOrDefault();
+            DET_APROBH dh = db.DET_APROBH.Where(a => a.SOCIEDAD_ID.Equals(bukrs) && a.PUESTOC_ID == p).OrderByDescending(a => a.VERSION).FirstOrDefault();
             if (dh != null)
             {
                 var c = (from N in db.DET_APROBP
                          join St in db.PUESTOTs
                          on N.PUESTOA_ID equals St.PUESTO_ID
-                         where N.SOCIEDAD_ID.Equals(bukrs) & N.PUESTOC_ID.Equals(p) & St.SPRAS_ID.Equals(spras) & N.VERSION.Equals(dh.VERSION)
+                         where N.SOCIEDAD_ID.Equals(bukrs) && N.PUESTOC_ID.Equals(p) && St.SPRAS_ID.Equals(spras) && N.VERSION.Equals(dh.VERSION)
                          //where N.BUKRS.Equals(bukrs) 
-                         select new { N.POS, N.PUESTOA_ID.Value, St.TXT50, N.MONTO, PRESUPUESTO = (bool)N.PRESUPUESTO.Value }).ToList();
+                         select new { N.POS, N.PUESTOA_ID.Value, St.TXT50, N.MONTO, PRESUPUESTO = N.PRESUPUESTO.Value }).ToList();
 
-                TAX_LAND tl = db.TAX_LAND.Where(a => a.SOCIEDAD_ID.Equals(bukrs) & a.ACTIVO == true).FirstOrDefault();
+                TAX_LAND tl = db.TAX_LAND.Where(a => a.SOCIEDAD_ID.Equals(bukrs) && a.ACTIVO == true).FirstOrDefault();
                 if (tl != null)
                 {
                     var col = (from St in db.PUESTOTs
-                               where St.PUESTO_ID == 9 & St.SPRAS_ID.Equals(spras)
+                               where St.PUESTO_ID == 9 && St.SPRAS_ID.Equals(spras)
                                //where N.BUKRS.Equals(bukrs) 
                                select new { POS = 98, Value = St.PUESTO_ID, St.TXT50, PRESUPUESTO = false });
                     foreach (var coll in col)
                     {
-                        var colll = new { POS = 98, Value = coll.Value, coll.TXT50, MONTO = (decimal?)decimal.Parse("-1"), PRESUPUESTO = false };
+                        var colll = new { POS = 98,  coll.Value, coll.TXT50, MONTO = (decimal?)decimal.Parse("-1"), PRESUPUESTO = false };
                         c.Add(colll);
                     }
                 }
@@ -198,7 +220,7 @@ namespace TAT001.Controllers
         [HttpGet]
         public JsonResult UsuariosPuesto(string puesto, string Prefix)
         {
-            int p = Int16.Parse(puesto);
+            //int p = Int16.Parse(puesto);
             var c = (from N in db.USUARIOs
                      where //N.PUESTO_ID == p & 
                      N.ID.Contains(Prefix)
@@ -208,7 +230,7 @@ namespace TAT001.Controllers
             {
                 c = (from N in db.USUARIOs
                      where //N.PUESTO_ID == p & 
-                     N.NOMBRE.Contains(Prefix) | N.APELLIDO_P.Contains(Prefix) | N.APELLIDO_M.Contains(Prefix)
+                     N.NOMBRE.Contains(Prefix) || N.APELLIDO_P.Contains(Prefix) || N.APELLIDO_M.Contains(Prefix)
                      //where N.BUKRS.Equals(bukrs) 
                      select new { N.ID, NOMBRE = N.ID + " - " + N.NOMBRE + " " + N.APELLIDO_P + " " + N.APELLIDO_M });
             }
@@ -224,11 +246,11 @@ namespace TAT001.Controllers
             
             var c = (from N in db.DET_AGENTEC
                      where N.PAIS_ID == pais
-                     & N.USUARIOC_ID.Equals(user)
-                     & N.VKORG.Equals(vkorg)
-                     & N.VTWEG.Equals(vtweg)
-                     & N.SPART.Equals(spart)
-                     & N.KUNNR.Equals(kunnr)
+                     && N.USUARIOC_ID.Equals(user)
+                     && N.VKORG.Equals(vkorg)
+                     && N.VTWEG.Equals(vtweg)
+                     && N.SPART.Equals(spart)
+                     && N.KUNNR.Equals(kunnr)
                      select new { N.POS });
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
             return cc;
@@ -236,7 +258,7 @@ namespace TAT001.Controllers
         [HttpPost]
         public JsonResult getPresupuesto(string kunnr, string periodo)
         {
-            PRESUPUESTO_MOD pm = new PRESUPUESTO_MOD();
+            PRESUPUESTO_MOD pm;
             Presupuesto pr = new Presupuesto();
             Cadena c = new Cadena();
             pm = pr.getPresupuesto(c.completaCliente(kunnr), periodo);
@@ -264,9 +286,9 @@ namespace TAT001.Controllers
                                          join G in db.GALLTs
                                          on TA.GALL_ID equals G.GALL_ID
                                          where DR.NUM_DOC == num
-                                         & T.SPRAS_ID == spras
-                                         & G.SPRAS_ID == spras
-                                         & D.NUM_DOC != 0
+                                         && T.SPRAS_ID == spras
+                                         && G.SPRAS_ID == spras
+                                         && D.NUM_DOC != 0
                                          select new DOCUMENTO_MOD
                                          {
                                              NUM_DOC = D.NUM_DOC,
@@ -296,8 +318,8 @@ namespace TAT001.Controllers
                                          join G in db.GALLTs
                                          on TA.GALL_ID equals G.GALL_ID
                                          where D.DOCUMENTO_REF == num
-                                         & T.SPRAS_ID == spras
-                                         & G.SPRAS_ID == spras
+                                         && T.SPRAS_ID == spras
+                                         && G.SPRAS_ID == spras
                                          select new DOCUMENTO_MOD
                                          {
                                              NUM_DOC = D.NUM_DOC,
@@ -338,12 +360,12 @@ namespace TAT001.Controllers
                      join TX in db.TX_CONCEPTOT
                      on T.CONCEPTO_ID equals TX.CONCEPTO_ID
                      where T.SOCIEDAD_ID == bukrs
-                     & T.PAIS_ID == pais
-                     & T.VKORG == vkorg
-                     & T.VTWEG == vtweg
-                     & T.SPART == spart
-                     & T.KUNNR == kunnr
-                     & TX.SPRAS_ID == spras
+                     && T.PAIS_ID == pais
+                     && T.VKORG == vkorg
+                     && T.VTWEG == vtweg
+                     && T.SPART == spart
+                     && T.KUNNR == kunnr
+                     && TX.SPRAS_ID == spras
                      select new { T.CONCEPTO_ID, TX.TXT50 });
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
             return cc;
@@ -358,13 +380,13 @@ namespace TAT001.Controllers
                      join TX in db.TX_NOTAT
                      on T.TNOTA_ID equals TX.TNOTA_ID
                      where T.SOCIEDAD_ID == bukrs
-                     & T.PAIS_ID == pais
-                     & T.VKORG == vkorg
-                     & T.VTWEG == vtweg
-                     & T.SPART == spart
-                     & T.KUNNR == kunnr
-                     & T.CONCEPTO_ID == co
-                     & TX.SPRAS_ID == spras
+                     && T.PAIS_ID == pais
+                     && T.VKORG == vkorg
+                     && T.VTWEG == vtweg
+                     && T.SPART == spart
+                     && T.KUNNR == kunnr
+                     && T.CONCEPTO_ID == co
+                     && TX.SPRAS_ID == spras
                      select new { T.TNOTA_ID, TX.TXT50 });
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
             return cc;
@@ -377,25 +399,25 @@ namespace TAT001.Controllers
             int co = int.Parse(concepto);
             var c = (from T in db.TAXEOHs
                      where T.SOCIEDAD_ID == bukrs
-                     & T.PAIS_ID == pais
-                     & T.VKORG == vkorg
-                     & T.VTWEG == vtweg
-                     & T.SPART == spart
-                     & T.KUNNR == kunnr
-                     & T.CONCEPTO_ID == co
+                     && T.PAIS_ID == pais
+                     && T.VKORG == vkorg
+                     && T.VTWEG == vtweg
+                     && T.SPART == spart
+                     && T.KUNNR == kunnr
+                     && T.CONCEPTO_ID == co
                      select new { T.IMPUESTO_ID, T.PORC, TXT50 = "IVA" }).ToList();
 
             var c2 = (from T in db.TAXEOPs
                       join R in db.TRETENCIONTs
                       on T.TRETENCION_ID equals R.TRETENCION_ID
                       where T.SOCIEDAD_ID == bukrs
-                      & T.PAIS_ID == pais
-                      & T.VKORG == vkorg
-                      & T.VTWEG == vtweg
-                      & T.SPART == spart
-                      & T.KUNNR == kunnr
-                      & T.CONCEPTO_ID == co
-                      & R.SPRAS_ID == spras
+                      && T.PAIS_ID == pais
+                      && T.VKORG == vkorg
+                      && T.VTWEG == vtweg
+                      && T.SPART == spart
+                      && T.KUNNR == kunnr
+                      && T.CONCEPTO_ID == co
+                      && R.SPRAS_ID == spras
                       select new { IMPUESTO_ID = T.RETENCION_ID.ToString(), T.PORC, R.TXT50 }).ToList();
 
             c.AddRange(c2);
@@ -410,7 +432,7 @@ namespace TAT001.Controllers
                      join T in db.TSOPORTETs
                      on C.TSOPORTE_ID equals T.TSOPORTE_ID
                      where C.TSOL_ID == tsol
-                     & T.SPRAS_ID == spras
+                     && T.SPRAS_ID == spras
                      select new { C.TSOPORTE_ID, C.OBLIGATORIO, T.TXT50 });
 
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
@@ -423,9 +445,9 @@ namespace TAT001.Controllers
 
             var c = (from C in db.CUENTAs
                      where C.SOCIEDAD_ID == bukrs
-                     & C.PAIS_ID == land
-                     & C.TALL_ID == gall
-                     & C.EJERCICIO == ejer
+                     && C.PAIS_ID == land
+                     && C.TALL_ID == gall
+                     && C.EJERCICIO == ejer
                      //-----DRS 1.10.2018-----
                      select new { C.ABONO, NOMBREA = C.CUENTAGL.NOMBRE, C.CARGO, NOMBREC = C.CUENTAGL1.NOMBRE, C.CLEARING, C.LIMITE }).FirstOrDefault();
 
@@ -453,81 +475,50 @@ namespace TAT001.Controllers
             //Validar si hay materiales
             if (db.MATERIALs.Any(x => x.MATERIALGP_ID != null && x.ACTIVO.Value))
             {
-
-                CLIENTE cli = new CLIENTE();
                 List<CLIENTE> clil = new List<CLIENTE>();
 
                 try
                 {
-                    cli = db.CLIENTEs.Where(c => c.KUNNR == kunnr & c.VKORG == vkorg & c.SPART == spart).FirstOrDefault();
-                    //Saber si el cliente es sold to, payer o un grupo
-                    if (cli != null)
+                    CLIENTE cli = db.CLIENTEs.Where(c => c.KUNNR == kunnr && c.VKORG == vkorg && c.SPART == spart).FirstOrDefault();
+                    //Saber si el cliente es sold to, payer o un grupo  //Es un soldto
+                    if (cli != null && cli.KUNNR != cli.PAYER && cli.KUNNR != cli.BANNER)
                     {
-                        //Es un soldto
-                        if (cli.KUNNR != cli.PAYER && cli.KUNNR != cli.BANNER)
-                        {
                             clil.Add(cli);
-                        }
                     }
                 }
                 catch (Exception e)
                 {
-
+                    Log.ErrorLogApp(e, "Listas", "categoriasCliente");
                 }
 
-                var cie = clil.Cast<CLIENTE>();
-                //    IEnumerable<CLIENTE> cie = clil as IEnumerable<CLIENTE>;
+                var cie = clil;
                 //Obtener el numero de periodos para obtener el historial
-                int nummonths = 3;
+                int? mesesVenta = (db.CONFDIST_CAT.Any(x => x.SOCIEDAD_ID == soc_id) ? db.CONFDIST_CAT.First(x => x.SOCIEDAD_ID == soc_id).PERIODOS:null);
+                int nummonths = (mesesVenta != null ? mesesVenta.Value : DateTime.Now.Month);
                 int imonths = nummonths * -1;
                 //Obtener el rango de los periodos incluyendo el año
                 DateTime ff = DateTime.Today;
                 DateTime fi = ff.AddMonths(imonths);
 
-                string mi = fi.Month.ToString();//.ToString("MM");
-                string ai = fi.Year.ToString();//.ToString("yyyy");
+                string mi = fi.Month.ToString();
+                string ai = fi.Year.ToString();
 
-                string mf = ff.Month.ToString();// ("MM");
-                string af = ff.Year.ToString();// "yyyy");
+                string mf = ff.Month.ToString();
+                string af = ff.Year.ToString();
 
                 int aii = 0;
-                try
-                {
-                    aii = Convert.ToInt32(ai);
-                }
-                catch (Exception e)
-                {
-
-                }
-
                 int mii = 0;
-                try
-                {
-                    mii = Convert.ToInt32(mi);
-                }
-                catch (Exception e)
-                {
-
-                }
-
                 int aff = 0;
-                try
-                {
-                    aff = Convert.ToInt32(af);
-                }
-                catch (Exception e)
-                {
-
-                }
-
                 int mff = 0;
-                try
-                {
+                try{
+                    aii = Convert.ToInt32(ai);
+                    mii = Convert.ToInt32(mi);
+                    aff = Convert.ToInt32(af);
                     mff = Convert.ToInt32(mf);
                 }
                 catch (Exception e)
                 {
-
+                    Log.ErrorLogApp(e, "Listas", "categoriasCliente-mesesVenta");
                 }
 
                 if (cie != null)
@@ -555,7 +546,7 @@ namespace TAT001.Controllers
         [AllowAnonymous]
         public JsonResult grupoMateriales(string vkorg, string spart, string kunnr, string soc_id)
         {
-         
+
             if (kunnr == null)
             {
                 kunnr = "";
@@ -570,87 +561,56 @@ namespace TAT001.Controllers
             //Validar si hay materiales
             if (db.MATERIALs.Any(x => x.MATERIALGP_ID != null && x.ACTIVO.Value))
             {
-
-                CLIENTE cli = new CLIENTE();
                 List<CLIENTE> clil = new List<CLIENTE>();
-
                 try
                 {
-                    cli = db.CLIENTEs.Where(c => c.KUNNR == kunnr & c.VKORG == vkorg & c.SPART == spart).FirstOrDefault();
+                    CLIENTE cli = db.CLIENTEs.Where(c => c.KUNNR == kunnr && c.VKORG == vkorg && c.SPART == spart).FirstOrDefault();
 
                     //Saber si el cliente es sold to, payer o un grupo
-                    if (cli != null)
+                    if (cli != null && cli.KUNNR != cli.PAYER && cli.KUNNR != cli.BANNER)
                     {
-                        //Es un soldto
-                        if (cli.KUNNR != cli.PAYER && cli.KUNNR != cli.BANNER)
-                        {
-                            //cli.VKORG = cli.VKORG+" ";
-                            clil.Add(cli);
-                        }
+                        clil.Add(cli);
                     }
                 }
                 catch (Exception e)
                 {
-
+                    Log.ErrorLogApp(e, "Listas", "grupoMateriales");
                 }
-                var cie = clil.Cast<CLIENTE>();
-                //    IEnumerable<CLIENTE> cie = clil as IEnumerable<CLIENTE>;
+                var cie = clil;
                 //Obtener el numero de periodos para obtener el historial
-                int nummonths = 3;
+                int? mesesVenta = (db.CONFDIST_CAT.Any(x => x.SOCIEDAD_ID == soc_id) ? db.CONFDIST_CAT.First(x => x.SOCIEDAD_ID == soc_id).PERIODOS : null);
+                int nummonths = (mesesVenta != null ? mesesVenta.Value : DateTime.Now.Month);
                 int imonths = nummonths * -1;
                 //Obtener el rango de los periodos incluyendo el año
                 DateTime ff = DateTime.Today;
                 DateTime fi = ff.AddMonths(imonths);
 
-                string mi = fi.Month.ToString();//.ToString("MM");
-                string ai = fi.Year.ToString();//.ToString("yyyy");
+                string mi = fi.Month.ToString();
+                string ai = fi.Year.ToString();
 
-                string mf = ff.Month.ToString();// ("MM");
-                string af = ff.Year.ToString();// "yyyy");
+                string mf = ff.Month.ToString();
+                string af = ff.Year.ToString();
 
                 int aii = 0;
-                try
-                {
-                    aii = Convert.ToInt32(ai);
-                }
-                catch (Exception e)
-                {
-
-                }
-
                 int mii = 0;
-                try
-                {
-                    mii = Convert.ToInt32(mi);
-                }
-                catch (Exception e)
-                {
-
-                }
-
                 int aff = 0;
-                try
-                {
-                    aff = Convert.ToInt32(af);
-                }
-                catch (Exception e)
-                {
-
-                }
-
                 int mff = 0;
                 try
                 {
+                    aii = Convert.ToInt32(ai);
+                    mii = Convert.ToInt32(mi);
+                    aff = Convert.ToInt32(af);
                     mff = Convert.ToInt32(mf);
                 }
                 catch (Exception e)
                 {
-
+                    Log.ErrorLogApp(e, "Listas", "grupoMateriales-mesesVenta");
                 }
+
 
                 if (cie != null)
                 {
-                   jd = FnCommon.ObtenerMaterialGroupsMateriales(db, vkorg, spart, kunnr, soc_id, aii, mii, aff, mff,User.Identity.Name);
+                    jd = FnCommon.ObtenerMaterialGroupsMateriales(db, vkorg, spart, kunnr, soc_id, aii, mii, aff, mff, User.Identity.Name);
                 }
             }
 
@@ -663,17 +623,17 @@ namespace TAT001.Controllers
             {
                 CategoriaMaterial cm = new CategoriaMaterial();
                 cm.ID = item.Key;
-                cm.EXCLUIR = jd.Where(x => x.ID_CAT.Equals(item.Key)).FirstOrDefault().EXCLUIR; //RSG 09.07.2018 ID167
+                cm.EXCLUIR = jd.FirstOrDefault(x => x.ID_CAT.Equals(item.Key)).EXCLUIR; //RSG 09.07.2018 ID167
 
                 //Obtener los materiales de la categoría
-                List<DOCUMENTOM_MOD> dl = new List<DOCUMENTOM_MOD>();
+                List<DOCUMENTOM_MOD> dl;
                 List<DOCUMENTOM_MOD> dm = new List<DOCUMENTOM_MOD>();
                 dl = jd.Where(c => c.ID_CAT == item.Key).Select(c => new DOCUMENTOM_MOD { ID_CAT = c.ID_CAT, MATNR = c.MATNR, VAL = c.VAL, DESC = c.DESC }).ToList();//Falta obtener el groupby
 
                 //Obtener la descripción de los materiales
                 foreach (DOCUMENTOM_MOD d in dl)
                 {
-                    DOCUMENTOM_MOD dcl = new DOCUMENTOM_MOD();
+                    DOCUMENTOM_MOD dcl ;
                     dcl = dm.Where(z => z.MATNR == d.MATNR).Select(c => new DOCUMENTOM_MOD { ID_CAT = c.ID_CAT, MATNR = c.MATNR, VAL = c.VAL, DESC = c.DESC }).FirstOrDefault();
 
                     if (dcl == null)
@@ -683,9 +643,10 @@ namespace TAT001.Controllers
                         decimal val = dl.Where(y => y.MATNR == d.MATNR).Sum(x => x.VAL);
                         dcll.ID_CAT = item.Key;
                         dcll.MATNR = d.MATNR;
-                        
+
                         dcll.DESC = d.DESC;
                         dcll.VAL = val;
+                        cm.TOTALCAT += val;//ADD RSG 22.11.2018
 
                         dm.Add(dcll);
                     }
@@ -705,8 +666,9 @@ namespace TAT001.Controllers
                 nnn.ID = "000";
                 nnn.DESCRIPCION = FnCommon.ObtenerTotalProducts(db).TXT50;
                 nnn.MATERIALES = new List<DOCUMENTOM_MOD>();
+                nnn.TOTALCAT = 0;//ADD RSG 22.11.2018
                 //foreach (var item in lcatmat)//RSG 09.07.2018 ID167
-                foreach (var item in lcatmat.Where(x => x.EXCLUIR == false).ToList())
+                foreach (var item in lcatmat.Where(x => !x.EXCLUIR).ToList())
                 {
                     foreach (var ii in item.MATERIALES)
                     {
@@ -716,6 +678,7 @@ namespace TAT001.Controllers
                         dm.MATNR = ii.MATNR;
                         dm.POR = ii.POR;
                         dm.VAL = ii.VAL;
+                        nnn.TOTALCAT += ii.VAL;
                         nnn.MATERIALES.Add(dm);
                     }
                 }
@@ -737,9 +700,9 @@ namespace TAT001.Controllers
             {
                 conf = db.CONFDIST_CAT.Where(c => c.SOCIEDAD_ID == soc && c.ACTIVO == true).FirstOrDefault();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                Log.ErrorLogApp(e,"Listas", "getCatConf");
             }
 
             return conf;
@@ -817,7 +780,7 @@ namespace TAT001.Controllers
                                  join co in db.CONTACTOCs
                                  on new { c.VKORG, c.VTWEG, c.SPART, c.KUNNR } equals new { co.VKORG, co.VTWEG, co.SPART, co.KUNNR } into jjcont
                                  from co in jjcont.DefaultIfEmpty()
-                                 where (c.KUNNR == kunnr & co.DEFECTO == true)
+                                 where (c.KUNNR == kunnr && co.DEFECTO == true)
                                  select new CLIENTE_MOD
                                  {
                                      VKORG = c.VKORG,
@@ -870,7 +833,7 @@ namespace TAT001.Controllers
                 var clientei = (from c in db.TCLIENTEs
                                 join ct in db.TCLIENTETs
                                 on c.ID equals ct.PARVW_ID
-                                where c.ID == id_cl.PARVW && c.ACTIVO == true
+                                where c.ID == id_cl.PARVW && c.ACTIVO
                                 select ct).FirstOrDefault();
                 id_cl.PARVW = "";
                 if (clientei != null)
@@ -910,7 +873,7 @@ namespace TAT001.Controllers
                                  join co in db.CONTACTOCs
                                  on new { c.VKORG, c.VTWEG, c.SPART, c.KUNNR } equals new { co.VKORG, co.VTWEG, co.SPART, co.KUNNR } into jjcont
                                  from co in jjcont.DefaultIfEmpty()
-                                 where (c.KUNNR == kunnr & co.DEFECTO == true)
+                                 where (c.KUNNR == kunnr && co.DEFECTO == true)
                                  select new CLIENTE_MOD
                                  {
                                      VKORG = c.VKORG,
@@ -963,7 +926,7 @@ namespace TAT001.Controllers
                 var clientei = (from c in db.TCLIENTEs
                                 join ct in db.TCLIENTETs
                                 on c.ID equals ct.PARVW_ID
-                                where c.ID == id_cl.PARVW && c.ACTIVO == true
+                                where c.ID == id_cl.PARVW && c.ACTIVO
                                 select ct).FirstOrDefault();
                 id_cl.PARVW = "";
                 if (clientei != null)
@@ -975,7 +938,7 @@ namespace TAT001.Controllers
             //Si es borrador asignar datos de contacto a cliente
             if (id_cl != null && esBorrador != null && esBorrador.Value)
             {
-                DOCUMENTBORR doc = db.DOCUMENTBORRs.Where(x => x.USUARIOC_ID == User.Identity.Name && x.PAYER_ID == kunnr).FirstOrDefault();
+                DOCUMENTBORR doc = db.DOCUMENTBORRs.Where(x => x.USUARIOC_ID == User.Identity.Name && (x.PAYER_ID == kunnr || x.PAYER_ID == null)).FirstOrDefault();
                 if (doc != null)
                 {
                     id_cl.PAYER_EMAIL = doc.PAYER_EMAIL;
@@ -1053,7 +1016,7 @@ namespace TAT001.Controllers
             
             var tsr = (from ts in db.TSOLTs
                         where spras_id == ts.SPRAS_ID && (ts.TSOL_ID.Contains(Prefix)|| ts.TXT50.Contains(Prefix))
-                        select new { TSOL_ID=ts.TSOL_ID, TXT50=(ts.TSOL_ID+" - "+ts.TXT50) }).ToList();
+                        select new { ts.TSOL_ID, TXT50=(ts.TSOL_ID+" - "+ts.TXT50) }).ToList();
           
             return Json(tsr, JsonRequestBehavior.AllowGet);
         }
@@ -1064,7 +1027,7 @@ namespace TAT001.Controllers
 
             var c = (from st in db.TSOPORTETs
                      where st.SPRAS_ID == spras_id && (st.TXT50.Contains(Prefix) || st.TSOPORTE_ID.Contains(Prefix))
-                     select new { TSOPORTE_ID=st.TSOPORTE_ID, TXT50=(st.TSOPORTE_ID + " - "+st.TXT50) });
+                     select new { st.TSOPORTE_ID, TXT50=(st.TSOPORTE_ID + " - "+st.TXT50) });
 
             return Json(c, JsonRequestBehavior.AllowGet);
         }
@@ -1091,7 +1054,7 @@ namespace TAT001.Controllers
         {
             var c = (from st in db.SOCIEDADs
                      where (st.BUKRS.Contains(Prefix) || st.BUTXT.Contains(Prefix))
-                     select new { BUKRS = st.BUKRS, TXT50 = (st.BUKRS + " - " + st.BUTXT) });
+                     select new { st.BUKRS, TXT50 = (st.BUKRS + " - " + st.BUTXT) });
 
             return Json(c, JsonRequestBehavior.AllowGet);
         }
@@ -1101,7 +1064,7 @@ namespace TAT001.Controllers
         {
             var c = (from sp in db.PAIS
                      where (sp.LAND.Contains(Prefix)|| sp.LANDX.Contains(Prefix))
-                     select new { LAND = sp.LAND, TXT50 = (sp.LANDX) });
+                     select new { sp.LAND, TXT50 = (sp.LANDX) });
 
             return Json(c, JsonRequestBehavior.AllowGet);
         }
@@ -1111,7 +1074,7 @@ namespace TAT001.Controllers
         {
             var c = (from st in db.TALLs
                      where (st.ID.Contains(Prefix)|| st.DESCRIPCION.Contains(Prefix))
-                     select new { ID = st.ID, TXT50 = (st.DESCRIPCION) });
+                     select new { st.ID, TXT50 = (st.DESCRIPCION) });
 
             return Json(c, JsonRequestBehavior.AllowGet);
         }
@@ -1120,7 +1083,7 @@ namespace TAT001.Controllers
         {
             var c = (from st in db.CUENTAGLs
                      where st.ACTIVO==true && (st.ID.ToString().Contains(Prefix)||st.NOMBRE.Contains(Prefix))
-                     select new { ID = st.ID, TXT50 = (st.ID + " - " + st.NOMBRE) });
+                     select new { st.ID, TXT50 = (st.ID + " - " + st.NOMBRE) });
 
             return Json(c, JsonRequestBehavior.AllowGet);
         }
@@ -1129,7 +1092,7 @@ namespace TAT001.Controllers
         public JsonResult impuestos(string Prefix)
         {
             var c = (from st in db.IMPUESTOes
-                     where st.ACTIVO == true && (st.MWSKZ.Contains(Prefix))
+                     where st.ACTIVO && (st.MWSKZ.Contains(Prefix))
                      select new { ID = st.MWSKZ, TXT50 = (st.MWSKZ) });
 
             return Json(c, JsonRequestBehavior.AllowGet);

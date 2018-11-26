@@ -501,6 +501,19 @@ namespace TAT001.Entities
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_upgraddiagrams");
         }
     
+        public virtual ObjectResult<CSP_DOCUMENTOSXCOCODE_Result> CSP_DOCUMENTOSXCOCODE(string cOCODE, string sPRAS)
+        {
+            var cOCODEParameter = cOCODE != null ?
+                new ObjectParameter("COCODE", cOCODE) :
+                new ObjectParameter("COCODE", typeof(string));
+    
+            var sPRASParameter = sPRAS != null ?
+                new ObjectParameter("SPRAS", sPRAS) :
+                new ObjectParameter("SPRAS", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CSP_DOCUMENTOSXCOCODE_Result>("CSP_DOCUMENTOSXCOCODE", cOCODEParameter, sPRASParameter);
+        }
+    
         public virtual ObjectResult<CSP_DOCUMENTOSXUSER2_Result> CSP_DOCUMENTOSXUSER2(string uSUARIO, string sPRAS)
         {
             var uSUARIOParameter = uSUARIO != null ?

@@ -47,6 +47,7 @@
     int year2 = yeard + 2;
     int yearback = yeard - 1;
     int yearback2 = yeard - 2;
+    var baseurl = HttpContext.Current.Request;
     <div class="row">
 
         @if (ViewBag.Display)
@@ -55,7 +56,7 @@
             <div class="col s12 right-align">
 
                 <button class="btn-small" id="btnConsultar" type="submit" name="action" @*style="display:none"*@>Consultar</button>
-                <input class="btn-small" id="id_excel" type="button" onclick="tableToExcel('table', 'Reporte Provisiones Abiertas TS')" value="Generar Excel" name="action" />
+                <input class="btn-small" id="id_excel" type="button" @*onclick="tableToExcel('table', 'Reporte Provisiones Abiertas TS')"*@ value="Generar Excel" name="action" />
             </div>
         }
         else
@@ -75,7 +76,7 @@
                         {
                             if (cadena == ViewBag.sociedad[i].BUKRS)
                             {
-                                <option value="@ViewBag.sociedad[i].BUKRS" selected="selected">@ViewBag.sociedad[i].BUKRS</option>
+                                <option selected="selected" value="@ViewBag.sociedad[i].BUKRS">@ViewBag.sociedad[i].BUKRS</option>
                             }
                             else
                             {
@@ -173,6 +174,7 @@
     if (ViewBag.display)
     {
         <script>
+
             $(document).ready(function () {
                 $("#id_excel").click(function () {
                     $("#table").trigger("filterReset");
@@ -180,7 +182,7 @@
                     $('#table').trigger('destroy');
                     var pager = $('#table tfoot').html();
                     $('#table tfoot').html("");
-                    tableToExcel('table', 'Reporte de Provisiones Abiertas');
+                    //tableToExcel('table', 'IntegraciónTS');
                     $('#table tfoot').html(pager);
                     $('#table').tablesorter({
                         theme: "materialize",
@@ -201,7 +203,7 @@
                 $(".grid thead td").click(function () {
                     showFilterOption(this);
                 });
-
+           
 
                 $('select.select_all').siblings('ul').prepend('<li id=sm_select_all id="filters_all"><span>Todas Las Opciones</span></li>');
                 $('li#sm_select_all').on('click', function () {
@@ -215,55 +217,62 @@
                     }).click();
                 });
                 $("#id_excel").click(function () {
+
                     $('#table').trigger('destroyPager');
+                    $('#table').parent().append('<table id="tableClon" style="display:none;border:2px;"><thead id="headclon"></thead><tbody id="bodyclon"></tbody></table>');
+
+                    $('#table > thead > tr').each(function (index) {
+                        if (index === 0) {
+                            $('#headclon').append('<tr id="headc"></tr>');
+                            $(this).children().each(function (indexch) {
+                                var thead = $(this).text();
+                                $('#headc').append('<th>' + thead + '</th>');
+                            });
+                        }
+                    });
+                    $('#table > tbody > tr').each(function (indexb) {
+                        $('#bodyclon').append('<tr id="b' + indexb + '"></tr>');
+                        $(this).children().each(function (indextd) {
+                            var btext = $(this).text();
+                            if (indextd == 2) {
+                                console.log("num doc: " + $(this).html());
+                                btext = $(this).html();
+                            }
+                            $('#b' + indexb).append('<td style="border: 2px solid black;">' + btext + '</td>');
+                        });
+                    });
                     var tableid = table;
-                    fnExcelReport();
+                    //getting values of current time for generating the file name
+                    var dt = new Date();
+                    var day = dt.getDate();
+                    var month = dt.getMonth() + 1;
+                    var year = dt.getFullYear();
+                    var hour = dt.getHours();
+                    var mins = dt.getMinutes();
+                    var postfix = day + "" + month + "" + year + "-" + hour + "" + mins;
+                    //creating a temporary HTML link element (they support setting file names)
+                    var a = document.createElement('a');
+                    //getting data from our div that contains the HTML table
+                    var data_type = 'data:application/vnd.ms-excel;charset=UTF-8';
+                    var table_div = document.getElementById('tableClon');
+                    var table_html = table_div.outerHTML.replace(/ /g, '%20');
+                    table_html = table_html.replace("á", "&aacute;");
+                    table_html = table_html.replace("é", "&eacute;");
+                    table_html = table_html.replace("í", "&iacute;");
+                    table_html = table_html.replace("ó", "&oacute;");
+                    table_html = table_html.replace("ú", "&uacute;");
+                    table_html = table_html.replace("ü", "&uuml;");
+                    a.href = data_type + ', ' + table_html.replace("ó", "&oacute;").replace("ú", "&uacute;");
+                    //setting the file name
+                    a.download = 'ProvisionesAbiertasTS' + postfix + '.xls';
+                    //triggering the function
+                    a.click();
+                    //just in case, prevent default behaviour
+                    e.preventDefault();
+
                     location.refresh();
                 });
             });
-           
-
-            function b64toBlob(b64Data, contentType, sliceSize) {
-                contentType = contentType || '';
-                sliceSize = sliceSize || 512;
-
-                var byteCharacters = atob(b64Data);
-                var byteArrays = [];
-
-                for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-                    var slice = byteCharacters.slice(offset, offset + sliceSize);
-
-                    var byteNumbers = new Array(slice.length);
-                    for (var i = 0; i < slice.length; i++) {
-                        byteNumbers[i] = slice.charCodeAt(i);
-                    }
-
-                    var byteArray = new Uint8Array(byteNumbers);
-
-                    byteArrays.push(byteArray);
-                }
-
-                var blob = new Blob(byteArrays, { type: contentType });
-                return blob;
-            }
-
-            var tableToExcel = (function () {
-                var uri = 'data:application/vnd.ms-excel;base64,'
-                   , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
-                    , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
-                    , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
-                return function (table, name) {
-                    if (!table.nodeType) table = document.getElementById(table)
-                    var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
-                    var str = base64(format(template, ctx));
-                    //window.location.href = uri + base64(format(template, ctx))
-                    var blob = b64toBlob(str, "application/vnd.ms-excel");
-                    var blobUrl = URL.createObjectURL(blob);
-                    window.location = blobUrl;
-                }
-            })()
-
-
 
             $(function () {
 
@@ -303,12 +312,14 @@
                         // output string - default is '{page}/{totalPages}';
                         // possible variables: {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
                         output: '{startRow} - {endRow} / {filteredRows} ({totalRows})'
+
                     });
+
             });
         </script>
 
         <br />
-        <b id="titulo2" style="color:rgba(0, 0, 0, 0.87); font-family:Tahoma; font-size:12px;">Al</b>
+        <b id="titulo2" style="color:rgba(0, 0, 0, 0.87); font-family:Tahoma; font-size:12px; margin-left:17px">Al</b>
 
         @*@System.DateTime.Now.ToString("dd/MM/yyyy")*@
 
@@ -404,6 +415,7 @@
                                     <option value="20">20</option>
                                     <option value="30">30</option>
                                     <option value="40">40</option>
+                                    <option value="50">50</option>
                                 </select>
                                 <label class="label_pag">Ir a Página</label>
                                 <select class="pagenum browser-default" title="Select page number"></select>
@@ -462,942 +474,951 @@
                             /////////////////////////////REMANENTE EN DOLARES///////////////////////////
                             var amountParent3 = consulta.GetType().GetProperty("MONTO_DOC_ML2").GetValue(consulta, null);
 
-                            <tr>
-                                <td>
-                                    @consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null)
-                                </td>
+                    <tr>
+                        <td>
+                            @consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null)
+                        </td>
 
-                                <td>
-                                    @consulta.GetType().GetProperty("PAIS_ID").GetValue(consulta, null)
-                                </td>
+                        <td>
+                            @consulta.GetType().GetProperty("PAIS_ID").GetValue(consulta, null)
+                        </td>
 
-                                <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = consulta.GetType().GetProperty("NUM_DOC").GetValue(consulta, null) })'" style="cursor:pointer">
-                                    @consulta.GetType().GetProperty("NUM_DOC").GetValue(consulta, null)
-                                </td>
+                        <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = consulta.GetType().GetProperty("NUM_DOC").GetValue(consulta, null), pais = "" })'" style="cursor:pointer">
+                            <a href="@ViewBag.baseURL/Solicitudes/Details/@consulta.GetType().GetProperty("NUM_DOC").GetValue(consulta, null)">@consulta.GetType().GetProperty("NUM_DOC").GetValue(consulta, null)</a>
+                        </td>
 
-                                <td>
-                                    @consulta.GetType().GetProperty("PAYER_ID").GetValue(consulta, null)
-                                </td>
+                        <td>
+                            @consulta.GetType().GetProperty("PAYER_ID").GetValue(consulta, null)
+                        </td>
 
-                                <td>
-                                    @consulta.GetType().GetProperty("NAME1").GetValue(consulta, null)
-                                </td>
+                        <td>
+                            @consulta.GetType().GetProperty("NAME1").GetValue(consulta, null)
+                        </td>
 
-                                <td>
-                                    @consulta.GetType().GetProperty("CANAL").GetValue(consulta, null)
-                                </td>
+                        <td>
+                            @consulta.GetType().GetProperty("CANAL").GetValue(consulta, null)
+                        </td>
 
-                                <td>
-                                    @consulta.GetType().GetProperty("CONCEPTO").GetValue(consulta, null)
-                                </td>
+                        <td>
+                            @consulta.GetType().GetProperty("CONCEPTO").GetValue(consulta, null)
+                        </td>
 
-                                <td>
-                                    @* PERIODO *@
-                                    @{
-                                        var per = consulta.GetType().GetProperty("FECHAC").GetValue(consulta, null);
-                                        per.ToString("MM / yyyy");
-                                    }
-                                    @per.ToString("MM / yyyy")
-                                </td>
+                        <td>
+                            @* PERIODO *@
+                            @{
+                                var per = consulta.GetType().GetProperty("FECHAC").GetValue(consulta, null);
+                                per.ToString("MM / yyyy");
+                            }
+                            @per.ToString("MM / yyyy")
+                        </td>
 
-                                <td>
-                                    @* FECHA REGISTRO CONTABLE *@
-                                    @consulta.GetType().GetProperty("FECHAC").GetValue(consulta, null)
-                                </td>
+                        <td>
+                            @* FECHA REGISTRO CONTABLE *@
+                            @consulta.GetType().GetProperty("FECHAC").GetValue(consulta, null)
+                        </td>
 
-                                <td>
-                                    @* FECHA CIERRE CONTABLE *@
-                                    @{
-                                        int ejercicio = Int32.Parse(consulta.GetType().GetProperty("EJERCICIO").GetValue(consulta, null));
-                                        int periodo = Int32.Parse(consulta.GetType().GetProperty("PERIODO").GetValue(consulta, null).ToString());
-                                        TAT001.Services.Calendario445 c = new TAT001.Services.Calendario445();
-                                        c.getUltimoDia(ejercicio, periodo);
-                                    }
-                                    @c.getUltimoDia(ejercicio, periodo)
+                        <td>
+                            @* FECHA CIERRE CONTABLE *@
+                            @{
+                                int ejercicio = Int32.Parse(consulta.GetType().GetProperty("EJERCICIO").GetValue(consulta, null));
+                                int periodo = Int32.Parse(consulta.GetType().GetProperty("PERIODO").GetValue(consulta, null).ToString());
+                                TAT001.Services.Calendario445 c = new TAT001.Services.Calendario445();
+                                c.getUltimoDia(ejercicio, periodo);
+                            }
+                            @c.getUltimoDia(ejercicio, periodo)
 
-                                </td>
+                        </td>
 
-                                <td>
-                                    @* MONTO ORIGINAL DE LA PROVISION *@
-                                    @*$@consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null)
-                                        @if (consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null) == "KCMX")
-                                        {
-                                            String.Format("{0:C}", "MONTO_DOC_MD");
-                                        }*@
-                                    @*//FORMATO KCMX//*@
-                                    @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KCMX"))) ? String.Format("{0:C}", consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null)) : "")
-                                    @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KCAR"))) ? String.Format("{0:C}", consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null)) : "")
-                                    @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLCH"))) ? String.Format("{0:C}", consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null)) : "")
-                                    @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLSV"))) ? String.Format("{0:C}", consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null)) : "")
-                                    @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KPRS"))) ? String.Format("{0:C}", consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null)) : "")
-                                    @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("LAGA"))) ? String.Format("{0:C}", consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null)) : "")
-                                    @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("LCCR"))) ? String.Format("{0:C}", consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null)) : "")
-                                    @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("LEKE"))) ? String.Format("{0:C}", consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null)) : "")
-                                    @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("LPKP"))) ? String.Format("{0:C}", consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null)) : "")
-                                    @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("LPPE"))) ? String.Format("{0:C}", consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null)) : "")
+                        <td>
+                            @* MONTO ORIGINAL DE LA PROVISION *@
+                            @*$@consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null)
+            @if (consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null) == "KCMX")
+            {
+                String.Format("{0:C}", "MONTO_DOC_MD");
+            }*@
+                            @*//FORMATO KCMX//*@
+                            @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KCMX"))) ? String.Format("{0:C}", consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null)) : "")
+                            @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KCAR"))) ? String.Format("{0:C}", consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null)) : "")
+                            @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLCH"))) ? String.Format("{0:C}", consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null)) : "")
+                            @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLSV"))) ? String.Format("{0:C}", consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null)) : "")
+                            @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KPRS"))) ? String.Format("{0:C}", consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null)) : "")
+                            @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("LAGA"))) ? String.Format("{0:C}", consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null)) : "")
+                            @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("LCCR"))) ? String.Format("{0:C}", consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null)) : "")
+                            @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("LEKE"))) ? String.Format("{0:C}", consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null)) : "")
+                            @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("LPKP"))) ? String.Format("{0:C}", consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null)) : "")
+                            @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("LPPE"))) ? String.Format("{0:C}", consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null)) : "")
 
-                                    @* //FORMATO COLOMBIA, BRASIL Y GUATEMALA *@
-                                    @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLCO"))) ? String.Format("{0:C}", consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null).ToString("c2", CultureInfo.GetCultureInfo("es-CO"))) : "")
-                                    @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLCA"))) ? String.Format("{0:C}", consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null).ToString("c2", CultureInfo.GetCultureInfo("es-CO"))) : "")
-                                    @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLBL"))) ? String.Format("{0:C}", consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null).ToString("c2", CultureInfo.GetCultureInfo("es-CO"))) : "")
+                            @* //FORMATO COLOMBIA, BRASIL Y GUATEMALA *@
+                            @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLCO"))) ? String.Format("{0:C}", consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null).ToString("c2", CultureInfo.GetCultureInfo("es-CO"))) : "")
+                            @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLCA"))) ? String.Format("{0:C}", consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null).ToString("c2", CultureInfo.GetCultureInfo("es-CO"))) : "")
+                            @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLBL"))) ? String.Format("{0:C}", consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null).ToString("c2", CultureInfo.GetCultureInfo("es-CO"))) : "")
 
-                                </td>
+                        </td>
 
-                                <td>
-                                    @* REMANENTE *@
+                        <td>
+                            @* REMANENTE *@
 
-                                    @foreach (var docamnt in ViewBag.remanente)
+                            @foreach (var docamnt in ViewBag.remanente)
+                            {
+                                foreach (var amount in docamnt)
+                                {
+
+                                    if (consulta.GetType().GetProperty("NUM_DOC").GetValue(consulta, null) == amount.GetType().GetProperty("DOCUMENTO_REF").GetValue(amount, null))
                                     {
-                                        foreach (var amount in docamnt)
-                                        {
-
-                                            if (consulta.GetType().GetProperty("NUM_DOC").GetValue(consulta, null) == amount.GetType().GetProperty("DOCUMENTO_REF").GetValue(amount, null))
-                                            {
-                                                amountParent = amountParent - amount.GetType().GetProperty("MONTO_DOC_MD").GetValue(amount, null);
-                                            }
-
-                                        }
+                                        amountParent = amountParent - amount.GetType().GetProperty("MONTO_DOC_MD").GetValue(amount, null);
                                     }
 
-                                    @if (amountParent == 0)
+                                }
+                            }
+
+                            @if (amountParent == 0)
+                            {
+                                string showamnt = "-";
+                                @showamnt;
+
+                            }
+                            else if (amountParent < 0)
+                            {
+                                amountParent = amountParent * -1;
+                                //string showamnt = "($" + amountParent + ")";
+
+                                //FORMATO KCMX
+                                @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KCMX"))) ? String.Format("({0:C})", amountParent) : "")
+                                @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KCAR"))) ? String.Format("({0:C})", amountParent) : "")
+                                @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLCH"))) ? String.Format("({0:C})", amountParent) : "")
+                                @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLSV"))) ? String.Format("({0:C})", amountParent) : "")
+                                @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KPRS"))) ? String.Format("({0:C})", amountParent) : "")
+                                @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("LAGA"))) ? String.Format("({0:C})", amountParent) : "")
+                                @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("LCCR"))) ? String.Format("({0:C})", amountParent) : "")
+                                @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("LEKE"))) ? String.Format("({0:C})", amountParent) : "")
+                                @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("LPKP"))) ? String.Format("({0:C})", amountParent) : "")
+                                @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("LPPE"))) ? String.Format("({0:C})", amountParent) : "")
+
+                                //FORMATO COLOMBIA, BRASIL Y GUATEMALA
+                                @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLCO"))) ? String.Format("({0:C})", amountParent.ToString("c2", CultureInfo.GetCultureInfo("es-CO"))) : "")
+                                @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLCA"))) ? String.Format("({0:C})", amountParent.ToString("c2", CultureInfo.GetCultureInfo("es-CO"))) : "")
+                                @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLBL"))) ? String.Format("({0:C})", amountParent.ToString("c2", CultureInfo.GetCultureInfo("es-CO"))) : "")
+
+                            }
+                            else
+                            {
+                                //string showamnt = "$" + amountParent;
+
+                                //FORMATO KCMX
+                                @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KCMX"))) ? String.Format("{0:C}", amountParent) : "")
+                                @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KCAR"))) ? String.Format("{0:C}", amountParent) : "")
+                                @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLCH"))) ? String.Format("{0:C}", amountParent) : "")
+                                @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLSV"))) ? String.Format("{0:C}", amountParent) : "")
+                                @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KPRS"))) ? String.Format("{0:C}", amountParent) : "")
+                                @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("LAGA"))) ? String.Format("{0:C}", amountParent) : "")
+                                @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("LCCR"))) ? String.Format("{0:C}", amountParent) : "")
+                                @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("LEKE"))) ? String.Format("{0:C}", amountParent) : "")
+                                @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("LPKP"))) ? String.Format("{0:C}", amountParent) : "")
+                                @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("LPPE"))) ? String.Format("{0:C}", amountParent) : "")
+
+                                //FORMATO COLOMBIA, BRASIL Y GUATEMALA
+                                @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLCO"))) ? (amountParent.ToString("c2", CultureInfo.GetCultureInfo("es-CO"))) : "")
+                                @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLCA"))) ? (amountParent.ToString("c2", CultureInfo.GetCultureInfo("es-CO"))) : "")
+                                @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLBL"))) ? (amountParent.ToString("c2", CultureInfo.GetCultureInfo("es-CO"))) : "")
+
+                            }
+
+                        </td>
+
+                        <td>
+                            @* PORCENTAJE DEL REMANENTE *@
+
+                            @{
+                                try
+                                {
+                                    var original = consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null);
+                                    var opRemanente = amountParent * 100 / original;
+                                    string porcentaje = opRemanente + "%";
+
+                                    @porcentaje
+                                }
+                                catch (DivideByZeroException ex)
+                                {
+
+                                }
+                            }
+
+                        </td>
+
+                        <td>
+                            @* Aging *@
+                            @aging
+                        </td>
+
+                        <td>
+                            @* CUENTA PASIVO *@
+                            @consulta.GetType().GetProperty("CUENTAP").GetValue(consulta, null)
+                        </td>
+
+                        <td>
+                            @* NOMBRE CUENTA PASIVO *@
+                            @consulta.GetType().GetProperty("NOMBRE").GetValue(consulta, null)
+                        </td>
+                        <td>
+                            @consulta.GetType().GetProperty("CUENTAPL").GetValue(consulta, null)
+                        </td>
+
+                        <td>
+                            @foreach (var a in ViewBag.cuenta)
+                            {
+                                @* NOMBRE CUENTA PL *@
+                                if (a.GetType().GetProperty("ID").GetValue(a, null) == consulta.GetType().GetProperty("CUENTAPL").GetValue(consulta, null))
+                                {
+                                    @a.GetType().GetProperty("NOMBRE").GetValue(a, null)
+                                }
+                            }
+
+                        </td>
+
+                        <td>
+                            @* NUM REGISTRO CONTABLE *@
+                            @consulta.GetType().GetProperty("DOCUMENTO_SAP").GetValue(consulta, null)
+                        </td>
+
+                        <td>
+                            @* MODIFICADO POR *@
+                            @consulta.GetType().GetProperty("USUARIOC_ID").GetValue(consulta, null)
+                        </td>
+                        <td>
+                            @* USUARIO CREADOR *@
+                            @consulta.GetType().GetProperty("USUARIOD_ID").GetValue(consulta, null)
+                        </td>
+                        <td>
+                            @* MANAGER *@
+                            @consulta.GetType().GetProperty("USUARIOA_ID").GetValue(consulta, null)
+                        </td>
+                        <td>
+                            @*COMENTARIO*@
+
+                            @foreach (var come in ViewBag.ultimo)
+                            {
+                                foreach (TAT001.Models.Comentarios com in come)
+                                {
+                                    if (consulta.GetType().GetProperty("NUM_DOC").GetValue(consulta, null) == com.NUM_DOC)
                                     {
-                                        string showamnt = "-";
-                                        @showamnt;
-
+                                        @com.COMENTARIOS
                                     }
-                                    else if (amountParent < 0)
-                                    {
-                                        amountParent = amountParent * -1;
-                                        //string showamnt = "($" + amountParent + ")";
-
-                                        //FORMATO KCMX
-                                        @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KCMX"))) ? String.Format("({0:C})", amountParent) : "")
-                                        @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KCAR"))) ? String.Format("({0:C})", amountParent) : "")
-                                        @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLCH"))) ? String.Format("({0:C})", amountParent) : "")
-                                        @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLSV"))) ? String.Format("({0:C})", amountParent) : "")
-                                        @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KPRS"))) ? String.Format("({0:C})", amountParent) : "")
-                                        @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("LAGA"))) ? String.Format("({0:C})", amountParent) : "")
-                                        @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("LCCR"))) ? String.Format("({0:C})", amountParent) : "")
-                                        @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("LEKE"))) ? String.Format("({0:C})", amountParent) : "")
-                                        @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("LPKP"))) ? String.Format("({0:C})", amountParent) : "")
-                                        @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("LPPE"))) ? String.Format("({0:C})", amountParent) : "")
-
-                                        //FORMATO COLOMBIA, BRASIL Y GUATEMALA
-                                        @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLCO"))) ? String.Format("({0:C})", amountParent.ToString("c2", CultureInfo.GetCultureInfo("es-CO"))) : "")
-                                        @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLCA"))) ? String.Format("({0:C})", amountParent.ToString("c2", CultureInfo.GetCultureInfo("es-CO"))) : "")
-                                        @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLBL"))) ? String.Format("({0:C})", amountParent.ToString("c2", CultureInfo.GetCultureInfo("es-CO"))) : "")
-
-                                    }
-                                    else
-                                    {
-                                        //string showamnt = "$" + amountParent;
-
-                                        //FORMATO KCMX
-                                        @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KCMX"))) ? String.Format("{0:C}", amountParent) : "")
-                                        @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KCAR"))) ? String.Format("{0:C}", amountParent) : "")
-                                        @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLCH"))) ? String.Format("{0:C}", amountParent) : "")
-                                        @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLSV"))) ? String.Format("{0:C}", amountParent) : "")
-                                        @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KPRS"))) ? String.Format("{0:C}", amountParent) : "")
-                                        @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("LAGA"))) ? String.Format("{0:C}", amountParent) : "")
-                                        @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("LCCR"))) ? String.Format("{0:C}", amountParent) : "")
-                                        @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("LEKE"))) ? String.Format("{0:C}", amountParent) : "")
-                                        @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("LPKP"))) ? String.Format("{0:C}", amountParent) : "")
-                                        @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("LPPE"))) ? String.Format("{0:C}", amountParent) : "")
-
-                                        //FORMATO COLOMBIA, BRASIL Y GUATEMALA
-                                        @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLCO"))) ? (amountParent.ToString("c2", CultureInfo.GetCultureInfo("es-CO"))) : "")
-                                        @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLCA"))) ? (amountParent.ToString("c2", CultureInfo.GetCultureInfo("es-CO"))) : "")
-                                        @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLBL"))) ? (amountParent.ToString("c2", CultureInfo.GetCultureInfo("es-CO"))) : "")
-
-                                    }
-
-                                </td>
-
-                                <td>
-                                    @* PORCENTAJE DEL REMANENTE *@
-
-                                    @{
-                                        var original = consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null);
-                                        var opRemanente = amountParent * 100 / original;
-                                        string porcentaje = opRemanente + "%";
-
-                                        @porcentaje
-                                    }
-
-                                </td>
-
-                                <td>
-                                    @* Aging *@
-                                    @aging
-                                </td>
-
-                                <td>
-                                    @* CUENTA PASIVO *@
-                                    @consulta.GetType().GetProperty("CUENTAP").GetValue(consulta, null)
-                                </td>
-
-                                <td>
-                                    @* NOMBRE CUENTA PASIVO *@
-                                    @consulta.GetType().GetProperty("NOMBRE").GetValue(consulta, null)
-                                </td>
-                                <td>
-                                    @consulta.GetType().GetProperty("CUENTAPL").GetValue(consulta, null)
-                                </td>
-
-                                <td>
-                                    @foreach (var a in ViewBag.cuenta)
-                                    {
-                                        @* NOMBRE CUENTA PL *@
-                                        if (a.GetType().GetProperty("ID").GetValue(a, null) == consulta.GetType().GetProperty("CUENTAPL").GetValue(consulta, null))
-                                        {
-                                            @a.GetType().GetProperty("NOMBRE").GetValue(a, null)
-                                        }
-                                    }
-                                </td>
-
-                                <td>
-                                    @* NUM REGISTRO CONTABLE *@
-                                    @consulta.GetType().GetProperty("DOCUMENTO_SAP").GetValue(consulta, null)
-                                </td>
-
-                                <td>
-                                    @* MODIFICADO POR *@
-                                    @consulta.GetType().GetProperty("USUARIOC_ID").GetValue(consulta, null)
-                                </td>
-                                <td>
-                                    @* USUARIO CREADOR *@
-                                    @consulta.GetType().GetProperty("USUARIOD_ID").GetValue(consulta, null)
-                                </td>
-                                <td>
-                                    @* MANAGER *@
-                                    @consulta.GetType().GetProperty("USUARIOA_ID").GetValue(consulta, null)
-                                </td>
-                                <td>
-                                    @*COMENTARIO*@
-
-                                    @foreach (var come in ViewBag.ultimo)
-                                    {
-                                        foreach (TAT001.Models.Comentarios com in come)
-                                        {
-                                            if (consulta.GetType().GetProperty("NUM_DOC").GetValue(consulta, null) == com.NUM_DOC)
-                                            {
-                                                @com.COMENTARIOS
-                                            }
-                                        }
-                                    }
-                                </td>
-                                @* AL CIERRE MONEDA LOCAL *@
-                                @if (aging <= 30)
+                                }
+                                break;
+                            }
+                        </td>
+                        @* AL CIERRE MONEDA LOCAL *@
+                        @if (aging <= 30)
+                        {
+                            string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
+                            <td>
+                                @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
                                 {
-                                    string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
-                                    <td>
-                                        @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
-                                        {
-                                            @String.Format("{0:C}", amountParent2.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
-
-
-                                        }
-                                        else
-                                        {
-                                            @String.Format("{0:C}", amountParent2)
-
-                                        }
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    @String.Format("{0:C}", amountParent2.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
 
 
                                 }
-                                else if (aging >= 31 && aging <= 60)
-
+                                else
                                 {
-                                    string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
-                                    <td></td>
-                                    <td>
-                                        @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
-                                        {
-                                            @String.Format("{0:C}", amountParent2.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
-
-
-                                        }
-                                        else
-                                        {
-                                            @String.Format("{0:C}", amountParent2)
-
-                                        }
-
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                }
-                                else if (aging >= 61 && aging <= 90)
-                                {
-                                    string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
-                                        {
-                                            @String.Format("{0:C}", amountParent2.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
-
-
-                                        }
-                                        else
-                                        {
-                                            @String.Format("{0:C}", amountParent2)
-
-                                        }
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    @String.Format("{0:C}", amountParent2)
 
                                 }
-                                else if (aging >= 91 && aging <= 120)
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
 
+
+                        }
+                        else if (aging >= 31 && aging <= 60)
+
+                        {
+                            string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
+                            <td></td>
+                            <td>
+                                @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
                                 {
-                                    string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
-                                        {
-                                            @String.Format("{0:C}", amountParent2.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
+                                    @String.Format("{0:C}", amountParent2.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
 
-
-                                        }
-                                        else
-                                        {
-                                            @String.Format("{0:C}", amountParent2)
-
-                                        }
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
 
                                 }
-                                else if (aging >= 121 && aging <= 180)
-
+                                else
                                 {
-                                    string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
-                                        {
-                                            @String.Format("{0:C}", amountParent2.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
-
-
-                                        }
-                                        else
-                                        {
-                                            @String.Format("{0:C}", amountParent2)
-
-                                        }
-
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-
-                                }
-                                else if (aging >= 181 && aging <= 360)
-
-                                {
-                                    string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
-                                        {
-                                            @String.Format("{0:C}", amountParent2.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
-
-
-                                        }
-                                        else
-                                        {
-                                            @String.Format("{0:C}", amountParent2)
-
-                                        }
-
-                                    </td>
-                                    <td></td>
-
-                                }
-                                else if (aging > 360)
-                                {
-                                    string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
-                                        {
-                                            @String.Format("{0:C}", amountParent2.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
-
-
-                                        }
-                                        else
-                                        {
-                                            @String.Format("{0:C}", amountParent2)
-
-                                        }
-                                    </td>
+                                    @String.Format("{0:C}", amountParent2)
 
                                 }
 
-                                @* FECHA ACTUAL MONEDA LOCAL  *@
-
-                                @if (aging <= 30)
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        }
+                        else if (aging >= 61 && aging <= 90)
+                        {
+                            string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
+                            <td></td>
+                            <td></td>
+                            <td>
+                                @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
                                 {
-                                    string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
-                                    <td>
-                                        @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
-                                        {
-                                            @String.Format("{0:C}", amountParent.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
+                                    @String.Format("{0:C}", amountParent2.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
 
-
-                                        }
-                                        else
-                                        {
-                                            @String.Format("{0:C}", amountParent)
-
-                                        }
-
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
 
                                 }
-                                else if (aging >= 31 && aging <= 60)
-
+                                else
                                 {
-                                    string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
-                                    <td></td>
-                                    <td>
-                                        @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
-                                        {
-                                            @String.Format("{0:C}", amountParent.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
-
-
-                                        }
-                                        else
-                                        {
-                                            @String.Format("{0:C}", amountParent)
-
-                                        }
-
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    @String.Format("{0:C}", amountParent2)
 
                                 }
-                                else if (aging >= 61 && aging <= 90)
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
 
+                        }
+                        else if (aging >= 91 && aging <= 120)
+
+                        {
+                            string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
                                 {
-                                    string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
-                                        {
-                                            @String.Format("{0:C}", amountParent.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
+                                    @String.Format("{0:C}", amountParent2.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
 
-
-                                        }
-                                        else
-                                        {
-                                            @String.Format("{0:C}", amountParent)
-
-                                        }
-
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
 
                                 }
-                                else if (aging >= 91 && aging <= 120)
-
+                                else
                                 {
-                                    string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
-                                    <td></td>
-                                    <td></td>
-                                    <td> </td>
-                                    <td>
-                                        @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
-                                        {
-                                            @String.Format("{0:C}", amountParent.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
-
-
-                                        }
-                                        else
-                                        {
-                                            @String.Format("{0:C}", amountParent)
-
-                                        }
-
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                }
-                                else if (aging >= 121 && aging <= 180)
-
-                                {
-                                    string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
-                                        {
-                                            @String.Format("{0:C}", amountParent.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
-
-
-                                        }
-                                        else
-                                        {
-                                            @String.Format("{0:C}", amountParent)
-
-                                        }
-
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                }
-                                else if (aging >= 181 && aging <= 360)
-
-                                {
-                                    string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
-                                        {
-                                            @String.Format("{0:C}", amountParent.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
-
-
-                                        }
-                                        else
-                                        {
-                                            @String.Format("{0:C}", amountParent)
-
-                                        }
-
-                                    </td>
-                                    <td></td>
+                                    @String.Format("{0:C}", amountParent2)
 
                                 }
-                                else if (aging > 360)
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+
+                        }
+                        else if (aging >= 121 && aging <= 180)
+
+                        {
+                            string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
                                 {
-                                    string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
-                                        {
-                                            @String.Format("{0:C}", amountParent.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
+                                    @String.Format("{0:C}", amountParent2.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
 
 
-                                        }
-                                        else
-                                        {
-                                            @String.Format("{0:C}", amountParent)
-
-                                        }
-
-                                    </td>
                                 }
-
-                                @* AL CIERRE DOLARES *@
-                                @if (aging <= 30)
+                                else
                                 {
-                                    var compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
-                                    <td>
-                                        @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
-                                        {
-                                            @String.Format("{0:C}", amountParent3.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
-
-
-                                        }
-                                        else
-                                        {
-                                            @String.Format("{0:C}", amountParent3)
-
-                                        }
-
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                }
-                                else if (aging >= 31 && aging <= 60)
-                                {
-                                    string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
-                                    <td></td>
-                                    <td>
-                                        @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
-                                        {
-                                            @String.Format("{0:C}", amountParent3.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
-
-
-                                        }
-                                        else
-                                        {
-                                            @String.Format("{0:C}", amountParent3)
-
-                                        }
-
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    @String.Format("{0:C}", amountParent2)
 
                                 }
 
-                                else if (aging >= 61 && aging <= 90)
+                            </td>
+                            <td></td>
+                            <td></td>
 
+                        }
+                        else if (aging >= 181 && aging <= 360)
+
+                        {
+                            string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
                                 {
-                                    string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
-                                    <td></td>
-                                    <td> </td>
-                                    <td>
-                                        @*@amountParent3*@
-                                        @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
-                                        {
-                                            @String.Format("{0:C}", amountParent3.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
+                                    @String.Format("{0:C}", amountParent2.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
 
 
-                                        }
-                                        else
-                                        {
-                                            @String.Format("{0:C}", amountParent3)
-
-                                        }
-
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
                                 }
-                                else if (aging >= 91 && aging <= 120)
-
+                                else
                                 {
-                                    string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
-                                        {
-                                            @String.Format("{0:C}", amountParent3.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
-
-
-                                        }
-                                        else
-                                        {
-                                            @String.Format("{0:C}", amountParent3)
-
-                                        }
-
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                }
-                                else if (aging >= 121 && aging <= 180)
-
-                                {
-                                    string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
-                                        {
-                                            @String.Format("{0:C}", amountParent3.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
-
-
-                                        }
-                                        else
-                                        {
-                                            @String.Format("{0:C}", amountParent3)
-
-                                        }
-
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                }
-                                else if (aging >= 181 && aging <= 360)
-
-                                {
-                                    string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
-                                        {
-                                            @String.Format("{0:C}", amountParent3.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
-
-
-                                        }
-                                        else
-                                        {
-                                            @String.Format("{0:C}", amountParent3)
-
-                                        }
-
-                                    </td>
-                                    <td></td>
-                                }
-                                else if (aging > 360)
-                                {
-                                    string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
-                                        {
-                                            @String.Format("{0:C}", amountParent3.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
-
-
-                                        }
-                                        else
-                                        {
-                                            @String.Format("{0:C}", amountParent3)
-
-                                        }
-
-                                    </td>
+                                    @String.Format("{0:C}", amountParent2)
 
                                 }
 
-                                @* A LA FECHA ACTUAL DOLARES *@
+                            </td>
+                            <td></td>
 
-                                @if (aging <= 30)
+                        }
+                        else if (aging > 360)
+                        {
+                            string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
                                 {
-                                    string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
-                                    <td>
-                                        @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
-                                        {
-                                            @String.Format("{0:C}", amountParent3.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
+                                    @String.Format("{0:C}", amountParent2.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
 
-
-                                        }
-                                        else
-                                        {
-                                            @String.Format("{0:C}", amountParent3)
-
-                                        }
-
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
 
                                 }
-                                else if (aging >= 31 && aging <= 60)
-
+                                else
                                 {
-                                    string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
-                                    <td></td>
-                                    <td>
-                                        @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
-                                        {
-                                            @String.Format("{0:C}", amountParent3.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
+                                    @String.Format("{0:C}", amountParent2)
 
-
-                                        }
-                                        else
-                                        {
-                                            @String.Format("{0:C}", amountParent3)
-
-                                        }
-
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
                                 }
-                                else if (aging >= 61 && aging <= 90)
+                            </td>
+
+                        }
+
+                        @* FECHA ACTUAL MONEDA LOCAL  *@
+
+                        @if (aging <= 30)
+                        {
+                            string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
+                            <td>
+                                @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
                                 {
-                                    string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
-                                    <td></td>
-                                    <td> </td>
-                                    <td>
-                                        @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
-                                        {
-                                            @String.Format("{0:C}", amountParent3.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
+                                    @String.Format("{0:C}", amountParent.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
 
 
-                                        }
-                                        else
-                                        {
-                                            @String.Format("{0:C}", amountParent3)
-
-                                        }
-
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
                                 }
-                                else if (aging >= 91 && aging <= 120)
-
+                                else
                                 {
-                                    string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
-                                    <td></td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td>
-                                        @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
-                                        {
-                                            @String.Format("{0:C}", amountParent3.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
+                                    @String.Format("{0:C}", amountParent)
 
-
-                                        }
-                                        else
-                                        {
-                                            @String.Format("{0:C}", amountParent3)
-
-                                        }
-
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
                                 }
-                                else if (aging >= 121 && aging <= 180)
 
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+
+                        }
+                        else if (aging >= 31 && aging <= 60)
+
+                        {
+                            string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
+                            <td></td>
+                            <td>
+                                @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
                                 {
-                                    string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
-                                    <td></td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td>
-                                        @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
-                                        {
-                                            @String.Format("{0:C}", amountParent3.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
+                                    @String.Format("{0:C}", amountParent.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
 
 
-                                        }
-                                        else
-                                        {
-                                            @String.Format("{0:C}", amountParent3)
-
-                                        }
-
-                                    </td>
-                                    <td></td>
-                                    <td></td>
                                 }
-                                else if (aging >= 181 && aging <= 360)
-
+                                else
                                 {
-                                    string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
-                                    <td></td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td></td>
-                                    <td>
-                                        @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
-                                        {
-                                            @String.Format("{0:C}", amountParent3.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
+                                    @String.Format("{0:C}", amountParent)
 
-
-                                        }
-                                        else
-                                        {
-                                            @String.Format("{0:C}", amountParent3)
-
-                                        }
-
-                                    </td>
-                                    <td></td>
                                 }
-                                else if (aging > 360)
+
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+
+                        }
+                        else if (aging >= 61 && aging <= 90)
+
+                        {
+                            string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
+                            <td></td>
+                            <td></td>
+                            <td>
+                                @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
                                 {
-                                    string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
-                                    <td></td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
-                                        {
-                                            @String.Format("{0:C}", amountParent3.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
+                                    @String.Format("{0:C}", amountParent.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
 
 
-                                        }
-                                        else
-                                        {
-                                            @String.Format("{0:C}", amountParent3)
-
-                                        }
-
-
-                                    </td>
                                 }
-                            </tr>
+                                else
+                                {
+                                    @String.Format("{0:C}", amountParent)
+
+                                }
+
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+
+                        }
+                        else if (aging >= 91 && aging <= 120)
+
+                        {
+                            string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
+                            <td></td>
+                            <td></td>
+                            <td> </td>
+                            <td>
+                                @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
+                                {
+                                    @String.Format("{0:C}", amountParent.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
+
+
+                                }
+                                else
+                                {
+                                    @String.Format("{0:C}", amountParent)
+
+                                }
+
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        }
+                        else if (aging >= 121 && aging <= 180)
+
+                        {
+                            string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
+                                {
+                                    @String.Format("{0:C}", amountParent.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
+
+
+                                }
+                                else
+                                {
+                                    @String.Format("{0:C}", amountParent)
+
+                                }
+
+                            </td>
+                            <td></td>
+                            <td></td>
+                        }
+                        else if (aging >= 181 && aging <= 360)
+
+                        {
+                            string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
+                                {
+                                    @String.Format("{0:C}", amountParent.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
+
+
+                                }
+                                else
+                                {
+                                    @String.Format("{0:C}", amountParent)
+
+                                }
+
+                            </td>
+                            <td></td>
+
+                        }
+                        else if (aging > 360)
+                        {
+                            string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
+                                {
+                                    @String.Format("{0:C}", amountParent.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
+
+
+                                }
+                                else
+                                {
+                                    @String.Format("{0:C}", amountParent)
+
+                                }
+
+                            </td>
+                        }
+
+                        @* AL CIERRE DOLARES *@
+                        @if (aging <= 30)
+                        {
+                            var compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
+                            <td>
+                                @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
+                                {
+                                    @String.Format("{0:C}", amountParent3.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
+
+
+                                }
+                                else
+                                {
+                                    @String.Format("{0:C}", amountParent3)
+
+                                }
+
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        }
+                        else if (aging >= 31 && aging <= 60)
+                        {
+                            string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
+                            <td></td>
+                            <td>
+                                @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
+                                {
+                                    @String.Format("{0:C}", amountParent3.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
+
+
+                                }
+                                else
+                                {
+                                    @String.Format("{0:C}", amountParent3)
+
+                                }
+
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+
+                        }
+
+                        else if (aging >= 61 && aging <= 90)
+
+                        {
+                            string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
+                            <td></td>
+                            <td> </td>
+                            <td>
+                                @*@amountParent3*@
+                                @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
+                                {
+                                    @String.Format("{0:C}", amountParent3.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
+
+
+                                }
+                                else
+                                {
+                                    @String.Format("{0:C}", amountParent3)
+
+                                }
+
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        }
+                        else if (aging >= 91 && aging <= 120)
+
+                        {
+                            string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
+                                {
+                                    @String.Format("{0:C}", amountParent3.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
+
+
+                                }
+                                else
+                                {
+                                    @String.Format("{0:C}", amountParent3)
+
+                                }
+
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        }
+                        else if (aging >= 121 && aging <= 180)
+
+                        {
+                            string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
+                                {
+                                    @String.Format("{0:C}", amountParent3.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
+
+
+                                }
+                                else
+                                {
+                                    @String.Format("{0:C}", amountParent3)
+
+                                }
+
+                            </td>
+                            <td></td>
+                            <td></td>
+                        }
+                        else if (aging >= 181 && aging <= 360)
+
+                        {
+                            string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
+                                {
+                                    @String.Format("{0:C}", amountParent3.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
+
+
+                                }
+                                else
+                                {
+                                    @String.Format("{0:C}", amountParent3)
+
+                                }
+
+                            </td>
+                            <td></td>
+                        }
+                        else if (aging > 360)
+                        {
+                            string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
+                                {
+                                    @String.Format("{0:C}", amountParent3.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
+
+
+                                }
+                                else
+                                {
+                                    @String.Format("{0:C}", amountParent3)
+
+                                }
+
+                            </td>
+
+                        }
+
+                        @* A LA FECHA ACTUAL DOLARES *@
+
+                        @if (aging <= 30)
+                        {
+                            string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
+                            <td>
+                                @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
+                                {
+                                    @String.Format("{0:C}", amountParent3.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
+
+
+                                }
+                                else
+                                {
+                                    @String.Format("{0:C}", amountParent3)
+
+                                }
+
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+
+                        }
+                        else if (aging >= 31 && aging <= 60)
+
+                        {
+                            string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
+                            <td></td>
+                            <td>
+                                @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
+                                {
+                                    @String.Format("{0:C}", amountParent3.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
+
+
+                                }
+                                else
+                                {
+                                    @String.Format("{0:C}", amountParent3)
+
+                                }
+
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        }
+                        else if (aging >= 61 && aging <= 90)
+                        {
+                            string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
+                            <td></td>
+                            <td> </td>
+                            <td>
+                                @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
+                                {
+                                    @String.Format("{0:C}", amountParent3.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
+
+
+                                }
+                                else
+                                {
+                                    @String.Format("{0:C}", amountParent3)
+
+                                }
+
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        }
+                        else if (aging >= 91 && aging <= 120)
+
+                        {
+                            string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
+                            <td></td>
+                            <td> </td>
+                            <td> </td>
+                            <td>
+                                @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
+                                {
+                                    @String.Format("{0:C}", amountParent3.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
+
+
+                                }
+                                else
+                                {
+                                    @String.Format("{0:C}", amountParent3)
+
+                                }
+
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        }
+                        else if (aging >= 121 && aging <= 180)
+
+                        {
+                            string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
+                            <td></td>
+                            <td> </td>
+                            <td> </td>
+                            <td> </td>
+                            <td>
+                                @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
+                                {
+                                    @String.Format("{0:C}", amountParent3.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
+
+
+                                }
+                                else
+                                {
+                                    @String.Format("{0:C}", amountParent3)
+
+                                }
+
+                            </td>
+                            <td></td>
+                            <td></td>
+                        }
+                        else if (aging >= 181 && aging <= 360)
+
+                        {
+                            string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
+                            <td></td>
+                            <td> </td>
+                            <td> </td>
+                            <td> </td>
+                            <td></td>
+                            <td>
+                                @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
+                                {
+                                    @String.Format("{0:C}", amountParent3.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
+
+
+                                }
+                                else
+                                {
+                                    @String.Format("{0:C}", amountParent3)
+
+                                }
+
+                            </td>
+                            <td></td>
+                        }
+                        else if (aging > 360)
+                        {
+                            string compara = consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null);
+                            <td></td>
+                            <td> </td>
+                            <td> </td>
+                            <td> </td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                @if (compara == "KLCO" || compara == "KLCA" || compara == "KLBL")
+                                {
+                                    @String.Format("{0:C}", amountParent3.ToString("c2", CultureInfo.GetCultureInfo("es-CO")))
+
+
+                                }
+                                else
+                                {
+                                    @String.Format("{0:C}", amountParent3)
+
+                                }
+
+
+                            </td>
+                        }
+                    </tr>
                         }
                     }
                 </tbody>

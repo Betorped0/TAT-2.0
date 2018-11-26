@@ -211,7 +211,7 @@
                                         url: "../Listas/TiposSolicitud",
                                         type: "GET",
                                         dataType: "json",
-                                        data: { spras_id: 'ES' },
+                                        data: { Prefix: request.term }, //spras_id: 'ES'
                                         success: function (data) {
                                             response(auto.map(data, function (item) {
                                                 return { label: item.TSOL_ID + " - " + item.TXT50, value: item.TSOL_ID };
@@ -418,6 +418,7 @@
                                     <option value="20">20</option>
                                     <option value="30">30</option>
                                     <option value="40">40</option>
+                                    <option value="50">50</option>
                                 </select>
                                 <label class="label_pag">Ir a Página</label>
                                 <select class="pagenum browser-default" title="Select page number"></select>

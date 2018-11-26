@@ -5,6 +5,19 @@
     ViewBag.carpeta_r = 100;
     ViewBag.Title = "";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+
+    string regresar = TempData["return"] != null ? TempData["return"].ToString() : null;
+    string accion = "Details";
+    string controller = "Solicitudes";
+    TempData["vista"] = regresar;
+    if (regresar == "LIST")
+    {
+        accion = "Lista";
+        controller = "CartaV";
+        TempData["swf"] = TempData["ESTATUS_WF"];
+    }
+
 }
 @using (Html.BeginForm())
 {
@@ -13,9 +26,16 @@
     <div class="row">
         <div class="row right">
             <div class="col l12 m12 right">
-                <a href="@Url.Action("Details", "Solicitudes", new { id = Model.num_doc })" class="btn btn-default">Regresar</a>
-                <input type="submit" id="btn_impb" value="Imprimir" class="btn btn-default"  />
-            </div>
+                @if (accion == "Lista")
+                {
+                    <a href="@Url.Action(accion, controller, new { id = Model.num_doc, swf = TempData["ESTATUS_WF"] })" class="btn btn-small">Regresar</a>
+                }
+                else
+                {
+                    <a href="@Url.Action(accion, controller, new { id = Model.num_doc })" class="btn btn-small">Regresar</a>
+                }
+                    <input type="submit" id="btn_impb" value="Imprimir" class="btn btn-small" />
+                </div>
         </div>
     </div>
 
@@ -641,8 +661,5 @@
                     <div class="col l2 yellow" style="height:10px;padding:0;"></div>
                 </div>
             </div>
-        </div>
-        <div>
-            @Html.ActionLink("Regresar", "Index")
         </div>
     }

@@ -259,7 +259,6 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\Catalogos\ImpuestoController.cs" />
     <Compile Include="Controllers\LayoutCargaMasivaController.cs" />
-    <Compile Include="Controllers\ListasController2.cs" />
     <Compile Include="Controllers\ListasController.cs" />
     <Compile Include="Controllers\MailsController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -277,8 +276,6 @@
     <Compile Include="Controllers\RecurrenciasController.cs" />
     <Compile Include="Controllers\Reportes\ReportesController.cs" />
     <Compile Include="Controllers\SolicitudesController.cs" />
-    <Compile Include="Controllers\SolicitudesController3.cs" />
-    <Compile Include="Controllers\SolicitudesController2.cs" />
     <Compile Include="Controllers\Catalogos\TCambioController.cs" />
     <Compile Include="Controllers\Catalogos\TextosController.cs" />
     <Compile Include="Controllers\Catalogos\UsuariosController.cs" />
@@ -389,6 +386,9 @@
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\CSP_CONSULTARPRESUPUESTO_Result.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\CSP_DOCUMENTOSXCOCODE_Result.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\CSP_DOCUMENTOSXUSER2_Result.cs">
@@ -1418,6 +1418,7 @@
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\rangos.js" />
+    <Content Include="Scripts\Solicitudes\comun.js" />
     <Content Include="Scripts\subfilters\jquery.tablesorter.js" />
     <Content Include="Scripts\subfilters\jquery.tablesorter.pager.js" />
     <Content Include="Scripts\subfilters\script.js" />
@@ -1429,8 +1430,6 @@
     <Content Include="Scripts\ConsultarPresupuesto.js" />
     <Content Include="Scripts\cartaV.js" />
     <Content Include="Scripts\create.js" />
-    <Content Include="Scripts\create2.js" />
-    <Content Include="Scripts\edit - antes.js" />
     <Content Include="Scripts\edit.js" />
     <Content Include="Scripts\createa.js" />
     <Content Include="Scripts\dataTables.fixedColumns.min.js" />
@@ -1761,7 +1760,6 @@
     <Content Include="Views\Mails\Solicitudes.cshtml" />
     <Content Include="Views\Listas\Estados.cshtml" />
     <Content Include="Views\Listas\Ciudades.cshtml" />
-    <Content Include="Views\Solicitudes\CreateNew.cshtml" />
     <Content Include="Views\CartaV\Details.cshtml" />
     <Content Include="Views\CartaV\Index.cshtml" />
     <Content Include="Views\Solicitudes\DetailsF.cshtml" />
@@ -1867,7 +1865,6 @@
     <Content Include="Views\ccat\Details.cshtml" />
     <Content Include="Views\ccat\Edit.cshtml" />
     <Content Include="Views\CartaV\Create.cshtml" />
-    <Content Include="Views\Solicitudes\Create3.cshtml" />
     <Content Include="Views\Listas\getPeriodo.cshtml" />
     <Content Include="Views\Correos\Index.cshtml" />
     <Content Include="Views\Correos\Details.cshtml" />
@@ -1918,7 +1915,6 @@
     <Content Include="Views\NOTICIAs\Delete.cshtml" />
     <Content Include="Views\NOTICIAs\Details.cshtml" />
     <Content Include="Views\NOTICIAs\Edit.cshtml" />
-    <Content Include="Views\Solicitudes\Create2.cshtml" />
     <Content Include="Views\Recurrencias\Cancelar.cshtml" />
     <Content Include="Views\Solicitudes\Create.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
@@ -2034,6 +2030,11 @@
     <Content Include="Views\Region\Index.cshtml" />
     <Content Include="Views\ModificacionesGlobales\Index.cshtml" />
     <Content Include="Views\ModificacionesGlobales\ListModAutorizador.cshtml" />
+    <Content Include="Views\Solicitudes\_EditTabDis.cshtml" />
+    <Content Include="Views\Solicitudes\_EditTabFin.cshtml" />
+    <Content Include="Views\Solicitudes\_EditTabInfo.cshtml" />
+    <Content Include="Views\Solicitudes\_EditTabRec.cshtml" />
+    <Content Include="Views\Solicitudes\_EditTabSop.cshtml" />
     <Content Include="Views\Sociedades\Flujos.cshtml" />
     <Content Include="Views\Sociedades\MAFlujos.cshtml" />
     <Content Include="Views\Sociedades\EditF.cshtml" />

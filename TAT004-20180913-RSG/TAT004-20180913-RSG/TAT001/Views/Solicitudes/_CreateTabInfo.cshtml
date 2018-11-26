@@ -323,8 +323,14 @@
                                         }
                                         var clien = cliente.substring(con, i);
                                         auto("#payer_id").attr("value", clien);
-                                });
-                                  
+                        });
+                        
+                        $('#payer_id').focusout(function (e) {
+                            if ($("#payer_id").val() === "") {
+                                limpiarCliente();
+                            }
+
+                        });
                     </script>
                     <input type="hidden" id="txt_vkorg" />
                     <input type="hidden" id="txt_vtweg" />

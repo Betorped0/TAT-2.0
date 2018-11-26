@@ -33,7 +33,7 @@
             },
             {
                 "name": 'ID',
-                "className": 'ID',
+                "className": 'ID'
             },
             {
                 "name": 'NOMBRE',
@@ -78,11 +78,11 @@ function subeExcel() {
             onclick = checkoff();
         } else {
             document.getElementById("files").value = "";
-            mostrarAlerta("info", "E", 'Tipo de archivo incorrecto: ' + filename)
+            mostrarAlerta("info", "E", 'Tipo de archivo incorrecto: ' + filename);
             //M.toast({ html: 'Tipo de archivo incorrecto: ' + filename });
         }
     } else {
-        mostrarAlerta("info", "A", 'Seleccione un archivo')
+        mostrarAlerta("info", "A", 'Seleccione un archivo');
         //M.toast({ html: 'Seleccione un archivo' });
         var table = $('#table').DataTable();
         table.clear().draw();
@@ -136,35 +136,35 @@ function loadExcelDis(file) {
                     var bor = i;
                     var mes = dataj.mess;
 
-                    if (mes == null)
+                    if (mes === null)
                         mes = "";
 
                     //identificacion de error
-                    if (cli.indexOf('?') != -1) {
+                    if (cli.indexOf('?') !== -1) {
                         cli = cli.slice(0, -1);
                         var clix = true;
                     }
-                    if (com.indexOf('?') != -1) {
+                    if (com.indexOf('?') !== -1) {
                         com = com.slice(0, -1);
                         var comx = true;
                     }
-                    if (niv.indexOf('?') != -1) {
+                    if (niv.indexOf('?') !== -1) {
                         niv = niv.slice(0, -1);
                         var nivx = true;
                     }
-                    if (usc.indexOf('?') != -1) {
+                    if (usc.indexOf('?') !== -1) {
                         usc = usc.slice(0, -1);
                         var uscx = true;
                     }
-                    if (usc.indexOf('!') != -1) {
+                    if (usc.indexOf('!') !== -1) {
                         usc = usc.slice(0, -1);
                         var uscy = true;
                     }
-                    if (spr.indexOf('?') != -1) {
+                    if (spr.indexOf('?') !== -1) {
                         spr = spr.slice(0, -1);
                         var sprx = true;
                     }
-                    if (ema.indexOf('?') != -1) {
+                    if (ema.indexOf('?') !== -1) {
                         ema = ema.slice(0, -1);
                         var emax = true;
                     }//Termina identificacion
@@ -172,30 +172,30 @@ function loadExcelDis(file) {
                     var addedRow = addRow(table, dataj.POS, bor, cli, com, niv, usc, dataj.NOMBRE, dataj.APELLIDO_P, dataj.APELLIDO_M, ema, spr, dataj.PASS, mes);
 
                     var cols = addedRow.cells[1];
-                    if (clix == true) {
+                    if (clix === true) {
                         $(cols).addClass("red");
                     }
-                    var cols = addedRow.cells[2];
-                    if (comx == true) {
+                    cols = addedRow.cells[2];
+                    if (comx === true) {
                         $(cols).addClass("red");
                     }
-                    var cols = addedRow.cells[3];
-                    if (nivx == true) {
+                    cols = addedRow.cells[3];
+                    if (nivx === true) {
                         $(cols).addClass("red");
                     }
-                    var cols = addedRow.cells[4];
-                    if (uscx == true) {
+                    cols = addedRow.cells[4];
+                    if (uscx === true) {
                         $(cols).addClass("red");
                     }
-                    if (uscy == true) {
+                    if (uscy === true) {
                         $(cols).addClass("yellow");
                     }
-                    var cols = addedRow.cells[8];
-                    if (emax == true) {
+                    cols = addedRow.cells[8];
+                    if (emax === true) {
                         $(cols).addClass("red");
                     }
-                    var cols = addedRow.cells[9];
-                    if (sprx == true) {
+                    cols = addedRow.cells[9];
+                    if (sprx === true) {
                         $(cols).addClass("red");
                     }
                 });
@@ -270,6 +270,7 @@ function Carga() {
     var doc = sessionStorage.getItem("num");
     if (doc > 0) {
         if (message.indexOf('1.') < 0) {
+            document.getElementById("loader").style.display = "flex";
             $.ajax({
                 type: "POST",
                 url: 'Agregar',
@@ -278,15 +279,19 @@ function Carga() {
                 success: function (data) {
                     if (data.isRedirect) {
                         window.location.href = data.redirectUrl;
+                    } else {
+                        window.location = root + "Usuarios/Index";
                     }
+                    document.getElementById("loader").style.display = "none";
+                    mostrarAlerta("info", "A", "Se agregaron los nuevos usuarios");
                 },
                 error: function (request, status, error) {
+                    document.getElementById("loader").style.display = "none";
                     //alert(request.responseText);
-                }
+                },
+                async: true
             });
-            mostrarAlerta("info", "A", "Se agregaron los nuevos usuarios");
-            //M.toast({ html: 'Se agregaron los nuevos usuarios' });
-            window.location = root + "Usuarios/Index";
+          
         }
         else
             mostrarAlerta("info", "E", "Hay errores por corregir");
@@ -318,6 +323,7 @@ function Borrar() {
 function Actualizar() {
     var message = $('.input_mes').serialize();
     if (message.indexOf('existe') > -1) {
+        document.getElementById("loader").style.display = "flex";
         $.ajax({
             type: "POST",
             url: 'Actualizar',
@@ -326,18 +332,21 @@ function Actualizar() {
             success: function (data) {
                 if (data.isRedirect) {
                     window.location.href = data.redirectUrl;
+                } else {
+                    window.location = root + "Usuarios/Index";
                 }
+                document.getElementById("loader").style.display = "none";
+                mostrarAlerta("info", "A", "Se actualizaron los usuarios");
             },
             error: function (request, status, error) {
+                document.getElementById("loader").style.display = "none";
                 //alert(request.responseText);
-            }
+            },
+            async: true
         });
-        mostrarAlerta("info", "A", "Se actualizaron los usuarios")
-        //M.toast({ html: 'Se actualizaron los usuarios' });
-        window.location = root + "Usuarios/Index";
     }
     else
-        mostrarAlerta("info", "E", "No hay usuarios por actualizar")
+        mostrarAlerta("info", "E", "No hay usuarios por actualizar");
         //M.toast({ html: 'No hay usuarios por actualizar' });
 }
 
@@ -365,35 +374,35 @@ function creart(metodo, datos) {
                     var clix = false;
                     var mes = dataj.mess;
 
-                    if (mes == null)
+                    if (mes === null)
                         mes = "";
 
                     //identificacion de error
-                    if (cli.indexOf('?') != -1) {
+                    if (cli.indexOf('?') !== -1) {
                         cli = cli.slice(0, -1);
-                        var clix = true;
+                        clix = true;
                     }
-                    if (com.indexOf('?') != -1) {
+                    if (com.indexOf('?') !== -1) {
                         com = com.slice(0, -1);
                         var comx = true;
                     }
-                    if (niv.indexOf('?') != -1) {
+                    if (niv.indexOf('?') !== -1) {
                         niv = niv.slice(0, -1);
                         var nivx = true;
                     }
-                    if (usc.indexOf('?') != -1) {
+                    if (usc.indexOf('?') !== -1) {
                         usc = usc.slice(0, -1);
                         var uscx = true;
                     }
-                    if (usc.indexOf('!') != -1) {
+                    if (usc.indexOf('!') !== -1) {
                         usc = usc.slice(0, -1);
                         var uscy = true;
                     }
-                    if (spr.indexOf('?') != -1) {
+                    if (spr.indexOf('?') !== -1) {
                         spr = spr.slice(0, -1);
                         var sprx = true;
                     }
-                    if (ema.indexOf('?') != -1) {
+                    if (ema.indexOf('?') !== -1) {
                         ema = ema.slice(0, -1);
                         var emax = true;
                     }//Termina identificacion
@@ -401,30 +410,30 @@ function creart(metodo, datos) {
                     var addedRow = addRow(table, dataj.POS, bor, cli, com, niv, usc, dataj.NOMBRE, dataj.APELLIDO_P, dataj.APELLIDO_M, ema, spr, dataj.PASS, mes);
 
                     var cols = addedRow.cells[1];
-                    if (clix == true) {
+                    if (clix === true) {
                         $(cols).addClass("red");
                     }
-                    var cols = addedRow.cells[2];
-                    if (comx == true) {
+                    cols = addedRow.cells[2];
+                    if (comx === true) {
                         $(cols).addClass("red");
                     }
-                    var cols = addedRow.cells[3];
-                    if (nivx == true) {
+                    cols = addedRow.cells[3];
+                    if (nivx === true) {
                         $(cols).addClass("red");
                     }
-                    var cols = addedRow.cells[4];
-                    if (uscx == true) {
+                    cols = addedRow.cells[4];
+                    if (uscx === true) {
                         $(cols).addClass("red");
                     }
-                    if (uscy == true) {
+                    if (uscy === true) {
                         $(cols).addClass("yellow");
                     }
-                    var cols = addedRow.cells[8];
-                    if (emax == true) {
+                    cols = addedRow.cells[8];
+                    if (emax === true) {
                         $(cols).addClass("red");
                     }
-                    var cols = addedRow.cells[9];
-                    if (sprx == true) {
+                    cols = addedRow.cells[9];
+                    if (sprx === true) {
                         $(cols).addClass("red");
                     }
                 });
@@ -470,7 +479,7 @@ function AgregarU() {
 
 function AgregarC() {
     var datos = $('.input_cli').serializeArray();
-    if (datos.length == 0)
+    if (datos.length === 0)
         datos = $('.input_cli1').serializeArray();
     creart('AgregarT', datos);
 }
@@ -484,11 +493,11 @@ function mostrarAlerta(warning_id, tipo, mensaje) {
         color = 'yellow',
         icon = 'info',
         classe = 'toast';
-    if (tipo == "E") {
+    if (tipo === "E") {
         color = 'red';
         icon = 'error';
     }
-    dismiss(classe)
+    dismiss(classe);
     M.toast({
         classes: classe,
         displayLength: dura,
@@ -517,9 +526,9 @@ $('body').on('keydown.autocomplete', '.input_cli1', function () {
                 success: function (data) {
                     response(auto.map(data, function (item) {
                         return { label: item.KUNNR + " | " + item.NAME1, value: item.KUNNR };
-                    }))
+                    }));
                 }
-            })
+            });
         },
 
         messages: {
@@ -539,11 +548,11 @@ $('body').on('keydown.autocomplete', '.input_cli1', function () {
 });
 
 $('body').on('keydown.autocomplete', '.input_cli', function () {
-    if (event.keyCode == 13) {
+    if (event.keyCode === 13) {
         AgregarC();
     }
-    else if (event.keyCode == 9) {
-        Comprobar()
+    else if (event.keyCode === 9) {
+        Comprobar();
     }
     else {
         var table = $("#table").DataTable();
@@ -555,7 +564,7 @@ $('body').on('keydown.autocomplete', '.input_cli', function () {
         for (var d = (table.rows().data().length) - 1; d > -1; d--) {
             var row = table.row(d).node();
             var bukrs = $(row).children().eq(col_index2).children().val();
-            if (bukrs != "") {
+            if (bukrs !== "") {
                 break;
             }
 
@@ -571,9 +580,9 @@ $('body').on('keydown.autocomplete', '.input_cli', function () {
                     success: function (data) {
                         response(auto.map(data, function (item) {
                             return { label: item.KUNNR + " | " + item.NAME1, value: item.KUNNR };
-                        }))
+                        }));
                     }
-                })
+                });
             },
 
             messages: {
@@ -594,11 +603,11 @@ $('body').on('keydown.autocomplete', '.input_cli', function () {
 });
 
 $('body').on('keydown.autocomplete', '.input_usc', function () {
-    if (event.keyCode == 13) {
+    if (event.keyCode === 13) {
         AgregarU();
     }
-    else if (event.keyCode == 9) {
-        Comprobar()
+    else if (event.keyCode === 9) {
+        Comprobar();
     }
     else {
         auto(this).autocomplete({
@@ -611,9 +620,9 @@ $('body').on('keydown.autocomplete', '.input_usc', function () {
                     success: function (data) {
                         response(auto.map(data, function (item) {
                             return { label: item.ID + " | " + item.NOMBRE + " " + item.APELLIDO_P, value: item.ID };
-                        }))
+                        }));
                     }
-                })
+                });
             },
 
             messages: {
@@ -645,9 +654,9 @@ $('body').on('keydown.autocomplete', '.input_idi', function () {
                 success: function (data) {
                     response(auto.map(data, function (item) {
                         return { label: item.ID + " | " + item.DESCRIPCION, value: item.ID };
-                    }))
+                    }));
                 }
-            })
+            });
         },
 
         messages: {
@@ -678,9 +687,9 @@ $('body').on('keydown.autocomplete', '.input_com', function () {
                 success: function (data) {
                     response(auto.map(data, function (item) {
                         return { label: item.BUKRS + " | " + item.BUTXT, value: item.BUKRS };
-                    }))
+                    }));
                 }
-            })
+            });
         },
 
         messages: {
@@ -711,9 +720,9 @@ $('body').on('keydown.autocomplete', '.input_niv', function () {
                 success: function (data) {
                     response(auto.map(data, function (item) {
                         return { label: item.ID + " | " + item.TEXTO, value: item.ID };
-                    }))
+                    }));
                 }
-            })
+            });
         },
 
         messages: {

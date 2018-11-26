@@ -741,6 +741,7 @@
                                     <option value="20">20</option>
                                     <option value="30">30</option>
                                     <option value="40">40</option>
+                                    <option value="50">50</option>
                                 </select>
                                 <label class="label_pag">Ir a Página</label>
                                 <select class="pagenum browser-default" title="Select page number"></select>
@@ -759,100 +760,253 @@
                     <tr>
                         @if (((string[])ViewBag.campos).Contains("1"))
                         {
-                            <td>@(item.documento.SOCIEDAD_ID)</td>}<!--Co. Code-->
+                        <td>
+                            @try
+                            {
+                                @(item.documento.SOCIEDAD_ID)
+                            }
+                            catch { }
+                        </td>}<!--Co. Code-->
                         @if (((string[])ViewBag.campos).Contains("2"))
                         {
-                            <td>@(item.documento.PAIS_ID)</td>}<!--País-->
+                        <td>
+                            @try
+                            {
+                                @(item.documento.PAIS_ID)
+                            }
+                            catch { }
+                        </td>}<!--País-->
                         @if (((string[])ViewBag.campos).Contains("3"))
                         {
-                            <td>@(item.documento.CLIENTE.REGION)</td>}<!--Subregión-->
+                        <td>
+                            @try
+                            {
+                                @(item.documento.CLIENTE.REGION)
+                            }
+                            catch { }
+                        </td>}<!--Subregión-->
                         @if (((string[])ViewBag.campos).Contains("4"))
                         {
-                            <td>@(item.documento.ESTADO)</td>}<!--Estado-->
+                        <td>
+                            @try
+                            {
+                                @(item.documento.ESTADO)
+                            }
+                            catch { }
+                        </td>}<!--Estado-->
                         @if (((string[])ViewBag.campos).Contains("5"))
                         {
-                            <td>@(item.documento.CIUDAD)</td>}<!--Ciudad-->
+                        <td>
+                            @try
+                            {
+                                @(item.documento.CIUDAD)
+                            }
+                            catch { }
+                        </td>}<!--Ciudad-->
                         @if (((string[])ViewBag.campos).Contains("6"))
                         {
                             <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.documento.NUM_DOC })'" style="cursor:pointer">@(item.documento.NUM_DOC)</td>}<!--Número solicitud-->
                         @if (((string[])ViewBag.campos).Contains("7"))
                         {
-                            <td>@(((DateTime)item.documento.FECHAC).ToShortDateString())</td>}<!--Fecha Solicitud-->
+                            <td>
+                                @try
+                                {
+                                    @(((DateTime)item.documento.FECHAC).ToShortDateString())
+                                }
+                                catch { }
+                            </td>}<!--Fecha Solicitud-->
                         @if (((string[])ViewBag.campos).Contains("8"))
                         {
-                            <td>@(((DateTime)item.documento.FECHAC).ToString("HH:mm:ss"))</td>}<!--Hora solicitud-->
+                            <td>
+                                @try
+                                {
+                                    @(((DateTime)item.documento.FECHAC).ToString("HH:mm:ss"))
+                                }
+                                catch { }
+                            </td>}<!--Hora solicitud-->
                         @if (((string[])ViewBag.campos).Contains("9"))
                         {
-                            <td>@(item.SEMANA)</td>}<!--Semana del periodo-->
+                            <td>
+                                @try
+                                {
+                                    @(item.SEMANA)
+                                }
+                                catch { }
+                            </td>}<!--Semana del periodo-->
                         @if (((string[])ViewBag.campos).Contains("10"))
                         {
-                            <td>@(item.documento.PERIODO)</td>}<!--Periodo contable-->
+                            <td>
+                                @try
+                                {
+                                    @(item.documento.PERIODO)
+                                }
+                                catch { }
+                            </td>}<!--Periodo contable-->
                         @if (((string[])ViewBag.campos).Contains("11"))
                         {
-                            <td>@(item.documento.EJERCICIO)</td>}<!--Año-->
+                            <td>
+                                @try
+                                {
+                                    @(item.documento.EJERCICIO)
+                                }
+                                catch { }
+                            </td>}<!--Año-->
                         @if (((string[])ViewBag.campos).Contains("12"))
                         {
-                            <td>@(item.documento.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(item.documento.USUARIO.SPRAS_ID)).FirstOrDefault().TXT020)</td>}<!--Tipo Solicitud-->
+                            <td>
+                                @try
+                                {
+                                    @(item.documento.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(item.documento.USUARIO.SPRAS_ID)).FirstOrDefault().TXT020)
+                                }
+                                catch { }
+                            </td>}<!--Tipo Solicitud-->
                         @if (((string[])ViewBag.campos).Contains("13"))
                         {
                             <td>
-                                @if (item.documento.TSOL_ID.StartsWith("PR"))
+                                @try
                                 {
-                                    @(item.documento.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(item.documento.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50)
+
+                                    if (item.documento.TSOL_ID.StartsWith("PR"))
+                                    {
+                                        @(item.documento.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(item.documento.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50)
+                                    }
                                 }
+                                catch { }
                             </td>}<!--Tipo Provisión-->
                         @if (((string[])ViewBag.campos).Contains("14"))
                         {
                             <td>
-                                @if (item.documento.TSOL_ID.StartsWith("NC"))
+                                @try
                                 {
-                                    @(item.documento.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(item.documento.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50)
+
+                                    if (item.documento.TSOL_ID.StartsWith("NC"))
+                                    {
+                                        @(item.documento.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(item.documento.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50)
+                                    }
                                 }
+                                catch { }
                             </td>}<!--Tipo NC-->
                         @if (((string[])ViewBag.campos).Contains("15"))
                         {
                             <td>
-                                @if (item.documento.TSOL_ID.StartsWith("OP"))
+                                @try
                                 {
-                                    @(item.documento.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(item.documento.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50)
+
+                                    if (item.documento.TSOL_ID.StartsWith("OP"))
+                                    {
+                                        @(item.documento.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(item.documento.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50)
+                                    }
                                 }
+                                catch { }
                             </td>}<!--Tipo OP-->
                         @if (((string[])ViewBag.campos).Contains("16"))
                         {
-                            <td>@(item.ESTATUS_STRING)</td>}<!--Status-->
+                            <td>
+                                @try
+                                {
+                                    @(item.ESTATUS_STRING)
+                                }
+                                catch { }
+                            </td>}<!--Status-->
                         @if (((string[])ViewBag.campos).Contains("17"))
                         {
-                            <td>@(item.documento.CONCEPTO)</td>}<!--Concepto-->
+                            <td>
+                                @try
+                                {
+                                    @(item.documento.CONCEPTO)
+                                }
+                                catch { }
+                            </td>}<!--Concepto-->
                         @if (((string[])ViewBag.campos).Contains("18"))
                         {
-                            <td>@(item.documento.NOTAS)</td>}<!--Mecánica-->
+                            <td>
+                                @try
+                                {
+                                    @(item.documento.NOTAS)
+                                }
+                                catch { }
+                            </td>}<!--Mecánica-->
                         @if (((string[])ViewBag.campos).Contains("19"))
                         {
-                            <td>@(item.documento.FECHAI_VIG.Value.ToShortDateString())</td>}<!--De-->
+                            <td>
+                                @try
+                                {
+                                    @(item.documento.FECHAI_VIG.Value.ToShortDateString())
+                                }
+                                catch { }
+                            </td>}<!--De-->
                         @if (((string[])ViewBag.campos).Contains("20"))
                         {
-                            <td>@(item.documento.FECHAF_VIG.Value.ToShortDateString())</td>}<!--A-->
+                            <td>
+                                @try
+                                {
+                                    @(item.documento.FECHAF_VIG.Value.ToShortDateString())
+                                }
+                                catch { }
+                            </td>}<!--A-->
                         @if (((string[])ViewBag.campos).Contains("21"))
                         {
-                            <td>@(item.documento.FECHAI_VIG.Value.ToString("MM-yyyy"))</td>}<!--De-->
+                            <td>
+                                @try
+                                {
+                                    @(item.documento.FECHAI_VIG.Value.ToString("MM-yyyy"))
+                                }
+                                catch { }
+                            </td>}<!--De-->
                         @if (((string[])ViewBag.campos).Contains("22"))
                         {
-                            <td>@(item.documento.FECHAF_VIG.Value.ToString("MM-yyyy"))</td>}<!--A-->
+                            <td>
+                                @try
+                                {
+                                    @(item.documento.FECHAF_VIG.Value.ToString("MM-yyyy"))
+                                }
+                                catch { }
+                            </td>}<!--A-->
                         @if (((string[])ViewBag.campos).Contains("23"))
                         {
-                            <td>@(item.documento.GALL.GALLTs.Where(a => a.SPRAS_ID.Equals(item.documento.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50)</td>}<!--Clasificación-->
+                            <td>
+                                @try
+                                {
+                                    @(item.documento.GALL.GALLTs.Where(a => a.SPRAS_ID.Equals(item.documento.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50)
+                                }
+                                catch { }
+                            </td>}<!--Clasificación-->
                         @if (((string[])ViewBag.campos).Contains("24"))
                         {
-                            <td>@(item.CUENTA_CARGO)</td>}<!--Cuenta Contable Gasto-->
+                            <td>
+                                @try
+                                {
+                                    @(item.CUENTA_CARGO)
+                                }
+                                catch { }
+                            </td>}<!--Cuenta Contable Gasto-->
                         @if (((string[])ViewBag.campos).Contains("25"))
                         {
-                            <td>@(item.CUENTA_CARGO_NOMBRE)</td>}<!--Nombre de la cuenta-->
+                            <td>
+                                @try
+                                {
+                                    @(item.CUENTA_CARGO_NOMBRE)
+                                }
+                                catch { }
+                            </td>}<!--Nombre de la cuenta-->
                         @if (((string[])ViewBag.campos).Contains("26"))
                         {
-                            <td>@(item.documento.CLIENTE.KUNNR)</td>}<!--Cliente-->
+                            <td>
+                                @try
+                                {
+                                    @(item.documento.CLIENTE.KUNNR)
+                                }
+                                catch { }
+                            </td>}<!--Cliente-->
                         @if (((string[])ViewBag.campos).Contains("27"))
                         {
-                            <td>@(item.documento.CLIENTE.NAME1)</td>}<!--Nombre-->
+                            <td>
+                                @try
+                                {
+                                    @(item.documento.CLIENTE.NAME1)
+                                }
+                                catch { }
+                            </td>}<!--Nombre-->
                         @if (((string[])ViewBag.campos).Contains("28"))
                         {
                             if (item.documento.SOLD_TO_ID != null)
@@ -866,144 +1020,314 @@
                         }<!--Tipo de Cliente-->
                         @if (((string[])ViewBag.campos).Contains("29"))
                         {
-                            <td>@(item.documento.CLIENTE.VKORG)</td>}<!--Organización de Ventas-->
+                                <td>
+                                    @try
+                                    {
+                                        @(item.documento.CLIENTE.VKORG)
+                                    }
+                                    catch { }
+                                </td>}<!--Organización de Ventas-->
                         @if (((string[])ViewBag.campos).Contains("30"))
                         {
-                            <td>@(item.documento.CLIENTE.STCD1)</td>}<!--Tax ID-->
+                                <td>
+                                    @try
+                                    {
+                                        @(item.documento.CLIENTE.STCD1)
+                                    }
+                                    catch { }
+                                </td>}<!--Tax ID-->
                         @if (((string[])ViewBag.campos).Contains("31"))
                         {
-                            <td>@(item.documento.CLIENTE.CANAL)</td>}<!--Canal-->
+                                <td>
+                                    @try
+                                    {
+                                        @(item.documento.CLIENTE.CANAL)
+                                    }
+                                    catch { }
+                                </td>}<!--Canal-->
                         @if (((string[])ViewBag.campos).Contains("32"))
                         {
-                            <td>@((item.CANAL == null) ? "" : item.CANAL.CDESCRIPCION)</td>}<!--Descripción-->
+                                <td>
+                                    @try
+                                    {
+                                        @((item.CANAL == null) ? "" : item.CANAL.CDESCRIPCION)
+                                    }
+                                    catch { }
+                                </td>}<!--Descripción-->
                         @if (((string[])ViewBag.campos).Contains("33"))
                         {
-                            <td>@(item.documento.PAYER_NOMBRE)</td>}<!--Nombre de Contacto-->
+                                <td>
+                                    @try
+                                    {
+                                        @(item.documento.PAYER_NOMBRE)
+                                    }
+                                    catch { }
+                                </td>}<!--Nombre de Contacto-->
                         @if (((string[])ViewBag.campos).Contains("34"))
                         {
-                            <td>@(item.documento.PAYER_EMAIL)</td>}<!--Email de Contacto-->
+                                <td>
+                                    @try
+                                    {
+                                        @(item.documento.PAYER_EMAIL)
+                                    }
+                                    catch { }
+                                </td>}<!--Email de Contacto-->
                         @if (((string[])ViewBag.campos).Contains("35"))
                         {
-                            <td>
-                                @if (item.documento.TSOL_ID.StartsWith("PR"))
-                                {
-                                    @(String.Format("{0:C}", item.documento.MONTO_DOC_MD))
-                                }
-                            </td>}<!--$ Monto Original de Provisión-->
+                                <td>
+                                    @try
+                                    {
+
+                                        if (item.documento.TSOL_ID.StartsWith("PR"))
+                                        {
+                                            @(String.Format("{0:C}", item.documento.MONTO_DOC_MD))
+                                        }
+                                    }
+                                    catch { }
+                                </td>}<!--$ Monto Original de Provisión-->
                         @if (((string[])ViewBag.campos).Contains("36"))
                         {
-                            <td>
-                                @if (item.documento.TSOL_ID.StartsWith("NC") || item.documento.TSOL_ID.StartsWith("OP"))
-                                {
-                                    @(String.Format("({0:C})", item.documento.MONTO_DOC_MD))
-                                }
-                            </td>}<!--$ Monto NC/OP-->
+                                <td>
+                                    @try
+                                    {
+
+                                        if (item.documento.TSOL_ID.StartsWith("NC") || item.documento.TSOL_ID.StartsWith("OP"))
+                                        {
+                                            @(String.Format("({0:C})", item.documento.MONTO_DOC_MD))
+                                        }
+                                    }
+                                    catch { }
+                                </td>}<!--$ Monto NC/OP-->
                         @if (((string[])ViewBag.campos).Contains("37"))
                         {
-                            <td>@((item.PRESUPUESTO.PC_T == 0) ? string.Empty : String.Format("({0:C})", item.PRESUPUESTO.PC_T))</td>}<!--$Monto Aplicado-->
+                                <td>
+                                    @try
+                                    {
+                                        @((item.PRESUPUESTO.PC_T == 0) ? string.Empty : String.Format("({0:C})", item.PRESUPUESTO.PC_T))
+                                    }
+                                    catch { }
+                                </td>}<!--$Monto Aplicado-->
                         @if (((string[])ViewBag.campos).Contains("38"))
                         {
-                            <td>@((item.PRESUPUESTO.CONSU == 0) ? string.Empty : String.Format("{0:C}", item.PRESUPUESTO.CONSU))</td>}<!--Saldo Remanente Provisión-->
+                                <td>
+                                    @try
+                                    {
+                                        @((item.PRESUPUESTO.CONSU == 0) ? string.Empty : String.Format("{0:C}", item.PRESUPUESTO.CONSU))
+                                    }
+                                    catch { }
+                                </td>}<!--Saldo Remanente Provisión-->
                         @if (((string[])ViewBag.campos).Contains("39"))
                         {
-                            <td>
-                                @if (item.DOCSREFREVERSOS != null)
-                                {
-                                    @(String.Format("{0:C}", item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null).GetType().GetProperty("MONTO_DOC_MD").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null), null)))
-                                }
-                            </td>}<!--$ Monto Reverso Provisión-->
+                                <td>
+                                    @try
+                                    {
+
+                                        if (item.DOCSREFREVERSOS != null)
+                                        {
+                                            @(String.Format("{0:C}", item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null).GetType().GetProperty("MONTO_DOC_MD").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null), null)))
+                                        }
+                                    }
+                                    catch { }
+                                </td>}<!--$ Monto Reverso Provisión-->
                         @if (((string[])ViewBag.campos).Contains("40"))
                         {
-                            <td>
-                                @if (item.DOCSREFREVERSOS != null)
-                                {
-                                    @((Convert.ToDecimal(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null).GetType().GetProperty("MONTO_DOC_MD").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null), null)) * 100) / item.documento.MONTO_DOC_MD)
-                                }
-                            </td>}<!--% Reverso-->
+                                <td>
+                                    @try
+                                    {
+
+                                        if (item.DOCSREFREVERSOS != null)
+                                        {
+                                            @((Convert.ToDecimal(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null).GetType().GetProperty("MONTO_DOC_MD").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null), null)) * 100) / item.documento.MONTO_DOC_MD)
+                                        }
+                                    }
+                                    catch { }
+                                </td>}<!--% Reverso-->
                         @if (((string[])ViewBag.campos).Contains("41"))
                         {
-                            <td>@(String.Format("{0:C}", item.remanente))</td>}<!--$ Exceso/(Insuficiencia) Provisión-->
+                                <td>
+                                    @try
+                                    {
+                                        @(String.Format("{0:C}", item.remanente))
+                                    }
+                                    catch { }
+                                </td>}<!--$ Exceso/(Insuficiencia) Provisión-->
                         @if (((string[])ViewBag.campos).Contains("42"))
                         {
-                            <td>@(item.porcentaje_remanente)</td>}<!--% Exceso/(Insuficiencia) Provisión-->
+                                <td>
+                                    @try
+                                    {
+                                        @(item.porcentaje_remanente)
+                                    }
+                                    catch { }
+                                </td>}<!--% Exceso/(Insuficiencia) Provisión-->
                         @if (((string[])ViewBag.campos).Contains("43"))
                         {
-                            <td>@(String.Empty)</td>}<!--Impactos / Beneficios en el gasto del Periodo-->
+                                <td>
+                                    @try
+                                    {
+                                        @(String.Empty)
+                                    }
+                                    catch { }
+                                </td>}<!--Impactos / Beneficios en el gasto del Periodo-->
                         @if (((string[])ViewBag.campos).Contains("44"))
                         {
-                            <td>@((item.documento.DOCUMENTOSAP != null) ? item.documento.DOCUMENTOSAP.NUM_DOC.ToString() : "")</td>}<!--Núm. Registro Provisión-->
+                                <td>
+                                    @try
+                                    {
+                                        @((item.documento.DOCUMENTO_SAP != null) ? item.documento.DOCUMENTO_SAP.ToString() : "")
+                                    }
+                                    catch { }
+                                </td>}<!--Núm. Registro Provisión-->
                         @if (((string[])ViewBag.campos).Contains("45"))
                         {
-                            <td>
-                                @if (item.documento.TSOL_ID.StartsWith("NC") || item.documento.TSOL_ID.StartsWith("OP"))
-                                {
-                                    @(item.documento.NUM_DOC)
-                                }
-                            </td>}<!--Núm. Registro NC/OP-->
+                                <td>
+                                    @try
+                                    {
+
+                                        if (item.documento.TSOL_ID.StartsWith("NC") || item.documento.TSOL_ID.StartsWith("OP"))
+                                        {
+                                            @((item.documento.DOCUMENTO_SAP != null) ? item.documento.DOCUMENTO_SAP.ToString() : "")
+                                        }
+                                    }
+                                    catch { }
+                                </td>}<!--Núm. Registro NC/OP-->
                         @if (((string[])ViewBag.campos).Contains("46"))
                         {
-                            <td>
-                                @if (item.DOCSREFREVERSOS != null)
-                                {
-                                    @(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("NUM_DOC").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null))
-                                }
-                            </td>}<!--Núm. Registro Reverso-->
+                                <td>
+                                    @try
+                                    {
+
+                                        if (item.DOCSREFREVERSOS != null)
+                                        {
+                                            @((item.documento.DOCUMENTO_SAP != null) ? item.documento.DOCUMENTO_SAP.ToString() : "")
+                                        }
+                                    }
+                                    catch { }
+                                </td>}<!--Núm. Registro Reverso-->
                         @if (((string[])ViewBag.campos).Contains("47"))
                         {
-                            <td>
-                                @if (item.DOCSREFREVERSOS != null)
-                                {
-                                    @(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("FECHAC").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null))
-                                }
-                            </td>}<!--Fecha Reverso Provisión-->
+                                <td>
+                                    @try
+                                    {
+
+                                        if (item.DOCSREFREVERSOS != null)
+                                        {
+                                            @(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("FECHAC").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null))
+                                        }
+                                    }
+                                    catch { }
+                                </td>}<!--Fecha Reverso Provisión-->
                         @if (((string[])ViewBag.campos).Contains("48"))
                         {
-                            <td>
-                                @if (item.DOCSREFREVERSOS != null)
-                                {
-                                    @(item.DOCSREFREVERSOS.GetType().GetProperty("d").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("PERIODO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("d").GetValue(item.DOCSREFREVERSOS, null), null))
-                                }
-                            </td>}<!--Periodo Contable Reverso-->
+                                <td>
+                                    @try
+                                    {
+
+                                        if (item.DOCSREFREVERSOS != null)
+                                        {
+                                            @(item.DOCSREFREVERSOS.GetType().GetProperty("d").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("PERIODO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("d").GetValue(item.DOCSREFREVERSOS, null), null))
+                                        }
+                                    }
+                                    catch { }
+                                </td>}<!--Periodo Contable Reverso-->
                         @if (((string[])ViewBag.campos).Contains("49"))
                         {
-                            <td>
-                                @if (item.DOCSREFREVERSOS != null)
-                                {
-                                    @(item.DOCSREFREVERSOS.GetType().GetProperty("tr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("TXT100").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("tr").GetValue(item.DOCSREFREVERSOS, null), null))
-                                }
-                            </td>}<!--Razón Reverso-->
+                                <td>
+                                    @try
+                                    {
+
+                                        if (item.DOCSREFREVERSOS != null)
+                                        {
+                                            @(item.DOCSREFREVERSOS.GetType().GetProperty("tr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("TXT100").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("tr").GetValue(item.DOCSREFREVERSOS, null), null))
+                                        }
+                                    }
+                                    catch { }
+                                </td>}<!--Razón Reverso-->
                         @if (((string[])ViewBag.campos).Contains("50"))
                         {
-                            <td>
-                                @if (item.DOCSREFREVERSOS != null)
-                                {
-                                    @(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("COMENTARIO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null))
-                                }
-                            </td>}<!--Comentario Reverso-->
+                                <td>
+                                    @try
+                                    {
+
+                                        if (item.DOCSREFREVERSOS != null)
+                                        {
+                                            @(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("COMENTARIO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null))
+                                        }
+                                    }
+                                    catch { }
+                                </td>}<!--Comentario Reverso-->
                         @if (((string[])ViewBag.campos).Contains("51"))
                         {
-                            <td>@(item.documento.USUARIO.NOMBRE + " " + item.documento.USUARIO.APELLIDO_P)</td>}<!--Usuario-->
+                                <td>
+                                    @try
+                                    {
+                                        @(item.documento.USUARIO.NOMBRE + " " + item.documento.USUARIO.APELLIDO_P)
+                                    }
+                                    catch { }
+                                </td>}<!--Usuario-->
                         @if (((string[])ViewBag.campos).Contains("52"))
                         {
-                            <td>@(item.documento.USUARIO.BACKUP_ID)</td>}<!--Back Up-->
+                                <td>
+                                    @try
+                                    {
+                                        @(item.documento.USUARIO.BACKUP_ID)
+                                    }
+                                    catch { }
+                                </td>}<!--Back Up-->
                         @if (((string[])ViewBag.campos).Contains("53"))
                         {
-                            <td>@(item.documento.USUARIO.NOMBRE + " " + item.documento.USUARIO.APELLIDO_P)</td>}<!--Creado Por-->
+                                <td>
+                                    @try
+                                    {
+                                        @(item.documento.USUARIO.NOMBRE + " " + item.documento.USUARIO.APELLIDO_P)
+                                    }
+                                    catch { }
+                                </td>}<!--Creado Por-->
                         @if (((string[])ViewBag.campos).Contains("54"))
                         {
-                            <td>@(item.documento.USUARIO.ID)</td>}<!--Creado Por ID-->
+                                <td>
+                                    @try
+                                    {
+                                        @(item.documento.USUARIO.ID)
+                                    }
+                                    catch { }
+                                </td>}<!--Creado Por ID-->
                         @if (((string[])ViewBag.campos).Contains("55"))
                         {
-                            <td>@(item.documento.USUARIO.NOMBRE + " " + item.documento.USUARIO.APELLIDO_P)</td>}<!--Solicitado Por-->
+                                <td>
+                                    @try
+                                    {
+                                        @(item.documento.USUARIO.NOMBRE + " " + item.documento.USUARIO.APELLIDO_P)
+                                    }
+                                    catch { }
+                                </td>}<!--Solicitado Por-->
                         @if (((string[])ViewBag.campos).Contains("56"))
                         {
-                            <td>@(item.documento.USUARIO.ID)</td>}<!--Solicitado Por ID-->
+                                <td>
+                                    @try
+                                    {
+                                        @(item.documento.USUARIO.ID)
+                                    }
+                                    catch { }
+                                </td>}<!--Solicitado Por ID-->
                         @if (((string[])ViewBag.campos).Contains("57"))
                         {
-                            <td>@(item.documento.USUARIOD_ID)</td>}<!--Modificado Por-->
+                                <td>
+                                    @try
+                                    {
+                                        @(item.documento.USUARIOD_ID)
+                                    }
+                                    catch { }
+                                </td>}<!--Modificado Por-->
                         @if (((string[])ViewBag.campos).Contains("58"))
                         {
-                            <td>@(item.documento.USUARIOD_ID)</td>}<!--Modificado Por ID-->
+                                <td>
+                                    @try
+                                    {
+                                        @(item.documento.USUARIOD_ID)
+                                    }
+                                    catch { }
+                                </td>}<!--Modificado Por ID-->
                         @if (((string[])ViewBag.campos).Contains("59"))
                         {
                             <td>
@@ -1051,165 +1375,357 @@
                             </td>}<!--Aprobador Nivel 5-->
                         @if (((string[])ViewBag.campos).Contains("64"))
                         {
-                            <td>@(item.documento.DOCUMENTOFs.Select(df => df.PROVEEDOR).FirstOrDefault())</td>}<!--Proveedor-->
+                            <td>
+                                @try
+                                {
+                                    @(item.documento.DOCUMENTOFs.Select(df => df.PROVEEDOR).FirstOrDefault())
+                                }
+                                catch { }
+                            </td>}<!--Proveedor-->
                         @if (((string[])ViewBag.campos).Contains("65"))
                         {
-                            <td>@(item.PROVEEDOR_NOMBRE)</td>}<!--Nombre Proveedor-->
+                            <td>
+                                @try
+                                {
+                                    @(item.PROVEEDOR_NOMBRE)
+                                }
+                                catch { }
+                            </td>}<!--Nombre Proveedor-->
                         @if (((string[])ViewBag.campos).Contains("66"))
                         {
-                            <td>@(item.documento.DOCUMENTOFs.Select(df => df.BILL_DOC).FirstOrDefault())</td>}<!--Número Factura Proveedor-->
+                            <td>
+                                @try
+                                {
+                                    @(item.documento.DOCUMENTOFs.Select(df => df.BILL_DOC).FirstOrDefault())
+                                }
+                                catch { }
+                            </td>}<!--Número Factura Proveedor-->
                         @if (((string[])ViewBag.campos).Contains("67"))
                         {
-                            <td>@(item.documento.DOCUMENTOFs.Select(df => df.FACTURAK).FirstOrDefault())</td>}<!--Número Factura Kellogg´s-->
+                            <td>
+                                @try
+                                {
+                                    @(item.documento.DOCUMENTOFs.Select(df => df.FACTURAK).FirstOrDefault())
+                                }
+                                catch { }
+                            </td>}<!--Número Factura Kellogg´s-->
                         @if (((string[])ViewBag.campos).Contains("68"))
                         {
                             <td>
-                                @if (item.documento.TSOL_ID.StartsWith("NC"))
+                                @try
                                 {
-                                    @(item.documento.NUM_DOC)
+
+                                    if (item.documento.TSOL_ID.StartsWith("NC"))
+                                    {
+                                        @(item.documento.NUM_DOC)
+                                    }
                                 }
+                                catch { }
                             </td>}<!--Número NC -->
                         @if (((string[])ViewBag.campos).Contains("69"))
                         {
                             <td>
-                                @if (item.documento.TSOL_ID.StartsWith("OP"))
+                                @try
                                 {
-                                    @(item.documento.NUM_DOC)
+
+                                    if (item.documento.TSOL_ID.StartsWith("OP"))
+                                    {
+                                        @(item.documento.NUM_DOC)
+                                    }
                                 }
+                                catch { }
                             </td>}<!--Número Orden de Pago-->
                         @if (((string[])ViewBag.campos).Contains("70"))
                         {
-                            <td>@((item.documento.DOCUMENTOTS.Where(x => x.TSFORM_ID == 1 && (bool)x.CHECKS).Count() > 0) ? "X" : "") </td>}<!--Expense Recognition en periodo-->
+                            <td>
+                                @try
+                                {
+                                    @((item.documento.DOCUMENTOTS.Where(x => x.TSFORM_ID == 1 && (bool)x.CHECKS).Count() > 0) ? "X" : "")
+                                }
+                                catch { }
+                            </td>}<!--Expense Recognition en periodo-->
                         @if (((string[])ViewBag.campos).Contains("71"))
                         {
-                            <td>@((item.documento.DOCUMENTOTS.Where(x => x.TSFORM_ID == 2 && (bool)x.CHECKS).Count() > 0) ? "X" : "")</td>}<!--Expense Recognition Ejercicio-->
+                            <td>
+                                @try
+                                {
+                                    @((item.documento.DOCUMENTOTS.Where(x => x.TSFORM_ID == 2 && (bool)x.CHECKS).Count() > 0) ? "X" : "")
+                                }
+                                catch { }
+                            </td>}<!--Expense Recognition Ejercicio-->
                         @if (((string[])ViewBag.campos).Contains("72"))
                         {
-                            <td>@((item.documento.DOCUMENTOTS.Where(x => x.TSFORM_ID == 3 && (bool)x.CHECKS).Count() > 0) ? "X" : "")</td>}<!--Soporte Incorrecto-->
+                            <td>
+                                @try
+                                {
+                                    @((item.documento.DOCUMENTOTS.Where(x => x.TSFORM_ID == 3 && (bool)x.CHECKS).Count() > 0) ? "X" : "")
+                                }
+                                catch { }
+                            </td>}<!--Soporte Incorrecto-->
                         @if (((string[])ViewBag.campos).Contains("73"))
                         {
-                            <td>@((item.documento.DOCUMENTOTS.Where(x => x.TSFORM_ID == 4 && (bool)x.CHECKS).Count() > 0) ? "X" : "")</td>}<!--Soporte validado con base variable pendiente-->
+                            <td>
+                                @try
+                                {
+                                    @((item.documento.DOCUMENTOTS.Where(x => x.TSFORM_ID == 4 && (bool)x.CHECKS).Count() > 0) ? "X" : "")
+                                }
+                                catch { }
+                            </td>}<!--Soporte validado con base variable pendiente-->
                         @if (((string[])ViewBag.campos).Contains("74"))
                         {
-                            <td>@((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("CAR")).Count() > 0) ? "X" : "")</td>}<!--Carta-->
+                            <td>
+                                @try
+                                {
+                                    @((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("CAR")).Count() > 0) ? "X" : "")
+                                }
+                                catch { }
+                            </td>}<!--Carta-->
                         @if (((string[])ViewBag.campos).Contains("75"))
                         {
-                            <td>@((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("CON")).Count() > 0) ? "X" : "")</td>}<!--Contrato-->
+                            <td>
+                                @try
+                                {
+                                    @((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("CON")).Count() > 0) ? "X" : "")
+                                }
+                                catch { }
+                            </td>}<!--Contrato-->
                         @if (((string[])ViewBag.campos).Contains("76"))
                         {
-                            <td>@((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("JBP")).Count() > 0) ? "X" : "")</td>}<!--JBP-->
+                            <td>
+                                @try
+                                {
+                                    @((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("JBP")).Count() > 0) ? "X" : "")
+                                }
+                                catch { }
+                            </td>}<!--JBP-->
                         @if (((string[])ViewBag.campos).Contains("77"))
                         {
-                            <td>@((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("FAC")).Count() > 0) ? "X" : "")</td>}<!--Factura-->
+                            <td>
+                                @try
+                                {
+                                    @((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("FAC")).Count() > 0) ? "X" : "")
+                                }
+                                catch { }
+                            </td>}<!--Factura-->
                         @if (((string[])ViewBag.campos).Contains("78"))
                         {
-                            <td>@((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("OTR")).Count() > 0) ? "X" : "")</td>}<!--Otros-->
+                            <td>
+                                @try
+                                {
+                                    @((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("OTR")).Count() > 0) ? "X" : "")
+                                }
+                                catch { }
+                            </td>}<!--Otros-->
                         @if (((string[])ViewBag.campos).Contains("79"))
                         {
-                            <td>@((item.documento.TIPO_TECNICO == "M") ? "X" : "")</td>}<!--Negociación por monto-->
+                            <td>
+                                @try
+                                {
+                                    @((item.documento.TIPO_TECNICO == "M") ? "X" : "")
+                                }
+                                catch { }
+                            </td>}<!--Negociación por monto-->
                         @if (((string[])ViewBag.campos).Contains("80"))
                         {
-                            <td>@((item.documento.TIPO_TECNICO == "P") ? "X" : "")</td>}<!--Negociación por %-->
+                            <td>
+                                @try
+                                {
+                                    @((item.documento.TIPO_TECNICO == "P") ? "X" : "")
+                                }
+                                catch { }
+                            </td>}<!--Negociación por %-->
                         @if (((string[])ViewBag.campos).Contains("81"))
                         {
                             <td>
-                                @if (item.documento.DOCUMENTOPs.Count > 0)
+                                @try
                                 {
-                                    @((item.documento.DOCUMENTOPs.FirstOrDefault().MATNR != "") ? "X" : "")
+
+                                    if (item.documento.DOCUMENTOPs.Count > 0)
+                                    {
+                                        @((item.documento.DOCUMENTOPs.FirstOrDefault().MATNR != "") ? "X" : "")
+                                    }
                                 }
+                                catch { }
                             </td>}<!--Distribución por material-->
                         @if (((string[])ViewBag.campos).Contains("82"))
                         {
                             <td>
-                                @if (item.documento.DOCUMENTOPs.Count > 0)
+                                @try
                                 {
-                                    @((item.documento.DOCUMENTOPs.FirstOrDefault().MATNR == "") ? "X" : "")
+
+                                    if (item.documento.DOCUMENTOPs.Count > 0)
+                                    {
+                                        @((item.documento.DOCUMENTOPs.FirstOrDefault().MATNR == "") ? "X" : "")
+                                    }
                                 }
+                                catch { }
                             </td>}<!--Distribución categoría-->
                         @if (((string[])ViewBag.campos).Contains("83"))
                         {
-                            <td>@((item.documento.TIPO_TECNICO == "M") ? String.Format("{0:C}", item.documento.MONTO_DOC_MD) : "")</td>}<!--Monto Base-->
+                            <td>
+                                @try
+                                {
+                                    @((item.documento.TIPO_TECNICO == "M") ? String.Format("{0:C}", item.documento.MONTO_DOC_MD) : "")
+                                }
+                                catch { }
+                            </td>}<!--Monto Base-->
                         @if (((string[])ViewBag.campos).Contains("84"))
                         {
-                            <td>@((item.documento.TIPO_TECNICO == "P") ? String.Format("{0:C}", item.documento.MONTO_DOC_MD) : "")</td>}<!--Monto %-->
+                            <td>
+                                @try
+                                {
+                                    @((item.documento.TIPO_TECNICO == "P") ? String.Format("{0:C}", item.documento.MONTO_DOC_MD) : "")
+                                }
+                                catch { }
+                            </td>}<!--Monto %-->
                         @if (((string[])ViewBag.campos).Contains("85"))
                         {
-                            <td>@((item.documento.TIPO_RECURRENTE != null) ? "Si" : "No")</td>}<!--Recurrente-->
+                            <td>
+                                @try
+                                {
+                                    @((item.documento.TIPO_RECURRENTE != null) ? "Si" : "No")
+                                }
+                                catch { }
+                            </td>}<!--Recurrente-->
                         @if (((string[])ViewBag.campos).Contains("86"))
                         {
-                            <td>@((item.documento.TIPO_RECURRENTE != null) ? ((item.documento.TIPO_TECNICO == "P") ? "X" : "") : "")</td>}<!--Recurrente por porcentaje-->
+                            <td>
+                                @try
+                                {
+                                    @((item.documento.TIPO_RECURRENTE != null) ? ((item.documento.TIPO_TECNICO == "P") ? "X" : "") : "")
+                                }
+                                catch { }
+                            </td>}<!--Recurrente por porcentaje-->
                         @if (((string[])ViewBag.campos).Contains("87"))
                         {
-                            <td>@((item.documento.TIPO_RECURRENTE != null) ? ((item.documento.TIPO_TECNICO == "M") ? "X" : "") : "")</td>}<!--Recurrente por Monto-->
+                            <td>
+                                @try
+                                {
+                                    @((item.documento.TIPO_RECURRENTE != null) ? ((item.documento.TIPO_TECNICO == "M") ? "X" : "") : "")
+                                }
+                                catch { }
+                            </td>}<!--Recurrente por Monto-->
                         @if (((string[])ViewBag.campos).Contains("88"))
                         {
                             <td>
-                                @if(item.documento.DOCUMENTORECs.Count > 0)
+                                @try
                                 {
-                                    @((item.documento.DOCUMENTORECs.FirstOrDefault().ESTATUS == "C")? "X" : "")
+
+                                    if (item.documento.DOCUMENTORECs.Count > 0)
+                                    {
+                                        @((item.documento.DOCUMENTORECs.FirstOrDefault().ESTATUS == "C") ? "X" : "")
+                                    }
                                 }
+                                catch { }
                             </td>}<!--Recurrente Cancelada-->
                         @if (((string[])ViewBag.campos).Contains("89"))
                         {
                             <td>
-                                @if(item.documento.DOCUMENTORAN.Count > 0)
+                                @try
                                 {
-                                    @(item.documento.DOCUMENTORAN.FirstOrDefault().OBJETIVOI)
+
+                                    if (item.documento.DOCUMENTORAN.Count > 0)
+                                    {
+                                        @(String.Format("{0:C}", item.documento.DOCUMENTORAN.FirstOrDefault().OBJETIVOI))
+                                    }
                                 }
+                                catch { }
                             </td>}<!--Objetivo Inicio-->
                         @if (((string[])ViewBag.campos).Contains("90"))
                         {
                             <td>
-                                @if (item.documento.DOCUMENTORAN.Count > 0)
+                                @try
                                 {
-                                    @(item.documento.DOCUMENTORAN.FirstOrDefault().PORCENTAJE)
+
+                                    if (item.documento.DOCUMENTORAN.Count > 0)
+                                    {
+                                        @(item.documento.DOCUMENTORAN.FirstOrDefault().PORCENTAJE)
+                                    }
                                 }
+                                catch { }
                             </td>}<!--Objetivo Límite-->
                         @if (((string[])ViewBag.campos).Contains("91"))
                         {
-                            <td>@(item.ESTATUS_STRING)</td>}<!--Estatus-->
+                            <td>
+                                @try
+                                {
+                                    @(item.ESTATUS_STRING)
+                                }
+                                catch { }
+                            </td>}<!--Estatus-->
                         @if (((string[])ViewBag.campos).Contains("92"))
                         {
                             <td>
-                                @if(item.documento.DOCUMENTOLs.Count > 0)
+                                @try
                                 {
-                                    @(String.Format("{0:C}", item.documento.DOCUMENTOLs.FirstOrDefault().MONTO_VENTA))
+
+                                    if (item.documento.DOCUMENTOLs.Count > 0)
+                                    {
+                                        @(String.Format("{0:C}", item.documento.DOCUMENTOLs.FirstOrDefault().MONTO_VENTA))
+                                    }
                                 }
+                                catch { }
                             </td>}<!--Venta del Periodo-->
                         @if (((string[])ViewBag.campos).Contains("93"))
                         {
                             <td>
-                                @if (item.documento.DOCUMENTOLs.Count > 0 && item.documento.DOCUMENTORAN.Count > 0)
+                                @try
                                 {
-                                    @(String.Format("{0:C}", item.documento.DOCUMENTOLs.FirstOrDefault().MONTO_VENTA * (item.documento.DOCUMENTORAN.FirstOrDefault().PORCENTAJE / 100)))
+
+                                    if (item.documento.DOCUMENTOLs.Count > 0 && item.documento.DOCUMENTORAN.Count > 0)
+                                    {
+                                        @(String.Format("{0:C}", item.documento.DOCUMENTOLs.FirstOrDefault().MONTO_VENTA * (item.documento.DOCUMENTORAN.FirstOrDefault().PORCENTAJE / 100)))
+                                    }
                                 }
+                                catch { }
                             </td>}<!--Monto Provisión-->
                         @if (((string[])ViewBag.campos).Contains("94"))
                         {
-                            <td>@(((item.documento.ESTATUS.Equals("A")) && (item.documento.TSOL.PADRE) && (item.documento.DOCUMENTOLs.Count > 0))? String.Format("{0:C}", item.documento.MONTO_DOC_MD) : "")</td>}<!--Back Order-->
+                            <td>
+                                @try
+                                {
+                                    @(((item.documento.ESTATUS.Equals("A")) && (item.documento.TSOL.PADRE) && (item.documento.DOCUMENTOLs.Count > 0)) ? String.Format("{0:C}", item.documento.MONTO_DOC_MD) : "")
+                                }
+                                catch { }
+                            </td>}<!--Back Order-->
                         @if (((string[])ViewBag.campos).Contains("95"))
                         {
                             <td>
-                                @if (item.documento.DOCUMENTOLs.Count > 0)
+                                @try
                                 {
-                                    @(String.Format("{0:C}", item.documento.DOCUMENTOLs.FirstOrDefault().MONTO_VENTA + item.documento.DOCUMENTOLs.FirstOrDefault().BACKORDER))
+
+                                    if (item.documento.DOCUMENTOLs.Count > 0)
+                                    {
+                                        @(String.Format("{0:C}", item.documento.DOCUMENTOLs.FirstOrDefault().MONTO_VENTA + item.documento.DOCUMENTOLs.FirstOrDefault().BACKORDER))
+                                    }
                                 }
+                                catch { }
                             </td>}<!--Venta Real + BO-->
                         @if (((string[])ViewBag.campos).Contains("96"))
                         {
                             <td>
-                                @if (item.documento.TSOL_ID.StartsWith("NC") || item.documento.TSOL_ID.StartsWith("OP") || item.documento.TSOL_ID.StartsWith("RP"))
+                                @try
                                 {
-                                    @(item.documento.NUM_DOC)
+
+                                    if (item.documento.TSOL_ID.StartsWith("NC") || item.documento.TSOL_ID.StartsWith("OP") || item.documento.TSOL_ID.StartsWith("RP"))
+                                    {
+                                        @(item.documento.NUM_DOC)
+                                    }
                                 }
+                                catch { }
                             </td>}<!--NC / OP o Reverso-->
                         @if (((string[])ViewBag.campos).Contains("97"))
                         {
                             <td>
-                                @if (item.documento.DOCUMENTOLs.Count > 0 && item.documento.DOCUMENTORAN.Count > 0)
+                                @try
                                 {
-                                    @(String.Format("{0:C}", (item.documento.DOCUMENTOLs.FirstOrDefault().MONTO_VENTA + item.documento.DOCUMENTOLs.FirstOrDefault().BACKORDER) * (item.documento.DOCUMENTORAN.FirstOrDefault().OBJETIVOI / 100)))
+
+                                    if (item.documento.DOCUMENTOLs.Count > 0 && item.documento.DOCUMENTORAN.Count > 0)
+                                    {
+                                        @(String.Format("{0:C}", (item.documento.DOCUMENTOLs.FirstOrDefault().MONTO_VENTA + item.documento.DOCUMENTOLs.FirstOrDefault().BACKORDER) * (item.documento.DOCUMENTORAN.FirstOrDefault().OBJETIVOI / 100)))
+                                    }
                                 }
+                                catch { }
                             </td>}<!--Monto-->
                     </tr>
                     }

@@ -42,36 +42,31 @@
                 </div>
             </div>
         </div>
-        @if (ViewBag.acciones != null)
+        @if (ViewBag.acciones != null && Model.D.ESTATUS_C==null)
         {
             if (ViewBag.accion == "S")
             {
                 <div class="col s12 m12 l6">
                     <div class="card-panel">
                         <div class="row">
-                            <h5>Carta</h5>@*FALTA TEXTO DE LA CARTA*@
+                            <h5 id="headCarta">Carta</h5>
                         </div>
                         <div class="row">
                             @using (Html.BeginForm("Details", "Solicitudes", FormMethod.Post, new { enctype = "multipart/form-data" }))
                             {
                                 @Html.AntiForgeryToken()
                                 @Html.HiddenFor(model => model.D.NUM_DOC)
-                                @*<label>Carta</label><label class"lbl_nec">*</label>*@
-                                <label name="labels_soporte2">Acuerdo comercial</label><label class"lbl_nec"></label>
+                                <label name="labels_soporte2" id="labels_soporte2">Acuerdo comercial</label><label class"lbl_nec"></label>
                                             <input type="text" value="Carta" name="labels_soporte" hidden />
                                             <div class="file-field input-field">
                                                 <div class="btn-small  " style="float:left;">
                                                     <span>Examinar</span>
-                                                    @*<input class="file_soporte nec" name="files_soporte" id="file_carta" type="file">*@
                                                     <input class="file_soporte" name="files_soporte" id="file_carta" type="file">
                                                 </div>
                                                 <div class="file-path-wrapper">
                                                     <input class="file-path validate" type="text">
                                                 </div>
                                             </div>
-                                            @*<div class="col s12 right-align">
-                                                <input type="submit" value="Enviar" class="btn-small  " />
-                                                </div>*@
                                             <div class="col s12 right-align">
                                                 <input id="Enviar" type="button" value="Enviar" class="btn-small btnEnviar" />
                                                 <input style="display:none" id="btn_guardar" type="submit" value="Guardar" class="btn btn-default" />
@@ -82,7 +77,67 @@
                     </div>
                 </div>
                             <script>
-                                  var cartasCount = "@Model.D.CARTAs.Count()";
+                                var cartasCount = "@Model.D.CARTAs.Count()";
+
+                                //LEJ 13.07.2018-----------------------------------------------------
+                                $('.btnEnviar').on("click", function (e) {
+                                    var msg = "";
+                                    var ban = 0;
+                                    if (document.getElementById("file_carta").files.length > 0) {
+                                        if (ligada()) {
+                                            ban++;
+                                            $('#btn_guardar').click();
+                                        } else if (cartasCount == "0") {
+                                            msg = "Favor de Generar la carta.";
+                                            M.toast({
+                                                classes: "validarDis",
+                                                displayLength: 1000000,
+                                                html: '<span style="padding-right:15px;"><i class="material-icons yellow-text">info</i></span> ' + msg
+                                                    + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'validarDis\')">Aceptar</button>'
+                                            });
+                                            return;
+                                        } else {
+                                            $(".cpC :input[type=checkbox]").each(function () {
+                                                var _xid = $(this).attr('id');
+                                                var checkedTrue = $('#' + _xid + ':checked').length > 0;
+                                                if (checkedTrue) {
+                                                    ban++;
+                                                    var _pTb = _xid.split('b');
+                                                    var tt = $("#Tt-" + _pTb[1]).text();
+                                                    $("#pos").val(tt[0]);
+                                                    $('#btn_guardar').click();
+                                                }
+                                            });
+                                        }
+                                        if (ban == 0) {
+                                            msg = "Seleccionar una Distribucion";
+                                            M.toast({
+                                                classes: "validarDis",
+                                                displayLength: 1000000,
+                                                html: '<span style="padding-right:15px;"><i class="material-icons yellow-text">info</i></span> ' + msg
+                                                    + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'validarDis\')">Aceptar</button>'
+                                            });
+                                            document.getElementById("loader").style.display = "none"; //LEJ 13.07.2018
+                                        }
+                                    } else {
+                                        msg = "Favor de subir archivo";
+                                        M.toast({
+                                            classes: "validarDis",
+                                            displayLength: 1000000,
+                                            html: '<span style="padding-right:15px;"><i class="material-icons yellow-text">info</i></span> ' + msg
+                                                + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'validarDis\')">Aceptar</button>'
+                                        });
+                                        document.getElementById("loader").style.display = "none"; //LEJ 13.07.2018
+                                    }
+                                });
+
+                                function dismiss(classe) {
+                                    var toastElement = document.querySelectorAll('.' + classe);
+                                    for (var i = 0; i < toastElement.length; i++) {
+                                        var toastInstance = M.Toast.getInstance(toastElement[i]);
+                                        toastInstance.dismiss();
+                                    }
+                                }
                             </script>
                 if (ViewBag.cartap.Count != 0)
                 {
@@ -113,9 +168,6 @@
                                                                 <th>Vigencia de</th>
                                                                 <th>Vigencia al </th>
                                                                 <th>Material</th>
-                                                                @*
-                                                                    <th>CANTIDAD</th>
-                                                                    <th>Monto</th>*@
                                                                 <th>Porc Apoyo</th>
                                                                 <th>Monto Apoyo</th>
                                                                 <th>Precio Sugerido</th>

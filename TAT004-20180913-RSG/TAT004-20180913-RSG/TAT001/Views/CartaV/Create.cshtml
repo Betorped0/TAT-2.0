@@ -6,6 +6,18 @@
     ViewBag.carpeta_r = 100;
     ViewBag.Title = "";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+
+    string regresar = TempData["return"] != null ? TempData["return"].ToString() : null;
+    string accion = "Details";
+    string controller = "Solicitudes";
+    TempData["vista"] = regresar;
+    if (regresar == "LIST")
+    {
+        accion = "Lista";
+        controller = "CartaV";
+        TempData["swf"] = TempData["ESTATUS_WF"];
+    }
 }
 
 <script src="~/Scripts/cartaV.js"></script> @*B20180710 MGC 2018.07.12 Modificaciones para editar los campos de distribución*@
@@ -24,10 +36,15 @@
     <div class="row">
         <div class="row right">
             <div class="col l12 m12 right">
-                <a href="@Url.Action("Details", "Solicitudes", new { id = Model.num_doc })" class="btn btn-default">Regresar</a>
-                <input type="button" id="btn_visualizar" value="Visualizar" class="btn btn-default" />
-                <input type="button" id="btn_guardar" value="Guardar" class="btn btn-default" />@*B20180710 MGC 2018.07.12 Modificaciones para editar los campos de distribución*@
-                <input type="submit" id="btn_submit" value="Guardar" class="btn btn-default" style="display:none" /> @*onclick="timer()"  />@*B20180710 MGC 2018.07.12 Modificaciones para editar los campos de distribución*@
+                @if (accion == "Lista"){
+                    <a href="@Url.Action(accion, controller, new { id =Model.num_doc, swf = TempData["ESTATUS_WF"] })" class="btn btn-small">Regresar</a>
+                }
+                else{
+                    <a href="@Url.Action(accion, controller, new { id = Model.num_doc })" class="btn btn-small">Regresar</a>
+                }
+                <input type="button" id="btn_visualizar" value="Visualizar" class="btn btn-small" />
+                <input type="button" id="btn_guardar" value="Guardar" class="btn btn-small" />@*B20180710 MGC 2018.07.12 Modificaciones para editar los campos de distribución*@
+                <input type="submit" id="btn_submit" value="Guardar" class="btn btn-small" style="display:none" /> @*onclick="timer()"  />@*B20180710 MGC 2018.07.12 Modificaciones para editar los campos de distribución*@
             </div>
         </div>
     </div>
@@ -677,37 +694,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                @*<div class="col l6 m8 sl2">
-                                    <div class="col l12 m12 s12">
-                                        <div class="col l1 s2">
-                                            <label>
-                                                <input type="checkbox" name="compromisok_x" value="true" id="compromisok_x" @Html.Raw((Model.compromisoK_x) ? "checked=\"checked\"" : "") />
-                                                <span style="height:0"></span>
-                                            </label>
-                                        </div>
-                                        <div class="input-field col l10 m10" style="margin-bottom:0;">
-                                            @Html.TextAreaFor(model => model.compromisoK, new { @class = "materialize-textarea" })
-                                            @Html.LabelFor(model => model.compromisoK, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_comproK" })
-                                        </div>
-                                    </div>
-                                </div>*@
                             </div>
                         </div>
                         <div class="col l12 m6">
                             <div class="row">
                                 <div class="col l6 m8 sl2">
-                                    @*<div class="col l12 m12 s12">
-                                        <div class="col l1 s2">
-                                            <label>
-                                                <input type="checkbox" name="compromisoC_x" value="true" id="compromisoC_x" @Html.Raw((Model.compromisoC_x) ? "checked=\"checked\"" : "") />
-                                                <span style="height:0"></span>
-                                            </label>
-                                        </div>
-                                        <div class="input-field col l10 m10" style="margin-bottom:0;">
-                                            @Html.TextAreaFor(model => model.compromisoC, new { @class = "materialize-textarea" })
-                                            @Html.LabelFor(model => model.compromisoC, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_comproC" })
-                                        </div>
-                                    </div>*@
                                 </div>
                             </div>
                         </div>
@@ -749,8 +740,5 @@
                     <div class="col l2 yellow" style="height:10px;padding:0;"></div>
                 </div>
             </div>
-        </div>
-        <div>
-            @Html.ActionLink("Back to List", "Index")
         </div>
     }

@@ -508,6 +508,7 @@ namespace TAT001.Controllers.Catalogos
             }
 
             List<Clientes> cc = new List<Clientes>();
+            List<Clientes> ccErr = new List<Clientes>();
 
             foreach (DET_AGENTE1 da in ld)
             {
@@ -661,10 +662,16 @@ namespace TAT001.Controllers.Catalogos
 
                 da.MESS = messa;
                 cl.MESS = da.MESS;
-
-                cc.Add(cl);
+                if (string.IsNullOrEmpty(messa)) {
+                    cc.Add(cl);
+                }
+                else
+                {
+                    ccErr.Add(cl);
+                }
             }
-            return Json(cc, JsonRequestBehavior.AllowGet);
+            ccErr.AddRange(cc);
+            return Json(ccErr, JsonRequestBehavior.AllowGet);
             //  return View("CargaList",cc);
         }
         [HttpPost]
@@ -1427,11 +1434,33 @@ namespace TAT001.Controllers.Catalogos
                 worksheet.Cell("F1").Value = new[] { new { BANNER = "Payer" }, };
                 worksheet.Cell("G1").Value = new[] { new { BANNER = "Canal" }, };
                 worksheet.Cell("H1").Value = new[] { new { BANNER = "Estatus" }, };
+                worksheet.Cell("I1").Value = new[] { new { BANNER = "Contacto" }, };
+                worksheet.Cell("J1").Value = new[] { new { BANNER = "Email" }, };
 
                 for (int i = 2; i <= (lst.Count + 1); i++)
                 {
+                    var NOMBRE = "";
+                    var EMAIL = "";
                     var pais = lst[i - 2].LAND;
+                    var kunnr = lst[i - 2].KUNNR;
                     var pais2 = db.PAIS.Where(X => X.LAND.Equals(pais)).Select(x => x.LANDX).FirstOrDefault();
+                    var contacto = db.CONTACTOCs.Where(x => x.KUNNR == kunnr && x.ACTIVO == true).ToArray();
+                    if (contacto != null)
+                    {
+                        for (int j = 0; j < contacto.Length; j++)
+                        {
+                            if (contacto[j].DEFECTO == true)
+                            {
+                                NOMBRE = NOMBRE + contacto[j].NOMBRE + "*/";
+                                EMAIL = EMAIL + contacto[j].EMAIL + "*/";
+                            }
+                            else
+                            {
+                                NOMBRE = NOMBRE + contacto[j].NOMBRE + "/";
+                                EMAIL = EMAIL + contacto[j].EMAIL + "/";
+                            }
+                        }
+                    }
                     worksheet.Cell("A" + i).Value = new[] { new { BANNER = lst[i - 2].KUNNR.TrimStart('0') }, };
                     worksheet.Cell("B" + i).Value = new[] { new { BANNER = lst[i - 2].NAME1 }, };
                     worksheet.Cell("C" + i).Value = new[] { new { BANNER = lst[i - 2].SUBREGION }, };
@@ -1440,6 +1469,8 @@ namespace TAT001.Controllers.Catalogos
                     worksheet.Cell("F" + i).Value = new[] { new { BANNER = lst[i - 2].PAYER.TrimStart('0') }, };
                     worksheet.Cell("G" + i).Value = new[] { new { BANNER = lst[i - 2].CANAL }, };
                     worksheet.Cell("H" + i).Value = new[] { new { BANNER = lst[i - 2].ACTIVO? "Activo":"Inactivo" }, };
+                    worksheet.Cell("I" + i).Value = new[] { new { BANNER = NOMBRE.TrimEnd('/') }, };
+                    worksheet.Cell("J" + i).Value = new[] { new { BANNER = EMAIL.TrimEnd('/') }, };
                 }
                 var rt = ruta + @"\Clientes_" + DateTime.Now.ToShortDateString() + ".xlsx";
                 workbook.SaveAs(rt);
@@ -1548,95 +1579,100 @@ namespace TAT001.Controllers.Catalogos
                 //Nivel 7
                 doc.ID_US7 = (dt.Rows[i][11] != null ? dt.Rows[i][11].ToString().ToUpper() : null);
 
-                if (string.IsNullOrEmpty(dt.Rows[i][12]==null?"": dt.Rows[i][12].ToString()))
+                if (!String.IsNullOrEmpty(dt.Rows[i][12].ToString()))
+                //if (string.IsNullOrEmpty(dt.Rows[i][12]==null?"": dt.Rows[i][12].ToString()))
+                {
+                    doc.ID_PROVEEDOR = dt.Rows[i][12].ToString();
+                }
+                else
+                {
+                    if (existeCliente == null)
                     {
-                        doc.ID_PROVEEDOR = dt.Rows[i][12].ToString();
+                        doc.ID_PROVEEDOR = "";
                     }
                     else
                     {
-                        if (existeCliente == null)
-                        {
-                            doc.ID_PROVEEDOR = "";
-                        }
-                        else
-                        {
-                            doc.ID_PROVEEDOR = (existeCliente.PROVEEDOR_ID==null?"": existeCliente.PROVEEDOR_ID);
-                        }
+                        doc.ID_PROVEEDOR = (existeCliente.PROVEEDOR_ID == null ? "" : existeCliente.PROVEEDOR_ID);
                     }
-                    doc.ID_PROVEEDOR = Completa(doc.ID_PROVEEDOR, 10);
+                }
+                doc.ID_PROVEEDOR = Completa(doc.ID_PROVEEDOR, 10);
                 //Banner
 
-                if(string.IsNullOrEmpty(dt.Rows[i][13] == null ? "" : dt.Rows[i][13].ToString()))
-                    {
-                        doc.BANNER = dt.Rows[i][13].ToString();
-                    }
-                    else
-                    {
-                        if (existeCliente == null)
-                        {
-                            doc.BANNER = "";
-                        }
-                        else
-                        {
-                            doc.BANNER = (existeCliente.BANNER==null?"": existeCliente.BANNER);
-                        }
-                    }
-                    doc.BANNER = Completa(doc.BANNER, 10);
-                //Banner Agrupador
-                if (string.IsNullOrEmpty(dt.Rows[i][14] == null ? "" : dt.Rows[i][14].ToString()))
+                if (!String.IsNullOrEmpty(dt.Rows[i][13].ToString()))
+                //if(string.IsNullOrEmpty(dt.Rows[i][13] == null ? "" : dt.Rows[i][13].ToString()))
                 {
-                        doc.BANNERG = dt.Rows[i][14].ToString();
+                    doc.BANNER = dt.Rows[i][13].ToString();
+                }
+                else
+                {
+                    if (existeCliente == null)
+                    {
+                        doc.BANNER = "";
                     }
                     else
                     {
-                        if (existeCliente == null)
-                        {
-                            doc.BANNERG = "";
-                        }
-                        else
-                        {
-                            doc.BANNERG = (existeCliente.BANNERG == null ? "" : existeCliente.BANNERG); 
-                        }
+                        doc.BANNER = (existeCliente.BANNER == null ? "" : existeCliente.BANNER);
                     }
-                    doc.BANNERG = Completa(doc.BANNERG, 10);
+                }
+                doc.BANNER = Completa(doc.BANNER, 10);
+                //Banner Agrupador
+                if (!String.IsNullOrEmpty(dt.Rows[i][14].ToString()))
+                //if (string.IsNullOrEmpty(dt.Rows[i][14] == null ? "" : dt.Rows[i][14].ToString()))
+                {
+                    doc.BANNERG = dt.Rows[i][14].ToString();
+                }
+                else
+                {
+                    if (existeCliente == null)
+                    {
+                        doc.BANNERG = "";
+                    }
+                    else
+                    {
+                        doc.BANNERG = (existeCliente.BANNERG == null ? "" : existeCliente.BANNERG);
+                    }
+                }
+                doc.BANNERG = Completa(doc.BANNERG, 10);
 
                 //Canal
-                if (string.IsNullOrEmpty(dt.Rows[i][15] == null ? "" : dt.Rows[i][15].ToString()))
+                //if (string.IsNullOrEmpty(dt.Rows[i][15] == null ? "" : dt.Rows[i][15].ToString()))
+                if (!String.IsNullOrEmpty(dt.Rows[i][15].ToString()))
                 {
-                        doc.CANAL = dt.Rows[i][15].ToString();
+                    doc.CANAL = dt.Rows[i][15].ToString();
+                }
+                else
+                {
+                    if (existeCliente == null)
+                    {
+                        doc.CANAL = "";
                     }
                     else
                     {
-                        if (existeCliente == null)
-                        {
-                            doc.CANAL = "";
-                        }
-                        else
-                        {
-                            doc.CANAL = (existeCliente.CANAL == null ? "" : existeCliente.CANAL);
-                        }
+                        doc.CANAL = (existeCliente.CANAL == null ? "" : existeCliente.CANAL);
                     }
+                }
                 //EXPORTACION
-                if (string.IsNullOrEmpty(dt.Rows[i][16] == null ? "" : dt.Rows[i][16].ToString()))
+                if (!String.IsNullOrEmpty(dt.Rows[i][16].ToString()))
+                //if (string.IsNullOrEmpty(dt.Rows[i][16] == null ? "" : dt.Rows[i][16].ToString()))
                 {
-                        doc.EXPORTACION = dt.Rows[i][16].ToString();
+                    doc.EXPORTACION = dt.Rows[i][16].ToString();
+                }
+                else
+                {
+                    if (existeCliente == null)
+                    {
+                        doc.EXPORTACION = "";
                     }
                     else
                     {
-                        if (existeCliente == null)
-                        {
-                            doc.EXPORTACION = "";
-                        }
-                        else
-                        {
-                            doc.EXPORTACION = (existeCliente.EXPORTACION == null ? "" : existeCliente.EXPORTACION);
-                        }
+                        doc.EXPORTACION = (existeCliente.EXPORTACION == null ? "" : existeCliente.EXPORTACION);
                     }
+                }
                 //CONTACTO
-                    doc.CONTACTO = (dt.Rows[i][17] != null ? dt.Rows[i][17].ToString().ToUpper() : null);
-                 //Contacto Enal
+                doc.CONTACTO = (dt.Rows[i][17] != null ? dt.Rows[i][17].ToString().ToUpper() : null);
+                //Contacto Emal
                
-                    doc.CONTACTOE = (dt.Rows[i][18]!= null ? dt.Rows[i][18].ToString().ToUpper() : null);
+                doc.CONTACTOE = (dt.Rows[i][18]!= null ? dt.Rows[i][18].ToString().ToUpper() : null);
 
 
                 ld.Add(doc);

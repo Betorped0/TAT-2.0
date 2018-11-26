@@ -2,12 +2,12 @@
 @using TAT001.Entities
 <div id="fina" class="col s12">
     <div class="row">
-        @if (ViewBag.acciones != null)
-        {
-            if (ViewBag.accion == "T")
+        <div class="col s12 m12 l12">
+            @if (ViewBag.acciones != null)
             {
-                <div class="col s12 m12 l12">
-                    @using (Html.BeginForm("Taxeo", "Solicitudes"))
+                if (ViewBag.accion == "T")
+                {
+                    using (Html.BeginForm("Taxeo", "Solicitudes"))
                     {
                         @Html.AntiForgeryToken()
                         @Html.HiddenFor(model => model.D.NUM_DOC)
@@ -145,19 +145,19 @@
                             </div>
                         </div>
                     }
-                </div>
+                }
             }
-        }
-        <div class="col s12 m6 l6">
+        </div>
+        <div class="col s12 m12 l6">
             <div class="card-panel">
-                <h5>Detalle de solicitud</h5>
+                <h5 id="headDetalSol">Detalle solicitud</h5>
                 <div class="row" style="margin-bottom:0">
                     <div class="input-field col s8">
-                        @if (ViewBag.accion == "N")
+                        @*@if (ViewBag.accion == "N")
                         {
                             @Html.EditorFor(model => model.D.MONTO_DOC_MD)
-                        }
-                        @Html.EditorFor(model => model.D.MONTO_DOC_MD, new { htmlAttributes = new { @disabled = "disabled", @class = "_vmonto" } })
+                        }*@
+                        @Html.EditorFor(model => model.D.MONTO_DOC_MD, new { htmlAttributes = new { @disabled = "disabled", @class = "precio" } })
                         @Html.LabelFor(model => model.D.MONTO_DOC_MD, "Monto", new { @id = "lbl_montomd" })
                     </div>
                     <div class="input-field col s4">
@@ -165,45 +165,45 @@
                         @Html.LabelFor(model => model.D.MONEDA_ID, "Moneda", new { @id = "lbl_waers" })
                     </div>
                     <div class="input-field col s6">
-                        @Html.EditorFor(model => model.D.TIPO_CAMBIO, new { htmlAttributes = new { @disabled = "disabled", @class = "_tc" } })
+                        @Html.EditorFor(model => model.D.TIPO_CAMBIO, new { htmlAttributes = new { @disabled = "disabled", @class = "precio" } })
                         @Html.LabelFor(model => model.D.TIPO_CAMBIO, "Tipo de cambio", new { @id = "lbl_tcambio" })
                     </div>
                     <div class="input-field col s6">
-                        @Html.EditorFor(model => model.D.MONTO_DOC_ML2, new { htmlAttributes = new { @disabled = "disabled", @class = "_vmonto2" } })
+                        @Html.EditorFor(model => model.D.MONTO_DOC_ML2, new { htmlAttributes = new { @disabled = "disabled", @class = "precio" } })
                         @Html.LabelFor(model => model.D.MONTO_DOC_ML2, "Monto USD", new { @id = "lbl_montoml2" })
                     </div>
                     @if (Model.D.TSOL.PADRE)
                     {
-                        <div class="input-field col s4">
+                        <div class="input-field col s12 m4">
                             @*@Html.EditorFor(model => model.D.TSOL_ID, new { htmlAttributes = new { @disabled = "disabled" } })*@
                             @Html.EditorFor(model => model.D.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(model.D.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50, new { htmlAttributes = new { @disabled = "disabled" } })
                             @Html.LabelFor(model => model.D.TSOL_ID, "Tipo de solicitud", new { @class = "lbl_tsol" })
                         </div>
-                                    <div class="input-field col s4">
-                                        @Html.EditorFor(model => model.D.DOCUMENTO_SAP, new { htmlAttributes = new { @disabled = "disabled" } })
-                                        @Html.LabelFor(model => model.D.DOCUMENTO_SAP, "No. Documento SAP", new { @id = "lbl_sap" })
-                                    </div>
-                                    <div class="input-field col s4">
-                                        @Html.EditorFor(model => model.D.SOCIEDAD_ID, new { htmlAttributes = new { @disabled = "disabled" } })
-                                        @Html.LabelFor(model => model.D.SOCIEDAD_ID, "Company code", new { @class = "lbl_bu" })
-                                    </div>
-                                    <div class="input-field col s6">
-                                        @Html.EditorFor(model => model.D.PERIODO, new { htmlAttributes = new { @disabled = "disabled" } })
-                                        @Html.LabelFor(model => model.D.PERIODO, "Periodssso", new { @class = "lbl_periodo" })
-                                    </div>
-                                    <div class="input-field col s6">
-                                        @Html.EditorFor(model => model.D.EJERCICIO, new { htmlAttributes = new { @disabled = "disabled" } })
-                                        @Html.LabelFor(model => model.D.EJERCICIO, "Ejercicio", new { @class = "lbl_ejer" })
-                                    </div>
+                        <div class="input-field col s6 m4">
+                            @Html.EditorFor(model => model.D.DOCUMENTO_SAP, new { htmlAttributes = new { @disabled = "disabled" } })
+                            @Html.LabelFor(model => model.D.DOCUMENTO_SAP, "No. Documento SAP", new { @id = "lbl_sap" })
+                        </div>
+                        <div class="input-field col s6 m4">
+                            @Html.EditorFor(model => model.D.SOCIEDAD_ID, new { htmlAttributes = new { @disabled = "disabled" } })
+                            @Html.LabelFor(model => model.D.SOCIEDAD_ID, "Company code", new { @class = "lbl_bu" })
+                        </div>
+                        <div class="input-field col s6">
+                            @Html.EditorFor(model => model.D.PERIODO, new { htmlAttributes = new { @disabled = "disabled" } })
+                            @Html.LabelFor(model => model.D.PERIODO, "Periodssso", new { @class = "lbl_periodo" })
+                        </div>
+                        <div class="input-field col s6">
+                            @Html.EditorFor(model => model.D.EJERCICIO, new { htmlAttributes = new { @disabled = "disabled" } })
+                            @Html.LabelFor(model => model.D.EJERCICIO, "Ejercicio", new { @class = "lbl_ejer" })
+                        </div>
                     }
                     @*<div class="input-field col s12">
-                        @Html.TextAreaFor(model => model.D.NOTAS, new { @id = "txt_notas", @class = "materialize-textarea", @style = "height:500px;", @disabled = "disabled" })
-                        @Html.LabelFor(model => model.D.NOTAS, "Mecánica de negociación", new { @id = "lbl_notas" })
-                        </div>*@
+                    @Html.TextAreaFor(model => model.D.NOTAS, new { @id = "txt_notas", @class = "materialize-textarea", @style = "height:500px;", @disabled = "disabled" })
+                    @Html.LabelFor(model => model.D.NOTAS, "Mecánica de negociación", new { @id = "lbl_notas" })
+                    </div>*@
                 </div>
             </div>
         </div>
-        <div class="col s12 m6 l6 right">
+        <div class="col s12 m6 l6">
             <!--RSG 22.05.2018-->
             <div class="card-panel">
                 <div class="row">
@@ -214,53 +214,58 @@
                     </div>
                     <script>
 
-                                var clearing = [];
-                                function getClearing() {
-                                    $("#div_clearing").empty();
-                                    cuentas();
-                                }
-                                function formaClearing() {
-                                    var tex_abono = document.querySelector(".lbl_cabono").innerHTML;
-                                    var tex_cargo = document.querySelector(".lbl_ccargo").innerHTML;
-                                    var tex_clearing = document.querySelector(".lbl_cclear").innerHTML;
+                        var clearing = [];
+                        function getClearing() {
+                            $("#div_clearing").empty();
+                            cuentas();
+                        }
+                        function formaClearing() {
+                            var tex_abono = document.querySelector(".lbl_cabono").innerHTML;
+                            var tex_cargo = document.querySelector(".lbl_ccargo").innerHTML;
+                            var tex_clearing = document.querySelector(".lbl_cclear").innerHTML;
 
-                                    getClearing();
-                                    $("#div_clearing").empty();
-                                    var monto = document.getElementById("D_MONTO_DOC_MD").value;
+                            getClearing();
+                            $("#div_clearing").empty();
+                            var monto = document.getElementById("D_MONTO_DOC_MD").value;
 
-                                    var div = "<ul class='collection'><li class='collection-item'>";
-                                    //DRS 24.09.18---------------------------------------------+
-                                    div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_abono + "</div><div class='col s3'>" + clearing[1] + "</div><div class='col s3'>" + clearing[0] + "</div><div class='col s3 right-align'>" + monto + "</div></div>";
-                                    div += "</li><li class='collection-item'>";
+                            var div = "<ul class='collection'><li class='collection-item'>";
+                            //DRS 24.09.18---------------------------------------------+
+                            div += "<div class='row' style='margin-bottom:0;'><div class='col s4 m12 l3'>" + tex_abono + "</div><div class='col s4 m12 l3'>" + clearing[1] + "</div><div class='col s4 m12 l3'>" + clearing[0] + "</div><div class='col s12 m12 l3 right-align'>" + monto + "</div></div>";
+                            div += "</li><li class='collection-item'>";
 
-                                    if (clearing[5] == null) {
-                                        //DRS 24.09.18---------------------------------------------
-                                        div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + clearing[3] + "</div><div class='col s3'>" + clearing[2] + "</div><div class='col s3 right-align'>" + monto + "</div></div></div>";
+                            if (clearing[5] == null) {
+                                //DRS 24.09.18---------------------------------------------
+                                div += "<div class='row' style='margin-bottom:0;'><div class='col s4 m12 l3'>" + tex_cargo + "</div><div class='col s4 m12 l3'>" + clearing[3] + "</div><div class='col s4 m12 l3'>" + clearing[2] + "</div><div class='col s12 m12 l3 right-align'>" + monto + "</div></div></div>";
+                            } else {
+                                if (clearing[2] != null) {
+                                    if (monto <= clearing[3]) {
+
+                                        div += "<div class='row' style='margin-bottom:0;'><div class='col s4 m12 l3'>" + tex_cargo + "</div><div class='col s4 m12 l3'>" + clearing[3] + "</div><div class='col s4 m12 l3'>" + clearing[2] + "</div><div class='col s12 m12 l3 right-align'>" + monto + "</div></div>";
+                                        div += "</li><li class='collection-item'>";
+                                        div += "<div class='row' style='margin-bottom:0;'><div class='col s4 m12 l3'>" + tex_clearing + "</div><div class='col s4 m12 l3'>" + clearing[4] + "</div><div class='col s12 m12 l3'>0.00</div></div>";
+                                        div += "</li>";
                                     } else {
-                                        if (clearing[2] != null) {
-                                            if (monto <= clearing[3]) {
-
-                                                div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + clearing[3] + "</div><div class='col s3'>" + clearing[2] + "</div><div class='col s3 right-align'>" + monto + "</div></div>";
-                                                div += "</li><li class='collection-item'>";
-                                                div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>" + tex_clearing + "</div><div class='col s4'>" + clearing[4] + "</div><div class='col s4'>0.00</div></div>";
-                                                div += "</li>";
-                                            } else {
-                                                div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + clearing[3] + "</div><div class='col s3'>" + clearing[2] + "</div><div class='col s3'>" + clearing[5] + "</div></div>";
-                                                div += "</li><li class='collection-item'>";
-                                                div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>" + tex_clearing + "</div><div class='col s4'>" + clearing[4] + "</div><div class='col s4'>" + (monto - clearing[5]) + "</div></div>";
-                                                div += "</li>";
-                                            }
-                                        }
+                                        div += "<div class='row' style='margin-bottom:0;'><div class='col s4 m12 l3'>" + tex_cargo + "</div><div class='col s4 m12 l3'>" + clearing[3] + "</div><div class='col s4 m12 l3'>" + clearing[2] + "</div><div class='col s12 m12 l3'>" + clearing[5] + "</div></div>";
+                                        div += "</li><li class='collection-item'>";
+                                        div += "<div class='row' style='margin-bottom:0;'><div class='col s4 m12 l3'>" + tex_clearing + "</div><div class='col s4 m12 l3'>" + clearing[4] + "</div><div class='col s12 m12 l3'>" + (monto - clearing[5]) + "</div></div>";
+                                        div += "</li>";
                                     }
-                                    div += "</li>";
-                                    div += "</ul>";
-                                    $("#div_clearing").append(div);
                                 }
-                                $('#tab_fin').click(function () {
-                                    formaClearing();
-                                });
+                            }
+                            div += "</li>";
+                            div += "</ul>";
+                            $("#div_clearing").append(div);
+                        }
+                        $('#tab_fin').click(function () {
+                            formaClearing();
+                        });
                     </script>
                 </div>
+            </div>
+
+        </div>
+        <div class="col s12 m6 l6 right">
+            <div class="card-panel">
                 <div class="row">
                     <h5 id="head_solicitudanalisis">Análisis Solicitud</h5>@*B20180801 MGC Textos*@
                     <div class="row" style="margin-bottom:0">
@@ -303,7 +308,8 @@
                                 @if (esNeg)
                                 {
                                     @*<li class="collection-item" id="a4" style="background-color:red; color:white;">
-                                    *@<li class="collection-item red white-text" id="a4">
+                                    *@
+                                    <li class="collection-item red white-text" id="a4">
 
                                         <div class="row" style="margin-bottom:0;padding-bottom:0;">
                                             <div id="div_remanente" class="col s6">
@@ -317,7 +323,9 @@
 
                                         </div>
                                     </li>
-                                    }else{
+                                }
+                                else
+                                {
                                     <li class="collection-item" id="a4">
 
                                         <div class="row" style="margin-bottom:0;padding-bottom:0;">
@@ -332,34 +340,37 @@
 
                                         </div>
                                     </li>
-                                    }
-                                    <li class="collection-item" id="a5">
-                                        <div class="row" style="margin-bottom:0;padding-bottom:0;">
-                                            <div id="div_impuesto" class="col s6">
-                                                @*B20180801 MGC Textos*@
-                                                Impuesto
-                                            </div>
-                                            <div class="col s6 right-align">
-                                                <span id="s_impa">@ViewBag.impuesto</span>
-                                            </div>
+                                }
+                                <li class="collection-item" id="a5">
+                                    <div class="row" style="margin-bottom:0;padding-bottom:0;">
+                                        <div id="div_impuesto" class="col s6">
+                                            @*B20180801 MGC Textos*@
+                                            Impuesto
                                         </div>
-                                    </li>
-                                    <li class="collection-item" id="a5">
-                                        <div class="row" style="margin-bottom:0;padding-bottom:0;">
-                                            <div id="div_montototal" class="col s6">
-                                                @*B20180801 MGC Textos*@
-                                                Monto total
-                                            </div>
-                                            <div class="col s6 right-align">
-                                                <span id="s_total">@ViewBag.montoTotal</span>
-                                            </div>
+                                        <div class="col s6 right-align">
+                                            <span id="s_impa">@ViewBag.impuesto</span>
                                         </div>
-                                    </li>
-                                </ul>
+                                    </div>
+                                </li>
+                                <li class="collection-item" id="a5">
+                                    <div class="row" style="margin-bottom:0;padding-bottom:0;">
+                                        <div id="div_montototal" class="col s6">
+                                            @*B20180801 MGC Textos*@
+                                            Monto total
+                                        </div>
+                                        <div class="col s6 right-align">
+                                            <span id="s_total">@ViewBag.montoTotal</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
+
+        </div>
+        <div class="col s12 m6 l6">
             @using (TAT001Entities db = new TAT001Entities())
             {
                 List<DOCUMENTO>
@@ -367,37 +378,56 @@
                 ();
                 inf = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == Model.D.NUM_DOC).ToList();
                 <div class="card-panel">
-                    <div class="row">
+                    <div class="row" style="overflow:auto;">
                         <h5>Relacionados</h5>
                         <div class="col s12">
-                            @if (inf.Count() > 0)
-                            {
-                                <table class="table striped" id="table" style="width:100%; font-size:12px;">
-                                    <thead>
-                                        <tr class="header">
-                                            <th>
-                                                @* -----------DRS 24.09.18-------- *@
-                                                @Html.LabelFor(model => model.D.TSOL.TSOLTs.First().TXT010, "Tipo")
-                                            </th>
-                                            <th>
-                                                @Html.LabelFor(model => model.D.NUM_DOC, "Documento")
-                                            </th>
-                                            <th>
-                                                @Html.LabelFor(model => model.D.DOCUMENTO_SAP, "SAP")
-                                            </th>
-                                            <th>
-                                                @Html.LabelFor(model => model.D.SOCIEDAD_ID, "Sociedad")
-                                            </th>
-                                            <th>
-                                                @Html.LabelFor(model => model.D.PERIODO, "Periodo")
-                                            </th>
-                                            <th>
-                                                @Html.LabelFor(model => model.D.EJERCICIO, "Ejercicio")
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var miCi in inf)
+                            <table class="table striped" id="table" style="width:100%; font-size:12px;">
+                                <thead>
+                                    <tr class="header">
+                                        <th>
+                                            @Html.LabelFor(model => model.D.TSOL_ID, "Tipo")
+                                        </th>
+                                        <th>
+                                            @Html.LabelFor(model => model.D.NUM_DOC, "Documento")
+                                        </th>
+                                        <th>
+                                            @Html.LabelFor(model => model.D.DOCUMENTO_SAP, "SAP")
+                                        </th>
+                                        <th>
+                                            @Html.LabelFor(model => model.D.SOCIEDAD_ID, "Sociedad")
+                                        </th>
+                                        <th>
+                                            @Html.LabelFor(model => model.D.PERIODO, "Periodo")
+                                        </th>
+                                        <th>
+                                            @Html.LabelFor(model => model.D.EJERCICIO, "Ejercicio")
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            @Model.D.TSOL.TSOLTs.Where(x => x.SPRAS_ID == ViewBag.spras_id).FirstOrDefault().TXT010
+                                        </td>
+                                        <td>
+                                            @Model.D.NUM_DOC
+                                        </td>
+                                        <td>
+                                            @Model.D.DOCUMENTO_SAP
+                                        </td>
+                                        <td>
+                                            @Model.D.SOCIEDAD_ID
+                                        </td>
+                                        <td>
+                                            @Model.D.PERIODO
+                                        </td>
+                                        <td>
+                                            @Model.D.EJERCICIO
+                                        </td>
+                                    </tr>
+                                    @if (inf.Count() > 0)
+                                    {
+                                        foreach (var miCi in inf)
                                         {
                                             <tr>
                                                 <td>
@@ -420,63 +450,18 @@
                                                 </td>
                                             </tr>
                                         }
-                                    </tbody>
-                                </table>
-                            }
-                            else
-                            {
-                                <table class="table striped" id="table" style="width:100%; font-size:12px;">
-                                    <thead>
-                                        <tr class="header">
-                                            <th>
-                                                @Html.LabelFor(model => model.D.TSOL_ID, "Tipo")
-                                            </th>
-                                            <th>
-                                                @Html.LabelFor(model => model.D.NUM_DOC, "Documento")
-                                            </th>
-                                            <th>
-                                                @Html.LabelFor(model => model.D.DOCUMENTO_SAP, "SAP")
-                                            </th>
-                                            <th>
-                                                @Html.LabelFor(model => model.D.SOCIEDAD_ID, "Sociedad")
-                                            </th>
-                                            <th>
-                                                @Html.LabelFor(model => model.D.PERIODO, "Periodo")
-                                            </th>
-                                            <th>
-                                                @Html.LabelFor(model => model.D.EJERCICIO, "Ejercicio")
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                @Model.D.TSOL.TSOLTs.Where(x => x.SPRAS_ID == ViewBag.spras_id).FirstOrDefault().TXT010
-                                            </td>
-                                            <td>
-                                                @Model.D.NUM_DOC
-                                            </td>
-                                            <td>
-                                                @Model.D.DOCUMENTO_SAP
-                                            </td>
-                                            <td>
-                                                @Model.D.SOCIEDAD_ID
-                                            </td>
-                                            <td>
-                                                @Model.D.PERIODO
-                                            </td>
-                                            <td>
-                                                @Model.D.EJERCICIO
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            }
+                                    }
+                                </tbody>
+                            </table>
+                            @* } *@
                         </div>
                     </div>
                 </div>
             }
             @*///////////////////////////////L.G.P.P MODIFICACIONES INICIO*@
+
+        </div>
+        <div class="col s12 m12 l6">
             <div class="card-panel">
                 <h5><span id="head_analisispre">Análisis Presupuesto</span><p style="font-size:15px"><span id="load_carga">Última fecha de carga</span> @ViewBag.ultMod</p></h5>
                 <div class="row" style="margin-bottom:0">
@@ -587,41 +572,42 @@
             @*///////////////////////////////L.G.P.P MODIFICACIONES FIN*@
         </div>
         @if (Model.D.CONCEPTO_ID != null)
-        {<div class="col s12 m12 l12">
-                        <div class="card-panel">
-                            <h5>Taxeo</h5>
-                            <div class="row">
-                                <div class="col s12 m12 l12">
-                                    <div class="row" id="lbl_taxeo">
-                                        <div class="input-field col s6 m6 l3">
-                                            <input type="text" id="txt_concepto" name="txt_concepto" value="@Model.D.CONCEPTO_ID" disabled="disabled" />
-                                            <label for="txt_concepto">Concepto</label>
-                                        </div>
-                                        <div class="input-field col s6 m6 l3">
-                                            <input id="txt_nota" name="txt_nota" disabled="disabled" />
-                                            <label id="lbl_nota" for="txt_nota">Tipo de nota</label>
-                                        </div>
-                                        <div class="col s12 m12 l6">
-                                            <div>
-                                                <table class="table" id="tab_conc">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Concepto</th>
-                                                            <th>Porcentaje</th>
-                                                            <th>Código</th>
-                                                            <th>Totales</th>
-                                                        </tr>
-                                                    <thead>
-                                                    <tbody></tbody>
-                                                    <tfoot>
-                                                    </tfoot>
-                                                </table>
-                                            </div>
-                                        </div>
+        {
+            <div class="col s12 m12 l12">
+                <div class="card-panel">
+                    <h5>Taxeo</h5>
+                    <div class="row">
+                        <div class="col s12 m12 l12">
+                            <div class="row" id="lbl_taxeo">
+                                <div class="input-field col s6 m6 l3">
+                                    <input type="text" id="txt_concepto" name="txt_concepto" value="@Model.D.CONCEPTO_ID" disabled="disabled" />
+                                    <label for="txt_concepto">Concepto</label>
+                                </div>
+                                <div class="input-field col s6 m6 l3">
+                                    <input id="txt_nota" name="txt_nota" disabled="disabled" />
+                                    <label id="lbl_nota" for="txt_nota">Tipo de nota</label>
+                                </div>
+                                <div class="col s12 m12 l6">
+                                    <div>
+                                        <table class="table" id="tab_conc">
+                                            <thead>
+                                                <tr>
+                                                    <th>Concepto</th>
+                                                    <th>Porcentaje</th>
+                                                    <th>Código</th>
+                                                    <th>Totales</th>
+                                                </tr>
+                                            <thead>
+                                            <tbody></tbody>
+                                            <tfoot>
+                                            </tfoot>
+                                        </table>
                                     </div>
-                                    <script>
+                                </div>
+                            </div>
+                            <script>
                                     selConcepto(document.getElementById("txt_concepto").value);
-                                        
+
                                     function selConcepto(value) {
                                         var soci = '@Model.D.SOCIEDAD_ID';
                                         var pais = '@Model.D.PAIS_ID';
@@ -665,7 +651,7 @@
                                                 return { IMPUESTO_ID: item.IMPUESTO_ID, PORC: item.PORC, label: item.TXT50 };
                                             }))
                                             var foot = @Model.D.MONTO_DOC_ML;
-                                    
+
                                     for (var i = 0; i < pp.length; i++) {
                                         var cod = pp[i].IMPUESTO_ID;
                                         var por = pp[i].PORC;
@@ -680,11 +666,11 @@
                             }
                         });
                     }
-                                    </script>
-                                </div>
-                            </div>
+                            </script>
                         </div>
                     </div>
+                </div>
+            </div>
 
         }
         @if (ViewBag.Relacionados != null)
@@ -703,8 +689,8 @@
                                             <th>Documento</th>
                                             <th>Tipo Solicitud</th>
                                             @*
-                                                <th>Fecha</th>
-                                                <th>Hora</th>*@
+                                            <th>Fecha</th>
+                                            <th>Hora</th>*@
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -719,12 +705,12 @@
                                                     @item.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(ViewBag.spras_id)).FirstOrDefault().TXT50
                                                 </td>
                                                 @*
-                                                    <td>
-                                                    @item.FECHAC.Value.ToShortDateString()
-                                                    </td>
-                                                    <td>
-                                                    @item.HORAC.Value.ToString().Split('.')[0]
-                                                    </td>*@
+                                                <td>
+                                                @item.FECHAC.Value.ToShortDateString()
+                                                </td>
+                                                <td>
+                                                @item.HORAC.Value.ToString().Split('.')[0]
+                                                </td>*@
                                                 <td>
                                                     <a href="@Url.Action("Details", new { id = item.NUM_DOC })" class="btn-small">Ver</a>
                                                 </td>
