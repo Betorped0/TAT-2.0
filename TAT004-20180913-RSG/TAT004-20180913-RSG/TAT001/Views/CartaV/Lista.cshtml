@@ -25,6 +25,7 @@
 <div class="card-panel">
     <table class="table">
         <tr>
+            <td></td>
             <th>
                 @Html.DisplayNameFor(model => model.FECHAC)
             </th>
@@ -66,44 +67,58 @@
         @foreach (var item in Model)
         {
             ////////DRS 14.10.2018//////
-            <tr onclick="document.location = '@Url.Action("DetailsPos", new { id = item.NUM_DOC, pos = item.POS, swf=TempData["ESTATUS_WF"] })'" style="cursor:pointer">
-                <td>
-                    @Html.DisplayFor(modelItem => item.FECHAC)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TIPO)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.COMPANY)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TAXID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CONCEPTO)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CLIENTE)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PUESTO)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DIRECCION)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FOLIO)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.LUGAR)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PAYER)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ESTIMADO)
-                </td>
-            </tr>
+        <tr onclick="document.location = '@Url.Action("DetailsPos", new { id = item.NUM_DOC, pos = item.POS, swf=TempData["ESTATUS_WF"] })'" style="cursor:pointer">
+            @if ((bool)item.DOCUMENTO.LIGADA==false)
+            {
+             if (item.STATUS != null && (bool)item.STATUS == true)
+             {
+                <td style="align-items:center"><i class='material-icons green-text'>check_box</i></td>
+             }
+             else
+             {
+                <td style="align-items:center;"><i class='material-icons black-text'>check_box_outline_blank</i></td>
+                }
+            }
+            else {
+                <td></td>
+            }
+            <td>
+                @Html.DisplayFor(modelItem => item.FECHAC)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TIPO)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.COMPANY)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TAXID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CONCEPTO)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CLIENTE)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PUESTO)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DIRECCION)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FOLIO)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LUGAR)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PAYER)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ESTIMADO)
+            </td>
+        </tr>
         }
 
     </table>
