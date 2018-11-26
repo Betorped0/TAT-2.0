@@ -200,6 +200,7 @@
           <Property Name="APOYO_REAX" Type="bit" />
           <Property Name="VOLUMEN_ESTX" Type="bit" />
           <Property Name="VOLUMEN_REAX" Type="bit" />
+          <Property Name="STATUS" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="CARTAP">
           <Key>
@@ -1206,7 +1207,7 @@
           <Property Name="ESTATUS" Type="nchar" MaxLength="1" />
           <Property Name="FECHAC" Type="datetime" />
           <Property Name="FECHAM" Type="datetime" />
-          <Property Name="COMENTARIO" Type="nvarchar" MaxLength="255" />
+          <Property Name="COMENTARIO" Type="nvarchar(max)" />
           <Property Name="STATUS" Type="nvarchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="GALL">
@@ -6439,6 +6440,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <NavigationProperty Name="DOCUMENTO" Relationship="Self.FK_CARTA_DOCUMENTO" FromRole="CARTA" ToRole="DOCUMENTO" />
           <NavigationProperty Name="USUARIO" Relationship="Self.FK_CARTA_USUARIO" FromRole="CARTA" ToRole="USUARIO" />
           <NavigationProperty Name="CARTAPs" Relationship="Self.FK_CARTAP_CARTA" FromRole="CARTA" ToRole="CARTAP" />
+          <Property Name="STATUS" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="CARTAP">
           <Key>
@@ -7505,7 +7507,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Property Name="ESTATUS" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
           <Property Name="FECHAC" Type="DateTime" Precision="3" />
           <Property Name="FECHAM" Type="DateTime" Precision="3" />
-          <Property Name="COMENTARIO" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="COMENTARIO" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="STATUS" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="DOCUMENTO" Relationship="Self.FK_FLUJO_DOCUMENTO" FromRole="FLUJO" ToRole="DOCUMENTO" />
           <NavigationProperty Name="USUARIO" Relationship="Self.FK_FLUJO_USUARIO" FromRole="FLUJO" ToRole="USUARIO" />
@@ -12925,6 +12927,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <EntitySetMapping Name="CARTAs">
             <EntityTypeMapping TypeName="TAT001Model.CARTA">
               <MappingFragment StoreEntitySet="CARTA">
+                <ScalarProperty Name="STATUS" ColumnName="STATUS" />
                 <ScalarProperty Name="NUM_DOC" ColumnName="NUM_DOC" />
                 <ScalarProperty Name="POS" ColumnName="POS" />
                 <ScalarProperty Name="FECHAC" ColumnName="FECHAC" />
