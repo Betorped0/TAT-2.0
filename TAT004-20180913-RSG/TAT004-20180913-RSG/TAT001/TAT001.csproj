@@ -391,6 +391,9 @@
     <Compile Include="Entities\CSP_CONSULTARPRESUPUESTO_Result.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\CSP_DOCUMENTOSXUSER2_Result.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\CSP_DOCUMENTOSXUSER_Result.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
@@ -2031,6 +2034,10 @@
     <Content Include="Views\Region\Index.cshtml" />
     <Content Include="Views\ModificacionesGlobales\Index.cshtml" />
     <Content Include="Views\ModificacionesGlobales\ListModAutorizador.cshtml" />
+    <Content Include="Views\Sociedades\Flujos.cshtml" />
+    <Content Include="Views\Sociedades\MAFlujos.cshtml" />
+    <Content Include="Views\Sociedades\EditF.cshtml" />
+    <Content Include="Views\Sociedades\CreateF.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->
