@@ -209,7 +209,8 @@
                     </div>
                     <script>
                         var reversan = "@ViewBag.reversan";
-                        if (reversan == "X") {
+                        var relacionada = "@ViewBag.relacionada";
+                        if (reversan == "X" || relacionada =="prelacionada") {
                             periodo(val);
                         }
                                 var elemdp = document.querySelector('#fechad');
