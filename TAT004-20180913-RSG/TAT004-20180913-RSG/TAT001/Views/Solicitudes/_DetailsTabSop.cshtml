@@ -84,10 +84,7 @@
                                     var msg = "";
                                     var ban = 0;
                                     if (document.getElementById("file_carta").files.length > 0) {
-                                        if (ligada()) {
-                                            ban++;
-                                            $('#btn_guardar').click();
-                                        } else if (cartasCount == "0") {
+                                         if (cartasCount == "0") {
                                             msg = "Favor de Generar la carta.";
                                             M.toast({
                                                 classes: "validarDis",
@@ -96,7 +93,11 @@
                                                     + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'validarDis\')">Aceptar</button>'
                                             });
                                             return;
-                                        } else {
+                                         } else if (ligada()) {
+                                             ban++;
+                                             $('#btn_guardar').click();
+                                         }
+                                        else {
                                             $(".cpC :input[type=checkbox]").each(function () {
                                                 var _xid = $(this).attr('id');
                                                 var checkedTrue = $('#' + _xid + ':checked').length > 0;
