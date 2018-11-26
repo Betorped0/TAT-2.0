@@ -1,10 +1,16 @@
-﻿@model IEnumerable<TAT001.Entities.SOCIEDAD>
+﻿@model IEnumerable<TAT001.Entities.DET_APROBH>
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.pagina_r = 920;
     ViewBag.carpeta_r = 500;
 }
+
+<div class="row">
+    <div class="col s12 right-align">
+        @Html.ActionLink("Nuevo", "CreateF", new {id=ViewBag.coCode }, new { @class = "btn-small", id = "btn_create" })
+    </div>
+</div>
 <div class="row">
     <div class="card-panel">
         <div class="row" style="margin-bottom:0;">
@@ -15,11 +21,11 @@
                     <option value="50">50</option>
                     <option value="100">100</option>
                 </select>
-                <label id="btn_length"></label>
+                <label id="lbl_length">Ver por página</label>
             </div>
             <div class="input-field col s5 m3 l3 offset-l6 offset-m6 offset-s4">
                 <input type="text" class="global_filter" id="global_filter">
-                <label for="global_filter" id="lbl_search"></label>
+                <label for="global_filter" id="lbl_search">Buscar</label>
             </div>
         </div>
         <script>
@@ -36,22 +42,16 @@
             <thead>
                 <tr>
                     <th class="lbl_coCode">
+                        @Html.DisplayNameFor(model => model.SOCIEDAD_ID)
                     </th>
-                    <th class="lbl_Compania">
+                    <th class="lbl_Puesto">
+                        @Html.DisplayNameFor(model => model.PUESTOC_ID)
                     </th>
-                    <th class="lbl_Estado">
-                    </th>
-                    <th class="lbl_Pais">
-                    </th>
-                    <th class="lbl_subRegion">
-                    </th>
-                    <th class="lbl_Moneda">
-                    </th>
-                    <th class="lbl_Idioma">
+                    <th class="lbl_Version">
+                        @Html.DisplayNameFor(model => model.VERSION)
                     </th>
                     <th class="lbl_Activo">
-                    </th>
-                    <th class="lbl_Region">
+                        @Html.DisplayNameFor(model => model.ACTIVO)
                     </th>
                     <th></th>
                 </tr>
@@ -59,52 +59,36 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.BUKRS)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.BUTXT)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ORT01)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.LAND)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.SUBREGIO)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.WAERS)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.SPRAS)
-                    </td>
-                    @if ((bool)item.ACTIVO == true)
-                    {
-                        <td style="align-items:center"><i class='material-icons green-text'>check</i></td>}
-                    else
-                    {
-                        <td style="align-items:center;"><i class='material-icons red-text'>clear</i></td>}
-                    <td>
-                        @Html.DisplayFor(modelItem => item.REGION)
-                    </td>
-                    <td>
-                        <a href="@Url.Action("Edit", new { id = item.BUKRS })">
-                            <i class='material-icons green-text'>edit</i>
-                        </a>&nbsp
-                        <a href="@Url.Action("Details", new { id = item.BUKRS })">
-                            <i class='material-icons blue-text'>search</i>
-                        </a>&nbsp
-                        @*<a href="@Url.Action("Flujos", new { id = item.BUKRS })">
-                            <i class='material-icons black-text'>assignment_turned_in</i>
-                        </a>*@
-                    </td>
-                </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SOCIEDAD_ID)
+                        </td>
+                        <td>
+                            @item.PUESTO.PUESTOTs.Where(t => t.SPRAS_ID == ViewBag.usuario.SPRAS_ID).First().TXT50
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.VERSION)
+                        </td>
+                        @if ((bool)item.ACTIVO == true)
+                        {
+                            <td style="align-items:center"><i class='material-icons green-text'>check</i></td>}
+                        else
+                        {
+                            <td style="align-items:center;"><i class='material-icons red-text'>clear</i></td>}
+                            <td>
+                                <a href="@Url.Action("EditF", new { id = item.SOCIEDAD_ID, pid = item.PUESTOC_ID, v = item.VERSION })">
+                                    <i class='material-icons green-text'>edit</i>
+                                </a>
+                                <a href="@Url.Action("MAFlujos", new { id = item.SOCIEDAD_ID, pid = item.PUESTOC_ID, v = item.VERSION })">
+                                    <i class='material-icons black-text'>done_all</i></a>
+                            </td>
+                    </tr>
                 }
             </tbody>
         </table>
+    </div>
+    <div>
+        @Html.ActionLink("Back to List", "Index", null, new { id = "btn_return" })
     </div>
     <script>
     $(document).ready(function () {
@@ -113,7 +97,7 @@
             scrollY: "50vh",
             scrollCollapse: true,
             language: {
-                "url": "../Scripts/lang/@ViewBag.usuario.SPRAS_ID"+".json"
+                "url": "/Scripts/lang/@ViewBag.usuario.SPRAS_ID"+".json"
             }, columnDefs: [
                 {
                     targets: [1],
@@ -152,22 +136,6 @@
             filterGlobal();
         });
 
-        $('#table tbody').on('click', 'td.details-control', function () {
-            var tr = $(this).closest('tr');
-            var row = table.row(tr);
-
-            if (row.child.isShown()) {
-                // This row is already open - close it
-                row.child.hide();
-                tr.removeClass('shown');
-            }
-            else {
-                // Open this row
-                var child = format(row.data(), row, tr);
-                if (child != undefined) {
-                }
-            }
-        });
     });
     function filterGlobal() {
         $('#table').DataTable().search(

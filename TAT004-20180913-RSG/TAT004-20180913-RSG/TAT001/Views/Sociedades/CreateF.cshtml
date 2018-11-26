@@ -1,0 +1,202 @@
+﻿@model TAT001.Entities.DET_APROBH
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.pagina_r = 920;
+    ViewBag.carpeta_r = 500;
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="col s12 l12 right-align">
+        <button type="submit" id="lbl_guardar" class="btn btn-default"></button>
+    </div>
+    <div class="card-panel">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model=>model.SOCIEDAD_ID)
+        @Html.HiddenFor(model=>model.VERSION)
+        <div class="row">
+            <div class="col s4">
+                @Html.LabelFor(model => model.SOCIEDAD_ID, "SOCIEDAD_ID", htmlAttributes: new { @class = "control-label col-md-2", id = "lbl_coCode" })
+                <div class="col-md-4">
+                    @Html.EditorFor(model => model.SOCIEDAD_ID, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
+                    @Html.ValidationMessageFor(model => model.SOCIEDAD_ID, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col s4">
+                @Html.LabelFor(model => model.PUESTOC_ID, "PUESTOC_ID", htmlAttributes: new { @class = "control-label col-md-2", id = "lbl_Puesto" })
+                <div class="col-md-4">
+                    @Html.DropDownList("PUESTOC_ID", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.PUESTOC_ID, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col s2">
+                @Html.LabelFor(model => model.VERSION, htmlAttributes: new { @class = "control-label col-md-2", id = "lbl_Version" })
+                <div class="col-md-4">
+                    @Html.EditorFor(model => model.VERSION, new { htmlAttributes = new { @class = "form-control", disabled="disabled" } })
+                    @Html.ValidationMessageFor(model => model.VERSION, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col s2">
+                <br />
+                <label>
+                    @Html.CheckBoxFor(model => model.ACTIVO,new { htmlAttributes=new { } })
+                    <span class="lbl_Activo"></span>
+                </label>
+
+            </div>
+        </div>
+        <div class="row">
+            <div id="table" class="table-editable">
+                <span class="table-add material-icons green-text">add</span>
+                <table class="table">
+                    <tr>
+                        <th class="lbl_Posicion">Pos</th>
+                        <th class="lbl_Presupuesto">Presupuesto</th>
+                        <th class="lbl_NPresupuesto"></th>
+                        <th class="lbl_Monto"></th>
+                        <th class="lbl_AprobadorDos"></th>
+                        <th class="lbl_Activo"></th>
+                        <th></th>
+                    </tr>
+                    <tr class="hide">
+                        <td>0</td>
+                        <td>
+                            <label><input class='input_presu' type='checkbox' id='input_presu' name='presu' /><span></span></label>
+                        </td>
+                        <td><input type="number"/></td>
+                        <td><input type="text" class="monto"/></td>
+                        <td><input type="number"/></td>
+                        <td><label><input class='input_activo' type='checkbox' id='input_activo' name='acti' /><span></span></label></td>
+                        <td>
+                            <span class="table-remove material-icons red-text">delete</span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+            }
+
+            <div>
+                @Html.ActionLink("Back to List", "Flujos",new { id=Model.SOCIEDAD_ID},new { id="btn_return"})
+            </div>
+            <script src="~/Scripts/jquery.mask.js"></script>
+<script>
+    $("input[type='hidden']").each(function (index, element) {
+        $(this).appendTo($(element).parent());
+                });
+                document.addEventListener('DOMContentLoaded', function () {
+                    var elems = document.querySelectorAll('select');
+                    var instances = M.FormSelect.init(elems, options);
+                });
+                var $TABLE = $('#table');
+                var $BTN = $('#export-btn');
+                var $EXPORT = $('#export');
+
+    $(document).on('click', '.table-add', function () {
+                    var pos = $TABLE.find('tr:last>td:eq(0)').text();
+                    var $clone = $TABLE.find('tr.hide').clone(true).removeClass('hide table-line');
+                    var posn = parseInt(pos) + 1;
+                        $clone.find('td:eq(0)').text(posn);
+
+                    $TABLE.find('table').append($clone);
+                    $clone.find('td:eq(3)>input').mask('#,##0.00', { reverse: true });
+                });
+
+                $('.table-remove').click(function () {
+                    $(this).parents('tr').detach();
+    });
+    $('.input_presu').change(function () {
+        if ($(this).is(':checked')) {
+            $(this).closest("tr").find("td:eq(2)>input").prop("required", true);           
+        }
+        else {
+            $(this).closest("tr").find("td:eq(2)>input").prop("required", false);
+        }
+    });
+
+    $(document).on('focusout', '.monto', function () {
+        if ($(this).val() != "") {
+
+            $(this).closest("tr").find("td:eq(4)>input").prop("required", true);
+        }
+        else {
+            $(this).closest("tr").find("td:eq(4)>input").prop("required", false);
+        }
+    });
+    
+
+
+                // A few jQuery helpers for exporting only
+                jQuery.fn.pop = [].pop;
+                jQuery.fn.shift = [].shift;
+
+                $BTN.click(function () {
+                    var $rows = $TABLE.find('tr:not(:hidden)');
+                    var headers = [];
+                    var data = [];
+
+                    // Get the headers (add special header logic here)
+                    $($rows.shift()).find('th:not(:empty)').each(function () {
+                        headers.push($(this).text().toLowerCase());
+                    });
+
+                    // Turn all existing rows into a loopable array
+                    $rows.each(function () {
+                        var $td = $(this).find('td');
+                        var h = {};
+
+                        // Use the headers from earlier to name our hash keys
+                        headers.forEach(function (header, i) {
+                            h[header] = $td.eq(i).text();
+                        });
+
+                        data.push(h);
+                    });
+
+                    // Output the result
+                    $EXPORT.text(JSON.stringify(data));
+                });
+            </script>
+<style>
+    .table-editable {
+        position: relative;
+    }
+
+        .table-editable .glyphicon {
+            font-size: 20px;
+        }
+
+    .table-remove {
+        color: #700;
+        cursor: pointer;
+    }
+
+        .table-remove:hover {
+            color: #f00;
+        }
+
+    .table-up,
+    .table-down {
+        color: #007;
+        cursor: pointer;
+    }
+
+        .table-up:hover,
+        .table-down:hover {
+            color: #00f;
+        }
+
+    .table-add {
+        color: #070;
+        cursor: pointer;
+        position: absolute;
+        top: 8px;
+        right: 0;
+    }
+
+        .table-add:hover {
+            color: #0b0;
+        }
+</style>
