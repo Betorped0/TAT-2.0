@@ -112,21 +112,22 @@ $("#files").on('change', function() {
         var file = document.getElementById("files").files[0];
         var filename = file.name;
         if (evaluarExt(filename)) {
-            M.toast({ html: 'Cargando ' + filename });
+            mostrarAlerta("info", "B", 'Archivo: ' + filename);
             loadExcelDis(file);
             onclick = checkoff();
+            sessionStorage.setItem("num", filenum);
+            $('#files').val("");
         } else {
             document.getElementById("files").value = "";
             mostrarAlerta("info", "E", 'Tipo de archivo incorrecto: ' + filename );
-            //M.toast({ html: 'Tipo de archivo incorrecto: ' + filename });
+            sessionStorage.setItem("num", filenum);
+            $('#files').val("");
         }
     } else {
         mostrarAlerta("info", "E", 'Seleccione un archivo');
-        //M.toast({ html: 'Seleccione un archivo' });
         var table = $('#table').DataTable();
         table.clear().draw();
     }
-    sessionStorage.setItem("num", filenum);
 });
 
 function evaluarExt(filename) {
@@ -773,6 +774,10 @@ function mostrarAlerta(warning_id, tipo, mensaje) {
     if (tipo === "E") {
         color = 'red';
         icon = 'error';
+    }
+    else if (tipo === "B") {
+        color = 'green';
+        icon = 'done';
     }
     dismiss(classe);
     M.toast({
