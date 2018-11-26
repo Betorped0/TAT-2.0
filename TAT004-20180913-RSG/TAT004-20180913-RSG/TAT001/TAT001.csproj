@@ -391,6 +391,9 @@
     <Compile Include="Entities\CSP_DOCUMENTOSXCOCODE_Result.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\CSP_DOCUMENTOSXUSER2_Result.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\CSP_DOCUMENTOSXUSER_Result.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
@@ -2032,6 +2035,10 @@
     <Content Include="Views\Solicitudes\_EditTabInfo.cshtml" />
     <Content Include="Views\Solicitudes\_EditTabRec.cshtml" />
     <Content Include="Views\Solicitudes\_EditTabSop.cshtml" />
+    <Content Include="Views\Sociedades\Flujos.cshtml" />
+    <Content Include="Views\Sociedades\MAFlujos.cshtml" />
+    <Content Include="Views\Sociedades\EditF.cshtml" />
+    <Content Include="Views\Sociedades\CreateF.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->

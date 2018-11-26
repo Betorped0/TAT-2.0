@@ -513,5 +513,18 @@ namespace TAT001.Entities
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CSP_DOCUMENTOSXCOCODE_Result>("CSP_DOCUMENTOSXCOCODE", cOCODEParameter, sPRASParameter);
         }
+    
+        public virtual ObjectResult<CSP_DOCUMENTOSXUSER2_Result> CSP_DOCUMENTOSXUSER2(string uSUARIO, string sPRAS)
+        {
+            var uSUARIOParameter = uSUARIO != null ?
+                new ObjectParameter("USUARIO", uSUARIO) :
+                new ObjectParameter("USUARIO", typeof(string));
+    
+            var sPRASParameter = sPRAS != null ?
+                new ObjectParameter("SPRAS", sPRAS) :
+                new ObjectParameter("SPRAS", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CSP_DOCUMENTOSXUSER2_Result>("CSP_DOCUMENTOSXUSER2", uSUARIOParameter, sPRASParameter);
+        }
     }
 }

@@ -81,6 +81,68 @@ namespace TAT001.Controllers.Catalogos
             return View(sOCIEDAD);
         }
 
+        public ActionResult Flujos(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            ObtenerConfPage(923);
+            List<DET_APROBH> flujos = db.DET_APROBH.Where(t=>t.SOCIEDAD_ID==id).ToList();
+            ViewBag.coCode = id;
+            return View(flujos);
+        }
+        public ActionResult CreateF(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            ObtenerConfPage(923);
+            var flujos = db.DET_APROBH.Where(t => t.SOCIEDAD_ID == id && t.ACTIVO).Select(t=>t.PUESTOC_ID).Distinct().ToList();
+            var lan =ViewBag.usuario.SPRAS_ID;
+            var puestos = db.PUESTOes.Where(t => t.ACTIVO == true && !flujos.Contains(t.ID)).ToList();
+            var sl_puestos = puestos.Select(x => new { x.ID,Puesto= x.PUESTOTs.Count>0? x.PUESTOTs.Where(t=>t.SPRAS_ID==lan).FirstOrDefault().TXT50 : ""}).ToList();
+            ViewBag.PUESTOC_ID = new SelectList(sl_puestos, "ID", "Puesto");
+            var version= db.DET_APROBH.Where(t => t.SOCIEDAD_ID == id).OrderByDescending(t=>t.VERSION).FirstOrDefault();
+
+            DET_APROBH dET_APROBP = new DET_APROBH { SOCIEDAD_ID = id, ACTIVO=true, VERSION=version!=null?version.VERSION:1 };
+            return View(dET_APROBP);
+        }
+        public ActionResult EditF(string id, int pid, int v)
+        {
+            if (id == null || pid==0||v==0)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            ObtenerConfPage(923);
+            DET_APROBH flujo = db.DET_APROBH.Where(t => t.SOCIEDAD_ID == id && t.PUESTOC_ID==pid && t.VERSION==v).SingleOrDefault();
+
+            return View(flujo);
+        }
+        [HttpPost]
+        public ActionResult EditF([Bind(Include = "ACTIVO")]DET_APROBH modelo)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(modelo).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Flujos", new {modelo.SOCIEDAD_ID });
+            }
+            ObtenerConfPage(923);
+            return View(modelo);
+        }
+        public ActionResult MAFlujos(string id, int pid, int v)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            ObtenerConfPage(923);
+            List<DET_APROBP> flujos = db.DET_APROBP.Where(t => t.SOCIEDAD_ID == id && t.PUESTOC_ID==pid && t.VERSION==v).ToList();
+
+            return View(flujos);
+        }
         void ObtenerConfPage(int pagina)//ID EN BASE DE DATOS
         {
             var user = ObtenerUsuario();

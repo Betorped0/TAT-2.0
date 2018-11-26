@@ -323,6 +323,8 @@ namespace TAT001.Controllers
                                          select new DOCUMENTO_MOD
                                          {
                                              NUM_DOC = D.NUM_DOC,
+                                             SOCIEDAD_ID=D.SOCIEDAD_ID,
+                                             PAIS_ID=D.PAIS_ID,
                                              TSOL_ID = T.TXT020,
                                              GALL_ID = G.TXT50,
                                              ESTADO = D.FECHAD.Value.Year + "/" + D.FECHAD.Value.Month + "/" + D.FECHAD.Value.Day,

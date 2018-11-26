@@ -200,6 +200,7 @@
           <Property Name="APOYO_REAX" Type="bit" />
           <Property Name="VOLUMEN_ESTX" Type="bit" />
           <Property Name="VOLUMEN_REAX" Type="bit" />
+          <Property Name="STATUS" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="CARTAP">
           <Key>
@@ -1206,7 +1207,7 @@
           <Property Name="ESTATUS" Type="nchar" MaxLength="1" />
           <Property Name="FECHAC" Type="datetime" />
           <Property Name="FECHAM" Type="datetime" />
-          <Property Name="COMENTARIO" Type="nvarchar" MaxLength="255" />
+          <Property Name="COMENTARIO" Type="nvarchar(max)" />
           <Property Name="STATUS" Type="nvarchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="GALL">
@@ -5013,6 +5014,10 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Parameter Name="USUARIO" Type="nvarchar" Mode="In" />
           <Parameter Name="SPRAS" Type="nvarchar" Mode="In" />
         </Function>
+        <Function Name="CSP_DOCUMENTOSXUSER2" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="USUARIO" Type="nvarchar" Mode="In" />
+          <Parameter Name="SPRAS" Type="nvarchar" Mode="In" />
+        </Function>
         <Function Name="CSP_PERMISO" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ID" Type="nvarchar" Mode="In" />
           <Parameter Name="ACCION" Type="int" Mode="In" />
@@ -6439,6 +6444,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <NavigationProperty Name="DOCUMENTO" Relationship="Self.FK_CARTA_DOCUMENTO" FromRole="CARTA" ToRole="DOCUMENTO" />
           <NavigationProperty Name="USUARIO" Relationship="Self.FK_CARTA_USUARIO" FromRole="CARTA" ToRole="USUARIO" />
           <NavigationProperty Name="CARTAPs" Relationship="Self.FK_CARTAP_CARTA" FromRole="CARTA" ToRole="CARTAP" />
+          <Property Name="STATUS" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="CARTAP">
           <Key>
@@ -7505,7 +7511,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Property Name="ESTATUS" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
           <Property Name="FECHAC" Type="DateTime" Precision="3" />
           <Property Name="FECHAM" Type="DateTime" Precision="3" />
-          <Property Name="COMENTARIO" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="COMENTARIO" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="STATUS" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="DOCUMENTO" Relationship="Self.FK_FLUJO_DOCUMENTO" FromRole="FLUJO" ToRole="DOCUMENTO" />
           <NavigationProperty Name="USUARIO" Relationship="Self.FK_FLUJO_USUARIO" FromRole="FLUJO" ToRole="USUARIO" />
@@ -12334,6 +12340,10 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
             <Parameter Name="COCODE" Mode="In" Type="String" />
             <Parameter Name="SPRAS" Mode="In" Type="String" />
           </FunctionImport>
+          <FunctionImport Name="CSP_DOCUMENTOSXUSER2" ReturnType="Collection(TAT001Model.CSP_DOCUMENTOSXUSER2_Result)">
+            <Parameter Name="USUARIO" Mode="In" Type="String" />
+            <Parameter Name="SPRAS" Mode="In" Type="String" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="CPS_LISTA_CLI_PRO_Result">
           <Property Type="String" Name="KUNNR" Nullable="false" MaxLength="10" />
@@ -12791,6 +12801,44 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Property Type="Decimal" Name="CUENTAPL" Nullable="true" Precision="10" Scale="0" />
           <Property Type="Decimal" Name="CUENTACL" Nullable="true" Precision="10" Scale="0" />
         </ComplexType>
+        <ComplexType Name="CSP_DOCUMENTOSXUSER2_Result">
+          <Property Type="Decimal" Name="NUM_DOC" Nullable="false" Precision="10" Scale="0" />
+          <Property Type="Boolean" Name="PADRE" Nullable="false" />
+          <Property Type="Boolean" Name="REVERSO" Nullable="false" />
+          <Property Type="String" Name="BUTTON" Nullable="false" MaxLength="11" />
+          <Property Type="String" Name="ESTATUS" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="USUARIOA_ID" Nullable="true" MaxLength="16" />
+          <Property Type="String" Name="NUM_DOC_TEXT" Nullable="false" MaxLength="7" />
+          <Property Type="String" Name="SOCIEDAD_ID" Nullable="true" MaxLength="4" />
+          <Property Type="String" Name="PAIS_ID" Nullable="true" MaxLength="2" />
+          <Property Type="DateTime" Name="FECHAD" Nullable="true" Precision="23" />
+          <Property Type="Time" Name="HORAC" Nullable="true" />
+          <Property Type="Int32" Name="PERIODO" Nullable="true" />
+          <Property Type="String" Name="ESTATUSS" Nullable="false" MaxLength="8" />
+          <Property Type="String" Name="PAYER_ID" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="NAME1" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="CANAL" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="TXT020" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="TXT50" Nullable="true" MaxLength="62" />
+          <Property Type="String" Name="CONCEPTO" Nullable="true" MaxLength="100" />
+          <Property Type="Decimal" Name="MONTO_DOC_MD" Nullable="true" Precision="13" Scale="2" />
+          <Property Type="String" Name="FACTURA" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="FACTURAK" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="USUARIOD_ID" Nullable="true" MaxLength="16" />
+          <Property Type="String" Name="DOCUMENTO_SAP" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="BLART" Nullable="true" MaxLength="2" />
+          <Property Type="String" Name="KUNNR" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="DESCR" Nullable="true" MaxLength="60" />
+          <Property Type="Decimal" Name="IMPORTE" Nullable="true" Precision="13" Scale="5" />
+          <Property Type="String" Name="CUENTA_C" Nullable="true" MaxLength="10" />
+          <Property Type="Decimal" Name="CARGO" Nullable="true" Precision="10" Scale="0" />
+          <Property Type="Decimal" Name="CUENTAP" Nullable="true" Precision="10" Scale="0" />
+          <Property Type="Decimal" Name="CUENTAPL" Nullable="true" Precision="10" Scale="0" />
+          <Property Type="Decimal" Name="CUENTACL" Nullable="true" Precision="10" Scale="0" />
+          <Property Type="String" Name="TIPO_RECURRENTE" Nullable="true" MaxLength="1" />
+          <Property Type="Int32" Name="nRelacionadas" Nullable="true" />
+          <Property Type="Int32" Name="nRecurrentes" Nullable="true" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -12925,6 +12973,7 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <EntitySetMapping Name="CARTAs">
             <EntityTypeMapping TypeName="TAT001Model.CARTA">
               <MappingFragment StoreEntitySet="CARTA">
+                <ScalarProperty Name="STATUS" ColumnName="STATUS" />
                 <ScalarProperty Name="NUM_DOC" ColumnName="NUM_DOC" />
                 <ScalarProperty Name="POS" ColumnName="POS" />
                 <ScalarProperty Name="FECHAC" ColumnName="FECHAC" />
@@ -15441,6 +15490,48 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
                 <ScalarProperty Name="CUENTAP" ColumnName="CUENTAP" />
                 <ScalarProperty Name="CUENTAPL" ColumnName="CUENTAPL" />
                 <ScalarProperty Name="CUENTACL" ColumnName="CUENTACL" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="CSP_DOCUMENTOSXUSER2" FunctionName="TAT001Model.Store.CSP_DOCUMENTOSXUSER2">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="TAT001Model.CSP_DOCUMENTOSXUSER2_Result">
+                <ScalarProperty Name="NUM_DOC" ColumnName="NUM_DOC" />
+                <ScalarProperty Name="PADRE" ColumnName="PADRE" />
+                <ScalarProperty Name="REVERSO" ColumnName="REVERSO" />
+                <ScalarProperty Name="BUTTON" ColumnName="BUTTON" />
+                <ScalarProperty Name="ESTATUS" ColumnName="ESTATUS" />
+                <ScalarProperty Name="USUARIOA_ID" ColumnName="USUARIOA_ID" />
+                <ScalarProperty Name="NUM_DOC_TEXT" ColumnName="NUM_DOC_TEXT" />
+                <ScalarProperty Name="SOCIEDAD_ID" ColumnName="SOCIEDAD_ID" />
+                <ScalarProperty Name="PAIS_ID" ColumnName="PAIS_ID" />
+                <ScalarProperty Name="FECHAD" ColumnName="FECHAD" />
+                <ScalarProperty Name="HORAC" ColumnName="HORAC" />
+                <ScalarProperty Name="PERIODO" ColumnName="PERIODO" />
+                <ScalarProperty Name="ESTATUSS" ColumnName="ESTATUSS" />
+                <ScalarProperty Name="PAYER_ID" ColumnName="PAYER_ID" />
+                <ScalarProperty Name="NAME1" ColumnName="NAME1" />
+                <ScalarProperty Name="CANAL" ColumnName="CANAL" />
+                <ScalarProperty Name="TXT020" ColumnName="TXT020" />
+                <ScalarProperty Name="TXT50" ColumnName="TXT50" />
+                <ScalarProperty Name="CONCEPTO" ColumnName="CONCEPTO" />
+                <ScalarProperty Name="MONTO_DOC_MD" ColumnName="MONTO_DOC_MD" />
+                <ScalarProperty Name="FACTURA" ColumnName="FACTURA" />
+                <ScalarProperty Name="FACTURAK" ColumnName="FACTURAK" />
+                <ScalarProperty Name="USUARIOD_ID" ColumnName="USUARIOD_ID" />
+                <ScalarProperty Name="DOCUMENTO_SAP" ColumnName="DOCUMENTO_SAP" />
+                <ScalarProperty Name="BLART" ColumnName="BLART" />
+                <ScalarProperty Name="KUNNR" ColumnName="KUNNR" />
+                <ScalarProperty Name="DESCR" ColumnName="DESCR" />
+                <ScalarProperty Name="IMPORTE" ColumnName="IMPORTE" />
+                <ScalarProperty Name="CUENTA_C" ColumnName="CUENTA_C" />
+                <ScalarProperty Name="CARGO" ColumnName="CARGO" />
+                <ScalarProperty Name="CUENTAP" ColumnName="CUENTAP" />
+                <ScalarProperty Name="CUENTAPL" ColumnName="CUENTAPL" />
+                <ScalarProperty Name="CUENTACL" ColumnName="CUENTACL" />
+                <ScalarProperty Name="TIPO_RECURRENTE" ColumnName="TIPO_RECURRENTE" />
+                <ScalarProperty Name="nRelacionadas" ColumnName="nRelacionadas" />
+                <ScalarProperty Name="nRecurrentes" ColumnName="nRecurrentes" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

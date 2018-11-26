@@ -385,9 +385,26 @@
                 @foreach (var item in Model@*.Where(x=>x.NUM_DOC == 0)*@)
 {
 
-<tr>
-    <td class="details-control" style="cursor:pointer"><i class='material-icons'>@item.BUTTON</i></td>
-    @*@if (item.NUM_DOC_TEXT == "Edit")
+                    <tr>
+                        @if (item.BUTTON.Contains("disabled"))
+                        {
+                            <td class="disabled" style="cursor:auto">
+                                <i class='material-icons grey-text'>@item.BUTTON.Replace("disabled", "")</i>
+                            </td>
+                        }
+                        else if(item.BUTTON=="")
+                        {
+                            <td class="details" style="cursor:auto">
+                                <i class='material-icons'>@item.BUTTON</i>
+                            </td>
+                        }
+                        else
+                        {
+                        <td class="details-control" style="cursor:pointer">
+                            <i class='material-icons'>@item.BUTTON</i>
+                        </td>
+                        }
+                        @*@if (item.NUM_DOC_TEXT == "Edit")
         {
             <td onclick="document.location='@Url.Action("Edit", "Solicitudes", new { id_d = item.NUM_DOC })'" style="cursor:pointer">
                 @item.NUM_DOC
@@ -395,42 +412,43 @@
         }
         else
         {*@
-    <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC, pais = item.PAIS_ID })'" style="cursor:pointer">
-        @item.NUM_DOC
-    </td>
-    @*}*@
-    <td>@item.SOCIEDAD_ID</td>
-    <td>@item.PAIS_ID</td>
-    <td>@item.FECHAD</td>
-    <td>@item.FECHADD</td>
-    <td>@item.HORAC</td>
-    <td>@item.PERIODO</td>
-    <td><span class="@item.ESTATUS_CLASS" data-badge-caption=" ">@item.ESTATUS</span></td>
-    <td>@item.PAYER_ID</td>
-    <td>@item.CLIENTE</td>
-    <td>@item.CANAL</td>
-    <td>@item.TSOL</td>
-    <td>@item.TALL</td>
-    @*<td>@item.CUENTAS</td>*@
-    <td>@item.CUENTAP</td>
-    <td>@item.CUENTAPL</td>
-    <td>@item.CUENTACL</td>
-    <td>@item.CONCEPTO</td>
-    <td>@item.MONTO_DOC_ML</td>
-    <td>@item.FACTURA</td>
-    <td>@item.FACTURAK</td>
-    <td>@item.USUARIOC_ID</td>
-    <td>@item.USUARIOM_ID</td>
-    <td>@item.NUM_PRO</td>
-    <td>@item.NUM_NC</td>
-    <td>@item.NUM_AP</td>
-    <td>@item.NUM_REV</td>
-    <td>@item.BLART</td>
-    <td>@item.NUM_PAYER</td>
-    <td>@item.NUM_CLIENTE</td>
-    <td>@item.NUM_IMPORTE</td>
-    <td>@item.NUM_CUENTA</td>
-</tr>
+                        <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUM_DOC, pais = item.PAIS_ID })'" style="cursor:pointer">
+                            @item.NUM_DOC
+                        </td>
+                        @*}*@
+                        <td></td>    
+                        <td>@item.SOCIEDAD_ID</td>
+                        <td>@item.PAIS_ID</td>
+                        <td>@item.FECHAD</td>
+                        <td>@item.FECHADD</td>
+                        <td>@item.HORAC</td>
+                        <td>@item.PERIODO</td>
+                        <td><span class="@item.ESTATUS_CLASS" data-badge-caption=" ">@item.ESTATUS</span></td>
+                        <td>@item.PAYER_ID</td>
+                        <td>@item.CLIENTE</td>
+                        <td>@item.CANAL</td>
+                        <td>@item.TSOL</td>
+                        <td>@item.TALL</td>
+                        @*<td>@item.CUENTAS</td>*@
+                        <td>@item.CUENTAP</td>
+                        <td>@item.CUENTAPL</td>
+                        <td>@item.CUENTACL</td>
+                        <td>@item.CONCEPTO</td>
+                        <td>@item.MONTO_DOC_ML</td>
+                        <td>@item.FACTURA</td>
+                        <td>@item.FACTURAK</td>
+                        <td>@item.USUARIOC_ID</td>
+                        <td>@item.USUARIOM_ID</td>
+                        <td>@item.NUM_PRO</td>
+                        <td>@item.NUM_NC</td>
+                        <td>@item.NUM_AP</td>
+                        <td>@item.NUM_REV</td>
+                        <td>@item.BLART</td>
+                        <td>@item.NUM_PAYER</td>
+                        <td>@item.NUM_CLIENTE</td>
+                        <td>@item.NUM_IMPORTE</td>
+                        <td>@item.NUM_CUENTA</td>
+                    </tr>
 }
             </tbody>
         </table>
@@ -474,7 +492,7 @@
             //    infoFiltered: "(Filtrado de _MAX_ líneas totales)",
             //    search: "Buscar"
             //},
-            order: [[4, "desc"], [6, "desc"], [1, "desc"]],
+            order: [[5, "desc"], [7, "desc"], [1, "desc"]],
             language: {
                 //"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
                 "url": root + "Scripts/lang/@Session["spras"].ToString()"+".json"
@@ -485,7 +503,7 @@
                 //    className: 'mdl-data-table__cell--non-numeric'
                 //},
                 {
-                    "targets": [4],
+                    "targets": [5,2],
                     "visible": false,
                     "searchable": false
                 }
@@ -601,7 +619,7 @@
                 var ret = "<table class='table mdl-data-table striped'>";
                 for (var i = 0; i < uu.length; i++) {
                     var sum = 0;
-                    ret += "<tr onclick='link(" + uu[i].value.NUM_DOC + ",'" + uu[i].value.PAIS_ID+"')' style='cursor:pointer'><td>" + uu[i].value.NUM_DOC + "</td><td>" + uu[i].value.TSOL_ID + "</td>";
+                    ret += "<tr onclick=\"link('"+ uu[i].value.NUM_DOC + "','" + uu[i].value.PAIS_ID+"')\" style='cursor:pointer'><td>" + uu[i].value.NUM_DOC + "</td><td>" + uu[i].value.TSOL_ID + "</td>";
                     ret += "<td>" + uu[i].value.GALL_ID + "</td>";
                     ret += "<td>" + uu[i].value.ESTADO + "</td>";
                     ret += "<td>" + uu[i].value.CIUDAD.split('.')[0] + "</td>";
