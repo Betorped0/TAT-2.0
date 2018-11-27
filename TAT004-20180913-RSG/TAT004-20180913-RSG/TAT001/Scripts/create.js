@@ -5490,11 +5490,15 @@ function asignCity(valu) {
         $('#citys_id').val(iNum);
     }
 }
-
+var ban = false;
 function selectCliente(valu) {
-    if (valu != "") {
+    if (valu !== "") {
         document.getElementById("loader").style.display = "flex";//RSG 03.07.2018
-        var esBorrador = $('#borradore').val() == "true";
+        if (!ban) {
+            var esBorrador = $('#borradore').val() === "true"; ban = true;
+        }
+        else
+            esBorrador = false;
         var num = $('#duplicate').val();//RSG 07.11.2018
         $.ajax({
             type: "POST",
@@ -5505,7 +5509,7 @@ function selectCliente(valu) {
 
                 document.getElementById("loader").style.display = "none";//RSG 03.07.2018
                 if (data !== null || data !== "") {
-                    if (data.MANAGER != null) {
+                    if (data.MANAGER !== null) {
                         $("label[for='USUARIO_MANAGER']").addClass("active");
                         $('#USUARIO_MANAGER').val(data.MANAGER);
                     }

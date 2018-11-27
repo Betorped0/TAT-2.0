@@ -48,7 +48,7 @@ namespace TAT001.Models.Dao
             return solicitudes;
 
         }
-        public  List<SolicitudPorAprobar> ObtenerSolicitudesPorAprobar(decimal? num_doci, decimal? num_docf, DateTime? fechai, DateTime? fechaf,          string kunnr, string usuarioa_id,
+        public  List<SolicitudPorAprobar> ObtenerSolicitudesPorAprobar(decimal? num_doci, decimal? num_docf, DateTime? fechai, DateTime? fechaf,string kunnr, string usuarioa_id,
           decimal? num_doc = null)
         {
             List<object> paramsCSP = new List<object>();
@@ -65,7 +65,7 @@ namespace TAT001.Models.Dao
             if (fechaf != null) { paramsCSP.Add(new SqlParameter("@FECHAF", fechaf)); }
             else { paramsCSP.Add(new SqlParameter("@FECHAF", DBNull.Value)); }
 
-            if (kunnr != null) { paramsCSP.Add(new SqlParameter("@KUNNR", kunnr)); }
+            if (!string.IsNullOrEmpty(kunnr)) { paramsCSP.Add(new SqlParameter("@KUNNR", kunnr)); }
             else { paramsCSP.Add(new SqlParameter("@KUNNR", DBNull.Value)); }
 
             if (usuarioa_id != null) { paramsCSP.Add(new SqlParameter("@USUARIOA_ID", usuarioa_id)); }

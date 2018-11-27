@@ -10,6 +10,7 @@ using TAT001.Entities;
 
 namespace TAT001.Controllers
 {
+    [Authorize]
     public class NegsController : Controller
     {
         private TAT001Entities db = new TAT001Entities();
@@ -104,12 +105,12 @@ namespace TAT001.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,FECHAI,FECHAF,FECHAN")] NEGOCIACION nEGOCIACION)
         {
-            DateTime _ff = DateTime.Parse(nEGOCIACION.FECHAF.ToString());
+            DateTime _ff = DateTime.Parse(nEGOCIACION.FECHAN.ToString());
             //validamos que no este vacio
             if (nEGOCIACION.FECHAF != null & nEGOCIACION.FECHAI != null)
             {
-                var _ffnpr = _ff.AddDays(1);
-                var _fpr = db.NEGOCIACIONs.Where(x => x.FECHAN == _ffnpr).FirstOrDefault();
+                var _ffnpr = _ff.AddDays(0);
+                var _fpr = db.NEGOCIACIONs.Where(x => x.FECHAN == nEGOCIACION.FECHAN).FirstOrDefault();
                 //si es nullo,significa que es permitida la fecha de envio, que no cuenta con un antecedente
                 if (_fpr == null)
                 {
@@ -118,7 +119,7 @@ namespace TAT001.Controllers
                     {
                         if (ModelState.IsValid)
                         {
-                            nEGOCIACION.FECHAN = _ff.AddDays(1);
+                            nEGOCIACION.FECHAN = nEGOCIACION.FECHAN;
                             nEGOCIACION.ACTIVO = true;
                             db.NEGOCIACIONs.Add(nEGOCIACION);
                             db.SaveChanges();
@@ -128,12 +129,14 @@ namespace TAT001.Controllers
                 }
                 //si esta desactivado se activa
                 if (_fpr.ACTIVO == false) {
-                    if (_fpr.FECHAI == nEGOCIACION.FECHAI && _fpr.FECHAF == nEGOCIACION.FECHAF) {
+                    //if (_fpr.FECHAI == nEGOCIACION.FECHAI && _fpr.FECHAF == nEGOCIACION.FECHAF) {
                         _fpr.ACTIVO = true;
-                        db.Entry(_fpr).State = EntityState.Modified;
+                        _fpr.FECHAI = nEGOCIACION.FECHAI;
+                        _fpr.FECHAN = nEGOCIACION.FECHAN;
+                    db.Entry(_fpr).State = EntityState.Modified;
                         db.SaveChanges();
                         return RedirectToAction("Index");
-                    }
+                    //}
                 }
             }
             int pagina = 903; //ID EN BASE DE DATOS

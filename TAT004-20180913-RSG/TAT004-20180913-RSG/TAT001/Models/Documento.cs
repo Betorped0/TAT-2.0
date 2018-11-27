@@ -44,5 +44,6 @@ namespace TAT001.Models
         public decimal? CUENTAPL { get; set; }
         public decimal? CUENTACL { get; set; }
         public string TIPO_RECURRENTE { get; set; }
+        public decimal? DOCUMENTO_REF { get; set; }
     }
 }
