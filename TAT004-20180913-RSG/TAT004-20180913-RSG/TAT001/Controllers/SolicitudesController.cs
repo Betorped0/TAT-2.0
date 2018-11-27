@@ -5669,7 +5669,12 @@ namespace TAT001.Controllers
             d.ESTATUS_C = "C";
             FLUJO actual = db.FLUJOes.Where(a => a.NUM_DOC == id).OrderByDescending(a => a.POS).FirstOrDefault();
             db.Entry(d).State = EntityState.Modified;
-
+            if (d.DOCUMENTO_REF != null)//Se cancela una relacionada
+            {
+                DOCUMENTO dRef = db.DOCUMENTOes.Find(d.DOCUMENTO_REF);//Se abre de nuevo la provisión
+                dRef.ESTATUS = "A";
+                db.Entry(dRef).State = EntityState.Modified;
+            }
             if (actual != null)
             {
                 FLUJO nuevo = new FLUJO();

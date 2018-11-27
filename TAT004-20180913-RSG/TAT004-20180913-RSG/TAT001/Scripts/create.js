@@ -5498,7 +5498,7 @@ function selectCliente(valu) {
             var esBorrador = $('#borradore').val() === "true"; ban = true;
         }
         else
-            esBorrador = $('#borradore').val() === "false";
+            esBorrador = false;
         var num = $('#duplicate').val();//RSG 07.11.2018
         $.ajax({
             type: "POST",
