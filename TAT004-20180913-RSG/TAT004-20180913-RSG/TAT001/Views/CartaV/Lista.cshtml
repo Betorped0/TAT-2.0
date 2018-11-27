@@ -68,7 +68,7 @@
         {
             ////////DRS 14.10.2018//////
         <tr onclick="document.location = '@Url.Action("DetailsPos", new { id = item.NUM_DOC, pos = item.POS, swf=TempData["ESTATUS_WF"] })'" style="cursor:pointer">
-            @if ((bool)item.DOCUMENTO.LIGADA==false)
+            @if (item.DOCUMENTO.LIGADA==null || item.DOCUMENTO.LIGADA==false)
             {
              if (item.STATUS != null && (bool)item.STATUS == true)
              {
