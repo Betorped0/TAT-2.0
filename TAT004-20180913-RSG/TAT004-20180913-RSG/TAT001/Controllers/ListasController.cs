@@ -272,72 +272,271 @@ namespace TAT001.Controllers
         {
             //var c = db.DOCUMENTOes.Where(a => a.DOCUMENTO_REF.Equals(num_doc));
             decimal num = (decimal.Parse(num_doc));
+            List<ESTATU> ee = db.ESTATUS.Where(x => x.ACTIVO == true).ToList();
             DOCUMENTO d = db.DOCUMENTOes.Find(num);
             if (d.DOCUMENTORECs.Count > 0)
             {
-                Estatus e = new Estatus();
-                List<DOCUMENTO_MOD> c = (from DR in db.DOCUMENTORECs
-                                         join D in db.DOCUMENTOes
-                                         on DR.DOC_REF equals D.NUM_DOC
-                                         join T in db.TSOLTs
-                                         on D.TSOL_ID equals T.TSOL_ID
-                                         join TA in db.TALLs
-                                         on D.TALL_ID equals TA.ID
-                                         join G in db.GALLTs
-                                         on TA.GALL_ID equals G.GALL_ID
-                                         where DR.NUM_DOC == num
-                                         && T.SPRAS_ID == spras
-                                         && G.SPRAS_ID == spras
-                                         && D.NUM_DOC != 0
-                                         select new DOCUMENTO_MOD
-                                         {
-                                             NUM_DOC = D.NUM_DOC,
-                                             TSOL_ID = T.TXT020,
-                                             GALL_ID = G.TXT50,
-                                             ESTADO = D.FECHAD.Value.Year + "/" + D.FECHAD.Value.Month + "/" + D.FECHAD.Value.Day,
-                                             CIUDAD = D.HORAC.Value.ToString(),
-                                             ESTATUS = D.ESTATUS,
-                                             CONCEPTO = D.CONCEPTO,
-                                             MONTO_DOC_ML = D.MONTO_DOC_ML
-                                         }).ToList();
-                foreach (DOCUMENTO_MOD ddd in c)
+                //Estatus e = new Estatus();
+                //List<DOCUMENTO_MOD> c = (from DR in db.DOCUMENTORECs
+                //                         join D in db.DOCUMENTOes
+                //                         on DR.DOC_REF equals D.NUM_DOC
+                //                         join T in db.TSOLTs
+                //                         on D.TSOL_ID equals T.TSOL_ID
+                //                         join TA in db.TALLs
+                //                         on D.TALL_ID equals TA.ID
+                //                         join G in db.GALLTs
+                //                         on TA.GALL_ID equals G.GALL_ID
+                //                         where DR.NUM_DOC == num
+                //                         && T.SPRAS_ID == spras
+                //                         && G.SPRAS_ID == spras
+                //                         && D.NUM_DOC != 0
+                //                         select new DOCUMENTO_MOD
+                //                         {
+                //                             NUM_DOC = D.NUM_DOC,
+                //                             TSOL_ID = T.TXT020,
+                //                             GALL_ID = G.TXT50,
+                //                             ESTADO = D.FECHAD.Value.Year + "/" + D.FECHAD.Value.Month + "/" + D.FECHAD.Value.Day,
+                //                             CIUDAD = D.HORAC.Value.ToString(),
+                //                             ESTATUS = D.ESTATUS,
+                //                             CONCEPTO = D.CONCEPTO,
+                //                             MONTO_DOC_ML = D.MONTO_DOC_ML
+                //                         }).ToList();
+                //foreach (DOCUMENTO_MOD ddd in c)
+                //{
+                //    ddd.ESTATUS = e.getHtml(ddd.NUM_DOC);
+                //}
+                List<CSP_DOCUMENTOSRECCXSOL_Result> dOCUMENTOes = db.CSP_DOCUMENTOSRECCXSOL(num.ToString(), spras).ToList();
+                List<Documento> listaDocs = new List<Documento>();
+
+                foreach (CSP_DOCUMENTOSRECCXSOL_Result item in dOCUMENTOes)
                 {
-                    ddd.ESTATUS = e.getHtml(ddd.NUM_DOC);
+                    Documento ld = new Documento();
+                    ld.DOCUMENTO_REF = 0;
+                    ld.NUM_DOC = item.NUM_DOC;
+                    ld.NUM_DOC_TEXT = item.NUM_DOC_TEXT;
+                    ld.SOCIEDAD_ID = item.SOCIEDAD_ID;
+                    ld.PAIS_ID = item.PAIS_ID;
+                    ld.FECHADD = item.FECHAD.Value.Day + "/" + item.FECHAD.Value.Month + "/" + item.FECHAD.Value.Year;
+                    ld.FECHAD = item.FECHAD.Value.Year + "/" + item.FECHAD.Value.Month + "/" + item.FECHAD.Value.Day;
+                    ld.HORAC = item.HORAC.Value.ToString().Split('.')[0];
+                    ld.PERIODO = item.PERIODO + "";
+
+                    if (item.ESTATUS == "R")
+                    {
+                        FLUJO flujo = db.FLUJOes.Include("USUARIO").Where(x => x.NUM_DOC == item.NUM_DOC & x.ESTATUS == "R").OrderByDescending(a => a.POS).FirstOrDefault();
+                        item.ESTATUSS = item.ESTATUSS.Substring(0, 6) +
+                                        (flujo.USUARIO != null ? flujo.USUARIO.PUESTO_ID.ToString() : "") +
+                                        item.ESTATUSS.Substring(6, 2);
+                    }
+                    else
+                    {
+                        item.ESTATUSS = item.ESTATUSS.Substring(0, 6) + " " + item.ESTATUSS.Substring(6, 2); ;
+                    }
+                    Estatus eS = new Estatus();
+                    ld.ESTATUS = eS.getText(item.ESTATUSS, ld.NUM_DOC, spras, ee);
+                    ld.ESTATUS_CLASS = eS.getClass(item.ESTATUSS, ld.NUM_DOC, spras, ee);
+
+                    ld.PAYER_ID = item.PAYER_ID;
+
+                    ld.CLIENTE = item.NAME1;
+                    ld.CANAL = item.CANAL;
+                    ld.TSOL = item.TXT020;
+                    ld.TALL = item.TXT50;
+                    try
+                    {
+                        ld.CUENTAS = item.CARGO + "";
+                        ld.CUENTAP = item.CUENTAP;
+                        ld.CUENTAPL = item.CUENTAPL;
+                        ld.CUENTACL = item.CUENTACL;
+                    }
+                    catch { }
+                    ld.CONCEPTO = item.CONCEPTO;
+                    ld.MONTO_DOC_ML = item.MONTO_DOC_MD != null ? Convert.ToDecimal(item.MONTO_DOC_MD).ToString("C") : "";
+
+                    ld.FACTURA = item.FACTURA;
+                    ld.FACTURAK = item.FACTURAK;
+
+                    ld.USUARIOC_ID = String.IsNullOrEmpty(item.USUARIOD_ID)?"":item.USUARIOD_ID;
+                    ld.USUARIOM_ID = String.IsNullOrEmpty(item.USUARIOD_ID) ? "" : item.USUARIOD_ID;
+
+                    if (item.DOCUMENTO_SAP != null)
+                    {
+                        if (item.PADRE)
+                        {
+                            ld.NUM_PRO = item.DOCUMENTO_SAP;
+                            ld.NUM_AP = "";
+                            ld.NUM_NC = "";
+                            ld.NUM_REV = "";
+                        }
+                        else if (item.REVERSO)
+                        {
+                            ld.NUM_REV = item.DOCUMENTO_SAP;
+                            ld.NUM_AP = "";
+                            ld.NUM_NC = "";
+                            ld.NUM_PRO = "";
+                        }
+                        else
+                        {
+                            ld.NUM_NC = item.DOCUMENTO_SAP;
+                            ld.NUM_AP = "";
+                            ld.NUM_PRO = "";
+                            ld.NUM_REV = "";
+                        }
+                        //<!--NUM_SAP-->
+                        ld.BLART = item.BLART;
+                        ld.NUM_PAYER = item.KUNNR;
+                        ld.NUM_CLIENTE = item.DESCR;
+                        ld.NUM_IMPORTE = item.IMPORTE != null ? Convert.ToDecimal(item.IMPORTE).ToString("C") : "";
+                        ld.NUM_CUENTA = item.CUENTA_C;
+                    }
+                    else
+                    {
+                        ld.NUM_CUENTA = "";
+                        ld.NUM_PAYER = "";
+                        ld.NUM_CLIENTE = "";
+                        ld.NUM_IMPORTE = "";
+                        ld.BLART = "";
+                        ld.NUM_PRO = "";
+                        ld.NUM_AP = "";
+                        ld.NUM_NC = "";
+                        ld.NUM_REV = "";
+                    }
+
+                    listaDocs.Add(ld);
                 }
-                JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+                JsonResult cc = Json(listaDocs, JsonRequestBehavior.AllowGet);
                 return cc;
             }
-            else
+            else//Contiene solicitudes relacionadas
             {
-                Estatus e = new Estatus();
-                List<DOCUMENTO_MOD> c = (from D in db.DOCUMENTOes
-                                         join T in db.TSOLTs
-                                         on D.TSOL_ID equals T.TSOL_ID
-                                         join TA in db.TALLs
-                                         on D.TALL_ID equals TA.ID
-                                         join G in db.GALLTs
-                                         on TA.GALL_ID equals G.GALL_ID
-                                         where D.DOCUMENTO_REF == num
-                                         && T.SPRAS_ID == spras
-                                         && G.SPRAS_ID == spras
-                                         select new DOCUMENTO_MOD
-                                         {
-                                             NUM_DOC = D.NUM_DOC,
-                                             SOCIEDAD_ID=D.SOCIEDAD_ID,
-                                             PAIS_ID=D.PAIS_ID,
-                                             TSOL_ID = T.TXT020,
-                                             GALL_ID = G.TXT50,
-                                             ESTADO = D.FECHAD.Value.Year + "/" + D.FECHAD.Value.Month + "/" + D.FECHAD.Value.Day,
-                                             CIUDAD = D.HORAC.Value.ToString(),
-                                             ESTATUS = D.ESTATUS,
-                                             CONCEPTO = D.CONCEPTO,
-                                             MONTO_DOC_ML = D.MONTO_DOC_ML
-                                         }).ToList();
-                foreach (DOCUMENTO_MOD ddd in c)
+                //Estatus e = new Estatus();
+                //List<DOCUMENTO_MOD> c = (from D in db.DOCUMENTOes
+                //                         join T in db.TSOLTs
+                //                         on D.TSOL_ID equals T.TSOL_ID
+                //                         join TA in db.TALLs
+                //                         on D.TALL_ID equals TA.ID
+                //                         join G in db.GALLTs
+                //                         on TA.GALL_ID equals G.GALL_ID
+                //                         where D.DOCUMENTO_REF == num
+                //                         && T.SPRAS_ID == spras
+                //                         && G.SPRAS_ID == spras
+                //                         select new DOCUMENTO_MOD
+                //                         {
+                //                             NUM_DOC = D.NUM_DOC,
+                //                             SOCIEDAD_ID=D.SOCIEDAD_ID,
+                //                             PAIS_ID=D.PAIS_ID,
+                //                             TSOL_ID = T.TXT020,
+                //                             GALL_ID = G.TXT50,
+                //                             ESTADO = D.FECHAD.Value.Year + "/" + D.FECHAD.Value.Month + "/" + D.FECHAD.Value.Day,
+                //                             CIUDAD = D.HORAC.Value.ToString(),
+                //                             ESTATUS = D.ESTATUS,
+                //                             CONCEPTO = D.CONCEPTO,
+                //                             MONTO_DOC_ML = D.MONTO_DOC_ML
+                //                         }).ToList();
+                //foreach (DOCUMENTO_MOD ddd in c)
+                //{
+                //    ddd.ESTATUS = e.getHtml(ddd.NUM_DOC);
+                //}
+                List<CSP_DOCUMENTOSRELXSOL_Result> dOCUMENTOes = db.CSP_DOCUMENTOSRELXSOL(num.ToString(), spras).ToList();
+                List<Documento> listaDocs = new List<Documento>();
+
+                foreach (CSP_DOCUMENTOSRELXSOL_Result item in dOCUMENTOes)
                 {
-                    ddd.ESTATUS = e.getHtml(ddd.NUM_DOC);
+                    Documento ld = new Documento();
+                    ld.DOCUMENTO_REF = item.DOCUMENTO_REF;
+                    ld.NUM_DOC = item.NUM_DOC;
+                    ld.NUM_DOC_TEXT = item.NUM_DOC_TEXT;
+                    ld.SOCIEDAD_ID = item.SOCIEDAD_ID;
+                    ld.PAIS_ID = item.PAIS_ID;
+                    ld.FECHADD = item.FECHAD.Value.Day + "/" + item.FECHAD.Value.Month + "/" + item.FECHAD.Value.Year;
+                    ld.FECHAD = item.FECHAD.Value.Year + "/" + item.FECHAD.Value.Month + "/" + item.FECHAD.Value.Day;
+                    ld.HORAC = item.HORAC.Value.ToString().Split('.')[0];
+                    ld.PERIODO = item.PERIODO + "";
+
+                    if (item.ESTATUS == "R")
+                    {
+                        FLUJO flujo = db.FLUJOes.Include("USUARIO").Where(x => x.NUM_DOC == item.NUM_DOC & x.ESTATUS == "R").OrderByDescending(a => a.POS).FirstOrDefault();
+                        item.ESTATUSS = item.ESTATUSS.Substring(0, 6) +
+                                        (flujo.USUARIO != null ? flujo.USUARIO.PUESTO_ID.ToString() : "") +
+                                        item.ESTATUSS.Substring(6, 2);
+                    }
+                    else
+                    {
+                        item.ESTATUSS = item.ESTATUSS.Substring(0, 6) + " " + item.ESTATUSS.Substring(6, 2); ;
+                    }
+                    Estatus eS = new Estatus();
+                    ld.ESTATUS = eS.getText(item.ESTATUSS, ld.NUM_DOC, spras, ee);
+                    ld.ESTATUS_CLASS = eS.getClass(item.ESTATUSS, ld.NUM_DOC, spras, ee);
+
+                    ld.PAYER_ID = item.PAYER_ID;
+
+                    ld.CLIENTE = item.NAME1;
+                    ld.CANAL = item.CANAL;
+                    ld.TSOL = item.TXT020;
+                    ld.TALL = item.TXT50;
+                    try
+                    {
+                        ld.CUENTAS = item.CARGO + "";
+                        ld.CUENTAP = item.CUENTAP;
+                        ld.CUENTAPL = item.CUENTAPL;
+                        ld.CUENTACL = item.CUENTACL;
+                    }
+                    catch { }
+                    ld.CONCEPTO = item.CONCEPTO;
+                    ld.MONTO_DOC_ML = item.MONTO_DOC_MD != null ? Convert.ToDecimal(item.MONTO_DOC_MD).ToString("C") : "";
+
+                    ld.FACTURA = item.FACTURA;
+                    ld.FACTURAK = item.FACTURAK;
+
+                    ld.USUARIOC_ID = item.USUARIOD_ID;
+                    ld.USUARIOM_ID = item.USUARIOD_ID;
+
+                    if (item.DOCUMENTO_SAP != null)
+                    {
+                        if (item.PADRE)
+                        {
+                            ld.NUM_PRO = item.DOCUMENTO_SAP;
+                            ld.NUM_AP = "";
+                            ld.NUM_NC = "";
+                            ld.NUM_REV = "";
+                        }
+                        else if (item.REVERSO)
+                        {
+                            ld.NUM_REV = item.DOCUMENTO_SAP;
+                            ld.NUM_AP = "";
+                            ld.NUM_NC = "";
+                            ld.NUM_PRO = "";
+                        }
+                        else
+                        {
+                            ld.NUM_NC = item.DOCUMENTO_SAP;
+                            ld.NUM_AP = "";
+                            ld.NUM_PRO = "";
+                            ld.NUM_REV = "";
+                        }
+                        //<!--NUM_SAP-->
+                        ld.BLART = item.BLART;
+                        ld.NUM_PAYER = item.KUNNR;
+                        ld.NUM_CLIENTE = item.DESCR;
+                        ld.NUM_IMPORTE = item.IMPORTE != null ? Convert.ToDecimal(item.IMPORTE).ToString("C") : "";
+                        ld.NUM_CUENTA = item.CUENTA_C;
+                    }
+                    else
+                    {
+                        ld.NUM_CUENTA = "";
+                        ld.NUM_PAYER = "";
+                        ld.NUM_CLIENTE = "";
+                        ld.NUM_IMPORTE = "";
+                        ld.BLART = "";
+                        ld.NUM_PRO = "";
+                        ld.NUM_AP = "";
+                        ld.NUM_NC = "";
+                        ld.NUM_REV = "";
+                    }
+
+                    listaDocs.Add(ld);
                 }
-                JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+                JsonResult cc = Json(listaDocs, JsonRequestBehavior.AllowGet);
                 return cc;
             }
         }

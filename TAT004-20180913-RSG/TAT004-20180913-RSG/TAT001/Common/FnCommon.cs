@@ -551,5 +551,16 @@ namespace TAT001.Common
 
             return talls;
         }
+
+        public static List<SelectListItem> ObtenerCmbNivelesA()
+        {
+            return new List<SelectListItem> {
+                    new SelectListItem{Text="Nivel 1",Value="1"},
+                    new SelectListItem{Text="Nivel 2",Value="2"},
+                    new SelectListItem{Text="Nivel 3",Value="3"},
+                    new SelectListItem{Text="Nivel 4",Value="4"},
+                    new SelectListItem{Text="Nivel 5",Value="5"}
+            };
+        }
     }
 }

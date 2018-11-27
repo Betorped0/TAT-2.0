@@ -526,5 +526,31 @@ namespace TAT001.Entities
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CSP_DOCUMENTOSXUSER2_Result>("CSP_DOCUMENTOSXUSER2", uSUARIOParameter, sPRASParameter);
         }
+    
+        public virtual ObjectResult<CSP_DOCUMENTOSRECCXSOL_Result> CSP_DOCUMENTOSRECCXSOL(string sOLICITUD, string sPRAS)
+        {
+            var sOLICITUDParameter = sOLICITUD != null ?
+                new ObjectParameter("SOLICITUD", sOLICITUD) :
+                new ObjectParameter("SOLICITUD", typeof(string));
+    
+            var sPRASParameter = sPRAS != null ?
+                new ObjectParameter("SPRAS", sPRAS) :
+                new ObjectParameter("SPRAS", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CSP_DOCUMENTOSRECCXSOL_Result>("CSP_DOCUMENTOSRECCXSOL", sOLICITUDParameter, sPRASParameter);
+        }
+    
+        public virtual ObjectResult<CSP_DOCUMENTOSRELXSOL_Result> CSP_DOCUMENTOSRELXSOL(string sOLICITUD, string sPRAS)
+        {
+            var sOLICITUDParameter = sOLICITUD != null ?
+                new ObjectParameter("SOLICITUD", sOLICITUD) :
+                new ObjectParameter("SOLICITUD", typeof(string));
+    
+            var sPRASParameter = sPRAS != null ?
+                new ObjectParameter("SPRAS", sPRAS) :
+                new ObjectParameter("SPRAS", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CSP_DOCUMENTOSRELXSOL_Result>("CSP_DOCUMENTOSRELXSOL", sOLICITUDParameter, sPRASParameter);
+        }
     }
 }

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using TAT001.Common;
 using TAT001.Entities;
 using TAT001.Filters;
 
@@ -105,7 +106,7 @@ namespace TAT001.Controllers.Catalogos
             var sl_puestos = puestos.Select(x => new { x.ID,Puesto= x.PUESTOTs.Count>0? x.PUESTOTs.Where(t=>t.SPRAS_ID==lan).FirstOrDefault().TXT50 : ""}).ToList();
             ViewBag.PUESTOC_ID = new SelectList(sl_puestos, "ID", "Puesto");
             var version= db.DET_APROBH.Where(t => t.SOCIEDAD_ID == id).OrderByDescending(t=>t.VERSION).FirstOrDefault();
-
+            ViewBag.NivelesA = FnCommon.ObtenerCmbNivelesA();
             DET_APROBH dET_APROBP = new DET_APROBH { SOCIEDAD_ID = id, ACTIVO=true, VERSION=version!=null?version.VERSION:1 };
             return View(dET_APROBP);
         }

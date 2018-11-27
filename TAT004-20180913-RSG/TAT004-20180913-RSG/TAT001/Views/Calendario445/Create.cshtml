@@ -133,14 +133,14 @@
         $("#calendario445_EJERCICIO")
             .change(function () {
                 var d = new Date();
-                var año = $("#calendario445_EJERCICIO").val();
-                if (año == "") {
-                    año = d.getFullYear();
+                var anio = $("#calendario445_EJERCICIO").val();
+                if (anio == "") {
+                    anio = d.getFullYear();
                 }
                 var mes = $("#calendario445_PERIODO").val();
                 var nmes = parseInt(mes) - 1;
-                var periodo_inicio = new Date(año, nmes, 1);
-                var periodo_fin = new Date(año, nmes + 1, 0);
+                var periodo_inicio = new Date(anio, nmes, 1);
+                var periodo_fin = new Date(anio, nmes + 1, 0);
                 var datei = moment(periodo_inicio);//.format('DD/MM/YYYY');
                 var datef = moment(periodo_fin);//.format('DD/MM/YYYY');
                 document.querySelectorAll('.datepicker').forEach(function (e) {
@@ -156,15 +156,15 @@
         $("#calendario445_PERIODO")
             .change(function () {
                 var d = new Date();
-                var año = $("#calendario445_EJERCICIO").val();
-                if (año == "") {
-                    año=d.getFullYear();
+                var anio = $("#calendario445_EJERCICIO").val();
+                if (anio == "") {
+                    anio=d.getFullYear();
                 }
                 var mes = $(this).val();
                 if (mes != "") {
                     var nmes = parseInt(mes) - 1;
-                    var periodo_inicio = new Date(año, nmes, 1);
-                    var periodo_fin = new Date(año, nmes + 1, 0);
+                    var periodo_inicio = new Date(anio, nmes, 1);
+                    var periodo_fin = new Date(anio, nmes + 1, 0);
                     var datei = moment(periodo_inicio);//.format('DD/MM/YYYY');
                     var datef = moment(periodo_fin);//.format('DD/MM/YYYY');
                     document.querySelectorAll('.datepicker').forEach(function (e) {
