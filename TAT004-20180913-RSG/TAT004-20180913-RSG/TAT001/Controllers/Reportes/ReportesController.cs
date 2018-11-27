@@ -129,7 +129,7 @@ namespace TAT001.Controllers.Reportes
                                       doc.MONTO_DOC_MD,
                                       doc.PERIODO,
                                       doc.EJERCICIO
-                                  }).ToList();
+                                  }).Distinct().ToList();
 
 
 
