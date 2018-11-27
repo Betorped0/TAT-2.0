@@ -80,7 +80,6 @@ function pickerFecha(clase) {
         //"var date = $('#fechad').val(); " +
         //"var periodo = date.split(" / "); " +
 
-        //" $('#periodo').val(periodo[1]); " +
         //"}," +
         "i18n: {" +
         " clear: 'Limpiar', " +
@@ -116,8 +115,7 @@ function pickerFecha2(clase, div) {
         onClose: function (e) {
             var date = $('#fechad').val();
             var periodo = date.split(" / ");
-
-            $('#periodo').val(periodo[1]);
+            
         },
         i18n: {
             clear: 'Limpiar',

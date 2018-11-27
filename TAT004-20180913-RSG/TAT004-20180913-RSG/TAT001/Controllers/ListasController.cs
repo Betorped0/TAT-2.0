@@ -7,13 +7,20 @@ using System.Web.Mvc;
 using TAT001.Common;
 using TAT001.Entities;
 using TAT001.Models;
+using TAT001.Models.Dao;
 using TAT001.Services;
 
 namespace TAT001.Controllers
 {
+  
     public class ListasController : Controller
     {
         readonly TAT001Entities db = new TAT001Entities();
+       
+        //------------------DAO------------------------------
+        readonly UsuariosDao usuariosDao = new UsuariosDao();
+        readonly SolicitudesDao solicitudesDao = new SolicitudesDao();
+
         // GET: Listas
         public ActionResult Index()
         {
@@ -122,16 +129,31 @@ namespace TAT001.Controllers
 
         }
         [HttpGet]
-        public JsonResult Solicitudes(string Prefix,decimal? num_doci,decimal? num_docf)
+        public JsonResult Solicitudes(string Prefix,decimal? num_doci,decimal? num_docf, bool? autorizador,string usuario_id)
         {
-            var solicitudes = FnCommon.ObtenerSolicitudes(db, Prefix, num_doci, num_docf);
+            List<DOCUMENTO> solicitudes;
+            if (autorizador != null && autorizador.Value)
+            {
+                 solicitudes = solicitudesDao.ObtenerSolicitudes(TATConstantes.ACCION_LISTA_SOLSPORAPROBADOR,Prefix, num_doci, num_docf, usuario_id);
+            }
+            else
+            {
+                solicitudes = solicitudesDao.ObtenerSolicitudes(TATConstantes.ACCION_LISTA_SOLICITUDES, Prefix, num_doci, num_docf);
+            }
             JsonResult cc = Json(solicitudes, JsonRequestBehavior.AllowGet);
             return cc;
         }
         [HttpGet]
         public JsonResult Usuarios(string Prefix,bool? autorizador)
         {
-            var usuarios = FnCommon.ObtenerUsuarios(db, Prefix, autorizador);
+            List<USUARIO> usuarios;
+            if (autorizador!= null && autorizador.Value) {
+                 usuarios = usuariosDao.ListaUsuarios(Prefix, TATConstantes.ACCION_LISTA_AUTORIZADOR);
+            }
+            else
+            {
+                usuarios = usuariosDao.ListaUsuarios(Prefix, TATConstantes.ACCION_LISTA_USUARIO);
+            }
             JsonResult cc = Json(usuarios, JsonRequestBehavior.AllowGet);
             return cc;
         }

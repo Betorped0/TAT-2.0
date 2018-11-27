@@ -447,56 +447,8 @@ namespace TAT001.Common
             return presupuesto;
         }
 
-        public static List<DOCUMENTO> ObtenerSolicitudes(TAT001Entities db, string prefix, decimal? num_doci,decimal? num_docf,
-            DateTime? fechai=null,
-            DateTime? fechaf=null,
-            string kunnr=null,
-            string usuario_id=null)
-        {
-            if (prefix == null) { prefix = ""; }
-            List<object> paramsCSP = new List<object>();
-
-            paramsCSP.Add(new SqlParameter("@PREFIX", prefix));
-
-            if (num_doci != null) { paramsCSP.Add(new SqlParameter("@NUM_DOCI", num_doci)); }
-            else { paramsCSP.Add(new SqlParameter("@NUM_DOCI", DBNull.Value)); }
-
-            if (num_docf != null) { paramsCSP.Add(new SqlParameter("@NUM_DOCF", num_docf)); }
-            else { paramsCSP.Add(new SqlParameter("@NUM_DOCF", DBNull.Value)); }
-
-            if (fechai != null) { paramsCSP.Add(new SqlParameter("@FECHAI", fechai)); }
-            else { paramsCSP.Add(new SqlParameter("@FECHAI", DBNull.Value)); }
-
-            if (fechaf != null) { paramsCSP.Add(new SqlParameter("@FECHAF", fechaf)); }
-            else { paramsCSP.Add(new SqlParameter("@FECHAF", DBNull.Value)); }
-
-            if (kunnr != null) { paramsCSP.Add(new SqlParameter("@KUNNR", kunnr)); }
-            else { paramsCSP.Add(new SqlParameter("@KUNNR", DBNull.Value)); }
-
-            if (usuario_id != null) { paramsCSP.Add(new SqlParameter("@USUARIO_ID", usuario_id)); }
-            else { paramsCSP.Add(new SqlParameter("@USUARIO_ID", DBNull.Value)); }
-            
-
-
-
-            List<DOCUMENTO> solicitudes = db.Database.SqlQuery<DOCUMENTO>("CPS_LISTA_SOLICITUDES @PREFIX,@NUM_DOCI,@NUM_DOCF,@FECHAI,@FECHAF,@KUNNR,@USUARIO_ID",
-            paramsCSP.ToArray()).ToList();
-            return solicitudes;
-
-        }
-        public static List<USUARIO> ObtenerUsuarios(TAT001Entities db, string prefix, bool? autorizador)
-        {
-            List<object> paramsCSP = new List<object>();
-
-            paramsCSP.Add(new SqlParameter("@PREFIX", prefix));
-
-            if (autorizador != null) { paramsCSP.Add(new SqlParameter("@AUTORIZADOR", autorizador)); }
-            else { paramsCSP.Add(new SqlParameter("@AUTORIZADOR", DBNull.Value)); }
-
-            List<USUARIO> usuarios = db.Database.SqlQuery<USUARIO>("CPS_LISTA_USUARIOS @PREFIX,@AUTORIZADOR",
-                paramsCSP.ToArray()).ToList();
-            return usuarios;
-        }
+       
+     
 
         public static List<DOCUMENTOP_SP> ObtenerDocumentoP(TAT001Entities db, string spras_id, decimal num_doc, DateTime vigencia_de, DateTime vigencia_al)
         {
@@ -509,37 +461,7 @@ namespace TAT001.Common
             return documentop;
         }
 
-        public static List<SolicitudPorAprobar> ObtenerSolicitudesPorAprobar(TAT001Entities db,
-           decimal? num_doci, decimal? num_docf,
-           DateTime? fechai, DateTime? fechaf,
-           string kunnr, string usuarioa_id,
-           decimal? num_doc = null)
-        {
-            List<object> paramsCSP = new List<object>();
-
-            if (num_doci != null) { paramsCSP.Add(new SqlParameter("@NUM_DOCI", num_doci)); }
-            else { paramsCSP.Add(new SqlParameter("@NUM_DOCI", DBNull.Value)); }
-
-            if (num_docf != null) { paramsCSP.Add(new SqlParameter("@NUM_DOCF", num_docf)); }
-            else { paramsCSP.Add(new SqlParameter("@NUM_DOCF", DBNull.Value)); }
-
-            if (fechai != null) { paramsCSP.Add(new SqlParameter("@FECHAI", fechai)); }
-            else { paramsCSP.Add(new SqlParameter("@FECHAI", DBNull.Value)); }
-
-            if (fechaf != null) { paramsCSP.Add(new SqlParameter("@FECHAF", fechaf)); }
-            else { paramsCSP.Add(new SqlParameter("@FECHAF", DBNull.Value)); }
-
-            if (kunnr != null) { paramsCSP.Add(new SqlParameter("@KUNNR", kunnr)); }
-            else { paramsCSP.Add(new SqlParameter("@KUNNR", DBNull.Value)); }
-
-            if (usuarioa_id != null) { paramsCSP.Add(new SqlParameter("@USUARIOA_ID", usuarioa_id)); }
-            else { paramsCSP.Add(new SqlParameter("@USUARIOA_ID", DBNull.Value)); }
-            
-            List<SolicitudPorAprobar> solicitudes = db.Database.SqlQuery<SolicitudPorAprobar>("CPS_LISTA_SOLICITUDES_POR_APROBAR @NUM_DOCI,@NUM_DOCF,@FECHAI,@FECHAF,@KUNNR,@USUARIOA_ID",
-            paramsCSP.ToArray()).ToList();
-            return solicitudes;
-
-        }
+       
 
         public static List<TALLT> ObtenerTallsConCuenta(TAT001Entities db, string spras_id, string pais_id, int ejercicio, string sociedad_id)
         {

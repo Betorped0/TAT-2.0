@@ -398,6 +398,11 @@ namespace TAT001.Controllers
                         {
                             throw new Exception();
                         }
+
+                        CARTA cartaSeleccionada = db.CARTAs.Where(c => c.POS == pos && c.NUM_DOC == num_doc).FirstOrDefault();
+                        cartaSeleccionada.STATUS = true;
+                        db.Entry(cartaSeleccionada).State = EntityState.Modified;
+                        db.SaveChanges();
                     }
                 }
                 else

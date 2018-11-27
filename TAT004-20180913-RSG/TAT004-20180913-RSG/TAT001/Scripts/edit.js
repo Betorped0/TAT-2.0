@@ -2395,14 +2395,16 @@ function copiarTableVistaSop() {
             //var belnr = $(this).find("td.BELNR").text();
             importe_fac = importe_fac + parseFloat(($(this).find("td:eq(13)")).text());
             var imp_fact = $(this).find("td:eq(13)").text();//lej 03.08.2018
-            if (_xdec == '.') {
-                var ifc = parseFloat(imp_fact).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-                imp_fact = "$" + ifc;
-            } else if (_xdec == ',') {
-                var ifc = parseFloat(imp_fact).toFixed(2);
-                ifc = ifc.replace('.', ',').toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-                imp_fact = "$" + ifc;
-            }
+            //if (_xdec == '.') {
+            //    var ifc = parseFloat(imp_fact).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            //    imp_fact = "$" + ifc;
+            //} else if (_xdec == ',') {
+            //    var ifc = parseFloat(imp_fact).toFixed(2);
+            //    ifc = ifc.replace('.', ',').toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            //    imp_fact = "$" + ifc;
+            //}
+            var ifc = parseFloat(toNum(imp_fact)).toFixed(2);
+            imp_fact = toShow(ifc);
             //var desc = $(this).find("td:eq(13)").text();//lej 03.08.2018
             var belnr = $(this).find("td:eq(14)").text();
             //LEJ 03.08.18---------------------T

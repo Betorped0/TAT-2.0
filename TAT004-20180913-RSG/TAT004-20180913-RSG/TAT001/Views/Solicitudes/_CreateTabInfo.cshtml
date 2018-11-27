@@ -208,14 +208,18 @@
                         <label id="lbl_periodo" for="periodo">Periodo</label>@*B20180801 MGC Textos*@
                     </div>
                     <script>
+                        var reversan = "@ViewBag.reversan";
+                        var relacionada = "@ViewBag.relacionada";
+                        if (reversan == "X" || relacionada =="prelacionada") {
+                            periodo(val);
+                        }
                                 var elemdp = document.querySelector('#fechad');
                                 var optionsdp = {
                                     format: 'dd/mm/yyyy',
                                     onClose: function (e) {
                                         var date = $('#fechad').val();
                                         var periodo = date.split("/");
-
-                                        $('#periodo').val(periodo[1]);
+                                        
                                     },
                                     i18n: {
                                         clear: 'Limpiar',

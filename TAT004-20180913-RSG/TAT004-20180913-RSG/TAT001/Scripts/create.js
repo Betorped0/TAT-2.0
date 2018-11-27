@@ -1681,7 +1681,7 @@ $(window).on('load', function () {
         var instancessd2 = M.FormSelect.init(elemdpsd2, optionsdpsd);
         $('#select_categoria').prop('disabled', 'disabled');
         var elemdpc1 = document.querySelector('#select_categoria');
-        var instancesc1 = M.FormSelect.init(elemdpc1, optionsdpc);
+        var instancesc1 = M.FormSelect.init(elemdpc1, []);// optionsdpc);
     }
     var mt = parseFloat(toNum(tipocambio)) //B20180625 MGC 2018.07.02
     if (mt > 0) { //B20180625 MGC 2018.07.02
@@ -5490,11 +5490,15 @@ function asignCity(valu) {
         $('#citys_id').val(iNum);
     }
 }
-
+var ban = false;
 function selectCliente(valu) {
-    if (valu != "") {
+    if (valu !== "") {
         document.getElementById("loader").style.display = "flex";//RSG 03.07.2018
-        var esBorrador = $('#borradore').val() == "true";
+        if (!ban) {
+            var esBorrador = $('#borradore').val() === "true"; ban = true;
+        }
+        else
+            esBorrador = $('#borradore').val() === "false";
         var num = $('#duplicate').val();//RSG 07.11.2018
         $.ajax({
             type: "POST",
@@ -5505,7 +5509,7 @@ function selectCliente(valu) {
 
                 document.getElementById("loader").style.display = "none";//RSG 03.07.2018
                 if (data !== null || data !== "") {
-                    if (data.MANAGER != null) {
+                    if (data.MANAGER !== null) {
                         $("label[for='USUARIO_MANAGER']").addClass("active");
                         $('#USUARIO_MANAGER').val(data.MANAGER);
                     }
