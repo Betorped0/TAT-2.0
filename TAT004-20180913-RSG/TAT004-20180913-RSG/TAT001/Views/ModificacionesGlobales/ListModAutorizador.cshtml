@@ -1,27 +1,120 @@
 ﻿@model TAT001.Models.ModificacionesGlobalesViewModel
-<table class="table mdl-data-table striped" id="tableModAutorizador" style="width:100%; overflow-x: scroll;">
-    <thead>
-        <tr class="text-left">
-            <th id="lbl_num_doc">Número Solicitud</th>
-            <th id="lbl_autorizador">Autorizador</th>
-            <th id="lbl_nuevo_autorizador">Nuevo Autorizador</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.solicitudPorAprobar)
+@using TAT001.Entities
+@using (Html.BeginForm("ListModAutorizador", "ModificacionesGlobales", FormMethod.Post, new { @id = "modAutorizadoForm" }))
+{
+    <div class="col s12 l12 right-align">
+        <button type="submit" id="btn_save" class="btn btn-default" disabled></button>
+    </div>
+
+    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
+    <table class="table mdl-data-table striped" id="tableModAutorizador" style="width:100%; overflow-x: scroll;">
+        <thead>
+            <tr class="text-left">
+                <th id="lbl_num_doc">Num Doc</th>
+                <th id="lbl_autorizador">Autorizador</th>
+                <th id="lbl_nuevo_autorizador">Nuevo autorizador</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int i = 0;
+                foreach (var item in Model.solicitudPorAprobar)
+                {
+                    @Html.HiddenFor(model => item.NUM_DOC)
+                    <tr>
+                        <td>
+                            @item.NUM_DOC
+                        </td>
+                        <td>
+                            @item.USUARIOA_ID - @item.USUARIOA_NOMBRE
+                        </td>
+                        <td>
+                            @if (i == 0)
+                            {
+                                @Html.EditorFor(model => item.USUARIOA_ID_NUEVO, new { htmlAttributes = new { @maxlength = 18, @id = "USUARIOA_ID_NUEVO", @required = "", @change = "actualizarAutorizador" } })
+                            }
+                            else
+                            {
+                                @Html.HiddenFor(model => item.USUARIOA_ID_NUEVO)
+                            }
+                        </td>
+                    </tr>
+                    i++;
+                }
+            }
+        </tbody>
+    </table>
+    <div>
+
+        @if (ViewBag.textos != null)
         {
-            <tr>
-                <td>
-                    @item.NUM_DOC
-                </td>
-                <td>
-                    @item.USUARIOA_ID - @item.USUARIOA_NOMBRE
-                </td>
-                <td>
-                   @Html.EditorFor(model => item.USUARIOA_ID_NUEVO, new { htmlAttributes = new { @maxlength = 18 } })                  
-                </td>
-                </tr>
+            foreach (TEXTO t in ViewBag.textos)
+            {
+                <script>
+                try {
+                    var elem = document.getElementById("@t.CAMPO_ID");
+                    if (elem.nodeName != 'INPUT' & elem.nodeName != 'SELECT' & elem.nodeName != 'TABLE' & elem.nodeName != 'TEXTAREA')
+                    elem.innerHTML = "@t.TEXTOS";
+                } catch (e) {
+                    try {
+                        var divs = document.getElementsByClassName("@t.CAMPO_ID");
+                        [].slice.call(divs).forEach(function (div) {
+                            if (div.nodeName != 'INPUT' & div.nodeName != 'SELECT' & div.nodeName != 'TABLE' & div.nodeName != 'TEXTAREA')
+                            div.innerHTML = "@t.TEXTOS";
+                        });
+                    }
+                    catch (ee) {
+
+                    }
+                 }
+                </script>
+            }
         }
-</tbody>
-</table>
+    </div>
+}
+<script src="//code.jquery.com/jquery-1.12.4.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
+<script>
+    
+      //----- Configuracion de Tablas-----
+    $(document).ready(function () {
+        var root = "@Url.Content("~")",
+        spras_id = "@ViewBag.spras_id",
+        urlLanguage = root + "Scripts/lang/" + spras_id + ".json";
+        fnCommon.configurarTable('tableModAutorizador', '50vh', '50vh', urlLanguage, 'cmbPagModAutorizador','gfilterModAutorizador',[0,1,2]);
+    });
+
+    //Mostrar process
+    $('#modAutorizadoForm').submit(function () {
+        //if () {
+        //    $('#tableModAutorizador');
+        //}
+        document.getElementById("loader").style.display = "flex";
+    });
+    //Actualizar Autorizador
+    function actualizarAutorizador() {
+        var autorizador = $("#USUARIOA_ID_NUEVO").val();
+    }
+
+
+    var auto = $.noConflict(true);
+    auto(document).ready(function () {
+        auto("#USUARIOA_ID_NUEVO").autocomplete(
+            {
+                source: function (request, response) {
+                    fnCommon.autoAjax(root + "Listas/Usuarios", response, { Prefix: request.term }, function (item) { return { label: (item.ID + " - " + item.NOMBRE + " " + item.APELLIDO_P + " " + (item.APELLIDO_M == null ? "" : item.APELLIDO_M)), value: item.ID }; });
+                },
+                messages: {
+                    noResults: '',
+                    results: function (resultsCount) { }
+                },
+                select: function (event, ui) {
+                    var label = ui.item.label;
+                    var value = ui.item.value;
+                }
+            });
+    })
+</script>
+
