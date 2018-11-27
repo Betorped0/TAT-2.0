@@ -62,9 +62,9 @@ namespace TAT001.Models
                     return "No se encontro configuracion para generar documento para este tipo de solicitud";
                 }
 
-                string txt = "";
+                //string txt = "";
                 string msj = "";
-                string[] cc;
+                //string[] cc;
                 string cta = "";
                 try
                 {
@@ -106,7 +106,7 @@ namespace TAT001.Models
                 //    return "Agrege comando para generar texto de encabezado";
                 //}
 
-                txt = "";
+                //txt = "";
                 tab.REFERENCIA = tab.REFERENCIA.Trim();
                 if (String.IsNullOrEmpty(tab.REFERENCIA) == false)
                 {
@@ -133,7 +133,7 @@ namespace TAT001.Models
                     doc.MONEDA_ID = "";
                 }
 
-                doc.FECHAC = Fecha(tab.FECHA_CONTAB, Convert.ToDateTime(doc.FECHAC));
+                //doc.FECHAC = Fecha(tab.FECHA_CONTAB, Convert.ToDateTime(doc.FECHAC));
 
                 List<DetalleContab> det = new List<DetalleContab>();
                 msj = Detalle(doc, ref det, ref tab, docf, hijo, pos);
@@ -147,6 +147,8 @@ namespace TAT001.Models
                 {
                     return "Configure rango para fecha contable";
                 }
+                //doc.FECHAC = Convert.ToDateTime(tab.FECHA_DOCU);
+                tab.FECHA_DOCU = tab.FECHA_DOCU.Replace("-", "");
                 if (String.IsNullOrEmpty(clien.EXPORTACION) == false)
                 {
                     doc.MONEDA_ID = "USD";
@@ -219,7 +221,8 @@ namespace TAT001.Models
                 sw.WriteLine(
                     tab.TIPO_DOC + "|" +
                     dir.SOCIEDAD.Trim() + "|"
-                    + String.Format("{0:MM.dd.yyyy}", doc.FECHAC).Replace(".", "") + "|"
+                    //+ String.Format("{0:MM.dd.yyyy}", doc.FECHAC).Replace(".", "") + "|"
+                    + dir.FECHA_DOCU.Trim() + "|"
                     + dir.FECHA_DOCU.Trim() + "|"
                     + doc.MONEDA_ID.Trim() + "|"
                     + dir.HEADER_TEXT.Trim() + "|"
@@ -364,16 +367,16 @@ namespace TAT001.Models
                 DateTime calendario = calend[1].PRE_FROMF;
                 if (hoy >= calendario && hoy <= periodo)
                 {
-                    return hoy.ToString("MM-dd-yyyy").Replace("-", "");
+                    return hoy.ToString("MM-dd-yyyy");
                 }
                 else if (hoy > periodo)
                 {
-                    return periodo.ToString("MM-dd-yyyy").Replace("-", "");
+                    return periodo.ToString("MM-dd-yyyy");
                 }
                 else
                 {
                     hoy = new DateTime(peri[0].EJERCICIO, peri[0].PERIODO, peri[0].DIA_NATURAL);
-                    return hoy.ToString("MM-dd-yyyy").Replace("-", "");
+                    return hoy.ToString("MM-dd-yyyy");
                 }
             }
             else
