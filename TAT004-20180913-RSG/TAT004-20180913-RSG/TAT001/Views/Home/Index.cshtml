@@ -504,7 +504,7 @@
                 //    className: 'mdl-data-table__cell--non-numeric'
                 //},
                 {
-                    "targets": [5,2],
+                    "targets": [5],
                     "visible": false,
                     "searchable": false
                 }
@@ -605,7 +605,7 @@
         $('#table').DataTable().search(
             $('#global_filter').val()).draw();
     }
-    function format(d, row, tr) {
+            function format(d, row, tr) {
         $.ajax({
             url: root+"Listas/Relacionados",
             type: "GET",
@@ -617,13 +617,53 @@
                 var uu = ($.map(data, function (item) {
                     return { label: item.NUM_DOC, value: item };
                 }));
-                var ret = "<table class='table mdl-data-table striped'>";
+                var ret = "<table class='encabezados table mdl-data-table striped' style='margin-left:-24px'>";
+                ret += "<thead><tr style='visibility:collapse'><th class='sorting'></th><th class='lbl_num sorting'>Numero Solicitud</th><th class='lbl_NumProvi sorting'>Numero Provision</th><th class='lblSociedad sorting'>Co. Code</th>";
+                ret += "<th class='lblPais sorting'>Pais</th><th class='lbl_fechad sorting'>Fecha Solicitud</th><th class='lbl_horac sorting'>Hora</th>";
+                ret += "<th class='lblPC sorting'>Periodo Contable</th><th class='lbl_estatus sorting'>Estatus</th><th class='lblPayId sorting'>Cliente ID</th><th class='lblCliente sorting'>Cliente</th>";
+                ret += "<th class='lblCanal sorting'>Canal</th><th class='lbl_tsol sorting'>Tipo Solicitud</th><th class='lbl_tall sorting'>Clasificacion Allowance</th><th class='lblCCG sorting'>Cuenta Contable Gasto</th><th class='lblCCP sorting'>Cuenta Contable Pasivo</th>";
+                ret += "<th class='lblCCC sorting'>Cuenta Contable Clearing</th><th class='lbl_concepto sorting'>Descripcion Solicitud</th><th class='lblMo sorting'>$ Importe Solicitud</th><th class='lblFac sorting'>Numero Factura Proveedor</th><th class='lblFack sorting'>Numero Factura Kellogg</th>";
+                ret += "<th class='lblUC sorting'>Creador por</th><th class='lblUM sorting'>Modificado por</th><th class='lblRP sorting'>Registro Provision</th><th class='lblRnc sorting'>Registro NC/OP</th><th class='lblRap sorting'>Registro AP</th><th class='lblRR sorting'>Registro Reverso</th>";
+                ret += "<th id='lblTDoc sorting'>Tipo Registro SAP</th><th class='lblPayId sorting'>Cliente ID</th><th class='lblCl sorting'>Cliente</th><th class='lblIL sorting'>$ Importe Moneda Local</th><th class='lblCCG sorting'>Cuenta Contable Gasto</th></tr></thead>";
+                ret += "<tbody>";
                 for (var i = 0; i < uu.length; i++) {
                     var sum = 0;
-                    ret += "<tr onclick=\"link('"+ uu[i].value.NUM_DOC + "','" + uu[i].value.PAIS_ID+"')\" style='cursor:pointer'><td>" + uu[i].value.NUM_DOC + "</td><td>" + uu[i].value.TSOL_ID + "</td>";
-                    ret += "<td>" + uu[i].value.GALL_ID + "</td>";
-                    ret += "<td>" + uu[i].value.ESTADO + "</td>";
-                    ret += "<td>" + uu[i].value.CIUDAD.split('.')[0] + "</td>";
+                    ret += "<tr onclick=\"link('" + uu[i].value.NUM_DOC + "','" + uu[i].value.PAIS_ID + "')\" style='cursor:pointer'><td></td><td>" + uu[i].value.NUM_DOC + "</td>";
+                    if (uu[i].value.DOCUMENTO_REF != "0") {
+                        ret += "<td>" + uu[i].value.DOCUMENTO_REF + "</td>";
+                    }
+                    else {
+                        ret += "<td>    </td>";
+                    }
+                    ret+="<td>" + uu[i].value.SOCIEDAD_ID + "</td> <td>" + uu[i].value.PAIS_ID + "</td>";
+                    //ret += "<td>" + uu[i].value.FECHAD + "</td>";
+                    ret += "<td>" + uu[i].value.FECHADD + "</td>";
+                    ret += "<td>" + uu[i].value.HORAC + "</td>";
+                    ret += "<td>" + uu[i].value.PERIODO + "</td>";
+                    ret += "<td><span class='" + uu[i].value.ESTATUS_CLASS + "' data-badge-caption=' '>" + uu[i].value.ESTATUS + "</span></td>";
+                    ret += "<td>" + uu[i].value.PAYER_ID + "</td>";
+                    ret += "<td>" + uu[i].value.CLIENTE + "</td>";
+                    ret += "<td>" + uu[i].value.CANAL + "</td>";
+                    ret += "<td>" + uu[i].value.TSOL + "</td>";
+                    ret += "<td>" + uu[i].value.TALL + "</td>";
+                    ret += "<td>" + uu[i].value.CUENTAP + "</td>";
+                    ret += "<td>" + uu[i].value.CUENTAPL + "</td>";
+                    ret += "<td>" + uu[i].value.CUENTACL + "</td>";
+                    ret += "<td>" + uu[i].value.CONCEPTO + "</td>";
+                    ret += "<td>" + uu[i].value.MONTO_DOC_ML + "</td>";
+                    ret += "<td>" + uu[i].value.FACTURA + "</td>";
+                    ret += "<td>" + uu[i].value.FACTURAK + "</td>";
+                    ret += "<td>" + uu[i].value.USUARIOC_ID + "</td>";
+                    ret += "<td>" + uu[i].value.USUARIOM_ID + "</td>";
+                    ret += "<td>" + uu[i].value.NUM_PRO + "</td>";
+                    ret += "<td>" + uu[i].value.NUM_NC + "</td>";
+                    ret += "<td>" + uu[i].value.NUM_AP + "</td>";
+                    ret += "<td>" + uu[i].value.NUM_REV + "</td>";
+                    ret += "<td>" + uu[i].value.BLART + "</td>";
+                    ret += "<td>" + uu[i].value.NUM_PAYER + "</td>";
+                    ret += "<td>" + uu[i].value.NUM_CLIENTE + "</td>";
+                    ret += "<td>" + uu[i].value.NUM_IMPORTE + "</td>";
+                    ret += "<td>" + uu[i].value.NUM_CUENTA + "</td>";
                     @*if (uu[i].value.ESTATUS_WF == "R") {
                         uu[i].value.ESTATUS = "red"
                         uu[i].value.ESTATUS_WF = "@foreach (TAT001.Entities.TEXTO t in ViewBag.textos){if(t.CAMPO_ID == "lbl_rejected"){<span>@t.TEXTOS</span>}}";
@@ -635,17 +675,18 @@
                     uu[i].value.ESTATUS_WF = "@foreach (TAT001.Entities.TEXTO t in ViewBag.textos){if(t.CAMPO_ID == "lbl_approved"){<span>@t.TEXTOS</span>}}";
                     }
                     ret += "<td class='" + uu[i].value.ESTATUS + " white-text'>" + uu[i].value.ESTATUS_WF+"</td>";*@
-                    ret += "<td>" + uu[i].value.ESTATUS + "</td>";
-                    ret += "<td>" + uu[i].value.CONCEPTO + "</td>";
-                    ret += "<td>" + parseFloat(uu[i].value.MONTO_DOC_ML).toLocaleString("es-MX", { style: 'currency', currency: 'MXN' }) + "</td>";
-                    for (var aa = 0; aa < uu.length; aa++) {
-                        sum = sum + uu[aa].value.MONTO_DOC_ML;
-                    }
-                    ret += "<td>" + parseFloat(sum).toLocaleString("es-MX", { style: 'currency', currency: 'MXN' }) + "</td>";
-                    ret += "<td style='width:70%;'></td>";
+                    //ret += "<td>" + uu[i].value.ESTATUS + "</td>";
+                    //ret += "<td>" + uu[i].value.CONCEPTO + "</td>";
+                    //ret += "<td>" + parseFloat(uu[i].value.MONTO_DOC_ML).toLocaleString("es-MX", { style: 'currency', currency: 'MXN' }) + "</td>";
+                    //for (var aa = 0; aa < uu.length; aa++) {
+                    //    sum = sum + uu[aa].value.MONTO_DOC_ML;
+                    //}
+                    //ret += "<td>" + parseFloat(sum).toLocaleString("es-MX", { style: 'currency', currency: 'MXN' }) + "</td>";
+                    //ret += "<td style='width:70%;'></td>";
 
                     ret += "</tr>";
                 }
+                ret += "</tbody>";
                 ret += "</table>"
 
                 row.child(ret).show();

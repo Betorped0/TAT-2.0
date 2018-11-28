@@ -3586,6 +3586,10 @@ namespace TAT001.Controllers
                 }
                 impuesto = (D.MONTO_DOC_MD.Value * KBETR);
             }
+            if (D.TSOL.REVERSO)
+            {
+                montoApli = montoApli * -1;
+            }
             ViewBag.montoSol = format.toShow(D.MONTO_DOC_MD.Value, ".");
             ViewBag.montoProv = (esProv ? format.toShow(montoProv, ".") : "-");
             ViewBag.montoApli = (esDocRef ? format.toShow(montoApli, ".") : "-");
@@ -5669,7 +5673,12 @@ namespace TAT001.Controllers
             d.ESTATUS_C = "C";
             FLUJO actual = db.FLUJOes.Where(a => a.NUM_DOC == id).OrderByDescending(a => a.POS).FirstOrDefault();
             db.Entry(d).State = EntityState.Modified;
-
+            if (d.DOCUMENTO_REF != null)//Se cancela una relacionada
+            {
+                DOCUMENTO dRef = db.DOCUMENTOes.Find(d.DOCUMENTO_REF);//Se abre de nuevo la provisión
+                dRef.ESTATUS = "A";
+                db.Entry(dRef).State = EntityState.Modified;
+            }
             if (actual != null)
             {
                 FLUJO nuevo = new FLUJO();

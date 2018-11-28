@@ -14,14 +14,19 @@ namespace TAT001.Services
         {
             var existeUsuario = db.USUARIOLOGs.SingleOrDefault(x => x.USUARIO_ID == usuario);
 
-            if (existeUsuario!= null && System.Web.HttpContext.Current.Session.SessionID != existeUsuario.SESION )
+            if (false)
             {
-                return false;
+                if(existeUsuario != null && System.Web.HttpContext.Current.Session.SessionID != existeUsuario.SESION)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
             }
             else
-            {
                 return true;
-            }
         }
     }
 }

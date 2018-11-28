@@ -166,49 +166,68 @@
                                                     <table class="table highlight responsive-table" style="font-size: 12px;" id="tableC-@i">
                                                         <thead>
                                                             <tr>
-                                                                <th>Vigencia de</th>
-                                                                <th>Vigencia al </th>
-                                                                <th>Material</th>
-                                                                <th>Porc Apoyo</th>
-                                                                <th>Monto Apoyo</th>
-                                                                <th>Precio Sugerido</th>
+                                                                <th id="lblVigde">Vigencia de</th>
+                                                                <th id="lblVigal">Vigencia al </th>
+                                                                @if (lstCF.First().MATNR!= ""){
+                                                                <th id="lblMater">Material</th>
+                                                                }else {
+                                                                <th id="lblCat">Categoría</th>
+                                                                }
+                                                                <th id="lblPorApoyo">Porc Apoyo</th>
+                                                                <th id="lblMonApoy">Monto Apoyo</th>
+                                                                <th id="lblPreSu">Precio Sugerido</th>
                                                                 @if (Model.D.TSOL.FACTURA)
                                                                 {
-                                                                    <th>Volumen real</th>
-                                                                                <th>Apoyo real</th>
+                                                                <th id="lblVolReal">Volumen real</th>
+                                                                <th id="lblApoyReal">Apoyo real</th>
                                                                 }
                                                                 else
                                                                 {
-                                                                    <th>Volumen Estimado</th>
-                                                                                <th>Apoyo Estimado</th>
+                                                                <th id="lblVolsEst">Volumen Estimado</th>
+                                                                <th id="lblApoyEst">Apoyo Estimado</th>
                                                                 }
                                                             </tr>
                                                         </thead>
                                                         <tbody id="tb-@i">
                                                             @for (int y = 0; y < lstCF.Count; y++)
                                                             {
-                                                                <tr>
-                                                                    <td id="_pos-@i-@y" name="_pos-@i" style="display:none;">@lstCF[y].POS_ID</td>
-                                                                    <td id="Vigd-@i-@y">@lstCF[y].VIGENCIA_DE.Value.Year/@lstCF[y].VIGENCIA_DE.Value.Month/@lstCF[y].VIGENCIA_DE.Value.Day</td>
-                                                                    <td id="Viga-@i-@y-@y">@lstCF[y].VIGENCIA_AL.Value.Year/@lstCF[y].VIGENCIA_AL.Value.Month/@lstCF[y].VIGENCIA_DE.Value.Day</td>
-                                                                    <td id="mantr-@i-@y">@lstCF[y].MATNR </td>
-                                                                    @*
-                                                                        <td id="cant-@i-@y"> @lstCF[y].CANTIDAD </td>
-                                                                        <td id="pap-@i-@y">@lstCF[y].MONTO </td>*@
-                                                                    <td id="papo-@i-@y"> @lstCF[y].PORC_APOYO </td>
-                                                                    <td id="mnt-@i-@y">@lstCF[y].MONTO_APOYO </td>
-                                                                    <td id="psu-@i-@y">@lstCF[y].PRECIO_SUG </td>
-                                                                    @if (Model.D.TSOL.FACTURA)
+                                                            <tr>
+                                                                <td id="_pos-@i-@y" name="_pos-@i" style="display:none;">@lstCF[y].POS_ID</td>
+                                                                <td id="Vigd-@i-@y">@lstCF[y].VIGENCIA_DE.Value.Year/@lstCF[y].VIGENCIA_DE.Value.Month/@lstCF[y].VIGENCIA_DE.Value.Day</td>
+                                                                <td id="Viga-@i-@y-@y">@lstCF[y].VIGENCIA_AL.Value.Year/@lstCF[y].VIGENCIA_AL.Value.Month/@lstCF[y].VIGENCIA_DE.Value.Day</td>
+                                                                @{
+                                                                    using (TAT001.Entities.TAT001Entities db = new TAT001.Entities.TAT001Entities())
                                                                     {
-                                                                        <td class="precio" id="vol-@i-@y"> @lstCF[y].VOLUMEN_REAL </td>
-                                                                                    <td class="" id="ape-@i-@y"> @lstCF[y].APOYO_REAL </td>
+                                                                        if (lstCF[y].MATNR != "")
+                                                                        {
+                                                                            var matnr = TAT001.Common.FnCommon.ObtenerMaterial(db, User.Identity.Name, lstCF[y].MATNR);
+                                                                            <td>@matnr.MAKTX</td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            var matkl = TAT001.Common.FnCommon.ObtenerMaterialGroup(db, lstCF[y].MATKL);
+                                                                            <td>@matkl.DESCRIPCION </td>
+                                                                        }
+
                                                                     }
-                                                                    else
-                                                                    {
-                                                                        <td class="precio" id="vol-@i-@y"> @lstCF[y].VOLUMEN_EST </td>
-                                                                                    <td class="" id="ape-@i-@y"> @lstCF[y].APOYO_EST </td>
-                                                                    }
-                                                                </tr>
+                                                                }
+                                                                @*<td id="cant-@i-@y"> @lstCF[y].CANTIDAD </td>
+                                                                    <td id="pap-@i-@y">@lstCF[y].MONTO </td>*@
+                                                                <td id="papo-@i-@y" class="porcentaje"> @lstCF[y].PORC_APOYO </td>
+                                                                <td id="mnt-@i-@y" class="precio" >@lstCF[y].MONTO_APOYO </td>
+                                                                <td id="psu-@i-@y" class="precio">@lstCF[y].PRECIO_SUG </td>
+                                                                @if (Model.D.TSOL.FACTURA)
+                                                                {
+                                                                    <td class="precio" id="vol-@i-@y"> @lstCF[y].VOLUMEN_REAL </td>
+                                                                    <td class="precio" id="ape-@i-@y"> @lstCF[y].APOYO_REAL </td>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <td class="precio" id="vol-@i-@y"> @lstCF[y].VOLUMEN_EST </td>
+                                                                    <td class="precio" id="ape-@i-@y"> @lstCF[y].APOYO_EST </td>
+                                                                }
+                                                            </tr>
                                                             }
                                                         </tbody>
                                                     </table>
@@ -262,63 +281,19 @@
         t = 0;
         for (var y = 0; y < rowCount; y++) {
             if (_decimales === '.') {
-
-                //Para los valores de la tabla
-                var _cant = $("#cant-" + i + '-' + y).text();
-                var _pap = $("#pap-" + i + '-' + y).text();
-                var _papo = $("#papo-" + i + '-' + y).text();
-                var _mnt = $("#mnt-" + i + '-' + y).text();
-                var _psu = $("#psu-" + i + '-' + y).text();
                 var _ape = $("#ape-" + i + '-' + y).text();
 
                 //Convertimos a 2 decimales
-                _cant = parseFloat(_cant).toFixed(2);
-                _pap = parseFloat(_pap).toFixed(2);
-                _papo = parseFloat(_papo).toFixed(2);
-                _mnt = parseFloat(_mnt).toFixed(2);
-                _psu = parseFloat(_psu).toFixed(2);
                 _ape = parseFloat(_ape).toFixed(2);
                 t = t + parseFloat(_ape);
-
-                //Reasignacion de valores y asignacion de millares
-                $("#cant-" + i + '-' + y).text("$" + _cant.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-                $("#pap-" + i + '-' + y).text("$" + _pap.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-                $("#papo-" + i + '-' + y).text(_papo.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "%");
-                $("#mnt-" + i + '-' + y).text("$" + _mnt.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-                $("#psu-" + i + '-' + y).text("$" + _psu.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-                $("#ape-" + i + '-' + y).text("$" + _ape.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
             }
             else if (_decimales === ',') {
                 //Para los valores de la tabla
-                var _cant = $("#cant-" + i + '-' + y).text();
-                var _pap = $("#pap-" + i + '-' + y).text();
-                var _papo = $("#papo-" + i + '-' + y).text();
-                var _mnt = $("#mnt-" + i + '-' + y).text();
-                var _psu = $("#psu-" + i + '-' + y).text();
                 var _ape = $("#ape-" + i + '-' + (y)).text();
 
                 //Convertimos a 2 decimales
-                _cant = parseFloat(_cant).toFixed(2);
-                _pap = parseFloat(_pap).toFixed(2);
-                _papo = parseFloat(_papo).toFixed(2);
-                _mnt = parseFloat(_mnt).toFixed(2);
-                _psu = parseFloat(_psu).toFixed(2);
                 _ape = parseFloat(_ape).toFixed(2);
                 t = t + parseFloat(_ape);
-                //Remplazamos el simbolo de decimal x la coma','
-                _cant = (_cant).replace('.', ',');
-                _pap = (_pap).replace('.', ',');
-                _papo = (_papo).replace('.', ',');
-                _mnt = (_mnt).replace('.', ',');
-                _psu = (_psu).replace('.', ',');
-                _ape = (_ape).replace('.', ',');
-                //Reasignacion de valores
-                $("#cant-" + i + '-' + y).text("$" + _cant.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."));
-                $("#pap-" + i + '-' + y).text("$" + _pap.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."));
-                $("#papo-" + i + '-' + y).text(_papo.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + "%");
-                $("#mnt-" + i + '-' + y).text("$" + _mnt.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."));
-                $("#psu-" + i + '-' + y).text("$" + _psu.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."));
-                $("#ape-" + i + '-' + y).text("$" + _ape.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."));
             }
         }
         //LEJ 17.07.2018----------------------------------------------------------------

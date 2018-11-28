@@ -9,15 +9,15 @@
 <div class="row">
     <div class="row right">
         <div class="col l12 m12 right">
-            <a href="@Url.Action("Details", "Solicitudes", new { id = TempData["id"].ToString()})" class="btn btn-small">Regresar</a>
+            <a href="@Url.Action("Details", "Solicitudes", new { id = TempData["id"].ToString()})" class="btn btn-small" id="btn_return">Regresar</a>
             @{ string swf = TempData["ESTATUS_WF"].ToString();}
             @if (swf.Equals("S") && (Model.Count()>0 && Model.First().DOCUMENTO.USUARIOD_ID == User.Identity.Name))
             {
-                <a href="@Url.Action("Create", "CartaV", new { id = TempData["id"].ToString(), Viewlista=true})" class="btn btn-small">Generar Carta</a>
+                <a href="@Url.Action("Create", "CartaV", new { id = TempData["id"].ToString(), Viewlista=true})" class="btn btn-small" id="btn_generarC">Generar Carta</a>
             }
             else if(Model.Count() > 0 && Model.First().DOCUMENTO.USUARIOD_ID == User.Identity.Name)
             {
-                <a href="@Url.Action("Create", "CartaD", new { id = TempData["id"].ToString(), Viewlista=true})" class="btn btn-small">Generar Carta</a>
+                <a href="@Url.Action("Create", "CartaD", new { id = TempData["id"].ToString(), Viewlista=true})" class="btn btn-small" id="btn_generarC">Generar Carta</a>
             }
         </div>
     </div>
@@ -26,42 +26,18 @@
     <table class="table">
         <tr>
             <td></td>
-            <th>
-                @Html.DisplayNameFor(model => model.FECHAC)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TIPO)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.COMPANY)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TAXID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CONCEPTO)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CLIENTE)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PUESTO)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DIRECCION)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FOLIO)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LUGAR)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PAYER)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ESTIMADO)
-            </th>
+            <th id="lbl_Fecha"></th>
+            <th id="lbl_Tipo"> </th>
+            <th id="lbl_Sociedad"> </th>
+            <th id="lbl_Tax"> </th>
+            <th id="lbl_Concepto"></th>
+            <th id="lbl_Cliente"></th>
+            <th id="lbl_Puesto"></th>
+            <th id="lbl_Direccion"></th>
+            <th id="lbl_Folio"></th>
+            <th id="lbl_Lugar"></th>
+            <th id="lbl_PayerId"> </th>
+            <th id="lbl_Estimado"> </th>
         </tr>
 
         @foreach (var item in Model)
