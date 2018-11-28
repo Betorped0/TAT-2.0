@@ -842,7 +842,7 @@ namespace TAT001.Controllers.Catalogos
                     {
                         CONTACTOC co = new CONTACTOC();
                         db.CONTACTOCs.Where(x => (x.DEFECTO != null && x.DEFECTO.Value) && x.VKORG == da.VKORG
-                        && x.VTWEG == co.VTWEG && da.SPART == x.SPART && x.KUNNR == da.KUNNR).ToList().ForEach(x=>
+                        && x.SPART== da.SPART && x.KUNNR == da.KUNNR).ToList().ForEach(x=>
                         {
                             x.DEFECTO = false;
                             db.Entry(x).State = EntityState.Modified;

@@ -7661,7 +7661,8 @@ namespace TAT001.Controllers
         public JsonResult getSolicitud(string num, string monto, string tsol_id, string sociedad_id, bool esCategoriaUnica, bool edit = false)//RSG 07.06.2018---------------------------------------------
         {
             SOLICITUD_MOD sm = new SOLICITUD_MOD();
-
+            FormatosC format = new FormatosC();
+            bool reverso = false;
             //Obtener info solicitud
             if (num == null || num == "" || num == "0.00")
             {
@@ -7672,11 +7673,14 @@ namespace TAT001.Controllers
                 decimal num_doc = Convert.ToDecimal(num);
                 DOCUMENTO D = db.DOCUMENTOes.First(x => x.NUM_DOC == num_doc);
                 ObtenerAnalisisSolicitud(D, Convert.ToDecimal(monto));
+                
+                decimal montoAplicado = format.toNum(ViewBag.montoApli,",",".") + format.toNum(ViewBag.montoSol, ",", ".");
+                decimal remanente = format.toNum(ViewBag.remanente, ",", ".") - format.toNum(ViewBag.montoSol, ",", ".");
 
                 sm.S_MONTOB = ViewBag.montoSol;
                 sm.S_MONTOP = ViewBag.montoProv;
-                sm.S_MONTOA = ViewBag.montoApli;
-                sm.S_REMA = ViewBag.remanente;
+                sm.S_MONTOA = format.toShow(montoAplicado, ".");
+                sm.S_REMA = format.toShow(remanente, ".");
                 sm.S_IMPA = ViewBag.impuesto;
                 sm.S_IMPB = "-";
                 sm.S_IMPC = "-";
@@ -7687,16 +7691,18 @@ namespace TAT001.Controllers
             {
                 decimal num_doc = Convert.ToDecimal(num);
                 var rev = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == num_doc && x.ESTATUS_C == null && x.ESTATUS_WF != "B").ToList();
-
+                reverso= db.TSOLs.First(x => x.ID == tsol_id).REVERSO;
                 if (rev.Count == 0)
                 {
                     //CON UN RELACIONADO 
                     var rev2 = db.DOCUMENTOes.Where(x => x.NUM_DOC == num_doc).FirstOrDefault();
+                    decimal montor2 = Convert.ToDecimal(monto);
+                    decimal rem2 = (rev2.MONTO_DOC_MD.Value - montor2);
 
                     sm.S_MONTOB = monto;
                     sm.S_MONTOP = rev2.MONTO_DOC_MD.ToString();
-                    sm.S_MONTOA = "-";
-                    sm.S_REMA = "-";
+                    sm.S_MONTOA = monto;
+                    sm.S_REMA = rem2.ToString();
                     sm.S_IMPA = "-";
                     sm.S_IMPB = "-";
                     sm.S_IMPC = "-";
@@ -7708,11 +7714,12 @@ namespace TAT001.Controllers
                     //CON DOS RELACIONADOS
                     var rev3 = db.DOCUMENTOes.Where(x => x.NUM_DOC == num_doc).FirstOrDefault();
                     var rev33 = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == num_doc && x.ESTATUS_C == null && x.ESTATUS_WF != "B").First().MONTO_DOC_MD.Value;
-                    decimal rem3 = (rev3.MONTO_DOC_MD.Value - rev33);
+                    decimal sumr3Hijos = rev33 + Convert.ToDecimal(monto);
+                    decimal rem3 = (rev3.MONTO_DOC_MD.Value - sumr3Hijos);
 
                     sm.S_MONTOB = monto;
                     sm.S_MONTOP = rev3.MONTO_DOC_MD.ToString();
-                    sm.S_MONTOA = rev33.ToString();
+                    sm.S_MONTOA = sumr3Hijos.ToString();
                     sm.S_REMA = rem3.ToString();
                     sm.S_IMPA = "-";
                     sm.S_IMPB = "-";
@@ -7730,11 +7737,12 @@ namespace TAT001.Controllers
                     {
                         sum = sum + k.Value;
                     }
-                    decimal rem4 = (rev4.MONTO_DOC_MD.Value - sum);
+                    decimal sumr4Hijos = sum + Convert.ToDecimal(monto);
+                    decimal rem4 = (rev4.MONTO_DOC_MD.Value - sumr4Hijos);
 
                     sm.S_MONTOB = monto;
                     sm.S_MONTOP = rev4.MONTO_DOC_MD.ToString();
-                    sm.S_MONTOA = sum.ToString();
+                    sm.S_MONTOA = sumr4Hijos.ToString();
                     sm.S_REMA = rem4.ToString();
                     sm.S_IMPA = "-";
                     sm.S_IMPB = "-";
@@ -7742,7 +7750,10 @@ namespace TAT001.Controllers
                     sm.S_RET = "-";
                     sm.S_TOTAL = monto;
                 }
-
+                if (sm.S_MONTOA != "-" && reverso)
+                {
+                    sm.S_MONTOA = "-" + sm.S_MONTOA;
+                }
             }
             string[] tsolImp = new string[] { "NC", "NCA", "NCAS", "NCAM", "NCASM", "NCS", "NCI", "NCIA", "NCIAS", "NCIS" };
             if (tsolImp.Contains(tsol_id))
@@ -7760,7 +7771,8 @@ namespace TAT001.Controllers
                 }
                 sm.S_IMPA = (Convert.ToDecimal(monto) * KBETR).ToString();
             }
-            JsonResult cc = Json(sm, JsonRequestBehavior.AllowGet);
+           
+                JsonResult cc = Json(sm, JsonRequestBehavior.AllowGet);
             return cc;
         }
 
