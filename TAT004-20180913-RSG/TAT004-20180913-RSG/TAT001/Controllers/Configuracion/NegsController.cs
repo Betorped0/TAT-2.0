@@ -115,7 +115,7 @@ namespace TAT001.Controllers
                 if (_fpr == null)
                 {
                     //validamos que la fecha final sea mayor a la anterior
-                    if (nEGOCIACION.FECHAI < nEGOCIACION.FECHAF)
+                    if (nEGOCIACION.FECHAI <= nEGOCIACION.FECHAF)
                     {
                         if (ModelState.IsValid)
                         {
