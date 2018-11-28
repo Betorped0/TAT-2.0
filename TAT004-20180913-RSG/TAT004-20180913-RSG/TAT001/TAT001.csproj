@@ -845,6 +845,9 @@
     <Compile Include="Models\CategoriaMaterial.cs" />
     <Compile Include="Models\ClienteViewModel.cs" />
     <Compile Include="Models\Comentarios.cs" />
+    <Compile Include="Models\Dao\ClientesDao.cs" />
+    <Compile Include="Models\Dao\ContactosDao.cs" />
+    <Compile Include="Models\Dao\PeriodosDao.cs" />
     <Compile Include="Models\Dao\SolicitudesDao.cs" />
     <Compile Include="Models\Dao\UsuariosDao.cs" />
     <Compile Include="Models\dby.cs" />
@@ -867,6 +870,7 @@
     <Compile Include="Models\ProveedorViewModel.cs" />
     <Compile Include="Models\ReportesModel.cs" />
     <Compile Include="Models\SelectTreeItem.cs" />
+    <Compile Include="Models\Dao\SociedadesDao.cs" />
     <Compile Include="Models\SOLICITUD_MOD.cs" />
     <Compile Include="Models\Flujos.cs" />
     <Compile Include="Models\TALLT_MOD.cs" />

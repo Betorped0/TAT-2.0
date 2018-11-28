@@ -20,6 +20,8 @@ namespace TAT001.Controllers
         //------------------DAO------------------------------
         readonly UsuariosDao usuariosDao = new UsuariosDao();
         readonly SolicitudesDao solicitudesDao = new SolicitudesDao();
+        readonly ContactosDao contactosDao = new ContactosDao();
+        readonly ClientesDao clientesDao = new ClientesDao();
 
         // GET: Listas
         public ActionResult Index()
@@ -120,35 +122,39 @@ namespace TAT001.Controllers
         [HttpGet]
         public JsonResult Clientes(string Prefix, string usuario, string pais)
         {
-            if (usuario==""){ usuario = null;}
-            if (pais == ""){  pais = null;}
-            var clientes = FnCommon.ObtenerClientes(db,Prefix,usuario,pais);
+            var clientes = clientesDao.ListaClientes(Prefix,usuario,pais);
             JsonResult cc = Json(clientes, JsonRequestBehavior.AllowGet);
             return cc;
            
 
         }
         [HttpGet]
-        public JsonResult Solicitudes(string Prefix,decimal? num_doci,decimal? num_docf, bool? autorizador,string usuario_id)
+        public JsonResult Solicitudes(string Prefix,string sociedad_id,decimal? num_doci,decimal? num_docf, bool? autorizador,string usuario_id)
         {
             List<DOCUMENTO> solicitudes;
             if (autorizador != null && autorizador.Value)
             {
-                 solicitudes = solicitudesDao.ObtenerSolicitudes(TATConstantes.ACCION_LISTA_SOLSPORAPROBADOR,Prefix, num_doci, num_docf, usuario_id);
+                 solicitudes = solicitudesDao.ListaSolicitudes(TATConstantes.ACCION_LISTA_SOLSPORAPROBADOR,Prefix, sociedad_id, num_doci, num_docf, usuario_id);
             }
             else
             {
-                solicitudes = solicitudesDao.ObtenerSolicitudes(TATConstantes.ACCION_LISTA_SOLICITUDES, Prefix, num_doci, num_docf);
+                solicitudes = solicitudesDao.ListaSolicitudes(TATConstantes.ACCION_LISTA_SOLICITUDES, Prefix, sociedad_id, num_doci, num_docf);
             }
             JsonResult cc = Json(solicitudes, JsonRequestBehavior.AllowGet);
             return cc;
         }
         [HttpGet]
-        public JsonResult Usuarios(string Prefix,bool? autorizador)
+        public JsonResult Usuarios(string Prefix,string sociedad_id, int? autorizador)
         {
+            //1-ACCION_LISTA_AUTORIZADOR (FLUJO)
+            //2-ACCION_LISTA_AUTORIZADOR (USUARIOS)
             List<USUARIO> usuarios;
-            if (autorizador!= null && autorizador.Value) {
-                 usuarios = usuariosDao.ListaUsuarios(Prefix, TATConstantes.ACCION_LISTA_AUTORIZADOR);
+            if (autorizador!= null && autorizador.Value==1) {
+                 usuarios = usuariosDao.ListaUsuarios(Prefix, TATConstantes.ACCION_LISTA_AUTORIZADOR_F,null, sociedad_id);
+            }
+            else if (autorizador != null && autorizador.Value == 2)
+            {
+                usuarios = usuariosDao.ListaUsuarios(Prefix, TATConstantes.ACCION_LISTA_AUTORIZADOR_U,null, sociedad_id);
             }
             else
             {
@@ -1025,7 +1031,7 @@ namespace TAT001.Controllers
             Cadena cad = new Cadena();
             kunnr = cad.completaCliente(kunnr);
 
-           var contactos=FnCommon.ObtenerContactos(db,Prefix,vkorg,vtweg,kunnr);
+           var contactos= contactosDao.ListaContactos(Prefix,vkorg,vtweg,kunnr);
             JsonResult cc = Json(contactos, JsonRequestBehavior.AllowGet);
             return cc;
         }

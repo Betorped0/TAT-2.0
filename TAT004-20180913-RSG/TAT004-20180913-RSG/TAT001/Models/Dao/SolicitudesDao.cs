@@ -10,7 +10,7 @@ namespace TAT001.Models.Dao
     {
         readonly TAT001Entities db = new TAT001Entities();
 
-        public  List<DOCUMENTO> ObtenerSolicitudes(int accion,string prefix, decimal? num_doci, decimal? num_docf,
+        public  List<DOCUMENTO> ListaSolicitudes(int accion,string prefix,string sociedad_id, decimal? num_doci, decimal? num_docf,
            string usuario_id = null,
            DateTime? fechai = null,
            DateTime? fechaf = null,
@@ -40,15 +40,14 @@ namespace TAT001.Models.Dao
             if (usuario_id != null) { paramsCSP.Add(new SqlParameter("@USUARIO_ID", usuario_id)); }
             else { paramsCSP.Add(new SqlParameter("@USUARIO_ID", DBNull.Value)); }
 
-
-
-
-            List<DOCUMENTO> solicitudes = db.Database.SqlQuery<DOCUMENTO>("CPS_LISTA_SOLICITUDES @ACCION,@PREFIX,@NUM_DOCI,@NUM_DOCF,@FECHAI,@FECHAF,@KUNNR,@USUARIO_ID",
+            if (!string.IsNullOrEmpty(sociedad_id)) { paramsCSP.Add(new SqlParameter("@SOCIEDAD_ID", sociedad_id)); }
+       
+            List<DOCUMENTO> solicitudes = db.Database.SqlQuery<DOCUMENTO>("CPS_LISTA_SOLICITUDES @ACCION,@PREFIX,@NUM_DOCI,@NUM_DOCF,@FECHAI,@FECHAF,@KUNNR,@USUARIO_ID,@SOCIEDAD_ID",
             paramsCSP.ToArray()).ToList();
             return solicitudes;
 
         }
-        public  List<SolicitudPorAprobar> ObtenerSolicitudesPorAprobar(decimal? num_doci, decimal? num_docf, DateTime? fechai, DateTime? fechaf,string kunnr, string usuarioa_id,
+        public  List<SolicitudPorAprobar> ListaSolicitudesPorAprobar( string sociedad_id,decimal? num_doci, decimal? num_docf, DateTime? fechai, DateTime? fechaf,string kunnr, string usuarioa_id,
           decimal? num_doc = null)
         {
             List<object> paramsCSP = new List<object>();
@@ -71,10 +70,15 @@ namespace TAT001.Models.Dao
             if (usuarioa_id != null) { paramsCSP.Add(new SqlParameter("@USUARIOA_ID", usuarioa_id)); }
             else { paramsCSP.Add(new SqlParameter("@USUARIOA_ID", DBNull.Value)); }
 
-            List<SolicitudPorAprobar> solicitudes = db.Database.SqlQuery<SolicitudPorAprobar>("CPS_LISTA_SOLICITUDES_POR_APROBAR @NUM_DOCI,@NUM_DOCF,@FECHAI,@FECHAF,@KUNNR,@USUARIOA_ID",
+            if (!string.IsNullOrEmpty(sociedad_id)) { paramsCSP.Add(new SqlParameter("@SOCIEDAD_ID", sociedad_id)); }
+            else { paramsCSP.Add(new SqlParameter("@SOCIEDAD_ID", DBNull.Value)); }
+
+            List<SolicitudPorAprobar> solicitudes = db.Database.SqlQuery<SolicitudPorAprobar>("CPS_LISTA_SOLICITUDES_POR_APROBAR @NUM_DOCI,@NUM_DOCF,@FECHAI,@FECHAF,@KUNNR,@USUARIOA_ID,@SOCIEDAD_ID",
             paramsCSP.ToArray()).ToList();
             return solicitudes;
 
         }
+
+        
     }
 }

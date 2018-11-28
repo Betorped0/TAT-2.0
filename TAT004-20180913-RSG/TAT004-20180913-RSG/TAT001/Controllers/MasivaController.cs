@@ -20,6 +20,7 @@ using System.Globalization;
 using System.IO;
 using System.Web.Security;
 using TAT001.Common;
+using TAT001.Models.Dao;
 
 namespace TAT001.Controllers
 {
@@ -32,6 +33,9 @@ namespace TAT001.Controllers
         private TCambio tcambio = new TCambio();
         private Cadena cad = new Cadena();
         private UsuarioLogin usuValidateLogin = new UsuarioLogin();
+
+        //------------------DAO------------------------------
+        readonly ClientesDao clientesDao = new ClientesDao();
 
         // GET: Masiva
         public ActionResult Index()
@@ -989,9 +993,7 @@ namespace TAT001.Controllers
         [HttpPost]
         public JsonResult cliente(string Prefix, string usuario, string pais)
         {
-            if (usuario == "") { usuario = null; }
-            if (pais == "") { pais = null; }
-            var clientes = FnCommon.ObtenerClientes(db, Prefix, usuario, pais);
+            var clientes = clientesDao.ListaClientes(Prefix, usuario, pais);
             JsonResult cc = Json(clientes, JsonRequestBehavior.AllowGet);
             return cc;
 

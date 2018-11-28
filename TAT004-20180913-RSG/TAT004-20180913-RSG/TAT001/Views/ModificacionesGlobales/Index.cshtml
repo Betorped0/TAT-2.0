@@ -30,6 +30,7 @@
 <link href="~/Content/dataTable.css" rel="stylesheet" />
 <link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
 <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
+<script src="//code.jquery.com/jquery-1.12.4.js"></script>
 <div class="row">
     <div class="col s12">
         <ul class="tabs">
@@ -96,6 +97,12 @@
         <div class="card-panel">
             <div class="row">
                 <div class="col s12">
+                    <div class="row">
+                        <label class="col s2"><span id="lbl_coCode"></span></label>
+                        <div class="col s4">
+                            @Html.DropDownListFor(model => model.filtros.SOCIEDAD_ID, Model.sociedades,  new {  @id = "SOCIEDAD_ID_2" })
+                        </div>
+                    </div>
                     <div class="row">
                         <label class="col s2"><span id="lbl_autorizador"></span></label>
                         <div class="col s2">
@@ -175,7 +182,8 @@
             fechai = $("#FECHAI_1").val(),
             fechaf = $("#FECHAF_1").val(),
             kunnr = $("#KUNNR_2").val(),
-            usuario_id = $("#USUARIOA_ID_2").val();
+            usuario_id = $("#USUARIOA_ID_2").val(),
+         sociedad_id = $("#SOCIEDAD_ID_2").val();
 
         if (!usuario_id){
             $("#USUARIOA_ID_2").addClass("invalid");
@@ -184,7 +192,7 @@
         $("#USUARIOA_ID_2").removeClass("invalid");
         fnCommon.showProcess(true);
         $.ajax({
-            url: root + 'ModificacionesGlobales/ListModAutorizador?num_doci=' + num_doci
+            url: root + 'ModificacionesGlobales/ListModAutorizador?sociedad_id=' + sociedad_id+'&num_doci=' + num_doci
             + '&&num_docf=' + num_docf + '&&fechai=' + fechai + '&&fechaf=' + fechaf + '&&kunnr=' + kunnr + '&&usuarioa_id=' + usuario_id,
             success: function (resultView) {
                 fnCommon.showProcess(false);
@@ -280,7 +288,8 @@
         auto("#USUARIOA_ID_2").autocomplete(
             {
                 source: function (request, response) {
-                    fnCommon.autoAjax(root + "Listas/Usuarios", response, { Prefix: request.term, autorizador: true }, function (item) { return { label: (item.ID + " - " + item.NOMBRE + " " + item.APELLIDO_P + " " + (item.APELLIDO_M == null ? "" : item.APELLIDO_M)), value: item.ID }; });
+                    var sociedad_id = $("#SOCIEDAD_ID_2").val();
+                    fnCommon.autoAjax(root + "Listas/Usuarios", response, { Prefix: request.term, autorizador: 1, sociedad_id: sociedad_id}, function (item) { return { label: (item.ID + " - " + item.NOMBRE + " " + item.APELLIDO_P + " " + (item.APELLIDO_M == null ? "" : item.APELLIDO_M)), value: item.ID }; });
                 },
                 messages: {
                     noResults: '',
@@ -296,8 +305,9 @@
         auto("#NUM_DOCI_2").autocomplete({
             source: function (request, response) {
                 var num_docf = $("#NUM_DOCF_2").val(),
-                    usuario_id = $("#USUARIOA_ID_2").val();
-                fnCommon.autoAjax(root + "Listas/Solicitudes", response, { Prefix: request.term, num_doci: null, num_docf: num_docf, autorizador: true, usuario_id: usuario_id }, function (item) { return { label: item.NUM_DOC, value: item.NUM_DOC }; });
+                    usuario_id = $("#USUARIOA_ID_2").val(),
+                 sociedad_id = $("#SOCIEDAD_ID_2").val();
+                fnCommon.autoAjax(root + "Listas/Solicitudes", response, { Prefix: request.term, sociedad_id: sociedad_id, num_doci: null, num_docf: num_docf, autorizador: true, usuario_id: usuario_id }, function (item) { return { label: item.NUM_DOC, value: item.NUM_DOC }; });
             },
             messages: {
                 noResults: '',
@@ -313,8 +323,9 @@
         auto("#NUM_DOCF_2").autocomplete({
             source: function (request, response) {
                 var num_doci = $("#NUM_DOCI_2").val(),
-                    usuario_id = $("#USUARIOA_ID_2").val();
-                fnCommon.autoAjax(root + "Listas/Solicitudes", response, { Prefix: request.term, num_doci: num_doci, num_docf: null, autorizador: true, usuario_id: usuario_id }, function (item) { return { label: item.NUM_DOC, value: item.NUM_DOC }; });
+                    usuario_id = $("#USUARIOA_ID_2").val(),
+                 sociedad_id = $("#SOCIEDAD_ID_2").val();
+                fnCommon.autoAjax(root + "Listas/Solicitudes", response, { Prefix: request.term, sociedad_id: sociedad_id, num_doci: num_doci, num_docf: null, autorizador: true, usuario_id: usuario_id }, function (item) { return { label: item.NUM_DOC, value: item.NUM_DOC }; });
             },
             messages: {
                 noResults: '',
