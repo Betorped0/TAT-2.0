@@ -243,7 +243,7 @@
                         using (TAT001Entities db = new TAT001Entities())
                         {
                             List<DOCUMENTO> inf = new List<DOCUMENTO>();
-                            inf = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == Model.D.NUM_DOC).ToList();
+                            inf = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == Model.D.NUM_DOC & x.ESTATUS_C != "C" & x.ESTATUS_WF != "B").ToList();
                             if (inf.Where(x => x.TSOL.REVERSO == true).ToList().Count == 0)
                             {
                                 if (Model.D.USUARIOC_ID == ViewBag.usuario.ID & Model.D.DOCUMENTO_SAP != null)

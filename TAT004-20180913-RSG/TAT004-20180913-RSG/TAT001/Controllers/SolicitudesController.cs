@@ -791,13 +791,13 @@ namespace TAT001.Controllers
                                 }).ToList();
                 //clasificación
                 //MGC B20180611
-                List<TALLT_MOD> id_clas =FnCommon.ObtenerTallsConCuenta(db,user.SPRAS_ID,pais_id,DateTime.Now.Year,sociedad_id)
-                    .Select(x=> new TALLT_MOD
-                                {
-                                    SPRAS_ID = x.SPRAS_ID,
-                                    TALL_ID = x.TALL_ID,
-                                    TXT50 = x.TXT50
-                                })
+                List<TALLT_MOD> id_clas = FnCommon.ObtenerTallsConCuenta(db, user.SPRAS_ID, pais_id, DateTime.Now.Year, sociedad_id)
+                    .Select(x => new TALLT_MOD
+                    {
+                        SPRAS_ID = x.SPRAS_ID,
+                        TALL_ID = x.TALL_ID,
+                        TXT50 = x.TXT50
+                    })
                             .ToList();
                 id_clas = id_clas.OrderBy(x => x.TXT50).ToList();
 
@@ -1039,7 +1039,7 @@ namespace TAT001.Controllers
                     DOCUMENTBORR docb = new DOCUMENTBORR();
                     try
                     {
-                        docb = db.DOCUMENTBORRs.FirstOrDefault(x=>x.USUARIOC_ID==user.ID && x.SOCIEDAD_ID==sociedad_id);
+                        docb = db.DOCUMENTBORRs.FirstOrDefault(x => x.USUARIOC_ID == user.ID && x.SOCIEDAD_ID == sociedad_id);
                         ViewBag.LIGADA = docb.LIGADA;//RSG 09.07.2018
                         pais_id = docb.PAIS_ID;//RSG 01.08.2018
                     }
@@ -2694,10 +2694,10 @@ namespace TAT001.Controllers
                     if (dOCUMENTO.DOCUMENTO_REF > 0 & txt_flujo != "B")//ADD RSG 02.11.2018
                     {
                         //if (dOCUMENTO.TSOL_ID != "CPR")
+                        DOCUMENTO docPadre = db.DOCUMENTOes.Find(dOCUMENTO.DOCUMENTO_REF);
+                        List<DOCUMENTO> dd = db.DOCUMENTOes.Where(a => a.DOCUMENTO_REF == (dOCUMENTO.DOCUMENTO_REF) & a.ESTATUS_C != "C" & a.ESTATUS_WF != "B").ToList();
                         if (!dOCUMENTO.TSOL.REVERSO)
                         {
-                            DOCUMENTO docPadre = db.DOCUMENTOes.Find(dOCUMENTO.DOCUMENTO_REF);
-                            List<DOCUMENTO> dd = db.DOCUMENTOes.Where(a => a.DOCUMENTO_REF == (dOCUMENTO.DOCUMENTO_REF) & a.ESTATUS_C != "C").ToList();
                             List<DOCUMENTOP> ddr = db.DOCUMENTOPs.Where(a => a.NUM_DOC == (dOCUMENTO.DOCUMENTO_REF)).ToList();
                             ////decimal total = 0;
                             decimal[] totales = new decimal[ddr.Count()];
@@ -2738,6 +2738,42 @@ namespace TAT001.Controllers
                             if (docPadre.MONTO_DOC_MD - totalRes > 0)
                                 return RedirectToAction("Reversa", new { id = dOCUMENTO.DOCUMENTO_REF, resto = resto });
 
+                        }
+                        else
+                        {
+                            if (dd.Where(x=>!x.TSOL.REVERSO && x.ESTATUS_WF != "A").ToList().Count == 0)
+                            {
+                                using (TAT001Entities db1 = new TAT001Entities())
+                                {
+                                    decimal num_doc = dd.First().NUM_DOC;
+                                    FLUJO ff = db1.FLUJOes.Where(x => x.NUM_DOC == num_doc).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+                                    ff.FECHAM = DateTime.Now;
+                                    ff.ESTATUS = "A";
+                                    string c = pf.procesa(ff, "C");
+                                    FLUJO conta = db.FLUJOes.Where(x => x.NUM_DOC == ff.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+                                    while (c == "1")
+                                    {
+                                        Email em = new Email();
+                                        string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
+                                        string image = Server.MapPath("~/images/logo_kellogg.png");
+                                        em.enviaMailC(ff.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image);
+
+                                        if (conta.WORKFP.ACCION.TIPO == "B")
+                                        {
+                                            WORKFP wpos = db.WORKFPs.Where(x => x.ID == conta.WORKF_ID & x.VERSION == conta.WF_VERSION & x.POS == conta.WF_POS).FirstOrDefault();
+                                            conta.ESTATUS = "A";
+                                            conta.FECHAM = DateTime.Now;
+                                            c = pf.procesa(conta, "");
+                                            conta = db.FLUJOes.Where(x => x.NUM_DOC == ff.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+
+                                        }
+                                        else
+                                        {
+                                            c = "";
+                                        }
+                                    }
+                                }
+                            }
                         }
                         using (TAT001Entities db1 = new TAT001Entities())
                         {
@@ -3161,7 +3197,7 @@ namespace TAT001.Controllers
                         }
                         catch (Exception e)
                         {
-                            Log.ErrorLogApp(e,"Solicitudes","Borrador");
+                            Log.ErrorLogApp(e, "Solicitudes", "Borrador");
                         }
                         DOCUMENTBORR docb = new DOCUMENTBORR();
                         //docb = guardarBorrador(dOCUMENTO, id_bukrs, select_dis, monedadis, bmonto_apoyo);//RSG 09.07.2018
@@ -3227,7 +3263,7 @@ namespace TAT001.Controllers
             docb.TIPO_TECNICO2 = dis;
             docb.MONEDA_DIS = monedadis;
             if (ligada != null && ligada != "off")
-                    docb.LIGADA = "X";
+                docb.LIGADA = "X";
             try
             {
                 docb.PORC_APOYO = Convert.ToDecimal(bmonto_apoyo);
@@ -5664,40 +5700,8 @@ namespace TAT001.Controllers
 
         public ActionResult Cancelar(decimal id)
         {
-            //Session["sol_tipo"] = null;
-            DOCUMENTO d = db.DOCUMENTOes.Find(id);
-            d.ESTATUS_C = "C";
-            FLUJO actual = db.FLUJOes.Where(a => a.NUM_DOC == id).OrderByDescending(a => a.POS).FirstOrDefault();
-            db.Entry(d).State = EntityState.Modified;
-            if (d.DOCUMENTO_REF != null)//Se cancela una relacionada
-            {
-                DOCUMENTO dRef = db.DOCUMENTOes.Find(d.DOCUMENTO_REF);//Se abre de nuevo la provisión
-                dRef.ESTATUS = "A";
-                db.Entry(dRef).State = EntityState.Modified;
-            }
-            if (actual != null)
-            {
-                FLUJO nuevo = new FLUJO();
-                WORKFP fin = db.WORKFPs.Where(a => a.ID == actual.WORKF_ID & a.VERSION == actual.WF_VERSION & a.NEXT_STEP == 99).FirstOrDefault();
-                if (fin != null)
-                {
-                    nuevo.COMENTARIO = "";
-                    nuevo.DETPOS = 0;
-                    nuevo.DETVER = 0;
-                    nuevo.ESTATUS = "A";
-                    nuevo.FECHAC = DateTime.Now;
-                    nuevo.FECHAM = nuevo.FECHAC;
-                    nuevo.LOOP = 0;
-                    nuevo.NUM_DOC = actual.NUM_DOC;
-                    nuevo.POS = actual.POS + 1;
-                    nuevo.USUARIOA_ID = User.Identity.Name;
-                    nuevo.WF_POS = fin.POS;
-                    nuevo.WF_VERSION = fin.VERSION;
-                    nuevo.WORKF_ID = fin.ID;
-                    db.FLUJOes.Add(nuevo);
-                }
-            }
-            db.SaveChanges();
+            Cancelar can = new Cancelar();
+            can.cancela(id, User.Identity.Name);
 
             return RedirectToAction("Index", "Home");
         }
