@@ -2745,7 +2745,7 @@ namespace TAT001.Controllers
                             {
                                 using (TAT001Entities db1 = new TAT001Entities())
                                 {
-                                    decimal num_doc = dd.First().NUM_DOC;
+                                    decimal num_doc = dd.First(x => x.TSOL.REVERSO).NUM_DOC;
                                     FLUJO ff = db1.FLUJOes.Where(x => x.NUM_DOC == num_doc).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
                                     ff.FECHAM = DateTime.Now;
                                     ff.ESTATUS = "A";
