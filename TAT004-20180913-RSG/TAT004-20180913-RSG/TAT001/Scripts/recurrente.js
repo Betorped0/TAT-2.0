@@ -646,7 +646,10 @@ function primerDiaT(t, num, periodo, ejercicio, monto, tipo, meses) {
             var dd = data.split('/');
             var dates = new Date(dd[2], dd[1] - 1, dd[0]);
             datee = dates.getDate() + "/" + (dates.getMonth() + 1) + "/" + dates.getFullYear();
-
+            if (periodo > 12) {
+                ejercicio = ejercicio + (periodo / 12);
+                periodo = periodo - 12;
+            }
             addRowRec(t, num, datee, monto, tipo, "", "P" + (periodo - 2 + num) + "-" + ejercicio, meses);
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
@@ -674,7 +677,10 @@ function ultimoDiaT(t, num, periodo, ejercicio, monto, tipo, porc, meses) {
             var dd = data.split('/');
             var dates = new Date(dd[2], dd[1] - 1, dd[0]);
             datee = dates.getDate() + "/" + (dates.getMonth() + 1) + "/" + dates.getFullYear();
-
+            if (periodo > 12) {
+                ejercicio = ejercicio + (periodo / 12);
+                periodo = periodo - 12;
+            }
             addRowRec(t, num, datee, monto, tipo, porc, "P" + (periodo - 1 + num) + "-" + ejercicio, meses);
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
