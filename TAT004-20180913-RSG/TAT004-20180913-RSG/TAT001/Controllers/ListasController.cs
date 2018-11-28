@@ -1222,9 +1222,8 @@ namespace TAT001.Controllers
             doc.DOCUMENTOP = docs;
             return PartialView("~/Views/CartaV/_PartialMatTr.cshtml", doc);
         }
-        [HttpPost]
-        [AllowAnonymous]
-        public JsonResult contactos(string Prefix, string vkorg, string vtweg, string kunnr)
+        [HttpGet]
+        public JsonResult contactos(string Prefix, string kunnr, string vkorg = null, string vtweg = null)
         {
             
             Cadena cad = new Cadena();

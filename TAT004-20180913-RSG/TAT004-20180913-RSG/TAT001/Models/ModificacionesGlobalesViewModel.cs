@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
+using TAT001.Entities;
 
 namespace TAT001.Models
 {
@@ -12,12 +13,14 @@ namespace TAT001.Models
             pageSizes = new List<SelectListItem>();
             sociedades= new List<SelectListItem>();
             solicitudPorAprobar = new List<SolicitudPorAprobar>();
+            solicitudes = new List<DOCUMENTO>();
+
         }
         public Filtros filtros { get; set; }
         public List<SelectListItem>  pageSizes  { get; set; }
         public List<SelectListItem> sociedades { get; set; }
         public List<SolicitudPorAprobar> solicitudPorAprobar { get; set; }
-
+        public List<DOCUMENTO> solicitudes { get; set; }
     }
     public class Filtros {
         public decimal? NUM_DOCI { get; set; }

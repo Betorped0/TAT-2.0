@@ -17,10 +17,11 @@ namespace TAT001.Models.Dao
            string kunnr = null)
         {
             if (prefix == null) { prefix = ""; }
-            List<object> paramsCSP = new List<object>();
-
-            paramsCSP.Add(new SqlParameter("@ACCION", accion));
-            paramsCSP.Add(new SqlParameter("@PREFIX", prefix));
+            List<object> paramsCSP = new List<object>
+            {
+                new SqlParameter("@ACCION", accion),
+                new SqlParameter("@PREFIX", prefix)
+            };
 
             if (num_doci != null) { paramsCSP.Add(new SqlParameter("@NUM_DOCI", num_doci)); }
             else { paramsCSP.Add(new SqlParameter("@NUM_DOCI", DBNull.Value)); }
@@ -34,10 +35,10 @@ namespace TAT001.Models.Dao
             if (fechaf != null) { paramsCSP.Add(new SqlParameter("@FECHAF", fechaf)); }
             else { paramsCSP.Add(new SqlParameter("@FECHAF", DBNull.Value)); }
 
-            if (kunnr != null) { paramsCSP.Add(new SqlParameter("@KUNNR", kunnr)); }
+            if (!string.IsNullOrEmpty(kunnr)) { paramsCSP.Add(new SqlParameter("@KUNNR", kunnr)); }
             else { paramsCSP.Add(new SqlParameter("@KUNNR", DBNull.Value)); }
 
-            if (usuario_id != null) { paramsCSP.Add(new SqlParameter("@USUARIO_ID", usuario_id)); }
+            if (!string.IsNullOrEmpty(usuario_id)) { paramsCSP.Add(new SqlParameter("@USUARIO_ID", usuario_id)); }
             else { paramsCSP.Add(new SqlParameter("@USUARIO_ID", DBNull.Value)); }
 
             if (!string.IsNullOrEmpty(sociedad_id)) { paramsCSP.Add(new SqlParameter("@SOCIEDAD_ID", sociedad_id)); }

@@ -403,7 +403,7 @@
 
                                     auto.ajax({
                                         url: root + "Listas/contactos",
-                                        type: "POST",
+                                        type: "GET",
                                         dataType: "json",
                                         data: { Prefix: request.term, vkorg: vk, vtweg: vt, kunnr: kunnr },
                                         success: function (data) {

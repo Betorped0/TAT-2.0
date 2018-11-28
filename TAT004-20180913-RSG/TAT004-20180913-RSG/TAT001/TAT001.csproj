@@ -1736,6 +1736,7 @@
     <Content Include="Scripts\ValidarProv.js" />
     <Content Include="Scripts\ValidarTCambio.js" />
     <Content Include="Views\Mails\logo_kellogg.png" />
+    <None Include="Views\ModificacionesGlobales\ListModSolicitudes.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

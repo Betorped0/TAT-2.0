@@ -178,13 +178,13 @@
         }
     },
     autoAjax: function (url,response,params,fnData) {
-        return auto.ajax({
+        return $.ajax({
             url: url,
             type: "GET",
             dataType: "json",
             data: params,
             success: function (data) {
-                response(auto.map(data, function (item) {
+                response($.map(data, function (item) {
                     return fnData(item);
                 }));
             }

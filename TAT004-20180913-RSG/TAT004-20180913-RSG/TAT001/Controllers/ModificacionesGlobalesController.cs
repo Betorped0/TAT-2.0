@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
 using TAT001.Common;
@@ -43,43 +44,117 @@ namespace TAT001.Controllers
         }
 
         [HttpPost]
-        public ActionResult ListModAutorizador(List<SolicitudPorAprobar> solicitudes)
+        public ActionResult ListModAutorizador(List<SolicitudPorAprobar> solicitudPorAprobar)
         {
             try
             {
-                string usuarioa_id = solicitudes.First().USUARIOA_ID_NUEVO;
-                foreach (SolicitudPorAprobar sol in solicitudes)
+                string usuarioa_id = solicitudPorAprobar.First().USUARIOA_ID_NUEVO;
+                foreach (SolicitudPorAprobar sol in solicitudPorAprobar)
                 {
                     //actualizar registro ant.
                     FLUJO f = db.FLUJOes.Where(x => x.NUM_DOC == sol.NUM_DOC).OrderByDescending(a => a.POS).FirstOrDefault();
                     if (f.ESTATUS== "P")
                     {
-                        f.POS = f.POS + 1;
-                        f.FECHAC = DateTime.Now;
+
+                        db.FLUJOes.Add(new FLUJO
+                        {
+                            WORKF_ID=f.WORKF_ID,
+                            WF_VERSION=f.WF_VERSION,
+                            WF_POS=f.WF_POS,
+                            NUM_DOC=f.NUM_DOC,
+                            POS=f.POS+1,
+                            DETPOS=f.DETPOS,
+                            DETVER=f.DETVER,
+                            LOOP=f.LOOP,
+                            USUARIOD_ID=f.USUARIOD_ID,
+                            USUARIOA_ID = usuarioa_id,
+                            ESTATUS = f.ESTATUS,
+                            FECHAC = DateTime.Now,
+                            FECHAM = DateTime.Now,
+                            COMENTARIO = "Se modifica Autorizador",
+                            STATUS= f.STATUS
+                        });
+
+                        f.ESTATUS = "M";
+                        f.STATUS = null;
                         f.FECHAM = DateTime.Now;
-                        f.USUARIOA_ID = usuarioa_id;
-                        f.COMENTARIO = "-";
-                        db.FLUJOes.Add(f);
-                        db.SaveChanges();
+                        db.Entry(f).State = EntityState.Modified;
+
                     }
                 }
-                return View("Index");
+                db.SaveChanges();
             }
             catch (Exception e)
             {
                 Log.ErrorLogApp(e, "ModificacionesGlobales", "ListModAutorizador");
-
-                int pagina_id = 240;//ID EN BASE DE DATOS
-                FnCommon.ObtenerTextos(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
-                ViewBag.spras_id = FnCommon.ObtenerSprasId(db, User.Identity.Name);
-
-                ModificacionesGlobalesViewModel modelView = new ModificacionesGlobalesViewModel
-                {
-                    solicitudPorAprobar = solicitudes
-                };
-                return View(modelView);
             }
+
+            return RedirectToAction("Index");
+        }
+        public ActionResult ListModSolicitudes(string sociedad_id, decimal? num_doci, decimal? num_docf, DateTime? fechai, DateTime? fechaf, string kunnr, string usuario_id)
+        {
+            int pagina_id = 240;//ID EN BASE DE DATOS
+            FnCommon.ObtenerTextos(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
+            ViewBag.spras_id = FnCommon.ObtenerSprasId(db, User.Identity.Name);
+
+            ModificacionesGlobalesViewModel modelView = new ModificacionesGlobalesViewModel
+            {
+                solicitudes = solicitudesDao.ListaSolicitudes(TATConstantes.ACCION_LISTA_SOCIEDADES,null,sociedad_id, num_doci, num_docf, usuario_id, fechai, fechaf, kunnr)
+            };
+            return View(modelView);
         }
 
+        [HttpPost]
+        public ActionResult ListModSolicitudes(List<DOCUMENTO> solicitudes)
+        {
+            try
+            {
+                string contacto = solicitudes[0].PAYER_NOMBRE;
+                string emailContacto = solicitudes[0].PAYER_EMAIL;
+                string estado = solicitudes[0].ESTADO;
+                string ciudad = solicitudes[0].CIUDAD;
+                string concepto = solicitudes[0].CONCEPTO;
+                string mecanica = solicitudes[0].NOTAS;
+                
+                foreach (DOCUMENTO sol in solicitudes)
+                {
+                    DOCUMENTO docActual = db.DOCUMENTOes.Find(sol.NUM_DOC);
+                    if (!string.IsNullOrEmpty(contacto))
+                    {
+                        docActual.PAYER_NOMBRE = contacto;
+                    }
+                    if (!string.IsNullOrEmpty(emailContacto))
+                    {
+                        docActual.PAYER_EMAIL = emailContacto;
+                    }
+                    if (!string.IsNullOrEmpty(estado))
+                    {
+                        docActual.ESTADO = estado;
+                    }
+                    if (!string.IsNullOrEmpty(ciudad))
+                    {
+                        docActual.CIUDAD = ciudad;
+                    }
+                    if (!string.IsNullOrEmpty(concepto))
+                    {
+                        docActual.CONCEPTO = concepto;
+                    }
+                    if (!string.IsNullOrEmpty(mecanica))
+                    {
+                        docActual.NOTAS = mecanica;
+                    }
+
+                    db.Entry(docActual).State = EntityState.Modified;
+                }
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Log.ErrorLogApp(e, "ModificacionesGlobales", "ListModSolicitudes");
+            }
+
+            return RedirectToAction("Index");
         }
+
+    }
 }
