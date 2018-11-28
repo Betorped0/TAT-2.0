@@ -165,7 +165,8 @@
                                     var clearing = [];
                                     function getClearing() {
                                         $("#div_clearing").empty();
-                                        cuentas();
+                                        var reversan = "@ViewBag.reversan";
+                                        cuentas(reversan == "X");
                                     }
                                     function formaClearing() {
                                         var tex_abono = document.querySelector(".lbl_cabono").innerHTML;
@@ -173,6 +174,7 @@
                                         var tex_clearing = document.querySelector(".lbl_cclear").innerHTML;
                                        
                                         getClearing();
+
                                         $("#div_clearing").empty();
                                         var monto = $('#monto_doc_md').val();
 
@@ -186,7 +188,7 @@
                                             div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + clearing[3] + "</div><div class='col s3'>" + clearing[2] + "</div><div class='col s3 right-align'>" + monto + "</div></div></div>";
                                         } else {
                                             if (clearing[2] != null) {
-                                                if (monto <= clearing[3]) {
+                                                if (monto <= clearing[5]) {
 
                                                     div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + clearing[3] + "</div><div class='col s3'>" + clearing[2] + "</div><div class='col s3 right-align'>" + monto + "</div></div>";
                                                     div += "</li><li class='collection-item'>";

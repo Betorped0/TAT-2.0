@@ -3586,6 +3586,10 @@ namespace TAT001.Controllers
                 }
                 impuesto = (D.MONTO_DOC_MD.Value * KBETR);
             }
+            if (D.TSOL.REVERSO)
+            {
+                montoApli = montoApli * -1;
+            }
             ViewBag.montoSol = format.toShow(D.MONTO_DOC_MD.Value, ".");
             ViewBag.montoProv = (esProv ? format.toShow(montoProv, ".") : "-");
             ViewBag.montoApli = (esDocRef ? format.toShow(montoApli, ".") : "-");
