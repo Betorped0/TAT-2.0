@@ -15,16 +15,23 @@ namespace TAT001.Services
             //ADD RSG 01.11.2018----------------------
             bool recurrent = false;
             bool draft = false;
+            bool reve = false;
             if (recurrente == "X")
                 recurrent = true;
             if (recurrente == "B")
                 draft = true;
+            if (recurrente == "C" && f.WORKFP.ACCION.TIPO == "E")
+                reve = true;
             //ADD RSG 01.11.2018----------------------
             string correcto = String.Empty;
             TAT001Entities db = new TAT001Entities();
             FLUJO actual = new FLUJO();
+            if (reve)
+                f.ESTATUS = "I";
             if (f.ESTATUS.Equals("I"))//---------------------------NUEVO REGISTRO
             {
+                if (reve)
+                    f.ESTATUS = "A";
                 actual.NUM_DOC = f.NUM_DOC;
                 DOCUMENTO d = db.DOCUMENTOes.Find(actual.NUM_DOC);
                 actual.COMENTARIO = f.COMENTARIO;
@@ -51,7 +58,8 @@ namespace TAT001.Services
                 actual.WORKF_ID = f.WORKF_ID;
                 f.ESTATUS = "A";
                 actual.ESTATUS = f.ESTATUS;
-                db.FLUJOes.Add(actual);
+                if (!reve)
+                    db.FLUJOes.Add(actual);
 
                 if (!draft)//NO ES BORRADOR
                 {
@@ -725,24 +733,30 @@ namespace TAT001.Services
                     conta.FECHAM = DateTime.Now;
                     corr = procesa(conta, recurrente);
                 }
-                if (corr == "")
-                {
-                    if (f.DOCUMENTO.DOCUMENTO_REF != null)
-                    {
-                        f.DOCUMENTO.TSOL = db.DOCUMENTOes.Where(x => x.NUM_DOC == f.NUM_DOC).FirstOrDefault().TSOL;
-                        if (f.DOCUMENTO.TSOL.REVERSO == false)
-                        {
-                            DOCUMENTO rel = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == f.DOCUMENTO.DOCUMENTO_REF & x.TSOL.REVERSO == true).FirstOrDefault();
-                            if (rel != null)
-                            {
-                                FLUJO rev = db.FLUJOes.Where(x => x.NUM_DOC == rel.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
-                                rev.ESTATUS = "A";
-                                rev.FECHAM = DateTime.Now;
-                                corr = procesa(rev, recurrente);
-                            }
-                        }
-                    }
-                }
+                ////if (corr == "")
+                ////{
+                ////    if (f.DOCUMENTO.DOCUMENTO_REF != null)
+                ////    {
+                ////        f.DOCUMENTO.TSOL = db.DOCUMENTOes.Where(x => x.NUM_DOC == f.NUM_DOC).FirstOrDefault().TSOL;
+                ////        if (f.DOCUMENTO.TSOL.REVERSO == false)
+                ////        {
+                ////            List<DOCUMENTO> rels = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == f.DOCUMENTO.DOCUMENTO_REF && !x.TSOL.REVERSO & x.ESTATUS_C != "C" & x.ESTATUS_WF != "B").ToList();
+                ////            bool ban = true;
+                ////            foreach (DOCUMENTO re in rels)
+                ////            {
+                ////                if(re.ESTATUS_WF)
+                ////            }
+                ////            DOCUMENTO rel = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == f.DOCUMENTO.DOCUMENTO_REF & x.TSOL.REVERSO == true).FirstOrDefault();
+                ////            if (rel != null & rel.ESTATUS_WF == "A")
+                ////            {
+                ////                FLUJO rev = db.FLUJOes.Where(x => x.NUM_DOC == rel.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+                ////                rev.ESTATUS = "A";
+                ////                rev.FECHAM = DateTime.Now;
+                ////                corr = procesa(rev, recurrente);
+                ////            }
+                ////        }
+                ////    }
+                ////}
             }
             //else if (correcto.Equals("1"))
             //{
