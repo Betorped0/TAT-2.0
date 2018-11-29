@@ -974,6 +974,11 @@ namespace TAT001.Controllers
         {
             int e = int.Parse(ejercicio);
             int p = int.Parse(periodo);
+            if (p > 12)
+            {
+                e = e + (p / 12);
+                p = p - 12;
+            }
             Calendario445 c4 = new Calendario445();
             DateTime f = c4.getPrimerDia(e, p);
             int daysUntilMonday = ((int)DayOfWeek.Monday - (int)f.DayOfWeek + 7) % 7;

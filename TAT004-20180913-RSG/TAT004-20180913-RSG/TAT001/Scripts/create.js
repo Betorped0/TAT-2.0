@@ -1464,6 +1464,8 @@ $(window).on('load', function () {
 
     selectCliente($("#payer_id").val());
     $('#tipo_cambio').val(toShow5($('#tipo_cambio').val()));
+    if (isDuplicado())
+        periodo();
 
     //B20180625 MGC 2018.06.26 Verificar si hay algún borrador mostrar la sección de facturas
     var check = $("#check_facturas").val();
@@ -1707,10 +1709,10 @@ function _ff() {
                 if (pp !== 0) {
                     $("#periodoi_id").val(pp);
                     document.getElementById("btn-peri").checked = true;
-                    $("#btn-peri").trigger("change");
                     if (!isDuplicado()) {
                         $("#anioi_id").val(_anoi);
                     }
+                    $("#btn-peri").trigger("change");
                 } else {
                     document.getElementById("btn-date").checked = true;
                     $("#btn-date").trigger("change");
@@ -1736,10 +1738,10 @@ function _ff() {
                 if (pp !== 0) {
                     $("#periodof_id").val(pp);
                     document.getElementById("btn-peri").checked = true;
-                    $("#btn-peri").trigger("change");
-                    if (!isDuplicado()) {
+                    //if (!isDuplicado()) {//ADD RSG 28.11.2018
                         $("#aniof_id").val(_anof);
-                    }
+                    //}
+                    $("#btn-peri").trigger("change");
                 } else {
                     document.getElementById("btn-date").checked = true;
                     $("#btn-date").trigger("change");
