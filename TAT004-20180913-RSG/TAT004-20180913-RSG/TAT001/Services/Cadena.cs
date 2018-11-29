@@ -13,15 +13,18 @@ namespace TAT001.Services
             try
             {
                 long matnr1 = long.Parse(m);
-                int l = 18 - m.Length;
-                for (int i = 0; i < l; i++)
+                if (matnr1 != 0)
                 {
-                    m = "0" + m;
+                    int l = 18 - m.Length;
+                    for (int i = 0; i < l; i++)
+                    {
+                        m = "0" + m;
+                    }
                 }
             }
             catch
             {
-
+                return m;
             }
             return m;
         }
@@ -31,15 +34,18 @@ namespace TAT001.Services
             try
             {
                 long matnr1 = long.Parse(m);
-                int l = 10 - m.Length;
-                for (int i = 0; i < l; i++)
+                if (matnr1 != 0)
                 {
-                    m = "0" + m;
+                    int l = 10 - m.Length;
+                    for (int i = 0; i < l; i++)
+                    {
+                        m = "0" + m;
+                    }
                 }
             }
             catch
             {
-
+                return m;
             }
             return m;
         }

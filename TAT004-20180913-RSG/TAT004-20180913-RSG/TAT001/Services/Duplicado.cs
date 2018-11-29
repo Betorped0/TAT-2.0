@@ -10,8 +10,6 @@ namespace TAT001.Services
     {
         public DOCUMENTBORR llenaDuplicado(TAT001Entities db1, decimal num_doc, string user)
         {
-            //using (TAT001Entities db1 = new TAT001Entities())
-            //{
             DOCUMENTBORR docb = new DOCUMENTBORR();
             DOCUMENTO docPadre = db1.DOCUMENTOes.Find(num_doc);
             docb.AGENTE_ACTUAL = docPadre.AGENTE_ACTUAL;
@@ -79,7 +77,7 @@ namespace TAT001.Services
             docb.TIPO_CAMBIOL2 = docPadre.TIPO_CAMBIOL2;
             docb.TIPO_RECURRENTE = docPadre.TIPO_RECURRENTE;
             docb.TIPO_TECNICO = docPadre.TIPO_TECNICO;
-            //docb.TIPO_TECNICO2 = docPadre. ;
+
             TSOL tsol = db1.TSOLs.Where(x => x.TSOLM == docPadre.TSOL_ID).FirstOrDefault();
             if (tsol == null)
                 docb.TSOL_ID = docPadre.TSOL_ID;
@@ -154,7 +152,6 @@ namespace TAT001.Services
                     docb.DOCUMENTOBORRRECs.Add(docRe);
                 }
             return docb;
-            //}
         }
     }
 }

@@ -49,17 +49,20 @@ function soportes(tsol, spras) {
         data: { tsol: tsol },
         success: function (data) {
             $("#txt_trec").val(data);
-            if (data === "") {
+            if (data !== "1") {
                 //$("#tabs_rec").addClass("disabled");
-                $("#check_recurrente").addClass("disabled");
+                $("#check_recurrente").prop("checked", false);
+                $("#check_recurrente").attr("disabled", "disabled");
+                $("#check_recurrente").trigger("change");
             } else {
                 if (!isRelacionada()) {
                     //$("#tabs_rec").removeClass("disabled");
-                    $("#check_recurrente").removeClass("disabled");
+                    $("#check_recurrente").attr("disabled", false);
                 }
             }
         }
     });
+
 }
 
 function pickerFecha(clase) {
