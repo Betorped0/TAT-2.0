@@ -3,7 +3,7 @@
 @using (Html.BeginForm("ListModSolicitudes", "ModificacionesGlobales", FormMethod.Post, new { @id = "modSolicitudesForm" }))
 {
     <div class="col s12 l12 right-align">
-        <button type="button" id="btn_save" class="btn btn-small modal-trigger" href="#modal2" disabled></button>
+        <a id="btn_save" class="btn btn-small modal-trigger" href="#modal2" disabled></a>
     </div>
     <table class="table mdl-data-table striped" id="tableModSolicitudes" style="width:100%; overflow-x: scroll;">
         <thead>
@@ -96,7 +96,7 @@
         </tbody>
     </table>
 
-    <div id="modal2" class="modal">
+    <div id="modal2" class="modal" style=" background-color: #B90C46; height: 200px; width: 350px;">
         <div class="modal-content">
             <p style="color: white;font-size: 16px;" class="lbl_actualizar"></p>
         </div>
@@ -134,8 +134,9 @@
     </div>
 }
 <script>
-    var registrosSol = "@Model.solicitudes.Count" * 1;
+    fnCommon.materializeInit('modal');
 
+    var registrosSol = "@Model.solicitudes.Count" * 1;
     //----- Configuracion de Tablas-----
     var root = "@Url.Content("~")",
         spras_id = "@ViewBag.spras_id",
@@ -145,19 +146,13 @@
         $('#btn_save').removeAttr('disabled');
     }
     function actualizarSolicitudes() {
-        $('#modAutorizadoForm').submit();
-    }
-    //-------Mostrar process---------
-    $('#modAutorizadoForm').submit(function () {
-        $("#USUARIOA_ID_2").removeClass("invalid");
         var esCambio = ($("#PAYER_NOMBRE").val() != "" || $("#PAYER_EMAIL").val() != "" || $("#ESTADO").val() != "" || $("#CIUDAD").val() != "" || $("#CONCEPTO").val() != "" || $("#NOTAS").val() != "");
         if (registrosSol > 0 && esCambio) {
             document.getElementById("loader").style.display = "flex";
-        } else {
-            return;
+            $('#modAutorizadoForm').submit();
         }
-
-    });
+       
+    }
 
 </script>
 <script>
@@ -178,9 +173,16 @@
                 noResults: '',
                 results: function (resultsCount) { }
             },
+            change: function (e, ui) {
+                if (!(ui.item)) {
+                    e.target.value = "";
+                }
+            },
             select: function (event, ui) {
                 var label = ui.item.label;
                 var value = ui.item.value;
+                var email = ui.item.mail;
+                $("#PAYER_EMAIL").val(email);
             }
         });
         $("#ESTADO").autocomplete({

@@ -77,7 +77,7 @@
                             @Html.EditorFor(model => model.filtros.KUNNR, new { htmlAttributes = new { @maxlength = 10, @id = "KUNNR_1" } })
                         </div>
                         <div class="col s2">
-                            <button id="btn_buscar_1" class="btn btn-default" onclick="ListModSolicitudes()"><span class="lbl_search"></span></button>
+                            <button id="btn_buscar_1" class="btn btn-small" onclick="ListModSolicitudes()"><span class="lbl_search"></span></button>
                         </div>
                     </div>
                 </div>
@@ -144,7 +144,7 @@
                             @Html.EditorFor(model => model.filtros.KUNNR, new { htmlAttributes = new { @maxlength = 10, @id = "KUNNR_2" } })
                         </div>
                         <div class="col s2">
-                            <button id="btn_buscar_2" class="btn btn-default" onclick="ListModAutorizador()"><span class="lbl_search"></span></button>
+                            <button id="btn_buscar_2" class="btn btn-small" onclick="ListModAutorizador()"><span class="lbl_search"></span></button>
                         </div>
                     </div>
                 </div>
@@ -168,16 +168,16 @@
 </div>
 <script>
     var spras_id ="@ViewBag.spras_id";
-        //---- Inicializador de componentes Materialize----
-        fnCommon.materializeInit('datepicker', spras_id);
-        fnCommon.materializeInit('select');
-        fnCommon.materializeInit('tabs');
+    //---- Inicializador de componentes Materialize----
+    fnCommon.materializeInit('datepicker', spras_id);
+    fnCommon.materializeInit('select');
+    fnCommon.materializeInit('tabs');
 
-        // Remover Fecha y Hora
-        var sinFecha = "01/01/0001";
-        document.querySelectorAll('.datepicker').forEach(function (datePicker) {
-            if (datePicker.value.indexOf(sinFecha)>-1) { datePicker.value = ''; }
-        });
+    // Remover Fecha y Hora
+    var sinFecha = "01/01/0001";
+    document.querySelectorAll('.datepicker').forEach(function (datePicker) {
+    if (datePicker.value.indexOf(sinFecha)>-1) { datePicker.value = ''; }
+    });
     fnCommon.setDateRange('FECHAI_1', 'FECHAF_1', null);
     fnCommon.setDateRange('FECHAF_1', null, 'FECHAI_1');
     fnCommon.setDateRange('FECHAI_2', 'FECHAF_2', null);
@@ -221,7 +221,7 @@
             kunnr = $("#KUNNR_1").val(),
             usuario_id = $("#USUARIO_ID_1").val(),
             sociedad_id = $("#SOCIEDAD_ID_1").val();
-        
+
         fnCommon.showProcess(true);
         $.ajax({
             url: root + 'ModificacionesGlobales/ListModSolicitudes?sociedad_id=' + sociedad_id + '&num_doci=' + num_doci
@@ -247,6 +247,11 @@
                 noResults: '',
                 results: function (resultsCount) { }
             },
+            change: function (e, ui) {
+                if (!(ui.item)) {
+                    e.target.value = "";
+                }
+            },
             select: function (event, ui) {
                 var label = ui.item.label;
                 var value = ui.item.value;
@@ -261,6 +266,11 @@
                 messages: {
                     noResults: '',
                     results: function (resultsCount) { }
+                },
+                change: function (e, ui) {
+                    if (!(ui.item)) {
+                        e.target.value = "";
+                    }
                 },
                 select: function (event, ui) {
                     var label = ui.item.label;
@@ -277,6 +287,11 @@
                 noResults: '',
                 results: function (resultsCount) { }
             },
+            change: function (e, ui) {
+                if (!(ui.item)) {
+                    e.target.value = "";
+                }
+            },
             select: function (event, ui) {
                 var label = ui.item.label;
                 var value = ui.item.value;
@@ -291,6 +306,11 @@
             messages: {
                 noResults: '',
                 results: function (resultsCount) { }
+            },
+            change: function (e, ui) {
+                if (!(ui.item)) {
+                    e.target.value = "";
+                }
             },
             select: function (event, ui) {
                 var label = ui.item.label;
@@ -308,6 +328,11 @@
                 noResults: '',
                 results: function (resultsCount) { }
             },
+            change: function (e, ui) {
+                if (!(ui.item)) {
+                    e.target.value = "";
+                }
+            },
             select: function (event, ui) {
                 var label = ui.item.label;
                 var value = ui.item.value;
@@ -323,6 +348,11 @@
                     noResults: '',
                     results: function (resultsCount) { }
                 },
+                change: function (e, ui) {
+                    if (!(ui.item)) {
+                        e.target.value = "";
+                    }
+                },
                 select: function (event, ui) {
                     var label = ui.item.label;
                     var value = ui.item.value;
@@ -337,6 +367,11 @@
                 messages: {
                     noResults: '',
                     results: function (resultsCount) { }
+                },
+                change: function (e, ui) {
+                    if (!(ui.item)) {
+                        e.target.value = "";
+                    }
                 },
                 select: function (event, ui) {
                     var label = ui.item.label;
@@ -354,6 +389,11 @@
                 noResults: '',
                 results: function (resultsCount) { }
             },
+            change: function (e, ui) {
+                if (!(ui.item)) {
+                    e.target.value = "";
+                }
+            },
             select: function (event, ui) {
                 var label = ui.item.label;
                 var value = ui.item.value;
@@ -369,6 +409,11 @@
             messages: {
                 noResults: '',
                 results: function (resultsCount) { }
+            },
+            change: function (e, ui) {
+                if (!(ui.item)) {
+                    e.target.value = "";
+                }
             },
             select: function (event, ui) {
                 var label = ui.item.label;

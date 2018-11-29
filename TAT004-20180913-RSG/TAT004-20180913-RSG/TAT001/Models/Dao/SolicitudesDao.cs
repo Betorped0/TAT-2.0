@@ -74,7 +74,7 @@ namespace TAT001.Models.Dao
             if (!string.IsNullOrEmpty(sociedad_id)) { paramsCSP.Add(new SqlParameter("@SOCIEDAD_ID", sociedad_id)); }
             else { paramsCSP.Add(new SqlParameter("@SOCIEDAD_ID", DBNull.Value)); }
 
-            if (usuario_id != null) { paramsCSP.Add(new SqlParameter("@USUARIO_ID", usuario_id)); }
+            if (!string.IsNullOrEmpty(usuario_id)) { paramsCSP.Add(new SqlParameter("@USUARIO_ID", usuario_id)); }
             else { paramsCSP.Add(new SqlParameter("@USUARIO_ID", DBNull.Value)); }
 
             List<SolicitudPorAprobar> solicitudes = db.Database.SqlQuery<SolicitudPorAprobar>("CPS_LISTA_SOLICITUDES_POR_APROBAR @NUM_DOCI,@NUM_DOCF,@FECHAI,@FECHAF,@KUNNR,@USUARIOA_ID,@SOCIEDAD_ID,@USUARIO_ID",
