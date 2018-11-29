@@ -847,7 +847,7 @@ namespace TAT001.Controllers.Catalogos
                             x.DEFECTO = false;
                             db.Entry(x).State = EntityState.Modified;
                         });
-                        if (!db.CONTACTOCs.Any(x=>x.EMAIL== (da.CONTACTOE != null ? da.CONTACTOE.Trim() : null) && x.NOMBRE== (da.CONTACTO != null ? da.CONTACTO.Trim() : null)))
+                        if (!db.CONTACTOCs.Any(x=>x.EMAIL== (da.CONTACTOE != null ? da.CONTACTOE.Trim() : null) && x.NOMBRE== (da.CONTACTO != null ? da.CONTACTO.Trim() : null) && x.KUNNR==da.KUNNR))
                         {
                             co.NOMBRE = (!string.IsNullOrEmpty(da.CONTACTO) ? da.CONTACTO.Trim() : null);
                             co.EMAIL = (!string.IsNullOrEmpty(da.CONTACTOE) ? da.CONTACTOE.Trim() : null);
@@ -859,7 +859,14 @@ namespace TAT001.Controllers.Catalogos
                             co.DEFECTO = true;
                             db.CONTACTOCs.Add(co);
                         }
-                      
+                        else
+                        {
+                            co = db.CONTACTOCs.FirstOrDefault(x => x.EMAIL == da.CONTACTOE.Trim() && x.NOMBRE == da.CONTACTO.Trim() && x.KUNNR == da.KUNNR);
+                            co.DEFECTO = true;
+                            co.ACTIVO = true;
+                            db.Entry(co).State = EntityState.Modified;
+                        }
+
                     }
                     ////Guardar cambios en db
                     db.CLIENTEFs.Add(cl);
