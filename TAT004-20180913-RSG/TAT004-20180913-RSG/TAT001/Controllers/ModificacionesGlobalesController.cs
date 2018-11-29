@@ -30,7 +30,7 @@ namespace TAT001.Controllers
             };
             return View(modelView);
         }
-        public ActionResult ListModAutorizador(string sociedad_id,decimal? num_doci, decimal? num_docf, DateTime? fechai, DateTime? fechaf, string kunnr, string usuarioa_id)
+        public ActionResult ListModAutorizador(string sociedad_id,decimal? num_doci, decimal? num_docf, DateTime? fechai, DateTime? fechaf, string kunnr, string usuarioa_id, string usuario_id)
         {
             int pagina_id = 240;//ID EN BASE DE DATOS
             FnCommon.ObtenerTextos(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
@@ -38,7 +38,7 @@ namespace TAT001.Controllers
 
             ModificacionesGlobalesViewModel modelView = new ModificacionesGlobalesViewModel
             {
-                solicitudPorAprobar = solicitudesDao.ListaSolicitudesPorAprobar(sociedad_id,num_doci, num_docf, fechai, fechaf, kunnr, usuarioa_id)
+                solicitudPorAprobar = solicitudesDao.ListaSolicitudesPorAprobar(sociedad_id,num_doci, num_docf, fechai, fechaf, kunnr, usuarioa_id, usuario_id)
             };
             return View(modelView);
         }

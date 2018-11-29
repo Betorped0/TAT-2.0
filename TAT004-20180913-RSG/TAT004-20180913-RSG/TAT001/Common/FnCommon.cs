@@ -403,18 +403,6 @@ namespace TAT001.Common
             return documentop;
         }
 
-       
-
-        public static List<TALLT> ObtenerTallsConCuenta(TAT001Entities db, string spras_id, string pais_id, int ejercicio, string sociedad_id)
-        {
-            List<TALLT> talls = db.Database.SqlQuery<TALLT>("CSP_LISTA_TALL_CUENTA @SPRAS_ID,@PAIS_ID,@EJERCICIO,@SOCIEDAD_ID",
-                new SqlParameter("@SPRAS_ID", spras_id),
-                new SqlParameter("@PAIS_ID", pais_id),
-                new SqlParameter("@EJERCICIO", ejercicio),
-                new SqlParameter("@SOCIEDAD_ID", sociedad_id)).ToList();
-
-            return talls;
-        }
 
         public static List<SelectListItem> ObtenerCmbNivelesA()
         {

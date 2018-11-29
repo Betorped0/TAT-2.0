@@ -3,7 +3,7 @@
 @using (Html.BeginForm("ListModAutorizador", "ModificacionesGlobales", FormMethod.Post, new { @id = "modAutorizadoForm" }))
 {
     <div class="col s12 l12 right-align">
-        <button type="submit" id="btn_save" class="btn btn-default" disabled></button>
+        <button type="button" id="btn_save" class="btn btn-small modal-trigger" href="#modal1"  disabled></button>
     </div>
     <table class="table mdl-data-table striped" id="tableModAutorizador" style="width:100%; overflow-x: scroll;">
         <thead>
@@ -11,39 +11,46 @@
                 <th id="lbl_num_doc">Num Doc</th>
                 <th id="lbl_usuario">Usuario</th>
                 <th id="lbl_autorizador">Autorizador</th>
-                <th id="lbl_nuevo_autorizador">Nuevo autorizador</th>
             </tr>
         </thead>
         <tbody>
-            @{
-                for (int i = 0; i < Model.solicitudPorAprobar.Count; i++)
-                {
-                    <tr>
-                        <td>
-                            @Html.HiddenFor(model => Model.solicitudPorAprobar[i].NUM_DOC)
-                            @Model.solicitudPorAprobar[i].NUM_DOC
-                        </td>
-                        <td>
-                            @Html.HiddenFor(model => Model.solicitudPorAprobar[i].USUARIOD_ID)
-                            @Html.HiddenFor(model => Model.solicitudPorAprobar[i].USUARIOA_NOMBRE)
-                            @Model.solicitudPorAprobar[i].USUARIOD_ID - @Model.solicitudPorAprobar[i].USUARIOA_NOMBRE
-                        </td>
-                        <td>
-                            @Html.HiddenFor(model => Model.solicitudPorAprobar[i].USUARIOA_ID)
-                            @Html.HiddenFor(model => Model.solicitudPorAprobar[i].USUARIOA_NOMBRE)
-                            @Model.solicitudPorAprobar[i].USUARIOA_ID - @Model.solicitudPorAprobar[i].USUARIOA_NOMBRE
-                        </td>
-                        <td>
-                            @if (i == 0)
-                            {
-                                @Html.EditorFor(model => Model.solicitudPorAprobar[i].USUARIOA_ID_NUEVO, new { htmlAttributes = new { @style = "width: 250px;", @maxlength = 18, @id = "USUARIOA_ID_NUEVO" } })
-                            }
-                        </td>
-                    </tr>
-                }
+            @if (Model.solicitudPorAprobar.Count > 0)
+            {
+            <tr>
+                <td></td>
+                <td></td>
+                <td>
+                    @Html.EditorFor(model => Model.solicitudPorAprobar[0].USUARIOA_ID_NUEVO, new { htmlAttributes = new { @style = "width: 250px;", @maxlength = 18, @id = "USUARIOA_ID_NUEVO",@Value="" } })
+                </td>
+            </tr>
+            }
+            @for (int i = 0; i < Model.solicitudPorAprobar.Count; i++)
+            {
+                <tr>
+                    <td>
+                        @Html.HiddenFor(model => Model.solicitudPorAprobar[i].NUM_DOC)
+                        @Model.solicitudPorAprobar[i].NUM_DOC
+                    </td>
+                    <td>
+                        @Model.solicitudPorAprobar[i].USUARIOD_ID - @Model.solicitudPorAprobar[i].USUARIOA_NOMBRE
+                    </td>
+                    <td>
+                        @Model.solicitudPorAprobar[i].USUARIOA_ID - @Model.solicitudPorAprobar[i].USUARIOA_NOMBRE
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
+    
+<div id="modal1" class="modal">
+    <div class="modal-content">
+        <p style="color: white;font-size: 16px;" class="lbl_actualizar"></p>
+    </div>
+    <div class="modal-footer">
+        <a class="modal-close waves-effect  btn-flat"><label class="lbl_No"></label></a>
+        <a onclick="actualizarAutorizador()" class="modal-close waves-effect  btn-flat"><label class="lbl_Si"></label></a>
+    </div>
+</div>
     <div>
 
         @if (ViewBag.textos != null)
@@ -82,7 +89,10 @@
         fnCommon.configurarTable('tableModAutorizador', '50vh', '50vh', urlLanguage, 'cmbPagModAutorizador','gfilterModAutorizador',[0]);
         if (registros > 0) {
             $('#btn_save').removeAttr('disabled');
-        }
+    }
+    function actualizarAutorizador() {
+        $('#modAutorizadoForm').submit();
+    }
     //-------Mostrar process---------
     $('#modAutorizadoForm').submit(function () {
         $("#USUARIOA_ID_2").removeClass("invalid");
