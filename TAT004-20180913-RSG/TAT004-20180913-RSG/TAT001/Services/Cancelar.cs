@@ -18,7 +18,7 @@ namespace TAT001.Services
                 FLUJO actual = db.FLUJOes.Where(a => a.NUM_DOC == id).OrderByDescending(a => a.POS).FirstOrDefault();
                 db.Entry(d).State = EntityState.Modified;
 
-                if (d.DOCUMENTO_REF != null & !d.TSOL.REVERSO)//Se cancela una relacionada
+                if (d.DOCUMENTO_REF != null && !d.TSOL.REVERSO)//Se cancela una relacionada
                 {
                     DOCUMENTO dRef = db.DOCUMENTOes.Find(d.DOCUMENTO_REF);//Se abre de nuevo la provisión
                     dRef.ESTATUS = "A";
@@ -27,7 +27,7 @@ namespace TAT001.Services
                     if (actual != null)
                     {
                         FLUJO nuevo = new FLUJO();
-                        WORKFP fin = db.WORKFPs.Where(a => a.ID == actual.WORKF_ID & a.VERSION == actual.WF_VERSION & a.NEXT_STEP == 99).FirstOrDefault();
+                        WORKFP fin = db.WORKFPs.Where(a => a.ID == actual.WORKF_ID && a.VERSION == actual.WF_VERSION && a.NEXT_STEP == 99).FirstOrDefault();
                         if (fin != null)
                         {
                             nuevo.COMENTARIO = "";
@@ -46,7 +46,7 @@ namespace TAT001.Services
                             db.FLUJOes.Add(nuevo);
                         }
                     }
-                    DOCUMENTO rev = db.DOCUMENTOes.FirstOrDefault(a => a.DOCUMENTO_REF == dRef.NUM_DOC & a.ESTATUS_C != "C" & a.ESTATUS_WF != "B" & a.TSOL.REVERSO);
+                    DOCUMENTO rev = db.DOCUMENTOes.FirstOrDefault(a => a.DOCUMENTO_REF == dRef.NUM_DOC && a.ESTATUS_C != "C" && a.ESTATUS_WF != "B" && a.TSOL.REVERSO);
                     if (rev != null)
                     {
                         cancela(rev.NUM_DOC, user);
@@ -61,7 +61,7 @@ namespace TAT001.Services
                         db.Entry(dRef).State = EntityState.Modified;
                     }
                     FLUJO nuevo = new FLUJO();
-                    WORKFP fin = db.WORKFPs.Where(a => a.ID == actual.WORKF_ID & a.VERSION == actual.WF_VERSION & a.NEXT_STEP == 99).FirstOrDefault();
+                    WORKFP fin = db.WORKFPs.Where(a => a.ID == actual.WORKF_ID && a.VERSION == actual.WF_VERSION && a.NEXT_STEP == 99).FirstOrDefault();
                     if (fin != null)
                     {
                         nuevo.COMENTARIO = "";

@@ -14,11 +14,9 @@ namespace TAT001.Services
 {
     public class Email
     {
-        private TAT001Entities db = new TAT001Entities();
+        private readonly TAT001Entities db = new TAT001Entities();
         public void enviaMailC(decimal id, bool ban, string spras, string UrlDirectory, string page, string image)
         {
-            //int pagina = 203; //ID EN BASE DE DATOS
-            //ViewBag.Title = "Solicitud";
             try
             {
                 if (id != 0)
@@ -28,12 +26,11 @@ namespace TAT001.Services
                     {
 
                         dOCUMENTO.CLIENTE = db.CLIENTEs.Where(a => a.VKORG.Equals(dOCUMENTO.VKORG)
-                                                                & a.VTWEG.Equals(dOCUMENTO.VTWEG)
-                                                                & a.SPART.Equals(dOCUMENTO.SPART)
-                                                                & a.KUNNR.Equals(dOCUMENTO.PAYER_ID)).First();
+                                                                && a.VTWEG.Equals(dOCUMENTO.VTWEG)
+                                                                && a.SPART.Equals(dOCUMENTO.SPART)
+                                                                && a.KUNNR.Equals(dOCUMENTO.PAYER_ID)).First();
                         var workflow = db.FLUJOes.Where(a => a.NUM_DOC.Equals(id)).OrderByDescending(a => a.POS).FirstOrDefault();
-                        //ViewBag.acciones = db.FLUJOes.Where(a => a.NUM_DOC.Equals(id) & a.ESTATUS.Equals("P") & a.USUARIOA_ID.Equals(User.Identity.Name)).FirstOrDefault();
-
+                        
                         string mailt = ConfigurationManager.AppSettings["mailt"];
                         string mtest = ConfigurationManager.AppSettings["mailtest"]; //B20180803 MGC Correos
                         string mailTo = "";
@@ -67,7 +64,7 @@ namespace TAT001.Services
                             else
                                 mail.Subject = workflow.ESTATUS + dOCUMENTO.NUM_DOC + "-" + DateTime.Now.ToShortTimeString();
                             mail.IsBodyHtml = true;
-                            //UrlDirectory = UrlDirectory.Substring(0, UrlDirectory.LastIndexOf("/"));
+
                             UrlDirectory = UrlDirectory.Replace("Solicitudes/Create", "Correos/" + page);
                             UrlDirectory = UrlDirectory.Replace("Solicitudes/Details", "Correos/" + page);
                             UrlDirectory = UrlDirectory.Replace("Solicitudes/Edit", "Correos/" + page);
@@ -94,18 +91,19 @@ namespace TAT001.Services
 
                     }
                 }
-                //return View(dOCUMENTO);
             }
-            catch { }
+            catch {
+                Console.Write("Error al enviar correo");
+            }
         }
 
         private AlternateView Mail_Body(string strr, string path)
         {
 
-            //string path = "";
-            //path = HttpContext.Current.Server.MapPath("/images/logo_kellogg.png");
+            ////string path = "";
+            ////path = HttpContext.Current.Server.MapPath("/images/logo_kellogg.png");
 
-            //string path = "C:/Users/matias/Documents/GitHub/TAT004/TAT001/images/logo_kellogg.png";// HttpContext.Current.Server.MapPath(@"images/6792532.jpg");
+            ////string path = "C:/Users/matias/Documents/GitHub/TAT004/TAT001/images/logo_kellogg.png";// HttpContext.Current.Server.MapPath(@"images/6792532.jpg");
             LinkedResource Img = new LinkedResource(path, MediaTypeNames.Image.Jpeg);
             Img.ContentId = "logo_img";
 
