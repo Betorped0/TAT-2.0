@@ -855,6 +855,7 @@
     <Compile Include="Models\Dao\ContactosDao.cs" />
     <Compile Include="Models\Dao\PeriodosDao.cs" />
     <Compile Include="Models\Dao\SolicitudesDao.cs" />
+    <Compile Include="Models\Dao\TallsDao.cs" />
     <Compile Include="Models\Dao\UsuariosDao.cs" />
     <Compile Include="Models\dby.cs" />
     <Compile Include="Models\DesviacionesTS.cs" />

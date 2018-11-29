@@ -22,6 +22,7 @@ namespace TAT001.Controllers
         readonly SolicitudesDao solicitudesDao = new SolicitudesDao();
         readonly ContactosDao contactosDao = new ContactosDao();
         readonly ClientesDao clientesDao = new ClientesDao();
+        readonly TallsDao tallsDao = new TallsDao();
 
         // GET: Listas
         public ActionResult Index()
@@ -120,8 +121,12 @@ namespace TAT001.Controllers
         }
 
         [HttpGet]
-        public JsonResult Clientes(string Prefix, string usuario, string pais)
+        public JsonResult Clientes(string Prefix, string usuario, string pais= null,string sociedad_id=null)
         {
+            if (sociedad_id!=null)
+            {
+                pais = db.SOCIEDADs.Find(sociedad_id).LAND;
+            }
             var clientes = clientesDao.ListaClientes(Prefix,usuario,pais);
             JsonResult cc = Json(clientes, JsonRequestBehavior.AllowGet);
             return cc;
@@ -158,7 +163,7 @@ namespace TAT001.Controllers
             }
             else
             {
-                usuarios = usuariosDao.ListaUsuarios(Prefix, TATConstantes.ACCION_LISTA_USUARIO);
+                usuarios = usuariosDao.ListaUsuarios(Prefix, TATConstantes.ACCION_LISTA_USUARIO,null, sociedad_id);
             }
             JsonResult cc = Json(usuarios, JsonRequestBehavior.AllowGet);
             return cc;
@@ -1327,6 +1332,19 @@ namespace TAT001.Controllers
                      select new { ID = st.MWSKZ, TXT50 = (st.MWSKZ) });
 
             return Json(c, JsonRequestBehavior.AllowGet);
+        }
+        [HttpGet]
+        public JsonResult Talls(string Prefix, string sociedad_id)
+        {
+            string spras_id = FnCommon.ObtenerSprasId(db,User.Identity.Name);
+            int ejercicio = DateTime.Now.Year;
+            string pais_id = db.SOCIEDADs.Any(x => x.BUKRS == sociedad_id) ? db.SOCIEDADs.First(x => x.BUKRS == sociedad_id).LAND:null ;
+
+            var talls = tallsDao.ListaTallsConCuenta(Prefix, spras_id, pais_id,ejercicio,sociedad_id);
+            JsonResult cc = Json(talls, JsonRequestBehavior.AllowGet);
+            return cc;
+
+
         }
     }
 }

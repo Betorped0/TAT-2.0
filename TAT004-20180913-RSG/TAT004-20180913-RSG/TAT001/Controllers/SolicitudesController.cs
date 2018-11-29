@@ -15,6 +15,7 @@ using System.Web.Mvc;
 using TAT001.Common;
 using TAT001.Entities;
 using TAT001.Models;
+using TAT001.Models.Dao;
 using TAT001.Services;
 
 namespace TAT001.Controllers
@@ -24,6 +25,8 @@ namespace TAT001.Controllers
     {
         private TAT001Entities db = new TAT001Entities();
 
+        //------------------DAO------------------------------
+        readonly TallsDao tallsDao = new TallsDao();
         public ActionResult Index()
         {
             return RedirectToAction("Index", "Home");
@@ -791,7 +794,7 @@ namespace TAT001.Controllers
                                 }).ToList();
                 //clasificación
                 //MGC B20180611
-                List<TALLT_MOD> id_clas = FnCommon.ObtenerTallsConCuenta(db, user.SPRAS_ID, pais_id, DateTime.Now.Year, sociedad_id)
+                List<TALLT_MOD> id_clas = tallsDao.ListaTallsConCuenta(null,user.SPRAS_ID, pais_id, DateTime.Now.Year, sociedad_id)
                     .Select(x => new TALLT_MOD
                     {
                         SPRAS_ID = x.SPRAS_ID,
@@ -3618,7 +3621,7 @@ namespace TAT001.Controllers
                 {
                     decimal concecutivo = db.CONPOSAPHs.First(x => x.TIPO_SOL == "NC" && x.SOCIEDAD == D.SOCIEDAD_ID && (x.TIPO_DOC == "YG" || x.TIPO_DOC == "DG")).CONSECUTIVO;
                     string tax_code = db.CONPOSAPPs.First(x => x.CONSECUTIVO == concecutivo).TAX_CODE;
-                    KBETR = db.IIMPUESTOes.First(x => x.MWSKZ == tax_code).KBETR.Value;
+                    KBETR = db.IIMPUESTOes.Any(x => x.MWSKZ == tax_code)?db.IIMPUESTOes.First(x => x.MWSKZ == tax_code).KBETR.Value:0.0M;
                 }
                 impuesto = (D.MONTO_DOC_MD.Value * KBETR);
             }

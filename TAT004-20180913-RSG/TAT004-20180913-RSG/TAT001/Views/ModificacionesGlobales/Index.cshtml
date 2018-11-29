@@ -133,6 +133,12 @@
                         </div>
                     </div>
                     <div class="row">
+                        <label class="col s2"><span class="lbl_agente"></span></label>
+                        <div class="col s2">
+                            @Html.EditorFor(model => model.filtros.USUARIO_ID, new { htmlAttributes = new { @maxlength = 18, @id = "USUARIO_ID_2" } })
+                        </div>
+                    </div>
+                    <div class="row">
                         <label class="col s2"><span class="lbl_cliente"></span></label>
                         <div class="col s2">
                             @Html.EditorFor(model => model.filtros.KUNNR, new { htmlAttributes = new { @maxlength = 10, @id = "KUNNR_2" } })
@@ -172,8 +178,10 @@
         document.querySelectorAll('.datepicker').forEach(function (datePicker) {
             if (datePicker.value.indexOf(sinFecha)>-1) { datePicker.value = ''; }
         });
-        fnCommon.setDateRange('FECHAI_1','FECHAF_1', null);
-        fnCommon.setDateRange('FECHAI_2', 'FECHAF_2', null);
+    fnCommon.setDateRange('FECHAI_1', 'FECHAF_1', null);
+    fnCommon.setDateRange('FECHAF_1', null, 'FECHAI_1');
+    fnCommon.setDateRange('FECHAI_2', 'FECHAF_2', null);
+    fnCommon.setDateRange('FECHAF_2', null, 'FECHAI_2');
 
 
     function ListModAutorizador() {
@@ -182,18 +190,21 @@
             fechai = $("#FECHAI_1").val(),
             fechaf = $("#FECHAF_1").val(),
             kunnr = $("#KUNNR_2").val(),
-            usuario_id = $("#USUARIOA_ID_2").val(),
+            usuarioa_id = $("#USUARIOA_ID_2").val(),
+            usuario_id = $("#USUARIO_ID_2").val(),
          sociedad_id = $("#SOCIEDAD_ID_2").val();
 
-        if (!usuario_id){
+        if (!usuarioa_id){
             $("#USUARIOA_ID_2").addClass("invalid");
             return;
         }
         $("#USUARIOA_ID_2").removeClass("invalid");
         fnCommon.showProcess(true);
         $.ajax({
-            url: root + 'ModificacionesGlobales/ListModAutorizador?sociedad_id=' + sociedad_id+'&num_doci=' + num_doci
-            + '&&num_docf=' + num_docf + '&&fechai=' + fechai + '&&fechaf=' + fechaf + '&&kunnr=' + kunnr + '&&usuarioa_id=' + usuario_id,
+            url: root + 'ModificacionesGlobales/ListModAutorizador?'
+                + 'sociedad_id=' + sociedad_id + '&num_doci=' + num_doci
+                + '&&num_docf=' + num_docf + '&&fechai=' + fechai + '&&fechaf=' + fechaf
+                + '&&kunnr=' + kunnr + '&&usuarioa_id=' + usuarioa_id + '&&usuario_id=' + usuario_id,
             success: function (resultView) {
                 fnCommon.showProcess(false);
                 $('#listModAutorizador').html(resultView);
@@ -228,7 +239,9 @@
     auto(document).ready(function () {
         $("#KUNNR_1").autocomplete({
             source: function (request, response) {
-                fnCommon.autoAjax(root + "Listas/Clientes", response, { Prefix: request.term }, function (item) { return { label: (item.KUNNR + " - " + item.NAME1), value: item.KUNNR }; });
+                var sociedad_id = $("#SOCIEDAD_ID_1").val(),
+                    usuario = $("#USUARIO_ID_1").val();
+                fnCommon.autoAjax(root + "Listas/Clientes", response, { Prefix: request.term, sociedad_id: sociedad_id, usuario: usuario }, function (item) { return { label: (item.KUNNR + " - " + item.NAME1), value: item.KUNNR }; });
             },
             messages: {
                 noResults: '',
@@ -242,7 +255,8 @@
         $("#USUARIO_ID_1").autocomplete(
             {
                 source: function (request, response) {
-                    fnCommon.autoAjax(root + "Listas/Usuarios", response, { Prefix: request.term }, function (item) { return { label: (item.ID + " - " + item.NOMBRE + " " + item.APELLIDO_P + " " + (item.APELLIDO_M == null ? "" : item.APELLIDO_M)), value: item.ID }; });
+                    var sociedad_id = $("#SOCIEDAD_ID_1").val();
+                    fnCommon.autoAjax(root + "Listas/Usuarios", response, { Prefix: request.term, sociedad_id: sociedad_id}, function (item) { return { label: (item.ID + " - " + item.NOMBRE + " " + item.APELLIDO_P + " " + (item.APELLIDO_M == null ? "" : item.APELLIDO_M)), value: item.ID }; });
                 },
                 messages: {
                     noResults: '',
@@ -286,7 +300,9 @@
         // TAB MOD AUTORIZADOR
         $("#KUNNR_2").autocomplete({
             source: function (request, response) {
-                fnCommon.autoAjax(root + "Listas/Clientes", response, { Prefix: request.term }, function (item) { return { label: (item.KUNNR + " - " + item.NAME1), value: item.KUNNR }; });
+                var sociedad_id = $("#SOCIEDAD_ID_2").val(),
+                    usuario = $("#USUARIO_ID_2").val();
+                fnCommon.autoAjax(root + "Listas/Clientes", response, { Prefix: request.term, sociedad_id: sociedad_id, usuario: usuario}, function (item) { return { label: (item.KUNNR + " - " + item.NAME1), value: item.KUNNR }; });
             },
             messages: {
                 noResults: '',
@@ -297,6 +313,21 @@
                 var value = ui.item.value;
             }
         });
+        $("#USUARIO_ID_2").autocomplete(
+            {
+                source: function (request, response) {
+                    var sociedad_id = $("#SOCIEDAD_ID_2").val();
+                    fnCommon.autoAjax(root + "Listas/Usuarios", response, { Prefix: request.term, sociedad_id: sociedad_id }, function (item) { return { label: (item.ID + " - " + item.NOMBRE + " " + item.APELLIDO_P + " " + (item.APELLIDO_M == null ? "" : item.APELLIDO_M)), value: item.ID }; });
+                },
+                messages: {
+                    noResults: '',
+                    results: function (resultsCount) { }
+                },
+                select: function (event, ui) {
+                    var label = ui.item.label;
+                    var value = ui.item.value;
+                }
+            });
         $("#USUARIOA_ID_2").autocomplete(
             {
                 source: function (request, response) {
