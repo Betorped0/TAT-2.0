@@ -2057,6 +2057,7 @@
     <Content Include="Views\Sociedades\MAFlujos.cshtml" />
     <Content Include="Views\Sociedades\EditF.cshtml" />
     <Content Include="Views\Sociedades\CreateF.cshtml" />
+    <Content Include="Views\Sociedades\CreateFA.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->

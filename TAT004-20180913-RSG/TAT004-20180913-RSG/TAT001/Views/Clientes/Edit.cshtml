@@ -137,10 +137,10 @@
                             @Html.ValidationMessageFor(model => model.PARVW, "", new { @class = "text-danger" })
                         </div>
                         @*<script>
-                            var elem = document.getElementById('sel-par');
-                            var options = [];
-                            var instance = M.FormSelect.init(elem, options);
-                        </script>*@
+            var elem = document.getElementById('sel-par');
+            var options = [];
+            var instance = M.FormSelect.init(elem, options);
+        </script>*@
 
                         <div class="input-field col s12" style="margin-bottom:0;">
                             @Html.EditorFor(model => model.PAYER, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
@@ -148,9 +148,9 @@
                         </div>
 
                         @*<div class="input-field col s12" style="margin-bottom:0;">
-                            @Html.EditorFor(model => model.GRUPO, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.LabelFor(model => model.GRUPO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_grupo" })
-                        </div>*@
+            @Html.EditorFor(model => model.GRUPO, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.LabelFor(model => model.GRUPO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_grupo" })
+        </div>*@
 
                         <div class="input-field col s12" style="margin-bottom:0;">
                             @Html.EditorFor(model => model.SPRAS, new { htmlAttributes = new { @class = "form-control", @id = "input_idioma", @readonly = "readonly" } })
@@ -158,9 +158,9 @@
                         </div>
 
                         @*<div class="input-field col s12" style="margin-bottom:0;">
-                            @Html.EditorFor(model => model.BDESCRIPCION, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.LabelFor(model => model.BDESCRIPCION, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_bdescrip" })
-                        </div>*@
+            @Html.EditorFor(model => model.BDESCRIPCION, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.LabelFor(model => model.BDESCRIPCION, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_bdescrip" })
+        </div>*@
 
                         <div class="input-field col s12" style="margin-bottom:0;">
                             @Html.EditorFor(model => model.BANNER, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
@@ -172,25 +172,31 @@
                             @Html.LabelFor(model => model.PROVEEDOR_ID, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_proveedor" })
                         </div>
                         @*<script>
-                                $(document).ready(function () {
-                                    $('#sel-vendor').siblings('ul').prepend("<li id=sm_select_all><span id='filters_all'></span></li>");
-                                });
-                                var elem = document.getElementById('sel-vendor');
-                                var options = [];
-                                var instance = M.FormSelect.init(elem, options);
-                            </script>*@
+            $(document).ready(function () {
+                $('#sel-vendor').siblings('ul').prepend("<li id=sm_select_all><span id='filters_all'></span></li>");
+            });
+            var elem = document.getElementById('sel-vendor');
+            var options = [];
+            var instance = M.FormSelect.init(elem, options);
+        </script>*@
                         <div class="input-field col s12" style="margin-bottom:0;">
                             @*@Html.DropDownList("CANAL", null, htmlAttributes: new { id = "sel-canal" })*@
                             @Html.EditorFor(model => model.CANAL, new { htmlAttributes = new { @class = "form-control", @id = "input_canal" } })
                             @Html.LabelFor(model => model.CANAL, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_canal" })
                         </div>
                         @*<script>
-                            var elem = document.getElementById('sel-canal');
-                            var options = [];
-                            var instance = M.FormSelect.init(elem, options);
-                        </script>*@
+            var elem = document.getElementById('sel-canal');
+            var options = [];
+            var instance = M.FormSelect.init(elem, options);
+        </script>*@
+                        @*<div class="input-field col s12" style="margin-bottom:0;">
+                            <label>
+                                @Html.CheckBoxFor(model => model.ACTIVO)
+                                <span id="lbl_activo"></span>
+                            </label>
+                        </div>*@
+                        </div>
                     </div>
-                </div>
             </div>
             <div class="col s12 m6">
                 <div class="card-panel">
@@ -234,6 +240,9 @@
 <script src="~/Scripts/autocomplete1.11.4.js"></script>
 <link href="~/Content/autocomplete.css" rel="stylesheet" />
 <script>
+    //$("input[type='hidden']").each(function (index, element) {
+    //    $(this).appendTo($(element).parent());
+    //});
     var pais = $("#input_pais").val();
     if (pais != "CO") {
         $("#taxeo").hide();
