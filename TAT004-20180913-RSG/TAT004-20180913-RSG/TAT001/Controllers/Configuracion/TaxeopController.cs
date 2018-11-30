@@ -57,18 +57,60 @@ namespace TAT001.Controllers.Configuracion
         }
 
         // GET: Taxeop/Details/5
-        public ActionResult Details(string id)
+        public ActionResult Details(string sc, string ld, string kun, string vk, string vtw, string sp, string con, string pos, string rid)
         {
-            if (id == null)
+            int pagina = 862; //ID EN BASE DE DATOS
+            using (TAT001Entities db = new TAT001Entities())
+            {
+                string u = User.Identity.Name;
+                //string u = "admin";
+                var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
+                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
+                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
+                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(865)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(861) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+
+                try
+                {
+                    string p = Session["pais"].ToString();
+                    ViewBag.pais = p + ".svg";
+                }
+                catch
+                {
+                    //ViewBag.pais = "mx.svg";
+                    //return RedirectToAction("Pais", "Home");
+                }
+                Session["spras"] = user.SPRAS_ID;
+            }
+            if (sc == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TAXEOP tAXEOP = db.TAXEOPs.Find(id);
-            if (tAXEOP == null)
+            int c = Convert.ToInt32(con);
+            int ps = Convert.ToInt32(pos);
+            int r = Convert.ToInt32(rid);
+            var txp = db.TAXEOPs.Where(t => t.SOCIEDAD_ID == sc && t.PAIS_ID == ld && t.KUNNR == kun && t.VKORG == vk && t.VTWEG == vtw && t.SPART == sp && t.CONCEPTO_ID == c && t.POS == ps && t.RETENCION_ID == r).FirstOrDefault();
+            if (txp == null)
             {
                 return HttpNotFound();
             }
-            return View(tAXEOP);
+            //Para Regresar al Index
+            ViewBag.sc = sc;
+            ViewBag.ld = ld;
+            ViewBag.kun = kun;
+            ViewBag.vk = vk;
+            ViewBag.vtw = vtw;
+            ViewBag.sp = sp;
+            ViewBag.con = con;
+            //
+            var retenciones = db.RETENCIONs.Where(t => t.ACTIVO).Select(t => new { t.ID, DESCRIPCION = t.DESCRIPCIÓN + "-" + t.PORC + "%" });
+            ViewBag.RETENCION_ID = new SelectList(retenciones, "ID", "DESCRIPCION", txp.RETENCION_ID);
+            var tretenciones = db.TRETENCIONs.Where(t => t.ACTIVO == true).Select(t => new { t.ID, DESCRIPCION = t.ID + "-" + t.DESCRIPCION });
+            ViewBag.TRETENCION_ID = new SelectList(tretenciones, "ID", "DESCRIPCION", txp.TRETENCION_ID);
+            return View(txp);
         }
         [HttpPost]
         public ActionResult CreateR([Bind(Include = "ID,DESCRIPCIÓN,PORC,ACTIVO")] RETENCION tX_CONCEPTO)
@@ -436,7 +478,7 @@ namespace TAT001.Controllers.Configuracion
                 worksheet.Cell("A1").Value = new[]
              {
                   new {
-                      BANNER = "ID SOCIEDAD"
+                      BANNER = "CO. CODE"
                       },
                     };
                 worksheet.Cell("B1").Value = new[]
