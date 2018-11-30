@@ -111,7 +111,7 @@ namespace TAT001.Controllers.Reportes
                                   join ta in db.TALLTs on doc.TALL_ID equals ta.TALL_ID
                                   join cli in db.CLIENTEs on new { doc.VKORG, doc.VTWEG, doc.SPART, doc.PAYER_ID } equals new { cli.VKORG, cli.VTWEG, cli.SPART, PAYER_ID = cli.KUNNR }   // NAME1
                                   join fl in db.FLUJOes on doc.NUM_DOC equals fl.NUM_DOC  //FLUJO-COMENTARIO -- FLUJO-USUARIOA
-                                  where doc.SOCIEDAD_ID == companyCode.ToString() && doc.PERIODO == period && cg.ID == decAccnt && doc.EJERCICIO == year
+                                  where doc.SOCIEDAD_ID == companyCode.ToString() && doc.PERIODO == period && cg.ID == decAccnt && doc.EJERCICIO == year && fl.POS == 2
                                   select new {
                                       cg.ID, cg.NOMBRE,
                                       doc.NUM_DOC,

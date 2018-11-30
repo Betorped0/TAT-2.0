@@ -98,7 +98,7 @@
                         {
                             foreach (var id in ViewBag.cuentagl)
                             {
-                                <option value="@id.ID">@id.ID</option>
+                                <option value="@id.ID">@id.ID @id.NOMBRE</option>
                             }
                         }
                         catch (Exception)

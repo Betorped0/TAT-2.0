@@ -10,9 +10,9 @@ function soportes(tsol, spras) {
         dataType: "json",
         data: { tsol: tsol, spras: spras },
         success: function (data) {
-            var pp = ($.map(data, function (item) {
+            var pp = $.map(data, function (item) {
                 return { tsoporte: item.TSOPORTE_ID, oblig: item.OBLIGATORIO, txt50: item.TXT50 };
-            }))
+            });
             $("#div_soportes").empty();
             for (var i = 0; i < pp.length; i++) {
                 var input = '<label name="labels_soporte2" class="col s12">';
@@ -49,17 +49,20 @@ function soportes(tsol, spras) {
         data: { tsol: tsol },
         success: function (data) {
             $("#txt_trec").val(data);
-            if (data === "") {
+            if (data !== "1") {
                 //$("#tabs_rec").addClass("disabled");
-                $("#check_recurrente").addClass("disabled");
+                $("#check_recurrente").prop("checked", false);
+                $("#check_recurrente").attr("disabled", "disabled");
+                $("#check_recurrente").trigger("change");
             } else {
                 if (!isRelacionada()) {
                     //$("#tabs_rec").removeClass("disabled");
-                    $("#check_recurrente").removeClass("disabled");
+                    $("#check_recurrente").attr("disabled", false);
                 }
             }
         }
     });
+
 }
 
 function pickerFecha(clase) {
@@ -113,8 +116,8 @@ function pickerFecha2(clase, div) {
         minDate: minDate,
         maxDate: maxDate,
         onClose: function (e) {
-            var date = $('#fechad').val();
-            var periodo = date.split(" / ");
+            ////var date = $('#fechad').val();
+            ////var periodo = date.split(" / ");
             
         },
         i18n: {
@@ -131,5 +134,5 @@ function pickerFecha2(clase, div) {
 
         }
     };
-    var instances = M.Datepicker.init(elems, options);
+    M.Datepicker.init(elems, options);
 }

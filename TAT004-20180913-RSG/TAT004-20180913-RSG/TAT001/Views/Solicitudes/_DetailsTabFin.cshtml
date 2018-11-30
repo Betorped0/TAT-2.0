@@ -217,7 +217,8 @@
                         var clearing = [];
                         function getClearing() {
                             $("#div_clearing").empty();
-                            cuentas();
+                            var reverso=  "@Model.D.TSOL.REVERSO"
+                                cuentas(reverso);
                         }
                         function formaClearing() {
                             var tex_abono = document.querySelector(".lbl_cabono").innerHTML;
@@ -238,7 +239,7 @@
                                 div += "<div class='row' style='margin-bottom:0;'><div class='col s4 m12 l3'>" + tex_cargo + "</div><div class='col s4 m12 l3'>" + clearing[3] + "</div><div class='col s4 m12 l3'>" + clearing[2] + "</div><div class='col s12 m12 l3 right-align'>" + monto + "</div></div></div>";
                             } else {
                                 if (clearing[2] != null) {
-                                    if (monto <= clearing[3]) {
+                                    if (monto <= clearing[5]) {
 
                                         div += "<div class='row' style='margin-bottom:0;'><div class='col s4 m12 l3'>" + tex_cargo + "</div><div class='col s4 m12 l3'>" + clearing[3] + "</div><div class='col s4 m12 l3'>" + clearing[2] + "</div><div class='col s12 m12 l3 right-align'>" + monto + "</div></div>";
                                         div += "</li><li class='collection-item'>";
@@ -293,7 +294,10 @@
                                         </div>
                                     </div>
                                 </li>
-                                <li class="collection-item">
+                                @{bool negMontoApli = ViewBag.montoApli.Contains("("); }
+                                @if (negMontoApli)
+                                {
+                                <li class="collection-item red white-text" id="a4">
                                     <div class="row" style="margin-bottom:0;padding-bottom:0;">
                                         <div id="div_montoapli" class="col s6">
                                             @*B20180801 MGC Textos*@
@@ -304,6 +308,22 @@
                                         </div>
                                     </div>
                                 </li>
+
+                                }
+                                else
+                                {
+                                    <li class="collection-item">
+                                        <div class="row" style="margin-bottom:0;padding-bottom:0;">
+                                            <div id="div_montoapli" class="col s6">
+                                                @*B20180801 MGC Textos*@
+                                                Monto aplicado
+                                            </div>
+                                            <div class="col s6 right-align">
+                                                <span id="s_montoa">@ViewBag.montoApli</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                }
                                 @{bool esNeg = ViewBag.remanente.Contains("("); }
                                 @if (esNeg)
                                 {

@@ -15,6 +15,7 @@ using System.Web.Mvc;
 using TAT001.Common;
 using TAT001.Entities;
 using TAT001.Models;
+using TAT001.Models.Dao;
 using TAT001.Services;
 
 namespace TAT001.Controllers
@@ -24,6 +25,8 @@ namespace TAT001.Controllers
     {
         private TAT001Entities db = new TAT001Entities();
 
+        //------------------DAO------------------------------
+        readonly TallsDao tallsDao = new TallsDao();
         public ActionResult Index()
         {
             return RedirectToAction("Index", "Home");
@@ -791,13 +794,13 @@ namespace TAT001.Controllers
                                 }).ToList();
                 //clasificación
                 //MGC B20180611
-                List<TALLT_MOD> id_clas =FnCommon.ObtenerTallsConCuenta(db,user.SPRAS_ID,pais_id,DateTime.Now.Year,sociedad_id)
-                    .Select(x=> new TALLT_MOD
-                                {
-                                    SPRAS_ID = x.SPRAS_ID,
-                                    TALL_ID = x.TALL_ID,
-                                    TXT50 = x.TXT50
-                                })
+                List<TALLT_MOD> id_clas = tallsDao.ListaTallsConCuenta(null,user.SPRAS_ID, pais_id, DateTime.Now.Year, sociedad_id)
+                    .Select(x => new TALLT_MOD
+                    {
+                        SPRAS_ID = x.SPRAS_ID,
+                        TALL_ID = x.TALL_ID,
+                        TXT50 = x.TXT50
+                    })
                             .ToList();
                 id_clas = id_clas.OrderBy(x => x.TXT50).ToList();
 
@@ -1039,7 +1042,7 @@ namespace TAT001.Controllers
                     DOCUMENTBORR docb = new DOCUMENTBORR();
                     try
                     {
-                        docb = db.DOCUMENTBORRs.FirstOrDefault(x=>x.USUARIOC_ID==user.ID && x.SOCIEDAD_ID==sociedad_id);
+                        docb = db.DOCUMENTBORRs.FirstOrDefault(x => x.USUARIOC_ID == user.ID && x.SOCIEDAD_ID == sociedad_id);
                         ViewBag.LIGADA = docb.LIGADA;//RSG 09.07.2018
                         pais_id = docb.PAIS_ID;//RSG 01.08.2018
                     }
@@ -2694,10 +2697,10 @@ namespace TAT001.Controllers
                     if (dOCUMENTO.DOCUMENTO_REF > 0 & txt_flujo != "B")//ADD RSG 02.11.2018
                     {
                         //if (dOCUMENTO.TSOL_ID != "CPR")
+                        DOCUMENTO docPadre = db.DOCUMENTOes.Find(dOCUMENTO.DOCUMENTO_REF);
+                        List<DOCUMENTO> dd = db.DOCUMENTOes.Where(a => a.DOCUMENTO_REF == (dOCUMENTO.DOCUMENTO_REF) & a.ESTATUS_C != "C" & a.ESTATUS_WF != "B").ToList();
                         if (!dOCUMENTO.TSOL.REVERSO)
                         {
-                            DOCUMENTO docPadre = db.DOCUMENTOes.Find(dOCUMENTO.DOCUMENTO_REF);
-                            List<DOCUMENTO> dd = db.DOCUMENTOes.Where(a => a.DOCUMENTO_REF == (dOCUMENTO.DOCUMENTO_REF) & a.ESTATUS_C != "C").ToList();
                             List<DOCUMENTOP> ddr = db.DOCUMENTOPs.Where(a => a.NUM_DOC == (dOCUMENTO.DOCUMENTO_REF)).ToList();
                             ////decimal total = 0;
                             decimal[] totales = new decimal[ddr.Count()];
@@ -2738,6 +2741,42 @@ namespace TAT001.Controllers
                             if (docPadre.MONTO_DOC_MD - totalRes > 0)
                                 return RedirectToAction("Reversa", new { id = dOCUMENTO.DOCUMENTO_REF, resto = resto });
 
+                        }
+                        else
+                        {
+                            if (dd.Where(x=>!x.TSOL.REVERSO && x.ESTATUS_WF != "A").ToList().Count == 0)
+                            {
+                                using (TAT001Entities db1 = new TAT001Entities())
+                                {
+                                    decimal num_doc = dd.First(x => x.TSOL.REVERSO).NUM_DOC;
+                                    FLUJO ff = db1.FLUJOes.Where(x => x.NUM_DOC == num_doc).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+                                    ff.FECHAM = DateTime.Now;
+                                    ff.ESTATUS = "A";
+                                    string c = pf.procesa(ff, "C");
+                                    FLUJO conta = db.FLUJOes.Where(x => x.NUM_DOC == ff.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+                                    while (c == "1")
+                                    {
+                                        Email em = new Email();
+                                        string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
+                                        string image = Server.MapPath("~/images/logo_kellogg.png");
+                                        em.enviaMailC(ff.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image);
+
+                                        if (conta.WORKFP.ACCION.TIPO == "B")
+                                        {
+                                            WORKFP wpos = db.WORKFPs.Where(x => x.ID == conta.WORKF_ID & x.VERSION == conta.WF_VERSION & x.POS == conta.WF_POS).FirstOrDefault();
+                                            conta.ESTATUS = "A";
+                                            conta.FECHAM = DateTime.Now;
+                                            c = pf.procesa(conta, "");
+                                            conta = db.FLUJOes.Where(x => x.NUM_DOC == ff.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+
+                                        }
+                                        else
+                                        {
+                                            c = "";
+                                        }
+                                    }
+                                }
+                            }
                         }
                         using (TAT001Entities db1 = new TAT001Entities())
                         {
@@ -3161,7 +3200,7 @@ namespace TAT001.Controllers
                         }
                         catch (Exception e)
                         {
-                            Log.ErrorLogApp(e,"Solicitudes","Borrador");
+                            Log.ErrorLogApp(e, "Solicitudes", "Borrador");
                         }
                         DOCUMENTBORR docb = new DOCUMENTBORR();
                         //docb = guardarBorrador(dOCUMENTO, id_bukrs, select_dis, monedadis, bmonto_apoyo);//RSG 09.07.2018
@@ -3227,7 +3266,7 @@ namespace TAT001.Controllers
             docb.TIPO_TECNICO2 = dis;
             docb.MONEDA_DIS = monedadis;
             if (ligada != null && ligada != "off")
-                    docb.LIGADA = "X";
+                docb.LIGADA = "X";
             try
             {
                 docb.PORC_APOYO = Convert.ToDecimal(bmonto_apoyo);
@@ -3582,9 +3621,13 @@ namespace TAT001.Controllers
                 {
                     decimal concecutivo = db.CONPOSAPHs.First(x => x.TIPO_SOL == "NC" && x.SOCIEDAD == D.SOCIEDAD_ID && (x.TIPO_DOC == "YG" || x.TIPO_DOC == "DG")).CONSECUTIVO;
                     string tax_code = db.CONPOSAPPs.First(x => x.CONSECUTIVO == concecutivo).TAX_CODE;
-                    KBETR = db.IIMPUESTOes.First(x => x.MWSKZ == tax_code).KBETR.Value;
+                    KBETR = db.IIMPUESTOes.Any(x => x.MWSKZ == tax_code)?db.IIMPUESTOes.First(x => x.MWSKZ == tax_code).KBETR.Value:0.0M;
                 }
                 impuesto = (D.MONTO_DOC_MD.Value * KBETR);
+            }
+            if (D.TSOL.REVERSO)
+            {
+                montoApli = montoApli * -1;
             }
             ViewBag.montoSol = format.toShow(D.MONTO_DOC_MD.Value, ".");
             ViewBag.montoProv = (esProv ? format.toShow(montoProv, ".") : "-");
@@ -5664,35 +5707,8 @@ namespace TAT001.Controllers
 
         public ActionResult Cancelar(decimal id)
         {
-            //Session["sol_tipo"] = null;
-            DOCUMENTO d = db.DOCUMENTOes.Find(id);
-            d.ESTATUS_C = "C";
-            FLUJO actual = db.FLUJOes.Where(a => a.NUM_DOC == id).OrderByDescending(a => a.POS).FirstOrDefault();
-            db.Entry(d).State = EntityState.Modified;
-
-            if (actual != null)
-            {
-                FLUJO nuevo = new FLUJO();
-                WORKFP fin = db.WORKFPs.Where(a => a.ID == actual.WORKF_ID & a.VERSION == actual.WF_VERSION & a.NEXT_STEP == 99).FirstOrDefault();
-                if (fin != null)
-                {
-                    nuevo.COMENTARIO = "";
-                    nuevo.DETPOS = 0;
-                    nuevo.DETVER = 0;
-                    nuevo.ESTATUS = "A";
-                    nuevo.FECHAC = DateTime.Now;
-                    nuevo.FECHAM = nuevo.FECHAC;
-                    nuevo.LOOP = 0;
-                    nuevo.NUM_DOC = actual.NUM_DOC;
-                    nuevo.POS = actual.POS + 1;
-                    nuevo.USUARIOA_ID = User.Identity.Name;
-                    nuevo.WF_POS = fin.POS;
-                    nuevo.WF_VERSION = fin.VERSION;
-                    nuevo.WORKF_ID = fin.ID;
-                    db.FLUJOes.Add(nuevo);
-                }
-            }
-            db.SaveChanges();
+            Cancelar can = new Cancelar();
+            can.cancela(id, User.Identity.Name);
 
             return RedirectToAction("Index", "Home");
         }
@@ -7648,7 +7664,8 @@ namespace TAT001.Controllers
         public JsonResult getSolicitud(string num, string monto, string tsol_id, string sociedad_id, bool esCategoriaUnica, bool edit = false)//RSG 07.06.2018---------------------------------------------
         {
             SOLICITUD_MOD sm = new SOLICITUD_MOD();
-
+            FormatosC format = new FormatosC();
+            bool reverso = false;
             //Obtener info solicitud
             if (num == null || num == "" || num == "0.00")
             {
@@ -7659,11 +7676,14 @@ namespace TAT001.Controllers
                 decimal num_doc = Convert.ToDecimal(num);
                 DOCUMENTO D = db.DOCUMENTOes.First(x => x.NUM_DOC == num_doc);
                 ObtenerAnalisisSolicitud(D, Convert.ToDecimal(monto));
+                
+                decimal montoAplicado = format.toNum(ViewBag.montoApli,",",".") + format.toNum(ViewBag.montoSol, ",", ".");
+                decimal remanente = format.toNum(ViewBag.remanente, ",", ".") - format.toNum(ViewBag.montoSol, ",", ".");
 
                 sm.S_MONTOB = ViewBag.montoSol;
                 sm.S_MONTOP = ViewBag.montoProv;
-                sm.S_MONTOA = ViewBag.montoApli;
-                sm.S_REMA = ViewBag.remanente;
+                sm.S_MONTOA = format.toShow(montoAplicado, ".");
+                sm.S_REMA = format.toShow(remanente, ".");
                 sm.S_IMPA = ViewBag.impuesto;
                 sm.S_IMPB = "-";
                 sm.S_IMPC = "-";
@@ -7674,16 +7694,18 @@ namespace TAT001.Controllers
             {
                 decimal num_doc = Convert.ToDecimal(num);
                 var rev = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == num_doc && x.ESTATUS_C == null && x.ESTATUS_WF != "B").ToList();
-
+                reverso= db.TSOLs.First(x => x.ID == tsol_id).REVERSO;
                 if (rev.Count == 0)
                 {
                     //CON UN RELACIONADO 
                     var rev2 = db.DOCUMENTOes.Where(x => x.NUM_DOC == num_doc).FirstOrDefault();
+                    decimal montor2 = Convert.ToDecimal(monto);
+                    decimal rem2 = (rev2.MONTO_DOC_MD.Value - montor2);
 
                     sm.S_MONTOB = monto;
                     sm.S_MONTOP = rev2.MONTO_DOC_MD.ToString();
-                    sm.S_MONTOA = "-";
-                    sm.S_REMA = "-";
+                    sm.S_MONTOA = monto;
+                    sm.S_REMA = rem2.ToString();
                     sm.S_IMPA = "-";
                     sm.S_IMPB = "-";
                     sm.S_IMPC = "-";
@@ -7695,11 +7717,12 @@ namespace TAT001.Controllers
                     //CON DOS RELACIONADOS
                     var rev3 = db.DOCUMENTOes.Where(x => x.NUM_DOC == num_doc).FirstOrDefault();
                     var rev33 = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == num_doc && x.ESTATUS_C == null && x.ESTATUS_WF != "B").First().MONTO_DOC_MD.Value;
-                    decimal rem3 = (rev3.MONTO_DOC_MD.Value - rev33);
+                    decimal sumr3Hijos = rev33 + Convert.ToDecimal(monto);
+                    decimal rem3 = (rev3.MONTO_DOC_MD.Value - sumr3Hijos);
 
                     sm.S_MONTOB = monto;
                     sm.S_MONTOP = rev3.MONTO_DOC_MD.ToString();
-                    sm.S_MONTOA = rev33.ToString();
+                    sm.S_MONTOA = sumr3Hijos.ToString();
                     sm.S_REMA = rem3.ToString();
                     sm.S_IMPA = "-";
                     sm.S_IMPB = "-";
@@ -7717,11 +7740,12 @@ namespace TAT001.Controllers
                     {
                         sum = sum + k.Value;
                     }
-                    decimal rem4 = (rev4.MONTO_DOC_MD.Value - sum);
+                    decimal sumr4Hijos = sum + Convert.ToDecimal(monto);
+                    decimal rem4 = (rev4.MONTO_DOC_MD.Value - sumr4Hijos);
 
                     sm.S_MONTOB = monto;
                     sm.S_MONTOP = rev4.MONTO_DOC_MD.ToString();
-                    sm.S_MONTOA = sum.ToString();
+                    sm.S_MONTOA = sumr4Hijos.ToString();
                     sm.S_REMA = rem4.ToString();
                     sm.S_IMPA = "-";
                     sm.S_IMPB = "-";
@@ -7729,7 +7753,10 @@ namespace TAT001.Controllers
                     sm.S_RET = "-";
                     sm.S_TOTAL = monto;
                 }
-
+                if (sm.S_MONTOA != "-" && reverso)
+                {
+                    sm.S_MONTOA = "-" + sm.S_MONTOA;
+                }
             }
             string[] tsolImp = new string[] { "NC", "NCA", "NCAS", "NCAM", "NCASM", "NCS", "NCI", "NCIA", "NCIAS", "NCIS" };
             if (tsolImp.Contains(tsol_id))
@@ -7747,7 +7774,8 @@ namespace TAT001.Controllers
                 }
                 sm.S_IMPA = (Convert.ToDecimal(monto) * KBETR).ToString();
             }
-            JsonResult cc = Json(sm, JsonRequestBehavior.AllowGet);
+           
+                JsonResult cc = Json(sm, JsonRequestBehavior.AllowGet);
             return cc;
         }
 

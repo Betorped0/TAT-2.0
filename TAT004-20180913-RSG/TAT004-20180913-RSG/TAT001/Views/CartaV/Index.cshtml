@@ -23,15 +23,15 @@
 <div class="row right">
     @if (accion == "Lista")
     {
-        <a href="@Url.Action(accion, controller, new { id = @ViewBag.miNum, swf = TempData["ESTATUS_WF"] })" class="col btn btn-small">Regresar</a>
+        <a href="@Url.Action(accion, controller, new { id = @ViewBag.miNum, swf = TempData["ESTATUS_WF"] })" class="col btn btn-small" id="btn_return">Regresar</a>
     }
     else if (accion == "Create")
     {
-        <a href="@Url.Action(accion, controller, new { id = @ViewBag.miNum, Viewlista=lista })" class="col btn btn-small">Regresar</a>
+        <a href="@Url.Action(accion, controller, new { id = @ViewBag.miNum, Viewlista=lista })" class="col btn btn-small" id="btn_return">Regresar</a>
     }
     else
     {
-        <a href="@Url.Action(accion, controller, new { id = @ViewBag.miNum })" class="col btn btn-small">Regresar</a>
+        <a href="@Url.Action(accion, controller, new { id = @ViewBag.miNum })" class="col btn btn-small" id="btn_return">Regresar</a>
     }
 
     @if (v != null)

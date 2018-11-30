@@ -3,118 +3,135 @@
 @using (Html.BeginForm("ListModAutorizador", "ModificacionesGlobales", FormMethod.Post, new { @id = "modAutorizadoForm" }))
 {
     <div class="col s12 l12 right-align">
-        <button type="submit" id="btn_save" class="btn btn-default" disabled></button>
+        <a id="btn_save_a" class="btn btn-small modal-trigger" href="#modal1"  disabled></a>
     </div>
-
-    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-    <script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
     <table class="table mdl-data-table striped" id="tableModAutorizador" style="width:100%; overflow-x: scroll;">
         <thead>
             <tr class="text-left">
                 <th id="lbl_num_doc">Num Doc</th>
+                <th id="lbl_usuario">Usuario</th>
                 <th id="lbl_autorizador">Autorizador</th>
-                <th id="lbl_nuevo_autorizador">Nuevo autorizador</th>
-                <th></th>
             </tr>
         </thead>
         <tbody>
-            @{
-                int i = 0;
-                foreach (var item in Model.solicitudPorAprobar)
-                {
-                    @Html.HiddenFor(model => item.NUM_DOC)
-                    <tr>
-                        <td>
-                            @item.NUM_DOC
-                        </td>
-                        <td>
-                            @item.USUARIOA_ID - @item.USUARIOA_NOMBRE
-                        </td>
-                        <td>
-                            @if (i == 0)
-                            {
-                                @Html.EditorFor(model => item.USUARIOA_ID_NUEVO, new { htmlAttributes = new { @maxlength = 18, @id = "USUARIOA_ID_NUEVO", @required = "", @change = "actualizarAutorizador" } })
-                            }
-                            else
-                            {
-                                @Html.HiddenFor(model => item.USUARIOA_ID_NUEVO)
-                            }
-                        </td>
-                    </tr>
-                    i++;
-                }
+            @if (Model.solicitudPorAprobar.Count > 0)
+            {
+            <tr>
+                <td></td>
+                <td></td>
+                <td>
+                    @Html.EditorFor(model => Model.solicitudPorAprobar[0].USUARIOA_ID_NUEVO, new { htmlAttributes = new { @style = "width: 250px;", @maxlength = 18, @id = "USUARIOA_ID_NUEVO",@Value="" } })
+                </td>
+            </tr>
+            }
+            @for (int i = 0; i < Model.solicitudPorAprobar.Count; i++)
+            {
+                <tr>
+                    <td>
+                        @Html.HiddenFor(model => Model.solicitudPorAprobar[i].NUM_DOC)
+                        @Model.solicitudPorAprobar[i].NUM_DOC
+                    </td>
+                    <td>
+                        @Model.solicitudPorAprobar[i].USUARIOD_ID - @Model.solicitudPorAprobar[i].USUARIOA_NOMBRE
+                    </td>
+                    <td>
+                        @Model.solicitudPorAprobar[i].USUARIOA_ID - @Model.solicitudPorAprobar[i].USUARIOA_NOMBRE
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
-    <div>
-
-        @if (ViewBag.textos != null)
+    
+<div id="modal1" class="modal" style=" background-color: #B90C46; height: 200px; width: 350px;">
+    <div class="modal-content">
+        <p style="color: white;font-size: 16px;" class="lbl_actualizar"></p>
+    </div>
+    <div class="modal-footer">
+        <a class="modal-close waves-effect  btn-flat"><label class="lbl_No"></label></a>
+        <a onclick="actualizarAutorizador()" class="modal-close waves-effect  btn-flat"><label class="lbl_Si"></label></a>
+    </div>
+</div>
+<div>
+    @if (ViewBag.textos != null)
+    {
+        foreach (TEXTO t in ViewBag.textos)
         {
-            foreach (TEXTO t in ViewBag.textos)
-            {
-                <script>
-                try {
-                    var elem = document.getElementById("@t.CAMPO_ID");
-                    if (elem.nodeName != 'INPUT' & elem.nodeName != 'SELECT' & elem.nodeName != 'TABLE' & elem.nodeName != 'TEXTAREA')
-                    elem.innerHTML = "@t.TEXTOS";
-                } catch (e) {
-                    try {
-                        var divs = document.getElementsByClassName("@t.CAMPO_ID");
-                        [].slice.call(divs).forEach(function (div) {
-                            if (div.nodeName != 'INPUT' & div.nodeName != 'SELECT' & div.nodeName != 'TABLE' & div.nodeName != 'TEXTAREA')
-                            div.innerHTML = "@t.TEXTOS";
-                        });
-                    }
-                    catch (ee) {
+    <script>
+        try {
+            var elem = document.getElementById("@t.CAMPO_ID");
+            if (elem.nodeName != 'INPUT' & elem.nodeName != 'SELECT' & elem.nodeName != 'TABLE' & elem.nodeName != 'TEXTAREA')
+                elem.innerHTML = "@t.TEXTOS";
+        } catch (e) {
+            try {
+                var divs = document.getElementsByClassName("@t.CAMPO_ID");
+                [].slice.call(divs).forEach(function (div) {
+                    if (div.nodeName != 'INPUT' & div.nodeName != 'SELECT' & div.nodeName != 'TABLE' & div.nodeName != 'TEXTAREA')
+                        div.innerHTML = "@t.TEXTOS";
+                });
+            }
+            catch (ee) {
 
-                    }
-                 }
-                </script>
             }
         }
-    </div>
+    </script>
+        }
+    }
+</div>
 }
-<script src="//code.jquery.com/jquery-1.12.4.js"></script>
-<script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
 <script>
-    
-      //----- Configuracion de Tablas-----
-    $(document).ready(function () {
-        var root = "@Url.Content("~")",
-        spras_id = "@ViewBag.spras_id",
-        urlLanguage = root + "Scripts/lang/" + spras_id + ".json";
-        fnCommon.configurarTable('tableModAutorizador', '50vh', '50vh', urlLanguage, 'cmbPagModAutorizador','gfilterModAutorizador',[0,1,2]);
-    });
+    var registros = "@Model.solicitudPorAprobar.Count"*1;
+    //---- Inicializador de componentes Materialize----
+    fnCommon.materializeInit('modal');
 
-    //Mostrar process
-    $('#modAutorizadoForm').submit(function () {
-        //if () {
-        //    $('#tableModAutorizador');
-        //}
-        document.getElementById("loader").style.display = "flex";
-    });
-    //Actualizar Autorizador
+    //----- Configuracion de Tablas-----
+    var root = "@Url.Content("~")",
+    spras_id = "@ViewBag.spras_id",
+    urlLanguage = root + "Scripts/lang/" + spras_id + ".json";
+    fnCommon.configurarTable('tableModAutorizador', '50vh', '50vh', urlLanguage, 'cmbPagModAutorizador','gfilterModAutorizador',[0]);
+       
     function actualizarAutorizador() {
-        var autorizador = $("#USUARIOA_ID_NUEVO").val();
+        var esCambio = $("#USUARIOA_ID_NUEVO").val() !== "";      
+        if (esCambio) {
+            $("#USUARIOA_ID_NUEVO").removeClass("invalid");
+            document.getElementById("loader").style.display = "flex";
+            $('#modAutorizadoForm').submit();
+        } else {
+            $("#USUARIOA_ID_NUEVO").addClass("invalid");
+            $('#btn_save_a').removeAttr('disabled');
+        }
     }
 
 
-    var auto = $.noConflict(true);
+</script>
+<script>
     auto(document).ready(function () {
-        auto("#USUARIOA_ID_NUEVO").autocomplete(
-            {
+        $("#USUARIOA_ID_NUEVO").autocomplete({
                 source: function (request, response) {
-                    fnCommon.autoAjax(root + "Listas/Usuarios", response, { Prefix: request.term }, function (item) { return { label: (item.ID + " - " + item.NOMBRE + " " + item.APELLIDO_P + " " + (item.APELLIDO_M == null ? "" : item.APELLIDO_M)), value: item.ID }; });
+                    var sociedad_id = $("#SOCIEDAD_ID_2").val();
+                    fnCommon.autoAjax(root + "Listas/Usuarios", response, { Prefix: request.term, autorizador: 2, sociedad_id: sociedad_id }, function (item) { return { label: (item.ID + " - " + item.NOMBRE + " " + item.APELLIDO_P + " " + (item.APELLIDO_M == null ? "" : item.APELLIDO_M)), value: item.ID }; });
                 },
                 messages: {
                     noResults: '',
                     results: function (resultsCount) { }
-                },
-                select: function (event, ui) {
+            },
+            change: function (e, ui) {
+                if (!(ui.item)) {
+                    e.target.value = "";
+                    $('#btn_save_a').attr('disabled', 'disabled');
+                }
+            },
+            select: function (e, ui) {
                     var label = ui.item.label;
-                    var value = ui.item.value;
+                var value = ui.item.value;
+                var usuarioa_id = $("#USUARIOA_ID_2").val();
+                if (usuarioa_id == value) {
+                    e.target.value = "";
+                    $('#btn_save_a').attr('disabled', 'disabled');
+                    e.preventDefault();
+                } else {
+                    $('#btn_save_a').removeAttr('disabled');
+                }
                 }
             });
-    })
+    })  
 </script>
-

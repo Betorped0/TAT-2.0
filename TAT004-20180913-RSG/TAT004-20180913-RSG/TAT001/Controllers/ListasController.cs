@@ -20,6 +20,9 @@ namespace TAT001.Controllers
         //------------------DAO------------------------------
         readonly UsuariosDao usuariosDao = new UsuariosDao();
         readonly SolicitudesDao solicitudesDao = new SolicitudesDao();
+        readonly ContactosDao contactosDao = new ContactosDao();
+        readonly ClientesDao clientesDao = new ClientesDao();
+        readonly TallsDao tallsDao = new TallsDao();
 
         // GET: Listas
         public ActionResult Index()
@@ -118,41 +121,49 @@ namespace TAT001.Controllers
         }
 
         [HttpGet]
-        public JsonResult Clientes(string Prefix, string usuario, string pais)
+        public JsonResult Clientes(string Prefix, string usuario, string pais= null,string sociedad_id=null)
         {
-            if (usuario==""){ usuario = null;}
-            if (pais == ""){  pais = null;}
-            var clientes = FnCommon.ObtenerClientes(db,Prefix,usuario,pais);
+            if (sociedad_id!=null)
+            {
+                pais = db.SOCIEDADs.Find(sociedad_id).LAND;
+            }
+            var clientes = clientesDao.ListaClientes(Prefix,usuario,pais);
             JsonResult cc = Json(clientes, JsonRequestBehavior.AllowGet);
             return cc;
            
 
         }
         [HttpGet]
-        public JsonResult Solicitudes(string Prefix,decimal? num_doci,decimal? num_docf, bool? autorizador,string usuario_id)
+        public JsonResult Solicitudes(string Prefix,string sociedad_id,decimal? num_doci,decimal? num_docf, bool? autorizador,string usuario_id)
         {
             List<DOCUMENTO> solicitudes;
             if (autorizador != null && autorizador.Value)
             {
-                 solicitudes = solicitudesDao.ObtenerSolicitudes(TATConstantes.ACCION_LISTA_SOLSPORAPROBADOR,Prefix, num_doci, num_docf, usuario_id);
+                 solicitudes = solicitudesDao.ListaSolicitudes(TATConstantes.ACCION_LISTA_SOLSPORAPROBADOR,Prefix, sociedad_id, num_doci, num_docf, usuario_id);
             }
             else
             {
-                solicitudes = solicitudesDao.ObtenerSolicitudes(TATConstantes.ACCION_LISTA_SOLICITUDES, Prefix, num_doci, num_docf);
+                solicitudes = solicitudesDao.ListaSolicitudes(TATConstantes.ACCION_LISTA_SOLICITUDES, Prefix, sociedad_id, num_doci, num_docf);
             }
             JsonResult cc = Json(solicitudes, JsonRequestBehavior.AllowGet);
             return cc;
         }
         [HttpGet]
-        public JsonResult Usuarios(string Prefix,bool? autorizador)
+        public JsonResult Usuarios(string Prefix,string sociedad_id, int? autorizador)
         {
+            //1-ACCION_LISTA_AUTORIZADOR (FLUJO)
+            //2-ACCION_LISTA_AUTORIZADOR (USUARIOS)
             List<USUARIO> usuarios;
-            if (autorizador!= null && autorizador.Value) {
-                 usuarios = usuariosDao.ListaUsuarios(Prefix, TATConstantes.ACCION_LISTA_AUTORIZADOR);
+            if (autorizador!= null && autorizador.Value==1) {
+                 usuarios = usuariosDao.ListaUsuarios(Prefix, TATConstantes.ACCION_LISTA_AUTORIZADOR_F,null, sociedad_id);
+            }
+            else if (autorizador != null && autorizador.Value == 2)
+            {
+                usuarios = usuariosDao.ListaUsuarios(Prefix, TATConstantes.ACCION_LISTA_AUTORIZADOR_U,null, sociedad_id);
             }
             else
             {
-                usuarios = usuariosDao.ListaUsuarios(Prefix, TATConstantes.ACCION_LISTA_USUARIO);
+                usuarios = usuariosDao.ListaUsuarios(Prefix, TATConstantes.ACCION_LISTA_USUARIO,null, sociedad_id);
             }
             JsonResult cc = Json(usuarios, JsonRequestBehavior.AllowGet);
             return cc;
@@ -968,6 +979,11 @@ namespace TAT001.Controllers
         {
             int e = int.Parse(ejercicio);
             int p = int.Parse(periodo);
+            if (p > 12)
+            {
+                e = e + (p / 12);
+                p = p - 12;
+            }
             Calendario445 c4 = new Calendario445();
             DateTime f = c4.getPrimerDia(e, p);
             int daysUntilMonday = ((int)DayOfWeek.Monday - (int)f.DayOfWeek + 7) % 7;
@@ -1216,15 +1232,14 @@ namespace TAT001.Controllers
             doc.DOCUMENTOP = docs;
             return PartialView("~/Views/CartaV/_PartialMatTr.cshtml", doc);
         }
-        [HttpPost]
-        [AllowAnonymous]
-        public JsonResult contactos(string Prefix, string vkorg, string vtweg, string kunnr)
+        [HttpGet]
+        public JsonResult contactos(string Prefix, string kunnr, string vkorg = null, string vtweg = null)
         {
             
             Cadena cad = new Cadena();
             kunnr = cad.completaCliente(kunnr);
 
-           var contactos=FnCommon.ObtenerContactos(db,Prefix,vkorg,vtweg,kunnr);
+           var contactos= contactosDao.ListaContactos(Prefix,vkorg,vtweg,kunnr);
             JsonResult cc = Json(contactos, JsonRequestBehavior.AllowGet);
             return cc;
         }
@@ -1317,6 +1332,19 @@ namespace TAT001.Controllers
                      select new { ID = st.MWSKZ, TXT50 = (st.MWSKZ) });
 
             return Json(c, JsonRequestBehavior.AllowGet);
+        }
+        [HttpGet]
+        public JsonResult Talls(string Prefix, string sociedad_id)
+        {
+            string spras_id = FnCommon.ObtenerSprasId(db,User.Identity.Name);
+            int ejercicio = DateTime.Now.Year;
+            string pais_id = db.SOCIEDADs.Any(x => x.BUKRS == sociedad_id) ? db.SOCIEDADs.First(x => x.BUKRS == sociedad_id).LAND:null ;
+
+            var talls = tallsDao.ListaTallsConCuenta(Prefix, spras_id, pais_id,ejercicio,sociedad_id);
+            JsonResult cc = Json(talls, JsonRequestBehavior.AllowGet);
+            return cc;
+
+
         }
     }
 }

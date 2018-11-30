@@ -51,37 +51,7 @@ namespace TAT001.Common
             controller.ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina_id) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
             controller.ViewBag.spras_id = user.SPRAS_ID;
         }
-        public static List<SelectListItem> ObtenerCmbSociedades(TAT001Entities db, string id)
-        {
-            return db.SOCIEDADs
-                .Where(x => (x.BUKRS == id || id == null) && x.ACTIVO)
-                .Select(x => new SelectListItem
-                {
-                    Value = x.BUKRS,
-                    Text = x.BUKRS
-                }).ToList();
-        }
-        public static List<SelectListItem> ObtenerCmbPeriodos(TAT001Entities db, string spras_id, int? id)
-        {
-            return db.PERIODOes
-                .Join(db.PERIODOTs, p => p.ID, pt => pt.PERIODO_ID, (p, pt) => pt)
-                .Where(x => x.SPRAS_ID == spras_id && (x.PERIODO_ID == id || id == null))
-                .Select(x => new SelectListItem
-                {
-                    Value = x.PERIODO_ID.ToString(),
-                    Text = (x.PERIODO_ID.ToString() + " - " + x.TXT50)
-                }).ToList();
-        }
-        public static List<SelectListItem> ObtenerCmbUsuario(TAT001Entities db, string id)
-        {
-            return db.USUARIOs
-                .Where(x => (x.ID == id || id == null) && (x.ACTIVO != null && x.ACTIVO.Value))
-                .Select(x => new SelectListItem
-                {
-                    Value = x.ID,
-                    Text = (x.ID +" - "+x.NOMBRE + " " + x.APELLIDO_P + " " + (x.APELLIDO_M == null ? "" : x.APELLIDO_M))
-                }).ToList();
-        }
+       
         public static List<SelectListItem> ObtenerCmbTabs(TAT001Entities db, string spras_id,bool? activo, string id)
         {
             return db.TABs.Where(x=>x.TAB_CAMPO.Any(y=>y.ACTIVO == activo.Value || activo == null))
@@ -408,36 +378,8 @@ namespace TAT001.Common
             return db.MATERIALGPTs.Where(x => x.MATERIALGP_ID == "000" && x.SPRAS_ID == "EN").FirstOrDefault();
         }
 
-        public static List<CLIENTE> ObtenerClientes(TAT001Entities db, string prefix, string usuario_id, string pais)
-        {
-            if (prefix==null) { prefix = ""; }
-
-            List<object> paramsCSP = new List<object>();
-
-            if (usuario_id != null){ paramsCSP.Add(new SqlParameter("@USUARIO_ID", usuario_id));}
-            else{ paramsCSP.Add(new SqlParameter("@USUARIO_ID", DBNull.Value));}
-
-            if (pais != null){ paramsCSP.Add(new SqlParameter("@PAIS", pais));}
-            else {paramsCSP.Add(new SqlParameter("@PAIS", DBNull.Value));}
-
-            paramsCSP.Add(new SqlParameter("@PREFIX", prefix));
-           
-            List<CLIENTE> clientes = db.Database.SqlQuery<CLIENTE>("CPS_LISTA_CLIENTES @USUARIO_ID,@PAIS,@PREFIX",
-            paramsCSP.ToArray()).ToList();
-            return clientes;
-        }
-
-        public static List<CONTACTOC> ObtenerContactos(TAT001Entities db, string prefix, string vkorg, string vtweg, string kunnr)
-        {
-            if (prefix == null) { prefix = ""; }
-
-            List<CONTACTOC> contactos = db.Database.SqlQuery<CONTACTOC>("CPS_LISTA_CONTACTOS @KUNNR,@VKORG,@VTWEG,@PREFIX",
-            new SqlParameter("@KUNNR", kunnr),
-            new SqlParameter("@VKORG", vkorg),
-            new SqlParameter("@VTWEG", vtweg),
-            new SqlParameter("@PREFIX", prefix)).ToList();
-            return contactos;
-        }
+       
+       
 
         public static List<CSP_PRESU_CLIENT_Result> ObtenerPresupuestoCliente(TAT001Entities db, string kunnr,  string periodo)
         {
@@ -461,18 +403,6 @@ namespace TAT001.Common
             return documentop;
         }
 
-       
-
-        public static List<TALLT> ObtenerTallsConCuenta(TAT001Entities db, string spras_id, string pais_id, int ejercicio, string sociedad_id)
-        {
-            List<TALLT> talls = db.Database.SqlQuery<TALLT>("CSP_LISTA_TALL_CUENTA @SPRAS_ID,@PAIS_ID,@EJERCICIO,@SOCIEDAD_ID",
-                new SqlParameter("@SPRAS_ID", spras_id),
-                new SqlParameter("@PAIS_ID", pais_id),
-                new SqlParameter("@EJERCICIO", ejercicio),
-                new SqlParameter("@SOCIEDAD_ID", sociedad_id)).ToList();
-
-            return talls;
-        }
 
         public static List<SelectListItem> ObtenerCmbNivelesA()
         {

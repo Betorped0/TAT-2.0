@@ -18,7 +18,7 @@
                     .text(cat));
             }
             var elem = document.getElementById("select_categoria");
-            var instance = M.FormSelect.init(elem, []);
+            M.FormSelect.init(elem, []);
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             M.toast({ html: httpStatusMessage });
@@ -50,15 +50,15 @@ $(document).ready(function () {
         "columns": [
             {
                 "name": 'ADD',
-                "className": 'ADD',
+                "className": 'ADD'
             },
             {
                 "name": 'POS',
-                "className": 'POS',
+                "className": 'POS'
             },
             {
                 "name": 'PERIODO',
-                "className": 'PERIODO',
+                "className": 'PERIODO'
             },
             {
                 "name": 'TSOL',
@@ -89,8 +89,8 @@ $(document).ready(function () {
 
     //LEJ 31.07.2018---------------------
     var _rec = $('#valRec').val();
-    if (_rec != undefined) {
-        if (_rec > 0 || _rec != '') {
+    if (_rec !== undefined) {
+        if (_rec > 0 || _rec !== '') {
             $('#check_recurrente').prop('checked', true);
             showPrTable();
         }
@@ -103,7 +103,7 @@ $(document).ready(function () {
         $("#txt_ligada").val("");
     }
     //LEJ 31.07.2018---------------------
-    var tableR = $('#table_rangos').DataTable({
+    $('#table_rangos').DataTable({
         "language": {
             "zerorecords": "no hay registros",
             "infoempty": "registros no disponibles",
@@ -118,11 +118,11 @@ $(document).ready(function () {
         "columns": [
             {
                 "name": 'POS',
-                "className": 'POS',
+                "className": 'POS'
             },
             {
                 "name": 'LIN',
-                "className": 'LIN',
+                "className": 'LIN'
             },
             {
                 "name": 'OBJETIVO',
@@ -143,7 +143,7 @@ $(document).ready(function () {
     });
 
     $('#table_rec tbody').on('click', 'tr', function () {
-        if ($(this).hasClass('selected') | listaRangos.length == 0) {
+        if ($(this).hasClass('selected') | listaRangos.length === 0) {
             $(this).removeClass('selected');
             $(".table_rangos").css("display", "none");
             $("#btnRango").css("display", "none");
@@ -173,7 +173,7 @@ $(document).ready(function () {
 function showPrTable() {
     var _table = $('#table_rec').DataTable();
     _table.clear().draw(true);
-    var t = $('#table_dis').DataTable();
+
     if ($('#check_recurrente').is(":checked")) {
         $('#table_rech > tbody  > tr').each(function () {
             var pos = $(this).find('td').eq(1).text();
@@ -183,11 +183,11 @@ function showPrTable() {
             if ($('#miles').val() === ',') {
                 var _mt = parseFloat(mt);
                 var _porc = parseFloat(porc);
-                fillTable(_table, pos, fecha[0], "$" + _mt.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','), _porc.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + "%");
+                fillTable(_table, pos, fecha[0], "$" + toShow(_mt), toShow(_porc));
             } else if ($('#miles').val() === '.') {
                 mt = mt.toFixed(2).replace('.', ',');
                 porc = porc.toFixed(2).replace('.', ',');
-                fillTable(_table, pos, fecha[0], "$" + mt.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'), porc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + "%");
+                fillTable(_table, pos, fecha[0], "$" + toShow(mt), toShow(porc));
             }
         });
         $(".table_rec").css("display", "table");
@@ -222,7 +222,7 @@ function cambiaRec() {
     var tipoR = document.getElementById("txt_trec").value;//RSG 09.07.2018
     var porc = document.getElementById("bmonto_apoyo").value;//RSG 09.07.2018
 
-    if (radio != null) { //B20180625 MGC 2018.06.26 Marcaba error, por validación de null
+    if (radio !== null) { //B20180625 MGC 2018.06.26 Marcaba error, por validación de null
         if (radio.checked & !isRelacionada()) {
 
             var pe1 = document.getElementById("periodoi_id").value;
@@ -240,7 +240,7 @@ function cambiaRec() {
     if (campo.checked) {
         $("#tabs_rec").removeClass("disabled");
         if (montoo === "" | ligada()) {
-            var dist = $('#table_dis').DataTable();
+            //var dist = $('#table_dis').DataTable();
             var montooo = 0.00;
             $('#table_dis > tbody  > tr').each(function () {
                 var montot = $(this).find("td.total input").val();
@@ -250,7 +250,7 @@ function cambiaRec() {
             });
             montoo = montooo;
         }
-        if ((montoo > 0 /*& tipo == "PC"*/) | ligada()) {
+        if (montoo > 0 | ligada()) {
             //if (montoo > 0) { 
             $(".table_rec").css("display", "table");
             //Add row 
@@ -262,63 +262,61 @@ function cambiaRec() {
             var anios = ej2 - ej1;
             ////var resdate = dateff - dateii;
 
-            var meses = 1 + (pe2 - pe1) + (anios * 12);
+            var meses = 1 + (pe2 - pe1) + anios * 12;
             if (meses > 1 & (montoo > 0 | ligada())) {
                 for (var i = 1; i <= meses; i++) {
-                    var date = "";
+                    //var date = "";
                     var monto = "";
-                    if (i === 1) {
-                        ////if (tipo !== "P") {
-                        if (tipoR !== "2") {
-                            if (tipo == "MM" | tipo == "MC") {
-                                ////date = document.getElementById("fechai_vig").value;
-                                monto = montoo;
-                                //////addRowRec(table, i, date, monto, tipo);
-                                //////primerDiaT(table, i, datei, monto, tipo);
-                                primerDiaT(table, i, (parseInt(pe1) + 1), ej1, monto, tipoR, meses);
-                            } else if (ligada() & (tipo == "PM" | tipo == "PC")) {
-                                monto = montoo;
-                                ultimoDiaT(table, i, pe1, ej1, monto, tipoR, porc, meses);
-                                var o = { POS: i, LIN: 1, PERIODO: pe1, OBJ1: 0, OBJ2: 0, PORC: porc };
-                                listaRangos.push(o);
-                            }
-                        } else {
-                            ////var dates = new Date(datei[2], datei[1] - 1 + i, 1);
-                            //////date = date.addDays(-1);
-                            ////dates.setDate(dates.getDate() - 1);
-                            ////date = dates.getDate() + "/" + (dates.getMonth() + 1) + "/" + dates.getFullYear();
+                    ////if (i === 1) {
+                    ////if (tipo !== "P") {
+                    if (tipoR !== "2") {
+                        if (tipo === "MM" | tipo === "MC") {
+                            ////date = document.getElementById("fechai_vig").value;
                             monto = montoo;
                             //////addRowRec(table, i, date, monto, tipo);
-                            ////ultimoDiaT(table, i, datei, monto, tipo);
-                            ultimoDiaT(table, i, pe1, ej1, monto, tipoR, porc, meses);
-                        }
-                    }
-                    else {
-                        ////if (tipo !== "P") {
-                        if (tipoR !== "2") {
-                            if (tipo == "MM" | tipo == "MC") {
-                                //////var dates = new Date(datei[2], datei[1] - 2 + i, 1);
-                                //////date = dates.getDate() + "/" + (dates.getMonth() + 1) + "/" + dates.getFullYear();
-                                monto = montoo;
-                                //////primerDiaT(table, i, datei, monto, tipo);
-                                primerDiaT(table, i, (parseInt(pe1) + 1), ej1, monto, tipoR, meses);
-                            } else if (ligada() & (tipo == "PM" | tipo == "PC")) {
-                                monto = montoo;
-                                ultimoDiaT(table, i, pe1, ej1, monto, tipoR, porc, meses);
-                                var o = { POS: i, LIN: 1, PERIODO: pe1, OBJ1: 0, OBJ2: 0, PORC: porc };
-                                listaRangos.push(o);
-                            }
-                        } else {
-                            ////var dates = new Date(datei[2], datei[1] - 1 + i, 1);
-                            //////date = date.addDays(-1);
-                            ////dates.setDate(dates.getDate() - 1);
-                            ////date = dates.getDate() + "/" + (dates.getMonth() + 1) + "/" + dates.getFullYear();
+                            //////primerDiaT(table, i, datei, monto, tipo);
+                            primerDiaT(table, i, parseInt(pe1) + 1, ej1, monto, tipoR, meses);
+                        } else if (ligada() & (tipo === "PM" | tipo === "PC")) {
                             monto = montoo;
-                            //////addRowRec(table, i, date, monto, tipo);
-                            ////ultimoDiaT(table, i, datei, monto, tipo);
                             ultimoDiaT(table, i, pe1, ej1, monto, tipoR, porc, meses);
+                            listaRangos.push({ POS: i, LIN: 1, PERIODO: pe1, OBJ1: 0, OBJ2: 0, PORC: porc });
                         }
+                    } else {
+                        ////var dates = new Date(datei[2], datei[1] - 1 + i, 1);
+                        //////date = date.addDays(-1);
+                        ////dates.setDate(dates.getDate() - 1);
+                        ////date = dates.getDate() + "/" + (dates.getMonth() + 1) + "/" + dates.getFullYear();
+                        monto = montoo;
+                        //////addRowRec(table, i, date, monto, tipo);
+                        ////ultimoDiaT(table, i, datei, monto, tipo);
+                        ultimoDiaT(table, i, pe1, ej1, monto, tipoR, porc, meses);
                     }
+                    ////}
+                    ////else {
+                    ////    ////if (tipo !== "P") {
+                    ////    if (tipoR !== "2") {
+                    ////        if (tipo === "MM" | tipo === "MC") {
+                    ////            //////var dates = new Date(datei[2], datei[1] - 2 + i, 1);
+                    ////            //////date = dates.getDate() + "/" + (dates.getMonth() + 1) + "/" + dates.getFullYear();
+                    ////            monto = montoo;
+                    ////            //////primerDiaT(table, i, datei, monto, tipo);
+                    ////            primerDiaT(table, i, parseInt(pe1) + 1, ej1, monto, tipoR, meses);
+                    ////        } else if (ligada() & (tipo === "PM" | tipo === "PC")) {
+                    ////            monto = montoo;
+                    ////            ultimoDiaT(table, i, pe1, ej1, monto, tipoR, porc, meses);
+                    ////            listaRangos.push({ POS: i, LIN: 1, PERIODO: pe1, OBJ1: 0, OBJ2: 0, PORC: porc });
+                    ////        }
+                    ////    } else {
+                    ////        ////var dates = new Date(datei[2], datei[1] - 1 + i, 1);
+                    ////        //////date = date.addDays(-1);
+                    ////        ////dates.setDate(dates.getDate() - 1);
+                    ////        ////date = dates.getDate() + "/" + (dates.getMonth() + 1) + "/" + dates.getFullYear();
+                    ////        monto = montoo;
+                    ////        //////addRowRec(table, i, date, monto, tipo);
+                    ////        ////ultimoDiaT(table, i, datei, monto, tipo);
+                    ////        ultimoDiaT(table, i, pe1, ej1, monto, tipoR, porc, meses);
+                    ////    }
+                    ////}
                 }
 
             }
@@ -350,8 +348,8 @@ function cambiaCheckRec() {
 
     if (campo.checked) {
         if (periodoiV === periodofV) {
-            var periodo = (periodoiV + 1) === 13 ? 1 : (periodoiV + 1);
-            if (periodo === 1 && (anioiV === aniofV)) {
+            var periodo = periodoiV + 1 === 13 ? 1 : periodoiV + 1;
+            if (periodo === 1 && anioiV === aniofV) {
                 aniof.val(anioiV + 1);
                 aniof.formSelect();
             }
@@ -380,59 +378,87 @@ function cambiaCheckRec() {
         $("#select_neg").change();
     }
     var elem = document.getElementById('select_neg');
-    var instance = M.FormSelect.init(elem, []);
+    M.FormSelect.init(elem, []);
 
 }
 
 function addRowRec(t, num, date, monto, tipo, porc, periodo, meses) {
     var tsoll = $("#TSOL_ID").val();
+    var m = "";
+    var p = "";
     if (tipo !== "2") {
         if (!ligada()) {
-            addRowRecl(
-                t,
-                num + "/" + meses, //POS
-                tsoll,
-                date,
-                toShow(monto),
-                toShowPorc(0.00)
-                , periodo
-            );
+            m = toShow(monto);
+            p = toShowPorc(0.00);
         } else {
-            addRowRecl(
-                t,
-                num + "/" + meses, //POS
-                tsoll,
-                date,
-                toShow(monto),
-                toShowPorc(porc)
-                , periodo
-            );
+            m = toShow(monto);
+            p = toShowPorc(porc);
         }
     } else {
-        if (num !== 1) {
-            addRowRecl(
-                t,
-                //num, //POS
-                num + "/" + meses, //POS
-                tsoll,
-                date,
-                "<input class=\"MONTO input_rec numberd input_dc monto \" style=\"font-size:12px;height:2rem;\" type=\"text\" id=\"\" name=\"\" value=\"" + toShow(monto) + "\" onchange='updateObjQ()'>",
-                toShowPorc(porc)
-                , periodo
-            );
-        } else {
-            addRowRecl(
-                t,
-                //num, //POS
-                num + "/" + meses, //POS
-                tsoll,
-                date,
-                "<input class=\"MONTO input_rec numberd input_dc monto \" style=\"font-size:12px;height:2rem;\" type=\"text\" id=\"\" name=\"\" value=\"" + toShow(monto) + "\" onchange='updateObjQ()'>",
-                toShowPorc(porc)
-                , periodo
-            );
-        }
+        p = toShowPorc(porc);
+        //if (num !== 1) {
+        //    m = "<input class=\"MONTO input_rec numberd input_dc monto \" style=\"font-size:12px;height:2rem;\" type=\"text\" id=\"\" name=\"\" value=\"" + toShow(monto) + "\" onchange='updateObjQ()'>";
+        //} else {
+        m = "<input class=\"MONTO input_rec numberd input_dc monto \" style=\"font-size:12px;height:2rem;\" type=\"text\" id=\"\" name=\"\" value=\"" + toShow(monto) + "\" onchange='updateObjQ()'>";
+        //}
     }
+
+    addRowRecl(
+        t,
+        num + "/" + meses, //POS
+        tsoll,
+        date,
+        m,
+        p
+        , periodo
+    );
+
+    ////if (tipo !== "2") {
+    ////    if (!ligada()) {
+    ////        addRowRecl(
+    ////            t,
+    ////            num + "/" + meses, //POS
+    ////            tsoll,
+    ////            date,
+    ////            toShow(monto),
+    ////            toShowPorc(0.00)
+    ////            , periodo
+    ////        );
+    ////    } else {
+    ////        addRowRecl(
+    ////            t,
+    ////            num + "/" + meses, //POS
+    ////            tsoll,
+    ////            date,
+    ////            toShow(monto),
+    ////            toShowPorc(porc)
+    ////            , periodo
+    ////        );
+    ////    }
+    ////} else {
+    ////    if (num !== 1) {
+    ////        addRowRecl(
+    ////            t,
+    ////            num + "/" + meses, //POS
+    ////            tsoll,
+    ////            date,
+    ////            "<input class=\"MONTO input_rec numberd input_dc monto \" style=\"font-size:12px;height:2rem;\" type=\"text\" id=\"\" name=\"\" value=\"" + toShow(monto) + "\" onchange='updateObjQ()'>",
+    ////            toShowPorc(porc)
+    ////            , periodo
+    ////        );
+    ////    } else {
+    ////        addRowRecl(
+    ////            t,
+    ////            //num, //POS
+    ////            num + "/" + meses, //POS
+    ////            tsoll,
+    ////            date,
+    ////            "<input class=\"MONTO input_rec numberd input_dc monto \" style=\"font-size:12px;height:2rem;\" type=\"text\" id=\"\" name=\"\" value=\"" + toShow(monto) + "\" onchange='updateObjQ()'>",
+    ////            toShowPorc(porc)
+    ////            , periodo
+    ////        );
+    ////    }
+    ////}
 }
 
 function addRowRecl(t, pos, tsol, fecha, monto, porc, periodo) {
@@ -455,23 +481,17 @@ function enviaRec(borrador) { //B20180625 MGC 2018.07.03
 
     var lengthT = $("table#table_rec tbody tr[role='row']").length;
     var tipo = document.getElementById("select_neg").value;
-    var tipoR = document.getElementById("txt_trec").value;
+    //var tipoR = document.getElementById("txt_trec").value;
 
     if (lengthT > 0) {
-        //Obtener los valores de la tabla para agregarlos a la tabla oculta y agregarlos al json
-        //Se tiene que jugar con los index porque las columnas (ocultas) en vista son diferentes a las del plugin
-        var indext = 0;
-        jsonObjDocs = [];
-        var i = 1;
-        var vol = "";
-        var sol = $("#TSOL_ID").val();
-        var mostrar = isFactura(sol);
-        //if (sol == "NC" | sol == "NCI" | sol == "OP") {
-        if (mostrar) {
-            vol = "real";
-        } else {
-            vol = "estimado";
-        }
+        //var i = 1;
+        //var sol = $("#TSOL_ID").val();
+        //var mostrar = isFactura(sol);
+        //if (mostrar) {
+        //    vol = "real";
+        //} else {
+        //    vol = "estimado";
+        //}
 
         var poss = 0;
         $("#table_rec > tbody  > tr[role='row']").each(function () { //B20180625 MGC 2018.07.03
@@ -480,29 +500,29 @@ function enviaRec(borrador) { //B20180625 MGC 2018.07.03
             var pos = $(this).find("td.POS").text().split("/")[0];
             var tsol = $(this).find("td.TSOL").text();
             var fecha = $(this).find("td.FECHAV span").text();
-            var monto = "";
+            var monto = ""; var porcentaje = "";
             if (tipo === "P") {
                 if (ligada()) {
                     monto = toNum($(this).find("td.MONTO input").val());
-                    var porcentaje = toNum($(this).find("td.PORCENTAJE").text());
+                    porcentaje = toNum($(this).find("td.PORCENTAJE").text());
                 } else {
-                    if (poss === 1) {
-                        monto = toNum($(this).find("td.MONTO").text());
-                    } else {
-                        //monto = toNum($(this).find("td.MONTO input").val());
-                        monto = toNum($(this).find("td.MONTO").text());
-                    }
-                    var porcentaje = toNum($(this).find("td.PORCENTAJE input").val());
+                    //if (poss === 1) {
+                    //    monto = toNum($(this).find("td.MONTO").text());
+                    //} else {
+                    //    //monto = toNum($(this).find("td.MONTO input").val());
+                    monto = toNum($(this).find("td.MONTO").text());
+                    //}
+                    porcentaje = toNum($(this).find("td.PORCENTAJE input").val());
                 }
             } else {
                 monto = toNum($(this).find("td.MONTO").text());
-                var porcentaje = toNum($(this).find("td.PORCENTAJE").text());
+                porcentaje = toNum($(this).find("td.PORCENTAJE").text());
             }
 
 
-            //Obtener el id de la categoría            
-            var t = $('#table_rec').DataTable();
-            var tr = $(this);
+            ////Obtener el id de la categoría            
+            //var t = $('#table_rec').DataTable();
+            //var tr = $(this);
 
             var item = {};
 
@@ -517,17 +537,16 @@ function enviaRec(borrador) { //B20180625 MGC 2018.07.03
             item["PORC"] = porcentaje;
 
             jsonObjDocs.push(item);
-            i++;
-            item = "";
+            //i++;
+            //item = "";
 
-            //$(this).addClass('selected');            
-            if (borrador != "X") { //B20180625 MGC 2018.07.03
+            if (borrador !== "X") { //B20180625 MGC 2018.07.03
                 $(this).addClass('selected');
             }
 
         });
 
-        docsenviar = JSON.stringify({ 'docs': jsonObjDocs });
+        var docsenviar = JSON.stringify({ 'docs': jsonObjDocs });
 
         $.ajax({
             type: "POST",
@@ -535,11 +554,10 @@ function enviaRec(borrador) { //B20180625 MGC 2018.07.03
             contentType: "application/json; charset=UTF-8",
             data: docsenviar,
             success: function (data) {
-
-                if (data !== null || data !== "") {
+                if (data !== null /*|| data !== ""*/) {
 
                     $("table#table_rech tbody").append(data);
-                    if (borrador != "X") { //B20180625 MGC 2018.07.03
+                    if (borrador !== "X") { //B20180625 MGC 2018.07.03
                         $('#delRow').click();
                     }
                 }
@@ -557,21 +575,18 @@ function enviaRec(borrador) { //B20180625 MGC 2018.07.03
 function copiarTableVistaRec() {
 
     var lengthT = $("table#table_rech tbody tr").length;
-    var tipo = document.getElementById("select_neg").value;
+    //var tipo = document.getElementById("select_neg").value;
 
     if (lengthT > 0) {
-        //Obtener los valores de la tabla para agregarlos a la tabla de la vista en información
-        //Se tiene que jugar con los index porque las columnas (ocultas) en vista son diferentes a las del plugin
-        //$('#check_recurrente').trigger('change');
         if (lengthT > 1)
             document.getElementById("check_recurrente").checked = true;
         $(".table_rec").css("display", "table");
-        var rowsn = 0;
+        ////var rowsn = 0;
 
-        var tsol = "";
+        ////var tsol = "";
         var sol = $("#TSOL_ID").val();
 
-        var i = 1;
+        //var i = 1;
         $('#table_rech > tbody  > tr').each(function () {
 
             //var pos = $(this).find("td.POS").text();
@@ -611,8 +626,8 @@ function copiarTableVistaRec() {
 
             ////    porc = "<input class=\"PORCENTAJE input_rec numberd input_dc\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + porc.trim() + "\">";
             ////} else {
-                monto = monto.trim();
-                porc = porc.trim();
+            monto = monto.trim();
+            porc = porc.trim();
             ////}
             var t = $('#table_rec').DataTable();
 
@@ -640,14 +655,18 @@ function primerDiaT(t, num, periodo, ejercicio, monto, tipo, meses) {
         //url: '../Listas/getPrimerDia',
         url: '../Listas/getPrimerLunes',
         dataType: "json",
-        data: { ejercicio: ejercicio, periodo: (periodo - 1 + num) },
+        data: { ejercicio: ejercicio, periodo: periodo - 1 + num },
         success: function (data) {
             document.getElementById("loader").style.display = "none";
             var dd = data.split('/');
             var dates = new Date(dd[2], dd[1] - 1, dd[0]);
-            datee = dates.getDate() + "/" + (dates.getMonth() + 1) + "/" + dates.getFullYear();
-
-            addRowRec(t, num, datee, monto, tipo, "", "P" + (periodo - 2 + num) + "-" + ejercicio, meses);
+            var datee = dates.getDate() + "/" + (dates.getMonth() + 1) + "/" + dates.getFullYear();
+            if (periodo - 2 + num > 12) {
+                ejercicio = parseInt(ejercicio) + Math.floor((periodo - 2 + num) / 12);
+                periodo = periodo - 2 + num - 12;
+            } else
+                periodo = periodo - 2 + num;
+            addRowRec(t, num, datee, monto, tipo, "", "P" + periodo + "-" + ejercicio, meses);
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             M.toast({ html: httpStatusMessage });
@@ -667,15 +686,20 @@ function ultimoDiaT(t, num, periodo, ejercicio, monto, tipo, porc, meses) {
         url: '../Listas/getUltimoDia',
         //url: '../Listas/getPrimerLunes',
         dataType: "json",
-        data: { ejercicio: ejercicio, periodo: (periodo - 1 + num) },
+        data: { ejercicio: ejercicio, periodo: periodo - 1 + num },
         //data: { ejercicio: ejercicio, periodo: (periodo - 1 + 1 + num) },
         success: function (data) {
             document.getElementById("loader").style.display = "none";
             var dd = data.split('/');
             var dates = new Date(dd[2], dd[1] - 1, dd[0]);
-            datee = dates.getDate() + "/" + (dates.getMonth() + 1) + "/" + dates.getFullYear();
+            var datee = dates.getDate() + "/" + (dates.getMonth() + 1) + "/" + dates.getFullYear();
+            if (periodo - 1 + num > 12) {
+                ejercicio = parseInt(ejercicio) + Math.floor((periodo - 1 + num) / 12);
+                periodo = periodo - 1 + num - 12;
+            } else
+                periodo = periodo - 1 + num;
 
-            addRowRec(t, num, datee, monto, tipo, porc, "P" + (periodo - 1 + num) + "-" + ejercicio, meses);
+            addRowRec(t, num, datee, monto, tipo, porc, "P" + periodo + "-" + ejercicio, meses);
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             M.toast({ html: httpStatusMessage });
@@ -687,7 +711,7 @@ function ultimoDiaT(t, num, periodo, ejercicio, monto, tipo, porc, meses) {
 
 function setDates(tipo) {
 
-    if (tipo == "date") {
+    if (tipo === "date") {
         var fechI = document.getElementById("fechai_vig2"),
             fechF = document.getElementById("fechaf_vig2");
         fechI.value = document.getElementById('fechai_vig').value;
@@ -702,11 +726,11 @@ function setDates(tipo) {
             aniof = document.getElementById('aniof_id').value,
             periodoi = document.getElementById('periodoi_id').value,
             periodof = document.getElementById('periodof_id').value;
-        if ((anioi * 1) > (aniof * 1)) {
-            af = $("#aniof_id");
+        if (anioi * 1 > aniof * 1) {
+            var af = $("#aniof_id");
             af.val("");
             af.formSelect();
-            fechaf_vig = $("#fechaf_vig");
+            var fechaf_vig = $("#fechaf_vig");
             fechaf_vig.val("");
             M.toast({
                 classes: "pFechas",
@@ -716,8 +740,8 @@ function setDates(tipo) {
             });
             return;
         }
-        if (((periodoi * 1) > (periodof * 1)) && ((anioi * 1) === (aniof * 1))) {
-            pf = $("#periodof_id");
+        if (periodoi * 1 > periodof * 1 && anioi * 1 === aniof * 1) {
+            var pf = $("#periodof_id");
             pf.val("");
             pf.formSelect();
             fechaf_vig = $("#fechaf_vig");
@@ -739,7 +763,7 @@ function setDates(tipo) {
                 success: function (data) {
                     var dd = data.split('/');
                     var dates = new Date(dd[2], dd[1] - 1, dd[0]);
-                    datee = dates.getDate() + "/" + (dates.getMonth() + 1) + "/" + dates.getFullYear();
+                    var datee = dates.getDate() + "/" + (dates.getMonth() + 1) + "/" + dates.getFullYear();
 
                     document.getElementById('fechai_vig').value = datee;
                 },
@@ -758,7 +782,7 @@ function setDates(tipo) {
                 success: function (data) {
                     var dd = data.split('/');
                     var dates = new Date(dd[2], dd[1] - 1, dd[0]);
-                    datee = dates.getDate() + "/" + (dates.getMonth() + 1) + "/" + dates.getFullYear();
+                    var datee = dates.getDate() + "/" + (dates.getMonth() + 1) + "/" + dates.getFullYear();
 
                     document.getElementById('fechaf_vig').value = datee;
                 },
@@ -797,7 +821,7 @@ function changeFile(campo) {
         message = "No selecciono archivo";
     }
 
-    if (message != "") {
+    if (message !== "") {
         $(campo).val("");
         M.toast({ html: message });
     } else {
@@ -813,20 +837,17 @@ function changeFile(campo) {
 }
 
 function ligada() {
-    return ($("#chk_ligada").is(":checked"));
+    return $("#chk_ligada").is(":checked");
 }
 
 function isObjetivoQ() {
-    return ($("#check_objetivoq").is(":checked"));
+    return $("#check_objetivoq").is(":checked");
 }
 
 function isRecurrente() {
-    return ($("#check_recurrente").is(":checked"));
+    return $("#check_recurrente").is(":checked");
 }
 
 function isDuplicado() {
-    if (($("#duplicate").val() !== ""))
-        return true;
-    else
-        return false;
+    return $("#duplicate").val() !== "";
 }
