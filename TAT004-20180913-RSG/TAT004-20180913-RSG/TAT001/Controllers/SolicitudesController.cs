@@ -794,7 +794,7 @@ namespace TAT001.Controllers
                                 }).ToList();
                 //clasificación
                 //MGC B20180611
-                List<TALLT_MOD> id_clas = tallsDao.ListaTallsConCuenta(null,user.SPRAS_ID, pais_id, DateTime.Now.Year, sociedad_id)
+                List<TALLT_MOD> id_clas = tallsDao.ListaTallsConCuenta(TATConstantes.ACCION_LISTA_TALLTCONCUENTA, null,user.SPRAS_ID, pais_id, DateTime.Now.Year, sociedad_id)
                     .Select(x => new TALLT_MOD
                     {
                         SPRAS_ID = x.SPRAS_ID,

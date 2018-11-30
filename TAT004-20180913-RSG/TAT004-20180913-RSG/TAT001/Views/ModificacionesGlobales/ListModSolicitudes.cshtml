@@ -149,7 +149,7 @@
         var esCambio = ($("#PAYER_NOMBRE").val() != "" || $("#PAYER_EMAIL").val() != "" || $("#ESTADO").val() != "" || $("#CIUDAD").val() != "" || $("#CONCEPTO").val() != "" || $("#NOTAS").val() != "");
         if (registrosSol > 0 && esCambio) {
             document.getElementById("loader").style.display = "flex";
-            $('#modAutorizadoForm').submit();
+            $('#modSolicitudesForm').submit();
         }
        
     }
@@ -187,7 +187,8 @@
         });
         $("#ESTADO").autocomplete({
             source: function (request, response) {
-                fnCommon.autoAjax(root + "Listas/Estados", response, { Prefix: request.term }, function (item) { return { label: item.NAME, value: item.NAME }; });
+                var sociedad_id = $("#SOCIEDAD_ID_1").val();
+                fnCommon.autoAjax(root + "Listas/Estados", response, { Prefix: request.term, sociedad_id: sociedad_id }, function (item) { return { label: item.NAME, value: item.NAME }; });
             },
             messages: {
                 noResults: '',

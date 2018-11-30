@@ -23,6 +23,8 @@ namespace TAT001.Controllers
         readonly ContactosDao contactosDao = new ContactosDao();
         readonly ClientesDao clientesDao = new ClientesDao();
         readonly TallsDao tallsDao = new TallsDao();
+        readonly StatesDao statesDao = new StatesDao();
+        readonly CitiesDao citiesDao = new CitiesDao();
 
         // GET: Listas
         public ActionResult Index()
@@ -169,33 +171,18 @@ namespace TAT001.Controllers
             return cc;
         }
         [HttpGet]
-        public JsonResult Estados(string pais, string Prefix)
+        public JsonResult Estados(string Prefix,string pais, string sociedad_id=null)
         {
-            if (Prefix == null)
-                Prefix = "";
-            
-
-            string p = pais.Split('.')[0].ToUpper();
-            var c = (from N in db.STATES
-                     where N.NAME.Contains(Prefix) && N.COUNTRy.SORTNAME.Equals(p)
-                     select new { N.NAME });
-            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            List<STATE> estados = statesDao.ListaStates(Prefix,pais, sociedad_id);
+            JsonResult cc = Json(estados, JsonRequestBehavior.AllowGet);
             return cc;
         }
 
         [HttpGet]
-        public JsonResult Ciudades(string estado, string Prefix)
+        public JsonResult Ciudades(string Prefix,string estado)
         {
-            if (Prefix == null)
-                Prefix = "";
-            
-
-            var c = (from N in db.CITIES
-                     join St in db.STATES
-                     on N.STATE_ID equals St.ID
-                     where N.NAME.Contains(Prefix) && St.NAME.Equals(estado)
-                     select new { N.NAME });
-            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            List<CITy> ciudades = citiesDao.ListaCities(Prefix,estado);
+            JsonResult cc = Json(ciudades, JsonRequestBehavior.AllowGet);
             return cc;
         }
 
@@ -1340,7 +1327,7 @@ namespace TAT001.Controllers
             int ejercicio = DateTime.Now.Year;
             string pais_id = db.SOCIEDADs.Any(x => x.BUKRS == sociedad_id) ? db.SOCIEDADs.First(x => x.BUKRS == sociedad_id).LAND:null ;
 
-            var talls = tallsDao.ListaTallsConCuenta(Prefix, spras_id, pais_id,ejercicio,sociedad_id);
+            var talls = tallsDao.ListaTallsConCuenta(TATConstantes.ACCION_LISTA_TALLTCONCUENTA, Prefix, spras_id, pais_id,ejercicio,sociedad_id);
             JsonResult cc = Json(talls, JsonRequestBehavior.AllowGet);
             return cc;
 
