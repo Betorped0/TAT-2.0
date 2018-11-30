@@ -13,5 +13,8 @@ namespace TAT001.Common
 
         public const int ACCION_LISTA_SOCIEDADES = 1;
         public const int ACCION_LISTA_SOCPORUSUARIO = 2;
+
+        public const int ACCION_LISTA_TALLCONCUENTA = 1;
+        public const int ACCION_LISTA_TALLTCONCUENTA = 2;
     }
 }

@@ -12,7 +12,7 @@ namespace TAT001.Models.Dao
         readonly TAT001Entities db = new TAT001Entities();
 
 
-        public  List<TALLT> ListaTallsConCuenta(string prefix,string spras_id, string pais_id, int ejercicio, string sociedad_id)
+        public  List<TALLT> ListaTallsConCuenta(int accion,string prefix,string spras_id, string pais_id, int ejercicio, string sociedad_id)
         {
             if (prefix == null) { prefix = ""; }
             List<object> paramsCSP = new List<object>
@@ -28,8 +28,9 @@ namespace TAT001.Models.Dao
             else { paramsCSP.Add(new SqlParameter("@SOCIEDAD_ID", DBNull.Value)); }
 
             paramsCSP.Add(new SqlParameter("@PREFIX", prefix));
+            paramsCSP.Add(new SqlParameter("@ACCION", accion));
 
-            List<TALLT> talls = db.Database.SqlQuery<TALLT>("CSP_LISTA_TALL_CUENTA @SPRAS_ID,@PAIS_ID,@EJERCICIO,@SOCIEDAD_ID,@PREFIX",
+            List<TALLT> talls = db.Database.SqlQuery<TALLT>("CSP_LISTA_TALL_CUENTA @SPRAS_ID,@PAIS_ID,@EJERCICIO,@SOCIEDAD_ID,@PREFIX,@ACCION",
                paramsCSP.ToArray()).ToList();
 
             return talls;
