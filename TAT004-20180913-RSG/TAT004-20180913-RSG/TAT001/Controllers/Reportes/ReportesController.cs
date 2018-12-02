@@ -1754,18 +1754,32 @@ namespace TAT001.Controllers.Reportes
             //ViewBag.cuentagl = db.CUENTAGLs.ToList();
             //ViewBag.cuenta = db.CUENTAs.ToList();
             //ViewBag.Consulta = "";
+
+            ViewBag.selectedcocode = Request["selectcocode"];
+            ViewBag.selectedperiod = Request["selectperiod"];
+            ViewBag.selectedyear = Request["selectyear"];
+            ViewBag.selectedUsuarioF = Request["selectUsuarioF"];
+            ViewBag.selectedCliente = Request["selectCliente"];
+            ViewBag.selectedTipoSolicitud = Request["selectTipoSolicitud"];
+
+            ViewBag.tabla_reporte = GenerarTrackingTS(Request["selectcocode"], Request["selectperiod"], Request["selectyear"], Request["selectUsuarioF"], Request["selectCliente"], Request["selectTipoSolicitud"]);
+            return View();
+        }
+
+        public dynamic GenerarTrackingTS(string selectcocode, string selectperiod, string selectyear, string selectUsuarioF, string selectCliente, string selectTipoSolicitud)
+        {
             // EVALUAR FILTROS
             string[] comcodessplit = new string[] { };
-            string comcode = Request["selectcocode"] as string;
+            string comcode = selectcocode;
             if (!string.IsNullOrEmpty(comcode))
             {
                 comcodessplit = comcode.Split(',');
             }
-            int period = Int32.Parse(Request["selectperiod"]);
-            string year = Request["selectyear"];
-            string usuarioF = (string)Request["selectUsuarioF"];
-            string clienteF = (string)Request["selectCliente"];
-            string solicitudF = (string)Request["selectTipoSolicitud"];
+            int period = Int32.Parse(selectperiod);
+            string year = selectyear;
+            string usuarioF = selectUsuarioF;
+            string clienteF = selectCliente;
+            string solicitudF = selectTipoSolicitud;
 
             var queryP = (from d in db.DOCUMENTOes
                           join f in db.FLUJOes on d.NUM_DOC equals f.NUM_DOC
@@ -1817,7 +1831,7 @@ namespace TAT001.Controllers.Reportes
                 renglon.f = db.FLUJOes.Where(a => (a.NUM_DOC.Equals(renglon.NUMERO_SOLICITUD) && a.POS.Equals(renglon.POS))).OrderByDescending(x => x.FECHAC).FirstOrDefault();
             }
 
-            ViewBag.tabla_reporte = queryP.GroupBy(registro => new { registro.NUMERO_SOLICITUD, registro.POS })
+            return queryP.GroupBy(registro => new { registro.NUMERO_SOLICITUD, registro.POS })
                 .Select(grupo => new
                 {
                     trackings = grupo.OrderBy(x => x.FECHA)
@@ -1826,7 +1840,42 @@ namespace TAT001.Controllers.Reportes
                 {
                     tracking = calcularValoresGrupo(grupo_ordenado.trackings)
                 }).ToList();
-            return View();
+        }
+
+        [HttpPost]
+        public FileResult ExportReporteTrackingTS()
+        {
+            int pagina = 1107; // ID EN BASE DE DATOS
+            var user = db.USUARIOs.Where(a => a.ID.Equals(User.Identity.Name)).FirstOrDefault();
+
+            List<ExcelExportColumn> columnas = new List<ExcelExportColumn>();
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_code"))).FirstOrDefault().TEXTOS, "CO_CODE"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_pais"))).FirstOrDefault().TEXTOS, "PAIS"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_num_solicitud"))).FirstOrDefault().TEXTOS, "NUMERO_SOLICITUD", Request.Url.GetLeftPart(UriPartial.Authority) + "Solicitudes/Details/", true));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_num_cliente"))).FirstOrDefault().TEXTOS, "NUMERO_CLIENTE"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_cliente"))).FirstOrDefault().TEXTOS, "CLIENTE"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_tipo_solicitud"))).FirstOrDefault().TEXTOS, "TIPO_SOLICITUD"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_status"))).FirstOrDefault().TEXTOS, "STATUS_STRING"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_fecha"))).FirstOrDefault().TEXTOS, "FECHA_STRING"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_hora"))).FirstOrDefault().TEXTOS, "HORA_STRING"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_tiempo"))).FirstOrDefault().TEXTOS, "TIEMPO_TRANSCURRIDO_STRING"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_semana"))).FirstOrDefault().TEXTOS, "SEMANA"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_periodo"))).FirstOrDefault().TEXTOS, "PERIODO"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_ano"))).FirstOrDefault().TEXTOS, "ANIO"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_usuario"))).FirstOrDefault().TEXTOS, "USUARIO"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_rol"))).FirstOrDefault().TEXTOS, "ROL"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_usuario_accion"))).FirstOrDefault().TEXTOS, "USUARIO_ACCION"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_comentario"))).FirstOrDefault().TEXTOS, "COMENTARIO"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_correcciones"))).FirstOrDefault().TEXTOS, "NUMERO_CORRECCIONES_STRING"));
+
+            var datos = GenerarTrackingTS(Request["selectedcocode"], Request["selectedperiod"], Request["selectedyear"], Request["selectedUsuarioF"], Request["selectedCliente"], Request["selectedTipoSolicitud"]);
+            List<TrackingTS> reporte = new List<TrackingTS>();
+            foreach(object dato in datos)
+            {
+                reporte.Add((TrackingTS)(dato.GetType().GetProperty("tracking").GetValue(dato, null)));
+            }
+            string nombreArchivo = ExcelExport.generarExcelHome(columnas, reporte, "TrackingTS", Server.MapPath(ExcelExport.getRuta()));
+            return File(Server.MapPath(ExcelExport.getRuta() + nombreArchivo), "application /vnd.openxmlformats-officedocument.spreadsheetml.sheet", nombreArchivo);
         }
 
         private TrackingTS calcularValoresGrupo(IOrderedEnumerable<TrackingTS> grupo)

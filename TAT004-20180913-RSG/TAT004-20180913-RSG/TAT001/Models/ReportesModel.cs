@@ -87,6 +87,13 @@ namespace TAT001.Models
                     return Convert.ToInt32(TIEMPO_TRANSCURRIDO);
                 }
             }
+            public string NUMERO_CORRECCIONES_STRING
+            {
+                get
+                {
+                    return (NUMERO_CORRECCIONES == 0) ? "" : NUMERO_CORRECCIONES.ToString();
+                }
+            }
 
             public int POS { get; internal set; }
             public DateTime? FECHA_SOLICITUD { get; internal set; }
