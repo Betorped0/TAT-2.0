@@ -1577,18 +1577,30 @@ namespace TAT001.Controllers.Reportes
             Session["spras"] = user.SPRAS_ID;
             // ViewBag.Calendario = cal;
             // ViewBag.Consulta = "";
+            ViewBag.dperiodo = db.PERIODOes.ToList();
+            ViewBag.aperiodo = db.PERIODOes.ToList();
+            ViewBag.selectedcocode = Request["selectcocode"];
+            ViewBag.selecteddperiod = Request["selectdperiod"];
+            ViewBag.selectedaperiod = Request["selectaperiod"];
+            ViewBag.selectedyear = Request["selectyear"];
+            ViewBag.tabla_reporte = GenerarMRLTS(Request["selectcocode"], Int32.Parse(Request["selectdperiod"]), Int32.Parse(Request["selectaperiod"]), Request["selectyear"]);
+            return View();
+        }
+
+        public dynamic GenerarMRLTS(string selectcocode, int selectdperiod, int selectaperiod, string selectyear)
+        {
+            var user = db.USUARIOs.Where(a => a.ID.Equals(User.Identity.Name)).FirstOrDefault();
+
             // EVALUAR FILTROS
             string[] comcodessplit = new string[] { };
-            string comcode = Request["selectcocode"] as string;
+            string comcode = selectcocode;
             if (!string.IsNullOrEmpty(comcode))
             {
                 comcodessplit = comcode.Split(',');
             }
-            int dperiod = Int32.Parse(Request["selectdperiod"]);
-            int aperiod = Int32.Parse(Request["selectaperiod"]);
-            string year = Request["selectyear"];
-            ViewBag.dperiodo = db.PERIODOes.ToList();
-            ViewBag.aperiodo = db.PERIODOes.ToList();
+            int dperiod = selectdperiod;
+            int aperiod = selectaperiod;
+            string year = selectyear;
 
             var queryP = (from d in db.DOCUMENTOes
                           join p in db.PAIS on d.PAIS_ID equals p.LAND
@@ -1608,7 +1620,7 @@ namespace TAT001.Controllers.Reportes
                               CO_CODE = d.SOCIEDAD_ID,
                               PAIS = p.LANDX,
                               NUMERO_SOLICITUD = d.NUM_DOC,
-                              FECHA_SOLICITUD = ((d.FECHAC == null)? new DateTime() : (DateTime)d.FECHAC),
+                              FECHA_SOLICITUD = ((d.FECHAC == null) ? new DateTime() : (DateTime)d.FECHAC),
                               PERIODO_CONTABLE = (Int32)d.PERIODO,
                               ANIO_CONTABLE = d.EJERCICIO,
                               NUMERO_DOCUMENTO_SAP = d.DOCUMENTO_SAP,
@@ -1672,22 +1684,69 @@ namespace TAT001.Controllers.Reportes
                 string estatuss = renglon.STATUSS1 + renglon.STATUSS2 + renglon.STATUSS3 + renglon.STATUSS4;
                 if (renglon.STATUS == "R")
                 {
-                    renglon.STATUSS = estatuss.Substring(0, 6) +
-                                    db.FLUJOes.Where(x => x.NUM_DOC == renglon.NUMERO_SOLICITUD & x.ESTATUS == "R").OrderByDescending(a => a.POS).FirstOrDefault().USUARIO.PUESTO_ID +
-                                    estatuss.Substring(6, 1);
+                    try
+                    {
+                        renglon.STATUSS = estatuss.Substring(0, 6) +
+                                        db.FLUJOes.Where(x => x.NUM_DOC == renglon.NUMERO_SOLICITUD & x.ESTATUS == "R").OrderByDescending(a => a.POS).FirstOrDefault().USUARIO.PUESTO_ID +
+                                        estatuss.Substring(6, 1);
+                    } catch (Exception ex)
+                    {
+                        renglon.STATUSS = estatuss.Substring(0, 6) + " " + estatuss.Substring(6, 1);
+                    }
                 }
                 else
                 {
-                    renglon.STATUSS = estatuss.Substring(0, 6) + " " + estatuss.Substring(6, 1); ;
+                    renglon.STATUSS = estatuss.Substring(0, 6) + " " + estatuss.Substring(6, 1);
                 }
                 Estatus e = new Estatus();
                 renglon.ESTATUS_STRING = e.getText(renglon.STATUSS, renglon.NUMERO_SOLICITUD, user.SPRAS_ID);
                 renglon.d = db.DOCUMENTOes.Find(renglon.NUMERO_SOLICITUD);
             }
-
-            ViewBag.tabla_reporte = queryP;
-            return View();
+            return queryP;
         }
+
+        [HttpPost]
+        public FileResult ExportReporteMRLTS()
+        {
+            int pagina = 1106;
+            var user = db.USUARIOs.Where(a => a.ID.Equals(User.Identity.Name)).FirstOrDefault();
+
+            List<ExcelExportColumn> columnas = new List<ExcelExportColumn>();
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_code"))).FirstOrDefault().TEXTOS, "CO_CODE"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_pais"))).FirstOrDefault().TEXTOS, "PAIS"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_num_solicitud"))).FirstOrDefault().TEXTOS, "NUMERO_SOLICITUD", Request.Url.GetLeftPart(UriPartial.Authority) + "Solicitudes/Details/", true));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_fecha_solicitud"))).FirstOrDefault().TEXTOS, "FECHA_SOLICITUD_STRING"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_periodo_contable"))).FirstOrDefault().TEXTOS, "PERIODO_CONTABLE"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_anio_contable"))).FirstOrDefault().TEXTOS, "ANIO_CONTABLE"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_no_doc_SAP"))).FirstOrDefault().TEXTOS, "NUMERO_DOCUMENTO_SAP"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_no_rev_SAP"))).FirstOrDefault().TEXTOS, "NUMERO_REVERSO_SAP"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_fecha_reverso"))).FirstOrDefault().TEXTOS, "FECHA_REVERSO_STRING"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_p_contable_reverso"))).FirstOrDefault().TEXTOS, "PERIODO_CONTABLE_REVERSO"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_c_reverso_provision"))).FirstOrDefault().TEXTOS, "COMENTARIOS_REVERSO_PROVISION"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_tipo_solicitud"))).FirstOrDefault().TEXTOS, "TIPO_SOLICITUD"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_status"))).FirstOrDefault().TEXTOS, "ESTATUS_STRING"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_concepto_solicitud"))).FirstOrDefault().TEXTOS, "CONCEPTO_SOLICITUD"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_d"))).FirstOrDefault().TEXTOS, "DE_STRING"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_a"))).FirstOrDefault().TEXTOS, "A_STRING"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_clasificacion"))).FirstOrDefault().TEXTOS, "CLASIFICACION"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_num_cliente"))).FirstOrDefault().TEXTOS, "NUMERO_CLIENTE"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_cliente"))).FirstOrDefault().TEXTOS, "CLIENTE"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_monto"))).FirstOrDefault().TEXTOS, "MONTO_PROVISION_STRING"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_importe"))).FirstOrDefault().TEXTOS, "MONTO_NCOP_STRING"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_reverso"))).FirstOrDefault().TEXTOS, "MONTO_REVERSO_STRING"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_beneficio"))).FirstOrDefault().TEXTOS, "BENEFICIO_IMPACTO_MRL"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_expense"))).FirstOrDefault().TEXTOS, "EXPENSE_RECOGNITION_STRING"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_monto_USD"))).FirstOrDefault().TEXTOS, "MONTO_PROVISION_USD_STRING"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_importe_USD"))).FirstOrDefault().TEXTOS, "MONTO_NCOP_USD_STRING"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_reverso_USD"))).FirstOrDefault().TEXTOS, "MONTO_REVERSO_USD_STRING"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_beneficio_USD"))).FirstOrDefault().TEXTOS, "BENEFICIO_IMPACTO_MRL_USD"));
+
+            var datos = GenerarMRLTS(Request["selectedcocode"], Int32.Parse(Request["selecteddperiod"]), Int32.Parse(Request["selectedaperiod"]), Request["selectedyear"]);
+            List<MRLTS> reporte = new List<MRLTS>();
+            string nombreArchivo = ExcelExport.generarExcelHome(columnas, datos, "MRLTS", Server.MapPath(ExcelExport.getRuta()));
+            return File(Server.MapPath(ExcelExport.getRuta() + nombreArchivo), "application /vnd.openxmlformats-officedocument.spreadsheetml.sheet", nombreArchivo);
+        }
+
         // FIN REPORTE 5 - MRLTS
 
         // REPORTE 6 - TRACKING TS

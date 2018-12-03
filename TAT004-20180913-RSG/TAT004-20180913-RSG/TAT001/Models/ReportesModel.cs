@@ -111,7 +111,6 @@ namespace TAT001.Models
             public int PERIODO_CONTABLE { get; set; }
             public string ANIO_CONTABLE { get; internal set; }
             public string NUMERO_DOCUMENTO_SAP { get; set; }
-            public int NUMERO_REVERSO_SAP { get; set; }
             public DateTime FECHA_REVERSO { get; set; }
             public string PERIODO_CONTABLE_REVERSO { get; set; }
             public string COMENTARIOS_REVERSO_PROVISION { get; set; }
@@ -137,6 +136,121 @@ namespace TAT001.Models
             public decimal MONTO_2 { get; internal set; }
             public decimal EXPENSE_RECOGNITION { get; internal set; }
             public bool ES_REVERSO { get; internal set; }
+            public string BENEFICIO_IMPACTO_MRL { get; set; }
+            public string BENEFICIO_IMPACTO_MRL_USD { get; set; }
+            public string NUMERO_REVERSO_SAP { get; set; }
+
+            public string COMENTARIOS_REVERSO_PROVISION_STRING
+            {
+                get
+                {
+                    if (this.ES_REVERSO)
+                        return this.COMENTARIOS_REVERSO_PROVISION;
+                    else
+                        return String.Empty;
+                }
+            }
+            public string FECHA_SOLICITUD_STRING
+            {
+                get
+                {
+                    return this.FECHA_SOLICITUD.ToShortDateString();
+                }
+            }
+            public string FECHA_REVERSO_STRING
+            {
+                get
+                {
+                    if (this.ES_REVERSO)
+                        return this.FECHA_REVERSO.ToShortDateString();
+                    else
+                        return String.Empty;
+                }
+            }
+            public string DE_STRING
+            {
+                get
+                {
+                    return this.DE.ToShortDateString();
+                }
+            }
+            public string A_STRING
+            {
+                get
+                {
+                    return this.A.ToShortDateString();
+                }
+            }
+            public string MONTO_PROVISION_STRING
+            {
+                get
+                {
+                    if (this.TIPO_SOLICITUD_ID.StartsWith("PR"))
+                        return String.Format("{0:C}", this.MONTO);
+                    else
+                        return String.Empty;
+                }
+            }
+            public string MONTO_NCOP_STRING
+            {
+                get
+                {
+                    if (this.TIPO_SOLICITUD_ID.StartsWith("NC") || this.TIPO_SOLICITUD_ID.StartsWith("OP"))
+                        return String.Format("{0:C}", this.MONTO);
+                    else
+                        return String.Empty;
+                }
+            }
+            public string MONTO_REVERSO_STRING
+            {
+                get
+                {
+                    if (this.TIPO_SOLICITUD_ID.StartsWith("RP"))
+                        return String.Format("{0:C}", this.MONTO);
+                    else
+                        return String.Empty;
+                }
+            }
+            public string EXPENSE_RECOGNITION_STRING
+            {
+                get
+                {
+                    if (this.EXPENSE_RECOGNITION > 0)
+                        return String.Format("{0:C}", this.EXPENSE_RECOGNITION);
+                    else
+                        return String.Empty;
+                }
+            }
+            public string MONTO_PROVISION_USD_STRING
+            {
+                get
+                {
+                    if (this.TIPO_SOLICITUD_ID.StartsWith("PR"))
+                        return String.Format("{0:C}", this.MONTO_2);
+                    else
+                        return String.Empty;
+                }
+            }
+            public string MONTO_NCOP_USD_STRING
+            {
+                get
+                {
+                    if (this.TIPO_SOLICITUD_ID.StartsWith("NC") || this.TIPO_SOLICITUD_ID.StartsWith("OP"))
+                        return String.Format("{0:C}", this.MONTO_2);
+                    else
+                        return String.Empty;
+                }
+            }
+            public string MONTO_REVERSO_USD_STRING
+            {
+                get
+                {
+                    if (this.TIPO_SOLICITUD_ID.StartsWith("RP"))
+                        return String.Format("{0:C}", this.MONTO_2);
+                    else
+                        return String.Empty;
+                }
+            }
         }
 
         public class AllowancesB
