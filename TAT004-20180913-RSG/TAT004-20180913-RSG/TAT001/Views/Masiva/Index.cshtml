@@ -270,6 +270,7 @@
     function confirmExit() {
         return "¿Deseas salir del módulo? La infomración se perderá. ";
     }
+    var el1 = document.querySelector(".tabs");
     var instance1 = M.Tabs.init(el1, []);
 
     var elem1 = document.getElementById('borraTabla');
@@ -284,6 +285,7 @@
 <link href="~/Content/autocomplete.css" rel="stylesheet" />
 
 <script>
+    var root = "@Url.Content("~")";
     var auto = $.noConflict();
     var ln = "@Session["spras"].ToString()";
 </script>
@@ -301,7 +303,13 @@
         width: 100%;
     }
 </style>
-
+<script>
+    $('#tab_test1').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" } });
+    $('#tab_test2').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" } });
+    $('#tab_test3').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" } });
+    $('#tab_test4').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" } });
+    $('#tab_test5').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" }, "paging": false });
+</script>
 @*<script>
         //$(".mdl-button").on("click", function () {
         //    if ($(this).hasClass("valid")) {

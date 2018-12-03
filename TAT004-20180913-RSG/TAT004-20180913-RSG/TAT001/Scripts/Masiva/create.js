@@ -9,6 +9,7 @@ cargaInicialSpin[4] = false;
 $("#miMas").change(function () {
     var filenum = $('#miMas').get(0).files.length;
     if (filenum > 0) {
+        InicializarTablas();
         var file = document.getElementById("miMas").files[0];
         var filename = file.name;
         //EVALUAMOS LA EXTENSION PARA VER QUE SOLO PERMITA FORMATOS DE EXCEL
@@ -75,7 +76,7 @@ function getExcelMasivas(file) {
 /////////////////////////////////////////////////////////HOJA 1 FUNCIONES Y ASIGNACIONES////////////////////////////////////////////////////////
 function procesarHoja1() {
     document.getElementById("loader").style.display = "initial";
-    var table = $('#tab_test1').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" } });
+    var table = $('#tab_test1').DataTable();
     table.clear().draw();
 
     $.ajax({
@@ -95,7 +96,7 @@ function procesarHoja1() {
                     //INICIO DEL CICLO FOR
                     $.each(data, function (i, dataj) {
                         //if (i % 2 == 0) {//}  CONDICION PARA SOLO PARES
-                        var addedRow = addRowH1(table, dataj.NUM_DOC, dataj.TSOL_ID, dataj.GALL_ID, dataj.SOCIEDAD_ID, dataj.PAIS_ID, dataj.ESTADO, dataj.CIUDAD, dataj.CONCEPTO, dataj.NOTAS, dataj.PAYER_ID, dataj.PAYER_NOMBRE, dataj.CONTACTO_NOMBRE, dataj.CONTACTO_EMAIL, dataj.FECHAI_VIG, dataj.FECHAF_VIG, dataj.MONEDA_ID, dataj.VKORG, dataj.VTWEG, errores[i], dataj.PAIS_NAME);
+                        var addedRow = addRowH1(table, dataj.NUM_DOC, dataj.TSOL_ID, dataj.TALL_ID, dataj.SOCIEDAD_ID, dataj.PAIS_ID, dataj.ESTADO, dataj.CIUDAD, dataj.CONCEPTO, dataj.NOTAS, dataj.PAYER_ID, dataj.PAYER_NOMBRE, dataj.CONTACTO_NOMBRE, dataj.CONTACTO_EMAIL, dataj.FECHAI_VIG, dataj.FECHAF_VIG, dataj.MONEDA_ID, dataj.VKORG, dataj.VTWEG, errores[i], dataj.PAIS_NAME, dataj.TALL_NAME);
                         tsols += "." + dataj.NUM_DOC + "-" + dataj.TSOL_ID;//ADD RSG 05.11.2018
                     }); //FIN DEL FOR
 
@@ -124,7 +125,7 @@ function procesarHoja1() {
     });
 }
 
-function addRowH1(t, NUM_DOC, TSOL_ID, GALL_ID, SOCIEDAD_ID, PAIS_ID, ESTADO, CIUDAD, CONCEPTO, NOTAS, PAYER_ID, PAYER_NOMBRE, CONTACTO_NOMBRE, CONTACTO_EMAIL, FECHAI_VIG, FECHAF_VIG, MONEDA_ID, VKORG, VTWEG, ERRORES, PAIS_NAME) {
+function addRowH1(t, NUM_DOC, TSOL_ID, TALL_ID, SOCIEDAD_ID, PAIS_ID, ESTADO, CIUDAD, CONCEPTO, NOTAS, PAYER_ID, PAYER_NOMBRE, CONTACTO_NOMBRE, CONTACTO_EMAIL, FECHAI_VIG, FECHAF_VIG, MONEDA_ID, VKORG, VTWEG, ERRORES, PAIS_NAME, TALL_NAME) {
 
     //var clasificacion = "<select id=\"clas\" class=\"miSel\">";
     //$.each(arr1, function (i, data) {
@@ -152,11 +153,11 @@ function addRowH1(t, NUM_DOC, TSOL_ID, GALL_ID, SOCIEDAD_ID, PAIS_ID, ESTADO, CI
     var r = t.row.add([
         "<span class='" + clase + " material-icons'>" + icono + "</span>",
         "<input class='" + ERRORES[0] + " input_numdoc' style='font-size:10px; text-align:center;' type='text' id='' name='' disabled value='" + NUM_DOC + "'><span hidden>" + NUM_DOC + "</span>",
-        "<input class='" + ERRORES[1] + " input_tsol' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + TSOL_ID + "'><span hidden>" + TSOL_ID + "</span>",
-        "<input class='" + ERRORES[2] + " input_clasificacion' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + GALL_ID + "'><span hidden>" + GALL_ID + "</span>",
-        "<input class='" + ERRORES[3] + " input_sociedad' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + SOCIEDAD_ID + "'><span hidden>" + SOCIEDAD_ID + "</span>",
+        "<input class='" + ERRORES[1] + " input_tsol' style='font-size:10px; text-align:center;' type='text' id='' name='' disabled value='" + TSOL_ID + "'><span hidden>" + TSOL_ID + "</span>",
+        "<input class='" + ERRORES[2] + " input_clasificacion' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + TALL_NAME + "'><span hidden>" + TALL_ID + "</span>",
+        "<input class='" + ERRORES[3] + " input_sociedad' style='font-size:10px; text-align:center;' type='text' id='' name='' disabled value='" + SOCIEDAD_ID + "'><span hidden>" + SOCIEDAD_ID + "</span>",
         //"<input class='" + ERRORES[4] + " input_pais' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + PAIS_ID + "'><span hidden class='span_pais'>" + PAIS_ID + "</span>",
-        "<input class='" + ERRORES[4] + " input_pais' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + PAIS_NAME + "'><span hidden class='span_pais'>" + PAIS_ID + "</span>",
+        "<input class='" + ERRORES[4] + " input_pais' style='font-size:10px; text-align:center;' type='text' id='' name='' disabled value='" + PAIS_NAME + "'><span hidden class='span_pais'>" + PAIS_ID + "</span>",
         "<input class='" + ERRORES[5] + " input_estado' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + ESTADO + "'><span hidden>" + ESTADO + "</span>",
         "<input class='" + ERRORES[6] + " input_ciudad' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + CIUDAD + "'><span hidden>" + CIUDAD + "</span>",
         "<input class='" + ERRORES[7] + " input_concepto' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + CONCEPTO + "'><span hidden>" + CONCEPTO + "</span>",
@@ -266,17 +267,17 @@ $('#tab_test1').on('keydown.autocomplete', '.input_clasificacion', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
-
+    var sociedad = $('.input_sociedad').val();
     auto(this).autocomplete({
         source: function (request, response) {
             auto.ajax({
-                type: "POST",
-                url: 'clasificacion',
+                type: "GET",
+                url: root + 'Listas/Talls',
                 dataType: "json",
-                data: { "Prefix": request.term },
+                data: { "Prefix": request.term, "sociedad_id": sociedad },
                 success: function (data) {
                     response(auto.map(data, function (item) {
-                        return { label: item.DESCRIPCION, value: item.DESCRIPCION };
+                        return { label: item.TXT50, value: item.TXT50 , TallId: item.TALL_ID };
                     }));
                 }
             });
@@ -299,6 +300,8 @@ $('#tab_test1').on('keydown.autocomplete', '.input_clasificacion', function () {
         select: function (event, ui) {
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
+            var idTall = tr.find("td:eq(" + col_index + ")").children('span');
+            idTall.text(ui.item.TallId);
             clearErrors();
         }
     });
@@ -407,15 +410,15 @@ $('#tab_test1').on('keydown.autocomplete', '.input_estado', function () {
     var col_index2 = col_index - 1;
 
     $(tr.find("td:eq(" + col_index2 + ")").children().addClass('' + row_index + 'pais' + col_index2));
-    var pais = $('.' + row_index + 'pais' + col_index2).val();
-
+    var pais = $('.' + row_index + 'pais' + col_index2)[1].textContent;
+    
     auto(this).autocomplete({
         source: function (request, response) {
             auto.ajax({
-                type: "POST",
-                url: 'estado',
+                type: "GET",
+                url: root + "Listas/Estados",
                 dataType: "json",
-                data: { "Prefix": request.term, "Pais": pais },
+                data: { "Prefix": request.term, "pais": pais },
                 success: function (data) {
                     response(auto.map(data, function (item) {
                         return { label: item.NAME, value: item.NAME };
@@ -458,10 +461,10 @@ $('#tab_test1').on('keydown.autocomplete', '.input_ciudad', function () {
     auto(this).autocomplete({
         source: function (request, response) {
             auto.ajax({
-                type: "POST",
-                url: 'ciudad',
+                type: "GET",
+                url: root + "Listas/Ciudades",
                 dataType: "json",
-                data: { "Prefix": request.term, "Estado": estado },
+                data: { "Prefix": request.term, "estado": estado },
                 success: function (data) {
                     response(auto.map(data, function (item) {
                         return { label: item.NAME, value: item.NAME };
@@ -580,8 +583,8 @@ $('body').on('keydown.autocomplete', '.input_cliente', function () {
     auto(this).autocomplete({
         source: function (request, response) {
             auto.ajax({
-                type: "POST",
-                url: 'cliente',
+                type: "GET",
+                url: root + "Listas/Clientes",
                 dataType: "json",
                 //data: { "Prefix": request.term },
                 data: { "Prefix": request.term, "usuario": us, "pais": pais }, //ADD RSG 01.11.2018
@@ -628,25 +631,49 @@ $('#tab_test1').on('keydown.autocomplete', '.input_contacto', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
+    var col = col_index - 2;
+    var cliente = tr.find("td:eq(" + col + ")").children();
+    var errorcliente = cliente.attr("class").indexOf('rojo');
 
     auto(this).autocomplete({
         source: function (request, response) {
-            auto.ajax({
-                type: "POST",
-                url: 'contactoNombre',
-                dataType: "json",
-                data: { "Prefix": request.term },
-                success: function (data) {
-                    if (data) {
-                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
-                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
-                    } else {
-                        $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
-                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
+            if (errorcliente >= 0) {
+                auto.ajax({
+                    type: "POST",
+                    url: 'contactoNombre',
+                    dataType: "json",
+                    data: { "Prefix": request.term },
+                    success: function (data) {
+                        if (data) {
+                            $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+                            $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
+                        } else {
+                            $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                            $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
+                        }
+                        clearErrors();
                     }
-                    clearErrors();
-                }
-            });
+                });
+            } else {
+                auto.ajax({
+                    url: root + "Listas/contactos",
+                    type: "GET",
+                    dataType: "json",
+                    data: { Prefix: request.term, kunnr: cliente.val() },
+                    success: function (data) {
+                        if (data) {
+                            $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+                            $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
+                        } else {
+                            $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                            $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
+                        }
+                        response(auto.map(data, function (item) {
+                            return { label: item.NOMBRE + " - " + item.EMAIL, value: item.NOMBRE, mail: item.EMAIL };
+                        }))
+                    }
+                });
+            }
         },
 
         change: function () {
@@ -654,6 +681,19 @@ $('#tab_test1').on('keydown.autocomplete', '.input_contacto', function () {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
                 $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
             }
+            clearErrors();
+        },
+
+        select: function (event, ui) {
+            var tr = $(this).closest('tr'); 
+            var col_index = $(this).parent().index();
+            var co = col_index + 1;
+            var colemail = $(tr.find("td:eq(" + co + ")").children());
+            if (errorcliente < 0) {
+                colemail.val(ui.item.mail);
+            }
+            $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+            $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
             clearErrors();
         }
     });
@@ -827,7 +867,7 @@ $("#tab_info").click(function () {
 /////////////////////////////////////////////////////////HOJA 2 FUNCIONES Y ASIGNACIONES////////////////////////////////////////////////////////
 function procesarHoja2() {
     //document.getElementById("loader").style.display = "initial";
-    var table = $('#tab_test2').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" } });
+    var table = $('#tab_test2').DataTable();
     table.clear().draw();
 
     $.ajax({
@@ -1244,7 +1284,7 @@ $("#tab_rel").click(function () {
 });
 /////////////////////////////////////////////////////////HOJA 3 FUNCIONES Y ASIGNACIONES////////////////////////////////////////////////////////
 function procesarHoja3() {
-    var table = $('#tab_test3').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" } });
+    var table = $('#tab_test3').DataTable();
     table.clear().draw();
 
     $.ajax({
@@ -1551,7 +1591,7 @@ $("#tab_mul").click(function () {
 
 /////////////////////////////////////////////////////////HOJA 4 FUNCIONES Y ASIGNACIONES////////////////////////////////////////////////////////
 function procesarHoja4() {
-    var table = $('#tab_test4').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" } });
+    var table = $('#tab_test4').DataTable();
     table.clear().draw();
 
     $.ajax({
@@ -2575,7 +2615,7 @@ $("#tab_dis").click(function () {
 
 /////////////////////////////////////////////////////////HOJA 5 FUNCIONES Y ASIGNACIONES////////////////////////////////////////////////////////
 function procesarHoja5() {
-    var table = $('#tab_test5').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" }, "paging": false });
+    var table = $('#tab_test5').DataTable();
     table.clear().draw();
 
     $.ajax({
@@ -3310,9 +3350,9 @@ function guardaDatos() {
         if (status == "done") {
             var num_doc = $(rowH1).children().eq(1).children().val();
             var t_sol = $(rowH1).children().eq(2).children().val();
-            var gall_id = $(rowH1).children().eq(3).children().val();
+            var tall_id = $(rowH1).children().eq(3).children('span').text();
             var bukrs = $(rowH1).children().eq(4).children().val();
-            var land = $(rowH1).children().eq(5).children().val();
+            var land = $(rowH1).children().eq(5).children('span').text();
             var estado = $(rowH1).children().eq(6).children().val();
             var ciudad = $(rowH1).children().eq(7).children().val();
             var concepto = $(rowH1).children().eq(8).children().val();
@@ -3325,7 +3365,7 @@ function guardaDatos() {
             var fechaf_vig = $(rowH1).children().eq(15).children().val();
             var moneda_id = $(rowH1).children().eq(16).children().val();
 
-            rowsH1[a] = [num_doc, t_sol, gall_id, bukrs, land, estado, ciudad, concepto, notas, payer_id, payer_nombre, contacto_nombre, contacto_email, fechai_vig, fechaf_vig, moneda_id];
+            rowsH1[a] = [num_doc, t_sol, tall_id, bukrs, land, estado, ciudad, concepto, notas, payer_id, payer_nombre, contacto_nombre, contacto_email, fechai_vig, fechaf_vig, moneda_id];
             a++;
         }
     }
@@ -3816,3 +3856,21 @@ var tablesToExcel = (function () {
 //        alert("error");
 //    });
 //};
+
+function InicializarTablas() {
+    var table = $('#tab_test1').DataTable();
+    table.clear().draw();
+    var table2 = $('#tab_test2').DataTable();
+    table2.clear().draw();
+    var table3 = $('#tab_test3').DataTable();
+    table3.clear().draw();
+    var table4 = $('#tab_test4').DataTable();
+    table4.clear().draw();
+    var table5 = $('#tab_test5').DataTable();
+    table5.clear().draw();
+    cargaInicialSpin[0] = false;
+    cargaInicialSpin[1] = false;
+    cargaInicialSpin[2] = false;
+    cargaInicialSpin[3] = false;
+    cargaInicialSpin[4] = false;
+}
