@@ -107,7 +107,7 @@
                     valoress.push($(this).val());
                 }
                 else {
-                    alert("No introduzca aprobadores repetidos");
+                    toast("tcambio", 100000, "alert", "No introduzca aprobadores repetidos", "red");
                     continuar = false;
                     e.preventDefault();
                 }
@@ -119,7 +119,7 @@
                     return;
                 }
                 else {
-                    alert('Incluya al menos dos filas a la matriz de aprobación');
+                    toast("tcambio", 100000, "alert", "Incluya al menos dos filas a la matriz de aprobación", "red");
                     e.preventDefault();
                 }
             }
@@ -157,7 +157,7 @@
             $TABLE.find('table').append($clone);
         }
         else {
-            alert("Solo es posible agregar 5 registros.");
+            toast("tcambio", 100000, "alert", "Solo es posible agregar 5 registros.", "red");
         }
                 });
 

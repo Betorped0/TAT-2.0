@@ -37,6 +37,22 @@
     </script>
 }
 
+@using (Html.BeginForm("ExportReporteAllowancesB", "Reportes", FormMethod.Post, new { @style = "display:inline;" }))
+{
+    if (ViewBag.Display)
+    {
+        <div class="row">
+            <div class="col s12 right-align">
+                <input type="hidden" name="selectedquarter" value="@((ViewBag.selectedquarter == null)?String.Empty:ViewBag.selectedquarter)" />
+                <input type="hidden" name="selectedperiod" value="@((ViewBag.selectedperiod == null)?String.Empty:ViewBag.selectedperiod)" />
+                <input type="hidden" name="selectedyear" value="@((ViewBag.selectedyear == null)?String.Empty:ViewBag.selectedyear)" />
+                <input type="hidden" name="selectedcocode" value="@((ViewBag.selectedcocode == null)?String.Empty:ViewBag.selectedcocode)" />
+                <button id="btnExport" name="excel" class="btn-small" type="submit">Exportar</button>
+            </div>
+        </div>
+    }
+}
+
 @using (Html.BeginForm("ReporteAllowancesB", "Reportes", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
@@ -49,19 +65,10 @@
     int yearback = yeard - 1;
     int yearback2 = yeard - 2;
     <div class="row">
-        @if (ViewBag.Display)
-        {
-            <div class="col s12 right-align">
-                <button class="btn-small" id="sendbtn" type="submit" name="action">Consultar</button>
-                <input class="btn-small" id="id_excel" type="button" value="Generar Excel" name="action" />
-            </div>
-        }
-        else
-        {
-            <div class="col s12 right-align">
-                <button class="btn-small" id="sendbtn" type="submit" name="action">Consultar</button>
-            </div>
-        }
+        <div class="col s12 right-align">
+            <button class="btn-small" id="sendbtn" type="submit" name="action">Consultar</button>
+            @*<input class="btn-small" id="id_excel" type="button" value="Generar Excel" name="action" />*@
+        </div>
     </div>
     <div class="card-panel">
         <div class="row">
@@ -145,17 +152,17 @@
         @*<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>*@
         <script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
         @*<link href="~/Content/dataTable.css" rel="stylesheet" />
-        <link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />*@
+            <link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />*@
         <script src="~/Scripts/subfilters/jquery.tablesorter.js"></script>
         <link href="~/Scripts/subfilters/jquery.tablesorter.pager.css" rel="stylesheet" />
         <script src="~/Scripts/subfilters/jquery.tablesorter.pager.js"></script>
         <script src="~/Scripts/subfilters/widget-filter.js"></script>
         <script src="~/Scripts/tablesort/tableToExcel.js"></script>
         @*<script>
-            var elem = document.querySelector('select');
-            var options = [];
-            var instance = M.FormSelect.init(elem, options);
-        </script>*@
+                var elem = document.querySelector('select');
+                var options = [];
+                var instance = M.FormSelect.init(elem, options);
+            </script>*@
     </div>
     if (ViewBag.display)
     {
@@ -291,32 +298,32 @@
                 </thead>
                 <tfoot>
                     @*<tr>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_cuenta_balance">Cuenta de Balance</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_descrpcion">Descripción de la cuenta de Balance</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_fuente">Fuente del registro</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_KCMX">KCMX</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_KLCA">KLCA</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_LCCR">LCCR</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_LPKP">LPKP</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_KLSV">KLSV</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_KCAR">KCAR</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_KPRS">KPRS</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_KLCO">KLCO</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_LEKE">LEKE</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_LAGA">LAGA</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_KLCH">KLCH</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_KCMXUSD">KCMX USD</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_KLCAUSD">KLCA USD</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_LCCRUSD">LCCR USD</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_LPKPUSD">LPKP USD</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_KLSVUSD">KLSV USD</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_KCARUSD">KCAR USD</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_KPRSUSD">KPRS USD</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_KLCOUSD">KLCO USD</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_LEKEUSD">LEKE USD</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_LAGAUSD">LAGA USD</th>
-                        <th class="filter-select" data-placeholder="Todas las opciones" id="head_KLCHUSD">KLCH USD</th>
-                    </tr>*@
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_cuenta_balance">Cuenta de Balance</th>
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_descrpcion">Descripción de la cuenta de Balance</th>
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_fuente">Fuente del registro</th>
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_KCMX">KCMX</th>
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_KLCA">KLCA</th>
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_LCCR">LCCR</th>
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_LPKP">LPKP</th>
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_KLSV">KLSV</th>
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_KCAR">KCAR</th>
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_KPRS">KPRS</th>
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_KLCO">KLCO</th>
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_LEKE">LEKE</th>
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_LAGA">LAGA</th>
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_KLCH">KLCH</th>
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_KCMXUSD">KCMX USD</th>
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_KLCAUSD">KLCA USD</th>
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_LCCRUSD">LCCR USD</th>
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_LPKPUSD">LPKP USD</th>
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_KLSVUSD">KLSV USD</th>
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_KCARUSD">KCAR USD</th>
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_KPRSUSD">KPRS USD</th>
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_KLCOUSD">KLCO USD</th>
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_LEKEUSD">LEKE USD</th>
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_LAGAUSD">LAGA USD</th>
+                            <th class="filter-select" data-placeholder="Todas las opciones" id="head_KLCHUSD">KLCH USD</th>
+                        </tr>*@
                     <!-- include "tablesorter-ignoreRow" class for pager rows in thead -->
                     <tr class="tablesorter-ignoreRow">
                         <th colspan="2" class="ts-pager form-horizontal">
@@ -349,83 +356,83 @@
                 <tbody>
                     @foreach (TAT001.Models.ReportesModel.AllowancesB item in ViewBag.reporte)
                     {
-                    <tr>
-                        <td>
-                            @item.CUENTA_DE_BALANCE
-                        </td>
-                        <td>
-                            @item.DESCRIPCION
-                        </td>
-                        <td>
-                            @item.FUENTE
-                        </td>
-                        <td>
-                            @((item.KCMX == 0) ? "-" : String.Format("{0:C}", (item.KCMX)))
-                        </td>
-                        <td>
-                            @((item.KLCA == 0) ? "-" : String.Format("{0:C}", (item.KLCA)))
-                        </td>
-                        <td>
-                            @((item.LCCR == 0) ? "-" : String.Format("{0:C}", (item.LCCR)))
-                        </td>
-                        <td>
-                            @((item.LPKP == 0) ? "-" : String.Format("{0:C}", (item.LPKP)))
-                        </td>
-                        <td>
-                            @((item.KLSV == 0) ? "-" : String.Format("{0:C}", (item.KLSV)))
-                        </td>
-                        <td>
-                            @((item.KCAR == 0) ? "-" : String.Format("{0:C}", (item.KCAR)))
-                        </td>
-                        <td>
-                            @((item.KPRS == 0) ? "-" : String.Format("{0:C}", (item.KPRS)))
-                        </td>
-                        <td>
-                            @((item.KLCO == 0) ? "-" : String.Format("{0:C}", (item.KLCO)))
-                        </td>
-                        <td>
-                            @((item.LEKE == 0) ? "-" : String.Format("{0:C}", (item.LEKE)))
-                        </td>
-                        <td>
-                            @((item.LAGA == 0) ? "-" : String.Format("{0:C}", (item.LAGA)))
-                        </td>
-                        <td>
-                            @((item.KLCH == 0) ? "-" : String.Format("{0:C}", (item.KLCH)))
-                        </td>
-                        <td>
-                            @((item.KCMX_USD == 0) ? "-" : String.Format("{0:C}", (item.KCMX_USD)))
-                        </td>
-                        <td>
-                            @((item.KLCA_USD == 0) ? "-" : String.Format("{0:C}", (item.KLCA_USD)))
-                        </td>
-                        <td>
-                            @((item.LCCR_USD == 0) ? "-" : String.Format("{0:C}", (item.LCCR_USD)))
-                        </td>
-                        <td>
-                            @((item.LPKP_USD == 0) ? "-" : String.Format("{0:C}", (item.LPKP_USD)))
-                        </td>
-                        <td>
-                            @((item.KLSV_USD == 0) ? "-" : String.Format("{0:C}", (item.KLSV_USD)))
-                        </td>
-                        <td>
-                            @((item.KCAR_USD == 0) ? "-" : String.Format("{0:C}", (item.KCAR_USD)))
-                        </td>
-                        <td>
-                            @((item.KPRS_USD == 0) ? "-" : String.Format("{0:C}", (item.KPRS_USD)))
-                        </td>
-                        <td>
-                            @((item.KLCO_USD == 0) ? "-" : String.Format("{0:C}", (item.KLCO_USD)))
-                        </td>
-                        <td>
-                            @((item.LEKE_USD == 0) ? "-" : String.Format("{0:C}", (item.LEKE_USD)))
-                        </td>
-                        <td>
-                            @((item.LAGA_USD == 0) ? "-" : String.Format("{0:C}", (item.LAGA_USD)))
-                        </td>
-                        <td>
-                            @((item.KLCH_USD == 0) ? "-" : String.Format("{0:C}", (item.KLCH_USD)))
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>
+                                @item.CUENTA_DE_BALANCE
+                            </td>
+                            <td>
+                                @item.DESCRIPCION
+                            </td>
+                            <td>
+                                @item.FUENTE
+                            </td>
+                            <td>
+                                @item.KCMX_STRING
+                            </td>
+                            <td>
+                                @item.KLCA_STRING
+                            </td>
+                            <td>
+                                @item.LCCR_STRING
+                            </td>
+                            <td>
+                                @item.LPKP_STRING
+                            </td>
+                            <td>
+                                @item.KLSV_STRING
+                            </td>
+                            <td>
+                                @item.KCAR_STRING
+                            </td>
+                            <td>
+                                @item.KPRS_STRING
+                            </td>
+                            <td>
+                                @item.KLCO_STRING
+                            </td>
+                            <td>
+                                @item.LEKE_STRING
+                            </td>
+                            <td>
+                                @item.LAGA_STRING
+                            </td>
+                            <td>
+                                @item.KLCH_STRING
+                            </td>
+                            <td>
+                                @item.KCMX_USD_STRING
+                            </td>
+                            <td>
+                                @item.KLCA_USD_STRING
+                            </td>
+                            <td>
+                                @item.LCCR_USD_STRING
+                            </td>
+                            <td>
+                                @item.LPKP_USD_STRING
+                            </td>
+                            <td>
+                                @item.KLSV_USD_STRING
+                            </td>
+                            <td>
+                                @item.KCAR_USD_STRING
+                            </td>
+                            <td>
+                                @item.KPRS_USD_STRING
+                            </td>
+                            <td>
+                                @item.KLCO_USD_STRING
+                            </td>
+                            <td>
+                                @item.LEKE_USD_STRING
+                            </td>
+                            <td>
+                                @item.LAGA_USD_STRING
+                            </td>
+                            <td>
+                                @item.KLCH_USD_STRING
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>

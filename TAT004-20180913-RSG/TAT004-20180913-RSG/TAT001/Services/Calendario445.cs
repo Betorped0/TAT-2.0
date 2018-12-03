@@ -58,7 +58,7 @@ namespace TAT001.Services
         {
             TAT001Entities db = new TAT001Entities();
             List<PERIODO445> pp = db.PERIODO445.Where(a => a.EJERCICIO == fecha.Year).ToList();
-            PERIODO445 p = pp.Where(a => a.MES_NATURAL == fecha.Month && a.DIA_NATURAL >= fecha.Day).OrderBy(a => a.DIA_NATURAL).LastOrDefault();
+            PERIODO445 p = pp.Where(a => a.MES_NATURAL == fecha.Month && a.DIA_NATURAL >= fecha.Day).OrderBy(a => a.DIA_NATURAL).FirstOrDefault();
             
             if (p == null)
             {
