@@ -282,6 +282,28 @@ namespace TAT001.Models
             public decimal LAGA_USD { get; set; }
             public decimal KLCH_USD { get; set; }
             public int ORDEN { get; internal set; }
+            public string KCMX_STRING { get { return ((this.KCMX == 0) ? "-" : String.Format("{0:C}", (this.KCMX))); } }
+            public string KLCA_STRING { get { return ((this.KLCA == 0) ? "-" : String.Format("{0:C}", (this.KLCA))); } }
+            public string LCCR_STRING { get { return ((this.LCCR == 0) ? "-" : String.Format("{0:C}", (this.LCCR))); } }
+            public string LPKP_STRING { get { return ((this.LPKP == 0) ? "-" : String.Format("{0:C}", (this.LPKP))); } }
+            public string KLSV_STRING { get { return ((this.KLSV == 0) ? "-" : String.Format("{0:C}", (this.KLSV))); } }
+            public string KCAR_STRING { get { return ((this.KCAR == 0) ? "-" : String.Format("{0:C}", (this.KCAR))); } }
+            public string KPRS_STRING { get { return ((this.KPRS == 0) ? "-" : String.Format("{0:C}", (this.KPRS))); } }
+            public string KLCO_STRING { get { return ((this.KLCO == 0) ? "-" : String.Format("{0:C}", (this.KLCO))); } }
+            public string LEKE_STRING { get { return ((this.LEKE == 0) ? "-" : String.Format("{0:C}", (this.LEKE))); } }
+            public string LAGA_STRING { get { return ((this.LAGA == 0) ? "-" : String.Format("{0:C}", (this.LAGA))); } }
+            public string KLCH_STRING { get { return ((this.KLCH == 0) ? "-" : String.Format("{0:C}", (this.KLCH))); } }
+            public string KCMX_USD_STRING { get { return ((this.KCMX_USD == 0) ? "-" : String.Format("{0:C}", (this.KCMX_USD))); } }
+            public string KLCA_USD_STRING { get { return ((this.KLCA_USD == 0) ? "-" : String.Format("{0:C}", (this.KLCA_USD))); } }
+            public string LCCR_USD_STRING { get { return ((this.LCCR_USD == 0) ? "-" : String.Format("{0:C}", (this.LCCR_USD))); } }
+            public string LPKP_USD_STRING { get { return ((this.LPKP_USD == 0) ? "-" : String.Format("{0:C}", (this.LPKP_USD))); } }
+            public string KLSV_USD_STRING { get { return ((this.KLSV_USD == 0) ? "-" : String.Format("{0:C}", (this.KLSV_USD))); } }
+            public string KCAR_USD_STRING { get { return ((this.KCAR_USD == 0) ? "-" : String.Format("{0:C}", (this.KCAR_USD))); } }
+            public string KPRS_USD_STRING { get { return ((this.KPRS_USD == 0) ? "-" : String.Format("{0:C}", (this.KPRS_USD))); } }
+            public string KLCO_USD_STRING { get { return ((this.KLCO_USD == 0) ? "-" : String.Format("{0:C}", (this.KLCO_USD))); } }
+            public string LEKE_USD_STRING { get { return ((this.LEKE_USD == 0) ? "-" : String.Format("{0:C}", (this.LEKE_USD))); } }
+            public string LAGA_USD_STRING { get { return ((this.LAGA_USD == 0) ? "-" : String.Format("{0:C}", (this.LAGA_USD))); } }
+            public string KLCH_USD_STRING { get { return ((this.KLCH_USD == 0) ? "-" : String.Format("{0:C}", (this.KLCH_USD))); } }
         }
 
         public class AllowancesPL
