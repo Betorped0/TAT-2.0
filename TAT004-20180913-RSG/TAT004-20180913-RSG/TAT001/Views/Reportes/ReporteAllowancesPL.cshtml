@@ -37,6 +37,25 @@
     </script>
 }
 
+@using (Html.BeginForm("ExportReporteAllowancesPL", "Reportes", FormMethod.Post, new { @style = "display:inline;" }))
+{
+    if (ViewBag.Display)
+    {
+        <div class="row">
+            <div class="col s12 right-align">
+                <input type="hidden" name="selectedcocode" value="@((ViewBag.selectedcocode == null)?String.Empty:ViewBag.selectedcocode)" />
+                <input type="hidden" name="selectedq" value="@((ViewBag.selectedq == null)?String.Empty:ViewBag.selectedq)" />
+                <input type="hidden" name="selectedperiod" value="@((ViewBag.selectedperiod == null)?String.Empty:ViewBag.selectedperiod)" />
+                <input type="hidden" name="selectedpayer" value="@((ViewBag.selectedpayer == null)?String.Empty:ViewBag.selectedpayer)" />
+                <input type="hidden" name="selectedcategory" value="@((ViewBag.selectedcategory == null)?String.Empty:ViewBag.selectedcategory)" />
+                <input type="hidden" name="selectedyear" value="@((ViewBag.selectedyear == null)?String.Empty:ViewBag.selectedyear)" />
+                <input type="hidden" name="selectedcanal" value="@((ViewBag.selectedcanal == null)?String.Empty:ViewBag.selectedcanal)" />
+                <button id="btnExport" name="excel" class="btn-small" type="submit">Exportar</button>
+            </div>
+        </div>
+    }
+}
+
 @using (Html.BeginForm("ReporteAllowancesPL", "Reportes", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
@@ -49,19 +68,10 @@
     int yearback = yeard - 1;
     int yearback2 = yeard - 2;
     <div class="row">
-        @if (ViewBag.Display)
-        {
-            <div class="col s12 right-align">
-                <button class="btn-small" id="sendbtn" type="submit" name="action">Consultar</button>
-                <input class="btn-small" id="id_excel" type="button" value="Generar Excel" name="action" />
-            </div>
-        }
-        else
-        {
-            <div class="col s12 right-align">
-                <button class="btn-small" id="sendbtn" type="submit" name="action">Consultar</button>
-            </div>
-        }
+        <div class="col s12 right-align">
+            <button class="btn-small" id="sendbtn" type="submit" name="action">Consultar</button>
+            @*<input class="btn-small" id="id_excel" type="button" value="Generar Excel" name="action" />*@
+        </div>
     </div>
     <div class="card-panel">
         <div class="row">
@@ -152,7 +162,6 @@
                         //            }
                         //        },
                         //        //error: function (data) {
-                        //        //    alert('error');
                         //        //}
                         //    })
                         //});
@@ -626,106 +635,106 @@
                             <td>@item.CLIENTE </td>
                             <td>@item.CANAL </td>
                             <td>@item.CATEGORIA </td>
-                            <td>@((item.CD_EN_PROCESO == 0) ? "-" : String.Format("{0:C}", item.CD_EN_PROCESO)) </td>
-                            <td>@((item.CD_ALLOWANCE_TAT == 0) ? "-" : String.Format("{0:C}", item.CD_ALLOWANCE_TAT)) </td>
-                            <td>@((item.CD_ALLOWANCE_FACT == 0) ? "-" : String.Format("{0:C}", item.CD_ALLOWANCE_FACT)) </td>
-                            <td>@((item.CD_AJUSTES == 0) ? "-" : String.Format("{0:C}", item.CD_AJUSTES)) </td>
-                            <td>@((item.CD_TOTALES == 0) ? "-" : String.Format("{0:C}", item.CD_TOTALES)) </td>
-                            <td>@((item.C_EN_PROCESO == 0) ? "-" : String.Format("{0:C}", item.C_EN_PROCESO)) </td>
-                            <td>@((item.C_ALLOWANCE_TAT == 0) ? "-" : String.Format("{0:C}", item.C_ALLOWANCE_TAT)) </td>
-                            <td>@((item.C_ALLOWANCE_FACT == 0) ? "-" : String.Format("{0:C}", item.C_ALLOWANCE_FACT)) </td>
-                            <td>@((item.C_AJUSTES == 0) ? "-" : String.Format("{0:C}", item.C_AJUSTES)) </td>
-                            <td>@((item.C_TOTALES == 0) ? "-" : String.Format("{0:C}", item.C_TOTALES)) </td>
-                            <td>@((item.COD_EN_PROCESO == 0) ? "-" : String.Format("{0:C}", item.COD_EN_PROCESO)) </td>
-                            <td>@((item.COD_ALLOWANCE_TAT == 0) ? "-" : String.Format("{0:C}", item.COD_ALLOWANCE_TAT)) </td>
-                            <td>@((item.COD_ALLOWANCE_FACT == 0) ? "-" : String.Format("{0:C}", item.COD_ALLOWANCE_FACT)) </td>
-                            <td>@((item.COD_AJUSTES == 0) ? "-" : String.Format("{0:C}", item.COD_AJUSTES)) </td>
-                            <td>@((item.COD_TOTALES == 0) ? "-" : String.Format("{0:C}", item.COD_TOTALES)) </td>
-                            <td>@((item.DPS_EN_PROCESO == 0) ? "-" : String.Format("{0:C}", item.DPS_EN_PROCESO)) </td>
-                            <td>@((item.DPS_ALLOWANCE_TAT == 0) ? "-" : String.Format("{0:C}", item.DPS_ALLOWANCE_TAT)) </td>
-                            <td>@((item.DPS_ALLOWANCE_FACT == 0) ? "-" : String.Format("{0:C}", item.DPS_ALLOWANCE_FACT)) </td>
-                            <td>@((item.DPS_AJUSTES == 0) ? "-" : String.Format("{0:C}", item.DPS_AJUSTES)) </td>
-                            <td>@((item.DPS_TOTALES == 0) ? "-" : String.Format("{0:C}", item.DPS_TOTALES)) </td>
-                            <td>@((item.DC_EN_PROCESO == 0) ? "-" : String.Format("{0:C}", item.DC_EN_PROCESO)) </td>
-                            <td>@((item.DC_ALLOWANCE_TAT == 0) ? "-" : String.Format("{0:C}", item.DC_ALLOWANCE_TAT)) </td>
-                            <td>@((item.DC_ALLOWANCE_FACT == 0) ? "-" : String.Format("{0:C}", item.DC_ALLOWANCE_FACT)) </td>
-                            <td>@((item.DC_AJUSTES == 0) ? "-" : String.Format("{0:C}", item.DC_AJUSTES)) </td>
-                            <td>@((item.DC_TOTALES == 0) ? "-" : String.Format("{0:C}", item.DC_TOTALES)) </td>
-                            <td>@((item.ELP_EN_PROCESO == 0) ? "-" : String.Format("{0:C}", item.ELP_EN_PROCESO)) </td>
-                            <td>@((item.ELP_ALLOWANCE_TAT == 0) ? "-" : String.Format("{0:C}", item.ELP_ALLOWANCE_TAT)) </td>
-                            <td>@((item.ELP_ALLOWANCE_FACT == 0) ? "-" : String.Format("{0:C}", item.ELP_ALLOWANCE_FACT)) </td>
-                            <td>@((item.ELP_AJUSTES == 0) ? "-" : String.Format("{0:C}", item.ELP_AJUSTES)) </td>
-                            <td>@((item.ELP_TOTALES == 0) ? "-" : String.Format("{0:C}", item.ELP_TOTALES)) </td>
-                            <td>@((item.FG_EN_PROCESO == 0) ? "-" : String.Format("{0:C}", item.FG_EN_PROCESO)) </td>
-                            <td>@((item.FG_ALLOWANCE_TAT == 0) ? "-" : String.Format("{0:C}", item.FG_ALLOWANCE_TAT)) </td>
-                            <td>@((item.FG_ALLOWANCE_FACT == 0) ? "-" : String.Format("{0:C}", item.FG_ALLOWANCE_FACT)) </td>
-                            <td>@((item.FG_AJUSTES == 0) ? "-" : String.Format("{0:C}", item.FG_AJUSTES)) </td>
-                            <td>@((item.FG_TOTALES == 0) ? "-" : String.Format("{0:C}", item.FG_TOTALES)) </td>
-                            <td>@((item.GD_EN_PROCESO == 0) ? "-" : String.Format("{0:C}", item.GD_EN_PROCESO)) </td>
-                            <td>@((item.GD_ALLOWANCE_TAT == 0) ? "-" : String.Format("{0:C}", item.GD_ALLOWANCE_TAT)) </td>
-                            <td>@((item.GD_ALLOWANCE_FACT == 0) ? "-" : String.Format("{0:C}", item.GD_ALLOWANCE_FACT)) </td>
-                            <td>@((item.GD_AJUSTES == 0) ? "-" : String.Format("{0:C}", item.GD_AJUSTES)) </td>
-                            <td>@((item.GD_TOTALES == 0) ? "-" : String.Format("{0:C}", item.GD_TOTALES)) </td>
-                            <td>@((item.GP_EN_PROCESO == 0) ? "-" : String.Format("{0:C}", item.GP_EN_PROCESO)) </td>
-                            <td>@((item.GP_ALLOWANCE_TAT == 0) ? "-" : String.Format("{0:C}", item.GP_ALLOWANCE_TAT)) </td>
-                            <td>@((item.GP_ALLOWANCE_FACT == 0) ? "-" : String.Format("{0:C}", item.GP_ALLOWANCE_FACT)) </td>
-                            <td>@((item.GP_AJUSTES == 0) ? "-" : String.Format("{0:C}", item.GP_AJUSTES)) </td>
-                            <td>@((item.GP_TOTALES == 0) ? "-" : String.Format("{0:C}", item.GP_TOTALES)) </td>
-                            <td>@((item.LD_EN_PROCESO == 0) ? "-" : String.Format("{0:C}", item.LD_EN_PROCESO)) </td>
-                            <td>@((item.LD_ALLOWANCE_TAT == 0) ? "-" : String.Format("{0:C}", item.LD_ALLOWANCE_TAT)) </td>
-                            <td>@((item.LD_ALLOWANCE_FACT == 0) ? "-" : String.Format("{0:C}", item.LD_ALLOWANCE_FACT)) </td>
-                            <td>@((item.LD_AJUSTES == 0) ? "-" : String.Format("{0:C}", item.LD_AJUSTES)) </td>
-                            <td>@((item.LD_TOTALES == 0) ? "-" : String.Format("{0:C}", item.LD_TOTALES)) </td>
-                            <td>@((item.MS_EN_PROCESO == 0) ? "-" : String.Format("{0:C}", item.MS_EN_PROCESO)) </td>
-                            <td>@((item.MS_ALLOWANCE_TAT == 0) ? "-" : String.Format("{0:C}", item.MS_ALLOWANCE_TAT)) </td>
-                            <td>@((item.MS_ALLOWANCE_FACT == 0) ? "-" : String.Format("{0:C}", item.MS_ALLOWANCE_FACT)) </td>
-                            <td>@((item.MS_AJUSTES == 0) ? "-" : String.Format("{0:C}", item.MS_AJUSTES)) </td>
-                            <td>@((item.MS_TOTALES == 0) ? "-" : String.Format("{0:C}", item.MS_TOTALES)) </td>
-                            <td>@((item.R_EN_PROCESO == 0) ? "-" : String.Format("{0:C}", item.R_EN_PROCESO)) </td>
-                            <td>@((item.R_ALLOWANCE_TAT == 0) ? "-" : String.Format("{0:C}", item.R_ALLOWANCE_TAT)) </td>
-                            <td>@((item.R_ALLOWANCE_FACT == 0) ? "-" : String.Format("{0:C}", item.R_ALLOWANCE_FACT)) </td>
-                            <td>@((item.R_AJUSTES == 0) ? "-" : String.Format("{0:C}", item.R_AJUSTES)) </td>
-                            <td>@((item.R_TOTALES == 0) ? "-" : String.Format("{0:C}", item.R_TOTALES)) </td>
-                            <td>@((item.TP_EN_PROCESO == 0) ? "-" : String.Format("{0:C}", item.TP_EN_PROCESO)) </td>
-                            <td>@((item.TP_ALLOWANCE_TAT == 0) ? "-" : String.Format("{0:C}", item.TP_ALLOWANCE_TAT)) </td>
-                            <td>@((item.TP_ALLOWANCE_FACT == 0) ? "-" : String.Format("{0:C}", item.TP_ALLOWANCE_FACT)) </td>
-                            <td>@((item.TP_AJUSTES == 0) ? "-" : String.Format("{0:C}", item.TP_AJUSTES)) </td>
-                            <td>@((item.TP_TOTALES == 0) ? "-" : String.Format("{0:C}", item.TP_TOTALES)) </td>
-                            <td>@((item.SIS_EN_PROCESO == 0) ? "-" : String.Format("{0:C}", item.SIS_EN_PROCESO)) </td>
-                            <td>@((item.SIS_ALLOWANCE_TAT == 0) ? "-" : String.Format("{0:C}", item.SIS_ALLOWANCE_TAT)) </td>
-                            <td>@((item.SIS_ALLOWANCE_FACT == 0) ? "-" : String.Format("{0:C}", item.SIS_ALLOWANCE_FACT)) </td>
-                            <td>@((item.SIS_AJUSTES == 0) ? "-" : String.Format("{0:C}", item.SIS_AJUSTES)) </td>
-                            <td>@((item.SIS_TOTALES == 0) ? "-" : String.Format("{0:C}", item.SIS_TOTALES)) </td>
-                            <td>@((item.SO_EN_PROCESO == 0) ? "-" : String.Format("{0:C}", item.SO_EN_PROCESO)) </td>
-                            <td>@((item.SO_ALLOWANCE_TAT == 0) ? "-" : String.Format("{0:C}", item.SO_ALLOWANCE_TAT)) </td>
-                            <td>@((item.SO_ALLOWANCE_FACT == 0) ? "-" : String.Format("{0:C}", item.SO_ALLOWANCE_FACT)) </td>
-                            <td>@((item.SO_AJUSTES == 0) ? "-" : String.Format("{0:C}", item.SO_AJUSTES)) </td>
-                            <td>@((item.SO_TOTALES == 0) ? "-" : String.Format("{0:C}", item.SO_TOTALES)) </td>
-                            <td>@((item.TPIS_EN_PROCESO == 0) ? "-" : String.Format("{0:C}", item.TPIS_EN_PROCESO)) </td>
-                            <td>@((item.TPIS_ALLOWANCE_TAT == 0) ? "-" : String.Format("{0:C}", item.TPIS_ALLOWANCE_TAT)) </td>
-                            <td>@((item.TPIS_ALLOWANCE_FACT == 0) ? "-" : String.Format("{0:C}", item.TPIS_ALLOWANCE_FACT)) </td>
-                            <td>@((item.TPIS_AJUSTES == 0) ? "-" : String.Format("{0:C}", item.TPIS_AJUSTES)) </td>
-                            <td>@((item.TPIS_TOTALES == 0) ? "-" : String.Format("{0:C}", item.TPIS_TOTALES)) </td>
-                            <td>@((item.TPO_EN_PROCESO == 0) ? "-" : String.Format("{0:C}", item.TPO_EN_PROCESO)) </td>
-                            <td>@((item.TPO_ALLOWANCE_TAT == 0) ? "-" : String.Format("{0:C}", item.TPO_ALLOWANCE_TAT)) </td>
-                            <td>@((item.TPO_ALLOWANCE_FACT == 0) ? "-" : String.Format("{0:C}", item.TPO_ALLOWANCE_FACT)) </td>
-                            <td>@((item.TPO_AJUSTES == 0) ? "-" : String.Format("{0:C}", item.TPO_AJUSTES)) </td>
-                            <td>@((item.TPO_TOTALES == 0) ? "-" : String.Format("{0:C}", item.TPO_TOTALES)) </td>
-                            <td>@((item.U_EN_PROCESO == 0) ? "-" : String.Format("{0:C}", item.U_EN_PROCESO)) </td>
-                            <td>@((item.U_ALLOWANCE_TAT == 0) ? "-" : String.Format("{0:C}", item.U_ALLOWANCE_TAT)) </td>
-                            <td>@((item.U_ALLOWANCE_FACT == 0) ? "-" : String.Format("{0:C}", item.U_ALLOWANCE_FACT)) </td>
-                            <td>@((item.U_AJUSTES == 0) ? "-" : String.Format("{0:C}", item.U_AJUSTES)) </td>
-                            <td>@((item.U_TOTALES == 0) ? "-" : String.Format("{0:C}", item.U_TOTALES)) </td>
-                            <td>@((item.WA_EN_PROCESO == 0) ? "-" : String.Format("{0:C}", item.WA_EN_PROCESO)) </td>
-                            <td>@((item.WA_ALLOWANCE_TAT == 0) ? "-" : String.Format("{0:C}", item.WA_ALLOWANCE_TAT)) </td>
-                            <td>@((item.WA_ALLOWANCE_FACT == 0) ? "-" : String.Format("{0:C}", item.WA_ALLOWANCE_FACT)) </td>
-                            <td>@((item.WA_AJUSTES == 0) ? "-" : String.Format("{0:C}", item.WA_AJUSTES)) </td>
-                            <td>@((item.WA_TOTALES == 0) ? "-" : String.Format("{0:C}", item.WA_TOTALES)) </td>
-                            <td>@((item.PROCESO_TAT_TOTAL == 0) ? "-" : String.Format("{0:C}", item.PROCESO_TAT_TOTAL)) </td>
-                            <td>@((item.ALLOWANCE_TAT_TOTAL == 0) ? "-" : String.Format("{0:C}", item.ALLOWANCE_TAT_TOTAL)) </td>
-                            <td>@((item.ALLOWANCE_FACT_TOTAL == 0) ? "-" : String.Format("{0:C}", item.ALLOWANCE_FACT_TOTAL)) </td>
-                            <td>@((item.AJUSTES == 0) ? "-" : String.Format("{0:C}", item.AJUSTES)) </td>
-                            <td>@((item.ALLOWANCE_TOTALES == 0) ? "-" : String.Format("{0:C}", item.ALLOWANCE_TOTALES)) </td>
+                            <td>@item.CD_EN_PROCESO_STRING </td>
+                            <td>@item.CD_ALLOWANCE_TAT_STRING </td>
+                            <td>@item.CD_ALLOWANCE_FACT_STRING </td>
+                            <td>@item.CD_AJUSTES_STRING </td>
+                            <td>@item.CD_TOTALES_STRING </td>
+                            <td>@item.C_EN_PROCESO_STRING </td>
+                            <td>@item.C_ALLOWANCE_TAT_STRING </td>
+                            <td>@item.C_ALLOWANCE_FACT_STRING </td>
+                            <td>@item.C_AJUSTES_STRING </td>
+                            <td>@item.C_TOTALES_STRING </td>
+                            <td>@item.COD_EN_PROCESO_STRING </td>
+                            <td>@item.COD_ALLOWANCE_TAT_STRING </td>
+                            <td>@item.COD_ALLOWANCE_FACT_STRING </td>
+                            <td>@item.COD_AJUSTES_STRING </td>
+                            <td>@item.COD_TOTALES_STRING </td>
+                            <td>@item.DPS_EN_PROCESO_STRING </td>
+                            <td>@item.DPS_ALLOWANCE_TAT_STRING </td>
+                            <td>@item.DPS_ALLOWANCE_FACT_STRING </td>
+                            <td>@item.DPS_AJUSTES_STRING </td>
+                            <td>@item.DPS_TOTALES_STRING </td>
+                            <td>@item.DC_EN_PROCESO_STRING </td>
+                            <td>@item.DC_ALLOWANCE_TAT_STRING </td>
+                            <td>@item.DC_ALLOWANCE_FACT_STRING </td>
+                            <td>@item.DC_AJUSTES_STRING </td>
+                            <td>@item.DC_TOTALES_STRING </td>
+                            <td>@item.ELP_EN_PROCESO_STRING </td>
+                            <td>@item.ELP_ALLOWANCE_TAT_STRING </td>
+                            <td>@item.ELP_ALLOWANCE_FACT_STRING </td>
+                            <td>@item.ELP_AJUSTES_STRING </td>
+                            <td>@item.ELP_TOTALES_STRING </td>
+                            <td>@item.FG_EN_PROCESO_STRING </td>
+                            <td>@item.FG_ALLOWANCE_TAT_STRING </td>
+                            <td>@item.FG_ALLOWANCE_FACT_STRING </td>
+                            <td>@item.FG_AJUSTES_STRING </td>
+                            <td>@item.FG_TOTALES_STRING </td>
+                            <td>@item.GD_EN_PROCESO_STRING </td>
+                            <td>@item.GD_ALLOWANCE_TAT_STRING </td>
+                            <td>@item.GD_ALLOWANCE_FACT_STRING </td>
+                            <td>@item.GD_AJUSTES_STRING </td>
+                            <td>@item.GD_TOTALES_STRING </td>
+                            <td>@item.GP_EN_PROCESO_STRING </td>
+                            <td>@item.GP_ALLOWANCE_TAT_STRING </td>
+                            <td>@item.GP_ALLOWANCE_FACT_STRING </td>
+                            <td>@item.GP_AJUSTES_STRING </td>
+                            <td>@item.GP_TOTALES_STRING </td>
+                            <td>@item.LD_EN_PROCESO_STRING </td>
+                            <td>@item.LD_ALLOWANCE_TAT_STRING </td>
+                            <td>@item.LD_ALLOWANCE_FACT_STRING </td>
+                            <td>@item.LD_AJUSTES_STRING </td>
+                            <td>@item.LD_TOTALES_STRING </td>
+                            <td>@item.MS_EN_PROCESO_STRING </td>
+                            <td>@item.MS_ALLOWANCE_TAT_STRING </td>
+                            <td>@item.MS_ALLOWANCE_FACT_STRING </td>
+                            <td>@item.MS_AJUSTES_STRING </td>
+                            <td>@item.MS_TOTALES_STRING </td>
+                            <td>@item.R_EN_PROCESO_STRING </td>
+                            <td>@item.R_ALLOWANCE_TAT_STRING </td>
+                            <td>@item.R_ALLOWANCE_FACT_STRING </td>
+                            <td>@item.R_AJUSTES_STRING </td>
+                            <td>@item.R_TOTALES_STRING </td>
+                            <td>@item.TP_EN_PROCESO_STRING </td>
+                            <td>@item.TP_ALLOWANCE_TAT_STRING </td>
+                            <td>@item.TP_ALLOWANCE_FACT_STRING </td>
+                            <td>@item.TP_AJUSTES_STRING </td>
+                            <td>@item.TP_TOTALES_STRING </td>
+                            <td>@item.SIS_EN_PROCESO_STRING </td>
+                            <td>@item.SIS_ALLOWANCE_TAT_STRING </td>
+                            <td>@item.SIS_ALLOWANCE_FACT_STRING </td>
+                            <td>@item.SIS_AJUSTES_STRING </td>
+                            <td>@item.SIS_TOTALES_STRING </td>
+                            <td>@item.SO_EN_PROCESO_STRING </td>
+                            <td>@item.SO_ALLOWANCE_TAT_STRING </td>
+                            <td>@item.SO_ALLOWANCE_FACT_STRING </td>
+                            <td>@item.SO_AJUSTES_STRING </td>
+                            <td>@item.SO_TOTALES_STRING </td>
+                            <td>@item.TPIS_EN_PROCESO_STRING </td>
+                            <td>@item.TPIS_ALLOWANCE_TAT_STRING </td>
+                            <td>@item.TPIS_ALLOWANCE_FACT_STRING </td>
+                            <td>@item.TPIS_AJUSTES_STRING </td>
+                            <td>@item.TPIS_TOTALES_STRING </td>
+                            <td>@item.TPO_EN_PROCESO_STRING </td>
+                            <td>@item.TPO_ALLOWANCE_TAT_STRING </td>
+                            <td>@item.TPO_ALLOWANCE_FACT_STRING </td>
+                            <td>@item.TPO_AJUSTES_STRING </td>
+                            <td>@item.TPO_TOTALES_STRING </td>
+                            <td>@item.U_EN_PROCESO_STRING </td>
+                            <td>@item.U_ALLOWANCE_TAT_STRING </td>
+                            <td>@item.U_ALLOWANCE_FACT_STRING </td>
+                            <td>@item.U_AJUSTES_STRING </td>
+                            <td>@item.U_TOTALES_STRING </td>
+                            <td>@item.WA_EN_PROCESO_STRING </td>
+                            <td>@item.WA_ALLOWANCE_TAT_STRING </td>
+                            <td>@item.WA_ALLOWANCE_FACT_STRING </td>
+                            <td>@item.WA_AJUSTES_STRING </td>
+                            <td>@item.WA_TOTALES_STRING </td>
+                            <td>@item.PROCESO_TAT_TOTAL_STRING </td>
+                            <td>@item.ALLOWANCE_TAT_TOTAL_STRING </td>
+                            <td>@item.ALLOWANCE_FACT_TOTAL_STRING </td>
+                            <td>@item.AJUSTES_STRING </td>
+                            <td>@item.ALLOWANCE_TOTALES_STRING </td>
                         </tr>
                     }
                 </tbody>

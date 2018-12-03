@@ -68,7 +68,6 @@ function getExcelMasivas(file) {
         processData: false,
         async: true
     }).fail(function () {
-        alert("error");
     });
 }
 
