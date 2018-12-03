@@ -1403,7 +1403,7 @@
     <Content Include="obj\Release\TempPE\Entities.TAT001.Designer.cs.dll" />-->
     <Content Include="images\Simple-wallpapers-HD-for-desktop.png" />
     <!--<Content Include="PdfTemp\readme.txt" />-->
-    <Content Include="Properties\PublishProfiles\FolderProfile.pubxml.user" />
+    <!--<Content Include="Properties\PublishProfiles\FolderProfile.pubxml.user" />-->
     <Content Include="Scripts\CargaUsuarios.js" />
     <Content Include="Scripts\CargaClientes.js" />
     <!--<Content Include="obj\Debug\TAT001.csproj.FileListAbsolute.txt" />
