@@ -2681,7 +2681,6 @@ $('body').on('click', '.pc', function () {
 $('body').on('keydown', '.input_oper.numberd', function (e) {
     var t = $('#table_dis').DataTable();
     var tr = $(this).closest('tr'); //Obtener el row 
-    //alert("press");
     //Obtener el tipo de negociación
     var neg = $("#select_neg").val();
 
@@ -3790,7 +3789,6 @@ function loadExcelDis(file) {
 
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
-            alert("Request couldn't be processed. Please try again later. the reason        " + xhr.status + " : " + httpStatusMessage + " : " + customErrorMessage);
             document.getElementById("loader").style.display = "none";//RSG 24.05.2018
         },
         async: true
@@ -3866,7 +3864,6 @@ function loadExcelSop(file) {
             }
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
-            alert("Request couldn't be processed. Please try again later. the reason        " + xhr.status + " : " + httpStatusMessage + " : " + customErrorMessage);
             document.getElementById("loader").style.display = 'none';
         },
         async: true
@@ -4164,7 +4161,6 @@ function ocultarColumnasTablaSoporte(sociedad, pais, tsol, class_doc) {
             //}
             if (data[i] == true | data[i] == false) {
                 if (data.hasOwnProperty(i)) {
-                    //alert(i + " -- " + data[i]);
                     table.column(i + ':name').visible(data[i]);
                 }
             }
@@ -4190,7 +4186,7 @@ function configColumnasTablaSoporte(sociedad, pais, tsol, nu, class_doc) {
             }
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
-            alert("Request couldn't be processed. Please try again later. the reason        " + xhr.status + " : " + httpStatusMessage + " : " + customErrorMessage);
+
         },
         async: false
     });
@@ -4244,13 +4240,11 @@ function loadFile(f_carta) {//, f_contratos, f_factura, f_jbp) {
         success: function (data) {
 
             if (data !== null || data !== "") {
-                alert("success" + data);
 
             }
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
-            alert("Request couldn't be processed. Please try again later. the reason        " + xhr.status + " : " + httpStatusMessage + " : " + customErrorMessage);
-        },
+            },
         async: false
     });
 
@@ -4280,13 +4274,11 @@ function loadFiles(files) {
         success: function (data) {
 
             if (data !== null || data !== "") {
-                alert("success" + data);
 
             }
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
-            alert("Request couldn't be processed. Please try again later. the reason        " + xhr.status + " : " + httpStatusMessage + " : " + customErrorMessage);
-        },
+            },
         async: false
     });
 
@@ -5313,7 +5305,6 @@ function selectTall(valu) {
                 }
             },
             error: function (data) {
-                alert("Request couldn't be processed. Please try again later. the reason        " + data);
             },
             async: false
         });
@@ -5479,7 +5470,6 @@ function selectCity(valu) {
                 }
             },
             error: function (data) {
-                alert("Request couldn't be processed. Please try again later. the reason        " + data);
             },
             async: false
         });
@@ -5652,7 +5642,7 @@ function selectMoneda(valu) {
                 },
                 error: function (data) {
                     if (monedafinanciera != true) { //B20180625 MGC 2018.06.29 Evitar Mensaje al cargar página
-                        alert("Error tipo de cambio        " + data);
+                        toast("tcambio", 100000, "alert", "Error tipo de cambio        " + data, "red");
                         monedafinanciera = false;
                     }
                 },
