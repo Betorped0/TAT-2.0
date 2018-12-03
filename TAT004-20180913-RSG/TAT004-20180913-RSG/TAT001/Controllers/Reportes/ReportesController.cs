@@ -11,6 +11,7 @@ using TAT001.Entities;
 using TAT001.Models;
 using TAT001.Services;
 using static TAT001.Models.ReportesModel;
+using ClosedXML.Excel;
 
 namespace TAT001.Controllers.Reportes
 {
@@ -684,6 +685,575 @@ namespace TAT001.Controllers.Reportes
             }
             Session["spras"] = user.SPRAS_ID;
             return View();
+        }
+
+        [HttpPost]
+        public FileResult ExportReporteConcentrado()
+        {
+            //var dOCUMENTOes = db.DOCUMENTOes.Where(a => a.USUARIOC_ID.Equals(User.Identity.Name)).Include(d => d.TALL).Include(d => d.TSOL).Include(d => d.USUARIO).Include(d => d.CLIENTE).Include(d => d.PAI).Include(d => d.SOCIEDAD).ToList();
+            //var dOCUMENTOVs = db.DOCUMENTOVs.Where(a => a.USUARIOA_ID.Equals(User.Identity.Name)).ToList();
+            //var tsol = db.TSOLs.ToList();
+            //var tall = db.TALLs.ToList();
+            //foreach (DOCUMENTOV v in dOCUMENTOVs)
+            //{
+            //    DOCUMENTO d = new DOCUMENTO();
+            //    var ppd = d.GetType().GetProperties();
+            //    var ppv = v.GetType().GetProperties();
+            //    foreach (var pv in ppv)
+            //    {
+            //        foreach (var pd in ppd)
+            //        {
+            //            if (pd.Name == pv.Name)
+            //            {
+            //                pd.SetValue(d, pv.GetValue(v));
+            //                break;
+            //            }
+            //        }
+            //    }
+            //    d.TSOL = tsol.Where(a => a.ID.Equals(d.TSOL_ID)).FirstOrDefault();
+            //    d.TALL = tall.Where(a => a.ID.Equals(d.TALL_ID)).FirstOrDefault();
+            //    dOCUMENTOes.Add(d);
+            //}
+            //dOCUMENTOes = dOCUMENTOes.Distinct(new DocumentoComparer()).ToList();
+            //dOCUMENTOes = dOCUMENTOes.OrderByDescending(a => a.FECHAC).OrderByDescending(a => a.NUM_DOC).ToList();
+
+            string u = User.Identity.Name;
+            var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+            string us = "";
+            us = User.Identity.Name;
+            var sociedades = user.SOCIEDADs;
+
+            List<CSP_DOCUMENTOSXUSER2_Result> dOCUMENTOes = db.CSP_DOCUMENTOSXUSER2(us, user.SPRAS_ID).ToList();
+
+            List<Documento> listaDocs = new List<Documento>();
+            foreach (var cocode in sociedades)
+            {
+                List<CSP_DOCUMENTOSXCOCODE_Result> dOCUMENTOesc = db.CSP_DOCUMENTOSXCOCODE(cocode.BUKRS, user.SPRAS_ID).ToList();
+                foreach (CSP_DOCUMENTOSXCOCODE_Result item in dOCUMENTOesc)
+                {
+                    Documento ld = new Documento();
+                    ld.BUTTON = item.BUTTON;
+
+                    ld.NUM_DOC = item.NUM_DOC;
+                    ld.NUM_DOC_TEXT = item.NUM_DOC_TEXT;
+                    ld.SOCIEDAD_ID = item.SOCIEDAD_ID;
+                    ld.PAIS_ID = item.PAIS_ID;
+                    ld.FECHADD = item.FECHAD.Value.Day + "/" + item.FECHAD.Value.Month + "/" + item.FECHAD.Value.Year;
+                    ld.FECHAD = item.FECHAD.Value.Year + "/" + item.FECHAD.Value.Month + "/" + item.FECHAD.Value.Day;
+                    ld.HORAC = item.HORAC.Value.ToString().Split('.')[0];
+                    ld.PERIODO = item.PERIODO + "";
+
+                    if (item.ESTATUS == "R")
+                    {
+                        FLUJO flujo = db.FLUJOes.Include("USUARIO").Where(x => x.NUM_DOC == item.NUM_DOC & x.ESTATUS == "R").OrderByDescending(a => a.POS).FirstOrDefault();
+                        item.ESTATUSS = item.ESTATUSS.Substring(0, 6) +
+                                        (flujo.USUARIO != null ? flujo.USUARIO.PUESTO_ID.ToString() : "") +
+                                        item.ESTATUSS.Substring(6, 2);
+                    }
+                    else
+                    {
+                        item.ESTATUSS = item.ESTATUSS.Substring(0, 6) + " " + item.ESTATUSS.Substring(6, 2); ;
+                    }
+                    Estatus e = new Estatus();
+                    ld.ESTATUS = e.getText(item.ESTATUSS, ld.NUM_DOC, user.SPRAS_ID);
+                    ld.ESTATUS_CLASS = e.getClass(item.ESTATUSS, ld.NUM_DOC);
+                    //ld.ESTATUS = e.getText(item.ESTATUSS);
+                    //ld.ESTATUS_CLASS = e.getClass(item.ESTATUSS);
+
+                    ld.PAYER_ID = item.PAYER_ID;
+
+                    ld.CLIENTE = item.NAME1;
+                    ld.CANAL = item.CANAL;
+                    ld.TSOL = item.TXT020;
+                    ld.TALL = item.TXT50;
+                    //foreach (CUENTA cuenta in db.CUENTAs.Where(x => x.SOCIEDAD_ID.Equals(item.SOCIEDAD_ID)).ToList())
+                    //{
+                    //    if (item.TALL != null)
+                    //    {
+                    //        if (cuenta.TALL_ID == item.TALL.ID)
+                    //        {
+                    //            ld.CUENTAS = cuenta.CARGO.ToString();
+                    //            break;
+                    //        }
+                    //    }
+                    //}
+                    try
+                    {
+                        ld.CUENTAS = item.CARGO + "";
+                        ld.CUENTAP = item.CUENTAP;
+                        ld.CUENTAPL = item.CUENTAPL;
+                        ld.CUENTACL = item.CUENTACL;
+                    }
+                    catch { }
+                    ld.CONCEPTO = item.CONCEPTO;
+                    ld.MONTO_DOC_ML = item.MONTO_DOC_MD != null ? Convert.ToDecimal(item.MONTO_DOC_MD).ToString("C") : "";
+
+                    ld.FACTURA = item.FACTURA;
+                    ld.FACTURAK = item.FACTURAK;
+
+                    ld.USUARIOC_ID = item.USUARIOD_ID;
+                    ld.USUARIOM_ID = item.USUARIOD_ID;
+
+                    if (item.DOCUMENTO_SAP != null)
+                    {
+                        if (item.PADRE)
+                        {
+                            ld.NUM_PRO = item.DOCUMENTO_SAP;
+                            ld.NUM_AP = "";
+                            ld.NUM_NC = "";
+                            ld.NUM_REV = "";
+                        }
+                        else if (item.REVERSO)
+                        {
+                            ld.NUM_REV = item.DOCUMENTO_SAP;
+                            ld.NUM_AP = "";
+                            ld.NUM_NC = "";
+                            ld.NUM_PRO = "";
+                        }
+                        else
+                        {
+                            ld.NUM_NC = item.DOCUMENTO_SAP;
+                            ld.NUM_AP = "";
+                            ld.NUM_PRO = "";
+                            ld.NUM_REV = "";
+                        }
+                        //<!--NUM_SAP-->
+                        ld.BLART = item.BLART;
+                        ld.NUM_PAYER = item.KUNNR;
+                        ld.NUM_CLIENTE = item.DESCR;
+                        ld.NUM_IMPORTE = item.IMPORTE != null ? Convert.ToDecimal(item.IMPORTE).ToString("C") : "";
+                        ld.NUM_CUENTA = item.CUENTA_C;
+                    }
+                    else
+                    {
+                        //<td></td>
+                        //<td></td>
+                        //<td></td>
+                        //<td></td>
+                        //<td></td>
+                        //<td></td>
+                        //<td></td>
+                        //<td></td>
+                        //<td></td>
+                    }
+
+                    listaDocs.Add(ld);
+                }
+            }
+            string nombre_archivo = generarExcelConcentrado(listaDocs.OrderByDescending(t => t.FECHAD).ThenByDescending(t => t.HORAC).ThenByDescending(t => t.NUM_DOC).ToList(), Server.MapPath("~/PdfTemp/"));
+            return File(Server.MapPath("~/pdfTemp/" + nombre_archivo), "application /vnd.openxmlformats-officedocument.spreadsheetml.sheet", nombre_archivo);
+        }
+
+        public string generarExcelConcentrado(List<Documento> lst, string ruta)
+        {
+            var workbook = new XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("Sheet 1");
+            try
+            {
+                //Creamos el encabezado
+                worksheet.Cell("A1").Value = new[]
+{
+                  new {
+                      BANNER = "Recurrencia"
+                      },
+                    };
+                worksheet.Cell("B1").Value = new[]
+             {
+                  new {
+                      BANNER = "Número Solicitud"
+                      },
+                    };
+                worksheet.Cell("C1").Value = new[]
+            {
+                  new {
+                      BANNER = "Company Code"
+                      },
+                    };
+                worksheet.Cell("D1").Value = new[]
+            {
+                  new {
+                      BANNER = "País"
+                      },
+                    };
+                worksheet.Cell("E1").Value = new[]
+            {
+                  new {
+                      BANNER = "Fecha Solicitud"
+                      },
+                    };
+                worksheet.Cell("F1").Value = new[]
+            {
+                  new {
+                      BANNER = "Hora de Solicitud"
+                      },
+                    };
+                worksheet.Cell("G1").Value = new[]
+            {
+                  new {
+                      BANNER = "Período Contable"
+                      },
+                    };
+                worksheet.Cell("H1").Value = new[]
+              {
+                  new {
+                      BANNER = "Estatus"
+                      },
+                    };
+                worksheet.Cell("I1").Value = new[]
+            {
+                  new {
+                      BANNER = "Cliente ID"
+                      },
+                    };
+                worksheet.Cell("J1").Value = new[]
+            {
+                  new {
+                      BANNER = "Cliente"
+                      },
+                    };
+                worksheet.Cell("K1").Value = new[]
+                {
+                    new {
+                        BANNER = "Canal"
+                    },
+                };
+                worksheet.Cell("L1").Value = new[]
+            {
+                  new {
+                      BANNER = "Tipo Solicitud"
+                      },
+                    };
+                worksheet.Cell("M1").Value = new[]
+            {
+                  new {
+                      BANNER = "Clasificación Allowances"
+                      },
+                    };
+                worksheet.Cell("N1").Value = new[]
+      {
+                  new {
+                      BANNER = "Cuenta Contable Gasto"
+                      },
+                    };
+                worksheet.Cell("O1").Value = new[]
+{
+                  new {
+                      BANNER = "Cuenta Contable Pasivo"
+                      },
+                    };
+                worksheet.Cell("P1").Value = new[]
+                {
+                  new {
+                      BANNER = "Cuenta Contable Clearing"
+                      },
+                    };
+                worksheet.Cell("Q1").Value = new[]
+{
+                  new {
+                      BANNER = "Descripción Solicitud"
+                      },
+                    };
+                worksheet.Cell("R1").Value = new[]
+      {
+                  new {
+                      BANNER = "$ Importe Solicitud"
+                      },
+                    };
+                worksheet.Cell("S1").Value = new[]
+      {
+                  new {
+                      BANNER = "Número Factura Proveedor"
+                      },
+                    };
+                worksheet.Cell("T1").Value = new[]
+      {
+                  new {
+                      BANNER = "Número Factura Kellogg"
+                      },
+                    };
+                worksheet.Cell("U1").Value = new[]
+                {
+                  new {
+                      BANNER = "Creado por"
+                      },
+                    };
+                worksheet.Cell("V1").Value = new[]
+     {
+                  new {
+                      BANNER = "Modificado por"
+                      },
+                    };
+                worksheet.Cell("W1").Value = new[]
+      {
+                  new {
+                      BANNER = "Núm. Registro Provisión"
+                      },
+                    };
+                worksheet.Cell("X1").Value = new[]
+     {
+                  new {
+                      BANNER = "Núm. Registro NC/OP"
+                      },
+                    };
+                worksheet.Cell("Y1").Value = new[]
+  {
+                  new {
+                      BANNER = "Núm. Registro AP"
+                      },
+                    };
+                worksheet.Cell("Z1").Value = new[]
+                {
+                  new {
+                      BANNER = "Núm. Registro Reverso"
+                      },
+                    };
+                worksheet.Cell("AA1").Value = new[]
+                {
+                  new {
+                      BANNER = "Tipo Registro SAP"
+                      },
+                    };
+                worksheet.Cell("AB1").Value = new[]
+                {
+                  new {
+                      BANNER = "Cliente ID"
+                      },
+                    };
+                worksheet.Cell("AC1").Value = new[]
+               {
+                  new {
+                      BANNER = "Cliente"
+                      },
+                    };
+                worksheet.Cell("AD1").Value = new[]
+              {
+                  new {
+                      BANNER = "$ Importe Moneda Local"
+                      },
+                    };
+                worksheet.Cell("AF1").Value = new[]
+              {
+                  new {
+                      BANNER = "Cuenta Contable Gasto"
+                      },
+                    };
+                for (int i = 2; i <= (lst.Count + 1); i++)
+                {
+                    worksheet.Cell("A" + i).Value = new[]
+{
+                  new {
+                      BANNER       = !String.IsNullOrEmpty(lst[i-2].TIPO_RECURRENTE)?"X":""
+                      },
+                    };
+                    worksheet.Cell("B" + i).Value = new[]
+                 {
+                  new {
+                      BANNER       = lst[i-2].NUM_DOC
+                      },
+                    };
+                    try
+                    {
+                        worksheet.Cell(i - 2, "B").Hyperlink = new XLHyperlink(new Uri(Request.Url.GetLeftPart(UriPartial.Authority) + "Solicitudes/Details/" + lst[i - 2].NUM_DOC));
+                    }
+                    catch (Exception e) { }
+                    worksheet.Cell("C" + i).Value = new[]
+                {
+                  new {
+                      BANNER       = lst[i-2].SOCIEDAD_ID
+                      },
+                    };
+                    worksheet.Cell("D" + i).Value = new[]
+                 {
+                    new {
+                        BANNER       = lst[i-2].PAIS_ID
+                        },
+                      };
+                    worksheet.Cell("E" + i).Value = new[]
+                  {
+                   new {
+                       BANNER       = lst[i-2].FECHAD
+                       },
+                     };
+                    worksheet.Cell("F" + i).Value = new[]
+               {
+                  new {
+                      BANNER       = lst[i-2].HORAC.ToString().Split('.')[0]
+                      },
+                    };
+                    var fx = lst[i - 2].PERIODO;
+                    worksheet.Cell("G" + i).Value = new[]
+                 {
+                  new {
+                      BANNER       = fx
+                      },
+                    };
+                    //Verdes
+                    worksheet.Cell("H" + i).Value = new[]
+                {
+                        new
+                        {
+                            BANNER = lst[i - 2].ESTATUS
+                    },
+                };
+                    worksheet.Cell("I" + i).Value = new[]
+                {
+                    new {
+                        BANNER       = lst[i-2].PAYER_ID
+                        },
+                      };
+                    //Para sacar el Nombre "I" y "J"
+                    worksheet.Cell("J" + i).Value = new[]
+                    {
+                                //List Clientes y for para sacar su name 
+                                new {
+                                    BANNER = lst[i-2].CLIENTE
+                                },
+                            };
+
+                    worksheet.Cell("K" + i).Value = new[]
+                    {
+                                //   List Clientes y for para sacar su name
+                                new
+                                {
+                                    BANNER = lst[i-2].CANAL
+                                },
+                            };
+                    worksheet.Cell("L" + i).Value = new[]
+                    {
+                        new {
+                            BANNER       = lst[i-2].TSOL
+                        },
+                    };
+                    worksheet.Cell("M" + i).Value = new[]
+                   {
+                        new {
+                            BANNER       = lst[i-2].TALL
+                        },
+                    };
+
+                    worksheet.Cell("N" + i).Value = new[]
+                    {
+                                new {
+                                    BANNER       = lst[i-2].CUENTAP
+                                },
+                            };
+                    worksheet.Cell("O" + i).Value = new[]
+                            {
+                                new {
+                                    BANNER       = lst[i-2].CUENTAPL
+                                },
+                            };
+                    worksheet.Cell("P" + i).Value = new[]
+                            {
+                                new {
+                                    BANNER       = lst[i-2].CUENTACL
+                                },
+                            };
+
+                    worksheet.Cell("Q" + i).Value = new[]
+                   {
+                        new {
+                            BANNER       = lst[i-2].CONCEPTO
+                        },
+                    };
+                    worksheet.Cell("R" + i).Value = new[]
+                   {
+                        new {
+                            BANNER       = lst[i-2].MONTO_DOC_ML
+                        },
+                    };
+                    worksheet.Cell("S" + i).Value = new[]
+                    {
+                                new {
+                                    BANNER       =lst[i-2].FACTURA
+                                },
+                            };
+
+                    worksheet.Cell("T" + i).Value = new[]
+                    {
+                                new {
+                                    BANNER       = lst[i-2].FACTURAK
+                                },
+                            };
+
+                    worksheet.Cell("U" + i).Value = new[]
+                    {
+                        new {
+                            BANNER       = lst[i-2].USUARIOC_ID
+                        },
+                    };
+                    worksheet.Cell("V" + i).Value = new[]
+                    {
+                        new {
+                            BANNER       = lst[i-2].USUARIOC_ID
+                        },
+                    };
+                    worksheet.Cell("W" + i).Value = new[]
+                    {
+                        new {
+                            BANNER       = lst[i-2].NUM_PRO
+                        },
+                    };
+                    worksheet.Cell("X" + i).Value = new[]
+                    {
+                        new {
+                            BANNER       = lst[i-2].NUM_NC
+                        },
+                    };
+                    worksheet.Cell("Y" + i).Value = new[]
+                    {
+                        new {
+                            BANNER       = lst[i-2].NUM_AP
+                        },
+                    };
+                    worksheet.Cell("Z" + i).Value = new[]
+                    {
+                        new {
+                            BANNER       = lst[i-2].NUM_REV
+                        },
+                    };
+                    worksheet.Cell("AA" + i).Value = new[]
+                    {
+                        new {
+                            BANNER       = lst[i-2].BLART
+                        },
+                    };
+                    worksheet.Cell("AB" + i).Value = new[]
+                    {
+                        new {
+                            BANNER       = lst[i-2].NUM_PAYER
+                        },
+                    };
+                    worksheet.Cell("AC" + i).Value = new[]
+                    {
+                        new {
+                            BANNER       = lst[i-2].NUM_CLIENTE
+                        },
+                    };
+                    worksheet.Cell("AD" + i).Value = new[]
+                    {
+                        new {
+                            BANNER       = lst[i-2].NUM_IMPORTE
+                        },
+                    };
+                    worksheet.Cell("AF" + i).Value = new[]
+                    {
+                        new {
+                            BANNER       = lst[i-2].NUM_CUENTA
+                        },
+                    };
+                }
+                string nombre_archivo = "Concentrado" + DateTime.Now.ToString("HHmmyyyyMMdd") + ".xlsx";
+                var rt = ruta + nombre_archivo;
+                workbook.SaveAs(rt);
+                return nombre_archivo;
+            }
+            catch (Exception e)
+            {
+                var ex = e.ToString();
+                return String.Empty;
+            }
+
         }
 
         public PRESUPUESTO_MOD getPresupuesto(string kunnr)
