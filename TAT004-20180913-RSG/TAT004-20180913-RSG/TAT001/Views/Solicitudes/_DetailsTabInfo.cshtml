@@ -25,8 +25,8 @@
                         @Html.LabelFor(model => model.D.TSOL, "Tipo de solicitud", new { @class = "lbl_tiposol" })
                     </div>
                     <div class="input-field col s12">
-                        @Html.EditorFor(model => model.D.GALL.GALLTs.Where(a => a.SPRAS_ID.Equals(model.D.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50, new { htmlAttributes = new { @disabled = "disabled" } })
-                        @Html.LabelFor(model => model.D.GALL_ID, "Clasificación", new { @id = "lbl_tall" })
+                        @Html.EditorFor(model => model.D.TALL.TALLTs.Where(a => a.SPRAS_ID.Equals(model.D.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50, new { htmlAttributes = new { @disabled = "disabled" } })
+                        @Html.LabelFor(model => model.D.TALL_ID, "Clasificación", new { @id = "lbl_tall" })
                     </div>
                     @Html.HiddenFor(model => model.D.GALL_ID, new { @id = "gall_id" })
                     @Html.HiddenFor(model => model.D.TALL_ID, new { @id = "tall_id" })
