@@ -6,7 +6,6 @@
             addRowRan(table, listaRangos[i].POS, listaRangos[i].LIN, listaRangos[i].OBJ1, listaRangos[i].OBJ2, listaRangos[i].PORC);
         }
     }
-    //alert(pos);
 }
 
 

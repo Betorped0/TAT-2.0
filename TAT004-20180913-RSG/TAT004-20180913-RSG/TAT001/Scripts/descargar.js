@@ -1,8 +1,6 @@
 ﻿function descargar(id) {
     var cont = id.split('-')[1];
     //var link = document.getElementById("desc-" + cont).value;
-    //alert(link);
-    ////alert(tsol + soci + pais);
     ////$.ajax({
     ////    url: "Descargar",
     ////    type: "POST",

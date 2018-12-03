@@ -442,7 +442,7 @@ function validateEmail(email) {
                 //var val = 'asdasdasd';
                 ////var qq = warning(warning(val, "n", 0), '|', warning(warning(val, ">", 0), "&", warning(val, "<=", 100)));
                 //var qq = warning(warning(val, "n", 0), '|', warning(warning(val, "==", "200c"), "|", warning(val, "==", "201c")));
-                //alert(qq);
+                
 
 //function validarTab(e, tabId, tab) {
 //    //M.Toast.dismissAll();

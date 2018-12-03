@@ -1,6 +1,5 @@
 ﻿
 function soportes(tsol, spras) {
-    //alert(tsol + soci + pais);
     var texto = document.querySelector(".span_fileload").innerHTML;
     $.ajax({
         url: "../Listas/Soportes",
@@ -39,7 +38,6 @@ function soportes(tsol, spras) {
             }
         }
     });
-    //alert(tsol + soci + pais);
     $.ajax({
         url: "../Listas/TipoRecurrencia",
         type: "POST",

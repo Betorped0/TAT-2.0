@@ -223,7 +223,7 @@ function loadExcelDis(file) {
         async: true
     });
     $("#table > tbody  > tr[role='row']").each(function () {
-        alert("as");
+        ////alert("as");
     });
 }
 

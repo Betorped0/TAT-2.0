@@ -309,9 +309,7 @@
         var xx = $(this).val();
         if (xx != "") {
             if (isDate(xx) === true) {
-                //alert("true");
             } else {
-                //alert("false");
                 $(this).val("");
             }
         } else {
