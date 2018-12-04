@@ -31,6 +31,9 @@ namespace TAT001.Controllers.Catalogos
 
         //------------------DAO------------------------------
         readonly SociedadesDao sociedadesDao = new SociedadesDao();
+        readonly TiposSolicitudesDao tiposSolicitudesDao = new TiposSolicitudesDao();
+        readonly TabsDao tabsDao = new TabsDao();
+        readonly CamposDao camposDao = new CamposDao();
 
         // GET: Alertas
         public ActionResult Index()
@@ -61,7 +64,7 @@ namespace TAT001.Controllers.Catalogos
             AlertaViewModel modelView = new AlertaViewModel
             {
                 //Mensajes
-                alertaMensajes = new List<WARNINGPT> { new WARNINGPT { SPRAS_ID = "ES" }, new WARNINGPT { SPRAS_ID = "EN" }, new WARNINGPT { SPRAS_ID = "PT" } },
+                alertaMensajes = new List<WARNINGPT> { new WARNINGPT { SPRAS_ID = "ES" }, new WARNINGPT { SPRAS_ID = "EN" }},
                 //Condiciones
                 alertaCondiciones = new List<WARNING_COND> { new WARNING_COND { POS = 1 }, new WARNING_COND { POS = 2, ORAND = ")" } }
             };
@@ -72,51 +75,64 @@ namespace TAT001.Controllers.Catalogos
 
         // POST: Alertas/Create
         [HttpPost]
-        public ActionResult Create(AlertaViewModel modelView)
+        public ActionResult Create(AlertaViewModel modelView,List<string> sociedades)
         {
             int pagina_id = 541;//ID EN BASE DE DATOS
             try
             {
-                WARNINGP warningP = modelView.alerta;
-                List<WARNINGPT> warningts = modelView.alertaMensajes;
-                List<WARNING_COND> warningconds = modelView.alertaCondiciones;
-
-                warningP.ID = warningP.ID.Replace(" ", "_");
-                warningP.ACCION = "focusout";
-                warningP.CAMPOVAL_ID = warningP.CAMPO_ID;
-
-                if (!ValidarAlertaExistente(warningP) || !ValidarCondExistente(warningP, warningconds))
+                foreach (string sociedad_id in sociedades)
                 {
-                    throw (new Exception());
-                }
+                    WARNINGP warningpAux = modelView.alerta;
+                    WARNINGP warningP = new WARNINGP {
+                        ID = warningpAux.ID.Replace(" ", "_") + "_" + sociedad_id,
+                        DESCR= warningpAux.DESCR,
+                        SOCIEDAD_ID= sociedad_id,
+                        TIPO = warningpAux.TIPO,
+                        CAMPOVAL_ID= warningpAux.CAMPOVAL_ID,
+                        PAGINA_ID= warningpAux.PAGINA_ID,
+                        CAMPO_ID= warningpAux.CAMPO_ID,
+                        ACCION= warningpAux.ACCION
+                    };
+                    List<WARNINGPT> warningts = modelView.alertaMensajes;
+                    List<WARNING_COND> warningconds = modelView.alertaCondiciones;
 
-                //Guardar Alerta
-                db.WARNINGPs.Add(warningP);
+                    warningP.ID = warningP.ID.Replace(" ", "_");
+                    warningP.ACCION = "focusout";
+                    warningP.CAMPOVAL_ID = warningP.CAMPO_ID;
 
-                //Guardar Mensajes
-                warningts.ForEach(x =>
-                {
-                    x.TAB_ID = warningP.TAB_ID;
-                    x.WARNING_ID = warningP.ID;
-                    db.WARNINGPTs.Add(x);
-                });
+                    if (!ValidarAlertaExistente(warningP) || !ValidarCondExistente(warningP, warningconds))
+                    {
+                        throw (new Exception());
+                    }
 
-                //Guardar Condiciones
-                warningconds.ForEach(x =>
-                {
-                    if (x.CONDICION_ID != null && x.VALOR_COMP != null)
+                    //Guardar Alerta
+                    db.WARNINGPs.Add(warningP);
+
+                    //Guardar Mensajes
+                    warningts.ForEach(x =>
                     {
                         x.TAB_ID = warningP.TAB_ID;
                         x.WARNING_ID = warningP.ID;
-                        x.ACTIVO = true;
-                        if (x.VALOR_COMP == "v")
+                        db.WARNINGPTs.Add(x);
+                    });
+
+                    //Guardar Condiciones
+                    warningconds.ForEach(x =>
+                    {
+                        if (x.CONDICION_ID != null && x.VALOR_COMP != null)
                         {
-                            x.VALOR_COMP = "";
+                            x.TAB_ID = warningP.TAB_ID;
+                            x.WARNING_ID = warningP.ID;
+                            x.ACTIVO = true;
+                            if (x.VALOR_COMP == "v")
+                            {
+                                x.VALOR_COMP = "";
+                            }
+                            db.WARNING_COND.Add(x);
                         }
-                        db.WARNING_COND.Add(x);
-                    }
-                });
-                db.SaveChanges();
+                    });
+                    db.SaveChanges();
+                }
 
                 return RedirectToAction("Index");
             }
@@ -156,8 +172,7 @@ namespace TAT001.Controllers.Catalogos
             modelView.alertaMensajes = new List<WARNINGPT>
             {
                 ObtenerWarningT("ES", warning_id, tab_id),
-                ObtenerWarningT("EN", warning_id, tab_id),
-                ObtenerWarningT("PT", warning_id, tab_id)
+                ObtenerWarningT("EN", warning_id, tab_id)
             };
 
             //Condiciones  
@@ -353,16 +368,16 @@ namespace TAT001.Controllers.Catalogos
                         modelView.sociedades = sociedadesDao.ComboSociedades(TATConstantes.ACCION_LISTA_SOCIEDADES, id);
                         break;
                     case CMBTREE_TIPOSSOLICITUD:
-                        modelView.treeTiposSolicitud = FnCommon.ObtenerTreeTiposSolicitud(db,null, spras_id);
+                        modelView.treeTiposSolicitud = tiposSolicitudesDao.TreePadresTiposSolicitudes( spras_id);
                         break;
                     case CMB_TIPOSSOLICITUD:
-                        modelView.cmbTiposSolicitud = FnCommon.ObtenerCmbTiposSolicitud(db, spras_id, id);
+                        modelView.cmbTiposSolicitud = tiposSolicitudesDao.ComboTiposSolicitudes(spras_id, id);
                         break;
                     case CMB_TABS:
-                        modelView.tabs = FnCommon.ObtenerCmbTabs(db,spras_id, activo, id);
+                        modelView.tabs = tabsDao.ComboTabs(spras_id, activo, id);
                         break;
                     case CMB_CAMPOS:
-                        modelView.campos = FnCommon.ObtenerCmbCamposPoTabId(db,spras_id,tab_id, activo,id);
+                        modelView.campos = camposDao.ComboCamposPorTabId(spras_id,tab_id, activo,id);
                         break;
                     case CMB_TIPOS:
                         int pagina_id = 540;//ID EN BASE DE DATOS

@@ -123,7 +123,7 @@ namespace TAT001.Controllers
         }
 
         [HttpGet]
-        public JsonResult Clientes(string Prefix, string usuario, string pais= null,string sociedad_id=null)
+        public JsonResult Clientes(string Prefix, string usuario=null, string pais= null,string sociedad_id=null)
         {
             if (sociedad_id!=null)
             {
@@ -151,7 +151,7 @@ namespace TAT001.Controllers
             return cc;
         }
         [HttpGet]
-        public JsonResult Usuarios(string Prefix,string sociedad_id, int? autorizador)
+        public JsonResult Usuarios(string Prefix,string sociedad_id=null, int? autorizador=null)
         {
             //1-ACCION_LISTA_AUTORIZADOR (FLUJO)
             //2-ACCION_LISTA_AUTORIZADOR (USUARIOS)
