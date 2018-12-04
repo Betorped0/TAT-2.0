@@ -2,16 +2,14 @@
 @{
     ViewBag.pagina_r = 641;
     ViewBag.carpeta_r = 500;
-    //ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
 }<div class="row">
-     <div class="row right">
-         <div class="col l12 m12 right">
-             <a href="@Url.Action("Create", "Contacto", new { vko=Model.vkorg, vtw=Model.vtweg,kun=Model.kunnr,spa=Model.spart})" id="btnCrear" class="btn-small">Crear</a>
-             <a class="btn-small" href="@Url.Action("Index", "Clientes")" id="lbl_returnC">Clientes</a>
-         </div>
-     </div>
+    <div class="row right">
+        <div class="col l12 m12 right">
+            <a href="@Url.Action("Create", "Contacto", new { vko=Model.vkorg, vtw=Model.vtweg,kun=Model.kunnr,spa=Model.spart})" id="btnCrear" class="btn-small">Crear</a>
+           </div>
+    </div>
 </div>
 <div class="card-panel">
     <div class="row" style="margin-bottom:0;">
@@ -97,8 +95,11 @@
 
 
 </div>
-
+<div>
+    <a href="@Url.Action("Index", "Clientes")" id="btn_return"> </a>
+</div>
 <script>
+    var root = '@Url.Content("~")';
     $(document).ready(function () {
         var i = 0;
         $('#table tfoot th').each(function () {
@@ -108,7 +109,7 @@
         });
         var table = $('#table').DataTable({
             language: {
-                "url": "../Scripts/lang/@Session["spras"].ToString()"+".json"
+                "url": root+"Scripts/lang/@ViewBag.spras_id"+".json"
             },
             columnDefs: [
                 {

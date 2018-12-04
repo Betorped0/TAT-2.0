@@ -1,7 +1,7 @@
 ﻿$(document).ready(function () {
     formato();
 });
-
+var esFile = false;
 function formato() {
     $('#table').DataTable({
         "order": [],
@@ -146,7 +146,7 @@ function evaluarExt(filename) {
 }
 
 function loadExcelDis(file) {
-
+    esFile = true;
     document.getElementById("loader").style.display = "initial";
     var formData = new FormData();
 
@@ -448,6 +448,10 @@ function addRowl(t, pos, br, cc, p, c, nc, n0, n1, n2, n3, n4, n5, n6, n7, v, b,
 }
 
 function Carga() {
+    var rowNum = $('#table>tbody').find('.input_bor').length;
+    if (rowNum === 0) {
+        return;
+    }
     var table = $('#table').DataTable();
     table.destroy();
     habilitar();
@@ -469,14 +473,13 @@ function Carga() {
                     data: datos,
                     dataType: "json",
                     success: function (data) {
-                        if (data.isRedirect) {
-                            window.location.href = data.redirectUrl;
+                        mostrarAlerta("info", "A", "Se agregaron los nuevos registros");
+                        if (esFile) {
+                            window.location = root + "Clientes";
+                        } else {
+                            Limpiar();
+                            document.getElementById("loader").style.display = "none";
                         }
-                        else {
-                            mostrarAlerta("info", "A", "Se agregaron los nuevos registros");
-                            window.location = root + "Clientes/Index";
-                        }
-                        document.getElementById("loader").style.display = "none";
                     },
                     error: function (request, status, error) {
                         document.getElementById("loader").style.display = "none";
@@ -496,34 +499,83 @@ function Carga() {
 }
 
 function Comprobar() {
-    $('#table').DataTable().destroy();
     habilitar();
     var datos = $('#tabla').serializeArray();
-    $('#table tbody').empty();
-    formato();
     creart('Comprobar', datos);
-    //M.toast({ html: 'Registros Actualizados' });
-    mostrarAlerta("info", "A", "Vista Actualizada");
+    //mostrarAlerta("info", "A", "Vista Actualizada");
 }
 
 function Borrar() {
+    var rowNum = $('#table>tbody').find('.input_bor').length;
+    var check = false;
+    $('#table>tbody').find('.input_bor').each(function (indx, checkInput) {
+        check = checkInput.checked;
+    });
+    if (rowNum === 0 || !check) {
+        return;
+    }
     var table = $('#table').DataTable();
     var rows = $('.input_bor').serializeArray();
     for (var i = rows.length; i > 0; i--) {
         var num = rows[i-1].value;
         table.row(num).remove().draw();
     }
-    Comprobar();
+    rowNum = $('#table>tbody').find('.input_bor').length;
+    if (rowNum >0) {
+        Comprobar();
+    } else {
+        Iniciar();
+    }
+}
+
+function Limpiar() {
+    var table = $('#table').DataTable();
+    table.clear().draw();
+    Iniciar(); 
+}
+
+function Iniciar() {
+    var htmlTr = '<tr>'
+        + '<td></td>'
+        + '<td></td>'
+        + '<td></td>'
+        + '<td><input class="input_cli" style="font-size:12px;" type="text" id="" name="cli" value="" onkeyup="if(event.keyCode == 13) Actualizar()"/></td>'
+        + '<td></td>'
+        + '<td></td>'
+        + '<td></td>'
+        + '<td></td>'
+        + '<td></td>'
+        + '<td></td>'
+        + '<td></td>'
+        + '<td></td>'
+        + '<td></td>'
+        + '<td></td>'
+        + '<td></td>'
+        + '<td></td>'
+        + '<td></td>'
+        + '<td></td>'
+        + '<td></td>'
+        + '<td></td>'
+        + '<td></td>'
+        + '</tr>';
+    $('#table').DataTable().destroy();
+    $('#table').append(htmlTr);
+    formato();
+    $('#idBorrar').attr('disabled', 'disabled');
+    $("#borrar").prop('checked', false);
+
 }
 
 function Actualizar() {
-    habilitar();
     var datos = $('#tabla').serializeArray();
-    creart('Actualizar', datos);
+    if (datos.length > 0 && datos[1].value.length === 10) {
+        esFile = false;
+        habilitar();
+        creart('Actualizar', datos);
+    }
 }
 
 function creart(metodo, datos) {
-    var table = $('#table').DataTable();
     $.ajax({
         type: "POST",
         url: metodo,
@@ -531,9 +583,9 @@ function creart(metodo, datos) {
         data: datos,
         success: function (data) {
             if ((data !== null || data !== "") && !data.isRedirect) {
-
+                
+                var table = $('#table').DataTable();
                 table.clear().draw();
-
                 $.each(data, function (i, dataj) {
 
                     var bor = i;
@@ -756,14 +808,27 @@ function creart(metodo, datos) {
 }
 
 function check() {
-    if ($("#borrar").prop('checked'))
+    if ($("#borrar").prop('checked') && $('#table>tbody').find('.input_bor').length>0) {
+        $('#idBorrar').removeAttr('disabled');
         $(".input_bor").prop('checked', true);
-    else
+    } else {
         $(".input_bor").prop('checked', false);
+        $('#idBorrar').attr('disabled', 'disabled');
+    }
+
 }
 
 function checkoff() {
-    $("#borrar").prop('checked', false);
+    var check = false;
+    $('#table>tbody').find('.input_bor').each(function (indx, checkInput) {
+        check = checkInput.checked;
+    });
+    if (!check) {
+        $("#borrar").prop('checked', false);
+        $('#idBorrar').attr('disabled', 'disabled');
+    } else {
+        $('#idBorrar').removeAttr('disabled');
+    }
 }
 
 function mostrarAlerta(warning_id, tipo, mensaje) {
@@ -877,8 +942,8 @@ $('body').on('keydown.autocomplete', '.input_cli', function () {
     auto(this).autocomplete({
         source: function (request, response) {
             auto.ajax({
-                type: "POST",
-                url: 'Cliente',
+                type: "GET",
+                url: root + 'Listas/Clientes',
                 dataType: "json",
                 data: { "Prefix": request.term },
                 success: function (data) {
@@ -928,7 +993,7 @@ $('body').on('keydown.autocomplete', '.input_coc', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item) && (".input_coc").val()==="") {
+            if (!(ui.item) && $(".input_coc").val()==="") {
                 e.target.value = "";
             }
         },
@@ -943,10 +1008,10 @@ $('body').on('keydown.autocomplete', '.input_ni0', function () {
     auto(this).autocomplete({
         source: function (request, response) {
             auto.ajax({
-                type: "POST",
-                url: 'Usuario',
+                type: "GET",
+                url: root+'Listas/Usuarios',
                 dataType: "json",
-                data: { "Prefix": request.term },
+                data: { "Prefix": request.term, autorizador:2 },
                 success: function (data) {
                     response(auto.map(data, function (item) {
                         return { label: item.ID + " | " + item.NOMBRE + " " + item.APELLIDO_P, value: item.ID };
@@ -976,10 +1041,10 @@ $('body').on('keydown.autocomplete', '.input_ni1', function () {
     auto(this).autocomplete({
         source: function (request, response) {
             auto.ajax({
-                type: "POST",
-                url: 'Usuario',
+                type: "GET",
+                url: root + 'Listas/Usuarios',
                 dataType: "json",
-                data: { "Prefix": request.term },
+                data: { "Prefix": request.term, autorizador: 2 },
                 success: function (data) {
                     response(auto.map(data, function (item) {
                         return { label: item.ID + " | " + item.NOMBRE + " " + item.APELLIDO_P, value: item.ID };
@@ -1009,10 +1074,10 @@ $('body').on('keydown.autocomplete', '.input_ni2', function () {
     auto(this).autocomplete({
         source: function (request, response) {
             auto.ajax({
-                type: "POST",
-                url: 'Usuario',
+                type: "GET",
+                url: root + 'Listas/Usuarios',
                 dataType: "json",
-                data: { "Prefix": request.term },
+                data: { "Prefix": request.term, autorizador: 2 },
                 success: function (data) {
                     response(auto.map(data, function (item) {
                         return { label: item.ID + " | " + item.NOMBRE + " " + item.APELLIDO_P, value: item.ID };
@@ -1042,10 +1107,10 @@ $('body').on('keydown.autocomplete', '.input_ni3', function () {
     auto(this).autocomplete({
         source: function (request, response) {
             auto.ajax({
-                type: "POST",
-                url: 'Usuario',
+                type: "GET",
+                url: root + 'Listas/Usuarios',
                 dataType: "json",
-                data: { "Prefix": request.term },
+                data: { "Prefix": request.term, autorizador: 2 },
                 success: function (data) {
                     response(auto.map(data, function (item) {
                         return { label: item.ID + " | " + item.NOMBRE + " " + item.APELLIDO_P, value: item.ID };
@@ -1075,10 +1140,10 @@ $('body').on('keydown.autocomplete', '.input_ni4', function () {
     auto(this).autocomplete({
         source: function (request, response) {
             auto.ajax({
-                type: "POST",
-                url: 'Usuario',
+                type: "GET",
+                url: root + 'Listas/Usuarios',
                 dataType: "json",
-                data: { "Prefix": request.term },
+                data: { "Prefix": request.term, autorizador: 2 },
                 success: function (data) {
                     response(auto.map(data, function (item) {
                         return { label: item.ID + " | " + item.NOMBRE + " " + item.APELLIDO_P, value: item.ID };
@@ -1108,10 +1173,10 @@ $('body').on('keydown.autocomplete', '.input_ni5', function () {
     auto(this).autocomplete({
         source: function (request, response) {
             auto.ajax({
-                type: "POST",
-                url: 'Usuario',
+                type: "GET",
+                url: root + 'Listas/Usuarios',
                 dataType: "json",
-                data: { "Prefix": request.term },
+                data: { "Prefix": request.term, autorizador: 2 },
                 success: function (data) {
                     response(auto.map(data, function (item) {
                         return { label: item.ID + " | " + item.NOMBRE + " " + item.APELLIDO_P, value: item.ID };

@@ -28,6 +28,8 @@ namespace TAT001.Controllers.Catalogos
         readonly UsuariosDao usuariosDao = new UsuariosDao();
         readonly SociedadesDao sociedadesDao = new SociedadesDao();
         readonly PeriodosDao periodosDao = new PeriodosDao();
+        readonly TiposSolicitudesDao tiposSolicitudesDao = new TiposSolicitudesDao();
+
 
         // GET: Calendario445
         public ActionResult Index()
@@ -93,10 +95,10 @@ namespace TAT001.Controllers.Catalogos
                 string spras_id = FnCommon.ObtenerSprasId(db, User.Identity.Name);
                 sociedadesDao.ListaSociedades(TATConstantes.ACCION_LISTA_SOCIEDADES).ForEach(x=>
                 {
-                    FnCommon.ObtenerCmbTiposSolicitud(db,spras_id, null).ForEach(z =>
+                    tiposSolicitudesDao.ListaTiposSolicitudes(spras_id, null).ForEach(z =>
                     {
                         calendarioAc.SOCIEDAD_ID = x.BUKRS;
-                        calendarioAc.TSOL_ID = z.Value;
+                        calendarioAc.TSOL_ID = z.TSOL_ID;
                         if (!db.CALENDARIO_AC.Any(y =>
                         y.EJERCICIO == calendarioAc.EJERCICIO
                         && y.PERIODO == calendarioAc.PERIODO
@@ -199,10 +201,10 @@ namespace TAT001.Controllers.Catalogos
             int noExiste = 0;
             sociedadesDao.ListaSociedades(TATConstantes.ACCION_LISTA_SOCIEDADES).ForEach(x =>
             {
-                FnCommon.ObtenerCmbTiposSolicitud(db,spras_id,null).ForEach(z =>
+                tiposSolicitudesDao.ListaTiposSolicitudes(spras_id,null).ForEach(z =>
                 {
                     calendarioAc.SOCIEDAD_ID = x.BUKRS;
-                    calendarioAc.TSOL_ID = z.Value;
+                    calendarioAc.TSOL_ID = z.TSOL_ID;
                     if (!db.CALENDARIO_AC.Any(y => y.EJERCICIO == calendarioAc.EJERCICIO && y.PERIODO == calendarioAc.PERIODO 
                     && y.SOCIEDAD_ID == calendarioAc.SOCIEDAD_ID && y.TSOL_ID == calendarioAc.TSOL_ID))
                     {
@@ -274,7 +276,7 @@ namespace TAT001.Controllers.Catalogos
                         modelView.usuarios = usuariosDao.ComboUsuarios(TATConstantes.ACCION_LISTA_USUARIO, id);
                         break;
                     case CMB_TIPOSSOLICITUD:
-                        modelView.cmbTiposSolicitud = FnCommon.ObtenerCmbTiposSolicitud(db, spras_id, id);
+                        modelView.cmbTiposSolicitud = tiposSolicitudesDao.ComboTiposSolicitudes( spras_id, id);
                         break;
                     case CMB_EJERCICIO:
                         modelView.ejercicio = FnCommon.ObtenerCmbEjercicio();

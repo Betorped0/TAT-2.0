@@ -9,7 +9,8 @@ namespace TAT001.Models.Masiva
     {
         public string NUM_DOC { get; set; }
         public string TSOL_ID { get; set; }
-        public string GALL_ID { get; set; }
+        public string TALL_ID { get; set; } //03/12/2018
+        public string TALL_NAME { get; set; }//03/12/2018
         public string SOCIEDAD_ID { get; set; }
         public string PAIS_ID { get; set; }
         public string PAIS_NAME { get; set; }//RSG 01.11.2018

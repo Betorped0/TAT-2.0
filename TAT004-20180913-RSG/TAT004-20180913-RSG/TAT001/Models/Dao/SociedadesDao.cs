@@ -29,7 +29,7 @@ namespace TAT001.Models.Dao
                 .Select(x => new SelectListItem
                 {
                     Value = x.BUKRS,
-                    Text = (x.BUKRS+" - "+x.BUTXT)
+                    Text = x.BUKRS
                 }).ToList();
         }
     }
