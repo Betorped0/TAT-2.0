@@ -177,6 +177,41 @@ namespace TAT001.Controllers
                     ViewBag.vtw = vtweg;
                     ViewBag.clCorreo2 = correo.Replace('@', '/').Replace('.', '*').Replace('-', '#');
                     ViewBag.spras = cl.SPRAS;
+                    List<TEXTO> tt = db.TEXTOes.Where(x => x.PAGINA_ID == 905 && x.SPRAS_ID == cl.SPRAS).ToList();
+                    try { ViewBag.lbl_control = tt.FirstOrDefault(x => x.CAMPO_ID == "lbl_control").TEXTOS; } catch { }
+                    try
+                    {
+                        ViewBag.lbl_dear = tt.FirstOrDefault(x => x.CAMPO_ID == "lbl_dear").TEXTOS;
+                    }
+                    catch { ViewBag.lbl_dear = ""; }
+                    try
+                    {
+                        ViewBag.lbl_next = tt.FirstOrDefault(x => x.CAMPO_ID == "lbl_next").TEXTOS;
+                    }
+                    catch { ViewBag.lbl_next = ""; }
+                    try
+                    {
+                        ViewBag.lbl_pres = tt.FirstOrDefault(x => x.CAMPO_ID == "lbl_pres").TEXTOS;
+                    }
+                    catch { ViewBag.lbl_pres = ""; }
+                    try
+                    {
+                        ViewBag.lbl_numsol = tt.FirstOrDefault(x => x.CAMPO_ID == "lbl_numsol").TEXTOS;
+                    }
+                    catch { ViewBag.lbl_numsol = ""; }
+                    try
+                    {
+                        ViewBag.lbl_vigencia = tt.FirstOrDefault(x => x.CAMPO_ID == "lbl_vigencia").TEXTOS;
+                    }
+                    catch { ViewBag.lbl_vigencia = ""; }
+                    try
+                    {
+                        ViewBag.lbl_desc = tt.FirstOrDefault(x => x.CAMPO_ID == "lbl_desc").TEXTOS;
+                    }
+                    catch { ViewBag.lbl_desc = ""; }
+                    try
+                    { ViewBag.lbl_soporte = tt.FirstOrDefault(x => x.CAMPO_ID == "lbl_soporte").TEXTOS; }
+                    catch { ViewBag.lbl_soporte = ""; }
                 }
             }
             catch (Exception e)

@@ -1021,13 +1021,13 @@ namespace TAT001.Services
                     int nummonths = 0;
                     if (conf.PERIODOS != null)
                         nummonths = (int)conf.PERIODOS;
-                    if (tipo != "1")
-                        nummonths = 0;
+                    ////TEST 03.12.2018 if (tipo != "1")
+                    nummonths = 0;
                     int imonths = nummonths * -1;
                     //Obtener el rango de los periodos incluyendo el año
                     //DateTime ff = DateTime.Today;
-                    if (tipo != "1")
-                        fechaActual = fechaActual.AddDays(-7);
+                    ////TEST 03.12.2018 if (tipo != "1")//
+                    fechaActual = fechaActual.AddDays(-7);
 
                     DateTime ff = fechaActual;
                     DateTime fi = ff.AddMonths(imonths);
