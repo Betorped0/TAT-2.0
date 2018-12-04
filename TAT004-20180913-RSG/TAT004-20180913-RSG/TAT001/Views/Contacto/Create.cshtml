@@ -10,13 +10,16 @@
 {
     @Html.AntiForgeryToken()
 
-    <div class="row">
-        <div class="row right">
-            <div class="col l12 m12 right">
-                <input type="submit" value="Guardar" class="btn btn-default" />
-            </div>
+<div class="row">
+    <div class="row left">
+        <h6>@ViewBag.NoCliente - @ViewBag.Cliente</h6>
+    </div>
+    <div class="row right">
+        <div class="col l12 m12 right">
+            <input type="submit" value="Guardar" class="btn btn-default" />
         </div>
     </div>
+</div>
 
     <div class="row">
         <div class="col s12 m6">
@@ -35,30 +38,39 @@
                         </div>*@
 
                     <div class="input-field col l12 m12 s12" style="margin-bottom:0;">
-                        @Html.EditorFor(model => model.nombre, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.EditorFor(model => model.nombre, new { htmlAttributes = new { @class = "form-control", required=true,@maxlength="150"} })
                         @Html.LabelFor(model => model.nombre, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_nombre" })
                     </div>
 
                     <div class="input-field col s12 m6" style="margin-bottom:0;">
-                        @Html.EditorFor(model => model.telefono, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.EditorFor(model => model.telefono, new { htmlAttributes = new { @class = "form-control", type = "tel", @maxlength="15" } })
                         @Html.LabelFor(model => model.telefono, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_telefono" })
                     </div>
 
                     <div class="input-field col s12" style="margin-bottom:0;">
-                        @Html.EditorFor(model => model.correo, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.EditorFor(model => model.correo, new { htmlAttributes = new { @class = "form-control", required=true, type="email", @maxlength = "50" } })
                         @Html.LabelFor(model => model.correo, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_correo" })
                     </div>
 
                     <div class="input-field col s12" style="margin-bottom:0px;">
                         <div class="col l10 m10 text-center">
-                            <input type="checkbox" name="defecto" value="true" id="defecto" @Html.Raw((Model.defecto) ? "checked=\"checked\"" : "") />
-                            <span style="height:0; position: relative;top: -18px;"></span>
-                            @Html.LabelFor(model => model.defecto, htmlAttributes: new { @class = "control-label col-md-1 text-left", @id = "lbl_defecto" })
+                            @*<input type="checkbox" name="defecto" value="true" id="defecto" @Html.Raw((Model.defecto) ? "checked=\"checked\"" : "") />
+        <span style="height:0; position: relative;top: -18px;"></span>*@
+                            @*@Html.CheckBox("defecto")
+                            @Html.LabelFor(model => model.defecto, htmlAttributes: new { @class = "control-label col-md-1 text-left", @id = "lbl_defecto" })*@
+                            <label>
+                                @Html.CheckBoxFor(model => model.defecto)
+                                <span id="lbl_defecto"></span>
+                            </label>
                         </div>
                         <div class="col l10 m10 text-center">
-                            <input type="checkbox" name="carta" value="true" id="carta" @Html.Raw((Model.carta) ? "checked=\"checked\"" : "") />
-                            <span style="height:0; position: relative;top: -18px;"></span>
-                            @Html.LabelFor(model => model.carta, htmlAttributes: new { @class = "control-label col-md-1 text-center", @id = "lbl_carta" })
+                            @*<input type="checkbox" name="carta" value="true" id="carta" @Html.Raw((Model.carta) ? "checked=\"checked\"" : "") />
+        <span style="height:0; position: relative;top: -18px;"></span>
+        @Html.LabelFor(model => model.carta, htmlAttributes: new { @class = "control-label col-md-1 text-center", @id = "lbl_carta" })*@
+                            <label>
+                                @Html.CheckBoxFor(model => model.carta)
+                                <span id="lbl_carta"></span>
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -70,6 +82,11 @@
         @Html.ActionLink("Regresar", "Index", new { vko = Model.vkorg, vtw = Model.vtweg, kun = Model.kunnr, spa = Model.spart }, new { id = "lblRegresar" })
     </div>
 }
+<script>
+    $("input[type='hidden']").each(function (index, element) {
+        $(this).appendTo($(element).parent());
+    });
+</script>
 
 
 
