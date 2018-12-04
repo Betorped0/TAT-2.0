@@ -769,973 +769,296 @@
                         <tr>
                             @if (((string[])ViewBag.campos).Contains("1"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.SOCIEDAD_ID)
-                                    }
-                                    catch { }
-                                </td>}<!--Co. Code-->
+                                <td>@(item.CoCode_STRING)</td>}<!--Co. Code-->
                             @if (((string[])ViewBag.campos).Contains("2"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.PAIS_ID)
-                                    }
-                                    catch { }
-                                </td>}<!--País-->
+                                <td>@(item.Pais_STRING)</td>}<!--País-->
                             @if (((string[])ViewBag.campos).Contains("3"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.CLIENTE.REGION)
-                                    }
-                                    catch { }
-                                </td>}<!--Subregión-->
+                                <td>@(item.Subregion_STRING)</td>}<!--Subregión-->
                             @if (((string[])ViewBag.campos).Contains("4"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.ESTADO)
-                                    }
-                                    catch { }
-                                </td>}<!--Estado-->
+                                <td>@(item.Estado_STRING)</td>}<!--Estado-->
                             @if (((string[])ViewBag.campos).Contains("5"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.CIUDAD)
-                                    }
-                                    catch { }
-                                </td>}<!--Ciudad-->
+                                <td>@(item.Ciudad_STRING)</td>}<!--Ciudad-->
                             @if (((string[])ViewBag.campos).Contains("6"))
                             {
-                                <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.documento.NUM_DOC })'" style="cursor:pointer">@(item.documento.NUM_DOC)</td>}<!--Número solicitud-->
+                                <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.documento.NUM_DOC })'" style="cursor:pointer">@(item.NumeroSolicitud_STRING)</td>}<!--Número solicitud-->
                             @if (((string[])ViewBag.campos).Contains("7"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(((DateTime)item.documento.FECHAC).ToShortDateString())
-                                    }
-                                    catch { }
-                                </td>}<!--Fecha Solicitud-->
+                                <td>@(item.FechaSolicitud_STRING)</td>}<!--Fecha Solicitud-->
                             @if (((string[])ViewBag.campos).Contains("8"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(((DateTime)item.documento.FECHAC).ToString("HH:mm:ss"))
-                                    }
-                                    catch { }
-                                </td>}<!--Hora solicitud-->
+                                <td>@(item.HoraSolicitud_STRING)</td>}<!--Hora solicitud-->
                             @if (((string[])ViewBag.campos).Contains("9"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.SEMANA)
-                                    }
-                                    catch { }
-                                </td>}<!--Semana del periodo-->
+                                <td>@(item.SemanaPeriodo_STRING)</td>}<!--Semana del periodo-->
                             @if (((string[])ViewBag.campos).Contains("10"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.PERIODO)
-                                    }
-                                    catch { }
-                                </td>}<!--Periodo contable-->
+                                <td>@(item.PeriodoContable_STRING)</td>}<!--Periodo contable-->
                             @if (((string[])ViewBag.campos).Contains("11"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.EJERCICIO)
-                                    }
-                                    catch { }
-                                </td>}<!--Año-->
+                                <td>@(item.Anio_STRING)</td>}<!--Año-->
                             @if (((string[])ViewBag.campos).Contains("12"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(item.documento.USUARIO.SPRAS_ID)).FirstOrDefault().TXT020)
-                                    }
-                                    catch { }
-                                </td>}<!--Tipo Solicitud-->
+                                <td>@(item.TipoSolicitud_STRING)</td>}<!--Tipo Solicitud-->
                             @if (((string[])ViewBag.campos).Contains("13"))
                             {
-                                <td>
-                                    @try
-                                    {
-
-                                        if (item.documento.TSOL_ID.StartsWith("PR"))
-                                        {
-                                            @(item.documento.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(item.documento.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50)
-                                        }
-                                    }
-                                    catch { }
-                                </td>}<!--Tipo Provisión-->
+                                <td>@(item.TipoProvision_STRING)</td>}<!--Tipo Provisión-->
                             @if (((string[])ViewBag.campos).Contains("14"))
                             {
-                                <td>
-                                    @try
-                                    {
-
-                                        if (item.documento.TSOL_ID.StartsWith("NC"))
-                                        {
-                                            @(item.documento.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(item.documento.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50)
-                                        }
-                                    }
-                                    catch { }
-                                </td>}<!--Tipo NC-->
+                                <td>@(item.TipoNC_STRING)</td>}<!--Tipo NC-->
                             @if (((string[])ViewBag.campos).Contains("15"))
                             {
-                                <td>
-                                    @try
-                                    {
-
-                                        if (item.documento.TSOL_ID.StartsWith("OP"))
-                                        {
-                                            @(item.documento.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(item.documento.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50)
-                                        }
-                                    }
-                                    catch { }
-                                </td>}<!--Tipo OP-->
+                                <td>@(item.TipoOP_STRING)</td>}<!--Tipo OP-->
                             @if (((string[])ViewBag.campos).Contains("16"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.ESTATUS_STRING)
-                                    }
-                                    catch { }
-                                </td>}<!--Status-->
+                                <td>@(item.Status_STRING)</td>}<!--Status-->
                             @if (((string[])ViewBag.campos).Contains("17"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.CONCEPTO)
-                                    }
-                                    catch { }
-                                </td>}<!--Concepto-->
+                                <td>@(item.Concepto_STRING)</td>}<!--Concepto-->
                             @if (((string[])ViewBag.campos).Contains("18"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.NOTAS)
-                                    }
-                                    catch { }
-                                </td>}<!--Mecánica-->
+                                <td>@(item.Mecanica_STRING)</td>}<!--Mecánica-->
                             @if (((string[])ViewBag.campos).Contains("19"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.FECHAI_VIG.Value.ToShortDateString())
-                                    }
-                                    catch { }
-                                </td>}<!--De-->
+                                <td>@(item.De_STRING)</td>}<!--De-->
                             @if (((string[])ViewBag.campos).Contains("20"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.FECHAF_VIG.Value.ToShortDateString())
-                                    }
-                                    catch { }
-                                </td>}<!--A-->
+                                <td>@(item.A_STRING)</td>}<!--A-->
                             @if (((string[])ViewBag.campos).Contains("21"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.FECHAI_VIG.Value.ToString("MM-yyyy"))
-                                    }
-                                    catch { }
-                                </td>}<!--De-->
+                                <td>@(item.DePeriodo_STRING)</td>}<!--De-->
                             @if (((string[])ViewBag.campos).Contains("22"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.FECHAF_VIG.Value.ToString("MM-yyyy"))
-                                    }
-                                    catch { }
-                                </td>}<!--A-->
+                                <td>@(item.APeriodo_STRING)</td>}<!--A-->
                             @if (((string[])ViewBag.campos).Contains("23"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.GALL.GALLTs.Where(a => a.SPRAS_ID.Equals(item.documento.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50)
-                                    }
-                                    catch { }
-                                </td>}<!--Clasificación-->
+                                <td>@(item.Clasificacion_STRING)</td>}<!--Clasificación-->
                             @if (((string[])ViewBag.campos).Contains("24"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.CUENTA_CARGO)
-                                    }
-                                    catch { }
-                                </td>}<!--Cuenta Contable Gasto-->
+                                <td>@(item.CuentaContableGasto_STRING)</td>}<!--Cuenta Contable Gasto-->
                             @if (((string[])ViewBag.campos).Contains("25"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.CUENTA_CARGO_NOMBRE)
-                                    }
-                                    catch { }
-                                </td>}<!--Nombre de la cuenta-->
+                                <td>@(item.NombreCuenta_STRING)</td>}<!--Nombre de la cuenta-->
                             @if (((string[])ViewBag.campos).Contains("26"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.CLIENTE.KUNNR)
-                                    }
-                                    catch { }
-                                </td>}<!--Cliente-->
+                                <td>@(item.Cliente_STRING)</td>}<!--Cliente-->
                             @if (((string[])ViewBag.campos).Contains("27"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.CLIENTE.NAME1)
-                                    }
-                                    catch { }
-                                </td>}<!--Nombre-->
+                                <td>@(item.Nombre_STRING)</td>}<!--Nombre-->
                             @if (((string[])ViewBag.campos).Contains("28"))
                             {
-                                if (item.documento.SOLD_TO_ID != null)
-                                {
-                                    <td>Sold To</td>
-                                }
-                                else
-                                {
-                                    <td>Payer</td>
-                                }
+                                <td>@(item.TipoCliente_STRING)</td>
                             }<!--Tipo de Cliente-->
                             @if (((string[])ViewBag.campos).Contains("29"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.CLIENTE.VKORG)
-                                    }
-                                    catch { }
-                                </td>}<!--Organización de Ventas-->
+                                <td>@(item.OrganizacionVentas_STRING)</td>}<!--Organización de Ventas-->
                             @if (((string[])ViewBag.campos).Contains("30"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.CLIENTE.STCD1)
-                                    }
-                                    catch { }
-                                </td>}<!--Tax ID-->
+                                <td>@(item.TaxID_STRING)</td>}<!--Tax ID-->
                             @if (((string[])ViewBag.campos).Contains("31"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.CLIENTE.CANAL)
-                                    }
-                                    catch { }
-                                </td>}<!--Canal-->
+                                <td>@(item.Canal_STRING)</td>}<!--Canal-->
                             @if (((string[])ViewBag.campos).Contains("32"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @((item.CANAL == null) ? "" : item.CANAL.CDESCRIPCION)
-                                    }
-                                    catch { }
-                                </td>}<!--Descripción-->
+                                <td>@(item.Descripcion_STRING)</td>}<!--Descripción-->
                             @if (((string[])ViewBag.campos).Contains("33"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.PAYER_NOMBRE)
-                                    }
-                                    catch { }
-                                </td>}<!--Nombre de Contacto-->
+                                <td>@(item.NombreContacto_STRING)</td>}<!--Nombre de Contacto-->
                             @if (((string[])ViewBag.campos).Contains("34"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.PAYER_EMAIL)
-                                    }
-                                    catch { }
-                                </td>}<!--Email de Contacto-->
+                                <td>@(item.EmailContacto_STRING)</td>}<!--Email de Contacto-->
                             @if (((string[])ViewBag.campos).Contains("35"))
                             {
-                                <td>
-                                    @try
-                                    {
-
-                                        if (item.documento.TSOL_ID.StartsWith("PR"))
-                                        {
-                                            @(String.Format("{0:C}", item.documento.MONTO_DOC_MD))
-                                        }
-                                    }
-                                    catch { }
-                                </td>}<!--$ Monto Original de Provisión-->
+                                <td>@(item.MontoOriginalProvision_STRING)</td>}<!--$ Monto Original de Provisión-->
                             @if (((string[])ViewBag.campos).Contains("36"))
                             {
-                                <td>
-                                    @try
-                                    {
-
-                                        if (item.documento.TSOL_ID.StartsWith("NC") || item.documento.TSOL_ID.StartsWith("OP"))
-                                        {
-                                            @(String.Format("({0:C})", item.documento.MONTO_DOC_MD))
-                                        }
-                                    }
-                                    catch { }
-                                </td>}<!--$ Monto NC/OP-->
+                                <td>@(item.MontoNCOP_STRING)</td>}<!--$ Monto NC/OP-->
                             @if (((string[])ViewBag.campos).Contains("37"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @((item.PRESUPUESTO.PC_T == 0) ? string.Empty : String.Format("({0:C})", item.PRESUPUESTO.PC_T))
-                                    }
-                                    catch { }
-                                </td>}<!--$Monto Aplicado-->
+                                <td>@(item.MontoAplicado_STRING)</td>}<!--$Monto Aplicado-->
                             @if (((string[])ViewBag.campos).Contains("38"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @((item.PRESUPUESTO.CONSU == 0) ? string.Empty : String.Format("{0:C}", item.PRESUPUESTO.CONSU))
-                                    }
-                                    catch { }
-                                </td>}<!--Saldo Remanente Provisión-->
+                                <td>@(item.SaldoRemanenteProvision_STRING)</td>}<!--Saldo Remanente Provisión-->
                             @if (((string[])ViewBag.campos).Contains("39"))
                             {
-                                <td>
-                                    @try
-                                    {
-
-                                        if (item.DOCSREFREVERSOS != null)
-                                        {
-                                            @(String.Format("{0:C}", item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null).GetType().GetProperty("MONTO_DOC_MD").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null), null)))
-                                        }
-                                    }
-                                    catch { }
-                                </td>}<!--$ Monto Reverso Provisión-->
+                                <td>@(item.MontoReversoProvision_STRING)</td>}<!--$ Monto Reverso Provisión-->
                             @if (((string[])ViewBag.campos).Contains("40"))
                             {
-                                <td>
-                                    @try
-                                    {
-
-                                        if (item.DOCSREFREVERSOS != null)
-                                        {
-                                            @((Convert.ToDecimal(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null).GetType().GetProperty("MONTO_DOC_MD").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null), null)) * 100) / item.documento.MONTO_DOC_MD)
-                                        }
-                                    }
-                                    catch { }
-                                </td>}<!--% Reverso-->
+                                <td>@(item.PorcentajeReverso_STRING)</td>}<!--% Reverso-->
                             @if (((string[])ViewBag.campos).Contains("41"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(String.Format("{0:C}", item.remanente))
-                                    }
-                                    catch { }
-                                </td>}<!--$ Exceso/(Insuficiencia) Provisión-->
+                                <td>@(item.MontoExcesoProvision_STRING)</td>}<!--$ Exceso/(Insuficiencia) Provisión-->
                             @if (((string[])ViewBag.campos).Contains("42"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.porcentaje_remanente)
-                                    }
-                                    catch { }
-                                </td>}<!--% Exceso/(Insuficiencia) Provisión-->
+                                <td>@(item.PorcentajeExcesoProvision_STRING)</td>}<!--% Exceso/(Insuficiencia) Provisión-->
                             @if (((string[])ViewBag.campos).Contains("43"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(String.Empty)
-                                    }
-                                    catch { }
-                                </td>}<!--Impactos / Beneficios en el gasto del Periodo-->
+                                <td>@(item.Impactos_STRING)</td>}<!--Impactos / Beneficios en el gasto del Periodo-->
                             @if (((string[])ViewBag.campos).Contains("44"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @((item.documento.DOCUMENTO_SAP != null) ? item.documento.DOCUMENTO_SAP.ToString() : "")
-                                    }
-                                    catch { }
-                                </td>}<!--Núm. Registro Provisión-->
+                                <td>@(item.NumRegistroProvision_STRING)</td>}<!--Núm. Registro Provisión-->
                             @if (((string[])ViewBag.campos).Contains("45"))
                             {
-                                <td>
-                                    @try
-                                    {
-
-                                        if (item.documento.TSOL_ID.StartsWith("NC") || item.documento.TSOL_ID.StartsWith("OP"))
-                                        {
-                                            @((item.documento.DOCUMENTO_SAP != null) ? item.documento.DOCUMENTO_SAP.ToString() : "")
-                                        }
-                                    }
-                                    catch { }
-                                </td>}<!--Núm. Registro NC/OP-->
+                                <td>@(item.NumRegistroNCOP_STRING)</td>}<!--Núm. Registro NC/OP-->
                             @if (((string[])ViewBag.campos).Contains("46"))
                             {
-                                <td>
-                                    @try
-                                    {
-
-                                        if (item.DOCSREFREVERSOS != null)
-                                        {
-                                            @((item.documento.DOCUMENTO_SAP != null) ? item.documento.DOCUMENTO_SAP.ToString() : "")
-                                        }
-                                    }
-                                    catch { }
-                                </td>}<!--Núm. Registro Reverso-->
+                                <td>@(item.NumRegistroReverso_STRING)</td>}<!--Núm. Registro Reverso-->
                             @if (((string[])ViewBag.campos).Contains("47"))
                             {
-                                <td>
-                                    @try
-                                    {
-
-                                        if (item.DOCSREFREVERSOS != null)
-                                        {
-                                            @(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("FECHAC").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null))
-                                        }
-                                    }
-                                    catch { }
-                                </td>}<!--Fecha Reverso Provisión-->
+                                <td>@(item.FechaReverso_STRING)</td>}<!--Fecha Reverso Provisión-->
                             @if (((string[])ViewBag.campos).Contains("48"))
                             {
-                                <td>
-                                    @try
-                                    {
-
-                                        if (item.DOCSREFREVERSOS != null)
-                                        {
-                                            @(item.DOCSREFREVERSOS.GetType().GetProperty("d").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("PERIODO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("d").GetValue(item.DOCSREFREVERSOS, null), null))
-                                        }
-                                    }
-                                    catch { }
-                                </td>}<!--Periodo Contable Reverso-->
+                                <td>@(item.PeriodoContableReverso_STRING)</td>}<!--Periodo Contable Reverso-->
                             @if (((string[])ViewBag.campos).Contains("49"))
                             {
-                                <td>
-                                    @try
-                                    {
-
-                                        if (item.DOCSREFREVERSOS != null)
-                                        {
-                                            @(item.DOCSREFREVERSOS.GetType().GetProperty("tr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("TXT100").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("tr").GetValue(item.DOCSREFREVERSOS, null), null))
-                                        }
-                                    }
-                                    catch { }
-                                </td>}<!--Razón Reverso-->
+                                <td>@(item.RazonReverso_STRING)</td>}<!--Razón Reverso-->
                             @if (((string[])ViewBag.campos).Contains("50"))
                             {
-                                <td>
-                                    @try
-                                    {
-
-                                        if (item.DOCSREFREVERSOS != null)
-                                        {
-                                            @(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null).GetType().GetProperty("COMENTARIO").GetValue(item.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(item.DOCSREFREVERSOS, null), null))
-                                        }
-                                    }
-                                    catch { }
-                                </td>}<!--Comentario Reverso-->
+                                <td>@(item.ComentarioReverso_STRING)</td>}<!--Comentario Reverso-->
                             @if (((string[])ViewBag.campos).Contains("51"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.USUARIO.NOMBRE + " " + item.documento.USUARIO.APELLIDO_P)
-                                    }
-                                    catch { }
-                                </td>}<!--Usuario-->
+                                <td>@(item.Usuario_STRING)</td>}<!--Usuario-->
                             @if (((string[])ViewBag.campos).Contains("52"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.USUARIO.BACKUP_ID)
-                                    }
-                                    catch { }
-                                </td>}<!--Back Up-->
+                                <td>@(item.Backup_STRING)</td>}<!--Back Up-->
                             @if (((string[])ViewBag.campos).Contains("53"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.USUARIO.NOMBRE + " " + item.documento.USUARIO.APELLIDO_P)
-                                    }
-                                    catch { }
-                                </td>}<!--Creado Por-->
+                                <td>@(item.CreadoPor_STRING)</td>}<!--Creado Por-->
                             @if (((string[])ViewBag.campos).Contains("54"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.USUARIO.ID)
-                                    }
-                                    catch { }
-                                </td>}<!--Creado Por ID-->
+                                <td>@(item.CreadoPorID_STRING)</td>}<!--Creado Por ID-->
                             @if (((string[])ViewBag.campos).Contains("55"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.USUARIO.NOMBRE + " " + item.documento.USUARIO.APELLIDO_P)
-                                    }
-                                    catch { }
-                                </td>}<!--Solicitado Por-->
+                                <td>@(item.SolicitadoPor_STRING)</td>}<!--Solicitado Por-->
                             @if (((string[])ViewBag.campos).Contains("56"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.USUARIO.ID)
-                                    }
-                                    catch { }
-                                </td>}<!--Solicitado Por ID-->
+                                <td>@(item.SolicitadoPorID_STRING)</td>}<!--Solicitado Por ID-->
                             @if (((string[])ViewBag.campos).Contains("57"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.USUARIOD_ID)
-                                    }
-                                    catch { }
-                                </td>}<!--Modificado Por-->
+                                <td>@(item.ModificadoPor_STRING)</td>}<!--Modificado Por-->
                             @if (((string[])ViewBag.campos).Contains("58"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.USUARIOD_ID)
-                                    }
-                                    catch { }
-                                </td>}<!--Modificado Por ID-->
+                                <td>@(item.ModificadoPorID_STRING)</td>}<!--Modificado Por ID-->
                             @if (((string[])ViewBag.campos).Contains("59"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.FLUJOes.Where(u => u.WF_POS == 1).Select(u => u.USUARIO.NOMBRE + " " + u.USUARIO.APELLIDO_P).FirstOrDefault())
-                                    }
-                                    catch { }
-                                </td>}<!--Aprobador Nivel 1-->
+                                <td>@(item.AprobadorN1_STRING)</td>}<!--Aprobador Nivel 1-->
                             @if (((string[])ViewBag.campos).Contains("60"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.FLUJOes.Where(u => u.WF_POS == 2).Select(u => u.USUARIO.NOMBRE + " " + u.USUARIO.APELLIDO_P).FirstOrDefault())
-                                    }
-                                    catch { }
-                                </td>}<!--Aprobador Nivel 2-->
+                                <td>@(item.AprobadorN2_STRING)</td>}<!--Aprobador Nivel 2-->
                             @if (((string[])ViewBag.campos).Contains("61"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.FLUJOes.Where(u => u.WF_POS == 3).Select(u => u.USUARIO.NOMBRE + " " + u.USUARIO.APELLIDO_P).FirstOrDefault())
-                                    }
-                                    catch { }
-                                </td>}<!--Aprobador Nivel 3-->
+                                <td>@(item.AprobadorN3_STRING)</td>}<!--Aprobador Nivel 3-->
                             @if (((string[])ViewBag.campos).Contains("62"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.FLUJOes.Where(u => u.WF_POS == 4).Select(u => u.USUARIO.NOMBRE + " " + u.USUARIO.APELLIDO_P).FirstOrDefault())
-                                    }
-                                    catch { }
-                                </td>}<!--Aprobador Nivel 4-->
+                                <td>@(item.AprobadorN4_STRING)</td>}<!--Aprobador Nivel 4-->
                             @if (((string[])ViewBag.campos).Contains("63"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.FLUJOes.Where(u => u.WF_POS == 5).Select(u => u.USUARIO.NOMBRE + " " + u.USUARIO.APELLIDO_P).FirstOrDefault())
-                                    }
-                                    catch { }
-                                </td>}<!--Aprobador Nivel 5-->
+                                <td>@(item.AprobadorN5_STRING)</td>}<!--Aprobador Nivel 5-->
                             @if (((string[])ViewBag.campos).Contains("64"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.DOCUMENTOFs.Select(df => df.PROVEEDOR).FirstOrDefault())
-                                    }
-                                    catch { }
-                                </td>}<!--Proveedor-->
+                                <td>@(item.Proveedor_STRING)</td>}<!--Proveedor-->
                             @if (((string[])ViewBag.campos).Contains("65"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.PROVEEDOR_NOMBRE)
-                                    }
-                                    catch { }
-                                </td>}<!--Nombre Proveedor-->
+                                <td>@(item.NombreProveedor_STRING)</td>}<!--Nombre Proveedor-->
                             @if (((string[])ViewBag.campos).Contains("66"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.DOCUMENTOFs.Select(df => df.BILL_DOC).FirstOrDefault())
-                                    }
-                                    catch { }
-                                </td>}<!--Número Factura Proveedor-->
+                                <td>@(item.NumeroFacturaProveedor_STRING)</td>}<!--Número Factura Proveedor-->
                             @if (((string[])ViewBag.campos).Contains("67"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.documento.DOCUMENTOFs.Select(df => df.FACTURAK).FirstOrDefault())
-                                    }
-                                    catch { }
-                                </td>}<!--Número Factura Kellogg´s-->
+                                <td>@(item.NumeroFacturaK_STRING)</td>}<!--Número Factura Kellogg´s-->
                             @if (((string[])ViewBag.campos).Contains("68"))
                             {
-                                <td>
-                                    @try
-                                    {
-
-                                        if (item.documento.TSOL_ID.StartsWith("NC"))
-                                        {
-                                            @(item.documento.NUM_DOC)
-                                        }
-                                    }
-                                    catch { }
-                                </td>}<!--Número NC -->
+                                <td>@(item.NumeroNC_STRING)</td>}<!--Número NC -->
                             @if (((string[])ViewBag.campos).Contains("69"))
                             {
-                                <td>
-                                    @try
-                                    {
-
-                                        if (item.documento.TSOL_ID.StartsWith("OP"))
-                                        {
-                                            @(item.documento.NUM_DOC)
-                                        }
-                                    }
-                                    catch { }
-                                </td>}<!--Número Orden de Pago-->
+                                <td>@(item.NumeroOP_STRING)</td>}<!--Número Orden de Pago-->
                             @if (((string[])ViewBag.campos).Contains("70"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @((item.documento.DOCUMENTOTS.Where(x => x.TSFORM_ID == 1 && (bool)x.CHECKS).Count() > 0) ? "X" : "")
-                                    }
-                                    catch { }
-                                </td>}<!--Expense Recognition en periodo-->
+                                <td>@(item.ExpRecognitionPeriodo_STRING)</td>}<!--Expense Recognition en periodo-->
                             @if (((string[])ViewBag.campos).Contains("71"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @((item.documento.DOCUMENTOTS.Where(x => x.TSFORM_ID == 2 && (bool)x.CHECKS).Count() > 0) ? "X" : "")
-                                    }
-                                    catch { }
-                                </td>}<!--Expense Recognition Ejercicio-->
+                                <td>@(item.ExpRecognitionEjercicio_STRING)</td>}<!--Expense Recognition Ejercicio-->
                             @if (((string[])ViewBag.campos).Contains("72"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @((item.documento.DOCUMENTOTS.Where(x => x.TSFORM_ID == 3 && (bool)x.CHECKS).Count() > 0) ? "X" : "")
-                                    }
-                                    catch { }
-                                </td>}<!--Soporte Incorrecto-->
+                                <td>@(item.SoporteIncorrecto_STRING)</td>}<!--Soporte Incorrecto-->
                             @if (((string[])ViewBag.campos).Contains("73"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @((item.documento.DOCUMENTOTS.Where(x => x.TSFORM_ID == 4 && (bool)x.CHECKS).Count() > 0) ? "X" : "")
-                                    }
-                                    catch { }
-                                </td>}<!--Soporte validado con base variable pendiente-->
+                                <td>@(item.SoporteValidado_STRING)</td>}<!--Soporte validado con base variable pendiente-->
                             @if (((string[])ViewBag.campos).Contains("74"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("CAR")).Count() > 0) ? "X" : "")
-                                    }
-                                    catch { }
-                                </td>}<!--Carta-->
+                                <td>@(item.Carta_STRING)</td>}<!--Carta-->
                             @if (((string[])ViewBag.campos).Contains("75"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("CON")).Count() > 0) ? "X" : "")
-                                    }
-                                    catch { }
-                                </td>}<!--Contrato-->
+                                <td>@(item.Contrato_STRING)</td>}<!--Contrato-->
                             @if (((string[])ViewBag.campos).Contains("76"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("JBP")).Count() > 0) ? "X" : "")
-                                    }
-                                    catch { }
-                                </td>}<!--JBP-->
+                                <td>@(item.JBP_STRING)</td>}<!--JBP-->
                             @if (((string[])ViewBag.campos).Contains("77"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("FAC")).Count() > 0) ? "X" : "")
-                                    }
-                                    catch { }
-                                </td>}<!--Factura-->
+                                <td>@(item.Factura_STRING)</td>}<!--Factura-->
                             @if (((string[])ViewBag.campos).Contains("78"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @((item.documento.DOCUMENTOAs.Where(da => da.CLASE.Equals("OTR")).Count() > 0) ? "X" : "")
-                                    }
-                                    catch { }
-                                </td>}<!--Otros-->
+                                <td>@(item.Otros_STRING)</td>}<!--Otros-->
                             @if (((string[])ViewBag.campos).Contains("79"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @((item.documento.TIPO_TECNICO == "M") ? "X" : "")
-                                    }
-                                    catch { }
-                                </td>}<!--Negociación por monto-->
+                                <td>@(item.NegociacionMonto_STRING)</td>}<!--Negociación por monto-->
                             @if (((string[])ViewBag.campos).Contains("80"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @((item.documento.TIPO_TECNICO == "P") ? "X" : "")
-                                    }
-                                    catch { }
-                                </td>}<!--Negociación por %-->
+                                <td>@(item.NegociacionPorcentaje_STRING)</td>}<!--Negociación por %-->
                             @if (((string[])ViewBag.campos).Contains("81"))
                             {
-                                <td>
-                                    @try
-                                    {
-
-                                        if (item.documento.DOCUMENTOPs.Count > 0)
-                                        {
-                                            @((item.documento.DOCUMENTOPs.FirstOrDefault().MATNR != "") ? "X" : "")
-                                        }
-                                    }
-                                    catch { }
-                                </td>}<!--Distribución por material-->
+                                <td>@(item.DistribucionMaterial_STRING)</td>}<!--Distribución por material-->
                             @if (((string[])ViewBag.campos).Contains("82"))
                             {
-                                <td>
-                                    @try
-                                    {
-
-                                        if (item.documento.DOCUMENTOPs.Count > 0)
-                                        {
-                                            @((item.documento.DOCUMENTOPs.FirstOrDefault().MATNR == "") ? "X" : "")
-                                        }
-                                    }
-                                    catch { }
-                                </td>}<!--Distribución categoría-->
+                                <td>@(item.DistribucionCategoria_STRING)</td>}<!--Distribución categoría-->
                             @if (((string[])ViewBag.campos).Contains("83"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @((item.documento.TIPO_TECNICO == "M") ? String.Format("{0:C}", item.documento.MONTO_DOC_MD) : "")
-                                    }
-                                    catch { }
-                                </td>}<!--Monto Base-->
+                                <td>@(item.MontoBase_STRING)</td>}<!--Monto Base-->
                             @if (((string[])ViewBag.campos).Contains("84"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @((item.documento.TIPO_TECNICO == "P") ? String.Format("{0:C}", item.documento.MONTO_DOC_MD) : "")
-                                    }
-                                    catch { }
-                                </td>}<!--Monto %-->
+                                <td>@(item.MontoPorcentaje_STRING)</td>}<!--Monto %-->
                             @if (((string[])ViewBag.campos).Contains("85"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @((item.documento.TIPO_RECURRENTE != null) ? "Si" : "No")
-                                    }
-                                    catch { }
-                                </td>}<!--Recurrente-->
+                                <td>@(item.Recurrente_STRING)</td>}<!--Recurrente-->
                             @if (((string[])ViewBag.campos).Contains("86"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @((item.documento.TIPO_RECURRENTE != null) ? ((item.documento.TIPO_TECNICO == "P") ? "X" : "") : "")
-                                    }
-                                    catch { }
-                                </td>}<!--Recurrente por porcentaje-->
+                                <td>@(item.RecurrentePorcentaje_STRING)</td>}<!--Recurrente por porcentaje-->
                             @if (((string[])ViewBag.campos).Contains("87"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @((item.documento.TIPO_RECURRENTE != null) ? ((item.documento.TIPO_TECNICO == "M") ? "X" : "") : "")
-                                    }
-                                    catch { }
-                                </td>}<!--Recurrente por Monto-->
+                                <td>@(item.RecurrenteMonto_STRING)</td>}<!--Recurrente por Monto-->
                             @if (((string[])ViewBag.campos).Contains("88"))
                             {
-                                <td>
-                                    @try
-                                    {
-
-                                        if (item.documento.DOCUMENTORECs.Count > 0)
-                                        {
-                                            @((item.documento.DOCUMENTORECs.FirstOrDefault().ESTATUS == "C") ? "X" : "")
-                                        }
-                                    }
-                                    catch { }
-                                </td>}<!--Recurrente Cancelada-->
+                                <td>@(item.RecurrenteCancelada_STRING)</td>}<!--Recurrente Cancelada-->
                             @if (((string[])ViewBag.campos).Contains("89"))
                             {
-                                <td>
-                                    @try
-                                    {
-
-                                        if (item.documento.DOCUMENTORAN.Count > 0)
-                                        {
-                                            @(String.Format("{0:C}", item.documento.DOCUMENTORAN.FirstOrDefault().OBJETIVOI))
-                                        }
-                                    }
-                                    catch { }
-                                </td>}<!--Objetivo Inicio-->
+                                <td>@(item.ObjetivoInicio_STRING)</td>}<!--Objetivo Inicio-->
                             @if (((string[])ViewBag.campos).Contains("90"))
                             {
-                                <td>
-                                    @try
-                                    {
-
-                                        if (item.documento.DOCUMENTORAN.Count > 0)
-                                        {
-                                            @(item.documento.DOCUMENTORAN.FirstOrDefault().PORCENTAJE)
-                                        }
-                                    }
-                                    catch { }
-                                </td>}<!--Objetivo Límite-->
+                                <td>@(item.ObjetivoLimite_STRING)</td>}<!--Objetivo Límite-->
                             @if (((string[])ViewBag.campos).Contains("91"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(item.ESTATUS_STRING)
-                                    }
-                                    catch { }
-                                </td>}<!--Estatus-->
+                                <td>@(item.Estatus_STRING)</td>}<!--Estatus-->
                             @if (((string[])ViewBag.campos).Contains("92"))
                             {
-                                <td>
-                                    @try
-                                    {
-
-                                        if (item.documento.DOCUMENTOLs.Count > 0)
-                                        {
-                                            @(String.Format("{0:C}", item.documento.DOCUMENTOLs.FirstOrDefault().MONTO_VENTA))
-                                        }
-                                    }
-                                    catch { }
-                                </td>}<!--Venta del Periodo-->
+                                <td>@(item.VentaPeriodo_STRING)</td>}<!--Venta del Periodo-->
                             @if (((string[])ViewBag.campos).Contains("93"))
                             {
-                                <td>
-                                    @try
-                                    {
-
-                                        if (item.documento.DOCUMENTOLs.Count > 0 && item.documento.DOCUMENTORAN.Count > 0)
-                                        {
-                                            @(String.Format("{0:C}", item.documento.DOCUMENTOLs.FirstOrDefault().MONTO_VENTA * (item.documento.DOCUMENTORAN.FirstOrDefault().PORCENTAJE / 100)))
-                                        }
-                                    }
-                                    catch { }
-                                </td>}<!--Monto Provisión-->
+                                <td>@(item.MontoProvision_STRING)</td>}<!--Monto Provisión-->
                             @if (((string[])ViewBag.campos).Contains("94"))
                             {
-                                <td>
-                                    @try
-                                    {
-                                        @(((item.documento.ESTATUS.Equals("A")) && (item.documento.TSOL.PADRE) && (item.documento.DOCUMENTOLs.Count > 0)) ? String.Format("{0:C}", item.documento.MONTO_DOC_MD) : "")
-                                    }
-                                    catch { }
-                                </td>}<!--Back Order-->
+                                <td>@(item.BackOrder_STRING)</td>}<!--Back Order-->
                             @if (((string[])ViewBag.campos).Contains("95"))
                             {
-                                <td>
-                                    @try
-                                    {
-
-                                        if (item.documento.DOCUMENTOLs.Count > 0)
-                                        {
-                                            @(String.Format("{0:C}", item.documento.DOCUMENTOLs.FirstOrDefault().MONTO_VENTA + item.documento.DOCUMENTOLs.FirstOrDefault().BACKORDER))
-                                        }
-                                    }
-                                    catch { }
-                                </td>}<!--Venta Real + BO-->
+                                <td>@(item.VentaRealBackOrder_STRING)</td>}<!--Venta Real + BO-->
                             @if (((string[])ViewBag.campos).Contains("96"))
                             {
-                                <td>
-                                    @try
-                                    {
-
-                                        if (item.documento.TSOL_ID.StartsWith("NC") || item.documento.TSOL_ID.StartsWith("OP") || item.documento.TSOL_ID.StartsWith("RP"))
-                                        {
-                                            @(item.documento.NUM_DOC)
-                                        }
-                                    }
-                                    catch { }
-                                </td>}<!--NC / OP o Reverso-->
+                                <td>@(item.NCOPReverso_STRING)</td>}<!--NC / OP o Reverso-->
                             @if (((string[])ViewBag.campos).Contains("97"))
                             {
-                                <td>
-                                    @try
-                                    {
-
-                                        if (item.documento.DOCUMENTOLs.Count > 0 && item.documento.DOCUMENTORAN.Count > 0)
-                                        {
-                                            @(String.Format("{0:C}", (item.documento.DOCUMENTOLs.FirstOrDefault().MONTO_VENTA + item.documento.DOCUMENTOLs.FirstOrDefault().BACKORDER) * (item.documento.DOCUMENTORAN.FirstOrDefault().OBJETIVOI / 100)))
-                                        }
-                                    }
-                                    catch { }
-                                </td>}<!--Monto-->
+                                <td>@(item.MontoProvision_STRING)</td>}<!--Monto-->
                         </tr>
                     }
                 </tbody>
