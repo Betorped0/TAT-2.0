@@ -280,6 +280,7 @@ namespace TAT001.Controllers
                     Estatus e = new Estatus();
                     ld.ESTATUS = e.getText(item.ESTATUSS, ld.NUM_DOC, user.SPRAS_ID, ee);
                     ld.ESTATUS_CLASS = e.getClass(item.ESTATUSS, ld.NUM_DOC, user.SPRAS_ID, ee);
+                    ld.ESTATUS_WF = item.ESTATUS!="R" && item.ESTATUS!="S"?item.ESTATUS:"";
                     //ld.ESTATUS = e.getText(item.ESTATUSS);
                     //ld.ESTATUS_CLASS = e.getClass(item.ESTATUSS);
 

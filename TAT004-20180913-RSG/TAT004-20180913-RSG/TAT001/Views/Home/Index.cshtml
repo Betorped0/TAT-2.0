@@ -2,7 +2,6 @@
 @model IEnumerable<TAT001.Models.Documento>
 @using System.Web.Hosting;
 @{
-    //ViewBag.Title = "Páginas";
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.pagina_r = 101;
     ViewBag.carpeta_r = 100;
@@ -305,6 +304,7 @@
                     <th id="lbl_estatus">
                         @Html.DisplayNameFor(model => model.ESTATUS)
                     </th>
+                    <th></th>
                     <th class="lblPayId">
                         @Html.DisplayNameFor(model => model.PAYER_ID)
                     </th>
@@ -425,6 +425,7 @@
                         <td>@item.HORAC</td>
                         <td>@item.PERIODO</td>
                         <td><span class="@item.ESTATUS_CLASS" data-badge-caption=" ">@item.ESTATUS</span></td>
+                        <td>@item.ESTATUS_WF</td>
                         <td>@item.PAYER_ID</td>
                         <td>@item.CLIENTE</td>
                         <td>@item.CANAL</td>
@@ -504,7 +505,7 @@
                 //    className: 'mdl-data-table__cell--non-numeric'
                 //},
                 {
-                    "targets": [5],
+                    "targets": [5,10],
                     "visible": false,
                     "searchable": false
                 }

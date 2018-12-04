@@ -180,6 +180,7 @@ $(document).ready(function () {
 
     //Distribución    
     $('#table_dis').DataTable({
+        destroy: true,
         "language": {
             "zeroRecords": "No hay registros",
             "infoEmpty": "Registros no disponibles",

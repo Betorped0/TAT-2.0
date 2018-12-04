@@ -27,6 +27,7 @@ namespace TAT001.Controllers
 
         //------------------DAO------------------------------
         readonly TallsDao tallsDao = new TallsDao();
+        readonly TiposSolicitudesDao tiposSolicitudesDao = new TiposSolicitudesDao();
         public ActionResult Index()
         {
             return RedirectToAction("Index", "Home");
@@ -151,7 +152,7 @@ namespace TAT001.Controllers
             Models.PresupuestoModels carga = new Models.PresupuestoModels();
             ViewBag.ultMod = carga.consultarUCarga();
 
-            ViewBag.TSOL_RELA = FnCommon.ObtenerTreeTiposSolicitud(db, DF.D.SOCIEDAD_ID, uu, "SR");
+            ViewBag.TSOL_RELA = tiposSolicitudesDao.TreeTiposSolicitudes( DF.D.SOCIEDAD_ID, uu, "SR");
             //RECUPERO EL PAIS para hacer una busqueda de su formato monetario
             ////var paisMon = Session["pais"].ToString();//------------------------LEJGG090718
             ViewBag.miles = DF.D.PAI.MILES;//LEJGG 090718
@@ -752,25 +753,25 @@ namespace TAT001.Controllers
                 }//ADD 31.10.2018----------------------------
                 if (ViewBag.reversa == "preversa")
                 {
-                    list_sol = FnCommon.ObtenerCmbTiposSolicitud(db, user.SPRAS_ID, null, true)
+                    list_sol = tiposSolicitudesDao.ComboTiposSolicitudes( user.SPRAS_ID, null, true)
                         .Select(x => new TSOLT_MOD
                         {
                             SPRAS_ID = user.SPRAS_ID,
                             TSOL_ID = x.Value,
                             TEXT = x.Text
                         }).ToList();
-                    ViewBag.listtreetsol = FnCommon.ObtenerTreeTiposSolicitud(db, sociedad_id, user.SPRAS_ID, null, true);
+                    ViewBag.listtreetsol = tiposSolicitudesDao.TreeTiposSolicitudes( sociedad_id, user.SPRAS_ID, null, true);
                 }
                 else
                 {
-                    list_sol = FnCommon.ObtenerCmbTiposSolicitud(db, user.SPRAS_ID, null)
+                    list_sol = tiposSolicitudesDao.ComboTiposSolicitudes( user.SPRAS_ID, null)
                         .Select(x => new TSOLT_MOD
                         {
                             SPRAS_ID = user.SPRAS_ID,
                             TSOL_ID = x.Value,
                             TEXT = x.Text
                         }).ToList();
-                    ViewBag.listtreetsol = FnCommon.ObtenerTreeTiposSolicitud(db, sociedad_id, user.SPRAS_ID, tipS);
+                    ViewBag.listtreetsol = tiposSolicitudesDao.TreeTiposSolicitudes( sociedad_id, user.SPRAS_ID, tipS);
                 }
 
                 //Obtener los documentos relacionados
@@ -2811,14 +2812,14 @@ namespace TAT001.Controllers
                 var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
                 FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
                 //tipo de solicitud
-                var id_sol = FnCommon.ObtenerCmbTiposSolicitud(db, user.SPRAS_ID, null)
+                var id_sol = tiposSolicitudesDao.ComboTiposSolicitudes( user.SPRAS_ID, null)
                         .Select(x => new TSOLT_MOD
                         {
                             SPRAS_ID = user.SPRAS_ID,
                             TSOL_ID = x.Value,
                             TEXT = x.Text
                         }).ToList();
-                ViewBag.listtreetsol = FnCommon.ObtenerTreeTiposSolicitud(db, dOCUMENTO.SOCIEDAD_ID, user.SPRAS_ID, "SD");
+                ViewBag.listtreetsol = tiposSolicitudesDao.TreeTiposSolicitudes( dOCUMENTO.SOCIEDAD_ID, user.SPRAS_ID, "SD");
                 ViewBag.TSOL_ID = new SelectList(id_sol, "TSOL_ID", "TEXT", selectedValue: dOCUMENTO.TSOL_ID);
                 //                      
 
@@ -3837,7 +3838,7 @@ namespace TAT001.Controllers
                 if (ViewBag.reversa == "preversa")
                 {
 
-                    list_sol = FnCommon.ObtenerCmbTiposSolicitud(db, user.SPRAS_ID, null, true)
+                    list_sol = tiposSolicitudesDao.ComboTiposSolicitudes( user.SPRAS_ID, null, true)
                         .Select(x => new TSOLT_MOD
                         {
                             SPRAS_ID = user.SPRAS_ID,
@@ -3847,7 +3848,7 @@ namespace TAT001.Controllers
                 }
                 else
                 {
-                    list_sol = FnCommon.ObtenerCmbTiposSolicitud(db, user.SPRAS_ID, null)
+                    list_sol = tiposSolicitudesDao.ComboTiposSolicitudes( user.SPRAS_ID, null)
                         .Select(x => new TSOLT_MOD
                         {
                             SPRAS_ID = user.SPRAS_ID,

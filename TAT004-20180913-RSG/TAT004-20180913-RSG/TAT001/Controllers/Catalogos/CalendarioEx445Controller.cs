@@ -26,6 +26,7 @@ namespace TAT001.Controllers.Catalogos
         readonly UsuariosDao usuariosDao = new UsuariosDao();
         readonly SociedadesDao sociedadesDao = new SociedadesDao();
         readonly PeriodosDao periodosDao = new PeriodosDao();
+        readonly TiposSolicitudesDao tiposSolicitudesDao = new TiposSolicitudesDao();
 
         // GET: CalendarioEx445/5
         public ActionResult Index(short ejercicio, int periodo, string sociedad_id, string tsol_id)
@@ -209,7 +210,7 @@ namespace TAT001.Controllers.Catalogos
                         modelView.usuarios = usuariosDao.ComboUsuarios(TATConstantes.ACCION_LISTA_USUARIO, id);
                         break;
                     case CMB_TIPOSSOLICITUD:
-                        modelView.cmbTiposSolicitud = FnCommon.ObtenerCmbTiposSolicitud(db, spras_id, id);
+                        modelView.cmbTiposSolicitud = tiposSolicitudesDao.ComboTiposSolicitudes( spras_id, id);
                         break;
                     default:
                         break;

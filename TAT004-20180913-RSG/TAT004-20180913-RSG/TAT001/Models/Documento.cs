@@ -18,6 +18,7 @@ namespace TAT001.Models
         public string PERIODO { get; set; }
         public string ESTATUS { get; set; }
         public string ESTATUS_CLASS { get; set; }
+        public string ESTATUS_WF { get; set; }
         public string PAYER_ID { get; set; }
         public string CLIENTE { get; set; }
         public string CANAL { get; set; }
