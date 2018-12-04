@@ -134,11 +134,11 @@
 <div class="row">
     <div id="test1" class="card-panel col s12">
         <div style="overflow:auto;">
-            <table id="tab_test1" class="display" cellspacing="0" width="100%" style="display:none">
+            <table id="tab_test1"  class="table mdl-data-table striped" cellspacing="0" style="width:100%; overflow-x: scroll;">
                 <thead>
                     <tr>
-                        <th id="lbl_estatusH1">ESTATUSS</th>
-                        <th id="lbl_numDocH1">NUM_DOC</th>
+                        <th id="lbl_estatusH1">VALIDACION</th>
+                        <th id="lbl_numDocH1">ID</th>
                         <th id="lbl_tipoSolicitud">T_SOL</th>
                         <th id="lbl_clasificacion">GALL_ID</th>
                         <th id="lbl_sociedad">Co. Code</th>
@@ -166,11 +166,11 @@
 
     <div id="test2" class="card-panel col s12">
         <div style="overflow:auto;">
-            <table id="tab_test2" class="display" cellspacing="0" width="100%" style="display:none">
+            <table id="tab_test2"  class="table mdl-data-table striped" cellspacing="0" style="width:100%; overflow-x: scroll;">
                 <thead>
                     <tr>
-                        <th id="lbl_estatusH2">ESTATUSS</th>
-                        <th id="lbl_numDocH2">NUM_DOC</th>
+                        <th id="lbl_estatusH2">VALIDACION</th>
+                        <th id="lbl_numDocH2">ID</th>
                         <th id="lbl_factura">FACTURA</th>
                         <th id="lbl_facturaFecha">FECHA</th>
                         <th id="lbl_proveedor">PROVEEDOR</th>
@@ -189,11 +189,11 @@
 
     <div id="test3" class="card-panel col s12">
         <div style="overflow:auto;">
-            <table id="tab_test3" class="display" cellspacing="0" width="100%" style="display:none">
+            <table id="tab_test3"  class="table mdl-data-table striped" cellspacing="0" style="width:100%; overflow-x: scroll;">
                 <thead>
                     <tr>
-                        <th id="lbl_estatusH3">ESTATUSS</th>
-                        <th id="lbl_numDocH3">NUM_DOC</th>
+                        <th id="lbl_estatusH3">VALIDACION</th>
+                        <th id="lbl_numDocH3">ID</th>
                         <th id="lbl_facturaFiscal">FACTURA</th>
                         <th id="lbl_bill">BILL_DOC</th>
                         <th id="lbl_ejerciciokH3">EJERCICIOK</th>
@@ -211,11 +211,11 @@
 
     <div id="test4" class="card-panel col s12">
         <div style="overflow:auto;">
-            <table id="tab_test4" class="display" cellspacing="0" width="100%" style="display:none">
+            <table id="tab_test4"  class="table mdl-data-table striped" cellspacing="0" style="width:100%; overflow-x: scroll;">
                 <thead>
                     <tr>
-                        <th id="lbl_estatusH4">ESTATUSS</th>
-                        <th id="lbl_numDocH4">NUM_DOC</th>
+                        <th id="lbl_estatusH4">VALIDACION</th>
+                        <th id="lbl_numDocH4">ID</th>
                         <th id="lbl_ligada">LIGADA</th>
                         <th id="lbl_fechaInicioH4">VIGENCIA DE</th>
                         <th id="lbl_fechaFinH4">VIGENCIA AL</th>
@@ -239,11 +239,11 @@
 
     <div id="test5" class="card-panel col s12">
         <div style="overflow:auto;">
-            <table id="tab_test5" class="display" cellspacing="0" width="100%" style="display:none">
+            <table id="tab_test5" class="table mdl-data-table striped" cellspacing="0" style="width:100%; overflow-x: scroll;">
                 <thead>
                     <tr>
-                        <th id="lbl_estatusH5">ESTATUSS</th>
-                        <th id="lbl_numDocH5">NUM_DOC</th>
+                        <th id="lbl_estatusH5">VALIDACION</th>
+                        <th id="lbl_numDocH5">ID</th>
                         <th style="text-align:center;" id="lbl_tipo">TIPO</th>
                         <th style="text-align:center;" id="lbl_archivo">ARCHIVO</th>
                         <th style="text-align:center;" id="lbl_notasH5">NOTAS</th>
@@ -303,13 +303,7 @@
         width: 100%;
     }
 </style>
-<script>
-    $('#tab_test1').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" } });
-    $('#tab_test2').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" } });
-    $('#tab_test3').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" } });
-    $('#tab_test4').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" } });
-    $('#tab_test5').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" }, "paging": false });
-</script>
+
 @*<script>
         //$(".mdl-button").on("click", function () {
         //    if ($(this).hasClass("valid")) {

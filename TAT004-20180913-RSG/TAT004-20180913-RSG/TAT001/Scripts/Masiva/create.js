@@ -75,8 +75,7 @@ function getExcelMasivas(file) {
 /////////////////////////////////////////////////////////HOJA 1 FUNCIONES Y ASIGNACIONES////////////////////////////////////////////////////////
 function procesarHoja1() {
     document.getElementById("loader").style.display = "initial";
-    var table = $('#tab_test1').DataTable();
-    table.clear().draw();
+    var table = $('#tab_test1').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" } });
 
     $.ajax({
         type: "POST",
@@ -866,8 +865,7 @@ $("#tab_info").click(function () {
 /////////////////////////////////////////////////////////HOJA 2 FUNCIONES Y ASIGNACIONES////////////////////////////////////////////////////////
 function procesarHoja2() {
     //document.getElementById("loader").style.display = "initial";
-    var table = $('#tab_test2').DataTable();
-    table.clear().draw();
+    var table = $('#tab_test2').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" } });
 
     $.ajax({
         type: "POST",
@@ -1283,8 +1281,7 @@ $("#tab_rel").click(function () {
 });
 /////////////////////////////////////////////////////////HOJA 3 FUNCIONES Y ASIGNACIONES////////////////////////////////////////////////////////
 function procesarHoja3() {
-    var table = $('#tab_test3').DataTable();
-    table.clear().draw();
+    var table = $('#tab_test3').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" } });
 
     $.ajax({
         type: "POST",
@@ -1590,8 +1587,7 @@ $("#tab_mul").click(function () {
 
 /////////////////////////////////////////////////////////HOJA 4 FUNCIONES Y ASIGNACIONES////////////////////////////////////////////////////////
 function procesarHoja4() {
-    var table = $('#tab_test4').DataTable();
-    table.clear().draw();
+    var table = $('#tab_test4').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" } });
 
     $.ajax({
         type: "POST",
@@ -2614,8 +2610,7 @@ $("#tab_dis").click(function () {
 
 /////////////////////////////////////////////////////////HOJA 5 FUNCIONES Y ASIGNACIONES////////////////////////////////////////////////////////
 function procesarHoja5() {
-    var table = $('#tab_test5').DataTable();
-    table.clear().draw();
+    var table = $('#tab_test5').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" }, "paging": false });
 
     $.ajax({
         type: "POST",
@@ -3859,14 +3854,24 @@ var tablesToExcel = (function () {
 function InicializarTablas() {
     var table = $('#tab_test1').DataTable();
     table.clear().draw();
+    table.destroy();
+
     var table2 = $('#tab_test2').DataTable();
     table2.clear().draw();
+    table2.destroy();
+
     var table3 = $('#tab_test3').DataTable();
     table3.clear().draw();
+    table3.destroy();
+
     var table4 = $('#tab_test4').DataTable();
     table4.clear().draw();
+    table4.destroy();
+
     var table5 = $('#tab_test5').DataTable();
     table5.clear().draw();
+    table5.destroy();
+
     cargaInicialSpin[0] = false;
     cargaInicialSpin[1] = false;
     cargaInicialSpin[2] = false;
