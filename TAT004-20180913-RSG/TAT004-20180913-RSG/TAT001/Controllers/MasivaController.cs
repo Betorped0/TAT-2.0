@@ -34,23 +34,16 @@ namespace TAT001.Controllers
         private Cadena cad = new Cadena();
         private UsuarioLogin usuValidateLogin = new UsuarioLogin();
 
+
         //------------------DAO------------------------------
+        readonly TallsDao tallsDao = new TallsDao();
         readonly ClientesDao clientesDao = new ClientesDao();
 
         // GET: Masiva
         public ActionResult Index()
         {
             int pagina = 221; //ID EN BASE DE DATOS
-            string u = User.Identity.Name;
-            var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-            ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-            ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-            ViewBag.usuario = user;
-            ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            //ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-            ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-
+            FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
             try
             {
                 string p = Session["pais"].ToString();
@@ -60,7 +53,6 @@ namespace TAT001.Controllers
             {
                 //return RedirectToAction("Pais", "Home");
             }
-            Session["spras"] = user.SPRAS_ID;
 
             return View();
         }
@@ -173,6 +165,7 @@ namespace TAT001.Controllers
                     string payer_id = ds1.Tables[0].Rows[i][9].ToString().Trim();
                     if (payer_id.Length < 10) { payer_id = cad.completaCliente(payer_id); }
                     string payer_nombre = ds1.Tables[0].Rows[i][10].ToString().Trim();
+                    string spras_id = FnCommon.ObtenerSprasId(db, User.Identity.Name);
 
                     string vkorg = "", vtweg = "";
                     if (db.CLIENTEs.Where(x => x.KUNNR == payer_id).Count() > 0)
@@ -196,13 +189,19 @@ namespace TAT001.Controllers
 
                     doc.NUM_DOC = num_doc;
                     doc.TSOL_ID = t_sol;
-                    doc.GALL_ID = gall_id;
+                    doc.TALL_NAME = gall_id;
                     doc.SOCIEDAD_ID = bukrs;
                     doc.PAIS_NAME = land;
 
                     PAI p = pp.Where(a => a.LANDX == land).FirstOrDefault();
                     if (p != null)
                         doc.PAIS_ID = p.LAND;//ADD RSG 01.11.2018--------------------------------------------------
+
+                    List<TALLT> list = tallsDao.ListaTallsConCuenta(TATConstantes.ACCION_LISTA_TALLCONCUENTA, null, spras_id, p.LAND, DateTime.Now.Year, bukrs);
+                    if (list.Any(x => x.TXT50 == gall_id))
+                    {
+                        doc.TALL_ID = list.Where(x => x.TXT50 == gall_id).FirstOrDefault().TALL_ID;
+                    }
                     doc.ESTADO = estado;
                     doc.CIUDAD = ciudad;
                     doc.CONCEPTO = concepto;
@@ -770,26 +769,7 @@ namespace TAT001.Controllers
             return cc;
         }
 
-        //COSULTA DE AJAX PARA LA CLASIFICACION GALL_ID
-        public JsonResult clasificacion(string Prefix)
-        {
-            if (Prefix == null)
-                Prefix = "";
-
-            var c = (from t in db.TALLs
-                     where t.ID.Contains(Prefix) && t.ACTIVO == true
-                     select new { t.ID, t.DESCRIPCION, t.GALL_ID }).ToList();
-
-            if (c.Count == 0)
-            {
-                var c2 = (from t in db.TALLs
-                          where t.DESCRIPCION.Contains(Prefix) && t.ACTIVO == true
-                          select new { t.ID, t.DESCRIPCION, t.GALL_ID }).ToList();
-                c.AddRange(c2);
-            }
-            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
-            return cc;
-        }
+        
 
         //COSULTA DE AJAX PARA LA SOCIEDAD
         //public JsonResult sociedad(string Prefix)
@@ -852,36 +832,7 @@ namespace TAT001.Controllers
             return cc;
         }
 
-        public JsonResult estado(string Prefix, string Pais)
-        {
-            var idPais = db.COUNTRIES.Where(x => x.SORTNAME == db.PAIS.Where(y => y.LANDX == Pais).FirstOrDefault().LAND).FirstOrDefault().ID;
-
-            if (Prefix == null)
-                Prefix = "";
-
-            var c = (from s in db.STATES
-                     where s.NAME.Contains(Prefix) && s.COUNTRY_ID == idPais
-                     select new { s.NAME }).ToList();
-
-            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
-            return cc;
-        }
-
-        //COSULTA DE AJAX PARA EL TIPO DE CIUDAD
-        public JsonResult ciudad(string Prefix, string Estado)
-        {
-            if (Prefix == null)
-                Prefix = "";
-
-            var state = db.STATES.Where(x => x.NAME == Estado).FirstOrDefault().ID;
-
-            var c = (from ciudad in db.CITIES
-                     where ciudad.NAME.Contains(Prefix) && ciudad.STATE_ID == state
-                     select new { ciudad.NAME }).ToList();
-
-            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
-            return cc;
-        }
+       
 
         //COSULTA DE AJAX PARA EL TAMAÑO DEL CONCEPTO
         public JsonResult concepto(string Prefix)
@@ -1511,6 +1462,7 @@ namespace TAT001.Controllers
             string[] fechaf_vig2 = fechaf_vig.Split(' ');
             fechaf_vig = fechaf_vig2[0];
             string moneda_id = fila[15].ToString().Trim();
+            string spras_id = FnCommon.ObtenerSprasId(db, User.Identity.Name);
 
             //fechai_vig = validaFech(fechai_vig, "x");
             //fechaf_vig = validaFech(fechaf_vig, "");
@@ -1546,7 +1498,10 @@ namespace TAT001.Controllers
                 regresaRowH1.Add("red white-text rojo");
             }
 
-            if (db.TALLs.Join(db.GALLs, x => x.GALL_ID, y => y.ID, (x, y) => new { x, y }).Where(xy => xy.x.DESCRIPCION == gall_id & xy.x.ACTIVO == true).Select(xy => xy.y.ID).Count() > 0)
+            List<TALLT> list =tallsDao.ListaTallsConCuenta(TATConstantes.ACCION_LISTA_TALLCONCUENTA, null,spras_id, land_id, DateTime.Now.Year, bukrs);
+
+            //if (db.TALLs.Join(db.GALLs, x => x.GALL_ID, y => y.ID, (x, y) => new { x, y }).Where(xy => xy.x.DESCRIPCION == gall_id & xy.x.ACTIVO == true).Select(xy => xy.y.ID).Count() > 0)
+            if (list.Any(x => x.TXT50 == gall_id))
             {
                 regresaRowH1.Add("");
             }
@@ -1573,7 +1528,6 @@ namespace TAT001.Controllers
             {
                 regresaRowH1.Add("red white-text rojo");
             }
-
             if (land.Length <= 50)
             {
                 //if (db.PAIS.Where(x => x.LANDX == land & x.SOCIEDAD_ID == bukrs).Select(x => x.LAND).Count() > 0)
@@ -1636,7 +1590,9 @@ namespace TAT001.Controllers
 
             if (payer_id.Length <= 10)
             {
-                if (db.CLIENTEs.Where(x => x.KUNNR == payer_id & x.ACTIVO == true).Count() > 0)
+                List<CLIENTE> listClientes=clientesDao.ListaClientes(null,User.Identity.Name, p.LAND);
+                //if (db.CLIENTEs.Where(x => x.KUNNR == payer_id && x.ACTIVO && x.LAND==p.LAND).Count() > 0)
+                if(listClientes.Any(x=>x.KUNNR==payer_id))
                 {
                     regresaRowH1.Add("");
                 }
@@ -2986,6 +2942,7 @@ namespace TAT001.Controllers
             string u = User.Identity.Name;
             string errorString;
             var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+            string spras_id = FnCommon.ObtenerSprasId(db, User.Identity.Name);
             IEnumerable<HttpPostedFileBase> archivos = (IEnumerable<HttpPostedFileBase>)(Session["archivosSoporte"]);
             List<DOCUMENTO> listD = new List<DOCUMENTO>();
             List<object> iDs = new List<object>();
@@ -2995,11 +2952,10 @@ namespace TAT001.Controllers
                 DOCUMENTO docu = new DOCUMENTO();
                 string num_doc = ds1.Tables[0].Rows[i][0].ToString();
                 string t_sol = ds1.Tables[0].Rows[i][1].ToString().Trim();
-                string gall_id2 = ds1.Tables[0].Rows[i][2].ToString().Trim();
-                string gall_id = db.TALLs.Where(x => x.DESCRIPCION == gall_id2 & x.ACTIVO == true).Select(x => x.GALL_ID).FirstOrDefault();
+                string tall_id = ds1.Tables[0].Rows[i][2].ToString().Trim();
+                string gall_id = db.TALLs.Where(x => x.ID == tall_id & x.ACTIVO == true).Select(x => x.GALL_ID).FirstOrDefault();
                 string bukrs = ds1.Tables[0].Rows[i][3].ToString().Trim();
-                string landx = ds1.Tables[0].Rows[i][4].ToString().Trim();
-                string land = db.PAIS.Where(x => x.LANDX == landx).Select(x => x.LAND).FirstOrDefault();
+                string land = ds1.Tables[0].Rows[i][4].ToString().Trim();
                 string estado = ds1.Tables[0].Rows[i][5].ToString().Trim();
                 string ciudad = ds1.Tables[0].Rows[i][6].ToString().Trim();
                 string concepto = ds1.Tables[0].Rows[i][7].ToString().Trim();
@@ -3034,13 +2990,15 @@ namespace TAT001.Controllers
                 {
                     docu.NUM_DOC = Convert.ToDecimal(num_doc);
                     docu.TSOL_ID = t_sol;
-                    docu.TALL_ID = db.TALLs.Where(x => x.DESCRIPCION == gall_id2).FirstOrDefault().ID;
+                    docu.TALL_ID = tall_id;
+                    //docu.TALL_ID = db.TALLs.Where(x => x.DESCRIPCION == gall_id2).FirstOrDefault().ID;
                     docu.SOCIEDAD_ID = bukrs;
                     docu.PAIS_ID = land;
                     docu.ESTADO = estado;
                     docu.CIUDAD = ciudad;
                     docu.PERIODO = cal445.getPeriodo(System.DateTime.Now);
                     docu.EJERCICIO = Convert.ToString(System.DateTime.Now.Year);
+
                     docu.TIPO_TECNICO = "M";///////////////////////////////////////////////CHECK
                     docu.TIPO_RECURRENTE = null;
                     docu.CANTIDAD_EV = 2;
@@ -3567,6 +3525,13 @@ namespace TAT001.Controllers
                 foreach (DOCUMENTOP docp in doc.DOCUMENTOPs)
                 {
                     docp.POS = pos;
+                    pos++;
+                }
+
+                pos = 1;
+                foreach(DOCUMENTOA docA in doc.DOCUMENTOAs)
+                {
+                    docA.POS = pos;
                     pos++;
                 }
             }

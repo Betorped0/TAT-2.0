@@ -62,12 +62,17 @@ namespace TAT001.Controllers
         //
         // GET: /Account/Login
         [AllowAnonymous]
+        //[OutputCache(NoStore = true, Duration = 0, VaryByParam = "None")]
         public ActionResult Login(string returnUrl)
         {
             try
             {
                 Session["pais"] = null;
-                FormsAuthentication.SignOut();
+                if (User.Identity.IsAuthenticated)
+                {
+                    FormsAuthentication.SignOut();
+                    return RedirectToAction("Index", "Home");
+                }
             }
             catch
             {
