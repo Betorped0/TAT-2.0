@@ -359,36 +359,36 @@
                     @foreach (TAT001.Models.ReportesModel.MRLTS item in ViewBag.tabla_reporte)
                     {
                         // TAT001.Models.ReportesModel.MRLTS item = itemvar.GetType().GetProperty("renglon").GetValue(itemvar, null);
-                        <tr>
-                            <td>@item.CO_CODE </td>
-                            <td>@item.PAIS </td>
-                            <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.NUMERO_SOLICITUD })'" style="cursor:pointer">@item.NUMERO_SOLICITUD </td>
-                            <td>@item.FECHA_SOLICITUD_STRING </td>
-                            <td>@item.PERIODO_CONTABLE </td>
-                            <td>@item.ANIO_CONTABLE</td>
-                            <td>@item.NUMERO_DOCUMENTO_SAP </td>
-                            <td>@item.NUMERO_REVERSO_SAP </td>
-                            <td>@item.FECHA_REVERSO_STRING </td>
-                            <td>@item.PERIODO_CONTABLE_REVERSO </td>
-                            <td>@item.COMENTARIOS_REVERSO_PROVISION_STRING </td>
-                            <td>@item.TIPO_SOLICITUD </td>
-                            <td>@item.ESTATUS_STRING </td>
-                            <td>@item.CONCEPTO_SOLICITUD </td>
-                            <td>@item.DE_STRING </td>
-                            <td>@item.A_STRING </td>
-                            <td>@item.CLASIFICACION </td>
-                            <td>@item.NUMERO_CLIENTE </td>
-                            <td>@item.CLIENTE </td>
-                            <td>@item.MONTO_PROVISION_STRING </td>
-                            <td>@item.MONTO_NCOP_STRING </td>
-                            <td>@item.MONTO_REVERSO_STRING </td>
-                            <td>@item.BENEFICIO_IMPACTO_MRL </td>
-                            <td>@item.EXPENSE_RECOGNITION_STRING </td>
-                            <td>@item.MONTO_PROVISION_USD_STRING </td>
-                            <td>@item.MONTO_NCOP_USD_STRING </td>
-                            <td>@item.MONTO_REVERSO_USD_STRING </td>
-                            <td>@item.BENEFICIO_IMPACTO_MRL_USD </td>
-                        </tr>
+                    <tr>
+                        <td>@item.CO_CODE </td>
+                        <td>@item.PAIS </td>
+                        <td><a href="@Url.Action("Details", "Solicitudes", new { id = item.NUMERO_SOLICITUD })" style="cursor:pointer">@item.NUMERO_SOLICITUD </a></td>
+                        <td>@item.FECHA_SOLICITUD_STRING </td>
+                        <td>@item.PERIODO_CONTABLE </td>
+                        <td>@item.ANIO_CONTABLE</td>
+                        <td>@item.NUMERO_DOCUMENTO_SAP </td>
+                        <td>@item.NUMERO_REVERSO_SAP </td>
+                        <td>@item.FECHA_REVERSO_STRING </td>
+                        <td>@item.PERIODO_CONTABLE_REVERSO </td>
+                        <td>@item.COMENTARIOS_REVERSO_PROVISION_STRING </td>
+                        <td>@item.TIPO_SOLICITUD </td>
+                        <td>@item.ESTATUS_STRING </td>
+                        <td>@item.CONCEPTO_SOLICITUD </td>
+                        <td>@item.DE_STRING </td>
+                        <td>@item.A_STRING </td>
+                        <td>@item.CLASIFICACION </td>
+                        <td>@item.NUMERO_CLIENTE </td>
+                        <td>@item.CLIENTE </td>
+                        <td>@item.MONTO_PROVISION_STRING </td>
+                        <td>@item.MONTO_NCOP_STRING </td>
+                        <td>@item.MONTO_REVERSO_STRING </td>
+                        <td>@item.BENEFICIO_IMPACTO_MRL </td>
+                        <td>@item.EXPENSE_RECOGNITION_STRING </td>
+                        <td>@item.MONTO_PROVISION_USD_STRING </td>
+                        <td>@item.MONTO_NCOP_USD_STRING </td>
+                        <td>@item.MONTO_REVERSO_USD_STRING </td>
+                        <td>@item.BENEFICIO_IMPACTO_MRL_USD </td>
+                    </tr>
                     }
                 </tbody>
             </table>

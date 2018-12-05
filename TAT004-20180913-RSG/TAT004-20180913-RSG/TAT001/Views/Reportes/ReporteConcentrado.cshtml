@@ -766,300 +766,300 @@
                     }
                     @foreach (TAT001.Models.ReportesModel.Concentrado item in ViewBag.lista_reporte)
                     {
-                        <tr>
-                            @if (((string[])ViewBag.campos).Contains("1"))
-                            {
-                                <td>@(item.CoCode_STRING)</td>}<!--Co. Code-->
-                            @if (((string[])ViewBag.campos).Contains("2"))
-                            {
-                                <td>@(item.Pais_STRING)</td>}<!--País-->
-                            @if (((string[])ViewBag.campos).Contains("3"))
-                            {
-                                <td>@(item.Subregion_STRING)</td>}<!--Subregión-->
-                            @if (((string[])ViewBag.campos).Contains("4"))
-                            {
-                                <td>@(item.Estado_STRING)</td>}<!--Estado-->
-                            @if (((string[])ViewBag.campos).Contains("5"))
-                            {
-                                <td>@(item.Ciudad_STRING)</td>}<!--Ciudad-->
-                            @if (((string[])ViewBag.campos).Contains("6"))
-                            {
-                                <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = item.documento.NUM_DOC })'" style="cursor:pointer">@(item.NumeroSolicitud_STRING)</td>}<!--Número solicitud-->
-                            @if (((string[])ViewBag.campos).Contains("7"))
-                            {
-                                <td>@(item.FechaSolicitud_STRING)</td>}<!--Fecha Solicitud-->
-                            @if (((string[])ViewBag.campos).Contains("8"))
-                            {
-                                <td>@(item.HoraSolicitud_STRING)</td>}<!--Hora solicitud-->
-                            @if (((string[])ViewBag.campos).Contains("9"))
-                            {
-                                <td>@(item.SemanaPeriodo_STRING)</td>}<!--Semana del periodo-->
-                            @if (((string[])ViewBag.campos).Contains("10"))
-                            {
-                                <td>@(item.PeriodoContable_STRING)</td>}<!--Periodo contable-->
-                            @if (((string[])ViewBag.campos).Contains("11"))
-                            {
-                                <td>@(item.Anio_STRING)</td>}<!--Año-->
-                            @if (((string[])ViewBag.campos).Contains("12"))
-                            {
-                                <td>@(item.TipoSolicitud_STRING)</td>}<!--Tipo Solicitud-->
-                            @if (((string[])ViewBag.campos).Contains("13"))
-                            {
-                                <td>@(item.TipoProvision_STRING)</td>}<!--Tipo Provisión-->
-                            @if (((string[])ViewBag.campos).Contains("14"))
-                            {
-                                <td>@(item.TipoNC_STRING)</td>}<!--Tipo NC-->
-                            @if (((string[])ViewBag.campos).Contains("15"))
-                            {
-                                <td>@(item.TipoOP_STRING)</td>}<!--Tipo OP-->
-                            @if (((string[])ViewBag.campos).Contains("16"))
-                            {
-                                <td>@(item.Status_STRING)</td>}<!--Status-->
-                            @if (((string[])ViewBag.campos).Contains("17"))
-                            {
-                                <td>@(item.Concepto_STRING)</td>}<!--Concepto-->
-                            @if (((string[])ViewBag.campos).Contains("18"))
-                            {
-                                <td>@(item.Mecanica_STRING)</td>}<!--Mecánica-->
-                            @if (((string[])ViewBag.campos).Contains("19"))
-                            {
-                                <td>@(item.De_STRING)</td>}<!--De-->
-                            @if (((string[])ViewBag.campos).Contains("20"))
-                            {
-                                <td>@(item.A_STRING)</td>}<!--A-->
-                            @if (((string[])ViewBag.campos).Contains("21"))
-                            {
-                                <td>@(item.DePeriodo_STRING)</td>}<!--De-->
-                            @if (((string[])ViewBag.campos).Contains("22"))
-                            {
-                                <td>@(item.APeriodo_STRING)</td>}<!--A-->
-                            @if (((string[])ViewBag.campos).Contains("23"))
-                            {
-                                <td>@(item.Clasificacion_STRING)</td>}<!--Clasificación-->
-                            @if (((string[])ViewBag.campos).Contains("24"))
-                            {
-                                <td>@(item.CuentaContableGasto_STRING)</td>}<!--Cuenta Contable Gasto-->
-                            @if (((string[])ViewBag.campos).Contains("25"))
-                            {
-                                <td>@(item.NombreCuenta_STRING)</td>}<!--Nombre de la cuenta-->
-                            @if (((string[])ViewBag.campos).Contains("26"))
-                            {
-                                <td>@(item.Cliente_STRING)</td>}<!--Cliente-->
-                            @if (((string[])ViewBag.campos).Contains("27"))
-                            {
-                                <td>@(item.Nombre_STRING)</td>}<!--Nombre-->
-                            @if (((string[])ViewBag.campos).Contains("28"))
-                            {
-                                <td>@(item.TipoCliente_STRING)</td>
-                            }<!--Tipo de Cliente-->
-                            @if (((string[])ViewBag.campos).Contains("29"))
-                            {
-                                <td>@(item.OrganizacionVentas_STRING)</td>}<!--Organización de Ventas-->
-                            @if (((string[])ViewBag.campos).Contains("30"))
-                            {
-                                <td>@(item.TaxID_STRING)</td>}<!--Tax ID-->
-                            @if (((string[])ViewBag.campos).Contains("31"))
-                            {
-                                <td>@(item.Canal_STRING)</td>}<!--Canal-->
-                            @if (((string[])ViewBag.campos).Contains("32"))
-                            {
-                                <td>@(item.Descripcion_STRING)</td>}<!--Descripción-->
-                            @if (((string[])ViewBag.campos).Contains("33"))
-                            {
-                                <td>@(item.NombreContacto_STRING)</td>}<!--Nombre de Contacto-->
-                            @if (((string[])ViewBag.campos).Contains("34"))
-                            {
-                                <td>@(item.EmailContacto_STRING)</td>}<!--Email de Contacto-->
-                            @if (((string[])ViewBag.campos).Contains("35"))
-                            {
-                                <td>@(item.MontoOriginalProvision_STRING)</td>}<!--$ Monto Original de Provisión-->
-                            @if (((string[])ViewBag.campos).Contains("36"))
-                            {
-                                <td>@(item.MontoNCOP_STRING)</td>}<!--$ Monto NC/OP-->
-                            @if (((string[])ViewBag.campos).Contains("37"))
-                            {
-                                <td>@(item.MontoAplicado_STRING)</td>}<!--$Monto Aplicado-->
-                            @if (((string[])ViewBag.campos).Contains("38"))
-                            {
-                                <td>@(item.SaldoRemanenteProvision_STRING)</td>}<!--Saldo Remanente Provisión-->
-                            @if (((string[])ViewBag.campos).Contains("39"))
-                            {
-                                <td>@(item.MontoReversoProvision_STRING)</td>}<!--$ Monto Reverso Provisión-->
-                            @if (((string[])ViewBag.campos).Contains("40"))
-                            {
-                                <td>@(item.PorcentajeReverso_STRING)</td>}<!--% Reverso-->
-                            @if (((string[])ViewBag.campos).Contains("41"))
-                            {
-                                <td>@(item.MontoExcesoProvision_STRING)</td>}<!--$ Exceso/(Insuficiencia) Provisión-->
-                            @if (((string[])ViewBag.campos).Contains("42"))
-                            {
-                                <td>@(item.PorcentajeExcesoProvision_STRING)</td>}<!--% Exceso/(Insuficiencia) Provisión-->
-                            @if (((string[])ViewBag.campos).Contains("43"))
-                            {
-                                <td>@(item.Impactos_STRING)</td>}<!--Impactos / Beneficios en el gasto del Periodo-->
-                            @if (((string[])ViewBag.campos).Contains("44"))
-                            {
-                                <td>@(item.NumRegistroProvision_STRING)</td>}<!--Núm. Registro Provisión-->
-                            @if (((string[])ViewBag.campos).Contains("45"))
-                            {
-                                <td>@(item.NumRegistroNCOP_STRING)</td>}<!--Núm. Registro NC/OP-->
-                            @if (((string[])ViewBag.campos).Contains("46"))
-                            {
-                                <td>@(item.NumRegistroReverso_STRING)</td>}<!--Núm. Registro Reverso-->
-                            @if (((string[])ViewBag.campos).Contains("47"))
-                            {
-                                <td>@(item.FechaReverso_STRING)</td>}<!--Fecha Reverso Provisión-->
-                            @if (((string[])ViewBag.campos).Contains("48"))
-                            {
-                                <td>@(item.PeriodoContableReverso_STRING)</td>}<!--Periodo Contable Reverso-->
-                            @if (((string[])ViewBag.campos).Contains("49"))
-                            {
-                                <td>@(item.RazonReverso_STRING)</td>}<!--Razón Reverso-->
-                            @if (((string[])ViewBag.campos).Contains("50"))
-                            {
-                                <td>@(item.ComentarioReverso_STRING)</td>}<!--Comentario Reverso-->
-                            @if (((string[])ViewBag.campos).Contains("51"))
-                            {
-                                <td>@(item.Usuario_STRING)</td>}<!--Usuario-->
-                            @if (((string[])ViewBag.campos).Contains("52"))
-                            {
-                                <td>@(item.Backup_STRING)</td>}<!--Back Up-->
-                            @if (((string[])ViewBag.campos).Contains("53"))
-                            {
-                                <td>@(item.CreadoPor_STRING)</td>}<!--Creado Por-->
-                            @if (((string[])ViewBag.campos).Contains("54"))
-                            {
-                                <td>@(item.CreadoPorID_STRING)</td>}<!--Creado Por ID-->
-                            @if (((string[])ViewBag.campos).Contains("55"))
-                            {
-                                <td>@(item.SolicitadoPor_STRING)</td>}<!--Solicitado Por-->
-                            @if (((string[])ViewBag.campos).Contains("56"))
-                            {
-                                <td>@(item.SolicitadoPorID_STRING)</td>}<!--Solicitado Por ID-->
-                            @if (((string[])ViewBag.campos).Contains("57"))
-                            {
-                                <td>@(item.ModificadoPor_STRING)</td>}<!--Modificado Por-->
-                            @if (((string[])ViewBag.campos).Contains("58"))
-                            {
-                                <td>@(item.ModificadoPorID_STRING)</td>}<!--Modificado Por ID-->
-                            @if (((string[])ViewBag.campos).Contains("59"))
-                            {
-                                <td>@(item.AprobadorN1_STRING)</td>}<!--Aprobador Nivel 1-->
-                            @if (((string[])ViewBag.campos).Contains("60"))
-                            {
-                                <td>@(item.AprobadorN2_STRING)</td>}<!--Aprobador Nivel 2-->
-                            @if (((string[])ViewBag.campos).Contains("61"))
-                            {
-                                <td>@(item.AprobadorN3_STRING)</td>}<!--Aprobador Nivel 3-->
-                            @if (((string[])ViewBag.campos).Contains("62"))
-                            {
-                                <td>@(item.AprobadorN4_STRING)</td>}<!--Aprobador Nivel 4-->
-                            @if (((string[])ViewBag.campos).Contains("63"))
-                            {
-                                <td>@(item.AprobadorN5_STRING)</td>}<!--Aprobador Nivel 5-->
-                            @if (((string[])ViewBag.campos).Contains("64"))
-                            {
-                                <td>@(item.Proveedor_STRING)</td>}<!--Proveedor-->
-                            @if (((string[])ViewBag.campos).Contains("65"))
-                            {
-                                <td>@(item.NombreProveedor_STRING)</td>}<!--Nombre Proveedor-->
-                            @if (((string[])ViewBag.campos).Contains("66"))
-                            {
-                                <td>@(item.NumeroFacturaProveedor_STRING)</td>}<!--Número Factura Proveedor-->
-                            @if (((string[])ViewBag.campos).Contains("67"))
-                            {
-                                <td>@(item.NumeroFacturaK_STRING)</td>}<!--Número Factura Kellogg´s-->
-                            @if (((string[])ViewBag.campos).Contains("68"))
-                            {
-                                <td>@(item.NumeroNC_STRING)</td>}<!--Número NC -->
-                            @if (((string[])ViewBag.campos).Contains("69"))
-                            {
-                                <td>@(item.NumeroOP_STRING)</td>}<!--Número Orden de Pago-->
-                            @if (((string[])ViewBag.campos).Contains("70"))
-                            {
-                                <td>@(item.ExpRecognitionPeriodo_STRING)</td>}<!--Expense Recognition en periodo-->
-                            @if (((string[])ViewBag.campos).Contains("71"))
-                            {
-                                <td>@(item.ExpRecognitionEjercicio_STRING)</td>}<!--Expense Recognition Ejercicio-->
-                            @if (((string[])ViewBag.campos).Contains("72"))
-                            {
-                                <td>@(item.SoporteIncorrecto_STRING)</td>}<!--Soporte Incorrecto-->
-                            @if (((string[])ViewBag.campos).Contains("73"))
-                            {
-                                <td>@(item.SoporteValidado_STRING)</td>}<!--Soporte validado con base variable pendiente-->
-                            @if (((string[])ViewBag.campos).Contains("74"))
-                            {
-                                <td>@(item.Carta_STRING)</td>}<!--Carta-->
-                            @if (((string[])ViewBag.campos).Contains("75"))
-                            {
-                                <td>@(item.Contrato_STRING)</td>}<!--Contrato-->
-                            @if (((string[])ViewBag.campos).Contains("76"))
-                            {
-                                <td>@(item.JBP_STRING)</td>}<!--JBP-->
-                            @if (((string[])ViewBag.campos).Contains("77"))
-                            {
-                                <td>@(item.Factura_STRING)</td>}<!--Factura-->
-                            @if (((string[])ViewBag.campos).Contains("78"))
-                            {
-                                <td>@(item.Otros_STRING)</td>}<!--Otros-->
-                            @if (((string[])ViewBag.campos).Contains("79"))
-                            {
-                                <td>@(item.NegociacionMonto_STRING)</td>}<!--Negociación por monto-->
-                            @if (((string[])ViewBag.campos).Contains("80"))
-                            {
-                                <td>@(item.NegociacionPorcentaje_STRING)</td>}<!--Negociación por %-->
-                            @if (((string[])ViewBag.campos).Contains("81"))
-                            {
-                                <td>@(item.DistribucionMaterial_STRING)</td>}<!--Distribución por material-->
-                            @if (((string[])ViewBag.campos).Contains("82"))
-                            {
-                                <td>@(item.DistribucionCategoria_STRING)</td>}<!--Distribución categoría-->
-                            @if (((string[])ViewBag.campos).Contains("83"))
-                            {
-                                <td>@(item.MontoBase_STRING)</td>}<!--Monto Base-->
-                            @if (((string[])ViewBag.campos).Contains("84"))
-                            {
-                                <td>@(item.MontoPorcentaje_STRING)</td>}<!--Monto %-->
-                            @if (((string[])ViewBag.campos).Contains("85"))
-                            {
-                                <td>@(item.Recurrente_STRING)</td>}<!--Recurrente-->
-                            @if (((string[])ViewBag.campos).Contains("86"))
-                            {
-                                <td>@(item.RecurrentePorcentaje_STRING)</td>}<!--Recurrente por porcentaje-->
-                            @if (((string[])ViewBag.campos).Contains("87"))
-                            {
-                                <td>@(item.RecurrenteMonto_STRING)</td>}<!--Recurrente por Monto-->
-                            @if (((string[])ViewBag.campos).Contains("88"))
-                            {
-                                <td>@(item.RecurrenteCancelada_STRING)</td>}<!--Recurrente Cancelada-->
-                            @if (((string[])ViewBag.campos).Contains("89"))
-                            {
-                                <td>@(item.ObjetivoInicio_STRING)</td>}<!--Objetivo Inicio-->
-                            @if (((string[])ViewBag.campos).Contains("90"))
-                            {
-                                <td>@(item.ObjetivoLimite_STRING)</td>}<!--Objetivo Límite-->
-                            @if (((string[])ViewBag.campos).Contains("91"))
-                            {
-                                <td>@(item.Estatus_STRING)</td>}<!--Estatus-->
-                            @if (((string[])ViewBag.campos).Contains("92"))
-                            {
-                                <td>@(item.VentaPeriodo_STRING)</td>}<!--Venta del Periodo-->
-                            @if (((string[])ViewBag.campos).Contains("93"))
-                            {
-                                <td>@(item.MontoProvision_STRING)</td>}<!--Monto Provisión-->
-                            @if (((string[])ViewBag.campos).Contains("94"))
-                            {
-                                <td>@(item.BackOrder_STRING)</td>}<!--Back Order-->
-                            @if (((string[])ViewBag.campos).Contains("95"))
-                            {
-                                <td>@(item.VentaRealBackOrder_STRING)</td>}<!--Venta Real + BO-->
-                            @if (((string[])ViewBag.campos).Contains("96"))
-                            {
-                                <td>@(item.NCOPReverso_STRING)</td>}<!--NC / OP o Reverso-->
-                            @if (((string[])ViewBag.campos).Contains("97"))
-                            {
-                                <td>@(item.MontoProvision_STRING)</td>}<!--Monto-->
-                        </tr>
+                    <tr>
+                        @if (((string[])ViewBag.campos).Contains("1"))
+                        {
+                            <td>@(item.CoCode_STRING)</td>}<!--Co. Code-->
+                        @if (((string[])ViewBag.campos).Contains("2"))
+                        {
+                            <td>@(item.Pais_STRING)</td>}<!--País-->
+                        @if (((string[])ViewBag.campos).Contains("3"))
+                        {
+                            <td>@(item.Subregion_STRING)</td>}<!--Subregión-->
+                        @if (((string[])ViewBag.campos).Contains("4"))
+                        {
+                            <td>@(item.Estado_STRING)</td>}<!--Estado-->
+                        @if (((string[])ViewBag.campos).Contains("5"))
+                        {
+                            <td>@(item.Ciudad_STRING)</td>}<!--Ciudad-->
+                        @if (((string[])ViewBag.campos).Contains("6"))
+                        {
+                            <td><a href="@Url.Action("Details", "Solicitudes", new { id = item.documento.NUM_DOC })" style="cursor:pointer">@item.NumeroSolicitud_STRING </a></td>}<!--Número solicitud-->
+                        @if (((string[])ViewBag.campos).Contains("7"))
+                        {
+                            <td>@(item.FechaSolicitud_STRING)</td>}<!--Fecha Solicitud-->
+                        @if (((string[])ViewBag.campos).Contains("8"))
+                        {
+                            <td>@(item.HoraSolicitud_STRING)</td>}<!--Hora solicitud-->
+                        @if (((string[])ViewBag.campos).Contains("9"))
+                        {
+                            <td>@(item.SemanaPeriodo_STRING)</td>}<!--Semana del periodo-->
+                        @if (((string[])ViewBag.campos).Contains("10"))
+                        {
+                            <td>@(item.PeriodoContable_STRING)</td>}<!--Periodo contable-->
+                        @if (((string[])ViewBag.campos).Contains("11"))
+                        {
+                            <td>@(item.Anio_STRING)</td>}<!--Año-->
+                        @if (((string[])ViewBag.campos).Contains("12"))
+                        {
+                            <td>@(item.TipoSolicitud_STRING)</td>}<!--Tipo Solicitud-->
+                        @if (((string[])ViewBag.campos).Contains("13"))
+                        {
+                            <td>@(item.TipoProvision_STRING)</td>}<!--Tipo Provisión-->
+                        @if (((string[])ViewBag.campos).Contains("14"))
+                        {
+                            <td>@(item.TipoNC_STRING)</td>}<!--Tipo NC-->
+                        @if (((string[])ViewBag.campos).Contains("15"))
+                        {
+                            <td>@(item.TipoOP_STRING)</td>}<!--Tipo OP-->
+                        @if (((string[])ViewBag.campos).Contains("16"))
+                        {
+                            <td>@(item.Status_STRING)</td>}<!--Status-->
+                        @if (((string[])ViewBag.campos).Contains("17"))
+                        {
+                            <td>@(item.Concepto_STRING)</td>}<!--Concepto-->
+                        @if (((string[])ViewBag.campos).Contains("18"))
+                        {
+                            <td>@(item.Mecanica_STRING)</td>}<!--Mecánica-->
+                        @if (((string[])ViewBag.campos).Contains("19"))
+                        {
+                            <td>@(item.De_STRING)</td>}<!--De-->
+                        @if (((string[])ViewBag.campos).Contains("20"))
+                        {
+                            <td>@(item.A_STRING)</td>}<!--A-->
+                        @if (((string[])ViewBag.campos).Contains("21"))
+                        {
+                            <td>@(item.DePeriodo_STRING)</td>}<!--De-->
+                        @if (((string[])ViewBag.campos).Contains("22"))
+                        {
+                            <td>@(item.APeriodo_STRING)</td>}<!--A-->
+                        @if (((string[])ViewBag.campos).Contains("23"))
+                        {
+                            <td>@(item.Clasificacion_STRING)</td>}<!--Clasificación-->
+                        @if (((string[])ViewBag.campos).Contains("24"))
+                        {
+                            <td>@(item.CuentaContableGasto_STRING)</td>}<!--Cuenta Contable Gasto-->
+                        @if (((string[])ViewBag.campos).Contains("25"))
+                        {
+                            <td>@(item.NombreCuenta_STRING)</td>}<!--Nombre de la cuenta-->
+                        @if (((string[])ViewBag.campos).Contains("26"))
+                        {
+                            <td>@(item.Cliente_STRING)</td>}<!--Cliente-->
+                        @if (((string[])ViewBag.campos).Contains("27"))
+                        {
+                            <td>@(item.Nombre_STRING)</td>}<!--Nombre-->
+                        @if (((string[])ViewBag.campos).Contains("28"))
+                        {
+                            <td>@(item.TipoCliente_STRING)</td>
+                        }<!--Tipo de Cliente-->
+                        @if (((string[])ViewBag.campos).Contains("29"))
+                        {
+                            <td>@(item.OrganizacionVentas_STRING)</td>}<!--Organización de Ventas-->
+                        @if (((string[])ViewBag.campos).Contains("30"))
+                        {
+                            <td>@(item.TaxID_STRING)</td>}<!--Tax ID-->
+                        @if (((string[])ViewBag.campos).Contains("31"))
+                        {
+                            <td>@(item.Canal_STRING)</td>}<!--Canal-->
+                        @if (((string[])ViewBag.campos).Contains("32"))
+                        {
+                            <td>@(item.Descripcion_STRING)</td>}<!--Descripción-->
+                        @if (((string[])ViewBag.campos).Contains("33"))
+                        {
+                            <td>@(item.NombreContacto_STRING)</td>}<!--Nombre de Contacto-->
+                        @if (((string[])ViewBag.campos).Contains("34"))
+                        {
+                            <td>@(item.EmailContacto_STRING)</td>}<!--Email de Contacto-->
+                        @if (((string[])ViewBag.campos).Contains("35"))
+                        {
+                            <td>@(item.MontoOriginalProvision_STRING)</td>}<!--$ Monto Original de Provisión-->
+                        @if (((string[])ViewBag.campos).Contains("36"))
+                        {
+                            <td>@(item.MontoNCOP_STRING)</td>}<!--$ Monto NC/OP-->
+                        @if (((string[])ViewBag.campos).Contains("37"))
+                        {
+                            <td>@(item.MontoAplicado_STRING)</td>}<!--$Monto Aplicado-->
+                        @if (((string[])ViewBag.campos).Contains("38"))
+                        {
+                            <td>@(item.SaldoRemanenteProvision_STRING)</td>}<!--Saldo Remanente Provisión-->
+                        @if (((string[])ViewBag.campos).Contains("39"))
+                        {
+                            <td>@(item.MontoReversoProvision_STRING)</td>}<!--$ Monto Reverso Provisión-->
+                        @if (((string[])ViewBag.campos).Contains("40"))
+                        {
+                            <td>@(item.PorcentajeReverso_STRING)</td>}<!--% Reverso-->
+                        @if (((string[])ViewBag.campos).Contains("41"))
+                        {
+                            <td>@(item.MontoExcesoProvision_STRING)</td>}<!--$ Exceso/(Insuficiencia) Provisión-->
+                        @if (((string[])ViewBag.campos).Contains("42"))
+                        {
+                            <td>@(item.PorcentajeExcesoProvision_STRING)</td>}<!--% Exceso/(Insuficiencia) Provisión-->
+                        @if (((string[])ViewBag.campos).Contains("43"))
+                        {
+                            <td>@(item.Impactos_STRING)</td>}<!--Impactos / Beneficios en el gasto del Periodo-->
+                        @if (((string[])ViewBag.campos).Contains("44"))
+                        {
+                            <td>@(item.NumRegistroProvision_STRING)</td>}<!--Núm. Registro Provisión-->
+                        @if (((string[])ViewBag.campos).Contains("45"))
+                        {
+                            <td>@(item.NumRegistroNCOP_STRING)</td>}<!--Núm. Registro NC/OP-->
+                        @if (((string[])ViewBag.campos).Contains("46"))
+                        {
+                            <td>@(item.NumRegistroReverso_STRING)</td>}<!--Núm. Registro Reverso-->
+                        @if (((string[])ViewBag.campos).Contains("47"))
+                        {
+                            <td>@(item.FechaReverso_STRING)</td>}<!--Fecha Reverso Provisión-->
+                        @if (((string[])ViewBag.campos).Contains("48"))
+                        {
+                            <td>@(item.PeriodoContableReverso_STRING)</td>}<!--Periodo Contable Reverso-->
+                        @if (((string[])ViewBag.campos).Contains("49"))
+                        {
+                            <td>@(item.RazonReverso_STRING)</td>}<!--Razón Reverso-->
+                        @if (((string[])ViewBag.campos).Contains("50"))
+                        {
+                            <td>@(item.ComentarioReverso_STRING)</td>}<!--Comentario Reverso-->
+                        @if (((string[])ViewBag.campos).Contains("51"))
+                        {
+                            <td>@(item.Usuario_STRING)</td>}<!--Usuario-->
+                        @if (((string[])ViewBag.campos).Contains("52"))
+                        {
+                            <td>@(item.Backup_STRING)</td>}<!--Back Up-->
+                        @if (((string[])ViewBag.campos).Contains("53"))
+                        {
+                            <td>@(item.CreadoPor_STRING)</td>}<!--Creado Por-->
+                        @if (((string[])ViewBag.campos).Contains("54"))
+                        {
+                            <td>@(item.CreadoPorID_STRING)</td>}<!--Creado Por ID-->
+                        @if (((string[])ViewBag.campos).Contains("55"))
+                        {
+                            <td>@(item.SolicitadoPor_STRING)</td>}<!--Solicitado Por-->
+                        @if (((string[])ViewBag.campos).Contains("56"))
+                        {
+                            <td>@(item.SolicitadoPorID_STRING)</td>}<!--Solicitado Por ID-->
+                        @if (((string[])ViewBag.campos).Contains("57"))
+                        {
+                            <td>@(item.ModificadoPor_STRING)</td>}<!--Modificado Por-->
+                        @if (((string[])ViewBag.campos).Contains("58"))
+                        {
+                            <td>@(item.ModificadoPorID_STRING)</td>}<!--Modificado Por ID-->
+                        @if (((string[])ViewBag.campos).Contains("59"))
+                        {
+                            <td>@(item.AprobadorN1_STRING)</td>}<!--Aprobador Nivel 1-->
+                        @if (((string[])ViewBag.campos).Contains("60"))
+                        {
+                            <td>@(item.AprobadorN2_STRING)</td>}<!--Aprobador Nivel 2-->
+                        @if (((string[])ViewBag.campos).Contains("61"))
+                        {
+                            <td>@(item.AprobadorN3_STRING)</td>}<!--Aprobador Nivel 3-->
+                        @if (((string[])ViewBag.campos).Contains("62"))
+                        {
+                            <td>@(item.AprobadorN4_STRING)</td>}<!--Aprobador Nivel 4-->
+                        @if (((string[])ViewBag.campos).Contains("63"))
+                        {
+                            <td>@(item.AprobadorN5_STRING)</td>}<!--Aprobador Nivel 5-->
+                        @if (((string[])ViewBag.campos).Contains("64"))
+                        {
+                            <td>@(item.Proveedor_STRING)</td>}<!--Proveedor-->
+                        @if (((string[])ViewBag.campos).Contains("65"))
+                        {
+                            <td>@(item.NombreProveedor_STRING)</td>}<!--Nombre Proveedor-->
+                        @if (((string[])ViewBag.campos).Contains("66"))
+                        {
+                            <td>@(item.NumeroFacturaProveedor_STRING)</td>}<!--Número Factura Proveedor-->
+                        @if (((string[])ViewBag.campos).Contains("67"))
+                        {
+                            <td>@(item.NumeroFacturaK_STRING)</td>}<!--Número Factura Kellogg´s-->
+                        @if (((string[])ViewBag.campos).Contains("68"))
+                        {
+                            <td>@(item.NumeroNC_STRING)</td>}<!--Número NC -->
+                        @if (((string[])ViewBag.campos).Contains("69"))
+                        {
+                            <td>@(item.NumeroOP_STRING)</td>}<!--Número Orden de Pago-->
+                        @if (((string[])ViewBag.campos).Contains("70"))
+                        {
+                            <td>@(item.ExpRecognitionPeriodo_STRING)</td>}<!--Expense Recognition en periodo-->
+                        @if (((string[])ViewBag.campos).Contains("71"))
+                        {
+                            <td>@(item.ExpRecognitionEjercicio_STRING)</td>}<!--Expense Recognition Ejercicio-->
+                        @if (((string[])ViewBag.campos).Contains("72"))
+                        {
+                            <td>@(item.SoporteIncorrecto_STRING)</td>}<!--Soporte Incorrecto-->
+                        @if (((string[])ViewBag.campos).Contains("73"))
+                        {
+                            <td>@(item.SoporteValidado_STRING)</td>}<!--Soporte validado con base variable pendiente-->
+                        @if (((string[])ViewBag.campos).Contains("74"))
+                        {
+                            <td>@(item.Carta_STRING)</td>}<!--Carta-->
+                        @if (((string[])ViewBag.campos).Contains("75"))
+                        {
+                            <td>@(item.Contrato_STRING)</td>}<!--Contrato-->
+                        @if (((string[])ViewBag.campos).Contains("76"))
+                        {
+                            <td>@(item.JBP_STRING)</td>}<!--JBP-->
+                        @if (((string[])ViewBag.campos).Contains("77"))
+                        {
+                            <td>@(item.Factura_STRING)</td>}<!--Factura-->
+                        @if (((string[])ViewBag.campos).Contains("78"))
+                        {
+                            <td>@(item.Otros_STRING)</td>}<!--Otros-->
+                        @if (((string[])ViewBag.campos).Contains("79"))
+                        {
+                            <td>@(item.NegociacionMonto_STRING)</td>}<!--Negociación por monto-->
+                        @if (((string[])ViewBag.campos).Contains("80"))
+                        {
+                            <td>@(item.NegociacionPorcentaje_STRING)</td>}<!--Negociación por %-->
+                        @if (((string[])ViewBag.campos).Contains("81"))
+                        {
+                            <td>@(item.DistribucionMaterial_STRING)</td>}<!--Distribución por material-->
+                        @if (((string[])ViewBag.campos).Contains("82"))
+                        {
+                            <td>@(item.DistribucionCategoria_STRING)</td>}<!--Distribución categoría-->
+                        @if (((string[])ViewBag.campos).Contains("83"))
+                        {
+                            <td>@(item.MontoBase_STRING)</td>}<!--Monto Base-->
+                        @if (((string[])ViewBag.campos).Contains("84"))
+                        {
+                            <td>@(item.MontoPorcentaje_STRING)</td>}<!--Monto %-->
+                        @if (((string[])ViewBag.campos).Contains("85"))
+                        {
+                            <td>@(item.Recurrente_STRING)</td>}<!--Recurrente-->
+                        @if (((string[])ViewBag.campos).Contains("86"))
+                        {
+                            <td>@(item.RecurrentePorcentaje_STRING)</td>}<!--Recurrente por porcentaje-->
+                        @if (((string[])ViewBag.campos).Contains("87"))
+                        {
+                            <td>@(item.RecurrenteMonto_STRING)</td>}<!--Recurrente por Monto-->
+                        @if (((string[])ViewBag.campos).Contains("88"))
+                        {
+                            <td>@(item.RecurrenteCancelada_STRING)</td>}<!--Recurrente Cancelada-->
+                        @if (((string[])ViewBag.campos).Contains("89"))
+                        {
+                            <td>@(item.ObjetivoInicio_STRING)</td>}<!--Objetivo Inicio-->
+                        @if (((string[])ViewBag.campos).Contains("90"))
+                        {
+                            <td>@(item.ObjetivoLimite_STRING)</td>}<!--Objetivo Límite-->
+                        @if (((string[])ViewBag.campos).Contains("91"))
+                        {
+                            <td>@(item.Estatus_STRING)</td>}<!--Estatus-->
+                        @if (((string[])ViewBag.campos).Contains("92"))
+                        {
+                            <td>@(item.VentaPeriodo_STRING)</td>}<!--Venta del Periodo-->
+                        @if (((string[])ViewBag.campos).Contains("93"))
+                        {
+                            <td>@(item.MontoProvision_STRING)</td>}<!--Monto Provisión-->
+                        @if (((string[])ViewBag.campos).Contains("94"))
+                        {
+                            <td>@(item.BackOrder_STRING)</td>}<!--Back Order-->
+                        @if (((string[])ViewBag.campos).Contains("95"))
+                        {
+                            <td>@(item.VentaRealBackOrder_STRING)</td>}<!--Venta Real + BO-->
+                        @if (((string[])ViewBag.campos).Contains("96"))
+                        {
+                            <td>@(item.NCOPReverso_STRING)</td>}<!--NC / OP o Reverso-->
+                        @if (((string[])ViewBag.campos).Contains("97"))
+                        {
+                            <td>@(item.MontoProvision_STRING)</td>}<!--Monto-->
+                    </tr>
                     }
                 </tbody>
             </table>
