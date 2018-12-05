@@ -245,11 +245,6 @@ namespace TAT001.Models
                     {
                         index = "A";
                         index = index + contador;
-                        double proceso = row.VVX17 + row.CSHDC + row.RECUN +
-                                        row.DSTRB + row.OTHTA + row.ADVER +
-                                        row.CORPM + row.POP + row.PMVAR +
-                                        row.CONPR + row.RSRDV + row.SPA + row.FREEG;
-
                         worksheet.Cell(index).Value = new[]
                      {
                   new {
@@ -275,12 +270,9 @@ namespace TAT001.Models
                       FREEG        = row.FREEG,
                       ALLB        = row.ALLB,
                       ALLF        = row.ALLF,
-                      //PROCE       = row.PROCESO,
-                      //CONSU        = row.CONSU + row.ALLB + row.ALLF + row.PROCESO,
-                      //TOTAL        = row.TOTAL - ( row.ALLB + row.ALLF + row.PROCESO)
-                      PROCE       = proceso,
-                      CONSU        = row.CONSU + row.ALLB + row.ALLF + proceso,
-                      TOTAL        = row.TOTAL - ( row.ALLB + row.ALLF + proceso)
+                      PROCE       = row.PROCESO,
+                      CONSU        = row.CONSU + row.ALLB + row.ALLF + row.PROCESO,
+                      TOTAL        = row.TOTAL - ( row.ALLB + row.ALLF + row.PROCESO)
                       },
                     };
                         contador++;

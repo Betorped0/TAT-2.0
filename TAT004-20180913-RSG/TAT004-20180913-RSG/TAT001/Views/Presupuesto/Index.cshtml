@@ -264,8 +264,8 @@
                 }
                 <p id="fechUlt">$ en miles @moneda</p>
             </div>
-            <div class="row" style="margin-bottom:0px;">
-                <div class="col s6">
+            <div>
+                <p>
                     <label>
                         @if (ViewBag.chkcpt != null)
                         {
@@ -277,14 +277,12 @@
                         }
                         <span>Sin Consumo</span>
                     </label>
-                </div>
+                </p>
                 @if (Model.presupuesto.Count > 0)
                 {
-                <div class="col s6 right-align">
                     <button id="lbl_cargar" name="excel" class="btn-small" type="submit" value="Excel">
                         Generar Excel
                     </button>
-                </div>
                 }
             </div>
         </div>
@@ -520,27 +518,19 @@
                                 @*<td>$@String.Format("{0:0,0.000}", Model.presupuesto[i].OHV)</td>*@
                                 @if (ViewBag.chkcpt == null)
                                 {
-                                    double proceso = Model.presupuesto[i].VVX17 + Model.presupuesto[i].CSHDC + Model.presupuesto[i].RECUN +
-                                        Model.presupuesto[i].DSTRB + Model.presupuesto[i].OTHTA + Model.presupuesto[i].ADVER +
-                                        Model.presupuesto[i].CORPM + Model.presupuesto[i].POP + Model.presupuesto[i].PMVAR +
-                                        Model.presupuesto[i].CONPR + Model.presupuesto[i].RSRDV + Model.presupuesto[i].SPA + Model.presupuesto[i].FREEG;
-                                    
                                     <td>$@String.Format("{0:0,0}", Model.presupuesto[i].ALLB)</td>
                                     <td>$@String.Format("{0:0,0}", Model.presupuesto[i].ALLF)</td>
-                                    @*<td>$@String.Format("{0:0,0}", Model.presupuesto[i].PROCESO)</td>*@
-                                    <td>$@String.Format("{0:0,0}", proceso)</td>
+                                    <td>$@String.Format("{0:0,0}", Model.presupuesto[i].PROCESO)</td>
                                     if (Model.presupuesto[i].CONSU > 0)
                                     {
-                                        @*<td>$-@String.Format("{0:0,0}", Model.presupuesto[i].CONSU + (Model.presupuesto[i].ALLB + Model.presupuesto[i].ALLF + Model.presupuesto[i].PROCESO))</td>*@
-                                        <td>$@String.Format("{0:0,0}", (Model.presupuesto[i].CONSU + (Model.presupuesto[i].ALLB + Model.presupuesto[i].ALLF + proceso)) * -1)</td>
+                                        <td>$-@String.Format("{0:0,0}", Model.presupuesto[i].CONSU + (Model.presupuesto[i].ALLB + Model.presupuesto[i].ALLF + Model.presupuesto[i].PROCESO))</td>
                                     }
                                     else if (Model.presupuesto[i].CONSU == 0)
                                     {
-                                        //Model.presupuesto[i].CONSU = Model.presupuesto[i].CONSU + (Model.presupuesto[i].ALLB + Model.presupuesto[i].ALLF + Model.presupuesto[i].PROCESO);
-                                        Model.presupuesto[i].CONSU = Model.presupuesto[i].CONSU + (Model.presupuesto[i].ALLB + Model.presupuesto[i].ALLF + proceso);
+                                        Model.presupuesto[i].CONSU = Model.presupuesto[i].CONSU + (Model.presupuesto[i].ALLB + Model.presupuesto[i].ALLF + Model.presupuesto[i].PROCESO);
                                         if (Model.presupuesto[i].CONSU > 0)
                                         {
-                                            <td>$@String.Format("{0:0,0}", Model.presupuesto[i].CONSU*-1)</td>
+                                            <td>$-@String.Format("{0:0,0}", Model.presupuesto[i].CONSU)</td>
                                         }
                                         else
                                         {
@@ -549,11 +539,9 @@
                                     }
                                     else
                                     {
-                                        @*<td>$-@String.Format("{0:0,0}", Model.presupuesto[i].CONSU - (Model.presupuesto[i].ALLB + Model.presupuesto[i].ALLF + Model.presupuesto[i].PROCESO))</td>*@
-                                        <td>$@String.Format("{0:0,0}", (Model.presupuesto[i].CONSU - (Model.presupuesto[i].ALLB + Model.presupuesto[i].ALLF + proceso))*-1)</td>
+                                        <td>$-@String.Format("{0:0,0}", Model.presupuesto[i].CONSU - (Model.presupuesto[i].ALLB + Model.presupuesto[i].ALLF + Model.presupuesto[i].PROCESO))</td>
                                     }
-                                    @*<td>$@String.Format("{0:0,0}", Model.presupuesto[i].TOTAL - (Model.presupuesto[i].ALLB + Model.presupuesto[i].ALLF + Model.presupuesto[i].PROCESO))</td>*@
-                                    <td>$@String.Format("{0:0,0}", Model.presupuesto[i].TOTAL - (Model.presupuesto[i].ALLB + Model.presupuesto[i].ALLF + proceso))</td>
+                                    <td>$@String.Format("{0:0,0}", Model.presupuesto[i].TOTAL - (Model.presupuesto[i].ALLB + Model.presupuesto[i].ALLF + Model.presupuesto[i].PROCESO))</td>
                                 }
                             </tr>
                         }
