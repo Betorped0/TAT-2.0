@@ -1,7 +1,6 @@
 ﻿@model TAT001.Entities.USUARIO
 
 @{
-    //ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.pagina_r = 601;
     ViewBag.carpeta_r = 500;
@@ -34,14 +33,15 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.ID)
         @Html.HiddenFor(model => model.PASS)
+        @Html.HiddenFor(model => model.PUESTO_ID)
         @*<div class="input-field col s6">
-                    @Html.PasswordFor(model => model.PASS, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.LabelFor(model => model.PASS, htmlAttributes: new { @class = "control-label col-md-2" })
-                    @Html.ValidationMessageFor(model => model.PASS, "", new { @class = "text-danger" })
-                <div class="input-field col s6">
-                    <div style="height:54px;"></div>
-                </div>
-        </div>*@
+                        @Html.PasswordFor(model => model.PASS, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.LabelFor(model => model.PASS, htmlAttributes: new { @class = "control-label col-md-2" })
+                        @Html.ValidationMessageFor(model => model.PASS, "", new { @class = "text-danger" })
+                    <div class="input-field col s6">
+                        <div style="height:54px;"></div>
+                    </div>
+            </div>*@
         <div class="col l6 s12">
             <div class="card-panel">
                 <div class="row">
@@ -74,7 +74,7 @@
                     <div class="input-field col s6">
                         @*@Html.DropDownList("SPRAS_ID", null, htmlAttributes: new { @class = "select", required = true })*@
                         @*<label id="lbl_spras">SPRAS</label>*@
-                        @Html.EditorFor(model => model.SPRAS_ID, new { htmlAttributes = new { @class = "form-control", @id = "input_idioma" } })
+                        @Html.EditorFor(model => model.SPRAS_ID, new { htmlAttributes = new { @class = "form-control", @id = "input_idioma", required=true } })
                         @Html.LabelFor(model => model.SPRAS_ID, htmlAttributes: new { @id = "lbl_spras" })
                         @*@Html.ValidationMessageFor(model => model.SPRAS_ID, "", new { @class = "text-danger" })*@
                     </div>
@@ -86,55 +86,82 @@
                 <div class="row">
                     <div class="input-field col s12">
                         @*@Html.DropDownList("PUESTO_ID", null, htmlAttributes: new { @class = "select", @id = "txt_puestoid" })*@
-                        @Html.EditorFor(model => model.PUESTO_ID, new { htmlAttributes = new { @class = "text", @id = "input_puesto" } })
+                        @Html.EditorFor(model => model.PUESTO_ID, new { htmlAttributes = new { @class = "text", @id = "input_puesto", required = true } })
                         @Html.LabelFor(model => model.PUESTO_ID, htmlAttributes: new { @id = "lbl_puesto" })
                         @Html.ValidationMessageFor(model => model.PUESTO_ID, "", new { @class = "text-danger" })
                     </div>
-                    @*<div class="input-field col s4">
-                        @Html.EditorFor(model => model.MANAGER, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.LabelFor(model => model.MANAGER, htmlAttributes: new { @class = "control-label col-md-2" })
-                        @Html.ValidationMessageFor(model => model.MANAGER, "", new { @class = "text-danger" })
-                    </div>
-
-                    <div class="input-field col s4">
-                        @Html.EditorFor(model => model.BACKUP_ID, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.LabelFor(model => model.BACKUP_ID, htmlAttributes: new { @class = "control-label col-md-2" })
-                        @Html.ValidationMessageFor(model => model.BACKUP_ID, "", new { @class = "text-danger" })
-                    </div>*@
+                    @*<div class="unico" style="display:none">
+            <div class="input-field col s12">
+                @Html.DropDownList("BUNIT", null, htmlAttributes: new { @class = "select", required = true })
+                @Html.EditorFor(model => model.BUNIT, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.LabelFor(model => model.BUNIT, htmlAttributes: new { @class = "lbl_bukrs" })
+            </div>
+        </div>*@
                     @if (ViewBag.PUESTO_ID1 == null || ViewBag.PUESTO_ID1 == "")
                     {
-                        <div class="input-field col s12">
-                            @Html.HiddenFor(model => model.SOCIEDADs)
-                            @{string jval2 = ViewBag.sociedad;
-                                @Html.Hidden("SELECT_SOCIEDADES", jval2)
-                            }
-                            <select multiple name="selectcocode" id="selectcocode" required="" class="comcode select_all">
-                                @try
-                                {
-                                    foreach (var item in ViewBag.SOCIEDADES)
+                        <div class="cocodemul">
+                            <div class="input-field col s12">
+                                @Html.HiddenFor(model => model.SOCIEDADs)
+                                @{string jval22 = ViewBag.sociedad;
+                                    @Html.Hidden("SELECT_SOCIEDADES1", jval22)
+                                }
+                                <select multiple name="selectcocode" id="selectcocode1" required class="comcode select_all">
+                                    @try
                                     {
-                                        <option id="@item.BUKRS" value="@item.BUKRS">@item.BUKRS</option>
+                                        foreach (var item in ViewBag.SOCIEDADES)
+                                        {
+                                            <option id="@item.BUKRS" value="@item.BUKRS">@item.BUKRS</option>
+                                        }
                                     }
-                                }
-                                catch (Exception)
-                                {
-                                    <option value="" id="no_opt">No hay opciones</option>
-                                }
-                            </select>
-                            <label id="label_cocode">Co. Code</label>
+                                    catch (Exception)
+                                    {
+                                        <option value="" id="no_opt">No hay opciones</option>
+                                    }
+                                </select>
+                                <label id="label_cocode">Co. Code</label>
+                            </div>
+                        </div>
+                        <div class="unico" style="display:none">
+                            <div class="input-field col s12">
+                                @*@Html.DropDownList("BUNIT", null, htmlAttributes: new { @class = "select", required = true })*@
+                                @Html.EditorFor(model => model.BUNIT, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.LabelFor(model => model.BUNIT, htmlAttributes: new { @class = "lbl_bukrs" })
+                                @Html.ValidationMessageFor(model => model.BUNIT, "", new { @class = "text-danger" })
+                            </div>
                         </div>
                     }
                     else
                     {
-                        <div class="input-field col s12">
-                            @*@Html.DropDownList("BUNIT", null, htmlAttributes: new { @class = "select", required = true })*@
-                            @Html.EditorFor(model => model.BUNIT, new { htmlAttributes = new { @class = "form-control", @id = "input_sociedad" } })
-                            @Html.LabelFor(model => model.BUNIT, htmlAttributes: new { @id = "lbl_bukrs" })
-                            @Html.ValidationMessageFor(model => model.BUNIT, "", new { @class = "text-danger" })
+                        <div class="cocodemul" style="display:none">
+                            <div class="input-field col s12">
+
+                                <select multiple name="selectcocode" id="selectcocode" class="comcode select_all">
+                                    @try
+                                    {
+                                        foreach (var item in ViewBag.SOCIEDADES)
+                                        {
+                                            <option id="@item.BUKRS" value="@item.BUKRS">@item.BUKRS</option>
+                                        }
+                                    }
+                                    catch (Exception)
+                                    {
+                                        <option value="" id="no_opt">No hay opciones</option>
+                                    }
+                                </select>
+                                <label id="label_cocode">Co. Code</label>
+                            </div>
+                        </div>
+                        <div class="unico">
+                            <div class="input-field col s12">
+                                @*@Html.DropDownList("BUNIT", null, htmlAttributes: new { @class = "select", required = true })*@
+                                @Html.EditorFor(model => model.BUNIT, new { htmlAttributes = new { @class = "form-control", required = true } })
+                                @Html.LabelFor(model => model.BUNIT, htmlAttributes: new { @class = "lbl_bukrs" })
+                                @Html.ValidationMessageFor(model => model.BUNIT, "", new { @class = "text-danger" })
+                            </div>
                         </div>
                     }
                 </div>
-            </div>
+                    </div>
         </div>
         <script>
             var elem = document.querySelectorAll('select');
@@ -144,10 +171,10 @@
         <div class="col l6 s12">
             <div class="card-panel">
                 @*<div class="row">
-                    <div class="col s12 l12 right-align">
-                        <a class="btn" id="btn_agregarbackup" href="@Url.Action("AddBackup", new { id = Model.ID})"></a>
-                    </div>
-                </div>*@
+                        <div class="col s12 l12 right-align">
+                            <a class="btn" id="btn_agregarbackup" href="@Url.Action("AddBackup", new { id = Model.ID})"></a>
+                        </div>
+                    </div>*@
                 <table>
                     <thead>
                         <tr>
@@ -188,119 +215,126 @@
             </div>
         </div>
         @*<div class="col l6 s12">
-            <div class="card-panel">
-                <div class="row">
-                    <h5>Grupos</h5>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Clave</th>
-                                <th>Solciedad</th>
-                                <th>País</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.GAUTORIZACIONs)
-                            {
+                <div class="card-panel">
+                    <div class="row">
+                        <h5>Grupos</h5>
+                        <table class="table">
+                            <thead>
                                 <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.CLAVE)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.BUKRS)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.LAND)
-                                    </td>
+                                    <th>Clave</th>
+                                    <th>Solciedad</th>
+                                    <th>País</th>
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.GAUTORIZACIONs)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CLAVE)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.BUKRS)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.LAND)
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col l6 s12">
-            <div class="card-panel">
-                <div class="row">
-                    <h5>Roles</h5>
-                    <div class="col s12 right-align">
-                        <div class="row">
-                            <table class="table">
-                                <thead><tr><th>Rol</th></tr></thead>
-                                <tbody>
-                                    @foreach (var item in Model.MIEMBROS)
-                                    {
-                                        <tr>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.ROL.ROLTs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50)
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
+            <div class="col l6 s12">
+                <div class="card-panel">
+                    <div class="row">
+                        <h5>Roles</h5>
+                        <div class="col s12 right-align">
+                            <div class="row">
+                                <table class="table">
+                                    <thead><tr><th>Rol</th></tr></thead>
+                                    <tbody>
+                                        @foreach (var item in Model.MIEMBROS)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.ROL.ROLTs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50)
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col s12 right-align">
+                            <a class="btn modal-trigger" href="#modal1">Agregar M</a>
+                            <a class="btn modal-trigger" href="@Url.Action("AgregarRol", new { id = Model.ID })">Agregar</a>
                         </div>
                     </div>
-                    <div class="col s12 right-align">
-                        <a class="btn modal-trigger" href="#modal1">Agregar M</a>
-                        <a class="btn modal-trigger" href="@Url.Action("AgregarRol", new { id = Model.ID })">Agregar</a>
-                    </div>
                 </div>
-            </div>
-        </div>*@
+            </div>*@
     </div>
 
     //OCG 11/10/18 Validacion de email
-
+    <script>
+        var elem = document.querySelectorAll('select');
+        var options = [];
+        var instance = M.FormSelect.init(elem, options);
+    </script>
     <script>
         var admin = "@ViewBag.admin";
         var flujos = "@ViewBag.flujo";
-        var sociedad = $("#SELECT_SOCIEDADES").val();
+        var puesto_ID1 = "@ViewBag.PUESTO_ID1";
+        var sociedad = $("#SELECT_SOCIEDADES1").val();
         if (sociedad != null) {
             var jsval = $.parseJSON(sociedad);
             for (var i = 0; i < jsval.length; i++) {
-                var ids = "#" + jsval[i] + "";
+                var ids = "#selectcocode1 #" + jsval[i] + "";
                 $(ids).prop('selected', true);
             }
         }
-        $("input.select-dropdown").trigger("click");
-        $("input.select-dropdown").trigger("click");
+        if (puesto_ID1=="") {
+                        $("input.select-dropdown").trigger("click");
+                        $("input.select-dropdown").trigger("click");
+                    }
 
-        if (admin == "no") {
+                    if (admin == "no") {
             $("#txt_puestoid").prop("disabled", true);
             $("#selectcocode").prop("disabled", true);
-            var elem = document.querySelectorAll('select');
-            var instance = M.FormSelect.init(elem, []);
-        }
+                        var elem = document.querySelectorAll('select');
+                        var instance = M.FormSelect.init(elem, []);
+                    }
 
-        if (flujos == "no") {
+                    if (flujos == "no") {
             $("#input_puesto").prop("disabled", true);
-        }
+                    }
 
         $("#input_puesto").attr("type", "text");
 
         $('#EMAIL').on("focusout", function () {
-            var email = $('#EMAIL').val();
+                        var email = $('#EMAIL').val();
             $('#EMAIL').removeClass("valid");
             $('#EMAIL').removeClass("invalid");
-            if (validateEmail(email) == true) {
+                        if (validateEmail(email) == true) {
                 $('#EMAIL').addClass("valid");
-            }
-            else {
+                        }
+                        else {
                 $('#EMAIL').addClass("invalid");
-            }
-        });
+                        }
+                    });
 
-        function validateEmail(email) {
-            var re = /^(([^<>()\[\]\\.,;:\s@@"]+(\.[^<>()\[\]\\.,;:\s@@"]+)*)|(".+"))@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                    function validateEmail(email) {
+                        var re = /^(([^<>()\[\]\\.,;:\s@@"]+(\.[^<>()\[\]\\.,;:\s@@"]+)*)|(".+"))@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             return re.test(String(email).toLowerCase());
         }
 
         $('body').on('keydown.autocomplete', '#input_idioma', function () {
 
             auto(this).autocomplete({
-                source: function (request, response) {
+            source: function (request, response) {
                     auto.ajax({
-                        type: "POST",
+                    type: "POST",
                         url: '../Idioma',
                         dataType: "json",
                         data: { "Prefix": request.term },
@@ -313,7 +347,7 @@
                 },
 
                 messages: {
-                    noResults: '',
+                noResults: '',
                     results: function (resultsCount) { }
                 },
 
@@ -328,12 +362,12 @@
             });
         });
 
-        $('body').on('keydown.autocomplete', '#input_sociedad', function () {
+        $('body').on('keydown.autocomplete', '#BUNIT', function () {
 
             auto(this).autocomplete({
-                source: function (request, response) {
+            source: function (request, response) {
                     auto.ajax({
-                        type: "POST",
+                    type: "POST",
                         url: '../Sociedad',
                         dataType: "json",
                         data: { "Prefix": request.term },
@@ -346,7 +380,7 @@
                 },
 
                 messages: {
-                    noResults: '',
+                noResults: '',
                     results: function (resultsCount) { }
                 },
 
@@ -364,9 +398,9 @@
         $('body').on('keydown.autocomplete', '#input_puesto', function () {
 
             auto(this).autocomplete({
-                source: function (request, response) {
+            source: function (request, response) {
                     auto.ajax({
-                        type: "POST",
+                    type: "POST",
                         url: '../Nivel',
                         dataType: "json",
                         data: { "Prefix": request.term },
@@ -379,7 +413,7 @@
                 },
 
                 messages: {
-                    noResults: '',
+                noResults: '',
                     results: function (resultsCount) { }
                 },
 
@@ -387,9 +421,48 @@
                     if (!(ui.item)) {
                         e.target.value = "";
                     }
+                    $("#PUESTO_ID").val(ui.item.value);
+                    var array = @Html.Raw(Json.Encode(@ViewBag.ROLESCC));
+                    var visible = true;
+                    for (var i = 0; i < array.length; i++){
+                        if (array[i] == parseInt(ui.item.value)) {
+                            $(".unico").css("display", "inline");
+                            $(".cocodemul").css("display", "none");
+                            $("#BUNIT").prop("required", true);
+                            $("#selectcocode").prop("required", false);
+                            $("#selectcocode1").prop("required", false);
+                            visible = false;
+                            break;
+                        }
+                    }
+                    if (visible) {
+                        $(".unico").css("display", "none");
+                        $("#BUNIT").prop("required", false);
+                        $("#selectcocode").prop("required", true);
+                        $(".cocodemul").css("display", "inline");
+                    }
                 },
 
                 select: function (event, ui) {
+                    $("#PUESTO_ID").val(ui.item.value);
+                    var array = @Html.Raw(Json.Encode(@ViewBag.ROLESCC));
+                    var visible = true;
+                    for (var i = 0; i < array.length; i++){
+                        if (array[i] == parseInt(ui.item.value)) {
+                            $(".unico").css("display", "inline");
+                            $(".cocodemul").css("display", "none");
+                            $("#BUNIT").prop("required", true);
+                            $("#selectcocode").prop("required", false);
+                            visible = false;
+                            break;
+                        }
+                    }
+                    if (visible) {
+                        $(".unico").css("display", "none");
+                        $("#BUNIT").prop("required", false);
+                        $("#selectcocode").prop("required", true);
+                        $(".cocodemul").css("display", "inline");
+                    }
                 }
             });
         });
@@ -404,16 +477,16 @@
     </script>
 }
 
-    <div>
-        @if (ViewBag.nivelUsuario == 1 || ViewBag.nivelUsuario == 8)
-        {
-            @Html.ActionLink("Back to List", "Index", null, new { id = "lbl_regresar" })
-        }
-        else
-        {
-            @Html.ActionLink("Back to List", "Index", "Home", null, new { id = "lbl_regresar" })
-        }
-    </div>
+<div>
+    @if (ViewBag.nivelUsuario == 1 || ViewBag.nivelUsuario == 8)
+    {
+        @Html.ActionLink("Back to List", "Index", null, new { id = "lbl_regresar" })
+    }
+    else
+    {
+        @Html.ActionLink("Back to List", "Index", "Home", null, new { id = "lbl_regresar" })
+    }
+</div>
 <script>
 </script>
 @if (ViewBag.Error != null)
