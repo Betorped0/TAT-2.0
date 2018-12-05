@@ -40,7 +40,8 @@ namespace TAT001.Models.Dao
                         {
                             text = x.TXT50,
                             expanded = false,
-                            items = ObtenerItemsSelectTree(x.TSOL_GROUP_ID, x.TSOL_GROUP_TIPO, spras_id,true)
+                            items = ObtenerItemsSelectTree(x.TSOL_GROUP_ID, x.TSOL_GROUP_TIPO, spras_id,true),
+                            value= x.TSOL_GROUP_ID+"|" + x.TSOL_GROUP_TIPO
                         });
                     });
 
@@ -112,6 +113,10 @@ namespace TAT001.Models.Dao
                     {
                         item.items = ObtenerItemsTSOLT( x.ID, x.TIPO, spras_id);
                     }
+                    else if (!item.items.Any() && soloNodoSup)
+                    {
+                        item.value = x.ID + "|" + x.TIPO;
+                    }
                     items.Add(item);
                 });
             if (!items.Any() && !soloNodoSup)
@@ -120,7 +125,7 @@ namespace TAT001.Models.Dao
             }
             return items;
         }
-        List<SelectTreeItem> ObtenerItemsTSOLT(string id_padre, string tipo_padre, string spras_id, bool? esReversa = false)
+       public List<SelectTreeItem> ObtenerItemsTSOLT(string id_padre, string tipo_padre, string spras_id, bool? esReversa = false)
         {
             List<SelectTreeItem> items = new List<SelectTreeItem>();
             if (esReversa.Value)

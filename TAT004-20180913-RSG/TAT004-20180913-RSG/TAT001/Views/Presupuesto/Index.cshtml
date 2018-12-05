@@ -114,7 +114,7 @@
                         <option value="">No hay opciones</option>
                     }
                 </select>
-                <label id="lbl_bukrs">Co. Code</label>
+                <label id="lbl_bukrs">Cos. Code</label>
             </div>
             @try
             {
@@ -158,7 +158,7 @@
                             }
                         }
                     </select>
-                    <label>Año</label>
+                    <label id="lbl_anio">Años</label>
                 </div>
             }
             catch (Exception)
@@ -182,7 +182,7 @@
                             }
                         }
                     </select>
-                    <label>Periodo</label>
+                    <label id="lbl_periodo">Periodo</label>
                 </div>
             }
             else
@@ -203,7 +203,7 @@
                         <option value="11">Noviembre</option>
                         <option value="12">Diciembre</option>
                     </select>
-                    <label>Periodo</label>
+                    <label id="lbl_periodo">Periodo</label>
                 </div>
             }
             <div class="input-field col s2">
@@ -462,8 +462,8 @@
                             <th>OHV  </th>*@
                         @if (ViewBag.chkcpt == null)
                         {
-                            <th>Allowance Registros Manuales</th>
-                            <th>Allowance Facturados</th>
+                            <th>Allowances Registros Icon & Manuales</th>
+                            <th>Allowances Facturados</th>
                             <th>En Proceso en ICON</th>
                             <th>Consumido</th>
 

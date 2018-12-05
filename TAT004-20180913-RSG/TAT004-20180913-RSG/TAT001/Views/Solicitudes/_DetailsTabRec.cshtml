@@ -43,23 +43,23 @@
                             <table>
                                 <thead>
                                     <tr>
-                                        <th id="lbl_rec_pos">Pos</th>
-                                        <th id="lbl_rec_periodo">Periodo</th>
-                                        <th id="lbl_rec_tipo">Tipo</th>
-                                        <th id="lbl_rec_numsol">No solicitud TAT</th>
-                                        <th id="lbl_rec_fecha">Fecha</th>
+                                        <th id="thead_rnumero">Pos</th>
+                                        <th id="thead_rperiodo">Periodo</th>
+                                        <th id="thead_rtiposol">Tipo</th>
+                                        <th id="thead_rnumsol">No solicitud TAT</th>
+                                        <th id="thead_rfecha">Fecha</th>
                                         @if (caso != "1")
                                         {
-                                            <th id="lbl_rec_porc">%</th>
+                                            <th id="thead_rporc">%</th>
                                         }
                                         @if (Model.D.LIGADA != null && Model.D.LIGADA.Value)
                                         {<th id="lbl_rec_obj">Objetivo</th>
                                         }
                                         else
                                         {
-                                            <th id="lbl_rec_monto">Monto</th>
+                                            <th id="thead_rmonto">Monto</th>
                                         }
-                                        <th id="lbl_rec_estatus">Estatus</th>
+                                        <th id="thead_estatus">Estatus</th>
 
                                         @if (ViewBag.recs.Count > 0)
                                         {

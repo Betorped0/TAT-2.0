@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Web;
 using TAT001.Common;
 using TAT001.Entities;
 using TAT001.Models;
+using TAT001.Models.Dao;
 
 namespace TAT001.Services
 {
     class Recurrente
     {
+        //------------------DAO------------------------------
+        readonly MaterialesgptDao materialesgptDao = new MaterialesgptDao();
+
         public int creaRecurrente(decimal id_d, string tsol, DateTime fechaActual, int posicion)
         {
             string dates = DateTime.Now.ToString("dd/MM/yyyy");
@@ -893,7 +896,7 @@ namespace TAT001.Services
                         //          }).ToList();
                         //}
 
-                        jd = FnCommon.ObtenerMaterialGroupsMateriales(db, vkorg, spart, kunnr, soc_id, aii, mii, aff, mff, "admin");
+                        jd = materialesgptDao.ListaMaterialGroupsMateriales( vkorg, spart, kunnr, soc_id, aii, mii, aff, mff, "admin");
                     }
                 }
 
@@ -1021,13 +1024,13 @@ namespace TAT001.Services
                     int nummonths = 0;
                     if (conf.PERIODOS != null)
                         nummonths = (int)conf.PERIODOS;
-                    if (tipo != "1")
-                        nummonths = 0;
+                    ////TEST 03.12.2018 if (tipo != "1")
+                    nummonths = 0;
                     int imonths = nummonths * -1;
                     //Obtener el rango de los periodos incluyendo el año
                     //DateTime ff = DateTime.Today;
-                    if (tipo != "1")
-                        fechaActual = fechaActual.AddDays(-7);
+                    ////TEST 03.12.2018 if (tipo != "1")//
+                    fechaActual = fechaActual.AddDays(-7);
 
                     DateTime ff = fechaActual;
                     DateTime fi = ff.AddMonths(imonths);
@@ -1142,7 +1145,7 @@ namespace TAT001.Services
                         ////    }
                         ////}
 
-                        jd = FnCommon.ObtenerMaterialGroupsMateriales(db, vkorg, spart, kunnr, soc_id, aii, mii, aff, mff, "admin");
+                        jd = materialesgptDao.ListaMaterialGroupsMateriales( vkorg, spart, kunnr, soc_id, aii, mii, aff, mff, "admin");
                     }
                 }
 

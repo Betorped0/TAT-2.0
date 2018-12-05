@@ -718,7 +718,7 @@ namespace TAT001.Controllers.Reportes
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_campo_3"))).FirstOrDefault().TEXTOS, "Subregion_STRING", true));
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_campo_4"))).FirstOrDefault().TEXTOS, "Estado_STRING", true));
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_campo_5"))).FirstOrDefault().TEXTOS, "Ciudad_STRING", true));
-            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_campo_6"))).FirstOrDefault().TEXTOS, "NumeroSolicitud_STRING", Request.Url.GetLeftPart(UriPartial.Authority) + "Solicitudes/Details/", true));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_campo_6"))).FirstOrDefault().TEXTOS, "NumeroSolicitud_STRING", Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/') + "/" + "Solicitudes/Details/", true));
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_campo_7"))).FirstOrDefault().TEXTOS, "FechaSolicitud_STRING", true));
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_campo_8"))).FirstOrDefault().TEXTOS, "HoraSolicitud_STRING", true));
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_campo_9"))).FirstOrDefault().TEXTOS, "SemanaPeriodo_STRING", true));
@@ -1182,7 +1182,7 @@ namespace TAT001.Controllers.Reportes
                     };
                     try
                     {
-                        worksheet.Cell(i - 2, "B").Hyperlink = new XLHyperlink(new Uri(Request.Url.GetLeftPart(UriPartial.Authority) + "Solicitudes/Details/" + lst[i - 2].NUM_DOC));
+                        worksheet.Cell(i - 2, "B").Hyperlink = new XLHyperlink(new Uri(Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/') + "/" + "Solicitudes/Details/" + lst[i - 2].NUM_DOC));
                     }
                     catch (Exception e) { }
                     worksheet.Cell("C" + i).Value = new[]
@@ -2582,7 +2582,7 @@ namespace TAT001.Controllers.Reportes
             List<ExcelExportColumn> columnas = new List<ExcelExportColumn>();
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_code"))).FirstOrDefault().TEXTOS, "CO_CODE"));
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_pais"))).FirstOrDefault().TEXTOS, "PAIS"));
-            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_num_solicitud"))).FirstOrDefault().TEXTOS, "NUMERO_SOLICITUD", Request.Url.GetLeftPart(UriPartial.Authority) + "Solicitudes/Details/", true));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_num_solicitud"))).FirstOrDefault().TEXTOS, "NUMERO_SOLICITUD", Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/') + "/" + "Solicitudes/Details/", true));
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_fecha_solicitud"))).FirstOrDefault().TEXTOS, "FECHA_SOLICITUD_STRING"));
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_periodo_contable"))).FirstOrDefault().TEXTOS, "PERIODO_CONTABLE"));
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_anio_contable"))).FirstOrDefault().TEXTOS, "ANIO_CONTABLE"));
@@ -2777,7 +2777,7 @@ namespace TAT001.Controllers.Reportes
             List<ExcelExportColumn> columnas = new List<ExcelExportColumn>();
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_code"))).FirstOrDefault().TEXTOS, "CO_CODE"));
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_pais"))).FirstOrDefault().TEXTOS, "PAIS"));
-            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_num_solicitud"))).FirstOrDefault().TEXTOS, "NUMERO_SOLICITUD", Request.Url.GetLeftPart(UriPartial.Authority) + "Solicitudes/Details/", true));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_num_solicitud"))).FirstOrDefault().TEXTOS, "NUMERO_SOLICITUD", Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/') + "/" + "Solicitudes/Details/", true));
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_num_cliente"))).FirstOrDefault().TEXTOS, "NUMERO_CLIENTE"));
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_cliente"))).FirstOrDefault().TEXTOS, "CLIENTE"));
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_tipo_solicitud"))).FirstOrDefault().TEXTOS, "TIPO_SOLICITUD"));

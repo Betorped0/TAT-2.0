@@ -509,7 +509,9 @@ function Borrar() {
     var rowNum = $('#table>tbody').find('.input_bor').length;
     var check = false;
     $('#table>tbody').find('.input_bor').each(function (indx, checkInput) {
-        check = checkInput.checked;
+        if (checkInput.checked) {
+            check = checkInput.checked;
+        }
     });
     if (rowNum === 0 || !check) {
         return;
@@ -821,7 +823,9 @@ function check() {
 function checkoff() {
     var check = false;
     $('#table>tbody').find('.input_bor').each(function (indx, checkInput) {
-        check = checkInput.checked;
+        if (checkInput.checked) {
+            check = checkInput.checked;
+        }
     });
     if (!check) {
         $("#borrar").prop('checked', false);

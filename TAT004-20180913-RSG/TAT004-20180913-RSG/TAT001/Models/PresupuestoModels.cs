@@ -234,9 +234,9 @@ namespace TAT001.Models
                       RSRDV        = "RSRDV - Rollbacks",
                       SPA          = "SPA - Cleareance",
                       FREEG        = "FREEG - Free Goods",
-                      ALLB         = "Allowance Registros Manuales",
-                      ALLF         = "Allowance Facturados",
-                      PROCE        = "En Proceso TAT",
+                      ALLB         = "Allowances Registros Icon & Manuales",
+                      ALLF         = "Allowances Facturados",
+                      PROCE        = "En Proceso ICON",
                       CONSU        = "Consumido",
                       TOTAL        = "PPTO Disponible"
                       },

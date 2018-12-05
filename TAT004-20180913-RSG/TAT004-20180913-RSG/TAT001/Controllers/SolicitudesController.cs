@@ -28,6 +28,8 @@ namespace TAT001.Controllers
         //------------------DAO------------------------------
         readonly TallsDao tallsDao = new TallsDao();
         readonly TiposSolicitudesDao tiposSolicitudesDao = new TiposSolicitudesDao();
+        readonly MaterialesgptDao materialesgptDao = new MaterialesgptDao();
+        readonly MaterialesDao materialesDao = new MaterialesDao();
         public ActionResult Index()
         {
             return RedirectToAction("Index", "Home");
@@ -5966,7 +5968,7 @@ namespace TAT001.Controllers
                         MATERIAL mat = material(doc.MATNR);
                         if (mat != null)
                         {
-                            List<MATERIAL> materiales = FnCommon.ObtenerMateriales(db, doc.MATNR, vkorg, vtweg, User.Identity.Name);
+                            List<MATERIAL> materiales = materialesDao.ListaMateriales( doc.MATNR, vkorg, vtweg, User.Identity.Name);
                             mat = materiales.Where(x => x.ID == mat.ID).FirstOrDefault();
                         }
                         if (mat != null & ld.Where(x => x.MATNR.Equals(doc.MATNR)).Count() == 0)//Validar si el material existe
@@ -6608,7 +6610,7 @@ namespace TAT001.Controllers
                     ///
                     if (cie != null)
                     {
-                        jd = FnCommon.ObtenerMaterialGroupsMateriales(db, vkorg, spart, kunnr, soc_id, aii, mii, aff, mff, User.Identity.Name);
+                        jd = materialesgptDao.ListaMaterialGroupsMateriales( vkorg, spart, kunnr, soc_id, aii, mii, aff, mff, User.Identity.Name);
                     }
 
                 }
@@ -7676,15 +7678,19 @@ namespace TAT001.Controllers
             {
                 decimal num_doc = Convert.ToDecimal(num);
                 DOCUMENTO D = db.DOCUMENTOes.First(x => x.NUM_DOC == num_doc);
-                ObtenerAnalisisSolicitud(D, Convert.ToDecimal(monto));
-                
-                decimal montoAplicado = format.toNum(ViewBag.montoApli,",",".") + format.toNum(ViewBag.montoSol, ",", ".");
-                decimal remanente = format.toNum(ViewBag.remanente, ",", ".") - format.toNum(ViewBag.montoSol, ",", ".");
+                ObtenerAnalisisSolicitud(D, Convert.ToDecimal(monto)); 
 
                 sm.S_MONTOB = ViewBag.montoSol;
                 sm.S_MONTOP = ViewBag.montoProv;
-                sm.S_MONTOA = format.toShow(montoAplicado, ".");
-                sm.S_REMA = format.toShow(remanente, ".");
+                if (D.TSOL.REVERSO) {
+                    sm.S_MONTOA = format.toNum(ViewBag.montoApli, ",", ".") + format.toNum(ViewBag.montoSol, ",", ".");
+                    sm.S_REMA = format.toNum(ViewBag.remanente, ",", ".") - format.toNum(ViewBag.montoSol, ",", ".");
+                }
+                else
+                {
+                    sm.S_MONTOA = ViewBag.montoApli;
+                    sm.S_REMA = ViewBag.remanente;
+                }
                 sm.S_IMPA = ViewBag.impuesto;
                 sm.S_IMPB = "-";
                 sm.S_IMPC = "-";

@@ -70,7 +70,7 @@
     auto(document).ready(function () {
         auto("#BUKRS_ID").autocomplete({
             source: function (request, response) {
-                fnCommon.autoAjax(root + "Listas/sociedades", response, { Prefix: request.term }, function (item) { return { label: item.TXT50, value: item.BUKRS }; });
+                fnCommon.autoAjax(root + "Listas/Sociedades", response, { Prefix: request.term }, function (item) { return { label: item.BUKRS, value: item.BUKRS }; });
             },
             messages: {
                 noResults: '',
@@ -86,8 +86,6 @@
                 }
             }
         });
-    })
-    auto(document).ready(function () {
         auto("#LAND_ID").autocomplete({
             source: function (request, response) {
                 fnCommon.autoAjax(root + "Listas/paises_", response, { Prefix: request.term }, function (item) { return { label: item.TXT50, value: item.LAND }; });
