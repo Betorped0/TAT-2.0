@@ -66,6 +66,10 @@ namespace TAT001.Models
                 string msj = "";
                 //string[] cc;
                 string cta = "";
+                if (doc.DOCUMENTO_REF == null && doc.TSOL_ID == "NC")
+                {
+                    tab.RELACION = null;
+                }
                 try
                 {
                     clien = db.CLIENTEs.Where(x => x.KUNNR == doc.PAYER_ID).Single();
@@ -182,14 +186,6 @@ namespace TAT001.Models
                 {
                     padre = Convert.ToInt32(tab.CONSECUTIVO);
                 }
-                //if (padre == tab.RELACION && relacion != 0)
-                //{
-                //    return "";
-                //}
-                //else if(padre != 0 && tab.TIPO_SOL != "NCIM")
-                //{
-                //    pos--;
-                //}
                 if (tab.TIPO_SOL == "NCM")
                 {
                     unico = true;
@@ -271,6 +267,19 @@ namespace TAT001.Models
                 }
                 sw.Close();
             }
+        }
+        private void Importe(DOCUMENTO doc)
+        {
+            try
+            {
+                decimal provicion = Convert.ToDecimal(db.DOCUMENTOes.Where(x => x.NUM_DOC == doc.DOCUMENTO_REF).Select(x => x.MONTO_DOC_MD).SingleOrDefault());
+                decimal docs = Convert.ToDecimal(db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == doc.DOCUMENTO_REF && x.NUM_DOC <= doc.NUM_DOC).Sum(x=>x.MONTO_DOC_MD));
+            }
+            catch (Exception e)
+            {
+
+            }
+            
         }
         private string Referencia(string campo, DOCUMENTO doc, List<DOCUMENTOF> docf, CLIENTE clien, int pos)
         {
@@ -594,11 +603,11 @@ namespace TAT001.Models
                                 {
                                     if (unico)
                                     {
-                                        conta.BALANCE = Conversion(Convert.ToDecimal(docf[pos].IMPORTE_FAC + (docf[pos].IMPORTE_FAC * taxh.PORC)), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                        conta.BALANCE = Conversion(Convert.ToDecimal(docf[pos].IMPORTE_FAC ), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
                                     }
                                     else
                                     {
-                                        conta.BALANCE = Conversion(Convert.ToDecimal(doc.MONTO_DOC_MD + (doc.MONTO_DOC_MD * impu.KBETR)), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
+                                        conta.BALANCE = Conversion(Convert.ToDecimal(doc.MONTO_DOC_MD ), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
                                     }
                                 }
                             }
@@ -1057,11 +1066,11 @@ namespace TAT001.Models
                                         }
                                         else
                                         {
-                                            //conta.TAX_CODE = conp[i].TAX_CODE;
-                                            if (enca.TIPO_DOC != "KG")
-                                            {
-                                                conta.TAX_CODE = conp[i].TAX_CODE;
-                                            }
+                                            conta.TAX_CODE = conp[i].TAX_CODE;
+                                            //if (enca.TIPO_DOC != "KG")
+                                            //{
+                                            //    conta.TAX_CODE = conp[i].TAX_CODE;
+                                            //}
                                         }
                                     }
                                 }
