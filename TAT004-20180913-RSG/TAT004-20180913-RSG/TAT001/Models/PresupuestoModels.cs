@@ -236,7 +236,7 @@ namespace TAT001.Models
                       FREEG        = "FREEG - Free Goods",
                       ALLB         = "Allowance Registros Manuales",
                       ALLF         = "Allowance Facturados",
-                      PROCE        = "En Proceso TAT",
+                      PROCE        = "En Proceso ICON",
                       CONSU        = "Consumido",
                       TOTAL        = "PPTO Disponible"
                       },
