@@ -5,7 +5,7 @@ using System.Linq;
 using TAT001.Common;
 using TAT001.Entities;
 
-namespace TAT001.Models
+namespace TAT001.Models.Dao
 {
     public class MaterialesDao
     {
