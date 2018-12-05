@@ -10,7 +10,7 @@ using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using TAT001.Entities;
-
+using TAT001.Services;
 
 namespace TAT001.Controllers
 {
@@ -41,96 +41,51 @@ namespace TAT001.Controllers
                         dz = db.DOCUMENTOAs.Where(x => x.NUM_DOC == de && x.CLASE != "OTR").FirstOrDefault();
                         if (dz == null || dz != null)
                         {
-                            if (dOCUMENTOes[i].TSOL.NEGO == true)//para el ultimo filtro
+                            if (dOCUMENTOes[i].TSOL.NEGO)//para el ultimo filtro
                             {
-                                string estatus = "";
-                                if (dOCUMENTOes[i].ESTATUS != null) { estatus += dOCUMENTOes[i].ESTATUS; } else { estatus += " "; }
-                                if (dOCUMENTOes[i].ESTATUS_C != null) { estatus += dOCUMENTOes[i].ESTATUS_C; } else { estatus += " "; }
-                                if (dOCUMENTOes[i].ESTATUS_SAP != null) { estatus += dOCUMENTOes[i].ESTATUS_SAP; } else { estatus += " "; }
-                                if (dOCUMENTOes[i].ESTATUS_WF != null) { estatus += dOCUMENTOes[i].ESTATUS_WF; } else { estatus += " "; }
-                                if (dOCUMENTOes[i].FLUJOes.Count > 0)
+                                Estatus es = new Estatus();
+                                string estatus = es.getEstatus(dOCUMENTOes[i]);
+                                List<int> ee = new List<int>();
+                                ee.Add(20);
+                                ee.Add(90);
+                                ee.Add(100);
+                                ee.Add(110);
+                                ee.Add(120);
+                                ee.Add(130);
+                                ee.Add(160);
+
+                                List<ESTATUSR> ess = (from e in db.ESTATUSRs.ToList()
+                                                      join n in ee
+                                                      on e.ESTATUS_ID equals n
+                                                      select e).ToList();
+
+                                foreach (ESTATUSR e in ess)
                                 {
-                                    estatus += dOCUMENTOes[i].FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().WORKFP.ACCION.TIPO;
-                                }
-                                else
-                                {
-                                    estatus += " ";
-                                }
-                                if (dOCUMENTOes[i].TSOL.PADRE) { estatus += "P"; } else { estatus += " "; }
-                                if (dOCUMENTOes[i].FLUJOes.Where(x => x.ESTATUS == "R").ToList().Count > 0)
-                                {
-                                    estatus += dOCUMENTOes[i].FLUJOes.Where(x => x.ESTATUS == "R").OrderByDescending(a => a.POS).FirstOrDefault().USUARIO.PUESTO_ID;
-                                }
-                                else
-                                {
-                                    estatus += " ";
+                                    if (System.Text.RegularExpressions.Regex.IsMatch(estatus, e.REGEX))
+                                    {
+                                        dx.Add(dOCUMENTOes[i]);
+                                        break;
+                                    }
                                 }
 
-                                if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[P][R].."))
-                                    dx.Add(dOCUMENTOes[i]);
-                                else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[R]..[8]"))
-                                    dx.Add(dOCUMENTOes[i]);
-                                else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[P]..[A]..."))
-                                    dx.Add(dOCUMENTOes[i]);
-                                else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[P][A]..."))
-                                    dx.Add(dOCUMENTOes[i]);
-                                else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[E][A]..."))
-                                    dx.Add(dOCUMENTOes[i]);
-                                else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A].[P]."))
-                                    dx.Add(dOCUMENTOes[i]);
-                                else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A]..."))
-                                    dx.Add(dOCUMENTOes[i]);
-                                else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[T]..."))
-                                    dx.Add(dOCUMENTOes[i]);
-                                //if (dOCUMENTOes[i].ESTATUS_WF == "P")//LEJ 19.07.2018---------------------------I
-                                //{
-                                //    if (dOCUMENTOes[i].FLUJOes.Count > 0)
-                                //    {
-                                //        if (dOCUMENTOes[i].FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIO != null)
-                                //        {
-                                //            //(Pendiente Validación TS)
-                                //            if (dOCUMENTOes[i].FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().USUARIO.PUESTO_ID == 8)
-                                //            {
-                                //                dx.Add(dOCUMENTOes[i]);
-                                //            }
-                                //        }
-                                //    }
-                                //}
-                                //else if (dOCUMENTOes[i].ESTATUS_WF == "R")//(Pendiente Corrección)
-                                //{
-                                //    if (dOCUMENTOes[i].FLUJOes.Count > 0)
-                                //    {
-                                //        dx.Add(dOCUMENTOes[i]);
-                                //    }
-                                //}
-                                //else if (dOCUMENTOes[i].ESTATUS_WF == "T")//(Pendiente Taxeo)
-                                //{
-                                //    if (dOCUMENTOes[i].TSOL_ID == "NCIA")
-                                //    {
-                                //        if (dOCUMENTOes[i].PAIS_ID == "CO")//(sólo Colombia)
-                                //        {
-                                //            dx.Add(dOCUMENTOes[i]);
-                                //        }
-                                //    }
-                                //}
-                                //else if (dOCUMENTOes[i].ESTATUS_WF == "A")//(Por Contabilizar)
-                                //{
-                                //    if (dOCUMENTOes[i].ESTATUS == "P")
-                                //    {
-                                //        dx.Add(dOCUMENTOes[i]);
-                                //    }
-                                //}
-                                //else if (dOCUMENTOes[i].ESTATUS_SAP == "E")//Error en SAP
-                                //{
-                                //    // dx.Add(dOCUMENTOes[i]);
-                                //}
-                                //else if (dOCUMENTOes[i].ESTATUS_SAP == "X")//Succes en SAP
-                                //{
-                                //    dx.Add(dOCUMENTOes[i]);
-                                //}
+                                ////if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[P][R].."))
+                                ////    dx.Add(dOCUMENTOes[i]);
+                                ////else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[R]..[8]"))
+                                ////    dx.Add(dOCUMENTOes[i]);
+                                ////else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[P]..[A]..."))
+                                ////    dx.Add(dOCUMENTOes[i]);
+                                ////else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[P][A]..."))
+                                ////    dx.Add(dOCUMENTOes[i]);
+                                ////else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[E][A]..."))
+                                ////    dx.Add(dOCUMENTOes[i]);
+                                ////else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A].[P]."))
+                                ////    dx.Add(dOCUMENTOes[i]);
+                                ////else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A]..."))
+                                ////    dx.Add(dOCUMENTOes[i]);
+                                ////else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[T]..."))
+                                ////    dx.Add(dOCUMENTOes[i]);
+                                
                             }
-                            //LEJ 19.07.2018----------------------------------------------------------------T
-                            // dx.Add(dOCUMENTOes[i]);
                         }
                     }
                 }
@@ -177,6 +132,41 @@ namespace TAT001.Controllers
                     ViewBag.vtw = vtweg;
                     ViewBag.clCorreo2 = correo.Replace('@', '/').Replace('.', '*').Replace('-', '#');
                     ViewBag.spras = cl.SPRAS;
+                    List<TEXTO> tt = db.TEXTOes.Where(x => x.PAGINA_ID == 905 && x.SPRAS_ID == cl.SPRAS).ToList();
+                    try { ViewBag.lbl_control = tt.FirstOrDefault(x => x.CAMPO_ID == "lbl_control").TEXTOS; } catch { }
+                    try
+                    {
+                        ViewBag.lbl_dear = tt.FirstOrDefault(x => x.CAMPO_ID == "lbl_dear").TEXTOS;
+                    }
+                    catch { ViewBag.lbl_dear = ""; }
+                    try
+                    {
+                        ViewBag.lbl_next = tt.FirstOrDefault(x => x.CAMPO_ID == "lbl_next").TEXTOS;
+                    }
+                    catch { ViewBag.lbl_next = ""; }
+                    try
+                    {
+                        ViewBag.lbl_pres = tt.FirstOrDefault(x => x.CAMPO_ID == "lbl_pres").TEXTOS;
+                    }
+                    catch { ViewBag.lbl_pres = ""; }
+                    try
+                    {
+                        ViewBag.lbl_numsol = tt.FirstOrDefault(x => x.CAMPO_ID == "lbl_numsol").TEXTOS;
+                    }
+                    catch { ViewBag.lbl_numsol = ""; }
+                    try
+                    {
+                        ViewBag.lbl_vigencia = tt.FirstOrDefault(x => x.CAMPO_ID == "lbl_vigencia").TEXTOS;
+                    }
+                    catch { ViewBag.lbl_vigencia = ""; }
+                    try
+                    {
+                        ViewBag.lbl_desc = tt.FirstOrDefault(x => x.CAMPO_ID == "lbl_desc").TEXTOS;
+                    }
+                    catch { ViewBag.lbl_desc = ""; }
+                    try
+                    { ViewBag.lbl_soporte = tt.FirstOrDefault(x => x.CAMPO_ID == "lbl_soporte").TEXTOS; }
+                    catch { ViewBag.lbl_soporte = ""; }
                 }
             }
             catch (Exception e)

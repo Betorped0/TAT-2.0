@@ -76,7 +76,7 @@ namespace TAT001.Controllers.Catalogos
             if (!String.IsNullOrEmpty(buscar))
             {
                 clientes = clientes.Where(x =>
-                String.Concat(x.KUNNR, x.NAME1, (x.SUBREGION == null ? "" : x.SUBREGION), x.LAND, x.PARVW, x.PAYER, (x.CANAL == null ? "" : x.CANAL))
+                String.Concat(x.KUNNR, x.NAME1, (x.SUBREGION == null ? "" : x.SUBREGION), x.LAND, x.PAI.LANDX, x.PARVW, x.PAYER, (x.CANAL == null ? "" : x.CANAL))
                 .ToLower().Contains(buscar.ToLower()))
                 .ToList();
             }

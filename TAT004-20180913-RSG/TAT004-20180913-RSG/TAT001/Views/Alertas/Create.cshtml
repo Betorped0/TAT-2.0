@@ -35,7 +35,7 @@
                     <div class="form-group">
                         <label id="lbl_alerta"></label>
                         <div class="col-md-10">
-                            @Html.TextBoxFor(model => model.alerta.ID,new { @required=true, @maxlength =20})
+                            @Html.TextBoxFor(model => model.alerta.ID,new { @required=true, @maxlength =10})
                         </div>
                     </div>
                 </div>
@@ -61,7 +61,7 @@
                     <div class="form-group">
                         <label id="lbl_bu"></label>
                         <div class="col-md-10">
-                            <select name="sociedades" id="sociedades" multiple>
+                            <select name="sociedadesSelected" id="sociedades" multiple>
                                 @foreach (var item in Model.sociedades)
                                 {
                                     <option value="@item.Value">@item.Text</option>
@@ -184,10 +184,10 @@
     <a id="btn_return" href="@Url.Action("Index")"></a>
 </div>
 <script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
-@if (Model.alerta.SOCIEDAD_ID != null && Model.alerta.TSOL_ID != null)
+@if (Model.sociedadesSelected.Count >0 && Model.alerta.TSOL_ID != null)
 {
     <script>
-    // Asignar valor a combos de list
+    //----- Asignar valor a combos de list
     var idAndOr = "@Model.alertaCondiciones[1].ANDOR";
     if (idAndOr == "&amp;") { idAndOr = "&";}
     $('#alertaCondiciones_0__CONDICION_ID').val('@Model.alertaCondiciones[0].CONDICION_ID');
@@ -199,7 +199,10 @@
         $('#alertaCondiciones_0__ANDOR').val('(');
         $('#alertaCondiciones_1__CONDICION_ID').prop('disabled', false);
         $('#alertaCondiciones_1__VALOR_COMP').prop('disabled', false);
-    }
+        }
+        var sociedadesSelected = @Html.Raw(Json.Encode(Model.sociedadesSelected));
+        $('#sociedades').val(sociedadesSelected);
+
     </script>
 }
 <script>
@@ -249,10 +252,16 @@
             return $(this).find('input').prop('checked') != select_all;
         }).click();
     });
-  
-        //-- Valida si ocurrio un error al intentar crear el periodo y otro.
-        var mnjError = '@ViewBag.mnjError';
-        if (mnjError) {
-            M.toast({ html: mnjError });
+
+    //Mostrar process
+    $('#alertaForm').submit(function () {
+        if ($('#alertaForm').valid()) {
+            document.getElementById("loader").style.display = "flex";
         }
+    });
+    //-- Valida si ocurrio un error al intentar crear el periodo y otro.
+    var mnjError = '@ViewBag.mnjError';
+    if (mnjError) {
+        M.toast({ html: mnjError });
+    }
 </script>

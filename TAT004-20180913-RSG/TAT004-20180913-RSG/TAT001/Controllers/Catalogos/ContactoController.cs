@@ -35,14 +35,15 @@ namespace TAT001.Controllers.Catalogos
                 {
                     var con = db.CONTACTOCs
                             .Where(x => x.VKORG == vko && x.VTWEG == vtw && x.KUNNR == kun && x.SPART == spa && x.ACTIVO == true).ToList();
-
+                    CLIENTE cli = db.CLIENTEs.Find(vko, vtw, spa, kun);
                     Contactoc conCli = new Contactoc();
                     conCli.vkorg = vko;
                     conCli.vtweg = vtw;
                     conCli.kunnr = kun;
                     conCli.spart = spa;
                     conCli.tabContacto = con;
-
+                    ViewBag.Cliente = cli.NAME1;
+                    ViewBag.NoCliente = cli.KUNNR;
                     return View(conCli);
                 }
                 else
@@ -129,6 +130,9 @@ namespace TAT001.Controllers.Catalogos
                 cl.correo = cli.EMAIL;
                 cl.defecto = Convert.ToBoolean(cli.DEFECTO);
                 cl.carta = Convert.ToBoolean(cli.CARTA);
+                CLIENTE cliente = db.CLIENTEs.Find(vko, vtw, spa, kun);
+                ViewBag.Cliente = cliente.NAME1;
+                ViewBag.NoCliente = cliente.KUNNR;
                 return View(cl);
             }
         }
@@ -160,7 +164,9 @@ namespace TAT001.Controllers.Catalogos
                 conC.vtweg = vtw;
                 conC.kunnr = kun;
                 conC.spart = spa;
-
+                CLIENTE cliente = db.CLIENTEs.Find(vko, vtw, spa, kun);
+                ViewBag.Cliente = cliente.NAME1;
+                ViewBag.NoCliente = cliente.KUNNR;
                 return View(conC);
             }
         }
@@ -234,6 +240,9 @@ namespace TAT001.Controllers.Catalogos
                 co.correo = con.EMAIL;
                 co.defecto = Convert.ToBoolean(con.DEFECTO);
                 co.carta = Convert.ToBoolean(con.CARTA);
+                CLIENTE cli = db.CLIENTEs.Find(vko, vtw, spa, kun);
+                ViewBag.Cliente = cli.NAME1;
+                ViewBag.NoCliente = cli.KUNNR;
                 return View(co);
             }
         }

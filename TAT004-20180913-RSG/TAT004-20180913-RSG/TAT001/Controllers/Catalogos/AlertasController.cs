@@ -75,69 +75,97 @@ namespace TAT001.Controllers.Catalogos
 
         // POST: Alertas/Create
         [HttpPost]
-        public ActionResult Create(AlertaViewModel modelView,List<string> sociedades)
+        public ActionResult Create(AlertaViewModel modelView)
         {
             int pagina_id = 541;//ID EN BASE DE DATOS
             try
             {
-                foreach (string sociedad_id in sociedades)
+                WARNINGP warningpAux = modelView.alerta;
+                bool reverso = (warningpAux.TSOL_ID == "Reverso");
+                string id_padre = "";
+                string tipo_padre = "";
+                string spras_id = FnCommon.ObtenerSprasId(db,User.Identity.Name);
+                if (!reverso && warningpAux.TSOL_ID.Contains("|")) {
+                     id_padre = warningpAux.TSOL_ID.Split('|')[0];
+                     tipo_padre = warningpAux.TSOL_ID.Split('|')[1];
+                }
+                List<SelectTreeItem> tiposSolicitudesT =tiposSolicitudesDao.ObtenerItemsTSOLT(id_padre, tipo_padre, spras_id, reverso);
+                List<WARNINGP> warningpListAux = new List<WARNINGP>();
+                bool valido = true;
+                foreach (string sociedad_id in modelView.sociedadesSelected)
                 {
-                    WARNINGP warningpAux = modelView.alerta;
-                    WARNINGP warningP = new WARNINGP {
-                        ID = warningpAux.ID.Replace(" ", "_") + "_" + sociedad_id,
-                        DESCR= warningpAux.DESCR,
-                        SOCIEDAD_ID= sociedad_id,
-                        TIPO = warningpAux.TIPO,
-                        CAMPOVAL_ID= warningpAux.CAMPOVAL_ID,
-                        PAGINA_ID= warningpAux.PAGINA_ID,
-                        CAMPO_ID= warningpAux.CAMPO_ID,
-                        ACCION= warningpAux.ACCION
-                    };
-                    List<WARNINGPT> warningts = modelView.alertaMensajes;
-                    List<WARNING_COND> warningconds = modelView.alertaCondiciones;
-
-                    warningP.ID = warningP.ID.Replace(" ", "_");
-                    warningP.ACCION = "focusout";
-                    warningP.CAMPOVAL_ID = warningP.CAMPO_ID;
-
-                    if (!ValidarAlertaExistente(warningP) || !ValidarCondExistente(warningP, warningconds))
+                    foreach (SelectTreeItem tsolt in tiposSolicitudesT)
                     {
-                        throw (new Exception());
+                        WARNINGP warningP = new WARNINGP
+                        {
+                            ID = warningpAux.ID.Replace(" ", "_") + "_" + sociedad_id + "_" + tsolt.value,
+                            DESCR = warningpAux.DESCR,
+                            SOCIEDAD_ID = sociedad_id,
+                            TIPO = warningpAux.TIPO,
+                            TSOL_ID= tsolt.value,
+                            CAMPOVAL_ID = warningpAux.CAMPO_ID,
+                            PAGINA_ID = warningpAux.PAGINA_ID,
+                            CAMPO_ID = warningpAux.CAMPO_ID,
+                            ACCION = "focusout",
+                            TAB_ID = warningpAux.TAB_ID
+                        };
+                        warningpListAux.Add(warningP);
+                        if (!ValidarAlertaExistente(warningP) || !ValidarCondExistente(warningP, modelView.alertaCondiciones))
+                        {
+                            valido = false;
+                        }
                     }
+                }
+                if (!valido)
+                {
+                    throw (new Exception());
+                }
+                List<WARNING_COND> warningconds = modelView.alertaCondiciones;
+                List<WARNINGPT> warningts = modelView.alertaMensajes;
+                foreach (WARNINGP warningP in warningpListAux)
+                {
+                        //Guardar Alerta
+                        db.WARNINGPs.Add(warningP);
 
-                    //Guardar Alerta
-                    db.WARNINGPs.Add(warningP);
-
-                    //Guardar Mensajes
-                    warningts.ForEach(x =>
-                    {
-                        x.TAB_ID = warningP.TAB_ID;
-                        x.WARNING_ID = warningP.ID;
-                        db.WARNINGPTs.Add(x);
-                    });
-
-                    //Guardar Condiciones
-                    warningconds.ForEach(x =>
-                    {
-                        if (x.CONDICION_ID != null && x.VALOR_COMP != null)
+                        //Guardar Mensajes
+                        warningts.ForEach(x =>
                         {
                             x.TAB_ID = warningP.TAB_ID;
                             x.WARNING_ID = warningP.ID;
-                            x.ACTIVO = true;
-                            if (x.VALOR_COMP == "v")
+                            db.WARNINGPTs.Add(new WARNINGPT {
+                                SPRAS_ID =x.SPRAS_ID,
+                                TAB_ID= warningP.TAB_ID,
+                                WARNING_ID = warningP.ID,
+                                TXT100=x.TXT100
+                            });
+                        });
+
+                        //Guardar Condiciones
+                        warningconds.ForEach(x =>
+                        {
+                            if (x.CONDICION_ID != null && x.VALOR_COMP != null)
                             {
-                                x.VALOR_COMP = "";
+                                db.WARNING_COND.Add(new WARNING_COND {
+                                    TAB_ID = warningP.TAB_ID,
+                                    WARNING_ID = warningP.ID,
+                                    POS=x.POS,
+                                    ANDOR=x.ANDOR,
+                                    ORAND=x.ORAND,
+                                    CONDICION_ID=x.CONDICION_ID,
+                                    ACTIVO = true,
+                                    VALOR_COMP=(x.VALOR_COMP == "v"?"": x.VALOR_COMP)
+                                });
                             }
-                            db.WARNING_COND.Add(x);
-                        }
-                    });
-                    db.SaveChanges();
+                        });
+                        db.SaveChanges();
+                    
                 }
 
                 return RedirectToAction("Index");
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Log.ErrorLogApp( e,"Alertas","Create");
                 FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
                 CargarSelectList(ref modelView, new string[] {
                     CMB_SOCIEDADES,

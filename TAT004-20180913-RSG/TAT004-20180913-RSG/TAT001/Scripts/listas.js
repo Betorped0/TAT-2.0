@@ -161,7 +161,7 @@ function cierre() {
 function asignarSolicitud(num, num2,edit) {
     num = toNum(num);
     num2 = toNum(num2);
-    var soc = $("#sociedad_id").val();
+    var soc  = ($("#sociedad_id").val() ? $("#sociedad_id").val() : $("#D_SOCIEDAD_ID").val());
     var tsol = (!$("#TSOL_ID").val() ? $("#tsol_id").val() : $("#TSOL_ID").val());
     var esCategoriaUnica = false;
     if ($("#select_dis").val()==="C"){

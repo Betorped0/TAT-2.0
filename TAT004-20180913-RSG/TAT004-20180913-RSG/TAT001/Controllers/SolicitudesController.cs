@@ -7676,15 +7676,19 @@ namespace TAT001.Controllers
             {
                 decimal num_doc = Convert.ToDecimal(num);
                 DOCUMENTO D = db.DOCUMENTOes.First(x => x.NUM_DOC == num_doc);
-                ObtenerAnalisisSolicitud(D, Convert.ToDecimal(monto));
-                
-                decimal montoAplicado = format.toNum(ViewBag.montoApli,",",".") + format.toNum(ViewBag.montoSol, ",", ".");
-                decimal remanente = format.toNum(ViewBag.remanente, ",", ".") - format.toNum(ViewBag.montoSol, ",", ".");
+                ObtenerAnalisisSolicitud(D, Convert.ToDecimal(monto)); 
 
                 sm.S_MONTOB = ViewBag.montoSol;
                 sm.S_MONTOP = ViewBag.montoProv;
-                sm.S_MONTOA = format.toShow(montoAplicado, ".");
-                sm.S_REMA = format.toShow(remanente, ".");
+                if (D.TSOL.REVERSO) {
+                    sm.S_MONTOA = format.toNum(ViewBag.montoApli, ",", ".") + format.toNum(ViewBag.montoSol, ",", ".");
+                    sm.S_REMA = format.toNum(ViewBag.remanente, ",", ".") - format.toNum(ViewBag.montoSol, ",", ".");
+                }
+                else
+                {
+                    sm.S_MONTOA = ViewBag.montoApli;
+                    sm.S_REMA = ViewBag.remanente;
+                }
                 sm.S_IMPA = ViewBag.impuesto;
                 sm.S_IMPB = "-";
                 sm.S_IMPC = "-";
