@@ -20,11 +20,14 @@ namespace TAT001.Controllers
         //------------------DAO------------------------------
         readonly UsuariosDao usuariosDao = new UsuariosDao();
         readonly SolicitudesDao solicitudesDao = new SolicitudesDao();
+        readonly SociedadesDao sociedadesDao = new SociedadesDao();
         readonly ContactosDao contactosDao = new ContactosDao();
         readonly ClientesDao clientesDao = new ClientesDao();
         readonly TallsDao tallsDao = new TallsDao();
         readonly StatesDao statesDao = new StatesDao();
         readonly CitiesDao citiesDao = new CitiesDao();
+        readonly MaterialesgptDao materialesgptDao = new MaterialesgptDao();
+        readonly MaterialesDao materialesDao = new MaterialesDao();
 
         // GET: Listas
         public ActionResult Index()
@@ -681,82 +684,8 @@ namespace TAT001.Controllers
         [AllowAnonymous]
         public JsonResult categoriasCliente(string vkorg, string spart, string kunnr, string soc_id)
         {
-            Cadena cad = new Cadena();
-            kunnr = cad.completaCliente(kunnr);
-            if (kunnr == null)
-            {
-                kunnr = "";
-            }
-            List<MATERIALGPT> jd = new List<MATERIALGPT>();
 
-           
-
-            //Validar si hay materiales
-            if (db.MATERIALs.Any(x => x.MATERIALGP_ID != null && x.ACTIVO.Value))
-            {
-                List<CLIENTE> clil = new List<CLIENTE>();
-
-                try
-                {
-                    CLIENTE cli = db.CLIENTEs.Where(c => c.KUNNR == kunnr && c.VKORG == vkorg && c.SPART == spart).FirstOrDefault();
-                    //Saber si el cliente es sold to, payer o un grupo  //Es un soldto
-                    if (cli != null && cli.KUNNR != cli.PAYER && cli.KUNNR != cli.BANNER)
-                    {
-                            clil.Add(cli);
-                    }
-                }
-                catch (Exception e)
-                {
-                    Log.ErrorLogApp(e, "Listas", "categoriasCliente");
-                }
-
-                var cie = clil;
-                //Obtener el numero de periodos para obtener el historial
-                int? mesesVenta = (db.CONFDIST_CAT.Any(x => x.SOCIEDAD_ID == soc_id) ? db.CONFDIST_CAT.First(x => x.SOCIEDAD_ID == soc_id).PERIODOS:null);
-                int nummonths = (mesesVenta != null ? mesesVenta.Value : DateTime.Now.Month);
-                int imonths = nummonths * -1;
-                //Obtener el rango de los periodos incluyendo el año
-                DateTime ff = DateTime.Today;
-                DateTime fi = ff.AddMonths(imonths);
-
-                string mi = fi.Month.ToString();
-                string ai = fi.Year.ToString();
-
-                string mf = ff.Month.ToString();
-                string af = ff.Year.ToString();
-
-                int aii = 0;
-                int mii = 0;
-                int aff = 0;
-                int mff = 0;
-                try{
-                    aii = Convert.ToInt32(ai);
-                    mii = Convert.ToInt32(mi);
-                    aff = Convert.ToInt32(af);
-                    mff = Convert.ToInt32(mf);
-                }
-                catch (Exception e)
-                {
-                    Log.ErrorLogApp(e, "Listas", "categoriasCliente-mesesVenta");
-                }
-
-                if (cie != null)
-                {
-                    jd = FnCommon.ObtenerMaterialGroupsCliente(db,vkorg,spart,kunnr,soc_id,aii,mii,aff,mff);
-                }
-            }
-
-            var list = new List<MATERIALGPT>();
-            if (jd.Count > 0)
-            {
-                MATERIALGPT c = FnCommon.ObtenerTotalProducts(db);
-                list.Add(new MATERIALGPT
-                {
-                    MATERIALGP_ID = c.MATERIALGP_ID,
-                    TXT50 = c.TXT50
-                });
-                list.AddRange(jd);
-            }
+            List<MATERIALGPT> list = materialesgptDao.CategoriasCliente(vkorg,spart,kunnr,soc_id);
             JsonResult jl = Json(list, JsonRequestBehavior.AllowGet);
             return jl;
         }
@@ -765,148 +694,8 @@ namespace TAT001.Controllers
         [AllowAnonymous]
         public JsonResult grupoMateriales(string vkorg, string spart, string kunnr, string soc_id)
         {
-
-            if (kunnr == null)
-            {
-                kunnr = "";
-            }
-
-            Cadena cad = new Cadena();
-            kunnr = cad.completaCliente(kunnr);
-
-            List<DOCUMENTOM_MOD> jd = new List<DOCUMENTOM_MOD>();
-
-
-            //Validar si hay materiales
-            if (db.MATERIALs.Any(x => x.MATERIALGP_ID != null && x.ACTIVO.Value))
-            {
-                List<CLIENTE> clil = new List<CLIENTE>();
-                try
-                {
-                    CLIENTE cli = db.CLIENTEs.Where(c => c.KUNNR == kunnr && c.VKORG == vkorg && c.SPART == spart).FirstOrDefault();
-
-                    //Saber si el cliente es sold to, payer o un grupo
-                    if (cli != null && cli.KUNNR != cli.PAYER && cli.KUNNR != cli.BANNER)
-                    {
-                        clil.Add(cli);
-                    }
-                }
-                catch (Exception e)
-                {
-                    Log.ErrorLogApp(e, "Listas", "grupoMateriales");
-                }
-                var cie = clil;
-                //Obtener el numero de periodos para obtener el historial
-                int? mesesVenta = (db.CONFDIST_CAT.Any(x => x.SOCIEDAD_ID == soc_id) ? db.CONFDIST_CAT.First(x => x.SOCIEDAD_ID == soc_id).PERIODOS : null);
-                int nummonths = (mesesVenta != null ? mesesVenta.Value : DateTime.Now.Month);
-                int imonths = nummonths * -1;
-                //Obtener el rango de los periodos incluyendo el año
-                DateTime ff = DateTime.Today;
-                DateTime fi = ff.AddMonths(imonths);
-
-                string mi = fi.Month.ToString();
-                string ai = fi.Year.ToString();
-
-                string mf = ff.Month.ToString();
-                string af = ff.Year.ToString();
-
-                int aii = 0;
-                int mii = 0;
-                int aff = 0;
-                int mff = 0;
-                try
-                {
-                    aii = Convert.ToInt32(ai);
-                    mii = Convert.ToInt32(mi);
-                    aff = Convert.ToInt32(af);
-                    mff = Convert.ToInt32(mf);
-                }
-                catch (Exception e)
-                {
-                    Log.ErrorLogApp(e, "Listas", "grupoMateriales-mesesVenta");
-                }
-
-
-                if (cie != null)
-                {
-                    jd = FnCommon.ObtenerMaterialGroupsMateriales(db, vkorg, spart, kunnr, soc_id, aii, mii, aff, mff, User.Identity.Name);
-                }
-            }
-
-            //Obtener las categorías
-            var categorias = jd.GroupBy(c => c.ID_CAT, c => new { ID = c.ID_CAT.ToString(), DESC = c.DESC }).ToList();
-
-            List<CategoriaMaterial> lcatmat = new List<CategoriaMaterial>();
-
-            foreach (var item in categorias)
-            {
-                CategoriaMaterial cm = new CategoriaMaterial();
-                cm.ID = item.Key;
-                cm.EXCLUIR = jd.FirstOrDefault(x => x.ID_CAT.Equals(item.Key)).EXCLUIR; //RSG 09.07.2018 ID167
-
-                //Obtener los materiales de la categoría
-                List<DOCUMENTOM_MOD> dl;
-                List<DOCUMENTOM_MOD> dm = new List<DOCUMENTOM_MOD>();
-                dl = jd.Where(c => c.ID_CAT == item.Key).Select(c => new DOCUMENTOM_MOD { ID_CAT = c.ID_CAT, MATNR = c.MATNR, VAL = c.VAL, DESC = c.DESC }).ToList();//Falta obtener el groupby
-
-                //Obtener la descripción de los materiales
-                foreach (DOCUMENTOM_MOD d in dl)
-                {
-                    DOCUMENTOM_MOD dcl ;
-                    dcl = dm.Where(z => z.MATNR == d.MATNR).Select(c => new DOCUMENTOM_MOD { ID_CAT = c.ID_CAT, MATNR = c.MATNR, VAL = c.VAL, DESC = c.DESC }).FirstOrDefault();
-
-                    if (dcl == null)
-                    {
-                        DOCUMENTOM_MOD dcll = new DOCUMENTOM_MOD();
-                        //No se ha agregado
-                        decimal val = dl.Where(y => y.MATNR == d.MATNR).Sum(x => x.VAL);
-                        dcll.ID_CAT = item.Key;
-                        dcll.MATNR = d.MATNR;
-
-                        dcll.DESC = d.DESC;
-                        dcll.VAL = val;
-                        cm.TOTALCAT += val;//ADD RSG 22.11.2018
-
-                        dm.Add(dcll);
-                    }
-                }
-
-                cm.MATERIALES = dm;
-                //LEJ 18.07.2018-----------------------------------------------------------
-                MATERIALGP vv = FnCommon.ObtenerMaterialGroup(db, cm.ID);
-                cm.UNICA = vv.UNICA;
-                cm.DESCRIPCION = vv.DESCRIPCION;
-                lcatmat.Add(cm);
-            }
-
-            if (lcatmat.Count > 0)
-            {
-                CategoriaMaterial nnn = new CategoriaMaterial();
-                nnn.ID = "000";
-                nnn.DESCRIPCION = FnCommon.ObtenerTotalProducts(db).TXT50;
-                nnn.MATERIALES = new List<DOCUMENTOM_MOD>();
-                nnn.TOTALCAT = 0;//ADD RSG 22.11.2018
-                //foreach (var item in lcatmat)//RSG 09.07.2018 ID167
-                foreach (var item in lcatmat.Where(x => !x.EXCLUIR).ToList())
-                {
-                    foreach (var ii in item.MATERIALES)
-                    {
-                        DOCUMENTOM_MOD dm = new DOCUMENTOM_MOD();
-                        dm.ID_CAT = "000";
-                        dm.DESC = ii.DESC;
-                        dm.MATNR = ii.MATNR;
-                        dm.POR = ii.POR;
-                        dm.VAL = ii.VAL;
-                        nnn.TOTALCAT += ii.VAL;
-                        nnn.MATERIALES.Add(dm);
-                    }
-                }
-                //LEJ 18.07.2018-----------------------------------------------------------
-                nnn.UNICA = FnCommon.ObtenerMaterialGroup(db, nnn.ID).UNICA;
-                lcatmat.Add(nnn);
-            }
-
-
+            List<CategoriaMaterial> lcatmat =materialesgptDao.GrupoMateriales(vkorg,spart,kunnr,soc_id,User.Identity.Name);
+            
 
             JsonResult jl = Json(lcatmat, JsonRequestBehavior.AllowGet);
             return jl;
@@ -1187,7 +976,7 @@ namespace TAT001.Controllers
         [HttpPost]
         public JsonResult materiales(string Prefix, string vkorg, string vtweg)
         {
-            List<MATERIAL> materiales = FnCommon.ObtenerMateriales(db, Prefix, vkorg, vtweg, User.Identity.Name);
+            List<MATERIAL> materiales = materialesDao.ListaMateriales( Prefix, vkorg, vtweg, User.Identity.Name);
             
             JsonResult cc = new JsonResult()
             {
@@ -1273,13 +1062,10 @@ namespace TAT001.Controllers
 
 
         [HttpGet]
-        public JsonResult sociedades(string Prefix)
+        public JsonResult Sociedades(string Prefix)
         {
-            var c = (from st in db.SOCIEDADs
-                     where (st.BUKRS.Contains(Prefix) || st.BUTXT.Contains(Prefix))
-                     select new { st.BUKRS, TXT50 = (st.BUKRS + " - " + st.BUTXT) });
-
-            return Json(c, JsonRequestBehavior.AllowGet);
+            var sociedades=sociedadesDao.ListaSociedades(TATConstantes.ACCION_LISTA_SOCIEDADES, null,null,Prefix);
+            return Json(sociedades, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]

@@ -855,6 +855,7 @@
     <Compile Include="Models\Dao\CitiesDao.cs" />
     <Compile Include="Models\Dao\ClientesDao.cs" />
     <Compile Include="Models\Dao\ContactosDao.cs" />
+    <Compile Include="Models\Dao\MaterialesgptDao.cs" />
     <Compile Include="Models\Dao\PeriodosDao.cs" />
     <Compile Include="Models\Dao\SolicitudesDao.cs" />
     <Compile Include="Models\Dao\TabsDao.cs" />
@@ -876,6 +877,7 @@
     <Compile Include="Models\Masiva\Encabezado.cs" />
     <Compile Include="Models\Masiva\Multiple.cs" />
     <Compile Include="Models\Masiva\Relacionada.cs" />
+    <Compile Include="Models\MaterialesDao.cs" />
     <Compile Include="Models\MaterialViewModel.cs" />
     <Compile Include="Models\ModificacionesGlobalesViewModel.cs" />
     <Compile Include="Models\ProveedorViewModel.cs" />

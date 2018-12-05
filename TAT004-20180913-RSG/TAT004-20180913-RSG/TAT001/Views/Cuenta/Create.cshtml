@@ -98,7 +98,7 @@
     auto(document).ready(function () {
         auto("#SOCIEDAD_ID").autocomplete({
             source: function (request, response) {
-                fnCommon.autoAjax(root + "Listas/sociedades", response, { Prefix: request.term }, function (item) { return { label: item.TXT50, value: item.BUKRS }; });
+                fnCommon.autoAjax(root + "Listas/Sociedades", response, { Prefix: request.term }, function (item) { return { label: item.BUKRS, value: item.BUKRS }; });
             },
             messages: {
                 noResults: '',
@@ -114,8 +114,6 @@
                 }
             }
         });
-    })
-    auto(document).ready(function () {
         auto("#PAIS_ID").autocomplete({
                 source: function (request, response) {
                     fnCommon.autoAjax(root + "Listas/paises_", response, { Prefix: request.term }, function (item) { return { label: item.TXT50, value: item.LAND }; });
@@ -134,8 +132,6 @@
                 }
             }
             });
-    })
-    auto(document).ready(function () {
         auto("#TALL_ID").autocomplete({
             source: function (request, response) {
                 fnCommon.autoAjax(root + "Listas/tipoAllowance", response, { Prefix: request.term }, function (item) { return { label: item.TXT50, value: item.ID }; });
@@ -154,8 +150,6 @@
                 }
             }
         });
-    })
-    auto(document).ready(function () {
         auto("#ABONO").autocomplete({
             source: function (request, response) {
                 fnCommon.autoAjax(root + "Listas/cuentas", response, { Prefix: request.term }, function (item) { return { label: item.TXT50, value: item.ID }; });
@@ -174,8 +168,6 @@
                 }
             }
         });
-    })
-    auto(document).ready(function () {
         auto("#CARGO").autocomplete({
             source: function (request, response) {
                 fnCommon.autoAjax(root + "Listas/cuentas", response, { Prefix: request.term }, function (item) { return { label: item.TXT50, value: item.ID }; });
@@ -194,8 +186,6 @@
                 }
             }
         });
-    })
-    auto(document).ready(function () {
         auto("#CLEARING").autocomplete({
             source: function (request, response) {
                 fnCommon.autoAjax(root + "Listas/cuentas", response, { Prefix: request.term }, function (item) { return { label: item.TXT50, value: item.ID }; });
@@ -214,7 +204,7 @@
                 }
             }
         });
-    })
+    });
     // Valida si ocurrio un error al intentar crear el layout.
         var mnjError = '@ViewBag.mnjError';
         if (mnjError) {
