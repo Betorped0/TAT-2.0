@@ -53,6 +53,9 @@ namespace TAT001.Controllers.Configuracion
             ViewBag.sp = sp;
             ViewBag.con = con;
             var tAXEOPs = db.TAXEOPs.Include(t => t.RETENCION).Include(t => t.TAXEOH).Include(t => t.TRETENCION);
+            CLIENTE cli = db.CLIENTEs.Find(vk, vtw, sp, kun);
+            ViewBag.Cliente = cli.NAME1;
+            ViewBag.NoCliente = cli.KUNNR;
             return View(tAXEOPs.Where(s => s.SOCIEDAD_ID == sc).ToList());
         }
 
@@ -110,6 +113,9 @@ namespace TAT001.Controllers.Configuracion
             ViewBag.RETENCION_ID = new SelectList(retenciones, "ID", "DESCRIPCION", txp.RETENCION_ID);
             var tretenciones = db.TRETENCIONs.Where(t => t.ACTIVO == true).Select(t => new { t.ID, DESCRIPCION = t.ID + "-" + t.DESCRIPCION });
             ViewBag.TRETENCION_ID = new SelectList(tretenciones, "ID", "DESCRIPCION", txp.TRETENCION_ID);
+            CLIENTE cli = db.CLIENTEs.Find(vk, vtw, sp, kun);
+            ViewBag.Cliente = cli.NAME1;
+            ViewBag.NoCliente = cli.KUNNR;
             return View(txp);
         }
         [HttpPost]
@@ -252,6 +258,9 @@ namespace TAT001.Controllers.Configuracion
             ViewBag.RETENCION_ID = new SelectList(retenciones, "ID","DESCRIPCION");
             var tretenciones = db.TRETENCIONs.Where(t => t.ACTIVO==true).Select(t => new { t.ID, DESCRIPCION = t.ID + "-" + t.DESCRIPCION  });
             ViewBag.TRETENCION_ID = new SelectList(tretenciones, "ID", "DESCRIPCION");
+            CLIENTE cli = db.CLIENTEs.Find(vk, vtw, sp, kun);
+            ViewBag.Cliente = cli.NAME1;
+            ViewBag.NoCliente = cli.KUNNR;
             return View(txp);
         }
 
@@ -369,6 +378,9 @@ namespace TAT001.Controllers.Configuracion
             ViewBag.RETENCION_ID = new SelectList(retenciones, "ID", "DESCRIPCION",txp.RETENCION_ID );
             var tretenciones = db.TRETENCIONs.Where(t => t.ACTIVO == true).Select(t => new { t.ID, DESCRIPCION = t.ID + "-" + t.DESCRIPCION });
             ViewBag.TRETENCION_ID = new SelectList(tretenciones, "ID", "DESCRIPCION",txp.TRETENCION_ID);
+            CLIENTE cli = db.CLIENTEs.Find(vk, vtw, sp, kun);
+            ViewBag.Cliente = cli.NAME1;
+            ViewBag.NoCliente = cli.KUNNR;
             return View(txp);
         }
 

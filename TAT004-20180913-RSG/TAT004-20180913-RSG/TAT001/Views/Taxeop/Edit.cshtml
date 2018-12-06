@@ -11,11 +11,14 @@
     @using (Html.BeginForm("Edit", "Taxeop", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
-        <div class="row">
-            <div class="col l12 m12 s12">
-                <button id="btnGuardar" type="submit" value="Delete" class="btn btn-default" style="float:right;">X</button>
-            </div>
+    <div class="row">
+        <div class="row left">
+            <h6>@ViewBag.NoCliente - @ViewBag.Cliente</h6>
         </div>
+        <div class="row right">
+            <button id="btnGuardar" type="submit" value="Delete" class="btn btn-default" style="float:right;">X</button>
+        </div>
+    </div>
         <div class="row">
             <div class="card-panel">
                 <div class="row">
