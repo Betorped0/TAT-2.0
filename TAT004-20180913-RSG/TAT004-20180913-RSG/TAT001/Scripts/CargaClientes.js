@@ -525,6 +525,7 @@ function Borrar() {
     rowNum = $('#table>tbody').find('.input_bor').length;
     if (rowNum >0) {
         Comprobar();
+        $('#idBorrar').attr('disabled', 'disabled');
     } else {
         Iniciar();
     }
