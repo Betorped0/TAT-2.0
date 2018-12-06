@@ -246,7 +246,7 @@
                             inf = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == Model.D.NUM_DOC & x.ESTATUS_C != "C" & x.ESTATUS_WF != "B").ToList();
                             if (inf.Where(x => x.TSOL.REVERSO == true).ToList().Count == 0)
                             {
-                                if (Model.D.USUARIOC_ID == ViewBag.usuario.ID & Model.D.DOCUMENTO_SAP != null & Model.D.DOCUMENTO_SAP != "E")
+                                if (Model.D.USUARIOC_ID == ViewBag.usuario.ID & Model.D.ESTATUS_SAP != null & Model.D.ESTATUS_SAP != "E")
                                 {
                                     <div id="div_drop" class="col" style="padding:0 4px;">
                                         <a href="@Url.Action("Create", "Solicitudes", new { id_d = Model.D.NUM_DOC.ToString(), tsol = Model.D.TSOL.TSOLR })" class="btn-small">Reversar</a>
