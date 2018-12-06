@@ -1526,7 +1526,7 @@ namespace TAT001.Controllers
             string errorString = "";
             SOCIEDAD id_bukrs = new SOCIEDAD();
             Calendario445 cal = new Calendario445();
-            bool test = false;
+            bool test = true;
             string p = "";
             string rele = ""; //Add MGC B20180705 2018.07.05 relacionadaed editar el material en los nuevos renglones
             decimal monto_ret = Convert.ToDecimal(dOCUMENTO.MONTO_DOC_MD);
