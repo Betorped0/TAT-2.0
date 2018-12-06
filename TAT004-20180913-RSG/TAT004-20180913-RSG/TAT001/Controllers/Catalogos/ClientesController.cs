@@ -430,36 +430,18 @@ namespace TAT001.Controllers.Catalogos
             }
             int pagina = 631; //ID EN BASE DE DATOS PARA EL TITULO
             string u = User.Identity.Name;
-            var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-            ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-            ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-            ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
-            ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            //pagina = 632; //ID EN BASE DE DATOS
-            ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-            ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            FnCommon.ObtenerConfPage(db, pagina, u, this.ControllerContext.Controller);
 
-           
-            //using (TAT001Entities db = new TAT001Entities())
-            //{
-            //    string u = User.Identity.Name;
-                //string u = "admin";
-
-                //var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-                FnCommon.ObtenerConfPage(db, pagina, u, this.ControllerContext.Controller);
-
-                try
-                {
-                    string p = Session["pais"].ToString();
-                    ViewBag.pais = p + ".png";
-                }
-                catch
-                {
-                    //ViewBag.pais = "mx.png";
-                    //return RedirectToAction("Pais", "Home");
-                }
-            //}
+            try
+            {
+                string p = Session["pais"].ToString();
+                ViewBag.pais = p + ".png";
+            }
+            catch
+            {
+                //ViewBag.pais = "mx.png";
+                //return RedirectToAction("Pais", "Home");
+            }
             return View();
         }
         [HttpPost]

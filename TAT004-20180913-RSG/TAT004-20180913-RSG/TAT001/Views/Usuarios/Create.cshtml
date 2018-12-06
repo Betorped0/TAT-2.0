@@ -1,29 +1,24 @@
 ﻿@model TAT001.Models.Usuario
 
 @{
-    /**/
-
-    //ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.pagina_r = 602;
     ViewBag.carpeta_r = 500;
 }
-<script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
+@*<script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>*@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
-    <div class="row">
-        <div class="col s12 right-align">
-            <button type="submit" id="btn_guardar" class="btn btn-default" />
-        </div>
-    </div>
     <div class="row">
         <div class="col s12 left-align">
             @if (@TempData["MensajeUsuario"] != null)
             {
                 <label id="lbl_mensajeusuario"></label>
             }
+        </div>
+        <div class="col s12 right-align">
+            <button type="submit" id="btn_guardar" class="btn btn-default" />
         </div>
     </div>
     <div class="row right">
@@ -120,7 +115,7 @@
                     </div>
 
                     <div class="input-field col s12">
-                        @Html.EditorFor(model => model.SPRAS_ID, new { htmlAttributes = new { @class = "form-control", @id = "input_idioma" } })
+                        @Html.EditorFor(model => model.SPRAS_ID, new { htmlAttributes = new { @class = "form-control", @id = "input_idioma", required=true } })
                         @*<label id="lbl_spras">SPRAS</label>*@
                         @Html.LabelFor(model => model.SPRAS_ID, htmlAttributes: new { @id = "lbl_spras" })
                     </div>
@@ -155,20 +150,48 @@
         <div class="col l6 s12">
             <div class="card-panel">
                 <div class="row">
-
-                    <div class="input-field col s12">
-                        @*@Html.DropDownList("BUNIT", null, htmlAttributes: new { @class = "form-control" })*@
-                        @Html.EditorFor(model => model.BUNIT, new { htmlAttributes = new { @class = "form-control", @id = "input_sociedad" } })
-                        @Html.LabelFor(model => model.BUNIT, htmlAttributes: new { @id = "lbl_bukrs" })
-                        @*@Html.EditorFor(model => model.BUNIT, new { htmlAttributes = new { @class = "form-control" } })*@
-                        @Html.ValidationMessageFor(model => model.BUNIT, "", new { @class = "text-danger" })
-                    </div>
-
                     <div class="input-field col s12">
                         @*@Html.DropDownList("PUESTO_ID", null, htmlAttributes: new { @class = "form-control" })*@
-                        @Html.EditorFor(model => model.PUESTO_ID, new { htmlAttributes = new { @class = "text", @id = "input_puesto" } })
+                        @Html.EditorFor(model => model.PUESTO_ID, new { htmlAttributes = new { @class = "text", @id = "input_puesto", required=true } })
                         @Html.LabelFor(model => model.PUESTO_ID, htmlAttributes: new { @id = "lbl_puesto" })
                         @Html.ValidationMessageFor(model => model.PUESTO_ID, "", new { @class = "text-danger" })
+                    </div>
+                    @*<div class="input-field col s12">
+                            @Html.DropDownList("BUNIT", null, htmlAttributes: new { @class = "form-control" })
+                            @Html.EditorFor(model => model.BUNIT, new { htmlAttributes = new { @class = "form-control", @id = "input_sociedad" } })
+                            @Html.LabelFor(model => model.BUNIT, htmlAttributes: new { @id = "lbl_bukrs" })
+                            @Html.EditorFor(model => model.BUNIT, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.BUNIT, "", new { @class = "text-danger" })
+                        </div>*@
+                    <div id="cocodemul" style="display:none">
+                        <div class="input-field col s12">
+                            @*@Html.HiddenFor(model => model.SOCIEDADs)*@
+                            @*@{string jval2 = ViewBag.sociedad;
+                                    @Html.Hidden("SELECT_SOCIEDADES", jval2)
+                                }*@
+                            <select multiple name="selectcocode" id="selectcocode" class="comcode select_all">
+                                @try
+                                {
+                                    foreach (var item in ViewBag.SOCIEDADES)
+                                    {
+                                        <option id="@item.BUKRS" value="@item.BUKRS">@item.BUKRS</option>
+                                    }
+                                }
+                                catch (Exception)
+                                {
+                                    <option value="" id="no_opt">No hay opciones</option>
+                                }
+                            </select>
+                            <label id="label_cocode">Co. Code</label>
+                        </div>
+                    </div>
+                    <div id="unico" style="display:none">
+                        <div class="input-field col s12">
+                            @*@Html.DropDownList("BUNIT", null, htmlAttributes: new { @class = "select", required = true })*@
+                            @Html.EditorFor(model => model.BUNIT, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.LabelFor(model => model.BUNIT, htmlAttributes: new { @id = "lbl_bukrs" })
+                            @*@Html.ValidationMessageFor(model => model.BUNIT, "", new { @class = "text-danger" })*@
+                        </div>
                     </div>
 
                     @*<div class="input-field col s12">
@@ -190,6 +213,11 @@
     <script src="~/Scripts/autocomplete1.10.2.js"></script>
     <script src="~/Scripts/autocomplete1.11.4.js"></script>
     <link href="~/Content/autocomplete.css" rel="stylesheet" />
+    <script>
+        var elem = document.querySelectorAll('select');
+        var options = [];
+        var instance = M.FormSelect.init(elem, options);
+    </script>
     <script>
 
         $("#input_puesto").attr("type", "text");
@@ -244,7 +272,7 @@
             });
         });
 
-        $('body').on('keydown.autocomplete', '#input_sociedad', function () {
+        $('body').on('keydown.autocomplete', '#BUNIT', function () {
 
             auto(this).autocomplete({
                 source: function (request, response) {
@@ -303,9 +331,45 @@
                     if (!(ui.item)) {
                         e.target.value = "";
                     }
+                    var array = @Html.Raw(Json.Encode(@ViewBag.ROLESCC));
+                    var visible = true;
+                    for (var i = 0; i < array.length; i++){
+                        if (array[i] == parseInt(ui.item.value)) {
+                            $("#unico").css("display", "inline");
+                            $("#cocodemul").css("display", "none");
+                            $("#BUNIT").prop("required", true);
+                            $("#selectcocode").prop("required", false);
+                            visible = false;
+                            break;
+                        }
+                    }
+                    if (visible) {
+                        $("#unico").css("display", "none");
+                        $("#BUNIT").prop("required", false);
+                        $("#selectcocode").prop("required", true);
+                        $("#cocodemul").css("display", "inline");
+                    }
                 },
 
                 select: function (event, ui) {
+                    var array = @Html.Raw(Json.Encode(@ViewBag.ROLESCC));
+                    var visible = true;
+                    for (var i = 0; i < array.length; i++){
+                        if (array[i] == parseInt(ui.item.value)) {
+                            $("#unico").css("display", "inline");
+                            $("#BUNIT").prop("required", true);
+                            $("#selectcocode").prop("required", false);
+                            $("#cocodemul").css("display", "none");
+                            visible = false;
+                            break;
+                        }
+                    }
+                    if (visible) {
+                        $("#unico").css("display", "none");
+                        $("#BUNIT").prop("required", false);
+                        $("#selectcocode").prop("required", true);
+                        $("#cocodemul").css("display", "inline");
+                    }
                 }
             });
         });

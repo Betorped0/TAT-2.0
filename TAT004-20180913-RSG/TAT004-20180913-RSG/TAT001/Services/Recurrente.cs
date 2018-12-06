@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Web;
 using TAT001.Common;
 using TAT001.Entities;
 using TAT001.Models;
+using TAT001.Models.Dao;
 
 namespace TAT001.Services
 {
     class Recurrente
     {
+        //------------------DAO------------------------------
+        readonly MaterialesgptDao materialesgptDao = new MaterialesgptDao();
+
         public int creaRecurrente(decimal id_d, string tsol, DateTime fechaActual, int posicion)
         {
             string dates = DateTime.Now.ToString("dd/MM/yyyy");
@@ -893,7 +896,7 @@ namespace TAT001.Services
                         //          }).ToList();
                         //}
 
-                        jd = FnCommon.ObtenerMaterialGroupsMateriales(db, vkorg, spart, kunnr, soc_id, aii, mii, aff, mff, "admin");
+                        jd = materialesgptDao.ListaMaterialGroupsMateriales( vkorg, spart, kunnr, soc_id, aii, mii, aff, mff, "admin");
                     }
                 }
 
@@ -1142,7 +1145,7 @@ namespace TAT001.Services
                         ////    }
                         ////}
 
-                        jd = FnCommon.ObtenerMaterialGroupsMateriales(db, vkorg, spart, kunnr, soc_id, aii, mii, aff, mff, "admin");
+                        jd = materialesgptDao.ListaMaterialGroupsMateriales( vkorg, spart, kunnr, soc_id, aii, mii, aff, mff, "admin");
                     }
                 }
 

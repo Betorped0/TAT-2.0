@@ -177,7 +177,8 @@
             document.getElementById("loader").style.display = "none";
         }
     },
-    autoAjax: function (url,response,params,fnData) {
+    autoAjax: function (url, response, params, fnData) {
+        $ = $ === undefined ? auto : $;
         return $.ajax({
             url: url,
             type: "GET",

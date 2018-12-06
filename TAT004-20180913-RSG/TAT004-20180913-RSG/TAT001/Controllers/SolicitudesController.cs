@@ -28,6 +28,8 @@ namespace TAT001.Controllers
         //------------------DAO------------------------------
         readonly TallsDao tallsDao = new TallsDao();
         readonly TiposSolicitudesDao tiposSolicitudesDao = new TiposSolicitudesDao();
+        readonly MaterialesgptDao materialesgptDao = new MaterialesgptDao();
+        readonly MaterialesDao materialesDao = new MaterialesDao();
         public ActionResult Index()
         {
             return RedirectToAction("Index", "Home");
@@ -5966,7 +5968,7 @@ namespace TAT001.Controllers
                         MATERIAL mat = material(doc.MATNR);
                         if (mat != null)
                         {
-                            List<MATERIAL> materiales = FnCommon.ObtenerMateriales(db, doc.MATNR, vkorg, vtweg, User.Identity.Name);
+                            List<MATERIAL> materiales = materialesDao.ListaMateriales( doc.MATNR, vkorg, vtweg, User.Identity.Name);
                             mat = materiales.Where(x => x.ID == mat.ID).FirstOrDefault();
                         }
                         if (mat != null & ld.Where(x => x.MATNR.Equals(doc.MATNR)).Count() == 0)//Validar si el material existe
@@ -6608,7 +6610,7 @@ namespace TAT001.Controllers
                     ///
                     if (cie != null)
                     {
-                        jd = FnCommon.ObtenerMaterialGroupsMateriales(db, vkorg, spart, kunnr, soc_id, aii, mii, aff, mff, User.Identity.Name);
+                        jd = materialesgptDao.ListaMaterialGroupsMateriales( vkorg, spart, kunnr, soc_id, aii, mii, aff, mff, User.Identity.Name);
                     }
 
                 }

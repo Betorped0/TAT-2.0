@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using TAT001.Common;
 using TAT001.Entities;
 
 namespace TAT001.Models.Dao
@@ -11,17 +10,26 @@ namespace TAT001.Models.Dao
     public class SociedadesDao
     {
         readonly TAT001Entities db = new TAT001Entities();
-        public List<SOCIEDAD> ListaSociedades(int accion,string bukrs=null, string usuario_id=null)
+        public List<SOCIEDAD> ListaSociedades(int accion,string bukrs=null, string usuario_id=null, string Prefix = null)
         {
-            List<SOCIEDAD> sociedades = new List<SOCIEDAD>();
-            if (accion== TATConstantes.ACCION_LISTA_SOCIEDADES) {
-                sociedades= db.SOCIEDADs
-                .Where(x => (x.BUKRS == bukrs || bukrs == null) && x.ACTIVO).ToList();
-            }
-            else if (accion== TATConstantes.ACCION_LISTA_SOCPORUSUARIO) {
-                sociedades= db.USUARIOs.First(x => x.ID == usuario_id).SOCIEDADs.Where(x=> x.ACTIVO).ToList();
-            }
+            if (Prefix == null) { Prefix = ""; }
+
+            List<object> paramsCSP = new List<object>
+            {
+                new SqlParameter("@ACCION", accion),
+                new SqlParameter("@PREFIX", Prefix)
+            };
+
+            if (!string.IsNullOrEmpty(bukrs)) { paramsCSP.Add(new SqlParameter("@SOCIEDAD_ID", bukrs)); }
+            else { paramsCSP.Add(new SqlParameter("@SOCIEDAD_ID", DBNull.Value)); }
+
+            if (!string.IsNullOrEmpty(usuario_id)) { paramsCSP.Add(new SqlParameter("@USUARIO_ID", usuario_id)); }
+            else { paramsCSP.Add(new SqlParameter("@USUARIO_ID", DBNull.Value)); }
+
+            List<SOCIEDAD> sociedades = db.Database.SqlQuery<SOCIEDAD>("CPS_LISTA_SOCIEDADES @ACCION,@PREFIX,@SOCIEDAD_ID,@USUARIO_ID",
+          paramsCSP.ToArray()).ToList();
             return sociedades;
+        
         }
         public  List<SelectListItem> ComboSociedades(int accion, string bukrs = null, string usuario_id = null)
         {

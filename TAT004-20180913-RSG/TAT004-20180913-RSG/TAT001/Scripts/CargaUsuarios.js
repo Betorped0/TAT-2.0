@@ -1,12 +1,15 @@
 ﻿$(document).ready(function () {
-
+    formato();
+});
+var esFile = false;
+function formato() {
     $('#table').DataTable({
         "scrollY": "200",
         "scrollX": "true",
         "scrollCollapse": true,
         "order": false,
         "language": {
-            //"url": "../Scripts/lang/@Session['spras'].ToString()" + ".json"
+            "url": root + "Scripts/lang/" + spras + ".json",
             "zerorecords": "no hay registros",
             "infoempty": "registros no disponibles"
         },
@@ -65,8 +68,7 @@
             }
         ]
     });
-});
-
+}
 function subeExcel() {
     var filenum = $('#files').get(0).files.length;
     if (filenum > 0) {
@@ -233,10 +235,10 @@ function addRow(t, POS, br, k, b, pi, id, n, ap, am, e, si, sp, me) {
         t,
         POS,
         "<label><input class='input_bor' type='checkbox' id='' name='bor' onclick='checkoff();' value='" + br + "'><span></span></label>",
-        "<input class='input_cli' style='font-size:12px;' type='text' id='' name='cli' value='" + k + "'>",
+        "<input class='input_cli' style='font-size:12px;' type='text' id='' name='cli' value='" + k + "' onchange='Comprobar()'>",
         "<input class='input_com' style='font-size:12px;' type='text' id='' name='com' value='" + b + "' onchange='Comprobar()'>",
         "<input class='input_niv' style='font-size:12px;' type='text' id='' name='niv' value='" + pi + "' onchange='Comprobar()'>",
-        "<input class='input_usc' style='font-size:12px;' type='text' id='' name='usc' value='" + id + "'>",
+        "<input class='input_usc' disabled='true' style='font-size:12px;' type='text' id='' name='usc' value='" + id + "'>",
         "<input class='input_nom' style='font-size:12px;' type='text' id='' name='nom' value='" + n + "' onchange='Comprobar()'>",
         "<input class='input_app' style='font-size:12px;' type='text' id='' name='app' value='" + ap + "' onchange='Comprobar()'>",
         "<input class='input_apm' style='font-size:12px;' type='text' id='' name='apm' value='" + am + "' onchange='Comprobar()'>",
@@ -307,18 +309,59 @@ function Carga() {
 function Comprobar() {
     var datos = $('#tabla').serializeArray();
     creart('Comprobar', datos); 
-    mostrarAlerta("info", "A", "Vista Actualizada");
+    //mostrarAlerta("info", "A", "Vista Actualizada");
 }
 
 function Borrar() {
+    var rowNum = $('#table>tbody').find('.input_bor').length;
+    var check = false;
+    $('#table>tbody').find('.input_bor').each(function (indx, checkInput) {
+        if (checkInput.checked) {
+            check = checkInput.checked;
+        }
+    });
+    if (rowNum === 0 || !check) {
+        return;
+    }
     var table = $('#table').DataTable();
     var rows = $('.input_bor').serializeArray();
     for (var i = rows.length; i > 0; i--) {
         var num = rows[i - 1].value;
         table.row(num).remove().draw();
     }
-    Comprobar();
-    checkoff();
+    if (rowNum > 0) {
+        Comprobar();
+    } else {
+        Iniciar();
+    }
+}
+function Limpiar() {
+    var table = $('#table').DataTable();
+    table.clear().draw();
+    Iniciar();
+}
+
+function Iniciar() {
+    var htmlTr = '<tr>'
+        + '<td></td>'
+        + '<td></td>'
+        + '<td></td>'
+        + '<td></td>'
+        + '<td><input class="input_usc" style="font-size:12px;" type="text" id="" name="usc" value="" onkeyup="if(event.keyCode == 13) AgregarU()" /></td>'
+        + '<td></td>'
+        + '<td></td>'
+        + '<td></td>'
+        + '<td></td>'
+        + '<td></td>'
+        + '<td></td>'
+        + '<td></td>'
+        + '</tr>';
+    $('#table').DataTable().destroy();
+    $('#table').append(htmlTr);
+    formato();
+    $('#idBorrar').attr('disabled', 'disabled');
+    $("#borrar").prop('checked', false);
+
 }
 
 function Actualizar() {
@@ -448,9 +491,10 @@ function creart(metodo, datos) {
             }
         },
         complete: function () {
-
-            var num = $("#table tr").length - 1;
-            addRow(table, num, num, "", "", "", "", "", "", "", "", "", "", "");
+            if (!existeRowSinDatos()) {
+                var num = $("#table tr").length - 1;
+                addRow(table, num, num, "", "", "", "", "", "", "", "", "", "", "");
+            }
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             M.toast({
@@ -463,14 +507,29 @@ function creart(metodo, datos) {
 }
 
 function check() {
-    if ($("#borrar").prop('checked'))
+    if ($("#borrar").prop('checked') && $('#table>tbody').find('.input_bor').length > 0) {
+        $('#idBorrar').removeAttr('disabled');
         $(".input_bor").prop('checked', true);
-    else
+    } else {
         $(".input_bor").prop('checked', false);
+        $('#idBorrar').attr('disabled', 'disabled');
+    }
+
 }
 
 function checkoff() {
-    $("#borrar").prop('checked', false);
+    var check = false;
+    $('#table>tbody').find('.input_bor').each(function (indx, checkInput) {
+        if (checkInput.checked) {
+            check = checkInput.checked;
+        }
+    });
+    if (!check) {
+        $("#borrar").prop('checked', false);
+        $('#idBorrar').attr('disabled', 'disabled');
+    } else {
+        $('#idBorrar').removeAttr('disabled');
+    }
 }
 
 function AgregarU() {
@@ -479,10 +538,14 @@ function AgregarU() {
 }
 
 function AgregarC() {
-    var datos = $('.input_cli').serializeArray();
-    if (datos.length === 0)
-        datos = $('.input_cli1').serializeArray();
-    creart('AgregarT', datos);
+
+    //var datos = $('.input_cli').serializeArray();
+    //if (datos.length === 0)
+    //    datos = $('.input_cli1').serializeArray();
+    //creart('AgregarT', datos);
+    var table = $('#table').DataTable(),
+    num = $("#table tr").length - 1;
+    addRow(table, num, num, "", "", "", "", "", "", "", "", "", "", "");
 }
 
 function foco() {
@@ -518,7 +581,35 @@ function dismiss(classe) {
         toastInstance.dismiss();
     }
 }
+function existeRowSinDatos() {
+    var conDatos = false;
+    var table = $("#table").DataTable();
+    var row = table.row(table.rows()[0].length-1).node();
+        for (var j = 0; j < row.cells.length; j++) {
+            var children = row.cells.item(j).children;
+            if (children.length > 0 && (children.item(0).value!== undefined &&  children.item(0).value !== "")) {
+                conDatos = true;
+            }
+        
+    }
+    return !conDatos;
 
+}
+function obtenerSociedadId(rowIndx) {
+    var sociedad_id = null;
+    var table = $("#table").DataTable();
+    for (var i = rowIndx; i >= 0; i--) {
+        var row = table.row(i).node();
+        for (var j = 0; j < row.cells.length; j++) {
+            var children = row.cells.item(j).children;
+            if (children.length > 0 && children.item(0).name === "com" && children.item(0).value !== "" && sociedad_id === null) {
+                sociedad_id = children.item(0).value;
+            }
+        }
+    }
+    return sociedad_id;
+
+}
 $('body').on('keydown.autocomplete', '.input_cli1', function () {
 
     auto(this).autocomplete({
@@ -553,35 +644,16 @@ $('body').on('keydown.autocomplete', '.input_cli1', function () {
 });
 
 $('body').on('keydown.autocomplete', '.input_cli', function () {
-    if (event.keyCode === 13) {
-        AgregarC();
-    }
-    else if (event.keyCode === 9) {
-        Comprobar();
-    }
-    else {
-        var table = $("#table").DataTable();
-        var tr = $(this).closest('tr'); //Obtener el row
-        var row_index = $(this).parent().parent().index();
-        var col_index = $(this).parent().index();
-        var col_index2 = col_index + 1;
-
-        for (var d = (table.rows().data().length) - 1; d > -1; d--) {
-            var row = table.row(d).node();
-            var bukrs = $(row).children().eq(col_index2).children().val();
-            if (bukrs !== "") {
-                break;
-            }
-
-        }
-
+    var rowIndx = this.parentElement._DT_CellIndex.row;
+    var sociedad_id = obtenerSociedadId(rowIndx);
         auto(this).autocomplete({
             source: function (request, response) {
                 auto.ajax({
-                    type: "POST",
-                    url: 'Cliente1',
+                    type: "GET",
+                    url: root +'Listas/Clientes',
                     dataType: "json",
-                    data: { "Prefix": request.term, "BUKRS": bukrs },
+                    data: {
+                        Prefix: request.term, sociedad_id: sociedad_id },
                     success: function (data) {
                         response(auto.map(data, function (item) {
                             return { label: item.KUNNR + " | " + item.NAME1, value: item.KUNNR };
@@ -602,19 +674,22 @@ $('body').on('keydown.autocomplete', '.input_cli', function () {
             },
 
             select: function (event, ui) {
+                if (!existeRowSinDatos()) {
+                    AgregarC();
+                }
             }
         });
-    }
+    //}
 });
 
 $('body').on('keydown.autocomplete', '.input_usc', function () {
-    if (event.keyCode === 13) {
-        AgregarU();
-    }
-    else if (event.keyCode === 9) {
-        Comprobar();
-    }
-    else {
+    //if (event.keyCode === 13) {
+    //    AgregarU();
+    //}
+    //else if (event.keyCode === 9) {
+    //    Comprobar();
+    //}
+    //else {
         auto(this).autocomplete({
             source: function (request, response) {
                 auto.ajax({
@@ -644,7 +719,7 @@ $('body').on('keydown.autocomplete', '.input_usc', function () {
             select: function (event, ui) {
             }
         });
-    }
+    //}
 });
 
 $('body').on('keydown.autocomplete', '.input_idi', function () {
@@ -686,12 +761,12 @@ $('body').on('keydown.autocomplete', '.input_com', function () {
         source: function (request, response) {
             auto.ajax({
                 type: "POST",
-                url: 'Sociedad',
+                url: root+'Listas/Sociedades',
                 dataType: "json",
                 data: { "Prefix": request.term },
                 success: function (data) {
                     response(auto.map(data, function (item) {
-                        return { label: item.BUKRS + " | " + item.BUTXT, value: item.BUKRS };
+                        return { label: item.BUKRS, value: item.BUKRS };
                     }));
                 }
             });
