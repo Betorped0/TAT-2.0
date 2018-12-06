@@ -2602,12 +2602,12 @@ namespace TAT001.Controllers.Reportes
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_monto"))).FirstOrDefault().TEXTOS, "MONTO_PROVISION_STRING"));
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_importe"))).FirstOrDefault().TEXTOS, "MONTO_NCOP_STRING"));
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_reverso"))).FirstOrDefault().TEXTOS, "MONTO_REVERSO_STRING"));
-            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_beneficio"))).FirstOrDefault().TEXTOS, "BENEFICIO_IMPACTO_MRL"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_beneficio"))).FirstOrDefault().TEXTOS, "BENEFICIO_IMPACTO_MRL_STRING"));
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_expense"))).FirstOrDefault().TEXTOS, "EXPENSE_RECOGNITION_STRING"));
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_monto_USD"))).FirstOrDefault().TEXTOS, "MONTO_PROVISION_USD_STRING"));
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_importe_USD"))).FirstOrDefault().TEXTOS, "MONTO_NCOP_USD_STRING"));
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_reverso_USD"))).FirstOrDefault().TEXTOS, "MONTO_REVERSO_USD_STRING"));
-            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_beneficio_USD"))).FirstOrDefault().TEXTOS, "BENEFICIO_IMPACTO_MRL_USD"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_beneficio_USD"))).FirstOrDefault().TEXTOS, "BENEFICIO_IMPACTO_MRL_USD_STRING"));
 
             var datos = GenerarMRLTS(Request["selectedcocode"], Int32.Parse(Request["selecteddperiod"]), Int32.Parse(Request["selectedaperiod"]), Request["selectedyear"]);
             string nombreArchivo = ExcelExport.generarExcelHome(columnas, datos, "MRLTS", Server.MapPath(ExcelExport.getRuta()));
