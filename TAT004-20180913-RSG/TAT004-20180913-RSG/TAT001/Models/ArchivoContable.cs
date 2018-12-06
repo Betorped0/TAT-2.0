@@ -473,7 +473,7 @@ namespace TAT001.Models
                         pais = db.TAX_LAND.Where(x => x.ACTIVO == true && x.PAIS_ID == doc.PAIS_ID).Select(x => x.PAIS_ID).Single();
                     if (String.IsNullOrEmpty(pais) == false)
                     {
-                        if (enca.TIPO_DOC == "DG" || enca.TIPO_DOC == "BB" || enca.TIPO_DOC == "KG")
+                        if (enca.TIPO_DOC == "DG" || enca.TIPO_DOC == "BB" || enca.TIPO_DOC == "KG" || enca.TIPO_DOC == "KR")
                         {
                             try
                             {
@@ -823,7 +823,7 @@ namespace TAT001.Models
                                 {
                                     //if (enca.CALC_TAXT == false)
                                     //{
-                                    conta.TAX_CODE = taxh.IMPUESTO_ID;
+                                    
                                     //}
                                     if (unico)
                                     {
@@ -832,6 +832,11 @@ namespace TAT001.Models
                                     else if (doc.PAIS_ID != "CO")
                                     {
                                         conta.BALANCE = doc.MONTO_DOC_MD.ToString();
+                                        conta.TAX_CODE = conp[i].TAX_CODE;
+                                    }
+                                    else
+                                    {
+                                        conta.TAX_CODE = taxh.IMPUESTO_ID;
                                     }
                                     conta.ASSIGNMENT = Referencia(conp[i].ASIGNACIONTXT, doc, docf, clien, pos); //clien.PAYER;
                                     conta.PRODUCT = docm[j].MATNR;
@@ -1030,7 +1035,7 @@ namespace TAT001.Models
                                 {
                                     //if (enca.CALC_TAXT == false)
                                     //{
-                                    conta.TAX_CODE = taxh.IMPUESTO_ID;
+                                    
                                     //}
                                     if (unico)
                                     {
@@ -1039,6 +1044,11 @@ namespace TAT001.Models
                                     else if (doc.PAIS_ID != "CO")
                                     {
                                         conta.BALANCE = doc.MONTO_DOC_MD.ToString();
+                                        conta.TAX_CODE = conp[i].TAX_CODE;
+                                    }
+                                    else
+                                    {
+                                        conta.TAX_CODE = taxh.IMPUESTO_ID;
                                     }
                                     conta.ASSIGNMENT = Referencia(conp[i].ASIGNACIONTXT, doc, docf, clien, pos); //clien.PAYER;
                                     conta.PRODUCT = docp[j].MATNR;

@@ -140,6 +140,13 @@ namespace TAT001.Models
             public string BENEFICIO_IMPACTO_MRL_USD { get; set; }
             public string NUMERO_REVERSO_SAP { get; set; }
 
+            public string PERIODO_CONTABLE_STRING
+            {
+                get
+                {
+                    return this.PERIODO_CONTABLE.ToString() + "-" + this.ANIO_CONTABLE.ToString();
+                }
+            }
             public string COMENTARIOS_REVERSO_PROVISION_STRING
             {
                 get
@@ -171,14 +178,14 @@ namespace TAT001.Models
             {
                 get
                 {
-                    return this.DE.ToShortDateString();
+                    return this.DE.ToString("MM-yyyy");
                 }
             }
             public string A_STRING
             {
                 get
                 {
-                    return this.A.ToShortDateString();
+                    return this.A.ToString("MM-yyyy");
                 }
             }
             public string MONTO_PROVISION_STRING

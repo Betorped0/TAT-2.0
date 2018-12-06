@@ -1,4 +1,5 @@
 ﻿@model TAT001.Entities.DOCUMENTO
+@using TAT001.Entities
 
 @{
     Layout = null;
@@ -11,6 +12,11 @@
     <meta name="viewport" content="width=device-width" />
     <title>Index</title>
     <style>
+        body {
+            font-family: Tahoma;
+            font-size: 12px;
+        }
+
         .divs {
             width: 800px;
             height: 100px;
@@ -277,6 +283,26 @@
                 .row .col.push-s12 {
                     left: 100%;
                 }
+
+        #container {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            right: 2px;
+        }
+
+        #navi,
+        #infoi {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #infoi {
+            z-index: 10;
+        }
     </style>
     <script type="text/javascript">
         function f1() {
@@ -285,6 +311,10 @@
     </script>
 </head>
 <body>
+    @{
+        string bandera = ViewBag.bandera;
+        bandera = bandera + ".png";
+    }
     @*//B20180803 MGC Correos......................................*@
     @* ------------------------------------------------------------------------LEJ 09-07-18 *@
     <input id="miles" name="miles" type="hidden" value="@ViewBag.miles">
@@ -304,19 +334,37 @@
             <img src="~/images/logo_kellogg.png" />
         }
         @*//B20180803 MGC Correos......................................*@
+
+        @{ string textoNotificacionCab = "", textoNotificacionCue = "";
+            if (Model.TSOL.REVERSO)
+            {
+                textoNotificacionCab = "Reverso Provisión";
+                textoNotificacionCue = "Se le informa que el usuario Pilar López con user id mxkp1l01 solicitó el Reverso Total/Remanente de una Provisión con los siguientes datos:";
+            }
+            else if (!Model.TSOL.CARTA)
+            {
+                textoNotificacionCab = "Solicitud con Soporte Externo";
+                textoNotificacionCue = "Se le informa que el usuario Pilar López con user id mxkp1l01 procesó solicitud en ICON con soporte externo a la herramienta (ej. Contrato, JBP, Factura, etc) con los siguientes datos:";
+            }
+        }
+
+
         @if (Model.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().WORKFP.ACCION.TIPO == "A")
         {
             <div style="display:inline-block;width:200px;"></div>
-            <h5 style="display:inline; text-align:center;color:white;font-size:30px;">MAIL APROBACIÓN - @Model.TSOL.TSOLTs.Where(x => x.SPRAS_ID.Equals(Model.USUARIO.SPRAS_ID)).FirstOrDefault().TXT020</h5>
+            <h5 style="display:inline; text-align:center;color:white;font-size:30px;">Aprobación Manager - @Model.TSOL.TSOLTs.Where(x => x.SPRAS_ID.Equals(Model.USUARIO.SPRAS_ID)).FirstOrDefault().TXT020</h5>
+            @*<h5 style="display:inline; text-align:center;color:white;font-size:30px;">MAIL APROBACIÓN - @Model.TSOL.TSOLTs.Where(x => x.SPRAS_ID.Equals(Model.USUARIO.SPRAS_ID)).FirstOrDefault().TXT020</h5>*@
         }
         else
         {
             <div style="display:inline-block;width:200px;"></div>
-            <h5 style="display:inline; text-align:center;color:white;font-size:30px;">MAIL NOTIFICACIÓN - @Model.TSOL.TSOLTs.Where(x => x.SPRAS_ID.Equals(Model.USUARIO.SPRAS_ID)).FirstOrDefault().TXT020</h5>
+            @*<h5 style="display:inline; text-align:center;color:white;font-size:30px;">Notificación solicitud - @Model.TSOL.TSOLTs.Where(x => x.SPRAS_ID.Equals(Model.USUARIO.SPRAS_ID)).FirstOrDefault().TXT020</h5>*@
+            <h5 style="display:inline; text-align:center;color:white;font-size:30px;">Notificación @textoNotificacionCab</h5>
         }
+        <img src="/images/flags/4x3/@bandera" style="width: 30px; height: 20px; margin-top:15px; margin-right:15px;" align="right" />
     </div>
-    @*<div class="container" style="width:1300px">*@
-    <div class="container" style="width:100%">
+
+    <div class="container" style="width:100%; font-size:15px; margin-top:15px">
         <br />
         @if (Model.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().WORKFP.ACCION.TIPO == "A")
         {
@@ -328,8 +376,8 @@
                                 <h4 style="margin-bottom:0px;">Favor de revisar y aprobar la siguiente solicitud.</h4>
                                 En caso de no autorizar la solicitud:<br />
                                 1-Dar click en el boton de rechazar.<br />
-                                2-En el mail alterno que se genera, debera indicar sus comentarios.<br />
-                                3-Deberán dar click en enviar al mensaje.<br />
+                                2-En el correo alterno que se genera, favor de indicar sus comentarios.<br />
+                                3-Deberá dar click en enviar al mensaje.<br />
                             </p>
                         </div>
                     </td>
@@ -385,9 +433,57 @@
                             </a>
                         </div>
                     </td>
+                    <td>
+                        @*<div id="container" style="margin-top:-30px;">
+                                <div id="navi">
+                                    @Html.LabelFor(model => model.SOCIEDAD_ID, "BU", new { @style = "color: rgba(0, 0, 0, 1.0);font-size:10px;", @id = "lbl_sociedadid" })
+                                </div>
+                                <div id="infoi">
+                                    <input type="text" disabled="disabled" style="color: rgba(0, 0, 0, 1.0); background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 120px;font-size: 12px;margin: 0 0 8px 0;padding: 0;" value="@Model.SOCIEDAD_ID" />
+                                </div>
+                            </div>*@
+                        <div class="row">
+                            <div class="input-field col s10 offset-s4" style="margin-bottom:0px;">
+                                <div style="margin-top:30px;">
+                                    @Html.LabelFor(model => model.SOCIEDAD_ID, "BU", new { @style = "color: rgba(0, 0, 0, 1.0);", @id = "lbl_sociedadid" })
+                                </div>
+                                <div class="input-field col s12" style="margin-bottom:0;" align="right">
+                                    <input type="text" disabled="disabled" style="color: rgba(0, 0, 0, 1.0); background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 120px;margin: 0 0 8px 0;padding: 0;" value="@Model.SOCIEDAD_ID" />
+                                </div>
+                            </div>
+                        </div>
+                    </td>
                 </tr>
             </table>
+        }
+        else
+        {
+            <div style="height:50px; width:100%; z-index:1000;left:0px; margin-top:30px;">
+                <table>
+                    <tr>
+                        <td>
+                            <div>
+                                <p>
+                                    <h4 style="margin-bottom:0px;">
+                                        @textoNotificacionCue
+                                    </h4>
+                                </p>
+                            </div>
+                        </td>
 
+                        <td>
+                            <div style="margin-left:450px">
+                                <div>
+                                    @Html.LabelFor(model => model.SOCIEDAD_ID, "BU", new { @style = "color: rgba(0, 0, 0, 1.0);", @id = "lbl_sociedadid" })
+                                </div>
+                                <div>
+                                    <input type="text" disabled="disabled" style="color: rgba(0, 0, 0, 1.0); background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 120px;margin: 0 0 8px 0;padding: 0;" value="@Model.SOCIEDAD_ID" />
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         }
         @*<div class="child_div_1">
             <a type="button" class="btn-small" id="btn_comm" name="btn_comm"
@@ -414,384 +510,902 @@
                 Comentarios
             </a>*@
     </div>
+
     <div>
         <div class="container" style="width:100%">
             <h4 style="font-family: -apple-system, BlinkMacSystemFont,Segoe UI, Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
                font-size:25px;">
                 @ViewBag.Title @Model.NUM_DOC
+                @if (Model.TIPO_RECURRENTE != null)
+                {
+                    <span style="font-weight: normal;">Documento recurrente</span>
+                }
             </h4>
-            <table>
-                <tr>
-                    <td>
-                        @Html.LabelFor(model => model.SOCIEDAD_ID, "Co. Code", new
-                        {
-                            @style = "color: rgba(0, 0, 0, 1.0);font-size:10px;",
-                            @id = "lbl_sociedadid"
-                        })
-                    </td>
-                </tr>
-                <tr>
-                    <td style="padding:5px;">
-                        <div class="input-field col s4">
-                            <input type="text" disabled="disabled" style="color: rgba(0, 0, 0, 1.0); background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 320px;font-size: 12px;margin: 0 0 8px 0;padding: 0;"
-                                   value="@Model.SOCIEDAD_ID - @Model.PAI.LANDX " />
-                        </div>
-                    </td>
-                    <td style="width:30px"></td>
-                    <td style="width:30px"></td>
-                    <td style="width:30px"></td>
-                </tr>
-                <tr>
-                    <td>
-                        @Html.LabelFor(model => model.USUARIOC_ID, "Usuario", new
-                        {
-                            @style = "color: rgba(0, 0, 0, 1.0);font-size:10px;",
-                            @id = "lbl_userid"
-                        })
-                    </td>
-                    <td>
-                        @Html.LabelFor(model => model.USUARIO.NOMBRE, "Nombre", new
-                        {
-                            @style = "color: rgba(0, 0, 0, 1.0);font-size:10px;",
-                            @id = "lbl_manager"
-                        })
-                    </td>
-                    <td colspan="4"></td>
-                </tr>
-                <tr>
-                    <td style="padding:5px;">
-                        <div class="input-field col s4">
-                            @Html.EditorFor(model => model.USUARIOC_ID, new
-                            {
-                                htmlAttributes = new
+            @*<table>
+                    <tr>
+                            <td>
+                                @Html.LabelFor(model => model.SOCIEDAD_ID, "Co. Code", new
                                 {
-                                    @disabled = "disabled",
-                                    @style = "color: rgba(0, 0, 0, 1.0); background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 120px;font-size: 12px;margin: 0 0 8px 0;padding: 0; "
-                                }
+                                    @style = "color: rgba(0, 0, 0, 1.0);font-size:10px;",
+                                    @id = "lbl_sociedadid"
+                                })
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding:5px;">
+                                <div class="input-field col s4">
+                                    <input type="text" disabled="disabled" style="color: rgba(0, 0, 0, 1.0); background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 320px;font-size: 12px;margin: 0 0 8px 0;padding: 0;"
+                                           value="@Model.SOCIEDAD_ID - @Model.PAI.LANDX " />
+                                </div>
+                            </td>
+                            <td style="width:30px"></td>
+                            <td style="width:30px"></td>
+                            <td style="width:30px"></td>
+                        </tr>
+                    <tr>
+                        <td>
+                            @Html.LabelFor(model => model.USUARIOC_ID, "Usuario", new
+                            {
+                                @style = "color: rgba(0, 0, 0, 1.0);font-size:10px;",
+                                @id = "lbl_userid"
                             })
-                        </div>
-                    </td>
-                    <td style="padding:5px;">
-                        <div class="input-field col s4">
-                            @*@Html.EditorFor(model => model.USUARIO.NOMBRE, new
+                        </td>
+                        <td>
+                            @Html.LabelFor(model => model.USUARIO.NOMBRE, "Nombre", new
+                            {
+                                @style = "color: rgba(0, 0, 0, 1.0);font-size:10px;",
+                                @id = "lbl_manager"
+                            })
+                        </td>
+                        <td colspan="4"></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:5px;">
+                            <div class="input-field col s4">
+                                @Html.EditorFor(model => model.USUARIOC_ID, new
                                 {
                                     htmlAttributes = new
                                     {
                                         @disabled = "disabled",
                                         @style = "color: rgba(0, 0, 0, 1.0); background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 120px;font-size: 12px;margin: 0 0 8px 0;padding: 0; "
                                     }
-                                })*@
-                            <input type="text" disabled="disabled" style="color: rgba(0, 0, 0, 1.0); background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 320px;font-size: 12px;margin: 0 0 8px 0;padding: 0;"
-                                   value="@Model.USUARIO.NOMBRE @Model.USUARIO.APELLIDO_P @Model.USUARIO.APELLIDO_M " />
-                        </div>
-                    </td>
-                    <td style="width:30px"></td>
-                    <td style="width:30px"></td>
-                    <td style="width:30px"></td>
-                </tr>
-            </table>
-            <br />
-            <br />
-            <table style="width:80%;">
-                <tr>
-                    <!------------------------------------11111111111111111111111111111111111----------------------------->
-                    <td style="width:50%;padding:5px;vertical-align:baseline;">
-                        @*<div class="" style="transition: box-shadow .25s, -webkit-box-shadow .25s;
-                            padding: 24px;margin: 0.5rem 0 1rem 0;border-radius: 2px;
-                            background-color:#fff;box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);">*@
-                        <div>
-                            <div class="row">
-                                <div class="col s6">
-                                    <div class="row">
-                                        <div class="input-field col s12" @*style="width:48%; float:left;  margin-right: 8px;"*@>
-                                            @Html.LabelFor(model => model.TSOL_ID, "Tipo solicitud", new { @style = "color: rgba(0, 0, 0, 1.0);font-size:10px;", @id = "lbl_userid" })
-                                            @Html.EditorFor(model => model.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(model.USUARIO.SPRAS_ID)).FirstOrDefault().TXT020, new
-                                            {
-                                                htmlAttributes = new
-                                                {
-                                                    @disabled = "disabled",
-                                                    @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;font-size: 12px;margin: 0 0 8px 0;padding: 0; "
-                                                }
-                                            })
-                                        </div>
-                                        <div class="input-field col s12" @*style="width:48%; float:left; margin-right: 8px;"*@>
-                                            @Html.LabelFor(model => model.TALL_ID, "Clasificación", new
-                                            {
-                                                @style = "    color: rgba(0, 0, 0, 1.0);font-size:10px;",
-                                                @id = "lbl_userid"
-                                            })
-                                            @Html.EditorFor(model => model.TALL.TALLTs.Where(a => a.SPRAS_ID.Equals(model.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50, new
-                                            {
-                                                htmlAttributes = new
-                                                {
-                                                    @disabled = "disabled",
-                                                    @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;font-size: 12px;margin: 0 0 8px 0;padding: 0; "
-                                                }
-                                            })
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <div class="col s6">
-                                    <div class="row">
-                                        <div class="input-field col s12" @*style="width:48%;  float:left;  margin-right: 8px;"*@>
-                                            @Html.LabelFor(model => model.PAYER_ID, "Cliente", new
-                                            {
-                                                @style = "    color: rgba(0, 0, 0, 1.0);font-size:10px;",
-                                                @id = "lbl_userid"
-                                            })
-                                            @Html.EditorFor(model => model.PAYER_ID, new
-                                            {
-                                                htmlAttributes = new
-                                                {
-                                                    @disabled = "disabled",
-                                                    @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;font-size: 12px;margin: 0 0 8px 0;padding: 0; "
-                                                }
-                                            })
-                                        </div>
-                                        <div class="input-field col s12" @*style="width:48%; float:left; margin-right: 8px;"*@>
-                                            @Html.LabelFor(model => model.PAYER_NOMBRE, "Nombre", new
-                                            {
-                                                @style = "    color: rgba(0, 0, 0, 1.0);font-size:10px;",
-                                                @id = "lbl_userid"
-                                            })
-                                            @Html.EditorFor(model => model.CLIENTE.NAME1, new
-                                            {
-                                                htmlAttributes = new
-                                                {
-                                                    @disabled = "disabled",
-                                                    @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;font-size: 12px;margin: 0 0 8px 0;padding: 0; "
-                                                }
-                                            })
-                                        </div>
-
-                                    </div>
-                                </div>
+                                })
                             </div>
-                            <div class="row">
-                                <h5 style="font-size:20px;margin:5px;">Vigencia</h5>
+                        </td>
+                        <td style="padding:5px;">
+                            <div class="input-field col s4">
+                                @Html.EditorFor(model => model.USUARIO.NOMBRE, new
+                                    {
+                                        htmlAttributes = new
+                                        {
+                                            @disabled = "disabled",
+                                            @style = "color: rgba(0, 0, 0, 1.0); background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 120px;font-size: 12px;margin: 0 0 8px 0;padding: 0; "
+                                        }
+                                    })
+                                <input type="text" disabled="disabled" style="color: rgba(0, 0, 0, 1.0); background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 320px;font-size: 12px;margin: 0 0 8px 0;padding: 0;"
+                                       value="@Model.USUARIO.NOMBRE @Model.USUARIO.APELLIDO_P @Model.USUARIO.APELLIDO_M " />
                             </div>
-                            <div class="row">
-                                <div class="col s6">
-                                    <div class="row">
-                                        <div class="input-field col s12" @*style="width:48%; float:left;  margin-right: 8px;"*@>
-                                            @Html.LabelFor(model => model.FECHAI_VIG, "Vigencia de", new { @style = "color: rgba(0, 0, 0, 1.0);font-size:10px;", @id = "lbl_userid" })
-                                            <input type="text"
-                                                   disabled="disabled" ,
-                                                   style="color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;font-size: 12px;margin: 0 0 8px 0;padding: 0; " ,
-                                                   value="@Model.FECHAI_VIG.Value.ToShortDateString()" />
-                                        </div>
-                                        <div class="input-field col s12" @*style="width:48%; float:left;  margin-right: 8px;"*@>
-                                            @Html.LabelFor(model => model.CONCEPTO, "Concepto", new { @style = "color: rgba(0, 0, 0, 1.0);font-size:10px;", @id = "lbl_userid" })
-                                            @Html.EditorFor(model => model.CONCEPTO, new
-                                            {
-                                                htmlAttributes = new
-                                                {
-                                                    @disabled = "disabled",
-                                                    @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;font-size: 12px;margin: 0 0 8px 0;padding: 0; "
-                                                }
-                                            })
-                                        </div>
+                        </td>
+                        <td style="width:30px"></td>
+                        <td style="width:30px"></td>
+                        <td style="width:30px"></td>
+                    </tr>
+                </table>*@
+            @*<br />
+                <br />*@
 
-                                    </div>
-                                </div>
+            <div class="row">
+                <table style="width:50%;" class="col s6">
 
-
-                                <div class="col s6">
-                                    <div class="row">
-                                        <div class="input-field col s12" @*style="width:48%;  float:left;  margin-right: 8px;"*@>
-                                            @Html.LabelFor(model => model.FECHAF_VIG, "Vigencia a", new
-                                            {
-                                                @style = "    color: rgba(0, 0, 0, 1.0);font-size:10px;",
-                                                @id = "lbl_userid"
-                                            })
-                                            <input type="text"
-                                                   disabled="disabled" ,
-                                                   style="color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;font-size: 12px;margin: 0 0 8px 0;padding: 0; " ,
-                                                   value="@Model.FECHAF_VIG.Value.ToShortDateString()" />
-                                        </div>
-                                        <div class="input-field col s12" @*style="width:48%; float:left;  margin-right: 8px;"*@>
-                                            @Html.LabelFor(model => model.MONTO_DOC_MD, "Monto", new
-                                            {
-                                                @style = "    color: rgba(0, 0, 0, 1.0);font-size:10px;",
-                                                @id = "lbl_userid"
-                                            })<input type="text"
-                                                     disabled="disabled" ,
-                                                     style="color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;font-size: 12px;margin: 0 0 8px 0;padding: 0; " ,
-                                                     value="@ViewBag.monto" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-
-            </table>
-
-            <table style="width:80%">
-                <tr>
-                    <td style="width:50%;padding:5px;vertical-align:baseline;">
-                        <div class="card-panel" style="transition: box-shadow .25s, -webkit-box-shadow .25s;
-                                padding: 24px;margin: 0.5rem 0 1rem 0;border-radius: 2px;
-                                background-color:#fff;box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);">
-                            <h5 style="font-size:20px;margin:5px;">Análisis Presupuesto</h5>
-                            <p style="font-size:15px">Última fecha de carga @ViewBag.ultMod</p>
-
-                            <input type="text" id="payer_id" hidden value="@Model.PAYER_ID" style="display:none" />
-
-                            <div class="row" style="margin-bottom:0">
-                                <table class="tg" style="width: 100%;border-collapse: collapse;">
-                                    <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
-                                        <td class="tg-yw4l">
-                                            <label>Presupuesto canal</label>
-                                        </td>
-                                        <td class="tg-yw4l">
-                                            <label id="p_vtweg">@ViewBag.vtweg</label>
-                                        </td>
-                                        <td class="tg-yw4l">
-                                            <label id="p_canal" style="color: #9e9e9e;">@ViewBag.pcan</label>
-                                        </td>
-                                    </tr>
-                                    <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
-                                        <td class="tg-yw4l">
-                                            <label>Presupuesto cliente</label>
-                                        </td>
-                                        <td class="tg-yw4l">
-                                            <label id="p_kunnr">@ViewBag.kunnr</label>
-                                        </td>
-                                        <td class="tg-yw4l">
-                                            <label id="p_banner" style="color: #9e9e9e;">@ViewBag.pban</label>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
+                    <tr>
+                        <!------------------------------------11111111111111111111111111111111111----------------------------->
+                        <td style="width:50%;padding:5px;vertical-align:baseline;">
                             <div class="card-panel" style="transition: box-shadow .25s, -webkit-box-shadow .25s;
                                 padding: 24px;margin: 0.5rem 0 1rem 0;border-radius: 2px;
                                 background-color:#fff;box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);">
+                                <div>
+                                    @if (Model.TSOL.REVERSO)
+                                    {
+                                        <div class="row">
+                                            <div class="col s6">
+                                                <div class="row">
+                                                    <div class="input-field col s12" @*style="width:48%; float:left;  margin-right: 8px;"*@>
+                                                        @Html.LabelFor(model => model.USUARIOC_ID, "Usuario", new { @style = "color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })
+                                                        @Html.EditorFor(model => model.USUARIOC_ID, new
+                                                   {
+                                                       htmlAttributes = new
+                                                       {
+                                                           @disabled = "disabled",
+                                                           @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; "
+                                                       }
+                                                   })
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                                <div class="row" style="margin-bottom:0">
-                                    <table class="tg" style="width: 100%; border-collapse: collapse;">
-                                        <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
-                                            <td class="tg-yw4l" colspan="2">
-                                                <label>Registrado en SAP</label>
-                                            </td>
-                                            <td class="tg-yw4l">
-                                                <label id="pc_c" style="color: #9e9e9e;">@ViewBag.pcc</label>
-                                            </td>
-                                            <td></td>
-                                        </tr>
-                                        <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
-                                            <td class="tg-yw4l" colspan="2">
-                                                <label>Por registrar en SAP</label>
-                                            </td>
-                                            <td class="tg-yw4l">
-                                                <label id="pc_a" style="color: #9e9e9e;">@ViewBag.pca</label>
-                                            </td>
-                                            <td></td>
-                                        </tr>
-                                        <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
-                                            <td class="tg-yw4l" colspan="2">
-                                                <label>En proceso TAT</label>
-                                            </td>
-                                            <td class="tg-yw4l">
-                                                <label id="pc_p" style="color: #9e9e9e;">@ViewBag.pcp</label>
-                                            </td>
-                                            <td></td>
-                                        </tr>
-                                        <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
-                                            <td class="tg-yw4l" colspan="2">
-                                                <label>Consumido</label>
-                                            </td>
-                                            <td></td>
-                                            <td class="tg-yw4l">
-                                                <label id="pc_t" style="color: #9e9e9e;">@ViewBag.pct</label>
-                                            </td>
-                                        </tr>
-                                        <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
-                                            <td class="tg-yw4l" colspan="2">
-                                                <label>Presupuesto disponible</label>
-                                            </td>
-                                            <td></td>
-                                            <td class="tg-yw4l">
-                                                <label id="consu" style="color: #9e9e9e;">@ViewBag.consu</label>
-                                            </td>
-                                        </tr>
-                                    </table>
+                                            <div class="col s6">
+                                                <div class="row">
+                                                    <div class="input-field col s12" @*style="width:48%; float:left; margin-right: 8px;"*@>
+                                                        @Html.LabelFor(model => model.USUARIO.NOMBRE, "Nombre", new { @style = "color: rgba(0, 0, 0, 1.0);", @id = "lbl_manager" })
+                                                        @Html.EditorFor(model => model.USUARIO.NOMBRE, new
+                                                   {
+                                                       htmlAttributes = new
+                                                       {
+                                                           @disabled = "disabled",
+                                                           @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; ",
+                                                           @Value = Model.USUARIO.NOMBRE, Model.USUARIO.APELLIDO_P, Model.USUARIO.APELLIDO_M
+                                                       }
+                                                   })
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col s6">
+                                                <div class="row">
+                                                    <div class="input-field col s12" @*style="width:48%; float:left;  margin-right: 8px;"*@>
+                                                        @Html.LabelFor(model => model.PERIODO, "Periodo", new { @style = "color: rgba(0, 0, 0, 1.0);", @id = "lbl_periodo" })
+                                                        @Html.EditorFor(model => model.PERIODO, new
+                                                   {
+                                                       htmlAttributes = new
+                                                       {
+                                                           @disabled = "disabled",
+                                                           @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; "
+                                                       }
+                                                   })
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col s6">
+                                                <div class="row">
+                                                    <div class="input-field col s12" @*style="width:48%; float:left; margin-right: 8px;"*@>
+                                                        @Html.LabelFor(model => model.EJERCICIO, "Ejercicio", new { @style = "color: rgba(0, 0, 0, 1.0);", @id = "lbl_ejercicio" })
+                                                        @Html.EditorFor(model => model.EJERCICIO, new
+                                                   {
+                                                       htmlAttributes = new
+                                                       {
+                                                           @disabled = "disabled",
+                                                           @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; ",
+                                                       }
+                                                   })
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col s6">
+                                                <div class="row">
+                                                    <div class="input-field col s12" @*style="width:48%; float:left;  margin-right: 8px;"*@>
+                                                        @Html.LabelFor(model => model.TSOL_ID, "Tipo solicitud", new { @style = "color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })
+                                                        @Html.EditorFor(model => model.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(model.USUARIO.SPRAS_ID)).FirstOrDefault().TXT020, new
+                                                   {
+                                                       htmlAttributes = new
+                                                       {
+                                                           @disabled = "disabled",
+                                                           @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; "
+                                                       }
+                                                   })
+                                                    </div>
+
+                                                    <div class="input-field col s12" @*style="width:48%; float:left; margin-right: 8px;"*@>
+                                                        @Html.LabelFor(model => model.TALL_ID, "Clasificación", new
+                                                   {
+                                                       @style = "    color: rgba(0, 0, 0, 1.0);",
+                                                       @id = "lbl_userid"
+                                                   })
+                                                        @Html.EditorFor(model => model.TALL.TALLTs.Where(a => a.SPRAS_ID.Equals(model.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50, new
+                                                   {
+                                                       htmlAttributes = new
+                                                       {
+                                                           @disabled = "disabled",
+                                                           @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; "
+                                                       }
+                                                   })
+                                                    </div>
+
+                                                    <div class="input-field col s12" @*style="width:48%;  float:left;  margin-right: 8px;"*@>
+                                                        @Html.LabelFor(model => model.PAYER_ID, "Cliente", new
+                                                   {
+                                                       @style = "    color: rgba(0, 0, 0, 1.0);",
+                                                       @id = "lbl_userid"
+                                                   })
+                                                        @Html.EditorFor(model => model.PAYER_ID, new
+                                                   {
+                                                       htmlAttributes = new
+                                                       {
+                                                           @disabled = "disabled",
+                                                           @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; font-weight:bold;"
+                                                       }
+                                                   })
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col s6">
+                                                <div class="row">
+
+                                                    @if (Model.TSOL.REVERSO)
+                                                    {
+                                                        <div class="input-field col s12" @*style="width:48%; float:left;  margin-right: 8px;"*@>
+                                                            @Html.LabelFor(model => model.CONCEPTO, "Concepto", new { @style = "color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })
+                                                            @Html.EditorFor(model => model.CONCEPTO, new
+                                                       {
+                                                           htmlAttributes = new
+                                                           {
+                                                               @disabled = "disabled",
+                                                               @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; "
+                                                           }
+                                                       })
+                                                        </div>
+                                                    }
+
+                                                    @if (Model.TSOL.REVERSO)
+                                                    {
+                                                        <div class="input-field col s12" @*style="width:48%; float:left;  margin-right: 8px;"*@>
+                                                            @Html.LabelFor(model => model.MONTO_DOC_MD, "Monto", new
+                                                       {
+                                                           @style = "    color: rgba(0, 0, 0, 1.0);",
+                                                           @id = "lbl_userid"
+                                                       })
+                                                            <input type="text"
+                                                                   disabled="disabled" ,
+                                                                   style="color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; font-weight:bold" ,
+                                                                   value="@ViewBag.monto" />
+                                                        </div>
+                                                    }
+
+                                                    <div class="input-field col s12" @*style="width:48%; float:left; margin-right: 8px;"*@>
+                                                        @Html.LabelFor(model => model.PAYER_NOMBRE, "Nombre", new
+                                                   {
+                                                       @style = "    color: rgba(0, 0, 0, 1.0);",
+                                                       @id = "lbl_userid"
+                                                   })
+                                                        @Html.EditorFor(model => model.CLIENTE.NAME1, new
+                                                   {
+                                                       htmlAttributes = new
+                                                       {
+                                                           @disabled = "disabled",
+                                                           @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; font-weight:bold;"
+                                                       }
+                                                   })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="row">
+                                            <div class="col s6">
+                                                <div class="row">
+                                                    <div class="input-field col s12" @*style="width:48%; float:left;  margin-right: 8px;"*@>
+                                                        @Html.LabelFor(model => model.USUARIOC_ID, "Usuario", new { @style = "color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })
+                                                        @Html.EditorFor(model => model.USUARIOC_ID, new
+                                                        {
+                                                            htmlAttributes = new
+                                                            {
+                                                                @disabled = "disabled",
+                                                                @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; "
+                                                            }
+                                                        })
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col s6">
+                                                <div class="row">
+                                                    <div class="input-field col s12" @*style="width:48%; float:left; margin-right: 8px;"*@>
+                                                        @Html.LabelFor(model => model.USUARIO.NOMBRE, "Nombre", new { @style = "color: rgba(0, 0, 0, 1.0);", @id = "lbl_manager" })
+                                                        @Html.EditorFor(model => model.USUARIO.NOMBRE, new
+                                                        {
+                                                       htmlAttributes = new
+                                                       {
+                                                           @disabled = "disabled",
+                                                           @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; ",
+                                                           @Value = Model.USUARIO.NOMBRE, Model.USUARIO.APELLIDO_P, Model.USUARIO.APELLIDO_M
+                                                       }
+                                                   })
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col s6">
+                                                <div class="row">
+                                                    <div class="input-field col s12" @*style="width:48%; float:left;  margin-right: 8px;"*@>
+                                                        @Html.LabelFor(model => model.TSOL_ID, "Tipo solicitud", new { @style = "color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })
+                                                        @Html.EditorFor(model => model.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(model.USUARIO.SPRAS_ID)).FirstOrDefault().TXT020, new
+                                                        {
+                                                            htmlAttributes = new
+                                                            {
+                                                                @disabled = "disabled",
+                                                                @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; "
+                                                            }
+                                                        })
+                                                    </div>
+
+                                                    <div class="input-field col s12" @*style="width:48%; float:left; margin-right: 8px;"*@>
+                                                        @Html.LabelFor(model => model.TALL_ID, "Clasificación", new
+                                                        {
+                                                            @style = "    color: rgba(0, 0, 0, 1.0);",
+                                                            @id = "lbl_userid"
+                                                        })
+                                                        @Html.EditorFor(model => model.TALL.TALLTs.Where(a => a.SPRAS_ID.Equals(model.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50, new
+                                                        {
+                                                            htmlAttributes = new
+                                                            {
+                                                                @disabled = "disabled",
+                                                                @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; "
+                                                            }
+                                                        })
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col s6">
+                                                <div class="row">
+                                                    <div class="input-field col s12" @*style="width:48%;  float:left;  margin-right: 8px;"*@>
+                                                        @Html.LabelFor(model => model.PAYER_ID, "Cliente", new
+                                                        {
+                                                            @style = "    color: rgba(0, 0, 0, 1.0);",
+                                                            @id = "lbl_userid"
+                                                        })
+                                                        @Html.EditorFor(model => model.PAYER_ID, new
+                                                        {
+                                                            htmlAttributes = new
+                                                            {
+                                                                @disabled = "disabled",
+                                                                @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; "
+                                                            }
+                                                        })
+                                                    </div>
+                                                    <div class="input-field col s12" @*style="width:48%; float:left; margin-right: 8px;"*@>
+                                                        @Html.LabelFor(model => model.PAYER_NOMBRE, "Nombre", new
+                                                        {
+                                                            @style = "    color: rgba(0, 0, 0, 1.0);",
+                                                            @id = "lbl_userid"
+                                                        })
+                                                        @Html.EditorFor(model => model.CLIENTE.NAME1, new
+                                                        {
+                                                            htmlAttributes = new
+                                                            {
+                                                                @disabled = "disabled",
+                                                                @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; "
+                                                            }
+                                                        })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <h5 style="font-size:20px;margin:5px;">Vigencia</h5>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col s6">
+                                                <div class="row">
+                                                    <div class="input-field col s12" @*style="width:48%; float:left;  margin-right: 8px;"*@>
+                                                        @Html.LabelFor(model => model.FECHAI_VIG, "De", new { @style = "color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })
+                                                        <input type="text"
+                                                               disabled="disabled" ,
+                                                               style="color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; " ,
+                                                               value="@Model.FECHAI_VIG.Value.ToShortDateString()" />
+                                                    </div>
+                                                    <div class="input-field col s12" @*style="width:48%; float:left;  margin-right: 8px;"*@>
+                                                        @Html.LabelFor(model => model.CONCEPTO, "Concepto", new { @style = "color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })
+                                                        @Html.EditorFor(model => model.CONCEPTO, new
+                                                        {
+                                                            htmlAttributes = new
+                                                            {
+                                                                @disabled = "disabled",
+                                                                @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; "
+                                                            }
+                                                        })
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col s6">
+                                                <div class="row">
+                                                    <div class="input-field col s12" @*style="width:48%;  float:left;  margin-right: 8px;"*@>
+                                                        @Html.LabelFor(model => model.FECHAF_VIG, "A", new
+                                                        {
+                                                            @style = "    color: rgba(0, 0, 0, 1.0);",
+                                                            @id = "lbl_userid"
+                                                        })
+                                                        <input type="text"
+                                                               disabled="disabled" ,
+                                                               style="color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; " ,
+                                                               value="@Model.FECHAF_VIG.Value.ToShortDateString()" />
+                                                    </div>
+                                                    @*<div class="input-field col s12" @*style="width:48%; float:left;  margin-right: 8px;">
+                                                            @Html.LabelFor(model => model.MONTO_DOC_MD, "Monto", new
+                                                            {
+                                                                @style = "    color: rgba(0, 0, 0, 1.0);font-size:10px;",
+                                                                @id = "lbl_userid"
+                                                            })
+                                                            <input type="text"
+                                                                   disabled="disabled" ,
+                                                                   style="color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;font-size: 12px;margin: 0 0 8px 0;padding: 0; font-weight:bold" ,
+                                                                   value="@ViewBag.monto" />
+                                                        </div>*@
+                                                </div>
+                                            </div>
+
+                                            <div class="col s6 offset-s6">
+                                                <div class="row">
+                                                    <div class="input-field col s12" @*style="width:48%; float:left;  margin-right: 8px;"*@>
+                                                        @if (Model.DOCUMENTO_REF != null & !@Model.TSOL.REVERSO)
+                                                        {
+                                                            <span>Remanente</span>
+                                                            <input type="text"
+                                                                   disabled="disabled" ,
+                                                                   style="color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0;" ,
+                                                                   value="@ViewBag.remanente" />
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
                             </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="width:50%;padding:5px;vertical-align:baseline;">
-                        <div class="card-panel" style="transition: box-shadow .25s, -webkit-box-shadow .25s;
+
+                            @if (Model.TSOL.REVERSO & Model.DOCUMENTO_REF != null)
+                            {
+                                using (TAT001Entities db = new TAT001Entities())
+                                {
+                                    List<DOCUMENTO> inf = new List<DOCUMENTO>();
+                                    inf = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == Model.NUM_DOC).ToList();
+                                    <div class="card-panel" style="transition: box-shadow .25s, -webkit-box-shadow .25s;
                                 padding: 24px;margin: 0.5rem 0 1rem 0;border-radius: 2px;
                                 background-color:#fff;box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);">
-                            <h5 style="font-size:20px;margin:5px;">Análisis solicitud</h5>
-                            <input type="text" id="payer_id" hidden value="@Model.PAYER_ID" style="display:none" />
-                            <div class="row" style="margin-bottom:0">
-                                <table class="tg" style="width: 100%;border-collapse: collapse;">
-                                    <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
-                                        <td class="tg-yw4l">
-                                            <span>Monto solicitud</span>
-                                        </td>
-                                        <td class="tg-yw4l" style="text-align:right">
-                                            <label id="p_vtweg" style="color: #9e9e9e;">@ViewBag.montoSol</label>
-                                        </td>
-                                    </tr>
-                                    <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
-                                        <td class="tg-yw4l">
-                                            <span>Monto provisión original</span>
-                                        </td>
-                                        <td class="tg-yw4l" style="text-align:right">
-                                            <label id="p_kunnr" style="color: #9e9e9e;">@ViewBag.montoProv</label>
-                                        </td>
-                                    </tr>
-                                    <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
-                                        <td class="tg-yw4l">
-                                            <span>Monto aplicado</span>
-                                        </td>
-                                        <td class="tg-yw4l" style="text-align:right">
-                                            <label id="p_kunnr" style="color: #9e9e9e;">@ViewBag.montoApli</label>
-                                        </td>
-                                    </tr>
-                                    <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
-                                        <td class="tg-yw4l">
-                                            <span>Remanente</span>
-                                        </td>
-                                        <td style="background-color:@ViewBag.rema_color;text-align:right;">
-                                            <label id="p_kunnr" style="color: #9e9e9e;">@ViewBag.remanente</label>
-                                        </td>
-                                    </tr>
-                                    <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
-                                        <td class="tg-yw4l">
-                                            <span>Impuesto</span>
-                                        </td>
-                                        <td style="text-align:right;">
-                                            <label id="p_imp" style="color: #9e9e9e;">@ViewBag.impuesto</label>
-                                        </td>
-                                    </tr>
-                                    <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
-                                        <td class="tg-yw4l">
-                                            <span>Total</span>
-                                        </td>
-                                        <td style="text-align:right">
-                                            <label id="p_kunnr" style="color: #9e9e9e;">@ViewBag.montoTotal</label>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            </table>
+                                        <div class="row" style="overflow:auto;">
+                                            <h5 style="font-size:20px;margin:5px;">Relacionados</h5>
+                                            <div class="col s12">
+                                                <table class="table striped" id="table" style="width:100%;">
+                                                    <thead>
+                                                        <tr class="header">
+                                                            <th>
+                                                                @Html.LabelFor(model => model.TSOL_ID, "Tipo")
+                                                            </th>
+                                                            <th>
+                                                                @Html.LabelFor(model => model.NUM_DOC, "Documento")
+                                                            </th>
+                                                            <th>
+                                                                @Html.LabelFor(model => model.DOCUMENTO_SAP, "SAP")
+                                                            </th>
+                                                            <th>
+                                                                @Html.LabelFor(model => model.SOCIEDAD_ID, "Sociedad")
+                                                            </th>
+                                                            <th>
+                                                                @Html.LabelFor(model => model.PERIODO, "Periodo")
+                                                            </th>
+                                                            <th>
+                                                                @Html.LabelFor(model => model.EJERCICIO, "Ejercicio")
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody style="text-align:center;">
+                                                        <tr rowspan=2>
+                                                            <td>
+                                                                @Model.TSOL.TSOLTs.Where(x => x.SPRAS_ID == "ES").FirstOrDefault().TXT010
+                                                            </td>
+                                                            <td>
+                                                                @Model.NUM_DOC
+                                                            </td>
+                                                            <td>
+                                                                @Model.DOCUMENTO_SAP
+                                                            </td>
+                                                            <td>
+                                                                @Model.SOCIEDAD_ID
+                                                            </td>
+                                                            <td>
+                                                                @Model.PERIODO
+                                                            </td>
+                                                            <td>
+                                                                @Model.EJERCICIO
+                                                            </td>
+                                                        </tr>
+                                                        @if (inf.Count() > 0)
+                                                        {
+                                                            foreach (var miCi in inf)
+                                                            {
+                                                                <tr>
+                                                                    <td>
+                                                                        @miCi.TSOL.TSOLTs.Where(x => x.SPRAS_ID == ViewBag.spras_id).FirstOrDefault().TXT010
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="@Url.Action("Details", new { id = miCi.NUM_DOC })">@miCi.NUM_DOC</a>
+                                                                    </td>
+                                                                    <td>
+                                                                        @miCi.DOCUMENTO_SAP
+                                                                    </td>
+                                                                    <td>
+                                                                        @miCi.SOCIEDAD_ID
+                                                                    </td>
+                                                                    <td>
+                                                                        @miCi.PERIODO
+                                                                    </td>
+                                                                    <td>
+                                                                        @miCi.EJERCICIO
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </td>
+                    </tr>
+                </table>
+
+                @if (Model.TSOL.REVERSO)
+                {
+                    <table style="width:50%" class="col s6">
+                        <tr>
+                            <td style="width:50%;padding:5px;vertical-align:baseline;">
+                                <div class="card-panel" style="transition: box-shadow .25s, -webkit-box-shadow .25s;
+                                padding: 24px;margin: 0.5rem 0 1rem 0;border-radius: 2px;
+                                background-color:#fff;box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);">
+                                    <h5 style="font-size:20px;margin:5px;">Reverso</h5>
+                                    @Html.LabelFor(model => model.DOCUMENTOR.COMENTARIO, "Razón del reverso", new { @style = "color: rgba(0, 0, 0, 1.0);", @id = "lbl_comentarioRev" })
+                                    @Html.EditorFor(model => model.DOCUMENTOR.COMENTARIO, new
+                                    {
+                                        htmlAttributes = new
+                                        {
+                                            @disabled = "disabled",
+                                            @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; font-weight:bold;"
+                                        }
+                                    })
+
+                                    @Html.LabelFor(model => model.DOCUMENTOR.TREVERSA.DESCRIPCION, "Tipo de reverso", new { @style = "color: rgba(0, 0, 0, 1.0);", @id = "lbl_descripcionRev" })
+                                    @Html.EditorFor(model => model.DOCUMENTOR.TREVERSA.DESCRIPCION, new
+                                    {
+                                        htmlAttributes = new
+                                        {
+                                            @disabled = "disabled",
+                                            @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; font-weight:bold;"
+                                        }
+                                    })
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table style="width:50%" class="col s6">
+                        <tr>
+                            <td style="width:50%;padding:5px;vertical-align:baseline;">
+                                <div class="card-panel" style="transition: box-shadow .25s, -webkit-box-shadow .25s;
+                                padding: 24px;margin: 0.5rem 0 1rem 0;border-radius: 2px;
+                                background-color:#fff;box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);">
+                                    <h5 style="font-size:20px;margin:5px;">Análisis solicitud</h5>
+                                    <input type="text" id="payer_id" hidden value="@Model.PAYER_ID" style="display:none" />
+                                    <div class="row" style="margin-bottom:0">
+                                        <table class="tg" style="width: 100%;border-collapse: collapse;">
+                                            <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                                <td class="tg-yw4l">
+                                                    <span>Monto solicitud</span>
+                                                </td>
+                                                <td class="tg-yw4l" style="text-align:right">
+                                                    <label id="p_vtweg" style="font-weight:bold;">@ViewBag.montoSol</label>
+                                                </td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                                <td class="tg-yw4l">
+                                                    <span>Monto provisión original</span>
+                                                </td>
+                                                <td class="tg-yw4l" style="text-align:right">
+                                                    <label id="p_kunnr" style="color: #9e9e9e;">@ViewBag.montoProv</label>
+                                                </td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                                <td class="tg-yw4l">
+                                                    <span>Monto aplicado</span>
+                                                </td>
+                                                <td class="tg-yw4l" style="text-align:right">
+                                                    <label id="p_kunnr" style="color: #9e9e9e;">@ViewBag.montoApli</label>
+                                                </td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                                <td class="tg-yw4l">
+                                                    <span>Remanente</span>
+                                                </td>
+                                                <td style="background-color:@ViewBag.rema_color;text-align:right;">
+                                                    <label id="p_kunnr" style="font-weight:bold;">@ViewBag.remanente</label>
+                                                </td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                                <td class="tg-yw4l">
+                                                    <span>Impuesto</span>
+                                                </td>
+                                                <td style="text-align:right;">
+                                                    <label id="p_imp" style="color: #9e9e9e;">@ViewBag.impuesto</label>
+                                                </td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                                <td class="tg-yw4l">
+                                                    <span>Total</span>
+                                                </td>
+                                                <td style="text-align:right">
+                                                    <label id="p_kunnr" style="color: #9e9e9e;">@ViewBag.montoTotal</label>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:50%;padding:5px;vertical-align:baseline;">
+                                <div class="card-panel" style="transition: box-shadow .25s, -webkit-box-shadow .25s;
+                                padding: 24px;margin: 0.5rem 0 1rem 0;border-radius: 2px;
+                                background-color:#fff;box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);">
+                                    <h5 style="font-size:20px;margin:5px;">Análisis Presupuesto</h5>
+                                    <p style="font-weight:bold;">Última fecha de carga @ViewBag.ultMod</p>
+
+                                    <input type="text" id="payer_id" hidden value="@Model.PAYER_ID" style="display:none" />
+
+                                    <div class="row" style="margin-bottom:0">
+                                        <table class="tg" style="width: 100%;border-collapse: collapse;">
+                                            <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                                <td class="tg-yw4l">
+                                                    <label>Presupuesto canal</label>
+                                                </td>
+                                                <td class="tg-yw4l">
+                                                    <label id="p_vtweg" style="font-weight:bold;">@ViewBag.vtweg</label>
+                                                </td>
+                                                <td class="tg-yw4l">
+                                                    <label id="p_canal" style="font-weight:bold;">@ViewBag.pcan</label>
+                                                </td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                                <td class="tg-yw4l">
+                                                    <label>Presupuesto cliente</label>
+                                                </td>
+                                                <td class="tg-yw4l">
+                                                    <label id="p_kunnr" style="font-weight:bold;">@ViewBag.kunnr</label>
+                                                </td>
+                                                <td class="tg-yw4l">
+                                                    <label id="p_banner" style="font-weight:bold;">@ViewBag.pban</label>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="card-panel" style="transition: box-shadow .25s, -webkit-box-shadow .25s;
+                                padding: 24px;margin: 0.5rem 0 1rem 0;border-radius: 2px;
+                                background-color:#fff;box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);">
+
+                                        <div class="row" style="margin-bottom:0">
+                                            <table class="tg" style="width: 100%; border-collapse: collapse;">
+                                                <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                                    <td class="tg-yw4l" colspan="2">
+                                                        <label>Registrado en SAP</label>
+                                                    </td>
+                                                    <td class="tg-yw4l">
+                                                        <label id="pc_c" style="color: #9e9e9e;">@ViewBag.pcc</label>
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                                    <td class="tg-yw4l" colspan="2">
+                                                        <label>Por registrar en SAP</label>
+                                                    </td>
+                                                    <td class="tg-yw4l">
+                                                        <label id="pc_a" style="color: #9e9e9e;">@ViewBag.pca</label>
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                                    <td class="tg-yw4l" colspan="2">
+                                                        <label>En proceso TAT</label>
+                                                    </td>
+                                                    <td class="tg-yw4l">
+                                                        <label id="pc_p" style="color: #9e9e9e; text-decoration:underline">@ViewBag.pcp</label>
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                                    <td class="tg-yw4l" colspan="2">
+                                                        <label>Consumido</label>
+                                                    </td>
+                                                    <td></td>
+                                                    <td class="tg-yw4l">
+                                                        <label id="pc_t" style="font-weight:bold;">@ViewBag.pct</label>
+                                                    </td>
+                                                </tr>
+                                                <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                                    <td class="tg-yw4l" colspan="2">
+                                                        <label>Presupuesto disponible</label>
+                                                    </td>
+                                                    <td></td>
+                                                    <td class="tg-yw4l">
+                                                        <label id="consu" style="font-weight:bold;">@ViewBag.consu</label>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                }
+                else
+                {
+                    <table style="width:50%" class="col s6">
+                        <tr>
+                            <td style="width:50%;padding:5px;vertical-align:baseline;">
+                                <div class="card-panel" style="transition: box-shadow .25s, -webkit-box-shadow .25s;
+                                padding: 24px;margin: 0.5rem 0 1rem 0;border-radius: 2px;
+                                background-color:#fff;box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);">
+                                    <h5 style="font-size:20px;margin:5px;">Análisis solicitud</h5>
+                                    <input type="text" id="payer_id" hidden value="@Model.PAYER_ID" style="display:none" />
+                                    <div class="row" style="margin-bottom:0">
+                                        <table class="tg" style="width: 100%;border-collapse: collapse;">
+                                            <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                                <td class="tg-yw4l">
+                                                    <span>Monto solicitud</span>
+                                                </td>
+                                                <td class="tg-yw4l" style="text-align:right">
+                                                    <label id="p_vtweg" style="color: #9e9e9e;">@ViewBag.montoSol</label>
+                                                </td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                                <td class="tg-yw4l">
+                                                    <span>Monto provisión original</span>
+                                                </td>
+                                                <td class="tg-yw4l" style="text-align:right">
+                                                    <label id="p_kunnr" style="color: #9e9e9e;">@ViewBag.montoProv</label>
+                                                </td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                                <td class="tg-yw4l">
+                                                    <span>Monto aplicado</span>
+                                                </td>
+                                                <td class="tg-yw4l" style="text-align:right">
+                                                    <label id="p_kunnr" style="color: #9e9e9e;">@ViewBag.montoApli</label>
+                                                </td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                                <td class="tg-yw4l">
+                                                    <span>Remanente</span>
+                                                </td>
+                                                <td style="background-color:@ViewBag.rema_color;text-align:right;">
+                                                    <label id="p_kunnr" style="color: #9e9e9e;">@ViewBag.remanente</label>
+                                                </td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                                <td class="tg-yw4l">
+                                                    <span>Impuesto</span>
+                                                </td>
+                                                <td style="text-align:right;">
+                                                    <label id="p_imp" style="color: #9e9e9e;">@ViewBag.impuesto</label>
+                                                </td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                                <td class="tg-yw4l">
+                                                    <span>Total</span>
+                                                </td>
+                                                <td style="text-align:right">
+                                                    <label id="p_kunnr" style="color: #9e9e9e;">@ViewBag.montoTotal</label>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:50%;padding:5px;vertical-align:baseline;">
+                                <div class="card-panel" style="transition: box-shadow .25s, -webkit-box-shadow .25s;
+                                padding: 24px;margin: 0.5rem 0 1rem 0;border-radius: 2px;
+                                background-color:#fff;box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);">
+                                    <h5 style="font-size:20px;margin:5px;">Análisis Presupuesto</h5>
+                                    <p style="font-weight:bold;">Última fecha de carga @ViewBag.ultMod</p>
+
+                                    <input type="text" id="payer_id" hidden value="@Model.PAYER_ID" style="display:none" />
+
+                                    <div class="row" style="margin-bottom:0">
+                                        <table class="tg" style="width: 100%;border-collapse: collapse;">
+                                            <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                                <td class="tg-yw4l">
+                                                    <label>Presupuesto canal</label>
+                                                </td>
+                                                <td class="tg-yw4l">
+                                                    <label id="p_vtweg" style="font-weight:bold;">@ViewBag.vtweg</label>
+                                                </td>
+                                                <td class="tg-yw4l">
+                                                    <label id="p_canal" style="font-weight:bold;">@ViewBag.pcan</label>
+                                                </td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                                <td class="tg-yw4l">
+                                                    <label>Presupuesto cliente</label>
+                                                </td>
+                                                <td class="tg-yw4l">
+                                                    <label id="p_kunnr" style="font-weight:bold;">@ViewBag.kunnr</label>
+                                                </td>
+                                                <td class="tg-yw4l">
+                                                    <label id="p_banner" style="font-weight:bold;">@ViewBag.pban</label>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="card-panel" style="transition: box-shadow .25s, -webkit-box-shadow .25s;
+                                padding: 24px;margin: 0.5rem 0 1rem 0;border-radius: 2px;
+                                background-color:#fff;box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);">
+
+                                        <div class="row" style="margin-bottom:0">
+                                            <table class="tg" style="width: 100%; border-collapse: collapse;">
+                                                <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                                    <td class="tg-yw4l" colspan="2">
+                                                        <label>Registrado en SAP</label>
+                                                    </td>
+                                                    <td class="tg-yw4l">
+                                                        <label id="pc_c" style="color: #9e9e9e;">@ViewBag.pcc</label>
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                                    <td class="tg-yw4l" colspan="2">
+                                                        <label>Por registrar en SAP</label>
+                                                    </td>
+                                                    <td class="tg-yw4l">
+                                                        <label id="pc_a" style="color: #9e9e9e;">@ViewBag.pca</label>
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                                    <td class="tg-yw4l" colspan="2">
+                                                        <label>En proceso TAT</label>
+                                                    </td>
+                                                    <td class="tg-yw4l">
+                                                        <label id="pc_p" style="color: #9e9e9e; text-decoration:underline">@ViewBag.pcp</label>
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                                    <td class="tg-yw4l" colspan="2">
+                                                        <label>Consumido</label>
+                                                    </td>
+                                                    <td></td>
+                                                    <td class="tg-yw4l">
+                                                        <label id="pc_t" style="font-weight:bold;">@ViewBag.pct</label>
+                                                    </td>
+                                                </tr>
+                                                <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                                    <td class="tg-yw4l" colspan="2">
+                                                        <label>Presupuesto disponible</label>
+                                                    </td>
+                                                    <td></td>
+                                                    <td class="tg-yw4l">
+                                                        <label id="consu" style="font-weight:bold;">@ViewBag.consu</label>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                }
+            </div>
+
         </div>
         <div class="child_div_1">
-            Si quieres ingresar a la solicitud, da clic
+            <span style="font-weight:bold;">Si se desea ingresar a la solicitud, favor de dar un click  en el siguiente</span>
             <a href="@ViewBag.url@Url.Action("Details","Solicitudes", new { id = Model.NUM_DOC })">
-                aquí
+                link.
             </a>
         </div>
     </div>

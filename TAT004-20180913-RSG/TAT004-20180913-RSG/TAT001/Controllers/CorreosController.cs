@@ -161,6 +161,303 @@ namespace TAT001.Controllers
             ViewBag.S_TOTAL = sol.S_TOTAL;
 
             //B20180803 MGC Presupuesto............
+            ViewBag.bandera = dOCUMENTO.PAIS_ID;
+            ObtenerAnalisisSolicitud(dOCUMENTO);//ADD RSG 13.11.2018
+            return View(dOCUMENTO);
+            //return RedirectToAction("Cancelacion", dOCUMENTO);
+        }
+
+        public ActionResult Cancelacion(decimal id, bool? mail) 
+        {
+            var dOCUMENTO = db.DOCUMENTOes.Where(x => x.NUM_DOC == id).FirstOrDefault();
+            var flujo = db.FLUJOes.Where(x => x.NUM_DOC == id).OrderByDescending(o => o.POS).Select(s => s.POS).ToList();
+            ViewBag.Pos = flujo[0];
+            ViewBag.url = "http://localhost:64497";
+            ViewBag.url = "http://192.168.1.77";
+            ViewBag.url = Request.Url.AbsoluteUri.Replace(Request.Url.AbsolutePath, "");
+            //ViewBag.miles = dOCUMENTOes.PAI.MILES;//LEJGG 090718
+            //ViewBag.dec = dOCUMENTOes.PAI.DECIMAL;//LEJGG 090718
+            FormatosC fc = new FormatosC();
+            ViewBag.monto = fc.toShow((decimal)dOCUMENTO.MONTO_DOC_MD, dOCUMENTO.PAI.DECIMAL) + " " + dOCUMENTO.MONEDA_ID;
+            if (mail == null)
+                mail = true;
+            //B20180803 MGC Correos............
+            string mailv = "";
+            if (mail != null)
+            {
+                if (mail == true)
+                {
+                    mailv = "X";
+                }
+            }
+
+            ViewBag.mail = mailv;
+            //B20180803 MGC Correos............
+
+            //B20180803 MGC Presupuesto............
+            Models.PresupuestoModels carga = new Models.PresupuestoModels();
+            ViewBag.ultMod = carga.consultarUCarga();
+
+            dOCUMENTO.PAI = db.PAIS.Where(a => a.LAND.Equals(dOCUMENTO.PAIS_ID)).FirstOrDefault();
+            if (dOCUMENTO.PAI != null)
+            {
+                ViewBag.miles = dOCUMENTO.PAI.MILES;//LEJGG 090718
+                ViewBag.dec = dOCUMENTO.PAI.DECIMAL;//LEJGG 090718
+            }
+
+            CLIENTE_MOD cli = new CLIENTE_MOD();
+
+            cli = SelectCliente(dOCUMENTO.PAYER_ID);
+
+            ViewBag.kunnr = cli.KUNNR + "-" + cli.NAME1;
+            ViewBag.vtweg = cli.VTWEG;
+
+            Services.FormatosC format = new FormatosC();
+
+            PRESUPUESTO_MOD presu = new PRESUPUESTO_MOD();
+            presu = getPresupuesto(dOCUMENTO.PAYER_ID, dOCUMENTO.PERIODO.ToString());
+
+            decimal pcanal = 0;
+            try
+            {
+                pcanal = Convert.ToDecimal(presu.P_CANAL) / 1;
+            }
+            catch (Exception)
+            {
+
+            }
+            decimal pbanner = 0;
+            try
+            {
+                pbanner = Convert.ToDecimal(presu.P_BANNER) / 1;
+            }
+            catch (Exception)
+            {
+
+            }
+            decimal pcc = 0;
+            try
+            {
+                pcc = Convert.ToDecimal(presu.PC_C) / 1 * -1;
+            }
+            catch (Exception)
+            {
+
+            }
+            decimal pca = 0;
+            try
+            {
+                pca = Convert.ToDecimal(presu.PC_A) / 1 * -1;
+            }
+            catch (Exception)
+            {
+
+            }
+            decimal pcp = 0;
+            try
+            {
+                pcp = Convert.ToDecimal(presu.PC_P) / 1 * -1;
+            }
+            catch (Exception)
+            {
+
+            }
+            decimal pct = 0;
+            try
+            {
+                pct = Convert.ToDecimal(presu.PC_T) / 1 * -1;
+            }
+            catch (Exception)
+            {
+
+            }
+            decimal consu = 0;
+            try
+            {
+                consu = Convert.ToDecimal(presu.CONSU) / 1;
+            }
+            catch (Exception)
+            {
+
+            }
+            ViewBag.pcan = format.toShowG(pcanal, dOCUMENTO.PAI.DECIMAL);
+            ViewBag.pban = format.toShowG(pbanner, dOCUMENTO.PAI.DECIMAL);
+            ViewBag.pcc = format.toShowG(pcc, dOCUMENTO.PAI.DECIMAL);
+            ViewBag.pca = format.toShowG(pca, dOCUMENTO.PAI.DECIMAL);
+            ViewBag.pcp = format.toShowG(pcp, dOCUMENTO.PAI.DECIMAL);
+            ViewBag.pct = format.toShowG(pct, dOCUMENTO.PAI.DECIMAL);
+            ViewBag.consu = format.toShowG(consu, dOCUMENTO.PAI.DECIMAL);
+
+            SOLICITUD_MOD sol = new SOLICITUD_MOD();
+            if (dOCUMENTO.DOCUMENTO_REF == null)
+                sol = getSolicitud("0.00", dOCUMENTO.MONTO_DOC_MD + "", dOCUMENTO.PAI.DECIMAL);
+            else
+                sol = getSolicitud(dOCUMENTO.DOCUMENTO_REF + "", dOCUMENTO.MONTO_DOC_MD + "", dOCUMENTO.PAI.DECIMAL);
+
+            ViewBag.S_IMPA = sol.S_IMPA;
+            ViewBag.S_IMPB = sol.S_IMPB;
+            ViewBag.S_IMPC = sol.S_IMPC;
+            ViewBag.S_MONTOA = sol.S_MONTOA;
+            ViewBag.S_MONTOB = sol.S_MONTOB;
+            ViewBag.S_MONTOP = sol.S_MONTOP;
+            ViewBag.S_NUM = sol.S_NUM;
+            ViewBag.S_REMA = sol.S_REMA;
+            ViewBag.rema_color = "";
+            if (format.toNum(sol.S_REMA, dOCUMENTO.PAI.MILES, dOCUMENTO.PAI.DECIMAL) < 0)
+                ViewBag.rema_color = "#F44336 !important";
+
+            ViewBag.S_RET = sol.S_RET;
+            ViewBag.S_TOTAL = sol.S_TOTAL;
+
+            //B20180803 MGC Presupuesto............
+            ViewBag.bandera = dOCUMENTO.PAIS_ID;
+            ObtenerAnalisisSolicitud(dOCUMENTO);//ADD RSG 13.11.2018
+            return View(dOCUMENTO);
+        }
+
+        public ActionResult Taxeo(decimal id, bool? mail)
+        {
+            var dOCUMENTO = db.DOCUMENTOes.Where(x => x.NUM_DOC == id).FirstOrDefault();
+            var flujo = db.FLUJOes.Where(x => x.NUM_DOC == id).OrderByDescending(o => o.POS).Select(s => s.POS).ToList();
+            ViewBag.Pos = flujo[0];
+            ViewBag.url = "http://localhost:64497";
+            ViewBag.url = "http://192.168.1.77";
+            ViewBag.url = Request.Url.AbsoluteUri.Replace(Request.Url.AbsolutePath, "");
+            //ViewBag.miles = dOCUMENTOes.PAI.MILES;//LEJGG 090718
+            //ViewBag.dec = dOCUMENTOes.PAI.DECIMAL;//LEJGG 090718
+            FormatosC fc = new FormatosC();
+            ViewBag.monto = fc.toShow((decimal)dOCUMENTO.MONTO_DOC_MD, dOCUMENTO.PAI.DECIMAL) + " " + dOCUMENTO.MONEDA_ID;
+            if (mail == null)
+                mail = true;
+            //B20180803 MGC Correos............
+            string mailv = "";
+            if (mail != null)
+            {
+                if (mail == true)
+                {
+                    mailv = "X";
+                }
+            }
+
+            ViewBag.mail = mailv;
+            //B20180803 MGC Correos............
+
+            //B20180803 MGC Presupuesto............
+            Models.PresupuestoModels carga = new Models.PresupuestoModels();
+            ViewBag.ultMod = carga.consultarUCarga();
+
+            dOCUMENTO.PAI = db.PAIS.Where(a => a.LAND.Equals(dOCUMENTO.PAIS_ID)).FirstOrDefault();
+            if (dOCUMENTO.PAI != null)
+            {
+                ViewBag.miles = dOCUMENTO.PAI.MILES;//LEJGG 090718
+                ViewBag.dec = dOCUMENTO.PAI.DECIMAL;//LEJGG 090718
+            }
+
+            CLIENTE_MOD cli = new CLIENTE_MOD();
+
+            cli = SelectCliente(dOCUMENTO.PAYER_ID);
+
+            ViewBag.kunnr = cli.KUNNR + "-" + cli.NAME1;
+            ViewBag.vtweg = cli.VTWEG;
+
+            Services.FormatosC format = new FormatosC();
+
+            PRESUPUESTO_MOD presu = new PRESUPUESTO_MOD();
+            presu = getPresupuesto(dOCUMENTO.PAYER_ID, dOCUMENTO.PERIODO.ToString());
+
+            decimal pcanal = 0;
+            try
+            {
+                pcanal = Convert.ToDecimal(presu.P_CANAL) / 1;
+            }
+            catch (Exception)
+            {
+
+            }
+            decimal pbanner = 0;
+            try
+            {
+                pbanner = Convert.ToDecimal(presu.P_BANNER) / 1;
+            }
+            catch (Exception)
+            {
+
+            }
+            decimal pcc = 0;
+            try
+            {
+                pcc = Convert.ToDecimal(presu.PC_C) / 1 * -1;
+            }
+            catch (Exception)
+            {
+
+            }
+            decimal pca = 0;
+            try
+            {
+                pca = Convert.ToDecimal(presu.PC_A) / 1 * -1;
+            }
+            catch (Exception)
+            {
+
+            }
+            decimal pcp = 0;
+            try
+            {
+                pcp = Convert.ToDecimal(presu.PC_P) / 1 * -1;
+            }
+            catch (Exception)
+            {
+
+            }
+            decimal pct = 0;
+            try
+            {
+                pct = Convert.ToDecimal(presu.PC_T) / 1 * -1;
+            }
+            catch (Exception)
+            {
+
+            }
+            decimal consu = 0;
+            try
+            {
+                consu = Convert.ToDecimal(presu.CONSU) / 1;
+            }
+            catch (Exception)
+            {
+
+            }
+            ViewBag.pcan = format.toShowG(pcanal, dOCUMENTO.PAI.DECIMAL);
+            ViewBag.pban = format.toShowG(pbanner, dOCUMENTO.PAI.DECIMAL);
+            ViewBag.pcc = format.toShowG(pcc, dOCUMENTO.PAI.DECIMAL);
+            ViewBag.pca = format.toShowG(pca, dOCUMENTO.PAI.DECIMAL);
+            ViewBag.pcp = format.toShowG(pcp, dOCUMENTO.PAI.DECIMAL);
+            ViewBag.pct = format.toShowG(pct, dOCUMENTO.PAI.DECIMAL);
+            ViewBag.consu = format.toShowG(consu, dOCUMENTO.PAI.DECIMAL);
+
+            SOLICITUD_MOD sol = new SOLICITUD_MOD();
+            if (dOCUMENTO.DOCUMENTO_REF == null)
+                sol = getSolicitud("0.00", dOCUMENTO.MONTO_DOC_MD + "", dOCUMENTO.PAI.DECIMAL);
+            else
+                sol = getSolicitud(dOCUMENTO.DOCUMENTO_REF + "", dOCUMENTO.MONTO_DOC_MD + "", dOCUMENTO.PAI.DECIMAL);
+
+            ViewBag.S_IMPA = sol.S_IMPA;
+            ViewBag.S_IMPB = sol.S_IMPB;
+            ViewBag.S_IMPC = sol.S_IMPC;
+            ViewBag.S_MONTOA = sol.S_MONTOA;
+            ViewBag.S_MONTOB = sol.S_MONTOB;
+            ViewBag.S_MONTOP = sol.S_MONTOP;
+            ViewBag.S_NUM = sol.S_NUM;
+            ViewBag.S_REMA = sol.S_REMA;
+            ViewBag.rema_color = "";
+            if (format.toNum(sol.S_REMA, dOCUMENTO.PAI.MILES, dOCUMENTO.PAI.DECIMAL) < 0)
+                ViewBag.rema_color = "#F44336 !important";
+
+            ViewBag.S_RET = sol.S_RET;
+            ViewBag.S_TOTAL = sol.S_TOTAL;
+
+            //B20180803 MGC Presupuesto............
 
             ObtenerAnalisisSolicitud(dOCUMENTO);//ADD RSG 13.11.2018
             return View(dOCUMENTO);
@@ -235,6 +532,17 @@ namespace TAT001.Controllers
         // GET: Correos/Details/5
         public ActionResult Details(decimal id, bool? mail)
         {
+            int pagina = 254; //ID EN BASE DE DATOS
+            string u = User.Identity.Name;
+            var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+            ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
+            ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
+            ViewBag.usuario = user;
+            ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            //ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
+            ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -267,7 +575,19 @@ namespace TAT001.Controllers
             }
 
             ViewBag.mail = mailv;
+            ViewBag.cabecera = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == user.SPRAS_ID & x.CAMPO_ID == "lbl_cabeceraDet").FirstOrDefault().TEXTOS;
+            ViewBag.titulo = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == user.SPRAS_ID & x.CAMPO_ID == "lbl_tituloDet").FirstOrDefault().TEXTOS;
+            ViewBag.opcionDet = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == user.SPRAS_ID & x.CAMPO_ID == "lbl_opcionesDet").FirstOrDefault().TEXTOS;
+            ViewBag.ligaDet = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == user.SPRAS_ID & x.CAMPO_ID == "lbl_ligaDet").FirstOrDefault().TEXTOS;
             //B20180803 MGC Correos............
+            ViewBag.usuarioDet = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == user.SPRAS_ID & x.CAMPO_ID == "lbl_usuario").FirstOrDefault().TEXTOS;
+            ViewBag.usuarioNom = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == user.SPRAS_ID & x.CAMPO_ID == "lbl_nombreUsu").FirstOrDefault().TEXTOS;
+            ViewBag.tipoSol = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == user.SPRAS_ID & x.CAMPO_ID == "lbl_tsol").FirstOrDefault().TEXTOS;
+            ViewBag.cliente = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == user.SPRAS_ID & x.CAMPO_ID == "lbl_cliente").FirstOrDefault().TEXTOS;
+            ViewBag.clasificacion = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == user.SPRAS_ID & x.CAMPO_ID == "lbl_clasificacion").FirstOrDefault().TEXTOS;
+            ViewBag.concepto = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == user.SPRAS_ID & x.CAMPO_ID == "lbl_concepto").FirstOrDefault().TEXTOS;
+            ViewBag.montoDet = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == user.SPRAS_ID & x.CAMPO_ID == "lbl_monto").FirstOrDefault().TEXTOS;
+            ViewBag.bandera = dOCUMENTO.PAIS_ID;
             return View(dOCUMENTO);
         }
 
