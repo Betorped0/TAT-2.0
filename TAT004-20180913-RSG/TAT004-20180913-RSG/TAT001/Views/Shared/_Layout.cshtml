@@ -114,17 +114,8 @@
                         <td>
                             <div class="white-text">
                                 <a href='@Url.Action("Details", "Usuarios", new { id = ViewBag.usuario.ID})' style='padding: 0;'><span class='white-text name' style='margin: 0'>@ViewBag.usuario.NOMBRE @ViewBag.usuario.APELLIDO_P @ViewBag.usuario.APELLIDO_M</span></a>
-                                @if (ViewBag.nivelUsuario == 1 || ViewBag.nivelUsuario == 8)
-                                {
-                                    <a href='@Url.Action("Edit", "Usuarios", new { id = ViewBag.usuario.ID})' style='padding: 0;'><span class='white-text email' style='margin: 0'>@ViewBag.usuario.EMAIL</span></a>
-                                    <a href='@Url.Action("Edit", "Usuarios", new { id = ViewBag.usuario.ID})' style='padding: 0;'><span class='white-text email' style='margin: 0'>@ViewBag.rol</span></a>
-                                }
-                                else
-                                {
-                                    <a href='' style='padding: 0;'><span class='white-text email' style='margin: 0'>@ViewBag.usuario.EMAIL</span></a>
-                                    <a href='' style='padding: 0;'><span class='white-text email' style='margin: 0'>@ViewBag.rol</span></a>
-
-                                }
+                                <a style='padding: 0;cursor: default;'><span class='white-text email' style='margin: 0'>@ViewBag.usuario.EMAIL</span></a>
+                                <a style='padding: 0;cursor: default;'><span class='white-text email' style='margin: 0'>@ViewBag.rol</span></a>
                             </div>
                         </td>
                     </tr>
@@ -521,7 +512,7 @@ var elems = document.querySelectorAll('.collapsible');
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - @*<a href="@Url.Action("About","Home")">*@ICON@*</a>*@ 15.11.2018</p>
+            <p>&copy; @DateTime.Now.Year - @*<a href="@Url.Action("About","Home")">*@ICON@*</a>*@ 26.11.2018</p>
         </footer>
     </div>
     @using TAT001.Entities;

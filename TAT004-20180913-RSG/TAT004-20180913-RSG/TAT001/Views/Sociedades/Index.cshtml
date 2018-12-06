@@ -96,6 +96,9 @@
                         </a>&nbsp
                         <a href="@Url.Action("Details", new { id = item.BUKRS })">
                             <i class='material-icons blue-text'>search</i>
+                        </a>&nbsp
+                        <a href="@Url.Action("Flujos", new { id = item.BUKRS })">
+                            <i class='material-icons black-text'>assignment_turned_in</i>
                         </a>
                     </td>
                 </tr>
@@ -110,7 +113,7 @@
             scrollY: "50vh",
             scrollCollapse: true,
             language: {
-                "url": "../Scripts/lang/@Session["spras"].ToString()"+".json"
+                "url": "../Scripts/lang/@ViewBag.usuario.SPRAS_ID"+".json"
             }, columnDefs: [
                 {
                     targets: [1],

@@ -57,7 +57,7 @@
             <table style="width:100%;" id="table2;" class="table borde;">
                 <thead>
                     <tr>
-                        <th class="th borde" style="text-align:center;" id="lbl_control">Para Control Interno Kellogg’s</th>
+                        <th class="th borde" style="text-align:center;" id="lbl_control">@ViewBag.lbl_control</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -72,12 +72,12 @@
         <div style="margin-top:20px; width:100%">
             <br />
             <p align="justify">
-                <span id="lbl_dear">Estimado/a </span>@ViewBag.clCon,<br /><br />
-                A continuación compartimos listado de las negociaciones de descuentos vigentes y comprometidas con usted por parte de Kellogg’s al @ViewBag.ff.<br />
+                <span id="lbl_dear">@ViewBag.lbl_dear </span>@ViewBag.clCon,<br /><br />
+                <span id="lbl_next">@ViewBag.lbl_next</span> @ViewBag.ff.<br />
                 <br />
                 <br />
-                <span id="lbl_pres">
-                    La presente conciliación se comparte con fines de validación y aprobación de su parte. En caso de detectar alguna omisión o desviación, le solicitamos que nos envíe sus comentarios en un plazo no mayor de 3 días hábiles contados a partir de la fecha de recepción del presente correo. Le pedimos que los comentarios estén relacionados con las negociaciones comerciales detalladas en el presente comunicado. En el supuesto de no recibir ningún comentario, se entenderá que usted está de acuerdo con la información señalada.
+                <span id="lbl_pres">@ViewBag.lbl_pres
+                    
                 </span>
             </p>
         </div>
@@ -86,16 +86,16 @@
                 <thead>
                     <tr>
                         <th class="texto th borde">
-                            <span>Número de solicitud</span>
+                            <span id="lbl_numsol">@ViewBag.lbl_numsol</span>
                         </th>
                         <th class="texto th borde">
-                            <span> Vigencia de negociación</span>
+                            <span id="lbl_vigencia">@ViewBag.lbl_vigencia</span>
                         </th>
                         <th class="texto th borde">
-                            <span>Descripción negociación</span>
+                            <span id="lbl_desc">@ViewBag.lbl_desc</span>
                         </th>
                         <th class="texto th borde">
-                            <span>Soporte negociación</span>
+                            <span id="lbl_soporte">@ViewBag.lbl_soporte</span>
                         </th>
                     </tr>
                 </thead>

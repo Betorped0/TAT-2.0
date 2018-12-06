@@ -27,7 +27,7 @@
         async: false
     });
 }
-function cuentas() {
+function cuentas(reverso) {
     var bool = false;
     clearing = [];
     var bukrs = ($("#sociedad_id").val() ? $("#sociedad_id").val():$("#D_SOCIEDAD_ID").val()),
@@ -42,12 +42,20 @@ function cuentas() {
 
         success: function (data) {
             if (data !== null && data !== "") {
-                //RSG 26.04.2018----------------
-                clearing.push(data.ABONO);
-                //DRS 28.09.2018
-                clearing.push(data.NOMBREA);
-                clearing.push(data.CARGO);
-                clearing.push(data.NOMBREC);
+                if (reverso) {
+                    clearing.push(data.CARGO);
+                    //DRS 28.09.2018
+                    clearing.push(data.NOMBREC);
+                    clearing.push(data.ABONO);
+                    clearing.push(data.NOMBREA);
+                } else {
+                    //RSG 26.04.2018----------------
+                    clearing.push(data.ABONO);
+                    //DRS 28.09.2018
+                    clearing.push(data.NOMBREA);
+                    clearing.push(data.CARGO);
+                    clearing.push(data.NOMBREC);
+                }
                 clearing.push(data.CLEARING);
                 clearing.push(data.LIMITE);
                 //RSG 26.04.2018----------------
@@ -153,7 +161,7 @@ function cierre() {
 function asignarSolicitud(num, num2,edit) {
     num = toNum(num);
     num2 = toNum(num2);
-    var soc = $("#sociedad_id").val();
+    var soc  = ($("#sociedad_id").val() ? $("#sociedad_id").val() : $("#D_SOCIEDAD_ID").val());
     var tsol = (!$("#TSOL_ID").val() ? $("#tsol_id").val() : $("#TSOL_ID").val());
     var esCategoriaUnica = false;
     if ($("#select_dis").val()==="C"){

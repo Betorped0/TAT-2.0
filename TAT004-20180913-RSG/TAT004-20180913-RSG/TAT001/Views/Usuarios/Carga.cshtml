@@ -21,9 +21,8 @@
 
 <div class="row right-align">
     <div class="col s12">
-        <input type="button" id="btnAgregar" value="Agregar" class="btn btn-small" onclick="Carga();" />
-        <input type="button" id="btnBorrar" value="Borrar" class="btn btn-small" onclick="Borrar()" />
-        <input type="button" id="btnActualizar" value="Actualizar" class="btn btn-small" onclick="Actualizar()" />
+        <button type="button" id="btnAgregar" class="btn btn-small" onclick="Guardar()">Guardar</button>
+        <button type="button" id="idLimpiar"  class="btn btn-small" onclick="Limpiar()">Limpiar</button>
     </div>
 </div>
 @Html.AntiForgeryToken()
@@ -40,6 +39,11 @@
         </div>
     </div>
     <div class="row">
+        <div class="row right-align">
+            <div class="col s12">
+                <input type="button" id="idBorrar" value="Borrar" class="btn btn-small" onclick="Borrar()" disabled="disabled"/>
+              </div>
+        </div>
         @using (Html.BeginForm("Carga", "Usuarios", FormMethod.Post, new { enctype = "multipart/form-data", id = "tabla" }))
         {
             <div class="col s12 ">
@@ -64,10 +68,10 @@
                         <tbody>
                             <tr>
                                 <td></td>
-                                <td><input class='input_cli1' style='font-size:12px;' type='text' id='' name='cli' value='' onkeyup='if(event.keyCode == 13) AgregarC()' /></td>
                                 <td></td>
                                 <td></td>
-                                <td><input class='input_usc' style='font-size:12px;' type='text' id='' name='usc' value=''/></td>
+                                <td></td>
+                                <td><input class='input_usc' style='font-size:12px;' type='text' id='' name='usc' value='' onkeyup='if(event.keyCode == 13) AgregarU()'/></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -83,8 +87,10 @@
         }
     </div>
 </div>
-
-
+<script>
+    var spras = "@ViewBag.spras_id";
+    var root = '@Url.Content("~")';
+</script>
 <script src="~/Scripts/autocomplete1.10.2.js"></script>
 <script src="~/Scripts/autocomplete1.11.4.js"></script>
 <script src="~/Scripts/CargaUsuarios.js"></script>

@@ -225,8 +225,7 @@
                             onClose: function (e) {
                                 var date = $('#fechad').val();
                                 var periodo = date.split("/");
-
-                                $('#periodo').val(periodo[1]);
+                                
                             },
                             i18n: {
                                 clear: 'Limpiar',
@@ -404,7 +403,7 @@
 
                                     auto.ajax({
                                         url: root + "Listas/contactos",
-                                        type: "POST",
+                                        type: "GET",
                                         dataType: "json",
                                         data: { Prefix: request.term, vkorg: vk, vtweg: vt, kunnr: kunnr },
                                         success: function (data) {
@@ -476,11 +475,11 @@
                     {
                         <div class="col s12">
                             <label class="col s6">
-                                <input name="group1" type="radio" checked id="btn-date" onclick="cambiaTemp(this.id)" />
+                                <input name="group1" type="radio" checked id="btn-date" onchange="cambiaTemp(this.id)" />
                                 <span id="sPorFecha">Por fecha</span>
                             </label>
                             <label class="col s6">
-                                <input name="group1" type="radio" id="btn-peri" onclick="cambiaTemp(this.id)" />
+                                <input name="group1" type="radio" id="btn-peri" onchange="cambiaTemp(this.id)" />
                                 <span id="sPorPeriodo">Por periodo</span>
                             </label>
                         </div>

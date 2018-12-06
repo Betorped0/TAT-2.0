@@ -97,7 +97,10 @@
                                     @Html.DisplayFor(modelItem => item.BACKUP_ID)
                                 </td>*@
                             <td>
-                                @Html.DisplayFor(modelItem => item.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50)
+                                @if (item.PUESTO_ID != null)
+                                {
+                                @item.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(ViewBag.spras_id)).FirstOrDefault().TXT50
+                                }
                             </td>
                             @*<td>
                                     @Html.DisplayFor(modelItem => item.PUESTO.PUESTOTs.FirstOrDefault().)
@@ -167,7 +170,7 @@
             //    search: "Buscar"
             //},
             language: {
-                "url": "../Scripts/lang/@Session["spras"].ToString()"+".json"
+                "url": "../Scripts/lang/@ViewBag.spras_id"+".json"
             },
             columnDefs: [
                 {

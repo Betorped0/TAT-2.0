@@ -1,8 +1,5 @@
 ﻿@model IEnumerable<TAT001.Entities.TAXEOH>
 @{
-    /**/
-
-    //ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.pagina_r = 851;
     ViewBag.carpeta_r = 500;
@@ -124,7 +121,7 @@
                 scrollY: "50vh",
                 scrollCollapse: true,
                 language: {
-                "url": "../Scripts/lang/@Session["spras"].ToString()"+".json"
+                "url": "../Scripts/lang/@ViewBag.usuario.SPRAS_ID"+".json"
                 },
                 order: [[4, "asc"]],
                 initComplete: function () {
@@ -193,4 +190,7 @@
             width: 100%;
         }
     </style>
+</div>
+<div>
+    <a href="@Url.Action("Edit", "Clientes", new { vko = Request.QueryString["vko"], vtw = Request.QueryString["vtw"], spa = Request.QueryString["spa"], kun = Request.QueryString["kun"] })" id="lblRegresar"> </a>
 </div>

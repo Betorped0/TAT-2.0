@@ -196,7 +196,7 @@
                     <p class="text-center"><label id="lbl_mensajes"></label></p>
                     <hr>
                     <div class="row">
-                        <div class="col s4">
+                        <div class="col s6">
                             <div class="form-group">
                                 <label>ES</label>
                                 <div class="col-md-10">
@@ -207,7 +207,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col s4">
+                        <div class="col s6">
                             <div class="form-group">
                                 <label>EN</label>
                                 <div class="col-md-10">
@@ -215,17 +215,6 @@
                                     @Html.HiddenFor(model => model.alertaMensajes[1].SPRAS_ID)
                                     @Html.HiddenFor(model => model.alertaMensajes[1].TAB_ID)
                                     @Html.HiddenFor(model => model.alertaMensajes[1].WARNING_ID)
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col s4">
-                            <div class="form-group">
-                                <label>PT</label>
-                                <div class="col-md-10">
-                                    @Html.TextBoxFor(model => model.alertaMensajes[2].TXT100, new { @required = "", @maxlength = 100 })
-                                    @Html.HiddenFor(model => model.alertaMensajes[2].SPRAS_ID)
-                                    @Html.HiddenFor(model => model.alertaMensajes[2].TAB_ID)
-                                    @Html.HiddenFor(model => model.alertaMensajes[2].WARNING_ID)
                                 </div>
                             </div>
                         </div>

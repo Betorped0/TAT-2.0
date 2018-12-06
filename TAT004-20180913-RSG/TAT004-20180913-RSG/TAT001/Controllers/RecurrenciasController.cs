@@ -3314,9 +3314,9 @@ namespace TAT001.Controllers
                 doc.PORC_APOYO = D.PORC_APOYO;
                 foreach (DOCUMENTOP dp in doc.DOCUMENTOPs)
                 {
-                    if (dp.APOYO_EST > 0)
+                    if (dOCpADRE.TSOL.PADRE)
                         dp.APOYO_EST = D.MONTO_DOC_MD * dp.PORC_APOYO / 100;
-                    if (dp.APOYO_REAL > 0)
+                    else
                         dp.APOYO_REAL = D.MONTO_DOC_MD * dp.PORC_APOYO / 100;
                     foreach(DOCUMENTOM dm in dp.DOCUMENTOMs)
                     {

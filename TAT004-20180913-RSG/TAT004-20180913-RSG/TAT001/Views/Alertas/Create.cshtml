@@ -20,6 +20,9 @@
 <link href="~/Content/dropdowntree.css" rel="stylesheet" />
 <script type="text/javascript" src="~/Scripts/dropdowntree.js"></script>
 <script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
+
+<span style="display:none;" class="lbl_selecionar_todo"></span>
+<span style="display:none;" class="lbl_deselecionar"></span>
 @using (Html.BeginForm("Create", "Alertas", FormMethod.Post, new { @id = "alertaForm" }))
 {
     @Html.AntiForgeryToken()
@@ -32,7 +35,7 @@
                     <div class="form-group">
                         <label id="lbl_alerta"></label>
                         <div class="col-md-10">
-                            @Html.TextBoxFor(model => model.alerta.ID,new { @required=true, @maxlength =20})
+                            @Html.TextBoxFor(model => model.alerta.ID,new { @required=true, @maxlength =10})
                         </div>
                     </div>
                 </div>
@@ -54,15 +57,20 @@
                 </div>
             </div>
             <div class="row"> 
-                <div class="col s2">
+                <div class="col s4">
                     <div class="form-group">
                         <label id="lbl_bu"></label>
                         <div class="col-md-10">
-                            @Html.DropDownListFor(model => model.alerta.SOCIEDAD_ID, Model.sociedades, "")
+                            <select name="sociedadesSelected" id="sociedades" multiple>
+                                @foreach (var item in Model.sociedades)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
                         </div>
                     </div>
                 </div>
-                <div class="col s5">
+                <div class="col s4">
                     <div class="form-group">
                         <label id="lbl_tipo"></label>
                         <div class="col-md-10">
@@ -78,7 +86,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col s3">
+                <div class="col s2">
                     <div class="form-group">
                         <label id="lbl_campo"></label>
                         <div class="col-md-10">
@@ -150,7 +158,7 @@
                 <p class="text-center"><label id="lbl_mensajes"></label></p>
                 <hr>
                 <div class="row">
-                    <div class="col s4">
+                    <div class="col s6">
                         <div class="form-group">
                             <label>ES</label>
                             <div class="col-md-10">
@@ -159,21 +167,12 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col s4">
+                    <div class="col s6">
                         <div class="form-group">
                             <label>EN</label>
                             <div class="col-md-10">
                                 @Html.TextBoxFor(model => model.alertaMensajes[1].TXT100, new { @required = "", @maxlength = 100 })
                                 @Html.HiddenFor(model => model.alertaMensajes[1].SPRAS_ID)
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col s4">
-                        <div class="form-group">
-                            <label>PT</label>
-                            <div class="col-md-10">
-                                @Html.TextBoxFor(model => model.alertaMensajes[2].TXT100, new { @required = "", @maxlength = 100 })
-                                @Html.HiddenFor(model => model.alertaMensajes[2].SPRAS_ID)
                             </div>
                         </div>
                     </div>
@@ -185,10 +184,10 @@
     <a id="btn_return" href="@Url.Action("Index")"></a>
 </div>
 <script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
-@if (Model.alerta.SOCIEDAD_ID != null && Model.alerta.TSOL_ID != null)
+@if (Model.sociedadesSelected.Count >0 && Model.alerta.TSOL_ID != null)
 {
     <script>
-    // Asignar valor a combos de list
+    //----- Asignar valor a combos de list
     var idAndOr = "@Model.alertaCondiciones[1].ANDOR";
     if (idAndOr == "&amp;") { idAndOr = "&";}
     $('#alertaCondiciones_0__CONDICION_ID').val('@Model.alertaCondiciones[0].CONDICION_ID');
@@ -200,7 +199,10 @@
         $('#alertaCondiciones_0__ANDOR').val('(');
         $('#alertaCondiciones_1__CONDICION_ID').prop('disabled', false);
         $('#alertaCondiciones_1__VALOR_COMP').prop('disabled', false);
-    }
+        }
+        var sociedadesSelected = @Html.Raw(Json.Encode(Model.sociedadesSelected));
+        $('#sociedades').val(sociedadesSelected);
+
     </script>
 }
 <script>
@@ -236,11 +238,30 @@
             }
             fnCommon.materializeInit('select');
             fnCommon.selectRequired();
-        }
+    }
 
-        // Valida si ocurrio un error al intentar crear el periodo y otro.
-        var mnjError = '@ViewBag.mnjError';
-        if (mnjError) {
-            M.toast({ html: mnjError });
+       //-- Actualizar seleccion de Sociedades
+    $('#sociedades').siblings('ul').prepend('<li id=op_select_all><span>Seleccionar todo</span></li>');
+    $('li#op_select_all').on('click', function () {
+        var jq_elem = $(this),
+            jq_elem_span = jq_elem.find('span'),
+            select_all = jq_elem_span.text() == $('.lbl_selecionar_todo').html(),
+            set_text = select_all ? $('.lbl_deselecionar').html() : $('.lbl_selecionar_todo').html();
+        jq_elem_span.text(set_text);
+        jq_elem.siblings('li').filter(function () {
+            return $(this).find('input').prop('checked') != select_all;
+        }).click();
+    });
+
+    //Mostrar process
+    $('#alertaForm').submit(function () {
+        if ($('#alertaForm').valid()) {
+            document.getElementById("loader").style.display = "flex";
         }
+    });
+    //-- Valida si ocurrio un error al intentar crear el periodo y otro.
+    var mnjError = '@ViewBag.mnjError';
+    if (mnjError) {
+        M.toast({ html: mnjError });
+    }
 </script>

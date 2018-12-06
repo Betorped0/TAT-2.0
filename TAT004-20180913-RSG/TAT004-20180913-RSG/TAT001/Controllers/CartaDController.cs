@@ -18,6 +18,8 @@ namespace TAT001.Controllers
         public ActionResult Index(string ruta, decimal ids)
         {
             int pagina_id = 230; //ID EN BASE DE DATOS
+            TempData["ESTATUS_WF"] = TempData["swf"];
+            TempData["lista"] = TempData["vista"];
             using (TAT001Entities db = new TAT001Entities())
             {
                 FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
@@ -59,9 +61,15 @@ namespace TAT001.Controllers
         }
 
         // GET: CartaD/Details/5
-        public ActionResult Create(decimal id)
+        public ActionResult Create(decimal id, bool? Viewlista)
         {
             int pagina_id = 232; //ID EN BASE DE DATOS
+
+            if (Viewlista == true)
+            {
+                TempData["return"] = "LIST";
+                TempData["ESTATUS_WF"] = TempData["swf"];
+            }
             using (TAT001Entities db = new TAT001Entities())
             {
                 string spras_id = FnCommon.ObtenerSprasId(db, User.Identity.Name);
@@ -258,6 +266,7 @@ namespace TAT001.Controllers
         [HttpPost]
         public ActionResult Create(CartaD v)
         {
+            TempData["lista"] = TempData["vista"];
             using (TAT001Entities db = new TAT001Entities())
             {
                 string spras_id = FnCommon.ObtenerSprasId(db, User.Identity.Name);
@@ -314,7 +323,8 @@ namespace TAT001.Controllers
 
                 //MARCA DE AGUA
                 bool aprob = false;
-                aprob = (d.ESTATUS_WF.Equals("A") | d.ESTATUS_WF.Equals("S"));
+                bool apTS = (d.ESTATUS_WF.Equals("P") && db.FLUJOes.Any(x=>x.STATUS== "N  PRP  0" && x.NUM_DOC == d.NUM_DOC));
+                aprob = (d.ESTATUS_WF.Equals("A") || d.ESTATUS_WF.Equals("S") || apTS);
 
                 //PARA LA TABLA 1 MATERIALES
                 v.numColEncabezado = cabeza;

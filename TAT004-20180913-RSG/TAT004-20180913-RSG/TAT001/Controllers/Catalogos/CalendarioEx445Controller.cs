@@ -7,6 +7,7 @@ using TAT001.Common;
 using TAT001.Entities;
 using TAT001.Filters;
 using TAT001.Models;
+using TAT001.Models.Dao;
 
 namespace TAT001.Controllers.Catalogos
 {
@@ -20,6 +21,12 @@ namespace TAT001.Controllers.Catalogos
         const string CMB_TIPOSSOLICITUD = "TSOL";
         const string CMB_PERIODOS = "PER";
         const string CMB_USUARIOS = "USU";
+
+        //------------------DAO------------------------------
+        readonly UsuariosDao usuariosDao = new UsuariosDao();
+        readonly SociedadesDao sociedadesDao = new SociedadesDao();
+        readonly PeriodosDao periodosDao = new PeriodosDao();
+        readonly TiposSolicitudesDao tiposSolicitudesDao = new TiposSolicitudesDao();
 
         // GET: CalendarioEx445/5
         public ActionResult Index(short ejercicio, int periodo, string sociedad_id, string tsol_id)
@@ -63,7 +70,7 @@ namespace TAT001.Controllers.Catalogos
 
                 if (!ValidarExcepcionExistente(calendarioEx) || !ValidarFechas(calendarioEx))
                 {
-                    throw new Exception();
+                    throw (new Exception());
                 }
                 db.CALENDARIO_EX.Add(calendarioEx);
                 db.SaveChanges();
@@ -74,7 +81,7 @@ namespace TAT001.Controllers.Catalogos
                     sociedad_id = calendarioEx.SOCIEDAD_ID,
                     tsol_id = calendarioEx.TSOL_ID });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
 
@@ -96,11 +103,13 @@ namespace TAT001.Controllers.Catalogos
             int pagina_id = 534;//ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
 
-            Calendario445ViewModel modelView = new Calendario445ViewModel();
-            modelView.calendarioEx445= db.CALENDARIO_EX
+            Calendario445ViewModel modelView = new Calendario445ViewModel
+            {
+                calendarioEx445 = db.CALENDARIO_EX
                 .Where(x => x.EJERCICIO == ejercicio && x.PERIODO == periodo && x.SOCIEDAD_ID == sociedad_id && x.TSOL_ID == tsol_id && x.USUARIO_ID == usuario_id)
-                .FirstOrDefault();
-            modelView.calendario445 = ObtenerCalendario445(ejercicio, periodo, sociedad_id, tsol_id);
+                .FirstOrDefault(),
+                calendario445 = ObtenerCalendario445(ejercicio, periodo, sociedad_id, tsol_id)
+            };
 
             CargarSelectList(ref modelView, new string[] {
                 CMB_SOCIEDADES + "," + sociedad_id,
@@ -122,7 +131,7 @@ namespace TAT001.Controllers.Catalogos
             {
                 if ( !ValidarFechas(calendarioEx))
                 {
-                    throw new Exception();
+                    throw (new Exception());
                 }
                 db.Entry(calendarioEx).State = EntityState.Modified;
                 db.SaveChanges();
@@ -139,7 +148,7 @@ namespace TAT001.Controllers.Catalogos
 
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
                 modelView.calendario445 = ObtenerCalendario445(calendarioEx.EJERCICIO, calendarioEx.PERIODO, calendarioEx.SOCIEDAD_ID, calendarioEx.TSOL_ID);
@@ -191,17 +200,17 @@ namespace TAT001.Controllers.Catalogos
                 switch (combo)
                 {
                     case CMB_SOCIEDADES:
-                        modelView.sociedades = FnCommon.ObtenerCmbSociedades(db, id);
+                        modelView.sociedades = sociedadesDao.ComboSociedades(TATConstantes.ACCION_LISTA_SOCIEDADES, id);
                         break;
                     case CMB_PERIODOS:
                         int? idAux = (id == null ? null : (int?)int.Parse(id));
-                        modelView.periodos = FnCommon.ObtenerCmbPeriodos(db, spras_id, idAux);
+                        modelView.periodos = periodosDao.ComboPeriodos( spras_id, idAux);
                         break;
                     case CMB_USUARIOS:
-                        modelView.usuarios = FnCommon.ObtenerCmbUsuario(db, id);
+                        modelView.usuarios = usuariosDao.ComboUsuarios(TATConstantes.ACCION_LISTA_USUARIO, id);
                         break;
                     case CMB_TIPOSSOLICITUD:
-                        modelView.cmbTiposSolicitud = FnCommon.ObtenerCmbTiposSolicitud(db, spras_id, id);
+                        modelView.cmbTiposSolicitud = tiposSolicitudesDao.ComboTiposSolicitudes( spras_id, id);
                         break;
                     default:
                         break;

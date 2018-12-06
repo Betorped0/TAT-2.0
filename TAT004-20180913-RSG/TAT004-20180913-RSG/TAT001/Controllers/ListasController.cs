@@ -7,13 +7,28 @@ using System.Web.Mvc;
 using TAT001.Common;
 using TAT001.Entities;
 using TAT001.Models;
+using TAT001.Models.Dao;
 using TAT001.Services;
 
 namespace TAT001.Controllers
 {
+  
     public class ListasController : Controller
     {
         readonly TAT001Entities db = new TAT001Entities();
+       
+        //------------------DAO------------------------------
+        readonly UsuariosDao usuariosDao = new UsuariosDao();
+        readonly SolicitudesDao solicitudesDao = new SolicitudesDao();
+        readonly SociedadesDao sociedadesDao = new SociedadesDao();
+        readonly ContactosDao contactosDao = new ContactosDao();
+        readonly ClientesDao clientesDao = new ClientesDao();
+        readonly TallsDao tallsDao = new TallsDao();
+        readonly StatesDao statesDao = new StatesDao();
+        readonly CitiesDao citiesDao = new CitiesDao();
+        readonly MaterialesgptDao materialesgptDao = new MaterialesgptDao();
+        readonly MaterialesDao materialesDao = new MaterialesDao();
+
         // GET: Listas
         public ActionResult Index()
         {
@@ -33,7 +48,7 @@ namespace TAT001.Controllers
                 comcodessplit = cocode.Split(',');
             }
 
-            if (comcodessplit.Count() > 0)
+            if (comcodessplit.Any())
             {
                 var c = (from cl in db.CLIENTEs
                          join p in db.PAIS on cl.LAND equals p.LAND
@@ -111,58 +126,66 @@ namespace TAT001.Controllers
         }
 
         [HttpGet]
-        public JsonResult Clientes(string Prefix, string usuario, string pais)
+        public JsonResult Clientes(string Prefix, string usuario=null, string pais= null,string sociedad_id=null)
         {
-            if (usuario==""){ usuario = null;}
-            if (pais == ""){  pais = null;}
-            var clientes = FnCommon.ObtenerClientes(db,Prefix,usuario,pais);
+            if (sociedad_id!=null)
+            {
+                pais = db.SOCIEDADs.Find(sociedad_id).LAND;
+            }
+            var clientes = clientesDao.ListaClientes(Prefix,usuario,pais);
             JsonResult cc = Json(clientes, JsonRequestBehavior.AllowGet);
             return cc;
            
 
         }
         [HttpGet]
-        public JsonResult Solicitudes(string Prefix,decimal? num_doci,decimal? num_docf)
+        public JsonResult Solicitudes(string Prefix,string sociedad_id,decimal? num_doci,decimal? num_docf, bool? autorizador,string usuario_id)
         {
-            var solicitudes = FnCommon.ObtenerSolicitudes(db, Prefix, num_doci, num_docf);
+            List<DOCUMENTO> solicitudes;
+            if (autorizador != null && autorizador.Value)
+            {
+                 solicitudes = solicitudesDao.ListaSolicitudes(TATConstantes.ACCION_LISTA_SOLSPORAPROBADOR,Prefix, sociedad_id, num_doci, num_docf, usuario_id);
+            }
+            else
+            {
+                solicitudes = solicitudesDao.ListaSolicitudes(TATConstantes.ACCION_LISTA_SOLICITUDES, Prefix, sociedad_id, num_doci, num_docf);
+            }
             JsonResult cc = Json(solicitudes, JsonRequestBehavior.AllowGet);
             return cc;
         }
         [HttpGet]
-        public JsonResult Usuarios(string Prefix,bool? autorizador)
+        public JsonResult Usuarios(string Prefix,string sociedad_id=null, int? autorizador=null)
         {
-            var usuarios = FnCommon.ObtenerUsuarios(db, Prefix, autorizador);
+            //1-ACCION_LISTA_AUTORIZADOR (FLUJO)
+            //2-ACCION_LISTA_AUTORIZADOR (USUARIOS)
+            List<USUARIO> usuarios;
+            if (autorizador!= null && autorizador.Value==1) {
+                 usuarios = usuariosDao.ListaUsuarios(Prefix, TATConstantes.ACCION_LISTA_AUTORIZADOR_F,null, sociedad_id);
+            }
+            else if (autorizador != null && autorizador.Value == 2)
+            {
+                usuarios = usuariosDao.ListaUsuarios(Prefix, TATConstantes.ACCION_LISTA_AUTORIZADOR_U,null, sociedad_id);
+            }
+            else
+            {
+                usuarios = usuariosDao.ListaUsuarios(Prefix, TATConstantes.ACCION_LISTA_USUARIO,null, sociedad_id);
+            }
             JsonResult cc = Json(usuarios, JsonRequestBehavior.AllowGet);
             return cc;
         }
         [HttpGet]
-        public JsonResult Estados(string pais, string Prefix)
+        public JsonResult Estados(string Prefix,string pais, string sociedad_id=null)
         {
-            if (Prefix == null)
-                Prefix = "";
-            
-
-            string p = pais.Split('.')[0].ToUpper();
-            var c = (from N in db.STATES
-                     where N.NAME.Contains(Prefix) & N.COUNTRy.SORTNAME.Equals(p)
-                     select new { N.NAME });
-            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            List<STATE> estados = statesDao.ListaStates(Prefix,pais, sociedad_id);
+            JsonResult cc = Json(estados, JsonRequestBehavior.AllowGet);
             return cc;
         }
 
         [HttpGet]
-        public JsonResult Ciudades(string estado, string Prefix)
+        public JsonResult Ciudades(string Prefix,string estado)
         {
-            if (Prefix == null)
-                Prefix = "";
-            
-
-            var c = (from N in db.CITIES
-                     join St in db.STATES
-                     on N.STATE_ID equals St.ID
-                     where N.NAME.Contains(Prefix) & St.NAME.Equals(estado)
-                     select new { N.NAME });
-            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            List<CITy> ciudades = citiesDao.ListaCities(Prefix,estado);
+            JsonResult cc = Json(ciudades, JsonRequestBehavior.AllowGet);
             return cc;
         }
 
@@ -173,7 +196,7 @@ namespace TAT001.Controllers
             var c = (from N in db.DET_APROB
                      join St in db.PUESTOTs
                      on N.PUESTOA_ID equals St.PUESTO_ID
-                     where N.BUKRS.Equals(bukrs) & N.PUESTOC_ID.Equals(p) & St.SPRAS_ID.Equals(spras)
+                     where N.BUKRS.Equals(bukrs) && N.PUESTOC_ID.Equals(p) && St.SPRAS_ID.Equals(spras)
                      //where N.BUKRS.Equals(bukrs) 
                      select new { N.PUESTOA_ID, St.TXT50 });
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
@@ -184,26 +207,26 @@ namespace TAT001.Controllers
         public JsonResult Det_Aprob2(string bukrs, string puesto, string spras)
         {
             int p = Int16.Parse(puesto);
-            DET_APROBH dh = db.DET_APROBH.Where(a => a.SOCIEDAD_ID.Equals(bukrs) & a.PUESTOC_ID == p).OrderByDescending(a => a.VERSION).FirstOrDefault();
+            DET_APROBH dh = db.DET_APROBH.Where(a => a.SOCIEDAD_ID.Equals(bukrs) && a.PUESTOC_ID == p).OrderByDescending(a => a.VERSION).FirstOrDefault();
             if (dh != null)
             {
                 var c = (from N in db.DET_APROBP
                          join St in db.PUESTOTs
                          on N.PUESTOA_ID equals St.PUESTO_ID
-                         where N.SOCIEDAD_ID.Equals(bukrs) & N.PUESTOC_ID.Equals(p) & St.SPRAS_ID.Equals(spras) & N.VERSION.Equals(dh.VERSION)
+                         where N.SOCIEDAD_ID.Equals(bukrs) && N.PUESTOC_ID.Equals(p) && St.SPRAS_ID.Equals(spras) && N.VERSION.Equals(dh.VERSION)
                          //where N.BUKRS.Equals(bukrs) 
-                         select new { N.POS, N.PUESTOA_ID.Value, St.TXT50, N.MONTO, PRESUPUESTO = (bool)N.PRESUPUESTO.Value }).ToList();
+                         select new { N.POS, N.PUESTOA_ID.Value, St.TXT50, N.MONTO, PRESUPUESTO = N.PRESUPUESTO.Value }).ToList();
 
-                TAX_LAND tl = db.TAX_LAND.Where(a => a.SOCIEDAD_ID.Equals(bukrs) & a.ACTIVO == true).FirstOrDefault();
+                TAX_LAND tl = db.TAX_LAND.Where(a => a.SOCIEDAD_ID.Equals(bukrs) && a.ACTIVO == true).FirstOrDefault();
                 if (tl != null)
                 {
                     var col = (from St in db.PUESTOTs
-                               where St.PUESTO_ID == 9 & St.SPRAS_ID.Equals(spras)
+                               where St.PUESTO_ID == 9 && St.SPRAS_ID.Equals(spras)
                                //where N.BUKRS.Equals(bukrs) 
                                select new { POS = 98, Value = St.PUESTO_ID, St.TXT50, PRESUPUESTO = false });
                     foreach (var coll in col)
                     {
-                        var colll = new { POS = 98, Value = coll.Value, coll.TXT50, MONTO = (decimal?)decimal.Parse("-1"), PRESUPUESTO = false };
+                        var colll = new { POS = 98,  coll.Value, coll.TXT50, MONTO = (decimal?)decimal.Parse("-1"), PRESUPUESTO = false };
                         c.Add(colll);
                     }
                 }
@@ -220,7 +243,7 @@ namespace TAT001.Controllers
         [HttpGet]
         public JsonResult UsuariosPuesto(string puesto, string Prefix)
         {
-            int p = Int16.Parse(puesto);
+            //int p = Int16.Parse(puesto);
             var c = (from N in db.USUARIOs
                      where //N.PUESTO_ID == p & 
                      N.ID.Contains(Prefix)
@@ -230,7 +253,7 @@ namespace TAT001.Controllers
             {
                 c = (from N in db.USUARIOs
                      where //N.PUESTO_ID == p & 
-                     N.NOMBRE.Contains(Prefix) | N.APELLIDO_P.Contains(Prefix) | N.APELLIDO_M.Contains(Prefix)
+                     N.NOMBRE.Contains(Prefix) || N.APELLIDO_P.Contains(Prefix) || N.APELLIDO_M.Contains(Prefix)
                      //where N.BUKRS.Equals(bukrs) 
                      select new { N.ID, NOMBRE = N.ID + " - " + N.NOMBRE + " " + N.APELLIDO_P + " " + N.APELLIDO_M });
             }
@@ -246,11 +269,11 @@ namespace TAT001.Controllers
             
             var c = (from N in db.DET_AGENTEC
                      where N.PAIS_ID == pais
-                     & N.USUARIOC_ID.Equals(user)
-                     & N.VKORG.Equals(vkorg)
-                     & N.VTWEG.Equals(vtweg)
-                     & N.SPART.Equals(spart)
-                     & N.KUNNR.Equals(kunnr)
+                     && N.USUARIOC_ID.Equals(user)
+                     && N.VKORG.Equals(vkorg)
+                     && N.VTWEG.Equals(vtweg)
+                     && N.SPART.Equals(spart)
+                     && N.KUNNR.Equals(kunnr)
                      select new { N.POS });
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
             return cc;
@@ -258,7 +281,7 @@ namespace TAT001.Controllers
         [HttpPost]
         public JsonResult getPresupuesto(string kunnr, string periodo)
         {
-            PRESUPUESTO_MOD pm = new PRESUPUESTO_MOD();
+            PRESUPUESTO_MOD pm;
             Presupuesto pr = new Presupuesto();
             Cadena c = new Cadena();
             pm = pr.getPresupuesto(c.completaCliente(kunnr), periodo);
@@ -272,70 +295,271 @@ namespace TAT001.Controllers
         {
             //var c = db.DOCUMENTOes.Where(a => a.DOCUMENTO_REF.Equals(num_doc));
             decimal num = (decimal.Parse(num_doc));
+            List<ESTATU> ee = db.ESTATUS.Where(x => x.ACTIVO == true).ToList();
             DOCUMENTO d = db.DOCUMENTOes.Find(num);
             if (d.DOCUMENTORECs.Count > 0)
             {
-                Estatus e = new Estatus();
-                List<DOCUMENTO_MOD> c = (from DR in db.DOCUMENTORECs
-                                         join D in db.DOCUMENTOes
-                                         on DR.DOC_REF equals D.NUM_DOC
-                                         join T in db.TSOLTs
-                                         on D.TSOL_ID equals T.TSOL_ID
-                                         join TA in db.TALLs
-                                         on D.TALL_ID equals TA.ID
-                                         join G in db.GALLTs
-                                         on TA.GALL_ID equals G.GALL_ID
-                                         where DR.NUM_DOC == num
-                                         & T.SPRAS_ID == spras
-                                         & G.SPRAS_ID == spras
-                                         & D.NUM_DOC != 0
-                                         select new DOCUMENTO_MOD
-                                         {
-                                             NUM_DOC = D.NUM_DOC,
-                                             TSOL_ID = T.TXT020,
-                                             GALL_ID = G.TXT50,
-                                             ESTADO = D.FECHAD.Value.Year + "/" + D.FECHAD.Value.Month + "/" + D.FECHAD.Value.Day,
-                                             CIUDAD = D.HORAC.Value.ToString(),
-                                             ESTATUS = D.ESTATUS,
-                                             CONCEPTO = D.CONCEPTO,
-                                             MONTO_DOC_ML = D.MONTO_DOC_ML
-                                         }).ToList();
-                foreach (DOCUMENTO_MOD ddd in c)
+                //Estatus e = new Estatus();
+                //List<DOCUMENTO_MOD> c = (from DR in db.DOCUMENTORECs
+                //                         join D in db.DOCUMENTOes
+                //                         on DR.DOC_REF equals D.NUM_DOC
+                //                         join T in db.TSOLTs
+                //                         on D.TSOL_ID equals T.TSOL_ID
+                //                         join TA in db.TALLs
+                //                         on D.TALL_ID equals TA.ID
+                //                         join G in db.GALLTs
+                //                         on TA.GALL_ID equals G.GALL_ID
+                //                         where DR.NUM_DOC == num
+                //                         && T.SPRAS_ID == spras
+                //                         && G.SPRAS_ID == spras
+                //                         && D.NUM_DOC != 0
+                //                         select new DOCUMENTO_MOD
+                //                         {
+                //                             NUM_DOC = D.NUM_DOC,
+                //                             TSOL_ID = T.TXT020,
+                //                             GALL_ID = G.TXT50,
+                //                             ESTADO = D.FECHAD.Value.Year + "/" + D.FECHAD.Value.Month + "/" + D.FECHAD.Value.Day,
+                //                             CIUDAD = D.HORAC.Value.ToString(),
+                //                             ESTATUS = D.ESTATUS,
+                //                             CONCEPTO = D.CONCEPTO,
+                //                             MONTO_DOC_ML = D.MONTO_DOC_ML
+                //                         }).ToList();
+                //foreach (DOCUMENTO_MOD ddd in c)
+                //{
+                //    ddd.ESTATUS = e.getHtml(ddd.NUM_DOC);
+                //}
+                List<CSP_DOCUMENTOSRECCXSOL_Result> dOCUMENTOes = db.CSP_DOCUMENTOSRECCXSOL(num.ToString(), spras).ToList();
+                List<Documento> listaDocs = new List<Documento>();
+
+                foreach (CSP_DOCUMENTOSRECCXSOL_Result item in dOCUMENTOes)
                 {
-                    ddd.ESTATUS = e.getHtml(ddd.NUM_DOC);
+                    Documento ld = new Documento();
+                    ld.DOCUMENTO_REF = 0;
+                    ld.NUM_DOC = item.NUM_DOC;
+                    ld.NUM_DOC_TEXT = item.NUM_DOC_TEXT;
+                    ld.SOCIEDAD_ID = item.SOCIEDAD_ID;
+                    ld.PAIS_ID = item.PAIS_ID;
+                    ld.FECHADD = item.FECHAD.Value.Day + "/" + item.FECHAD.Value.Month + "/" + item.FECHAD.Value.Year;
+                    ld.FECHAD = item.FECHAD.Value.Year + "/" + item.FECHAD.Value.Month + "/" + item.FECHAD.Value.Day;
+                    ld.HORAC = item.HORAC.Value.ToString().Split('.')[0];
+                    ld.PERIODO = item.PERIODO + "";
+
+                    if (item.ESTATUS == "R")
+                    {
+                        FLUJO flujo = db.FLUJOes.Include("USUARIO").Where(x => x.NUM_DOC == item.NUM_DOC & x.ESTATUS == "R").OrderByDescending(a => a.POS).FirstOrDefault();
+                        item.ESTATUSS = item.ESTATUSS.Substring(0, 6) +
+                                        (flujo.USUARIO != null ? flujo.USUARIO.PUESTO_ID.ToString() : "") +
+                                        item.ESTATUSS.Substring(6, 2);
+                    }
+                    else
+                    {
+                        item.ESTATUSS = item.ESTATUSS.Substring(0, 6) + " " + item.ESTATUSS.Substring(6, 2); ;
+                    }
+                    Estatus eS = new Estatus();
+                    ld.ESTATUS = eS.getText(item.ESTATUSS, ld.NUM_DOC, spras, ee);
+                    ld.ESTATUS_CLASS = eS.getClass(item.ESTATUSS, ld.NUM_DOC, spras, ee);
+
+                    ld.PAYER_ID = item.PAYER_ID;
+
+                    ld.CLIENTE = item.NAME1;
+                    ld.CANAL = item.CANAL;
+                    ld.TSOL = item.TXT020;
+                    ld.TALL = item.TXT50;
+                    try
+                    {
+                        ld.CUENTAS = item.CARGO + "";
+                        ld.CUENTAP = item.CUENTAP;
+                        ld.CUENTAPL = item.CUENTAPL;
+                        ld.CUENTACL = item.CUENTACL;
+                    }
+                    catch { }
+                    ld.CONCEPTO = item.CONCEPTO;
+                    ld.MONTO_DOC_ML = item.MONTO_DOC_MD != null ? Convert.ToDecimal(item.MONTO_DOC_MD).ToString("C") : "";
+
+                    ld.FACTURA = item.FACTURA;
+                    ld.FACTURAK = item.FACTURAK;
+
+                    ld.USUARIOC_ID = String.IsNullOrEmpty(item.USUARIOD_ID)?"":item.USUARIOD_ID;
+                    ld.USUARIOM_ID = String.IsNullOrEmpty(item.USUARIOD_ID) ? "" : item.USUARIOD_ID;
+
+                    if (item.DOCUMENTO_SAP != null)
+                    {
+                        if (item.PADRE)
+                        {
+                            ld.NUM_PRO = item.DOCUMENTO_SAP;
+                            ld.NUM_AP = "";
+                            ld.NUM_NC = "";
+                            ld.NUM_REV = "";
+                        }
+                        else if (item.REVERSO)
+                        {
+                            ld.NUM_REV = item.DOCUMENTO_SAP;
+                            ld.NUM_AP = "";
+                            ld.NUM_NC = "";
+                            ld.NUM_PRO = "";
+                        }
+                        else
+                        {
+                            ld.NUM_NC = item.DOCUMENTO_SAP;
+                            ld.NUM_AP = "";
+                            ld.NUM_PRO = "";
+                            ld.NUM_REV = "";
+                        }
+                        //<!--NUM_SAP-->
+                        ld.BLART = item.BLART;
+                        ld.NUM_PAYER = item.KUNNR;
+                        ld.NUM_CLIENTE = item.DESCR;
+                        ld.NUM_IMPORTE = item.IMPORTE != null ? Convert.ToDecimal(item.IMPORTE).ToString("C") : "";
+                        ld.NUM_CUENTA = item.CUENTA_C;
+                    }
+                    else
+                    {
+                        ld.NUM_CUENTA = "";
+                        ld.NUM_PAYER = "";
+                        ld.NUM_CLIENTE = "";
+                        ld.NUM_IMPORTE = "";
+                        ld.BLART = "";
+                        ld.NUM_PRO = "";
+                        ld.NUM_AP = "";
+                        ld.NUM_NC = "";
+                        ld.NUM_REV = "";
+                    }
+
+                    listaDocs.Add(ld);
                 }
-                JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+                JsonResult cc = Json(listaDocs, JsonRequestBehavior.AllowGet);
                 return cc;
             }
-            else
+            else//Contiene solicitudes relacionadas
             {
-                Estatus e = new Estatus();
-                List<DOCUMENTO_MOD> c = (from D in db.DOCUMENTOes
-                                         join T in db.TSOLTs
-                                         on D.TSOL_ID equals T.TSOL_ID
-                                         join TA in db.TALLs
-                                         on D.TALL_ID equals TA.ID
-                                         join G in db.GALLTs
-                                         on TA.GALL_ID equals G.GALL_ID
-                                         where D.DOCUMENTO_REF == num
-                                         & T.SPRAS_ID == spras
-                                         & G.SPRAS_ID == spras
-                                         select new DOCUMENTO_MOD
-                                         {
-                                             NUM_DOC = D.NUM_DOC,
-                                             TSOL_ID = T.TXT020,
-                                             GALL_ID = G.TXT50,
-                                             ESTADO = D.FECHAD.Value.Year + "/" + D.FECHAD.Value.Month + "/" + D.FECHAD.Value.Day,
-                                             CIUDAD = D.HORAC.Value.ToString(),
-                                             ESTATUS = D.ESTATUS,
-                                             CONCEPTO = D.CONCEPTO,
-                                             MONTO_DOC_ML = D.MONTO_DOC_ML
-                                         }).ToList();
-                foreach (DOCUMENTO_MOD ddd in c)
+                //Estatus e = new Estatus();
+                //List<DOCUMENTO_MOD> c = (from D in db.DOCUMENTOes
+                //                         join T in db.TSOLTs
+                //                         on D.TSOL_ID equals T.TSOL_ID
+                //                         join TA in db.TALLs
+                //                         on D.TALL_ID equals TA.ID
+                //                         join G in db.GALLTs
+                //                         on TA.GALL_ID equals G.GALL_ID
+                //                         where D.DOCUMENTO_REF == num
+                //                         && T.SPRAS_ID == spras
+                //                         && G.SPRAS_ID == spras
+                //                         select new DOCUMENTO_MOD
+                //                         {
+                //                             NUM_DOC = D.NUM_DOC,
+                //                             SOCIEDAD_ID=D.SOCIEDAD_ID,
+                //                             PAIS_ID=D.PAIS_ID,
+                //                             TSOL_ID = T.TXT020,
+                //                             GALL_ID = G.TXT50,
+                //                             ESTADO = D.FECHAD.Value.Year + "/" + D.FECHAD.Value.Month + "/" + D.FECHAD.Value.Day,
+                //                             CIUDAD = D.HORAC.Value.ToString(),
+                //                             ESTATUS = D.ESTATUS,
+                //                             CONCEPTO = D.CONCEPTO,
+                //                             MONTO_DOC_ML = D.MONTO_DOC_ML
+                //                         }).ToList();
+                //foreach (DOCUMENTO_MOD ddd in c)
+                //{
+                //    ddd.ESTATUS = e.getHtml(ddd.NUM_DOC);
+                //}
+                List<CSP_DOCUMENTOSRELXSOL_Result> dOCUMENTOes = db.CSP_DOCUMENTOSRELXSOL(num.ToString(), spras).ToList();
+                List<Documento> listaDocs = new List<Documento>();
+
+                foreach (CSP_DOCUMENTOSRELXSOL_Result item in dOCUMENTOes)
                 {
-                    ddd.ESTATUS = e.getHtml(ddd.NUM_DOC);
+                    Documento ld = new Documento();
+                    ld.DOCUMENTO_REF = item.DOCUMENTO_REF;
+                    ld.NUM_DOC = item.NUM_DOC;
+                    ld.NUM_DOC_TEXT = item.NUM_DOC_TEXT;
+                    ld.SOCIEDAD_ID = item.SOCIEDAD_ID;
+                    ld.PAIS_ID = item.PAIS_ID;
+                    ld.FECHADD = item.FECHAD.Value.Day + "/" + item.FECHAD.Value.Month + "/" + item.FECHAD.Value.Year;
+                    ld.FECHAD = item.FECHAD.Value.Year + "/" + item.FECHAD.Value.Month + "/" + item.FECHAD.Value.Day;
+                    ld.HORAC = item.HORAC.Value.ToString().Split('.')[0];
+                    ld.PERIODO = item.PERIODO + "";
+
+                    if (item.ESTATUS == "R")
+                    {
+                        FLUJO flujo = db.FLUJOes.Include("USUARIO").Where(x => x.NUM_DOC == item.NUM_DOC & x.ESTATUS == "R").OrderByDescending(a => a.POS).FirstOrDefault();
+                        item.ESTATUSS = item.ESTATUSS.Substring(0, 6) +
+                                        (flujo.USUARIO != null ? flujo.USUARIO.PUESTO_ID.ToString() : "") +
+                                        item.ESTATUSS.Substring(6, 2);
+                    }
+                    else
+                    {
+                        item.ESTATUSS = item.ESTATUSS.Substring(0, 6) + " " + item.ESTATUSS.Substring(6, 2); ;
+                    }
+                    Estatus eS = new Estatus();
+                    ld.ESTATUS = eS.getText(item.ESTATUSS, ld.NUM_DOC, spras, ee);
+                    ld.ESTATUS_CLASS = eS.getClass(item.ESTATUSS, ld.NUM_DOC, spras, ee);
+
+                    ld.PAYER_ID = item.PAYER_ID;
+
+                    ld.CLIENTE = item.NAME1;
+                    ld.CANAL = item.CANAL;
+                    ld.TSOL = item.TXT020;
+                    ld.TALL = item.TXT50;
+                    try
+                    {
+                        ld.CUENTAS = item.CARGO + "";
+                        ld.CUENTAP = item.CUENTAP;
+                        ld.CUENTAPL = item.CUENTAPL;
+                        ld.CUENTACL = item.CUENTACL;
+                    }
+                    catch { }
+                    ld.CONCEPTO = item.CONCEPTO;
+                    ld.MONTO_DOC_ML = item.MONTO_DOC_MD != null ? Convert.ToDecimal(item.MONTO_DOC_MD).ToString("C") : "";
+
+                    ld.FACTURA = item.FACTURA;
+                    ld.FACTURAK = item.FACTURAK;
+
+                    ld.USUARIOC_ID = item.USUARIOD_ID;
+                    ld.USUARIOM_ID = item.USUARIOD_ID;
+
+                    if (item.DOCUMENTO_SAP != null)
+                    {
+                        if (item.PADRE)
+                        {
+                            ld.NUM_PRO = item.DOCUMENTO_SAP;
+                            ld.NUM_AP = "";
+                            ld.NUM_NC = "";
+                            ld.NUM_REV = "";
+                        }
+                        else if (item.REVERSO)
+                        {
+                            ld.NUM_REV = item.DOCUMENTO_SAP;
+                            ld.NUM_AP = "";
+                            ld.NUM_NC = "";
+                            ld.NUM_PRO = "";
+                        }
+                        else
+                        {
+                            ld.NUM_NC = item.DOCUMENTO_SAP;
+                            ld.NUM_AP = "";
+                            ld.NUM_PRO = "";
+                            ld.NUM_REV = "";
+                        }
+                        //<!--NUM_SAP-->
+                        ld.BLART = item.BLART;
+                        ld.NUM_PAYER = item.KUNNR;
+                        ld.NUM_CLIENTE = item.DESCR;
+                        ld.NUM_IMPORTE = item.IMPORTE != null ? Convert.ToDecimal(item.IMPORTE).ToString("C") : "";
+                        ld.NUM_CUENTA = item.CUENTA_C;
+                    }
+                    else
+                    {
+                        ld.NUM_CUENTA = "";
+                        ld.NUM_PAYER = "";
+                        ld.NUM_CLIENTE = "";
+                        ld.NUM_IMPORTE = "";
+                        ld.BLART = "";
+                        ld.NUM_PRO = "";
+                        ld.NUM_AP = "";
+                        ld.NUM_NC = "";
+                        ld.NUM_REV = "";
+                    }
+
+                    listaDocs.Add(ld);
                 }
-                JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+                JsonResult cc = Json(listaDocs, JsonRequestBehavior.AllowGet);
                 return cc;
             }
         }
@@ -358,12 +582,12 @@ namespace TAT001.Controllers
                      join TX in db.TX_CONCEPTOT
                      on T.CONCEPTO_ID equals TX.CONCEPTO_ID
                      where T.SOCIEDAD_ID == bukrs
-                     & T.PAIS_ID == pais
-                     & T.VKORG == vkorg
-                     & T.VTWEG == vtweg
-                     & T.SPART == spart
-                     & T.KUNNR == kunnr
-                     & TX.SPRAS_ID == spras
+                     && T.PAIS_ID == pais
+                     && T.VKORG == vkorg
+                     && T.VTWEG == vtweg
+                     && T.SPART == spart
+                     && T.KUNNR == kunnr
+                     && TX.SPRAS_ID == spras
                      select new { T.CONCEPTO_ID, TX.TXT50 });
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
             return cc;
@@ -378,13 +602,13 @@ namespace TAT001.Controllers
                      join TX in db.TX_NOTAT
                      on T.TNOTA_ID equals TX.TNOTA_ID
                      where T.SOCIEDAD_ID == bukrs
-                     & T.PAIS_ID == pais
-                     & T.VKORG == vkorg
-                     & T.VTWEG == vtweg
-                     & T.SPART == spart
-                     & T.KUNNR == kunnr
-                     & T.CONCEPTO_ID == co
-                     & TX.SPRAS_ID == spras
+                     && T.PAIS_ID == pais
+                     && T.VKORG == vkorg
+                     && T.VTWEG == vtweg
+                     && T.SPART == spart
+                     && T.KUNNR == kunnr
+                     && T.CONCEPTO_ID == co
+                     && TX.SPRAS_ID == spras
                      select new { T.TNOTA_ID, TX.TXT50 });
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
             return cc;
@@ -397,25 +621,25 @@ namespace TAT001.Controllers
             int co = int.Parse(concepto);
             var c = (from T in db.TAXEOHs
                      where T.SOCIEDAD_ID == bukrs
-                     & T.PAIS_ID == pais
-                     & T.VKORG == vkorg
-                     & T.VTWEG == vtweg
-                     & T.SPART == spart
-                     & T.KUNNR == kunnr
-                     & T.CONCEPTO_ID == co
+                     && T.PAIS_ID == pais
+                     && T.VKORG == vkorg
+                     && T.VTWEG == vtweg
+                     && T.SPART == spart
+                     && T.KUNNR == kunnr
+                     && T.CONCEPTO_ID == co
                      select new { T.IMPUESTO_ID, T.PORC, TXT50 = "IVA" }).ToList();
 
             var c2 = (from T in db.TAXEOPs
                       join R in db.TRETENCIONTs
                       on T.TRETENCION_ID equals R.TRETENCION_ID
                       where T.SOCIEDAD_ID == bukrs
-                      & T.PAIS_ID == pais
-                      & T.VKORG == vkorg
-                      & T.VTWEG == vtweg
-                      & T.SPART == spart
-                      & T.KUNNR == kunnr
-                      & T.CONCEPTO_ID == co
-                      & R.SPRAS_ID == spras
+                      && T.PAIS_ID == pais
+                      && T.VKORG == vkorg
+                      && T.VTWEG == vtweg
+                      && T.SPART == spart
+                      && T.KUNNR == kunnr
+                      && T.CONCEPTO_ID == co
+                      && R.SPRAS_ID == spras
                       select new { IMPUESTO_ID = T.RETENCION_ID.ToString(), T.PORC, R.TXT50 }).ToList();
 
             c.AddRange(c2);
@@ -430,7 +654,7 @@ namespace TAT001.Controllers
                      join T in db.TSOPORTETs
                      on C.TSOPORTE_ID equals T.TSOPORTE_ID
                      where C.TSOL_ID == tsol
-                     & T.SPRAS_ID == spras
+                     && T.SPRAS_ID == spras
                      select new { C.TSOPORTE_ID, C.OBLIGATORIO, T.TXT50 });
 
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
@@ -443,9 +667,9 @@ namespace TAT001.Controllers
 
             var c = (from C in db.CUENTAs
                      where C.SOCIEDAD_ID == bukrs
-                     & C.PAIS_ID == land
-                     & C.TALL_ID == gall
-                     & C.EJERCICIO == ejer
+                     && C.PAIS_ID == land
+                     && C.TALL_ID == gall
+                     && C.EJERCICIO == ejer
                      //-----DRS 1.10.2018-----
                      select new { C.ABONO, NOMBREA = C.CUENTAGL.NOMBRE, C.CARGO, NOMBREC = C.CUENTAGL1.NOMBRE, C.CLEARING, C.LIMITE }).FirstOrDefault();
 
@@ -460,82 +684,8 @@ namespace TAT001.Controllers
         [AllowAnonymous]
         public JsonResult categoriasCliente(string vkorg, string spart, string kunnr, string soc_id)
         {
-            Cadena cad = new Cadena();
-            kunnr = cad.completaCliente(kunnr);
-            if (kunnr == null)
-            {
-                kunnr = "";
-            }
-            List<MATERIALGPT> jd = new List<MATERIALGPT>();
 
-           
-
-            //Validar si hay materiales
-            if (db.MATERIALs.Any(x => x.MATERIALGP_ID != null && x.ACTIVO.Value))
-            {
-                List<CLIENTE> clil = new List<CLIENTE>();
-
-                try
-                {
-                    CLIENTE cli = db.CLIENTEs.Where(c => c.KUNNR == kunnr && c.VKORG == vkorg && c.SPART == spart).FirstOrDefault();
-                    //Saber si el cliente es sold to, payer o un grupo  //Es un soldto
-                    if (cli != null && cli.KUNNR != cli.PAYER && cli.KUNNR != cli.BANNER)
-                    {
-                            clil.Add(cli);
-                    }
-                }
-                catch (Exception e)
-                {
-                    Log.ErrorLogApp(e, "Listas", "categoriasCliente");
-                }
-
-                var cie = clil;
-                //Obtener el numero de periodos para obtener el historial
-                int? mesesVenta = (db.CONFDIST_CAT.Any(x => x.SOCIEDAD_ID == soc_id) ? db.CONFDIST_CAT.First(x => x.SOCIEDAD_ID == soc_id).PERIODOS:null);
-                int nummonths = (mesesVenta != null ? mesesVenta.Value : DateTime.Now.Month);
-                int imonths = nummonths * -1;
-                //Obtener el rango de los periodos incluyendo el año
-                DateTime ff = DateTime.Today;
-                DateTime fi = ff.AddMonths(imonths);
-
-                string mi = fi.Month.ToString();
-                string ai = fi.Year.ToString();
-
-                string mf = ff.Month.ToString();
-                string af = ff.Year.ToString();
-
-                int aii = 0;
-                int mii = 0;
-                int aff = 0;
-                int mff = 0;
-                try{
-                    aii = Convert.ToInt32(ai);
-                    mii = Convert.ToInt32(mi);
-                    aff = Convert.ToInt32(af);
-                    mff = Convert.ToInt32(mf);
-                }
-                catch (Exception e)
-                {
-                    Log.ErrorLogApp(e, "Listas", "categoriasCliente-mesesVenta");
-                }
-
-                if (cie != null)
-                {
-                    jd = FnCommon.ObtenerMaterialGroupsCliente(db,vkorg,spart,kunnr,soc_id,aii,mii,aff,mff);
-                }
-            }
-
-            var list = new List<MATERIALGPT>();
-            if (jd.Count > 0)
-            {
-                MATERIALGPT c = FnCommon.ObtenerTotalProducts(db);
-                list.Add(new MATERIALGPT
-                {
-                    MATERIALGP_ID = c.MATERIALGP_ID,
-                    TXT50 = c.TXT50
-                });
-                list.AddRange(jd);
-            }
+            List<MATERIALGPT> list = materialesgptDao.CategoriasCliente(vkorg,spart,kunnr,soc_id);
             JsonResult jl = Json(list, JsonRequestBehavior.AllowGet);
             return jl;
         }
@@ -544,145 +694,8 @@ namespace TAT001.Controllers
         [AllowAnonymous]
         public JsonResult grupoMateriales(string vkorg, string spart, string kunnr, string soc_id)
         {
-         
-            if (kunnr == null)
-            {
-                kunnr = "";
-            }
-
-            Cadena cad = new Cadena();
-            kunnr = cad.completaCliente(kunnr);
-
-            List<DOCUMENTOM_MOD> jd = new List<DOCUMENTOM_MOD>();
-
-
-            //Validar si hay materiales
-            if (db.MATERIALs.Any(x => x.MATERIALGP_ID != null && x.ACTIVO.Value))
-            {
-                List<CLIENTE> clil = new List<CLIENTE>();
-                try
-                {
-                    CLIENTE cli = db.CLIENTEs.Where(c => c.KUNNR == kunnr && c.VKORG == vkorg && c.SPART == spart).FirstOrDefault();
-
-                    //Saber si el cliente es sold to, payer o un grupo
-                    if (cli != null && cli.KUNNR != cli.PAYER && cli.KUNNR != cli.BANNER)
-                    {
-                            clil.Add(cli);                 
-                    }
-                }
-                catch (Exception e)
-                {
-                    Log.ErrorLogApp(e,"Listas", "grupoMateriales");
-                }
-                var cie = clil;
-                //Obtener el numero de periodos para obtener el historial
-                int? mesesVenta = (db.CONFDIST_CAT.Any(x => x.SOCIEDAD_ID == soc_id) ? db.CONFDIST_CAT.First(x => x.SOCIEDAD_ID == soc_id).PERIODOS : null);
-                int nummonths = (mesesVenta!=null? mesesVenta.Value:DateTime.Now.Month);
-                int imonths = nummonths * -1;
-                //Obtener el rango de los periodos incluyendo el año
-                DateTime ff = DateTime.Today;
-                DateTime fi = ff.AddMonths(imonths);
-
-                string mi = fi.Month.ToString();
-                string ai = fi.Year.ToString();
-
-                string mf = ff.Month.ToString();
-                string af = ff.Year.ToString();
-
-                int aii = 0;
-                int mii = 0;
-                int aff = 0;
-                int mff = 0;
-                try
-                {
-                    aii = Convert.ToInt32(ai);
-                    mii = Convert.ToInt32(mi);
-                    aff = Convert.ToInt32(af);
-                    mff = Convert.ToInt32(mf);
-                }
-                catch (Exception e)
-                {
-                    Log.ErrorLogApp(e, "Listas", "grupoMateriales-mesesVenta");
-                }
-                
-
-                if (cie != null)
-                {
-                   jd = FnCommon.ObtenerMaterialGroupsMateriales(db, vkorg, spart, kunnr, soc_id, aii, mii, aff, mff,User.Identity.Name);
-                }
-            }
-
-            //Obtener las categorías
-            var categorias = jd.GroupBy(c => c.ID_CAT, c => new { ID = c.ID_CAT.ToString(), DESC = c.DESC }).ToList();
-
-            List<CategoriaMaterial> lcatmat = new List<CategoriaMaterial>();
-
-            foreach (var item in categorias)
-            {
-                CategoriaMaterial cm = new CategoriaMaterial();
-                cm.ID = item.Key;
-                cm.EXCLUIR = jd.Where(x => x.ID_CAT.Equals(item.Key)).FirstOrDefault().EXCLUIR; //RSG 09.07.2018 ID167
-
-                //Obtener los materiales de la categoría
-                List<DOCUMENTOM_MOD> dl = new List<DOCUMENTOM_MOD>();
-                List<DOCUMENTOM_MOD> dm = new List<DOCUMENTOM_MOD>();
-                dl = jd.Where(c => c.ID_CAT == item.Key).Select(c => new DOCUMENTOM_MOD { ID_CAT = c.ID_CAT, MATNR = c.MATNR, VAL = c.VAL, DESC = c.DESC }).ToList();//Falta obtener el groupby
-
-                //Obtener la descripción de los materiales
-                foreach (DOCUMENTOM_MOD d in dl)
-                {
-                    DOCUMENTOM_MOD dcl = new DOCUMENTOM_MOD();
-                    dcl = dm.Where(z => z.MATNR == d.MATNR).Select(c => new DOCUMENTOM_MOD { ID_CAT = c.ID_CAT, MATNR = c.MATNR, VAL = c.VAL, DESC = c.DESC }).FirstOrDefault();
-
-                    if (dcl == null)
-                    {
-                        DOCUMENTOM_MOD dcll = new DOCUMENTOM_MOD();
-                        //No se ha agregado
-                        decimal val = dl.Where(y => y.MATNR == d.MATNR).Sum(x => x.VAL);
-                        dcll.ID_CAT = item.Key;
-                        dcll.MATNR = d.MATNR;
-                        
-                        dcll.DESC = d.DESC;
-                        dcll.VAL = val;
-
-                        dm.Add(dcll);
-                    }
-                }
-
-                cm.MATERIALES = dm;
-                //LEJ 18.07.2018-----------------------------------------------------------
-                MATERIALGP vv = FnCommon.ObtenerMaterialGroup(db, cm.ID);
-                cm.UNICA = vv.UNICA;
-                cm.DESCRIPCION = vv.DESCRIPCION;
-                lcatmat.Add(cm);
-            }
-
-            if (lcatmat.Count > 0)
-            {
-                CategoriaMaterial nnn = new CategoriaMaterial();
-                nnn.ID = "000";
-                nnn.DESCRIPCION = FnCommon.ObtenerTotalProducts(db).TXT50;
-                nnn.MATERIALES = new List<DOCUMENTOM_MOD>();
-                //foreach (var item in lcatmat)//RSG 09.07.2018 ID167
-                foreach (var item in lcatmat.Where(x => x.EXCLUIR == false).ToList())
-                {
-                    foreach (var ii in item.MATERIALES)
-                    {
-                        DOCUMENTOM_MOD dm = new DOCUMENTOM_MOD();
-                        dm.ID_CAT = "000";
-                        dm.DESC = ii.DESC;
-                        dm.MATNR = ii.MATNR;
-                        dm.POR = ii.POR;
-                        dm.VAL = ii.VAL;
-                        nnn.MATERIALES.Add(dm);
-                    }
-                }
-                //LEJ 18.07.2018-----------------------------------------------------------
-                nnn.UNICA = FnCommon.ObtenerMaterialGroup(db, nnn.ID).UNICA;
-                lcatmat.Add(nnn);
-            }
-
-
+            List<CategoriaMaterial> lcatmat =materialesgptDao.GrupoMateriales(vkorg,spart,kunnr,soc_id,User.Identity.Name);
+            
 
             JsonResult jl = Json(lcatmat, JsonRequestBehavior.AllowGet);
             return jl;
@@ -695,9 +708,9 @@ namespace TAT001.Controllers
             {
                 conf = db.CONFDIST_CAT.Where(c => c.SOCIEDAD_ID == soc && c.ACTIVO == true).FirstOrDefault();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                Log.ErrorLogApp(e,"Listas", "getCatConf");
             }
 
             return conf;
@@ -742,6 +755,11 @@ namespace TAT001.Controllers
         {
             int e = int.Parse(ejercicio);
             int p = int.Parse(periodo);
+            if (p > 12)
+            {
+                e = e + (p / 12);
+                p = p - 12;
+            }
             Calendario445 c4 = new Calendario445();
             DateTime f = c4.getPrimerDia(e, p);
             int daysUntilMonday = ((int)DayOfWeek.Monday - (int)f.DayOfWeek + 7) % 7;
@@ -775,7 +793,7 @@ namespace TAT001.Controllers
                                  join co in db.CONTACTOCs
                                  on new { c.VKORG, c.VTWEG, c.SPART, c.KUNNR } equals new { co.VKORG, co.VTWEG, co.SPART, co.KUNNR } into jjcont
                                  from co in jjcont.DefaultIfEmpty()
-                                 where (c.KUNNR == kunnr & co.DEFECTO == true)
+                                 where (c.KUNNR == kunnr && co.DEFECTO == true)
                                  select new CLIENTE_MOD
                                  {
                                      VKORG = c.VKORG,
@@ -828,7 +846,7 @@ namespace TAT001.Controllers
                 var clientei = (from c in db.TCLIENTEs
                                 join ct in db.TCLIENTETs
                                 on c.ID equals ct.PARVW_ID
-                                where c.ID == id_cl.PARVW && c.ACTIVO == true
+                                where c.ID == id_cl.PARVW && c.ACTIVO
                                 select ct).FirstOrDefault();
                 id_cl.PARVW = "";
                 if (clientei != null)
@@ -868,7 +886,7 @@ namespace TAT001.Controllers
                                  join co in db.CONTACTOCs
                                  on new { c.VKORG, c.VTWEG, c.SPART, c.KUNNR } equals new { co.VKORG, co.VTWEG, co.SPART, co.KUNNR } into jjcont
                                  from co in jjcont.DefaultIfEmpty()
-                                 where (c.KUNNR == kunnr & co.DEFECTO == true)
+                                 where (c.KUNNR == kunnr && co.DEFECTO == true)
                                  select new CLIENTE_MOD
                                  {
                                      VKORG = c.VKORG,
@@ -921,7 +939,7 @@ namespace TAT001.Controllers
                 var clientei = (from c in db.TCLIENTEs
                                 join ct in db.TCLIENTETs
                                 on c.ID equals ct.PARVW_ID
-                                where c.ID == id_cl.PARVW && c.ACTIVO == true
+                                where c.ID == id_cl.PARVW && c.ACTIVO
                                 select ct).FirstOrDefault();
                 id_cl.PARVW = "";
                 if (clientei != null)
@@ -933,7 +951,7 @@ namespace TAT001.Controllers
             //Si es borrador asignar datos de contacto a cliente
             if (id_cl != null && esBorrador != null && esBorrador.Value)
             {
-                DOCUMENTBORR doc = db.DOCUMENTBORRs.Where(x => x.USUARIOC_ID == User.Identity.Name && x.PAYER_ID == kunnr).FirstOrDefault();
+                DOCUMENTBORR doc = db.DOCUMENTBORRs.Where(x => x.USUARIOC_ID == User.Identity.Name && (x.PAYER_ID == kunnr || x.PAYER_ID == null)).FirstOrDefault();
                 if (doc != null)
                 {
                     id_cl.PAYER_EMAIL = doc.PAYER_EMAIL;
@@ -958,7 +976,7 @@ namespace TAT001.Controllers
         [HttpPost]
         public JsonResult materiales(string Prefix, string vkorg, string vtweg)
         {
-            List<MATERIAL> materiales = FnCommon.ObtenerMateriales(db, Prefix, vkorg, vtweg, User.Identity.Name);
+            List<MATERIAL> materiales = materialesDao.ListaMateriales( Prefix, vkorg, vtweg, User.Identity.Name);
             
             JsonResult cc = new JsonResult()
             {
@@ -990,15 +1008,14 @@ namespace TAT001.Controllers
             doc.DOCUMENTOP = docs;
             return PartialView("~/Views/CartaV/_PartialMatTr.cshtml", doc);
         }
-        [HttpPost]
-        [AllowAnonymous]
-        public JsonResult contactos(string Prefix, string vkorg, string vtweg, string kunnr)
+        [HttpGet]
+        public JsonResult contactos(string Prefix, string kunnr, string vkorg = null, string vtweg = null)
         {
             
             Cadena cad = new Cadena();
             kunnr = cad.completaCliente(kunnr);
 
-           var contactos=FnCommon.ObtenerContactos(db,Prefix,vkorg,vtweg,kunnr);
+           var contactos= contactosDao.ListaContactos(Prefix,vkorg,vtweg,kunnr);
             JsonResult cc = Json(contactos, JsonRequestBehavior.AllowGet);
             return cc;
         }
@@ -1011,7 +1028,7 @@ namespace TAT001.Controllers
             
             var tsr = (from ts in db.TSOLTs
                         where spras_id == ts.SPRAS_ID && (ts.TSOL_ID.Contains(Prefix)|| ts.TXT50.Contains(Prefix))
-                        select new { TSOL_ID=ts.TSOL_ID, TXT50=(ts.TSOL_ID+" - "+ts.TXT50) }).ToList();
+                        select new { ts.TSOL_ID, TXT50=(ts.TSOL_ID+" - "+ts.TXT50) }).ToList();
           
             return Json(tsr, JsonRequestBehavior.AllowGet);
         }
@@ -1022,7 +1039,7 @@ namespace TAT001.Controllers
 
             var c = (from st in db.TSOPORTETs
                      where st.SPRAS_ID == spras_id && (st.TXT50.Contains(Prefix) || st.TSOPORTE_ID.Contains(Prefix))
-                     select new { TSOPORTE_ID=st.TSOPORTE_ID, TXT50=(st.TSOPORTE_ID + " - "+st.TXT50) });
+                     select new { st.TSOPORTE_ID, TXT50=(st.TSOPORTE_ID + " - "+st.TXT50) });
 
             return Json(c, JsonRequestBehavior.AllowGet);
         }
@@ -1045,13 +1062,10 @@ namespace TAT001.Controllers
 
 
         [HttpGet]
-        public JsonResult sociedades(string Prefix)
+        public JsonResult Sociedades(string Prefix)
         {
-            var c = (from st in db.SOCIEDADs
-                     where (st.BUKRS.Contains(Prefix) || st.BUTXT.Contains(Prefix))
-                     select new { BUKRS = st.BUKRS, TXT50 = (st.BUKRS + " - " + st.BUTXT) });
-
-            return Json(c, JsonRequestBehavior.AllowGet);
+            var sociedades=sociedadesDao.ListaSociedades(TATConstantes.ACCION_LISTA_SOCIEDADES, null,null,Prefix);
+            return Json(sociedades, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
@@ -1059,7 +1073,7 @@ namespace TAT001.Controllers
         {
             var c = (from sp in db.PAIS
                      where (sp.LAND.Contains(Prefix)|| sp.LANDX.Contains(Prefix))
-                     select new { LAND = sp.LAND, TXT50 = (sp.LANDX) });
+                     select new { sp.LAND, TXT50 = (sp.LANDX) });
 
             return Json(c, JsonRequestBehavior.AllowGet);
         }
@@ -1069,7 +1083,7 @@ namespace TAT001.Controllers
         {
             var c = (from st in db.TALLs
                      where (st.ID.Contains(Prefix)|| st.DESCRIPCION.Contains(Prefix))
-                     select new { ID = st.ID, TXT50 = (st.DESCRIPCION) });
+                     select new { st.ID, TXT50 = (st.DESCRIPCION) });
 
             return Json(c, JsonRequestBehavior.AllowGet);
         }
@@ -1078,7 +1092,7 @@ namespace TAT001.Controllers
         {
             var c = (from st in db.CUENTAGLs
                      where st.ACTIVO==true && (st.ID.ToString().Contains(Prefix)||st.NOMBRE.Contains(Prefix))
-                     select new { ID = st.ID, TXT50 = (st.ID + " - " + st.NOMBRE) });
+                     select new { st.ID, TXT50 = (st.ID + " - " + st.NOMBRE) });
 
             return Json(c, JsonRequestBehavior.AllowGet);
         }
@@ -1087,10 +1101,23 @@ namespace TAT001.Controllers
         public JsonResult impuestos(string Prefix)
         {
             var c = (from st in db.IMPUESTOes
-                     where st.ACTIVO == true && (st.MWSKZ.Contains(Prefix))
+                     where st.ACTIVO && (st.MWSKZ.Contains(Prefix))
                      select new { ID = st.MWSKZ, TXT50 = (st.MWSKZ) });
 
             return Json(c, JsonRequestBehavior.AllowGet);
+        }
+        [HttpGet]
+        public JsonResult Talls(string Prefix, string sociedad_id)
+        {
+            string spras_id = FnCommon.ObtenerSprasId(db,User.Identity.Name);
+            int ejercicio = DateTime.Now.Year;
+            string pais_id = db.SOCIEDADs.Any(x => x.BUKRS == sociedad_id) ? db.SOCIEDADs.First(x => x.BUKRS == sociedad_id).LAND:null ;
+
+            var talls = tallsDao.ListaTallsConCuenta(TATConstantes.ACCION_LISTA_TALLTCONCUENTA, Prefix, spras_id, pais_id,ejercicio,sociedad_id);
+            JsonResult cc = Json(talls, JsonRequestBehavior.AllowGet);
+            return cc;
+
+
         }
     }
 }

@@ -71,7 +71,12 @@
                         @Html.DisplayFor(modelItem => item.CAMPOS.ID)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.TEXTOS)
+                        @if (item.TEXTOS.ToString().Length > 70)
+                        {
+                            <span>@(item.TEXTOS.ToString().Substring(0, 70) + "...")</span>
+                        }
+                        else
+                        {@Html.Raw(item.TEXTOS)}
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.SPRAS_ID)

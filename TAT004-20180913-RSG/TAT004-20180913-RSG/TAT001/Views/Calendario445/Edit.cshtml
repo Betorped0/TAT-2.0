@@ -259,20 +259,14 @@
         fnCommon.materializeInit('timepicker');
         fnCommon.materializeInit( 'select');
 
-        var año = $("#calendario445_EJERCICIO").val();
-        var mes = $("#calendario445_PERIODO").val();
-        var nmes = parseInt(mes) - 1;
-        var periodo_inicio = new Date(año, nmes, 1);
-        var periodo_fin = new Date(año, nmes + 1, 0);
+       
         //----  Remover Hora de Fecha----
         document.querySelectorAll('.datepicker').forEach(function (datePicker) {
             datePicker.value = datePicker.value.substring(0, 10);
-            
+          
             var dateVal = moment(datePicker.value, 'DD/MM/YYYY');
             M.Datepicker.getInstance(datePicker).setDate(dateVal._d);
             
-            M.Datepicker.getInstance(datePicker).options.minDate=periodo_inicio;
-            M.Datepicker.getInstance(datePicker).options.maxDate=periodo_fin;
         });
         //----  Se agrega validaciones al formulario----
         fnCommon.selectRequired();

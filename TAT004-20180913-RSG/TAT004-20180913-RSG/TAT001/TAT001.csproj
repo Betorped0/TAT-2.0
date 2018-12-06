@@ -213,6 +213,7 @@
     <Compile Include="Common\FnCommon.cs" />
     <Compile Include="Common\FnCommonCarta.cs" />
     <Compile Include="Common\Log.cs" />
+    <Compile Include="Common\TATConstantes.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AyudaController.cs" />
     <Compile Include="Controllers\CartaDController.cs" />
@@ -388,7 +389,16 @@
     <Compile Include="Entities\CSP_CONSULTARPRESUPUESTO_Result.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\CSP_DOCUMENTOSRECCXSOL_Result.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\CSP_DOCUMENTOSRELXSOL_Result.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\CSP_DOCUMENTOSXCOCODE_Result.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\CSP_DOCUMENTOSXUSER2_Result.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\CSP_DOCUMENTOSXUSER_Result.cs">
@@ -841,6 +851,17 @@
     <Compile Include="Models\CategoriaMaterial.cs" />
     <Compile Include="Models\ClienteViewModel.cs" />
     <Compile Include="Models\Comentarios.cs" />
+    <Compile Include="Models\Dao\CamposDao.cs" />
+    <Compile Include="Models\Dao\CitiesDao.cs" />
+    <Compile Include="Models\Dao\ClientesDao.cs" />
+    <Compile Include="Models\Dao\ContactosDao.cs" />
+    <Compile Include="Models\Dao\MaterialesgptDao.cs" />
+    <Compile Include="Models\Dao\PeriodosDao.cs" />
+    <Compile Include="Models\Dao\SolicitudesDao.cs" />
+    <Compile Include="Models\Dao\TabsDao.cs" />
+    <Compile Include="Models\Dao\TallsDao.cs" />
+    <Compile Include="Models\Dao\TiposSolicitudesDao.cs" />
+    <Compile Include="Models\Dao\UsuariosDao.cs" />
     <Compile Include="Models\dby.cs" />
     <Compile Include="Models\DesviacionesTS.cs" />
     <Compile Include="Models\Documento.cs" />
@@ -856,11 +877,13 @@
     <Compile Include="Models\Masiva\Encabezado.cs" />
     <Compile Include="Models\Masiva\Multiple.cs" />
     <Compile Include="Models\Masiva\Relacionada.cs" />
+    <Compile Include="Models\Dao\MaterialesDao.cs" />
     <Compile Include="Models\MaterialViewModel.cs" />
     <Compile Include="Models\ModificacionesGlobalesViewModel.cs" />
     <Compile Include="Models\ProveedorViewModel.cs" />
     <Compile Include="Models\ReportesModel.cs" />
     <Compile Include="Models\SelectTreeItem.cs" />
+    <Compile Include="Models\Dao\SociedadesDao.cs" />
     <Compile Include="Models\SOLICITUD_MOD.cs" />
     <Compile Include="Models\Flujos.cs" />
     <Compile Include="Models\TALLT_MOD.cs" />
@@ -910,7 +933,9 @@
     <Compile Include="obj\Release\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
     <Compile Include="obj\Release\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />-->
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Cancelar.cs" />
     <Compile Include="Services\Duplicado.cs" />
+    <Compile Include="Services\ExcelExport.cs" />
     <Compile Include="Services\ProcesaFlujo4.cs" />
     <Compile Include="Services\ProcesaFlujo3.cs" />
     <Compile Include="Services\UsuarioLogin.cs" />
@@ -1383,7 +1408,7 @@
     <Content Include="obj\Release\TempPE\Entities.TAT001.Designer.cs.dll" />-->
     <Content Include="images\Simple-wallpapers-HD-for-desktop.png" />
     <!--<Content Include="PdfTemp\readme.txt" />-->
-    <Content Include="Properties\PublishProfiles\FolderProfile.pubxml.user" />
+    <!--<Content Include="Properties\PublishProfiles\FolderProfile.pubxml.user" />-->
     <Content Include="Scripts\CargaUsuarios.js" />
     <Content Include="Scripts\CargaClientes.js" />
     <!--<Content Include="obj\Debug\TAT001.csproj.FileListAbsolute.txt" />
@@ -1399,6 +1424,7 @@
     <Content Include="PdfTemp\Solicitudes_Consulta\Solicitudes_Consulta09\11\2018.xlsx" />
     <Content Include="PdfTemp\Solicitudes_Consulta\Solicitudes_Consulta\09\11\2018.xlsx" />
     <Content Include="PdfTemp\Solicitudes_Consulta\09\11\2018.xlsx" />
+    <Compile Include="Models\Dao\StatesDao.cs" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\borrador.js" />
     <Content Include="Scripts\dropdowntree.js" />
@@ -1415,6 +1441,7 @@
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\rangos.js" />
+    <Content Include="Scripts\Solicitudes\comun.js" />
     <Content Include="Scripts\subfilters\jquery.tablesorter.js" />
     <Content Include="Scripts\subfilters\jquery.tablesorter.pager.js" />
     <Content Include="Scripts\subfilters\script.js" />
@@ -1719,6 +1746,7 @@
     <Content Include="Scripts\ValidarProv.js" />
     <Content Include="Scripts\ValidarTCambio.js" />
     <Content Include="Views\Mails\logo_kellogg.png" />
+    <None Include="Views\ModificacionesGlobales\ListModSolicitudes.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -2031,6 +2059,11 @@
     <Content Include="Views\Solicitudes\_EditTabInfo.cshtml" />
     <Content Include="Views\Solicitudes\_EditTabRec.cshtml" />
     <Content Include="Views\Solicitudes\_EditTabSop.cshtml" />
+    <Content Include="Views\Sociedades\Flujos.cshtml" />
+    <Content Include="Views\Sociedades\MAFlujos.cshtml" />
+    <Content Include="Views\Sociedades\EditF.cshtml" />
+    <Content Include="Views\Sociedades\CreateF.cshtml" />
+    <Content Include="Views\Sociedades\CreateFA.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->

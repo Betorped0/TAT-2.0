@@ -128,100 +128,41 @@
             <a id="btn_return" href="@Url.Action("Index")"></a>
         </div>
         <script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
+
 <script>
-    $(document).ready(function () {
-        $("#calendario445_EJERCICIO")
-            .change(function () {
-                var d = new Date();
-                var año = $("#calendario445_EJERCICIO").val();
-                if (año == "") {
-                    año = d.getFullYear();
-                }
-                var mes = $("#calendario445_PERIODO").val();
-                var nmes = parseInt(mes) - 1;
-                var periodo_inicio = new Date(año, nmes, 1);
-                var periodo_fin = new Date(año, nmes + 1, 0);
-                var datei = moment(periodo_inicio);//.format('DD/MM/YYYY');
-                var datef = moment(periodo_fin);//.format('DD/MM/YYYY');
-                document.querySelectorAll('.datepicker').forEach(function (e) {
-                    e.disabled = false;
-                    e.value = "";
-                    var fechaI = $('#' + e.id + ''),
-                        fechaIM = M.Datepicker.getInstance(fechaI);
-                    fechaIM.options.minDate = datei;
-                    fechaIM.options.maxDate = datef;
-                    fechaIM.setDate(periodo_inicio, true);
-                });
-            });
-        $("#calendario445_PERIODO")
-            .change(function () {
-                var d = new Date();
-                var año = $("#calendario445_EJERCICIO").val();
-                if (año == "") {
-                    año=d.getFullYear();
-                }
-                var mes = $(this).val();
-                if (mes != "") {
-                    var nmes = parseInt(mes) - 1;
-                    var periodo_inicio = new Date(año, nmes, 1);
-                    var periodo_fin = new Date(año, nmes + 1, 0);
-                    var datei = moment(periodo_inicio);//.format('DD/MM/YYYY');
-                    var datef = moment(periodo_fin);//.format('DD/MM/YYYY');
-                    document.querySelectorAll('.datepicker').forEach(function (e) {
-                        e.value = "";
-                        e.disabled = false;
-                        var fechaI = $('#' + e.id + ''),
-                            fechaIM = M.Datepicker.getInstance(fechaI);
-                        fechaIM.options.minDate = datei;
-                        fechaIM.options.maxDate = datef;
-                        fechaIM.setDate(periodo_inicio, true);
-                        //fechaIM.gotoDate(datei);
-                    });
-                }
-                else {
-                    document.querySelectorAll('.datepicker').forEach(function (e) {
-                        e.value = "";
-                        e.disabled = true;
-                    });
-                }
-            });
-    });
-</script>
-        <script>
-            var spras_id ="@ViewBag.spras_id";
-        //---- Inicializador de componentes Materialize----
-        fnCommon.materializeInit('datepicker', spras_id);
-        fnCommon.materializeInit('timepicker');
-        fnCommon.materializeInit('select');
+    var spras_id ="@ViewBag.spras_id";
+//---- Inicializador de componentes Materialize----
+fnCommon.materializeInit('datepicker', spras_id);
+fnCommon.materializeInit('timepicker');
+fnCommon.materializeInit('select');
 
-        // Remover Fecha y Hora
-        var sinFecha = "01/01/0001";
-        document.querySelectorAll('.datepicker').forEach(function (datePicker) {
-            if (datePicker.value.indexOf(sinFecha) > -1) { datePicker.value = ''; }
-            datePicker.disabled = true;
-        });
-        var sinHora = "00:00";
-        document.querySelectorAll('.timepicker').forEach(function (timepicker) {
-            if (timepicker.value.indexOf(sinHora) > -1) { timepicker.value = ''; }
-        });
+// Remover Fecha y Hora
+var sinFecha = "01/01/0001";
+document.querySelectorAll('.datepicker').forEach(function (datePicker) {
+    if (datePicker.value.indexOf(sinFecha) > -1) { datePicker.value = ''; }
+});
+var sinHora = "00:00";
+document.querySelectorAll('.timepicker').forEach(function (timepicker) {
+    if (timepicker.value.indexOf(sinHora) > -1) { timepicker.value = ''; }
+});
 
-        //----  Se agrega validaciones al formulario----
-        fnCommon.selectRequired();
-        fnCommon.formValidation('calendario445Form');
-        fnCommon.dateRangeValidation('calendario445_PRE_FROMF', 'calendario445_PRE_TOF', 'calendario445_CIE_FROMF', 'calendario445_CIE_TOF');
+//----  Se agrega validaciones al formulario----
+fnCommon.selectRequired();
+fnCommon.formValidation('calendario445Form');
+fnCommon.dateRangeValidation('calendario445_PRE_FROMF', 'calendario445_PRE_TOF', 'calendario445_CIE_FROMF', 'calendario445_CIE_TOF');
 
-        //Mostrar process
-            $('#calendario445Form').submit(function () {
+//Mostrar process
+    $('#calendario445Form').submit(function () {
+        if ($('#calendario445Form').valid()) {
             document.getElementById("loader").style.display = "flex";
-        });
-
-        // Valida si ocurrio un error al intentar crear el periodo y otro.
-        var mnjError = '@ViewBag.mnjError';
-        if (mnjError) {
-            M.toast({ html: mnjError });
         }
+});
 
-
-        </script>
+// Valida si ocurrio un error al intentar crear el periodo y otro.
+var mnjError = '@ViewBag.mnjError';
+if (mnjError) {
+    M.toast({ html: mnjError });
+}
+</script>
 
 

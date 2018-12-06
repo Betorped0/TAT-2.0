@@ -24,8 +24,8 @@
 
 <div class="row right-align">
     <div class="col s12">
-        <input type="button" id="idAgregar" value="Agregar" class="btn btn-small" onclick="Carga();" />
-        <input type="button" id="idBorrar" value="Borrar" class="btn btn-small" onclick="Borrar()" />
+        <button id="idAgregar" class="btn btn-small" onclick="Carga();" >Guardar</button>
+        <input type="button" id="idLimpiar"  value="Limpiar" class="btn btn-small" onclick="Limpiar()" />
         @*<input type="button" value="Habilitar" class="btn btn-small" onclick="habilitar()" />*@
     </div>
 </div>
@@ -43,6 +43,11 @@
         </div>
     </div>
     <div class="row">
+        <div class="row right-align">
+            <div class="col s12">
+                <input type="button" id="idBorrar" value="Borrar" class="btn btn-small" onclick="Borrar()" disabled="disabled"/>
+            </div>
+        </div>
         @using (Html.BeginForm("Carga", "Clientes", FormMethod.Post, new { enctype = "multipart/form-data", id = "tabla" }))
         {
             <div class="col s12 ">
@@ -80,7 +85,7 @@
                                 <td></td>
                                 <td><input class='input_cli' style='font-size:12px;' type='text' id='' name='cli' value='' onkeyup='if(event.keyCode == 13) Actualizar()' /></td>
                                 <td></td>
-                                <td><input class='input_ni0' style='font-size:12px;' type='text' id='' name='ni0' value='' onkeyup='if(event.keyCode == 13) Actualizar()' /></td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>

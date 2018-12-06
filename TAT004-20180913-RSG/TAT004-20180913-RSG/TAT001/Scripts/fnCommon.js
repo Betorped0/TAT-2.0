@@ -1,15 +1,16 @@
 ﻿var fnCommon = {
 
-    materializeInit: function ( type, spras_id) {
+    materializeInit: function (type, spras_id) {
+        var options = {};
         switch (type) {
             case 'select':
-                var options = {};
+                 options = {};
                 var selects = document.querySelectorAll('select');
                 M.FormSelect.init(selects, options);
                 break;
             case 'datepicker':
-                var options = { format: 'dd/mm/yyyy' };
-                if (spras_id=='ES'){
+                 options = { format: 'dd/mm/yyyy' };
+                if (spras_id==='ES'){
                     options.i18n = {
                         clear: 'Limpiar',
                         today: 'Hoy',
@@ -27,7 +28,7 @@
                 M.Datepicker.init(datepickers, options);
                 break;
             case 'timepicker':
-                var options = {
+                 options = {
                     twelveHour: false,
                     autoClose: true
                 };
@@ -35,17 +36,17 @@
                 var instances = M.Timepicker.init(timepickers, options);
                 break;
             case 'tabs':
-                var options = {};
+                 options = {};
                 var tabs = document.querySelectorAll('.tabs');
                 M.Tabs.init(tabs, options);
                 break;
             case 'collapsible':
-                var options = {};
+                 options = {};
                 var collapsibles = document.querySelectorAll('.collapsible');
                 M.Collapsible.init(collapsibles, options);
                 break;
             case 'modal':
-                var options = {};
+                options = {};
                 var modals = document.querySelectorAll('.modal');
                 M.Modal.init(modals, options);
                 break;
@@ -118,7 +119,7 @@
                 url: urlLanguage
             },
             columnDefs: [{
-                targets: (targets ? targets:[0, 1, 2,4,5,6]),
+                targets: targets ? targets:[0, 1, 2,4,5,6],
                 className: 'mdl-data-table__cell--non-numeric'
             }]
         });
@@ -130,22 +131,6 @@
         });
 
        
-        $('#' + idTable + ' tbody').on('click', 'td.details-control', function () {
-            var tr = $(this).closest('tr');
-            var row = table.row(tr);
-
-            if (row.child.isShown()) {
-                // This row is already open - close it
-                row.child.hide();
-                tr.removeClass('shown');
-            }
-            else {
-                // Open this row
-                var child = format(row.data(), row, tr);
-                if (child != undefined) {
-                }
-            }
-        });
 
         $('input.global_filter').on('keyup click', function () {
             fnCommon.filterGlobal(idTable, idGFilter);
@@ -158,7 +143,7 @@
     fillOptionsInSelect: function (idSelect, url, idSelectToFill,callBack) {
         $('#' + idSelect).change(function () {
             var val = $('#' + idSelect).val();
-            if (val == "") {
+            if (val === "") {
                 var options = '<option value></option>';
                 $('#' + idSelectToFill).html(options);
                 fnCommon.materializeInit( 'select');
@@ -192,18 +177,19 @@
             document.getElementById("loader").style.display = "none";
         }
     },
-    autoAjax: function (url,response,params,fnData) {
-        return auto.ajax({
+    autoAjax: function (url, response, params, fnData) {
+        $ = $ === undefined ? auto : $;
+        return $.ajax({
             url: url,
             type: "GET",
             dataType: "json",
             data: params,
             success: function (data) {
-                response(auto.map(data, function (item) {
+                response($.map(data, function (item) {
                     return fnData(item);
-                }))
+                }));
             }
-        })
+        });
     }
 
 

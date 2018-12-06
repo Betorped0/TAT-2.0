@@ -43,15 +43,21 @@
                 <div class="form-horizontal">
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-
+                    <div class="row">
+                        <div class="input-field col l6">
+                            <i class="material-icons prefix">date_range</i>
+                            <input id="FECHAN" name="FECHAN" type="text" class="validate" required onkeyup="borrar(this);" />
+                            <label id="lblEjecutar" for="FECHAN">Se enviará el día</label>
+                        </div>
+                    </div>
                     <div class="input-field col l6">
                         <i class="material-icons prefix">date_range</i>
-                        <input id="FECHAI" name="FECHAI" type="text" class="validate" />
+                        <input id="FECHAI" name="FECHAI" type="text" class="validate" required onkeyup="borrar(this);" onchange="revisaFechas(this);" />
                         <label id="lblDesde" for="FECHAI">De</label>
                     </div>
                     <div class="input-field col l6">
                         <i class="material-icons prefix">date_range</i>
-                        <input id="FECHAF" name="FECHAF" type="text" class="validate" />
+                        <input id="FECHAF" name="FECHAF" type="text" class="validate" required onkeyup="borrar(this);" onchange="revisaFechas(this);" />
                         <label id="lblHasta" for="FECHAF">Hasta</label>
                     </div>
                 </div>
@@ -61,6 +67,24 @@
 
 }
 <script>
+    function revisaFechas(d) {
+        var fechai = document.getElementById("FECHAI").value;
+        var fechaf = document.getElementById("FECHAF").value;
+        if (fechaf != "" && fechai != "") {
+            var datei = new Date(fechai.split("/")[2], parseInt(fechai.split("/")[1]) - 1, fechai.split("/")[0]);
+            var datef = new Date(fechaf.split("/")[2], parseInt(fechaf.split("/")[1]) - 1, fechaf.split("/")[0]);
+            if (datei > datef) {
+                M.toast({ html: 'Secuencia de fechas incorrecta' });
+                d.value = "";
+                d.classList.remove("valid");
+                d.classList.add("invalid");
+            }
+        }
+    }
+
+    function borrar(field) {
+        field.value = "";
+    }
     var elemdp = document.querySelector('#FECHAI');
     var optionsdp = {
         format: 'dd/mm/yyyy',
@@ -108,7 +132,30 @@
         }
     };
     var instancedp2 = M.Datepicker.init(elemdp2, optionsdp2);
+
+    var elemdp3 = document.querySelector('#FECHAN');
+    var optionsdp3 = {
+        format: 'dd/mm/yyyy',
+        onClose: function (e) {
+            var date = $('#FECHAN').val();
+            var periodo = date.split("/");
+            
+        },
+        i18n: {
+            clear: 'Limpiar',
+            today: 'Hoy',
+            done: 'Seleccionar',
+            previousMonth: '‹',
+            nextMonth: '›',
+            months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+            weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+            weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+            weekdaysAbbrev: ['D', 'L', 'M', 'X', 'J', 'V', 'S']
+        }
+    };
+    var instancedp3 = M.Datepicker.init(elemdp3, optionsdp3);
 </script>
 <div>
-    @Html.ActionLink("Back to List", "Index",null,new { id="lblRegresar"})
+    @Html.ActionLink("Back to List", "Index", null, new { id = "lblRegresar" })
 </div>

@@ -47,6 +47,7 @@
     int year2 = yeard + 2;
     int yearback = yeard - 1;
     int yearback2 = yeard - 2;
+    var baseurl = HttpContext.Current.Request;
     <div class="row">
 
         @if (ViewBag.Display)
@@ -55,7 +56,7 @@
             <div class="col s12 right-align">
 
                 <button class="btn-small" id="btnConsultar" type="submit" name="action" @*style="display:none"*@>Consultar</button>
-                <input class="btn-small" id="id_excel" type="button" onclick="tableToExcel('table', 'Reporte Provisiones Abiertas TS')" value="Generar Excel" name="action" />
+                <input class="btn-small" id="id_excel" type="button" @*onclick="tableToExcel('table', 'Reporte Provisiones Abiertas TS')"*@ value="Generar Excel" name="action" />
             </div>
         }
         else
@@ -173,6 +174,7 @@
     if (ViewBag.display)
     {
         <script>
+
             $(document).ready(function () {
                 $("#id_excel").click(function () {
                     $("#table").trigger("filterReset");
@@ -180,7 +182,7 @@
                     $('#table').trigger('destroy');
                     var pager = $('#table tfoot').html();
                     $('#table tfoot').html("");
-                    tableToExcel('table', 'Reporte de Provisiones Abiertas');
+                    //tableToExcel('table', 'IntegraciónTS');
                     $('#table tfoot').html(pager);
                     $('#table').tablesorter({
                         theme: "materialize",
@@ -201,7 +203,7 @@
                 $(".grid thead td").click(function () {
                     showFilterOption(this);
                 });
-
+           
 
                 $('select.select_all').siblings('ul').prepend('<li id=sm_select_all id="filters_all"><span>Todas Las Opciones</span></li>');
                 $('li#sm_select_all').on('click', function () {
@@ -215,100 +217,62 @@
                     }).click();
                 });
                 $("#id_excel").click(function () {
+
                     $('#table').trigger('destroyPager');
+                    $('#table').parent().append('<table id="tableClon" style="display:none;border:2px;"><thead id="headclon"></thead><tbody id="bodyclon"></tbody></table>');
+
+                    $('#table > thead > tr').each(function (index) {
+                        if (index === 0) {
+                            $('#headclon').append('<tr id="headc"></tr>');
+                            $(this).children().each(function (indexch) {
+                                var thead = $(this).text();
+                                $('#headc').append('<th>' + thead + '</th>');
+                            });
+                        }
+                    });
+                    $('#table > tbody > tr').each(function (indexb) {
+                        $('#bodyclon').append('<tr id="b' + indexb + '"></tr>');
+                        $(this).children().each(function (indextd) {
+                            var btext = $(this).text();
+                            if (indextd == 2) {
+                                console.log("num doc: " + $(this).html());
+                                btext = $(this).html();
+                            }
+                            $('#b' + indexb).append('<td style="border: 2px solid black;">' + btext + '</td>');
+                        });
+                    });
                     var tableid = table;
-                    fnExcelReport();
+                    //getting values of current time for generating the file name
+                    var dt = new Date();
+                    var day = dt.getDate();
+                    var month = dt.getMonth() + 1;
+                    var year = dt.getFullYear();
+                    var hour = dt.getHours();
+                    var mins = dt.getMinutes();
+                    var postfix = day + "" + month + "" + year + "-" + hour + "" + mins;
+                    //creating a temporary HTML link element (they support setting file names)
+                    var a = document.createElement('a');
+                    //getting data from our div that contains the HTML table
+                    var data_type = 'data:application/vnd.ms-excel;charset=UTF-8';
+                    var table_div = document.getElementById('tableClon');
+                    var table_html = table_div.outerHTML.replace(/ /g, '%20');
+                    table_html = table_html.replace("á", "&aacute;");
+                    table_html = table_html.replace("é", "&eacute;");
+                    table_html = table_html.replace("í", "&iacute;");
+                    table_html = table_html.replace("ó", "&oacute;");
+                    table_html = table_html.replace("ú", "&uacute;");
+                    table_html = table_html.replace("ü", "&uuml;");
+                    a.href = data_type + ', ' + table_html.replace("ó", "&oacute;").replace("ú", "&uacute;");
+                    //setting the file name
+                    a.download = 'ProvisionesAbiertasTS' + postfix + '.xls';
+                    //triggering the function
+                    a.click();
+                    //just in case, prevent default behaviour
+                    e.preventDefault();
+
                     location.refresh();
                 });
             });
-           
-
-            function b64toBlob(b64Data, contentType, sliceSize) {
-                contentType = contentType || '';
-                sliceSize = sliceSize || 512;
-
-                var byteCharacters = atob(b64Data);
-                var byteArrays = [];
-
-                for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-                    var slice = byteCharacters.slice(offset, offset + sliceSize);
-
-                    var byteNumbers = new Array(slice.length);
-                    for (var i = 0; i < slice.length; i++) {
-                        byteNumbers[i] = slice.charCodeAt(i);
-                    }
-
-                    var byteArray = new Uint8Array(byteNumbers);
-
-                    byteArrays.push(byteArray);
-                }
-
-                var blob = new Blob(byteArrays, { type: contentType });
-                return blob;
-            }
-
-            //var tableToExcel = (function () {
-            //    var uri = 'data:application/vnd.ms-excel;base64,'
-            //       , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
-            //        , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
-            //        , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
-            //    return function (table, name) {
-            //        if (!table.nodeType) table = document.getElementById(table)
-            //        var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
-            //        var str = base64(format(template, ctx));
-
-            //        //window.location.href = uri + base64(format(template, ctx))
-            //        var blob = b64toBlob(str, "application/vnd.ms-excel");                    
-            //        var blobUrl = URL.createObjectURL(blob);
-            //        window.location = blobUrl;
-            //    }
-            $("#id_excel").click(function () {
-
-                $('#table').trigger('destroyPager');
-                $('#table').parent().append('<table id="tableClon" style="display:none;border:2px;"><thead id="headclon"></thead><tbody id="bodyclon"></tbody></table>');
-
-                $('#table > thead > tr').each(function (index) {
-                    if (index === 0) {
-                        $('#headclon').append('<tr id="headc"></tr>');
-                        $(this).children().each(function () {
-                            $('#headc').append('<th>' + $(this).text().normalize('NFD').replace(/[\u0300-\u036f]/g, "") + '</th>');
-                        });
-                    }
-                });
-                $('#table > tbody > tr').each(function (indexb) {
-                    $('#bodyclon').append('<tr id="b' + indexb + '"></tr>');
-                    $(this).children().each(function () {
-                        $('#b' + indexb).append('<td style="border: 2px black;">' + $(this).text() + '</td>');
-                    });
-                });
-                var tableid = table;
-                //getting values of current time for generating the file name
-                var dt = new Date();
-                var day = dt.getDate();
-                var month = dt.getMonth() + 1;
-                var year = dt.getFullYear();
-                var hour = dt.getHours();
-                var mins = dt.getMinutes();
-                var postfix = day + "" + month + "" + year + "-" + hour + "" + mins;
-                //creating a temporary HTML link element (they support setting file names)
-                var a = document.createElement('a');
-                //getting data from our div that contains the HTML table
-                var data_type = 'data:application/vnd.ms-excel';
-                var table_div = document.getElementById('tableClon');
-                var table_html = table_div.outerHTML.replace(/ /g, '%20');
-                a.href = data_type + ', ' + table_html;
-                //setting the file name
-                a.download = 'ProvisionesAbiertasTS' + postfix + '.xls';
-                //triggering the function
-                a.click();
-                //just in case, prevent default behaviour
-                e.preventDefault();
-
-                location.refresh();
-            });
-       
-
-           
 
             $(function () {
 
@@ -348,7 +312,9 @@
                         // output string - default is '{page}/{totalPages}';
                         // possible variables: {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
                         output: '{startRow} - {endRow} / {filteredRows} ({totalRows})'
+
                     });
+
             });
         </script>
 
@@ -449,7 +415,7 @@
                                     <option value="20">20</option>
                                     <option value="30">30</option>
                                     <option value="40">40</option>
-                                    <option value="40">50</option>
+                                    <option value="50">50</option>
                                 </select>
                                 <label class="label_pag">Ir a Página</label>
                                 <select class="pagenum browser-default" title="Select page number"></select>
@@ -517,8 +483,8 @@
                             @consulta.GetType().GetProperty("PAIS_ID").GetValue(consulta, null)
                         </td>
 
-                        <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = consulta.GetType().GetProperty("NUM_DOC").GetValue(consulta, null) })'" style="cursor:pointer">
-                            @consulta.GetType().GetProperty("NUM_DOC").GetValue(consulta, null)
+                        <td onclick="document.location='@Url.Action("Details", "Solicitudes", new { id = consulta.GetType().GetProperty("NUM_DOC").GetValue(consulta, null), pais = "" })'" style="cursor:pointer">
+                            <a href="@ViewBag.baseURL/Solicitudes/Details/@consulta.GetType().GetProperty("NUM_DOC").GetValue(consulta, null)">@consulta.GetType().GetProperty("NUM_DOC").GetValue(consulta, null)</a>
                         </td>
 
                         <td>
@@ -671,7 +637,7 @@
 
                                     @porcentaje
                                 }
-                                    catch (DivideByZeroException ex)
+                                catch (DivideByZeroException ex)
                                 {
 
                                 }

@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using TAT001.Entities;
 using TAT001.Models;
+using TAT001.Models.Dao;
 using TAT001.Services;
 
 namespace TAT001.Common
 {
     public static class FnCommonCarta
     {
-       public static string ObtenerTexto(TAT001Entities db, string spras_id, string campo)
+        readonly static TiposSolicitudesDao tiposSolicitudesDao = new TiposSolicitudesDao();
+
+        public static string ObtenerTexto(TAT001Entities db, string spras_id, string campo)
         {
             return db.TEXTOCVs.Where(x => x.SPRAS_ID == spras_id && x.CAMPO == campo).Select(x => x.TEXTO).FirstOrDefault();
         }
@@ -780,7 +783,7 @@ namespace TAT001.Common
             foreach (var item in con4)
             {
                 string periodo = "P" + item.PERIODO + "-" + item.EJERCICIO;
-                string tsol = FnCommon.ObtenerCmbTiposSolicitud(db, spras_id, item.TSOL_ID).First().Text;
+                string tsol = tiposSolicitudesDao.ListaTiposSolicitudes( spras_id, item.TSOL_ID).First().TXT50;
                 string posStr = item.POS.ToString() + "/" + con4.Count.ToString();
 
                 armadoCuerpoTab2.Add(posStr);
@@ -846,7 +849,7 @@ namespace TAT001.Common
                 foreach (var item in con4)
                 {
                     string periodo = "P" + item.PERIODO + "-" + item.EJERCICIO;
-                    string tsol = FnCommon.ObtenerCmbTiposSolicitud(db, spras_id, item.TSOL_ID).First().Text;
+                    string tsol = tiposSolicitudesDao.ListaTiposSolicitudes( spras_id, item.TSOL_ID).First().TXT50;
                     string posStr = item.POS.ToString() + "/" + con4.Count.ToString();
                     armadoCuerpoTab3.Add(posStr);
                     armadoCuerpoTab3.Add(periodo);

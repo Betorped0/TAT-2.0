@@ -76,7 +76,7 @@ namespace TAT001.Controllers.Catalogos
             if (!String.IsNullOrEmpty(buscar))
             {
                 clientes = clientes.Where(x =>
-                String.Concat(x.KUNNR, x.NAME1, (x.SUBREGION == null ? "" : x.SUBREGION), x.LAND, x.PARVW, x.PAYER, (x.CANAL == null ? "" : x.CANAL))
+                String.Concat(x.KUNNR, x.NAME1, (x.SUBREGION == null ? "" : x.SUBREGION), x.LAND, x.PAI.LANDX, x.PARVW, x.PAYER, (x.CANAL == null ? "" : x.CANAL))
                 .ToLower().Contains(buscar.ToLower()))
                 .ToList();
             }
@@ -430,36 +430,18 @@ namespace TAT001.Controllers.Catalogos
             }
             int pagina = 631; //ID EN BASE DE DATOS PARA EL TITULO
             string u = User.Identity.Name;
-            var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-            ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-            ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-            ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
-            ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            //pagina = 632; //ID EN BASE DE DATOS
-            ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-            ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            FnCommon.ObtenerConfPage(db, pagina, u, this.ControllerContext.Controller);
 
-           
-            //using (TAT001Entities db = new TAT001Entities())
-            //{
-            //    string u = User.Identity.Name;
-                //string u = "admin";
-
-                //var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-                FnCommon.ObtenerConfPage(db, pagina, u, this.ControllerContext.Controller);
-
-                try
-                {
-                    string p = Session["pais"].ToString();
-                    ViewBag.pais = p + ".png";
-                }
-                catch
-                {
-                    //ViewBag.pais = "mx.png";
-                    //return RedirectToAction("Pais", "Home");
-                }
-            //}
+            try
+            {
+                string p = Session["pais"].ToString();
+                ViewBag.pais = p + ".png";
+            }
+            catch
+            {
+                //ViewBag.pais = "mx.png";
+                //return RedirectToAction("Pais", "Home");
+            }
             return View();
         }
         [HttpPost]
@@ -508,6 +490,7 @@ namespace TAT001.Controllers.Catalogos
             }
 
             List<Clientes> cc = new List<Clientes>();
+            List<Clientes> ccErr = new List<Clientes>();
 
             foreach (DET_AGENTE1 da in ld)
             {
@@ -661,10 +644,16 @@ namespace TAT001.Controllers.Catalogos
 
                 da.MESS = messa;
                 cl.MESS = da.MESS;
-
-                cc.Add(cl);
+                if (string.IsNullOrEmpty(messa)) {
+                    cc.Add(cl);
+                }
+                else
+                {
+                    ccErr.Add(cl);
+                }
             }
-            return Json(cc, JsonRequestBehavior.AllowGet);
+            ccErr.AddRange(cc);
+            return Json(ccErr, JsonRequestBehavior.AllowGet);
             //  return View("CargaList",cc);
         }
         [HttpPost]
@@ -801,7 +790,7 @@ namespace TAT001.Controllers.Catalogos
                         cl.FECHAC = null;
                         cl.FECHAM = DateTime.Today;
                         //Actualizar a 0 Actiovo
-                        CLIENTEF clienteF = clientesF.Where(x=>x.ACTIVO).FirstOrDefault();
+                        CLIENTEF clienteF = clientesF.FirstOrDefault(x=>x.ACTIVO);
                         if (clienteF!=null) {
                             clienteF.ACTIVO = false;
                             db.Entry(clienteF).State = EntityState.Modified;
@@ -835,12 +824,12 @@ namespace TAT001.Controllers.Catalogos
                     {
                         CONTACTOC co = new CONTACTOC();
                         db.CONTACTOCs.Where(x => (x.DEFECTO != null && x.DEFECTO.Value) && x.VKORG == da.VKORG
-                        && x.VTWEG == co.VTWEG && da.SPART == x.SPART && x.KUNNR == da.KUNNR).ToList().ForEach(x=>
+                        && x.SPART== da.SPART && x.KUNNR == da.KUNNR).ToList().ForEach(x=>
                         {
                             x.DEFECTO = false;
                             db.Entry(x).State = EntityState.Modified;
                         });
-                        if (!db.CONTACTOCs.Any(x=>x.EMAIL== (da.CONTACTOE != null ? da.CONTACTOE.Trim() : null) && x.NOMBRE== (da.CONTACTO != null ? da.CONTACTO.Trim() : null)))
+                        if (!db.CONTACTOCs.Any(x=>x.EMAIL== (da.CONTACTOE != null ? da.CONTACTOE.Trim() : null) && x.NOMBRE== (da.CONTACTO != null ? da.CONTACTO.Trim() : null) && x.KUNNR==da.KUNNR))
                         {
                             co.NOMBRE = (!string.IsNullOrEmpty(da.CONTACTO) ? da.CONTACTO.Trim() : null);
                             co.EMAIL = (!string.IsNullOrEmpty(da.CONTACTOE) ? da.CONTACTOE.Trim() : null);
@@ -852,7 +841,14 @@ namespace TAT001.Controllers.Catalogos
                             co.DEFECTO = true;
                             db.CONTACTOCs.Add(co);
                         }
-                      
+                        else
+                        {
+                            co = db.CONTACTOCs.FirstOrDefault(x => x.EMAIL == da.CONTACTOE.Trim() && x.NOMBRE == da.CONTACTO.Trim() && x.KUNNR == da.KUNNR);
+                            co.DEFECTO = true;
+                            co.ACTIVO = true;
+                            db.Entry(co).State = EntityState.Modified;
+                        }
+
                     }
                     ////Guardar cambios en db
                     db.CLIENTEFs.Add(cl);
@@ -1167,17 +1163,13 @@ namespace TAT001.Controllers.Catalogos
             }
             List<Clientes> cc = new List<Clientes>();
             
-            CLIENTEF cf = new CLIENTEF();
-
             var cli = Request["cli"];
-            var ni0 = Request["ni0"];
-            var ni0x = true;
 
-            if (cli != null && cli != "")
+            if (!string.IsNullOrEmpty(cli))
             {
                 Clientes cl = new Clientes();
                 cli = Completa(cli, 10);
-                CLIENTE k = db.CLIENTEs.Where(x => x.KUNNR.Equals(cli) & x.ACTIVO == true).FirstOrDefault();
+                CLIENTE k = db.CLIENTEs.Where(x => x.KUNNR.Equals(cli) && x.ACTIVO).FirstOrDefault();
                 cl.KUNNRX = true;
                 cl.BUKRS = "";
                 cl.LAND = "";
@@ -1204,60 +1196,61 @@ namespace TAT001.Controllers.Catalogos
                     cl.KUNNRX = false;
                 else
                 {
+                    CLIENTEF clienteF = db.CLIENTEFs.FirstOrDefault(x=>x.KUNNR.Equals(cli) && x.ACTIVO);
                     var com = "";
-                    com = db.CLIENTEs.Where(x => x.KUNNR.Equals(cli)).Select(x => x.LAND).FirstOrDefault();
+                    com = k.LAND;
                     if (com != null)
                         cl.LAND = com;
-                    com = (from x in db.PAIS where x.LAND.Equals(cl.LAND) & x.ACTIVO == true select x.SOCIEDAD_ID).FirstOrDefault();
+                    com = (from x in db.PAIS where x.LAND.Equals(k.LAND) && x.ACTIVO select x.SOCIEDAD_ID).FirstOrDefault();
                     if (com != null)
                         cl.BUKRS = com;
                     cl.KUNNR = cli;
-                    com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.NAME1).FirstOrDefault();
+                    com = k.NAME1;
                     if (com != null)
                         cl.CLIENTE_N = com;
-                    com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO0_ID).FirstOrDefault();
+                    com = clienteF?.USUARIO0_ID;
                     if (com != null)
                         cl.ID_US0 = com;
-                    com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO1_ID).FirstOrDefault();
+                    com = clienteF?.USUARIO1_ID;
                     if (com != null)
                         cl.ID_US1 = com;
-                    com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO2_ID).FirstOrDefault();
+                    com = clienteF?.USUARIO2_ID;
                     if (com != null)
                         cl.ID_US2 = com;
-                    com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO3_ID).FirstOrDefault();
+                    com = clienteF?.USUARIO3_ID;
                     if (com != null)
                         cl.ID_US3 = com;
-                    com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO4_ID).FirstOrDefault();
+                    com = clienteF?.USUARIO4_ID;
                     if (com != null)
                         cl.ID_US4 = com;
-                    com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO5_ID).FirstOrDefault();
+                    com = clienteF?.USUARIO5_ID;
                     if (com != null)
                         cl.ID_US5 = com;
-                    com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO6_ID).FirstOrDefault();
+                    com = clienteF?.USUARIO6_ID;
                     if (com != null)
                         cl.ID_US6 = com;
-                    com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO7_ID).FirstOrDefault();
+                    com = clienteF?.USUARIO7_ID;
                     if (com != null)
                         cl.ID_US7 = com;
-                    com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.PROVEEDOR_ID).FirstOrDefault();
+                    com = k.PROVEEDOR_ID;
                     if (com != null)
                         cl.ID_PROVEEDOR = com;
-                    com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) select x.BANNER).FirstOrDefault();
+                    com = k.BANNER;
                     if (com != null)
                         cl.BANNER = com;
-                    com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) select x.BANNERG).FirstOrDefault();
+                    com = k.BANNERG;
                     if (com != null)
                         cl.BANNERG = "";
-                    com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) select x.CANAL).FirstOrDefault();
+                    com = k.CANAL;
                     if (com != null)
                         cl.CANAL = com;
-                    com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) select x.EXPORTACION).FirstOrDefault();
+                    com = k.EXPORTACION;
                     if (com != null)
                         cl.EXPORTACION = com;
-                    com = (from x in db.CONTACTOCs where x.KUNNR.Equals(cli) & x.DEFECTO == true select x.NOMBRE).FirstOrDefault();
+                    com = k.CONTAC;
                     if (com != null)
                         cl.CONTACTO = com;
-                    com = (from x in db.CONTACTOCs where x.KUNNR.Equals(cli) & x.DEFECTO == true select x.EMAIL).FirstOrDefault();
+                    com = k.CONT_EMAIL;
                     if (com != null)
                         cl.CONTACTOE = com;
                 }
@@ -1268,133 +1261,7 @@ namespace TAT001.Controllers.Catalogos
                 }
                 cc.Add(cl);
             }
-
-            else if (ni0 != null && ni0 != "")
-            {
-                USUARIO u = db.USUARIOs.Where(xu => xu.ID.Equals(ni0)).FirstOrDefault();
-                if (u == null)
-                    ni0x = false;
-                else
-                {
-                    var ucl = (from x in db.CLIENTEFs
-                                 where x.USUARIO0_ID.Equals(ni0) | x.USUARIO1_ID.Equals(ni0) | x.USUARIO2_ID.Equals(ni0) | x.USUARIO3_ID.Equals(ni0)
-                                   | x.USUARIO4_ID.Equals(ni0) | x.USUARIO5_ID.Equals(ni0) | x.USUARIO6_ID.Equals(ni0) | x.USUARIO7_ID.Equals(ni0)
-                                 select x.KUNNR).ToArray();
-                    for (int i = 0; i < ucl.Length; i++)
-                    {
-                        Clientes cl = new Clientes();
-                        cl.KUNNRX = true;
-                        cl.BUKRS = "";
-                        cl.LAND = "";
-                        cl.KUNNR = "";
-                        cl.CLIENTE_N = "";
-                        cl.ID_US0 = "";
-                        cl.ID_US1 = "";
-                        cl.ID_US2 = "";
-                        cl.ID_US3 = "";
-                        cl.ID_US4 = "";
-                        cl.ID_US5 = "";
-                        cl.ID_US6 = "";
-                        cl.ID_US7 = "";
-                        cl.ID_PROVEEDOR = "";
-                        cl.BANNER = "";
-                        cl.BANNERG = "";
-                        cl.CANAL = "";
-                        cl.EXPORTACION = "";
-                        cl.CONTACTO = "";
-                        cl.CONTACTOE = "";
-                        cl.MESS = "";
-                        cli = ucl[i];
-                        var com = "";
-                        com = db.CLIENTEs.Where(x => x.KUNNR.Equals(cli)).Select(x => x.LAND).FirstOrDefault();
-                        if (com != null)
-                            cl.LAND = com;
-                        com = (from x in db.SOCIEDADs where x.LAND.Equals(cl.LAND) & x.ACTIVO == true select x.BUKRS).FirstOrDefault();
-                        if (com != null)
-                            cl.BUKRS = com;
-                        cl.KUNNR = cli;
-                        com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) select x.NAME1).FirstOrDefault();
-                        if (com != null)
-                            cl.CLIENTE_N = com;
-                        com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO0_ID).FirstOrDefault();
-                        if (com != null)
-                            cl.ID_US0 = com;
-                        com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO1_ID).FirstOrDefault();
-                        if (com != null)
-                            cl.ID_US1 = com;
-                        com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO2_ID).FirstOrDefault();
-                        if (com != null)
-                            cl.ID_US2 = com;
-                        com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO3_ID).FirstOrDefault();
-                        if (com != null)
-                            cl.ID_US3 = com;
-                        com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO4_ID).FirstOrDefault();
-                        if (com != null)
-                            cl.ID_US4 = com;
-                        com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO5_ID).FirstOrDefault();
-                        if (com != null)
-                            cl.ID_US5 = com;
-                        com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO6_ID).FirstOrDefault();
-                        if (com != null)
-                            cl.ID_US6 = com;
-                        com = (from x in db.CLIENTEFs where x.KUNNR.Equals(cli) & x.ACTIVO == true select x.USUARIO7_ID).FirstOrDefault();
-                        if (com != null)
-                            cl.ID_US7 = com;
-                        com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) select x.PROVEEDOR_ID).FirstOrDefault();
-                        if (com != null)
-                            cl.ID_PROVEEDOR = com;
-                        com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) select x.BANNER).FirstOrDefault();
-                        if (com != null)
-                            cl.BANNER = com;
-                        com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) select x.BANNERG).FirstOrDefault();
-                        if (com != null)
-                            cl.BANNERG = "";
-                        com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) select x.CANAL).FirstOrDefault();
-                        if (com != null)
-                            cl.CANAL = com;
-                        com = (from x in db.CLIENTEs where x.KUNNR.Equals(cli) select x.EXPORTACION).FirstOrDefault();
-                        if (com != null)
-                            cl.EXPORTACION = com;
-                        com = (from x in db.CONTACTOCs where x.KUNNR.Equals(cli) & x.DEFECTO == true select x.NOMBRE).FirstOrDefault();
-                        if (com != null)
-                            cl.CONTACTO = com;
-                        com = (from x in db.CONTACTOCs where x.KUNNR.Equals(cli) & x.DEFECTO == true select x.EMAIL).FirstOrDefault();
-                        if (com != null)
-                            cl.CONTACTOE = com;
-
-                        cc.Add(cl);
-                    }
-                }
-                if (!ni0x)
-                {
-                    Clientes cl = new Clientes();
-                    cl.KUNNRX = true;
-                    cl.BUKRS = "";
-                    cl.LAND = "";
-                    cl.KUNNR = "";
-                    cl.CLIENTE_N = "";
-                    cl.ID_US0 = "";
-                    cl.ID_US1 = "";
-                    cl.ID_US2 = "";
-                    cl.ID_US3 = "";
-                    cl.ID_US4 = "";
-                    cl.ID_US5 = "";
-                    cl.ID_US6 = "";
-                    cl.ID_US7 = "";
-                    cl.ID_PROVEEDOR = "";
-                    cl.BANNER = "";
-                    cl.BANNERG = "";
-                    cl.CANAL = "";
-                    cl.EXPORTACION = "";
-                    cl.CONTACTO = "";
-                    cl.CONTACTOE = "";
-                    cl.MESS = "";
-                    cli = "";
-                    cl.ID_US0 = ni0 + "?";
-                    cl.MESS = "El usuario no existe";
-                    cc.Add(cl);
-                }
-            }
+            
             JsonResult jl = Json(cc, JsonRequestBehavior.AllowGet);
             return jl;
         }
@@ -1427,11 +1294,33 @@ namespace TAT001.Controllers.Catalogos
                 worksheet.Cell("F1").Value = new[] { new { BANNER = "Payer" }, };
                 worksheet.Cell("G1").Value = new[] { new { BANNER = "Canal" }, };
                 worksheet.Cell("H1").Value = new[] { new { BANNER = "Estatus" }, };
+                worksheet.Cell("I1").Value = new[] { new { BANNER = "Contacto" }, };
+                worksheet.Cell("J1").Value = new[] { new { BANNER = "Email" }, };
 
                 for (int i = 2; i <= (lst.Count + 1); i++)
                 {
+                    var NOMBRE = "";
+                    var EMAIL = "";
                     var pais = lst[i - 2].LAND;
+                    var kunnr = lst[i - 2].KUNNR;
                     var pais2 = db.PAIS.Where(X => X.LAND.Equals(pais)).Select(x => x.LANDX).FirstOrDefault();
+                    var contacto = db.CONTACTOCs.Where(x => x.KUNNR == kunnr && x.ACTIVO == true).ToArray();
+                    if (contacto != null)
+                    {
+                        for (int j = 0; j < contacto.Length; j++)
+                        {
+                            if (contacto[j].DEFECTO == true)
+                            {
+                                NOMBRE = NOMBRE + contacto[j].NOMBRE + "*/";
+                                EMAIL = EMAIL + contacto[j].EMAIL + "*/";
+                            }
+                            else
+                            {
+                                NOMBRE = NOMBRE + contacto[j].NOMBRE + "/";
+                                EMAIL = EMAIL + contacto[j].EMAIL + "/";
+                            }
+                        }
+                    }
                     worksheet.Cell("A" + i).Value = new[] { new { BANNER = lst[i - 2].KUNNR.TrimStart('0') }, };
                     worksheet.Cell("B" + i).Value = new[] { new { BANNER = lst[i - 2].NAME1 }, };
                     worksheet.Cell("C" + i).Value = new[] { new { BANNER = lst[i - 2].SUBREGION }, };
@@ -1440,6 +1329,8 @@ namespace TAT001.Controllers.Catalogos
                     worksheet.Cell("F" + i).Value = new[] { new { BANNER = lst[i - 2].PAYER.TrimStart('0') }, };
                     worksheet.Cell("G" + i).Value = new[] { new { BANNER = lst[i - 2].CANAL }, };
                     worksheet.Cell("H" + i).Value = new[] { new { BANNER = lst[i - 2].ACTIVO? "Activo":"Inactivo" }, };
+                    worksheet.Cell("I" + i).Value = new[] { new { BANNER = NOMBRE.TrimEnd('/') }, };
+                    worksheet.Cell("J" + i).Value = new[] { new { BANNER = EMAIL.TrimEnd('/') }, };
                 }
                 var rt = ruta + @"\Clientes_" + DateTime.Now.ToShortDateString() + ".xlsx";
                 workbook.SaveAs(rt);
@@ -1961,36 +1852,6 @@ namespace TAT001.Controllers.Catalogos
                 c.AddRange(c2);
             }
             
-            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
-            return cc;
-        }
-
-        public JsonResult Usuario(string Prefix)
-        {
-            if (Prefix == null)
-                Prefix = "";
-
-            TAT001Entities db = new TAT001Entities();
-
-            var c = (from x in db.USUARIOs
-                     where x.ID.Contains(Prefix) && x.ACTIVO == true && x.PUESTO_ID != 1 && x.PUESTO_ID != 14
-                     select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
-
-            if (c.Count == 0)
-            {
-                var c2 = (from x in db.USUARIOs
-                          where x.NOMBRE.Contains(Prefix) && x.ACTIVO == true && x.PUESTO_ID != 1 && x.PUESTO_ID != 14
-                          select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
-                c.AddRange(c2);
-                if (c2.Count == 0)
-                {
-                    var c3 = (from x in db.USUARIOs
-                              where x.APELLIDO_P.Contains(Prefix) && x.ACTIVO == true && x.PUESTO_ID != 1 && x.PUESTO_ID != 14
-                              select new { x.ID, x.NOMBRE, x.APELLIDO_P }).ToList();
-                    c.AddRange(c3);
-                }
-            }
-
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
             return cc;
         }

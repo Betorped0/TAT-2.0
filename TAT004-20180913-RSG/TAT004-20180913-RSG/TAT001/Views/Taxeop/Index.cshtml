@@ -1,7 +1,6 @@
 ﻿@model IEnumerable<TAT001.Entities.TAXEOP>
 
 @{
-    //ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.pagina_r = 861;
     ViewBag.carpeta_r = 500;
@@ -110,6 +109,9 @@
                         <a data-form-method="post" href="@Url.Action("Edit", "Taxeop", new { sc = item.SOCIEDAD_ID, ld = item.PAIS_ID, kun = item.KUNNR, vk = item.VKORG, vtw = item.VTWEG, sp = item.SPART, con = item.CONCEPTO_ID, pos = item.POS,  rid=item.RETENCION_ID})">
                             <i class='material-icons green-text'>edit</i>
                         </a>
+                        <a data-form-method="post" href="@Url.Action("Details", "Taxeop",new { sc = item.SOCIEDAD_ID, ld = item.PAIS_ID, kun = item.KUNNR, vk = item.VKORG, vtw = item.VTWEG, sp = item.SPART, con = item.CONCEPTO_ID, pos = item.POS,  rid=item.RETENCION_ID })">
+                            <i class='material-icons blue-text'>search</i>
+                        </a>
                         <a data-form-method="post" href="@Url.Action("Delete", "Taxeop", new { sc = item.SOCIEDAD_ID, ld = item.PAIS_ID, kun = item.KUNNR, vk = item.VKORG, vtw = item.VTWEG, sp = item.SPART, con = item.CONCEPTO_ID, pos = item.POS,  rid=item.RETENCION_ID})">
                             <i class='material-icons red-text'>delete</i>
                         </a>
@@ -125,7 +127,7 @@
                 scrollY: "50vh",
                 scrollCollapse: true,
                 language: {
-                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                "url": "../Scripts/lang/@ViewBag.usuario.SPRAS_ID"+".json"
                 },
                 initComplete: function () {
                     this.api().columns().every(function () {
@@ -193,4 +195,7 @@
             width: 100%;
         }
     </style>
+</div>
+<div>
+    <a href="@Url.Action("Index", "Taxeoh", new { vko = Request.QueryString["vk"], vtw = Request.QueryString["vtw"], spa = Request.QueryString["sp"], kun = Request.QueryString["kun"] })" id="lblRegresar"> </a>
 </div>

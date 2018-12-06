@@ -208,14 +208,18 @@
                         <label id="lbl_periodo" for="periodo">Periodo</label>@*B20180801 MGC Textos*@
                     </div>
                     <script>
+                        var reversan = "@ViewBag.reversan";
+                        var relacionada = "@ViewBag.relacionada";
+                        if (reversan == "X" || relacionada =="prelacionada") {
+                            periodo(val);
+                        }
                                 var elemdp = document.querySelector('#fechad');
                                 var optionsdp = {
                                     format: 'dd/mm/yyyy',
                                     onClose: function (e) {
                                         var date = $('#fechad').val();
                                         var periodo = date.split("/");
-
-                                        $('#periodo').val(periodo[1]);
+                                        
                                     },
                                     i18n: {
                                         clear: 'Limpiar',
@@ -323,8 +327,14 @@
                                         }
                                         var clien = cliente.substring(con, i);
                                         auto("#payer_id").attr("value", clien);
-                                });
-                                  
+                        });
+                        
+                        $('#payer_id').focusout(function (e) {
+                            if ($("#payer_id").val() === "") {
+                                limpiarCliente();
+                            }
+
+                        });
                     </script>
                     <input type="hidden" id="txt_vkorg" />
                     <input type="hidden" id="txt_vtweg" />
@@ -373,7 +383,7 @@
 
                                             auto.ajax({
                                                 url: root + "Listas/contactos",
-                                                type: "POST",
+                                                type: "GET",
                                                 dataType: "json",
                                                 data: { Prefix: request.term, vkorg: vk, vtweg: vt, kunnr: kunnr },
                                                 success: function (data) {

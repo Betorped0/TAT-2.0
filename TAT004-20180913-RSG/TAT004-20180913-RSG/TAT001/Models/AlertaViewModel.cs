@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using TAT001.Entities;
 
@@ -30,6 +28,8 @@ namespace TAT001.Models
 
             tabCampos = new List<TEXTO>();
 
+            sociedadesSelected = new List<string>();
+
         }
         public List<WARNINGP> alertas { get; set; }
         public WARNINGP alerta { get; set; }
@@ -50,5 +50,8 @@ namespace TAT001.Models
 
         public List<TEXTO> tabCampos { get; set; }
 
+        public List<string> sociedadesSelected { get; set; }
+
     }
+    
 }
