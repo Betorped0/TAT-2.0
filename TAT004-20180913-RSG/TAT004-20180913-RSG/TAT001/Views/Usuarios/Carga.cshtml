@@ -21,8 +21,7 @@
 
 <div class="row right-align">
     <div class="col s12">
-        @*<input type="button" id="btnAgregar" value="Agregar" class="btn btn-small" onclick="Carga();" />*@
-        <button type="button" id="btnAgregar" class="btn btn-small" onclick="Actualizar()">Guardar</button>
+        <button type="button" id="btnAgregar" class="btn btn-small" onclick="Guardar()">Guardar</button>
         <button type="button" id="idLimpiar"  class="btn btn-small" onclick="Limpiar()">Limpiar</button>
     </div>
 </div>
@@ -42,7 +41,7 @@
     <div class="row">
         <div class="row right-align">
             <div class="col s12">
-                <input type="button" id="idBorrar" value="Borrar" class="btn btn-small" onclick="Borrar()" />
+                <input type="button" id="idBorrar" value="Borrar" class="btn btn-small" onclick="Borrar()" disabled="disabled"/>
               </div>
         </div>
         @using (Html.BeginForm("Carga", "Usuarios", FormMethod.Post, new { enctype = "multipart/form-data", id = "tabla" }))

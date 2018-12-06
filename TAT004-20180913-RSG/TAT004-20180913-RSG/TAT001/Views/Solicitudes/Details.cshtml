@@ -246,7 +246,8 @@
                             inf = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == Model.D.NUM_DOC & x.ESTATUS_C != "C" & x.ESTATUS_WF != "B").ToList();
                             if (inf.Where(x => x.TSOL.REVERSO == true).ToList().Count == 0)
                             {
-                                if (Model.D.USUARIOC_ID == ViewBag.usuario.ID & Model.D.DOCUMENTO_SAP != null & Model.D.DOCUMENTO_SAP != "E")
+                                //if (Model.D.USUARIOC_ID == ViewBag.usuario.ID & Model.D.ESTATUS_SAP != null & Model.D.ESTATUS_SAP != "E")
+                                if (Model.D.USUARIOC_ID == ViewBag.usuario.ID & Model.D.ESTATUS_SAP == "X")
                                 {
                                     <div id="div_drop" class="col" style="padding:0 4px;">
                                         <a href="@Url.Action("Create", "Solicitudes", new { id_d = Model.D.NUM_DOC.ToString(), tsol = Model.D.TSOL.TSOLR })" class="btn-small">Reversar</a>
@@ -267,6 +268,13 @@
                         if (ViewBag.usuario.PUESTO_ID == 8 & Model.D.DOCUMENTOLs.Count > 0)
                         {
                             <a href="@Url.Action("Backorder", "Recurrencias", new { id_d = Model.D.NUM_DOC.ToString() })" class="btn-small">Backorder</a>
+                        }
+                        if (Model.D.DOCUMENTORECs.Any())
+                        {
+                            if (Model.D.DOCUMENTORECs.FirstOrDefault().NUM_DOC == Model.D.NUM_DOC && Model.D.DOCUMENTORECs.Any(x => x.DOC_REF == 0) && (Model.D.USUARIOC_ID == ViewBag.usuario.ID | Model.D.USUARIOD_ID == ViewBag.usuario.ID))
+                            {
+                            <a href="@Url.Action("Cancelar", "Recurrencias", new { id = Model.D.NUM_DOC })" class="btn-small">Cancelar recurrencia</a>
+                            }
                         }
                     }
                     else if (!Model.D.ESTATUS.Equals("A"))
@@ -298,6 +306,13 @@
                                 if (elem3 != undefined)
                                     M.Modal.init(elem3, []);
                             </script>
+                            if (Model.D.DOCUMENTORECs.Any())
+                            {
+                                if (Model.D.DOCUMENTORECs.FirstOrDefault().NUM_DOC == Model.D.NUM_DOC && Model.D.DOCUMENTORECs.Any(x=>x.DOC_REF == 0))
+                                {
+                                <a href="@Url.Action("Cancelar", "Recurrencias", new { id = Model.D.NUM_DOC })" class="btn-small">Cancelar recurrencia</a>
+                                }
+                            }
                         }
                         if (Model.D.ESTATUS_WF == "B")//ADD RSG 30.10.2018
                         {
