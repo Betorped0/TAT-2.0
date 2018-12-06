@@ -37,7 +37,7 @@
 {
     if (ViewBag.Display)
     {
-        <div class="row">
+        <div class="" style="float: right;margin-left: 10px;">
             <div class="col s12 right-align">
                 <input type="hidden" name="selectedcocode" value="@((ViewBag.selectedcocode == null)?String.Empty:ViewBag.selectedcocode)" />
                 <input type="hidden" name="selecteddperiod" value="@((ViewBag.selecteddperiod == null)?String.Empty:ViewBag.selecteddperiod)" />
@@ -61,7 +61,7 @@
     int year2 = yeard + 2;
     int yearback = yeard - 1;
     int yearback2 = yeard - 2;
-    <div class="row">
+    <div class="">
         <div class="col s12 right-align">
             <button class="btn-small" id="sendbtn" type="submit" name="action">Consultar</button>
             @*<input class="btn-small" id="id_excel" type="button" value="Generar Excel" name="action" />*@
@@ -364,7 +364,7 @@
                         <td>@item.PAIS </td>
                         <td><a href="@Url.Action("Details", "Solicitudes", new { id = item.NUMERO_SOLICITUD })" style="cursor:pointer">@item.NUMERO_SOLICITUD </a></td>
                         <td>@item.FECHA_SOLICITUD_STRING </td>
-                        <td>@item.PERIODO_CONTABLE </td>
+                        <td>@item.PERIODO_CONTABLE_STRING </td>
                         <td>@item.ANIO_CONTABLE</td>
                         <td>@item.NUMERO_DOCUMENTO_SAP </td>
                         <td>@item.NUMERO_REVERSO_SAP </td>
