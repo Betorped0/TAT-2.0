@@ -21,5 +21,16 @@ namespace TAT001.Models.Masiva
         public string PRECIO_SUG { get; set; }
         public string VOLUMEN_REAL { get; set; }
         public string APOYO { get; set; }
+        public string MATKL_ID { get; set; }
+    }
+    public class MaterialCategoria
+    {
+        public string Material { get; set; }
+        public string Categoria { get; set; }
+        public bool Unico { get; set; }
+        public bool Error { get; set; }
+        public string Msj { get; set; }
+
+
     }
 }

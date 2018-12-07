@@ -62,7 +62,7 @@
     </div>
     <div class="modal-footer">
         <a href="#!" class="modal-action modal-close btn-flat">NO</a>
-        <a href="" class="modal-action modal-close btn-flat">si</a>
+        <a href="" class="modal-action modal-close btn-flat">SI</a>
     </div>
 </div>
 
@@ -154,8 +154,9 @@
                         <th id="lbl_fechaInicio">FECHAI_VIG</th>
                         <th id="lbl_fechaFin">FECHAF_VIG</th>
                         <th id="lbl_moneda">MONEDA_ID</th>
-                        <th hidden>LABEL</th>
-                        <th hidden>LABEL</th>
+                        <th id="lbl_vkorg" hidden>LABEL</th>
+                        <th id="lbl_vtweg" hidden>LABEL</th>
+                        <th id="lbl_spart" hidden>LABEL</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -268,7 +269,7 @@
 <script>
     window.onbeforeunload = confirmExit;
     function confirmExit() {
-        return "¿Deseas salir del módulo? La infomración se perderá. ";
+        return "¿Deseas salir del módulo? La información se perderá. ";
     }
     var el1 = document.querySelector(".tabs");
     var instance1 = M.Tabs.init(el1, []);
@@ -287,7 +288,7 @@
 <script>
     var root = "@Url.Content("~")";
     var auto = $.noConflict();
-    var ln = "@Session["spras"].ToString()";
+    ln = "@ViewBag.spras_id";
 </script>
 
 <style>
@@ -302,6 +303,8 @@
     .dataTables_scrollHeadInner, .mdl-data-table {
         width: 100%;
     }
+
+
 </style>
 
 @*<script>

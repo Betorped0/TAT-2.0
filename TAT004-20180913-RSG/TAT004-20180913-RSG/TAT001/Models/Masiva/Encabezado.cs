@@ -27,5 +27,8 @@ namespace TAT001.Models.Masiva
         public string FECHAI_VIG { get; set; }
         public string FECHAF_VIG { get; set; }
         public string MONEDA_ID { get; set; }
+
+        public string SPART { get; set; }//04-12-2018
+
     }
 }

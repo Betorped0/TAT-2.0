@@ -94,7 +94,7 @@ function procesarHoja1() {
                     //INICIO DEL CICLO FOR
                     $.each(data, function (i, dataj) {
                         //if (i % 2 == 0) {//}  CONDICION PARA SOLO PARES
-                        var addedRow = addRowH1(table, dataj.NUM_DOC, dataj.TSOL_ID, dataj.TALL_ID, dataj.SOCIEDAD_ID, dataj.PAIS_ID, dataj.ESTADO, dataj.CIUDAD, dataj.CONCEPTO, dataj.NOTAS, dataj.PAYER_ID, dataj.PAYER_NOMBRE, dataj.CONTACTO_NOMBRE, dataj.CONTACTO_EMAIL, dataj.FECHAI_VIG, dataj.FECHAF_VIG, dataj.MONEDA_ID, dataj.VKORG, dataj.VTWEG, errores[i], dataj.PAIS_NAME, dataj.TALL_NAME);
+                        var addedRow = addRowH1(table, dataj.NUM_DOC, dataj.TSOL_ID, dataj.TALL_ID, dataj.SOCIEDAD_ID, dataj.PAIS_ID, dataj.ESTADO, dataj.CIUDAD, dataj.CONCEPTO, dataj.NOTAS, dataj.PAYER_ID, dataj.PAYER_NOMBRE, dataj.CONTACTO_NOMBRE, dataj.CONTACTO_EMAIL, dataj.FECHAI_VIG, dataj.FECHAF_VIG, dataj.MONEDA_ID, dataj.VKORG, dataj.VTWEG, errores[i], dataj.PAIS_NAME, dataj.TALL_NAME, dataj.SPART);
                         tsols += "." + dataj.NUM_DOC + "-" + dataj.TSOL_ID;//ADD RSG 05.11.2018
                     }); //FIN DEL FOR
 
@@ -106,7 +106,7 @@ function procesarHoja1() {
                 }
             }
             cargaInicialSpin[0] = true;
-            if (jQuery.inArray(false, cargaInicialSpin) == -1) {
+            if (jQuery.inArray(false, cargaInicialSpin) === -1) {
                 checkRelacionada();
                 checkRelacionadaMat();
                 clearErrors();
@@ -123,7 +123,7 @@ function procesarHoja1() {
     });
 }
 
-function addRowH1(t, NUM_DOC, TSOL_ID, TALL_ID, SOCIEDAD_ID, PAIS_ID, ESTADO, CIUDAD, CONCEPTO, NOTAS, PAYER_ID, PAYER_NOMBRE, CONTACTO_NOMBRE, CONTACTO_EMAIL, FECHAI_VIG, FECHAF_VIG, MONEDA_ID, VKORG, VTWEG, ERRORES, PAIS_NAME, TALL_NAME) {
+function addRowH1(t, NUM_DOC, TSOL_ID, TALL_ID, SOCIEDAD_ID, PAIS_ID, ESTADO, CIUDAD, CONCEPTO, NOTAS, PAYER_ID, PAYER_NOMBRE, CONTACTO_NOMBRE, CONTACTO_EMAIL, FECHAI_VIG, FECHAF_VIG, MONEDA_ID, VKORG, VTWEG, ERRORES, PAIS_NAME, TALL_NAME, SPART) {
 
     //var clasificacion = "<select id=\"clas\" class=\"miSel\">";
     //$.each(arr1, function (i, data) {
@@ -136,7 +136,6 @@ function addRowH1(t, NUM_DOC, TSOL_ID, TALL_ID, SOCIEDAD_ID, PAIS_ID, ESTADO, CI
     //});
     //clasificacion = clasificacion + "</select>";
     var icono, clase = null;
-
     if (jQuery.inArray('red white-text rojo', ERRORES) !== -1) {
         icono = 'close';
         clase = 'red white-text';
@@ -145,11 +144,11 @@ function addRowH1(t, NUM_DOC, TSOL_ID, TALL_ID, SOCIEDAD_ID, PAIS_ID, ESTADO, CI
         icono = 'done';
         clase = 'green white-text';
     }
-
+    
     NOTAS = NOTAS.replace("'", '&#39;');
 
     var r = t.row.add([
-        "<span class='" + clase + " material-icons'>" + icono + "</span>",
+        "<div class='" + clase + "'></div>",
         "<input class='" + ERRORES[0] + " input_numdoc' style='font-size:10px; text-align:center;' type='text' id='' name='' disabled value='" + NUM_DOC + "'><span hidden>" + NUM_DOC + "</span>",
         "<input class='" + ERRORES[1] + " input_tsol' style='font-size:10px; text-align:center;' type='text' id='' name='' disabled value='" + TSOL_ID + "'><span hidden>" + TSOL_ID + "</span>",
         "<input class='" + ERRORES[2] + " input_clasificacion' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + TALL_NAME + "'><span hidden>" + TALL_ID + "</span>",
@@ -168,7 +167,8 @@ function addRowH1(t, NUM_DOC, TSOL_ID, TALL_ID, SOCIEDAD_ID, PAIS_ID, ESTADO, CI
         "<input class='" + ERRORES[14] + " input_fechaf' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + FECHAF_VIG + "'><span hidden>" + FECHAF_VIG + "</span>",
         "<input class='" + ERRORES[15] + " input_moneda' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + MONEDA_ID + "'><span hidden>" + MONEDA_ID + "</span>",
         "<input id='txt_vkorg' value='" + VKORG + "' hidden>",
-        "<input id='txt_vtweg' value='" + VTWEG + "' hidden>"
+        "<input id='txt_vtweg' value='" + VTWEG + "' hidden>",
+        "<input id='txt_vtweg' value='" + SPART + "' hidden>"
     ]).draw(false).node();
 
     var td = $(r).children()[0];
@@ -560,6 +560,9 @@ $('body').on('keydown.autocomplete', '.input_cliente', function () {
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
     var col_index2 = col_index + 1;
+    var colVk_index = getTableIndex('#tab_test1', 'lbl_vkorg');
+    var colVt_index = getTableIndex('#tab_test1', 'lbl_vtweg');
+    var colSpartIdex = getTableIndex('#tab_test1', 'lbl_spart');
     var numTabla = $(this).parents()[3];
     numTabla = $(numTabla).attr('id');
     var us = $("#USUARIOC_ID").val(); //ADD RSG 01.11.2018
@@ -588,7 +591,7 @@ $('body').on('keydown.autocomplete', '.input_cliente', function () {
                 data: { "Prefix": request.term, "usuario": us, "pais": pais }, //ADD RSG 01.11.2018
                 success: function (data) {
                     response(auto.map(data, function (item) {
-                        return { label: trimStart('0', item.KUNNR) + '-' + item.NAME1, value: trimStart('0', item.KUNNR) };
+                        return { label: trimStart('0', item.KUNNR) + '-' + item.NAME1, value: trimStart('0', item.KUNNR), vkorg: item.VKORG, vtweg: item.VTWEG, spart:item.SPART };
                     }));
                 }
                 , error: function (e, er) {
@@ -617,6 +620,11 @@ $('body').on('keydown.autocomplete', '.input_cliente', function () {
             var label = ui.item.label;
             label = label.split('-');
             $(clase2).val(label[1]);
+            if (numTabla === 'tab_test1') {
+                $(tr.find("td:eq(" + colVk_index + ")").children()).val(ui.item.vkorg);
+                $(tr.find("td:eq(" + colVt_index + ")").children()).val(ui.item.vtweg);
+                $(tr.find("td:eq(" + colSpartIdex + ")").children()).val(ui.item.spart);
+            }
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
             //$(tr.find("td:eq(" + col_index2 + ")").children().removeClass("red white-text rojo"));
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
@@ -955,7 +963,7 @@ function addRowH2(t, NUM_DOC, FACTURA, FECHA, PROVEEDOR, PROVEEDOR_NOMBRE, AUTOR
     else { bloqueo[8] = ""; }
 
     var r = t.row.add([
-        "<span class='" + clase + " material-icons'>" + icono + "</span>",
+        "<div class='" + clase + "'></div>",
         "<input class='" + ERRORES[0] + WARNINGS[0] + " input_numdoc' style='font-size:12px; text-align:center;' type='text' id='' name='' disabled value='" + NUM_DOC + "'><span hidden>" + NUM_DOC + "</span>",
         "<input class='" + ERRORES[1] + WARNINGS[1] + " input_factura' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo[1] + " value='" + FACTURA + "'><span hidden>" + FACTURA + "</span>",
         "<input class='" + ERRORES[2] + WARNINGS[2] + " input_fechaH2' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo[2] + " value='" + FECHA + "'><span hidden>" + FECHA + "</span>",
@@ -1343,7 +1351,7 @@ function addRowH3(t, NUM_DOC, FACTURA, BILL_DOC, EJERCICIOK, PAYER, PAYER_NOMBRE
     }
 
     var r = t.row.add([
-        "<span class='" + clase + " material-icons'>" + icono + "</span>",
+        "<div class='" + clase + "'></div>",
         "<input class='" + ERRORES[0] + " input_numdoc' style='font-size:12px; text-align:center;' type='text' id='' name='' disabled value='" + NUM_DOC + "'><span hidden>" + NUM_DOC + "</span>",
         "<input class='" + ERRORES[1] + " input_facturaH3' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + FACTURA + "'><span hidden>" + FACTURA + "</span>",
         "<input class='" + ERRORES[2] + " input_bill' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + BILL_DOC + "'><span hidden>" + BILL_DOC + "</span>",
@@ -1605,7 +1613,7 @@ function procesarHoja4() {
 
                     //INICIO DEL CICLO FOR
                     $.each(data, function (i, dataj) {
-                        var addedRow = addRowH4(table, dataj.NUM_DOC, dataj.LIGADA, dataj.VIGENCIA_DE, dataj.VIGENCIA_AL, dataj.MATNR, dataj.MATKL, dataj.DESCRIPCION, dataj.MONTO, dataj.PORC_APOYO, dataj.APOYO_PIEZA, dataj.COSTO_APOYO, dataj.PRECIO_SUG, dataj.VOLUMEN_REAL, dataj.APOYO, errores[i]);
+                        addRowH4(table, dataj.NUM_DOC, dataj.LIGADA, dataj.VIGENCIA_DE, dataj.VIGENCIA_AL, dataj.MATNR, dataj.MATKL, dataj.DESCRIPCION, dataj.MONTO, dataj.PORC_APOYO, dataj.APOYO_PIEZA, dataj.COSTO_APOYO, dataj.PRECIO_SUG, dataj.VOLUMEN_REAL, dataj.APOYO, errores[i], dataj.MATKL_ID);
                     }); //FIN DEL FOR
 
                     $('#tab_test4').css("font-size", "10px");
@@ -1636,8 +1644,8 @@ function procesarHoja4() {
     //updateTable();
 }
 
-function addRowH4(t, NUM_DOC, LIGADA, VIGENCIA_DE, VIGENCIA_AL, MATNR, MATKL, DESCRIPCION, MONTO, PORC_APOYO, APOYO_PIEZA, COSTO_APOYO, PRECIO_SUG, VOLUMEN_REAL, APOYO, ERRORES) {
-    var check, bloqueo, icono, clase = null;
+function addRowH4(t, NUM_DOC, LIGADA, VIGENCIA_DE, VIGENCIA_AL, MATNR, MATKL, DESCRIPCION, MONTO, PORC_APOYO, APOYO_PIEZA, COSTO_APOYO, PRECIO_SUG, VOLUMEN_REAL, APOYO, ERRORES, MATKL_ID) {
+    var check, bloqueo, icono, clase = null, msj='';
 
     if (LIGADA !== "") {
         check = "checked='checked'";
@@ -1657,21 +1665,21 @@ function addRowH4(t, NUM_DOC, LIGADA, VIGENCIA_DE, VIGENCIA_AL, MATNR, MATKL, DE
     }
 
     var r = t.row.add([
-        "<span class='" + clase + " material-icons'>" + icono + "</span>",
-        "<input class='" + ERRORES[0] + " input_numdoc' style='font-size:12px; text-align:center;' type='text' id='' name='' disabled value='" + NUM_DOC + "'><span hidden>" + NUM_DOC + "</span>",
+        "<div class='" + clase + "'></div>",
+        "<input class='" + ERRORES[0] + " input_numdoc' style='font-size:12px; text-align:center;' type='text' id='' name='' disabled value='" + NUM_DOC + "' title='"+getWarning(ERRORES[0])+"'><span hidden>" + NUM_DOC + "</span>",
         "<p style='text-align:center;' class='" + ERRORES[1] + "'><label><input type='checkbox' class='filled-in ligada' " + check + " onchange='ligada(this);'/><span></span></label></p>",
-        "<input class='" + ERRORES[2] + " input_fechai' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + VIGENCIA_DE + "'><span hidden>" + VIGENCIA_DE + "</span>",
-        "<input class='" + ERRORES[3] + " input_fechaf' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + VIGENCIA_AL + "'><span hidden>" + VIGENCIA_AL + "</span>",
-        "<input class='" + ERRORES[4] + " input_material' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + MATNR + "'><span hidden>" + MATNR + "</span>",
-        "<input class='" + ERRORES[5] + " input_categoria' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + MATKL + "'><span hidden>" + MATKL + "</span>",
-        "<input class='" + ERRORES[6] + "' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + DESCRIPCION + "'><span hidden>" + DESCRIPCION + "</span>",
-        "<input class='" + ERRORES[7] + " input_cantidades' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo + " value='" + MONTO + "'><span hidden>" + MONTO + "</span>",
-        "<input class='" + ERRORES[8] + " input_cantidades' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + PORC_APOYO + "'><span hidden>" + PORC_APOYO + "</span>",
-        "<input class='" + ERRORES[9] + " input_cantidades' style='font-size:10px; text-align:center;' type='text' id='' name='' disabled value='" + APOYO_PIEZA + "'><span hidden>" + APOYO_PIEZA + "</span>",
-        "<input class='" + ERRORES[10] + " input_cantidades' style='font-size:10px; text-align:center;' type='text' id='' name='' disabled value='" + COSTO_APOYO + "'><span hidden>" + COSTO_APOYO + "</span>",
-        "<input class='" + ERRORES[11] + " input_cantidades' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo + " value='" + PRECIO_SUG + "'><span hidden>" + PRECIO_SUG + "</span>",
-        "<input class='" + ERRORES[12] + " input_cantidades' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo + " value='" + VOLUMEN_REAL + "'><span hidden>" + VOLUMEN_REAL + "</span>",
-        "<input class='" + ERRORES[13] + " input_cantidades input_apoyo' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo + " value='" + APOYO + "'><span hidden>" + APOYO + "</span>"
+        "<input class='" + ERRORES[2] + " input_fechai' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + VIGENCIA_DE + "' title='" + getWarning(ERRORES[2]) +"'><span hidden>" + VIGENCIA_DE + "</span>",
+        "<input class='" + ERRORES[3] + " input_fechaf' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + VIGENCIA_AL + "' title='" + getWarning(ERRORES[3]) +"'><span hidden>" + VIGENCIA_AL + "</span>",
+        "<input class='" + ERRORES[4] + " input_material' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + MATNR + "' title='" + getWarning(ERRORES[4]) +"'><span hidden>" + MATNR + "</span>",
+        "<input class='" + ERRORES[5] + " input_categoria' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + MATKL + "' title='" + getWarning(ERRORES[5]) +"'><span hidden>" + MATKL_ID + "</span>",
+        "<input class='" + ERRORES[6] + "' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + DESCRIPCION + "'' title='" + getWarning(ERRORES[6]) +"'><span hidden>" + DESCRIPCION + "</span>",
+        "<input class='" + ERRORES[7] + " input_cantidades' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo + " value='" + MONTO + "' ' title='" + getWarning(ERRORES[7]) +"'><span hidden>" + MONTO + "</span>",
+        "<input class='" + ERRORES[8] + " input_cantidades' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + PORC_APOYO + "' ' title='" + getWarning(ERRORES[8]) +"'><span hidden>" + PORC_APOYO + "</span>",
+        "<input class='" + ERRORES[9] + " input_cantidades' style='font-size:10px; text-align:center;' type='text' id='' name='' disabled value='" + APOYO_PIEZA + "' ' title='" + getWarning(ERRORES[9]) +"'><span hidden>" + APOYO_PIEZA + "</span>",
+        "<input class='" + ERRORES[10] + " input_cantidades' style='font-size:10px; text-align:center;' type='text' id='' name='' disabled value='" + COSTO_APOYO + "' ' title='" + getWarning(ERRORES[10]) +"'><span hidden>" + COSTO_APOYO + "</span>",
+        "<input class='" + ERRORES[11] + " input_cantidades' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo + " value='" + PRECIO_SUG + "'' title='" + getWarning(ERRORES[11]) +"'><span hidden>" + PRECIO_SUG + "</span>",
+        "<input class='" + ERRORES[12] + " input_cantidades' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo + " value='" + VOLUMEN_REAL + "' ' title='" + getWarning(ERRORES[12]) +"'><span hidden>" + VOLUMEN_REAL + "</span>",
+        "<input class='" + ERRORES[13] + " input_cantidades input_apoyo' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo + " value='" + APOYO + "' ' title='" + getWarning(ERRORES[13]) +"'><span hidden>" + APOYO + "</span>"
     ]).draw(false).node();
 
     var td = $(r).children()[0];
@@ -1693,16 +1701,34 @@ $('#tab_test4').on('keydown.autocomplete', '.input_material', function () {
     $(tr.find("td:eq(" + col_index + ")").children().addClass('' + row_index + 'descripcion' + col_index));
     var materialDes = '.' + row_index + 'descripcion' + col_index;
 
+    var vk = '', vt = '', indexvt, indexvk, indexnumDoc;
+
+    
+    indexvt= getTableIndex('#tab_test1', 'lbl_vtweg');
+    indexvk = getTableIndex('#tab_test1', 'lbl_vkorg');
+    indexnumDoc = getTableIndex('#tab_test1', 'lbl_numDocH1');
+
+    var tablaH1 = $('#tab_test1').DataTable();
+    for (var c = 0; c < tablaH1.rows().data().length; c++) {
+        var rowH1 = tablaH1.row(c).node();
+        var num_docH1 = $(rowH1).children().eq(indexnumDoc ).children().val();
+        if (num_doc === num_docH1) {
+            vk = $(rowH1).children().eq(indexvk).children().val();
+            vt = $(rowH1).children().eq(indexvt).children().val();
+            break;
+        }
+    }
+    
     auto(this).autocomplete({
         source: function (request, response) {
             auto.ajax({
                 type: "POST",
-                url: 'material',
+                url: root + 'Listas/materiales',
                 dataType: "json",
-                data: { "Prefix": request.term },
+                data: { "Prefix": request.term, vkorg: vk, vtweg: vt},
                 success: function (data) {
                     response(auto.map(data, function (item) {
-                        return { label: trimStart('0', item.ID) + '-' + item.CATEGORIA + '-' + item.DESCRIPCION, value: trimStart('0', item.ID) };
+                        return { label: trimStart('0', item.ID) + " - " + item.MAKTX, value: trimStart('0', item.ID) };
                     }))
                 }
             })
@@ -1728,14 +1754,17 @@ $('#tab_test4').on('keydown.autocomplete', '.input_material', function () {
 
         select: function (event, ui) {
             var label = ui.item.label;
-            label = label.split('-');
-            $(categoria).val(label[1]);
+            var value = ui.item.value;
+            var desc = label.split('-');
+            $(materialDes).val(desc[1]);
+            var cat = getCategoria(value);
+            $(categoria).val(cat.DESCRIPCION);
+            
             $(categoria).removeClass("red white-text rojo");
-            $(materialDes).val(label[2]);
             $(this).removeClass("red white-text rojo");
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
-            healtyMaterial(num_doc, label[0], row_index);
+            healtyMaterialCategoria(num_doc, value, row_index, 'M');
             clearErrors();
         }
     });
@@ -1749,16 +1778,38 @@ $('#tab_test4').on('keydown.autocomplete', '.input_categoria', function () {
 
     $(tr.find("td:eq(" + col_index + ")").children().addClass('' + row_index + 'categoriaDes' + col_index));
 
+    var vk = '', kunnr = '', spart = '', soc = '', indexvt, indexkunnr, indexnumDoc, indexspart, indexsoc;
+
+
+    indexvk = getTableIndex('#tab_test1', 'lbl_vkorg');
+    indexkunnr = getTableIndex('#tab_test1', 'lbl_payerId');
+    indexnumDoc = getTableIndex('#tab_test1', 'lbl_numDocH1'); 
+    indexspart = getTableIndex('#tab_test1', 'lbl_spart');
+    indexsoc = getTableIndex('#tab_test1', 'lbl_sociedad');
+
+    var tablaH1 = $('#tab_test1').DataTable();
+    for (var c = 0; c < tablaH1.rows().data().length; c++) {
+        var rowH1 = tablaH1.row(c).node();
+        var num_docH1 = $(rowH1).children().eq(indexnumDoc).children().val();
+        if (num_doc === num_docH1) {
+            vk = $(rowH1).children().eq(indexvk).children().val();
+            kunnr = $(rowH1).children().eq(indexkunnr).children().val();
+            spart = $(rowH1).children().eq(indexspart).children().val();
+            soc = $(rowH1).children().eq(indexsoc).children().val();
+            break;
+        }
+    }
+
     auto(this).autocomplete({
         source: function (request, response) {
             auto.ajax({
                 type: "POST",
-                url: 'categoria',
+                url: root + 'Listas/categoriasCliente',
                 dataType: "json",
-                data: { "Prefix": request.term },
+                data: { vkorg: vk, spart: spart, kunnr: kunnr, soc_id: soc },
                 success: function (data) {
                     response(auto.map(data, function (item) {
-                        return { label: trimStart('0', item.ID) + '-' + item.DESCRIPCION, value: item.DESCRIPCION };
+                        return { label: trimStart('0', item.MATERIALGP_ID) + '-' + item.TXT50, value: item.TXT50, idCat: item.MATERIALGP_ID };
                     }));
                 }
             });
@@ -1785,7 +1836,9 @@ $('#tab_test4').on('keydown.autocomplete', '.input_categoria', function () {
             $(tr.find("td:eq(" + (col_index + 1) + ")").children().val(""));
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
-            healtyCategoria(num_doc);
+            var idCategoria= tr.find("td:eq(" + col_index + ")").children('span');
+            idCategoria.text(ui.item.idCat);
+            healtyMaterialCategoria(num_doc, ui.item.idCat, row_index, 'C' );
             clearErrors();
         }
     });
@@ -2127,156 +2180,78 @@ $('#tab_test4').on('keydown', '.input_apoyo', function (e) {
     });
 });
 
-function healtyCategoria(num_doc) {
+
+function healtyMaterialCategoria(num_doc, clave, rowIndex, tipo ) {
     var tablaH4 = $('#tab_test4').DataTable();
-    var rowsCategoria = [];
-    var contador = 0;
+    var rowsMaterial = [];
+    var contador = 0, indexNumDoc, indexMaterial;
+    indexNumDoc = getTableIndex('#tab_test4', 'lbl_numDocH4');
+    indexMaterial = getTableIndex('#tab_test4', 'lbl_material');
+    indexCategoria = getTableIndex('#tab_test4', 'lbl_categoriaH4');
 
     for (var a = 0; a < tablaH4.rows().data().length; a++) {
         var rowH4 = tablaH4.row(a).node();
-        var num_docH4 = $(rowH4).children().eq(1).children().val();
-        var categoria = $(rowH4).children().eq(6).children().val();
+        var num_docH4 = $(rowH4).children().eq(indexNumDoc).children().val();
+        var material = $(rowH4).children().eq(indexMaterial).children().val();
+        var categoria = $(rowH4).children().eq(indexCategoria).children('span').text();
 
-        if (num_doc == num_docH4) {
-            rowsCategoria[contador] = categoria;
+        if (num_doc === num_docH4) {
+            if (a === rowIndex && tipo==="C") {
+                rowsMaterial.push({ material: material, categoria: clave });
+            } else if (a === rowIndex && tipo === "M") {
+                rowsMaterial.push({ material: clave, categoria: categoria });
+            }
+            else {
+                rowsMaterial.push({ material: material, categoria: categoria });
+            }
             contador++;
         }
     }
 
     $.ajax({
         type: "POST",
-        url: 'getHealtCategoria',
+        url: 'ValidarCategoriasMateriles',
         dataType: "json",
-        data: { "categorias": rowsCategoria },
+        data: { "materialCategorias": rowsMaterial },
         async: true,
         success: function (data) {
             if (data !== null | data !== "") {
                 var tablaH4 = $('#tab_test4').DataTable();
-                var pintaRojos = false;
-                var arrCatId = data.pop();
-                var recipienteCategorias = arrCatId.sort();
-
-                var recipienteClone = [];
-                for (var i = 0; i < recipienteCategorias.length - 1; i++) {
-                    if (recipienteCategorias[i + 1] == recipienteCategorias[i]) {
-                        recipienteClone.push(recipienteCategorias[i]);
-                    }
-                }
-
-                if (jQuery.inArray(true, data) != -1) {
-                    if (data.length > 1) {
-                        pintaRojos = true;
-                    }
-                }
-
-                ////if (jQuery.inArray(true, data) != -1) {
-                ////    if (jQuery.inArray(false, data) != -1) {
-                ////        pintaRojos = true;
-                ////    }
-                ////}
 
                 for (var a = 0; a < tablaH4.rows().data().length; a++) {
                     var rowH4 = tablaH4.row(a).node();
                     var num_docH4 = $(rowH4).children().eq(1).children().val();
 
-                    if (num_doc == num_docH4) {
-                        if (recipienteClone.length > 0) {
-                            if (pintaRojos) {
-                                $(rowH4).children().eq(6).children().addClass('red white-text rojo');
-                            }
-                            else {
-                                $(rowH4).children().eq(6).children().addClass('red white-text rojo');
-                            }
-                        }
-                        else {
-                            if (pintaRojos) {
-                                $(rowH4).children().eq(6).children().addClass('red white-text rojo');
-                            }
-                            else {
-                                $(rowH4).children().eq(6).children().removeClass('red white-text rojo');
-                            }
-                        }
-                        //if (pintaRojos) {
-                        //    $(rowH4).children().eq(6).children().addClass('red white-text rojo');
-                        //}
-                        //else {
-                        //    $(rowH4).children().eq(6).children().removeClass('red white-text rojo');
-                        //}
-                    }
-                }
-                clearErrors();
-            }
-        }
-    });
-}
+                    if (num_doc === num_docH4) {
+                        indexMaterial = getTableIndex('#tab_test4', 'lbl_material');
+                        indexCategoria = getTableIndex('#tab_test4', 'lbl_categoriaH4');
+                        categoria = $(rowH4).children().eq(indexCategoria).children('span').text();
+                        for (i = 0; i < data.length; i++) {
+                            var obj = data[i];
+                            if (obj.Categoria === categoria) {
+                                var colCategoria = $(rowH4).children().eq(indexCategoria);
+                                var colMaterial = $(rowH4).children().eq(indexMaterial);
+                                var inputCategoria = colCategoria.children('input');
+                                var inputMaterial = colMaterial.children('input');
 
-function healtyMaterial(num_doc, id, rowIndex) {
-    var tablaH4 = $('#tab_test4').DataTable();
-    var rowsMaterial = [];
-    var contador = 0;
-
-    for (var a = 0; a < tablaH4.rows().data().length; a++) {
-        var rowH4 = tablaH4.row(a).node();
-        var num_docH4 = $(rowH4).children().eq(1).children().val();
-        var material = $(rowH4).children().eq(5).children().val();
-
-        if (num_doc == num_docH4) {
-            if (a == rowIndex) {
-                rowsMaterial[contador] = id;
-                contador++;
-            }
-            else {
-                rowsMaterial[contador] = material;
-                contador++;
-            }
-        }
-    }
-
-    $.ajax({
-        type: "POST",
-        url: 'getHealtMaterial',
-        dataType: "json",
-        data: { "materiales": rowsMaterial },
-        async: true,
-        success: function (data) {
-            if (data !== null | data !== "") {
-                var tablaH4 = $('#tab_test4').DataTable();
-                var pintaRojos = false, num_mat = false;
-                var arrMatId = data.pop();
-                var recipienteMAteriales = arrMatId.sort();
-
-                var recipienteClone = [];
-                for (var i = 0; i < recipienteMAteriales.length - 1; i++) {
-                    if (recipienteMAteriales[i + 1] == recipienteMAteriales[i]) {
-                        recipienteClone.push(recipienteMAteriales[i]);
-                    }
-                }
-
-                if (jQuery.inArray(true, data) != -1) {
-                    if (jQuery.inArray(false, data) != -1) {
-                        pintaRojos = true;
-                    }
-                }
-
-                for (var a = 0; a < tablaH4.rows().data().length; a++) {
-                    var rowH4 = tablaH4.row(a).node();
-                    var num_docH4 = $(rowH4).children().eq(1).children().val();
-
-                    if (num_doc == num_docH4) {
-                        if (recipienteClone.length > 0) {
-                            if (pintaRojos) {
-                                $(rowH4).children().eq(5).children().addClass('red white-text rojo');
-                            }
-                            else {
-                                $(rowH4).children().eq(5).children().addClass('red white-text rojo');
-                            }
-                        }
-                        else {
-                            if (pintaRojos) {
-                                $(rowH4).children().eq(5).children().addClass('red white-text rojo');
-                            }
-                            else {
-                                $(rowH4).children().eq(5).children().removeClass('red white-text rojo');
+                                if (obj.Error) {
+                                    if ((obj.Categoria !== "" && obj.Categoria !== null) && (obj.Material !== "" && obj.Material!==null)) {
+                                        inputMaterial.prop('title', obj.Msj);
+                                        inputCategoria.prop('title', "");
+                                        colMaterial.children().addClass('red white-text rojo');
+                                        colCategoria.children().removeClass('red white-text rojo');
+                                    } else {
+                                        inputMaterial.prop('title', "");
+                                        inputCategoria.prop('title', obj.Msj);
+                                        colCategoria.children().addClass('red white-text rojo');
+                                        colMaterial.children().removeClass('red white-text rojo');
+                                    }
+                                } else {
+                                    inputMaterial.prop('title', "");
+                                    inputCategoria.prop('title', "");
+                                    colMaterial.children().removeClass('red white-text rojo');
+                                    colCategoria.children().removeClass('red white-text rojo');
+                                }
                             }
                         }
                     }
@@ -2610,7 +2585,7 @@ $("#tab_dis").click(function () {
 
 /////////////////////////////////////////////////////////HOJA 5 FUNCIONES Y ASIGNACIONES////////////////////////////////////////////////////////
 function procesarHoja5() {
-    var table = $('#tab_test5').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" }, "paging": false });
+    var table = $('#tab_test5').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" }, "paging": false, "order":[ 1, 'asc' ] });
 
     $.ajax({
         type: "POST",
@@ -2655,12 +2630,12 @@ function procesarHoja5() {
                     if ($(this).hasClass("valid") | val !== "") {//ADD RSG 29.10.2018
                         $(this).closest('tr').children().eq(0).children().removeClass("red rojo");
                         $(this).closest('tr').children().eq(0).children().addClass("green");
-                        $(this).closest('tr').children().eq(0).children().text("done");
+                        $(this).closest('tr').children().eq(0).children().text("Ok");
                         clearErrors();
                     } else {
                         $(this).closest('tr').children().eq(0).children().removeClass("green");
                         $(this).closest('tr').children().eq(0).children().addClass("red rojo");
-                        $(this).closest('tr').children().eq(0).children().text("close");
+                        $(this).closest('tr').children().eq(0).children().text("Error");
                         clearErrors();//ADD RSG 29.10.2018
                     }
                 });
@@ -2691,14 +2666,14 @@ function addRowH5(t, NUM_DOC, TIPO, OBLIGATORIO) {
     var CLASE = null;
 
     if (OBLIGATORIO == true) {
-        CHECK = "<span class='red white-text rojo material-icons'>close</span>";
+        CHECK = " <div class='red white-text rojo'></div>";
         TIPO = '*' + TIPO;//RMG
         CLASE = 'rojo';
         fileInpt = "<div class='file-field input-field isrequired'><div class='btn-small' style='float: left;'><span>Examinar</span><input type='file' name='" + NUM_DOC + TIPO + "' id='" + NUM_DOC + TIPO + "'></div><div class='file-path-wrapper'><input class='file-path validate requiredfile' type='text'></div></div>";
 
     }
     else {
-        CHECK = "<span class='green white-text material-icons'>done</span>";//RMG
+        CHECK = "<div class='green white-text'></div>";//RMG
         fileInpt = "<div class='file-field input-field'><div class='btn-small' style='float: left;'><span>Examinar</span><input type='file'></div><div class='file-path-wrapper'><input class='file-path validate outRequiredfile' type='text'></div></div>";
 
     }
@@ -3224,7 +3199,7 @@ function validaErrores(h1, h2, h3, h4, h5, num_doc) {
             if (num_docH1 == num_doc) {
                 $(rowH1).children().eq(0).children().removeClass("red");
                 $(rowH1).children().eq(0).children().addClass("green");
-                $(rowH1).children().eq(0).children().text("done");
+                $(rowH1).children().eq(0).children().text("Ok");
             }
         }
 
@@ -3235,7 +3210,7 @@ function validaErrores(h1, h2, h3, h4, h5, num_doc) {
             if (num_docH2 == num_doc) {
                 $(rowH2).children().eq(0).children().removeClass("red");
                 $(rowH2).children().eq(0).children().addClass("green");
-                $(rowH2).children().eq(0).children().text("done");
+                $(rowH2).children().eq(0).children().text("Ok");
             }
         }
 
@@ -3246,7 +3221,7 @@ function validaErrores(h1, h2, h3, h4, h5, num_doc) {
             if (num_docH3 == num_doc) {
                 $(rowH3).children().eq(0).children().removeClass("red");
                 $(rowH3).children().eq(0).children().addClass("green");
-                $(rowH3).children().eq(0).children().text("done");
+                $(rowH3).children().eq(0).children().text("Ok");
             }
         }
 
@@ -3257,7 +3232,7 @@ function validaErrores(h1, h2, h3, h4, h5, num_doc) {
             if (num_docH4 == num_doc) {
                 $(rowH4).children().eq(0).children().removeClass("red");
                 $(rowH4).children().eq(0).children().addClass("green");
-                $(rowH4).children().eq(0).children().text("done");
+                $(rowH4).children().eq(0).children().text("Ok");
             }
         }
         return "SE MODIFICARON LOS REGISTROS: " + num_doc;
@@ -3270,7 +3245,7 @@ function validaErrores(h1, h2, h3, h4, h5, num_doc) {
             if (num_docH11 == num_doc) {
                 $(rowH11).children().eq(0).children().removeClass("green");
                 $(rowH11).children().eq(0).children().addClass("red");
-                $(rowH11).children().eq(0).children().text("close");
+                $(rowH11).children().eq(0).children().text("Error");
             }
         }
 
@@ -3281,7 +3256,7 @@ function validaErrores(h1, h2, h3, h4, h5, num_doc) {
             if (num_docH22 == num_doc) {
                 $(rowH22).children().eq(0).children().removeClass("green");
                 $(rowH22).children().eq(0).children().addClass("red");
-                $(rowH22).children().eq(0).children().text("close");
+                $(rowH22).children().eq(0).children().text("Error");
             }
         }
 
@@ -3292,7 +3267,7 @@ function validaErrores(h1, h2, h3, h4, h5, num_doc) {
             if (num_docH33 == num_doc) {
                 $(rowH33).children().eq(0).children().removeClass("green");
                 $(rowH33).children().eq(0).children().addClass("red");
-                $(rowH33).children().eq(0).children().text("close");
+                $(rowH33).children().eq(0).children().text("Error");
             }
         }
 
@@ -3303,7 +3278,7 @@ function validaErrores(h1, h2, h3, h4, h5, num_doc) {
             if (num_docH44 == num_doc) {
                 $(rowH44).children().eq(0).children().removeClass("green");
                 $(rowH44).children().eq(0).children().addClass("red");
-                $(rowH44).children().eq(0).children().text("close");
+                $(rowH44).children().eq(0).children().text("Error");
             }
         }
 
@@ -3341,7 +3316,7 @@ function guardaDatos() {
         var rowH1 = tablaH1.row(aa).node();
         var status = $(rowH1).children().eq(0).children().text();
 
-        if (status == "done") {
+        if (status === "Ok") {
             var num_doc = $(rowH1).children().eq(1).children().val();
             var t_sol = $(rowH1).children().eq(2).children().val();
             var tall_id = $(rowH1).children().eq(3).children('span').text();
@@ -3368,7 +3343,7 @@ function guardaDatos() {
         var rowH2 = tablaH2.row(bb).node();
         var statusH2 = $(rowH2).children().eq(0).children().text();
 
-        if (statusH2 == "done") {
+        if (statusH2 === "Ok") {
             var num_docH2 = $(rowH2).children().eq(1).children().val();
             var facturaH2 = $(rowH2).children().eq(2).children().val();
             var fecha_facturaH2 = $(rowH2).children().eq(3).children().val();
@@ -3388,7 +3363,7 @@ function guardaDatos() {
         var rowH3 = tablaH3.row(cc).node();
         var statusH3 = $(rowH3).children().eq(0).children().text();
 
-        if (statusH3 == "done") {
+        if (statusH3 === "Ok") {
             var num_docH3 = $(rowH3).children().eq(1).children().val();
             var facturaH3 = $(rowH3).children().eq(2).children().val();
             var bill_docH3 = $(rowH3).children().eq(3).children().val();
@@ -3407,13 +3382,13 @@ function guardaDatos() {
         var rowH4 = tablaH4.row(dd).node();
         var statusH4 = $(rowH4).children().eq(0).children().text();
 
-        if (statusH4 == "done") {
+        if (statusH4 === "Ok") {
             var num_docH4 = $(rowH4).children().eq(1).children().val();
             var checkH4 = $(rowH4).children().eq(2).children().children().children().is(':checked');
             var vigencia_deH4 = $(rowH4).children().eq(3).children().val();
             var vigencia_alH4 = $(rowH4).children().eq(4).children().val();
             var matnrH4 = $(rowH4).children().eq(5).children().val();
-            var matklH4 = $(rowH4).children().eq(6).children().val();
+            var matklH4 = $(rowH4).children().eq(6).children('span').text();
             var descripcionH4 = $(rowH4).children().eq(7).children().val();
             var montoH4 = $(rowH4).children().eq(8).children().val();
             var porc_apoyoH4 = $(rowH4).children().eq(9).children().val();
@@ -3432,7 +3407,7 @@ function guardaDatos() {
         var rowH5 = tablaH5.row(ee).node();
         var statusH5 = $(rowH5).children().eq(0).children().text();
 
-        if (statusH5 == "done") {
+        if (statusH5 == "Ok") {
             var num_docH5 = $(rowH5).children().eq(1).children().val();
             var descripcionH5 = $(rowH5).children().eq(2).children().val();
             var idArchivoH5 = $(rowH5).children().eq(3).children().children().eq(0).children().eq(1).attr('id');
@@ -3467,7 +3442,7 @@ function guardaDatos() {
             var rowH5 = tablaH5.row(g).node();
             var statusH5 = $(rowH5).children().eq(0).children().text();
 
-            if (statusH5 == "done") {
+            if (statusH5 == "Ok") {
                 var num_docH5 = $(rowH5).children().eq(1).children().val();
                 var nota = $(rowH5).children().eq(4).children().val();
 
@@ -3877,4 +3852,51 @@ function InicializarTablas() {
     cargaInicialSpin[2] = false;
     cargaInicialSpin[3] = false;
     cargaInicialSpin[4] = false;
+}
+function getCategoria(mat) {
+    
+    var categoriamaterial = "";
+    if (mat !== "") {
+        $.ajax({
+            type: "POST",
+            url: root + 'Solicitudes/getCategoria',
+            data: { "material": mat },
+            dataType: "json",
+
+            success: function (data) {
+
+                if (data !== null || data !== "") {
+                    categoriamaterial =data;
+                }
+
+            },
+            error: function (xhr, httpStatusMessage, customErrorMessage) {
+                M.toast({ html: httpStatusMessage });
+            },
+            async: false
+        });
+    }
+    return categoriamaterial;
+
+}
+function getTableIndex(table, idColumna) {
+    var index;
+    $(table + ' thead>tr').each(function () {
+        $('th', this).each(function (i) {
+            var column = $(this);
+            if (column.context.id === idColumna) {
+                index = i;
+            }
+        });
+    });  
+
+    return index;
+}
+function getWarning(texto) {
+    msj = "";
+    error = texto.split(' | ');
+    if (error.length > 1) {
+        msj = error[1];
+    }
+    return msj;
 }
