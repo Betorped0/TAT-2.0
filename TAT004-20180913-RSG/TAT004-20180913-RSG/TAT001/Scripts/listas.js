@@ -202,6 +202,10 @@ function asignarSolicitud(num, num2,edit) {
                     } else if (edit) {
                         $('#s_montob').text(data.S_MONTOB);
                         $('#s_montop').text(data.S_MONTOP);
+                        if (data.S_MONTOA.indexOf("(") > -1) {
+                            document.getElementById("a3").classList.add("red");
+                            document.getElementById("a3").classList.add("white-text");
+                        }
                         $('#s_montoa').text(data.S_MONTOA);
                         if (data.S_REMA.indexOf("(")>-1){
                             document.getElementById("a4").classList.add("red");
@@ -221,8 +225,18 @@ function asignarSolicitud(num, num2,edit) {
                     else {
                         $('#s_montob').text(toShow(data.S_MONTOB));
                         $('#s_montop').text(toShow(data.S_MONTOP));
-                        if (data.S_MONTOA !== "-")
-                            $('#s_montoa').text(toShow(data.S_MONTOA));
+                        if (data.S_MONTOA !== "-") {
+                            if (data.S_MONTOA < 0) {
+                                $('#s_montoa').text(toShow(data.S_MONTOA));
+                                document.getElementById("a3").classList.add("red");
+                                document.getElementById("a3").classList.add("white-text");
+                            }
+                            else {
+                                $('#s_montoa').text(toShow(data.S_MONTOA));
+                                document.getElementById("a3").classList.remove("red");
+                                document.getElementById("a3").classList.remove("white-text");
+                            }
+                        }
                         if (data.S_REMA !== "-") {
                             if (data.S_REMA < 0) {
                                 $('#s_rema').text(toShow(data.S_REMA));
