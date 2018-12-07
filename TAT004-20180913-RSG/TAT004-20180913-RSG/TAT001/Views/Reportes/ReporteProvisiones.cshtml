@@ -14,11 +14,7 @@
 @if (!ViewBag.Display)
 {
     <script>
-
         $(document).ready(function () {
-
-
-
             $('select.select_all').siblings('ul').prepend("<li id=sm_select_all><span id='filters_all'>Todas las Opciones</span></li>");
             $('li#sm_select_all').on('click', function () {
                 var jq_elem = $(this),
@@ -30,9 +26,7 @@
                     return $(this).find('input').prop('checked') != select_all;
                 }).click();
             });
-
         });
-
     </script>
 }
 
@@ -52,9 +46,7 @@
 
         @if (ViewBag.Display)
         {
-
             <div class="col s12 right-align">
-
                 <button class="btn-small" id="btnConsultar" type="submit" name="action" @*style="display:none"*@>Consultar</button>
                 <input class="btn-small" id="id_excel" type="button" @*onclick="tableToExcel('table', 'Reporte Provisiones Abiertas TS')"*@ value="Generar Excel" name="action" />
             </div>
@@ -138,15 +130,6 @@
                     </select>
                     <label id="btn_length3">Año*</label>
                 </div>
-
-                @*<div class="input-field col s2 m2 l2">
-                        <label id="btn_length3">Año</label>
-                        <br />
-                        <br />
-                        <div>
-                            @Html.DropDownList("miconsultaAnio", null, "", htmlAttributes: new { @id = "filtroAnio", @name = "filtroAnio", @class = "form-control" })
-                        </div>
-                    </div>*@
             </div>
         </div>
         <script>
@@ -182,7 +165,7 @@
                     $('#table').trigger('destroy');
                     var pager = $('#table tfoot').html();
                     $('#table tfoot').html("");
-                    //tableToExcel('table', 'IntegraciónTS');
+                    //tableToExcel('table', 'Provisiones Abiertas TS');
                     $('#table tfoot').html(pager);
                     $('#table').tablesorter({
                         theme: "materialize",
@@ -312,16 +295,12 @@
                         // output string - default is '{page}/{totalPages}';
                         // possible variables: {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
                         output: '{startRow} - {endRow} / {filteredRows} ({totalRows})'
-
                     });
-
             });
         </script>
 
         <br />
         <b id="titulo2" style="color:rgba(0, 0, 0, 0.87); font-family:Tahoma; font-size:12px; margin-left:17px">Al</b>
-
-        @*@System.DateTime.Now.ToString("dd/MM/yyyy")*@
 
         foreach (var multi in ViewBag.miConsulSplit)
         {
@@ -532,10 +511,10 @@
                         <td>
                             @* MONTO ORIGINAL DE LA PROVISION *@
                             @*$@consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null)
-            @if (consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null) == "KCMX")
-            {
-                String.Format("{0:C}", "MONTO_DOC_MD");
-            }*@
+                                @if (consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null) == "KCMX")
+                                {
+                                    String.Format("{0:C}", "MONTO_DOC_MD");
+                                }*@
                             @*//FORMATO KCMX//*@
                             @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KCMX"))) ? String.Format("{0:C}", consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null)) : "")
                             @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KCAR"))) ? String.Format("{0:C}", consulta.GetType().GetProperty("MONTO_DOC_MD").GetValue(consulta, null)) : "")
@@ -620,9 +599,7 @@
                                 @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLCO"))) ? (amountParent.ToString("c2", CultureInfo.GetCultureInfo("es-CO"))) : "")
                                 @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLCA"))) ? (amountParent.ToString("c2", CultureInfo.GetCultureInfo("es-CO"))) : "")
                                 @(((consulta.GetType().GetProperty("SOCIEDAD_ID").GetValue(consulta, null).StartsWith("KLBL"))) ? (amountParent.ToString("c2", CultureInfo.GetCultureInfo("es-CO"))) : "")
-
                             }
-
                         </td>
 
                         <td>
