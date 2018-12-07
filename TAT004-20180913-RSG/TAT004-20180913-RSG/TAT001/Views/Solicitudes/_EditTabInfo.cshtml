@@ -36,7 +36,7 @@
                                 @Html.HiddenFor(model => model.TSOL_ID, new { @id = "tsol_id", onchange = @"selectTsol(this.value)" })@*@lej 24-07-2018*@
                                 @Html.HiddenFor(model => model.TSOL_ID, new { @id = "TSOL_ID", onchange = @"selectTsol(this.value)" })@*@lej 24-07-2018*@
 
-                                <input type="text" value="@ViewBag.TSOL_IDI" disabled="disabled" />
+                                <input type="text" id="tsol_idi" value="@ViewBag.TSOL_IDI" disabled="disabled" />
                                 <input type="text" id="tsolant_id" value="@ViewBag.TSOL_ANT" disabled="disabled" hidden />
                             }
                         </div>
