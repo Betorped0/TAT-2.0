@@ -247,15 +247,25 @@
             <div class="col s12 m12 l6">
                 <div class="card-panel">
                     <div class="row">
-                        <h5 id="head_soprev">Reversa</h5>
+                        @if (!Model.D.DOCUMENTORECs.Any())
+    {
+                    <h5 id="head_soprev">Reversa</h5>
+}
+else
+{
+                    <h5 id="head_sopRecCanc">Recurrente cancelada</h5>
+}
                     </div>
                     <div class="row">
                         @*@foreach (var iteem in Model.D.DOCUMENTORs)
                             {*@
+                        @if (!Model.D.DOCUMENTORECs.Any())
+                        {
                         <div class="input-field col s12">
                             <input id="txt_trev" type="text" disabled="disabled" value="@Model.D.DOCUMENTOR.TREVERSA.TREVERSATs.Where(a => a.SPRAS_ID.Equals(ViewBag.spras_id)).FirstOrDefault().TXT100" />
                             <label for="txt_trev">Tipo de reversa</label>
                         </div>
+                        }
                         <div class="input-field col s12">
                             <textarea id="txt_comm" disabled="disabled" class="materialize-textarea">@Model.D.DOCUMENTOR.COMENTARIO</textarea>
                             <label for="txt_comm">Comentario</label>

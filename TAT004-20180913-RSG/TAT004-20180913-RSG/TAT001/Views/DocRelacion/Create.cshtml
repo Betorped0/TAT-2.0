@@ -275,7 +275,7 @@
         auto(document).ready(function () {
             auto("#SOCIEDAD_ID").autocomplete({
                 source: function (request, response) {
-                    fnCommon.autoAjax(root + "Listas/sociedades", response, { Prefix: request.term }, function (item) { return { label: item.TXT50, value: item.BUKRS }; });
+                    fnCommon.autoAjax(root + "Listas/Sociedades", response, { Prefix: request.term }, function (item) { return { label: item.BUKRS, value: item.BUKRS }; });
                 },
                 messages: {
                     noResults: '',
@@ -291,8 +291,6 @@
                     }
                 }
             });
-        })
-        auto(document).ready(function () {
             auto("#TSOL").autocomplete({
                 source: function (request, response) {
                     fnCommon.autoAjax(root + "Listas/tiposSolicitud", response, { Prefix: request.term }, function (item) { return { label: item.TXT50, value: item.TSOL_ID }; });
@@ -311,8 +309,6 @@
                     }
                 }
             });
-        })
-        auto(document).ready(function () {
             auto("#PAIS_ID").autocomplete(
                 {
                     source: function (request, response) {
@@ -332,5 +328,5 @@
                         }
                     }
                 });
-        })
+        });
 </script>

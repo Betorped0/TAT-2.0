@@ -41,7 +41,7 @@
 {
     if (ViewBag.Display)
     {
-        <div class="row">
+        <div class="" style="float: right;margin-left: 10px;">
             <div class="col s12 right-align">
                 <input type="hidden" name="selectedquarter" value="@((ViewBag.selectedquarter == null)?String.Empty:ViewBag.selectedquarter)" />
                 <input type="hidden" name="selectedperiod" value="@((ViewBag.selectedperiod == null)?String.Empty:ViewBag.selectedperiod)" />
@@ -64,7 +64,7 @@
     int year2 = yeard + 2;
     int yearback = yeard - 1;
     int yearback2 = yeard - 2;
-    <div class="row">
+    <div class="">
         <div class="col s12 right-align">
             <button class="btn-small" id="sendbtn" type="submit" name="action">Consultar</button>
             @*<input class="btn-small" id="id_excel" type="button" value="Generar Excel" name="action" />*@

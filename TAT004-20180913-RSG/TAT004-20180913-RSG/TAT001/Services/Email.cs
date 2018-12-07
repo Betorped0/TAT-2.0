@@ -92,8 +92,8 @@ namespace TAT001.Services
                     }
                 }
             }
-            catch {
-                Console.Write("Error al enviar correo");
+            catch (Exception e){
+                Console.Write("Error al enviar correo:" +  e.Message);
             }
         }
 

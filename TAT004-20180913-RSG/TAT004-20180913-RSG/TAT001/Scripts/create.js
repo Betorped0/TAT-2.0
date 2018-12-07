@@ -5492,11 +5492,12 @@ function selectCliente(valu) {
         else
             esBorrador = false;
         var num = $('#duplicate').val();//RSG 07.11.2018
+        var buk = $("#sociedad_id").val();//RSG 06.12.2018
         $.ajax({
             type: "POST",
             //url: root + 'Listas/SelectCliente',
             url: root + 'Listas/SelectClienteDup',
-            data: { "kunnr": valu, esBorrador: esBorrador, num_doc: num },
+            data: { "kunnr": valu, esBorrador: esBorrador, num_doc: num, bukrs:buk },
             success: function (data) {
 
                 document.getElementById("loader").style.display = "none";//RSG 03.07.2018

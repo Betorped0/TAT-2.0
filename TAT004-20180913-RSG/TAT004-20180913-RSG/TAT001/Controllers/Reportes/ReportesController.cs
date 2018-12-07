@@ -701,6 +701,17 @@ namespace TAT001.Controllers.Reportes
                                       where d.DOCUMENTO_REF == r1.documento.NUM_DOC
                                       select new { d, dr, tr }).FirstOrDefault();
 
+                r1.DOCREVERSOS2 = (from d in db.DOCUMENTOes
+                                   join ts in db.TSOLs on d.TSOL_ID equals ts.ID
+                                   where ts.REVERSO
+                                   where (bool)ts.ACTIVO
+                                   where d.DOCUMENTO_REF == r1.documento.NUM_DOC
+                                   select d).FirstOrDefault();
+
+                r1.DOCBACKORDER = (from dl in db.DOCUMENTOLs
+                                   where dl.NUM_DOC == r1.documento.NUM_DOC
+                                   select dl).FirstOrDefault();
+
                 reporte.Add(r1);
             }
             return reporte;
@@ -2584,7 +2595,7 @@ namespace TAT001.Controllers.Reportes
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_pais"))).FirstOrDefault().TEXTOS, "PAIS"));
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_num_solicitud"))).FirstOrDefault().TEXTOS, "NUMERO_SOLICITUD", Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/') + "/" + "Solicitudes/Details/", true));
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_fecha_solicitud"))).FirstOrDefault().TEXTOS, "FECHA_SOLICITUD_STRING"));
-            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_periodo_contable"))).FirstOrDefault().TEXTOS, "PERIODO_CONTABLE"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_periodo_contable"))).FirstOrDefault().TEXTOS, "PERIODO_CONTABLE_STRING"));
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_anio_contable"))).FirstOrDefault().TEXTOS, "ANIO_CONTABLE"));
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_no_doc_SAP"))).FirstOrDefault().TEXTOS, "NUMERO_DOCUMENTO_SAP"));
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_no_rev_SAP"))).FirstOrDefault().TEXTOS, "NUMERO_REVERSO_SAP"));
@@ -2602,12 +2613,12 @@ namespace TAT001.Controllers.Reportes
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_monto"))).FirstOrDefault().TEXTOS, "MONTO_PROVISION_STRING"));
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_importe"))).FirstOrDefault().TEXTOS, "MONTO_NCOP_STRING"));
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_reverso"))).FirstOrDefault().TEXTOS, "MONTO_REVERSO_STRING"));
-            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_beneficio"))).FirstOrDefault().TEXTOS, "BENEFICIO_IMPACTO_MRL"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_beneficio"))).FirstOrDefault().TEXTOS, "BENEFICIO_IMPACTO_MRL_STRING"));
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_expense"))).FirstOrDefault().TEXTOS, "EXPENSE_RECOGNITION_STRING"));
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_monto_USD"))).FirstOrDefault().TEXTOS, "MONTO_PROVISION_USD_STRING"));
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_importe_USD"))).FirstOrDefault().TEXTOS, "MONTO_NCOP_USD_STRING"));
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_reverso_USD"))).FirstOrDefault().TEXTOS, "MONTO_REVERSO_USD_STRING"));
-            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_beneficio_USD"))).FirstOrDefault().TEXTOS, "BENEFICIO_IMPACTO_MRL_USD"));
+            columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_beneficio_USD"))).FirstOrDefault().TEXTOS, "BENEFICIO_IMPACTO_MRL_USD_STRING"));
 
             var datos = GenerarMRLTS(Request["selectedcocode"], Int32.Parse(Request["selecteddperiod"]), Int32.Parse(Request["selectedaperiod"]), Request["selectedyear"]);
             string nombreArchivo = ExcelExport.generarExcelHome(columnas, datos, "MRLTS", Server.MapPath(ExcelExport.getRuta()));

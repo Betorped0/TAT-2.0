@@ -36,7 +36,7 @@
                                 @Html.HiddenFor(model => model.TSOL_ID, new { @id = "tsol_id", onchange = @"selectTsol(this.value)" })@*@lej 24-07-2018*@
                                 @Html.HiddenFor(model => model.TSOL_ID, new { @id = "TSOL_ID", onchange = @"selectTsol(this.value)" })@*@lej 24-07-2018*@
 
-                                <input type="text" value="@ViewBag.TSOL_IDI" disabled="disabled" />
+                                <input type="text" id="tsol_idi" value="@ViewBag.TSOL_IDI" disabled="disabled" />
                                 <input type="text" id="tsolant_id" value="@ViewBag.TSOL_ANT" disabled="disabled" hidden />
                             }
                         </div>
@@ -475,11 +475,11 @@
                     {
                         <div class="col s12">
                             <label class="col s6">
-                                <input name="group1" type="radio" checked id="btn-date" onclick="cambiaTemp(this.id)" />
+                                <input name="group1" type="radio" checked id="btn-date" onchange="cambiaTemp(this.id)" />
                                 <span id="sPorFecha">Por fecha</span>
                             </label>
                             <label class="col s6">
-                                <input name="group1" type="radio" id="btn-peri" onclick="cambiaTemp(this.id)" />
+                                <input name="group1" type="radio" id="btn-peri" onchange="cambiaTemp(this.id)" />
                                 <span id="sPorPeriodo">Por periodo</span>
                             </label>
                         </div>

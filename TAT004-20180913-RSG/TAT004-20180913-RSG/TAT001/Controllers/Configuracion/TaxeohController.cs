@@ -50,6 +50,9 @@ namespace TAT001.Controllers.Configuracion
             ViewBag.vko = vko;
             ViewBag.vtw = vtw;
             ViewBag.spa = spa;
+            CLIENTE cli = db.CLIENTEs.Find(vko, vtw, spa, kun);
+            ViewBag.Cliente = cli.NAME1;
+            ViewBag.NoCliente = cli.KUNNR;
             return View(tAXEOHs.Where(x => x.VKORG == vko && x.VTWEG == vtw && x.KUNNR == kun && x.SPART == spa && x.ACTIVO == true).ToList());
         }
 
@@ -93,6 +96,9 @@ namespace TAT001.Controllers.Configuracion
             //ViewBag.vko = vko;
             //ViewBag.vtw = vtw;
             //ViewBag.spa = spa;
+            CLIENTE cli = db.CLIENTEs.Find(vk, tAXEOH.VTWEG, tAXEOH.SPART, kun);
+            ViewBag.Cliente = cli.NAME1;
+            ViewBag.NoCliente = cli.KUNNR;
             return View(tAXEOH);
         }
 
@@ -136,6 +142,9 @@ namespace TAT001.Controllers.Configuracion
             ViewBag.vko = vko;
             ViewBag.vtw = vtw;
             ViewBag.spa = spa;
+            CLIENTE cli = db.CLIENTEs.Find(vko, vtw, spa, kun);
+            ViewBag.Cliente = cli.NAME1;
+            ViewBag.NoCliente = cli.KUNNR;
             return View();
         }
 
@@ -259,6 +268,9 @@ namespace TAT001.Controllers.Configuracion
             ViewBag.SOCIEDAD_ID = new SelectList(db.SOCIEDADs, "BUKRS", "BUTXT", tAXEOH.SOCIEDAD_ID);
             ViewBag.CONCEPTO_ID = new SelectList(db.TX_CONCEPTO, "ID", "DESCRIPCION", tAXEOH.CONCEPTO_ID);
             ViewBag.TNOTA_ID = new SelectList(db.TX_TNOTA, "ID", "DESCRIPCION", tAXEOH.TNOTA_ID);
+            CLIENTE cli = db.CLIENTEs.Find(vk, tAXEOH.VTWEG, tAXEOH.SPART, kun);
+            ViewBag.Cliente = cli.NAME1;
+            ViewBag.NoCliente = cli.KUNNR;
             return View(tAXEOH);
         }
 

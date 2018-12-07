@@ -140,6 +140,13 @@ namespace TAT001.Models
             public string BENEFICIO_IMPACTO_MRL_USD { get; set; }
             public string NUMERO_REVERSO_SAP { get; set; }
 
+            public string PERIODO_CONTABLE_STRING
+            {
+                get
+                {
+                    return this.PERIODO_CONTABLE.ToString() + "-" + this.ANIO_CONTABLE.ToString();
+                }
+            }
             public string COMENTARIOS_REVERSO_PROVISION_STRING
             {
                 get
@@ -171,14 +178,14 @@ namespace TAT001.Models
             {
                 get
                 {
-                    return this.DE.ToShortDateString();
+                    return this.DE.ToString("MM-yyyy");
                 }
             }
             public string A_STRING
             {
                 get
                 {
-                    return this.A.ToShortDateString();
+                    return this.A.ToString("MM-yyyy");
                 }
             }
             public string MONTO_PROVISION_STRING
@@ -247,6 +254,34 @@ namespace TAT001.Models
                 {
                     if (this.TIPO_SOLICITUD_ID.StartsWith("RP"))
                         return String.Format("{0:C}", this.MONTO_2);
+                    else
+                        return String.Empty;
+                }
+            }
+            public string BENEFICIO_IMPACTO_MRL_STRING
+            {
+                get
+                {
+                    if (this.TIPO_SOLICITUD_ID.StartsWith("PR"))
+                        return String.Format("{0:C}", this.MONTO);
+                    else if (this.TIPO_SOLICITUD_ID.StartsWith("NC") || this.TIPO_SOLICITUD_ID.StartsWith("OP"))
+                        return "(" + String.Format("{0:C}", this.MONTO) + ")";
+                    else if (this.TIPO_SOLICITUD_ID.StartsWith("RP"))
+                        return "(" + String.Format("{0:C}", this.MONTO) + ")";
+                    else
+                        return String.Empty;
+                }
+            }
+            public string BENEFICIO_IMPACTO_MRL_USD_STRING
+            {
+                get
+                {
+                    if (this.TIPO_SOLICITUD_ID.StartsWith("PR"))
+                        return String.Format("{0:C}", this.MONTO_2);
+                    else if (this.TIPO_SOLICITUD_ID.StartsWith("NC") || this.TIPO_SOLICITUD_ID.StartsWith("OP"))
+                        return "(" + String.Format("{0:C}", this.MONTO_2) + ")";
+                    else if (this.TIPO_SOLICITUD_ID.StartsWith("RP"))
+                        return "(" + String.Format("{0:C}", this.MONTO_2) + ")";
                     else
                         return String.Empty;
                 }
@@ -1110,8 +1145,9 @@ namespace TAT001.Models
                 {
                     try
                     {
-                        if (this.DOCSREFREVERSOS != null)
-                            return (String.Format("{0:C}", this.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(this.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(this.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(this.DOCSREFREVERSOS, null), null).GetType().GetProperty("MONTO_DOC_MD").GetValue(this.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(this.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(this.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(this.DOCSREFREVERSOS, null), null), null)));
+                        if (this.DOCREVERSOS2 != null)
+                            return (String.Format("{0:C}", this.DOCREVERSOS2.MONTO_DOC_ML));
+                            //return (String.Format("{0:C}", this.DOCREVERSOS2.GetType().GetProperty("dr").GetValue(this.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(this.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(this.DOCSREFREVERSOS, null), null).GetType().GetProperty("MONTO_DOC_MD").GetValue(this.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(this.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(this.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(this.DOCSREFREVERSOS, null), null), null)));
                         else
                             return String.Empty;
                     }
@@ -1127,8 +1163,10 @@ namespace TAT001.Models
                 {
                     try
                     {
-                        if (this.DOCSREFREVERSOS != null)
-                            return ((Convert.ToDecimal(this.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(this.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(this.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(this.DOCSREFREVERSOS, null), null).GetType().GetProperty("MONTO_DOC_MD").GetValue(this.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(this.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(this.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(this.DOCSREFREVERSOS, null), null), null)) * 100) / this.documento.MONTO_DOC_MD).ToString();
+                        //if (this.DOCSREFREVERSOS != null)
+                        //    return ((Convert.ToDecimal(this.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(this.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(this.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(this.DOCSREFREVERSOS, null), null).GetType().GetProperty("MONTO_DOC_MD").GetValue(this.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(this.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(this.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(this.DOCSREFREVERSOS, null), null), null)) * 100) / this.documento.MONTO_DOC_MD).ToString();
+                        if (this.DOCREVERSOS2 != null)
+                            return Convert.ToInt32((this.DOCREVERSOS2.MONTO_DOC_ML * 100) / this.documento.MONTO_DOC_ML).ToString();
                         else
                             return String.Empty;
                     }
@@ -1931,7 +1969,11 @@ namespace TAT001.Models
                 {
                     try
                     {
-                        return (((this.documento.ESTATUS.Equals("A")) && (this.documento.TSOL.PADRE) && (this.documento.DOCUMENTOLs.Count > 0)) ? String.Format("{0:C}", this.documento.MONTO_DOC_MD) : "");
+                        //return (((this.documento.ESTATUS.Equals("A")) && (this.documento.TSOL.PADRE) && (this.documento.DOCUMENTOLs.Count > 0)) ? String.Format("{0:C}", this.documento.MONTO_DOC_MD) : "");
+                        if (this.DOCBACKORDER != null)
+                            return (String.Format("{0:C}", Convert.ToDecimal(this.DOCBACKORDER.BACKORDER)));
+                        else
+                            return String.Empty;
                     }
                     catch
                     {
@@ -1990,6 +2032,9 @@ namespace TAT001.Models
                     }
                 }
             }
+
+            public DOCUMENTO DOCREVERSOS2 { get; internal set; }
+            public DOCUMENTOL DOCBACKORDER { get; internal set; }
         }
     }
 }
