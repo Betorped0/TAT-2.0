@@ -380,7 +380,16 @@ function cambiaCheckRec() {
 }
 
 function addRowRec(t, num, date, monto, tipo, porc, periodo, meses) {
+//<<<<<<< 20181206-RSG
+    //var tsol = document.getElementsByClassName("k-state-selected");
+    //var tsoll = "";
+    //if (tsol.length > 0)
+    //    tsoll = [0].innerText;
+    //else
+    //    tsoll = document.getElementById("tsol_idi").value;
+//=======
     var tsoll = ($("#tsol_idi").val() ? $("#tsol_idi").val() : $("#tsol_id").val());
+
     var m = "";
     var p = "";
     if (tipo !== "2") {

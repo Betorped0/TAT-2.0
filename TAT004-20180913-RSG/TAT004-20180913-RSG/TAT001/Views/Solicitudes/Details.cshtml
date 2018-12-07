@@ -41,7 +41,20 @@
                 </div>
                 @* ---DRS 3.10.2018--- *@
                 <div class="input-field col s4 m2">
-                    @{ string manager = Model.D.CLIENTE.CLIENTEFs.Any(x => x.ACTIVO) ? Model.D.CLIENTE.CLIENTEFs.First(x => x.ACTIVO).USUARIO1_ID : "";
+                    @{ string manager = "";
+                        try
+                        {
+                            DET_APROBH dah = Model.D.USUARIO.PUESTO.DET_APROBH.Where(a => a.SOCIEDAD_ID == Model.D.SOCIEDAD_ID && a.ACTIVO)
+                                                .OrderByDescending(a => a.VERSION).FirstOrDefault();
+                            if (dah != null)
+                            {
+                                CLIENTEF cf = Model.D.CLIENTE.CLIENTEFs.Where(a => a.ACTIVO).OrderByDescending(a => a.VERSION).FirstOrDefault();
+                                TAT001.Services.ProcesaFlujo pf = new TAT001.Services.ProcesaFlujo();
+                                manager = pf.determinaAgenteI(cf, dah).USUARIOA_ID;
+                            }
+                        }
+                        catch { }
+                        //string manager = Model.D.CLIENTE.CLIENTEFs.Any(x => x.ACTIVO) ? Model.D.CLIENTE.CLIENTEFs.First(x => x.ACTIVO).USUARIO1_ID : "";
                         @Html.EditorFor(model => model.D.USUARIO.MANAGER, new { htmlAttributes = new { @disabled = "disabled", @Value = manager } })
                         @Html.LabelFor(model => model.D.USUARIO.MANAGER, "Manager", new { @id = "lbl_manager" })
                     }
@@ -265,7 +278,7 @@
                                 }
                             }
                         }
-                        if (ViewBag.usuario.PUESTO_ID == 8 & Model.D.DOCUMENTOLs.Count > 0)
+                        if (ViewBag.usuario.PUESTO_ID == 8 & Model.D.DOCUMENTOLs.Count > 0 && Model.D.DOCUMENTORECs.Count > 1)
                         {
                             <a href="@Url.Action("Backorder", "Recurrencias", new { id_d = Model.D.NUM_DOC.ToString() })" class="btn-small">Backorder</a>
                         }
