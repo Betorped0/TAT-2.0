@@ -47,11 +47,8 @@ $(document).ready(function () {
         "paging": false,
         "info": false,
         "searching": false,
+        "ordering": false,
         "columns": [
-            {
-                "name": 'ADD',
-                "className": 'ADD'
-            },
             {
                 "name": 'POS',
                 "className": 'POS'
@@ -383,7 +380,16 @@ function cambiaCheckRec() {
 }
 
 function addRowRec(t, num, date, monto, tipo, porc, periodo, meses) {
-    var tsoll = $("#TSOL_ID").val();
+//<<<<<<< 20181206-RSG
+    //var tsol = document.getElementsByClassName("k-state-selected");
+    //var tsoll = "";
+    //if (tsol.length > 0)
+    //    tsoll = [0].innerText;
+    //else
+    //    tsoll = document.getElementById("tsol_idi").value;
+//=======
+    var tsoll = ($("#tsol_idi").val() ? $("#tsol_idi").val() : $("#tsol_id").val());
+
     var m = "";
     var p = "";
     if (tipo !== "2") {
@@ -466,7 +472,6 @@ function addRowRecl(t, pos, tsol, fecha, monto, porc, periodo) {
     //var t = $('#table_rec').DataTable();
 
     t.row.add([
-        "",
         pos
         , periodo
         , tsol

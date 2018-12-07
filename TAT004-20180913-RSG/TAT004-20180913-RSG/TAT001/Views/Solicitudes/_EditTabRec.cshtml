@@ -1,15 +1,6 @@
 ﻿@model TAT001.Entities.DOCUMENTO
 
 <div id="Recurrente_cont" class="row" style="font-size:12px;">
-    <div class="col s12 l8 offset-l2">
-        <div class="card horizontal green white-text">
-            <div class="col s12" style="margin-bottom0;">
-                <p>
-                    Esta pestaña se debe llenar solamente si necesitas que tu solicitud se genere automáticamente durante los periodos seleccionados
-                </p>
-            </div>
-        </div>
-    </div>
     <div class="col s12">
         <div class="card-panel">
             <h5 id="hRecurre">Recurrente</h5>
@@ -26,11 +17,10 @@
                 <table class="table_rec display" id="table_rec" cellspacing="0" style="width:100%;display:none">
                     <thead>
                         <tr>
-                            <th id=""></th>@*B20180801 MGC Textos*@
                             <th id="thead_rnumero">NO</th>@*B20180801 MGC Textos*@
                             <th id="thead_rperiodo">Periodo</th>@*B20180801 MGC Textos*@
                             <th id="thead_rtiposol">Solicitud</th>@*B20180801 MGC Textos*@
-                            <th id="thead_rtiposol">No solicitud TAT</th>@*B20180801 MGC Textos*@
+                            <th id="thead_rnumsol">No solicitud TAT</th>@*B20180801 MGC Textos*@
                             <th id="thead_rfecha">FECHA</th>@*B20180801 MGC Textos*@
                             <th id="thead_rmonto">Monto</th>@*B20180801 MGC Textos*@
                             <th id="thead_rporc">Porcentaje</th>@*B20180801 MGC Textos*@
@@ -140,7 +130,7 @@
             </div>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12 m6 offset-m6 right-align">
-                    <input type="button" id="btnRango" style="display:none;" class="btn-small" onclick="addRango()" value="Agragar rango" />
+                    <input type="button" id="btnRango" style="display:none;" class="btn-small" onclick="addRango()" value="Agregar rango" />
                     <input type="button" id="btnDelRango" style="display:none;" class="btn-small" onclick="delRango()" value="Quitar rangos" />
                     @*<input type="button" id="dd" style="" class="btn-small" onclick="enviaRan()" value="Enviar" />*@
                 </div>

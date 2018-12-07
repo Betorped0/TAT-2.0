@@ -447,5 +447,31 @@ namespace TAT001.Services
             }
             return ret;
         }
+        public string getText(decimal num_doc, string spras)
+        {
+            string ret = "";
+            TAT001Entities db = new TAT001Entities();
+
+            DOCUMENTO doc = db.DOCUMENTOes.Find(num_doc);
+            string estatus = getEstatus(doc);
+            List<ESTATU> ee = db.ESTATUS.Where(x => x.ACTIVO).ToList();
+
+            foreach (ESTATU e in ee)
+            {
+                foreach (ESTATUSR reg in e.ESTATUSRs)
+                {
+                    if (System.Text.RegularExpressions.Regex.IsMatch(estatus, reg.REGEX))
+                    {
+                        ESTATUST t = e.ESTATUSTs.FirstOrDefault(x => x.SPRAS_ID == spras);
+                        if (t != null)
+                            ret = t.TXT050;
+                        else
+                            ret = e.DESCRIPCION;
+                        return ret;
+                    }
+                }
+            }
+            return ret;
+        }
     }
 }

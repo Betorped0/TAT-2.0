@@ -6,7 +6,10 @@
     ViewBag.carpeta_r = 500;
 }
 <div class="row">
-    <div class="col s12 right-align">
+    <div class="row left">
+        <h6>@ViewBag.NoCliente - @ViewBag.Cliente</h6>
+    </div>
+    <div class="row right">
         @Html.ActionLink("Crear Registro", "Create", "Taxeop", new { sc = @ViewBag.sc, ld = @ViewBag.ld, kun = @ViewBag.kun, vk = @ViewBag.vk, vtw = @ViewBag.vtw, sp = @ViewBag.sp, con = @ViewBag.con }, new { @class = "btn-small", @id = "btnCreate" })
         @using (Html.BeginForm("Descargar", "Taxeop", FormMethod.Post, new { @style = "display:initial;" }))
         {

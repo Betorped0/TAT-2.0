@@ -52,8 +52,12 @@
                                         {
                                             <th id="thead_rporc">%</th>
                                         }
-                                        @if (Model.D.LIGADA != null && Model.D.LIGADA.Value)
-                                        {<th id="lbl_rec_obj">Objetivo</th>
+                                        @if (Model.D.LIGADA != null && Model.D.LIGADA.Value && Model.D.DOCUMENTORECs.Count > 1)
+                                        {
+                                            <th id="lbl_rec_obj">Objetivo</th>
+                                        }
+                                        else if (Model.D.LIGADA != null && Model.D.LIGADA.Value)
+                                        {
                                         }
                                         else
                                         {
@@ -77,10 +81,10 @@
                                                 if (Model.D.PAI.BACKORDER)
                                                 {
                                                     <th id="lbl_rec_backorder">BackOrder</th>
-                                                                    <th id="lbl_rec_ventareal">Venta real</th>
+                                                    <th id="lbl_rec_ventareal">Venta real</th>
                                                 }
                                                 <th id="lbl_rec_ncreverso">NC o Reverso</th>
-                                                                <th id="lbl_rec_monto">Monto</th>
+                                                <th id="lbl_rec_monto">Monto</th>
                                             }
                                         }
                                     </tr>
@@ -121,7 +125,10 @@
                                                         if (caso != "1")
                                                         {
                                                             <td class="porcentaje">@ran.PORCENTAJE</td>}
-                                                        <td class="precio">@ran.OBJETIVOI</td>
+                                                        if (Model.D.DOCUMENTORECs.Count > 1)
+                                                        {
+                                                            <td class="precio">@ran.OBJETIVOI</td>
+                                                        }
                                                     }
                                                 }
                                                 else
@@ -156,9 +163,12 @@
                                                 {
                                                     if (iteem.DOCUMENTORANs.Where(x => x.LIN == 1).FirstOrDefault().PORCENTAJE == tol.DOCUMENTO.PORC_APOYO)
                                                     {
-                                                        <td>Contabilizado</td>
-                                                                        <td class="precio">@tol.MONTO_VENTA</td>
-                                                                        <td class="precio">@(tol.DOCUMENTO.MONTO_DOC_MD)</td>
+                                                        @*<td>Contabilizado</td>*@
+                                                        TAT001.Services.Estatus es = new TAT001.Services.Estatus();
+                                                         
+                                                        <td>@es.getText((decimal)iteem.DOC_REF, Session["spras"].ToString())</td>
+                                                        <td class="precio">@tol.MONTO_VENTA</td>
+                                                        <td class="precio">@(tol.DOCUMENTO.MONTO_DOC_MD)</td>
                                                         if (Model.D.DOCUMENTORECs.Count > 1)
                                                         {
                                                             if (Model.D.PAI.BACKORDER)
@@ -166,40 +176,40 @@
                                                                 if (tol.BACKORDER != null)
                                                                 {
                                                                     <td class="precio">@(tol.BACKORDER)</td>
-                                                                                    <td class="precio">@(tol.MONTO_VENTA + tol.BACKORDER)</td>
+                                                                    <td class="precio">@(tol.MONTO_VENTA + tol.BACKORDER)</td>
                                                                 }
                                                                 else
                                                                 {
                                                                     <td class="precio">0.00</td>
-                                                                                    <td class="precio">0.00</td>
+                                                                    <td class="precio">0.00</td>
                                                                 }
                                                             }
                                                             if (rtol.Where(a => a.DOCUMENTO_REF == tol.NUM_DOC).FirstOrDefault() != null)
                                                             {
                                                                 <td>@rtol.Where(a => a.DOCUMENTO_REF == tol.NUM_DOC).FirstOrDefault().TSOL_ID</td>
-                                                                                <td class="precio">@rtol.Where(a => a.DOCUMENTO_REF == tol.NUM_DOC).FirstOrDefault().MONTO_DOC_MD</td>
+                                                                <td class="precio">@rtol.Where(a => a.DOCUMENTO_REF == tol.NUM_DOC).FirstOrDefault().MONTO_DOC_MD</td>
                                                             }
                                                             else
                                                             {
                                                                 <td></td>
-                                                                                <td></td>
+                                                                <td></td>
                                                             }
                                                         }
                                                     }
                                                     else
                                                     {
                                                         <td></td>
-                                                                        <td></td>
-                                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
                                                         if (Model.D.DOCUMENTORECs.Count > 1)
                                                         {
                                                             if (Model.D.PAI.BACKORDER)
                                                             {
                                                                 <td></td>
-                                                                                <td></td>
+                                                                <td></td>
                                                             }
                                                             <td></td>
-                                                                            <td></td>
+                                                            <td></td>
                                                         }
                                                     }
                                                 }
@@ -207,130 +217,133 @@
                                             else if (ViewBag.recs.Count > 0)
                                             {
                                                 <td></td>
-                                                                <td></td>
-                                                                <td></td>
+                                                <td></td>
+                                                <td></td>
                                                 if (Model.D.DOCUMENTORECs.Count > 1)
                                                 {
                                                     if (Model.D.PAI.BACKORDER)
                                                     {
                                                         <td></td>
-                                                                        <td></td>
+                                                        <td></td>
                                                     }
                                                     <td></td>
-                                                                    <td></td>
+                                                    <td></td>
                                                 }
                                             }
                                         </tr>
-                                                foreach (TAT001.Entities.DOCUMENTORAN ran in iteem.DOCUMENTORANs.Where(x => x.LIN > 1))//RSG 20.09.2018
-                                                {
-                                                    @*<tr class="ran-@ran.POS" style="display:none;background-color:rgba(242, 242, 242, 0.5);">
-                                                    *@
-                                                    <tr class="ran-@ran.POS" style="background-color:rgba(242, 242, 242, 0.5);">
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td class="porcentaje">@ran.PORCENTAJE</td>
-                                                        <td class="precio">@ran.OBJETIVOI</td>
+                                        foreach (TAT001.Entities.DOCUMENTORAN ran in iteem.DOCUMENTORANs.Where(x => x.LIN > 1))//RSG 20.09.2018
+                                        {
+                                            @*<tr class="ran-@ran.POS" style="display:none;background-color:rgba(242, 242, 242, 0.5);">
+                                            *@
+                                            <tr class="ran-@ran.POS" style="background-color:rgba(242, 242, 242, 0.5);">
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td class="porcentaje">@ran.PORCENTAJE</td>
+                                                <td class="precio">@ran.OBJETIVOI</td>
 
-                                                        @if (ViewBag.recs.Count > 0 & iteem.DOC_REF != null & iteem.DOC_REF != 0)
+                                                @if (ViewBag.recs.Count > 0 & iteem.DOC_REF != null & iteem.DOC_REF != 0)
+                                                {
+                                                    foreach (DOCUMENTOL tol in ttol.Where(x => x.NUM_DOC == iteem.DOC_REF).FirstOrDefault().DOCUMENTOLs)
+                                                    {
+                                                        if (ran.PORCENTAJE == tol.DOCUMENTO.PORC_APOYO)
                                                         {
-                                                            foreach (DOCUMENTOL tol in ttol.Where(x => x.NUM_DOC == iteem.DOC_REF).FirstOrDefault().DOCUMENTOLs)
+                                                            <td>Contabilizado</td>
+                                                            <td class="precio">@tol.MONTO_VENTA</td>
+                                                            <td class="precio">@(tol.DOCUMENTO.MONTO_DOC_MD)</td>
+                                                            if (Model.D.DOCUMENTORECs.Count > 1)
                                                             {
-                                                                if (ran.PORCENTAJE == tol.DOCUMENTO.PORC_APOYO)
+                                                                if (Model.D.PAI.BACKORDER)
                                                                 {
-                                                                    <td>Contabilizado</td>
-                                                                            <td class="precio">@tol.MONTO_VENTA</td>
-                                                                            <td class="precio">@(tol.DOCUMENTO.MONTO_DOC_MD)</td>
-                                                                    if (Model.D.DOCUMENTORECs.Count > 1)
+                                                                    if (tol.BACKORDER != null)
                                                                     {
-                                                                        if (Model.D.PAI.BACKORDER)
-                                                                        {
-                                                                            if (tol.BACKORDER != null)
-                                                                            {
-                                                                                <td class="precio">@(tol.BACKORDER)</td>
-                                                                                        <td class="precio">@(tol.MONTO_VENTA + tol.BACKORDER)</td>
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                <td class="precio">0.00</td>
-                                                                                        <td class="precio">0.00</td>
-                                                                            }
-                                                                        }
-                                                                        if (rtol.Where(a => a.DOCUMENTO_REF == tol.NUM_DOC).FirstOrDefault() != null)
-                                                                        {
-                                                                            <td>@rtol.Where(a => a.DOCUMENTO_REF == tol.NUM_DOC).FirstOrDefault().TSOL_ID</td>
-                                                                                    <td class="precio">@rtol.Where(a => a.DOCUMENTO_REF == tol.NUM_DOC).FirstOrDefault().MONTO_DOC_MD</td>
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            <td></td>
-                                                                                    <td></td>
-                                                                        }
+                                                                        <td class="precio">@(tol.BACKORDER)</td>
+                                                                        <td class="precio">@(tol.MONTO_VENTA + tol.BACKORDER)</td>
                                                                     }
+                                                                    else
+                                                                    {
+                                                                        <td class="precio">0.00</td>
+                                                                        <td class="precio">0.00</td>
+                                                                    }
+                                                                }
+                                                                if (rtol.Where(a => a.DOCUMENTO_REF == tol.NUM_DOC).FirstOrDefault() != null)
+                                                                {
+                                                                    <td>@rtol.Where(a => a.DOCUMENTO_REF == tol.NUM_DOC).FirstOrDefault().TSOL_ID</td>
+                                                                    <td class="precio">@rtol.Where(a => a.DOCUMENTO_REF == tol.NUM_DOC).FirstOrDefault().MONTO_DOC_MD</td>
                                                                 }
                                                                 else
                                                                 {
                                                                     <td></td>
-                                                                            <td></td>
-                                                                            <td></td>
-                                                                    if (Model.D.DOCUMENTORECs.Count > 1)
-                                                                    {
-                                                                        if (Model.D.PAI.BACKORDER)
-                                                                        {
-                                                                            <td></td>
-                                                                                    <td></td>
-                                                                        }
-                                                                        <td></td>
-                                                                                <td></td>
-                                                                    }
+                                                                    <td></td>
                                                                 }
                                                             }
                                                         }
-                                                        else if (ViewBag.recs.Count > 0)
+                                                        else
                                                         {
                                                             <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
+                                                            <td></td>
+                                                            <td></td>
                                                             if (Model.D.DOCUMENTORECs.Count > 1)
                                                             {
                                                                 if (Model.D.PAI.BACKORDER)
                                                                 {
                                                                     <td></td>
-                                                                            <td></td>
+                                                                    <td></td>
                                                                 }
                                                                 <td></td>
-                                                                        <td></td>
+                                                                <td></td>
                                                             }
                                                         }
-                                                    </tr>
                                                     }
                                                 }
+                                                else if (ViewBag.recs.Count > 0)
+                                                {
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    if (Model.D.DOCUMENTORECs.Count > 1)
+                                                    {
+                                                        if (Model.D.PAI.BACKORDER)
+                                                        {
+                                                            <td></td>
+                                                            <td></td>
+                                                        }
+                                                        <td></td>
+                                                        <td></td>
+                                                    }
+                                                }
+                                                else {
+                                                    <td></td>
+                                                }
+                                            </tr>
+                                        }
+                                    }
                                 </tbody>
                             </table>
                         </div>
                         <script>
-                                            function muestraRan(id) {
-                                                var ii = id.split('-')[1];
-                                                var clas = $("#" + id).hasClass("ran");
-                                                if (!clas) {
-                                                    var a = document.getElementsByClassName("ran-" + ii);
-                                                    var i;
-                                                    for (i = 0; i < a.length; i++) {
-                                                        a[i].style.display = "table-row";
-                                                    }
-                                                    document.getElementById("rec-" + ii).classList.add("ran");
-                                                }
-                                                else {
-                                                    var a = document.getElementsByClassName("ran-" + ii);
-                                                    var i;
-                                                    for (i = 0; i < a.length; i++) {
-                                                        a[i].style.display = "none";
-                                                    }
-                                                    document.getElementById("rec-" + ii).classList.remove("ran");
-                                                }
-                                            }
+                            function muestraRan(id) {
+                                var ii = id.split('-')[1];
+                                var clas = $("#" + id).hasClass("ran");
+                                if (!clas) {
+                                    var a = document.getElementsByClassName("ran-" + ii);
+                                    var i;
+                                    for (i = 0; i < a.length; i++) {
+                                        a[i].style.display = "table-row";
+                                    }
+                                    document.getElementById("rec-" + ii).classList.add("ran");
+                                }
+                                else {
+                                    var a = document.getElementsByClassName("ran-" + ii);
+                                    var i;
+                                    for (i = 0; i < a.length; i++) {
+                                        a[i].style.display = "none";
+                                    }
+                                    document.getElementById("rec-" + ii).classList.remove("ran");
+                                }
+                            }
                         </script>
                     </div>
                     <br />
@@ -383,9 +396,9 @@
                     }
                 </div>
             </div>
-                            @*
-                                </div>
-                                </div>*@
-                                                }
+            @*
+                </div>
+                </div>*@
+        }
     </div>
 </div>
