@@ -592,7 +592,7 @@ namespace TAT001.Services
                 //var primer = new DateTime(hoy.Year, hoy.Month, 1);
                 //var ultimo = primer.AddMonths(1).AddDays(-1);
                 int restarMes = 0;
-                if (dOCpADRE.TIPO_RECURRENTE.Equals("2") | dOCpADRE.TIPO_RECURRENTE.Equals("3"))
+                if (dOCpADRE.TIPO_RECURRENTE.Equals("2") || dOCpADRE.TIPO_RECURRENTE.Equals("3"))
                 {
                     restarMes = 1;
                 }
@@ -608,7 +608,10 @@ namespace TAT001.Services
                 drecc.MONTO_BASE = dOCUMENTO.MONTO_DOC_MD;
                 dOCUMENTO.PORC_APOYO = drecc.PORC;
                 dOCUMENTO.FECHAD = DateTime.Now;
-                recurrente = "X";
+                if (d.DOCUMENTORECs.Count > 1)
+                    recurrente = "X";
+                else
+                    recurrente = "L";
             }
             drecc.DOC_REF = dOCUMENTO.NUM_DOC;
             //RSG 28.05.2018----------------------------------------------
@@ -677,7 +680,7 @@ namespace TAT001.Services
                         //Email em = new Email();
                         //em.enviaMail(f.NUM_DOC, true);
                     }
-                    if (dOCpADRE.TIPO_RECURRENTE == "1")
+                    if (dOCpADRE.TIPO_RECURRENTE == "1" || recurrente == "L")
                     {
                         conta = db.FLUJOes.Where(a => a.NUM_DOC.Equals(f.NUM_DOC)).OrderByDescending(a => a.POS).FirstOrDefault();
                         conta.USUARIOA_ID = user.ID;
@@ -896,7 +899,7 @@ namespace TAT001.Services
                         //          }).ToList();
                         //}
 
-                        jd = materialesgptDao.ListaMaterialGroupsMateriales( vkorg, spart, kunnr, soc_id, aii, mii, aff, mff, "admin");
+                        jd = materialesgptDao.ListaMaterialGroupsMateriales(vkorg, spart, kunnr, soc_id, aii, mii, aff, mff, "admin");
                     }
                 }
 
@@ -1145,7 +1148,7 @@ namespace TAT001.Services
                         ////    }
                         ////}
 
-                        jd = materialesgptDao.ListaMaterialGroupsMateriales( vkorg, spart, kunnr, soc_id, aii, mii, aff, mff, "admin");
+                        jd = materialesgptDao.ListaMaterialGroupsMateriales(vkorg, spart, kunnr, soc_id, aii, mii, aff, mff, "admin");
                     }
                 }
 

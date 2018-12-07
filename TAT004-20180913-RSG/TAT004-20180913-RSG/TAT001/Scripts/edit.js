@@ -5535,10 +5535,12 @@ function selectCliente(valu) {
     if (valu != "") {
         document.getElementById("loader").style.display = "flex";//RSG 03.07.2018
 
+        var buk = $("#sociedad_id").val();//RSG 06.12.2018
         $.ajax({
             type: "POST",
-            url: root + 'Listas/SelectCliente',
-            data: { "kunnr": valu },
+            //url: root + 'Listas/SelectCliente',
+            url: root + 'Listas/SelectClienteDup',
+            data: { "kunnr": valu, esBorrador: false, num_doc: "", bukrs: buk },
             success: function (data) {
 
                 document.getElementById("loader").style.display = "none";//RSG 03.07.2018
