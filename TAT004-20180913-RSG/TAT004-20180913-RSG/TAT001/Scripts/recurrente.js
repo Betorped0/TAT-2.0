@@ -383,7 +383,12 @@ function cambiaCheckRec() {
 }
 
 function addRowRec(t, num, date, monto, tipo, porc, periodo, meses) {
-    var tsoll = $("#TSOL_ID").val();
+    var tsol = document.getElementsByClassName("k-state-selected");
+    var tsoll = "";
+    if (tsol.length > 0)
+        tsoll = [0].innerText;
+    else
+        tsoll = document.getElementById("txt_tsol").value;
     var m = "";
     var p = "";
     if (tipo !== "2") {

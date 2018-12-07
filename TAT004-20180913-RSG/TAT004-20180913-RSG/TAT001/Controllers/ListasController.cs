@@ -877,7 +877,7 @@ namespace TAT001.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public JsonResult SelectClienteDup(string kunnr, bool? esBorrador, string num_doc)
+        public JsonResult SelectClienteDup(string kunnr, bool? esBorrador, string num_doc, string bukrs)
         {
             Cadena cad = new Cadena();
             kunnr = cad.completaCliente(kunnr);
@@ -967,7 +967,18 @@ namespace TAT001.Controllers
             //Asignar Manager
             if (id_cl != null && db.CLIENTEFs.Any(x => x.KUNNR == id_cl.KUNNR && x.ACTIVO))
             {
-                id_cl.MANAGER = db.CLIENTEFs.Where(x => x.KUNNR == id_cl.KUNNR && x.ACTIVO).First().USUARIO1_ID;
+                ////id_cl.MANAGER = db.CLIENTEFs.Where(x => x.KUNNR == id_cl.KUNNR && x.ACTIVO).First().USUARIO1_ID;
+                USUARIO user = db.USUARIOs.Find(User.Identity.Name);
+                DET_APROBH dah = db.DET_APROBH.Where(a => a.SOCIEDAD_ID == bukrs && a.PUESTOC_ID == user.PUESTO_ID && a.ACTIVO)
+                                    .OrderByDescending(a => a.VERSION).FirstOrDefault();
+                if (dah != null)
+                {
+                    CLIENTEF cf = db.CLIENTEFs.Where(a => a.KUNNR.Equals(id_cl.KUNNR) && a.ACTIVO
+                                   ).OrderByDescending(a => a.VERSION).FirstOrDefault();
+                    ProcesaFlujo pf = new ProcesaFlujo();
+                    id_cl.MANAGER = pf.determinaAgenteI(cf, dah).USUARIOA_ID;
+                }
+
             }
             JsonResult jc = Json(id_cl, JsonRequestBehavior.AllowGet);
             return jc;
