@@ -281,7 +281,10 @@ namespace TAT001.Controllers
                     Estatus e = new Estatus();
                     ld.ESTATUS = e.getText(item.ESTATUSS, ld.NUM_DOC, user.SPRAS_ID, ee);
                     ld.ESTATUS_CLASS = e.getClass(item.ESTATUSS, ld.NUM_DOC, user.SPRAS_ID, ee);
-                    ld.ESTATUS_WF = item.ESTATUS!="R" && item.ESTATUS!="S"?item.ESTATUS:"";
+                    //ld.ESTATUS_WF = item.ESTATUS!="R" && item.ESTATUS!="S"?item.ESTATUS:"";
+                    ld.ESTATUS_WF = item.ESTATUS_WF_USER != "R" ? item.ESTATUS_WF_USER  : "";
+                    if (ld.ESTATUS_WF == "P" && (item.USUARIOA_ID != us))
+                        ld.ESTATUS_WF = "";
                     //ld.ESTATUS = e.getText(item.ESTATUSS);
                     //ld.ESTATUS_CLASS = e.getClass(item.ESTATUSS);
 
@@ -656,10 +659,13 @@ namespace TAT001.Controllers
                 Estatus e = new Estatus();
                 ld.ESTATUS = e.getText(item.ESTATUSS, ld.NUM_DOC, user.SPRAS_ID,ee);
                 ld.ESTATUS_CLASS = e.getClass(item.ESTATUSS, ld.NUM_DOC,user.SPRAS_ID,ee);
-                //ld.ESTATUS = e.getText(item.ESTATUSS);
-                //ld.ESTATUS_CLASS = e.getClass(item.ESTATUSS);
+                    ld.ESTATUS_WF = item.ESTATUS_WF_USER != "R" ? item.ESTATUS_WF_USER : "";
+                    if (ld.ESTATUS_WF == "P" && (item.USUARIOA_ID != us))
+                        ld.ESTATUS_WF = "";
+                    //ld.ESTATUS = e.getText(item.ESTATUSS);
+                    //ld.ESTATUS_CLASS = e.getClass(item.ESTATUSS);
 
-                ld.PAYER_ID = item.PAYER_ID;
+                    ld.PAYER_ID = item.PAYER_ID;
 
                 ld.CLIENTE = item.NAME1;
                 ld.CANAL = item.CANAL;
@@ -739,7 +745,7 @@ namespace TAT001.Controllers
                 listaDocs.Add(ld);
                 }
             }
-            generarExcelHome(listaDocs.OrderByDescending(t => t.FECHAD).ThenByDescending(t => t.HORAC).ThenByDescending(t => t.NUM_DOC).ToList(), Server.MapPath("~/PdfTemp/"));
+            generarExcelHome(listaDocs.OrderByDescending(t => t.ESTATUS_WF).ThenByDescending(t => t.FECHAD).ThenByDescending(t => t.HORAC).ThenByDescending(t => t.NUM_DOC).ToList(), Server.MapPath("~/PdfTemp/"));
             return File(Server.MapPath("~/pdfTemp/Doc" + DateTime.Now.ToShortDateString() + ".xlsx"), "application /vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Doc" + DateTime.Now.ToShortDateString() + ".xlsx");
         }
 
@@ -995,7 +1001,7 @@ namespace TAT001.Controllers
                       },
                     };
                     //Verdes
-                    if (lst[i - 2].ESTATUS_CLASS == "new badge green darken-1 white-text" || lst[i - 2].ESTATUS_CLASS == "lbl_txt new badge green darken-1 white-text" || lst[i - 2].ESTATUS_CLASS == "lbl_rev new badge green darken-1 white-text")
+                    if (lst[i - 2].ESTATUS_CLASS.Contains("green") || lst[i - 2].ESTATUS_CLASS == "new badge green darken-1 white-text" || lst[i - 2].ESTATUS_CLASS == "lbl_txt new badge green darken-1 white-text" || lst[i - 2].ESTATUS_CLASS == "lbl_rev new badge green darken-1 white-text")
                     {
                         worksheet.Cell("I" + i).Value = new[]
                     {
@@ -1006,7 +1012,7 @@ namespace TAT001.Controllers
                 };
                         worksheet.Range("I" + i + ":I" + i).Style.Font.SetFontColor(XLColor.White).Fill.SetBackgroundColor(XLColor.FromHtml("#43A047")).Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center).Font.SetBold(true);
                     }//grises
-                    else if (lst[i - 2].ESTATUS_CLASS == "new badge grey darken-2 white-text")
+                    else if (lst[i - 2].ESTATUS_CLASS.Contains("grey") || lst[i - 2].ESTATUS_CLASS == "new badge grey darken-2 white-text")
                     {
                         worksheet.Cell("I" + i).Value = new[]
               {
@@ -1016,8 +1022,8 @@ namespace TAT001.Controllers
                         },
                 };
                         worksheet.Range("I" + i + ":I" + i).Style.Font.SetFontColor(XLColor.White).Fill.SetBackgroundColor(XLColor.FromHtml("#616161")).Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center).Font.SetBold(true);
-                    }
-                    else if (lst[i - 2].ESTATUS_CLASS.Contains("yellow darken-2 white-text") || lst[i - 2].ESTATUS_CLASS=="new badge yellow darken-1 white-text" || lst[i - 2].ESTATUS_CLASS == "lbl_ts yellow darken-2 white-text new badge" || lst[i - 2].ESTATUS_CLASS == "lbl_soporte new badge yellow darken-2 white-text")
+                    }//amarillos
+                    else if (lst[i - 2].ESTATUS_CLASS.Contains("yellow") || lst[i - 2].ESTATUS_CLASS=="new badge yellow darken-1 white-text" || lst[i - 2].ESTATUS_CLASS == "lbl_ts yellow darken-2 white-text new badge" || lst[i - 2].ESTATUS_CLASS == "lbl_soporte new badge yellow darken-2 white-text")
                     {
                         worksheet.Cell("I" + i).Value = new[]
               {
@@ -1039,7 +1045,7 @@ namespace TAT001.Controllers
                 };
                         worksheet.Range("I" + i + ":I" + i).Style.Font.SetFontColor(XLColor.White).Fill.SetBackgroundColor(XLColor.FromHtml("#f57c00")).Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center).Font.SetBold(true);
                     }//Rojos
-                    else if (lst[i - 2].ESTATUS_CLASS == "new badge red darken-1 white-text" || lst[i - 2].ESTATUS_CLASS == "lbl_txt new badge red darken-1 white-text" || lst[i - 2].ESTATUS_CLASS == "lbl_cancelled new badge red darken-1 white-text")
+                    else if (lst[i - 2].ESTATUS_CLASS.Contains("red") || lst[i - 2].ESTATUS_CLASS == "new badge red darken-1 white-text" || lst[i - 2].ESTATUS_CLASS == "lbl_txt new badge red darken-1 white-text" || lst[i - 2].ESTATUS_CLASS == "lbl_cancelled new badge red darken-1 white-text")
                     {
                         worksheet.Cell("I" + i).Value = new[]
                     {
