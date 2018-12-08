@@ -1092,7 +1092,7 @@ $(document).ready(function () {
             var monto = parseFloat(toNum($('#monto_dis').val()));
             importe_fac = parseFloat(importe_fac.toFixed(2));
             if (importe_fac !== monto) {
-                msg += ', Informacion: Importet total de las facturas sea igual al monto en Distribucion';
+                msg += ', Importe total de las facturas sea igual al monto en Distribución';
                 res = false;
             }
         }
@@ -1434,23 +1434,23 @@ function eliminarBorrador(asyncv) {
     $.ajax({
         type: "POST",
         url: 'eliminarBorrador',
-        //dataType: "json",
         data: { "user": user },
 
         success: function (data) {
 
-            if (data != null || data != "") {
-                if (data == "X") {
-                    M.toast({ html: "Borrador se ha eliminado " });
-                    borrador = $('#borradore').val("false");
-                    $('#btn_borradore').css("display", "none");
+            if (data !== null || data !== "") {
+                if (data === "X") {
+                    window.location = root + "Solicitudes/Create";
                 } else {
+                    document.getElementById("loader").style.display = "none";
                     M.toast({ html: "No se ha eliminado el borrador" });
                     borrador = $('#borradore').val("true");
                 }
             }
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
+
+            document.getElementById("loader").style.display = "none";
             M.toast({ html: "No se ha eliminado el borrador" });
             borrador = $('#borradore').val("true");
         },

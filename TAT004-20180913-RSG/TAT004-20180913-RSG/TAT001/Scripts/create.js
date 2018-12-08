@@ -1455,7 +1455,6 @@ $(document).ready(function () {
     $('#btn_borradore').on("click", function (e) {
         document.getElementById("loader").style.display = "initial";
         eliminarBorrador(false);
-        document.getElementById("loader").style.display = "none";
     });
 });
 

@@ -80,7 +80,7 @@ $(document).ready(function () {
             if (checkf) {
                 var monto = parseFloat(toNum($('#monto_dis').val()));
                 if (importe_fac !== monto) {
-                    msg += ', Informacion: Importet total de las facturas sea igual al monto en Distribucion';
+                    msg += ', Importe total de las facturas sea igual al monto en Distribución';
                     res = false;
                 }
             }
