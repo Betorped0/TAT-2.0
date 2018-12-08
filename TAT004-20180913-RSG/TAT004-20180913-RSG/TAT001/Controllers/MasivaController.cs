@@ -4076,8 +4076,8 @@ namespace TAT001.Controllers
                 }
                 foreach (MaterialCategoria objMC in materialCategorias)
                 {
-                    int totalCategoria = materialCategorias.FindAll(x => x.Material == "" && x.Categoria != "").Count();
-                    int totalMateriales = materialCategorias.FindAll(x => x.Material != "").Count();
+                    int totalCategoria = materialCategorias.FindAll(x => string.IsNullOrEmpty(x.Material) && !string.IsNullOrEmpty(x.Categoria)).Count();
+                    int totalMateriales = materialCategorias.FindAll(x => !string.IsNullOrEmpty(x.Material)).Count();
                     int totalHealty = materialCategorias.FindAll(x => x.Unico).Count();
                     if (!string.IsNullOrEmpty(objMC.Material))
                     {
@@ -4113,7 +4113,7 @@ namespace TAT001.Controllers
                             objMC.Error = true;
                             objMC.Msj = " Las categorías unicas no se pueden mezclar con otras categorias y/o Materiales";
                         }
-                        else if (totalCategoriasRepetidas > 0)
+                        else if (totalCategoriasRepetidas > 1)
                         {
                             objMC.Error = true;
                             objMC.Msj = "Una categoría no puede ser agregada más de una vez en la misma solicitud";

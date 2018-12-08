@@ -2184,7 +2184,7 @@ $('#tab_test4').on('keydown', '.input_apoyo', function (e) {
 function healtyMaterialCategoria(num_doc, clave, rowIndex, tipo ) {
     var tablaH4 = $('#tab_test4').DataTable();
     var rowsMaterial = [];
-    var contador = 0, indexNumDoc, indexMaterial;
+    var contador = 0, indexNumDoc, indexMaterial, indexCategoria;
     indexNumDoc = getTableIndex('#tab_test4', 'lbl_numDocH4');
     indexMaterial = getTableIndex('#tab_test4', 'lbl_material');
     indexCategoria = getTableIndex('#tab_test4', 'lbl_categoriaH4');
@@ -2226,9 +2226,12 @@ function healtyMaterialCategoria(num_doc, clave, rowIndex, tipo ) {
                         indexMaterial = getTableIndex('#tab_test4', 'lbl_material');
                         indexCategoria = getTableIndex('#tab_test4', 'lbl_categoriaH4');
                         categoria = $(rowH4).children().eq(indexCategoria).children('span').text();
+                        material = $(rowH4).children().eq(indexMaterial).children().val();
+                        material = material === null ? "" : material;
                         for (i = 0; i < data.length; i++) {
                             var obj = data[i];
-                            if (obj.Categoria === categoria) {
+                            var mat = (obj.Material !== "" && obj.Material !== null) ? trimStart('0', obj.Material) : "";
+                            if (obj.Categoria === categoria && material === mat) {
                                 var colCategoria = $(rowH4).children().eq(indexCategoria);
                                 var colMaterial = $(rowH4).children().eq(indexMaterial);
                                 var inputCategoria = colCategoria.children('input');
