@@ -249,10 +249,5 @@ namespace TAT001.Common
                     new SelectListItem{Text="5",Value="5"}
             };
         }
-        public static List<SOCIEDAD> obtenerCoCodes()
-        {
-            TAT001Entities db = new TAT001Entities();
-            return db.SOCIEDADs.Where(t => t.ACTIVO).ToList();
-        }
     }
 }

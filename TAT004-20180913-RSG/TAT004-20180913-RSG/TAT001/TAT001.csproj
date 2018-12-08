@@ -236,7 +236,6 @@
     <Compile Include="Controllers\Catalogos\SoporteController.cs" />
     <Compile Include="Controllers\Catalogos\TALLsController.cs" />
     <Compile Include="Controllers\Catalogos\TextocvController.cs" />
-    <Compile Include="Controllers\Catalogos\UsuariosController2.cs" />
     <Compile Include="Controllers\Configuracion\ccatController.cs" />
     <Compile Include="Controllers\Catalogos\ClienteController.cs" />
     <Compile Include="Controllers\Catalogos\ClientesController.cs" />
@@ -858,6 +857,7 @@
     <Compile Include="Models\Dao\MaterialesgptDao.cs" />
     <Compile Include="Models\Dao\PeriodosDao.cs" />
     <Compile Include="Models\Dao\SolicitudesDao.cs" />
+    <Compile Include="Models\Dao\SprasDao.cs" />
     <Compile Include="Models\Dao\TabsDao.cs" />
     <Compile Include="Models\Dao\TallsDao.cs" />
     <Compile Include="Models\Dao\TiposSolicitudesDao.cs" />
@@ -1795,7 +1795,6 @@
     <Content Include="Views\Presupuesto\Descargar.cshtml" />
     <Content Include="Views\Listas\Det_Aprob.cshtml" />
     <Content Include="Views\Listas\UsuariosPuesto.cshtml" />
-    <Content Include="Views\Usuarios\AgregarRol.cshtml" />
     <Content Include="Views\Listas\Grupos.cshtml" />
     <Content Include="Views\Cliente\Details.cshtml" />
     <Content Include="Views\Cliente\Edit.cshtml" />
@@ -1918,7 +1917,6 @@
     <Content Include="Views\Taxeop\Delete.cshtml" />
     <Content Include="Views\Taxeop\Details.cshtml" />
     <Content Include="Views\Taxeop\Edit.cshtml" />
-    <Content Include="Views\Usuarios\Details1.cshtml" />
     <Content Include="Views\Negs\Index.cshtml" />
     <Content Include="Views\Negs\Create.cshtml" />
     <Content Include="Views\Negs\Delete.cshtml" />
@@ -2118,7 +2116,6 @@
     <Content Include="Views\Flujos\Index.cshtml" />
     <Content Include="Views\Flujos\Procesa.cshtml" />
     <Content Include="Views\Usuarios\Create.cshtml" />
-    <Content Include="Views\Usuarios\Delete.cshtml" />
     <Content Include="Views\Usuarios\Details.cshtml" />
     <Content Include="Views\Usuarios\Edit.cshtml" />
     <Content Include="Views\Usuarios\Index.cshtml" />

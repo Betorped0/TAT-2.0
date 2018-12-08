@@ -8,8 +8,6 @@
 <script src="~/Scripts/autocomplete1.10.2.js"></script>
 <script src="~/Scripts/autocomplete1.11.4.js"></script>
 <link href="~/Content/autocomplete.css" rel="stylesheet" />
-@*<link href="~/Content/materialize.clockpicker.css" rel="stylesheet" />
-    <script type="text/javascript" src="~/Scripts/materialize.clockpicker.js"></script>*@
 <script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
 @using (Html.BeginForm("AddBackup", "Usuarios", FormMethod.Post, new { @id = "addbackup" }))
 {
@@ -67,7 +65,7 @@
 }
 
 <div>
-    <a id="lbl_regresar" href="@Url.Action("Edit",new { id=Model.USUARIO_ID})"></a>
+    <a id="lbl_regresar" href="@Url.Action("Edit",new { usuario_id=Model.USUARIO_ID})"></a>
 </div>
 <script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
 <script type="text/javascript" src="~/Scripts/moment.min.js"></script>

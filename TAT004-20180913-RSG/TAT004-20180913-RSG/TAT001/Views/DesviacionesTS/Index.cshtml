@@ -1,7 +1,6 @@
 ﻿@model IEnumerable<TAT001.Entities.TS_CAMPO>
 
 @{
-    //ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.pagina_r = 1310;
     ViewBag.carpeta_r = 500;
@@ -79,7 +78,7 @@
                 <td>
                     @dexEN
                 </td>
-                @if (item.ACTIVO != null && (bool)item.ACTIVO == true)
+                @if ((bool)item.ACTIVO == true)
                 {
                     <td style="align-items:center"><i class='material-icons green-text'>check</i></td>
                 }

@@ -25,12 +25,13 @@ namespace TAT001.Controllers.Catalogos
     [LoginActive]
     public class UsuariosController : Controller
     {
-        private TAT001Entities db = new TAT001Entities();
-        private UsuarioLogin usuValidateLogin = new UsuarioLogin();
+        readonly TAT001Entities db = new TAT001Entities();
+        readonly UsuarioLogin usuValidateLogin = new UsuarioLogin();
 
 
         //--------------------DAO's-----------
         readonly SociedadesDao sociedadesDao=new SociedadesDao();
+        readonly SprasDao sprasDao = new SprasDao();
 
         // GET: Usuarios
         public ActionResult Index()
@@ -49,72 +50,24 @@ namespace TAT001.Controllers.Catalogos
             FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
 
             var uSUARIOs = db.USUARIOs.Where(u => u.ACTIVO == true).Include(u => u.PUESTO).Include(u => u.SPRA);
-            UsuarioNuevo un = new UsuarioNuevo();
-            un.L = uSUARIOs;
+            UsuarioNuevo un = new UsuarioNuevo
+            {
+                L = uSUARIOs
+            };
             return View(un);
         }
 
-        // GET: Usuarios/Details/5
-        public ActionResult Details(string id)
-        {
-            string uz = User.Identity.Name;
-            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
-            if (!usuValidateLogin.validaUsuario(userz.ID))
-            {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Home");
-            }
-            int pagina = 604; //ID EN BASE DE DATOS
-            FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            USUARIO uSUARIO = db.USUARIOs.Find(id);
-            ViewBag.nivelUsuario = userz.PUESTO_ID;
-            ViewBag.idUsuario = userz.ID;
-            string spra = Session["spras"].ToString();
-            if (uSUARIO == null)
-            {
-                return HttpNotFound();
-            }
-            var ni = (from x in db.PUESTOTs
-                      join a in db.PUESTOes on x.PUESTO_ID equals a.ID
-                      where x.PUESTO_ID == uSUARIO.PUESTO_ID & x.SPRAS_ID.Equals(spra) & a.ACTIVO == true
-                      select x.PUESTO_ID).FirstOrDefault();
-            ViewBag.PUESTO_ID1 = (from x in db.DET_APROBH where x.PUESTOC_ID == ni & x.ACTIVO == true select x.SOCIEDAD_ID).FirstOrDefault();
-            List<SOCIEDAD> sociedades = db.USUARIOs.Where(a => a.ID.Equals(uSUARIO.ID)).FirstOrDefault().SOCIEDADs.ToList();
-            string[] sociedad = new string[sociedades.Count];
-            for (int i = 0; i < sociedades.Count; i++)
-            {
-                sociedad[i] = sociedades[i].BUKRS;
-            }
-            ViewBag.ID = uSUARIO.ID;
-            ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION", uSUARIO.SPRAS_ID);
-            ViewBag.PUESTO_ID = new SelectList(db.PUESTOTs.Where(a => a.SPRAS_ID.Equals(spra)), "PUESTO_ID", "TXT50", uSUARIO.PUESTO_ID);
-            ViewBag.BUNIT = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS", uSUARIO.BUNIT);
-            ViewBag.BUNIT1 = sociedad;
-            ViewBag.ROLES = db.ROLTs.Where(a => a.SPRAS_ID.Equals(spra));
-            ViewBag.SOCIEDADES = db.SOCIEDADs;
-            ViewBag.PAISES = db.PAIS.Where(a => a.SOCIEDAD_ID != null & a.ACTIVO == true).ToList();
-            ViewBag.APROBADORES = db.DET_APROB.Where(a => a.BUKRS.Equals("KCMX") & a.PUESTOC_ID == uSUARIO.PUESTO_ID).ToList();
-            return View(uSUARIO);
-        }
 
         // GET: Usuarios/Create
         public ActionResult Create()
         {
-            string uz = User.Identity.Name;
-            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
             int pagina = 602; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
 
-            string spra = ViewBag.spras_id;
-            //Roles a los cuales no se pueden agregar varios cocodes, solo uni
-            ViewBag.ROLESCC = (from x in db.DET_APROBH where x.ACTIVO == true select x.PUESTOC_ID).Distinct().ToArray();
-            ViewBag.SOCIEDADES = new List<SOCIEDAD>( FnCommon.obtenerCoCodes());
-            //ViewBag.PUESTO_ID = new SelectList(db.PUESTOTs.Where(a => a.SPRAS_ID.Equals(spra)), "PUESTO_ID", "TXT50");           
-            //ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION");
+         
+            ViewBag.ROLESCC = db.PUESTOes.Select(x=>x.ID).ToList();
+            ViewBag.SOCIEDADES = sociedadesDao.ListaSociedades(TATConstantes.ACCION_LISTA_SOCIEDADES);
+            ViewBag.SPRAS = sprasDao.ComboSpras();
 
             return View();
         }
@@ -126,25 +79,31 @@ namespace TAT001.Controllers.Catalogos
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,PASS,NOMBRE,APELLIDO_P,APELLIDO_M,EMAIL,SPRAS_ID,ACTIVO,PUESTO_ID,MANAGER,BACKUP_ID,BUNIT,ROL")] Usuario uSUARIO)
         {
-            string uz = User.Identity.Name;
-            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
             int pagina = 602; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
-            ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION");
             
-            ViewBag.ROLESCC = (from x in db.DET_APROBH where x.ACTIVO == true select x.PUESTOC_ID).Distinct().ToArray();
-            ViewBag.SOCIEDADES = new List<SOCIEDAD>(FnCommon.obtenerCoCodes());
+            ViewBag.ROLESCC = db.PUESTOes.Select(x => x.ID).ToList();
+            ViewBag.SOCIEDADES = sociedadesDao.ListaSociedades(TATConstantes.ACCION_LISTA_SOCIEDADES);
+            ViewBag.SPRAS = sprasDao.ComboSpras();
 
+            string socSelectedStr= Request["selectcocode"];
+            if (string.IsNullOrEmpty(socSelectedStr))
+            {
+                TempData["MensajeUsuario"] = "Seleccionar al menos un Co. Code";
+                return View(uSUARIO);
+            }
+            List<string> socSelected= socSelectedStr.Split(',').ToList();
+            ViewBag.sociedad = JsonConvert.SerializeObject(socSelected, Formatting.Indented);
             if (ModelState.IsValid)
             {           
                 if (!ExisteUsuario(uSUARIO.ID))
                 {
-                    if (!String.IsNullOrEmpty(uSUARIO.PASS) & !String.IsNullOrEmpty(uSUARIO.MANAGER))
+                    if (!String.IsNullOrEmpty(uSUARIO.PASS) && !String.IsNullOrEmpty(uSUARIO.MANAGER))
                     {
                         if (uSUARIO.PASS == uSUARIO.MANAGER)
                         {
 
-                            if (ComprobarEmail(uSUARIO.EMAIL) != false & !String.IsNullOrEmpty(uSUARIO.EMAIL))
+                            if (ComprobarEmail(uSUARIO.EMAIL) && !String.IsNullOrEmpty(uSUARIO.EMAIL))
                             {
                                 Cryptography c = new Cryptography();
                                 uSUARIO.PASS = c.Encrypt(uSUARIO.PASS);
@@ -165,94 +124,33 @@ namespace TAT001.Controllers.Catalogos
                                         u.PUESTO_ID = uSUARIO.PUESTO_ID;
                                         u.MANAGER = uSUARIO.MANAGER;
                                         u.BACKUP_ID = uSUARIO.BACKUP_ID;
-                                        string comcode1 = Request["selectcocode"] as string;
-                                        if (comcode1==null)
-                                            u.BUNIT = uSUARIO.BUNIT;
-                                        else
-                                            u.BUNIT = comcode1.Split(',')[0];
+                                        u.BUNIT =socSelected[0];
 
                                         db.USUARIOs.Add(u);
                                         db.SaveChanges();
                                     }
                                     catch (Exception e)
                                     {
+                                        Log.ErrorLogApp(e,"Usuarios","Create");
                                     }
                                 }
-                                    string comcode = Request["selectcocode"] as string;
-                                    USUARIO us = db.USUARIOs.Where(x => x.ID == uSUARIO.ID).FirstOrDefault();
-                                    var re = (from x in db.DET_APROBH where x.PUESTOC_ID == uSUARIO.PUESTO_ID & x.ACTIVO == true select x.SOCIEDAD_ID).FirstOrDefault();
-                                    int num = 1;
 
-
-                                    if (comcode != null)
+                                foreach (string sociedad_id in socSelected)
+                                {
+                                    USUARIO usS = db.USUARIOs.Include(x => x.SOCIEDADs).First(x => x.ID == uSUARIO.ID);
+                                    SOCIEDAD soc = db.SOCIEDADs.FirstOrDefault(x => x.BUKRS == sociedad_id);
+                                    if (!usS.SOCIEDADs.Any(x => x.BUKRS == sociedad_id) && soc != null)
                                     {
-                                        num = comcode.Split(',').Length;
-                                    }
-                                    if (re != null)
-                                    {
-                                        db.Entry(us).State = EntityState.Modified;
-                                        db.SaveChanges();
-
-                                        try
-                                        {
-                                            SOCIEDAD soc = db.SOCIEDADs.Where(x => x.BUKRS == us.BUNIT).First();
-                                            us.SOCIEDADs.Add(soc);
-                                            db.Entry(us).State = EntityState.Modified;
-                                            db.SaveChanges();
-                                        }
-                                        catch (Exception e)
-                                        {
-                                            db.Entry(us).State = EntityState.Detached;
-                                        }
-
-                                    }
-                                    else
-                                    {
-                                        string[] codes = new string[num];
-                                        if (comcode == null)
-                                        {
-                                            codes = uSUARIO.BUNIT.Split(',');
-                                        }
-                                        else
-                                        {
-                                            codes = comcode.Split(',');
-                                        }
-                                        us.BUNIT = codes[0];
-                                        db.Entry(us).State = EntityState.Modified;
-                                        db.SaveChanges();
-
-                                        foreach (var da in codes)
-                                        {
-                                            try
-                                            {
-                                                SOCIEDAD soc = db.SOCIEDADs.Where(x => x.BUKRS == da).First();
-                                                us.SOCIEDADs.Add(soc);
-                                                db.Entry(us).State = EntityState.Modified;
-                                                db.SaveChanges();
-                                            }
-                                            catch (Exception e)
-                                            {
-                                                db.Entry(us).State = EntityState.Detached;
-                                            }
-                                        }
-                                    }
-                                    try
-                                    {
-                                        SOCIEDAD soc = db.SOCIEDADs.Where(x => x.BUKRS == us.BUNIT).First();
-                                        if (!us.SOCIEDADs.Any(x => x.BUKRS == us.BUNIT))
-                                        {
-                                            us.SOCIEDADs.Add(soc);
-                                        }
-
-                                        db.Entry(us).State = EntityState.Modified;
-                                        db.SaveChanges();
-
-                                    }
-                                    catch (Exception e)
-                                    {
+                                        usS.SOCIEDADs.Add(soc);
                                     }
 
-                                    return RedirectToAction("Index");
+                                    db.Entry(usS).State = EntityState.Modified;
+                                    db.SaveChanges();
+                                }
+
+
+
+                                return RedirectToAction("Index");
 
                             }
                             else
@@ -278,10 +176,8 @@ namespace TAT001.Controllers.Catalogos
         }
 
         // GET: Usuarios/Edit/5
-        public ActionResult Edit(string id)
+        public ActionResult Edit(string usuario_id)
         {
-            string uz = User.Identity.Name;
-            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
             int pagina = 603; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
             
@@ -297,23 +193,16 @@ namespace TAT001.Controllers.Catalogos
             {
                 ViewBag.admin = "no";
             }
-            if (id == null)
+            if (usuario_id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            USUARIO uSUARIO = db.USUARIOs.Find(id);
+            USUARIO uSUARIO = db.USUARIOs.Find(usuario_id);
             if (uSUARIO == null)
             {
                 return HttpNotFound();
             }
-            //ViewBag.PUESTO_ID = new SelectList(db.PUESTOes, "ID", "ID", uSUARIO.PUESTO_ID);
-            string spra = ViewBag.spras_id;
-            var ni = (from x in db.PUESTOTs
-                      join a in db.PUESTOes on x.PUESTO_ID equals a.ID
-                      where x.PUESTO_ID == uSUARIO.PUESTO_ID & x.SPRAS_ID.Equals(spra) & a.ACTIVO == true
-                      select x.PUESTO_ID).FirstOrDefault();
-            ViewBag.PUESTO_ID1 = (from x in db.DET_APROBH where x.PUESTOC_ID == ni & x.ACTIVO == true select x.SOCIEDAD_ID).FirstOrDefault();
-            List<SOCIEDAD> sociedades = db.USUARIOs.Where(a => a.ID.Equals(uSUARIO.ID)).FirstOrDefault().SOCIEDADs.ToList();
+            List<SOCIEDAD> sociedades = db.USUARIOs.Include(x=>x.SOCIEDADs).First(a => a.ID.Equals(uSUARIO.ID)).SOCIEDADs.ToList();
             string[] sociedad = new string[sociedades.Count];
             for (int i = 0; i < sociedades.Count; i++)
             {
@@ -323,30 +212,23 @@ namespace TAT001.Controllers.Catalogos
                        where x.USUARIO_ID.Equals(uSUARIO.ID)
                        select x.KUNNR).ToArray();
             var ucl = (from x in db.CLIENTEFs
-                       where x.USUARIO0_ID.Equals(uSUARIO.ID) | x.USUARIO1_ID.Equals(uSUARIO.ID) | x.USUARIO2_ID.Equals(uSUARIO.ID) | x.USUARIO3_ID.Equals(uSUARIO.ID)
-                         | x.USUARIO4_ID.Equals(uSUARIO.ID) | x.USUARIO5_ID.Equals(uSUARIO.ID) | x.USUARIO6_ID.Equals(uSUARIO.ID) | x.USUARIO7_ID.Equals(uSUARIO.ID)
+                       where x.USUARIO0_ID.Equals(uSUARIO.ID) || x.USUARIO1_ID.Equals(uSUARIO.ID) || x.USUARIO2_ID.Equals(uSUARIO.ID) || x.USUARIO3_ID.Equals(uSUARIO.ID)
+                         || x.USUARIO4_ID.Equals(uSUARIO.ID) || x.USUARIO5_ID.Equals(uSUARIO.ID) || x.USUARIO6_ID.Equals(uSUARIO.ID) || x.USUARIO7_ID.Equals(uSUARIO.ID)
                        select x.KUNNR).ToArray();
             if (ucl.Length == 0 && usf.Length == 0)
             {
                 ViewBag.flujo = "si";
-                ViewBag.ROLESCC = (from x in db.DET_APROBH where x.ACTIVO == true select x.PUESTOC_ID).Distinct().ToArray();
-                ViewBag.SOCIEDADES = new List<SOCIEDAD>(FnCommon.obtenerCoCodes());
+                ViewBag.ROLESCC = db.PUESTOes.Select(x => x.ID).ToList();
             }
             else
             {
                 ViewBag.flujo = "no";
             }
             ViewBag.ID = uSUARIO.ID;
-            //ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION", uSUARIO.SPRAS_ID);
-            //ViewBag.PUESTO_ID = new SelectList(db.PUESTOTs.Where(a => a.SPRAS_ID.Equals(spra)), "PUESTO_ID", "TXT50", uSUARIO.PUESTO_ID);
-            //ViewBag.BUNIT = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS", uSUARIO.BUNIT);
-            //ViewBag.ROLES = db.ROLTs.Where(a => a.SPRAS_ID.Equals(spra));
-            ViewBag.SOCIEDADES = new List<SOCIEDAD>(FnCommon.obtenerCoCodes());
+            ViewBag.SOCIEDADES = sociedadesDao.ListaSociedades(TATConstantes.ACCION_LISTA_SOCIEDADES);
+            ViewBag.SPRAS = sprasDao.ComboSpras();
             ViewBag.sociedad = JsonConvert.SerializeObject(sociedad, Formatting.Indented);
-            //ViewBag.PAISES = db.PAIS;
-            //ViewBag.sociedad = JsonConvert.SerializeObject(sociedad, Formatting.Indented);
-            //ViewBag.APROBADORES = db.DET_APROB.Where(a => a.BUKRS.Equals("KCMX") & a.PUESTOC_ID == uSUARIO.PUESTO_ID).ToList();
-            return View(uSUARIO);
+             return View(uSUARIO);
         }
 
         // POST: Usuarios/Edit/5
@@ -365,44 +247,39 @@ namespace TAT001.Controllers.Catalogos
             }
             int pagina = 603; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
-            string spra = ViewBag.spras_id;
+
+            var usf = (from x in db.USUARIOFs
+                       where x.USUARIO_ID.Equals(uSUARIO.ID)
+                       select x.KUNNR).ToArray();
+            var ucl = (from x in db.CLIENTEFs
+                       where x.USUARIO0_ID.Equals(uSUARIO.ID) || x.USUARIO1_ID.Equals(uSUARIO.ID) || x.USUARIO2_ID.Equals(uSUARIO.ID) || x.USUARIO3_ID.Equals(uSUARIO.ID)
+                         || x.USUARIO4_ID.Equals(uSUARIO.ID) || x.USUARIO5_ID.Equals(uSUARIO.ID) || x.USUARIO6_ID.Equals(uSUARIO.ID) || x.USUARIO7_ID.Equals(uSUARIO.ID)
+                       select x.KUNNR).ToArray();
+            if (ucl.Length == 0 && usf.Length == 0)
+            {
+                ViewBag.flujo = "si";
+                ViewBag.ROLESCC = db.PUESTOes.Select(x => x.ID).ToList();
+            }
+            else
+            {
+                ViewBag.flujo = "no";
+            }
+            ViewBag.SOCIEDADES = sociedadesDao.ListaSociedades(TATConstantes.ACCION_LISTA_SOCIEDADES);
+            ViewBag.SPRAS = sprasDao.ComboSpras();
+            string socSelectedStr = Request["selectcocode"];
+            if (string.IsNullOrEmpty(socSelectedStr))
+            {
+                TempData["MensajeUsuario"] = "Seleccionar al menos un Co. Code";
+                return View(uSUARIO);
+            }
+            List<string> socSelected = socSelectedStr.Split(',').ToList();
+            ViewBag.sociedad = JsonConvert.SerializeObject(socSelected, Formatting.Indented);
             if (ModelState.IsValid)
             {
-                if (ComprobarEmail(uSUARIO.EMAIL) != false & uSUARIO.EMAIL != null & uSUARIO.EMAIL != "")
+                if (ComprobarEmail(uSUARIO.EMAIL) && uSUARIO.EMAIL != null && uSUARIO.EMAIL != "")
                 {
                     USUARIO us = db.USUARIOs.Where(x => x.ID == uSUARIO.ID).FirstOrDefault();
-                    //db.Entry(us).State = EntityState.Detached;
-                    //db.Entry(uSUARIO).State = EntityState.Detached;
-                    var ni = (from x in db.PUESTOTs
-                              join a in db.PUESTOes on x.PUESTO_ID equals a.ID
-                              where x.PUESTO_ID == uSUARIO.PUESTO_ID & x.SPRAS_ID.Equals(spra) & a.ACTIVO == true
-                              select x.PUESTO_ID).FirstOrDefault();
-                    var re = (from x in db.DET_APROBH where x.PUESTOC_ID == ni & x.ACTIVO == true select x.SOCIEDAD_ID).FirstOrDefault();
-                    List<SOCIEDAD> sociedades = db.USUARIOs.Where(a => a.ID.Equals(uSUARIO.ID)).FirstOrDefault().SOCIEDADs.ToList();
-                    int num = 1;
-                    string comcode = Request["selectcocode"] as string;
-
-                    if (comcode != null)
-                    {
-                        num = comcode.Split(',').Length;
-                    }
-
-
-
-                    foreach (var da in sociedades)
-                    {
-                        try
-                        {
-                            us.SOCIEDADs.Remove(da);
-                            db.Entry(us).State = EntityState.Modified;
-                            db.SaveChanges();
-                        }
-                        catch (Exception e)
-                        {
-                            db.Entry(us).State = EntityState.Detached;
-                        }
-                    }
-
+                  
                     us.ID = uSUARIO.ID;
                     us.PASS = uSUARIO.PASS;
                     us.NOMBRE = uSUARIO.NOMBRE;
@@ -411,108 +288,62 @@ namespace TAT001.Controllers.Catalogos
                     us.ACTIVO = true;
                     us.EMAIL = uSUARIO.EMAIL;
                     us.SPRAS_ID = uSUARIO.SPRAS_ID;
-                    us.PUESTO_ID = uSUARIO.PUESTO_ID;
+                    if (ucl.Length == 0 && usf.Length == 0) {
+                        us.PUESTO_ID = uSUARIO.PUESTO_ID;
+                    }
                     us.MANAGER = uSUARIO.MANAGER;
                     us.BACKUP_ID = uSUARIO.BACKUP_ID;
                     us.BUNIT = uSUARIO.BUNIT;
 
-                    if (re != null)
-                    {
+                  
+                        us.BUNIT = socSelected[0];
                         db.Entry(us).State = EntityState.Modified;
                         db.SaveChanges();
 
-                        try
+                    //Se eliminan Sociedades.
+                    us = db.USUARIOs.Include(x => x.SOCIEDADs).First(x => x.ID == uSUARIO.ID);
+                    List<SOCIEDAD> sociedadesU = sociedadesDao.ListaSociedades(TATConstantes.ACCION_LISTA_SOCPORUSUARIO, null, uSUARIO.ID);
+                    foreach (SOCIEDAD sociedadU in sociedadesU)
+                    {
+                        if (!socSelected.Contains(sociedadU.BUKRS))
                         {
-                            SOCIEDAD soc = db.SOCIEDADs.Where(x => x.BUKRS == us.BUNIT).First();
-                            us.SOCIEDADs.Add(soc);
-                            db.Entry(us).State = EntityState.Modified;
-                            db.SaveChanges();
+                            us.SOCIEDADs.Remove(us.SOCIEDADs.First(x => x.BUKRS == sociedadU.BUKRS));
+                            //Se eliminan Clientes
+                            db.USUARIOFs.RemoveRange(db.USUARIOFs.Where(x => x.USUARIO_ID == uSUARIO.ID && x.CLIENTE.LAND == sociedadU.LAND));
                         }
-                        catch (Exception e)
+                    }
+                    db.Entry(us).State = EntityState.Modified;
+                    db.SaveChanges();
+
+                    foreach (string sociedad_id in socSelected)
+                    {
+                        USUARIO usS = db.USUARIOs.Include(x => x.SOCIEDADs).First(x => x.ID == uSUARIO.ID);
+                        SOCIEDAD soc = db.SOCIEDADs.FirstOrDefault(x => x.BUKRS == sociedad_id);
+                        if (!usS.SOCIEDADs.Any(x => x.BUKRS == sociedad_id) && soc != null)
                         {
-                            db.Entry(us).State = EntityState.Detached;
+                            usS.SOCIEDADs.Add(soc);
                         }
 
-                    }
-                    else
-                    {
-                        string[] codes = new string[num];
-                        if (comcode == null)
-                        {
-                            codes = uSUARIO.BUNIT.Split(',');
-                        }
-                        else
-                        {
-                            codes = comcode.Split(',');
-                        }
-                        us.BUNIT = codes[0];
-                        db.Entry(us).State = EntityState.Modified;
+                        db.Entry(usS).State = EntityState.Modified;
                         db.SaveChanges();
-
-                        foreach (var da in codes)
-                        {
-                            try
-                            {
-                                SOCIEDAD soc = db.SOCIEDADs.Where(x => x.BUKRS == da).First();
-                                us.SOCIEDADs.Add(soc);
-                                db.Entry(us).State = EntityState.Modified;
-                                db.SaveChanges();
-                            }
-                            catch (Exception e)
-                            {
-                                db.Entry(us).State = EntityState.Detached;
-                            }
-                        }
                     }
-                    if (userz.PUESTO_ID == 1 || userz.PUESTO_ID == 8)
-                    {
+
+                
                         return RedirectToAction("Index");
-                    }
-                    else
-                    {
-                        return RedirectToAction("Details", new { id = uSUARIO.ID });
-                    }
+                   
                 }
                 else
                 {
                     ViewBag.Error = "El correo no es correcto";
                 }
             }
-            //using (TAT001Entities db = new TAT001Entities())
-            //{
-            //    string u = User.Identity.Name;
-            //    //string u = "admin";
-            //    var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-            //    ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-            //    ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-            //    ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
-            //    ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            //    ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            //    ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-            //    pagina = pagina - 1;
-            //    ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-
-            //    try
-            //    {
-            //        string p = Session["pais"].ToString();
-            //        ViewBag.pais = p + ".png";
-            //    }
-            //    catch
-            //    {
-            //        //ViewBag.pais = "mx.png";
-            //        //return RedirectToAction("Pais", "Home");
-            //    }
-            //    Session["spras"] = user.SPRAS_ID;
-            //}
-            ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "ID", uSUARIO.SPRAS_ID);
-            ViewBag.PUESTO_ID = new SelectList(db.PUESTOTs.Where(a => a.SPRAS_ID.Equals(spra)), "PUESTO_ID", "TXT50", uSUARIO.PUESTO_ID);
-            ViewBag.BUNIT = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS", uSUARIO.BUNIT);
-            ViewBag.ROLES = db.ROLTs.Where(a => a.SPRAS_ID.Equals(spra));
+            
             return View(uSUARIO);
         }
 
-        // GET: Usuarios/Delete/5
-        public ActionResult Delete(string id)
+
+        // GET: Usuarios/Details/5
+        public ActionResult Details(string usuario_id)
         {
             string uz = User.Identity.Name;
             var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
@@ -521,48 +352,43 @@ namespace TAT001.Controllers.Catalogos
                 FormsAuthentication.SignOut();
                 return RedirectToAction("Index", "Home");
             }
-            //int pagina = 603; //ID EN BASE DE DATOS
-            //using (TAT001Entities db = new TAT001Entities())
-            //{
-            //    string u = User.Identity.Name;
-            //    //string u = "admin";
-            //    var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-            //    ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-            //    ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-            //    ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
-            //    ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            //    ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            //    ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-            //    pagina = pagina - 1;
-            //    ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-
-            //    try
-            //    {
-            //        string p = Session["pais"].ToString();
-            //        ViewBag.pais = p + ".png";
-            //    }
-            //    catch
-            //    {
-            //        //ViewBag.pais = "mx.png";
-            //        //return RedirectToAction("Pais", "Home");
-            //    }
-            //    Session["spras"] = user.SPRAS_ID;
-            //}
-            if (id == null)
+            int pagina = 604; //ID EN BASE DE DATOS
+            FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
+            if (usuario_id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            USUARIO uSUARIO = db.USUARIOs.Find(id);
+            USUARIO uSUARIO = db.USUARIOs.Find(usuario_id);
+            ViewBag.nivelUsuario = userz.PUESTO_ID;
+            ViewBag.idUsuario = userz.ID;
+            string spra = ViewBag.spras_id;
             if (uSUARIO == null)
             {
                 return HttpNotFound();
             }
+            var ni = (from x in db.PUESTOTs
+                      join a in db.PUESTOes on x.PUESTO_ID equals a.ID
+                      where x.PUESTO_ID == uSUARIO.PUESTO_ID && x.SPRAS_ID.Equals(spra) && a.ACTIVO == true
+                      select x.PUESTO_ID).FirstOrDefault();
+            ViewBag.PUESTO_ID1 = (from x in db.DET_APROBH where x.PUESTOC_ID == ni && x.ACTIVO select x.SOCIEDAD_ID).FirstOrDefault();
+            List<SOCIEDAD> sociedades = db.USUARIOs.Where(a => a.ID.Equals(uSUARIO.ID)).FirstOrDefault().SOCIEDADs.ToList();
+            string[] sociedad = new string[sociedades.Count];
+            for (int i = 0; i < sociedades.Count; i++)
+            {
+                sociedad[i] = sociedades[i].BUKRS;
+            }
+            ViewBag.ID = uSUARIO.ID;
+            ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "DESCRIPCION", uSUARIO.SPRAS_ID);
+            ViewBag.PUESTO_ID = new SelectList(db.PUESTOTs.Where(a => a.SPRAS_ID.Equals(spra)), "PUESTO_ID", "TXT50", uSUARIO.PUESTO_ID);
+            ViewBag.BUNIT = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS", uSUARIO.BUNIT);
+            ViewBag.BUNIT1 = sociedad;
+            ViewBag.ROLES = db.ROLTs.Where(a => a.SPRAS_ID.Equals(spra));
+            ViewBag.SOCIEDADES = db.SOCIEDADs;
+            ViewBag.PAISES = db.PAIS.Where(a => a.SOCIEDAD_ID != null && a.ACTIVO).ToList();
+            ViewBag.APROBADORES = db.DET_APROB.Where(a => a.BUKRS.Equals("KCMX") && a.PUESTOC_ID == uSUARIO.PUESTO_ID).ToList();
             return View(uSUARIO);
         }
-
-        // POST: Usuarios/Delete/5
-        [HttpPost]
-        //[ValidateAntiForgeryToken]
+        // GET: Usuarios/Delete/5
         public ActionResult DeleteConfirmed(string id)
         {
             string uz = User.Identity.Name;
@@ -591,31 +417,6 @@ namespace TAT001.Controllers.Catalogos
             }
             int pagina = 605; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
-            //using (TAT001Entities db = new TAT001Entities())
-            //{
-            //    string u = User.Identity.Name;
-            //    //string u = "admin";
-            //    var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-            //    ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-            //    ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-            //    ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
-            //    ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            //    ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            //    ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-            //    ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-
-            //    try
-            //    {
-            //        string p = Session["pais"].ToString();
-            //        ViewBag.pais = p + ".png";
-            //    }
-            //    catch
-            //    {
-            //        //ViewBag.pais = "mx.png";
-            //        //return RedirectToAction("Pais", "Home");
-            //    }
-            //    Session["spras"] = user.SPRAS_ID;
-            //}
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -647,11 +448,13 @@ namespace TAT001.Controllers.Catalogos
             }
             var usu = User.Identity.Name;
             USUARIO usu2 = db.USUARIOs.Where(x => x.ID.Equals(usu)).FirstOrDefault();
-            Pass pass = new Pass();
-            pass.ID = Request.Form.Get("ID");
-            pass.pass = Request.Form.Get("pass");
-            pass.npass1 = Request.Form.Get("npass1");
-            pass.npass2 = Request.Form.Get("npass2");
+            Pass pass = new Pass
+            {
+                ID = Request.Form.Get("ID"),
+                pass = Request.Form.Get("pass"),
+                npass1 = Request.Form.Get("npass1"),
+                npass2 = Request.Form.Get("npass2")
+            };
             USUARIO us = db.USUARIOs.Find(pass.ID);
             Cryptography c = new Cryptography();
             string pass_a = c.Decrypt(us.PASS);
@@ -664,7 +467,7 @@ namespace TAT001.Controllers.Catalogos
                         us.PASS = c.Encrypt(pass.npass1);
                         db.Entry(us).State = EntityState.Modified;
                         db.SaveChanges();
-                        return RedirectToAction("Details", new { id = us.ID });
+                        return RedirectToAction("Details", new { usuario_id = us.ID });
                     }
                 }
                 else
@@ -678,296 +481,9 @@ namespace TAT001.Controllers.Catalogos
             }
             int pagina = 605; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
-            //using (TAT001Entities db = new TAT001Entities())
-            //{
-            //    string u = User.Identity.Name;
-            //    //string u = "admin";
-            //    var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-            //    ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-            //    ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-            //    ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
-            //    ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            //    ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            //    ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-            //    ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-
-            //    try
-            //    {
-            //        string p = Session["pais"].ToString();
-            //        ViewBag.pais = p + ".png";
-            //    }
-            //    catch
-            //    {
-            //        //ViewBag.pais = "mx.png";
-            //        //return RedirectToAction("Pais", "Home");
-            //    }
-            //    Session["spras"] = user.SPRAS_ID;
-            //}
             return View(pass);
         }
-        public ActionResult AgregarRol(string id)
-        {
-            string uz = User.Identity.Name;
-            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
-            if (!usuValidateLogin.validaUsuario(userz.ID))
-            {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Home");
-            }
-            int pagina = 603; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
-            {
-                string u = User.Identity.Name;
-                //string u = "admin";
-                var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
-                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                pagina = pagina - 1;
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-
-                try
-                {
-                    string p = Session["pais"].ToString();
-                    ViewBag.pais = p + ".png";
-                }
-                catch
-                {
-                    //ViewBag.pais = "mx.png";
-                    //return RedirectToAction("Pais", "Home");
-                }
-                Session["spras"] = user.SPRAS_ID;
-            }
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            USUARIO uSUARIO = db.USUARIOs.Find(id);
-            if (uSUARIO == null)
-            {
-                return HttpNotFound();
-            }
-            //ViewBag.PUESTO_ID = new SelectList(db.PUESTOes, "ID", "ID", uSUARIO.PUESTO_ID);
-            string spra = Session["spras"].ToString();
-            ViewBag.SPRAS_ID = new SelectList(db.SPRAS, "ID", "ID", uSUARIO.SPRAS_ID);
-            ViewBag.PUESTO_ID = new SelectList(db.PUESTOTs.Where(a => a.SPRAS_ID.Equals(spra)), "PUESTO_ID", "TXT50", uSUARIO.PUESTO_ID);
-            ViewBag.BUNIT = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS", uSUARIO.BUNIT);
-            ViewBag.ROLES = db.ROLTs.Where(a => a.SPRAS_ID.Equals(spra));
-            ViewBag.SOCIEDADES = db.SOCIEDADs;
-            ViewBag.PAISES = db.PAIS;
-            return View(uSUARIO);
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult AgregarRol(USUARIO u)
-        {
-            string uz = User.Identity.Name;
-            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
-            if (!usuValidateLogin.validaUsuario(userz.ID))
-            {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Home");
-            }
-            int rol = Int32.Parse(Request.Form["txt_rol"].ToString());
-            string pais = Request.Form["txt_pai"].ToString().Split('-')[0];
-            string vkorg = Request.Form["txt_vkor"].ToString();
-            string vtweg = Request.Form["txt_vtwe"].ToString();
-            string spart = Request.Form["txt_spar"].ToString();
-            string kunnr = Request.Form["txt_clie"].ToString();
-            string soc = Request.Form["txt_pai"].ToString().Split('-')[1];
-
-            //MIEMBRO m = db.MIEMBROS.Where(a => a.USUARIO_ID.Equals(u.ID) & a.ROL_ID == rol).FirstOrDefault();
-            //if (m == null)
-            //{
-            //    m = new MIEMBRO();
-            //    m.ROL_ID = rol;
-            //    m.USUARIO_ID = u.ID;
-            //    m.ACTIVO = true;
-            //    db.MIEMBROS.Add(m);
-            //}
-
-            ////List<DET_APROB> dd = db.DET_APROB.Where(a => a.PUESTOC_ID == u.PUESTO_ID & a.BUKRS.Equals(soc)).ToList();
-            //GAUTORIZACION ga = new GAUTORIZACION();
-            //ga.LAND = pais;
-            //ga.BUKRS = soc;
-            //ga.CLAVE = pais;
-            //ga.NOMBRE = soc;
-            ////db.GAUTORIZACIONs.Add(ga);
-            //USUARIO user = db.USUARIOs.Find(u.ID);
-            //user.GAUTORIZACIONs.Add(ga);
-            //db.Entry(user).State = EntityState.Modified;
-            //db.SaveChanges();
-
-            if (vkorg != "" && vtweg != "" && spart != "")
-            {
-
-                DET_APROBH dh = db.DET_APROBH.Where(a => a.SOCIEDAD_ID.Equals(soc) & a.PUESTOC_ID == u.PUESTO_ID).OrderByDescending(a => a.VERSION).FirstOrDefault();
-                if (dh != null)
-                {
-                    DET_AGENTEH dah = new DET_AGENTEH();
-                    //dah.SOCIEDAD_ID = dh.SOCIEDAD_ID;
-                    //dah.PUESTOC_ID = (int)u.PUESTO_ID;
-                    //dah.VERSION = dh.VERSION;
-                    //dah.AGROUP_ID = (int)ga.ID;
-                    //dah.USUARIOC_ID = u.ID;
-                    //dah.ACTIVO = true;
-                    //db.DET_AGENTEH.Add(dah);
-                    //db.SaveChanges();
-
-                    List<DET_APROBP> ddp = db.DET_APROBP.Where(a => a.SOCIEDAD_ID.Equals(soc) & a.PUESTOC_ID == u.PUESTO_ID & a.VERSION == dh.VERSION).ToList();
-                    foreach (DET_APROBP dp in ddp)
-                    {
-                        DET_AGENTEC dap = new DET_AGENTEC();
-                        dap.USUARIOC_ID = u.ID;
-                        dap.PAIS_ID = pais;
-                        dap.VKORG = vkorg;
-                        dap.VTWEG = vtweg;
-                        dap.SPART = spart;
-                        dap.KUNNR = kunnr;
-                        dap.VERSION = dah.VERSION;
-                        dap.POS = dp.POS;
-                        dap.USUARIOA_ID = Request.Form["txt_p-" + dp.POS].ToString();
-                        try
-                        {
-                            string pre = Request.Form["txt_presup-" + dp.POS].ToString();
-                            if (pre == "on")
-                                dap.PRESUPUESTO = true;
-
-                        }
-                        catch
-                        {
-                            dap.PRESUPUESTO = false;
-                        }
-                        try
-                        {
-                            string mon = Request.Form["txt_monto-" + dp.POS].ToString();
-                            if (mon != "")
-                                dap.MONTO = decimal.Parse(mon);
-
-                        }
-                        catch
-                        {
-                            dap.MONTO = null;
-                        }
-
-                        //dap.PRESUPUESTO = dp.PRESUPUESTO;
-                        dap.ACTIVO = true;
-                        db.DET_AGENTEC.Add(dap);
-                        //dgp.Add(dap);
-
-                        ////string us = dap.USUARIOA_ID;
-                        ////USUARIO uu = db.USUARIOs.Find(us);
-                        ////uu.GAUTORIZACIONs.Add(ga);
-                        ////db.Entry(uu).State = EntityState.Modified;
-
-                        ////MIEMBRO mi = db.MIEMBROS.Where(a => a.USUARIO_ID.Equals(uu.ID) & a.ROL_ID == 2).FirstOrDefault();
-                        ////if (mi == null)
-                        ////{
-                        ////    mi = new MIEMBRO();
-                        ////    mi.ROL_ID = 2;
-                        ////    mi.USUARIO_ID = uu.ID;
-                        ////    mi.ACTIVO = true;
-                        ////    db.MIEMBROS.Add(mi);
-                        ////}
-
-                    }
-
-                    TAX_LAND tl = db.TAX_LAND.Where(a => a.SOCIEDAD_ID.Equals(soc) & a.ACTIVO == true).FirstOrDefault();
-                    if (tl != null)
-                    {
-                        DET_TAXEO dt = new DET_TAXEO();
-                        dt.SOCIEDAD_ID = soc;
-                        dt.PAIS_ID = pais;
-                        dt.PUESTOC_ID = dah.PUESTOC_ID;
-                        dt.USUARIOC_ID = dah.USUARIOC_ID;
-                        dt.VERSION = dah.VERSION;
-                        dt.PUESTOA_ID = 9;
-                        dt.USUARIOA_ID = Request.Form["txt_p-9"].ToString();
-                        dt.ACTIVO = true;
-                        db.DET_TAXEO.Add(dt);
-                    }
-
-                    db.SaveChanges();
-                }
-            }
-            return RedirectToAction("Details", new { id = u.ID });
-
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult ModificarRol(USUARIO u)
-        {
-            string uz = User.Identity.Name;
-            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
-            if (!usuValidateLogin.validaUsuario(userz.ID))
-            {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Home");
-            }
-            //int rol = Int32.Parse(Request.Form["txt_rol"].ToString());
-            string pais = Request.Form["item.PAIS_ID"].ToString();
-            string vkorg = Request.Form["item.VKORG"].ToString();
-            string vtweg = Request.Form["item.VTWEG"].ToString();
-            string spart = Request.Form["item.SPART"].ToString();
-            string kunnr = Request.Form["item.KUNNR"].ToString();
-
-            //DET_AGENTEH dh = db.DET_AGENTEH.Where(a => a.SOCIEDAD_ID.Equals(soc) & a.PUESTOC_ID == u.PUESTO_ID & a.AGROUP_ID == (agroup)).OrderByDescending(a => a.VERSION).FirstOrDefault();
-            DET_AGENTEC dh = db.DET_AGENTEC.Where(a => a.USUARIOC_ID.Equals(u.ID) & a.PAIS_ID.Equals(pais) & a.VKORG.Equals(vkorg) & a.VTWEG.Equals(vtweg) & a.SPART.Equals(spart) & a.KUNNR.Equals(kunnr) & a.POS == 1 & a.ACTIVO == true).OrderByDescending(a => a.VERSION).FirstOrDefault();
-            if (dh != null)
-            {
-
-                List<DET_AGENTEC> ddp = db.DET_AGENTEC.Where(a => a.USUARIOC_ID.Equals(u.ID) & a.PAIS_ID.Equals(pais) & a.VKORG.Equals(vkorg) & a.VTWEG.Equals(vtweg)
-                                        & a.SPART.Equals(spart) & a.KUNNR.Equals(kunnr) & a.VERSION == dh.VERSION & a.ACTIVO == true).ToList();
-                foreach (DET_AGENTEC dp in ddp)
-                {
-                    //DET_AGENTEP dap = new DET_AGENTEP();
-                    //dap.SOCIEDAD_ID = dh.SOCIEDAD_ID;
-                    //dap.PUESTOC_ID = dh.PUESTOC_ID;
-                    //dap.VERSION = dh.VERSION;
-                    //dap.AGROUP_ID = dh.AGROUP_ID;
-                    //dap.POS = dp.POS;
-                    //dap.PUESTOA_ID = dp.PUESTOA_ID;
-                    dp.USUARIOA_ID = Request.Form[pais + "-" + kunnr + "-" + dp.POS].ToString();
-                    try
-                    {
-                        string isMonto = Request.Form[pais + "-" + kunnr + "-" + dp.POS + "-IsMonto"].ToString();
-                        string monto = Request.Form[pais + "-" + kunnr + "-" + dp.POS + "-monto"].ToString();
-                        if (monto != "")
-                            dp.MONTO = decimal.Parse(monto);
-                        else
-                            dp.MONTO = null;
-                    }
-                    catch
-                    {
-                        dp.MONTO = null;
-                    }
-                    try
-                    {
-                        string presu = Request.Form[pais + "-" + kunnr + "-" + dp.POS + "-presup"].ToString();
-                        if (presu == "on")
-                            dp.PRESUPUESTO = true;
-                        else
-                            dp.PRESUPUESTO = false;
-                    }
-                    catch
-                    {
-                        dp.PRESUPUESTO = false;
-                    }
-                    dp.MONTO = dp.MONTO;
-                    dp.PRESUPUESTO = dp.PRESUPUESTO;
-                    dp.ACTIVO = true;
-                    db.Entry(dp).State = EntityState.Modified;
-
-                }
-                db.SaveChanges();
-            }
-            return RedirectToAction("Details", new { id = u.ID });
-
-        }
+        
 
         protected override void Dispose(bool disposing)
         {
@@ -1059,8 +575,6 @@ namespace TAT001.Controllers.Catalogos
             string[,] tabla1 = new string[rowst, 11];
             string[,] admins = new string[rowst, 2];
             string[,] usuariosoc = new string[rowst, 2];
-            //string[] gua = new string[rowst];
-            //string[] gua1 = new string[rowst];
             string p = FnCommon.ObtenerSprasId(db,User.Identity.Name) ;
             string usuario_id = "";
             int puesto_id = 0;
@@ -1111,7 +625,7 @@ namespace TAT001.Controllers.Catalogos
                     
                 }
                 //Comprobacion de la asignacion de varios co code
-                if (cont3 > 0 && us.BUNIT != "" && (us.KUNNR == "" || us.KUNNR != "") && us.PUESTO_ID == "" && us.ID == "" && us.NOMBRE == "" && us.APELLIDO_P == "" && us.APELLIDO_M == "" && us.EMAIL == "" && us.SPRAS_ID == "" && us.PASS == "")
+                if ((cont3 > 0 || (cont2 > 0 && puesto_id == 8)) && us.BUNIT != "" && (us.KUNNR == "" || us.KUNNR != "") && us.PUESTO_ID == "" && us.ID == "" && us.NOMBRE == "" && us.APELLIDO_P == "" && us.APELLIDO_M == "" && us.EMAIL == "" && us.SPRAS_ID == "" && us.PASS == "")
                     {
                         vus = true;
                         sel = "super";
@@ -1155,7 +669,6 @@ namespace TAT001.Controllers.Catalogos
                             clientes.Add(k);
                             client[cont2, 0] = us.KUNNR.ToString();
                             tablas[cont2, 0] = da.KUNNR.ToString();
-                            //gua[cont2] = da.KUNNR.ToString();
                         }
                         if (!us.KUNNRX)
                         {
@@ -1394,7 +907,6 @@ namespace TAT001.Controllers.Catalogos
                             sociedad.Add(b);
                             admins[cont3, 0] = da.BUNIT.ToString();
                             tabla1[cont3, 1] = da.BUNIT.ToString();
-                            //gua1[cont3] = da.BUNIT.ToString();
                             usuariosoc[cont4, 0] = da.BUNIT.ToString();
                         }
                         if (!us.BUNITX)
@@ -1782,172 +1294,7 @@ namespace TAT001.Controllers.Catalogos
                 throw new NotImplementedException();
             }
         }
-
-        [HttpPost]
-        public JsonResult Agregar()
-        {
-            string uz = User.Identity.Name;
-            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
-            if (!usuValidateLogin.validaUsuario(userz.ID))
-            {
-                FormsAuthentication.SignOut();
-                return Json(new
-                {
-                    redirectUrl = Url.Action("Index", "Home"),
-                    isRedirect = true
-                });
-            }
-            string[,] tablas = (string[,])Session["tablas"];
-            int rowst = (int)Session["rowst"];
-            string[,] tabla1 = (string[,])Session["tabla1"];
-            string[,] admins = (string[,])Session["admins"];
-            string[,] usuariosoc = (string[,])Session["usuariosoc"];
-            int rows1 = (int)Session["rows1"];
-            List<DET_AGENTE1> ld = new List<DET_AGENTE1>();
-            List<DET_AGENTE1> ld1 = new List<DET_AGENTE1>();
-            ld = ObjAList2(tablas, rowst);
-            int cont = 0;
-
-            foreach (DET_AGENTE1 da in ld)
-            {
-                USUARIO us = new USUARIO();
-
-                if (da.mess == null || da.mess == "")
-                {
-                    if (da.ID != null)
-                    {
-                        ////---------------------------- USUARIO
-                        try
-                        {
-                            us.ID = da.ID.Trim();
-                            us.PASS = da.PASS;
-                            us.NOMBRE = da.NOMBRE;
-                            us.APELLIDO_P = da.APELLIDO_P;
-                            us.APELLIDO_M = da.APELLIDO_M;
-                            us.EMAIL = da.EMAIL;
-                            us.SPRAS_ID = da.SPRAS_ID;
-                            us.ACTIVO = true;
-                            us.PUESTO_ID = da.PUESTO_ID;
-                            us.MANAGER = null;
-                            us.BACKUP_ID = null;
-                            us.BUNIT = da.BUNIT;
-
-                            db.USUARIOs.Add(us);
-                            db.SaveChanges();
-                            cont++;
-                        }
-                        catch (Exception e)
-                        {
-                        }
-                    }
-                }
-            }
-
-            //List<DET_AGENTE1> ld1 = new List<DET_AGENTE1>();
-            ld1 = ObjAList3();
-            string usuario_id = null;
-            foreach (DET_AGENTE1 da in ld1)
-            {
-                if (!String.IsNullOrEmpty(da.ID))
-                {
-                    usuario_id = da.ID;
-                }
-                USUARIOF uf = new USUARIOF();
-
-                if (da.mess == null || da.mess == "")
-                {
-                    ////---------------------------- USUARIOF
-                    try
-                    {
-                        uf.USUARIO_ID = usuario_id;
-                        uf.VKORG = da.VKORG;
-                        uf.VTWEG = da.VTWEG;
-                        uf.SPART = da.SPART;
-                        uf.KUNNR = da.KUNNR;
-                        uf.ACTIVO = true;
-                        uf.USUARIOC_ID = null;
-                        uf.FECHAC = DateTime.Today;
-                        uf.USUARIOM_ID = null;
-                        uf.FECHAM = null;
-
-                        db.USUARIOFs.Add(uf);
-                        db.SaveChanges();
-                    }
-                    catch (Exception e)
-                    {
-                    }
-                }
-            }
-
-            ld = ObjAList2(tabla1, rows1);
-            foreach (DET_AGENTE1 da in ld)
-            {
-                USUARIO us = new USUARIO();
-
-                if (da.mess == null || da.mess == "")
-                {
-                    if (da.ID != null && !db.USUARIOs.Any(x=>x.ID==da.ID))
-                    {
-                        try
-                        {
-                            us.ID = da.ID.Trim();
-                            us.PASS = da.PASS;
-                            us.NOMBRE = da.NOMBRE;
-                            us.APELLIDO_P = da.APELLIDO_P;
-                            us.APELLIDO_M = da.APELLIDO_M;
-                            us.EMAIL = da.EMAIL;
-                            us.SPRAS_ID = da.SPRAS_ID;
-                            us.ACTIVO = true;
-                            us.PUESTO_ID = da.PUESTO_ID;
-                            us.MANAGER = null;
-                            us.BACKUP_ID = null;
-                            us.BUNIT = da.BUNIT;
-
-                            db.USUARIOs.Add(us);
-                            db.SaveChanges();
-                            cont++;
-                        }
-                        catch (Exception e)
-                        {
-                        }
-                    }
-                }
-            }
-
-            ////---------------------------- Co Codes
-            ld = ObjAList4();
-            usuario_id = null;
-            foreach (DET_AGENTE1 da in ld)
-            {
-                if (!String.IsNullOrEmpty(da.ID))
-                {
-                     usuario_id = da.ID;
-                }
-                USUARIO us = db.USUARIOs.Where(x => x.ID == usuario_id).First();
-
-                if (da.mess == null || da.mess == "")
-                {
-                    try
-                    { 
-                        SOCIEDAD soc = db.SOCIEDADs.Where(x => x.BUKRS == da.BUNIT).First();
-                        if (!us.SOCIEDADs.Any(x => x.BUKRS == da.BUNIT))
-                        {
-                            us.SOCIEDADs.Add(soc);
-                        }
-
-                        db.Entry(us).State = EntityState.Modified;
-                        db.SaveChanges();
-                        cont++;
-                    }
-                    catch (Exception e)
-                    {
-                    }
-                }
-            }
-
-            JsonResult jl = Json(cont, JsonRequestBehavior.AllowGet);
-            return jl;
-        }
+        
 
         private List<DET_AGENTE1> ObjAList2(string [,] dt, int rowsc)
         {
@@ -2021,17 +1368,17 @@ namespace TAT001.Controllers.Catalogos
                     doc.KUNNR = dt[i, 0];
                     doc.KUNNR = completa(doc.KUNNR, 10);
 
-                    CLIENTE u = clientes.Where(x => x.KUNNR.Equals(doc.KUNNR)).FirstOrDefault();
+                    CLIENTE u = clientes.FirstOrDefault(x => x.KUNNR.Equals(doc.KUNNR));
                     if (u == null)
                     {
-                        u = db.CLIENTEs.Where(cc => cc.KUNNR.Equals(doc.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
+                        u = db.CLIENTEs.Where(cc => cc.KUNNR.Equals(doc.KUNNR) && cc.ACTIVO).FirstOrDefault();
                         if (u == null)
                             doc.VKORG = null;
                         else
                             clientes.Add(u);
                     }
 
-                    CLIENTE c = clientes.Where(cc => cc.KUNNR.Equals(doc.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
+                    CLIENTE c = clientes.FirstOrDefault(cc => cc.KUNNR.Equals(doc.KUNNR) && cc.ACTIVO);
                     if (c != null)
                     {
                         doc.VKORG = c.VKORG;
@@ -2043,7 +1390,7 @@ namespace TAT001.Controllers.Catalogos
                         doc.VKORG = null;
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     doc.KUNNR = null;
                 }
@@ -2051,7 +1398,7 @@ namespace TAT001.Controllers.Catalogos
                 {
                     doc.ID = dt[i, 1];
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     doc.ID = null;
                 }
@@ -2149,8 +1496,6 @@ namespace TAT001.Controllers.Catalogos
             int cont2 = 0;
             int cont3 = 0;
             int cont4 = 0;
-            //string[] gua1 = new string[rowst];
-            //string[] gua = new string[rowst];
             string[] IDs = new string[rowst];
             string p = FnCommon.ObtenerSprasId(db,User.Identity.Name);
             string usuario_id = "";
@@ -2205,7 +1550,7 @@ namespace TAT001.Controllers.Catalogos
                         
                     }
                     // Comprobacion de la asignacion de varios co code
-                    if (cont3 > 0  && us.BUNIT != "" && (us.KUNNR == "" || us.KUNNR != "") && us.PUESTO_ID == "" && us.ID == "" && us.NOMBRE == "" && us.APELLIDO_P == "" && us.APELLIDO_M == "" && us.EMAIL == "" && us.SPRAS_ID == "" && us.PASS == "")
+                    if ((cont3 > 0 || (cont2>0 && puesto_id == 8)) && us.BUNIT != "" && (us.KUNNR == "" || us.KUNNR != "") && us.PUESTO_ID == "" && us.ID == "" && us.NOMBRE == "" && us.APELLIDO_P == "" && us.APELLIDO_M == "" && us.EMAIL == "" && us.SPRAS_ID == "" && us.PASS == "")
                         {
                             vus = true;
                             sel = "super";
@@ -2213,11 +1558,11 @@ namespace TAT001.Controllers.Catalogos
                     }
 
                     // Validacion del tipo de usuario
-                    if (((re != null && re != "") ) || (puesto_id == 8 && us.KUNNR != ""))
+                    if ((re != null && re != "")  || (puesto_id == 8 && us.KUNNR != ""))
                     {
                         sel = "venta";
                     }
-                    else if ((re == null || re == "") )
+                    else if (re == null || re == "")
                     {
                         sel = "super";
                     }
@@ -2249,7 +1594,6 @@ namespace TAT001.Controllers.Catalogos
                                 clientes.Add(k);
                                 client[cont2, 0] = us.KUNNR.ToString();
                                 tablas[cont2, 0] = da.KUNNR.ToString();
-                                //gua[cont2] = da.KUNNR.ToString();
                             }
                             if (!us.KUNNRX)
                             {
@@ -2490,7 +1834,6 @@ namespace TAT001.Controllers.Catalogos
                                 sociedad.Add(b);
                                 admins[cont3, 0] = da.BUNIT.ToString();
                                 tabla1[cont3, 1] = da.BUNIT.ToString();
-                                //gua1[cont3] = da.BUNIT.ToString();
                                 usuariosoc[cont4, 0] = da.BUNIT.ToString();
                             }
                             if (!us.BUNITX)
@@ -2888,7 +2231,6 @@ namespace TAT001.Controllers.Catalogos
                             {
                                 AgregarUsuario(ref rowst, ref cc, u, i, j, sociedadU);
                                 i++;
-                                j++;
                             }
                             
                         }
@@ -2934,20 +2276,23 @@ namespace TAT001.Controllers.Catalogos
             JsonResult jl = Json(cc, JsonRequestBehavior.AllowGet);
             return jl;
         }
-         void AgregarUsuario(ref int  rowst,ref List<Usuarios> cc, USUARIO u , int i,int j,SOCIEDAD sociedadU=null,USUARIOF clienteU=null)
+
+        void AgregarUsuario(ref int  rowst,ref List<Usuarios> cc, USUARIO u , int i,int j,SOCIEDAD sociedadU=null,USUARIOF clienteU=null)
         {
-            Usuarios ul = new Usuarios();
-            ul.KUNNR = (clienteU!=null? clienteU.KUNNR:"");
-            ul.BUNIT = "";
-            ul.PUESTO_ID = "";
-            ul.ID = "";
-            ul.NOMBRE = "";
-            ul.APELLIDO_P = "";
-            ul.APELLIDO_M = "";
-            ul.EMAIL = "";
-            ul.SPRAS_ID = "";
-            ul.PASS = "";
-            ul.mess = "";
+            Usuarios ul = new Usuarios
+            {
+                KUNNR = (clienteU != null ? clienteU.KUNNR : ""),
+                BUNIT = "",
+                PUESTO_ID = "",
+                ID = "",
+                NOMBRE = "",
+                APELLIDO_P = "",
+                APELLIDO_M = "",
+                EMAIL = "",
+                SPRAS_ID = "",
+                PASS = "",
+                mess = ""
+            };
             var com = "";
             if (j == 0 && sociedadU!=null)
             {
@@ -3035,8 +2380,6 @@ namespace TAT001.Controllers.Catalogos
             if (Prefix == null)
                 Prefix = "";
 
-            TAT001Entities db = new TAT001Entities();
-
             var c = (from x in db.SPRAS
                      where x.ID.Contains(Prefix)
                      select new { x.ID, x.DESCRIPCION }).ToList();
@@ -3057,11 +2400,11 @@ namespace TAT001.Controllers.Catalogos
         {
             if (Prefix == null)
                 Prefix = "";
-            string p = db.USUARIOs.Find(User.Identity.Name).SPRAS_ID;
+            string spras_id = FnCommon.ObtenerSprasId(db,User.Identity.Name);
             
             var c = (from x in db.PUESTOTs
                      join a in db.PUESTOes on x.PUESTO_ID equals a.ID
-                     where x.TXT50.Contains(Prefix) & x.SPRAS_ID.Equals(p) & a.ACTIVO == true
+                     where (x.TXT50.Contains(Prefix) || x.PUESTO_ID.ToString().Contains(Prefix)) && x.SPRAS_ID.Equals(spras_id) && a.ACTIVO == true
                      group x by new { x.PUESTO_ID, x.TXT50 } into g
                      select new { ID = g.Key.PUESTO_ID, TEXTO = g.Key.TXT50 }).ToList();
 
@@ -3082,7 +2425,7 @@ namespace TAT001.Controllers.Catalogos
                 var usr = db.USUARIOs.Where(t => t.ID == b.USUARIOD_ID).SingleOrDefault();
                 usuarios.Remove(usr);
             }
-            //var ac_usuarios = usuarios.Select(x => new { x.ID, DESCRIPCION = x.ID + "-" + x.NOMBRE+" "+x.APELLIDO_P });
+
             if (Prefix == null)
                 Prefix = "";
 
@@ -3110,18 +2453,15 @@ namespace TAT001.Controllers.Catalogos
             //Se comenta el filtro de puesto y sociedad, solo buscara los usuarios activos
             var usuarios = db.USUARIOs.Where(x => x.ACTIVO == true /*&& x.PUESTO_ID == usuario.PUESTO_ID && x.BUNIT == usuario.BUNIT*/).ToList();
             usuarios.Remove(usuario);
-            var backups = db.DELEGARs.Where(t => t.USUARIO_ID == ID && t.ACTIVO==true).ToList();
-            foreach(var b in backups)
+            var backups = db.DELEGARs.Where(t => t.USUARIO_ID == ID && t.ACTIVO).ToList();
+            foreach (var b in backups)
             {
-                var usr=db.USUARIOs.Where(t => t.ID == b.USUARIOD_ID).SingleOrDefault();
+                var usr = db.USUARIOs.Where(t => t.ID == b.USUARIOD_ID).SingleOrDefault();
                 usuarios.Remove(usr);
             }
-            if(backups.Count>0)
-            ViewBag.ultimoback = Convert.ToDateTime(backups.OrderByDescending(t => t.FECHAF).First().FECHAF).AddDays(1).ToString("dd/MM/yyyy");
-            //if (usuarios.Count() > 0)
-                ViewBag.USUARIOD_ID = new SelectList(usuarios.ToList(), "ID", "ID", "");
-            //else
-              //  ViewBag.USUARIOD_ID = new SelectList(new List<string> { "No data" });
+            if (backups.Count > 0)
+                ViewBag.ultimoback = Convert.ToDateTime(backups.OrderByDescending(t => t.FECHAF).First().FECHAF).AddDays(1).ToString("dd/MM/yyyy");
+            ViewBag.USUARIOD_ID = new SelectList(usuarios.ToList(), "ID", "ID", "");
             DELEGAR usuarioback = new DELEGAR();
             usuarioback.ACTIVO = true;
             usuarioback.USUARIO_ID = ID;
@@ -3152,11 +2492,10 @@ namespace TAT001.Controllers.Catalogos
             }
             if(backups.Count>0)
             ViewBag.ultimoback = Convert.ToDateTime(backups.OrderByDescending(t => t.FECHAF).First().FECHAF).AddDays(1).ToString("dd/MM/yyyy");
-            //if (usuarios.Count() > 0)
-            ViewBag.USUARIOD_ID = new SelectList(usuarios.ToList(), "ID", "ID", "");
+              ViewBag.USUARIOD_ID = new SelectList(usuarios.ToList(), "ID", "ID", "");
             if (ModelState.IsValid)
             {
-                var ultdelegados = db.DELEGARs.Where(t => t.USUARIO_ID == delegar.USUARIO_ID && t.ACTIVO==true).OrderByDescending(t => t.FECHAF).FirstOrDefault();
+                var ultdelegados = db.DELEGARs.Where(t => t.USUARIO_ID == delegar.USUARIO_ID && t.ACTIVO).OrderByDescending(t => t.FECHAF).FirstOrDefault();
                 if (ultdelegados != null)
                 {
                     if (ultdelegados.FECHAF < delegar.FECHAI)
@@ -3172,7 +2511,7 @@ namespace TAT001.Controllers.Catalogos
                             }
                             db.DELEGARs.Add(delegado);
                             db.SaveChanges();
-                            return RedirectToAction("Details", new { id = delegar.USUARIO_ID });
+                            return RedirectToAction("Details", new { usuario_id = delegar.USUARIO_ID });
                         }
                         catch (Exception e)
                         {
@@ -3199,11 +2538,12 @@ namespace TAT001.Controllers.Catalogos
                         }
                         db.DELEGARs.Add(delegado);
                         db.SaveChanges();
-                        return RedirectToAction("Details", new { id = delegar.USUARIO_ID });
+                        return RedirectToAction("Details", new { usuario_id = delegar.USUARIO_ID });
                     }
                     catch (Exception e)
                     {
                         TempData["MessageBackupRepetido"] = "Mensaje";
+                        Log.ErrorLogApp(e,"Usuarios","AddBackup");
                         return View(delegar);
                     }
                 }
@@ -3276,7 +2616,7 @@ namespace TAT001.Controllers.Catalogos
             {
                 db.Entry(delegar).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Details", new { id = delegar.USUARIO_ID });
+                return RedirectToAction("Details", new { usuario_id = delegar.USUARIO_ID });
             }
             else
             {
@@ -3304,7 +2644,7 @@ namespace TAT001.Controllers.Catalogos
                       .Where(x => x.USUARIO_ID == id && x.USUARIOD_ID == idd && x.FECHAI == dt && x.FECHAF == dff).FirstOrDefault();
             deledit.ACTIVO = false;
             db.SaveChanges();
-            return RedirectToAction("Details", new { id=id});
+            return RedirectToAction("Details", new { usuario_id=id});
 
         }
     }

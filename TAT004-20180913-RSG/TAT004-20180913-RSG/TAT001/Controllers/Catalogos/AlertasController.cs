@@ -355,7 +355,7 @@ namespace TAT001.Controllers.Catalogos
 
             bool existeCondParaTabCampo = false;
             List<WARNING_COND> warningPs = db.WARNINGPs
-                .Where(x => x.CAMPO_ID == warningP.CAMPO_ID && x.TAB_ID == warningP.TAB_ID && x.ID != warningP.ID)
+                .Where(x => x.CAMPO_ID == warningP.CAMPO_ID && x.TAB_ID == warningP.TAB_ID && x.ID != warningP.ID && ((x.SOCIEDAD_ID ==null || x.SOCIEDAD_ID==warningP.SOCIEDAD_ID )&&(x.TSOL_ID==null || x.TSOL_ID==warningP.TSOL_ID)))
                 .Join(db.WARNING_COND, w => w.ID, wc => wc.WARNING_ID, (w, wc) => wc)
                 .ToList();
             warningPs.ForEach(x =>

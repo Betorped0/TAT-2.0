@@ -33,15 +33,6 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.ID)
         @Html.HiddenFor(model => model.PASS)
-        @Html.HiddenFor(model => model.PUESTO_ID)
-        @*<div class="input-field col s6">
-                        @Html.PasswordFor(model => model.PASS, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.LabelFor(model => model.PASS, htmlAttributes: new { @class = "control-label col-md-2" })
-                        @Html.ValidationMessageFor(model => model.PASS, "", new { @class = "text-danger" })
-                    <div class="input-field col s6">
-                        <div style="height:54px;"></div>
-                    </div>
-            </div>*@
         <div class="col l6 s12">
             <div class="card-panel">
                 <div class="row">
@@ -72,11 +63,8 @@
                         @Html.ValidationMessageFor(model => model.EMAIL, "", new { @class = "text-danger" })
                     </div>
                     <div class="input-field col s6">
-                        @*@Html.DropDownList("SPRAS_ID", null, htmlAttributes: new { @class = "select", required = true })*@
-                        @*<label id="lbl_spras">SPRAS</label>*@
-                        @Html.EditorFor(model => model.SPRAS_ID, new { htmlAttributes = new { @class = "form-control", @id = "input_idioma", required=true } })
-                        @Html.LabelFor(model => model.SPRAS_ID, htmlAttributes: new { @id = "lbl_spras" })
-                        @*@Html.ValidationMessageFor(model => model.SPRAS_ID, "", new { @class = "text-danger" })*@
+                            @Html.DropDownListFor(model => model.SPRAS_ID, (List<SelectListItem>)ViewBag.SPRAS, "")
+                            @Html.LabelFor(model => model.SPRAS_ID, htmlAttributes: new { @id = "lbl_spras" })
                     </div>
                 </div>
             </div>
@@ -85,96 +73,35 @@
             <div class="card-panel">
                 <div class="row">
                     <div class="input-field col s12">
-                        @*@Html.DropDownList("PUESTO_ID", null, htmlAttributes: new { @class = "select", @id = "txt_puestoid" })*@
                         @Html.EditorFor(model => model.PUESTO_ID, new { htmlAttributes = new { @class = "text", @id = "input_puesto", required = true } })
                         @Html.LabelFor(model => model.PUESTO_ID, htmlAttributes: new { @id = "lbl_puesto" })
                         @Html.ValidationMessageFor(model => model.PUESTO_ID, "", new { @class = "text-danger" })
                     </div>
-                    @*<div class="unico" style="display:none">
-            <div class="input-field col s12">
-                @Html.DropDownList("BUNIT", null, htmlAttributes: new { @class = "select", required = true })
-                @Html.EditorFor(model => model.BUNIT, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.LabelFor(model => model.BUNIT, htmlAttributes: new { @class = "lbl_bukrs" })
-            </div>
-        </div>*@
-                    @if (ViewBag.PUESTO_ID1 == null || ViewBag.PUESTO_ID1 == "")
-                    {
-                        <div class="cocodemul">
-                            <div class="input-field col s12">
-                                @Html.HiddenFor(model => model.SOCIEDADs)
-                                @{string jval22 = ViewBag.sociedad;
-                                    @Html.Hidden("SELECT_SOCIEDADES1", jval22)
-                                }
-                                <select multiple name="selectcocode" id="selectcocode1" required class="comcode select_all">
-                                    @try
-                                    {
-                                        foreach (var item in ViewBag.SOCIEDADES)
-                                        {
-                                            <option id="@item.BUKRS" value="@item.BUKRS">@item.BUKRS</option>
-                                        }
-                                    }
-                                    catch (Exception)
-                                    {
-                                        <option value="" id="no_opt">No hay opciones</option>
-                                    }
-                                </select>
-                                <label id="label_cocode">Co. Code</label>
-                            </div>
-                        </div>
-                        <div class="unico" style="display:none">
-                            <div class="input-field col s12">
-                                @*@Html.DropDownList("BUNIT", null, htmlAttributes: new { @class = "select", required = true })*@
-                                @Html.EditorFor(model => model.BUNIT, new { htmlAttributes = new { @class = "form-control" } })
-                                @Html.LabelFor(model => model.BUNIT, htmlAttributes: new { @class = "lbl_bukrs" })
-                                @Html.ValidationMessageFor(model => model.BUNIT, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="cocodemul" style="display:none">
-                            <div class="input-field col s12">
+                        @Html.Hidden("SELECT_SOCIEDADES1", (string)ViewBag.sociedad)
+                    <div class="cocodemul">
+                        <div class="input-field col s12">
 
-                                <select multiple name="selectcocode" id="selectcocode" class="comcode select_all">
-                                    @try
+                            <select multiple name="selectcocode" id="selectcocode" class="comcode select_all">
+                                @try
+                                {
+                                    foreach (var item in ViewBag.SOCIEDADES)
                                     {
-                                        foreach (var item in ViewBag.SOCIEDADES)
-                                        {
-                                            <option id="@item.BUKRS" value="@item.BUKRS">@item.BUKRS</option>
-                                        }
+                                        <option id="@item.BUKRS" value="@item.BUKRS">@item.BUKRS</option>
                                     }
-                                    catch (Exception)
-                                    {
-                                        <option value="" id="no_opt">No hay opciones</option>
-                                    }
-                                </select>
-                                <label id="label_cocode">Co. Code</label>
-                            </div>
+                                }
+                                catch (Exception)
+                                {
+                                    <option value="" id="no_opt">No hay opciones</option>
+                                }
+                            </select>
+                            <label id="label_cocode">Co. Code</label>
                         </div>
-                        <div class="unico">
-                            <div class="input-field col s12">
-                                @*@Html.DropDownList("BUNIT", null, htmlAttributes: new { @class = "select", required = true })*@
-                                @Html.EditorFor(model => model.BUNIT, new { htmlAttributes = new { @class = "form-control", required = true } })
-                                @Html.LabelFor(model => model.BUNIT, htmlAttributes: new { @class = "lbl_bukrs" })
-                                @Html.ValidationMessageFor(model => model.BUNIT, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                    }
+                    </div>
                 </div>
                     </div>
         </div>
-        <script>
-            var elem = document.querySelectorAll('select');
-            var options = [];
-            var instance = M.FormSelect.init(elem, options);
-        </script>
         <div class="col l6 s12">
             <div class="card-panel">
-                @*<div class="row">
-                        <div class="col s12 l12 right-align">
-                            <a class="btn" id="btn_agregarbackup" href="@Url.Action("AddBackup", new { id = Model.ID})"></a>
-                        </div>
-                    </div>*@
                 <table>
                     <thead>
                         <tr>
@@ -214,101 +141,39 @@
                 </table>
             </div>
         </div>
-        @*<div class="col l6 s12">
-                <div class="card-panel">
-                    <div class="row">
-                        <h5>Grupos</h5>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Clave</th>
-                                    <th>Solciedad</th>
-                                    <th>País</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.GAUTORIZACIONs)
-                                {
-                                    <tr>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.CLAVE)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.BUKRS)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.LAND)
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="col l6 s12">
-                <div class="card-panel">
-                    <div class="row">
-                        <h5>Roles</h5>
-                        <div class="col s12 right-align">
-                            <div class="row">
-                                <table class="table">
-                                    <thead><tr><th>Rol</th></tr></thead>
-                                    <tbody>
-                                        @foreach (var item in Model.MIEMBROS)
-                                        {
-                                            <tr>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.ROL.ROLTs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().TXT50)
-                                                </td>
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="col s12 right-align">
-                            <a class="btn modal-trigger" href="#modal1">Agregar M</a>
-                            <a class="btn modal-trigger" href="@Url.Action("AgregarRol", new { id = Model.ID })">Agregar</a>
-                        </div>
-                    </div>
-                </div>
-            </div>*@
     </div>
 
     //OCG 11/10/18 Validacion de email
     <script>
-        var elem = document.querySelectorAll('select');
-        var options = [];
-        var instance = M.FormSelect.init(elem, options);
-    </script>
-    <script>
-        var admin = "@ViewBag.admin";
-        var flujos = "@ViewBag.flujo";
-        var puesto_ID1 = "@ViewBag.PUESTO_ID1";
+        var root = "@Url.Content("~")";
+
+        //--Asignar Sociedades
         var sociedad = $("#SELECT_SOCIEDADES1").val();
         if (sociedad != null) {
             var jsval = $.parseJSON(sociedad);
             for (var i = 0; i < jsval.length; i++) {
-                var ids = "#selectcocode1 #" + jsval[i] + "";
+                var ids = "#selectcocode #" + jsval[i] + "";
                 $(ids).prop('selected', true);
             }
         }
-        if (puesto_ID1=="") {
-                        $("input.select-dropdown").trigger("click");
-                        $("input.select-dropdown").trigger("click");
-                    }
 
-                    if (admin == "no") {
-            $("#txt_puestoid").prop("disabled", true);
-            $("#selectcocode").prop("disabled", true);
-                        var elem = document.querySelectorAll('select');
-                        var instance = M.FormSelect.init(elem, []);
-                    }
+         //--Inicializar combos
+        var elem = document.querySelectorAll('select');
+        var options = [];
+        var instance = M.FormSelect.init(elem, options);
 
-                    if (flujos == "no") {
-            $("#input_puesto").prop("disabled", true);
-                    }
+        var admin = "@ViewBag.admin";
+        var flujos = "@ViewBag.flujo";
+       
+        if (admin == "no") {
+            $("#selectcocode").attr("readonly", "readonly");
+            var elem = document.querySelectorAll('select');
+            var instance = M.FormSelect.init(elem, []);
+        }
+
+        if (flujos == "no") {
+            $("#input_puesto").attr("readonly", "readonly");
+        }
 
         $("#input_puesto").attr("type", "text");
 
@@ -329,79 +194,17 @@
             return re.test(String(email).toLowerCase());
         }
 
-        $('body').on('keydown.autocomplete', '#input_idioma', function () {
+     
 
-            auto(this).autocomplete({
-            source: function (request, response) {
-                    auto.ajax({
-                    type: "POST",
-                        url: '../Idioma',
-                        dataType: "json",
-                        data: { "Prefix": request.term },
-                        success: function (data) {
-                            response(auto.map(data, function (item) {
-                                return { label: item.ID + " | " + item.DESCRIPCION, value: item.ID };
-                            }))
-                        }
-                    })
-                },
-
-                messages: {
-                noResults: '',
-                    results: function (resultsCount) { }
-                },
-
-                change: function (e, ui) {
-                    if (!(ui.item)) {
-                        e.target.value = "";
-                    }
-                },
-
-                select: function (event, ui) {
-                }
-            });
-        });
-
-        $('body').on('keydown.autocomplete', '#BUNIT', function () {
-
-            auto(this).autocomplete({
-            source: function (request, response) {
-                    auto.ajax({
-                    type: "POST",
-                        url: '../Sociedad',
-                        dataType: "json",
-                        data: { "Prefix": request.term },
-                        success: function (data) {
-                            response(auto.map(data, function (item) {
-                                return { label: item.BUKRS + " | " + item.BUTXT, value: item.BUKRS };
-                            }))
-                        }
-                    })
-                },
-
-                messages: {
-                noResults: '',
-                    results: function (resultsCount) { }
-                },
-
-                change: function (e, ui) {
-                    if (!(ui.item)) {
-                        e.target.value = "";
-                    }
-                },
-
-                select: function (event, ui) {
-                }
-            });
-        });
-
+      
+        var auto = $.noConflict();
         $('body').on('keydown.autocomplete', '#input_puesto', function () {
 
             auto(this).autocomplete({
             source: function (request, response) {
                     auto.ajax({
                     type: "POST",
-                        url: '../Nivel',
+                        url: root +'Usuarios/Nivel',
                         dataType: "json",
                         data: { "Prefix": request.term },
                         success: function (data) {
@@ -421,318 +224,29 @@
                     if (!(ui.item)) {
                         e.target.value = "";
                     }
-                    $("#PUESTO_ID").val(ui.item.value);
-                    var array = @Html.Raw(Json.Encode(@ViewBag.ROLESCC));
-                    var visible = true;
-                    for (var i = 0; i < array.length; i++){
-                        if (array[i] == parseInt(ui.item.value)) {
-                            $(".unico").css("display", "inline");
-                            $(".cocodemul").css("display", "none");
-                            $("#BUNIT").prop("required", true);
-                            $("#selectcocode").prop("required", false);
-                            $("#selectcocode1").prop("required", false);
-                            visible = false;
-                            break;
-                        }
-                    }
-                    if (visible) {
-                        $(".unico").css("display", "none");
-                        $("#BUNIT").prop("required", false);
-                        $("#selectcocode").prop("required", true);
-                        $(".cocodemul").css("display", "inline");
-                    }
                 },
 
                 select: function (event, ui) {
-                    $("#PUESTO_ID").val(ui.item.value);
-                    var array = @Html.Raw(Json.Encode(@ViewBag.ROLESCC));
-                    var visible = true;
-                    for (var i = 0; i < array.length; i++){
-                        if (array[i] == parseInt(ui.item.value)) {
-                            $(".unico").css("display", "inline");
-                            $(".cocodemul").css("display", "none");
-                            $("#BUNIT").prop("required", true);
-                            $("#selectcocode").prop("required", false);
-                            visible = false;
-                            break;
-                        }
-                    }
-                    if (visible) {
-                        $(".unico").css("display", "none");
-                        $("#BUNIT").prop("required", false);
-                        $("#selectcocode").prop("required", true);
-                        $(".cocodemul").css("display", "inline");
-                    }
                 }
             });
         });
 
-
-    </script>
-    <script>
-        var auto = $.noConflict();
-        $("#files").on("click", function () {
-            $("#files").val('');
-        });
     </script>
 }
 
 <div>
     @if (ViewBag.nivelUsuario == 1 || ViewBag.nivelUsuario == 8)
     {
-        @Html.ActionLink("Back to List", "Index", null, new { id = "lbl_regresar" })
+        @Html.ActionLink("Regresar", "Index", null, new { id = "lbl_regresar" })
     }
     else
     {
-        @Html.ActionLink("Back to List", "Index", "Home", null, new { id = "lbl_regresar" })
+        @Html.ActionLink("Regresar", "Index", "Home", null, new { id = "lbl_regresar" })
     }
 </div>
-<script>
-</script>
 @if (ViewBag.Error != null)
 {
-    @*<div class="row red-text">
-            @ViewBag.Error
-        </div>*@
-
     <script>
             M.toast({ html: '@ViewBag.Error', classes: 'red' });
     </script>
 }
-
-
-@*@using (Html.BeginForm("AgregarRol", "Usuarios"))
-    {
-        @Html.AntiForgeryToken()
-
-        <div id="modal1" class="modal modal-fixed-footer">
-            <div class="modal-content">
-                <h4>Agregar Rol</h4>
-                <div class="row">
-                    @Html.HiddenFor(model => model.ID)
-                    @Html.HiddenFor(model => model.PUESTO_ID)
-                    <div class="input-field col s6">
-                        <select id="txt_rol" name="txt_rol" required="required" onchange="cambioRol(this);">
-                            @foreach (var item in ViewBag.ROLES)
-                            {
-                                <option value="@item.ROL_ID">@item.TXT50</option>
-                            }
-                        </select>
-                        <label for="txt_rol">Rol</label>
-                    </div>
-                </div>
-                <div class="row" id="div_crea">
-                    <div class="input-field col s6">
-                        <select id="txt_soc" name="txt_soc" required="required" onchange="selSoci(this.id)">
-                            <option value=""></option>
-                            @foreach (var item in ViewBag.SOCIEDADES)
-                            {
-                                <option value="@item.BUKRS">@item.BUKRS</option>
-                            }
-                        </select>
-                        <label for="txt_soc">Sociedad</label>
-                    </div>
-                    <div class="input-field col s6">
-                        <select id="txt_pai" name="txt_pai" required="required" onchange="selSoci('txt_soc')">
-                            <option value=""></option>
-                            @foreach (var item in ViewBag.PAISES)
-                            {
-                                <option value="@item.LAND">@item.LANDX</option>
-                            }
-                        </select>
-                        <label for="txt_pai">País</label>
-                    </div>
-                    <div id="lbl_puestos"></div>
-                    @foreach (TAT001.Entities.DET_APROB item in ViewBag.APROBADORES)
-                        {
-                            <div class="input-field col s6">
-                                <input id="@("PP"+item.PUESTOA_ID)" type="text" value="" />
-                                <label for="@("PP"+item.PUESTOA_ID)"> @item.PUESTO1.PUESTOTs.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).First().TXT50</label>
-                            </div>
-                        }
-                </div>
-            </div>
-            <div class="modal-footer">
-                <input type="submit" class="modal-action modal-close btn-flat disabled" value="Agregar" id="btn_submit" />
-            </div>
-        </div>
-    }
-    <script>
-        var elem = document.querySelector('.modal');
-        var options = {
-            onCloseEnd: function () {
-                $("#lbl_puestos").empty();
-                document.getElementById("txt_soc").value = "";
-                document.getElementById("txt_pai").value = "";
-                var elem2 = document.getElementById('txt_soc');
-                var instance2 = M.FormSelect.init(elem2, []);
-                var elem2 = document.getElementById('txt_pai');
-                var instance2 = M.FormSelect.init(elem2, []);
-            }
-        };
-        var instance = M.Modal.init(elem, options);
-        var elem2 = document.getElementById('txt_rol');
-        var instance2 = M.FormSelect.init(elem2, []);
-        var elem2 = document.getElementById('txt_soc');
-        var instance2 = M.FormSelect.init(elem2, []);
-        var elem2 = document.getElementById('txt_pai');
-        var instance2 = M.FormSelect.init(elem2, []);
-
-        function cambioRol(campo) {
-            if (campo.value == "1") {
-                document.getElementById("div_crea").style.display = "initial";
-                //$("#txt_soc option[value='']").attr('selected', true);
-                document.getElementById("txt_soc").value = "";
-                document.getElementById("txt_pai").value = "";
-                var elem2 = document.getElementById('txt_soc');
-                var instance2 = M.FormSelect.init(elem2, []);
-                var elem2 = document.getElementById('txt_pai');
-                var instance2 = M.FormSelect.init(elem2, []);
-                $("#lbl_puestos").empty();
-                document.getElementById("btn_submit").className = "modal-action modal-close btn-flat disabled";
-            } else {
-                document.getElementById("div_crea").style.display = "none";
-                document.getElementById("btn_submit").className = "modal-action modal-close btn-flat";
-            }
-        }
-        var campos_p = [];
-        function selSoci(id) {
-            var campo = document.getElementById(id);
-            var pais = document.getElementById("txt_pai").value;
-            $("#lbl_puestos").empty();
-            if (pais != "") {
-                var soc = campo.value;
-                var pu = document.getElementById("txt_puestoid").value;
-                $.ajax({
-                    url: "../../Listas/Det_Aprob",
-                    type: "GET",
-                    async: false,
-                    timeout: 30000,
-                    dataType: "json",
-                    data: { bukrs: campo.value, puesto: pu, spras: '@Session["spras"].ToString()' },
-                    success: function (data) {
-                        var pp = ($.map(data, function (item) {
-                            return { label: item.TXT50, value: item.PUESTOA_ID };
-                        }))
-                        for (var i = 0; i < pp.length; i++) {
-                            //var div = "<div class='input-field col s6'>" + formaInpPuestos(pp[i]) + "<label for='txt_p-" + pp[i].value + "'>" + pp[i].label + "</label></div>"
-                            var div = "<div class='input-field col s6'>" +
-                                "<input id='txt_p-" + pp[i].value + "' name='txt_p-" + pp[i].value + "' type='text' class='seleccUser' onchange='autorizadores();' />" +
-                                "<label for='txt_p-" + pp[i].value + "'>" + pp[i].label + "</label></div>"
-                            $("#lbl_puestos").append(div);
-                            autocompleta("txt_p-" + pp[i].value, pp[i].value);
-                        }
-                        campos_p = pp;
-                    }
-                });
-
-                if (pais != "" & soc != "") {
-                    var p = pais;
-                    var s = soc;
-                    var u = '@Model.ID'
-                    $.ajax({
-                    url: "../../Listas/Grupos",
-                    type: "GET",
-                    async: false,
-                    timeout: 30000,
-                    dataType: "json",
-                    data: { bukrs: s, pais: p, user: u },
-                    success: function (data) {
-                        var pp = ($.map(data, function (item) {
-                            return { label: item.AGROUP_ID, value: item.AGROUP_ID };
-                        }));
-                        if (pp.length > 0) {
-                            $("#lbl_puestos").empty();
-                            M.toast({ html: 'No se puede elegir!' })
-                        }
-                    }
-                });
-                }
-            }
-        }
-
-        function formaInpPuestos(p) {
-             $.ajax({
-                url: "../Listas/UsuariosPuesto",
-                type: "GET",
-                async: false,
-                timeout: 30000,
-                dataType: "json",
-                data: { puesto: p.value },
-                success: function (data) {
-                    var uu = ($.map(data, function (item) {
-                        return { label: item.ID, value: item.ID };
-                    }))
-                    var ret = "<select id='txt_p-" + p.value + "' name='txt_p-" + p.value + "'>";
-                    for (var i = 0; i < uu.length; i++) {
-                        ret += "<option value='" + uu[i].label + "'>" + uu[i].value+"</option>"}
-                    ret += "</select>"
-                    return ret
-                }
-            });
-        }
-
-        function autorizadores() {
-            //for (var i = 0; i < campos_p.length; i++) {
-            //    var value = document.getElementById("txt_p-" + campos_p[i].value).value;
-            //    if (value != "") {
-            //        document.getElementById("btn_submit").className = "modal-action modal-close btn-flat";
-            //    } else {
-            //        document.getElementById("btn_submit").className = "modal-action modal-close btn-flat disabled";
-            //        break;
-            //    }
-            //}
-        }
-    </script>
-    <link href="~/Content/autocomplete.css" rel="stylesheet" />
-    <script src="~/Scripts/autocomplete1.10.2.js"></script>
-    <script src="~/Scripts/autocomplete1.11.4.js"></script>
-    <style>
-        .ui-autocomplete {
-            z-index: 1003;
-        }
-    </style>
-    <script>
-        var auto = $.noConflict(true);
-        function autocompleta(id, p, freeInput) {
-            auto("#" + id).autocomplete({
-                source: function (request, response) {
-                    auto.ajax({
-                        url: "../../Listas/UsuariosPuesto",
-                        type: "GET",
-                        dataType: "json",
-                        data: { puesto: p, Prefix: request.term },
-                        success: function (data) {
-                            response($.map(data, function (item) {
-                                return { label: item.ID, value: item.ID };
-                            }))
-                        },
-                        error: function (data) {
-                            alert("error");
-                        }
-                    })
-                },
-                messages: {
-                    noResults: '',
-                    results: function (resultsCount) { }
-                },
-                change: function (e, ui) {
-                    if (!(freeInput || ui.item)) {
-                        e.target.value = "";
-                    }
-
-                    for (var i = 0; i < campos_p.length; i++) {
-                        var value = document.getElementById("txt_p-" + campos_p[i].value).value;
-                        if (value != "") {
-                            document.getElementById("btn_submit").className = "modal-action modal-close btn-flat";
-                        } else {
-                            document.getElementById("btn_submit").className = "modal-action modal-close btn-flat disabled";
-                            break;
-                        }
-                    }
-                },
-                autoFocus: true,
-                minLength: 1
-            });
-        }
-    </script>*@
