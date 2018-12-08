@@ -1743,66 +1743,139 @@ $(window).on('load', function () {
 //LEJ 30.07.2018--------------------------------------I
 function _ff() {
     //var meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-    var datei = $("#fechai_vig").val().split(' ')[0];
-    $("#fechai_vig").val(datei);
-    var periodoi = datei.split('/')[1];
-    var anioi = datei.split('/')[2];
-
+    $("#fechai_vig").val($("#fechai_vig").val().split(" ")[0]);
+    var datei = $("#fechai_vig").val().split(" ")[0];
+    var lis = datei.split('/');
+    var datesI = new Date(lis[2], lis[1] - 1, lis[0]);
+    datesI.setDate(datesI.getDate() - 1);
+    datei = datesI.getDate() + "/" + (datesI.getMonth()+1) + "/" + datesI.getFullYear();
+    var _anoi = datei.split('/')[2];
     if (datei !== "") {
         $.ajax({
             type: "POST",
-            url: root + 'Listas/getPrimerDia',
+            url: 'getPeriodo',
             dataType: "json",
-            data: { ejercicio: anioi, periodo: periodoi },
+            data: { "fecha": datei },
             success: function (data) {
-                var dd = data.split('/');
-                var dates = new Date(dd[2], dd[1] - 1, dd[0]);
-                datee = dates.getDate() + "/" + (dates.getMonth() + 1) + "/" + dates.getFullYear();
-
-                if (datei === datee){
+                var _xd = data;
+                var pp = parseInt(data);
+                if (pp !== 0) {
+                    pp++;
+                    if (pp == 13)
+                        pp = 1;
+                    $("#periodoi_id").val(pp);
                     document.getElementById("btn-peri").checked = true;
-                    $("#btn-peri").trigger("click");
+                    if (!isDuplicado()) {
+                        $("#anioi_id").val(_anoi);
+                    }
+                    $("#btn-peri").trigger("change");
                 } else {
                     document.getElementById("btn-date").checked = true;
-                    $("#btn-date").trigger("click");
+                    $("#btn-date").trigger("change");
                 }
             },
             error: function (xhr, httpStatusMessage, customErrorMessage) {
-               // M.toast({ html: httpStatusMessage });
+                M.toast({ html: httpStatusMessage });
             },
-            async: false
+            async: true
         });
     }
-    var datef = $("#fechaf_vig").val().split(' ')[0];
-    $("#fechaf_vig").val(datef);
-    var periodof = datef.split('/')[1];
-    var aniof = datef.split('/')[2];
+    $("#fechaf_vig").val($("#fechaf_vig").val().split(" ")[0]);
+    var datef = $("#fechaf_vig").val().split(" ")[0];
+    var _anof = datef.split('/')[2];
     if (datef !== "") {
         $.ajax({
             type: "POST",
-            url: root + 'Listas/getUltimoDia',
+            url: 'getPeriodo',
             dataType: "json",
-            data: { ejercicio: aniof, periodo: periodof },
+            data: { "fecha": datef },
             success: function (data) {
-                var dd = data.split('/');
-                var dates = new Date(dd[2], dd[1] - 1, dd[0]);
-                datee = dates.getDate() + "/" + (dates.getMonth() + 1) + "/" + dates.getFullYear();
-
-                if (datef === datee) {
+                var _xd = data;
+                var pp = parseInt(data);
+                if (pp !== 0 && document.getElementById("btn-peri").checked) {
+                    $("#periodof_id").val(pp);
                     document.getElementById("btn-peri").checked = true;
-                    $("#btn-peri").trigger("click");
+                    //if (!isDuplicado()) {//ADD RSG 28.11.2018
+                    $("#aniof_id").val(_anof);
+                    //}
+                    $("#btn-peri").trigger("change");
                 } else {
                     document.getElementById("btn-date").checked = true;
-                    $("#btn-date").trigger("click");
+                    $("#btn-date").trigger("change");
                 }
+
             },
             error: function (xhr, httpStatusMessage, customErrorMessage) {
-                //M.toast({ html: httpStatusMessage });
+                M.toast({ html: httpStatusMessage });
             },
-            async: false
+            async: true
         });
     }
 }
+//LEJ 30.07.2018--------------------------------------T
+//////LEJ 30.07.2018--------------------------------------I
+////function _ff() {
+////    //var meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+////    var datei = $("#fechai_vig").val().split(' ')[0];
+////    $("#fechai_vig").val(datei);
+////    var periodoi = datei.split('/')[1];
+////    var anioi = datei.split('/')[2];
+
+////    if (datei !== "") {
+////        $.ajax({
+////            type: "POST",
+////            url: root + 'Listas/getPrimerDia',
+////            dataType: "json",
+////            data: { ejercicio: anioi, periodo: periodoi },
+////            success: function (data) {
+////                var dd = data.split('/');
+////                var dates = new Date(dd[2], dd[1] - 1, dd[0]);
+////                datee = dates.getDate() + "/" + (dates.getMonth() + 1) + "/" + dates.getFullYear();
+
+////                if (datei === datee){
+////                    document.getElementById("btn-peri").checked = true;
+////                    $("#btn-peri").trigger("click");
+////                } else {
+////                    document.getElementById("btn-date").checked = true;
+////                    $("#btn-date").trigger("click");
+////                }
+////            },
+////            error: function (xhr, httpStatusMessage, customErrorMessage) {
+////               // M.toast({ html: httpStatusMessage });
+////            },
+////            async: false
+////        });
+////    }
+////    var datef = $("#fechaf_vig").val().split(' ')[0];
+////    $("#fechaf_vig").val(datef);
+////    var periodof = datef.split('/')[1];
+////    var aniof = datef.split('/')[2];
+////    if (datef !== "") {
+////        $.ajax({
+////            type: "POST",
+////            url: root + 'Listas/getUltimoDia',
+////            dataType: "json",
+////            data: { ejercicio: aniof, periodo: periodof },
+////            success: function (data) {
+////                var dd = data.split('/');
+////                var dates = new Date(dd[2], dd[1] - 1, dd[0]);
+////                datee = dates.getDate() + "/" + (dates.getMonth() + 1) + "/" + dates.getFullYear();
+
+////                if (datef === datee) {
+////                    document.getElementById("btn-peri").checked = true;
+////                    $("#btn-peri").trigger("click");
+////                } else {
+////                    document.getElementById("btn-date").checked = true;
+////                    $("#btn-date").trigger("click");
+////                }
+////            },
+////            error: function (xhr, httpStatusMessage, customErrorMessage) {
+////                //M.toast({ html: httpStatusMessage });
+////            },
+////            async: false
+////        });
+////    }
+////}
 //LEJ 30.07.2018--------------------------------------T
 
 //////B20180625 MGC 2018.07.04 para el auto-guardado del borrador
@@ -3871,78 +3944,80 @@ function loadExcelDis(file) {
 
 }
 
-function loadExcelSop(file) {
+////function loadExcelSop(file) {
 
-    var formData = new FormData();
+////    var formData = new FormData();
+////    document.getElementById("loader").style.display = 'flex';
+////    formData.append("FileUpload", file);
+////    importe_fac = 0;//jemo 25-17-2018
+////    var table = $('#table_sop').DataTable();
+////    table.clear().draw();
+////    $.ajax({
+////        type: "POST",
+////        url: 'LoadExcelSop',
+////        data: formData,
+////        dataType: "json",
+////        cache: false,
+////        contentType: false,
+////        processData: false,
+////        success: function (data) {
 
-    formData.append("FileUpload", file);
-    importe_fac = 0;//jemo 25-17-2018
-    var table = $('#table_sop').DataTable();
-    table.clear().draw();
-    $.ajax({
-        type: "POST",
-        url: 'LoadExcelSop',
-        data: formData,
-        dataType: "json",
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function (data) {
+////            if (data !== null || data !== "") {
 
-            if (data !== null || data !== "") {
+////                $.each(data, function (i, dataj) {
+////                    //lej 03.08.2018
+////                    var _decimales = $("#dec").val();
+////                    var _imp_fac = parseFloat(dataj.IMPORTE_FACT).toFixed(2);
+////                    if (_decimales == '.') {
+////                        _imp_fac = _imp_fac.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+////                    } if (_decimales == ',') {
 
-                $.each(data, function (i, dataj) {
-                    //lej 03.08.2018
-                    var _decimales = $("#dec").val();
-                    var _imp_fac = parseFloat(dataj.IMPORTE_FACT).toFixed(2);
-                    if (_decimales == '.') {
-                        _imp_fac = _imp_fac.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-                    } if (_decimales == ',') {
+////                        _imp_fac = _imp_fac.replace('.', ',').toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+////                    }
+////                    _imp_fac = "$" + _imp_fac;
+////                    //lej 03.08.2018
+////                    var addedRow = table.row.add([
+////                        dataj.POS,
+////                        dataj.SOCIEDAD,
+////                        dataj.FACTURA,
+////                        //jemo 10-17-2018 inicio
+////                        "",//"" + fecha.getDate() + "/" + (fecha.getMonth() + 1) + "/" + fecha.getFullYear(),
+////                        dataj.BILL_DOC,
+////                        "",//dataj.PROVEEDOR,
+////                        "",//dataj.PROVEEDOR_TXT,
+////                        "",//dataj.CONTROL,
+////                        "",//dataj.AUTORIZACION,
+////                        "",//"" + ven.getDate() + "/" + (ven.getMonth() + 1) + "/" + ven.getFullYear(),
+////                        "",//dataj.FACTURAK,
+////                        //jemo 10-17-2018 inicio
+////                        dataj.EJERCICIOK,
+////                        //jemo 10-17-2018 inicio
+////                        dataj.PAYER,
+////                        dataj.DESCRIPCION,
+////                        _imp_fac,//lej 03.08.2018
+////                        dataj.BELNR
+////                        //jemo 10-17-2018 fin
+////                    ]).draw(false).node();
 
-                        _imp_fac = _imp_fac.replace('.', ',').toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-                    }
-                    _imp_fac = "$" + _imp_fac;
-                    //lej 03.08.2018
-                    var addedRow = table.row.add([
-                        dataj.POS,
-                        dataj.SOCIEDAD,
-                        dataj.FACTURA,
-                        //jemo 10-17-2018 inicio
-                        "",//"" + fecha.getDate() + "/" + (fecha.getMonth() + 1) + "/" + fecha.getFullYear(),
-                        dataj.BILL_DOC,
-                        "",//dataj.PROVEEDOR,
-                        "",//dataj.PROVEEDOR_TXT,
-                        "",//dataj.CONTROL,
-                        "",//dataj.AUTORIZACION,
-                        "",//"" + ven.getDate() + "/" + (ven.getMonth() + 1) + "/" + ven.getFullYear(),
-                        "",//dataj.FACTURAK,
-                        //jemo 10-17-2018 inicio
-                        dataj.EJERCICIOK,
-                        //jemo 10-17-2018 inicio
-                        dataj.PAYER,
-                        dataj.DESCRIPCION,
-                        _imp_fac,//lej 03.08.2018
-                        dataj.BELNR
-                        //jemo 10-17-2018 fin
-                    ]).draw(false).node();
+////                    if (dataj.PROVEEDOR_ACTIVO == false) {
+////                        $(addedRow).find('td.PROVEEDOR').addClass("errorProveedor");
+////                    }
+////                    importe_fac += parseFloat(toNum(dataj.IMPORTE_FACT));//jemo inicio 24-07-2018
+////                    document.getElementById("loader").style.display = 'none';
+////                });
+////                //Aplicar configuración de columnas en las tablas
+////                ocultarColumnasTablaSoporteDatos();
+////                $(".table_sop").css("display", "table");
+////                $("#table_sop").css("display", "table");
+////            }
+////        },
+////        error: function (xhr, httpStatusMessage, customErrorMessage) {
+////            document.getElementById("loader").style.display = 'none';
+////        },
+////        async: false
+////    });
 
-                    if (dataj.PROVEEDOR_ACTIVO == false) {
-                        $(addedRow).find('td.PROVEEDOR').addClass("errorProveedor");
-                    }
-                    importe_fac += parseFloat(toNum(dataj.IMPORTE_FACT));//jemo inicio 24-07-2018
-                });
-                //Aplicar configuración de columnas en las tablas
-                ocultarColumnasTablaSoporteDatos();
-                $(".table_sop").css("display", "table");
-                $("#table_sop").css("display", "table");
-            }
-        },
-        error: function (xhr, httpStatusMessage, customErrorMessage) {
-        },
-        async: false
-    });
-
-}
+////}
 
 
 function selectTsol(sol) {
