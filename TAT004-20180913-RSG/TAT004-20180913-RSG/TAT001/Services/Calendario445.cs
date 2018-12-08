@@ -31,10 +31,11 @@ namespace TAT001.Services
         {
             TAT001Entities db = new TAT001Entities();
             int periodo = 0;
-            List<PERIODO445> pp = db.PERIODO445.Where(a => a.EJERCICIO == fecha.Year).ToList();
+            List<PERIODO445> pp = db.PERIODO445.Where(a => a.EJERCICIO == fecha.Year ||(a.EJERCICIO == (fecha.Year +1) && a.SUMA>0)).ToList();
             PERIODO445 p = pp.Where(a => a.MES_NATURAL == fecha.Month && a.DIA_NATURAL == fecha.Day).OrderBy(a => a.DIA_NATURAL).FirstOrDefault();
             if (p == null)
             {
+                return 0;
                 p = pp.Where(a => a.MES_NATURAL == fecha.Month).OrderBy(a => a.DIA_NATURAL).FirstOrDefault();
             }
             ////else

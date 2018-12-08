@@ -701,6 +701,17 @@ namespace TAT001.Controllers.Reportes
                                       where d.DOCUMENTO_REF == r1.documento.NUM_DOC
                                       select new { d, dr, tr }).FirstOrDefault();
 
+                r1.DOCREVERSOS2 = (from d in db.DOCUMENTOes
+                                   join ts in db.TSOLs on d.TSOL_ID equals ts.ID
+                                   where ts.REVERSO
+                                   where (bool)ts.ACTIVO
+                                   where d.DOCUMENTO_REF == r1.documento.NUM_DOC
+                                   select d).FirstOrDefault();
+
+                r1.DOCBACKORDER = (from dl in db.DOCUMENTOLs
+                                   where dl.NUM_DOC == r1.documento.NUM_DOC
+                                   select dl).FirstOrDefault();
+
                 reporte.Add(r1);
             }
             return reporte;

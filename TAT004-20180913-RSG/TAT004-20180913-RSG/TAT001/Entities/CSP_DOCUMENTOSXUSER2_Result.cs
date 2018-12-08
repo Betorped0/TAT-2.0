@@ -50,5 +50,6 @@ namespace TAT001.Entities
         public Nullable<int> nRelacionadas { get; set; }
         public Nullable<int> nRecurrentes { get; set; }
         public Nullable<decimal> DOCUMENTO_REF { get; set; }
+        public string ESTATUS_WF_USER { get; set; }
     }
 }

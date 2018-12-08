@@ -6126,7 +6126,7 @@ namespace TAT001.Controllers
         {
             List<DOCUMENTOF_MOD> ld = new List<DOCUMENTOF_MOD>();
 
-
+            Cadena cad = new Cadena();
             if (Request.Files.Count > 0)
             {
                 HttpPostedFileBase file = Request.Files["FileUpload"];
@@ -6275,13 +6275,33 @@ namespace TAT001.Controllers
                     {
                         doc.BELNR = null;
                     }
+                    try
+                    {
+                        var provs = dt.Rows[i][8];
+                        doc.PROVEEDOR = provs + ""; //Proveedor
+                        PROVEEDOR prov = proveedor(cad.completaCliente(doc.PROVEEDOR));
+                        if (prov != null)//Validar si el proveedor existe
+                        {
+
+                            doc.PROVEEDOR_TXT = prov.NOMBRE.ToString(); //Descripción
+                            doc.PROVEEDOR_ACTIVO = true;
+                        }
+                        else
+                        {
+                            doc.PROVEEDOR_ACTIVO = false;
+                        }
+                    }
+                    catch
+                    {
+                        doc.PROVEEDOR_ACTIVO = false;
+                    }
 
                     doc.DESCRIPCION = "";
                     ld.Add(doc);
                     pos++;
                 }
                 //jemo 10-17-2018 inicio
-                Cadena cad = new Cadena();
+                ////Cadena cad = new Cadena();
                 for (int i = 0; i < ld.Count; i++)
                 {
                     ld[i].PAYER = cad.completaCliente(ld[i].PAYER);

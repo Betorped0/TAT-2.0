@@ -1145,8 +1145,9 @@ namespace TAT001.Models
                 {
                     try
                     {
-                        if (this.DOCSREFREVERSOS != null)
-                            return (String.Format("{0:C}", this.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(this.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(this.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(this.DOCSREFREVERSOS, null), null).GetType().GetProperty("MONTO_DOC_MD").GetValue(this.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(this.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(this.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(this.DOCSREFREVERSOS, null), null), null)));
+                        if (this.DOCREVERSOS2 != null)
+                            return (String.Format("{0:C}", this.DOCREVERSOS2.MONTO_DOC_ML));
+                            //return (String.Format("{0:C}", this.DOCREVERSOS2.GetType().GetProperty("dr").GetValue(this.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(this.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(this.DOCSREFREVERSOS, null), null).GetType().GetProperty("MONTO_DOC_MD").GetValue(this.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(this.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(this.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(this.DOCSREFREVERSOS, null), null), null)));
                         else
                             return String.Empty;
                     }
@@ -1162,8 +1163,10 @@ namespace TAT001.Models
                 {
                     try
                     {
-                        if (this.DOCSREFREVERSOS != null)
-                            return ((Convert.ToDecimal(this.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(this.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(this.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(this.DOCSREFREVERSOS, null), null).GetType().GetProperty("MONTO_DOC_MD").GetValue(this.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(this.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(this.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(this.DOCSREFREVERSOS, null), null), null)) * 100) / this.documento.MONTO_DOC_MD).ToString();
+                        //if (this.DOCSREFREVERSOS != null)
+                        //    return ((Convert.ToDecimal(this.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(this.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(this.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(this.DOCSREFREVERSOS, null), null).GetType().GetProperty("MONTO_DOC_MD").GetValue(this.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(this.DOCSREFREVERSOS, null).GetType().GetProperty("DOCUMENTO").GetValue(this.DOCSREFREVERSOS.GetType().GetProperty("dr").GetValue(this.DOCSREFREVERSOS, null), null), null)) * 100) / this.documento.MONTO_DOC_MD).ToString();
+                        if (this.DOCREVERSOS2 != null)
+                            return Convert.ToInt32((this.DOCREVERSOS2.MONTO_DOC_ML * 100) / this.documento.MONTO_DOC_ML).ToString();
                         else
                             return String.Empty;
                     }
@@ -1966,7 +1969,11 @@ namespace TAT001.Models
                 {
                     try
                     {
-                        return (((this.documento.ESTATUS.Equals("A")) && (this.documento.TSOL.PADRE) && (this.documento.DOCUMENTOLs.Count > 0)) ? String.Format("{0:C}", this.documento.MONTO_DOC_MD) : "");
+                        //return (((this.documento.ESTATUS.Equals("A")) && (this.documento.TSOL.PADRE) && (this.documento.DOCUMENTOLs.Count > 0)) ? String.Format("{0:C}", this.documento.MONTO_DOC_MD) : "");
+                        if (this.DOCBACKORDER != null)
+                            return (String.Format("{0:C}", Convert.ToDecimal(this.DOCBACKORDER.BACKORDER)));
+                        else
+                            return String.Empty;
                     }
                     catch
                     {
@@ -2025,6 +2032,9 @@ namespace TAT001.Models
                     }
                 }
             }
+
+            public DOCUMENTO DOCREVERSOS2 { get; internal set; }
+            public DOCUMENTOL DOCBACKORDER { get; internal set; }
         }
     }
 }

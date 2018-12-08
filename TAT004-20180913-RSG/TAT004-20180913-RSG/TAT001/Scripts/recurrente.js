@@ -720,10 +720,21 @@ function ultimoDiaT(t, num, periodo, ejercicio, monto, tipo, porc, meses) {
 function setDates(tipo) {
 
     if (tipo === "date") {
-        var fechI = document.getElementById("fechai_vig2"),
-            fechF = document.getElementById("fechaf_vig2");
-        fechI.value = document.getElementById('fechai_vig').value;
-        fechF.value = document.getElementById('fechaf_vig').value;
+        ////var fechI = document.getElementById("fechai_vig2"),
+        ////    fechF = document.getElementById("fechaf_vig2");
+
+        ////fechI.value = document.getElementById('fechai_vig').value;
+        ////fechF.value = document.getElementById('fechaf_vig').value;
+
+        ////var instanceI = M.Datepicker.getInstance(fechI);
+        ////var dI = fechI.value.split('/');
+        ////var datesI = new Date(dI[2], dI[1] - 1, dI[0]);
+        ////instanceI.setDate(datesI);
+        ////var instanceF = M.Datepicker.getInstance(fechF);
+        ////var dF = fechF.value.split('/');
+        ////var datesF = new Date(dF[2], dF[1] - 1, dF[0]);
+        ////instanceF.setDate(datesF);
+
         document.getElementById("lbl_fechade").setAttribute('class', 'active');
         document.getElementById("lbl_fechahasta").setAttribute('class', 'active');
 
@@ -747,6 +758,14 @@ function setDates(tipo) {
                     + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'pFechas\')">Aceptar</button>'
             });
             return;
+        }
+        if (periodoi == "") {
+            periodoi = $("#fechai_vig").val().split('/')[1];
+            document.getElementById('periodoi_id').value = periodoi;
+        }
+        if (periodof == "") {
+            periodof = $("#fechaf_vig").val().split('/')[1];
+            document.getElementById('periodof_id').value = periodof;
         }
         if (periodoi * 1 > periodof * 1 && anioi * 1 === aniof * 1) {
             var pf = $("#periodof_id");
@@ -801,6 +820,20 @@ function setDates(tipo) {
             });
         }
     }
+    var fechI = document.getElementById("fechai_vig2"),
+        fechF = document.getElementById("fechaf_vig2");
+
+    fechI.value = document.getElementById('fechai_vig').value;
+    fechF.value = document.getElementById('fechaf_vig').value;
+
+    var instanceI = M.Datepicker.getInstance(fechI);
+    var dI = fechI.value.split('/');
+    var datesI = new Date(dI[2], dI[1] - 1, dI[0]);
+    instanceI.setDate(datesI);
+    var instanceF = M.Datepicker.getInstance(fechF);
+    var dF = fechF.value.split('/');
+    var datesF = new Date(dF[2], dF[1] - 1, dF[0]);
+    instanceF.setDate(datesF);
 }
 
 //Evaluar la extensión y tamaño del archivo a cargar
