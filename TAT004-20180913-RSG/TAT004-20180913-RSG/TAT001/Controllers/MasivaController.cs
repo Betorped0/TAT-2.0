@@ -137,7 +137,6 @@ namespace TAT001.Controllers
         public JsonResult validaHoja1()
         {
             DataSet ds1 = (DataSet)Session["ds1"];
-
             List<object> lp = new List<object>();
             List<object> validacion = new List<object>();
             if (ds1 != null)
@@ -159,6 +158,10 @@ namespace TAT001.Controllers
                         Encabezado doc = new Encabezado();
 
                         string num_doc = ds1.Tables[0].Rows[i][0].ToString().Trim();
+
+                        if (getNumberDocument(num_doc) == -1)
+                            continue;
+                       
                         string t_sol = ds1.Tables[0].Rows[i][1].ToString().Trim();
                         string gall_id = ds1.Tables[0].Rows[i][2].ToString().Trim();
                         string bukrs = ds1.Tables[0].Rows[i][3].ToString().Trim();
@@ -203,55 +206,68 @@ namespace TAT001.Controllers
 
                         PAI p = pp.Where(a => a.LANDX == land).FirstOrDefault();
                         if (p != null)
+                        {
                             doc.PAIS_ID = p.LAND;//ADD RSG 01.11.2018--------------------------------------------------
 
-                        List<TALLT> list = tallsDao.ListaTallsConCuenta(TATConstantes.ACCION_LISTA_TALLCONCUENTA, null, spras_id, p.LAND, DateTime.Now.Year, bukrs);
-                        if (list.Any(x => x.TXT50 == gall_id))
-                        {
-                            doc.TALL_ID = list.Where(x => x.TXT50 == gall_id).FirstOrDefault().TALL_ID;
+                            List<TALLT> list = tallsDao.ListaTallsConCuenta(TATConstantes.ACCION_LISTA_TALLCONCUENTA, null, spras_id, p.LAND, DateTime.Now.Year, bukrs);
+                            if (list.Any(x => x.TXT50 == gall_id))
+                            {
+                                doc.TALL_ID = list.Where(x => x.TXT50 == gall_id).FirstOrDefault().TALL_ID;
+                            }
+                            doc.ESTADO = estado;
+                            doc.CIUDAD = ciudad;
+                            doc.CONCEPTO = concepto;
+                            doc.NOTAS = notas;
+                            doc.PAYER_ID = payer_id.TrimStart('0');
+                            doc.VKORG = vkorg;
+                            doc.VTWEG = vtweg;
+                            doc.SPART = spart;
+                            //var existeCliente = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault().NAME1;
+
+                            //if (existeCliente != null | existeCliente != "")
+                            //{
+                            //    doc.PAYER_NOMBRE = existeCliente;
+                            //}
+                            var existeCliente = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault();
+
+                            if (existeCliente != null)
+                            {
+                                doc.PAYER_NOMBRE = existeCliente.NAME1;
+                            }
+                            else
+                            {
+                                doc.PAYER_NOMBRE = "";
+                            }
+
+                            doc.CONTACTO_NOMBRE = contacto_nombre;
+                            doc.CONTACTO_EMAIL = contacto_email;
+                            doc.FECHAI_VIG = fechai_vig2[0];
+                            doc.FECHAF_VIG = fechaf_vig2[0];
+                            doc.MONEDA_ID = moneda_id;
+
+                            lp.Add(doc);
+                            validacion.Add(cargaInicialH1(ds1.Tables[0].Rows[i], pp));
                         }
-                        doc.ESTADO = estado;
-                        doc.CIUDAD = ciudad;
-                        doc.CONCEPTO = concepto;
-                        doc.NOTAS = notas;
-                        doc.PAYER_ID = payer_id.TrimStart('0');
-                        doc.VKORG = vkorg;
-                        doc.VTWEG = vtweg;
-                        doc.SPART = spart;
-                        //var existeCliente = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault().NAME1;
-
-                        //if (existeCliente != null | existeCliente != "")
-                        //{
-                        //    doc.PAYER_NOMBRE = existeCliente;
-                        //}
-                        var existeCliente = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault();
-
-                        if (existeCliente != null)
-                        {
-                            doc.PAYER_NOMBRE = existeCliente.NAME1;
-                        }
-                        else
-                        {
-                            doc.PAYER_NOMBRE = "";
-                        }
-
-                        doc.CONTACTO_NOMBRE = contacto_nombre;
-                        doc.CONTACTO_EMAIL = contacto_email;
-                        doc.FECHAI_VIG = fechai_vig2[0];
-                        doc.FECHAF_VIG = fechaf_vig2[0];
-                        doc.MONEDA_ID = moneda_id;
-
-                        lp.Add(doc);
-                        validacion.Add(cargaInicialH1(ds1.Tables[0].Rows[i], pp));
 
                     }
-
-                    lp.Add(validacion);
+                    if (validacion.Count()==0)
+                    {
+                        lp.Add("El contenido de la hoja 1 no fue procesado");
+                    }
+                    else
+                    {
+                        lp.Add(validacion);
+                    }
                 }
                 else
                 {
-                    lp.Add("ERROR DE FORMATO EN HOJA 1");
+                    lp.Add("Error de formato en hoja 1");
                 }
+                
+            }
+            else
+            {
+                lp.Add("La hoja 1 no se pudo procesar, favor de intentarlo nuevamente");
             }
                 JsonResult jl = Json(lp, JsonRequestBehavior.AllowGet);
                 return jl;
@@ -306,6 +322,9 @@ namespace TAT001.Controllers
                         for (int i = 2; i < ds2.Tables[0].Rows.Count; i++)
                         {
                             string num_doc = ds2.Tables[0].Rows[i][0].ToString().Trim();
+                            if (getNumberDocument(num_doc) == -1)
+                                continue;
+
                             if (d.NUM_DOC == decimal.Parse(num_doc))
                             {
                                 Relacionada doc = new Relacionada();
@@ -406,8 +425,12 @@ namespace TAT001.Controllers
                 }
                 else
                 {
-                    lp.Add("ERROR DE FORMATO EN HOJA 2");
+                    lp.Add("Error de formato en hoja 2");
                 }
+            }
+            else
+            {
+                lp.Add("MSJ:La hoja 2 no se pudo procesar, favor de intentarlo nuevamente");
             }
 
             JsonResult jl = Json(lp, JsonRequestBehavior.AllowGet);
@@ -431,6 +454,8 @@ namespace TAT001.Controllers
                         Multiple doc = new Multiple();
 
                         string num_doc = ds3.Tables[0].Rows[i][0].ToString().Trim();
+                        if (getNumberDocument(num_doc) == -1)
+                            continue;
                         string factura = ds3.Tables[0].Rows[i][1].ToString().Trim();
                         string bill_doc = ds3.Tables[0].Rows[i][2].ToString().Trim();
                         string ejerciciok = ds3.Tables[0].Rows[i][3].ToString().Trim();
@@ -476,14 +501,25 @@ namespace TAT001.Controllers
                         lp.Add(doc);
                         validacion.Add(cargaInicialH3(ds3.Tables[0].Rows[i]));
                     }
-
-                    lp.Add(validacion);
+                    if (validacion.Count() == 0)
+                    {
+                        lp.Add("El contenido de la hoja 3 no fue procesado");
+                    }
+                    else
+                    {
+                        lp.Add(validacion);
+                    }
+                    
                 }
                 else
                 {
-                    lp.Add("ERROR DE FORMATO EN HOJA 3");
+                    lp.Add("Error de formato en hoja 3");
                 }
 
+            }
+            else
+            {
+                lp.Add("MSJ:La hoja 3 no se pudo procesar, favor de intentarlo nuevamente");
             }
             JsonResult jl = Json(lp, JsonRequestBehavior.AllowGet);
             return jl;
@@ -511,10 +547,14 @@ namespace TAT001.Controllers
                         string[] vigencia_de2 = objInformacion.FECHAI_VIG.Split(' ');
                         objInformacion.FECHAF_VIG = ds1.Tables[0].Rows[j][14].ToString().Trim();
                         string[] vigencia_al2 = objInformacion.FECHAF_VIG.Split(' ');
-                        objInformacion.PAYER_ID= ds1.Tables[0].Rows[j][9].ToString().Trim();
+                        objInformacion.PAYER_ID = ds1.Tables[0].Rows[j][9].ToString().Trim();
                         if (objInformacion.PAYER_ID.Length < 10) { objInformacion.PAYER_ID = cad.completaCliente(objInformacion.PAYER_ID); }
 
-                        string decimales = db.PAIS.Where(x => x.LANDX.ToUpper() == objInformacion.PAIS_NAME.ToUpper() && x.SOCIEDAD_ID == objInformacion.SOCIEDAD_ID).FirstOrDefault().DECIMAL;
+
+                        PAI pais_ = db.PAIS.Where(x => x.LANDX.ToUpper() == objInformacion.PAIS_NAME.ToUpper() && x.SOCIEDAD_ID == objInformacion.SOCIEDAD_ID).FirstOrDefault();
+                        if (pais_ != null)
+                        { 
+                            string decimales = pais_.DECIMAL;
                         string spras_id = FnCommon.ObtenerSprasId(db, User.Identity.Name);
 
                         string vkorg = "", vtweg = "", spart = "";
@@ -537,27 +577,26 @@ namespace TAT001.Controllers
                         objInformacion.SPART = spart;
 
                         List<MATERIALGPT> listCategorias = materialesgptDao.CategoriasCliente(vkorg, spart, objInformacion.PAYER_ID, objInformacion.SOCIEDAD_ID);
+                        List<DataRow> listRows = getRowsByDocument(ds4.Tables[0], objInformacion.NUM_DOC, 0);
 
-                        for (int i = 2; i < ds4.Tables[0].Rows.Count; i++)
+                        foreach (DataRow row in listRows)
                         {
                             Distribucion objDistribucion = new Distribucion();
 
-                            string num_doc = ds4.Tables[0].Rows[i][0].ToString().Trim();
-                            string ligada = ds4.Tables[0].Rows[i][1].ToString().Trim();
-                            //string vigencia_de = ds4.Tables[0].Rows[i][2].ToString().Trim();
-                            //string vigencia_al = ds4.Tables[0].Rows[i][3].ToString().Trim();
-                            string matnr = ds4.Tables[0].Rows[i][4].ToString().Trim();
+                            string num_doc = row[0].ToString();
+                            string ligada = row[1].ToString().Trim();
+                            string matnr = row[4].ToString().Trim();
                             if (matnr.Length < 18) { matnr = cad.completaMaterial(matnr); }
                             string materialSinCero = matnr.TrimStart('0');
-                            string matkl = ds4.Tables[0].Rows[i][5].ToString().Trim();
-                            string descripcion = ds4.Tables[0].Rows[i][6].ToString().Trim();
-                            string monto = ds4.Tables[0].Rows[i][7].ToString().Trim();
-                            string porc_apoyo = ds4.Tables[0].Rows[i][8].ToString().Trim();
-                            string apoyo_pieza = ds4.Tables[0].Rows[i][9].ToString().Trim();
-                            string costo_apoyo = ds4.Tables[0].Rows[i][10].ToString().Trim();
-                            string precio_sug = ds4.Tables[0].Rows[i][11].ToString().Trim();
-                            string volumen_real = ds4.Tables[0].Rows[i][12].ToString().Trim();
-                            string apoyo = ds4.Tables[0].Rows[i][13].ToString().Trim();
+                            string matkl = row[5].ToString().Trim();
+                            string descripcion = row[6].ToString().Trim();
+                            string monto = row[7].ToString().Trim();
+                            string porc_apoyo = row[8].ToString().Trim();
+                            string apoyo_pieza = row[9].ToString().Trim();
+                            string costo_apoyo = row[10].ToString().Trim();
+                            string precio_sug = row[11].ToString().Trim();
+                            string volumen_real = row[12].ToString().Trim();
+                            string apoyo = row[13].ToString().Trim();
 
 
 
@@ -602,7 +641,7 @@ namespace TAT001.Controllers
                                     }
                                     else
                                     {
-                                        objDistribucion.MATNR = matnr;
+                                        objDistribucion.MATNR = materialSinCero;
                                         objDistribucion.MATKL = "";
                                         objDistribucion.DESCRIPCION = descripcion;
                                     }
@@ -687,18 +726,31 @@ namespace TAT001.Controllers
                                 }
 
                                 ld.Add(objDistribucion);
-                                validacion.Add(cargaInicialH4(objInformacion, objDistribucion, listCategorias));
+                                validacion.Add(cargaInicialH4(objInformacion, objDistribucion, listCategorias, listRows));
                             }
                         }
+                        }
+
                     }
 
-                    ld.Add(validacion);
+                    if (validacion.Count() == 0)
+                    {
+                        ld.Add("El contenido de la hoja 4 no fue procesado");
+                    }
+                    else
+                    {
+                        ld.Add(validacion);
+                    }
                 }
                 else
                 {
-                    ld.Add("ERROR DE FORMATO EN HOJA 4");
+                    ld.Add("Error de formato en hoja 4");
                 }
 
+            }
+            else
+            {
+                ld.Add("La hoja 4 no se pudo procesar, favor de intentarlo nuevamente");
             }
             JsonResult jl = Json(ld, JsonRequestBehavior.AllowGet);
             return jl;
@@ -716,6 +768,9 @@ namespace TAT001.Controllers
                 for (int i = 2; i < ds5.Tables[0].Rows.Count; i++)
                 {
                     string num_doc = ds5.Tables[0].Rows[i][0].ToString().Trim();
+                    if (getNumberDocument(num_doc) == -1)
+                        continue;
+
                     string t_sol = ds5.Tables[0].Rows[i][1].ToString().Trim();
 
                     var con = db.TSOPORTEs
@@ -740,6 +795,10 @@ namespace TAT001.Controllers
                 //var query = db.TSOPORTEs.Where(x => x.ID != "REV" & x.ACTIVO == true);
                 la.Add(tsol);
                 la.Add(textos);
+            }
+            else
+            {
+                la.Add("La hoja 5 no se pudo procesar, favor de intentarlo nuevamente");
             }
             JsonResult jl = Json(la, JsonRequestBehavior.AllowGet);
             return jl;
@@ -2141,7 +2200,7 @@ namespace TAT001.Controllers
             return regresaRowH3;
         }
 
-        public List<string> cargaInicialH4(Encabezado objInformacion, Distribucion objDistribucion, List<MATERIALGPT> listCategorias)
+        public List<string> cargaInicialH4(Encabezado objInformacion, Distribucion objDistribucion, List<MATERIALGPT> listCategorias, List<DataRow> listRows)
         {
             DataSet ds4 = (DataSet)Session["ds4"];
             List<string> regresaRowH4 = new List<string>();
@@ -2190,11 +2249,11 @@ namespace TAT001.Controllers
 
                 if ((objDistribucion.MATNR != "" && objDistribucion.MATKL != "") || (objDistribucion.MATNR != "" && objDistribucion.MATKL == ""))
                 {
-                    for (int j = 2; j < ds4.Tables[0].Rows.Count; j++)
+                    foreach (DataRow row in listRows)
                     {
-                        string miNum_docH4 = ds4.Tables[0].Rows[j][0].ToString().Trim();
-                        string miMaterialH4 = ds4.Tables[0].Rows[j][4].ToString().Trim();
-                        string CategoriaH4 = ds4.Tables[0].Rows[j][5].ToString().Trim();
+                        string miNum_docH4 = row[0].ToString().Trim();
+                        string miMaterialH4 = row[4].ToString().Trim();
+                        string CategoriaH4 = row[5].ToString().Trim();
                         if (miMaterialH4.Length < 18) { miMaterialH4 = cad.completaMaterial(miMaterialH4); }
                         string num_material = "";
                         bool materiall = false;
@@ -2291,11 +2350,11 @@ namespace TAT001.Controllers
                 {
                     regresaRowH4.Add("");
 
-                    for (int j = 2; j < ds4.Tables[0].Rows.Count; j++)
+                    foreach (DataRow row in listRows)
                     {
-                        string miNum_docH4 = ds4.Tables[0].Rows[j][0].ToString().Trim();
-                        string mat = ds4.Tables[0].Rows[j][4].ToString().Trim();
-                        string categoriaa = ds4.Tables[0].Rows[j][5].ToString().Trim();
+                        string miNum_docH4 = row[0].ToString().Trim();
+                        string mat = row[4].ToString().Trim();
+                        string categoriaa = row[5].ToString().Trim();
                         string num_categoria = "";
                         bool categoriaUnica = false;
 
@@ -2393,11 +2452,11 @@ namespace TAT001.Controllers
 
                     if (IsNumeric(fc.toNum(objDistribucion.PORC_APOYO, miles, decimales)))
                     {
-                        for (int j = 2; j < ds4.Tables[0].Rows.Count; j++)
+                        foreach (DataRow row in listRows)
                         {
-                            string miNum_docH4 = ds4.Tables[0].Rows[j][0].ToString().Trim();
-                            string miLigadaH4 = ds4.Tables[0].Rows[j][1].ToString().Trim();
-                            string miPorc_apoyoH4 = ds4.Tables[0].Rows[j][8].ToString().Trim();
+                            string miNum_docH4 = row[0].ToString().Trim();
+                            string miLigadaH4 = row[1].ToString().Trim();
+                            string miPorc_apoyoH4 = row[8].ToString().Trim();
 
                             if (miNum_docH4 != "" && miNum_docH4 == objDistribucion.NUM_DOC)
                             {
@@ -2420,11 +2479,11 @@ namespace TAT001.Controllers
                     }
                     else
                     {
-                        for (int j = 2; j < ds4.Tables[0].Rows.Count; j++)
+                        foreach (DataRow row in listRows)
                         {
-                            string miNum_docH4 = ds4.Tables[0].Rows[j][0].ToString().Trim();
-                            string miLigadaH4 = ds4.Tables[0].Rows[j][1].ToString().Trim();
-                            string miPorc_apoyoH4 = ds4.Tables[0].Rows[j][8].ToString().Trim();
+                            string miNum_docH4 = row[0].ToString().Trim();
+                            string miLigadaH4 = row[1].ToString().Trim();
+                            string miPorc_apoyoH4 = row[8].ToString().Trim();
 
                             if (miNum_docH4 != "" && miNum_docH4 == objDistribucion.NUM_DOC)
                             {
@@ -2458,11 +2517,11 @@ namespace TAT001.Controllers
                     {
                         regresaRowH4.Add("");//MONTO
 
-                        for (int j = 2; j < ds4.Tables[0].Rows.Count; j++)
+                        foreach (DataRow row in listRows)
                         {
-                            string miNum_docH4 = ds4.Tables[0].Rows[j][0].ToString().Trim();
-                            string miLigadaH4 = ds4.Tables[0].Rows[j][1].ToString().Trim();
-                            string miPorc_apoyoH4 = ds4.Tables[0].Rows[j][8].ToString().Trim();
+                            string miNum_docH4 = row[0].ToString().Trim();
+                            string miLigadaH4 = row[1].ToString().Trim();
+                            string miPorc_apoyoH4 = row[8].ToString().Trim();
 
                             if (miNum_docH4 != "" && miNum_docH4 == objDistribucion.NUM_DOC)
                             {
@@ -2526,11 +2585,11 @@ namespace TAT001.Controllers
                         
                         if (IsNumeric(fc.toNum(objDistribucion.PORC_APOYO, miles, decimales)))
                         {
-                            for (int j = 2; j < ds4.Tables[0].Rows.Count; j++)
+                            foreach (DataRow row in listRows)
                             {
-                                string miNum_docH4 = ds4.Tables[0].Rows[j][0].ToString().Trim();
-                                string miLigadaH4 = ds4.Tables[0].Rows[j][1].ToString().Trim();
-                                string miPorc_apoyoH4 = ds4.Tables[0].Rows[j][8].ToString().Trim();
+                                string miNum_docH4 = row[0].ToString().Trim();
+                                string miLigadaH4 = row[1].ToString().Trim();
+                                string miPorc_apoyoH4 = row[8].ToString().Trim();
 
                                 if (miLigadaH4 != "")
                                 {
@@ -2566,11 +2625,11 @@ namespace TAT001.Controllers
                         }
                         else
                         {
-                            for (int j = 2; j < ds4.Tables[0].Rows.Count; j++)
+                            foreach (DataRow row in listRows)
                             {
-                                string miNum_docH4 = ds4.Tables[0].Rows[j][0].ToString().Trim();
-                                string miLigadaH4 = ds4.Tables[0].Rows[j][1].ToString().Trim();
-                                string miPorc_apoyoH4 = ds4.Tables[0].Rows[j][8].ToString().Trim();
+                                string miNum_docH4 = row[0].ToString().Trim();
+                                string miLigadaH4 = row[1].ToString().Trim();
+                                string miPorc_apoyoH4 = row[8].ToString().Trim();
 
                                 if (miLigadaH4 != "")
                                 {
@@ -4132,6 +4191,50 @@ namespace TAT001.Controllers
 
             JsonResult list = Json(materialCategorias, JsonRequestBehavior.AllowGet);
             return list;
+        }
+
+        public List<DataRow> getRowsByDocument(DataTable Pestania, string NumberContract, int ColumnNumber = 0)
+        {
+            List<IGrouping<bool, DataRow>> Result;
+            List<DataRow> Response = new List<DataRow>();
+
+            if (Pestania == null || Pestania.Rows.Count <= 0)
+                return Response;
+
+            int con = 0;
+            foreach (DataRow aux in Pestania.Rows)
+            {
+                if (con > 1)
+                    aux.SetField(ColumnNumber, getNumberDocument(aux[ColumnNumber].ToString().Trim()).ToString());
+
+                con++;
+            }
+
+            string ColumnName = string.Empty;
+            int TempNumDoc = getNumberDocument(NumberContract);
+
+            if (TempNumDoc == -1)
+                return Response;
+
+            ColumnName = Pestania.Columns[ColumnNumber].ColumnName;
+
+            if (string.IsNullOrEmpty(ColumnName))
+                return Response;
+
+            Result = Pestania.AsEnumerable().GroupBy(p => p[ColumnName].ToString() == TempNumDoc.ToString())?.ToList();
+
+            if (Result == null || Result.Count != 2 || Result.Last()?.First() == null)
+                return Response;
+
+            Response = Result.Last().ToList();
+            return Response;
+        }
+
+        public int getNumberDocument(string numDocument)
+        {
+            numDocument = numDocument.Trim();
+            int TempNumDoc = int.Parse(Math.Truncate(string.IsNullOrEmpty(numDocument) ? -1 : double.Parse(numDocument)).ToString());
+            return TempNumDoc;
         }
     }
 }

@@ -267,9 +267,24 @@
 </script>
 
 <script>
+    var exitClicked = false;
+
+    $("#btn_formatoMasiva").click(function () {
+        exitClicked = true;
+    });
+
+    $("#btn_listadoCP").click(function () {
+        exitClicked = true;
+    });
+    
     window.onbeforeunload = confirmExit;
-    function confirmExit() {
-        return "¿Deseas salir del módulo? La información se perderá. ";
+    function confirmExit(evento) {
+        if (exitClicked) {
+            exitClicked = false;
+            return;
+        } else {
+            return "¿Deseas salir del módulo? La información se perderá. ";
+        }
     }
     var el1 = document.querySelector(".tabs");
     var instance1 = M.Tabs.init(el1, []);
