@@ -1,135 +1,143 @@
 ﻿var div = $("#validaciones");
 var app = "<script>";
-for (var i = 0; i < lista.length; i++) {
-    var campo = document.getElementById(lista[i].ID);
-    if (campo !== undefined) {
-        //app += "$('#" + lista[i].ID + "').on('" + lista[i].ACTION + "', function (e) { validar('" + lista[i].ID + "', '" + lista[i].COND + "', '" + lista[i].MSG + "', '" + lista[i].TIPO + "', '" + lista[i].COLOR + "', '" + lista[i].ELEM + "', " + i + ")}); ";
-        app += "$('#" + lista[i].ID + "').on('" + lista[i].ACTION + "', function (e) {";
-        app += "var ban = ";
-        for (var j = 0; j < lista[i].COND.length; j++) {
-            app += lista[i].COND[j].andor + "warning($(this).val(), '" + lista[i].COND[j].comp + "', '" + lista[i].COND[j].val2 + "')" + lista[i].COND[j].orand;
+
+app = setValidInputs(lista, app);
+
+app = setValidTabs(app);
+
+var appValidarTab = "";
+appValidarTab += "function validarTab(e, tabid, div, rec) {";
+appValidarTab += "var ban = true;";
+for ( i = 0; i < lista.length; i++) {
+    appValidarTab += "ban = true;";
+    appValidarTab += "if ('" + lista[i].TAB + "' == tabid) {";
+    campo = document.getElementById(lista[i].ID);
+    if (campo !== null) {
+        appValidarTab += "ban = ";
+        for (j = 0; j < lista[i].COND.length; j++) {
+            appValidarTab += lista[i].COND[j].andor + "warning($('#" + lista[i].ID + "').val(), '" + lista[i].COND[j].comp + "', '" + lista[i].COND[j].val2 + "')" + lista[i].COND[j].orand;
         }
-        app += ";";
-        app += "if($('#TSOL_ID').val() =='" + lista[i].TSOL + "' |'" + lista[i].TSOL + "'== ''){";
-        app += " validarN('" + lista[i].ID + "', " + lista[i].NUM + ", '" + lista[i].MSG + "', '" + lista[i].TIPO + "', '";
-        app += lista[i].COLOR + "', '" + lista[i].ELEM + "', " + i + ", ban)}}); ";
+        appValidarTab += ";";
+        appValidarTab += "if($('#TSOL_ID').val() =='" + lista[i].TSOL + "' |'" + lista[i].TSOL + "'== ''){";
+        appValidarTab += " validarN('" + lista[i].ID + "', " + lista[i].NUM + ", '" + lista[i].MSG + "', '" + lista[i].TIPO + "', '";
+        appValidarTab += lista[i].COLOR + "', '" + lista[i].ELEM + "', " + i + ", ban);}else{ban=true;} ";
 
     }
     else {
-        //app += "$('body').on('" + lista[i].ACTION + "','." + lista[i].ID + "', function (e) { validarC('" + lista[i].ID + "', '" + lista[i].COND + "', '" + lista[i].MSG + "', '" + lista[i].TIPO + "', '" + lista[i].COLOR + "', '" + lista[i].ELEM + "', " + i + ");e.preventDefault(); e.stopPropagation();});";
-        app += "$('body').on('" + lista[i].ACTION + "','." + lista[i].ID + "', function (e) { ";
-        app += "var val = $(this).find('input').val(); if(val==undefined){ val = $(this).val();} var ban = ";
-        for (var j = 0; j < lista[i].COND.length; j++) {
-            app += lista[i].COND[j].andor + "warning(val, '" + lista[i].COND[j].comp + "', '" + lista[i].COND[j].val2 + "')" + lista[i].COND[j].orand;
-        }
-        app += ";";
-        app += " validarNC('" + lista[i].ID + "', " + lista[i].NUM + ", '" + lista[i].MSG + "', '" + lista[i].TIPO + "', '";
-        app += lista[i].COLOR + "', '" + lista[i].ELEM + "', " + i + ", ban)";
-        app += ";e.preventDefault(); e.stopPropagation();});";
-    }
-}''
-app += "$('#tab_soporte').on('click', function (e) {var ban = validarTab(e, 'tab_info','Informacion_cont',0); }); ";
-app += "$('#tab_dis').on('click', function (e) { var ban = validarTab(e, 'tab_info', 'Informacion_cont',0);" +
-    " if(ban){ ban = validarTab(e, 'tab_soporte', 'Soporte_cont',0);} }); ";
-app += "$('#tab_rec').on('click', function (e) { var ban = validarTab(e, 'tab_info', 'Informacion_cont',0);" +
-    " if(ban){ ban = validarTab(e, 'tab_soporte', 'Soporte_cont',0);} " +
-    " if(ban){ ban = validarTab(e, 'tab_dis', 'Distribucion_cont',0);} }); ";
-app += "$('#tab_fin').on('click', function (e) { var ban = validarTab(e, 'tab_info', 'Informacion_cont',0);" +
-    " if(ban){ ban = validarTab(e, 'tab_soporte', 'Soporte_cont',0);} " +
-    " if(ban){ ban = validarTab(e, 'tab_dis', 'Distribucion_cont',0);} " +
-    " if(isRecurrente()){ " +
-    " if(ban){ ban = validarTab(e, 'tab_rec', 'Recurrente_cont',1);}}if(ban){activaSubmit('Financiera_cont')} }); ";
-
-app += "function validarTab(e, tabid, div, rec) {";
-app += "var ban = true;";
-for (var i = 0; i < lista.length; i++) {
-    app += "ban = true;";
-    //if (lista[i].TAB == 'tab_info' | true) {
-    app += "if ('" + lista[i].TAB + "' == tabid) {";
-    var campo = document.getElementById(lista[i].ID);
-    if (campo != undefined) {
-        //app += "$('#" + lista[i].ID + "').on('" + lista[i].ACTION + "', function (e) {";
-        app += "ban = ";
-        for (var j = 0; j < lista[i].COND.length; j++) {
-            app += lista[i].COND[j].andor + "warning($('#" + lista[i].ID + "').val(), '" + lista[i].COND[j].comp + "', '" + lista[i].COND[j].val2 + "')" + lista[i].COND[j].orand;
-        }
-        app += ";";
-        app += "if($('#TSOL_ID').val() =='" + lista[i].TSOL + "' |'" + lista[i].TSOL + "'== ''){";
-        app += " validarN('" + lista[i].ID + "', " + lista[i].NUM + ", '" + lista[i].MSG + "', '" + lista[i].TIPO + "', '";
-        //app += lista[i].COLOR + "', '" + lista[i].ELEM + "', " + i + ", ban)}); ";
-        app += lista[i].COLOR + "', '" + lista[i].ELEM + "', " + i + ", ban);}else{ban=true;} ";
-
-    }
-    else {
-        //app += "$('body').on('" + lista[i].ACTION + "','." + lista[i].ID + "', function (e) { ";
-        //app += "var val = $('." + lista[i].ID + "').find('input').val(); if(val==undefined){ val = $('." + lista[i].ID + "').val();} ban = ";
-        app += "var val = $('." + lista[i].ID + "').find('input').val();";
-        if (lista[i].COND.length > 0 & lista[i].COND[0].comp != 'f') {
-            app += "if(val==undefined){ var li = document.querySelectorAll('." + lista[i].ID + "');";
-            app += "for(var j= 0; j<li.length;j++){ var par = $(li[j]).prop('tagName');if( par!= 'TH'){";
-            app += " val = $(li[j]).text(); ban = ";
-            for (var j = 0; j < lista[i].COND.length; j++) {
-                app += lista[i].COND[j].andor + "warning(val, '" + lista[i].COND[j].comp + "', '" + lista[i].COND[j].val2 + "')" + lista[i].COND[j].orand;
+        appValidarTab += "var val = $('." + lista[i].ID + "').find('input').val();";
+        if (lista[i].COND.length > 0 & lista[i].COND[0].comp !== 'f') {
+            appValidarTab += "if(val==undefined){ var li = document.querySelectorAll('." + lista[i].ID + "');";
+            appValidarTab += "for(var j= 0; j<li.length;j++){ var par = $(li[j]).prop('tagName');if( par!= 'TH'){";
+            appValidarTab += " val = $(li[j]).text(); ban = ";
+            for (j = 0; j < lista[i].COND.length; j++) {
+                appValidarTab += lista[i].COND[j].andor + "warning(val, '" + lista[i].COND[j].comp + "', '" + lista[i].COND[j].val2 + "')" + lista[i].COND[j].orand;
             }
-            app += ";if(!ban){j=li.length;}";
-            app += "}}}";
-            app += "else{";
-            app += "ban = ";
-            for (var j = 0; j < lista[i].COND.length; j++) {
-                app += lista[i].COND[j].andor + "warning(val, '" + lista[i].COND[j].comp + "', '" + lista[i].COND[j].val2 + "')" + lista[i].COND[j].orand;
+            appValidarTab += ";if(!ban){j=li.length;}";
+            appValidarTab += "}}}";
+            appValidarTab += "else{";
+            appValidarTab += "ban = ";
+            for (j = 0; j < lista[i].COND.length; j++) {
+                appValidarTab += lista[i].COND[j].andor + "warning(val, '" + lista[i].COND[j].comp + "', '" + lista[i].COND[j].val2 + "')" + lista[i].COND[j].orand;
             }
-            app += "}";
+            appValidarTab += "}";
         } else {
-            app += "ban = ";
-            for (var j = 0; j < lista[i].COND.length; j++) {
-                app += lista[i].COND[j].andor + "warning(val, '" + lista[i].COND[j].comp + "', '" + lista[i].COND[j].val2 + "')" + lista[i].COND[j].orand;
+            appValidarTab += "ban = ";
+            for (j = 0; j < lista[i].COND.length; j++) {
+                appValidarTab += lista[i].COND[j].andor + "warning(val, '" + lista[i].COND[j].comp + "', '" + lista[i].COND[j].val2 + "')" + lista[i].COND[j].orand;
             }
         }
-        app += ";";
-        app += "if($('#TSOL_ID').val() =='" + lista[i].TSOL + "' |'" + lista[i].TSOL + "'== ''){";
-        app += " validarNC('" + lista[i].ID + "', " + lista[i].NUM + ", '" + lista[i].MSG + "', '" + lista[i].TIPO + "', '";
-        app += lista[i].COLOR + "', '" + lista[i].ELEM + "', " + i + ", ban);}else{ban=true;}";
+        appValidarTab += ";";
+        appValidarTab += "if($('#TSOL_ID').val() =='" + lista[i].TSOL + "' |'" + lista[i].TSOL + "'== ''){";
+        appValidarTab += " validarNC('" + lista[i].ID + "', " + lista[i].NUM + ", '" + lista[i].MSG + "', '" + lista[i].TIPO + "', '";
+        appValidarTab += lista[i].COLOR + "', '" + lista[i].ELEM + "', " + i + ", ban);}else{ban=true;}";
     }
-    //}
-    app += "if('" + lista[i].TIPO + "'=='info'){ban=true;}";
+    appValidarTab += "if('" + lista[i].TIPO + "'=='info'){ban=true;}";
+
     var tabb = "";
-    if (lista[i].TAB == "tab_info") {
+    if (lista[i].TAB === "tab_info") {
         tabb = "Informacion_cont";
     }
-    if (lista[i].TAB == "tab_soporte") {
+    if (lista[i].TAB === "tab_soporte") {
         tabb = "Soporte_cont";
     }
-    if (lista[i].TAB == "tab_dist") {
+    if (lista[i].TAB === "tab_dis") {
         tabb = "Distribucion_cont";
     }
-    app += "if(!ban){selectTab('" + tabb + "', e);} activaSubmit('" + tabb + "');}";
-    app += "if(rec>0 & !ban){return ban;}";
+    appValidarTab += "if(!ban){selectTab('" + tabb + "', e);} activaSubmit('" + tabb + "');}";
+    appValidarTab += "if(rec>0 & !ban){return ban;}";
 }
-app += " return ban;}";
+appValidarTab += " return ban;}";
+app += appValidarTab;
 
-
-//app += "function validarInfo(){";
-//for (var i = 0; i < lista.length; i++) {
-//    app += "if(!valido('" + lista[i][0] + "', '" + lista[i][1] + "')){if('" + lista[i][3] + "' == 'error'){selectTab('Informacion_cont')}}";
-//}
-//app += "}";
-//app += " if(!valid('payer_id')){if('error' == 'error'){selectTab('Informacion_cont')}}";
-
+app += "</script>";
 div.append(app);
 
 
+function setValidInputs(lista,app) {
+    for (var i = 0; i < lista.length; i++) {
+        var campo = document.getElementById(lista[i].ID);
+        if (campo !== null) {
+            app += "$('#" + lista[i].ID + "').on('" + lista[i].ACTION + "', function (e) {";
+            app += "var ban = ";
+            for (var j = 0; j < lista[i].COND.length; j++) {
+                app += lista[i].COND[j].andor + "warning($(this).val(), '" + lista[i].COND[j].comp + "', '" + lista[i].COND[j].val2 + "')" + lista[i].COND[j].orand;
+            }
+            app += ";";
+            app += "if($('#TSOL_ID').val() =='" + lista[i].TSOL + "' |'" + lista[i].TSOL + "'== ''){";
+            app += " validarN('" + lista[i].ID + "', " + lista[i].NUM + ", '" + lista[i].MSG + "', '" + lista[i].TIPO + "', '";
+            app += lista[i].COLOR + "', '" + lista[i].ELEM + "', " + i + ", ban);";
+            app += "}";
+            app += "});";
+
+        }
+        else {
+            app += "$('body').on('" + lista[i].ACTION + "','." + lista[i].ID + "', function (e) { ";
+            app += "var val = $(this).find('input').val(); if(val==undefined){ val = $(this).val();}";
+            app += "var ban = ";
+            for (j = 0; j < lista[i].COND.length; j++) {
+                app += lista[i].COND[j].andor + "warning(val, '" + lista[i].COND[j].comp + "', '" + lista[i].COND[j].val2 + "')" + lista[i].COND[j].orand;
+            }
+            app += ";";
+            app += "if($('#TSOL_ID').val() =='" + lista[i].TSOL + "' |'" + lista[i].TSOL + "'== ''){";//Se agrego
+            app += " validarNC('" + lista[i].ID + "', " + lista[i].NUM + ", '" + lista[i].MSG + "', '" + lista[i].TIPO + "', '";
+            app += lista[i].COLOR + "', '" + lista[i].ELEM + "', " + i + ", ban);";
+            // app += ";e.preventDefault(); e.stopPropagation();"; se quito
+            app += "}";
+            app += "});";
+        }
+    }
+    return app;
+}
+
+function setValidTabs(app) {
+    var clickTab = "";
+    clickTab += "$('#tab_soporte').on('click', function (e) {var ban = validarTab(e, 'tab_info','Informacion_cont',0); }); ";
+    clickTab += "$('#tab_dis').on('click', function (e) { var ban = validarTab(e, 'tab_info', 'Informacion_cont',0);" +
+        " if(ban){ ban = validarTab(e, 'tab_soporte', 'Soporte_cont',0);} }); ";
+    clickTab += "$('#tab_rec').on('click', function (e) { var ban = validarTab(e, 'tab_info', 'Informacion_cont',0);" +
+        " if(ban){ ban = validarTab(e, 'tab_soporte', 'Soporte_cont',0);} " +
+        " if(ban){ ban = validarTab(e, 'tab_dis', 'Distribucion_cont',0);} }); ";
+    clickTab += "$('#tab_fin').on('click', function (e) { var ban = validarTab(e, 'tab_info', 'Informacion_cont',0);" +
+        " if(ban){ ban = validarTab(e, 'tab_soporte', 'Soporte_cont',0);} " +
+        " if(ban){ ban = validarTab(e, 'tab_dis', 'Distribucion_cont',0);} " +
+        " if(isRecurrente()){  if(ban){ ban = validarTab(e, 'tab_rec', 'Recurrente_cont',1);}} " +
+        " if(ban){ activaSubmit('Financiera_cont') } }); ";
+   
+
+    app += clickTab;
+    return app;
+}
 function condiciones(ii) {
     var ban = true;
     var cont = 0;
-    if (lista[ii].CONDICION != undefined)
-        if (lista[ii].CONDICION != "undefined")
+    if (lista[ii].CONDICION !== undefined && lista[ii].CONDICION !== "undefined")
             if (lista[ii].CONDICION.length > 0) {
                 for (var i = 0; i < lista[ii].CONDICION.length; i++) {
                     var ccc = lista[ii].CONDICION;
-                    if (document.getElementById(ccc[i].id).value == ccc[i].val)
+                    if (document.getElementById(ccc[i].id).value === ccc[i].val)
                         cont++;
                 }
-                if (cont != lista[ii].CONDICION.length)
+                if (cont !== lista[ii].CONDICION.length)
                     ban = false;
             }
     return ban;
@@ -157,7 +165,7 @@ function dismiss(clase) {
 function selectTab(tab, e) {
     e.preventDefault();
     e.stopPropagation();
-    if (tab == "Financiera_cont") {
+    if (tab === "Financiera_cont") {
         if (!cierre())
             $("#btn_guardarh").removeClass("disabled");
         else
@@ -167,10 +175,10 @@ function selectTab(tab, e) {
         $("#btn_guardarh").addClass("disabled");
     var ell = document.getElementById("tabs");
     var instances = M.Tabs.getInstance(ell);
-    instances.select(tab);
+   // instances.select(tab); Se quita para no ejecutar validacion otra vez
 }
 function activaSubmit(tab) {
-    if (tab == "Financiera_cont") {
+    if (tab === "Financiera_cont") {
         if (!cierre())
             $("#btn_guardarh").removeClass("disabled");
         else
@@ -217,21 +225,16 @@ function validarN(id, num, mensaje, icon, color, elem, ii, ban) {
     var campoVal = document.getElementById(id);
     var campo = document.getElementById(elem);
 
-    if (campo != undefined & campoVal != undefined) {
+    if (campo !== undefined & campoVal !== undefined) {
         var value = campoVal.value;
         if (condiciones(ii)) {
-
-            //var valid = valido(value, condicion, ii);
+            
             var valid = ban;
-            //var tipo_condicion = condicion.split("-")[0];
             var tipo_condicion = num;
-            //var valor_condicion = condicion.split("-")[1];
 
             if (!valid) {
-                //dismiss(id + "-" + tipo_condicion);
-                //M.toast({ classes: id + "-" + tipo_condicion, displayLength: 1000000, html: '<span style="padding-right:15px;"><i class="material-icons">' + icon + '</i></span>  ' + mensaje + '<button class="btn-flat toast-action" onclick="dismiss(\'toast\')">Aceptar</button>' });
                 toast(id + "-" + tipo_condicion, 1000000, icon, mensaje, color);
-                if (color == "red")
+                if (color === "red")
                     esInvalido(campo);
                 else
                     esWarning(campo);
@@ -243,53 +246,36 @@ function validarN(id, num, mensaje, icon, color, elem, ii, ban) {
     }
 }
 function validarNC(id, num, mensaje, icon, color, elem, ii, ban) {
-    //var campoVal = document.getElementById(id);
-    //var campo = document.getElementById(elem);
-    var campoVal = document.querySelectorAll("." + id);
-    var campo = document.querySelectorAll("." + elem);
+    var campoVal = document.querySelectorAll("td>." + id);
+    var campo = document.querySelectorAll("td>." + elem);
     for (var i = 0; i < campoVal.length; i++) {
-        if (campo != undefined & campoVal != undefined & campo.length == campoVal.length) {
-            var value = $(campoVal[i]).find('input').val();
-            if (lista[i].COND.length > 0 & lista[i].COND[0].comp != 'f') {
-                if (value == undefined)
+        if (campo !== null & campoVal !== null & campo.length === campoVal.length) {
+            var campoInput = $(campoVal[i]).find('input');
+            var value = campoInput.val();
+            if (lista[i].COND.length > 0 & lista[i].COND[0].comp !== 'f') {
+                if (value === undefined)
                     value = $(campoVal[i]).text();
             }
             var valid = ban;
             var tipo_condicion = num;
-            //if (value == undefined) {
-            //    var inputid = $(campoVal[i]).attr('id');
-            //    if (!valid)
-            //        toast(id + "-" + inputid, 1000000, icon, mensaje, color);
-            //} else {
-            if (!valid) {
-            } else {
-            }
-            //}
-            if (condiciones(ii) & value != undefined) {
-
-                //var valid = valido(value, condicion, ii);
-                //var tipo_condicion = condicion.split("-")[0];
-                //var valor_condicion = condicion.split("-")[1];
+            if (condiciones(ii) & value !== null) {
 
                 if (!valid) {
-                    //dismiss(id + "-" + tipo_condicion);
-                    //M.toast({ classes: id + "-" + tipo_condicion, displayLength: 1000000, html: '<span style="padding-right:15px;"><i class="material-icons">' + icon + '</i></span>  ' + mensaje + '<button class="btn-flat toast-action" onclick="dismiss(\'toast\')">Aceptar</button>' });
-                    //toast(id + "-" + tipo_condicion, 1000000, icon, mensaje, color);
                     toast(id + "-" + num, 1000000, icon, mensaje, color);
-                    if (color == "red")
+                    if (color === "red") {
                         esInvalidoC(campo[i]);
+                        campo[i].classList.add('invalid');
+                        campo[i].classList.remove('valid');
+                    }
                     else
                         esWarningC(campo[i]);
-                    //for (var j = 0; j < campo.length; j++) {
-                    //    esInvalido(campo[j]);
-                    //}
                     i = campoVal.length;
                 } else {
                     esValidoC(campo[i]);
-                    //for (var j = 0; j < campo.length; j++) {
-                    //    esValido(campo[j]);
-                    //}
+                    campo[i].classList.add('valid');
+                    campo[i].classList.remove('invalid');
                     dismiss(id + "-" + tipo_condicion);
+
                 }
             }
         }
@@ -299,117 +285,117 @@ function validarNC(id, num, mensaje, icon, color, elem, ii, ban) {
 
 function warning(val1, comp, val2) {
     var ban = false;
-    if (comp == '=') {
-        if (val1 == val2)
+    if (comp === '=') {
+        if (val1 === val2)
             return true;
-    } if (comp == '!=') {
-        if (val1 != val2)
+    } if (comp === '!=') {
+        if (val1 !== val2)
             return true;
-    } if (comp == '&') {
+    } if (comp === '&') {
         if (val1 & val2)
             return true;
         else
             return false;
-    } if (comp == '|') {
+    } if (comp === '|') {
         if (val1 | val2)
             return true;
         else
             return false;
-    } if (comp == 'n') {
+    } if (comp === 'n') {
         if ($.isNumeric(toNum(val1)))
             return true;
-    } if (comp == 'e') {
+    } if (comp === 'e') {
         if ($.isNumeric(parseFloat(toNum(val1))) & Number.isInteger(parseFloat(toNum(val1))))
             return true;
-    } if (comp == 'dec') {
+    } if (comp === 'dec') {
         if (!Number.isInteger(parseFloat(toNum(val1))) & $.isNumeric(parseFloat(toNum(val1))))
             return true;
     }
 
     if ($.isNumeric(toNum(val1))) {
-        if (comp == '>') {
+        if (comp === '>') {
             if (parseFloat(toNum(val1)) > parseFloat(toNum(val2)))
                 return true;
-        } if (comp == '<') {
+        } if (comp === '<') {
             if (parseFloat(toNum(val1)) < parseFloat(toNum(val2)))
                 return true;
-        } if (comp == '>=') {
+        } if (comp === '>=') {
             if (parseFloat(toNum(val1)) >= parseFloat(toNum(val2)))
                 return true;
-        } if (comp == '<=') {
+        } if (comp === '<=') {
             if (parseFloat(toNum(val1)) <= parseFloat(toNum(val2)))
                 return true;
         }
     }
-    if (comp == "l") {
+    if (comp === "l") {
         var longitud = parseInt(val2);
         if (longitud > 0) {
-            if (val1.length == longitud)
+            if (val1.length === longitud)
                 return true;
         }
     }
-    else if (comp == "f") {
+    else if (comp === "f") {
         ban = evaluarFiles();
     }
-    else if (comp == "d") {
+    else if (comp === "d") {
         ban = isDate(val1);
     }
-    else if (comp == "M") {
-        ban = ($("#select_neg").val() == "M");
+    else if (comp === "M") {
+        ban = ($("#select_neg").val() === "M");
     }
-    else if (comp == "P") {
-        ban = ($("#select_neg").val() == "P");
+    else if (comp === "P") {
+        ban = ($("#select_neg").val() === "P");
     }
-    else if (comp == "MA") {
-        ban = ($("#select_dis").val() == "M");
+    else if (comp === "MA") {
+        ban = ($("#select_dis").val() === "M");
     }
-    else if (comp == "CA") {
-        ban = ($("#select_dis").val() == "C");
+    else if (comp === "CA") {
+        ban = ($("#select_dis").val() === "C");
     }
-    else if (comp == "TOT") {
-        ban = (toNum(val1) == toNum($("#total_dis").text()))
+    else if (comp === "TOT") {
+        ban = (toNum(val1) === toNum($("#total_dis").text()));
     }
-    else if (comp == "T") {
-        ban = (parseFloat(toNum($("#total_dis").text())) > 0)
+    else if (comp === "T") {
+        ban = (parseFloat(toNum($("#total_dis").text())) > 0);
     }
-    else if (comp == "DIS") {
+    else if (comp === "DIS") {
         evaluarDisTable();
         var len = $("#table_dis > tbody  > tr[role='row']").length;
         if (len > 0) {
             var cont = 0;
             $('#table_dis > tbody  > tr').each(function () {
-                var mat = $(this).find("td:eq(" + (3) + ") input").val();
-                var cat = $(this).find("td:eq(" + (4) + ")").text();
-                if (mat != undefined & mat != "")
+                var mat = $(this).find("td:eq(" + 3 + ") input").val();
+                var cat = $(this).find("td:eq(" + 4 + ")").text();
+                if (mat !== undefined & mat !== "")
                     cont++;
-                else if (cat != undefined & cat != "")
+                else if (cat !== undefined & cat !== "")
                     cont++;
 
             });
         }
         ban = cont > 0;
     }
-    else if (comp == "INI") {
+    else if (comp === "INI") {
         ban = (val1.startsWith(val2));
     }
-    else if (comp == "mail") {
+    else if (comp === "mail") {
         ban = validateEmail(val1);
     }
-    else if (comp == "L") {
+    else if (comp === "L") {
         ban = ligada();
     }
-    else if (comp == "nL") {
+    else if (comp === "nL") {
         ban = !ligada();
     }
-    else if (comp == "r1") {
+    else if (comp === "r1") {
         if (isRecurrente() & !ligada()) {
-            var len = $("#table_rec > tbody  > tr[role='row']").length;
+            len = $("#table_rec > tbody  > tr[role='row']").length;
             ban = len > 1;
         }
     }
-    else if (comp == "r2") {
+    else if (comp === "r2") {
         if (isRecurrente() & ligada() & !isObjetivoQ()) {
-            var len = $("#table_rec > tbody  > tr[role='row']").length;
+            len = $("#table_rec > tbody  > tr[role='row']").length;
             if (listaRangos.length > 0)
                 for (var j = 0; j < listaRangos.length; j++) {
                     ban = parseFloat(listaRangos[j].OBJ1) > 0 & parseFloat(listaRangos[j].PORC) > 0;
@@ -419,11 +405,11 @@ function warning(val1, comp, val2) {
             ban = (len > 1) & ban;
         }
     }
-    else if (comp == "r3") {
+    else if (comp === "r3") {
         if (isRecurrente() & ligada() & isObjetivoQ()) {
-            var len = $("#table_rec > tbody  > tr[role='row']").length;
+            len = $("#table_rec > tbody  > tr[role='row']").length;
             if (listaRangos.length > 0)
-                for (var j = 0; j < listaRangos.length; j++) {
+                for (j = 0; j < listaRangos.length; j++) {
                     ban = parseFloat(listaRangos[j].OBJ1) > 0 & parseFloat(listaRangos[j].PORC) > 0;
                     if (!ban)
                         j = listaRangos.length;
@@ -439,202 +425,7 @@ function validateEmail(email) {
     return re.test(String(email).toLowerCase());
 }
 
-                //var val = 'asdasdasd';
-                ////var qq = warning(warning(val, "n", 0), '|', warning(warning(val, ">", 0), "&", warning(val, "<=", 100)));
-                //var qq = warning(warning(val, "n", 0), '|', warning(warning(val, "==", "200c"), "|", warning(val, "==", "201c")));
                 
 
-//function validarTab(e, tabId, tab) {
-//    //M.Toast.dismissAll();
-//    var ban = true;
-//    for (var i = 0; i < lista.length; i++) {
-//        if (lista[i].TAB == tabId) {
-//            var condicion = lista[i].COND;
-//            var id = lista[i].ID;
-//            var campoVal = document.getElementById(lista[i].ID);
-//            var campo = document.getElementById(lista[i].ELEM);
-
-//            var clase = false;
-//            if (campoVal == undefined & campo == undefined) {
-//                campoVal = document.querySelectorAll("." + lista[i].ID);
-//                campo = document.querySelectorAll("." + lista[i].ELEM);
-//                clase = true;
-//            }
-
-//            if (campo != undefined & campoVal != undefined) {
-//                var icon = lista[i].TIPO;
-//                var color = lista[i].COLOR;
-//                var mensaje = lista[i].MSG;
-//                //var tipo_condicion = condicion.split("-")[0];
-//                //var valor_condicion = condicion.split("-")[1];
-
-//                if (!clase) {
-//                    if (condiciones(i)) {
-//                        //var b = valido(campoVal.value, lista[i].COND, i);
-//                        var b = valido(campoVal.value, lista[i].COND, i);
-//                        if (!b) {
-//                            toast(id + "-" + tipo_condicion, 1000000, icon, mensaje, color);
-//                            if (lista[i].TIPO == 'error') {
-//                                esInvalido(campo);
-//                                selectTab(tab, e);
-//                                campo.focus();
-//                                ban = false;
-//                            }
-//                        } else {
-//                            if (lista[i].TIPO == 'error')
-//                                dismiss(id + "-" + tipo_condicion);
-//                        }
-//                    }
-//                } else {
-//                    for (var j = 0; j < campoVal.length; j++) {
-//                        var value = $(campoVal[j]).find('input').val();
-//                        if (value != undefined | tipo_condicion == 'f') {
-//                            if (tipo_condicion == 'f')
-//                                value = '';
-//                            if (condiciones(i)) {
-//                                var valid = valido(value, condicion, i);
-//                                if (!valid) {
-//                                    toast(id + "-" + tipo_condicion, 1000000, icon, mensaje, color);
-//                                    if (lista[i].TIPO == 'error') {
-//                                        esInvalidoC(campo[i]);
-//                                        selectTab(tab, e);
-//                                        $(campo).find('input').focus();
-//                                        ban = false;
-//                                    }
-//                                } else {
-//                                    dismiss(id + "-" + tipo_condicion);
-//                                }
-//                                j = campoVal.length;
-//                            }
-//                        } else {
-
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-//    return ban;
-//}
-
-//function validar(id, condicion, mensaje, icon, color, elem, ii) {
-//    var campoVal = document.getElementById(id);
-//    var campo = document.getElementById(elem);
-
-//    if (campo != undefined & campoVal != undefined) {
-//        var value = campoVal.value;
-//        if (condiciones(ii)) {
-//            var valid = valido(value, condicion, ii);
-//            var tipo_condicion = condicion.split("-")[0];
-//            var valor_condicion = condicion.split("-")[1];
-
-//            if (!valid) {
-//                //dismiss(id + "-" + tipo_condicion);
-//                //M.toast({ classes: id + "-" + tipo_condicion, displayLength: 1000000, html: '<span style="padding-right:15px;"><i class="material-icons">' + icon + '</i></span>  ' + mensaje + '<button class="btn-flat toast-action" onclick="dismiss(\'toast\')">Aceptar</button>' });
-//                toast(id + "-" + tipo_condicion, 1000000, icon, mensaje, color);
-//                esInvalido(campo);
-//            } else {
-//                esValido(campo);
-//                dismiss(id + "-" + tipo_condicion);
-//            }
-//        }
-//    }
-//}
-//function validarC(id, condicion, mensaje, icon, color, elem, ii) {
-//    var campoVal = document.querySelectorAll("." + id);
-//    var campo = document.querySelectorAll("." + elem);
-//    if (campo != undefined & campoVal != undefined & campo.length == campoVal.length) {
-//        for (var i = 0; i < campoVal.length; i++) {
-//            var value = $(campoVal[i]).find('input').val();
-//            if (value != undefined) {
-//                if (condiciones(ii)) {
-//                    var valid = valido(value, condicion, ii);
-//                    var tipo_condicion = condicion.split("-")[0];
-//                    var valor_condicion = condicion.split("-")[1];
-
-//                    if (!valid) {
-//                        //dismiss(id + "-" + tipo_condicion);
-//                        //M.toast({ classes: id + "-" + tipo_condicion, displayLength: 1000000, html: '<span style="padding-right:15px;"><i class="material-icons">' + icon + '</i></span>  ' + mensaje + '<button class="btn-flat toast-action" onclick="dismiss(\'toast\')">Aceptar</button>' });
-//                        toast(id + "-" + tipo_condicion, 1000000, icon, mensaje, color);
-//                        esInvalidoC(campo[i]);
-//                    } else {
-//                        esValidoC(campo[i]);
-//                        dismiss(id + "-" + tipo_condicion);
-//                    }
-//                    i = campoVal.length;
-//                }
-//            }
-//        }
-//    }
-//}
-//function valido(value, condicion, ii) {
-//    var ban = true;
-//    var valid = true;
-//    if (ban) {
-//        var tipo_condicion = condicion.split("-")[0];
-//        var valor_condicion = condicion.split("-")[1];
-
-//        if (tipo_condicion != "") {
-//            if (tipo_condicion == "c") {
-//                if (valor_condicion == "!=null") {
-//                    if (value == "")
-//                        valid = false;
-//                } else if (valor_condicion == "!=") {
-//                    var compara = $("#" + condicion.split("-")[2]).text();
-//                    if (parseFloat(toNum(value)) != parseFloat(toNum(compara)))
-//                        valid = false
-//                } else if (valor_condicion == ">") {
-//                    var compara = condicion.split("-")[2];
-//                    if (parseFloat(toNum(value)) <= parseFloat(toNum(compara)))
-//                        valid = false
-//                }
-//            } else if (tipo_condicion == "n") {
-//                if (tipo_condicion == 'n') {
-//                    if (!$.isNumeric(value))
-//                        valid = false;
-//                }
-//            } else if (tipo_condicion == "l") {
-//                var longitud = parseInt(valor_condicion);
-//                if (longitud > 0) {
-//                    if (value.length < longitud)
-//                        valid = false;
-//                }
-//            } else if (tipo_condicion == "lm") {
-//                var longitud = parseInt(valor_condicion);
-//                if (longitud > 0) {
-//                    if (value.length > longitud)
-//                        valid = false;
-//                }
-//            } else if (tipo_condicion == "f") {
-//                valid = evaluarFiles();
-//            }
-//        }
-//    }
-//    return valid;
-//}
 
 
-$('body').on('focusout', '.input_sop_f', function () {
-    var t = $('#table_dis').DataTable();
-    var tr = $(this).closest('tr'); //Obtener el row 
-    
-    if ($(this).hasClass("FECHA")) {
-        var date = $(this).val();
-
-        for (var i = 0; i < lista.length; i++) {
-            if (lista[i].ID === "FECHA") {
-                if (!warning(date, "d", "")) {
-                    toast(lista[i].ID + "_f", 1000000, "error", lista[i].MSG, "red");
-                    $(this).addClass("invalid");
-                    $(this).removeClass("valid");
-                    res = false;
-                } else {
-                    dismiss("FECHA_f");
-                    $(this).addClass("valid");
-                    $(this).removeClass("invalid");
-                }
-            }
-        }
-    }
-
-});
