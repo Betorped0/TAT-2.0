@@ -1404,7 +1404,7 @@ $('#tab_test3').on('keydown.autocomplete', '.input_facturaH3', function () {
         },
 
         change: function () {
-            if ($(this).val() == "") {
+            if ($(this).val() === "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
                 $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
             }
@@ -1439,7 +1439,7 @@ $('#tab_test3').on('keydown.autocomplete', '.input_bill', function () {
         },
 
         change: function () {
-            if ($(this).val() == "") {
+            if ($(this).val() === "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
                 $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
             }
@@ -1477,7 +1477,7 @@ $('#tab_test3').on('keydown.autocomplete', '.input_ejerciciokH3', function () {
         },
 
         change: function () {
-            if ($(this).val() == "") {
+            if ($(this).val() === "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
                 $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
             }
@@ -1503,7 +1503,7 @@ $('#tab_test3').on('keydown.autocomplete', '.input_importe', function () {
         var rowH1 = tablaH1.row(a).node();
         num_docH1 = $(rowH1).children().eq(1).children().val();
 
-        if (num_docH1 == num_doc) {
+        if (num_docH1 === num_doc) {
             pais = $(rowH1).find('td:eq(5)').children().val();
         }
     }
@@ -1568,7 +1568,7 @@ $('#tab_test3').on('keydown.autocomplete', '.input_belnr', function () {
         },
 
         change: function () {
-            if ($(this).val() == "") {
+            if ($(this).val() === "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
                 $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
             }
@@ -1900,7 +1900,7 @@ $('#tab_test4').on('focusout', '.input_cantidades', function () {
         success: function (data) {
             getDec = data;
 
-            if (getDec == '.') {
+            if (getDec === '.') {
                 monto = tr.find('td:eq(8) input').val().replace('$', '').replace(',', '');
                 porApoyo = tr.find('td:eq(9) input').val().replace('%', '').replace(',', '');
                 pieApoyo = tr.find('td:eq(10) input').val().replace('$', '').replace(',', '');
@@ -2056,7 +2056,7 @@ $('#tab_test4').on('focusout', '.input_cantidades', function () {
                     colVolReal.removeClass("red white-text rojo");
                 }
             }
-            else if (volReal == '') {
+            else if (volReal === '') {
                 colVolReal.val(toShowNum('0', getDec));
                 colVolReal.removeClass("red white-text rojo");
             }
@@ -2077,8 +2077,8 @@ $('#tab_test4').on('focusout', '.input_cantidades', function () {
 
                         validaApoyo(num2, colApoyo);
                     }
-                    else if ((monto == "" | porApoyo == "" | volReal == "") | (monto == "0.00" | porApoyo == "0.00" | volReal == "0.00")) {
-                        if ((monto == "" & porApoyo == "" & volReal == "") | (monto == "0.00" & porApoyo == "0.00" & volReal == "0.00") & apoyo !== "") {
+                    else if ((monto === "" || porApoyo === "" || volReal === "") || (monto === "0.00" || porApoyo === "0.00" || volReal === "0.00")) {
+                        if ((monto === "" && porApoyo === "" && volReal === "") || (monto === "0.00" && porApoyo === "0.00" && volReal === "0.00") && apoyo !== "") {
                             colMonto.val(toShow('0', getDec));
                             colPorApoyo.val(toShowPorc('0', getDec));
                             colPieApoyo.val(toShow('0', getDec));
@@ -2113,7 +2113,7 @@ $('#tab_test4').on('focusout', '.input_cantidades', function () {
                     }
                 }
             }
-            else if (apoyo == '') {
+            else if (apoyo === '') {
                 if ($.isNumeric(monto) & $.isNumeric(porApoyo) & $.isNumeric(volReal)) {
                     num1 = monto * (porApoyo / 100);
                     num2 = num1 * volReal;
@@ -2151,7 +2151,7 @@ $('#tab_test4').on('keydown', '.input_apoyo', function (e) {
         var rowH1 = tablaH1.row(a).node();
         num_docH1 = $(rowH1).children().eq(1).children().val();
 
-        if (num_docH1 == num_doc) {
+        if (num_docH1 === num_doc) {
             pais = $(rowH1).find('td:eq(5)').children().val();
         }
     }
@@ -2165,7 +2165,7 @@ $('#tab_test4').on('keydown', '.input_apoyo', function (e) {
         success: function (data) {
             getDec = data;
 
-            if (getDec == '.') {
+            if (getDec === '.') {
                 apoyo = tr.find('td:eq(14) input').val().replace('$', '').replace(',', '');
             }
             else {
@@ -2173,7 +2173,7 @@ $('#tab_test4').on('keydown', '.input_apoyo', function (e) {
             }
 
             //VISTA PARA EL APOYO
-            if (e.keyCode == 13) {
+            if (e.keyCode === 13) {
                 e.preventDefault();
 
                 if ($.isNumeric(apoyo)) {
@@ -2324,14 +2324,14 @@ function validaLigada(num_doc) {
         var check = $(rowH4).children().eq(2).children().eq(0).children().eq(0).children().eq(0);
         porcentaje = $(rowH4).children().eq(9).children().val();
 
-        if ($(check).is(":checked") & num_docH4 == num_doc) {
+        if ($(check).is(":checked") && num_docH4 === num_doc) {
             ligadaPorcentaje[contador] = num_docH4 + true + porcentaje;
             ligadaPorcentaje2[contador] = num_docH4 + true;
             //ligadaPorcentaje[contador] = num_docH4 + "-" + true + "-" + porcentaje;
             contador++;
         }
         else {
-            if (num_docH4 == num_doc) {
+            if (num_docH4 === num_doc) {
                 ligadaPorcentaje[contador] = num_docH4 + false + porcentaje;
                 ligadaPorcentaje2[contador] = num_docH4 + false;
                 //ligadaPorcentaje[contador] = num_docH4 + "-" + false + "-" + porcentaje;
@@ -2365,14 +2365,14 @@ function validaLigada(num_doc) {
             var num_docH4 = $(rowH4).children().eq(1).children().val();
             var check = $(rowH4).children().eq(2).children().eq(0).children().eq(0).children().eq(0);
 
-            if (num_docH4 == num_doc) {
+            if (num_docH4 === num_doc) {
                 $(rowH4).children().eq(2).children().removeClass("red white-text rojo");
                 $(rowH4).children().eq(9).children().removeClass("red white-text rojo");
             }
         }
     }
     else {
-        if (igualesCompleto2 & contienePalabra == 1) {
+        if (igualesCompleto2 && contienePalabra === 1) {
             var tablaH4 = $('#tab_test4').DataTable();
 
             for (var a = 0; a < tablaH4.rows().data().length; a++) {
@@ -2380,7 +2380,7 @@ function validaLigada(num_doc) {
                 var num_docH4 = $(rowH4).children().eq(1).children().val();
                 var check = $(rowH4).children().eq(2).children().eq(0).children().eq(0).children().eq(0);
 
-                if (num_docH4 == num_doc) {
+                if (num_docH4 === num_doc) {
                     $(rowH4).children().eq(2).children().removeClass("red white-text rojo");
                     $(rowH4).children().eq(9).children().removeClass("red white-text rojo");
                 }
@@ -2394,7 +2394,7 @@ function validaLigada(num_doc) {
                 var num_docH4 = $(rowH4).children().eq(1).children().val();
                 var check = $(rowH4).children().eq(2).children().eq(0).children().eq(0).children().eq(0);
 
-                if (num_docH4 == num_doc) {
+                if (num_docH4 === num_doc) {
                     $(rowH4).children().eq(2).children().addClass("red white-text rojo");
                     $(rowH4).children().eq(9).children().addClass("red white-text rojo");
                 }
@@ -2412,13 +2412,13 @@ function validaLigada(num_doc) {
         var porcentajeH4 = $(rowH4).children().eq(9).children().val();
         var check = $(rowH4).children().eq(2).children().eq(0).children().eq(0).children().eq(0);
 
-        if ($(check).is(":checked") & num_docH4 == num_doc) {
+        if ($(check).is(":checked") && num_docH4 === num_doc) {
             arrLigada[contadorLigada] = num_docH4 + true;
             arrPorcentaje[contadorLigada] = num_docH4 + porcentajeH4;
             contadorLigada++;
         }
         else {
-            if (num_docH4 == num_doc) {
+            if (num_docH4 === num_doc) {
                 arrLigada[contadorLigada] = num_docH4 + false;
                 arrPorcentaje[contadorLigada] = num_docH4 + porcentajeH4;
                 contadorLigada++;
@@ -2434,7 +2434,7 @@ function validaLigada(num_doc) {
         var check = $(rowbH4).children().eq(2).children().eq(0).children().eq(0).children().eq(0);
         var checkeado = $(check).is(":checked");
 
-        if (num_docbH4 == num_doc) {
+        if (num_docbH4 === num_doc) {
             if (igualesLigada) {
                 $(rowbH4).children().eq(2).children().removeClass("red white-text rojo");
                 revisaPorcentajeLigada(num_docbH4, checkeado);
@@ -2459,7 +2459,7 @@ function revisaPorcentajeLigada(num_doc, checked) {
         var num_docH4 = $(rowH4).children().eq(1).children().val();
         var porcentaje = $(rowH4).children().eq(9).children().val();
 
-        if (num_docH4 == num_doc) {
+        if (num_docH4 === num_doc) {
             arrPorcentajes[contador] = porcentaje;
             contador++;
         }
@@ -2482,10 +2482,10 @@ function revisaPorcentajeLigada(num_doc, checked) {
         var num_docH4 = $(rowH4).children().eq(1).children().val();
         var porcentaje = $(rowH4).children().eq(9).children().val();
 
-        if (num_docH4 == num_doc & checked & igualesPorcentaje) {
+        if (num_docH4 === num_doc & checked & igualesPorcentaje) {
             $(rowH4).children().eq(9).children().removeClass("red white-text rojo");
         }
-        else if (num_docH4 == num_doc & checked & !igualesPorcentaje) {
+        else if (num_docH4 === num_doc & checked & !igualesPorcentaje) {
             $(rowH4).children().eq(9).children().addClass("red white-text rojo");
         }
     }
@@ -2510,7 +2510,7 @@ function ligada(check) {
         var rowH1 = tablaH1.row(a).node();
         num_docH1 = $(rowH1).children().eq(1).children().val();
 
-        if (num_docH1 == num_doc) {
+        if (num_docH1 === num_doc) {
             pais = $(rowH1).find('td:eq(5)').children().val();
         }
     }
@@ -2523,7 +2523,7 @@ function ligada(check) {
         success: function (data) {
             getDec = data;
 
-            if (getDec == '.') {
+            if (getDec === '.') {
                 apoyo = tr.find('td:eq(14) input').val().replace('$', '').replace(',', '');
             }
             else {
@@ -2552,7 +2552,7 @@ function ligada(check) {
                 colVolReal.val(toShowNum('0', getDec)).attr("disabled", true);
                 colApoyo.val(toShow('0', getDec)).attr("disabled", true);
                 colApoyo.removeClass("red white-text rojo");
-                validaLigada(num_docGlobal)
+                validaLigada(num_docGlobal);
                 clearErrors();
             } else {
                 colMonto.val(toShow('0', getDec)).attr("disabled", false);
@@ -2563,7 +2563,7 @@ function ligada(check) {
                 colVolReal.val(toShowNum('0', getDec)).attr("disabled", false);
                 colApoyo.val(toShow('0', getDec)).attr("disabled", false);
                 colApoyo.addClass("red white-text rojo");
-                validaLigada(num_docGlobal)
+                validaLigada(num_docGlobal);
                 clearErrors();
             }
         },
@@ -2751,7 +2751,7 @@ function checkRelMul() {
             var rowH2 = tablaH2.row(b).node();
             var num_docH2 = $(rowH2).children().eq(1).children().val();
 
-            if (num_docH1 == num_docH2) {
+            if (num_docH1 === num_docH2) {
                 banderaH2 = true;
                 break;
             }
@@ -2761,7 +2761,7 @@ function checkRelMul() {
             var rowH3 = tablaH3.row(c).node();
             var num_docH3 = $(rowH3).children().eq(1).children().val();
 
-            if (num_docH1 == num_docH3) {
+            if (num_docH1 === num_docH3) {
                 banderaH3 = true;
                 break;
             }
@@ -2787,8 +2787,8 @@ function checkRelacionada() {
             var rowH3 = tablaH3.row(b).node();
             var num_docH3 = $(rowH3).children().eq(1).children().val();
 
-            if (num_docH2 == num_docH3) {
-                if (jQuery.inArray(num_docH2, arregloNumDoc) == -1) {
+            if (num_docH2 === num_docH3) {
+                if (jQuery.inArray(num_docH2, arregloNumDoc) === -1) {
                     arregloNumDoc[contador] = num_docH2;
                     contador++;
                 }
@@ -2829,7 +2829,7 @@ function checkRelacionadaMat() {
             var rowH1 = tablaH1.row(b).node();
             var num_docH1 = $(rowH1).children().eq(1).children().val();
 
-            if (num_docH1 == num_docH3) {
+            if (num_docH1 === num_docH3) {
                 pais = $(rowH1).find('td:eq(5)').children().val();
             }
         }
@@ -2837,16 +2837,16 @@ function checkRelacionadaMat() {
         cantidad = cantidad.substr(cantidad.length - 3);
         decimales = cantidad.charAt(0);
 
-        if (decimales == ".") {
+        if (decimales === ".") {
             miles = ",";
         }
-        else if (decimales == ",") {
+        else if (decimales === ",") {
             miles = ".";
         }
 
         cantidadRel = toNum(cantidadRel, miles, decimales);
 
-        if (jQuery.inArray(num_docH3, cantidadesH3) == -1) {
+        if (jQuery.inArray(num_docH3, cantidadesH3) === -1) {
             cantidadesH3[contadorH3] = cantidadRel;
             cantidadesH3Num[contadorH3] = num_docH3;
             contadorH3++;
@@ -2859,7 +2859,7 @@ function checkRelacionadaMat() {
         var sumH3 = 0;
 
         for (var d = 0; d < cantidadesH3.length; d++) {
-            if (num_docH11 == cantidadesH3Num[d]) {
+            if (num_docH11 === cantidadesH3Num[d]) {
                 sumH3 += cantidadesH3[d];
             }
         }
@@ -2887,7 +2887,7 @@ function checkRelacionadaMat() {
             var rowH111 = tablaH1.row(f).node();
             var num_docH111 = $(rowH111).children().eq(1).children().val();
 
-            if (num_docH111 == num_docH4) {
+            if (num_docH111 === num_docH4) {
                 pais = $(rowH111).find('td:eq(5)').children().val();
             }
         }
@@ -2895,16 +2895,16 @@ function checkRelacionadaMat() {
         cantidad = cantidad.substr(cantidad.length - 3);
         decimales = cantidad.charAt(0);
 
-        if (decimales == ".") {
+        if (decimales === ".") {
             miles = ",";
         }
-        else if (decimales == ",") {
+        else if (decimales === ",") {
             miles = ".";
         }
 
         cantidadRel = toNum(cantidadRel, miles, decimales);
 
-        if (jQuery.inArray(num_docH4, cantidadesH4) == -1) {
+        if (jQuery.inArray(num_docH4, cantidadesH4) === -1) {
             cantidadesH4[contadorH4] = cantidadRel;
             cantidadesH4Num[contadorH4] = num_docH4;
             contadorH4++;
@@ -2917,7 +2917,7 @@ function checkRelacionadaMat() {
         var sumH4 = 0;
 
         for (var h = 0; h < cantidadesH4.length; h++) {
-            if (num_docH1111 == cantidadesH4Num[h]) {
+            if (num_docH1111 === cantidadesH4Num[h]) {
                 sumH4 += cantidadesH4[h];
             }
         }
@@ -2933,7 +2933,7 @@ function checkRelacionadaMat() {
     var contadorErr = 0;
 
     for (var i = 0; i < cantidadesUniH3.length; i++) {
-        if (jQuery.inArray(cantidadesUniH3[i], cantidadesUniH4) == -1) {
+        if (jQuery.inArray(cantidadesUniH3[i], cantidadesUniH4) === -1) {
             cantidadesError[contadorErr] = cantidadesUniH3[i];
             contadorErr++;
         }
@@ -2950,7 +2950,7 @@ function checkRelacionadaMat() {
         var tieneRojo = $(rowH44).children().eq(14).children().hasClass("red white-text rojo");
 
         for (var l = 0; l < idError.length; l++) {
-            if (num_docH44 == idError[l]) {
+            if (num_docH44 === idError[l]) {
                 $(rowH44).children().eq(1).children().addClass("red white-text rojo errorCantidades");
                 //if (tieneRojo) {
                 //    $(rowH44).children().eq(14).children().addClass("errorCantidades");
@@ -2970,7 +2970,7 @@ function checkRelacionadaMat() {
         var rowH1C = tablaH1.row(m).node();
         var num_docH1C = $(rowH1C).children().eq(1).children().val();
 
-        if (jQuery.inArray(num_docH1C, idError) == -1) {
+        if (jQuery.inArray(num_docH1C, idError) === -1) {
             correctos[contadorCorrectos] = num_docH1C;
             contadorCorrectos++;
         }
@@ -2982,7 +2982,7 @@ function checkRelacionadaMat() {
         //var tieneRojo = $(rowH4C).children().eq(14).children().hasClass("red white-text rojo");
 
         for (var o = 0; o < correctos.length; o++) {
-            if (num_docH4C == correctos[o]) {
+            if (num_docH4C === correctos[o]) {
                 $(rowH4C).children().eq(1).children().removeClass("red white-text rojo errorCantidades");
             }
         }
@@ -3439,13 +3439,13 @@ function guardaDatos() {
         var rowH5 = tablaH5.row(ee).node();
         var statusH5 = $(rowH5).children().eq(0).children().text();
 
-        if (statusH5 == "Ok") {
+        if (statusH5 === "Ok") {
             var num_docH5 = $(rowH5).children().eq(1).children().val();
             var descripcionH5 = $(rowH5).children().eq(2).children().val();
             var idArchivoH5 = $(rowH5).children().eq(3).children().children().eq(0).children().eq(1).attr('id');
 
 
-            if (idArchivoH5 == (num_docH5 + descripcionH5)) {
+            if (idArchivoH5 === (num_docH5 + descripcionH5)) {
                 var archivo = document.getElementById(num_docH5 + descripcionH5).files[0];
 
                 if (idArchivoH5.includes("*")) {
@@ -3474,23 +3474,23 @@ function guardaDatos() {
             var rowH5 = tablaH5.row(g).node();
             var statusH5 = $(rowH5).children().eq(0).children().text();
 
-            if (statusH5 == "Ok") {
+            if (statusH5 === "Ok") {
                 var num_docH5 = $(rowH5).children().eq(1).children().val();
                 var nota = $(rowH5).children().eq(4).children().val();
 
 
-                if (num_docH1 == num_docH5) {
-                    if (notaFinal == "") {
+                if (num_docH1 === num_docH5) {
+                    if (notaFinal === "") {
                         notaFinal = notaFinal + nota;
                     }
-                    else if (nota != "") {
+                    else if (nota !== "") {
                         notaFinal = notaFinal + "," + nota;
                     }
                 }
             }
         }
 
-        if (notaFinal != "") {
+        if (notaFinal !== "") {
             notasArr[contadorNota] = num_docH1 + "*" + notaFinal;
             contadorNota++;
         }
@@ -3516,7 +3516,7 @@ function guardaDatos() {
         },
         error: function (xhr, status, p3, p4) {
             var err = "Error " + " " + status + " " + p3 + " " + p4;
-            if (xhr.responseText && xhr.responseText[0] == "{")
+            if (xhr.responseText && xhr.responseText[0] === "{")
                 err = JSON.parse(xhr.responseText).Message;
             document.getElementById("loader").style.display = "none";
             //console.log(err);
@@ -3535,10 +3535,28 @@ function guardaDatos() {
             if (data !== null | data !== "") {
                 var eliminarId = [];
                 var listaIds = [];
-
+                var listIdsRechazados=[];
                 listaIds = data.pop();
+                //eliminarId = data;
+                listaIds.forEach(function (element) {
+                    if (element.indexOf('<') >= 0) {
+                        var DocId = element.split('<')[1];
+                        listIdsRechazados.push(DocId);
+                    }
+                });
 
-                eliminarId = data;
+                data.forEach(function (numDoc) {
+                    var existe = false;
+                    numDoc = numDoc.toString();
+                    listIdsRechazados.forEach(function (idDoc) {
+                        if (idDoc === numDoc) {
+                            existe = true;
+                        }
+                    });
+                    if (!existe)
+                        eliminarId.push(numDoc);
+                });
+
                 var tablaH1 = $('#tab_test1').DataTable();
                 var tablaH2 = $('#tab_test2').DataTable();
                 var tablaH3 = $('#tab_test3').DataTable();
@@ -3553,7 +3571,7 @@ function guardaDatos() {
                     for (var b = 0; b < eliminarId.length; b++) {
                         num_doc = eliminarId[b];
 
-                        if (num_doc == num_docH1) {
+                        if (num_doc === num_docH1) {
                             rowH11.remove().draw();
                             a--;
                         }
@@ -3568,7 +3586,7 @@ function guardaDatos() {
                     for (var d = 0; d < eliminarId.length; d++) {
                         num_doc = eliminarId[d];
 
-                        if (num_doc == num_docH2) {
+                        if (num_doc === num_docH2) {
                             rowH22.remove().draw();
                             c--;
                         }
@@ -3583,7 +3601,7 @@ function guardaDatos() {
                     for (var f = 0; f < eliminarId.length; f++) {
                         num_doc = eliminarId[f];
 
-                        if (num_doc == num_docH3) {
+                        if (num_doc === num_docH3) {
                             rowH33.remove().draw();
                             e--;
                         }
@@ -3598,7 +3616,7 @@ function guardaDatos() {
                     for (var h = 0; h < eliminarId.length; h++) {
                         num_doc = eliminarId[h];
 
-                        if (num_doc == num_docH4) {
+                        if (num_doc === num_docH4) {
                             rowH44.remove().draw();
                             g--;
                         }
@@ -3613,7 +3631,7 @@ function guardaDatos() {
                     for (var j = 0; j < eliminarId.length; j++) {
                         num_doc = eliminarId[j];
 
-                        if (num_doc == num_docH5) {
+                        if (num_doc === num_docH5) {
                             rowH55.remove().draw();
                             i--;
                         }
@@ -3623,7 +3641,13 @@ function guardaDatos() {
                 document.getElementById("loader").style.display = "none";
 
                 for (var k = 0; k < listaIds.length; k++) {
-                    M.toast({ html: 'Documento ' + listaIds[k] + ' fue creado' });
+                    if (listaIds[k].indexOf('<') >= 0) {
+                        var texto = listaIds[k].split('<');
+                        M.toast({ html: 'Documento ' + texto[1] + ' no fue creado, porque no contiene materiales.' });
+
+                    }else {
+                        M.toast({ html: 'Documento ' + listaIds[k] + ' fue creado' });
+                    }
                 }
 
                 //var table = $('#tab_test1').DataTable();
@@ -3720,7 +3744,7 @@ function cloneTables() {
         $('#tabclon4b').append("<tr id='tr4" + dd + "'></tr>");
         $(rowH4c).children().each(function (td4) {
             if (td4 !== 0) {
-                if (td4 == 9) {
+                if (td4 === 9) {
                     $("#tr4" + dd).append("<td>" + $(this).find('input:first').val().replace('%', '') + "</td>");
                 }
                 else {
@@ -3760,10 +3784,10 @@ var tablesToExcel = (function () {
                     var dataValue = tables[i].rows[j].cells[k].getAttribute("data-value");
                     dataValue = (dataValue) ? dataValue : tables[i].rows[j].cells[k].innerHTML;
                     var dataFormula = tables[i].rows[j].cells[k].getAttribute("data-formula");
-                    dataFormula = (dataFormula) ? dataFormula : (appname == 'Calc' && dataType == 'DateTime') ? dataValue : null;
+                    dataFormula = (dataFormula) ? dataFormula : (appname === 'Calc' && dataType === 'DateTime') ? dataValue : null;
                     ctx = {
-                        attributeStyleID: (dataStyle == 'Currency' || dataStyle == 'Date') ? ' ss:StyleID="' + dataStyle + '"' : ''
-                        , nameType: (dataType == 'Number' || dataType == 'DateTime' || dataType == 'Boolean' || dataType == 'Error') ? dataType : 'String'
+                        attributeStyleID: (dataStyle === 'Currency' || dataStyle === 'Date') ? ' ss:StyleID="' + dataStyle + '"' : ''
+                        , nameType: (dataType === 'Number' || dataType === 'DateTime' || dataType === 'Boolean' || dataType === 'Error') ? dataType : 'String'
                         , data: (dataFormula) ? '' : dataValue
                         , attributeFormula: (dataFormula) ? ' ss:Formula="' + dataFormula + '"' : ''
                     };
