@@ -19,14 +19,14 @@ using TAT001.Services;
 
 namespace TAT001.Controllers.Catalogos
 {
-    [Authorize]
-    [LoginActive]
+    [Authorize]  
     public class ClientesController : Controller
     {
         readonly TAT001Entities db = new TAT001Entities();
         readonly UsuarioLogin usuValidateLogin = new UsuarioLogin();
 
-        // GET: Clientes       
+        // GET: Clientes 
+        [LoginActive]
         public ActionResult Index()
         {
             int pagina_id = 631; //ID EN BASE DE DATOS
@@ -52,7 +52,7 @@ namespace TAT001.Controllers.Catalogos
                 {
                     redirectUrl = Url.Action("Index", "Home"),
                     isRedirect = true
-                });
+                }, JsonRequestBehavior.AllowGet);
             }
             int pagina_id = 631; //ID EN BASE DE DATOS
             ClienteViewModel viewModel = new ClienteViewModel();
@@ -64,14 +64,14 @@ namespace TAT001.Controllers.Catalogos
         {
             int pageIndex = pagina.Value;
             List<CLIENTE> clientes = db.CLIENTEs.Include(c => c.PAI).Include(c => c.TCLIENTE).ToList();
-            viewModel.ordenActual = colOrden;
+            viewModel.ordenActual = (string.IsNullOrEmpty(ordenActual) || !colOrden.Equals(ordenActual) ? colOrden:"");
             viewModel.numRegistros = numRegistros.Value;
             viewModel.buscar = buscar;
 
             if (!String.IsNullOrEmpty(buscar))
             {
                 clientes = clientes.Where(x =>
-                String.Concat(x.KUNNR, x.NAME1, (x.SUBREGION ?? ""), x.LAND, x.PAI.LANDX, x.PARVW, x.PAYER, (x.CANAL == null ? "" : x.CANAL))
+                String.Concat(x.KUNNR, x.NAME1, (x.SUBREGION ?? ""), x.LAND, x.PAI.LANDX, x.PARVW, x.PAYER, (x.CANAL ?? ""))
                 .ToLower().Contains(buscar.ToLower()))
                 .ToList();
             }
@@ -189,8 +189,9 @@ namespace TAT001.Controllers.Catalogos
             }
             return View(flujo);
         }
-        
+
         // GET: Clientes/Details/5
+        [LoginActive]
         public ActionResult Details(string vko, string vtw, string spa, string kun)
         {
             int pagina_id = 632; //ID EN BASE DE DATOS
@@ -236,6 +237,7 @@ namespace TAT001.Controllers.Catalogos
         }
 
         // GET: Clientes/Edit/5
+        [LoginActive]
         public ActionResult Edit(string vko, string vtw, string spa, string kun)
         {
             int pagina_id = 635; //ID EN BASE DE DATOS PARA EL TITULO
@@ -269,6 +271,7 @@ namespace TAT001.Controllers.Catalogos
         // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [LoginActive]
         public ActionResult Edit([Bind(Include = "VKORG,VTWEG,SPART,KUNNR,NAME1,STCD1,STCD2,LAND,REGION,SUBREGION,REGIO,ORT01,STRAS_GP,PSTLZ,CONTAC,CONT_EMAIL,PARVW,PAYER,GRUPO,SPRAS,ACTIVO,BDESCRIPCION,BANNER, PROVEEDOR_ID,CANAL,BZIRK,KONDA,VKGRP,VKBUR,BANNERG")] CLIENTE cLIENTE)
         {
             if (ModelState.IsValid)
@@ -292,6 +295,7 @@ namespace TAT001.Controllers.Catalogos
             base.Dispose(disposing);
         }
 
+        [LoginActive]
         public ActionResult Carga()
         {
             int pagina = 631; //ID EN BASE DE DATOS PARA EL TITULO
@@ -311,6 +315,7 @@ namespace TAT001.Controllers.Catalogos
             return View();
         }
         [HttpPost]
+        [LoginActive]
         public ActionResult Carga(IEnumerable<HttpPostedFileBase> files)
         {
             string uz = User.Identity.Name;

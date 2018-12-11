@@ -5,13 +5,19 @@
     //ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+<style>
+    .pnl-cli {
+        background-color: white;
+        padding: 5px 15px 5px 15px;
+        border-radius: 5px;
+    }
+</style>
 @using (Html.BeginForm("Create2", "Contacto", new { vko = Model.vkorg, vtw = Model.vtweg, kun = Model.kunnr, spa = Model.spart }))
 {
     @Html.AntiForgeryToken()
 
 <div class="row">
-    <div class="row left">
+    <div class="row left pnl-cli">
         <h6>@ViewBag.NoCliente - @ViewBag.Cliente</h6>
     </div>
     <div class="row right">

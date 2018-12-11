@@ -4,8 +4,16 @@
     ViewBag.carpeta_r = 500;
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-}<div class="row">
-    <div class="row left">
+}
+<style>
+    .pnl-cli {
+        background-color: white;
+        padding: 5px 15px 5px 15px;
+        border-radius: 5px;
+    }
+</style>
+<div class="row">
+    <div class="row left pnl-cli">
         <h6>@ViewBag.NoCliente - @ViewBag.Cliente</h6>
     </div>
     <div class="row right">

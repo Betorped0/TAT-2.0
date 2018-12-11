@@ -1025,6 +1025,7 @@
     <Content Include="bin\TAT001.dll" />-->
     <!--<Content Include="bin\TAT001.pdb" />-->
     <!--<Content Include="bin\WebGrease.dll" />-->
+    <Content Include="Archivos\DoctosAyuda\readme.txt" />
     <Content Include="Archivos\LayoutCargaMasiva\readme.txt" />
     <Content Include="Content\autocomplete.css" />
     <Content Include="Content\bootstrap.css" />
@@ -2066,7 +2067,6 @@
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->
     <Folder Include="App_Data\" />
-    <Folder Include="Archivos\DoctosAyuda\" />
     <Folder Include="files\Ayuda\" />
   </ItemGroup>
   <ItemGroup>

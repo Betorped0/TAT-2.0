@@ -473,12 +473,16 @@ function Carga() {
                     data: datos,
                     dataType: "json",
                     success: function (data) {
-                        mostrarAlerta("info", "A", "Se agregaron los nuevos registros");
-                        if (esFile) {
-                            window.location = root + "Clientes";
+                        if (data.isRedirect) {
+                            window.location.href = data.redirectUrl;
                         } else {
-                            Limpiar();
-                            document.getElementById("loader").style.display = "none";
+                            mostrarAlerta("info", "A", "Se agregaron los nuevos registros");
+                            if (esFile) {
+                                window.location = root + "Clientes";
+                            } else {
+                                Limpiar();
+                                document.getElementById("loader").style.display = "none";
+                            }
                         }
                     },
                     error: function (request, status, error) {
