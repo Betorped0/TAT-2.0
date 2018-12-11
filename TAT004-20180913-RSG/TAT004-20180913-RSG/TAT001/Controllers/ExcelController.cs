@@ -935,7 +935,7 @@ namespace TAT001.Controllers
                     updateRango(doc.TSOL_ID, doc.NUM_DOC);
                     guardaArchivos(N_DOC);//ALMACENAMOS LOS ARCHIVOS DE SOPORTE
                     li.Add(doc.NUM_DOC.ToString());
-                    ProcesaFlujo2 pf = new ProcesaFlujo2();
+                    ProcesaFlujo pf = new ProcesaFlujo();
 
                     try
                     {

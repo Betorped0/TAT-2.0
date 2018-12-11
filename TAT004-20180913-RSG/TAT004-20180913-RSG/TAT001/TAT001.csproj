@@ -843,6 +843,8 @@
     </Compile>
     <Compile Include="Filters\LoginActiveFilter.cs" />
     <Compile Include="Models\AlertaViewModel.cs" />
+    <Compile Include="Models\ArchivoC.cs" />
+    <Compile Include="Models\ArchivoContable2.cs" />
     <Compile Include="Models\Calendario445ViewModel.cs" />
     <Compile Include="Models\CargaMasivaModels.cs" />
     <Compile Include="Models\CartaD.cs" />
@@ -936,8 +938,6 @@
     <Compile Include="Services\Cancelar.cs" />
     <Compile Include="Services\Duplicado.cs" />
     <Compile Include="Services\ExcelExport.cs" />
-    <Compile Include="Services\ProcesaFlujo4.cs" />
-    <Compile Include="Services\ProcesaFlujo3.cs" />
     <Compile Include="Services\UsuarioLogin.cs" />
     <Compile Include="Services\Warning.cs" />
     <Compile Include="Services\Presupuesto.cs" />
@@ -947,7 +947,6 @@
     <Compile Include="Services\Email.cs" />
     <Compile Include="Services\Files.cs" />
     <Compile Include="Services\FormatosC.cs" />
-    <Compile Include="Services\ProcesaFlujo2.cs" />
     <Compile Include="Services\ProcesaFlujo.cs" />
     <Compile Include="Services\Rangos.cs" />
     <Compile Include="Services\Reversa.cs" />

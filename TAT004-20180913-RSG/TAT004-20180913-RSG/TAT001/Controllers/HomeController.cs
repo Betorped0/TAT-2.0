@@ -381,6 +381,8 @@ namespace TAT001.Controllers
                 ////    db.DOCUMENTOSAPs.Add(dos);
                 ////}
                 ////db.SaveChanges();
+                
+
                 if (user.PUESTO_ID == 14) {
                     return  View(listaDocsc);
                 }
