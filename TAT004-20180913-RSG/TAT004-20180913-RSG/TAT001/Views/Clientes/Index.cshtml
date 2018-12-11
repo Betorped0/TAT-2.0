@@ -1,17 +1,13 @@
 ﻿@model TAT001.Models.ClienteViewModel
 @{
-ViewBag.pagina_r = 631;
-ViewBag.carpeta_r = 500;
-Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.pagina_r = 631;
+    ViewBag.carpeta_r = 500;
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <style>
     #list {
         overflow-x: auto;
     }
-
-    /*th {
-        min-width: 120px;
-    }*/
 </style>
 <div class="row">
     <div class="col s12 right-align">
@@ -40,7 +36,7 @@ Layout = "~/Views/Shared/_Layout.cshtml";
     <link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
     <iframe id="txtArea1" style="display:none"></iframe>
     <div id="list">
-        @Html.Partial("List", Model)
+       @Html.Partial("List", Model)
     </div>
 </div>
 
@@ -56,76 +52,35 @@ Layout = "~/Views/Shared/_Layout.cshtml";
         $.ajax({
             url: root + 'Clientes/List?numRegistros=' + $('#numRegistros').val() + '&&buscar=' + $('input.global_filter').val(),
             success: function (resultView) {
-                fnCommon.showProcess(false);
-                $('#list').html(resultView);
-                pagination();
-                sort();
+                if (resultView.isRedirect) {
+                    window.location = resultView.redirectUrl;
+                } else {
+                    fnCommon.showProcess(false);
+                    $('#list').html(resultView);
+                  
+                }
             }
         });
     });
 
     //------Actualizar registros por busqueda
     $('input.global_filter').keyup(function () {
-        var buscar = $('input.global_filter').val();
          $.ajax({
              url: root+'Clientes/List?numRegistros=' + $('#numRegistros').val() + '&&buscar=' + $('input.global_filter').val(),
-            success: function (resultView) {
-                $('#list').html(resultView);
-                pagination();
-                sort();
+             success: function (resultView) {
+                 if (resultView.isRedirect) {
+                     window.location = resultView.redirectUrl;
+                 } else {
+                     fnCommon.showProcess(false);
+                     $('#list').html(resultView);
+                    
+                 } 
             }
         });
     });
-  //-----Pagination
-    function pagination() {
-        var paginationLink = $('.pagination>li>a');
-        for (var i = 0; i < paginationLink.length; i++) {
-            var url = paginationLink.get(i).getAttribute("href");
-            var id = 'link_p' + i;
-            if (url) {
-                paginationLink.get(i).setAttribute("id", id);
-                paginationLink.get(i).setAttribute("url", url);
-                $('#' + id).click(function (me) {
-                    fnCommon.showProcess(true);
-                    $.ajax({
-                        url: me.toElement.getAttribute('url'),
-                        success: function (resultView) {
-                            fnCommon.showProcess(false);
-                            $('#list').html(resultView);
-                            pagination(); 
-                        }
-                    });
-                });
-            }
-            paginationLink.get(i).removeAttribute("href");
-        }
-    }
-    pagination(); 
-    //-----Sort
-    function sort() {
-        var sortLink = $('.header>th>a');
-        for (var i = 0; i < sortLink.length; i++) {
-            var url = sortLink.get(i).getAttribute("href");
-            var id = 'link_h' + i;
-            if (url) {
-                sortLink.get(i).setAttribute("id", id);
-                sortLink.get(i).setAttribute("url", url);
-                $('#' + id).click(function (me) {
-                    fnCommon.showProcess(true);
-                    $.ajax({
-                        url: me.toElement.getAttribute('url'),
-                        success: function (resultView) {
-                            fnCommon.showProcess(false);
-                            $('#list').html(resultView);
-                            sort();
-                        }
-                    });
-                });
-            }
-            sortLink.get(i).removeAttribute("href");
-        }
-    }
-    sort();
+
+    //////-------Cargar List
+    ////$('#numRegistros').trigger("change");
 
     $("#excelBtn").click(function () {
         $('#table').trigger('destroyPager');
@@ -134,7 +89,6 @@ Layout = "~/Views/Shared/_Layout.cshtml";
         M.toast({ html: 'Se ha generado el excel con los registros mostrados en pantalla' });
         location.reload();
     });
-
     function fnExcelReport() {
         var tab_text = "<table border='2px'><tr bgcolor='#87AFC6'>";
         var textRange; var j = 0;
@@ -166,5 +120,4 @@ Layout = "~/Views/Shared/_Layout.cshtml";
 
         return (sa);
     }
-
 </script>

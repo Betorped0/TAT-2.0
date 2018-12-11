@@ -102,9 +102,13 @@
                     $.ajax({
                         url: me.toElement.getAttribute('url'),
                         success: function (resultView) {
-                            fnCommon.showProcess(false);
-                            $('#list').html(resultView);
-                            sort();
+                            if (resultView.isRedirect) {
+                                window.location = resultView.redirectUrl;
+                            } else {
+                                fnCommon.showProcess(false);
+                                $('#list').html(resultView);
+                                sort();
+                            }
                         }
                     });
                 });
@@ -127,9 +131,13 @@
                     $.ajax({
                         url: me.toElement.getAttribute('url'),
                         success: function (resultView) {
-                            fnCommon.showProcess(false);
-                            $('#list').html(resultView);
-                            pagination();
+                            if (resultView.isRedirect) {
+                                window.location = resultView.redirectUrl;
+                            } else {
+                                fnCommon.showProcess(false);
+                                $('#list').html(resultView);
+                                pagination();
+                            }
                         }
                     });
                 });
@@ -141,7 +149,6 @@
 
 </script>
 <div>
-
     @if (ViewBag.textos != null)
     {
         foreach (TEXTO t in ViewBag.textos)
@@ -160,7 +167,6 @@
                         });
                     }
                     catch (ee) {
-
                     }
                  }
             </script>

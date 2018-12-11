@@ -13,20 +13,15 @@ namespace TAT001.Services
         public bool validaUsuario(string usuario)
         {
             var existeUsuario = db.USUARIOLOGs.SingleOrDefault(x => x.USUARIO_ID == usuario);
-
-            if (false)
+            
+            if(existeUsuario != null && System.Web.HttpContext.Current.Session.SessionID != existeUsuario.SESION)
             {
-                if(existeUsuario != null && System.Web.HttpContext.Current.Session.SessionID != existeUsuario.SESION)
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
+                return false;
             }
             else
+            {
                 return true;
+            }
         }
     }
 }
