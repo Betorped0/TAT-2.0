@@ -365,8 +365,10 @@ function cambiaCheckRec() {
 
     }
     if (campo.checked) {
-        $("#select_neg").val("M");
-        $("#select_negi").val("M");
+        if (!ligada()) {
+            $("#select_neg").val("M");
+            $("#select_negi").val("M");
+        }
         $("#select_neg").prop("disabled", "disabled");
         $("#select_neg").formSelect();
         $("#select_neg").change();
@@ -380,14 +382,14 @@ function cambiaCheckRec() {
 }
 
 function addRowRec(t, num, date, monto, tipo, porc, periodo, meses) {
-//<<<<<<< 20181206-RSG
+    //<<<<<<< 20181206-RSG
     //var tsol = document.getElementsByClassName("k-state-selected");
     //var tsoll = "";
     //if (tsol.length > 0)
     //    tsoll = [0].innerText;
     //else
     //    tsoll = document.getElementById("tsol_idi").value;
-//=======
+    //=======
     var tsoll = ($("#tsol_idi").val() ? $("#tsol_idi").val() : $("#tsol_id").val());
 
     var m = "";
@@ -719,6 +721,9 @@ function ultimoDiaT(t, num, periodo, ejercicio, monto, tipo, porc, meses) {
 
 function setDates(tipo) {
 
+    var fechaIa = document.getElementById('fechai_vig').value;
+    var fechaFa = document.getElementById('fechaf_vig').value;
+
     if (tipo === "date") {
         ////var fechI = document.getElementById("fechai_vig2"),
         ////    fechF = document.getElementById("fechaf_vig2");
@@ -834,6 +839,12 @@ function setDates(tipo) {
     var dF = fechF.value.split('/');
     var datesF = new Date(dF[2], dF[1] - 1, dF[0]);
     instanceF.setDate(datesF);
+
+
+    var fechaIb = document.getElementById('fechai_vig').value;
+    var fechaFb = document.getElementById('fechaf_vig').value;
+    if (fechaIa != fechaIb || fechaFa != fechaFb)
+        cambiaRec();
 }
 
 //Evaluar la extensión y tamaño del archivo a cargar
