@@ -3,7 +3,6 @@
 @{
     ViewBag.pagina_r = 635;
     ViewBag.carpeta_r = 500;
-    //ViewBag.Title = "MODIFICAR";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -20,15 +19,6 @@
             </div>
         </div>
 
-        @*<div class="row" style="height:10px;width:100%;">
-                <div class="col l7 pink darken-1" style="height:10px;padding:0;"></div>
-                <div class="col l3 pink darken-4" style="height:10px;padding:0;">
-                    <div class="col l3 pink darken-4" style="height:10px;padding:0;"></div>
-                    <div class="col l8 orange" style="height:10px;padding:0;"></div>
-                    <div class="col l1 red" style="height:10px;padding:0;"></div>
-                </div>
-                <div class="col l2 yellow" style="height:10px;padding:0;"></div>
-            </div>*@
 
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.VKORG)
@@ -240,6 +230,8 @@
 <script src="~/Scripts/autocomplete1.11.4.js"></script>
 <link href="~/Content/autocomplete.css" rel="stylesheet" />
 <script>
+    var root = '@Url.Content("~")';
+
     $("input[type='hidden']").each(function (index, element) {
         $(this).appendTo($(element).parent());
     });
@@ -253,8 +245,8 @@
         auto(this).autocomplete({
             source: function (request, response) {
                 auto.ajax({
-                    type: "POST",
-                    url: 'Vendor',
+                    type: "GET",
+                    url: root+'Listas/Vendors',
                     dataType: "json",
                     data: { "Prefix": request.term },
                     success: function (data) {
@@ -284,8 +276,8 @@
         auto(this).autocomplete({
             source: function (request, response) {
                 auto.ajax({
-                    type: "POST",
-                    url: 'Canal',
+                    type: "GET",
+                    url: root+'Listas/Canales',
                     dataType: "json",
                     data: { "Prefix": request.term },
                     success: function (data) {
@@ -311,82 +303,16 @@
             }
         });
     });
-
-    $('body').on('keydown.autocomplete', '#input_idioma', function () {
-
-        auto(this).autocomplete({
-            source: function (request, response) {
-                auto.ajax({
-                    type: "POST",
-                    url: 'Idioma',
-                    dataType: "json",
-                    data: { "Prefix": request.term },
-                    success: function (data) {
-                        response(auto.map(data, function (item) {
-                            return { label: item.ID + " | " + item.DESCRIPCION, value: item.ID };
-                        }))
-                    }
-                })
-            },
-
-            messages: {
-                noResults: '',
-                results: function (resultsCount) { }
-            },
-
-            change: function (e, ui) {
-                if (!(ui.item) && $("#input_idioma").val() === "") {
-                    e.target.value = "";
-                }
-            },
-
-            select: function (event, ui) {
-            }
-        });
-    });
-
-    $('body').on('keydown.autocomplete', '#input_tcliente', function () {
-
-        auto(this).autocomplete({
-            source: function (request, response) {
-                auto.ajax({
-                    type: "POST",
-                    url: 'TCliente',
-                    dataType: "json",
-                    data: { "Prefix": request.term },
-                    success: function (data) {
-                        response(auto.map(data, function (item) {
-                            return { label: item.ID, value: item.ID };
-                        }))
-                    }
-                })
-            },
-
-            messages: {
-                noResults: '',
-                results: function (resultsCount) { }
-            },
-
-            change: function (e, ui) {
-                if (!(ui.item) && $("#input_tcliente").val() === "") {
-                    e.target.value = "";
-                }
-            },
-
-            select: function (event, ui) {
-            }
-        });
-    });
-
+    
     $('body').on('keydown.autocomplete', '#input_pais', function () {
 
         auto(this).autocomplete({
             source: function (request, response) {
                 auto.ajax({
-                    type: "POST",
-                    url: 'Pais',
+                    type: "GET",
+                    url: root+'Listas/Paises',
                     dataType: "json",
-                    data: { "Prefix": request.term },
+                    data: { Prefix: request.term },
                     success: function (data) {
                         response(auto.map(data, function (item) {
                             return { label: item.LAND + " | " + item.LANDX, value: item.LAND };

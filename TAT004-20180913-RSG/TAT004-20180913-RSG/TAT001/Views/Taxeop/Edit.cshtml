@@ -7,12 +7,19 @@
 }
 <script src="~/Scripts/ValidarDecimalesTP.js"></script>
 <script src="~/Scripts/jquery.mask.js"></script>
+<style>
+    .pnl-cli {
+        background-color: white;
+        padding: 5px 15px 5px 15px;
+        border-radius: 5px;
+    }
+</style>
 <div>
     @using (Html.BeginForm("Edit", "Taxeop", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
     <div class="row">
-        <div class="row left">
+        <div class="row left pnl-cli">
             <h6>@ViewBag.NoCliente - @ViewBag.Cliente</h6>
         </div>
         <div class="row right">

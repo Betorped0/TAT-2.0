@@ -5,6 +5,13 @@
     ViewBag.pagina_r = 853;
     ViewBag.carpeta_r = 500;
 }
+<style>
+    .pnl-cli {
+        background-color: white;
+        padding: 5px 15px 5px 15px;
+        border-radius: 5px;
+    }
+</style>
 <script src="~/Scripts/validarTaxeoh.js"></script>
 @using (Html.BeginForm())
 {
@@ -13,7 +20,7 @@
 <div class="form-horizontal">
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     <div class="row">
-        <div class="row left">
+        <div class="row left pnl-cli">
             <h6>@ViewBag.NoCliente - @ViewBag.Cliente</h6>
         </div>
         <div class="row right">

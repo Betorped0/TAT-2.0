@@ -88,7 +88,7 @@
         });
         auto("#LAND_ID").autocomplete({
             source: function (request, response) {
-                fnCommon.autoAjax(root + "Listas/paises_", response, { Prefix: request.term }, function (item) { return { label: item.TXT50, value: item.LAND }; });
+                fnCommon.autoAjax(root + "Listas/Paises", response, { Prefix: request.term }, function (item) { return { label: item.LANDX, value: item.LAND }; });
             },
             messages: {
                 noResults: '',

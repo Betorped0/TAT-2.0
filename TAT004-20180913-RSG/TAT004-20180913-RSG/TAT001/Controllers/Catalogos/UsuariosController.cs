@@ -87,11 +87,6 @@ namespace TAT001.Controllers.Catalogos
             ViewBag.SPRAS = sprasDao.ComboSpras();
 
             string socSelectedStr= Request["selectcocode"];
-            if (string.IsNullOrEmpty(socSelectedStr))
-            {
-                TempData["MensajeUsuario"] = "Seleccionar al menos un Co. Code";
-                return View(uSUARIO);
-            }
             List<string> socSelected= socSelectedStr.Split(',').ToList();
             ViewBag.sociedad = JsonConvert.SerializeObject(socSelected, Formatting.Indented);
             if (ModelState.IsValid)
@@ -267,11 +262,6 @@ namespace TAT001.Controllers.Catalogos
             ViewBag.SOCIEDADES = sociedadesDao.ListaSociedades(TATConstantes.ACCION_LISTA_SOCIEDADES);
             ViewBag.SPRAS = sprasDao.ComboSpras();
             string socSelectedStr = Request["selectcocode"];
-            if (string.IsNullOrEmpty(socSelectedStr))
-            {
-                TempData["MensajeUsuario"] = "Seleccionar al menos un Co. Code";
-                return View(uSUARIO);
-            }
             List<string> socSelected = socSelectedStr.Split(',').ToList();
             ViewBag.sociedad = JsonConvert.SerializeObject(socSelected, Formatting.Indented);
             if (ModelState.IsValid)
