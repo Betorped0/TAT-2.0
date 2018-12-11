@@ -472,7 +472,9 @@ namespace TAT001.Services
                                 DOCUMENTO d = db.DOCUMENTOes.Find(actual.NUM_DOC);
 
                                 ArchivoContable sa = new ArchivoContable();
-                                string file = sa.generarArchivo(d.NUM_DOC, 0, 0);
+                                List<ArchivoC> ac = new List<ArchivoC>();
+                                ////string file = sa.generarArchivo(d.NUM_DOC, 0, 0);
+                                string file = sa.generarArchivo(d.NUM_DOC, 0, 0, "F", ref ac);
                                 ////string file = "";
 
                                 if (file == "")
