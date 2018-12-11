@@ -6,11 +6,18 @@
     ViewBag.carpeta_r = 500;
 }
 <script src="~/Scripts/ProbarFiltrado.js"></script>
+<style>
+    .pnl-cli {
+        background-color: white;
+        padding: 5px 15px 5px 15px;
+        border-radius: 5px;
+    }
+</style>
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 <div class="row">
-    <div class="row left">
+    <div class="row left pnl-cli">
         <h6>@ViewBag.NoCliente - @ViewBag.Cliente</h6>
     </div>
     <div class="row right">
@@ -113,6 +120,8 @@
     <script src="~/Scripts/autocomplete1.11.4.js"></script>
     <link href="~/Content/autocomplete.css" rel="stylesheet" />
     <script>
+        var root = '@Url.Content("~")';
+
         var elem = document.querySelectorAll('select');
         var instance = M.FormSelect.init(elem, []);
         $("#input_concepto").attr("type", "text");
@@ -158,13 +167,13 @@
             auto(this).autocomplete({
                 source: function (request, response) {
                     auto.ajax({
-                        type: "POST",
-                        url: 'Sociedad',
+                        type: "GET",
+                        url: root+'Listas/Sociedades',
                         dataType: "json",
                         data: { "Prefix": request.term },
                         success: function (data) {
                             response(auto.map(data, function (item) {
-                                return { label: item.BUKRS + " | " + item.BUTXT, value: item.BUKRS };
+                                return { label: item.BUKRS , value: item.BUKRS };
                             }))
                         }
                     })

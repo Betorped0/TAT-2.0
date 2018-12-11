@@ -4,8 +4,15 @@
     ViewBag.pagina_r = 851;
     ViewBag.carpeta_r = 500;
 }
+<style>
+    .pnl-cli {
+        background-color: white;
+        padding: 5px 15px 5px 15px;
+        border-radius: 5px;
+    }
+</style>
 <div class="row">
-    <div class="row left">
+    <div class="row left pnl-cli">
         <h6>@ViewBag.NoCliente - @ViewBag.Cliente</h6>
     </div>
     <div class="row right">
@@ -120,13 +127,14 @@
             </tbody>
         </table>
         <script>
+            var root = '@Url.Content("~")';
         $(document).ready(function () {
             var table = $('#table').DataTable({
                 scrollX: "50vh",
                 scrollY: "50vh",
                 scrollCollapse: true,
                 language: {
-                "url": "../Scripts/lang/@ViewBag.usuario.SPRAS_ID"+".json"
+                    "url": root+"Scripts/lang/@ViewBag.spras_id"+".json"
                 },
                 order: [[4, "asc"]],
                 initComplete: function () {

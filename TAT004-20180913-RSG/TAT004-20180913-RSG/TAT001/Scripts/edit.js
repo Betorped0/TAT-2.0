@@ -2724,7 +2724,7 @@ function copiarSopTableControl(borrador) { //B20180625 MGC 2018.07.03
                                     if ($(this).find('td input.' + i).length) {
                                         var valtd = $(this).find('td input.' + i).val();//lej 26.07.18
                                     } else {
-                                        valtd = $(this).find(rowcl).text();
+                                        valtd = $(this).find(rowcl).text().trim();
                                     }
                                     item[i] = valtd;
                                 } else {//para cuando es multiple
@@ -2733,7 +2733,7 @@ function copiarSopTableControl(borrador) { //B20180625 MGC 2018.07.03
                                     if ($(this).find('td input.' + i).length) {
                                         var valtd = $(this).find(rowcl + " input").val();
                                     } else {
-                                        var valtd = $(this).find(rowcl).text();
+                                        var valtd = $(this).find(rowcl).text().trim();
                                     }
                                     //jemo inicio 24-07-2018
                                     if (i === 'IMPORTE_FAC') {

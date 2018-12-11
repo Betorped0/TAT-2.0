@@ -980,10 +980,10 @@ $('body').on('keydown.autocomplete', '.input_coc', function () {
     auto(this).autocomplete({
         source: function (request, response) {
             auto.ajax({
-                type: "POST",
-                url: 'Company',
+                type: "GET",
+                url: root+'Listas/Sociedades',
                 dataType: "json",
-                data: { "Prefix": request.term },
+                data: { Prefix: request.term },
                 success: function (data) {
                     response(auto.map(data, function (item) {
                         return { label: item.BUKRS + " | " + item.NAME1, value: item.BUKRS };

@@ -1432,10 +1432,10 @@ namespace TAT001.Controllers
 
             var tsols_valbdjs = JsonConvert.SerializeObject(tsols_valbd, Formatting.Indented);
             ViewBag.TSOL_VALUES = tsols_valbdjs;
-            List<FACTURASCONF> ffc = db.FACTURASCONFs.Where(a => a.SOCIEDAD_ID.Equals(d.SOCIEDAD_ID) & a.PAIS_ID.Equals(d.PAIS_ID)).ToList();
+            List<FACTURASCONF> ffc = db.FACTURASCONFs.Where(a => a.SOCIEDAD_ID.Equals(d.SOCIEDAD_ID) && a.PAIS_ID.Equals(d.PAIS_ID)).ToList();
             foreach (var item in tsols_valbd)
             {
-                FACTURASCONF fc = ffc.Where(a => a.TSOL.Equals(item.ID)).FirstOrDefault();
+                FACTURASCONF fc = ffc.FirstOrDefault(a => a.TSOL.Equals(item.ID));
                 if (fc == null)
                     item.FACTURA = false;
             }
@@ -4384,14 +4384,15 @@ namespace TAT001.Controllers
 
             var tsols_valbdjs = JsonConvert.SerializeObject(tsols_valbd, Formatting.Indented);
             ViewBag.TSOL_VALUES = tsols_valbdjs;
-            List<FACTURASCONF> ffc = db.FACTURASCONFs.Where(a => a.SOCIEDAD_ID.Equals(d.SOCIEDAD_ID) & a.PAIS_ID.Equals(d.PAIS_ID)).ToList();
+            List<FACTURASCONF> ffc = db.FACTURASCONFs.Where(a => a.SOCIEDAD_ID.Equals(d.SOCIEDAD_ID) && a.PAIS_ID.Equals(d.PAIS_ID)).ToList();
             foreach (var item in tsols_valbd)
             {
-                FACTURASCONF fc = ffc.Where(a => a.TSOL.Equals(item.ID)).FirstOrDefault();
+                FACTURASCONF fc = ffc.FirstOrDefault(a => a.TSOL.Equals(item.ID));
                 if (fc == null)
                     item.FACTURA = false;
             }
             ViewBag.TSOL_VALUES2 = JsonConvert.SerializeObject(tsols_valbd, Formatting.Indented);
+
             //RSG 13.06.2018--------------------------------------------------------
             //}//RSG 13.06.2018--------------------------------------------------------
             d.NUM_DOC = decimal.Parse(id_d);
@@ -4439,6 +4440,14 @@ namespace TAT001.Controllers
                                                     & a.SPART.Equals(dOCUMENTO.SPART)
                                                     & a.KUNNR.Equals(dOCUMENTO.PAYER_ID)).First();
             dOCUMENTO.DOCUMENTOF = db.DOCUMENTOFs.Where(a => a.NUM_DOC.Equals(dOCUMENTO.NUM_DOC)).ToList();
+
+            if (ffc.Any(x => x.TSOL == d.TSOL_ID && x.ACTIVO) && dOCUMENTO.DOCUMENTOF == null)//ADD RSG 10.12.2018
+            {
+                DOCUMENTOF dff = new DOCUMENTOF();
+                dff.POS = 1;
+
+                dOCUMENTO.DOCUMENTOF.Add(dff);
+            }
             //LEJ 03.08.2018----i
             for (int i = 0; i < dOCUMENTO.DOCUMENTOF.Count; i++)
             {
@@ -5205,12 +5214,77 @@ namespace TAT001.Controllers
                         //lej 26-07-2018 inicio--------------
                         try
                         {
+                            //Si hay solo un registro se modifica
+                            var _df = db.DOCUMENTOFs.Where(_d => _d.NUM_DOC == dOCUMENTO.NUM_DOC).ToList();
+                            if (dOCUMENTO.DOCUMENTOF.Count > 0 && _df.Count == 0)
+                            {
+                                if (dOCUMENTO.DOCUMENTOF.Count == 1)
+                                {
+                                    List<DOCUMENTOF> facts = new List<DOCUMENTOF>();
+                                    if (dOCUMENTO.DOCUMENTOF[0].FACTURAK == null)
+                                        dOCUMENTO.DOCUMENTOF[0].FACTURAK = "";
+                                    if (dOCUMENTO.DOCUMENTOF[0].FACTURA == null)
+                                        dOCUMENTO.DOCUMENTOF[0].FACTURA = "";
+                                    if (dOCUMENTO.DOCUMENTOF[0].PROVEEDOR == null)
+                                        dOCUMENTO.DOCUMENTOF[0].PROVEEDOR = "";
+                                    string[] fact = dOCUMENTO.DOCUMENTOF[0].FACTURAK.Split(';');
+                                    for (int k = 0; k < fact.Length; k++)
+                                    {
+                                        DOCUMENTOF docF = new DOCUMENTOF();
+                                        docF = dOCUMENTO.DOCUMENTOF[0];
+                                        docF.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                        docF.POS = k + 1;
+                                        if (fact[k].Length > 4000)
+                                            fact[k] = fact[k].Substring(0, 4000);
+                                        docF.FACTURAK = fact[k];
+                                        facts.Add(new DOCUMENTOF
+                                        {
+                                            NUM_DOC = dOCUMENTO.NUM_DOC,
+                                            POS = k + 1,
+                                            FACTURA = docF.FACTURA,
+                                            FECHA = docF.FECHA,
+                                            PROVEEDOR = docF.PROVEEDOR,
+                                            CONTROL = docF.CONTROL,
+                                            AUTORIZACION = docF.AUTORIZACION,
+                                            VENCIMIENTO = docF.VENCIMIENTO,
+                                            EJERCICIOK = docF.EJERCICIOK,
+                                            BILL_DOC = docF.BILL_DOC,
+                                            BELNR = docF.BELNR,
+                                            IMPORTE_FAC = docF.IMPORTE_FAC,
+                                            PAYER = docF.PAYER,
+                                            FACTURAK = fact[k]
+                                        });
+                                    }
+                                    db.BulkInsert(facts);
+                                }
+                                else
+                                {
+                                    for (int j = 0; j < dOCUMENTO.DOCUMENTOF.Count; j++)
+                                    {
+                                        try
+                                        {
+                                            DOCUMENTOF docF = new DOCUMENTOF();
+                                            docF = dOCUMENTO.DOCUMENTOF[j];
+                                            docF.NUM_DOC = dOCUMENTO.NUM_DOC;
+                                            db.DOCUMENTOFs.Add(docF);
+                                            db.SaveChanges();
+                                        }
+                                        catch (Exception e)
+                                        {
+
+                                        }
+                                    }
+                                }
+                            }
+
+
+
                             if (dOCUMENTO.DOCUMENTOF.Count == 1)
                             {
-                                //Si hay solo un registro se modifica
-                                var _df = db.DOCUMENTOFs.Where(_d => _d.NUM_DOC == dOCUMENTO.NUM_DOC).ToList();
                                 if (_df.Count == 1)
                                 {
+                                    if (dOCUMENTO.DOCUMENTOF[0].FACTURAK == null)
+                                        dOCUMENTO.DOCUMENTOF[0].FACTURAK = "";
                                     string[] _f = dOCUMENTO.DOCUMENTOF[0].FACTURAK.Split(';');
                                     for (int k = 0; k < _f.Length; k++)
                                     {
@@ -5266,7 +5340,7 @@ namespace TAT001.Controllers
                             }
                             else if (dOCUMENTO.DOCUMENTOF.Count > 1)
                             {
-                                var _df = db.DOCUMENTOFs.Where(_d => _d.NUM_DOC == dOCUMENTO.NUM_DOC).ToList();
+                                ////var _df = db.DOCUMENTOFs.Where(_d => _d.NUM_DOC == dOCUMENTO.NUM_DOC).ToList();
                                 var _df2 = new DOCUMENTOF();
                                 if (_df.Count == 1)
                                 {

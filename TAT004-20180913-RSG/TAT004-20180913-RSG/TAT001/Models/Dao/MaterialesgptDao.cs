@@ -14,6 +14,10 @@ namespace TAT001.Models.Dao
         public List<MATERIALGPT> ListaMaterialGroupsCliente(string vkorg, string spart, string kunnr, string soc_id, int aii, int mii, int aff, int mff)
         {
             db.Database.CommandTimeout = 180;
+            if (!db.CONFDIST_CAT.Any(x => x.SOCIEDAD_ID == soc_id))
+            {
+                return new List<MATERIALGPT>();
+            }
             List<MATERIALGPT> materialgp = db.Database.SqlQuery<MATERIALGPT>("CPS_LISTA_MATERIALGP_CLIENTE @SOCIEDAD_ID,@VKORG,@SPART,@KUNNR,@aii,@mii,@aff,@mff",
                new SqlParameter("@SOCIEDAD_ID", soc_id),
               new SqlParameter("@VKORG", vkorg),
@@ -27,6 +31,10 @@ namespace TAT001.Models.Dao
         }
         public List<DOCUMENTOM_MOD> ListaMaterialGroupsMateriales(string vkorg, string spart, string kunnr, string soc_id, int aii, int mii, int aff, int mff, string user_id)
         {
+            if (!db.CONFDIST_CAT.Any(x => x.SOCIEDAD_ID == soc_id))
+            {
+                return new List<DOCUMENTOM_MOD>();
+            }
             db.Database.CommandTimeout = 180;
             string spras_id = FnCommon.ObtenerSprasId(db, user_id);
             List<DOCUMENTOM_MOD> materialgp = db.Database.SqlQuery<DOCUMENTOM_MOD>("CPS_LISTA_MATERIALGP_MATERIALES @SOCIEDAD_ID,@VKORG,@SPART,@KUNNR,@SPRAS_ID,@aii,@mii,@aff,@mff",
