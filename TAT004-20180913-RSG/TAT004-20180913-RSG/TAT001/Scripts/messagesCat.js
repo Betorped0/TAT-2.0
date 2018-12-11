@@ -1,10 +1,10 @@
-﻿function toast(clases, dura, icon, mensaje, color) {
+﻿function toast(clases, dura, icon, mensaje, color, aceptar) {
     dismiss(clases);
     M.toast({
         classes: clases,
         displayLength: dura,
         html: '<span style="padding-right:15px;"><i class="material-icons ' + color + '-text">' + icon + '</i></span>  ' + mensaje
-            + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'toast\')">Aceptar</button>'
+            + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'toast\')">'+aceptar+'</button> '
     });
 }
 

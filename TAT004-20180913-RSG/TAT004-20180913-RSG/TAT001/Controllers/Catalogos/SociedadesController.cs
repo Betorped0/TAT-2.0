@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -89,7 +90,7 @@ namespace TAT001.Controllers.Catalogos
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             ObtenerConfPage(923,924);
-            List<DET_APROBH> flujos = db.DET_APROBH.Where(t=>t.SOCIEDAD_ID==id && t.ACTIVO).ToList();
+            List<DET_APROBH> flujos = db.DET_APROBH.Where(t=>t.SOCIEDAD_ID==id).OrderByDescending(t=>t.VERSION).DistinctBy(t=>t.PUESTOC_ID).OrderBy(t=>t.PUESTOC_ID).ToList();
             ViewBag.coCode = id;
             return View(flujos);
         }
@@ -100,7 +101,7 @@ namespace TAT001.Controllers.Catalogos
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             ObtenerConfPage(923,925);
-            var flujos = db.DET_APROBH.Where(t => t.SOCIEDAD_ID == id && t.ACTIVO).Select(t=>t.PUESTOC_ID).Distinct().ToList();
+            var flujos = db.DET_APROBH.Where(t => t.SOCIEDAD_ID == id).Select(t=>t.PUESTOC_ID).Distinct().ToList();
             var lan =ViewBag.usuario.SPRAS_ID;
             var puestos = db.PUESTOes.Where(t => t.ACTIVO == true && t.ID!=1 && t.ID!=9 && !flujos.Contains(t.ID)).ToList();
             var sl_puestos = puestos.Select(x => new { x.ID,Puesto= x.PUESTOTs.Count>0? x.PUESTOTs.Where(t=>t.SPRAS_ID==lan).FirstOrDefault().TXT50 : ""}).ToList();
@@ -286,7 +287,7 @@ namespace TAT001.Controllers.Catalogos
                         e.ACTIVO=false;
                     }
                     db.SaveChanges();
-                    return RedirectToAction("Flujos", new { id = dET_APROBH.SOCIEDAD_ID });
+                    return RedirectToAction("MAFlujos", new { id = dET_APROBH.SOCIEDAD_ID, pid=dET_APROBH.PUESTOC_ID, v=dET_APROBH.VERSION});
                 }
                 else
                     ModelState.AddModelError("Mensaje", "Incluya al menos una fila a la matriz de aprobación");
@@ -323,7 +324,7 @@ namespace TAT001.Controllers.Catalogos
                 ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagtitulo.Value)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
             ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
             ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-
+            ViewBag.mensajes = JsonConvert.SerializeObject(db.MENSAJES.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS.Equals(user.SPRAS_ID)).ToList(), Formatting.Indented);
         }
         USUARIO ObtenerUsuario()
         {
