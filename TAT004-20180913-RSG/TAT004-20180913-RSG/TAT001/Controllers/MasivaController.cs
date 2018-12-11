@@ -204,53 +204,55 @@ namespace TAT001.Controllers
                         doc.SOCIEDAD_ID = bukrs;
                         doc.PAIS_NAME = land;
 
-                        PAI p = pp.Where(a => a.LANDX == land).FirstOrDefault();
+                        PAI p = pp.FirstOrDefault(a => a.LANDX == land);
+                        string pLand = null;
                         if (p != null)
                         {
                             doc.PAIS_ID = p.LAND;//ADD RSG 01.11.2018--------------------------------------------------
+                            pLand = p.LAND;
+                        }
+                        List<TALLT> list = tallsDao.ListaTallsConCuenta(TATConstantes.ACCION_LISTA_TALLCONCUENTA, null, spras_id, pLand, DateTime.Now.Year, bukrs);
+                        if (list.Any(x => x.TXT50 == gall_id))
+                        {
+                            doc.TALL_ID = list.Where(x => x.TXT50 == gall_id).FirstOrDefault().TALL_ID;
+                        }
+                        doc.ESTADO = estado;
+                        doc.CIUDAD = ciudad;
+                        doc.CONCEPTO = concepto;
+                        doc.NOTAS = notas;
+                        doc.PAYER_ID = payer_id.TrimStart('0');
+                        doc.VKORG = vkorg;
+                        doc.VTWEG = vtweg;
+                        doc.SPART = spart;
+                        //var existeCliente = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault().NAME1;
 
-                            List<TALLT> list = tallsDao.ListaTallsConCuenta(TATConstantes.ACCION_LISTA_TALLCONCUENTA, null, spras_id, p.LAND, DateTime.Now.Year, bukrs);
-                            if (list.Any(x => x.TXT50 == gall_id))
-                            {
-                                doc.TALL_ID = list.Where(x => x.TXT50 == gall_id).FirstOrDefault().TALL_ID;
-                            }
-                            doc.ESTADO = estado;
-                            doc.CIUDAD = ciudad;
-                            doc.CONCEPTO = concepto;
-                            doc.NOTAS = notas;
-                            doc.PAYER_ID = payer_id.TrimStart('0');
-                            doc.VKORG = vkorg;
-                            doc.VTWEG = vtweg;
-                            doc.SPART = spart;
-                            //var existeCliente = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault().NAME1;
+                        //if (existeCliente != null | existeCliente != "")
+                        //{
+                        //    doc.PAYER_NOMBRE = existeCliente;
+                        //}
+                        var existeCliente = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault();
 
-                            //if (existeCliente != null | existeCliente != "")
-                            //{
-                            //    doc.PAYER_NOMBRE = existeCliente;
-                            //}
-                            var existeCliente = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault();
-
-                            if (existeCliente != null)
-                            {
-                                doc.PAYER_NOMBRE = existeCliente.NAME1;
-                            }
-                            else
-                            {
-                                doc.PAYER_NOMBRE = "";
-                            }
-
-                            doc.CONTACTO_NOMBRE = contacto_nombre;
-                            doc.CONTACTO_EMAIL = contacto_email;
-                            doc.FECHAI_VIG = fechai_vig2[0];
-                            doc.FECHAF_VIG = fechaf_vig2[0];
-                            doc.MONEDA_ID = moneda_id;
-
-                            lp.Add(doc);
-                            validacion.Add(cargaInicialH1(ds1.Tables[0].Rows[i], pp));
+                        if (existeCliente != null)
+                        {
+                            doc.PAYER_NOMBRE = existeCliente.NAME1;
+                        }
+                        else
+                        {
+                            doc.PAYER_NOMBRE = "";
                         }
 
+                        doc.CONTACTO_NOMBRE = contacto_nombre;
+                        doc.CONTACTO_EMAIL = contacto_email;
+                        doc.FECHAI_VIG = fechai_vig2[0];
+                        doc.FECHAF_VIG = fechaf_vig2[0];
+                        doc.MONEDA_ID = moneda_id;
+
+                        lp.Add(doc);
+                        validacion.Add(cargaInicialH1(ds1.Tables[0].Rows[i], pp));
+
+
                     }
-                    if (validacion.Count()==0)
+                    if (validacion.Count() == 0)
                     {
                         lp.Add("El contenido de la hoja 1 no fue procesado");
                     }
@@ -263,7 +265,7 @@ namespace TAT001.Controllers
                 {
                     lp.Add("Error de formato en hoja 1");
                 }
-                
+
             }
             else
             {
@@ -552,9 +554,11 @@ namespace TAT001.Controllers
 
 
                         PAI pais_ = db.PAIS.Where(x => x.LANDX.ToUpper() == objInformacion.PAIS_NAME.ToUpper() && x.SOCIEDAD_ID == objInformacion.SOCIEDAD_ID).FirstOrDefault();
+                        string decimales = ".";
                         if (pais_ != null)
-                        { 
-                            string decimales = pais_.DECIMAL;
+                        {
+                            decimales = pais_.DECIMAL;
+                        }
                         string spras_id = FnCommon.ObtenerSprasId(db, User.Identity.Name);
 
                         string vkorg = "", vtweg = "", spart = "";
@@ -729,8 +733,7 @@ namespace TAT001.Controllers
                                 validacion.Add(cargaInicialH4(objInformacion, objDistribucion, listCategorias, listRows));
                             }
                         }
-                        }
-
+                        
                     }
 
                     if (validacion.Count() == 0)
@@ -1352,8 +1355,12 @@ namespace TAT001.Controllers
             string land_id = "";
             PAI p = pp.Where(a => a.LANDX == land).FirstOrDefault();//ADD RSG 01.11.2018
             SOCIEDAD soc = new SOCIEDAD();
+            string pLand = null;
             if (p != null)//ADD RSG 01.11.2018
+            {
                 land_id = p.LAND;//ADD RSG 01.11.2018
+                pLand = p.LAND;
+            }
 
             if (t_sol.Length <= 10)
             {
@@ -1461,7 +1468,7 @@ namespace TAT001.Controllers
 
             if (payer_id.Length <= 10)
             {
-                List<CLIENTE> listClientes=clientesDao.ListaClientes(null,User.Identity.Name, p.LAND);
+                List<CLIENTE> listClientes=clientesDao.ListaClientes(null,User.Identity.Name, pLand);
                 //if (db.CLIENTEs.Where(x => x.KUNNR == payer_id && x.ACTIVO && x.LAND==p.LAND).Count() > 0)
                 if(listClientes.Any(x=>x.KUNNR==payer_id))
                 {
@@ -2219,8 +2226,13 @@ namespace TAT001.Controllers
             string colorLigada = "";
             string spras_id = FnCommon.ObtenerSprasId(db, User.Identity.Name);
 
-            string miles = db.PAIS.Where(x => x.LANDX.ToUpper() == objInformacion.PAIS_NAME.ToUpper()).FirstOrDefault().MILES;
-            string decimales = db.PAIS.Where(x => x.LANDX.ToUpper() == objInformacion.PAIS_NAME.ToUpper()).FirstOrDefault().DECIMAL;
+            PAI pais_ = db.PAIS.Where(x => x.LANDX.ToUpper() == objInformacion.PAIS_NAME.ToUpper()).FirstOrDefault();
+            string decimales = ".";
+            string miles = ",";
+            if (pais_ != null) {
+                 miles = pais_.MILES;
+                 decimales = pais_.DECIMAL;
+            }
 
             if (objDistribucion != null)
             {
@@ -3081,6 +3093,43 @@ namespace TAT001.Controllers
                     //FIN DE LA SECCION 3
 
                     //SECCION 4.- VALIDACION DE DATOS DE LA CUARTA HOJA DEL EXCEL(DISTRIBUCION)
+                    List<MaterialCategoria> listMC = new List<MaterialCategoria>();
+                    List<string> listcat = new List<string>();
+                    decimal totalcats = 0;
+                    string select_dis = "";
+                    List<CategoriaMaterial> listcatm = new List<CategoriaMaterial>();
+
+                    ///VALIDAR SI ES POR CATEGORIA
+                    for (int k = 0; k < ds4.Tables[0].Rows.Count; k++)
+                    {
+                        string num_docH4 = ds4.Tables[0].Rows[k][0].ToString().Trim();
+                        num_docH4 = num_docH4.TrimStart('0').Trim();
+
+                        if (num_docH4 == num_doc)
+                        {
+                            MaterialCategoria objMC = new MaterialCategoria();
+                            string matnr = ds4.Tables[0].Rows[k][4].ToString().Trim();
+                            if (matnr.Length < 18) { matnr = cad.completaMaterial(matnr); }
+                            string matklId = ds4.Tables[0].Rows[k][5].ToString().Trim();
+
+                            objMC.Material = matnr;
+                            objMC.Categoria = matklId;
+                            listMC.Add(objMC);
+                            listcat.Add(matklId);
+
+                        }
+                    }
+                    int totalMC = listMC.Count();
+                    int totalCategoria = listMC.FindAll(x => string.IsNullOrEmpty(x.Material) && !string.IsNullOrEmpty(x.Categoria)).Count();
+
+                    if (totalMC == totalCategoria)
+                    {
+                        listcatm = grupoMaterialesController(listcat, docu.VKORG, docu.SPART, docu.PAYER_ID, docu.SOCIEDAD_ID, out totalcats);
+                        select_dis = "C";
+                    }
+
+
+
                     for (int k = 0; k < ds4.Tables[0].Rows.Count; k++)
                     {
                         string num_docH4 = ds4.Tables[0].Rows[k][0].ToString().Trim();
@@ -3178,7 +3227,7 @@ namespace TAT001.Controllers
                             }
                             //-------------------------------------------------ADD RSG 04.11.2018
 
-                            if (ligada.Trim() != "false" & dop.DOCUMENTORECs.Count == 0)//ES LIGADA
+                            if (ligada.Trim() != "false" && dop.DOCUMENTORECs.Count == 0)//ES LIGADA
                             {
                                 dop.LIGADA = true;
                                 dop.TIPO_TECNICO = "P";
@@ -3231,6 +3280,97 @@ namespace TAT001.Controllers
                                 //db.SaveChanges();
                             }
                             //-------------------------------------------------ADD RSG 04.11.2018
+                           
+
+                            List<DOCUMENTOM> docml = new List<DOCUMENTOM>();
+                            if (docup.MATNR == "")
+                            {
+                                string col = "";
+                                if (Convert.ToDecimal(docup.APOYO_EST) > 0)
+                                {
+                                    col = "E";
+                                }
+                                else if (Convert.ToDecimal(docup.APOYO_REAL) > 0)
+                                {
+                                    col = "R";
+                                }
+                                docml = addCatItems(listcatm, docu.PAYER_ID, docup.MATKL, docu.SOCIEDAD_ID, docu.NUM_DOC,
+                                    Convert.ToInt16(docup.POS), docup.VIGENCIA_DE, docup.VIGENCIA_AL, null, select_dis, totalcats, Convert.ToDecimal(docu.MONTO_DOC_MD), col);
+                            }
+                            //Obtener apoyo estimado
+                            decimal apoyo_esti = 0;
+                            decimal apoyo_real = 0;
+
+                            //Validar si es por porcentaje (si es ligada) o por monto 
+                            //Categoría por monto
+                            if (ligada.Trim() == "false")
+                            {
+                                //Obtener el apoyo real o estimado para cada material
+                                var cantmat = 1;
+                                try
+                                {
+                                    apoyo_esti = Convert.ToDecimal(docup.APOYO_EST) / cantmat;
+
+                                }
+                                catch (Exception e)
+                                {
+                                    apoyo_esti = 0;
+                                }
+
+                                try
+                                {
+                                    apoyo_real = Convert.ToDecimal(docup.APOYO_REAL) / cantmat;
+
+                                }
+                                catch (Exception e)
+                                {
+                                    apoyo_real = 0;
+                                }
+
+                                for (int d = 0; d < docml.Count; d++)
+                                {
+                                    
+                                        DOCUMENTOM docM = new DOCUMENTOM();
+                                        docM = docml[d];
+                                        docM.POS = d + 1;
+                                        CategoriaMaterial cm = listcatm.Where(x => x.ID == docup.MATKL).FirstOrDefault();
+                                        decimal porc = 0;
+                                        if (cm != null)
+                                        {
+                                            if (cm.TOTALCAT > 0) { porc = cm.MATERIALES.Where(x => x.MATNR == docM.MATNR).FirstOrDefault().VAL / cm.TOTALCAT * 100; }
+                                            docM.PORC_APOYO = porc;
+                                        }
+                                        else if (docup.MATKL == "000")
+                                        {
+                                            decimal suma = 0;
+                                            foreach (CategoriaMaterial cam in listcatm)
+                                                suma += cam.TOTALCAT;
+                                            foreach (CategoriaMaterial cam in listcatm)
+                                                foreach (DOCUMENTOM_MOD dm in cam.MATERIALES)
+                                                    if (dm.MATNR == docM.MATNR)
+                                                        if (suma > 0) { porc = dm.VAL / suma * 100; }
+                                            docM.PORC_APOYO = porc;
+                                        }
+                                        docM.APOYO_REAL = apoyo_real * porc / 100;
+                                        docM.APOYO_EST = apoyo_esti * porc / 100;
+
+                                    docup.DOCUMENTOMs.Add(docM);
+                                }
+                            }
+                            else
+                            {
+                                //Categoría por porcentaje
+                                for (int cp = 0; cp < docml.Count; cp++)
+                                {
+                                    
+                                        DOCUMENTOM docM = new DOCUMENTOM();
+                                        docM = docml[cp];
+                                        docM.POS = cp + 1;
+
+                                    docup.DOCUMENTOMs.Add(docM);
+                                }
+
+                            }
                             dop.DOCUMENTOPs.Add(docup);
                         }
                     }
@@ -4235,6 +4375,258 @@ namespace TAT001.Controllers
             numDocument = numDocument.Trim();
             int TempNumDoc = int.Parse(Math.Truncate(string.IsNullOrEmpty(numDocument) ? -1 : double.Parse(numDocument)).ToString());
             return TempNumDoc;
+        }
+        public List<CategoriaMaterial> grupoMaterialesController(List<string> catstabla, string vkorg, string spart, string kunnr, string soc_id, out decimal total)
+        {
+            TAT001Entities db = new TAT001Entities();
+            if (kunnr == null)
+            {
+                kunnr = "";
+            }
+            Cadena cad = new Cadena();
+            kunnr = cad.completaCliente(kunnr);
+
+            List<DOCUMENTOM_MOD> jd = new List<DOCUMENTOM_MOD>();
+
+            //Obtener los materiales
+            IEnumerable<MATERIAL> matl = Enumerable.Empty<MATERIAL>();
+            try
+            {
+                matl = db.MATERIALs.Where(m => m.ACTIVO == true);
+            }
+            catch (Exception e)
+            {
+                matl = null;
+            }
+
+            //Validar si hay materiales
+            if (matl != null)
+            {
+
+                CLIENTE cli = new CLIENTE();
+                List<CLIENTE> clil = new List<CLIENTE>();
+
+                try
+                {
+                    cli = db.CLIENTEs.Where(c => c.KUNNR == kunnr & c.VKORG == vkorg & c.SPART == spart).FirstOrDefault();
+
+                    //Saber si el cliente es sold to, payer o un grupo
+                    if (cli != null)
+                    {
+                        //Es un soldto
+                        if (cli.KUNNR != cli.PAYER && cli.KUNNR != cli.BANNER)
+                        {
+                            clil.Add(cli);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    cli = null;
+                }
+
+                var cie = clil.Cast<CLIENTE>();
+                //Obtener el numero de periodos para obtener el historial
+                int? mesesVenta = (db.CONFDIST_CAT.Any(x => x.SOCIEDAD_ID == soc_id) ? db.CONFDIST_CAT.First(x => x.SOCIEDAD_ID == soc_id).PERIODOS : null);
+                int nummonths = (mesesVenta != null ? mesesVenta.Value : DateTime.Now.Month);
+                int imonths = nummonths * -1;
+                //Obtener el rango de los periodos incluyendo el año
+                DateTime ff = DateTime.Today;
+                DateTime fi = ff.AddMonths(imonths);
+
+                string mi = fi.Month.ToString();//.ToString("MM");
+                string ai = fi.Year.ToString();//.ToString("yyyy");
+
+                string mf = ff.Month.ToString();// ("MM");
+                string af = ff.Year.ToString();// "yyyy");
+
+                int aii = 0;
+                try
+                {
+                    aii = Convert.ToInt32(ai);
+                }
+                catch (Exception e)
+                {
+                    aii = 0;
+                }
+
+                int mii = 0;
+                try
+                {
+                    mii = Convert.ToInt32(mi);
+                }
+                catch (Exception e)
+                {
+                    mii = 0;
+                }
+
+                int aff = 0;
+                try
+                {
+                    aff = Convert.ToInt32(af);
+                }
+                catch (Exception e)
+                {
+                    aff = 0;
+                }
+
+                int mff = 0;
+                try
+                {
+                    mff = Convert.ToInt32(mf);
+                }
+                catch (Exception e)
+                {
+                    mff =0;
+                }
+
+                 if (cie != null)
+                    {
+                        jd = materialesgptDao.ListaMaterialGroupsMateriales(vkorg, spart, kunnr, soc_id, aii, mii, aff, mff, User.Identity.Name);
+                    }
+            }
+
+            //Obtener las categorías
+            var categoriasl = jd.GroupBy(c => c.ID_CAT, c => new { ID = c.ID_CAT.ToString() }).ToList();
+            List<string> categorias = new List<string>();
+            //Diferencia del método de la vista jquery
+            //Tomar en cuenta nada más las categorías que se agregaron a la tabla y que se enviaron en el submmit 
+            for (int h = 0; h < catstabla.Count; h++)
+            {
+                for (int j = 0; j < categoriasl.Count; j++)
+                {
+                    if (catstabla[h].ToString() == categoriasl[j].Key.ToString() | catstabla[h].ToString() == "000")
+                    {
+                        categorias.Add(categoriasl[j].Key.ToString());
+                    }
+                }
+            }
+
+            List<CategoriaMaterial> lcatmat = new List<CategoriaMaterial>();
+            decimal t = 0;
+            foreach (string item in categorias)
+            {
+                CategoriaMaterial cm = new CategoriaMaterial();
+                cm.ID = item;
+                cm.EXCLUIR = jd.Where(x => x.ID_CAT.Equals(item)).FirstOrDefault().EXCLUIR;//RSG 09.07.2018 ID 156
+
+                //Obtener los materiales de la categoría
+                List<DOCUMENTOM_MOD> dl = new List<DOCUMENTOM_MOD>();
+                List<DOCUMENTOM_MOD> dm = new List<DOCUMENTOM_MOD>();
+                //dl = jd.Where(c => c.ID_CAT == item).Select(c => new DOCUMENTOM_MOD { ID_CAT = c.ID_CAT, MATNR = c.MATNR, VAL = c.VAL}).ToList();//Falta obtener el groupby
+                dl = jd.Where(c => c.ID_CAT == item).Select(c => new DOCUMENTOM_MOD { ID_CAT = c.ID_CAT, MATNR = c.MATNR, VAL = c.VAL, EXCLUIR = c.EXCLUIR }).ToList();//RSG 09.07.2018 ID 156
+
+                //Obtener la descripción de los materiales
+                foreach (DOCUMENTOM_MOD d in dl)
+                {
+                    DOCUMENTOM_MOD dcl = new DOCUMENTOM_MOD();
+                    //dcl = dm.Where(z => z.MATNR == d.MATNR).Select(c => new DOCUMENTOM_MOD { ID_CAT = c.ID_CAT, MATNR = c.MATNR, VAL = c.VAL }).FirstOrDefault();//RSG 09.07.2018 ID 156
+                    dcl = dm.Where(z => z.MATNR == d.MATNR).Select(c => new DOCUMENTOM_MOD { ID_CAT = c.ID_CAT, MATNR = c.MATNR, VAL = c.VAL, EXCLUIR = c.EXCLUIR }).FirstOrDefault();//RSG 09.07.2018 ID 156
+
+                    if (dcl == null)
+                    {
+                        DOCUMENTOM_MOD dcll = new DOCUMENTOM_MOD();
+                        //No se ha agregado
+                        decimal val = dl.Where(y => y.MATNR == d.MATNR).Sum(x => x.VAL);
+                        dcll.ID_CAT = item;
+                        dcll.MATNR = d.MATNR;
+
+                        //Obtener la descripción del material
+                        dcll.DESC = db.MATERIALs.Where(w => w.ID == d.MATNR).FirstOrDefault().MAKTG.ToString();
+                        dcll.VAL = val;
+                        t += val;
+                        cm.TOTALCAT += val;
+                        dm.Add(dcll);
+                    }
+                }
+
+                cm.MATERIALES = dm;
+                lcatmat.Add(cm);
+            }
+
+            total = t;
+
+            return lcatmat;
+        }
+        public List<DOCUMENTOM> addCatItems(List<CategoriaMaterial> categorias, string kunnr, string catid,
+           string soc_id, decimal numdoc, int posid, DateTime? vig_de, DateTime? vig_a, string neg, string dis, decimal total, decimal totaldoc, string col)
+        {
+            List<DOCUMENTOM> jdlret = new List<DOCUMENTOM>();
+
+            //Negaciación por monto
+
+            Cadena cad = new Cadena();
+            kunnr = cad.completaCliente(kunnr);
+
+            //Obtener de la lista de categorias los materiales de la categoría del item
+            List<CategoriaMaterial> ccategor = new List<CategoriaMaterial>();
+            if (catid == "000")//ccategor = categorias.ToList();//RSG 09.07.2018 ID 156
+                ccategor = categorias.Where(a => a.EXCLUIR == false).ToList();//RSG 09.07.2018 ID 156
+            else
+                ccategor = categorias.Where(c => c.ID == catid).ToList();
+            foreach (CategoriaMaterial categor in ccategor)
+            {
+                //CategoriaMaterial categor = categorias.Where(c => c.ID == catid).FirstOrDefault();
+                List<DOCUMENTOM_MOD> materiales = new List<DOCUMENTOM_MOD>();
+                materiales = categor.MATERIALES;
+                foreach (DOCUMENTOM_MOD docm in materiales)
+                {
+                    DOCUMENTOM dm = new DOCUMENTOM();
+                    dm.NUM_DOC = numdoc;
+                    dm.POS_ID = posid;
+                    dm.MATNR = docm.MATNR;
+                    dm.VIGENCIA_DE = vig_de;
+                    dm.VIGENCIA_A = vig_a;
+                    if (dis == "C")
+                    {
+                        //dm.APOYO_EST = docm.VAL;
+                        dm.VALORH = docm.VAL; //MGC B20180611 Se agregó el valor del material del historico de la provisión
+                    }
+                    jdlret.Add(dm);
+                }
+            }
+
+
+            if (dis == "C")
+            {
+                foreach (DOCUMENTOM docm in jdlret)
+                {
+                    //Prcentaje
+                    decimal por = 0;
+                    try
+                    {
+                        por = Convert.ToDecimal((docm.VALORH * 100) / total); //B20180618 v1 MGC 2018.06.18
+                    }
+                    catch (Exception)
+                    {
+                        por = 0;
+                    }
+                    decimal totalmat = 0;
+
+                    try
+                    {
+                        totalmat = Convert.ToDecimal((por * totaldoc) / 100);
+                    }
+                    catch (Exception)
+                    {
+                        totalmat = 0;
+                    }
+
+                    docm.PORC_APOYO = por;
+                    docm.APOYO_EST = 0;
+                    if (col == "E")
+                    {
+                        docm.APOYO_EST = totalmat;
+                    }
+                    else if (col == "R")
+                    {
+                        docm.APOYO_REAL = totalmat;
+                    }
+
+                }
+            }
+
+            return jdlret;
         }
     }
 }
