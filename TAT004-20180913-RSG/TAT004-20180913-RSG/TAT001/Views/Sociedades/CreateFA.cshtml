@@ -15,8 +15,8 @@
         @Html.ValidationSummary(true, "", new { @class = "red-text" })
         @Html.HiddenFor(model => model.SOCIEDAD_ID)
         @Html.HiddenFor(model => model.VERSION)
-        @Html.HiddenFor(model=>model.ACTIVO)
-        @Html.HiddenFor(model=>model.PUESTOC_ID)
+        @Html.HiddenFor(model => model.ACTIVO)
+        @Html.HiddenFor(model => model.PUESTOC_ID)
         <div class="row">
             <div class="col s4">
                 @Html.LabelFor(model => model.SOCIEDAD_ID, "SOCIEDAD_ID", htmlAttributes: new { @class = "control-label col-md-2", id = "lbl_coCode" })
@@ -28,7 +28,7 @@
             <div class="col s4">
                 @Html.LabelFor(model => model.PUESTOC_ID, "PUESTOC_ID", htmlAttributes: new { @class = "control-label col-md-2", id = "lbl_Puesto" })
                 <div class="col-md-4">
-                    @Html.DropDownList("PUESTOC_ID", null, htmlAttributes: new { @class = "form-control", disabled=true })
+                    @Html.DropDownList("PUESTOC_ID", null, htmlAttributes: new { @class = "form-control", disabled = true })
                     @Html.ValidationMessageFor(model => model.PUESTOC_ID, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -82,8 +82,8 @@
                             <td>@Html.DropDownList("NivelesMO", listM1, "", htmlAttributes: new { @class = "browser-default form-control NivelesMO", disabled = true })</td>
                             @*<td><label><input class='input_activo' type='checkbox' id='input_activo' name='activof' checked /><span></span></label></td>*@
                             @*<td>
-                                <span class="table-remove material-icons red-text">delete</span>
-                            </td>*@
+                                    <span class="table-remove material-icons red-text">delete</span>
+                                </td>*@
                         </tr>
                         @foreach (var item in ViewBag.FlujosActuales)
                         {
@@ -121,7 +121,7 @@
                                         var presu = item.PRESUPUESTO != null ? item.PRESUPUESTO : false;
                                         if (presu)
                                         {
-                                            @Html.DropDownList("NivelesPR", listP, "", htmlAttributes: new { @class = "browser-default form-control NivelesPR", required=true })
+                                            @Html.DropDownList("NivelesPR", listP, "", htmlAttributes: new { @class = "browser-default form-control NivelesPR", required = true })
                                         }
                                         else
                                         {
@@ -130,12 +130,12 @@
                                     }
                                 </td>
                                 <td>
-                                            <input type="text" class="monto" name="monto" maxlength="17" value="@item.MONTO" />
+                                    <input type="text" class="monto" name="monto" maxlength="17" value="@item.MONTO" />
                                 </td>
                                 <td>
                                     @if (item.MONTO != 0 && item.MONTO != null)
                                     {
-                                        @Html.DropDownList("NivelesMO", listM, "", htmlAttributes: new { @class = "browser-default form-control NivelesMO", required=true })
+                                        @Html.DropDownList("NivelesMO", listM, "", htmlAttributes: new { @class = "browser-default form-control NivelesMO", required = true })
                                     }
                                     else
                                     {
@@ -143,8 +143,8 @@
                                     }
                                 </td>
                                 @*<td>
-                                    <span class="table-remove material-icons red-text">delete</span>
-                                </td>*@
+                                        <span class="table-remove material-icons red-text">delete</span>
+                                    </td>*@
                             </tr>
                         }
 
@@ -158,13 +158,17 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "MAFlujos", new { id = Model.SOCIEDAD_ID, pid=Model.PUESTOC_ID, v=Model.VERSION-1 }, new { id = "btn_return" })
+    @Html.ActionLink("Back to List", "MAFlujos", new { id = Model.SOCIEDAD_ID, pid = Model.PUESTOC_ID, v = Model.VERSION - 1 }, new { id = "btn_return" })
 </div>
 <script src="~/Scripts/jquery.mask.js"></script>
 <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 <script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
 <link href="~/Content/dataTable.css" rel="stylesheet" />
 <link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
+<script src="~/Scripts/messagesCat.js"></script>
+<script>
+            var lista = @Html.Raw(ViewBag.mensajes);
+</script>
 <script>
     jQuery(function ($) {
         $('form').bind('submit', function (e) {
@@ -178,7 +182,7 @@
                         valoress.push($(this).val());
                     }
                     else {
-                        alert("No introduzca aprobadores repetidos");
+                        toast("tcambio", 100000, "priority_high", lista[2].DESCRIPCION, "red", lista[0].DESCRIPCION);
                         continuar = false;
                         e.preventDefault();
                     }
@@ -190,7 +194,7 @@
                     return;
                 }
                 else {
-                    alert('Incluya al menos dos filas a la matriz de aprobación');
+                    toast("tcambio", 100000, "priority_high", lista[1].DESCRIPCION, "red", lista[0].DESCRIPCION);
                     e.preventDefault();
                 }
             }
@@ -230,7 +234,7 @@
             $TABLE.find('table').append($clone);
         }
         else {
-            alert("Solo es posible agregar 5 registros.");
+            toast("tcambio", 100000, "priority_high", lista[3].DESCRIPCION, "red", lista[0].DESCRIPCION);
         }
                 });
 
