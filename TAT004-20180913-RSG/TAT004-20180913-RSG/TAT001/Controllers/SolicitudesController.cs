@@ -5803,7 +5803,12 @@ namespace TAT001.Controllers
         public ActionResult Cancelar(decimal id)
         {
             Cancelar can = new Cancelar();
+            Email em = new Email();
             can.cancela(id, User.Identity.Name);
+
+            string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
+            string image = Server.MapPath("~/images/logo_kellogg.png");
+            em.enviaMailC(id, true, Session["spras"].ToString(), UrlDirectory, "Cancelacion", image);
 
             return RedirectToAction("Index", "Home");
         }

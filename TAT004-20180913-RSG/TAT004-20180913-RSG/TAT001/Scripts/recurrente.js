@@ -332,6 +332,8 @@ function cambiaRec() {
         $(".PORCENTAJE").css("display", "table-cell");
     }
 
+    formaLiquida();
+    $('#check_objetivoq').prop('checked', false);
 }
 
 function cambiaCheckRec() {
@@ -902,4 +904,62 @@ function isRecurrente() {
 
 function isDuplicado() {
     return $("#duplicate").val() !== "";
+}
+
+var liquida = [];
+function formaLiquida() {
+    var mensual = true;
+    var trimestral = false;
+    var semestral = false;
+    var anual = false;
+    var periodoi = parseInt($("#periodoi_id").val());
+    var periodof = parseInt($("#periodof_id").val());
+    var anioi = parseInt($("#anioi_id").val());
+    var aniof = parseInt($("#aniof_id").val());
+    if (!(periodoi === periodof && anioi == aniof)){
+        var resta = 0;
+        if (aniof - anioi == 0)
+            resta = periodof - periodoi + 1;
+        else {
+            resta = 13 - periodoi + periodof;
+            resta += 12 * ((aniof - anioi) - 1)
+        }
+        trimestral = resta % 3 == 0;
+        semestral = resta % 6 == 0;
+        anual = resta % 12 == 0;
+    }
+    $("#sel_nn").find('option').remove().end();
+    ////$("#div_categoria").find('.select-dropdown.dropdown-trigger').removeClass('ui-autocomplete-loading');
+    var val = "";
+    var label = "";
+    if (mensual) {
+        val = 1;
+        label = "Mensual";
+        $("#sel_nn").append($("<option></option>")
+            .attr("value", val)
+            .text(label));
+    }
+    if (trimestral) {
+        val = 3;
+        label = "Trimestral";
+        $("#sel_nn").append($("<option></option>")
+            .attr("value", val)
+            .text(label));
+    }
+    if (semestral) {
+        val = 6;
+        label = "Semestral";
+        $("#sel_nn").append($("<option></option>")
+            .attr("value", val)
+            .text(label));
+    }
+    if (anual) {
+        val = 12;
+        label = "Anual";
+        $("#sel_nn").append($("<option></option>")
+            .attr("value", val)
+            .text(label));
+    }
+    var elem = document.getElementById("sel_nn");
+    M.FormSelect.init(elem, []);
 }
