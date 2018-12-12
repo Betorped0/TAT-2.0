@@ -1695,13 +1695,13 @@ $(window).on('load', function () {
 function _ff() {
     //var meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
     var datei = $("#fechai_vig").val().split(" ")[0];
-    var lis = datei.split('/');
-    var datesI = new Date(lis[2], lis[1] - 1, lis[0]);
-    datesI.setDate(datesI.getDate() - 1);
-    datei = datesI.getDate() + "/" + (datesI.getMonth() + 1) + "/" + datesI.getFullYear();
-    var _anoi = datei.split('/')[2];
     if (datei !== "") {
-        $.ajax({
+        var lis = datei.split('/');
+        var datesI = new Date(lis[2], lis[1] - 1, lis[0]);
+        datesI.setDate(datesI.getDate() - 1);
+        datei = datesI.getDate() + "/" + (datesI.getMonth() + 1) + "/" + datesI.getFullYear();
+        var _anoi = datei.split('/')[2];
+            $.ajax({
             type: "POST",
             url: 'getPeriodo',
             dataType: "json",
