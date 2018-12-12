@@ -11,7 +11,6 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
-using System.Web.UI;
 using TAT001.Common;
 using TAT001.Entities;
 using TAT001.Filters;
@@ -20,31 +19,25 @@ using TAT001.Services;
 
 namespace TAT001.Controllers.Catalogos
 {
-    [Authorize]
-    [LoginActive]
-    [Authorize]
+    [Authorize]  
     public class ClientesController : Controller
     {
-        private TAT001Entities db = new TAT001Entities();
-        private UsuarioLogin usuValidateLogin = new UsuarioLogin();
+        readonly TAT001Entities db = new TAT001Entities();
+        readonly UsuarioLogin usuValidateLogin = new UsuarioLogin();
 
-        // GET: Clientes       
+        // GET: Clientes 
+        [LoginActive]
         public ActionResult Index()
         {
-            string uz = User.Identity.Name;
-            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
-            if (!usuValidateLogin.validaUsuario(userz.ID))
-            {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Home");
-            }
             int pagina_id = 631; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
             ViewBag.pais = Session["pais"]!=null? Session["pais"].ToString() + ".png" :null;
 
 
-            ClienteViewModel viewModel = new ClienteViewModel();
-            viewModel.pageSizes = FnCommon.ObtenerCmbPageSize();
+            ClienteViewModel viewModel = new ClienteViewModel
+            {
+                pageSizes = FnCommon.ObtenerCmbPageSize()
+            };
             ObtenerListado(ref viewModel);
 
             return View(viewModel);
@@ -52,12 +45,14 @@ namespace TAT001.Controllers.Catalogos
 
         public ActionResult List(string colOrden, string ordenActual, int? numRegistros = 10, int? pagina = 1, string buscar = "")
         {
-            string uz = User.Identity.Name;
-            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
-            if (!usuValidateLogin.validaUsuario(userz.ID))
+            if (!usuValidateLogin.validaUsuario(User.Identity.Name))
             {
                 FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Home");
+                return Json(new
+                {
+                    redirectUrl = Url.Action("Index", "Home"),
+                    isRedirect = true
+                }, JsonRequestBehavior.AllowGet);
             }
             int pagina_id = 631; //ID EN BASE DE DATOS
             ClienteViewModel viewModel = new ClienteViewModel();
@@ -65,18 +60,18 @@ namespace TAT001.Controllers.Catalogos
             FnCommon.ObtenerTextos(db,pagina_id, User.Identity.Name, this.ControllerContext.Controller);
             return View(viewModel);
         }
-        public void ObtenerListado(ref ClienteViewModel viewModel, string colOrden="", string ordenActual="", int? numRegistros = 10, int? pagina = 1, string buscar = "")
+        void ObtenerListado(ref ClienteViewModel viewModel, string colOrden="", string ordenActual="", int? numRegistros = 10, int? pagina = 1, string buscar = "")
         {
             int pageIndex = pagina.Value;
             List<CLIENTE> clientes = db.CLIENTEs.Include(c => c.PAI).Include(c => c.TCLIENTE).ToList();
-            viewModel.ordenActual = colOrden;
+            viewModel.ordenActual = (string.IsNullOrEmpty(ordenActual) || !colOrden.Equals(ordenActual) ? colOrden:"");
             viewModel.numRegistros = numRegistros.Value;
             viewModel.buscar = buscar;
 
             if (!String.IsNullOrEmpty(buscar))
             {
                 clientes = clientes.Where(x =>
-                String.Concat(x.KUNNR, x.NAME1, (x.SUBREGION == null ? "" : x.SUBREGION), x.LAND, x.PAI.LANDX, x.PARVW, x.PAYER, (x.CANAL == null ? "" : x.CANAL))
+                String.Concat(x.KUNNR, x.NAME1, (x.SUBREGION ?? ""), x.LAND, x.PAI.LANDX, x.PARVW, x.PAYER, (x.CANAL ?? ""))
                 .ToLower().Contains(buscar.ToLower()))
                 .ToList();
             }
@@ -142,14 +137,17 @@ namespace TAT001.Controllers.Catalogos
                     break;
             }
         }
+
         public ActionResult VerFlujo(string vko, string vtw, string spa, string kun, int version)
         {
-            string uz = User.Identity.Name;
-            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
-            if (!usuValidateLogin.validaUsuario(userz.ID))
+            if (!usuValidateLogin.validaUsuario(User.Identity.Name))
             {
                 FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Home");
+                return Json(new
+                {
+                    redirectUrl = Url.Action("Index", "Home"),
+                    isRedirect = true
+                });
             }
             int pagina_id = 604; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
@@ -191,26 +189,13 @@ namespace TAT001.Controllers.Catalogos
             }
             return View(flujo);
         }
+
         // GET: Clientes/Details/5
+        [LoginActive]
         public ActionResult Details(string vko, string vtw, string spa, string kun)
         {
-            string uz = User.Identity.Name;
-            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
-            if (!usuValidateLogin.validaUsuario(userz.ID))
-            {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Home");
-            }
-            int pagina = 632; //ID EN BASE DE DATOS
-            string u = User.Identity.Name;
-            var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-            ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-            ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-            ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
-            ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-            ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            int pagina_id = 632; //ID EN BASE DE DATOS
+            FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
 
             try
             {
@@ -221,9 +206,8 @@ namespace TAT001.Controllers.Catalogos
             {
                 //return RedirectToAction("Pais", "Home");
             }
-            Session["spras"] = user.SPRAS_ID;
 
-            if (vko == null | vtw == null | spa == null | kun == null)
+            if (vko == null || vtw == null || spa == null || kun == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -252,69 +236,13 @@ namespace TAT001.Controllers.Catalogos
             return View(cLIENTE);
         }
 
-        // GET: Clientes/Create
-        public ActionResult Create()
-        {
-            string uz = User.Identity.Name;
-            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
-            if (!usuValidateLogin.validaUsuario(userz.ID))
-            {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Home");
-            }
-            ViewBag.LAND = new SelectList(db.PAIS, "LAND", "SPRAS");
-            ViewBag.PARVW = new SelectList(db.TCLIENTEs, "ID", "ID");
-            return View();
-        }
-
-        // POST: Clientes/Create
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
-        // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "VKORG,VTWEG,SPART,KUNNR,NAME1,STCD1,STCD2,LAND,REGION,SUBREGION,REGIO,ORT01,STRAS_GP,PSTLZ,CONTAC,CONT_EMAIL,PARVW,PAYER,GRUPO,SPRAS,ACTIVO,BDESCRIPCION,BANNER,CANAL,BZIRK,KONDA,VKGRP,VKBUR,BANNERG")] CLIENTE cLIENTE)
-        {
-            string uz = User.Identity.Name;
-            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
-            if (!usuValidateLogin.validaUsuario(userz.ID))
-            {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Home");
-            }
-            if (ModelState.IsValid)
-            {
-                db.CLIENTEs.Add(cLIENTE);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            ViewBag.LAND = new SelectList(db.PAIS, "LAND", "SPRAS", cLIENTE.LAND);
-            ViewBag.PARVW = new SelectList(db.TCLIENTEs, "ID", "ID", cLIENTE.PARVW);
-            return View(cLIENTE);
-        }
-
         // GET: Clientes/Edit/5
+        [LoginActive]
         public ActionResult Edit(string vko, string vtw, string spa, string kun)
         {
-            string uz = User.Identity.Name;
-            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
-            if (!usuValidateLogin.validaUsuario(userz.ID))
-            {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Home");
-            }
-            int pagina = 635; //ID EN BASE DE DATOS PARA EL TITULO
-            string u = User.Identity.Name;
-            var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-            ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-            ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-            ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
-            ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            pagina = 635; //ID EN BASE DE DATOS
-            ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-            ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-
+            int pagina_id = 635; //ID EN BASE DE DATOS PARA EL TITULO
+            FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
+            
             try
             {
                 string p = Session["pais"].ToString();
@@ -324,9 +252,8 @@ namespace TAT001.Controllers.Catalogos
             {
                 //return RedirectToAction("Pais", "Home");
             }
-            Session["spras"] = user.SPRAS_ID;
 
-            if (vko == null | vtw == null | spa == null | kun == null)
+            if (vko == null || vtw == null || spa == null || kun == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -336,13 +263,7 @@ namespace TAT001.Controllers.Catalogos
             {
                 return HttpNotFound();
             }
-            //ViewBag.LAND = new SelectList(db.PAIS, "LAND", "LANDX", cLIENTE.LAND);
-            //ViewBag.PARVW = new SelectList(db.TCLIENTEs, "ID", "ID", cLIENTE.PARVW);
-            //var canales = db.CANALs.Select(x => new { x.CANAL1, DESCRIPCION = x.CANAL1 + "-" + x.CDESCRIPCION });
-            //ViewBag.CANAL = new SelectList(canales, "CANAL1", "DESCRIPCION", cLIENTE.CANAL != null ? cLIENTE.CANAL.TrimEnd() : "");
-            //var proveedores = db.PROVEEDORs.Select(x => new { x.ID, NOMBRE = x.ID + "-" + x.NOMBRE });
-            //ViewBag.PROVEEDOR_ID = new SelectList(proveedores, "ID", "NOMBRE", cLIENTE.PROVEEDOR_ID != null ? cLIENTE.PROVEEDOR_ID.TrimEnd() : "");
-             return View(cLIENTE);
+              return View(cLIENTE);
         }
 
         // POST: Clientes/Edit/5
@@ -350,15 +271,9 @@ namespace TAT001.Controllers.Catalogos
         // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [LoginActive]
         public ActionResult Edit([Bind(Include = "VKORG,VTWEG,SPART,KUNNR,NAME1,STCD1,STCD2,LAND,REGION,SUBREGION,REGIO,ORT01,STRAS_GP,PSTLZ,CONTAC,CONT_EMAIL,PARVW,PAYER,GRUPO,SPRAS,ACTIVO,BDESCRIPCION,BANNER, PROVEEDOR_ID,CANAL,BZIRK,KONDA,VKGRP,VKBUR,BANNERG")] CLIENTE cLIENTE)
         {
-            string uz = User.Identity.Name;
-            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
-            if (!usuValidateLogin.validaUsuario(userz.ID))
-            {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Home");
-            }
             if (ModelState.IsValid)
             {
                 db.Entry(cLIENTE).State = EntityState.Modified;
@@ -369,46 +284,7 @@ namespace TAT001.Controllers.Catalogos
             ViewBag.PARVW = new SelectList(db.TCLIENTEs, "ID", "ID", cLIENTE.PARVW);
             return View(cLIENTE);
         }
-
-        // GET: Clientes/Delete/5
-        public ActionResult Delete(string id)
-        {
-            string uz = User.Identity.Name;
-            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
-            if (!usuValidateLogin.validaUsuario(userz.ID))
-            {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Home");
-            }
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            CLIENTE cLIENTE = db.CLIENTEs.Find(id);
-            if (cLIENTE == null)
-            {
-                return HttpNotFound();
-            }
-            return View(cLIENTE);
-        }
-
-        // POST: Clientes/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(string id)
-        {
-            string uz = User.Identity.Name;
-            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
-            if (!usuValidateLogin.validaUsuario(userz.ID))
-            {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Home");
-            }
-            CLIENTE cLIENTE = db.CLIENTEs.Find(id);
-            db.CLIENTEs.Remove(cLIENTE);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
+        
 
         protected override void Dispose(bool disposing)
         {
@@ -419,15 +295,9 @@ namespace TAT001.Controllers.Catalogos
             base.Dispose(disposing);
         }
 
+        [LoginActive]
         public ActionResult Carga()
         {
-            string uz = User.Identity.Name;
-            var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
-            if (!usuValidateLogin.validaUsuario(userz.ID))
-            {
-                FormsAuthentication.SignOut();
-                return RedirectToAction("Index", "Home");
-            }
             int pagina = 631; //ID EN BASE DE DATOS PARA EL TITULO
             string u = User.Identity.Name;
             FnCommon.ObtenerConfPage(db, pagina, u, this.ControllerContext.Controller);
@@ -445,6 +315,7 @@ namespace TAT001.Controllers.Catalogos
             return View();
         }
         [HttpPost]
+        [LoginActive]
         public ActionResult Carga(IEnumerable<HttpPostedFileBase> files)
         {
             string uz = User.Identity.Name;
@@ -476,13 +347,12 @@ namespace TAT001.Controllers.Catalogos
             if (Request.Files.Count > 0)
             {
                 HttpPostedFileBase file = Request.Files["FileUpload"];
-                string extension = System.IO.Path.GetExtension(file.FileName);
                 IExcelDataReader reader = ExcelReaderFactory.CreateReader(file.InputStream);
                 DataSet result = reader.AsDataSet();
                 DataTable dt = result.Tables[0];
                 if (dt.Columns.Count!=19)
                 {
-                    return Json("NO VALIDO", JsonRequestBehavior.AllowGet); ;
+                    return Json("NO VALIDO", JsonRequestBehavior.AllowGet); 
                 }
                 ld = ObjAList1(dt);
 
@@ -1786,76 +1656,7 @@ namespace TAT001.Controllers.Catalogos
                 throw new NotImplementedException();
             }
         }
-
-        public JsonResult Vendor(string Prefix)
-        {
-            if (Prefix == null)
-                Prefix = "";
-
-            TAT001Entities db = new TAT001Entities();
-
-            var c = (from x in db.PROVEEDORs
-                     where x.ID.Contains(Prefix) && x.ACTIVO == true
-                     select new { x.ID, x.NOMBRE }).ToList();
-
-            if (c.Count == 0)
-            {
-                var c2 = (from x in db.PROVEEDORs
-                         where x.NOMBRE.Contains(Prefix) && x.ACTIVO == true
-                         select new { x.ID, x.NOMBRE }).ToList();
-                c.AddRange(c2);
-            }
-            
-            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
-            return cc;
-        }
-
-        public JsonResult Canal(string Prefix)
-        {
-            if (Prefix == null)
-                Prefix = "";
-
-            TAT001Entities db = new TAT001Entities();
-
-            var c = (from x in db.CANALs
-                     where x.CANAL1.Contains(Prefix)
-                     select new { x.CANAL1, x.CDESCRIPCION }).ToList();
-
-            if (c.Count == 0)
-            {
-                var c2 = (from x in db.CANALs
-                         where x.CDESCRIPCION.Contains(Prefix)
-                         select new { x.CANAL1, x.CDESCRIPCION }).ToList();
-                c.AddRange(c2);
-            }
-            
-            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
-            return cc;
-        }
-
-        public JsonResult Cliente(string Prefix)
-        {
-            if (Prefix == null)
-                Prefix = "";
-
-            TAT001Entities db = new TAT001Entities();
-
-            var c = (from x in db.CLIENTEs
-                     where x.KUNNR.Contains(Prefix) && x.ACTIVO == true
-                     select new { x.KUNNR, x.NAME1 }).ToList();
-
-            if (c.Count == 0)
-            {
-                var c2 = (from x in db.CLIENTEs
-                          where x.NAME1.Contains(Prefix) && x.ACTIVO == true
-                          select new { x.KUNNR, x.NAME1 }).ToList();
-                c.AddRange(c2);
-            }
-            
-            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
-            return cc;
-        }
-
+        
         public JsonResult Usuario8(string Prefix)
         {
             if (Prefix == null)
@@ -1915,86 +1716,9 @@ namespace TAT001.Controllers.Catalogos
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
             return cc;
         }
+        
 
-        public JsonResult Company(string Prefix)
-        {
-            if (Prefix == null)
-                Prefix = "";
-
-            TAT001Entities db = new TAT001Entities();
-
-            var c = (from x in db.SOCIEDADs
-                     where x.BUKRS.Contains(Prefix) && x.ACTIVO == true
-                     select new { x.BUKRS, x.NAME1 }).ToList();
-
-            if (c.Count == 0)
-            {
-                var c2 = (from x in db.SOCIEDADs
-                          where x.NAME1.Contains(Prefix) && x.ACTIVO == true
-                          select new { x.BUKRS, x.NAME1 }).ToList();
-                c.AddRange(c2);
-            }
-            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
-            return cc;
-        }
-
-        public JsonResult Idioma(string Prefix)
-        {
-            if (Prefix == null)
-                Prefix = "";
-
-            TAT001Entities db = new TAT001Entities();
-
-            var c = (from x in db.SPRAS
-                     where x.ID.Contains(Prefix)
-                     select new { x.ID, x.DESCRIPCION }).ToList();
-
-            if (c.Count == 0)
-            {
-                var c2 = (from x in db.SPRAS
-                          where x.DESCRIPCION.Contains(Prefix)
-                          select new { x.ID, x.DESCRIPCION }).ToList();
-                c.AddRange(c2);
-            }
-            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
-            return cc;
-        }
-
-        public JsonResult TCliente(string Prefix)
-        {
-            if (Prefix == null)
-                Prefix = "";
-
-            TAT001Entities db = new TAT001Entities();
-
-            var c = (from x in db.TCLIENTEs
-                     where x.ID.Contains(Prefix) && x.ACTIVO == true
-                     select new { x.ID }).ToList();
-
-            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
-            return cc;
-        }
-
-        public JsonResult Pais(string Prefix)
-        {
-            if (Prefix == null)
-                Prefix = "";
-
-            TAT001Entities db = new TAT001Entities();
-
-            var c = (from x in db.PAIS
-                     where x.LAND.Contains(Prefix) && x.ACTIVO == true
-                     select new { x.LAND, x.LANDX }).ToList();
-
-            if (c.Count == 0)
-            {
-                var c2 = (from x in db.PAIS
-                          where x.LANDX.Contains(Prefix) && x.ACTIVO == true
-                          select new { x.LAND, x.LANDX}).ToList();
-                c.AddRange(c2);
-            }
-            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
-            return cc;
-        }
+       
+        
     }
 }

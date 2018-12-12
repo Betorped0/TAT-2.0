@@ -24,7 +24,6 @@ namespace TAT001.Controllers
 
             ModificacionesGlobalesViewModel modelView = new ModificacionesGlobalesViewModel
             {
-                pageSizes = FnCommon.ObtenerCmbPageSize(),
                 sociedades = sociedadesDao
                 .ComboSociedades(TATConstantes.ACCION_LISTA_SOCPORUSUARIO, null, User.Identity.Name)
             };

@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using TAT001.Common;
 using TAT001.Entities;
 using TAT001.Models;
+using TAT001.Models.Dao;
 
 namespace TAT001.Controllers
 {
@@ -18,13 +19,18 @@ namespace TAT001.Controllers
         const string CMB_SOCIEDADES = "SOC";
         const string CMB_PAIS = "PAIS";
 
+        //------------DAO´s--------------
+        readonly SociedadesDao sociedadesDao = new SociedadesDao();
+
         // GET: LayoutCargaMasiva
         public ActionResult Index()
         {
             int pagina_id = 550;//ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
-            LayoutCargaMasivaViewModels viewModel = new LayoutCargaMasivaViewModels();
-            viewModel.layouts = db.LAYOUT_CARGA.ToList();
+            LayoutCargaMasivaViewModels viewModel = new LayoutCargaMasivaViewModels
+            {
+                layouts = db.LAYOUT_CARGA.ToList()
+            };
 
             return View(viewModel);
         }
@@ -191,12 +197,7 @@ namespace TAT001.Controllers
                 switch (combo)
                 {
                     case CMB_SOCIEDADES:
-                        modelView.sociedades = db.SOCIEDADs
-                            .Where(x => (x.BUKRS == id || id == null) && x.ACTIVO)
-                            .Select(x => new SelectListItem{
-                                Value = x.BUKRS,
-                                Text = x.BUKRS + "-" + x.BUTXT
-                            }).ToList();
+                        modelView.sociedades = sociedadesDao.ComboSociedades(TATConstantes.ACCION_LISTA_SOCIEDADES);
                         break;
                     case CMB_PAIS:
                         modelView.paises = db.PAIS

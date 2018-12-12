@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using TAT001.Common;
@@ -32,8 +33,8 @@ namespace TAT001.Controllers
                 ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
                 ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0))  &&  a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0))  &&  a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
 
                 try
                 {
@@ -99,8 +100,8 @@ namespace TAT001.Controllers
                 ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery; ;
                 ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
                 ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0))  &&  a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0))  &&  a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
 
                 try
                 {
@@ -119,7 +120,7 @@ namespace TAT001.Controllers
                 //db.SaveChanges();
 
                 int rol = user.MIEMBROS.FirstOrDefault().ROL_ID;
-                //WORKFV wf = db.WORKFHs.Where(a => a.BUKRS.Equals(dOCUMENTO.SOCIEDAD_ID) & a.ROL_ID == rol).FirstOrDefault().WORKFVs.OrderByDescending(a => a.VERSION).FirstOrDefault();
+                //WORKFV wf = db.WORKFHs.Where(a => a.BUKRS.Equals(dOCUMENTO.SOCIEDAD_ID) && a.ROL_ID == rol).FirstOrDefault().WORKFVs.OrderByDescending(a => a.VERSION).FirstOrDefault();
                 WORKFV wf = db.WORKFHs.Where(a => a.TSOL_ID.Equals(dOCUMENTO.TSOL_ID)).FirstOrDefault().WORKFVs.OrderByDescending(a => a.VERSION).FirstOrDefault();
 
                 WORKFP wp = wf.WORKFPs.OrderBy(a => a.POS).FirstOrDefault();
@@ -271,7 +272,7 @@ namespace TAT001.Controllers
                 }
                 catch
                 {
-                    //return RedirectToAction("Pais", "Home");
+                    ////return RedirectToAction("Pais", "Home");
                 }
                 Session["spras"] = user.SPRAS_ID;
             
@@ -285,7 +286,7 @@ namespace TAT001.Controllers
             FLUJO actual = db.FLUJOes.Where(a => a.NUM_DOC.Equals(f.NUM_DOC)).OrderByDescending(a => a.POS).FirstOrDefault();
 
             DOCUMENTO d = db.DOCUMENTOes.Find(f.NUM_DOC);
-            List<TS_FORM> tts = db.TS_FORM.Where(a => a.BUKRS_ID.Equals(d.SOCIEDAD_ID) && a.LAND_ID.Equals(d.PAIS_ID) && a.TS_CAMPO.ACTIVO).ToList();
+            List<TS_FORM> tts = db.TS_FORM.Where(a => a.BUKRS_ID.Equals(d.SOCIEDAD_ID)  &&  a.LAND_ID.Equals(d.PAIS_ID)  &&  a.TS_CAMPO.ACTIVO).ToList();
             
             if (actual.WORKFP.ACCION.TIPO == "R")
             {
@@ -305,7 +306,7 @@ namespace TAT001.Controllers
                     {
                         dts.CHECKS = false;
                     }
-                    int tt = db.DOCUMENTOTS.Where(a => a.NUM_DOC.Equals(f.NUM_DOC) && a.TSFORM_ID == ts.POS).Count();
+                    int tt = db.DOCUMENTOTS.Where(a => a.NUM_DOC.Equals(f.NUM_DOC)  &&  a.TSFORM_ID == ts.POS).Count();
                     if (tt == 0)
                         ddt.Add(dts);
                     else
@@ -327,12 +328,6 @@ namespace TAT001.Controllers
             {
                 string res = pf.procesa(flujo, "");
                 
-                //FLUJO ff = db.FLUJOes.Where(x => x.NUM_DOC == flujo.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
-                //Estatus es = new Estatus();//RSG 18.09.2018
-                //d = db.DOCUMENTOes.Find(d.NUM_DOC);
-                //ff.STATUS = es.getEstatus(d);
-                //db.Entry(ff).State = EntityState.Modified;
-                //db.SaveChanges();
                 using (TAT001Entities db1 = new TAT001Entities())
                 {
                     FLUJO ff = db1.FLUJOes.Where(x => x.NUM_DOC == flujo.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
@@ -346,7 +341,8 @@ namespace TAT001.Controllers
 
                 if (res.Equals("0"))//Aprobado
                 {
-                    return RedirectToAction("Details", "Solicitudes", new { id = flujo.NUM_DOC });
+                    ////return RedirectToAction("Details", "Solicitudes", new { id = flujo.NUM_DOC });
+                    return RedirectToAction("Index", "Solicitudes");
                 }
                 else if (res.Equals("1") || res.Equals("2") || res.Equals("3"))//CORREO
                 {
@@ -363,12 +359,14 @@ namespace TAT001.Controllers
                         em.enviaMailC(f.NUM_DOC, true, spras_id, UrlDirectory, "Details", image);
                         return RedirectToAction("Index", "Home");
                     }
-                    return RedirectToAction("Details", "Solicitudes", new { id = flujo.NUM_DOC });
+                    ////return RedirectToAction("Details", "Solicitudes", new { id = flujo.NUM_DOC });
+                    return RedirectToAction("Index", "Solicitudes");
                 }
                 else
                 {
                     TempData["error"] = res;
-                    return RedirectToAction("Details", "Solicitudes", new { id = flujo.NUM_DOC });
+                    ////return RedirectToAction("Details", "Solicitudes", new { id = flujo.NUM_DOC });
+                    return RedirectToAction("Index", "Solicitudes");
                 }
             }
 
@@ -383,7 +381,7 @@ namespace TAT001.Controllers
             }
             catch
             {
-                //return RedirectToAction("Pais", "Home");
+                ////return RedirectToAction("Pais", "Home");
             }
             Session["spras"] = user.SPRAS_ID;
             
@@ -404,7 +402,7 @@ namespace TAT001.Controllers
             }
             catch
             {
-                //return RedirectToAction("Pais", "Home");
+                ////return RedirectToAction("Pais", "Home");
             }
                 Session["spras"] = user.SPRAS_ID;
             
@@ -421,19 +419,12 @@ namespace TAT001.Controllers
         public JsonResult LoadExcel()
         {
             List<DET_AGENTEC> ld = new List<DET_AGENTEC>();
-
-
+            
             if (Request.Files.Count > 0)
             {
                 HttpPostedFileBase file = Request.Files["FileUpload"];
-                //using (var stream2 = System.IO.File.Open(url, System.IO.FileMode.Open, System.IO.FileAccess.Read))
-                //{
-                string extension = System.IO.Path.GetExtension(file.FileName);
-                // Auto-detect format, supports:
-                //  - Binary Excel files (2.0-2003 format; *.xls)
-                //  - OpenXml Excel files (2007 format; *.xlsx)
-                //using (IExcelDataReader reader = ExcelReaderFactory.CreateReader(file.InputStream))
-                //{
+
+                ////string extension = System.IO.Path.GetExtension(file.FileName);
                 IExcelDataReader reader = ExcelReaderFactory.CreateReader(file.InputStream);
                 // 2. Use the AsDataSet extension method
                 DataSet result = reader.AsDataSet();
@@ -458,10 +449,10 @@ namespace TAT001.Controllers
                 ////---------------------------------------USUARIO
                 f.USUARIOC_ID = da.USUARIOC_ID;
                 f.USUARIOC_IDX = true;
-                USUARIO u = usuarios.Where(x => x.ID.Equals(f.USUARIOC_ID)).FirstOrDefault();
+                USUARIO u = usuarios.FirstOrDefault(x => x.ID.Equals(f.USUARIOC_ID));
                 if (u == null)
                 {
-                    u = db.USUARIOs.Where(x => x.ID.Equals(f.USUARIOC_ID) & x.ACTIVO == true).FirstOrDefault();
+                    u = db.USUARIOs.Where(x => x.ID.Equals(f.USUARIOC_ID)  &&  x.ACTIVO == true).FirstOrDefault();
                     if (u == null)
                         f.USUARIOC_IDX = false;
                     else
@@ -473,10 +464,10 @@ namespace TAT001.Controllers
                 f.PAIS_ID = da.PAIS_ID;
                 f.PAIS_IDX = true;
 
-                PAI p = paises.Where(x => x.LAND.Equals(f.PAIS_ID)).FirstOrDefault();
+                PAI p = paises.FirstOrDefault(x => x.LAND.Equals(f.PAIS_ID));
                 if (p == null)
                 {
-                    p = db.PAIS.Where(x => x.LAND.Equals(f.PAIS_ID) & x.ACTIVO == true & x.SOCIEDAD_ID != null).FirstOrDefault();
+                    p = db.PAIS.Where(x => x.LAND.Equals(f.PAIS_ID) && x.ACTIVO  && x.SOCIEDAD_ID != null).FirstOrDefault();
                     if (p == null)
                         f.PAIS_IDX = false;
                     else
@@ -489,10 +480,10 @@ namespace TAT001.Controllers
                 f.KUNNR = da.KUNNR;
                 f.KUNNRX = true;
 
-                CLIENTE c = clientes.Where(x => x.KUNNR.Equals(f.KUNNR)).FirstOrDefault();
+                CLIENTE c = clientes.FirstOrDefault(x => x.KUNNR.Equals(f.KUNNR));
                 if (c == null)
                 {
-                    c = db.CLIENTEs.Where(cc => cc.KUNNR.Equals(f.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
+                    c = db.CLIENTEs.Where(cc => cc.KUNNR.Equals(f.KUNNR) && cc.ACTIVO).FirstOrDefault();
                     if (c == null)
                         f.KUNNRX = false;
                     else
@@ -507,10 +498,10 @@ namespace TAT001.Controllers
                 ////---------------------------------------USUARIOA
                 f.USUARIOA_ID = da.USUARIOA_ID;
                 f.USUARIOA_IDX = true;
-                USUARIO ua = usuarios.Where(x => x.ID.Equals(f.USUARIOA_ID)).FirstOrDefault();
+                USUARIO ua = usuarios.FirstOrDefault(x => x.ID.Equals(f.USUARIOA_ID));
                 if (ua == null)
                 {
-                    ua = db.USUARIOs.Where(x => x.ID.Equals(f.USUARIOA_ID) & x.ACTIVO == true).FirstOrDefault();
+                    ua = db.USUARIOs.Where(x => x.ID.Equals(f.USUARIOA_ID) && x.ACTIVO == true).FirstOrDefault();
                     if (ua == null)
                         f.USUARIOA_IDX = false;
                     else
@@ -532,24 +523,23 @@ namespace TAT001.Controllers
 
         private string completa(string s, int longitud)
         {
-            string cadena = "";
+            StringBuilder cadena = new StringBuilder();
             try
             {
                 long a = Int64.Parse(s);
                 int l = a.ToString().Length;
-
-                //cadena = s;
+                
                 for (int i = l; i < longitud; i++)
                 {
-                    cadena += "0";
+                    cadena.Insert(0,"0");
                 }
-                cadena += a.ToString();
+                cadena.Insert(cadena.Length, a);
             }
             catch
             {
-                cadena = s;
+                cadena = new StringBuilder(s);
             }
-            return cadena;
+            return cadena.ToString();
         }
 
         private List<DET_AGENTEC> objAList(DataTable dt)
@@ -560,7 +550,7 @@ namespace TAT001.Controllers
             //Rows
             var rowsc = dt.Rows.Count;
             //columns
-            var columnsc = dt.Columns.Count;
+            ////var columnsc = dt.Columns.Count;
 
             //Columnd and row to start
             var rows = 1; // 2
@@ -569,10 +559,10 @@ namespace TAT001.Controllers
 
             for (int i = rows; i < rowsc; i++)
             {
-                //for (var j = 0; j < columnsc; j++)
-                //{
-                //    var data = dt.Rows[i][j];
-                //}
+                ////for (var j = 0; j < columnsc; j++)
+                ////{
+                ////    var data = dt.Rows[i][j];
+                ////}
                 if (i >= 4)
                 {
                     var v = dt.Rows[i][1];
@@ -591,7 +581,7 @@ namespace TAT001.Controllers
                     doc.USUARIOC_ID = dt.Rows[i][0].ToString(); //Usuario creador
 
                 }
-                catch (Exception e)
+                catch
                 {
                     doc.USUARIOC_ID = null;
                 }
@@ -599,7 +589,7 @@ namespace TAT001.Controllers
                 {
                     doc.PAIS_ID = dt.Rows[i][1].ToString(); //País
                 }
-                catch (Exception e)
+                catch
                 {
                     doc.PAIS_ID = null;
                 }
@@ -608,17 +598,17 @@ namespace TAT001.Controllers
                     doc.KUNNR = dt.Rows[i][2].ToString();
                     doc.KUNNR = completa(doc.KUNNR, 10);
 
-                    CLIENTE u = clientes.Where(x => x.KUNNR.Equals(doc.KUNNR)).FirstOrDefault();
+                    CLIENTE u = clientes.FirstOrDefault(x => x.KUNNR.Equals(doc.KUNNR));
                     if (u == null)
                     {
-                        u = db.CLIENTEs.Where(cc => cc.KUNNR.Equals(doc.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
+                        u = db.CLIENTEs.Where(cc => cc.KUNNR.Equals(doc.KUNNR) && cc.ACTIVO).FirstOrDefault();
                         if (u == null)
                             doc.VKORG = null;
                         else
                             clientes.Add(u);
                     }
 
-                    CLIENTE c = clientes.Where(cc => cc.KUNNR.Equals(doc.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
+                    CLIENTE c = clientes.FirstOrDefault(cc => cc.KUNNR.Equals(doc.KUNNR) && cc.ACTIVO);
                     if (c != null)
                     {
                         doc.VKORG = c.VKORG;
@@ -630,7 +620,7 @@ namespace TAT001.Controllers
                         doc.VKORG = null;
                     }
                 }
-                catch (Exception e)
+                catch
                 {
                     doc.KUNNR = null;
                 }
@@ -638,7 +628,7 @@ namespace TAT001.Controllers
                 {
                     doc.POS = int.Parse(dt.Rows[i][3].ToString());
                 }
-                catch (Exception e)
+                catch
                 {
                     doc.POS = 0;
                 }
@@ -646,7 +636,7 @@ namespace TAT001.Controllers
                 {
                     doc.USUARIOA_ID = dt.Rows[i][4].ToString();
                 }
-                catch (Exception e)
+                catch
                 {
                     doc.USUARIOA_ID = null;
                 }
@@ -655,27 +645,27 @@ namespace TAT001.Controllers
                 {
                     doc.MONTO = decimal.Parse(dt.Rows[i][5].ToString());
                 }
-                catch (Exception e)
+                catch
                 {
                     doc.MONTO = null;
                 }
                 try
                 {
                     string p = dt.Rows[i][6].ToString();
-                    if (p == "X" | p == "x")
+                    if (p == "X" || p == "x")
                         doc.PRESUPUESTO = true;
                 }
-                catch (Exception e)
+                catch
                 {
                     doc.PRESUPUESTO = false;
                 }
 
-                //DET_AGENTEC poss = ld.Where(x => x.USUARIOC_ID.Equals(doc.USUARIOC_ID) & x.PAIS_ID.Equals(doc.PAIS_ID)
-                //& x.KUNNR.Equals(doc.KUNNR)).FirstOrDefault();
-                //if (poss == null)
-                //    pos = 1;
-                //else
-                //    pos = ld.Where(x => x.USUARIOC_ID.Equals(doc.USUARIOC_ID) & x.PAIS_ID.Equals(doc.PAIS_ID) & x.KUNNR.Equals(doc.KUNNR)).Count() + 1;
+                ////DET_AGENTEC poss = ld.Where(x => x.USUARIOC_ID.Equals(doc.USUARIOC_ID) && x.PAIS_ID.Equals(doc.PAIS_ID)
+                ////& x.KUNNR.Equals(doc.KUNNR)).FirstOrDefault();
+                ////if (poss == null)
+                ////    pos = 1;
+                ////else
+                ////    pos = ld.Where(x => x.USUARIOC_ID.Equals(doc.USUARIOC_ID) && x.PAIS_ID.Equals(doc.PAIS_ID) && x.KUNNR.Equals(doc.KUNNR)).Count() + 1;
 
                 ld.Add(doc);
                 pos++;
@@ -691,7 +681,7 @@ namespace TAT001.Controllers
             {
                 ProcesaFlujo pf = new ProcesaFlujo();
                 DOCUMENTO dOCUMENTO = db.DOCUMENTOes.Find(id);
-                //WORKFV wf = db.WORKFHs.Where(a => a.BUKRS.Equals(dOCUMENTO.SOCIEDAD_ID) & a.ROL_ID == rol).FirstOrDefault().WORKFVs.OrderByDescending(a => a.VERSION).FirstOrDefault();
+                ////WORKFV wf = db.WORKFHs.Where(a => a.BUKRS.Equals(dOCUMENTO.SOCIEDAD_ID) && a.ROL_ID == rol).FirstOrDefault().WORKFVs.OrderByDescending(a => a.VERSION).FirstOrDefault();
                 WORKFV wf = db.WORKFHs.Where(a => a.TSOL_ID.Equals(dOCUMENTO.TSOL_ID)).FirstOrDefault().WORKFVs.OrderByDescending(a => a.VERSION).FirstOrDefault();
                 if (wf != null)
                 {
@@ -720,7 +710,7 @@ namespace TAT001.Controllers
 
                         if (conta.WORKFP.ACCION.TIPO == "B")
                         {
-                            WORKFP wpos = db.WORKFPs.Where(x => x.ID == conta.WORKF_ID & x.VERSION == conta.WF_VERSION & x.POS == conta.WF_POS).FirstOrDefault();
+                            ////WORKFP wpos = db.WORKFPs.Where(x => x.ID == conta.WORKF_ID && x.VERSION == conta.WF_VERSION && x.POS == conta.WF_POS).FirstOrDefault();
                             conta.ESTATUS = "A";
                             conta.FECHAM = DateTime.Now;
                             c = pf.procesa(conta, "");
@@ -739,12 +729,12 @@ namespace TAT001.Controllers
                     db.SaveChanges();
                 }
             }
-            catch (Exception ee)
+            catch 
             {
-                return RedirectToAction("Details", "Solicitudes", new { id = id });
+                return RedirectToAction("Index", "Solicitudes");
             }
 
-            return RedirectToAction("Details", "Solicitudes", new { id = id });
+            return RedirectToAction("Index", "Solicitudes");
         }
     }
 }

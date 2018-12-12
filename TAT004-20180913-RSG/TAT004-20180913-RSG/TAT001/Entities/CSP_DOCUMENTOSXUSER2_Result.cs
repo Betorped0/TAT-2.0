@@ -49,5 +49,7 @@ namespace TAT001.Entities
         public string TIPO_RECURRENTE { get; set; }
         public Nullable<int> nRelacionadas { get; set; }
         public Nullable<int> nRecurrentes { get; set; }
+        public Nullable<decimal> DOCUMENTO_REF { get; set; }
+        public string ESTATUS_WF_USER { get; set; }
     }
 }

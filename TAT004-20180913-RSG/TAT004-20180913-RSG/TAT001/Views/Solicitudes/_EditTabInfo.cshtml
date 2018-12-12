@@ -36,7 +36,7 @@
                                 @Html.HiddenFor(model => model.TSOL_ID, new { @id = "tsol_id", onchange = @"selectTsol(this.value)" })@*@lej 24-07-2018*@
                                 @Html.HiddenFor(model => model.TSOL_ID, new { @id = "TSOL_ID", onchange = @"selectTsol(this.value)" })@*@lej 24-07-2018*@
 
-                                <input type="text" value="@ViewBag.TSOL_IDI" disabled="disabled" />
+                                <input type="text" id="tsol_idi" value="@ViewBag.TSOL_IDI" disabled="disabled" />
                                 <input type="text" id="tsolant_id" value="@ViewBag.TSOL_ANT" disabled="disabled" hidden />
                             }
                         </div>
@@ -475,7 +475,11 @@
                     {
                         <div class="col s12">
                             <label class="col s6">
+                                @if (Model.FECHAI_VIG != null)
+                                {
                                 <input name="group1" type="radio" checked id="btn-date" onchange="cambiaTemp(this.id)" />
+                                }else{
+                                <input name="group1" type="radio" checked id="btn-date" onchange="cambiaTemp(this.id)" />}
                                 <span id="sPorFecha">Por fecha</span>
                             </label>
                             <label class="col s6">
@@ -515,14 +519,25 @@
                                 <i class="material-icons prefix">date_range</i>
                                 @*@Html.EditorFor(model => model.FECHAI_VIG, new { htmlAttributes = new { @id = "fechai_vig", @class = "form-control datepicker " + @ViewBag.relacionada, @onkeyup = "borrar(this);" } })*@
                                 @Html.HiddenFor(model => model.FECHAI_VIG, new { @id = "fechai_vig", @class = "form-control datepicker " })
-                                <input type="text" disabled class="datepicker" id="fechai_vig2" onkeyup="borrar(this);" onchange="document.getElementById('fechai_vig').value = this.value" />
+                                @if (Model.FECHAI_VIG != null || Model.FECHAF_VIG != null)
+                                {
+                                <input type="text" class="datepicker" id="fechai_vig2" onkeyup="borrar(this);" onchange="document.getElementById('fechai_vig').value = this.value" />
+                                }
+                                else {
+                                <input type="text" disabled class="datepicker" id="fechai_vig2" onkeyup="borrar(this);" onchange="document.getElementById('fechai_vig').value = this.value" />}
                                 @Html.LabelFor(model => model.FECHAI_VIG, "De", htmlAttributes: new { @class = "active", @for = "fechai_vig2", @id = "lbl_fechade" })
                             </div>
                             <div class="input-field col s12">
                                 <i class="material-icons prefix">date_range</i>
                                 @*@Html.EditorFor(model => model.FECHAF_VIG, new { htmlAttributes = new { @id = "fechaf_vig", @class = "form-control datepicker " + @ViewBag.relacionada, onkeyup = "borrar(this);" } })*@
                                 @Html.HiddenFor(model => model.FECHAF_VIG, new { @id = "fechaf_vig", @class = "form-control datepicker " })
+                                @if (Model.FECHAI_VIG != null || Model.FECHAF_VIG != null)
+                                {
+                                <input type="text" class="datepicker" id="fechaf_vig2" onkeyup="borrar(this);" onchange="document.getElementById('fechaf_vig').value = this.value" />
+                                }
+                                else {
                                 <input type="text" disabled class="datepicker" id="fechaf_vig2" onkeyup="borrar(this);" onchange="document.getElementById('fechaf_vig').value = this.value" />
+                                }
                                 @Html.LabelFor(model => model.FECHAF_VIG, "Hasta", htmlAttributes: new { @class = "active", @for = "fechaf_vig2", @id = "lbl_fechahasta" })
                             </div>
                         </div>
@@ -545,19 +560,19 @@
                         <div class="col s6">
                             <div class="col s12">
                                 <div class="input-field col s6">
-                                    @Html.DropDownList("PERIODOS", null, "", htmlAttributes: new { @id = "periodoi_id", @onchange = "setDates('')" })
+                                    @Html.DropDownList("PERIODOS", null, "", htmlAttributes: new { @id = "periodoi_id", @onchange = "setDates('')", @disabled="disabled" })
                                     <label id="lblDe">De</label>
                                 </div>
                                 <div class="input-field col s3">
-                                    @Html.DropDownList("ANIOS", null, "", htmlAttributes: new { @id = "anioi_id", @onchange = "setDates('')" })
+                                    @Html.DropDownList("ANIOS", null, "", htmlAttributes: new { @id = "anioi_id", @onchange = "setDates('')", @disabled = "disabled" })
                                 </div>
                             </div><div class="col s12">
                                 <div class="input-field col s6">
-                                    @Html.DropDownList("PERIODOSF", null, "", htmlAttributes: new { @id = "periodof_id", @onchange = "setDates('')" })
+                                    @Html.DropDownList("PERIODOSF", null, "", htmlAttributes: new { @id = "periodof_id", @onchange = "setDates('')", @disabled = "disabled" })
                                     <label id="lblHasta">Hasta</label>
                                 </div>
                                 <div class="input-field col s3">
-                                    @Html.DropDownList("ANIOSF", null, "", htmlAttributes: new { @id = "aniof_id", @onchange = "setDates('')" })
+                                    @Html.DropDownList("ANIOSF", null, "", htmlAttributes: new { @id = "aniof_id", @onchange = "setDates('')", @disabled = "disabled" })
                                 </div>
                             </div>
                         </div>

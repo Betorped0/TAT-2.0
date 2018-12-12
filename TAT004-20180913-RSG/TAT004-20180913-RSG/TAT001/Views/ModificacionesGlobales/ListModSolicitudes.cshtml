@@ -96,9 +96,9 @@
         </tbody>
     </table>
 
-    <div id="modal2" class="modal" style=" background-color: #B90C46; height: 200px; width: 350px;">
+    <div id="modal2" class="modal" style=" background-color: #fff; height: 200px; width: 450px;">
         <div class="modal-content">
-            <p style="color: white;font-size: 16px;" class="lbl_actualizar"></p>
+            <p style="font-size: 16px;" class="lbl_actualizar"></p>
         </div>
         <div class="modal-footer">
             <a class="modal-close waves-effect  btn-flat"><label class="lbl_No"></label></a>
@@ -141,7 +141,7 @@
     var root = "@Url.Content("~")",
         spras_id = "@ViewBag.spras_id",
         urlLanguage = root + "Scripts/lang/" + spras_id + ".json";
-    fnCommon.configurarTable('tableModSolicitudes', '50vh', '50vh', urlLanguage, 'cmbPagModGlobales', 'gfilterModGlobales', [0,1,2,3,4,5,6,7,8]);
+    fnCommon.configurarTableNoPagNoBusq('tableModSolicitudes', '50vh', '50vh', urlLanguage,  [0,1,2,3,4,5,6,7,8]);
     if (registrosSol > 0) {
         $('#btn_save').removeAttr('disabled');
     }

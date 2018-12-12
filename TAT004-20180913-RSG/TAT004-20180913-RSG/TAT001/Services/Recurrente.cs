@@ -59,7 +59,7 @@ namespace TAT001.Services
                 dOCpADRE = db.DOCUMENTOes.Where(doc => doc.NUM_DOC == rel).FirstOrDefault();
                 if (dOCpADRE.TIPO_RECURRENTE == null)//RSG 28.05.2018----------------------------------------------
                     return 0;
-                if (!((dOCpADRE.TIPO_RECURRENTE.Equals("1") | dOCpADRE.TIPO_RECURRENTE.Equals("2") | dOCpADRE.TIPO_RECURRENTE.Equals("3")) & dOCpADRE.ESTATUS.Equals("A") & dOCpADRE.ESTATUS_WF.Equals("A")))//RSG 28.05.2018
+                if (!((dOCpADRE.TIPO_RECURRENTE.Equals("1") || dOCpADRE.TIPO_RECURRENTE.Equals("2") || dOCpADRE.TIPO_RECURRENTE.Equals("3")) && dOCpADRE.ESTATUS.Equals("A") && dOCpADRE.ESTATUS_WF.Equals("A")))//RSG 28.05.2018
                 {
                     return 0;
                 }
@@ -72,7 +72,7 @@ namespace TAT001.Services
                     DateTime hoy = (DateTime)drec.FECHAF;
                     Calendario445 cal = new Calendario445();
                     int restarMes = 0;
-                    if (dOCpADRE.TIPO_RECURRENTE.Equals("2") | dOCpADRE.TIPO_RECURRENTE.Equals("3"))
+                    if (dOCpADRE.TIPO_RECURRENTE.Equals("2") || dOCpADRE.TIPO_RECURRENTE.Equals("3"))
                     {
                         restarMes = 1;
                     }
@@ -235,7 +235,7 @@ namespace TAT001.Services
             dOCUMENTO.DOCUMENTO_REF = null;
 
             //ADD 04.11.2018---------------------------------------------
-            CUENTA cta = db.CUENTAs.Where(x => x.SOCIEDAD_ID.Equals(dOCUMENTO.SOCIEDAD_ID) & x.PAIS_ID.Equals(dOCUMENTO.PAIS_ID) & x.TALL_ID.Equals(dOCUMENTO.TALL_ID)).FirstOrDefault();
+            CUENTA cta = db.CUENTAs.Where(x => x.SOCIEDAD_ID.Equals(dOCUMENTO.SOCIEDAD_ID) && x.PAIS_ID.Equals(dOCUMENTO.PAIS_ID) && x.TALL_ID.Equals(dOCUMENTO.TALL_ID)).FirstOrDefault();
             if (cta != null)
             {
                 dOCUMENTO.CUENTAP = cta.ABONO;
@@ -358,7 +358,7 @@ namespace TAT001.Services
                             ////db.SaveChanges();//RSG
                         }
 
-                        if (dOCpADRE.TIPO_RECURRENTE.Equals("1") | dOCpADRE.TIPO_RECURRENTE.Equals("2") | dOCpADRE.TIPO_RECURRENTE.Equals("3"))
+                        if (dOCpADRE.TIPO_RECURRENTE.Equals("1") || dOCpADRE.TIPO_RECURRENTE.Equals("2") || dOCpADRE.TIPO_RECURRENTE.Equals("3"))
                         {
                             DOCUMENTOP docP = new DOCUMENTOP();
                             docP.NUM_DOC = dOCUMENTO.NUM_DOC;
@@ -397,13 +397,13 @@ namespace TAT001.Services
 
                 }
 
-                if (dOCpADRE.TIPO_RECURRENTE.Equals("1") | dOCpADRE.TIPO_RECURRENTE.Equals("2") | dOCpADRE.TIPO_RECURRENTE.Equals("3"))
+                if (dOCpADRE.TIPO_RECURRENTE.Equals("1") || dOCpADRE.TIPO_RECURRENTE.Equals("2") || dOCpADRE.TIPO_RECURRENTE.Equals("3"))
                 {
                     //Si la distribución es categoría se obtienen las categorías
                     decimal totalcats = 0;
                     for (int j = 0; j < dOCUMENTO.DOCUMENTOPs.Count; j++)
                     {
-                        if (dOCUMENTO.DOCUMENTOPs.ElementAt(j).MATNR == null | dOCUMENTO.DOCUMENTOPs.ElementAt(j).MATNR == "")
+                        if (dOCUMENTO.DOCUMENTOPs.ElementAt(j).MATNR == null || dOCUMENTO.DOCUMENTOPs.ElementAt(j).MATNR == "")
                         {
                             string cat = dOCUMENTO.DOCUMENTOPs.ElementAt(j).MATKL.ToString();
                             listcat.Add(cat);
@@ -450,7 +450,7 @@ namespace TAT001.Services
                             dOCUMENTO.PORC_APOYO = 0;
                         }
                     }
-                    if (!(dOCpADRE.TIPO_RECURRENTE == "1" & listcat.Count == 0))
+                    if (!(dOCpADRE.TIPO_RECURRENTE == "1" && listcat.Count == 0))
                     {
                         foreach (DOCUMENTOP docP in dOCUMENTO.DOCUMENTOPs)
                         {
@@ -592,7 +592,7 @@ namespace TAT001.Services
                 //var primer = new DateTime(hoy.Year, hoy.Month, 1);
                 //var ultimo = primer.AddMonths(1).AddDays(-1);
                 int restarMes = 0;
-                if (dOCpADRE.TIPO_RECURRENTE.Equals("2") | dOCpADRE.TIPO_RECURRENTE.Equals("3"))
+                if (dOCpADRE.TIPO_RECURRENTE.Equals("2") || dOCpADRE.TIPO_RECURRENTE.Equals("3"))
                 {
                     restarMes = 1;
                 }
@@ -608,7 +608,10 @@ namespace TAT001.Services
                 drecc.MONTO_BASE = dOCUMENTO.MONTO_DOC_MD;
                 dOCUMENTO.PORC_APOYO = drecc.PORC;
                 dOCUMENTO.FECHAD = DateTime.Now;
-                recurrente = "X";
+                if (d.DOCUMENTORECs.Count > 1)
+                    recurrente = "X";
+                else
+                    recurrente = "L";
             }
             drecc.DOC_REF = dOCUMENTO.NUM_DOC;
             //RSG 28.05.2018----------------------------------------------
@@ -618,7 +621,7 @@ namespace TAT001.Services
             drecc.ESTATUS = "P";
             db.Entry(drecc).State = EntityState.Modified;
 
-            if (dOCpADRE.TIPO_RECURRENTE == "2" | dOCpADRE.TIPO_RECURRENTE == "3")
+            if (dOCpADRE.TIPO_RECURRENTE == "2" || dOCpADRE.TIPO_RECURRENTE == "3")
             {
                 DOCUMENTOL dl = new DOCUMENTOL();
                 dl.ESTATUS = null;
@@ -646,7 +649,7 @@ namespace TAT001.Services
             //int rol = user.MIEMBROS.FirstOrDefault().ROL_ID;
             try
             {
-                //WORKFV wf = db.WORKFHs.Where(a => a.BUKRS.Equals(dOCUMENTO.SOCIEDAD_ID) & a.ROL_ID == rol).FirstOrDefault().WORKFVs.OrderByDescending(a => a.VERSION).FirstOrDefault();
+                //WORKFV wf = db.WORKFHs.Where(a => a.BUKRS.Equals(dOCUMENTO.SOCIEDAD_ID) && a.ROL_ID == rol).FirstOrDefault().WORKFVs.OrderByDescending(a => a.VERSION).FirstOrDefault();
                 WORKFV wf = db.WORKFHs.Where(a => a.TSOL_ID.Equals(dOCUMENTO.TSOL_ID)).FirstOrDefault().WORKFVs.OrderByDescending(a => a.VERSION).FirstOrDefault();
                 if (wf != null)
                 {
@@ -677,7 +680,7 @@ namespace TAT001.Services
                         //Email em = new Email();
                         //em.enviaMail(f.NUM_DOC, true);
                     }
-                    if (dOCpADRE.TIPO_RECURRENTE == "1")
+                    if (dOCpADRE.TIPO_RECURRENTE == "1" || recurrente == "L")
                     {
                         conta = db.FLUJOes.Where(a => a.NUM_DOC.Equals(f.NUM_DOC)).OrderByDescending(a => a.POS).FirstOrDefault();
                         conta.USUARIOA_ID = user.ID;
@@ -710,15 +713,15 @@ namespace TAT001.Services
 
         public CLIENTE getCliente(string PAYER_ID)
         {
-            CLIENTE payer = new CLIENTE();
+            ////CLIENTE payer = new CLIENTE();
 
             using (TAT001Entities db = new TAT001Entities())
             {
 
-                payer = db.CLIENTEs.Where(c => c.KUNNR.Equals(PAYER_ID)).FirstOrDefault();
+                return db.CLIENTEs.Where(c => c.KUNNR.Equals(PAYER_ID)).FirstOrDefault();
 
             }
-            return payer;
+            ////return payer;
 
         }
         public List<DOCUMENTOM_MOD> grupoMaterialesController(List<string> catstabla, string vkorg, string spart, string kunnr, string soc_id, out decimal total, DateTime fechaActual, string tipo)
@@ -732,26 +735,26 @@ namespace TAT001.Services
             List<DOCUMENTOM_MOD> jd = new List<DOCUMENTOM_MOD>();
 
             //Obtener los materiales
-            IEnumerable<MATERIAL> matl = Enumerable.Empty<MATERIAL>();
+            IEnumerable<MATERIAL> matl;
             try
             {
-                matl = db.MATERIALs.Where(m => m.ACTIVO == true);//.Select(m => m.ID).ToList();
+                matl = db.MATERIALs.Where(m => m.ACTIVO == true);////.Select(m => m.ID).ToList();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-
+                matl = null;
             }
 
             //Validar si hay materiales
             if (matl != null)
             {
 
-                CLIENTE cli = new CLIENTE();
+                CLIENTE cli;
                 List<CLIENTE> clil = new List<CLIENTE>();
 
                 try
                 {
-                    cli = db.CLIENTEs.Where(c => c.KUNNR == kunnr & c.VKORG == vkorg & c.SPART == spart).FirstOrDefault();
+                    cli = db.CLIENTEs.Where(c => c.KUNNR == kunnr && c.VKORG == vkorg && c.SPART == spart).FirstOrDefault();
 
                     //Saber si el cliente es sold to, payer o un grupo
                     if (cli != null)
@@ -759,21 +762,22 @@ namespace TAT001.Services
                         //Es un soldto
                         if (cli.KUNNR != cli.PAYER && cli.KUNNR != cli.BANNER)
                         {
-                            //cli.VKORG = cli.VKORG+" ";
+                            ////cli.VKORG = cli.VKORG+" ";
                             clil.Add(cli);
                         }
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-
+                    total = 0;
+                    return new List<DOCUMENTOM_MOD>();
                 }
 
-                var cie = clil.Cast<CLIENTE>();
+                ////var cie = clil.Cast<CLIENTE>();
                 CONFDIST_CAT conf = getCatConf(soc_id);
                 if (conf != null)
                 {
-                    //    IEnumerable<CLIENTE> cie = clil as IEnumerable<CLIENTE>;
+                    ////    IEnumerable<CLIENTE> cie = clil as IEnumerable<CLIENTE>;
                     //Obtener el numero de periodos para obtener el historial
                     int nummonths = 0;
                     if (conf.PERIODOS != null)
@@ -782,39 +786,39 @@ namespace TAT001.Services
                         nummonths = 0;
                     int imonths = nummonths * -1;
                     //Obtener el rango de los periodos incluyendo el año
-                    //DateTime ff = DateTime.Today;
+                    ////DateTime ff = DateTime.Today;
                     if (tipo != "1")
                         fechaActual = fechaActual.AddDays(-7);
 
                     DateTime ff = fechaActual;
                     DateTime fi = ff.AddMonths(imonths);
 
-                    string mi = fi.Month.ToString();//.ToString("MM");
-                    string ai = fi.Year.ToString();//.ToString("yyyy");
+                    ////string mi = fi.Month.ToString();
+                    string ai = fi.Year.ToString();
 
-                    string mf = ff.Month.ToString();// ("MM");
-                    string af = ff.Year.ToString();// "yyyy");
+                    ////string mf = ff.Month.ToString();
+                    string af = ff.Year.ToString();
                     Calendario445 cal = new Calendario445();//RSG 09.07.2018
 
-                    int aii = 0;
+                    int aii;
                     try
                     {
                         aii = Convert.ToInt32(ai);
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
-
+                        aii = 0;
                     }
 
                     int mii = 0;
                     try
                     {
-                        mii = Convert.ToInt32(mi);
+                        ////mii = Convert.ToInt32(mi);
                         mii = cal.getPeriodo(fi);//RSG 09.07.2018
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
-
+                        mii = 0;
                     }
 
                     int aff = 0;
@@ -822,81 +826,81 @@ namespace TAT001.Services
                     {
                         aff = Convert.ToInt32(af);
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
-
+                        aff = 0;
                     }
 
                     int mff = 0;
                     try
                     {
-                        mff = Convert.ToInt32(mf);
+                        ////mff = Convert.ToInt32(mf);
                         mff = cal.getPeriodo(ff);//RSG 09.07.2018
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
-
+                        mff = 0;
                     }
 
-                    if (cie != null)
+                    if (clil != null)
                     {
-                        ////Obtener el historial de compras de los clientesd
-                        //var matt = matl.ToList();
-                        ////kunnr = kunnr.TrimStart('0').Trim();
-                        //var pres = db.PRESUPSAPPs.Where(a => a.VKORG.Equals(vkorg) & a.SPART.Equals(spart) & a.KUNNR == kunnr & (a.GRSLS != null | a.NETLB != null)).ToList();
-                        ////var cat = db.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(spras)).ToList();//RSG 09.07.2018 
-                        ////var cat = db.MATERIALGPs.Where(a => a.ACTIVO == true).ToList();
-                        ////foreach (var c in cie)
+                        //////Obtener el historial de compras de los clientesd
+                        ////var matt = matl.ToList();
+                        //////kunnr = kunnr.TrimStart('0').Trim();
+                        ////var pres = db.PRESUPSAPPs.Where(a => a.VKORG.Equals(vkorg) && a.SPART.Equals(spart) && a.KUNNR == kunnr && (a.GRSLS != null || a.NETLB != null)).ToList();
+                        //////var cat = db.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(spras)).ToList();//RSG 09.07.2018 
+                        //////var cat = db.MATERIALGPs.Where(a => a.ACTIVO == true).ToList();
+                        //////foreach (var c in cie)
+                        //////{
+                        //////    c.KUNNR = c.KUNNR.TrimStart('0').Trim();
+                        //////}
+
+                        ////if (conf.CAMPO == "GRSLS")
                         ////{
-                        ////    c.KUNNR = c.KUNNR.TrimStart('0').Trim();
+                        ////    jd = (from ps in pres
+                        ////          join cl in cie
+                        ////          on ps.KUNNR equals cl.KUNNR
+                        ////          join m in matt
+                        ////          on ps.MATNR equals m.ID
+                        ////          join mk in catstabla
+                        ////          //on m.MATERIALGP_ID equals mk.MATERIALGP_ID
+                        ////          on m.ID equals mk//RSG 09.07.2018 
+                        ////          where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) &&
+                        ////          (ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART
+                        ////          ) && ps.BUKRS == soc_id
+                        ////          && ps.GRSLS > 0
+                        ////          select new DOCUMENTOM_MOD
+                        ////          {
+                        ////              ID_CAT = m.MATERIALGP_ID,
+                        ////              MATNR = ps.MATNR,
+                        ////              //mk.TXT50
+                        ////              VAL = Convert.ToDecimal(ps.GRSLS),
+                        ////          }).ToList();
+                        ////}
+                        ////else
+                        ////{
+                        ////    jd = (from ps in pres
+                        ////          join cl in cie
+                        ////          on ps.KUNNR equals cl.KUNNR
+                        ////          join m in matt
+                        ////          on ps.MATNR equals m.ID
+                        ////          join mk in catstabla
+                        ////          //on m.MATERIALGP_ID equals mk.MATERIALGP_ID
+                        ////          on m.ID equals mk//RSG 09.07.2018 
+                        ////          where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) &&
+                        ////          (ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART
+                        ////          ) && ps.BUKRS == soc_id
+                        ////          && ps.NETLB > 0
+                        ////          select new DOCUMENTOM_MOD
+                        ////          {
+                        ////              ID_CAT = m.MATERIALGP_ID,
+                        ////              MATNR = ps.MATNR,
+                        ////              //mk.TXT50
+                        ////              VAL = Convert.ToDecimal(ps.NETLB)
+                        ////          }).ToList();
                         ////}
 
-                        //if (conf.CAMPO == "GRSLS")
-                        //{
-                        //    jd = (from ps in pres
-                        //          join cl in cie
-                        //          on ps.KUNNR equals cl.KUNNR
-                        //          join m in matt
-                        //          on ps.MATNR equals m.ID
-                        //          join mk in catstabla
-                        //          //on m.MATERIALGP_ID equals mk.MATERIALGP_ID
-                        //          on m.ID equals mk//RSG 09.07.2018 
-                        //          where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) &&
-                        //          (ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART
-                        //          ) && ps.BUKRS == soc_id
-                        //          && ps.GRSLS > 0
-                        //          select new DOCUMENTOM_MOD
-                        //          {
-                        //              ID_CAT = m.MATERIALGP_ID,
-                        //              MATNR = ps.MATNR,
-                        //              //mk.TXT50
-                        //              VAL = Convert.ToDecimal(ps.GRSLS),
-                        //          }).ToList();
-                        //}
-                        //else
-                        //{
-                        //    jd = (from ps in pres
-                        //          join cl in cie
-                        //          on ps.KUNNR equals cl.KUNNR
-                        //          join m in matt
-                        //          on ps.MATNR equals m.ID
-                        //          join mk in catstabla
-                        //          //on m.MATERIALGP_ID equals mk.MATERIALGP_ID
-                        //          on m.ID equals mk//RSG 09.07.2018 
-                        //          where (ps.ANIO >= aii && ps.PERIOD >= mii) && (ps.ANIO <= aff && ps.PERIOD <= mff) &&
-                        //          (ps.VKORG == cl.VKORG && ps.VTWEG == cl.VTWEG && ps.SPART == cl.SPART
-                        //          ) && ps.BUKRS == soc_id
-                        //          && ps.NETLB > 0
-                        //          select new DOCUMENTOM_MOD
-                        //          {
-                        //              ID_CAT = m.MATERIALGP_ID,
-                        //              MATNR = ps.MATNR,
-                        //              //mk.TXT50
-                        //              VAL = Convert.ToDecimal(ps.NETLB)
-                        //          }).ToList();
-                        //}
-
-                        jd = materialesgptDao.ListaMaterialGroupsMateriales( vkorg, spart, kunnr, soc_id, aii, mii, aff, mff, "admin");
+                        jd = materialesgptDao.ListaMaterialGroupsMateriales(vkorg, spart, kunnr, soc_id, aii, mii, aff, mff, "admin");
                     }
                 }
 
@@ -910,7 +914,7 @@ namespace TAT001.Services
             {
                 for (int j = 0; j < categoriasl.Count; j++)
                 {
-                    if (catstabla[h].ToString() == categoriasl[j].Key.ToString() | catstabla[h].ToString() == "000")
+                    if (catstabla[h].ToString() == categoriasl[j].Key.ToString() || catstabla[h].ToString() == "000")
                     {
                         categorias.Add(categoriasl[j].Key.ToString());
                     }
@@ -923,10 +927,10 @@ namespace TAT001.Services
             {
                 CategoriaMaterial cm = new CategoriaMaterial();
                 cm.ID = item;
-                cm.EXCLUIR = jd.Where(x => x.MATNR.Equals(item)).FirstOrDefault().EXCLUIR;//RSG 09.07.2018 ID 156
+                cm.EXCLUIR = jd.FirstOrDefault(x => x.MATNR.Equals(item)).EXCLUIR;//RSG 09.07.2018 ID 156
 
                 //Obtener los materiales de la categoría
-                List<DOCUMENTOM_MOD> dl = new List<DOCUMENTOM_MOD>();
+                List<DOCUMENTOM_MOD> dl;
                 List<DOCUMENTOM_MOD> dm = new List<DOCUMENTOM_MOD>();
                 //dl = jd.Where(c => c.ID_CAT == item).Select(c => new DOCUMENTOM_MOD { ID_CAT = c.ID_CAT, MATNR = c.MATNR, VAL = c.VAL}).ToList();//Falta obtener el groupby
                 dl = jd.Where(c => c.MATNR == item).Select(c => new DOCUMENTOM_MOD { ID_CAT = c.ID_CAT, MATNR = c.MATNR, VAL = c.VAL, EXCLUIR = c.EXCLUIR }).ToList();//RSG 09.07.2018 ID 156
@@ -934,7 +938,7 @@ namespace TAT001.Services
                 //Obtener la descripción de los materiales
                 foreach (DOCUMENTOM_MOD d in dl)
                 {
-                    DOCUMENTOM_MOD dcl = new DOCUMENTOM_MOD();
+                    DOCUMENTOM_MOD dcl;
                     //dcl = dm.Where(z => z.MATNR == d.MATNR).Select(c => new DOCUMENTOM_MOD { ID_CAT = c.ID_CAT, MATNR = c.MATNR, VAL = c.VAL }).FirstOrDefault();//RSG 09.07.2018 ID 156
                     dcl = dm.Where(z => z.MATNR == d.MATNR).Select(c => new DOCUMENTOM_MOD { ID_CAT = c.ID_CAT, MATNR = c.MATNR, VAL = c.VAL, EXCLUIR = c.EXCLUIR }).FirstOrDefault();//RSG 09.07.2018 ID 156
 
@@ -981,23 +985,24 @@ namespace TAT001.Services
             IEnumerable<MATERIAL> matl = Enumerable.Empty<MATERIAL>();
             try
             {
-                matl = db.MATERIALs.Where(m => m.ACTIVO == true);//.Select(m => m.ID).ToList();
+                matl = db.MATERIALs.Where(m => m.ACTIVO == true);////.Select(m => m.ID).ToList();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-
+                total = 0;
+                return new List<CategoriaMaterial>();
             }
 
             //Validar si hay materiales
             if (matl != null)
             {
 
-                CLIENTE cli = new CLIENTE();
+                CLIENTE cli;
                 List<CLIENTE> clil = new List<CLIENTE>();
 
                 try
                 {
-                    cli = db.CLIENTEs.Where(c => c.KUNNR == kunnr & c.VKORG == vkorg & c.SPART == spart).FirstOrDefault();
+                    cli = db.CLIENTEs.Where(c => c.KUNNR == kunnr && c.VKORG == vkorg && c.SPART == spart).FirstOrDefault();
 
                     //Saber si el cliente es sold to, payer o un grupo
                     if (cli != null)
@@ -1005,41 +1010,42 @@ namespace TAT001.Services
                         //Es un soldto
                         if (cli.KUNNR != cli.PAYER && cli.KUNNR != cli.BANNER)
                         {
-                            //cli.VKORG = cli.VKORG+" ";
+                            ////cli.VKORG = cli.VKORG+" ";
                             clil.Add(cli);
                         }
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-
+                    total = 0;
+                    return new List<CategoriaMaterial>();
                 }
 
-                var cie = clil.Cast<CLIENTE>();
+                ////var cie = clil.Cast<CLIENTE>();
                 CONFDIST_CAT conf = getCatConf(soc_id);
                 if (conf != null)
                 {
-                    //    IEnumerable<CLIENTE> cie = clil as IEnumerable<CLIENTE>;
+                    ////    IEnumerable<CLIENTE> cie = clil as IEnumerable<CLIENTE>;
                     //Obtener el numero de periodos para obtener el historial
                     int nummonths = 0;
-                    if (conf.PERIODOS != null)
-                        nummonths = (int)conf.PERIODOS;
+                    ////////////////////////////////////if (conf.PERIODOS != null)
+                    ////////////////////////////////////    nummonths = (int)conf.PERIODOS;
                     ////TEST 03.12.2018 if (tipo != "1")
                     nummonths = 0;
                     int imonths = nummonths * -1;
                     //Obtener el rango de los periodos incluyendo el año
-                    //DateTime ff = DateTime.Today;
+                    ////DateTime ff = DateTime.Today;
                     ////TEST 03.12.2018 if (tipo != "1")//
                     fechaActual = fechaActual.AddDays(-7);
 
                     DateTime ff = fechaActual;
                     DateTime fi = ff.AddMonths(imonths);
 
-                    string mi = fi.Month.ToString();//.ToString("MM");
-                    string ai = fi.Year.ToString();//.ToString("yyyy");
+                    ////string mi = fi.Month.ToString();
+                    string ai = fi.Year.ToString();
 
-                    string mf = ff.Month.ToString();// ("MM");
-                    string af = ff.Year.ToString();// "yyyy");
+                    ////string mf = ff.Month.ToString();
+                    string af = ff.Year.ToString();
                     Calendario445 cal = new Calendario445();//RSG 09.07.2018
 
                     int aii = 0;
@@ -1047,20 +1053,20 @@ namespace TAT001.Services
                     {
                         aii = Convert.ToInt32(ai);
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
-
+                        aii = 0;
                     }
 
                     int mii = 0;
                     try
                     {
-                        mii = Convert.ToInt32(mi);
+                        ////mii = Convert.ToInt32(mi);
                         mii = cal.getPeriodo(fi);//RSG 09.07.2018
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
-
+                        mii = 0;
                     }
 
                     int aff = 0;
@@ -1068,28 +1074,29 @@ namespace TAT001.Services
                     {
                         aff = Convert.ToInt32(af);
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
-
+                        aff = 0;
                     }
 
                     int mff = 0;
                     try
                     {
-                        mff = Convert.ToInt32(mf);
+                        ////mff = Convert.ToInt32(mf);
                         mff = cal.getPeriodo(ff);//RSG 09.07.2018
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
-
+                        mff = 0;
                     }
 
-                    if (cie != null)
+                    ////if (cie != null)
+                    if (clil != null)
                     {
                         //Obtener el historial de compras de los clientesd
                         ////    var matt = matl.ToList();
                         ////    //kunnr = kunnr.TrimStart('0').Trim();
-                        ////    var pres = db.PRESUPSAPPs.Where(a => a.VKORG.Equals(vkorg) & a.SPART.Equals(spart) & a.KUNNR == kunnr & (a.GRSLS != null | a.NETLB != null)).ToList();
+                        ////    var pres = db.PRESUPSAPPs.Where(a => a.VKORG.Equals(vkorg) && a.SPART.Equals(spart) && a.KUNNR == kunnr && (a.GRSLS != null || a.NETLB != null)).ToList();
                         ////    //var cat = db.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(spras)).ToList();//RSG 09.07.2018 
                         ////    var cat = db.MATERIALGPs.Where(a => a.ACTIVO == true).ToList();
                         ////    //foreach (var c in cie)
@@ -1145,7 +1152,7 @@ namespace TAT001.Services
                         ////    }
                         ////}
 
-                        jd = materialesgptDao.ListaMaterialGroupsMateriales( vkorg, spart, kunnr, soc_id, aii, mii, aff, mff, "admin");
+                        jd = materialesgptDao.ListaMaterialGroupsMateriales(vkorg, spart, kunnr, soc_id, aii, mii, aff, mff, "admin");
                     }
                 }
 
@@ -1159,7 +1166,7 @@ namespace TAT001.Services
             {
                 for (int j = 0; j < categoriasl.Count; j++)
                 {
-                    if (catstabla[h].ToString() == categoriasl[j].Key.ToString() | catstabla[h].ToString() == "000")
+                    if (catstabla[h].ToString() == categoriasl[j].Key.ToString() || catstabla[h].ToString() == "000")
                     {
                         categorias.Add(categoriasl[j].Key.ToString());
                     }
@@ -1172,20 +1179,20 @@ namespace TAT001.Services
             {
                 CategoriaMaterial cm = new CategoriaMaterial();
                 cm.ID = item;
-                cm.EXCLUIR = jd.Where(x => x.ID_CAT.Equals(item)).FirstOrDefault().EXCLUIR;//RSG 09.07.2018 ID 156
+                cm.EXCLUIR = jd.FirstOrDefault(x => x.ID_CAT.Equals(item)).EXCLUIR;//RSG 09.07.2018 ID 156
 
                 //Obtener los materiales de la categoría
-                List<DOCUMENTOM_MOD> dl = new List<DOCUMENTOM_MOD>();
+                List<DOCUMENTOM_MOD> dl;
                 List<DOCUMENTOM_MOD> dm = new List<DOCUMENTOM_MOD>();
                 //dl = jd.Where(c => c.ID_CAT == item).Select(c => new DOCUMENTOM_MOD { ID_CAT = c.ID_CAT, MATNR = c.MATNR, VAL = c.VAL}).ToList();//Falta obtener el groupby
                 dl = jd.Where(c => c.ID_CAT == item).Select(c => new DOCUMENTOM_MOD { ID_CAT = c.ID_CAT, MATNR = c.MATNR, VAL = c.VAL, EXCLUIR = c.EXCLUIR }).ToList();//RSG 09.07.2018 ID 156
 
-                if (!(catstabla[0] == "000" & cm.EXCLUIR == true))
+                if (!(catstabla[0] == "000" && cm.EXCLUIR))
                 {
                     //Obtener la descripción de los materiales
                     foreach (DOCUMENTOM_MOD d in dl)
                     {
-                        DOCUMENTOM_MOD dcl = new DOCUMENTOM_MOD();
+                        DOCUMENTOM_MOD dcl;
                         //dcl = dm.Where(z => z.MATNR == d.MATNR).Select(c => new DOCUMENTOM_MOD { ID_CAT = c.ID_CAT, MATNR = c.MATNR, VAL = c.VAL }).FirstOrDefault();//RSG 09.07.2018 ID 156
                         dcl = dm.Where(z => z.MATNR == d.MATNR).Select(c => new DOCUMENTOM_MOD { ID_CAT = c.ID_CAT, MATNR = c.MATNR, VAL = c.VAL, EXCLUIR = c.EXCLUIR }).FirstOrDefault();//RSG 09.07.2018 ID 156
 
@@ -1227,7 +1234,7 @@ namespace TAT001.Services
                 }
                 catch (Exception)
                 {
-
+                    return conf;
                 }
 
                 return conf;

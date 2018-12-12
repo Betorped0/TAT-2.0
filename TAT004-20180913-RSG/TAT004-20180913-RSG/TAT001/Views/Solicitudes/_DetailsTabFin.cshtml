@@ -217,7 +217,7 @@
                         var clearing = [];
                         function getClearing() {
                             $("#div_clearing").empty();
-                            var reverso=  "@Model.D.TSOL.REVERSO"
+                            var reverso = ("@Model.D.TSOL.REVERSO" == "True");
                                 cuentas(reverso);
                         }
                         function formaClearing() {

@@ -12854,6 +12854,8 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Property Type="String" Name="TIPO_RECURRENTE" Nullable="true" MaxLength="1" />
           <Property Type="Int32" Name="nRelacionadas" Nullable="true" />
           <Property Type="Int32" Name="nRecurrentes" Nullable="true" />
+          <Property Type="Decimal" Name="DOCUMENTO_REF" Nullable="true" Precision="10" Scale="0" />
+          <Property Type="String" Name="ESTATUS_WF_USER" Nullable="true" MaxLength="1" />
         </ComplexType>
         <ComplexType Name="CSP_DOCUMENTOSRECCXSOL_Result">
           <Property Type="Decimal" Name="NUM_DOC" Nullable="false" Precision="10" Scale="0" />
@@ -15618,6 +15620,8 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
                 <ScalarProperty Name="TIPO_RECURRENTE" ColumnName="TIPO_RECURRENTE" />
                 <ScalarProperty Name="nRelacionadas" ColumnName="nRelacionadas" />
                 <ScalarProperty Name="nRecurrentes" ColumnName="nRecurrentes" />
+                <ScalarProperty Name="DOCUMENTO_REF" ColumnName="DOCUMENTO_REF" />
+                <ScalarProperty Name="ESTATUS_WF_USER" ColumnName="ESTATUS_WF_USER" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

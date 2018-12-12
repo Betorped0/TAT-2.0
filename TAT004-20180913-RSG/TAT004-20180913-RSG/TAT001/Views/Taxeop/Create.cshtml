@@ -1,22 +1,31 @@
 ﻿@model TAT001.Entities.TAXEOP
 
 @{
-    //ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.pagina_r = 863;
     ViewBag.carpeta_r = 500;
 }
 <script src="~/Scripts/ValidarDecimalesTP.js"></script>
 <script src="~/Scripts/jquery.mask.js"></script>
+<style>
+    .pnl-cli {
+        background-color: white;
+        padding: 5px 15px 5px 15px;
+        border-radius: 5px;
+    }
+</style>
 <div>
     @using (Html.BeginForm("Create", "Taxeop", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
-        <div class="row">
-            <div class="col l12 m12 s12">
-                <button id="btnAgR" type="submit" value="Delete" class="btn btn-default" style="float:right;"></button>
-            </div>
+    <div class="row">
+        <div class="row left pnl-cli">
+            <h6>@ViewBag.NoCliente - @ViewBag.Cliente</h6>
         </div>
+        <div class="row right">
+            <button id="btnAgR" type="submit" value="Delete" class="btn btn-default" style="float:right;"></button>
+        </div>
+    </div>
         <div class="row">
             <div class="card-panel">
                 <div class="row">

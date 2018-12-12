@@ -10,14 +10,12 @@ namespace TAT001.Models
         public ModificacionesGlobalesViewModel()
         {
             filtros = new Filtros();
-            pageSizes = new List<SelectListItem>();
             sociedades= new List<SelectListItem>();
             solicitudPorAprobar = new List<SolicitudPorAprobar>();
             solicitudes = new List<DOCUMENTO>();
 
         }
         public Filtros filtros { get; set; }
-        public List<SelectListItem>  pageSizes  { get; set; }
         public List<SelectListItem> sociedades { get; set; }
         public List<SolicitudPorAprobar> solicitudPorAprobar { get; set; }
         public List<DOCUMENTO> solicitudes { get; set; }

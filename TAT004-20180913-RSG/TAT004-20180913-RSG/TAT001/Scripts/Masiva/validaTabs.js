@@ -231,14 +231,14 @@ function clearErrorsN(num_doc) {
                 //$(td).closest('tr').children().eq(0).children().removeClass("red rojo");
                 //$(td).closest('tr').children().eq(0).children().addClass("green");
                 //$(td).closest('tr').children().eq(0).children().text("done");
-                $(this).children().eq(0).children().removeClass("red rojo");
+                $(this).children().eq(0).children().removeClass("red");
                 $(this).children().eq(0).children().addClass("green");
-                $(this).children().eq(0).children().text("done");
+                $(this).children().eq(0).children().text("Ok");
                 //clearErrors();
             } else {
                 $(td).closest('tr').children().eq(0).children().removeClass("green");
-                $(td).closest('tr').children().eq(0).children().addClass("red rojo");
-                $(td).closest('tr').children().eq(0).children().text("close");
+                $(td).closest('tr').children().eq(0).children().addClass("red");
+                $(td).closest('tr').children().eq(0).children().text("Error");
             }
         }
     });

@@ -7,13 +7,23 @@
 }
 <script src="~/Scripts/ValidarDecimalesTP.js"></script>
 <script src="~/Scripts/jquery.mask.js"></script>
+<style>
+    .pnl-cli {
+        background-color: white;
+        padding: 5px 15px 5px 15px;
+        border-radius: 5px;
+    }
+</style>
 <div>
-        <div class="row">
-            <div class="col l12 m12 s12">
-                <a class="btn btn-default right" id="btnEdit" data-form-method="post" href="@Url.Action("Edit", "Taxeop", new { sc = Model.SOCIEDAD_ID, ld = Model.PAIS_ID, kun = Model.KUNNR, vk = Model.VKORG, vtw = Model.VTWEG, sp = Model.SPART, con = Model.CONCEPTO_ID, pos = Model.POS,  rid=Model.RETENCION_ID})">
-                </a>
-            </div>
+    <div class="row">
+        <div class="row left pnl-cli">
+            <h6>@ViewBag.NoCliente - @ViewBag.Cliente</h6>
         </div>
+        <div class="row right">
+            <a class="btn btn-default right" id="btnEdit" data-form-method="post" href="@Url.Action("Edit", "Taxeop", new { sc = Model.SOCIEDAD_ID, ld = Model.PAIS_ID, kun = Model.KUNNR, vk = Model.VKORG, vtw = Model.VTWEG, sp = Model.SPART, con = Model.CONCEPTO_ID, pos = Model.POS,  rid=Model.RETENCION_ID})">
+            </a>
+        </div>
+    </div>
         <div class="row">
             <div class="card-panel">
                 <div class="row">

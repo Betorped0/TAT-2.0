@@ -564,13 +564,26 @@ namespace TAT001.Controllers
             }
         }
         [HttpGet]
-        public JsonResult Paises(string bukrs)
+        public JsonResult Paises(string bukrs = null,string Prefix=null)
         {
-            var c = (from D in db.PAIS
+            if (!string.IsNullOrEmpty(bukrs))
+            {
+               var c = (from D in db.PAIS
                      where D.SOCIEDAD_ID == bukrs
                      select new { D.LAND, D.LANDX });
-            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
-            return cc;
+                return Json(c, JsonRequestBehavior.AllowGet);
+            }
+            else {
+                if (Prefix == null)
+                    Prefix = "";
+                 var c = (from sp in db.PAIS
+                         where (sp.LAND.Contains(Prefix) || sp.LANDX.Contains(Prefix))
+                         select new { sp.LAND,  sp.LANDX });
+                return Json(c, JsonRequestBehavior.AllowGet);
+
+            }
+           
+           
         }
         [HttpGet]
         public JsonResult selectTaxeo(string bukrs, string pais, string vkorg, string vtweg, string spart, string kunnr, string spras)
@@ -877,7 +890,7 @@ namespace TAT001.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public JsonResult SelectClienteDup(string kunnr, bool? esBorrador, string num_doc)
+        public JsonResult SelectClienteDup(string kunnr, bool? esBorrador, string num_doc, string bukrs)
         {
             Cadena cad = new Cadena();
             kunnr = cad.completaCliente(kunnr);
@@ -967,7 +980,18 @@ namespace TAT001.Controllers
             //Asignar Manager
             if (id_cl != null && db.CLIENTEFs.Any(x => x.KUNNR == id_cl.KUNNR && x.ACTIVO))
             {
-                id_cl.MANAGER = db.CLIENTEFs.Where(x => x.KUNNR == id_cl.KUNNR && x.ACTIVO).First().USUARIO1_ID;
+                ////id_cl.MANAGER = db.CLIENTEFs.Where(x => x.KUNNR == id_cl.KUNNR && x.ACTIVO).First().USUARIO1_ID;
+                USUARIO user = db.USUARIOs.Find(User.Identity.Name);
+                DET_APROBH dah = db.DET_APROBH.Where(a => a.SOCIEDAD_ID == bukrs && a.PUESTOC_ID == user.PUESTO_ID && a.ACTIVO)
+                                    .OrderByDescending(a => a.VERSION).FirstOrDefault();
+                if (dah != null)
+                {
+                    CLIENTEF cf = db.CLIENTEFs.Where(a => a.KUNNR.Equals(id_cl.KUNNR) && a.ACTIVO
+                                   ).OrderByDescending(a => a.VERSION).FirstOrDefault();
+                    ProcesaFlujo pf = new ProcesaFlujo();
+                    id_cl.MANAGER = pf.determinaAgenteI(cf, dah).USUARIOA_ID;
+                }
+
             }
             JsonResult jc = Json(id_cl, JsonRequestBehavior.AllowGet);
             return jc;
@@ -1067,16 +1091,7 @@ namespace TAT001.Controllers
             var sociedades=sociedadesDao.ListaSociedades(TATConstantes.ACCION_LISTA_SOCIEDADES, null,null,Prefix);
             return Json(sociedades, JsonRequestBehavior.AllowGet);
         }
-
-        [HttpGet]
-        public JsonResult paises_(string Prefix)
-        {
-            var c = (from sp in db.PAIS
-                     where (sp.LAND.Contains(Prefix)|| sp.LANDX.Contains(Prefix))
-                     select new { sp.LAND, TXT50 = (sp.LANDX) });
-
-            return Json(c, JsonRequestBehavior.AllowGet);
-        }
+        
 
         [HttpGet]
         public JsonResult tipoAllowance(string Prefix)
@@ -1118,6 +1133,61 @@ namespace TAT001.Controllers
             return cc;
 
 
+        }
+        [HttpGet]
+        public JsonResult TiposClientes(string Prefix)
+        {
+            if (Prefix == null)
+                Prefix = "";
+            
+
+            var c = (from x in db.TCLIENTEs
+                     where x.ID.Contains(Prefix) && x.ACTIVO
+                     select new { x.ID }).ToList();
+
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+        [HttpGet]
+        public JsonResult Spras(string Prefix)
+        {
+            if (Prefix == null)
+                Prefix = "";
+            
+            var c = (from x in db.SPRAS
+                     where (x.ID.Contains(Prefix) || x.DESCRIPCION.Contains(Prefix))&& x.ID!="PT"
+                     select new { x.ID, x.DESCRIPCION }).ToList();
+            
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+
+        [HttpGet]
+        public JsonResult Vendors(string Prefix)
+        {
+            if (Prefix == null)
+                Prefix = "";
+            
+
+            var c = (from x in db.PROVEEDORs
+                     where (x.ID.Contains(Prefix) || x.NOMBRE.Contains(Prefix)) && x.ACTIVO 
+                     select new { x.ID, x.NOMBRE }).ToList();
+
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
+        }
+        [HttpGet]
+        public JsonResult Canales(string Prefix)
+        {
+            if (Prefix == null)
+                Prefix = "";
+            
+            var c = (from x in db.CANALs
+                     where (x.CANAL1.Contains(Prefix) || x.CDESCRIPCION.Contains(Prefix))
+                     select new { x.CANAL1, x.CDESCRIPCION }).ToList();
+           
+            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            return cc;
         }
     }
 }

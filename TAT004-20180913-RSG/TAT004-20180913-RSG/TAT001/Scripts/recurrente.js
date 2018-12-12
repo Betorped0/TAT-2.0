@@ -47,11 +47,8 @@ $(document).ready(function () {
         "paging": false,
         "info": false,
         "searching": false,
+        "ordering": false,
         "columns": [
-            {
-                "name": 'ADD',
-                "className": 'ADD'
-            },
             {
                 "name": 'POS',
                 "className": 'POS'
@@ -335,6 +332,8 @@ function cambiaRec() {
         $(".PORCENTAJE").css("display", "table-cell");
     }
 
+    formaLiquida();
+    $('#check_objetivoq').prop('checked', false);
 }
 
 function cambiaCheckRec() {
@@ -368,8 +367,10 @@ function cambiaCheckRec() {
 
     }
     if (campo.checked) {
-        $("#select_neg").val("M");
-        $("#select_negi").val("M");
+        if (!ligada()) {
+            $("#select_neg").val("M");
+            $("#select_negi").val("M");
+        }
         $("#select_neg").prop("disabled", "disabled");
         $("#select_neg").formSelect();
         $("#select_neg").change();
@@ -383,7 +384,16 @@ function cambiaCheckRec() {
 }
 
 function addRowRec(t, num, date, monto, tipo, porc, periodo, meses) {
-    var tsoll = $("#TSOL_ID").val();
+    //<<<<<<< 20181206-RSG
+    //var tsol = document.getElementsByClassName("k-state-selected");
+    //var tsoll = "";
+    //if (tsol.length > 0)
+    //    tsoll = [0].innerText;
+    //else
+    //    tsoll = document.getElementById("tsol_idi").value;
+    //=======
+    var tsoll = ($("#tsol_idi").val() ? $("#tsol_idi").val() : $("#tsol_id").val());
+
     var m = "";
     var p = "";
     if (tipo !== "2") {
@@ -466,7 +476,6 @@ function addRowRecl(t, pos, tsol, fecha, monto, porc, periodo) {
     //var t = $('#table_rec').DataTable();
 
     t.row.add([
-        "",
         pos
         , periodo
         , tsol
@@ -714,11 +723,25 @@ function ultimoDiaT(t, num, periodo, ejercicio, monto, tipo, porc, meses) {
 
 function setDates(tipo) {
 
+    var fechaIa = document.getElementById('fechai_vig').value;
+    var fechaFa = document.getElementById('fechaf_vig').value;
+
     if (tipo === "date") {
-        var fechI = document.getElementById("fechai_vig2"),
-            fechF = document.getElementById("fechaf_vig2");
-        fechI.value = document.getElementById('fechai_vig').value;
-        fechF.value = document.getElementById('fechaf_vig').value;
+        ////var fechI = document.getElementById("fechai_vig2"),
+        ////    fechF = document.getElementById("fechaf_vig2");
+
+        ////fechI.value = document.getElementById('fechai_vig').value;
+        ////fechF.value = document.getElementById('fechaf_vig').value;
+
+        ////var instanceI = M.Datepicker.getInstance(fechI);
+        ////var dI = fechI.value.split('/');
+        ////var datesI = new Date(dI[2], dI[1] - 1, dI[0]);
+        ////instanceI.setDate(datesI);
+        ////var instanceF = M.Datepicker.getInstance(fechF);
+        ////var dF = fechF.value.split('/');
+        ////var datesF = new Date(dF[2], dF[1] - 1, dF[0]);
+        ////instanceF.setDate(datesF);
+
         document.getElementById("lbl_fechade").setAttribute('class', 'active');
         document.getElementById("lbl_fechahasta").setAttribute('class', 'active');
 
@@ -742,6 +765,14 @@ function setDates(tipo) {
                     + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'pFechas\')">Aceptar</button>'
             });
             return;
+        }
+        if (periodoi == "") {
+            periodoi = $("#fechai_vig").val().split('/')[1];
+            document.getElementById('periodoi_id').value = periodoi;
+        }
+        if (periodof == "") {
+            periodof = $("#fechaf_vig").val().split('/')[1];
+            document.getElementById('periodof_id').value = periodof;
         }
         if (periodoi * 1 > periodof * 1 && anioi * 1 === aniof * 1) {
             var pf = $("#periodof_id");
@@ -796,6 +827,26 @@ function setDates(tipo) {
             });
         }
     }
+    var fechI = document.getElementById("fechai_vig2"),
+        fechF = document.getElementById("fechaf_vig2");
+
+    fechI.value = document.getElementById('fechai_vig').value;
+    fechF.value = document.getElementById('fechaf_vig').value;
+
+    var instanceI = M.Datepicker.getInstance(fechI);
+    var dI = fechI.value.split('/');
+    var datesI = new Date(dI[2], dI[1] - 1, dI[0]);
+    instanceI.setDate(datesI);
+    var instanceF = M.Datepicker.getInstance(fechF);
+    var dF = fechF.value.split('/');
+    var datesF = new Date(dF[2], dF[1] - 1, dF[0]);
+    instanceF.setDate(datesF);
+
+
+    var fechaIb = document.getElementById('fechai_vig').value;
+    var fechaFb = document.getElementById('fechaf_vig').value;
+    if (fechaIa != fechaIb || fechaFa != fechaFb)
+        cambiaRec();
 }
 
 //Evaluar la extensión y tamaño del archivo a cargar
@@ -853,4 +904,62 @@ function isRecurrente() {
 
 function isDuplicado() {
     return $("#duplicate").val() !== "";
+}
+
+var liquida = [];
+function formaLiquida() {
+    var mensual = true;
+    var trimestral = false;
+    var semestral = false;
+    var anual = false;
+    var periodoi = parseInt($("#periodoi_id").val());
+    var periodof = parseInt($("#periodof_id").val());
+    var anioi = parseInt($("#anioi_id").val());
+    var aniof = parseInt($("#aniof_id").val());
+    if (!(periodoi === periodof && anioi == aniof)){
+        var resta = 0;
+        if (aniof - anioi == 0)
+            resta = periodof - periodoi + 1;
+        else {
+            resta = 13 - periodoi + periodof;
+            resta += 12 * ((aniof - anioi) - 1)
+        }
+        trimestral = resta % 3 == 0;
+        semestral = resta % 6 == 0;
+        anual = resta % 12 == 0;
+    }
+    $("#sel_nn").find('option').remove().end();
+    ////$("#div_categoria").find('.select-dropdown.dropdown-trigger').removeClass('ui-autocomplete-loading');
+    var val = "";
+    var label = "";
+    if (mensual) {
+        val = 1;
+        label = "Mensual";
+        $("#sel_nn").append($("<option></option>")
+            .attr("value", val)
+            .text(label));
+    }
+    if (trimestral) {
+        val = 3;
+        label = "Trimestral";
+        $("#sel_nn").append($("<option></option>")
+            .attr("value", val)
+            .text(label));
+    }
+    if (semestral) {
+        val = 6;
+        label = "Semestral";
+        $("#sel_nn").append($("<option></option>")
+            .attr("value", val)
+            .text(label));
+    }
+    if (anual) {
+        val = 12;
+        label = "Anual";
+        $("#sel_nn").append($("<option></option>")
+            .attr("value", val)
+            .text(label));
+    }
+    var elem = document.getElementById("sel_nn");
+    M.FormSelect.init(elem, []);
 }

@@ -7,43 +7,34 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using TAT001.Common;
 using TAT001.Entities;
+using TAT001.Filters;
 
 namespace TAT001.Controllers.Configuracion
 {
+    [Authorize]
+    [LoginActive]
     public class TaxeopController : Controller
     {
-        private TAT001Entities db = new TAT001Entities();
+        readonly TAT001Entities db = new TAT001Entities();
 
         // GET: Taxeop
         public ActionResult Index(string sc, string ld, string kun, string vk, string vtw, string sp, string con)
         {
-            int pagina = 861; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
+            int pagina_id = 861; //ID EN BASE DE DATOS
+            FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
+            try
             {
-                string u = User.Identity.Name;
-                //string u = "admin";
-                var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
-                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-
-                try
-                {
-                    string p = Session["pais"].ToString();
-                    ViewBag.pais = p + ".svg";
-                }
-                catch
-                {
-                    //ViewBag.pais = "mx.svg";
-                    //return RedirectToAction("Pais", "Home");
-                }
-                Session["spras"] = user.SPRAS_ID;
+                string p = Session["pais"].ToString();
+                ViewBag.pais = p + ".svg";
             }
+            catch
+            {
+                //ViewBag.pais = "mx.svg";
+                //return RedirectToAction("Pais", "Home");
+            }
+            
             //Para Regresar al Index
             ViewBag.sc = sc;
             ViewBag.ld = ld;
@@ -53,6 +44,9 @@ namespace TAT001.Controllers.Configuracion
             ViewBag.sp = sp;
             ViewBag.con = con;
             var tAXEOPs = db.TAXEOPs.Include(t => t.RETENCION).Include(t => t.TAXEOH).Include(t => t.TRETENCION);
+            CLIENTE cli = db.CLIENTEs.Find(vk, vtw, sp, kun);
+            ViewBag.Cliente = cli.NAME1;
+            ViewBag.NoCliente = cli.KUNNR;
             return View(tAXEOPs.Where(s => s.SOCIEDAD_ID == sc).ToList());
         }
 
@@ -110,6 +104,9 @@ namespace TAT001.Controllers.Configuracion
             ViewBag.RETENCION_ID = new SelectList(retenciones, "ID", "DESCRIPCION", txp.RETENCION_ID);
             var tretenciones = db.TRETENCIONs.Where(t => t.ACTIVO == true).Select(t => new { t.ID, DESCRIPCION = t.ID + "-" + t.DESCRIPCION });
             ViewBag.TRETENCION_ID = new SelectList(tretenciones, "ID", "DESCRIPCION", txp.TRETENCION_ID);
+            CLIENTE cli = db.CLIENTEs.Find(vk, vtw, sp, kun);
+            ViewBag.Cliente = cli.NAME1;
+            ViewBag.NoCliente = cli.KUNNR;
             return View(txp);
         }
         [HttpPost]
@@ -252,6 +249,9 @@ namespace TAT001.Controllers.Configuracion
             ViewBag.RETENCION_ID = new SelectList(retenciones, "ID","DESCRIPCION");
             var tretenciones = db.TRETENCIONs.Where(t => t.ACTIVO==true).Select(t => new { t.ID, DESCRIPCION = t.ID + "-" + t.DESCRIPCION  });
             ViewBag.TRETENCION_ID = new SelectList(tretenciones, "ID", "DESCRIPCION");
+            CLIENTE cli = db.CLIENTEs.Find(vk, vtw, sp, kun);
+            ViewBag.Cliente = cli.NAME1;
+            ViewBag.NoCliente = cli.KUNNR;
             return View(txp);
         }
 
@@ -369,6 +369,9 @@ namespace TAT001.Controllers.Configuracion
             ViewBag.RETENCION_ID = new SelectList(retenciones, "ID", "DESCRIPCION",txp.RETENCION_ID );
             var tretenciones = db.TRETENCIONs.Where(t => t.ACTIVO == true).Select(t => new { t.ID, DESCRIPCION = t.ID + "-" + t.DESCRIPCION });
             ViewBag.TRETENCION_ID = new SelectList(tretenciones, "ID", "DESCRIPCION",txp.TRETENCION_ID);
+            CLIENTE cli = db.CLIENTEs.Find(vk, vtw, sp, kun);
+            ViewBag.Cliente = cli.NAME1;
+            ViewBag.NoCliente = cli.KUNNR;
             return View(txp);
         }
 

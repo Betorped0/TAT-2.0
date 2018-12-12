@@ -6,10 +6,22 @@
     ViewBag.pagina_r = 852;
     ViewBag.carpeta_r = 500;
 }
-<div class="row right-align">
-    <div class="col s12">
-        @*<a href="@Url.Action("Index", "Taxeoh", new { kun = Model.KUNNR, vko = Model.VKORG, vtw = Model.VTWEG, spa = Model.SPART })" id="lblRegresar" class="btn-small"></a>*@
-        <a href="@Url.Action("Edit", "Taxeoh", new { kun = Model.KUNNR, vk = Model.VKORG, vtw = Model.VTWEG, spa = Model.SPART, con=Model.CONCEPTO_ID })" class="btn-small">Editar</a>
+<style>
+    .pnl-cli {
+        background-color: white;
+        padding: 5px 15px 5px 15px;
+        border-radius: 5px;
+    }
+</style>
+<div class="row">
+    <div class="row left pnl-cli">
+        <h6>@ViewBag.NoCliente - @ViewBag.Cliente</h6>
+    </div>
+    <div class="row right">
+        <div class="col s12">
+            @*<a href="@Url.Action("Index", "Taxeoh", new { kun = Model.KUNNR, vko = Model.VKORG, vtw = Model.VTWEG, spa = Model.SPART })" id="lblRegresar" class="btn-small"></a>*@
+            <a href="@Url.Action("Edit", "Taxeoh", new { kun = Model.KUNNR, vk = Model.VKORG, vtw = Model.VTWEG, spa = Model.SPART, con=Model.CONCEPTO_ID })" class="btn-small">Editar</a>
+        </div>
     </div>
 </div>
 <div class="row">
@@ -41,7 +53,7 @@
                         @Html.EditorFor(model => model.IMPUESTO_ID, new { htmlAttributes = new { @class = "form-control", @id = "input_impuesto", @readonly = "readonly" } })
                     </div>
                 </div>
-                </div>
+            </div>
             <div class="col s6 m6 l6">
                 <div class="col l12 m12 s12">
                     <div class="input-field col l10 m10" style="margin-bottom:0;">
@@ -67,7 +79,7 @@
                         @Html.EditorFor(model => model.PAY_T, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @maxlength = "4", @id = "txtPay" } })
                     </div>
                 </div>
-                </div>
+            </div>
         </div>
     </div>
 </div>

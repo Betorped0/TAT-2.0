@@ -137,12 +137,12 @@
                                         <a style="cursor: pointer;" onclick="mostrarAlerta('@item.ID','@item.TIPO','@mensaje')"><i class='material-icons blue-text'>chat</i></a>
                                         @if ((item.SOCIEDAD_ID != null && item.TSOL_ID != null) && !(item.ID == "concepto1" && item.TAB_ID == "tab_info"))
                                         {
-                                            <a class="modal-trigger" href="#modal1" ><i class='material-icons red-text'>delete</i></a>
+                                            <a class="modal-trigger" href="#modal_@item.ID" ><i class='material-icons red-text'>delete</i></a>
                                             <a id="actionDelete_@item.ID" href="@Url.Action("Delete", "Alertas", new { warning_id = item.ID, tab_id = item.TAB_ID })"></a>
                                             <!-- Modal Delete -->
-                                            <div id="modal1" class="modal" style=" background-color: #B90C46; height: 200px; width: 350px;">
+                                            <div id="modal_@item.ID" class="modal" style=" background-color: #fff; height: 200px; width: 450px;">
                                                 <div class="modal-content">
-                                                    <p style="color: white;font-size: 16px;" class="lbl_eliminar"></p>
+                                                    <p style="font-size: 16px;" class="lbl_eliminar"></p>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <a class="modal-close waves-effect  btn-flat"><label class="lbl_eliminarNo"></label></a>

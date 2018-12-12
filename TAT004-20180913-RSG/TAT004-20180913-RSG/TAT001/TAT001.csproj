@@ -236,7 +236,6 @@
     <Compile Include="Controllers\Catalogos\SoporteController.cs" />
     <Compile Include="Controllers\Catalogos\TALLsController.cs" />
     <Compile Include="Controllers\Catalogos\TextocvController.cs" />
-    <Compile Include="Controllers\Catalogos\UsuariosController2.cs" />
     <Compile Include="Controllers\Configuracion\ccatController.cs" />
     <Compile Include="Controllers\Catalogos\ClienteController.cs" />
     <Compile Include="Controllers\Catalogos\ClientesController.cs" />
@@ -844,6 +843,8 @@
     </Compile>
     <Compile Include="Filters\LoginActiveFilter.cs" />
     <Compile Include="Models\AlertaViewModel.cs" />
+    <Compile Include="Models\ArchivoC.cs" />
+    <Compile Include="Models\ArchivoContable2.cs" />
     <Compile Include="Models\Calendario445ViewModel.cs" />
     <Compile Include="Models\CargaMasivaModels.cs" />
     <Compile Include="Models\CartaD.cs" />
@@ -858,6 +859,7 @@
     <Compile Include="Models\Dao\MaterialesgptDao.cs" />
     <Compile Include="Models\Dao\PeriodosDao.cs" />
     <Compile Include="Models\Dao\SolicitudesDao.cs" />
+    <Compile Include="Models\Dao\SprasDao.cs" />
     <Compile Include="Models\Dao\TabsDao.cs" />
     <Compile Include="Models\Dao\TallsDao.cs" />
     <Compile Include="Models\Dao\TiposSolicitudesDao.cs" />
@@ -936,8 +938,6 @@
     <Compile Include="Services\Cancelar.cs" />
     <Compile Include="Services\Duplicado.cs" />
     <Compile Include="Services\ExcelExport.cs" />
-    <Compile Include="Services\ProcesaFlujo4.cs" />
-    <Compile Include="Services\ProcesaFlujo3.cs" />
     <Compile Include="Services\UsuarioLogin.cs" />
     <Compile Include="Services\Warning.cs" />
     <Compile Include="Services\Presupuesto.cs" />
@@ -947,7 +947,6 @@
     <Compile Include="Services\Email.cs" />
     <Compile Include="Services\Files.cs" />
     <Compile Include="Services\FormatosC.cs" />
-    <Compile Include="Services\ProcesaFlujo2.cs" />
     <Compile Include="Services\ProcesaFlujo.cs" />
     <Compile Include="Services\Rangos.cs" />
     <Compile Include="Services\Reversa.cs" />
@@ -1026,6 +1025,7 @@
     <Content Include="bin\TAT001.dll" />-->
     <!--<Content Include="bin\TAT001.pdb" />-->
     <!--<Content Include="bin\WebGrease.dll" />-->
+    <Content Include="Archivos\DoctosAyuda\readme.txt" />
     <Content Include="Archivos\LayoutCargaMasiva\readme.txt" />
     <Content Include="Content\autocomplete.css" />
     <Content Include="Content\bootstrap.css" />
@@ -1436,6 +1436,7 @@
     <Content Include="Scripts\Masiva\create.js" />
     <Content Include="Scripts\Masiva\formatosMasiva.js" />
     <Content Include="Scripts\Masiva\validaTabs.js" />
+    <Content Include="Scripts\messagesCat.js" />
     <Content Include="Scripts\moment-with-locales.js" />
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.js" />
@@ -1746,7 +1747,9 @@
     <Content Include="Scripts\ValidarProv.js" />
     <Content Include="Scripts\ValidarTCambio.js" />
     <Content Include="Views\Mails\logo_kellogg.png" />
-    <None Include="Views\ModificacionesGlobales\ListModSolicitudes.cshtml" />
+    <Content Include="Views\LayoutCargaMasiva\Details.cshtml" />
+    <Content Include="Views\LayoutCargaMasiva\Edit.cshtml" />
+    <Content Include="Views\ModificacionesGlobales\ListModSolicitudes.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -1795,7 +1798,6 @@
     <Content Include="Views\Presupuesto\Descargar.cshtml" />
     <Content Include="Views\Listas\Det_Aprob.cshtml" />
     <Content Include="Views\Listas\UsuariosPuesto.cshtml" />
-    <Content Include="Views\Usuarios\AgregarRol.cshtml" />
     <Content Include="Views\Listas\Grupos.cshtml" />
     <Content Include="Views\Cliente\Details.cshtml" />
     <Content Include="Views\Cliente\Edit.cshtml" />
@@ -1826,8 +1828,6 @@
     <Content Include="Views\Det_Aprobs\Details.cshtml" />
     <Content Include="Views\Det_Aprobs\Edit.cshtml" />
     <Content Include="Views\Det_Aprobs\Index.cshtml" />
-    <Content Include="Views\Clientes\Create.cshtml" />
-    <Content Include="Views\Clientes\Delete.cshtml" />
     <Content Include="Views\Clientes\Details.cshtml" />
     <Content Include="Views\Clientes\Edit.cshtml" />
     <Content Include="Views\Clientes\Index.cshtml" />
@@ -1918,7 +1918,6 @@
     <Content Include="Views\Taxeop\Delete.cshtml" />
     <Content Include="Views\Taxeop\Details.cshtml" />
     <Content Include="Views\Taxeop\Edit.cshtml" />
-    <Content Include="Views\Usuarios\Details1.cshtml" />
     <Content Include="Views\Negs\Index.cshtml" />
     <Content Include="Views\Negs\Create.cshtml" />
     <Content Include="Views\Negs\Delete.cshtml" />
@@ -2068,7 +2067,6 @@
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->
     <Folder Include="App_Data\" />
-    <Folder Include="Archivos\DoctosAyuda\" />
     <Folder Include="files\Ayuda\" />
   </ItemGroup>
   <ItemGroup>
@@ -2118,7 +2116,6 @@
     <Content Include="Views\Flujos\Index.cshtml" />
     <Content Include="Views\Flujos\Procesa.cshtml" />
     <Content Include="Views\Usuarios\Create.cshtml" />
-    <Content Include="Views\Usuarios\Delete.cshtml" />
     <Content Include="Views\Usuarios\Details.cshtml" />
     <Content Include="Views\Usuarios\Edit.cshtml" />
     <Content Include="Views\Usuarios\Index.cshtml" />

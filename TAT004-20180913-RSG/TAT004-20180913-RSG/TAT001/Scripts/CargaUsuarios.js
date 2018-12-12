@@ -504,6 +504,7 @@ function checkoff() {
 function AgregarU() {
     esFile = false;
     var datos = $('.input_usc').serializeArray();
+    document.getElementById("loader").style.display = "flex";
     creart('AgregarT', datos);
 }
 

@@ -1178,7 +1178,7 @@ namespace TAT001.Controllers
                         //Guardar número de documento creado
                         Session["ERROR_FILES"] = errorMessage;
                     }
-                    ProcesaFlujo2 pf = new ProcesaFlujo2();
+                    ProcesaFlujo pf = new ProcesaFlujo();
                     //db.DOCUMENTOes.Add(dOCUMENTO);
                     //db.SaveChanges();
 
@@ -3390,12 +3390,12 @@ namespace TAT001.Controllers
             {
                 List<string> li = new List<string>();
                 Files sc = new Files();
-                Reversa rv = new Reversa();
-                DOCUMENTOREC docRe = new DOCUMENTOREC();
-                docRe = db.DOCUMENTORECs.Where(x => x.DOC_REF == id).FirstOrDefault();
-                docRe.ESTATUS = "C";
+                ////Reversa rv = new Reversa();
+                DOCUMENTO docRe = new DOCUMENTO();
+                docRe = db.DOCUMENTOes.Find(id);
+                docRe.ESTATUS_C = "C";
                 db.Entry(docRe).State = EntityState.Modified;
-                List<DOCUMENTOREC> docRes = db.DOCUMENTORECs.Where(x => x.NUM_DOC.Equals(docRe.NUM_DOC) & x.POS > docRe.POS).ToList();
+                List<DOCUMENTOREC> docRes = db.DOCUMENTORECs.Where(x => x.NUM_DOC.Equals(id) && x.ESTATUS != "P").ToList();
                 foreach (DOCUMENTOREC dR in docRes)
                 {
                     dR.ESTATUS = "C";
@@ -3403,11 +3403,11 @@ namespace TAT001.Controllers
                 }
                 db.SaveChanges();
 
-                string tsolR = db.DOCUMENTOes.Where(x => x.NUM_DOC == id).FirstOrDefault().TSOL.TSOLR;
-                decimal numR = rv.creaReversa(id.ToString(), tsolR);
+                ////string tsolR = db.DOCUMENTOes.Where(x => x.NUM_DOC == id).FirstOrDefault().TSOL.TSOLR;
+                ////decimal numR = rv.creaReversa(id.ToString(), tsolR);
 
                 DOCUMENTOR docR = new DOCUMENTOR();
-                docR.NUM_DOC = numR;
+                docR.NUM_DOC = id;
                 docR.TREVERSA_ID = 1;
                 docR.USUARIOC_ID = User.Identity.Name;
                 docR.FECHAC = DateTime.Now;
@@ -3417,7 +3417,7 @@ namespace TAT001.Controllers
                 string fileExt = System.IO.Path.GetExtension(file.FileName);
                 string nombreV = file.FileName;
                 string url = ConfigurationManager.AppSettings["URL_SAVE"];
-                string nomNum = numR.ToString();
+                string nomNum = id.ToString();
                 var dir = sc.createDir(url, nomNum, DateTime.Now.Year.ToString());
                 if (dir.Equals(""))
                 {
@@ -3428,7 +3428,7 @@ namespace TAT001.Controllers
                 url = url + nomNum + @"\" + nombreV;
 
                 DOCUMENTOA docA = new DOCUMENTOA();
-                docA.NUM_DOC = numR;
+                docA.NUM_DOC = id;
                 docA.POS = 1;
                 docA.TIPO = fileExt.Replace(".", "");
                 docA.CLASE = "OTR";
@@ -3439,8 +3439,8 @@ namespace TAT001.Controllers
                 db.DOCUMENTOAs.Add(docA);
 
                 db.SaveChanges();
-                li.Add(numR.ToString());
-                TempData["docs_masiva"] = li;
+                //li.Add(id.ToString());
+                //TempData["docs_masiva"] = li;
 
                 return RedirectToAction("Index", "Home");
             }

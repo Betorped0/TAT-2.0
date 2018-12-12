@@ -46,44 +46,44 @@
 
             </div>
         </div>
-            <div class="row">
-                <div id="table" class="table-editable">
-                    <a class="table-add btn-floating btn-medium green right"><i class="material-icons">add_circle</i></a>
+        <div class="row">
+            <div id="table" class="table-editable">
+                <a class="table-add btn-floating btn-medium green right"><i class="material-icons">add_circle</i></a>
 
-                    <table class="mdl-data-table striped centered" id="tablama" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th class="lbl_Posicion">Pos</th>
-                                <th class="lbl_NAprobador">Nivel Aprobador</th>
-                                <th class="lbl_Presupuesto">Presupuesto</th>
-                                <th class="lbl_NPresupuesto">Nivel</th>
-                                <th class="lbl_Monto">Monto</th>
-                                <th class="lbl_AprobadorDos">Nivel</th>
-                                @*<th class="lbl_Activo">Activo</th>*@
-                                @*<th></th>*@
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="hide">
-                                <td><input type="text" readonly class="posicion" name="posicion" value="0"></td>
-                                <td>@Html.DropDownList("NivelesA", null, "", htmlAttributes: new { @class = "nivelapro browser-default form-control" })</td>
-                                <td>
-                                    <label><input class="input_presu" type="checkbox" name="p_0" /><span></span></label>
-                                </td>
-                                <td>@Html.DropDownList("NivelesP", null, "", htmlAttributes: new { @class = "browser-default form-control", disabled = true })</td>
-                                <td><input type="text" class="monto" maxlength="17" name="monto" /></td>
-                                <td>@Html.DropDownList("NivelesM", null, "", htmlAttributes: new { @class = "browser-default form-control", disabled = true })</td>
-                                @*<td><label><input class='input_activo' type='checkbox' id='input_activo' name='activof' checked /><span></span></label></td>*@
-                                @*<td>
-                        <span class="table-remove material-icons red-text">delete</span>
-                    </td>*@
-                            </tr>
-                        </tbody>
-                    </table>
-                    <a class="table-remove btn-floating btn-medium red right"><i class="material-icons">delete</i></a>
-                </div>
+                <table class="mdl-data-table striped centered" id="tablama" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th class="lbl_Posicion">Pos</th>
+                            <th class="lbl_NAprobador">Nivel Aprobador</th>
+                            <th class="lbl_Presupuesto">Presupuesto</th>
+                            <th class="lbl_NPresupuesto">Nivel</th>
+                            <th class="lbl_Monto">Monto</th>
+                            <th class="lbl_AprobadorDos">Nivel</th>
+                            @*<th class="lbl_Activo">Activo</th>*@
+                            @*<th></th>*@
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hide">
+                            <td><input type="text" readonly class="posicion" name="posicion" value="0"></td>
+                            <td>@Html.DropDownList("NivelesA", null, "", htmlAttributes: new { @class = "nivelapro browser-default form-control" })</td>
+                            <td>
+                                <label><input class="input_presu" type="checkbox" name="p_0" /><span></span></label>
+                            </td>
+                            <td>@Html.DropDownList("NivelesP", null, "", htmlAttributes: new { @class = "browser-default form-control", disabled = true })</td>
+                            <td><input type="text" class="monto" maxlength="17" name="monto" /></td>
+                            <td>@Html.DropDownList("NivelesM", null, "", htmlAttributes: new { @class = "browser-default form-control", disabled = true })</td>
+                            @*<td><label><input class='input_activo' type='checkbox' id='input_activo' name='activof' checked /><span></span></label></td>*@
+                            @*<td>
+                                    <span class="table-remove material-icons red-text">delete</span>
+                                </td>*@
+                        </tr>
+                    </tbody>
+                </table>
+                <a class="table-remove btn-floating btn-medium red right"><i class="material-icons">delete</i></a>
             </div>
         </div>
+    </div>
 }
 
 <div>
@@ -94,6 +94,10 @@
 <script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
 <link href="~/Content/dataTable.css" rel="stylesheet" />
 <link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
+<script src="~/Scripts/messagesCat.js"></script>
+<script>
+            var lista = @Html.Raw(ViewBag.mensajes);
+</script>
 <script>
     jQuery(function ($) {
         $('form').bind('submit', function (e) {
@@ -107,7 +111,7 @@
                     valoress.push($(this).val());
                 }
                 else {
-                    toast("tcambio", 100000, "alert", "No introduzca aprobadores repetidos", "red");
+                    toast("tcambio", 100000, "priority_high", lista[2].DESCRIPCION, "red", lista[0].DESCRIPCION);
                     continuar = false;
                     e.preventDefault();
                 }
@@ -119,7 +123,7 @@
                     return;
                 }
                 else {
-                    toast("tcambio", 100000, "alert", "Incluya al menos dos filas a la matriz de aprobación", "red");
+                    toast("tcambio", 100000, "priority_high", lista[1].DESCRIPCION, "red", lista[0].DESCRIPCION);
                     e.preventDefault();
                 }
             }
@@ -157,7 +161,7 @@
             $TABLE.find('table').append($clone);
         }
         else {
-            toast("tcambio", 100000, "alert", "Solo es posible agregar 5 registros.", "red");
+            toast("tcambio", 100000, "priority_high", lista[3].DESCRIPCION, "red", lista[0].DESCRIPCION);
         }
                 });
 

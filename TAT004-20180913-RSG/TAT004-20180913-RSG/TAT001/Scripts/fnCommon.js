@@ -110,6 +110,24 @@
             if (fechaFMaxM) { fechaFMaxM.options.maxDate = date; }
         }
     },
+    configurarTableNoPagNoBusq: function (idTable, scrollY, scrollX, urlLanguage, targets) {
+     $('#' + idTable).DataTable({
+            scrollY: scrollY,
+            scrollX: scrollX,
+            scrollCollapse: true,
+            paging: false,
+            info: false,
+            searching: false,
+            ordering: false,
+            language: {
+                url: urlLanguage
+            },
+            columnDefs: [{
+                targets: targets ? targets : [0, 1, 2, 4, 5, 6],
+                className: 'mdl-data-table__cell--non-numeric'
+            }]
+        });
+    },
     configurarTable: function (idTable, scrollY, scrollX, urlLanguage,idSelectPag,idGFilter,targets) {
         var table =  $('#'+idTable).DataTable({
             scrollY: scrollY,

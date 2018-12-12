@@ -1092,7 +1092,7 @@ $(document).ready(function () {
             var monto = parseFloat(toNum($('#monto_dis').val()));
             importe_fac = parseFloat(importe_fac.toFixed(2));
             if (importe_fac !== monto) {
-                msg += ', Informacion: Importet total de las facturas sea igual al monto en Distribucion';
+                msg += ', Importe total de las facturas sea igual al monto en Distribución';
                 res = false;
             }
         }
@@ -1434,23 +1434,23 @@ function eliminarBorrador(asyncv) {
     $.ajax({
         type: "POST",
         url: 'eliminarBorrador',
-        //dataType: "json",
         data: { "user": user },
 
         success: function (data) {
 
-            if (data != null || data != "") {
-                if (data == "X") {
-                    M.toast({ html: "Borrador se ha eliminado " });
-                    borrador = $('#borradore').val("false");
-                    $('#btn_borradore').css("display", "none");
+            if (data !== null || data !== "") {
+                if (data === "X") {
+                    window.location = root + "Solicitudes/Create";
                 } else {
+                    document.getElementById("loader").style.display = "none";
                     M.toast({ html: "No se ha eliminado el borrador" });
                     borrador = $('#borradore').val("true");
                 }
             }
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
+
+            document.getElementById("loader").style.display = "none";
             M.toast({ html: "No se ha eliminado el borrador" });
             borrador = $('#borradore').val("true");
         },
@@ -1582,7 +1582,76 @@ $('body').on('focusout', '#monto_dis', function () {
     $('#monto_dis').val(toShow(toNum($('#monto_dis').val())));
     cambiaRec();//RSG 06.06.2018
 });
+//------------------------------------------------------------------------
 
+function loadExcelSop(file) {
+
+    var formData = new FormData();
+    document.getElementById("loader").style.display = 'flex';
+    formData.append("FileUpload", file);
+    importe_fac = 0;//jemo 25-17-2018
+    var table = $('#table_sop').DataTable();
+    table.clear().draw();
+    $.ajax({
+        type: "POST",
+        url: 'LoadExcelSop',
+        data: formData,
+        dataType: "json",
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (data) {
+
+            if (data !== null || data !== "") {
+
+                $.each(data, function (i, dataj) {
+
+                    //var fecha = new Date(parseInt(dataj.FECHA.substr(6)));
+                    //var ven = new Date(parseInt(dataj.VENCIMIENTO.substr(6)));
+                    var addedRow = table.row.add([
+                        dataj.POS,
+                        dataj.SOCIEDAD,
+                        dataj.FACTURA,
+                        //jemo 25-17-2018 inicio
+                        "",//"" + fecha.getDate() + "/" + (fecha.getMonth() + 1) + "/" + fecha.getFullYear(),
+                        dataj.BILL_DOC,
+                        dataj.PROVEEDOR,
+                        dataj.PROVEEDOR_TXT,
+                        "",//dataj.CONTROL,
+                        "",//dataj.AUTORIZACION,
+                        "",//"" + ven.getDate() + "/" + (ven.getMonth() + 1) + "/" + ven.getFullYear(),
+                        "",//dataj.FACTURAK,
+                        //jemo 25-17-2018 inicio
+                        dataj.EJERCICIOK,
+                        //jemo 25-17-2018 inicio
+                        dataj.PAYER,
+                        dataj.DESCRIPCION,
+                        //"$" + dataj.IMPORTE_FACT.toString().replace(/\D/g, "")//jemo 31-17-2018 inicio
+                        //    .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ","),//jemo 31-17-2018 fin
+                        toShow(dataj.IMPORTE_FACT.toString()),
+                        dataj.BELNR
+                        //jemo 25-17-2018 fin
+                    ]).draw(false).node();
+
+                    if (dataj.PROVEEDOR_ACTIVO == false) {
+                        $(addedRow).find('td.PROVEEDOR').addClass("errorProveedor");
+                    }
+                    importe_fac += parseFloat(toNum(dataj.IMPORTE_FACT));//jemo inicio 25-07-2018
+                    document.getElementById("loader").style.display = 'none';
+                });
+                //Aplicar configuración de columnas en las tablas
+                ocultarColumnasTablaSoporteDatos();
+                $(".table_sop").css("display", "table");
+                $("#table_sop").css("display", "table");
+            }
+        },
+        error: function (xhr, httpStatusMessage, customErrorMessage) {
+            document.getElementById("loader").style.display = 'none';
+        },
+        async: true
+    });
+
+}
 //------------------------------------------------------------------------
 //Obtener los materiales por categoría
 function GetMaterialesCat(catid, total, m_base) {

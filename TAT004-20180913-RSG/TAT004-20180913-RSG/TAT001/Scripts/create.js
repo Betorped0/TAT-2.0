@@ -1455,7 +1455,6 @@ $(document).ready(function () {
     $('#btn_borradore').on("click", function (e) {
         document.getElementById("loader").style.display = "initial";
         eliminarBorrador(false);
-        document.getElementById("loader").style.display = "none";
     });
 });
 
@@ -3802,74 +3801,74 @@ function loadExcelDis(file) {
 
 }
 
-function loadExcelSop(file) {
+////function loadExcelSop(file) {
 
-    var formData = new FormData();
-    document.getElementById("loader").style.display = 'flex';
-    formData.append("FileUpload", file);
-    importe_fac = 0;//jemo 25-17-2018
-    var table = $('#table_sop').DataTable();
-    table.clear().draw();
-    $.ajax({
-        type: "POST",
-        url: 'LoadExcelSop',
-        data: formData,
-        dataType: "json",
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function (data) {
+////    var formData = new FormData();
+////    document.getElementById("loader").style.display = 'flex';
+////    formData.append("FileUpload", file);
+////    importe_fac = 0;//jemo 25-17-2018
+////    var table = $('#table_sop').DataTable();
+////    table.clear().draw();
+////    $.ajax({
+////        type: "POST",
+////        url: 'LoadExcelSop',
+////        data: formData,
+////        dataType: "json",
+////        cache: false,
+////        contentType: false,
+////        processData: false,
+////        success: function (data) {
 
-            if (data !== null || data !== "") {
+////            if (data !== null || data !== "") {
 
-                $.each(data, function (i, dataj) {
+////                $.each(data, function (i, dataj) {
 
-                    //var fecha = new Date(parseInt(dataj.FECHA.substr(6)));
-                    //var ven = new Date(parseInt(dataj.VENCIMIENTO.substr(6)));
-                    var addedRow = table.row.add([
-                        dataj.POS,
-                        dataj.SOCIEDAD,
-                        dataj.FACTURA,
-                        //jemo 25-17-2018 inicio
-                        "",//"" + fecha.getDate() + "/" + (fecha.getMonth() + 1) + "/" + fecha.getFullYear(),
-                        dataj.BILL_DOC,
-                        "",//dataj.PROVEEDOR,
-                        "",//dataj.PROVEEDOR_TXT,
-                        "",//dataj.CONTROL,
-                        "",//dataj.AUTORIZACION,
-                        "",//"" + ven.getDate() + "/" + (ven.getMonth() + 1) + "/" + ven.getFullYear(),
-                        "",//dataj.FACTURAK,
-                        //jemo 25-17-2018 inicio
-                        dataj.EJERCICIOK,
-                        //jemo 25-17-2018 inicio
-                        dataj.PAYER,
-                        dataj.DESCRIPCION,
-                        //"$" + dataj.IMPORTE_FACT.toString().replace(/\D/g, "")//jemo 31-17-2018 inicio
-                        //    .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ","),//jemo 31-17-2018 fin
-                        toShow(dataj.IMPORTE_FACT.toString()),
-                        dataj.BELNR
-                        //jemo 25-17-2018 fin
-                    ]).draw(false).node();
+////                    //var fecha = new Date(parseInt(dataj.FECHA.substr(6)));
+////                    //var ven = new Date(parseInt(dataj.VENCIMIENTO.substr(6)));
+////                    var addedRow = table.row.add([
+////                        dataj.POS,
+////                        dataj.SOCIEDAD,
+////                        dataj.FACTURA,
+////                        //jemo 25-17-2018 inicio
+////                        "",//"" + fecha.getDate() + "/" + (fecha.getMonth() + 1) + "/" + fecha.getFullYear(),
+////                        dataj.BILL_DOC,
+////                        "",//dataj.PROVEEDOR,
+////                        "",//dataj.PROVEEDOR_TXT,
+////                        "",//dataj.CONTROL,
+////                        "",//dataj.AUTORIZACION,
+////                        "",//"" + ven.getDate() + "/" + (ven.getMonth() + 1) + "/" + ven.getFullYear(),
+////                        "",//dataj.FACTURAK,
+////                        //jemo 25-17-2018 inicio
+////                        dataj.EJERCICIOK,
+////                        //jemo 25-17-2018 inicio
+////                        dataj.PAYER,
+////                        dataj.DESCRIPCION,
+////                        //"$" + dataj.IMPORTE_FACT.toString().replace(/\D/g, "")//jemo 31-17-2018 inicio
+////                        //    .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ","),//jemo 31-17-2018 fin
+////                        toShow(dataj.IMPORTE_FACT.toString()),
+////                        dataj.BELNR
+////                        //jemo 25-17-2018 fin
+////                    ]).draw(false).node();
 
-                    if (dataj.PROVEEDOR_ACTIVO == false) {
-                        $(addedRow).find('td.PROVEEDOR').addClass("errorProveedor");
-                    }
-                    importe_fac += parseFloat(toNum(dataj.IMPORTE_FACT));//jemo inicio 25-07-2018
-                    document.getElementById("loader").style.display = 'none';
-                });
-                //Aplicar configuración de columnas en las tablas
-                ocultarColumnasTablaSoporteDatos();
-                $(".table_sop").css("display", "table");
-                $("#table_sop").css("display", "table");
-            }
-        },
-        error: function (xhr, httpStatusMessage, customErrorMessage) {
-            document.getElementById("loader").style.display = 'none';
-        },
-        async: true
-    });
+////                    if (dataj.PROVEEDOR_ACTIVO == false) {
+////                        $(addedRow).find('td.PROVEEDOR').addClass("errorProveedor");
+////                    }
+////                    importe_fac += parseFloat(toNum(dataj.IMPORTE_FACT));//jemo inicio 25-07-2018
+////                    document.getElementById("loader").style.display = 'none';
+////                });
+////                //Aplicar configuración de columnas en las tablas
+////                ocultarColumnasTablaSoporteDatos();
+////                $(".table_sop").css("display", "table");
+////                $("#table_sop").css("display", "table");
+////            }
+////        },
+////        error: function (xhr, httpStatusMessage, customErrorMessage) {
+////            document.getElementById("loader").style.display = 'none';
+////        },
+////        async: true
+////    });
 
-}
+////}
 
 function selectTsol(sol) {
     $(document).ready(function () {
@@ -3960,7 +3959,7 @@ function addRowSop(t) {
         "<input class=\"AUTORIZACION input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
         "<input class=\"VENCIMIENTO input_sop_f fv\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
         "<input class=\"FACTURAK input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
-        "<input class=\"PEJERCICIOK input_sop_f prv\" maxlength=\"4\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
+        "<input class=\"EJERCICIOK input_sop_f prv\" maxlength=\"4\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
         "<input class=\"PAYER input_sop_f prv\" maxlength=\"4\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
         "<input class=\"DESCRIPCION input_sop_f prv\" maxlength=\"4\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
         "<input class=\"BILL_DOC input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"\">",
@@ -5492,11 +5491,12 @@ function selectCliente(valu) {
         else
             esBorrador = false;
         var num = $('#duplicate').val();//RSG 07.11.2018
+        var buk = $("#sociedad_id").val();//RSG 06.12.2018
         $.ajax({
             type: "POST",
             //url: root + 'Listas/SelectCliente',
             url: root + 'Listas/SelectClienteDup',
-            data: { "kunnr": valu, esBorrador: esBorrador, num_doc: num },
+            data: { "kunnr": valu, esBorrador: esBorrador, num_doc: num, bukrs:buk },
             success: function (data) {
 
                 document.getElementById("loader").style.display = "none";//RSG 03.07.2018

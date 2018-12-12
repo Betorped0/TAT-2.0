@@ -5,8 +5,18 @@
     ViewBag.pagina_r = 861;
     ViewBag.carpeta_r = 500;
 }
+<style>
+    .pnl-cli {
+        background-color: white;
+        padding: 5px 15px 5px 15px;
+        border-radius: 5px;
+    }
+</style>
 <div class="row">
-    <div class="col s12 right-align">
+    <div class="row left pnl-cli">
+        <h6>@ViewBag.NoCliente - @ViewBag.Cliente</h6>
+    </div>
+    <div class="row right">
         @Html.ActionLink("Crear Registro", "Create", "Taxeop", new { sc = @ViewBag.sc, ld = @ViewBag.ld, kun = @ViewBag.kun, vk = @ViewBag.vk, vtw = @ViewBag.vtw, sp = @ViewBag.sp, con = @ViewBag.con }, new { @class = "btn-small", @id = "btnCreate" })
         @using (Html.BeginForm("Descargar", "Taxeop", FormMethod.Post, new { @style = "display:initial;" }))
         {
@@ -121,13 +131,14 @@
         </tbody>
     </table>
     <script>
+          var root = '@Url.Content("~")';
         $(document).ready(function () {
             var table = $('#table').DataTable({
                 scrollX: "50vh",
                 scrollY: "50vh",
                 scrollCollapse: true,
                 language: {
-                "url": "../Scripts/lang/@ViewBag.usuario.SPRAS_ID"+".json"
+                    "url": root+"Scripts/lang/@ViewBag.spras_id"+".json"
                 },
                 initComplete: function () {
                     this.api().columns().every(function () {

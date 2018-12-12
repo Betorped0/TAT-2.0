@@ -138,6 +138,7 @@
                                             }
                                             @if (Model.D.DOCUMENTOF[0].PROVEEDOR != "0         ")
                                             {
+                                                <th id="thead_prov">Proveedor</th> @*B20180801 MGC Textos*@
                                                 <th id="thead_provdesc">Proveedor Desc</th> @*B20180801 MGC Textos*@
                                             }
                                             @if (Model.D.DOCUMENTOF[0].CONTROL != "0")
@@ -206,6 +207,15 @@
                                                 @if (item.PROVEEDOR.Trim() != "0")
                                                 {
                                                     <td>@item.PROVEEDOR</td>
+                                                    TAT001.Services.Cadena cad = new TAT001.Services.Cadena();
+                                                    string pro = cad.completaCliente(item.PROVEEDOR.Trim());
+                                                    PROVEEDOR p = db.PROVEEDORs.FirstOrDefault(x => x.ID == pro );
+                                                    if (p != null) {
+                                                    <td>@p.NOMBRE</td>
+                                                    } else
+                                                    {
+                                                    <td></td>
+                                                    }
                                                 }
                                                 @if (item.CONTROL != "0")
                                                 {

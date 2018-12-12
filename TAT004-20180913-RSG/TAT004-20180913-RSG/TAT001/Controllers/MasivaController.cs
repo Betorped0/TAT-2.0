@@ -38,6 +38,8 @@ namespace TAT001.Controllers
         //------------------DAO------------------------------
         readonly TallsDao tallsDao = new TallsDao();
         readonly ClientesDao clientesDao = new ClientesDao();
+        readonly MaterialesDao materialesDao = new MaterialesDao();
+        readonly MaterialesgptDao materialesgptDao = new MaterialesgptDao();
 
         // GET: Masiva
         public ActionResult Index()
@@ -137,117 +139,142 @@ namespace TAT001.Controllers
             DataSet ds1 = (DataSet)Session["ds1"];
             List<object> lp = new List<object>();
             List<object> validacion = new List<object>();
-            var numColumnas = ds1.Tables[0].Columns.Count;
-
-            List<PAI> pp = (from P in db.PAIS.ToList()//ADD RSG 01.11.2018--------------------------------------------------
-                            join C in db.CLIENTEs.Where(x => x.ACTIVO == true).ToList()
-                            on P.LAND equals C.LAND
-                            join U in db.USUARIOFs.Where(x => x.USUARIO_ID == User.Identity.Name & x.ACTIVO == true)
-                            on new { C.VKORG, C.VTWEG, C.SPART, C.KUNNR } equals new { U.VKORG, U.VTWEG, U.SPART, U.KUNNR }
-                            where P.ACTIVO == true
-                            select P).DistinctBy(x => x.LAND).ToList();
-
-            if (numColumnas == 16)
+            if (ds1 != null)
             {
-                for (int i = 2; i < ds1.Tables[0].Rows.Count; i++)
+                var numColumnas = ds1.Tables[0].Columns.Count;
+
+                List<PAI> pp = (from P in db.PAIS.ToList()//ADD RSG 01.11.2018--------------------------------------------------
+                                join C in db.CLIENTEs.Where(x => x.ACTIVO).ToList()
+                                on P.LAND equals C.LAND
+                                join U in db.USUARIOFs.Where(x => x.USUARIO_ID == User.Identity.Name && x.ACTIVO == true)
+                                on new { C.VKORG, C.VTWEG, C.SPART, C.KUNNR } equals new { U.VKORG, U.VTWEG, U.SPART, U.KUNNR }
+                                where P.ACTIVO
+                                select P).DistinctBy(x => x.LAND).ToList();
+
+                if (numColumnas == 16)
                 {
-                    Encabezado doc = new Encabezado();
-
-                    string num_doc = ds1.Tables[0].Rows[i][0].ToString().Trim();
-                    string t_sol = ds1.Tables[0].Rows[i][1].ToString().Trim();
-                    string gall_id = ds1.Tables[0].Rows[i][2].ToString().Trim();
-                    string bukrs = ds1.Tables[0].Rows[i][3].ToString().Trim();
-                    string land = ds1.Tables[0].Rows[i][4].ToString().Trim();
-                    string estado = ds1.Tables[0].Rows[i][5].ToString().Trim();
-                    string ciudad = ds1.Tables[0].Rows[i][6].ToString().Trim();
-                    string concepto = ds1.Tables[0].Rows[i][7].ToString().Trim();
-                    string notas = ds1.Tables[0].Rows[i][8].ToString().Trim();
-                    string payer_id = ds1.Tables[0].Rows[i][9].ToString().Trim();
-                    if (payer_id.Length < 10) { payer_id = cad.completaCliente(payer_id); }
-                    string payer_nombre = ds1.Tables[0].Rows[i][10].ToString().Trim();
-                    string spras_id = FnCommon.ObtenerSprasId(db, User.Identity.Name);
-
-                    string vkorg = "", vtweg = "";
-                    if (db.CLIENTEs.Where(x => x.KUNNR == payer_id).Count() > 0)
+                    for (int i = 2; i < ds1.Tables[0].Rows.Count; i++)
                     {
-                        vkorg = db.CLIENTEs.Where(x => x.KUNNR.Contains(payer_id)).Select(x => x.VKORG).First();
-                        vtweg = db.CLIENTEs.Where(x => x.KUNNR.Contains(payer_id)).Select(x => x.VTWEG).First();
+                        Encabezado doc = new Encabezado();
+
+                        string num_doc = ds1.Tables[0].Rows[i][0].ToString().Trim();
+
+                        if (getNumberDocument(num_doc) == -1)
+                            continue;
+                       
+                        string t_sol = ds1.Tables[0].Rows[i][1].ToString().Trim();
+                        string gall_id = ds1.Tables[0].Rows[i][2].ToString().Trim();
+                        string bukrs = ds1.Tables[0].Rows[i][3].ToString().Trim();
+                        string land = ds1.Tables[0].Rows[i][4].ToString().Trim();
+                        string estado = ds1.Tables[0].Rows[i][5].ToString().Trim();
+                        string ciudad = ds1.Tables[0].Rows[i][6].ToString().Trim();
+                        string concepto = ds1.Tables[0].Rows[i][7].ToString().Trim();
+                        string notas = ds1.Tables[0].Rows[i][8].ToString().Trim();
+                        string payer_id = ds1.Tables[0].Rows[i][9].ToString().Trim();
+                        if (payer_id.Length < 10) { payer_id = cad.completaCliente(payer_id); }
+                        string payer_nombre = ds1.Tables[0].Rows[i][10].ToString().Trim();
+                        string spras_id = FnCommon.ObtenerSprasId(db, User.Identity.Name);
+
+                        string vkorg = "", vtweg = "", spart = "";
+                        if (db.CLIENTEs.Where(x => x.KUNNR == payer_id).Count() > 0)
+                        {
+                            var clienteH1 = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault();
+                            vkorg = clienteH1.VKORG;
+                            vtweg = clienteH1.VTWEG;
+                            spart = clienteH1.SPART;
+                        }
+                        else
+                        {
+                            vkorg = "";
+                            vtweg = "";
+                            spart = "";
+                        }
+
+                        string contacto_nombre = ds1.Tables[0].Rows[i][11].ToString().Trim();
+                        string contacto_email = ds1.Tables[0].Rows[i][12].ToString().Trim();
+                        string fechai_vig = ds1.Tables[0].Rows[i][13].ToString().Trim();
+                        string[] fechai_vig2 = fechai_vig.Split(' ');
+                        string fechaf_vig = ds1.Tables[0].Rows[i][14].ToString().Trim();
+                        string[] fechaf_vig2 = fechaf_vig.Split(' ');
+                        string moneda_id = ds1.Tables[0].Rows[i][15].ToString().Trim();
+
+                        doc.NUM_DOC = num_doc;
+                        doc.TSOL_ID = t_sol;
+                        doc.TALL_NAME = gall_id;
+                        doc.SOCIEDAD_ID = bukrs;
+                        doc.PAIS_NAME = land;
+
+                        PAI p = pp.FirstOrDefault(a => a.LANDX == land);
+                        string pLand = null;
+                        if (p != null)
+                        {
+                            doc.PAIS_ID = p.LAND;//ADD RSG 01.11.2018--------------------------------------------------
+                            pLand = p.LAND;
+                        }
+                        List<TALLT> list = tallsDao.ListaTallsConCuenta(TATConstantes.ACCION_LISTA_TALLCONCUENTA, null, spras_id, pLand, DateTime.Now.Year, bukrs);
+                        if (list.Any(x => x.TXT50 == gall_id))
+                        {
+                            doc.TALL_ID = list.Where(x => x.TXT50 == gall_id).FirstOrDefault().TALL_ID;
+                        }
+                        doc.ESTADO = estado;
+                        doc.CIUDAD = ciudad;
+                        doc.CONCEPTO = concepto;
+                        doc.NOTAS = notas;
+                        doc.PAYER_ID = payer_id.TrimStart('0');
+                        doc.VKORG = vkorg;
+                        doc.VTWEG = vtweg;
+                        doc.SPART = spart;
+                        //var existeCliente = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault().NAME1;
+
+                        //if (existeCliente != null | existeCliente != "")
+                        //{
+                        //    doc.PAYER_NOMBRE = existeCliente;
+                        //}
+                        var existeCliente = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault();
+
+                        if (existeCliente != null)
+                        {
+                            doc.PAYER_NOMBRE = existeCliente.NAME1;
+                        }
+                        else
+                        {
+                            doc.PAYER_NOMBRE = "";
+                        }
+
+                        doc.CONTACTO_NOMBRE = contacto_nombre;
+                        doc.CONTACTO_EMAIL = contacto_email;
+                        doc.FECHAI_VIG = fechai_vig2[0];
+                        doc.FECHAF_VIG = fechaf_vig2[0];
+                        doc.MONEDA_ID = moneda_id;
+
+                        lp.Add(doc);
+                        validacion.Add(cargaInicialH1(ds1.Tables[0].Rows[i], pp));
+
+
+                    }
+                    if (validacion.Count() == 0)
+                    {
+                        lp.Add("El contenido de la hoja 1 no fue procesado");
                     }
                     else
                     {
-                        vkorg = "";
-                        vtweg = "";
+                        lp.Add(validacion);
                     }
-
-                    string contacto_nombre = ds1.Tables[0].Rows[i][11].ToString().Trim();
-                    string contacto_email = ds1.Tables[0].Rows[i][12].ToString().Trim();
-                    string fechai_vig = ds1.Tables[0].Rows[i][13].ToString().Trim();
-                    string[] fechai_vig2 = fechai_vig.Split(' ');
-                    string fechaf_vig = ds1.Tables[0].Rows[i][14].ToString().Trim();
-                    string[] fechaf_vig2 = fechaf_vig.Split(' ');
-                    string moneda_id = ds1.Tables[0].Rows[i][15].ToString().Trim();
-
-                    doc.NUM_DOC = num_doc;
-                    doc.TSOL_ID = t_sol;
-                    doc.TALL_NAME = gall_id;
-                    doc.SOCIEDAD_ID = bukrs;
-                    doc.PAIS_NAME = land;
-
-                    PAI p = pp.Where(a => a.LANDX == land).FirstOrDefault();
-                    if (p != null)
-                        doc.PAIS_ID = p.LAND;//ADD RSG 01.11.2018--------------------------------------------------
-
-                    List<TALLT> list = tallsDao.ListaTallsConCuenta(TATConstantes.ACCION_LISTA_TALLCONCUENTA, null, spras_id, p.LAND, DateTime.Now.Year, bukrs);
-                    if (list.Any(x => x.TXT50 == gall_id))
-                    {
-                        doc.TALL_ID = list.Where(x => x.TXT50 == gall_id).FirstOrDefault().TALL_ID;
-                    }
-                    doc.ESTADO = estado;
-                    doc.CIUDAD = ciudad;
-                    doc.CONCEPTO = concepto;
-                    doc.NOTAS = notas;
-                    doc.PAYER_ID = payer_id.TrimStart('0');
-                    doc.VKORG = vkorg;
-                    doc.VTWEG = vtweg;
-
-                    //var existeCliente = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault().NAME1;
-
-                    //if (existeCliente != null | existeCliente != "")
-                    //{
-                    //    doc.PAYER_NOMBRE = existeCliente;
-                    //}
-                    var existeCliente = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault();
-
-                    if (existeCliente != null)
-                    {
-                        doc.PAYER_NOMBRE = existeCliente.NAME1;
-                    }
-                    else
-                    {
-                        doc.PAYER_NOMBRE = "";
-                    }
-
-                    doc.CONTACTO_NOMBRE = contacto_nombre;
-                    doc.CONTACTO_EMAIL = contacto_email;
-                    doc.FECHAI_VIG = fechai_vig2[0];
-                    doc.FECHAF_VIG = fechaf_vig2[0];
-                    doc.MONEDA_ID = moneda_id;
-
-                    lp.Add(doc);
-                    validacion.Add(cargaInicialH1(ds1.Tables[0].Rows[i], pp));
-
+                }
+                else
+                {
+                    lp.Add("Error de formato en hoja 1");
                 }
 
-                lp.Add(validacion);
             }
             else
             {
-                lp.Add("ERROR DE FORMATO EN HOJA 1");
+                lp.Add("La hoja 1 no se pudo procesar, favor de intentarlo nuevamente");
             }
-
-            JsonResult jl = Json(lp, JsonRequestBehavior.AllowGet);
-            return jl;
-        }
+                JsonResult jl = Json(lp, JsonRequestBehavior.AllowGet);
+                return jl;
+            
+        } 
 
         public JsonResult validaHoja2()
         {
@@ -256,146 +283,156 @@ namespace TAT001.Controllers
             List<object> general = new List<object>();
             List<object> errores = new List<object>();
             List<object> warnings = new List<object>();
-            var numColumnas = ds2.Tables[0].Columns.Count;
-
-            DataSet ds1 = (DataSet)Session["ds1"];
-            List<DOCUMENTO> dd = new List<DOCUMENTO>();
-
-            List<PAI> pp = (from P in db.PAIS.ToList()//ADD RSG 01.11.2018--------------------------------------------------
-                            join C in db.CLIENTEs.Where(x => x.ACTIVO == true).ToList()
-                            on P.LAND equals C.LAND
-                            join U in db.USUARIOFs.Where(x => x.USUARIO_ID == User.Identity.Name & x.ACTIVO == true)
-                            on new { C.VKORG, C.VTWEG, C.SPART, C.KUNNR } equals new { U.VKORG, U.VTWEG, U.SPART, U.KUNNR }
-                            where P.ACTIVO == true
-                            select P).DistinctBy(x => x.LAND).ToList();
-
-            for (int i = 2; i < ds1.Tables[0].Rows.Count; i++)
+            if (ds2 != null)
             {
-                string num_doc = ds1.Tables[0].Rows[i][0].ToString().Trim();
-                string tsol = ds1.Tables[0].Rows[i][1].ToString().Trim();
-                string bukrs = ds1.Tables[0].Rows[i][3].ToString().Trim();
-                string land = ds1.Tables[0].Rows[i][4].ToString().Trim();
+                var numColumnas = ds2.Tables[0].Columns.Count;
 
-                PAI p = pp.Where(a => a.LANDX == land).FirstOrDefault();
+                DataSet ds1 = (DataSet)Session["ds1"];
+                List<DOCUMENTO> dd = new List<DOCUMENTO>();
 
-                DOCUMENTO d = new DOCUMENTO();
-                d.NUM_DOC = decimal.Parse(num_doc);
-                d.TSOL_ID = tsol;
-                d.SOCIEDAD_ID = bukrs;
-                if (p != null)
-                    d.PAIS_ID = p.LAND;//ADD RSG 01.11.2018--------------------------------------------------
-                dd.Add(d);
-            }
+                List<PAI> pp = (from P in db.PAIS.ToList()//ADD RSG 01.11.2018--------------------------------------------------
+                                join C in db.CLIENTEs.Where(x => x.ACTIVO == true).ToList()
+                                on P.LAND equals C.LAND
+                                join U in db.USUARIOFs.Where(x => x.USUARIO_ID == User.Identity.Name & x.ACTIVO == true)
+                                on new { C.VKORG, C.VTWEG, C.SPART, C.KUNNR } equals new { U.VKORG, U.VTWEG, U.SPART, U.KUNNR }
+                                where P.ACTIVO == true
+                                select P).DistinctBy(x => x.LAND).ToList();
 
-            if (numColumnas == 9)
-            {
-                foreach (DOCUMENTO d in dd)
+                for (int i = 2; i < ds1.Tables[0].Rows.Count; i++)
                 {
-                    List<Relacionada> rel = new List<Relacionada>();
-                    for (int i = 2; i < ds2.Tables[0].Rows.Count; i++)
-                    {
-                        string num_doc = ds2.Tables[0].Rows[i][0].ToString().Trim();
-                        if (d.NUM_DOC == decimal.Parse(num_doc))
-                        {
-                            Relacionada doc = new Relacionada();
+                    string num_doc = ds1.Tables[0].Rows[i][0].ToString().Trim();
+                    string tsol = ds1.Tables[0].Rows[i][1].ToString().Trim();
+                    string bukrs = ds1.Tables[0].Rows[i][3].ToString().Trim();
+                    string land = ds1.Tables[0].Rows[i][4].ToString().Trim();
 
-                            string factura = ds2.Tables[0].Rows[i][1].ToString().Trim();
-                            string fecha_factura = ds2.Tables[0].Rows[i][2].ToString().Trim();
-                            string[] fecha_factura2 = fecha_factura.Split(' ');
-                            string proveedor = ds2.Tables[0].Rows[i][3].ToString().Trim();
-                            string proveedor_nombre = ds2.Tables[0].Rows[i][4].ToString().Trim();
-                            string autorizacion = ds2.Tables[0].Rows[i][5].ToString().Trim();
-                            string vencimiento = ds2.Tables[0].Rows[i][6].ToString().Trim();
-                            string[] vencimiento2 = vencimiento.Split(' ');
-                            string facturak = ds2.Tables[0].Rows[i][7].ToString().Trim();
-                            string ejerciciok = ds2.Tables[0].Rows[i][8].ToString().Trim();
+                    PAI p = pp.Where(a => a.LANDX == land).FirstOrDefault();
 
-                            var con = db.FACTURASCONFs.Where(x => x.SOCIEDAD_ID == d.SOCIEDAD_ID & x.PAIS_ID == d.PAIS_ID & x.TSOL == d.TSOL_ID).FirstOrDefault();
-
-                            if (con != null)
-                            {
-                                doc.NUM_DOC = num_doc;
-
-                                if (con.FACTURA) { doc.FACTURA = factura; }
-                                else { doc.FACTURA = ""; }
-
-                                if (con.FECHA) { doc.FECHA = fecha_factura2[0]; }
-                                else { doc.FECHA = ""; }
-
-                                if (con.PROVEEDOR) { doc.PROVEEDOR = proveedor.TrimStart('0'); }
-                                else { doc.PROVEEDOR = ""; }
-
-                                if (con.PROVEEDOR) { doc.PROVEEDOR_NOMBRE = proveedor_nombre; }
-                                else { doc.PROVEEDOR_NOMBRE = ""; }
-
-                                if (con.AUTORIZACION) { doc.AUTORIZACION = autorizacion; }
-                                else { doc.AUTORIZACION = ""; }
-
-                                if (con.VENCIMIENTO) { doc.VENCIMIENTO = vencimiento2[0]; }
-                                else { doc.VENCIMIENTO = ""; }
-
-                                if (con.FACTURAK) { doc.FACTURAK = facturak; }
-                                else { doc.FACTURAK = ""; }
-
-                                if (con.EJERCICIOK) { doc.EJERCICIOK = ejerciciok; }
-                                else { doc.EJERCICIOK = ""; }
-                            }
-                            else
-                            {
-                                doc.NUM_DOC = num_doc;
-                                doc.FACTURA = factura;
-                                doc.FECHA = fecha_factura2[0];
-                                doc.PROVEEDOR = proveedor.TrimStart('0');
-                                doc.PROVEEDOR_NOMBRE = proveedor_nombre;
-                                doc.AUTORIZACION = autorizacion;
-                                doc.VENCIMIENTO = vencimiento2[0];
-                                doc.FACTURAK = facturak;
-                                doc.EJERCICIOK = ejerciciok;
-                            }
-
-                            rel.Add(doc);
-                            lp.Add(doc);
-                            errores.Add(cargaInicialH2(ds2.Tables[0].Rows[i]));
-                            warnings.Add(cargaInicialH2W(ds2.Tables[0].Rows[i]));
-                        }
-                    }
-                    if (rel.Where(x => x.NUM_DOC == d.NUM_DOC.ToString()).Count() == 0)
-                    {
-                        FACTURASCONF fcon = db.FACTURASCONFs.Where(x => x.SOCIEDAD_ID == d.SOCIEDAD_ID & x.PAIS_ID == d.PAIS_ID && x.TSOL == d.TSOL_ID).FirstOrDefault();
-                        if (fcon != null)
-                        {
-                            Relacionada doc = new Relacionada();
-                            doc.NUM_DOC = d.NUM_DOC.ToString();
-                            doc.FACTURA = "";
-                            doc.FECHA = "";
-                            doc.PROVEEDOR = "";
-                            doc.PROVEEDOR_NOMBRE = "";
-                            doc.AUTORIZACION = "";
-                            doc.VENCIMIENTO = "";
-                            doc.FACTURAK = "";
-                            doc.EJERCICIOK = "";
-                            //lp.Add(doc);
-                            List<string> err = new List<string>();
-                            for (int i = 0; i < 9; i++)
-                            {
-                                err.Add("red white-text rojo");
-                            }
-                            List<string> war = new List<string>();
-                            for (int i = 0; i < 9; i++)
-                            {
-                                war.Add("");
-                            }
-                            //errores.Add(err);
-                            //warnings.Add(war);
-                        }
-                    }
+                    DOCUMENTO d = new DOCUMENTO();
+                    d.NUM_DOC = decimal.Parse(num_doc);
+                    d.TSOL_ID = tsol;
+                    d.SOCIEDAD_ID = bukrs;
+                    if (p != null)
+                        d.PAIS_ID = p.LAND;//ADD RSG 01.11.2018--------------------------------------------------
+                    dd.Add(d);
                 }
-                lp.Add(errores);
-                lp.Add(warnings);
+
+                if (numColumnas == 9)
+                {
+                    foreach (DOCUMENTO d in dd)
+                    {
+                        List<Relacionada> rel = new List<Relacionada>();
+                        for (int i = 2; i < ds2.Tables[0].Rows.Count; i++)
+                        {
+                            string num_doc = ds2.Tables[0].Rows[i][0].ToString().Trim();
+                            if (getNumberDocument(num_doc) == -1)
+                                continue;
+
+                            if (d.NUM_DOC == decimal.Parse(num_doc))
+                            {
+                                Relacionada doc = new Relacionada();
+
+                                string factura = ds2.Tables[0].Rows[i][1].ToString().Trim();
+                                string fecha_factura = ds2.Tables[0].Rows[i][2].ToString().Trim();
+                                string[] fecha_factura2 = fecha_factura.Split(' ');
+                                string proveedor = ds2.Tables[0].Rows[i][3].ToString().Trim();
+                                string proveedor_nombre = ds2.Tables[0].Rows[i][4].ToString().Trim();
+                                string autorizacion = ds2.Tables[0].Rows[i][5].ToString().Trim();
+                                string vencimiento = ds2.Tables[0].Rows[i][6].ToString().Trim();
+                                string[] vencimiento2 = vencimiento.Split(' ');
+                                string facturak = ds2.Tables[0].Rows[i][7].ToString().Trim();
+                                string ejerciciok = ds2.Tables[0].Rows[i][8].ToString().Trim();
+
+                                var con = db.FACTURASCONFs.Where(x => x.SOCIEDAD_ID == d.SOCIEDAD_ID & x.PAIS_ID == d.PAIS_ID & x.TSOL == d.TSOL_ID).FirstOrDefault();
+
+                                if (con != null)
+                                {
+                                    doc.NUM_DOC = num_doc;
+
+                                    if (con.FACTURA) { doc.FACTURA = factura; }
+                                    else { doc.FACTURA = ""; }
+
+                                    if (con.FECHA) { doc.FECHA = fecha_factura2[0]; }
+                                    else { doc.FECHA = ""; }
+
+                                    if (con.PROVEEDOR) { doc.PROVEEDOR = proveedor.TrimStart('0'); }
+                                    else { doc.PROVEEDOR = ""; }
+
+                                    if (con.PROVEEDOR) { doc.PROVEEDOR_NOMBRE = proveedor_nombre; }
+                                    else { doc.PROVEEDOR_NOMBRE = ""; }
+
+                                    if (con.AUTORIZACION) { doc.AUTORIZACION = autorizacion; }
+                                    else { doc.AUTORIZACION = ""; }
+
+                                    if (con.VENCIMIENTO) { doc.VENCIMIENTO = vencimiento2[0]; }
+                                    else { doc.VENCIMIENTO = ""; }
+
+                                    if (con.FACTURAK) { doc.FACTURAK = facturak; }
+                                    else { doc.FACTURAK = ""; }
+
+                                    if (con.EJERCICIOK) { doc.EJERCICIOK = ejerciciok; }
+                                    else { doc.EJERCICIOK = ""; }
+                                }
+                                else
+                                {
+                                    doc.NUM_DOC = num_doc;
+                                    doc.FACTURA = factura;
+                                    doc.FECHA = fecha_factura2[0];
+                                    doc.PROVEEDOR = proveedor.TrimStart('0');
+                                    doc.PROVEEDOR_NOMBRE = proveedor_nombre;
+                                    doc.AUTORIZACION = autorizacion;
+                                    doc.VENCIMIENTO = vencimiento2[0];
+                                    doc.FACTURAK = facturak;
+                                    doc.EJERCICIOK = ejerciciok;
+                                }
+
+                                rel.Add(doc);
+                                lp.Add(doc);
+                                errores.Add(cargaInicialH2(ds2.Tables[0].Rows[i]));
+                                warnings.Add(cargaInicialH2W(ds2.Tables[0].Rows[i]));
+                            }
+                        }
+                        if (rel.Where(x => x.NUM_DOC == d.NUM_DOC.ToString()).Count() == 0)
+                        {
+                            FACTURASCONF fcon = db.FACTURASCONFs.Where(x => x.SOCIEDAD_ID == d.SOCIEDAD_ID & x.PAIS_ID == d.PAIS_ID && x.TSOL == d.TSOL_ID).FirstOrDefault();
+                            if (fcon != null)
+                            {
+                                Relacionada doc = new Relacionada();
+                                doc.NUM_DOC = d.NUM_DOC.ToString();
+                                doc.FACTURA = "";
+                                doc.FECHA = "";
+                                doc.PROVEEDOR = "";
+                                doc.PROVEEDOR_NOMBRE = "";
+                                doc.AUTORIZACION = "";
+                                doc.VENCIMIENTO = "";
+                                doc.FACTURAK = "";
+                                doc.EJERCICIOK = "";
+                                //lp.Add(doc);
+                                List<string> err = new List<string>();
+                                for (int i = 0; i < 9; i++)
+                                {
+                                    err.Add("red white-text rojo");
+                                }
+                                List<string> war = new List<string>();
+                                for (int i = 0; i < 9; i++)
+                                {
+                                    war.Add("");
+                                }
+                                //errores.Add(err);
+                                //warnings.Add(war);
+                            }
+                        }
+                    }
+                    lp.Add(errores);
+                    lp.Add(warnings);
+                }
+                else
+                {
+                    lp.Add("Error de formato en hoja 2");
+                }
             }
             else
             {
-                lp.Add("ERROR DE FORMATO EN HOJA 2");
+                lp.Add("MSJ:La hoja 2 no se pudo procesar, favor de intentarlo nuevamente");
             }
 
             JsonResult jl = Json(lp, JsonRequestBehavior.AllowGet);
@@ -408,68 +445,84 @@ namespace TAT001.Controllers
             DataSet ds3 = (DataSet)Session["ds3"];
             List<object> lp = new List<object>();
             List<object> validacion = new List<object>();
-            var columnas = ds3.Tables[0].Columns.Count;
-
-            if (columnas == 8)
+            if (ds1 != null && ds3 != null)
             {
-                for (int i = 2; i < ds3.Tables[0].Rows.Count; i++)
+                var columnas = ds3.Tables[0].Columns.Count;
+
+                if (columnas == 8)
                 {
-                    Multiple doc = new Multiple();
-
-                    string num_doc = ds3.Tables[0].Rows[i][0].ToString().Trim();
-                    string factura = ds3.Tables[0].Rows[i][1].ToString().Trim();
-                    string bill_doc = ds3.Tables[0].Rows[i][2].ToString().Trim();
-                    string ejerciciok = ds3.Tables[0].Rows[i][3].ToString().Trim();
-                    string payer_id = ds3.Tables[0].Rows[i][4].ToString().Trim();
-                    if (payer_id.Length < 10) { payer_id = cad.completaCliente(payer_id); }
-                    string payerSinCero = payer_id.TrimStart('0');
-                    string payer_nombre = ds3.Tables[0].Rows[i][5].ToString().Trim();
-                    string importe_fac = ds3.Tables[0].Rows[i][6].ToString().Trim();
-                    string belnr = ds3.Tables[0].Rows[i][7].ToString().Trim();
-
-                    for (int j = 2; j < ds1.Tables[0].Rows.Count; j++)
+                    for (int i = 2; i < ds3.Tables[0].Rows.Count; i++)
                     {
-                        string num_docH1 = ds1.Tables[0].Rows[j][0].ToString().Trim();
-                        string sociedad = ds1.Tables[0].Rows[j][3].ToString().Trim();
-                        string pais = ds1.Tables[0].Rows[j][4].ToString().Trim();
+                        Multiple doc = new Multiple();
 
-                        string decimales = db.PAIS.Where(x => x.LANDX.Contains(pais) & x.SOCIEDAD_ID == sociedad).FirstOrDefault().DECIMAL;
+                        string num_doc = ds3.Tables[0].Rows[i][0].ToString().Trim();
+                        if (getNumberDocument(num_doc) == -1)
+                            continue;
+                        string factura = ds3.Tables[0].Rows[i][1].ToString().Trim();
+                        string bill_doc = ds3.Tables[0].Rows[i][2].ToString().Trim();
+                        string ejerciciok = ds3.Tables[0].Rows[i][3].ToString().Trim();
+                        string payer_id = ds3.Tables[0].Rows[i][4].ToString().Trim();
+                        if (payer_id.Length < 10) { payer_id = cad.completaCliente(payer_id); }
+                        string payerSinCero = payer_id.TrimStart('0');
+                        string payer_nombre = ds3.Tables[0].Rows[i][5].ToString().Trim();
+                        string importe_fac = ds3.Tables[0].Rows[i][6].ToString().Trim();
+                        string belnr = ds3.Tables[0].Rows[i][7].ToString().Trim();
 
-                        if (num_docH1 == num_doc)
+                        for (int j = 2; j < ds1.Tables[0].Rows.Count; j++)
                         {
-                            doc.NUM_DOC = num_doc;
-                            doc.FACTURA = factura;
-                            doc.BILL_DOC = bill_doc;
-                            doc.EJERCICIOK = ejerciciok;
-                            doc.PAYER = payer_id.TrimStart('0');
+                            string num_docH1 = ds1.Tables[0].Rows[j][0].ToString().Trim();
+                            string sociedad = ds1.Tables[0].Rows[j][3].ToString().Trim();
+                            string pais = ds1.Tables[0].Rows[j][4].ToString().Trim();
 
-                            var existeCliente = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault();
+                            string decimales = db.PAIS.Where(x => x.LANDX.Contains(pais) & x.SOCIEDAD_ID == sociedad).FirstOrDefault().DECIMAL;
 
-                            if (existeCliente != null)
+                            if (num_docH1 == num_doc)
                             {
-                                doc.PAYER_NOMBRE = existeCliente.NAME1;
-                            }
-                            else
-                            {
-                                doc.PAYER_NOMBRE = "";
-                            }
+                                doc.NUM_DOC = num_doc;
+                                doc.FACTURA = factura;
+                                doc.BILL_DOC = bill_doc;
+                                doc.EJERCICIOK = ejerciciok;
+                                doc.PAYER = payer_id.TrimStart('0');
 
-                            doc.IMPORTE_FAC = fc.toShow(Convert.ToDecimal(importe_fac), decimales);
-                            doc.BELNR = belnr;
+                                var existeCliente = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault();
+
+                                if (existeCliente != null)
+                                {
+                                    doc.PAYER_NOMBRE = existeCliente.NAME1;
+                                }
+                                else
+                                {
+                                    doc.PAYER_NOMBRE = "";
+                                }
+
+                                doc.IMPORTE_FAC = fc.toShow(Convert.ToDecimal(importe_fac), decimales);
+                                doc.BELNR = belnr;
+                            }
                         }
-                    }
 
-                    lp.Add(doc);
-                    validacion.Add(cargaInicialH3(ds3.Tables[0].Rows[i]));
+                        lp.Add(doc);
+                        validacion.Add(cargaInicialH3(ds3.Tables[0].Rows[i]));
+                    }
+                    if (validacion.Count() == 0)
+                    {
+                        lp.Add("El contenido de la hoja 3 no fue procesado");
+                    }
+                    else
+                    {
+                        lp.Add(validacion);
+                    }
+                    
+                }
+                else
+                {
+                    lp.Add("Error de formato en hoja 3");
                 }
 
-                lp.Add(validacion);
             }
             else
             {
-                lp.Add("ERROR DE FORMATO EN HOJA 3");
+                lp.Add("MSJ:La hoja 3 no se pudo procesar, favor de intentarlo nuevamente");
             }
-
             JsonResult jl = Json(lp, JsonRequestBehavior.AllowGet);
             return jl;
         }
@@ -480,249 +533,276 @@ namespace TAT001.Controllers
             DataSet ds4 = (DataSet)Session["ds4"];
             List<object> ld = new List<object>();
             List<object> validacion = new List<object>();
-            var columnas = ds4.Tables[0].Columns.Count;
-
-            if (columnas == 14)
+            if (ds1 != null && ds4 != null)
             {
-                for (int j = 2; j < ds1.Tables[0].Rows.Count; j++)
+                var columnas = ds4.Tables[0].Columns.Count;
+
+                if (columnas == 14)
                 {
-                    string num_docH1 = ds1.Tables[0].Rows[j][0].ToString().Trim();
-                    string sociedad = ds1.Tables[0].Rows[j][3].ToString().Trim();
-                    string pais = ds1.Tables[0].Rows[j][4].ToString().Trim();
-                    string vigencia_de = ds1.Tables[0].Rows[j][13].ToString().Trim();
-                    string[] vigencia_de2 = vigencia_de.Split(' ');
-                    string vigencia_al = ds1.Tables[0].Rows[j][14].ToString().Trim();
-                    string[] vigencia_al2 = vigencia_al.Split(' ');
-                    string decimales = db.PAIS.Where(x => x.LANDX == pais & x.SOCIEDAD_ID == sociedad).FirstOrDefault().DECIMAL;
-
-                    for (int i = 2; i < ds4.Tables[0].Rows.Count; i++)
+                    for (int j = 2; j < ds1.Tables[0].Rows.Count; j++)
                     {
-                        Distribucion doc = new Distribucion();
-
-                        string num_doc = ds4.Tables[0].Rows[i][0].ToString().Trim();
-                        string ligada = ds4.Tables[0].Rows[i][1].ToString().Trim();
-                        //string vigencia_de = ds4.Tables[0].Rows[i][2].ToString().Trim();
-                        //string vigencia_al = ds4.Tables[0].Rows[i][3].ToString().Trim();
-                        string matnr = ds4.Tables[0].Rows[i][4].ToString().Trim();
-                        if (matnr.Length < 18) { matnr = cad.completaMaterial(matnr); }
-                        string materialSinCero = matnr.TrimStart('0');
-                        string matkl = ds4.Tables[0].Rows[i][5].ToString().Trim();
-                        string descripcion = ds4.Tables[0].Rows[i][6].ToString().Trim();
-                        string monto = ds4.Tables[0].Rows[i][7].ToString().Trim();
-                        string porc_apoyo = ds4.Tables[0].Rows[i][8].ToString().Trim();
-                        string apoyo_pieza = ds4.Tables[0].Rows[i][9].ToString().Trim();
-                        string costo_apoyo = ds4.Tables[0].Rows[i][10].ToString().Trim();
-                        string precio_sug = ds4.Tables[0].Rows[i][11].ToString().Trim();
-                        string volumen_real = ds4.Tables[0].Rows[i][12].ToString().Trim();
-                        string apoyo = ds4.Tables[0].Rows[i][13].ToString().Trim();
+                        Encabezado objInformacion = new Encabezado();
+                        objInformacion.NUM_DOC = ds1.Tables[0].Rows[j][0].ToString().Trim();
+                        objInformacion.SOCIEDAD_ID = ds1.Tables[0].Rows[j][3].ToString().Trim();
+                        objInformacion.PAIS_NAME = ds1.Tables[0].Rows[j][4].ToString().Trim();
+                        objInformacion.FECHAI_VIG = ds1.Tables[0].Rows[j][13].ToString().Trim();
+                        string[] vigencia_de2 = objInformacion.FECHAI_VIG.Split(' ');
+                        objInformacion.FECHAF_VIG = ds1.Tables[0].Rows[j][14].ToString().Trim();
+                        string[] vigencia_al2 = objInformacion.FECHAF_VIG.Split(' ');
+                        objInformacion.PAYER_ID = ds1.Tables[0].Rows[j][9].ToString().Trim();
+                        if (objInformacion.PAYER_ID.Length < 10) { objInformacion.PAYER_ID = cad.completaCliente(objInformacion.PAYER_ID); }
 
 
-
-                        if (num_docH1 == num_doc)
+                        PAI pais_ = db.PAIS.Where(x => x.LANDX.ToUpper() == objInformacion.PAIS_NAME.ToUpper() && x.SOCIEDAD_ID == objInformacion.SOCIEDAD_ID).FirstOrDefault();
+                        string decimales = ".";
+                        if (pais_ != null)
                         {
-                            doc.NUM_DOC = num_doc;
-                            doc.LIGADA = ligada;
-                            doc.VIGENCIA_DE = vigencia_de2[0];
-                            doc.VIGENCIA_AL = vigencia_al2[0];
-
-
-                            if (matnr != "" & matkl != "")
-                            {
-                                doc.MATNR = "";
-                                doc.MATKL = matkl;
-                                doc.DESCRIPCION = "";
-                            }
-                            else if (matnr == "" & matkl != "")
-                            {
-                                doc.MATNR = "";
-                                doc.MATKL = matkl;
-                                doc.DESCRIPCION = "";
-                            }
-                            else if (matnr != "" & matkl == "")
-                            {
-                                doc.MATNR = matnr.TrimStart('0');
-                                var idMat = db.MATERIALs.Where(y => y.ID == matnr).FirstOrDefault().MATERIALGP_ID;
-
-                                if (idMat != null)
-                                {
-                                    doc.MATKL = db.MATERIALGPTs.Where(x => x.MATERIALGP_ID == idMat & x.SPRAS_ID == "EN").FirstOrDefault().TXT50;
-                                }
-                                else
-                                {
-                                    doc.MATKL = null;
-                                }
-
-                                var desMaterial = (from mat1 in db.MATERIALs
-                                                   join mat2 in db.MATERIALTs on mat1.ID equals mat2.MATERIAL_ID
-                                                   where mat2.MATERIAL_ID == matnr & mat1.ACTIVO == true
-                                                   group mat2 by new { mat2.MATERIAL_ID, mat2.MAKTG } into g
-                                                   select new { DESCRIPCION = g.Key.MAKTG }).FirstOrDefault();
-
-                                doc.DESCRIPCION = desMaterial.DESCRIPCION;
-                            }
-
-
-                            //if (matnr != "" & matkl == "")
-                            //{
-                            //    doc.MATNR = matnr.TrimStart('0');
-                            //    var idMat = db.MATERIALs.Where(y => y.ID == matnr).FirstOrDefault().MATERIALGP_ID;
-                            //    doc.MATKL = db.MATERIALGPTs.Where(x => x.MATERIALGP_ID == idMat & x.SPRAS_ID == "EN").FirstOrDefault().TXT50;
-                            //}
-                            //else
-                            //{
-                            //    doc.MATNR = matnr.TrimStart('0');
-                            //    doc.MATKL = matkl;
-                            //}
-
-                            //var existMaterial = db.MATERIALs.Where(x => x.ID == matnr).FirstOrDefault();
-
-                            //if (existMaterial != null)
-                            //{
-                            //    var desMaterial = (from mat1 in db.MATERIALs
-                            //                       join mat2 in db.MATERIALTs on mat1.ID equals mat2.MATERIAL_ID
-                            //                       where mat2.MATERIAL_ID == matnr & mat1.ACTIVO == true
-                            //                       group mat2 by new { mat2.MATERIAL_ID, mat2.MAKTG } into g
-                            //                       select new { DESCRIPCION = g.Key.MAKTG }).FirstOrDefault();
-
-                            //    doc.DESCRIPCION = desMaterial.DESCRIPCION;
-                            //}
-                            //else
-                            //{
-                            //    doc.DESCRIPCION = "";
-                            //}
-                            if (ligada != "")
-                            {
-                                doc.MONTO = fc.toShow(Convert.ToDecimal(0), decimales);
-                                if (IsNumeric(porc_apoyo))
-                                {
-                                    doc.PORC_APOYO = fc.toShowPorc(Convert.ToDecimal(porc_apoyo) * 100, decimales);
-                                }
-                                else
-                                {
-                                    doc.PORC_APOYO = fc.toShowPorc(Convert.ToDecimal(0), decimales);
-                                }
-                                doc.APOYO_PIEZA = fc.toShow(Convert.ToDecimal(0), decimales);
-                                doc.COSTO_APOYO = fc.toShow(Convert.ToDecimal(0), decimales);
-                                doc.PRECIO_SUG = fc.toShow(Convert.ToDecimal(0), decimales);
-                                doc.VOLUMEN_REAL = fc.toShowNum(Convert.ToDecimal(0), decimales);
-                                doc.APOYO = fc.toShow(Convert.ToDecimal(0), decimales);
-                            }
-                            else
-                            {
-                                if (IsNumeric(monto) == false) { monto = "0"; }
-                                if (IsNumeric(porc_apoyo) == false) { porc_apoyo = "0"; } else { porc_apoyo = (Convert.ToDecimal(porc_apoyo) * 100).ToString(); }
-                                if (IsNumeric(apoyo_pieza) == false) { apoyo_pieza = "0"; }
-                                if (IsNumeric(costo_apoyo) == false) { costo_apoyo = "0"; }
-                                if (IsNumeric(precio_sug) == false) { precio_sug = "0"; }
-                                if (IsNumeric(volumen_real) == false) { volumen_real = "0"; }
-                                if (IsNumeric(apoyo) == false) { apoyo = "0"; }
-
-                                if (apoyo != "" & apoyo != "0")
-                                {
-                                    if ((monto != "" & monto != "0") & (porc_apoyo != "" & porc_apoyo != "0") & (volumen_real != "" & volumen_real != "0"))
-                                    {
-                                        doc.MONTO = fc.toShow(Convert.ToDecimal(monto), decimales);
-                                        doc.PORC_APOYO = fc.toShowPorc(Convert.ToDecimal(porc_apoyo), decimales);
-                                        doc.APOYO_PIEZA = fc.toShow(Convert.ToDecimal(apoyo_pieza), decimales);
-                                        doc.COSTO_APOYO = fc.toShow(Convert.ToDecimal(costo_apoyo), decimales);
-                                        doc.PRECIO_SUG = fc.toShow(Convert.ToDecimal(precio_sug), decimales);
-                                        doc.VOLUMEN_REAL = fc.toShowNum(Convert.ToDecimal(volumen_real), decimales);
-                                        doc.APOYO = fc.toShow(Convert.ToDecimal(apoyo), decimales);
-                                    }
-                                    else
-                                    {
-                                        doc.MONTO = "";
-                                        doc.PORC_APOYO = "";
-                                        doc.APOYO_PIEZA = "";
-                                        doc.COSTO_APOYO = "";
-                                        doc.PRECIO_SUG = "";
-                                        doc.VOLUMEN_REAL = "";
-                                        doc.APOYO = fc.toShow(Convert.ToDecimal(apoyo), decimales);
-                                    }
-
-                                }
-                                else
-                                {
-                                    if ((monto != "" & monto != "0") & (porc_apoyo != "" & porc_apoyo != "0") & (volumen_real != "" & volumen_real != "0"))
-                                    {
-                                        doc.MONTO = fc.toShow(Convert.ToDecimal(monto), decimales);
-                                        doc.PORC_APOYO = fc.toShowPorc(Convert.ToDecimal(porc_apoyo), decimales);
-                                        doc.APOYO_PIEZA = fc.toShow(Convert.ToDecimal(apoyo_pieza), decimales);
-                                        doc.COSTO_APOYO = fc.toShow(Convert.ToDecimal(costo_apoyo), decimales);
-                                        doc.PRECIO_SUG = fc.toShow(Convert.ToDecimal(precio_sug), decimales);
-                                        doc.VOLUMEN_REAL = fc.toShowNum(Convert.ToDecimal(volumen_real), decimales);
-
-                                        decimal total = (Convert.ToDecimal(monto) * (Convert.ToDecimal(porc_apoyo) / 100));
-                                        total = total * Convert.ToDecimal(volumen_real);
-                                        doc.APOYO = fc.toShow(total, decimales);
-                                    }
-                                    else
-                                    {
-                                        doc.MONTO = "";
-                                        doc.PORC_APOYO = "";
-                                        doc.APOYO_PIEZA = "";
-                                        doc.COSTO_APOYO = "";
-                                        doc.PRECIO_SUG = "";
-                                        doc.VOLUMEN_REAL = "";
-                                        doc.APOYO = "";
-                                    }
-                                }
-                            }
-
-                            ld.Add(doc);
-                            validacion.Add(cargaInicialH4(ds4.Tables[0].Rows[i]));
+                            decimales = pais_.DECIMAL;
                         }
+                        string spras_id = FnCommon.ObtenerSprasId(db, User.Identity.Name);
+
+                        string vkorg = "", vtweg = "", spart = "";
+                        if (db.CLIENTEs.Where(x => x.KUNNR == objInformacion.PAYER_ID).Count() > 0)
+                        {
+                            var clienteH1 = db.CLIENTEs.Where(x => x.KUNNR == objInformacion.PAYER_ID).FirstOrDefault();
+                            vkorg = clienteH1.VKORG;
+                            vtweg = clienteH1.VTWEG;
+                            spart = clienteH1.SPART;
+                        }
+                        else
+                        {
+                            vkorg = "";
+                            vtweg = "";
+                            spart = "";
+                        }
+
+                        objInformacion.VKORG = vkorg;
+                        objInformacion.VTWEG = vtweg;
+                        objInformacion.SPART = spart;
+
+                        List<MATERIALGPT> listCategorias = materialesgptDao.CategoriasCliente(vkorg, spart, objInformacion.PAYER_ID, objInformacion.SOCIEDAD_ID);
+                        List<DataRow> listRows = getRowsByDocument(ds4.Tables[0], objInformacion.NUM_DOC, 0);
+
+                        foreach (DataRow row in listRows)
+                        {
+                            Distribucion objDistribucion = new Distribucion();
+
+                            string num_doc = row[0].ToString();
+                            string ligada = row[1].ToString().Trim();
+                            string matnr = row[4].ToString().Trim();
+                            if (matnr.Length < 18) { matnr = cad.completaMaterial(matnr); }
+                            string materialSinCero = matnr.TrimStart('0');
+                            string matkl = row[5].ToString().Trim();
+                            string descripcion = row[6].ToString().Trim();
+                            string monto = row[7].ToString().Trim();
+                            string porc_apoyo = row[8].ToString().Trim();
+                            string apoyo_pieza = row[9].ToString().Trim();
+                            string costo_apoyo = row[10].ToString().Trim();
+                            string precio_sug = row[11].ToString().Trim();
+                            string volumen_real = row[12].ToString().Trim();
+                            string apoyo = row[13].ToString().Trim();
+
+
+
+                            if (objInformacion.NUM_DOC == num_doc)
+                            {
+                                objDistribucion.NUM_DOC = num_doc;
+                                objDistribucion.LIGADA = ligada;
+                                objDistribucion.VIGENCIA_DE = vigencia_de2[0];
+                                objDistribucion.VIGENCIA_AL = vigencia_al2[0];
+
+
+                                if ((matnr != "" && matkl != "") || (matnr == "" && matkl != ""))
+                                {
+                                    if (listCategorias.Any(x => x.TXT50.ToUpper() == matkl.ToUpper()))
+                                    {
+                                        var categoria = listCategorias.Where(x => x.TXT50.ToUpper() == matkl.ToUpper()).FirstOrDefault();
+                                        objDistribucion.MATNR = "";
+                                        objDistribucion.MATKL = categoria.TXT50;
+                                        objDistribucion.MATKL_ID = categoria.MATERIALGP_ID;
+                                        objDistribucion.DESCRIPCION = "";
+                                    }
+                                    else
+                                    {
+                                        objDistribucion.MATNR = "";
+                                        objDistribucion.MATKL = matkl;
+                                        objDistribucion.MATKL_ID = "";
+                                        objDistribucion.DESCRIPCION = "";
+                                    }
+                                }
+                                else if (matnr != "" && matkl == "")
+                                {
+
+                                    List<MATERIAL> ListMateriales = materialesDao.ListaMateriales(matnr, vkorg, vtweg, User.Identity.Name);
+                                    if (ListMateriales.Any(x => x.ID == matnr))
+                                    {
+                                        var material = ListMateriales.Where(x => x.ID == matnr).FirstOrDefault();
+                                        objDistribucion.MATNR = material.ID.TrimStart('0');
+                                        var idMatGp = material.MATERIALGP_ID;
+                                        objDistribucion.MATKL = db.MATERIALGPs.Where(x => x.ID == idMatGp).FirstOrDefault().DESCRIPCION;
+                                        objDistribucion.MATKL_ID = idMatGp;
+                                        objDistribucion.DESCRIPCION = material.MAKTX;
+                                    }
+                                    else
+                                    {
+                                        objDistribucion.MATNR = materialSinCero;
+                                        objDistribucion.MATKL = "";
+                                        objDistribucion.DESCRIPCION = descripcion;
+                                    }
+                                }
+                                if (ligada != "")
+                                {
+                                    objDistribucion.MONTO = fc.toShow(Convert.ToDecimal(0), decimales);
+                                    if (IsNumeric(porc_apoyo))
+                                    {
+                                        objDistribucion.PORC_APOYO = fc.toShowPorc(Convert.ToDecimal(porc_apoyo) * 100, decimales);
+                                    }
+                                    else
+                                    {
+                                        objDistribucion.PORC_APOYO = fc.toShowPorc(Convert.ToDecimal(0), decimales);
+                                    }
+                                    objDistribucion.APOYO_PIEZA = fc.toShow(Convert.ToDecimal(0), decimales);
+                                    objDistribucion.COSTO_APOYO = fc.toShow(Convert.ToDecimal(0), decimales);
+                                    objDistribucion.PRECIO_SUG = fc.toShow(Convert.ToDecimal(0), decimales);
+                                    objDistribucion.VOLUMEN_REAL = fc.toShowNum(Convert.ToDecimal(0), decimales);
+                                    objDistribucion.APOYO = fc.toShow(Convert.ToDecimal(0), decimales);
+                                }
+                                else
+                                {
+                                    if (!IsNumeric(monto)) { monto = "0"; }
+                                    if (!IsNumeric(porc_apoyo)) { porc_apoyo = "0"; } else { porc_apoyo = (Convert.ToDecimal(porc_apoyo) * 100).ToString(); }
+                                    if (!IsNumeric(apoyo_pieza)) { apoyo_pieza = "0"; }
+                                    if (!IsNumeric(costo_apoyo)) { costo_apoyo = "0"; }
+                                    if (!IsNumeric(precio_sug)) { precio_sug = "0"; }
+                                    if (!IsNumeric(volumen_real)) { volumen_real = "0"; }
+                                    if (!IsNumeric(apoyo)) { apoyo = "0"; }
+
+                                    if (apoyo != "" && apoyo != "0")
+                                    {
+                                        if ((monto != "" && monto != "0") && (porc_apoyo != "" && porc_apoyo != "0") && (volumen_real != "" && volumen_real != "0"))
+                                        {
+                                            objDistribucion.MONTO = fc.toShow(Convert.ToDecimal(monto), decimales);
+                                            objDistribucion.PORC_APOYO = fc.toShowPorc(Convert.ToDecimal(porc_apoyo), decimales);
+                                            objDistribucion.APOYO_PIEZA = fc.toShow(Convert.ToDecimal(apoyo_pieza), decimales);
+                                            objDistribucion.COSTO_APOYO = fc.toShow(Convert.ToDecimal(costo_apoyo), decimales);
+                                            objDistribucion.PRECIO_SUG = fc.toShow(Convert.ToDecimal(precio_sug), decimales);
+                                            objDistribucion.VOLUMEN_REAL = fc.toShowNum(Convert.ToDecimal(volumen_real), decimales);
+                                            objDistribucion.APOYO = fc.toShow(Convert.ToDecimal(apoyo), decimales);
+                                        }
+                                        else
+                                        {
+                                            objDistribucion.MONTO = "";
+                                            objDistribucion.PORC_APOYO = "";
+                                            objDistribucion.APOYO_PIEZA = "";
+                                            objDistribucion.COSTO_APOYO = "";
+                                            objDistribucion.PRECIO_SUG = "";
+                                            objDistribucion.VOLUMEN_REAL = "";
+                                            objDistribucion.APOYO = fc.toShow(Convert.ToDecimal(apoyo), decimales);
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        if ((monto != "" && monto != "0") && (porc_apoyo != "" && porc_apoyo != "0") && (volumen_real != "" && volumen_real != "0"))
+                                        {
+                                            objDistribucion.MONTO = fc.toShow(Convert.ToDecimal(monto), decimales);
+                                            objDistribucion.PORC_APOYO = fc.toShowPorc(Convert.ToDecimal(porc_apoyo), decimales);
+                                            objDistribucion.APOYO_PIEZA = fc.toShow(Convert.ToDecimal(apoyo_pieza), decimales);
+                                            objDistribucion.COSTO_APOYO = fc.toShow(Convert.ToDecimal(costo_apoyo), decimales);
+                                            objDistribucion.PRECIO_SUG = fc.toShow(Convert.ToDecimal(precio_sug), decimales);
+                                            objDistribucion.VOLUMEN_REAL = fc.toShowNum(Convert.ToDecimal(volumen_real), decimales);
+
+                                            decimal total = (Convert.ToDecimal(monto) * (Convert.ToDecimal(porc_apoyo) / 100));
+                                            total = total * Convert.ToDecimal(volumen_real);
+                                            objDistribucion.APOYO = fc.toShow(total, decimales);
+                                        }
+                                        else
+                                        {
+                                            objDistribucion.MONTO = "";
+                                            objDistribucion.PORC_APOYO = "";
+                                            objDistribucion.APOYO_PIEZA = "";
+                                            objDistribucion.COSTO_APOYO = "";
+                                            objDistribucion.PRECIO_SUG = "";
+                                            objDistribucion.VOLUMEN_REAL = "";
+                                            objDistribucion.APOYO = "";
+                                        }
+                                    }
+                                }
+
+                                ld.Add(objDistribucion);
+                                validacion.Add(cargaInicialH4(objInformacion, objDistribucion, listCategorias, listRows));
+                            }
+                        }
+                        
+                    }
+
+                    if (validacion.Count() == 0)
+                    {
+                        ld.Add("El contenido de la hoja 4 no fue procesado");
+                    }
+                    else
+                    {
+                        ld.Add(validacion);
                     }
                 }
+                else
+                {
+                    ld.Add("Error de formato en hoja 4");
+                }
 
-                ld.Add(validacion);
             }
             else
             {
-                ld.Add("ERROR DE FORMATO EN HOJA 4");
+                ld.Add("La hoja 4 no se pudo procesar, favor de intentarlo nuevamente");
             }
-
-
             JsonResult jl = Json(ld, JsonRequestBehavior.AllowGet);
             return jl;
         }
 
         public JsonResult validaHoja5()
         {
-            string idioma = Session["spras"].ToString();
+            string idioma = FnCommon.ObtenerSprasId(db, User.Identity.Name);
             DataSet ds5 = (DataSet)Session["ds1"];
             List<object> la = new List<object>();
             List<object> tsol = new List<object>();
             List<string> textos = new List<string>();
-
-            for (int i = 2; i < ds5.Tables[0].Rows.Count; i++)
+            if (ds5 != null)
             {
-                string num_doc = ds5.Tables[0].Rows[i][0].ToString().Trim();
-                string t_sol = ds5.Tables[0].Rows[i][1].ToString().Trim();
-
-                var con = db.TSOPORTEs
-                    .Join(db.TSOPORTETs, x => x.ID, y => y.TSOPORTE_ID, (x, y) => new { x, y })
-                    .Join(db.CONSOPORTEs, t => t.x.ID, z => z.TSOPORTE_ID, (t, z) => new { t, z })
-                    .Where(xy => xy.t.x.ID != "REV" & xy.t.x.ACTIVO == true & xy.t.y.SPRAS_ID == idioma & xy.z.TSOL_ID == t_sol & xy.z.ACTIVO == true)
-                    .Select(xyz => new { xyz.t.y.TXT50, xyz.z.OBLIGATORIO }).ToList();
-
-                //var con2 = db.DOCUMENTOes
-                //        .Join(db.CUENTAs, d => d.TALL_ID, c => c.TALL_ID, (d, c) => new { d, c })
-                //        .Join(db.IIMPUESTOes, x => x.c.IMPUESTO, imp => imp.IMPUESTO, (x, imp) => new { x, imp })
-
-                foreach (var item in con)
+                for (int i = 2; i < ds5.Tables[0].Rows.Count; i++)
                 {
-                    la.Add(num_doc);
-                    textos.Add(item.TXT50);
-                    tsol.Add(item.OBLIGATORIO);
+                    string num_doc = ds5.Tables[0].Rows[i][0].ToString().Trim();
+                    if (getNumberDocument(num_doc) == -1)
+                        continue;
+
+                    string t_sol = ds5.Tables[0].Rows[i][1].ToString().Trim();
+
+                    var con = db.TSOPORTEs
+                        .Join(db.TSOPORTETs, x => x.ID, y => y.TSOPORTE_ID, (x, y) => new { x, y })
+                        .Join(db.CONSOPORTEs, t => t.x.ID, z => z.TSOPORTE_ID, (t, z) => new { t, z })
+                        .Where(xy => xy.t.x.ID != "REV" & xy.t.x.ACTIVO == true & xy.t.y.SPRAS_ID == idioma & xy.z.TSOL_ID == t_sol & xy.z.ACTIVO == true)
+                        .Select(xyz => new { xyz.t.y.TXT50, xyz.z.OBLIGATORIO }).ToList();
+
+                    //var con2 = db.DOCUMENTOes
+                    //        .Join(db.CUENTAs, d => d.TALL_ID, c => c.TALL_ID, (d, c) => new { d, c })
+                    //        .Join(db.IIMPUESTOes, x => x.c.IMPUESTO, imp => imp.IMPUESTO, (x, imp) => new { x, imp })
+
+                    foreach (var item in con)
+                    {
+                        la.Add(num_doc);
+                        textos.Add(item.TXT50);
+                        tsol.Add(item.OBLIGATORIO);
+                    }
+                    //tsol.Add(obligatorioSub);
                 }
-                //tsol.Add(obligatorioSub);
+
+                //var query = db.TSOPORTEs.Where(x => x.ID != "REV" & x.ACTIVO == true);
+                la.Add(tsol);
+                la.Add(textos);
             }
-
-            //var query = db.TSOPORTEs.Where(x => x.ID != "REV" & x.ACTIVO == true);
-            la.Add(tsol);
-            la.Add(textos);
-
+            else
+            {
+                la.Add("La hoja 5 no se pudo procesar, favor de intentarlo nuevamente");
+            }
             JsonResult jl = Json(la, JsonRequestBehavior.AllowGet);
             return jl;
         }
@@ -769,7 +849,7 @@ namespace TAT001.Controllers
             return cc;
         }
 
-        
+
 
         //COSULTA DE AJAX PARA LA SOCIEDAD
         //public JsonResult sociedad(string Prefix)
@@ -832,7 +912,7 @@ namespace TAT001.Controllers
             return cc;
         }
 
-       
+
 
         //COSULTA DE AJAX PARA EL TAMAÑO DEL CONCEPTO
         public JsonResult concepto(string Prefix)
@@ -1202,84 +1282,6 @@ namespace TAT001.Controllers
         }
         #endregion
 
-        //COSULTA DE AJAX PARA EL TIPO DE MATERIAL
-        public JsonResult material(string Prefix)
-        {
-            string idioma = Session["spras"].ToString();
-
-            if (Prefix == null)
-                Prefix = "";
-
-            var con = (from a in db.MATERIALs
-                       join b in db.MATERIALGPs on a.MATERIALGP_ID equals b.ID
-                       join c in db.MATERIALTs on a.ID equals c.MATERIAL_ID
-                       where c.MATERIAL_ID.Contains(Prefix) && c.SPRAS == idioma && b.ACTIVO == true && a.ACTIVO == true
-                       group c by new { b.DESCRIPCION, c.MATERIAL_ID, c.MAKTG } into g
-                       select new { ID = g.Key.MATERIAL_ID, CATEGORIA = g.Key.DESCRIPCION, DESCRIPCION = g.Key.MAKTG }).ToList();
-
-            if (con.Count == 0)
-            {
-                var con2 = (from a in db.MATERIALs
-                            join b in db.MATERIALGPs on a.MATERIALGP_ID equals b.ID
-                            join c in db.MATERIALTs on a.ID equals c.MATERIAL_ID
-                            where c.MAKTG.Contains(Prefix) && c.SPRAS == idioma && b.ACTIVO == true && a.ACTIVO == true
-                            group c by new { b.DESCRIPCION, c.MATERIAL_ID, c.MAKTG } into g
-                            select new { ID = g.Key.MATERIAL_ID, CATEGORIA = g.Key.DESCRIPCION, DESCRIPCION = g.Key.MAKTG }).ToList();
-                con.AddRange(con2);
-            }
-
-            //var c = (from mat1 in db.MATERIALs
-            //         join mat2 in db.MATERIALTs on mat1.ID equals mat2.MATERIAL_ID
-
-            //         where mat2.MATERIAL_ID.Contains(Prefix) && mat2.SPRAS == idioma && mat1.ACTIVO == true
-            //         group mat2 by new { mat2.MATERIAL_ID, mat2.MAKTG } into g
-            //         select new { ID = g.Key.MATERIAL_ID, DESCRIPCION = g.Key.MAKTG }).ToList();
-
-            //if (c.Count == 0)
-            //{
-            //    var c2 = (from mat1 in db.MATERIALs
-            //              join mat2 in db.MATERIALTs on mat1.ID equals mat2.MATERIAL_ID
-            //              where mat2.MAKTG.Contains(Prefix) && mat2.SPRAS == idioma && mat1.ACTIVO == true
-            //              group mat2 by new { mat2.MATERIAL_ID, mat2.MAKTG } into g
-            //              select new { ID = g.Key.MATERIAL_ID, DESCRIPCION = g.Key.MAKTG }).ToList();
-            //    c.AddRange(c2);
-            //}
-            JsonResult cc = Json(con, JsonRequestBehavior.AllowGet);
-            return cc;
-        }
-
-        //COSULTA DE AJAX PARA EL TIPO DE CATEGORIA
-        public JsonResult categoria(string Prefix)
-        {
-            if (Prefix == null)
-                Prefix = "";
-
-            //var c = (from mat1 in db.MATERIALs
-            //         join cat in db.MATERIALGPTs on mat1.MATERIALGP_ID equals cat.MATERIALGP_ID
-            //         where cat.MATERIALGP_ID.Contains(Prefix) && cat.SPRAS_ID == "EN" && mat1.ACTIVO == true
-            //         group cat by new { cat.MATERIALGP_ID, cat.TXT50 } into g
-            //         select new { ID = g.Key.MATERIALGP_ID, DESCRIPCION = g.Key.TXT50 }).ToList();
-
-            var c = (from cat in db.MATERIALGPs
-                     where cat.DESCRIPCION.Contains(Prefix)
-                     select new { ID = cat.ID, DESCRIPCION = cat.DESCRIPCION }).ToList();
-
-            if (c.Count == 0)
-            {
-                //var c2 = (from mat1 in db.MATERIALs
-                //          join cat in db.MATERIALGPTs on mat1.MATERIALGP_ID equals cat.MATERIALGP_ID
-                //          where cat.TXT50.Contains(Prefix) && cat.SPRAS_ID == "EN" && mat1.ACTIVO == true
-                //          group cat by new { cat.MATERIALGP_ID, cat.TXT50 } into g
-                //          select new { ID = g.Key.MATERIALGP_ID, DESCRIPCION = g.Key.TXT50 }).ToList();
-
-                var c2 = (from cat in db.MATERIALGPs
-                          where cat.ID.Contains(Prefix)
-                          select new { ID = cat.ID, DESCRIPCION = cat.DESCRIPCION }).ToList();
-                c.AddRange(c2);
-            }
-            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
-            return cc;
-        }
 
         //COSULTA DE AJAX PARA EL TIPO DE DECIMAL
         public JsonResult getDecimal(string Pais)
@@ -1308,134 +1310,8 @@ namespace TAT001.Controllers
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
             return cc;
         }
-
-        //COSULTA DE AJAX PARA EL TIPO DE HEALTYDRINKS EN CATEGORIA       
-        public JsonResult getHealtCategoria(object[] categorias)
-        {
-            List<object> tieneHealty = new List<object>();
-            List<object> catIDList = new List<object>();
-
-            if (categorias.Length > 0)
-            {
-                for (int i = 0; i < categorias.Length; i++)
-                {
-                    string categoriaDes = categorias[i].ToString();
-                    string num_cat = "";
-
-                    var con = (from t in db.MATERIALGPs
-                               where t.DESCRIPCION.Contains(categoriaDes)
-                               select new { t.ID, t.DESCRIPCION }).FirstOrDefault();
-
-                    if (con == null)
-                    {
-                        var con2 = (from t in db.MATERIALGPs
-                                    where t.ID.Contains(categoriaDes)
-                                    select new { t.ID, t.DESCRIPCION }).FirstOrDefault();
-
-                        categoriaDes = con2.DESCRIPCION;
-                        num_cat = con2.ID;
-                    }
-                    else
-                    {
-                        categoriaDes = con.DESCRIPCION;
-                        num_cat = con.ID;
-                    }
-
-
-
-                    var unica = db.MATERIALGPs.Where(x => x.DESCRIPCION == categoriaDes).FirstOrDefault();
-
-                    if (unica != null)
-                    {
-                        if (unica.UNICA)
-                        {
-                            tieneHealty.Add(unica.UNICA);
-                            catIDList.Add(num_cat);
-                        }
-                        else
-                        {
-                            tieneHealty.Add(unica.UNICA);
-                            catIDList.Add(num_cat);
-                        }
-                    }
-                }
-                tieneHealty.Add(catIDList);
-            }
-            else
-            {
-                tieneHealty.Clear();
-                catIDList.Clear();
-            }
-
-            JsonResult cc = Json(tieneHealty, JsonRequestBehavior.AllowGet);
-            return cc;
-        }
-
-        //COSULTA DE AJAX PARA EL TIPO DE HEALTYDRINKS EN MASIVA     
-        public JsonResult getHealtMaterial(object[] materiales)
-        {
-            List<object> tieneHealty = new List<object>();
-            List<object> matIDList = new List<object>();
-            string idioma = Session["spras"].ToString();
-
-            if (materiales.Length > 0)
-            {
-                for (int i = 0; i < materiales.Length; i++)
-                {
-                    string materialID = materiales[i].ToString();
-                    if (materialID.Length < 18) { materialID = cad.completaMaterial(materialID); }
-                    string num_mat = "";
-
-                    var con = (from mat1 in db.MATERIALs
-                               join mat2 in db.MATERIALTs on mat1.ID equals mat2.MATERIAL_ID
-                               where mat2.MATERIAL_ID.Contains(materialID) && mat2.SPRAS == idioma && mat1.ACTIVO == true
-                               group mat2 by new { mat2.MATERIAL_ID, mat2.MAKTG, mat1.MATERIALGP_ID } into g
-                               select new { ID = g.Key.MATERIAL_ID, MATERIALGP_ID = g.Key.MATERIALGP_ID }).FirstOrDefault();
-
-                    if (con == null)
-                    {
-                        var con2 = (from mat1 in db.MATERIALs
-                                    join mat2 in db.MATERIALTs on mat1.ID equals mat2.MATERIAL_ID
-                                    where mat2.MAKTG.Contains(materialID) && mat2.SPRAS == idioma && mat1.ACTIVO == true
-                                    group mat2 by new { mat2.MATERIAL_ID, mat2.MAKTG, mat1.MATERIALGP_ID } into g
-                                    select new { ID = g.Key.MATERIAL_ID, MATERIALGP_ID = g.Key.MATERIALGP_ID }).FirstOrDefault();
-
-                        materialID = con2.MATERIALGP_ID;
-                        num_mat = con2.ID;
-                    }
-                    else
-                    {
-                        materialID = con.MATERIALGP_ID;
-                        num_mat = con.ID;
-                    }
-
-                    var unica = db.MATERIALGPs.Where(x => x.ID == materialID).FirstOrDefault();
-
-                    if (unica != null)
-                    {
-                        if (unica.UNICA)
-                        {
-                            tieneHealty.Add(unica.UNICA);
-                            matIDList.Add(num_mat);
-                        }
-                        else
-                        {
-                            tieneHealty.Add(unica.UNICA);
-                            matIDList.Add(num_mat);
-                        }
-                    }
-                }
-                tieneHealty.Add(matIDList);
-            }
-            else
-            {
-                tieneHealty.Clear();
-                matIDList.Clear();
-            }
-
-            JsonResult cc = Json(tieneHealty, JsonRequestBehavior.AllowGet);
-            return cc;
-        }
+        
+        
 
         public List<object> cargaInicialH1(DataRow fila, List<PAI> pp)//, DOCUMENTOP docp)
         {
@@ -1479,8 +1355,12 @@ namespace TAT001.Controllers
             string land_id = "";
             PAI p = pp.Where(a => a.LANDX == land).FirstOrDefault();//ADD RSG 01.11.2018
             SOCIEDAD soc = new SOCIEDAD();
+            string pLand = null;
             if (p != null)//ADD RSG 01.11.2018
+            {
                 land_id = p.LAND;//ADD RSG 01.11.2018
+                pLand = p.LAND;
+            }
 
             if (t_sol.Length <= 10)
             {
@@ -1499,8 +1379,6 @@ namespace TAT001.Controllers
             }
 
             List<TALLT> list =tallsDao.ListaTallsConCuenta(TATConstantes.ACCION_LISTA_TALLCONCUENTA, null,spras_id, land_id, DateTime.Now.Year, bukrs);
-
-            //if (db.TALLs.Join(db.GALLs, x => x.GALL_ID, y => y.ID, (x, y) => new { x, y }).Where(xy => xy.x.DESCRIPCION == gall_id & xy.x.ACTIVO == true).Select(xy => xy.y.ID).Count() > 0)
             if (list.Any(x => x.TXT50 == gall_id))
             {
                 regresaRowH1.Add("");
@@ -1510,7 +1388,7 @@ namespace TAT001.Controllers
                 regresaRowH1.Add("red white-text rojo");
             }
 
-            if (land_id != null & land_id != "")
+            if (land_id != null && land_id != "")
                 soc = db.SOCIEDADs.Find(bukrs);
             if (bukrs.Length == 4)
             {
@@ -1590,7 +1468,7 @@ namespace TAT001.Controllers
 
             if (payer_id.Length <= 10)
             {
-                List<CLIENTE> listClientes=clientesDao.ListaClientes(null,User.Identity.Name, p.LAND);
+                List<CLIENTE> listClientes=clientesDao.ListaClientes(null,User.Identity.Name, pLand);
                 //if (db.CLIENTEs.Where(x => x.KUNNR == payer_id && x.ACTIVO && x.LAND==p.LAND).Count() > 0)
                 if(listClientes.Any(x=>x.KUNNR==payer_id))
                 {
@@ -2329,368 +2207,409 @@ namespace TAT001.Controllers
             return regresaRowH3;
         }
 
-        public List<string> cargaInicialH4(DataRow fila)
+        public List<string> cargaInicialH4(Encabezado objInformacion, Distribucion objDistribucion, List<MATERIALGPT> listCategorias, List<DataRow> listRows)
         {
-            DataSet ds1 = (DataSet)Session["ds1"];
             DataSet ds4 = (DataSet)Session["ds4"];
-            string idioma = Session["spras"].ToString();
             List<string> regresaRowH4 = new List<string>();
-            List<string> categoriasHealty = new List<string>();
+            List<bool> categoriasHealty = new List<bool>();
             List<string> categoriasNum = new List<string>();
             List<bool> materialesHealty = new List<bool>();
             List<string> materialesNum = new List<string>();
             List<string> listLigadas = new List<string>();
             List<object> id = new List<object>();
 
-            string num_doc = fila[0].ToString().Trim();
-            string ligada = fila[1].ToString().Trim();
-            string matnr = fila[4].ToString().Trim();
-            if (matnr.Length < 18) { matnr = cad.completaMaterial(matnr); }
-            string matkl = fila[5].ToString().Trim();
-            string descripcion = fila[6].ToString().Trim();
-            string monto = fila[7].ToString().Trim();
-            string porc_apoyo = fila[8].ToString().Trim();
-            string apoyo_pieza = fila[9].ToString().Trim();
-            string costo_apoyo = fila[10].ToString().Trim();
-            string precio_sug = fila[11].ToString().Trim();
-            string volumen_real = fila[12].ToString().Trim();
-            string apoyo = fila[13].ToString().Trim();
+            List<string> ListMaterialesDoc = new List<string>();
+            List<string> ListCategoriasDoc = new List<string>();
 
-            for (int i = 2; i < ds1.Tables[0].Rows.Count; i++)
+            string[] vigencia_de2 = objInformacion.FECHAI_VIG.Split(' ');
+            string[] vigencia_al2 = objInformacion.FECHAF_VIG.Split(' ');
+            string colorLigada = "";
+            string spras_id = FnCommon.ObtenerSprasId(db, User.Identity.Name);
+
+            PAI pais_ = db.PAIS.Where(x => x.LANDX.ToUpper() == objInformacion.PAIS_NAME.ToUpper()).FirstOrDefault();
+            string decimales = ".";
+            string miles = ",";
+            if (pais_ != null) {
+                 miles = pais_.MILES;
+                 decimales = pais_.DECIMAL;
+            }
+
+            if (objDistribucion != null)
             {
-                string num_docH1 = ds1.Tables[0].Rows[i][0].ToString().Trim();
-                string sociedad = ds1.Tables[0].Rows[i][3].ToString().Trim();
-                string vigencia_de = ds1.Tables[0].Rows[i][13].ToString().Trim();
-                string[] vigencia_de2 = vigencia_de.Split(' ');
-                string vigencia_al = ds1.Tables[0].Rows[i][14].ToString().Trim();
-                string[] vigencia_al2 = vigencia_al.Split(' ');
-                string colorLigada = "";
-
-                if (num_doc == num_docH1)
+                if (IsNumeric(objDistribucion.NUM_DOC))
                 {
-                    if (IsNumeric(num_doc))
-                    {
-                        regresaRowH4.Add("");
-                    }
-                    else
-                    {
-                        regresaRowH4.Add("red white-text rojo");
-                    }
+                    regresaRowH4.Add("");
+                }
+                else
+                {
+                    regresaRowH4.Add("red white-text rojo");
+                }
 
-                    regresaRowH4.Add("nada");
+                regresaRowH4.Add("nada");
 
-                    if (validaRangoFecha(vigencia_de2[0], vigencia_al2[0]))
-                    {
-                        regresaRowH4.Add("");
-                        regresaRowH4.Add("");
-                    }
-                    else
-                    {
-                        regresaRowH4.Add("red white-text rojo");
-                        regresaRowH4.Add("red white-text rojo");
-                    }
+                if (validaRangoFecha(vigencia_de2[0], vigencia_al2[0]))
+                {
+                    regresaRowH4.Add("");
+                    regresaRowH4.Add("");
+                }
+                else
+                {
+                    regresaRowH4.Add("red white-text rojo");
+                    regresaRowH4.Add("red white-text rojo");
+                }
 
 
-                    if ((matnr != "" & matkl != "") | (matnr != "" & matkl == ""))
+                if ((objDistribucion.MATNR != "" && objDistribucion.MATKL != "") || (objDistribucion.MATNR != "" && objDistribucion.MATKL == ""))
+                {
+                    foreach (DataRow row in listRows)
                     {
-                        for (int j = 2; j < ds4.Tables[0].Rows.Count; j++)
+                        string miNum_docH4 = row[0].ToString().Trim();
+                        string miMaterialH4 = row[4].ToString().Trim();
+                        string CategoriaH4 = row[5].ToString().Trim();
+                        if (miMaterialH4.Length < 18) { miMaterialH4 = cad.completaMaterial(miMaterialH4); }
+                        string num_material = "";
+                        bool materiall = false;
+
+                        if (miNum_docH4 != "" && miNum_docH4 == objDistribucion.NUM_DOC)
                         {
-                            string miNum_docH4 = ds4.Tables[0].Rows[j][0].ToString().Trim();
-                            string miMaterialH4 = ds4.Tables[0].Rows[j][4].ToString().Trim();
-                            if (miMaterialH4.Length < 18) { miMaterialH4 = cad.completaMaterial(miMaterialH4); }
-                            string num_material = "";
-                            bool materiall = false;
-
-                            if (miNum_docH4 != "" & miNum_docH4 == num_doc)
+                            //MATERIALES
+                            try
                             {
-                                //MATERIALES
-                                try
+                               
+                                List<MATERIAL> ListMateriales = materialesDao.ListaMateriales(miMaterialH4, objInformacion.VKORG, objInformacion.VTWEG, User.Identity.Name);
+                                if (ListMateriales.Any(x => x.ID == miMaterialH4))
                                 {
-                                    var miMaterial = db.MATERIALs.Where(x => x.ID == miMaterialH4).FirstOrDefault();
+                                    var miMaterial = ListMateriales.Where(x => x.ID == miMaterialH4).FirstOrDefault();
                                     num_material = miMaterial.ID.ToString();
                                     var paso = db.MATERIALGPs.Where(x => x.ID == miMaterial.MATERIALGP_ID).FirstOrDefault();
                                     materiall = paso.UNICA;
                                 }
-                                catch
+                                else
                                 {
                                     num_material = "";
                                     miMaterialH4 = "";
                                 }
-
-                                //id.Add(miNum_docH4);
-                                materialesNum.Add(num_material);
-                                materialesHealty.Add(materiall);
+                                
                             }
-                        }
+                            catch
+                            {
+                                num_material = "";
+                                miMaterialH4 = "";
+                            }
+                            materialesNum.Add(num_material);
+                            materialesHealty.Add(materiall);
+                            if (miMaterialH4 == "" && CategoriaH4 != "")
+                            {
+                                ListCategoriasDoc.Add(CategoriaH4);
+                            }
+                            else if (miMaterialH4 != "")
+                            {
 
-                        var material = db.MATERIALs.Where(x => x.ID == matnr & x.ACTIVO == true).FirstOrDefault();
+                                ListMaterialesDoc.Add(miMaterialH4);
+                            }
+                            
+                        }
+                    }
+                    var matDistribucion = objDistribucion.MATNR;
+                    if (matDistribucion.Length < 18) { matDistribucion = cad.completaMaterial(matDistribucion); }
+                    List<MATERIAL> ListMateriales_ = materialesDao.ListaMateriales(matDistribucion, objInformacion.VKORG, objInformacion.VTWEG, User.Identity.Name);
+                    if (ListMateriales_.Any(x => x.ID == matDistribucion))
+                    {
+                        var material = ListMateriales_.Where(x => x.ID == matDistribucion).FirstOrDefault();
                         bool tieneHealtyMat = false;
                         List<object> num_mat = new List<object>();
 
-                        if (material != null)
+                        for (int k = 0; k < materialesNum.Count; k++)
                         {
-                            for (int k = 0; k < materialesNum.Count; k++)
-                            {
-                                if (materialesNum[k].Contains(material.ID.ToString()))
-                                    num_mat.Add(materialesNum[k]);
-                            }
+                            if (materialesNum[k].Contains(material.ID.ToString()))
+                                num_mat.Add(materialesNum[k]);
+                        }
 
-                            if (materialesHealty.Distinct().Skip(1).Any())
-                            {
-                                tieneHealtyMat = true;
-                            }
+                        if (materialesHealty.Distinct().Skip(1).Any())
+                        {
+                            tieneHealtyMat = true;
+                        }
 
-                            if (tieneHealtyMat | num_mat.Count() > 1)
-                            {
-                                regresaRowH4.Add("red white-text rojo");
-                            }
-                            else
-                            {
-                                regresaRowH4.Add("");
-                            }
+                        if (tieneHealtyMat || num_mat.Count() > 1)
+                        {
+                            regresaRowH4.Add("red white-text rojo |  Las categorías unicas no se pueden mezclar con otras categorias y/o Materiales");
+                        }
+                        else if (ListCategoriasDoc.Count()>0 && ListMaterialesDoc.Count()>0)
+                        {
+                            regresaRowH4.Add("red white-text rojo |  Los materiales no se pueden mezclar con categorias");
                         }
                         else
                         {
-                            regresaRowH4.Add("red white-text rojo");
+                            regresaRowH4.Add("");
                         }
 
-                        if (material != null)
+                        if (material.MATERIALGP_ID != null)
                         {
-                            if (material.MATERIALGP_ID != null)
-                            {
-                                regresaRowH4.Add("");
-                            }
-                            else
-                            {
-                                regresaRowH4.Add("red white-text rojo");
-                            }
-                        }
-
-                        regresaRowH4.Add("");
-                    }
-                    else if (matnr == "" & matkl != "")
-                    {
-                        regresaRowH4.Add("");
-
-                        for (int j = 2; j < ds4.Tables[0].Rows.Count; j++)
-                        {
-                            string miNum_docH4 = ds4.Tables[0].Rows[j][0].ToString().Trim();
-                            string categoriaa = ds4.Tables[0].Rows[j][5].ToString().Trim();
-                            string num_categoria = "";
-
-                            if (miNum_docH4 != "" & miNum_docH4 == num_doc)
-                            {
-                                //CATEGORIAS
-                                try
-                                {
-                                    var miCategoria = db.MATERIALGPs.Where(x => x.DESCRIPCION == categoriaa).FirstOrDefault();
-                                    num_categoria = miCategoria.ID.ToString();
-                                    categoriaa = miCategoria.UNICA.ToString();
-                                }
-                                catch
-                                {
-                                    num_categoria = "";
-                                    categoriaa = "";
-                                }
-
-                                //id.Add(miNum_docH4);
-                                categoriasNum.Add(num_categoria);
-                                categoriasHealty.Add(categoriaa);
-                            }
-                        }
-
-                        var categoria = db.MATERIALGPs.Where(x => x.DESCRIPCION == matkl & x.ACTIVO == true).FirstOrDefault();
-                        List<object> tieneHealty = new List<object>();
-                        List<object> num_cat = new List<object>();
-                        bool tieneHealtyCat = false;
-
-                        if (categoria != null)
-                        {
-                            for (int j = 0; j < categoriasHealty.Count; j++)
-                            {
-                                if (categoriasHealty[j].Contains(categoria.UNICA.ToString()))
-                                    tieneHealty.Add(categoriasHealty[j]);
-                            }
-
-                            for (int k = 0; k < categoriasNum.Count; k++)
-                            {
-                                if (categoriasNum[k].Contains(categoria.ID.ToString()))
-                                    num_cat.Add(categoriasNum[k]);
-                            }
-
-                            if (categoriasHealty.Distinct().Skip(1).Any())
-                            {
-                                tieneHealtyCat = true;
-                            }
-
-                            if (tieneHealty.Count() > 1 | num_cat.Count() > 1 | tieneHealtyCat)
-                            {
-                                regresaRowH4.Add("red white-text rojo");
-                            }
-                            else
-                            {
-                                regresaRowH4.Add("");
-                            }
+                            regresaRowH4.Add("");
                         }
                         else
                         {
-                            regresaRowH4.Add("red white-text rojo");
+                            regresaRowH4.Add("red white-text rojo | Material no encontrado");
                         }
-
-                        regresaRowH4.Add("");
                     }
                     else
                     {
                         regresaRowH4.Add("red white-text rojo");
-                        regresaRowH4.Add("red white-text rojo");
-                        regresaRowH4.Add("");
                     }
-                    //if ((matnr != "" & matkl != "") | (matnr != "" & matkl == ""))
-                    //{
-                    //    if (db.MATERIALs.Where(x => x.ID == matnr & x.ACTIVO == true).Count() > 0)
-                    //    {
-                    //        regresaRowH4.Add("");
-                    //    }
-                    //    else
-                    //    {
-                    //        regresaRowH4.Add("red white-text rojo");
-                    //    }
+                    regresaRowH4.Add("");
+                }
+                else if (objDistribucion.MATNR == "" && objDistribucion.MATKL != "")
+                {
+                    regresaRowH4.Add("");
 
-                    //    regresaRowH4.Add("");
+                    foreach (DataRow row in listRows)
+                    {
+                        string miNum_docH4 = row[0].ToString().Trim();
+                        string mat = row[4].ToString().Trim();
+                        string categoriaa = row[5].ToString().Trim();
+                        string num_categoria = "";
+                        bool categoriaUnica = false;
 
-                    //    var desMaterial = (from mat1 in db.MATERIALs
-                    //                       join mat2 in db.MATERIALTs on mat1.ID equals mat2.MATERIAL_ID
-                    //                       where mat2.MATERIAL_ID == matnr & mat2.SPRAS == idioma & mat2.MAKTG == descripcion & mat1.ACTIVO == true
-                    //                       group mat2 by new { mat2.MATERIAL_ID, mat2.MAKTG } into g
-                    //                       select new { ID = g.Key.MATERIAL_ID, DESCRIPCION = g.Key.MAKTG }).ToList();
+                        if (miNum_docH4 != "" && miNum_docH4 == objDistribucion.NUM_DOC)
+                        {
+                            //CATEGORIAS
+                            try
+                            {
+                                if (listCategorias.Any(x => x.TXT50.ToUpper() == categoriaa.ToUpper()))
+                                {
+                                    var categoria_ = listCategorias.Where(x => x.TXT50.ToUpper() == categoriaa.ToUpper()).FirstOrDefault();
+                                    var miCategoria = db.MATERIALGPs.Where(x => x.ID == categoria_.MATERIALGP_ID).FirstOrDefault();
+                                    num_categoria = miCategoria.ID.ToString();
+                                    categoriaUnica = miCategoria.UNICA;
+                                }
+                                else
+                                {
+                                    num_categoria = "";
+                                }
 
-                    //    regresaRowH4.Add("");
-                    //    //if (desMaterial.Count() > 0)
-                    //    //{
-                    //    //    regresaRowH4.Add("");
-                    //    //}
-                    //    //else
-                    //    //{
-                    //    //    regresaRowH4.Add("red white-text rojo");
-                    //    //}
-                    //}
-                    //else if (matnr == "" & matkl != "")
-                    //{
-                    //    regresaRowH4.Add("");
 
-                    //    //var categoria = (from mat1 in db.MATERIALs
-                    //    //                 join cat in db.MATERIALGPTs on mat1.MATERIALGP_ID equals cat.MATERIALGP_ID
-                    //    //                 where cat.TXT50 == matkl & cat.SPRAS_ID == "EN" & mat1.ACTIVO == true
-                    //    //                 group cat by new { cat.MATERIALGP_ID, cat.TXT50 } into g
-                    //    //                 select new { ID = g.Key.MATERIALGP_ID, DESCRIPCION = g.Key.TXT50 }).ToList();
-                    //    var categoria = (from cat in db.MATERIALGPs
-                    //                     where cat.DESCRIPCION == matkl
-                    //                     select new { ID = cat.ID, DESCRIPCION = cat.DESCRIPCION }).ToList();
+                            }
+                            catch
+                            {
+                                num_categoria = "";
+                            }
 
-                    //    if (categoria.Count() > 0)
-                    //    {
-                    //        regresaRowH4.Add("");
-                    //    }
-                    //    else
-                    //    {
-                    //        regresaRowH4.Add("red white-text rojo");
-                    //    }
+                            //id.Add(miNum_docH4);
+                            categoriasNum.Add(num_categoria);
+                            categoriasHealty.Add(categoriaUnica);
+                            
+                            if (mat == "" && categoriaa != "")
+                            {
+                                ListCategoriasDoc.Add(categoriaa);
+                            }else if (mat != "")
+                            {
+                                ListMaterialesDoc.Add(mat);
+                            }
+                        }
+                    }
 
-                    //    regresaRowH4.Add("");
-                    //}
-                    //else
-                    //{
-                    //    regresaRowH4.Add("red white-text rojo");
-                    //    regresaRowH4.Add("red white-text rojo");
-                    //    regresaRowH4.Add("");
-                    //}
-                    if (ligada != "")
+                    if (listCategorias.Any(x => x.TXT50.ToUpper() == objDistribucion.MATKL.ToUpper()))
+                    {
+                        var categoria_ = listCategorias.Where(x => x.TXT50.ToUpper() == objDistribucion.MATKL.ToUpper()).FirstOrDefault();
+                        var categoria = db.MATERIALGPs.Where(x => x.ID == categoria_.MATERIALGP_ID).FirstOrDefault();
+
+                        List<object> tieneHealty = new List<object>();
+                        List<object> num_cat = new List<object>();
+                        bool tieneHealtyCat = false;
+                        
+                        for (int k = 0; k < categoriasNum.Count; k++)
+                        {
+                            if (categoriasNum[k].Contains(categoria.ID.ToString()))
+                                num_cat.Add(categoriasNum[k]);
+                        }
+
+                        if (categoriasHealty.Distinct().Skip(1).Any())
+                        {
+                            tieneHealtyCat = true;
+                        }
+
+                        if ((tieneHealtyCat))
+                        {
+                            regresaRowH4.Add("red white-text rojo | Las categorías unicas no se pueden mezclar con otras categorias y/o Materiales.");
+                        }
+                        else if (num_cat.Count() > 1)
+                        {
+                            regresaRowH4.Add("red white-text rojo | Una categoría no puede ser agregada más de una vez en la misma solicitud.");
+                        }
+                        else if (ListCategoriasDoc.Count() > 0 && ListMaterialesDoc.Count() > 0)
+                        {
+                            regresaRowH4.Add("red white-text rojo |  Los materiales no se pueden mezclar con categorias");
+                        }
+                        else
+                        {
+                            regresaRowH4.Add("");
+                        }
+                    }
+                    else
+                    {
+                        regresaRowH4.Add("red white-text rojo | Categoria no encontrada");
+                    }
+                    regresaRowH4.Add("");
+                }
+                else
+                {
+                    regresaRowH4.Add("red white-text rojo");
+                    regresaRowH4.Add("red white-text rojo");
+                    regresaRowH4.Add("");
+                }
+              
+                if (objDistribucion.LIGADA != "")
+                {
+                    regresaRowH4.Add("");//MONTO
+
+                    if (IsNumeric(fc.toNum(objDistribucion.PORC_APOYO, miles, decimales)))
+                    {
+                        foreach (DataRow row in listRows)
+                        {
+                            string miNum_docH4 = row[0].ToString().Trim();
+                            string miLigadaH4 = row[1].ToString().Trim();
+                            string miPorc_apoyoH4 = row[8].ToString().Trim();
+
+                            if (miNum_docH4 != "" && miNum_docH4 == objDistribucion.NUM_DOC)
+                            {
+                                listLigadas.Add(miNum_docH4 + miLigadaH4 + miPorc_apoyoH4);
+                            }
+                        }
+
+                        bool kk = listLigadas.Distinct().Skip(1).Any();
+
+                        if (Convert.ToDecimal(fc.toNum(objDistribucion.PORC_APOYO, miles, decimales)) > 0 && !kk)
+                        {
+                            colorLigada = "";
+                            regresaRowH4.Add("");
+                        }
+                        else
+                        {
+                            colorLigada = "red white-text rojo";
+                            regresaRowH4.Add("red white-text rojo");
+                        }
+                    }
+                    else
+                    {
+                        foreach (DataRow row in listRows)
+                        {
+                            string miNum_docH4 = row[0].ToString().Trim();
+                            string miLigadaH4 = row[1].ToString().Trim();
+                            string miPorc_apoyoH4 = row[8].ToString().Trim();
+
+                            if (miNum_docH4 != "" && miNum_docH4 == objDistribucion.NUM_DOC)
+                            {
+                                listLigadas.Add(miNum_docH4 + miLigadaH4 + miPorc_apoyoH4);
+                            }
+                        }
+
+                        bool kk = listLigadas.Distinct().Skip(1).Any();
+
+                        if (!kk && objDistribucion.PORC_APOYO != "")
+                        {
+                            colorLigada = "";
+                            regresaRowH4.Add("");
+                        }
+                        else
+                        {
+                            colorLigada = "red white-text rojo";
+                            regresaRowH4.Add("red white-text rojo");
+                        }
+                    }
+
+                    regresaRowH4.Add("");//APOYO PIEZA
+                    regresaRowH4.Add("");//COSTO APOYO
+                    regresaRowH4.Add("");//PRECIO SUGERIDO
+                    regresaRowH4.Add("");//VOLUMEN
+                    regresaRowH4.Add("");//APOYO
+                }
+                else
+                {
+                    if (objDistribucion.APOYO != "")
                     {
                         regresaRowH4.Add("");//MONTO
 
-                        if (IsNumeric(porc_apoyo))
+                        foreach (DataRow row in listRows)
                         {
-                            for (int j = 2; j < ds4.Tables[0].Rows.Count; j++)
-                            {
-                                string miNum_docH4 = ds4.Tables[0].Rows[j][0].ToString().Trim();
-                                string miLigadaH4 = ds4.Tables[0].Rows[j][1].ToString().Trim();
-                                string miPorc_apoyoH4 = ds4.Tables[0].Rows[j][8].ToString().Trim();
+                            string miNum_docH4 = row[0].ToString().Trim();
+                            string miLigadaH4 = row[1].ToString().Trim();
+                            string miPorc_apoyoH4 = row[8].ToString().Trim();
 
-                                if (miNum_docH4 != "" & miNum_docH4 == num_doc)
+                            if (miNum_docH4 != "" && miNum_docH4 == objDistribucion.NUM_DOC)
+                            {
+                                if (miLigadaH4 != "")
                                 {
-                                    listLigadas.Add(miNum_docH4 + miLigadaH4 + miPorc_apoyoH4);
+                                    listLigadas.Add("true");
+                                }
+                                else
+                                {
+                                    listLigadas.Add("false");
                                 }
                             }
+                        }
 
-                            bool kk = listLigadas.Distinct().Skip(1).Any();
+                        bool validaLigadaList = listLigadas.Distinct().Skip(1).Any();
+                        bool existeLigada = listLigadas.Contains("true");
 
-                            if (Convert.ToDecimal(porc_apoyo) > 0 & !kk)
+                        if (existeLigada)
+                        {
+                            if (!validaLigadaList)
                             {
                                 colorLigada = "";
-                                regresaRowH4.Add("");
+                                regresaRowH4.Add("");//PORCENTAJE APOYO
                             }
                             else
                             {
                                 colorLigada = "red white-text rojo";
-                                regresaRowH4.Add("red white-text rojo");
+                                regresaRowH4.Add("red white-text rojo");//PORCENTAJE APOYO
                             }
                         }
                         else
                         {
-                            for (int j = 2; j < ds4.Tables[0].Rows.Count; j++)
-                            {
-                                string miNum_docH4 = ds4.Tables[0].Rows[j][0].ToString().Trim();
-                                string miLigadaH4 = ds4.Tables[0].Rows[j][1].ToString().Trim();
-                                string miPorc_apoyoH4 = ds4.Tables[0].Rows[j][8].ToString().Trim();
-
-                                if (miNum_docH4 != "" & miNum_docH4 == num_doc)
-                                {
-                                    listLigadas.Add(miNum_docH4 + miLigadaH4 + miPorc_apoyoH4);
-                                }
-                            }
-
-                            bool kk = listLigadas.Distinct().Skip(1).Any();
-
-                            if (!kk & porc_apoyo != "")
-                            {
-                                colorLigada = "";
-                                regresaRowH4.Add("");
-                            }
-                            else
-                            {
-                                colorLigada = "red white-text rojo";
-                                regresaRowH4.Add("red white-text rojo");
-                            }
+                            colorLigada = "";
+                            regresaRowH4.Add("");//PORCENTAJE APOYO
                         }
 
                         regresaRowH4.Add("");//APOYO PIEZA
                         regresaRowH4.Add("");//COSTO APOYO
                         regresaRowH4.Add("");//PRECIO SUGERIDO
                         regresaRowH4.Add("");//VOLUMEN
-                        regresaRowH4.Add("");//APOYO
+                        if (IsNumeric(fc.toNum(objDistribucion.APOYO, miles, decimales)))
+                        {
+                            regresaRowH4.Add("");
+                        }
+                        else
+                        {
+                            regresaRowH4.Add("red white-text rojo");
+                        }
                     }
                     else
                     {
-                        if (apoyo != "")
+                        if (IsNumeric(fc.toNum(objDistribucion.MONTO, miles, decimales)))
                         {
-                            regresaRowH4.Add("");//MONTO
+                            regresaRowH4.Add("");
+                        }
+                        else
+                        {
+                            regresaRowH4.Add("red white-text rojo");
+                        }
 
-                            for (int j = 2; j < ds4.Tables[0].Rows.Count; j++)
+                        
+                        if (IsNumeric(fc.toNum(objDistribucion.PORC_APOYO, miles, decimales)))
+                        {
+                            foreach (DataRow row in listRows)
                             {
-                                string miNum_docH4 = ds4.Tables[0].Rows[j][0].ToString().Trim();
-                                string miLigadaH4 = ds4.Tables[0].Rows[j][1].ToString().Trim();
-                                string miPorc_apoyoH4 = ds4.Tables[0].Rows[j][8].ToString().Trim();
+                                string miNum_docH4 = row[0].ToString().Trim();
+                                string miLigadaH4 = row[1].ToString().Trim();
+                                string miPorc_apoyoH4 = row[8].ToString().Trim();
 
-                                if (miNum_docH4 != "" & miNum_docH4 == num_doc)
+                                if (miLigadaH4 != "")
                                 {
-                                    if (miLigadaH4 != "")
-                                    {
-                                        listLigadas.Add("true");
-                                    }
-                                    else
-                                    {
-                                        listLigadas.Add("false");
-                                    }
+                                    listLigadas.Add("true");
+                                }
+                                else
+                                {
+                                    listLigadas.Add("false");
                                 }
                             }
 
@@ -2715,157 +2634,92 @@ namespace TAT001.Controllers
                                 colorLigada = "";
                                 regresaRowH4.Add("");//PORCENTAJE APOYO
                             }
-
-                            regresaRowH4.Add("");//APOYO PIEZA
-                            regresaRowH4.Add("");//COSTO APOYO
-                            regresaRowH4.Add("");//PRECIO SUGERIDO
-                            regresaRowH4.Add("");//VOLUMEN
-                            if (IsNumeric(apoyo))
-                            {
-                                regresaRowH4.Add("");
-                            }
-                            else
-                            {
-                                regresaRowH4.Add("red white-text rojo");
-                            }
                         }
                         else
                         {
-                            if (IsNumeric(monto))
+                            foreach (DataRow row in listRows)
                             {
-                                regresaRowH4.Add("");
-                            }
-                            else
-                            {
-                                regresaRowH4.Add("red white-text rojo");
-                            }
+                                string miNum_docH4 = row[0].ToString().Trim();
+                                string miLigadaH4 = row[1].ToString().Trim();
+                                string miPorc_apoyoH4 = row[8].ToString().Trim();
 
-                            if (IsNumeric(porc_apoyo))
-                            {
-                                for (int j = 2; j < ds4.Tables[0].Rows.Count; j++)
+                                if (miLigadaH4 != "")
                                 {
-                                    string miNum_docH4 = ds4.Tables[0].Rows[j][0].ToString().Trim();
-                                    string miLigadaH4 = ds4.Tables[0].Rows[j][1].ToString().Trim();
-                                    string miPorc_apoyoH4 = ds4.Tables[0].Rows[j][8].ToString().Trim();
-
-                                    if (miLigadaH4 != "")
-                                    {
-                                        listLigadas.Add("true");
-                                    }
-                                    else
-                                    {
-                                        listLigadas.Add("false");
-                                    }
-                                }
-
-                                bool validaLigadaList = listLigadas.Distinct().Skip(1).Any();
-                                bool existeLigada = listLigadas.Contains("true");
-
-                                if (existeLigada)
-                                {
-                                    if (!validaLigadaList)
-                                    {
-                                        colorLigada = "";
-                                        regresaRowH4.Add("");//PORCENTAJE APOYO
-                                    }
-                                    else
-                                    {
-                                        colorLigada = "red white-text rojo";
-                                        regresaRowH4.Add("red white-text rojo");//PORCENTAJE APOYO
-                                    }
+                                    listLigadas.Add("true");
                                 }
                                 else
+                                {
+                                    listLigadas.Add("false");
+                                }
+                            }
+
+                            bool validaLigadaList = listLigadas.Distinct().Skip(1).Any();
+                            bool existeLigada = listLigadas.Contains("true");
+
+                            if (existeLigada)
+                            {
+                                if (!validaLigadaList)
                                 {
                                     colorLigada = "";
                                     regresaRowH4.Add("");//PORCENTAJE APOYO
                                 }
-                            }
-                            else
-                            {
-                                for (int j = 2; j < ds4.Tables[0].Rows.Count; j++)
-                                {
-                                    string miNum_docH4 = ds4.Tables[0].Rows[j][0].ToString().Trim();
-                                    string miLigadaH4 = ds4.Tables[0].Rows[j][1].ToString().Trim();
-                                    string miPorc_apoyoH4 = ds4.Tables[0].Rows[j][8].ToString().Trim();
-
-                                    if (miLigadaH4 != "")
-                                    {
-                                        listLigadas.Add("true");
-                                    }
-                                    else
-                                    {
-                                        listLigadas.Add("false");
-                                    }
-                                }
-
-                                bool validaLigadaList = listLigadas.Distinct().Skip(1).Any();
-                                bool existeLigada = listLigadas.Contains("true");
-
-                                if (existeLigada)
-                                {
-                                    if (!validaLigadaList)
-                                    {
-                                        colorLigada = "";
-                                        regresaRowH4.Add("");//PORCENTAJE APOYO
-                                    }
-                                    else
-                                    {
-                                        colorLigada = "red white-text rojo";
-                                        regresaRowH4.Add("red white-text rojo");//PORCENTAJE APOYO
-                                    }
-                                }
                                 else
                                 {
-                                    colorLigada = "";
-                                    regresaRowH4.Add("");//PORCENTAJE APOYO
+                                    colorLigada = "red white-text rojo";
+                                    regresaRowH4.Add("red white-text rojo");//PORCENTAJE APOYO
                                 }
                             }
-
-                            if (IsNumeric(apoyo_pieza))
-                            {
-                                regresaRowH4.Add("");
-                            }
                             else
                             {
-                                regresaRowH4.Add("red white-text rojo");
+                                colorLigada = "";
+                                regresaRowH4.Add("");//PORCENTAJE APOYO
                             }
+                        }
 
-                            if (IsNumeric(costo_apoyo))
-                            {
-                                regresaRowH4.Add("");
-                            }
-                            else
-                            {
-                                regresaRowH4.Add("red white-text rojo");
-                            }
-
-                            if (IsNumeric(precio_sug))
-                            {
-                                regresaRowH4.Add("");
-                            }
-                            else
-                            {
-                                regresaRowH4.Add("red white-text rojo");
-                            }
-
-                            if (IsNumeric(volumen_real))
-                            {
-                                regresaRowH4.Add("");
-                            }
-                            else
-                            {
-                                regresaRowH4.Add("red white-text rojo");
-                            }
-
+                        if (IsNumeric(fc.toNum(objDistribucion.APOYO_PIEZA, miles, decimales)))
+                        {
                             regresaRowH4.Add("");
                         }
-                    }
+                        else
+                        {
+                            regresaRowH4.Add("red white-text rojo");
+                        }
 
-                    for (int j = 0; j < regresaRowH4.Count; j++)
-                    {
-                        if (regresaRowH4[j].Contains("nada"))
-                            regresaRowH4[j] = colorLigada;
+                        if (IsNumeric(fc.toNum(objDistribucion.COSTO_APOYO, miles, decimales)))
+                        {
+                            regresaRowH4.Add("");
+                        }
+                        else
+                        {
+                            regresaRowH4.Add("red white-text rojo");
+                        }
+
+                        if (IsNumeric(fc.toNum(objDistribucion.PRECIO_SUG, miles, decimales)))
+                        {
+                            regresaRowH4.Add("");
+                        }
+                        else
+                        {
+                            regresaRowH4.Add("red white-text rojo");
+                        }
+
+                        if (IsNumeric(fc.toNum(objDistribucion.VOLUMEN_REAL, miles, decimales)))
+                        {
+                            regresaRowH4.Add("");
+                        }
+                        else
+                        {
+                            regresaRowH4.Add("red white-text rojo");
+                        }
+
+                        regresaRowH4.Add("");
                     }
+                }
+
+                for (int j = 0; j < regresaRowH4.Count; j++)
+                {
+                    if (regresaRowH4[j].Contains("nada"))
+                        regresaRowH4[j] = colorLigada;
                 }
             }
 
@@ -3239,6 +3093,43 @@ namespace TAT001.Controllers
                     //FIN DE LA SECCION 3
 
                     //SECCION 4.- VALIDACION DE DATOS DE LA CUARTA HOJA DEL EXCEL(DISTRIBUCION)
+                    List<MaterialCategoria> listMC = new List<MaterialCategoria>();
+                    List<string> listcat = new List<string>();
+                    decimal totalcats = 0;
+                    string select_dis = "";
+                    List<CategoriaMaterial> listcatm = new List<CategoriaMaterial>();
+
+                    ///VALIDAR SI ES POR CATEGORIA
+                    for (int k = 0; k < ds4.Tables[0].Rows.Count; k++)
+                    {
+                        string num_docH4 = ds4.Tables[0].Rows[k][0].ToString().Trim();
+                        num_docH4 = num_docH4.TrimStart('0').Trim();
+
+                        if (num_docH4 == num_doc)
+                        {
+                            MaterialCategoria objMC = new MaterialCategoria();
+                            string matnr = ds4.Tables[0].Rows[k][4].ToString().Trim();
+                            if (matnr.Length < 18) { matnr = cad.completaMaterial(matnr); }
+                            string matklId = ds4.Tables[0].Rows[k][5].ToString().Trim();
+
+                            objMC.Material = matnr;
+                            objMC.Categoria = matklId;
+                            listMC.Add(objMC);
+                            listcat.Add(matklId);
+
+                        }
+                    }
+                    int totalMC = listMC.Count();
+                    int totalCategoria = listMC.FindAll(x => string.IsNullOrEmpty(x.Material) && !string.IsNullOrEmpty(x.Categoria)).Count();
+
+                    if (totalMC == totalCategoria)
+                    {
+                        listcatm = grupoMaterialesController(listcat, docu.VKORG, docu.SPART, docu.PAYER_ID, docu.SOCIEDAD_ID, out totalcats);
+                        select_dis = "C";
+                    }
+
+
+
                     for (int k = 0; k < ds4.Tables[0].Rows.Count; k++)
                     {
                         string num_docH4 = ds4.Tables[0].Rows[k][0].ToString().Trim();
@@ -3255,7 +3146,7 @@ namespace TAT001.Controllers
                             vigencia_al = validaPeriodoFecha(vigencia_al, "");
                             string matnr = ds4.Tables[0].Rows[k][4].ToString().Trim();
                             if (matnr.Length < 18) { matnr = cad.completaMaterial(matnr); }
-                            string matkl = ds4.Tables[0].Rows[k][5].ToString().Trim();
+                            string matklId = ds4.Tables[0].Rows[k][5].ToString().Trim();
                             string descripcion = ds4.Tables[0].Rows[k][6].ToString().Trim();
                             string monto = ds4.Tables[0].Rows[k][7].ToString().Trim();
                             monto = fc.toNum(monto, miles, decimales).ToString();
@@ -3294,16 +3185,7 @@ namespace TAT001.Controllers
                             else
                             {
                                 docup.MATNR = "";
-                                var categoria = db.MATERIALGPs.Where(x => x.DESCRIPCION == matkl).FirstOrDefault();
-                                if (categoria != null)
-                                {
-                                    docup.MATKL = categoria.ID;
-                                }
-                                else
-                                {
-                                    docup.MATKL = null;
-                                }
-
+                                docup.MATKL = matklId;
                             }
                             docup.CANTIDAD = 0;
                             docup.MONTO = Convert.ToDecimal(monto);
@@ -3345,7 +3227,7 @@ namespace TAT001.Controllers
                             }
                             //-------------------------------------------------ADD RSG 04.11.2018
 
-                            if (ligada.Trim() != "false" & dop.DOCUMENTORECs.Count == 0)//ES LIGADA
+                            if (ligada.Trim() != "false" && dop.DOCUMENTORECs.Count == 0)//ES LIGADA
                             {
                                 dop.LIGADA = true;
                                 dop.TIPO_TECNICO = "P";
@@ -3398,6 +3280,97 @@ namespace TAT001.Controllers
                                 //db.SaveChanges();
                             }
                             //-------------------------------------------------ADD RSG 04.11.2018
+                           
+
+                            List<DOCUMENTOM> docml = new List<DOCUMENTOM>();
+                            if (docup.MATNR == "")
+                            {
+                                string col = "";
+                                if (Convert.ToDecimal(docup.APOYO_EST) > 0)
+                                {
+                                    col = "E";
+                                }
+                                else if (Convert.ToDecimal(docup.APOYO_REAL) > 0)
+                                {
+                                    col = "R";
+                                }
+                                docml = addCatItems(listcatm, docu.PAYER_ID, docup.MATKL, docu.SOCIEDAD_ID, docu.NUM_DOC,
+                                    Convert.ToInt16(docup.POS), docup.VIGENCIA_DE, docup.VIGENCIA_AL, null, select_dis, totalcats, Convert.ToDecimal(docu.MONTO_DOC_MD), col);
+                            }
+                            //Obtener apoyo estimado
+                            decimal apoyo_esti = 0;
+                            decimal apoyo_real = 0;
+
+                            //Validar si es por porcentaje (si es ligada) o por monto 
+                            //Categoría por monto
+                            if (ligada.Trim() == "false")
+                            {
+                                //Obtener el apoyo real o estimado para cada material
+                                var cantmat = 1;
+                                try
+                                {
+                                    apoyo_esti = Convert.ToDecimal(docup.APOYO_EST) / cantmat;
+
+                                }
+                                catch (Exception e)
+                                {
+                                    apoyo_esti = 0;
+                                }
+
+                                try
+                                {
+                                    apoyo_real = Convert.ToDecimal(docup.APOYO_REAL) / cantmat;
+
+                                }
+                                catch (Exception e)
+                                {
+                                    apoyo_real = 0;
+                                }
+
+                                for (int d = 0; d < docml.Count; d++)
+                                {
+                                    
+                                        DOCUMENTOM docM = new DOCUMENTOM();
+                                        docM = docml[d];
+                                        docM.POS = d + 1;
+                                        CategoriaMaterial cm = listcatm.Where(x => x.ID == docup.MATKL).FirstOrDefault();
+                                        decimal porc = 0;
+                                        if (cm != null)
+                                        {
+                                            if (cm.TOTALCAT > 0) { porc = cm.MATERIALES.Where(x => x.MATNR == docM.MATNR).FirstOrDefault().VAL / cm.TOTALCAT * 100; }
+                                            docM.PORC_APOYO = porc;
+                                        }
+                                        else if (docup.MATKL == "000")
+                                        {
+                                            decimal suma = 0;
+                                            foreach (CategoriaMaterial cam in listcatm)
+                                                suma += cam.TOTALCAT;
+                                            foreach (CategoriaMaterial cam in listcatm)
+                                                foreach (DOCUMENTOM_MOD dm in cam.MATERIALES)
+                                                    if (dm.MATNR == docM.MATNR)
+                                                        if (suma > 0) { porc = dm.VAL / suma * 100; }
+                                            docM.PORC_APOYO = porc;
+                                        }
+                                        docM.APOYO_REAL = apoyo_real * porc / 100;
+                                        docM.APOYO_EST = apoyo_esti * porc / 100;
+
+                                    docup.DOCUMENTOMs.Add(docM);
+                                }
+                            }
+                            else
+                            {
+                                //Categoría por porcentaje
+                                for (int cp = 0; cp < docml.Count; cp++)
+                                {
+                                    
+                                        DOCUMENTOM docM = new DOCUMENTOM();
+                                        docM = docml[cp];
+                                        docM.POS = cp + 1;
+
+                                    docup.DOCUMENTOMs.Add(docM);
+                                }
+
+                            }
                             dop.DOCUMENTOPs.Add(docup);
                         }
                     }
@@ -3610,7 +3583,7 @@ namespace TAT001.Controllers
                                 string image = Server.MapPath("~/images/logo_kellogg.png");
                                 Email em = new Email();
                                 string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
-                                em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image);
+                                em.enviaMailC(f.NUM_DOC, true,spras_id, UrlDirectory, "Index", image);
 
                                 if (conta.WORKFP.ACCION.TIPO == "B")
                                 {
@@ -4269,6 +4242,391 @@ namespace TAT001.Controllers
             db2.Entry(rango).State = EntityState.Modified;
             db2.SaveChanges();
             db2.Dispose();
+        }
+
+        public JsonResult ValidarCategoriasMateriles(List<MaterialCategoria> materialCategorias)
+        {
+
+            if (materialCategorias.Count() > 0)
+            {
+
+                foreach (MaterialCategoria objMC in materialCategorias)
+                {
+                    bool unico = false;
+                    objMC.Error = false;
+                    objMC.Msj = "";
+                    objMC.Unico = false;
+                    if (!string.IsNullOrEmpty(objMC.Material))
+                    {
+
+                        if (objMC.Material.Length < 18) { objMC.Material = cad.completaMaterial(objMC.Material); }
+                        var MATERIALGP_ID = db.MATERIALs.Where(x => x.ID == objMC.Material).FirstOrDefault().MATERIALGP_ID;
+                        unico = db.MATERIALGPs.Where(x => x.ID == MATERIALGP_ID).FirstOrDefault().UNICA;
+                        objMC.Unico = unico;
+                    }
+                    else if (string.IsNullOrEmpty(objMC.Material) && !string.IsNullOrEmpty(objMC.Categoria))
+                    {
+                        unico = db.MATERIALGPs.Where(x => x.ID == objMC.Categoria).FirstOrDefault().UNICA;
+                        objMC.Unico = unico;
+                    }
+
+
+
+                }
+                foreach (MaterialCategoria objMC in materialCategorias)
+                {
+                    int totalCategoria = materialCategorias.FindAll(x => string.IsNullOrEmpty(x.Material) && !string.IsNullOrEmpty(x.Categoria)).Count();
+                    int totalMateriales = materialCategorias.FindAll(x => !string.IsNullOrEmpty(x.Material)).Count();
+                    int totalHealty = materialCategorias.FindAll(x => x.Unico).Count();
+                    if (!string.IsNullOrEmpty(objMC.Material))
+                    {
+                        if (totalMateriales > 0 && totalCategoria > 0)
+                        {
+                            objMC.Error = true;
+                            objMC.Msj = " Los materiales no se pueden mezclar con categorias";
+                        }
+                        else if (totalMateriales > 0 && totalHealty > 0)
+                        {
+                            objMC.Error = true;
+                            objMC.Msj = " Las categorías unicas no se pueden mezclar con otras categorias y/o Materiales";
+                        }
+                        else
+                        {
+                            objMC.Error = false;
+                            objMC.Msj = "";
+                        }
+
+                    }
+                    else if (string.IsNullOrEmpty(objMC.Material) && !string.IsNullOrEmpty(objMC.Categoria))
+                    {
+
+                        int totalCategoriasRepetidas = materialCategorias.FindAll(x => x.Categoria == objMC.Categoria).Count();
+
+                        if (totalMateriales > 0 && totalCategoria > 0)
+                        {
+                            objMC.Error = true;
+                            objMC.Msj = " Los materiales no se pueden mezclar con categorias";
+                        }
+                        else if (totalCategoria > 0 && totalHealty > 0)
+                        {
+                            objMC.Error = true;
+                            objMC.Msj = " Las categorías unicas no se pueden mezclar con otras categorias y/o Materiales";
+                        }
+                        else if (totalCategoriasRepetidas > 1)
+                        {
+                            objMC.Error = true;
+                            objMC.Msj = "Una categoría no puede ser agregada más de una vez en la misma solicitud";
+                        }
+                        else
+                        {
+                            objMC.Error = false;
+                            objMC.Msj = "";
+                        }
+                    }
+
+                }
+
+
+            }
+
+            JsonResult list = Json(materialCategorias, JsonRequestBehavior.AllowGet);
+            return list;
+        }
+
+        public List<DataRow> getRowsByDocument(DataTable Pestania, string NumberContract, int ColumnNumber = 0)
+        {
+            List<IGrouping<bool, DataRow>> Result;
+            List<DataRow> Response = new List<DataRow>();
+
+            if (Pestania == null || Pestania.Rows.Count <= 0)
+                return Response;
+
+            int con = 0;
+            foreach (DataRow aux in Pestania.Rows)
+            {
+                if (con > 1)
+                    aux.SetField(ColumnNumber, getNumberDocument(aux[ColumnNumber].ToString().Trim()).ToString());
+
+                con++;
+            }
+
+            string ColumnName = string.Empty;
+            int TempNumDoc = getNumberDocument(NumberContract);
+
+            if (TempNumDoc == -1)
+                return Response;
+
+            ColumnName = Pestania.Columns[ColumnNumber].ColumnName;
+
+            if (string.IsNullOrEmpty(ColumnName))
+                return Response;
+
+            Result = Pestania.AsEnumerable().GroupBy(p => p[ColumnName].ToString() == TempNumDoc.ToString())?.ToList();
+
+            if (Result == null || Result.Count != 2 || Result.Last()?.First() == null)
+                return Response;
+
+            Response = Result.Last().ToList();
+            return Response;
+        }
+
+        public int getNumberDocument(string numDocument)
+        {
+            numDocument = numDocument.Trim();
+            int TempNumDoc = int.Parse(Math.Truncate(string.IsNullOrEmpty(numDocument) ? -1 : double.Parse(numDocument)).ToString());
+            return TempNumDoc;
+        }
+        public List<CategoriaMaterial> grupoMaterialesController(List<string> catstabla, string vkorg, string spart, string kunnr, string soc_id, out decimal total)
+        {
+            TAT001Entities db = new TAT001Entities();
+            if (kunnr == null)
+            {
+                kunnr = "";
+            }
+            Cadena cad = new Cadena();
+            kunnr = cad.completaCliente(kunnr);
+
+            List<DOCUMENTOM_MOD> jd = new List<DOCUMENTOM_MOD>();
+
+            //Obtener los materiales
+            IEnumerable<MATERIAL> matl = Enumerable.Empty<MATERIAL>();
+            try
+            {
+                matl = db.MATERIALs.Where(m => m.ACTIVO == true);
+            }
+            catch (Exception e)
+            {
+                matl = null;
+            }
+
+            //Validar si hay materiales
+            if (matl != null)
+            {
+
+                CLIENTE cli = new CLIENTE();
+                List<CLIENTE> clil = new List<CLIENTE>();
+
+                try
+                {
+                    cli = db.CLIENTEs.Where(c => c.KUNNR == kunnr & c.VKORG == vkorg & c.SPART == spart).FirstOrDefault();
+
+                    //Saber si el cliente es sold to, payer o un grupo
+                    if (cli != null)
+                    {
+                        //Es un soldto
+                        if (cli.KUNNR != cli.PAYER && cli.KUNNR != cli.BANNER)
+                        {
+                            clil.Add(cli);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    cli = null;
+                }
+
+                var cie = clil.Cast<CLIENTE>();
+                //Obtener el numero de periodos para obtener el historial
+                int? mesesVenta = (db.CONFDIST_CAT.Any(x => x.SOCIEDAD_ID == soc_id) ? db.CONFDIST_CAT.First(x => x.SOCIEDAD_ID == soc_id).PERIODOS : null);
+                int nummonths = (mesesVenta != null ? mesesVenta.Value : DateTime.Now.Month);
+                int imonths = nummonths * -1;
+                //Obtener el rango de los periodos incluyendo el año
+                DateTime ff = DateTime.Today;
+                DateTime fi = ff.AddMonths(imonths);
+
+                string mi = fi.Month.ToString();//.ToString("MM");
+                string ai = fi.Year.ToString();//.ToString("yyyy");
+
+                string mf = ff.Month.ToString();// ("MM");
+                string af = ff.Year.ToString();// "yyyy");
+
+                int aii = 0;
+                try
+                {
+                    aii = Convert.ToInt32(ai);
+                }
+                catch (Exception e)
+                {
+                    aii = 0;
+                }
+
+                int mii = 0;
+                try
+                {
+                    mii = Convert.ToInt32(mi);
+                }
+                catch (Exception e)
+                {
+                    mii = 0;
+                }
+
+                int aff = 0;
+                try
+                {
+                    aff = Convert.ToInt32(af);
+                }
+                catch (Exception e)
+                {
+                    aff = 0;
+                }
+
+                int mff = 0;
+                try
+                {
+                    mff = Convert.ToInt32(mf);
+                }
+                catch (Exception e)
+                {
+                    mff =0;
+                }
+
+                 if (cie != null)
+                    {
+                        jd = materialesgptDao.ListaMaterialGroupsMateriales(vkorg, spart, kunnr, soc_id, aii, mii, aff, mff, User.Identity.Name);
+                    }
+            }
+
+            //Obtener las categorías
+            var categoriasl = jd.GroupBy(c => c.ID_CAT, c => new { ID = c.ID_CAT.ToString() }).ToList();
+            List<string> categorias = new List<string>();
+            //Diferencia del método de la vista jquery
+            //Tomar en cuenta nada más las categorías que se agregaron a la tabla y que se enviaron en el submmit 
+            for (int h = 0; h < catstabla.Count; h++)
+            {
+                for (int j = 0; j < categoriasl.Count; j++)
+                {
+                    if (catstabla[h].ToString() == categoriasl[j].Key.ToString() | catstabla[h].ToString() == "000")
+                    {
+                        categorias.Add(categoriasl[j].Key.ToString());
+                    }
+                }
+            }
+
+            List<CategoriaMaterial> lcatmat = new List<CategoriaMaterial>();
+            decimal t = 0;
+            foreach (string item in categorias)
+            {
+                CategoriaMaterial cm = new CategoriaMaterial();
+                cm.ID = item;
+                cm.EXCLUIR = jd.Where(x => x.ID_CAT.Equals(item)).FirstOrDefault().EXCLUIR;//RSG 09.07.2018 ID 156
+
+                //Obtener los materiales de la categoría
+                List<DOCUMENTOM_MOD> dl = new List<DOCUMENTOM_MOD>();
+                List<DOCUMENTOM_MOD> dm = new List<DOCUMENTOM_MOD>();
+                //dl = jd.Where(c => c.ID_CAT == item).Select(c => new DOCUMENTOM_MOD { ID_CAT = c.ID_CAT, MATNR = c.MATNR, VAL = c.VAL}).ToList();//Falta obtener el groupby
+                dl = jd.Where(c => c.ID_CAT == item).Select(c => new DOCUMENTOM_MOD { ID_CAT = c.ID_CAT, MATNR = c.MATNR, VAL = c.VAL, EXCLUIR = c.EXCLUIR }).ToList();//RSG 09.07.2018 ID 156
+
+                //Obtener la descripción de los materiales
+                foreach (DOCUMENTOM_MOD d in dl)
+                {
+                    DOCUMENTOM_MOD dcl = new DOCUMENTOM_MOD();
+                    //dcl = dm.Where(z => z.MATNR == d.MATNR).Select(c => new DOCUMENTOM_MOD { ID_CAT = c.ID_CAT, MATNR = c.MATNR, VAL = c.VAL }).FirstOrDefault();//RSG 09.07.2018 ID 156
+                    dcl = dm.Where(z => z.MATNR == d.MATNR).Select(c => new DOCUMENTOM_MOD { ID_CAT = c.ID_CAT, MATNR = c.MATNR, VAL = c.VAL, EXCLUIR = c.EXCLUIR }).FirstOrDefault();//RSG 09.07.2018 ID 156
+
+                    if (dcl == null)
+                    {
+                        DOCUMENTOM_MOD dcll = new DOCUMENTOM_MOD();
+                        //No se ha agregado
+                        decimal val = dl.Where(y => y.MATNR == d.MATNR).Sum(x => x.VAL);
+                        dcll.ID_CAT = item;
+                        dcll.MATNR = d.MATNR;
+
+                        //Obtener la descripción del material
+                        dcll.DESC = db.MATERIALs.Where(w => w.ID == d.MATNR).FirstOrDefault().MAKTG.ToString();
+                        dcll.VAL = val;
+                        t += val;
+                        cm.TOTALCAT += val;
+                        dm.Add(dcll);
+                    }
+                }
+
+                cm.MATERIALES = dm;
+                lcatmat.Add(cm);
+            }
+
+            total = t;
+
+            return lcatmat;
+        }
+        public List<DOCUMENTOM> addCatItems(List<CategoriaMaterial> categorias, string kunnr, string catid,
+           string soc_id, decimal numdoc, int posid, DateTime? vig_de, DateTime? vig_a, string neg, string dis, decimal total, decimal totaldoc, string col)
+        {
+            List<DOCUMENTOM> jdlret = new List<DOCUMENTOM>();
+
+            //Negaciación por monto
+
+            Cadena cad = new Cadena();
+            kunnr = cad.completaCliente(kunnr);
+
+            //Obtener de la lista de categorias los materiales de la categoría del item
+            List<CategoriaMaterial> ccategor = new List<CategoriaMaterial>();
+            if (catid == "000")//ccategor = categorias.ToList();//RSG 09.07.2018 ID 156
+                ccategor = categorias.Where(a => a.EXCLUIR == false).ToList();//RSG 09.07.2018 ID 156
+            else
+                ccategor = categorias.Where(c => c.ID == catid).ToList();
+            foreach (CategoriaMaterial categor in ccategor)
+            {
+                //CategoriaMaterial categor = categorias.Where(c => c.ID == catid).FirstOrDefault();
+                List<DOCUMENTOM_MOD> materiales = new List<DOCUMENTOM_MOD>();
+                materiales = categor.MATERIALES;
+                foreach (DOCUMENTOM_MOD docm in materiales)
+                {
+                    DOCUMENTOM dm = new DOCUMENTOM();
+                    dm.NUM_DOC = numdoc;
+                    dm.POS_ID = posid;
+                    dm.MATNR = docm.MATNR;
+                    dm.VIGENCIA_DE = vig_de;
+                    dm.VIGENCIA_A = vig_a;
+                    if (dis == "C")
+                    {
+                        //dm.APOYO_EST = docm.VAL;
+                        dm.VALORH = docm.VAL; //MGC B20180611 Se agregó el valor del material del historico de la provisión
+                    }
+                    jdlret.Add(dm);
+                }
+            }
+
+
+            if (dis == "C")
+            {
+                foreach (DOCUMENTOM docm in jdlret)
+                {
+                    //Prcentaje
+                    decimal por = 0;
+                    try
+                    {
+                        por = Convert.ToDecimal((docm.VALORH * 100) / total); //B20180618 v1 MGC 2018.06.18
+                    }
+                    catch (Exception)
+                    {
+                        por = 0;
+                    }
+                    decimal totalmat = 0;
+
+                    try
+                    {
+                        totalmat = Convert.ToDecimal((por * totaldoc) / 100);
+                    }
+                    catch (Exception)
+                    {
+                        totalmat = 0;
+                    }
+
+                    docm.PORC_APOYO = por;
+                    docm.APOYO_EST = 0;
+                    if (col == "E")
+                    {
+                        docm.APOYO_EST = totalmat;
+                    }
+                    else if (col == "R")
+                    {
+                        docm.APOYO_REAL = totalmat;
+                    }
+
+                }
+            }
+
+            return jdlret;
         }
     }
 }

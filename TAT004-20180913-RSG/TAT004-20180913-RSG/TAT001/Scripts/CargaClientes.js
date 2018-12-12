@@ -473,12 +473,16 @@ function Carga() {
                     data: datos,
                     dataType: "json",
                     success: function (data) {
-                        mostrarAlerta("info", "A", "Se agregaron los nuevos registros");
-                        if (esFile) {
-                            window.location = root + "Clientes";
+                        if (data.isRedirect) {
+                            window.location.href = data.redirectUrl;
                         } else {
-                            Limpiar();
-                            document.getElementById("loader").style.display = "none";
+                            mostrarAlerta("info", "A", "Se agregaron los nuevos registros");
+                            if (esFile) {
+                                window.location = root + "Clientes";
+                            } else {
+                                Limpiar();
+                                document.getElementById("loader").style.display = "none";
+                            }
                         }
                     },
                     error: function (request, status, error) {
@@ -872,15 +876,48 @@ function habilitar() {
     $(".input_ban").prop('disabled', false);
     habi = true;
 }
+$('body').on('keydown.autocomplete', '.input_pai', function () {
+    
+    auto(this).autocomplete({
+        source: function (request, response) {
+            auto.ajax({
+                type: "GET",
+                url: root + 'Listas/Paises',
+                dataType: "json",
+                data: { "Prefix": request.term },
+                success: function (data) {
+                    response(auto.map(data, function (item) {
+                        return { label: item.LAND + " | " + item.LANDX, value: item.LAND };
+                    }));
+                }
+            });
+        },
 
+        messages: {
+            noResults: '',
+            results: function (resultsCount) { }
+        },
+
+        change: function (e, ui) {
+            if (!(ui.item) && $(".input_pai").val() === "") {
+                e.target.value = "";
+            }
+        },
+
+        select: function (event, ui) {
+            //var label = ui.item.label;
+            //var value = ui.item.value;
+        }
+    });
+});
 $('body').on('keydown.autocomplete', '.input_ven', function () {
 
     //var tr = $(this).closest('tr'); //Obtener el row
     auto(this).autocomplete({
         source: function (request, response) {
             auto.ajax({
-                type: "POST",
-                url: 'Vendor',
+                type: "GET",
+                url: root+'Listas/Vendors',
                 dataType: "json",
                 data: { "Prefix": request.term },
                 success: function (data) {
@@ -914,8 +951,8 @@ $('body').on('keydown.autocomplete', '.input_can', function () {
     auto(this).autocomplete({
         source: function (request, response) {
             auto.ajax({
-                type: "POST",
-                url: 'Canal',
+                type: "GET",
+                url: root+'Listas/Canales',
                 dataType: "json",
                 data: { "Prefix": request.term },
                 success: function (data) {
@@ -980,13 +1017,13 @@ $('body').on('keydown.autocomplete', '.input_coc', function () {
     auto(this).autocomplete({
         source: function (request, response) {
             auto.ajax({
-                type: "POST",
-                url: 'Company',
+                type: "GET",
+                url: root+'Listas/Sociedades',
                 dataType: "json",
-                data: { "Prefix": request.term },
+                data: { Prefix: request.term },
                 success: function (data) {
                     response(auto.map(data, function (item) {
-                        return { label: item.BUKRS + " | " + item.NAME1, value: item.BUKRS };
+                        return { label: item.BUKRS, value: item.BUKRS };
                     }));
                 }
             });

@@ -11,13 +11,13 @@ using TAT001.Common;
 
 namespace TAT001.Models
 {
-    public class ArchivoContable
+    public class ArchivoContable2
     {
         bool unico = false;
         decimal padre;
         int contdoc = 0;
         TAT001Entities db;
-        public string generarArchivo(decimal docum, decimal relacion, int pos, string tipo, ref List<ArchivoC> aaCC)
+        public string generarArchivo(decimal docum, decimal relacion, int pos)
         {
             db = new TAT001Entities();
             try
@@ -62,9 +62,9 @@ namespace TAT001.Models
                     return "No se encontro configuracion para generar documento para este tipo de solicitud";
                 }
 
-                ////string txt = "";
+                //string txt = "";
                 string msj = "";
-                ////string[] cc;
+                //string[] cc;
                 string cta = "";
                 if (doc.DOCUMENTO_REF == null && doc.TSOL_ID == "NC")
                 {
@@ -72,14 +72,14 @@ namespace TAT001.Models
                 }
                 try
                 {
-                    clien = db.CLIENTEs.FirstOrDefault(x => x.KUNNR == doc.PAYER_ID);
-                ////}
-                ////catch (Exception) { }
-                ////try
-                ////{
+                    clien = db.CLIENTEs.Where(x => x.KUNNR == doc.PAYER_ID).Single();
+                }
+                catch (Exception) { }
+                try
+                {
                     docf = db.DOCUMENTOFs.Where(x => x.NUM_DOC == docum).ToList();
                 }
-                catch (Exception e ) { Console.Write(e.Message); }
+                catch (Exception) { }
 
                 if (tab.TIPO_DOC == "RN" || tab.TIPO_DOC == "KR")
                 {
@@ -101,33 +101,33 @@ namespace TAT001.Models
                 doc.GALL_ID = db.GALLs.Where(x => x.ID == doc.GALL_ID).Select(x => x.GRUPO_ALL).Single();
                 var ppd = doc.GetType().GetProperties();
                 tab.HEADER_TEXT = tab.HEADER_TEXT.Trim();
-                if (!String.IsNullOrEmpty(tab.HEADER_TEXT))
+                if (String.IsNullOrEmpty(tab.HEADER_TEXT) == false)
                 {
                     tab.HEADER_TEXT = Referencia(tab.HEADER_TEXT, doc, docf, clien, pos);
                 }
-                ////else
-                ////{
-                ////    return "Agrege comando para generar texto de encabezado";
-                ////}
+                //else
+                //{
+                //    return "Agrege comando para generar texto de encabezado";
+                //}
 
-                ////txt = "";
+                //txt = "";
                 tab.REFERENCIA = tab.REFERENCIA.Trim();
-                if (!String.IsNullOrEmpty(tab.REFERENCIA))
+                if (String.IsNullOrEmpty(tab.REFERENCIA) == false)
                 {
                     tab.REFERENCIA = Referencia(tab.REFERENCIA, doc, docf, clien, pos);
                 }
-                ////else
-                ////{
-                ////    return "Agrege comando para generar referencia";
-                ////}
-                ////tab.REFERENCIA = txt;
+                //else
+                //{
+                //    return "Agrege comando para generar referencia";
+                //}
+                //tab.REFERENCIA = txt;
                 tab.NOTA = tab.NOTA.Trim();
-                if (!String.IsNullOrEmpty(tab.NOTA))
+                if (String.IsNullOrEmpty(tab.NOTA) == false)
                 {
                     tab.NOTA = Referencia(tab.NOTA, doc, docf, clien, pos);
                 }
                 tab.CORRESPONDENCIA = tab.CORRESPONDENCIA.Trim();
-                if (!String.IsNullOrEmpty(tab.CORRESPONDENCIA))
+                if (String.IsNullOrEmpty(tab.CORRESPONDENCIA) == false)
                 {
                     tab.CORRESPONDENCIA = Referencia(tab.CORRESPONDENCIA, doc, docf, clien, pos);
                 }
@@ -137,20 +137,11 @@ namespace TAT001.Models
                     doc.MONEDA_ID = "";
                 }
 
-                ////doc.FECHAC = Fecha(tab.FECHA_CONTAB, Convert.ToDateTime(doc.FECHAC));
+                //doc.FECHAC = Fecha(tab.FECHA_CONTAB, Convert.ToDateTime(doc.FECHAC));
 
                 List<DetalleContab> det = new List<DetalleContab>();
                 msj = Detalle(doc, ref det, ref tab, docf, hijo, pos);
 
-                ArchivoC ac = new ArchivoC();//ADD RSG 11.12.2018
-                ac.dirFile = dirFile;
-                ac.tab = tab;
-                ac.doc = doc;
-                ac.det = det;
-                ac.estatus = msj;
-                ac.num_doc = doc.NUM_DOC;
-                ac.pos = pos;
-                
                 if (msj != "")
                 {
                     return msj;
@@ -160,45 +151,34 @@ namespace TAT001.Models
                 {
                     return "Configure rango para fecha contable";
                 }
-                ////doc.FECHAC = Convert.ToDateTime(tab.FECHA_DOCU);
+                //doc.FECHAC = Convert.ToDateTime(tab.FECHA_DOCU);
                 tab.FECHA_DOCU = tab.FECHA_DOCU.Replace("-", "");
-                if (!String.IsNullOrEmpty(clien.EXPORTACION))
+                if (String.IsNullOrEmpty(clien.EXPORTACION) == false)
                 {
                     doc.MONEDA_ID = "USD";
                 }
-
-                if (tipo == "F")
+                string saveFileDev = ConfigurationManager.AppSettings["saveFileDev"];
+                if (saveFileDev == "1")
                 {
-                    string saveFileDev = ConfigurationManager.AppSettings["saveFileDev"];
-                    if (saveFileDev == "1")
-                    {
-                        ////EscribirArchivo(dirFile, tab, doc, det);
-                        EscribirArchivo(ac);
-                    }
-                    else
-                    {
-                        string serverDocs = ConfigurationManager.AppSettings["serverDocs"],
-                         serverDocsUser = ConfigurationManager.AppSettings["serverDocsUser"],
-                         serverDocsPass = ConfigurationManager.AppSettings["serverDocsPass"];
-                        using (Impersonation.LogonUser(serverDocs, serverDocsUser, serverDocsPass, LogonType.NewCredentials))
-                        {
-                            ////EscribirArchivo(dirFile, tab, doc, det);
-                            EscribirArchivo(ac);
-                        }
-                    }
-                }else if (tipo == "L")
-                {
-                    aaCC.Add(ac);
+                    EscribirArchivo(dirFile, tab, doc, det);
                 }
-
+                else
+                {
+                    string serverDocs = ConfigurationManager.AppSettings["serverDocs"],
+                     serverDocsUser = ConfigurationManager.AppSettings["serverDocsUser"],
+                     serverDocsPass = ConfigurationManager.AppSettings["serverDocsPass"];
+                    using (Impersonation.LogonUser(serverDocs, serverDocsUser, serverDocsPass, LogonType.NewCredentials))
+                    {
+                        EscribirArchivo(dirFile, tab, doc, det);
+                    }
+                }
                 if (tab.TIPO_SOL == "NIM")
                 {
                     pos = 0;
                     unico = true;
                     for (int i = 0; i < docf.Count; i++)
                     {
-                        ////msj = generarArchivo(docum, Convert.ToInt32(tab.RELACION), i);
-                        msj = generarArchivo(docum, Convert.ToInt32(tab.RELACION), i, tipo, ref aaCC);
+                        msj = generarArchivo(docum, Convert.ToInt32(tab.RELACION), i);
                     }
                     return msj;
                 }
@@ -211,15 +191,13 @@ namespace TAT001.Models
                     unico = true;
                     for (int i = 0; i < docf.Count; i++)
                     {
-                        ////msj = generarArchivo(docum, Convert.ToInt32(tab.RELACION), i);
-                        msj = generarArchivo(docum, Convert.ToInt32(tab.RELACION), i, tipo, ref aaCC);
+                        msj = generarArchivo(docum, Convert.ToInt32(tab.RELACION), i);
                     }
                     return msj;
                 }
                 else if (tab.RELACION != 0 && tab.RELACION != null)
                 {
-                    ////return generarArchivo(docum, Convert.ToInt32(tab.RELACION), pos);
-                    return generarArchivo(docum, Convert.ToInt32(tab.RELACION), pos, tipo, ref aaCC);
+                    return generarArchivo(docum, Convert.ToInt32(tab.RELACION), pos);
                 }
                 else
                 {
@@ -231,16 +209,8 @@ namespace TAT001.Models
                 return "Error al generar el documento contable " + e.Message;
             }
         }
-
-
-        ////private void EscribirArchivo(string dirFile, CONPOSAPH tab, DOCUMENTO doc, List<DetalleContab> det)
-        public void EscribirArchivo(ArchivoC aC)
+        private void EscribirArchivo(string dirFile, CONPOSAPH tab, DOCUMENTO doc, List<DetalleContab> det)
         {
-            string dirFile = aC.dirFile;
-            CONPOSAPH tab = aC.tab;
-            DOCUMENTO doc = aC.doc;
-            List<DetalleContab> det = aC.det;
-
             using (StreamWriter sw = new StreamWriter(dirFile))
             {
                 CONPOSAPH dir = tab;
@@ -333,10 +303,10 @@ namespace TAT001.Models
                         try
                         {
                             txt += ppd.Where(x => x.Name == c).Single().GetValue(doc);
-                            ////txt += ppd[1].GetValue(doc);
+                            //txt += ppd[1].GetValue(doc);
                             indes[index] = "X";
                         }
-                        catch (Exception e) { Console.Write(e.Message.ToString()); }
+                        catch (Exception) { }
                         try
                         {
                             if (docf.Count > 0)
@@ -360,7 +330,7 @@ namespace TAT001.Models
                                 }
                             }
                         }
-                        catch (Exception e) { Console.Write(e.Message); }
+                        catch (Exception) { }
                         try
                         {
                             if (indes[index] != "X")
@@ -369,12 +339,12 @@ namespace TAT001.Models
                                 indes[index] = "X";
                             }
                         }
-                        catch (Exception e) { Console.Write(e.Message); }
+                        catch (Exception) { }
                         index++;
                     }
                 }
-                catch (Exception e)
-                { Console.Write(e.Message); }
+                catch (Exception)
+                { }
                 if (String.IsNullOrEmpty(txt))
                 {
                     return "";
@@ -1187,7 +1157,7 @@ namespace TAT001.Models
             }
         }
     }
-    public class DetalleContab
+    public class DetalleContab2
     {
         public string POS_TYPE;
         public string COMP_CODE;

@@ -96,7 +96,7 @@ namespace TAT001.Controllers
                             Server.MapPath("~/Archivos/DoctosAyuda"), fileName);
                         Ruta_Documento.SaveAs(dOCTOAYUDA.RUTA_DOCUMENTO);
 
-                        dOCTOAYUDA.RUTA_DOCUMENTO = "/Archivos/DoctosAyuda/" + Ruta_Documento.FileName;
+                        dOCTOAYUDA.RUTA_DOCUMENTO = "Archivos/DoctosAyuda/" + Ruta_Documento.FileName;
                         db.DOCTOAYUDAs.Add(dOCTOAYUDA);
                         db.SaveChanges();
                         return RedirectToAction("Index");
@@ -162,7 +162,7 @@ namespace TAT001.Controllers
                                 Server.MapPath("~/Archivos/DoctosAyuda"), fileName);
                             Ruta_Documento.SaveAs(dOCTOAYUDA.RUTA_DOCUMENTO);
 
-                            actdOCTOAYUDA.RUTA_DOCUMENTO = "/Archivos/DoctosAyuda/" + Ruta_Documento.FileName;
+                            actdOCTOAYUDA.RUTA_DOCUMENTO = "Archivos/DoctosAyuda/" + Ruta_Documento.FileName;
                             actdOCTOAYUDA.NOMBRE = dOCTOAYUDA.NOMBRE;
                             actdOCTOAYUDA.ACTIVO = dOCTOAYUDA.ACTIVO;
                             db.SaveChanges();

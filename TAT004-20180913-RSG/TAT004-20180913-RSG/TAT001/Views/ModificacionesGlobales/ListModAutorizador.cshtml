@@ -42,9 +42,9 @@
         </tbody>
     </table>
     
-<div id="modal1" class="modal" style=" background-color: #B90C46; height: 200px; width: 350px;">
+<div id="modal1" class="modal" style=" background-color: #fff; height: 200px; width: 450px;">
     <div class="modal-content">
-        <p style="color: white;font-size: 16px;" class="lbl_actualizar"></p>
+        <p style="font-size: 16px;" class="lbl_actualizar"></p>
     </div>
     <div class="modal-footer">
         <a class="modal-close waves-effect  btn-flat"><label class="lbl_No"></label></a>
@@ -87,7 +87,7 @@
     var root = "@Url.Content("~")",
     spras_id = "@ViewBag.spras_id",
     urlLanguage = root + "Scripts/lang/" + spras_id + ".json";
-    fnCommon.configurarTable('tableModAutorizador', '50vh', '50vh', urlLanguage, 'cmbPagModAutorizador','gfilterModAutorizador',[0]);
+    fnCommon.configurarTableNoPagNoBusq('tableModAutorizador', '50vh', '50vh', urlLanguage,[0]);
        
     function actualizarAutorizador() {
         var esCambio = $("#USUARIOA_ID_NUEVO").val() !== "";      
