@@ -365,7 +365,8 @@ namespace TAT001.Controllers
                 else
                 {
                     TempData["error"] = res;
-                    return RedirectToAction("Details", "Solicitudes", new { id = flujo.NUM_DOC });
+                    ////return RedirectToAction("Details", "Solicitudes", new { id = flujo.NUM_DOC });
+                    return RedirectToAction("Index", "Solicitudes");
                 }
             }
 

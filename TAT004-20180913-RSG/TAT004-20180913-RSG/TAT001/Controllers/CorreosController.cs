@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -162,10 +164,25 @@ namespace TAT001.Controllers
 
             //B20180803 MGC Presupuesto............
             ViewBag.bandera = dOCUMENTO.PAIS_ID;
+            ViewBag.nombreUsuario = db.USUARIOs.Where(x => x.ID == dOCUMENTO.USUARIOC_ID).FirstOrDefault().NOMBRE;
+            ViewBag.idUsuario = dOCUMENTO.USUARIOC_ID;
             ObtenerAnalisisSolicitud(dOCUMENTO);//ADD RSG 13.11.2018
             return View(dOCUMENTO);
             //return RedirectToAction("Cancelacion", dOCUMENTO);
         }
+
+        //public void ConvertHtmlToImage()
+        //{
+        //    Bitmap m_Bitmap = new Bitmap(400, 600);
+        //    PointF point = new PointF(0, 0);
+        //    SizeF maxSize = new System.Drawing.SizeF(500, 500);
+        //    HtmlRenderer.HtmlRender.Render(Graphics.FromImage(m_Bitmap),
+        //                                            "<html><body><p>This is a shitty html code</p>"
+        //                                            + "<p>This is another html line</p></body>",
+        //                                             point, maxSize);
+
+        //    m_Bitmap.Save(@"C:\Test.png", ImageFormat.Png);
+        //}
 
         public ActionResult Cancelacion(decimal id, bool? mail) 
         {
@@ -311,6 +328,8 @@ namespace TAT001.Controllers
 
             //B20180803 MGC Presupuesto............
             ViewBag.bandera = dOCUMENTO.PAIS_ID;
+            ViewBag.nombreUsuario = db.USUARIOs.Where(x => x.ID == dOCUMENTO.USUARIOC_ID).FirstOrDefault().NOMBRE;
+            ViewBag.idUsuario = dOCUMENTO.USUARIOC_ID;
             ObtenerAnalisisSolicitud(dOCUMENTO);//ADD RSG 13.11.2018
             return View(dOCUMENTO);
         }
