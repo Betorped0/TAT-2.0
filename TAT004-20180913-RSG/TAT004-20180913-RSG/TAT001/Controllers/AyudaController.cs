@@ -68,7 +68,7 @@ namespace TAT001.Controllers
             string spras_id = ViewBag.spras_id;
             ViewBag.ID_Clasificacion= new SelectList(db.DOCTOCLASIFTs.Where(t=>t.SPRAS_ID==spras_id), "ID_Clasificacion", "Texto");
             //if (ViewBag.rol == "Administrador")
-                return View(new DOCTOAYUDA());
+                return View(new DOCTOAYUDA{ ACTIVO=true });
             //else return View("Error");
         }
 

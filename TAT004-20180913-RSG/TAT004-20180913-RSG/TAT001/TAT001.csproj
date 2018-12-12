@@ -258,6 +258,7 @@
     <Compile Include="Controllers\FlujosController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\Catalogos\ImpuestoController.cs" />
+    <Compile Include="Controllers\LAContabilizacionController.cs" />
     <Compile Include="Controllers\LayoutCargaMasivaController.cs" />
     <Compile Include="Controllers\ListasController.cs" />
     <Compile Include="Controllers\MailsController.cs" />
@@ -2068,6 +2069,7 @@
     <!--<Folder Include="obj\Debug\TempPE\" />-->
     <Folder Include="App_Data\" />
     <Folder Include="files\Ayuda\" />
+    <Folder Include="Views\LAContabilizacion\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
