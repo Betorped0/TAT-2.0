@@ -47,54 +47,6 @@
                                 var instance = M.Tooltip.init(elem, options);
                             }
                         </script>
-
-                        @if (Model.DOCUMENTO_REF == null)
-                        {
-                            <script>
-                                function cambiaLigada(campo) {
-                                    if (campo.checked) {
-                                        $("#select_neg").val("P");
-                                        $("#select_negi").val("P");
-                                        $("#select_neg").prop("disabled", "disabled");
-                                        $("#select_neg").change();
-                                        $("#div_objq").removeClass("hide");
-                                        $("#txt_ligada").val("X");
-                                    } else {
-                                        $("#select_neg").prop("disabled", false);
-                                        $("#select_neg").change();
-                                        $("#div_objq").addClass("hide");
-                                        $("#txt_ligada").val("");
-                                        cambiaCheckRec();
-                                    }
-
-                                    var elem = document.getElementById('select_neg');
-                                    var instance = M.FormSelect.init(elem, []);
-                                }
-                                var elem = document.getElementById('select_neg');
-                                var instance = M.FormSelect.init(elem, []);
-                                elem = document.getElementById('select_dis');
-                                instance = M.FormSelect.init(elem, []);
-                                cambiaCheckRec();
-                            </script>
-                        }
-                        else
-                        {
-                            <script>
-                                function cambiaLigada(campo) {
-                                    if (campo.checked) {
-                                        $("#select_neg").val("P");
-                                        $("#select_dis").val("C");
-                                        $("#select_negi").val("P");
-                                        $("#select_disi").val("C");
-                                        $("#div_objq").removeClass("hide");
-                                        $("#txt_ligada").val("X");
-                                    } else {
-                                        $("#div_objq").addClass("hide");
-                                        $("#txt_ligada").val("");
-                                    }
-                                }
-                            </script>
-                        }
                     </div>
                     @*<input type="button" id="matcat" value="Get materiales cat" />*@
                     <input type="hidden" id="select_negi" name="select_negi" value="@ViewBag.SEL_NEG" />
@@ -314,3 +266,52 @@
         </div>
     </div>
 </div>
+
+
+                        @if (Model.DOCUMENTO_REF == null)
+                        {
+                            <script>
+                                function cambiaLigada(campo) {
+                                    if (campo.checked) {
+                                        $("#select_neg").val("P");
+                                        $("#select_negi").val("P");
+                                        $("#select_neg").prop("disabled", "disabled");
+                                        $("#select_neg").change();
+                                        $("#div_objq").removeClass("hide");
+                                        $("#txt_ligada").val("X");
+                                    } else {
+                                        $("#select_neg").prop("disabled", false);
+                                        $("#select_neg").change();
+                                        $("#div_objq").addClass("hide");
+                                        $("#txt_ligada").val("");
+                                        cambiaCheckRec(false);
+                                    }
+
+                                    var elem = document.getElementById('select_neg');
+                                    var instance = M.FormSelect.init(elem, []);
+                                }
+                                var elem = document.getElementById('select_neg');
+                                var instance = M.FormSelect.init(elem, []);
+                                elem = document.getElementById('select_dis');
+                                instance = M.FormSelect.init(elem, []);
+                                cambiaCheckRec(true);
+                            </script>
+                        }
+                        else
+                        {
+                            <script>
+                                function cambiaLigada(campo) {
+                                    if (campo.checked) {
+                                        $("#select_neg").val("P");
+                                        $("#select_dis").val("C");
+                                        $("#select_negi").val("P");
+                                        $("#select_disi").val("C");
+                                        $("#div_objq").removeClass("hide");
+                                        $("#txt_ligada").val("X");
+                                    } else {
+                                        $("#div_objq").addClass("hide");
+                                        $("#txt_ligada").val("");
+                                    }
+                                }
+                            </script>
+                        }
