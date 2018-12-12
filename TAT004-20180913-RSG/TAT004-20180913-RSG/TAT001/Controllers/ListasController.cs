@@ -675,10 +675,10 @@ namespace TAT001.Controllers
         }
         [HttpPost]
         public JsonResult clearing(string bukrs, string land, string gall, string ejercicio,
-            string tsol_id,decimal monto, decimal num_doc,bool esCategoriaUnica)
+            string tsol_id,decimal monto, decimal num_doc,string[] categorias=null)
         {
             bool esNC = false;
-            decimal impuesto = FnCommon.ObtenerImpuesto(db, new DOCUMENTO { NUM_DOC = num_doc, MONTO_DOC_MD = Convert.ToDecimal(monto), SOCIEDAD_ID = bukrs, TSOL_ID = tsol_id }, ref esNC, esCategoriaUnica);
+            decimal impuesto = FnCommon.ObtenerImpuesto(db, new DOCUMENTO { NUM_DOC = num_doc, MONTO_DOC_MD = Convert.ToDecimal(monto), SOCIEDAD_ID = bukrs, TSOL_ID = tsol_id }, ref esNC, categorias);
             decimal ejer = decimal.Parse(ejercicio);
             
 

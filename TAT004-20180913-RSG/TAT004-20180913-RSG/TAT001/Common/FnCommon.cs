@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using TAT001.Entities;
 using TAT001.Models;
+using TAT001.Services;
 
 namespace TAT001.Common
 {
@@ -249,7 +251,7 @@ namespace TAT001.Common
                     new SelectListItem{Text="5",Value="5"}
             };
         }
-        public static decimal ObtenerImpuesto(TAT001Entities db, DOCUMENTO D, ref bool esNC, bool esCategoriaUnica=false)
+        public static decimal ObtenerImpuesto(TAT001Entities db, DOCUMENTO D, ref bool esNC, string[] categorias=null)
         {
             decimal impuesto = 0.0M;
             string[] tsolImp = new string[] { "NC", "NCA", "NCAS", "NCAM", "NCASM", "NCS", "NCI", "NCIA", "NCIAS", "NCIS" };
@@ -258,7 +260,31 @@ namespace TAT001.Common
             {
                 decimal KBETR;
                 esNC = true;
-                if (esCategoriaUnica || db.DOCUMENTOPs.Any(x => (x.MATKL == "605" || x.MATKL == "207") && x.NUM_DOC == D.NUM_DOC))
+
+                if (categorias != null)
+                {
+                    // Se obtiene Id de la categoria
+                    Cadena cad = new Cadena();
+                    string[] auxCategorias = categorias;
+                    int i = 0;
+                    bool esMaterial = false;
+                    foreach (string cat in auxCategorias)
+                    {
+                        string catAux = cad.completaMaterial(cat);
+                        if (!esMaterial)
+                        {
+                            esMaterial = db.MATERIALs.Any(x => x.ID == catAux);
+                        }
+                        if (esMaterial)
+                        {
+                            categorias[i] = db.MATERIALs.First(x => x.ID == catAux).MATERIALGP_ID;
+                        }
+                        
+                        i++;
+                    }
+
+                }
+                if ((categorias!=null && categorias.Any() && (categorias.Contains("605") || categorias.Contains("207"))) || db.DOCUMENTOPs.Any(x => (x.MATKL == "605" || x.MATKL == "207") && x.NUM_DOC == D.NUM_DOC))
                 {
                     KBETR = db.IIMPUESTOes.First(x => x.MWSKZ == "A0").KBETR.Value;
                 }

@@ -165,7 +165,7 @@
                             var clearing = null;
                             function formaClearing() {
                                 
-                                var monto = toShowNum($('#monto_doc_md').val(), $('#dec').val()),
+                                var monto = toNum($('#monto_doc_md').val(), $('#dec').val()),
                                     tsol_id = $("#TSOL_ID").val(),
                                     isReverso = "@ViewBag.reversan" == "X";
 
@@ -196,6 +196,30 @@
                                             </div>
                                         </div>
                                     </li>
+                                    <li class="collection-item" id="a5">
+                                        <div class="row" style="margin-bottom:0;padding-bottom:0;">
+                                            <div id="div_impuesto" class="col s6">
+                                                @*B20180801 MGC Textos*@
+                                                Impuesto
+                                            </div>
+                                            <div class="col s6 right-align">
+                                                <span id="s_impa">-</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="collection-item" id="a5">
+                                        <div class="row" style="margin-bottom:0;padding-bottom:0;">
+                                            <div id="div_montototal" class="col s6">
+                                                @*B20180801 MGC Textos*@
+                                                Monto total
+                                            </div>
+                                            <div class="col s6 right-align">
+                                                <span id="s_total">-</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <ul class="collection">
                                     <li class="collection-item">
                                         <div class="row" style="margin-bottom:0;padding-bottom:0;">
                                             <div id="div_montoprov" class="col s6">
@@ -226,28 +250,6 @@
                                             </div>
                                             <div class="col s6 right-align">
                                                 <span id="s_rema">-</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="collection-item" id="a5">
-                                        <div class="row" style="margin-bottom:0;padding-bottom:0;">
-                                            <div id="div_impuesto" class="col s6">
-                                                @*B20180801 MGC Textos*@
-                                                Impuesto
-                                            </div>
-                                            <div class="col s6 right-align">
-                                                <span id="s_impa">-</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="collection-item" id="a5">
-                                        <div class="row" style="margin-bottom:0;padding-bottom:0;">
-                                            <div id="div_montototal" class="col s6">
-                                                @*B20180801 MGC Textos*@
-                                                Monto total
-                                            </div>
-                                            <div class="col s6 right-align">
-                                                <span id="s_total">-</span>
                                             </div>
                                         </div>
                                     </li>

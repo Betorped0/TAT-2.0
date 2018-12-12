@@ -159,7 +159,7 @@
                          var clearing = null;
                             function formaClearing() {
 
-                                var monto = toShowNum($('#D_NUM_DOC').val(), $('#dec').val()),
+                                var monto = toNum($('#monto_doc_md').val(), $('#dec').val()),
                                     tsol_id = $("#TSOL_ID").val(),
                                     isReverso = false,
                                     num_doc = $('#NUM_DOC').val();
@@ -190,61 +190,7 @@
                                         </div>
                                     </div>
                                 </li>
-                                <li class="collection-item">
-                                    <div class="row" style="margin-bottom:0;padding-bottom:0;">
-                                        <div class="col s6">
-                                            Monto provisión original
-                                        </div>
-                                        <div class="col s6 right-align">
-                                            <span id="s_montop">@ViewBag.montoProv</span>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="collection-item" id="a3">
-                                    <div class="row" style="margin-bottom:0;padding-bottom:0;">
-                                        <div class="col s6">
-                                            Monto aplicado
-                                        </div>
-                                        <div class="col s6 right-align">
-                                            <span id="s_montoa">@ViewBag.montoApli</span>
-                                        </div>
-                                    </div>
-                                </li>
-                                @{bool esNeg = ViewBag.remanente.Contains("("); }
-                                @if (esNeg)
-                                {
-                                    <li class="collection-item" id="a4" style="background-color:red; color:white;">
 
-                                        <div class="row" style="margin-bottom:0;padding-bottom:0;">
-                                            <div id="div_remanente" class="col s6">
-                                                @*B20180801 MGC Textos*@
-                                                Remanente/(Exceso)
-                                            </div>
-
-                                            <div class="col s6 right-align">
-                                                <span id="s_rema">@ViewBag.remanente</span>
-                                            </div>
-
-                                        </div>
-                                    </li>
-                                }
-                                else
-                                {
-                                    <li class="collection-item" id="a4">
-
-                                        <div class="row" style="margin-bottom:0;padding-bottom:0;">
-                                            <div id="div_remanente" class="col s6">
-                                                @*B20180801 MGC Textos*@
-                                                Remanente/(Exceso)
-                                            </div>
-
-                                            <div class="col s6 right-align">
-                                                <span id="s_rema">@ViewBag.remanente</span>
-                                            </div>
-
-                                        </div>
-                                    </li>
-                                }
                                 <li class="collection-item" id="a5">
                                     <div class="row" style="margin-bottom:0;padding-bottom:0;">
                                         <div id="div_impuesto" class="col s6">
@@ -267,6 +213,46 @@
                                     </div>
                                 </li>
                             </ul>
+                            <ul class="collection">
+                                <li class="collection-item">
+                                    <div class="row" style="margin-bottom:0;padding-bottom:0;">
+                                        <div class="col s6">
+                                            Monto provisión original
+                                        </div>
+                                        <div class="col s6 right-align">
+                                            <span id="s_montop">@ViewBag.montoProv</span>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="collection-item" id="a3">
+                                    <div class="row" style="margin-bottom:0;padding-bottom:0;">
+                                        <div class="col s6">
+                                            Monto aplicado
+                                        </div>
+                                        <div class="col s6 right-align">
+                                            <span id="s_montoa">@ViewBag.montoApli</span>
+                                        </div>
+                                    </div>
+                                </li>
+                                    <li class="collection-item" id="a4">
+                                        <div class="row" style="margin-bottom:0;padding-bottom:0;">
+                                            <div id="div_remanente" class="col s6">
+                                                @*B20180801 MGC Textos*@
+                                                Remanente/(Exceso)
+                                            </div>
+                                            <div class="col s6 right-align">
+                                                <span id="s_rema">@ViewBag.remanente</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                            </ul>
+                            <script>
+                                var esNeg = "@ViewBag.remanente.Contains("(")" == "True";
+                                if (esNeg) {
+                                    document.getElementById("a4").classList.add("red");
+                                    document.getElementById("a4").classList.add("white-text");
+                                }
+                            </script>
                         </div>
                     </div>
                 </div>
