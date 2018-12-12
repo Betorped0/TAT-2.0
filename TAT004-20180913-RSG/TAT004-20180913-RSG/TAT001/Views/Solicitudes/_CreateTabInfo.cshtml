@@ -725,6 +725,8 @@
                                 @Html.LabelFor(model => model.FECHAF_VIG, "Hasta", htmlAttributes: new { @class = "active", @for = "fechaf_vig2", @id = "lbl_fechavhasta" })@*B20180801 MGC Textos*@
                             </div>
                         </div>
+                        <input type="hidden" id="fechai_vig2" value="@Model.FECHAI_VIG.Value.ToShortDateString()" />
+                        <input type="hidden" id="fechaf_vig2" value="@Model.FECHAF_VIG.Value.ToShortDateString()" />
                     }
                 </div>
             </div>
