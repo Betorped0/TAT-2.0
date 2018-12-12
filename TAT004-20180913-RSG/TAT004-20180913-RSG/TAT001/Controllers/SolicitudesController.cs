@@ -7833,7 +7833,7 @@ namespace TAT001.Controllers
                     sm.S_IMPB = "-";
                     sm.S_IMPC = "-";
                     sm.S_RET = "-";
-                    sm.S_TOTAL = (monto + impuesto);
+                    sm.S_TOTAL = (montor2 + impuesto).ToString();
                 }
                 else if (rev.Count == 1)
                 {
@@ -7850,7 +7850,7 @@ namespace TAT001.Controllers
                     sm.S_IMPB = "-";
                     sm.S_IMPC = "-";
                     sm.S_RET = "-";
-                    sm.S_TOTAL = (monto + impuesto);
+                    sm.S_TOTAL = (Convert.ToDecimal(monto) + impuesto).ToString();
                 }
                 else if (rev.Count > 1)
                 {
@@ -7872,7 +7872,7 @@ namespace TAT001.Controllers
                     sm.S_IMPB = "-";
                     sm.S_IMPC = "-";
                     sm.S_RET = "-";
-                    sm.S_TOTAL = (monto + impuesto);
+                    sm.S_TOTAL = (Convert.ToDecimal(monto) + impuesto).ToString();
                 }
                 if (sm.S_MONTOA != "-" && reverso)
                 {

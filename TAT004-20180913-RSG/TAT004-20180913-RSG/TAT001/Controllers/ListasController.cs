@@ -687,7 +687,7 @@ namespace TAT001.Controllers
                      && C.PAIS_ID == land
                      && C.TALL_ID == gall
                      && C.EJERCICIO == ejer
-                     select new { C.ABONO, NOMBREA = C.CUENTAGL.NOMBRE, C.CARGO, NOMBREC = C.CUENTAGL1.NOMBRE, C.CLEARING, C.LIMITE,IMPUESTO=impuesto }).FirstOrDefault();
+                     select new { C.ABONO, NOMBREA = C.CUENTAGL.NOMBRE, C.CARGO, NOMBREC = C.CUENTAGL1.NOMBRE, C.CLEARING, NOMBRECL= C.CUENTAGL2.NOMBRE, C.LIMITE,IMPUESTO=impuesto }).FirstOrDefault();
 
             JsonResult cc = Json("", JsonRequestBehavior.AllowGet);
             if (c != null)

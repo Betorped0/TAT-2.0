@@ -65,7 +65,7 @@ function cuentas(num_doc, tsol_id, monto) {
 
         success: function (data) {
             if (data !== null && data !== "") {
-                //data = {CARGO,NOMBREC,ABONO,NOMBREA,CLEARING,LIMITE,IMPUESTO} 12-12-2018
+                //data = {CARGO,NOMBREC,ABONO,NOMBREA,CLEARING,NOMBRECL,LIMITE,IMPUESTO} 12-12-2018
                 clearing = data;
                 bool = true;
             } else {
@@ -300,30 +300,33 @@ function cuentasPorTSol(tsol_id, monto, isReverso) {
 
     var div = "<ul class='collection'><li class='collection-item'>";
     if (isReverso) {
-        monto = toShow(monto);
+        monto = toShow(monto, $('#dec').val());
         div += "<div class='row' style='margin-bottom:0;'><div class='col s2'>" + tex_abono + "</div><div class='col s3'>" + clearing.CARGO + "</div><div class='col s4'>" + clearing.NOMBREC + "</div><div class='col s3 right-align'>" + monto + "</div></div>";
         div += "</li><li class='collection-item'>";
         div += "<div class='row' style='margin-bottom:0;'><div class='col s2'>" + tex_cargo + "</div><div class='col s3'>" + clearing.ABONO + "</div><div class='col s4'>" + clearing.NOMBREA + "</div><div class='col s3 right-align'>" + monto + "</div></div></div>";
 
     } else {
         if (tsol_id.indexOf(prov) === 0) {
-            monto = toShow(monto);
+            monto = toShow(monto, $('#dec').val());
             div += "<div class='row' style='margin-bottom:0;'><div class='col s2'>" + tex_abono + "</div><div class='col s3'>" + clearing.ABONO + "</div><div class='col s4'>" + clearing.NOMBREA + "</div><div class='col s3 right-align'>" + monto + "</div></div>";
             div += "</li><li class='collection-item'>";
             div += "<div class='row' style='margin-bottom:0;'><div class='col s2'>" + tex_cargo + "</div><div class='col s3'>" + clearing.CARGO + "</div><div class='col s4'>" + clearing.NOMBREC + "</div><div class='col s3 right-align'>" + monto + "</div></div></div>";
 
         } else if (tsol_id.indexOf(nci) === 0) {
-            var impuesto = toShow(clearing.IMPUESTO);
+            var kunnr = $("#payer_id").val(),
+                nombrec = !$("#cli_name").val() ? $("#D_CLIENTE_NAME1").val() : $("#cli_name").val();
+            var impuesto = toShow(clearing.IMPUESTO, $('#dec').val()),
+                montot = toShow((monto + clearing.IMPUESTO), $('#dec').val());
             monto = toShow(monto);
-            div += "<div class='row' style='margin-bottom:0;'><div class='col s2'>" + tex_abono + "</div><div class='col s3'>" + clearing.ABONO + "</div><div class='col s4'>" + clearing.NOMBREA  + "</div><div class='col s3 right-align'>" + monto + "</div></div>";
+            div += "<div class='row' style='margin-bottom:0;'><div class='col s2'>" + tex_payer + "</div><div class='col s3'>" + kunnr + "</div><div class='col s4'>" + nombrec + "</div><div class='col s3 right-align'>" + montot + "</div></div>";
             div += "</li><li class='collection-item'>";
             div += "<div class='row' style='margin-bottom:0;'><div class='col s2'>" + tex_cargo + "</div><div class='col s3'>" + clearing.CARGO + "</div><div class='col s4'>" + clearing.NOMBREC + "</div><div class='col s3 right-align'>" + monto + "</div></div></div>";
             div += "</li><li class='collection-item'>";
-            div += "<div class='row' style='margin-bottom:0;'><div class='col s2'>" + tex_clearing + "</div><div class='col s3'>" + clearing.CLEARING + "</div><div class='col s4'>" + "</div><div class='col s3 right-align'>" + impuesto + "</div></div></div>";
+            div += "<div class='row' style='margin-bottom:0;'><div class='col s2'>" + tex_clearing + "</div><div class='col s3'>" + clearing.CLEARING + "</div><div class='col s4'>" + clearing.NOMBRECL+ "</div><div class='col s3 right-align'>" + impuesto + "</div></div></div>";
 
         } else if (tsol_id.indexOf(ncf) === 0) {
-            var kunnr = $("#payer_id").val(),
-                nombrec = !$("#cli_name").val() ? $("#D_CLIENTE_NAME1").val() : $("#cli_name").val();
+            kunnr = $("#payer_id").val();
+            nombrec = !$("#cli_name").val() ? $("#D_CLIENTE_NAME1").val() : $("#cli_name").val();
 
             monto += clearing.IMPUESTO;
             monto = toShow(monto);
