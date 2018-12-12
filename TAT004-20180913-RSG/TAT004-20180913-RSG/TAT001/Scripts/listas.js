@@ -27,9 +27,23 @@
         async: false
     });
 }
-function cuentas(reverso) {
+function cuentas(num_doc,tsol_id, monto) {
+
+    var esCategoriaUnica = false;
+    if ($("#select_dis").val() === "C") {
+        $("#table_dis > tbody  > tr[role='row']").each(function (indx, row) {
+            var cat = row.cells.item(5).textContent;
+            var _xxx = $.parseJSON($('#catmat').val());
+            for (var i = 0; i < _xxx.length; i++) {
+                if (cat === _xxx[i].DESCRIPCION && _xxx[i].UNICA === true) {
+                    esCategoriaUnica = true;
+                }
+            }
+        });
+    }
+
     var bool = false;
-    clearing = [];
+    clearing = null;
     var bukrs = ($("#sociedad_id").val() ? $("#sociedad_id").val():$("#D_SOCIEDAD_ID").val()),
         land = $("#pais_id").val(),
         gall = $("#tall_id").val(),
@@ -38,27 +52,12 @@ function cuentas(reverso) {
         type: "POST",
         url: root+'Listas/clearing',
         dataType: "json",
-        data: { bukrs: bukrs, land: land, gall: gall, ejercicio: ejercicio },
+        data: { bukrs: bukrs, land: land, gall: gall, ejercicio: ejercicio, esCategoriaUnica: esCategoriaUnica, tsol_id: tsol_id, monto: monto, num_doc: num_doc },
 
         success: function (data) {
             if (data !== null && data !== "") {
-                if (reverso) {
-                    clearing.push(data.CARGO);
-                    //DRS 28.09.2018
-                    clearing.push(data.NOMBREC);
-                    clearing.push(data.ABONO);
-                    clearing.push(data.NOMBREA);
-                } else {
-                    //RSG 26.04.2018----------------
-                    clearing.push(data.ABONO);
-                    //DRS 28.09.2018
-                    clearing.push(data.NOMBREA);
-                    clearing.push(data.CARGO);
-                    clearing.push(data.NOMBREC);
-                }
-                clearing.push(data.CLEARING);
-                clearing.push(data.LIMITE);
-                //RSG 26.04.2018----------------
+                //data = {CARGO,NOMBREC,ABONO,NOMBREA,CLEARING,LIMITE,IMPUESTO} 12-12-2018
+                clearing = data;
                 bool = true;
             } else {
                 M.toast({
@@ -267,4 +266,77 @@ function asignarSolicitud(num, num2,edit) {
             async: false
         });
     
+}
+
+function cuentasPorTSol(tsol_id, monto, isReverso) {
+
+    var tex_abono = document.querySelector(".lbl_cabono").innerHTML;
+    var tex_cargo = document.querySelector(".lbl_ccargo").innerHTML;
+    var tex_clearing = document.querySelector(".lbl_cclear").innerHTML;
+    var tex_payer = document.querySelector(".lbl_cpayer").innerHTML;
+
+    var prov = "PR",
+        ncf = "NC",
+        nci = "NCI";
+
+
+    var div = "<ul class='collection'><li class='collection-item'>";
+    if (isReverso) {
+        monto = toShow(monto);
+        div += "<div class='row' style='margin-bottom:0;'><div class='col s2'>" + tex_abono + "</div><div class='col s3'>" + clearing.CARGO + "</div><div class='col s4'>" + clearing.NOMBREC + "</div><div class='col s3 right-align'>" + monto + "</div></div>";
+        div += "</li><li class='collection-item'>";
+        div += "<div class='row' style='margin-bottom:0;'><div class='col s2'>" + tex_cargo + "</div><div class='col s3'>" + clearing.ABONO + "</div><div class='col s4'>" + clearing.NOMBREA + "</div><div class='col s3 right-align'>" + monto + "</div></div></div>";
+
+    } else {
+        if (tsol_id.indexOf(prov) === 0) {
+            monto = toShow(monto);
+            div += "<div class='row' style='margin-bottom:0;'><div class='col s2'>" + tex_abono + "</div><div class='col s3'>" + clearing.ABONO + "</div><div class='col s4'>" + clearing.NOMBREA + "</div><div class='col s3 right-align'>" + monto + "</div></div>";
+            div += "</li><li class='collection-item'>";
+            div += "<div class='row' style='margin-bottom:0;'><div class='col s2'>" + tex_cargo + "</div><div class='col s3'>" + clearing.CARGO + "</div><div class='col s4'>" + clearing.NOMBREC + "</div><div class='col s3 right-align'>" + monto + "</div></div></div>";
+
+        } else if (tsol_id.indexOf(nci) === 0) {
+            var impuesto = toShow(clearing.IMPUESTO);
+            monto = toShow(monto);
+            div += "<div class='row' style='margin-bottom:0;'><div class='col s2'>" + tex_abono + "</div><div class='col s3'>" + clearing.ABONO + "</div><div class='col s4'>" + clearing.NOMBREA + "</div><div class='col s3 right-align'>" + monto + "</div></div>";
+            div += "</li><li class='collection-item'>";
+            div += "<div class='row' style='margin-bottom:0;'><div class='col s2'>" + tex_cargo + "</div><div class='col s3'>" + clearing.CARGO + "</div><div class='col s4'>" + clearing.NOMBREC + "</div><div class='col s3 right-align'>" + monto + "</div></div></div>";
+            div += "</li><li class='collection-item'>";
+            div += "<div class='row' style='margin-bottom:0;'><div class='col s2'>" + tex_clearing + "</div><div class='col s3'>" + clearing.CLEARING + "</div><div class='col s4'>" + "</div><div class='col s3 right-align'>" + impuesto + "</div></div></div>";
+
+        } else if (tsol_id.indexOf(ncf) === 0) {
+            monto += clearing.IMPUESTO;
+            monto = toShow(monto);
+            div += "<div class='row' style='margin-bottom:0;'><div class='col s2'>" + tex_abono + "</div><div class='col s3'>" + clearing.ABONO + "</div><div class='col s4'>" + clearing.NOMBREA + "</div><div class='col s3 right-align'>" + monto + "</div></div>";
+            div += "</li><li class='collection-item'>";
+            div += "<div class='row' style='margin-bottom:0;'><div class='col s2'>" + tex_cargo + "</div><div class='col s3'>" + clearing.CARGO + "</div><div class='col s4'>" + clearing.NOMBREC + "</div><div class='col s3 right-align'>" + monto + "</div></div></div>";
+
+        }
+        else {
+            monto = toShow(monto);
+            div += "<div class='row' style='margin-bottom:0;'><div class='col s2'>" + tex_abono + "</div><div class='col s3'>" + clearing.ABONO + "</div><div class='col s4'>" + clearing.NOMBREA + "</div><div class='col s3 right-align'>" + monto + "</div></div>";
+            div += "</li><li class='collection-item'>";
+            div += "<div class='row' style='margin-bottom:0;'><div class='col s2'>" + tex_cargo + "</div><div class='col s3'>" + clearing.CARGO + "</div><div class='col s4'>" + clearing.NOMBREC + "</div><div class='col s3 right-align'>" + monto + "</div></div></div>";
+
+        }
+    }
+    div += "</li>";
+    div += "</ul>";
+    return div;
+
+
+    //    if (clearing[2] != null) {
+    //        if (monto <= clearing[5]) {
+
+    //            div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + clearing[3] + "</div><div class='col s3'>" + clearing[2] + "</div><div class='col s3 right-align'>" + monto + "</div></div>";
+    //            div += "</li><li class='collection-item'>";
+    //            div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>" + tex_clearing + "</div><div class='col s4'>" + clearing[4] + "</div><div class='col s4'>0.00</div></div>";
+    //            div += "</li>";
+    //        } else {
+    //            div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + clearing[3] + "</div><div class='col s3'>" + clearing[2] + "</div><div class='col s3'>" + clearing[5] + "</div></div>";
+    //            div += "</li><li class='collection-item'>";
+    //            div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>" + tex_clearing + "</div><div class='col s4'>" + clearing[4] + "</div><div class='col s4'>" + (monto - clearing[5]) + "</div></div>";
+    //            div += "</li>";
+    //        }
+    //    }
+    //}
 }

@@ -249,5 +249,28 @@ namespace TAT001.Common
                     new SelectListItem{Text="5",Value="5"}
             };
         }
+        public static decimal ObtenerImpuesto(TAT001Entities db, DOCUMENTO D, ref bool esNC, bool esCategoriaUnica=false)
+        {
+            decimal impuesto = 0.0M;
+            string[] tsolImp = new string[] { "NC", "NCA", "NCAS", "NCAM", "NCASM", "NCS", "NCI", "NCIA", "NCIAS", "NCIS" };
+            string pais_id = db.SOCIEDADs.Find(D.SOCIEDAD_ID).LAND;
+            if (tsolImp.Contains(D.TSOL_ID))
+            {
+                decimal KBETR;
+                esNC = true;
+                if (esCategoriaUnica || db.DOCUMENTOPs.Any(x => (x.MATKL == "605" || x.MATKL == "207") && x.NUM_DOC == D.NUM_DOC))
+                {
+                    KBETR = db.IIMPUESTOes.First(x => x.MWSKZ == "A0").KBETR.Value;
+                }
+                else
+                {
+                    decimal concecutivo = db.CONPOSAPHs.First(x => x.TIPO_SOL == "NC" && x.SOCIEDAD == D.SOCIEDAD_ID && (x.TIPO_DOC == "YG" || x.TIPO_DOC == "DG")).CONSECUTIVO;
+                    string tax_code = db.CONPOSAPPs.First(x => x.CONSECUTIVO == concecutivo).TAX_CODE;
+                    KBETR = db.IIMPUESTOes.Any(x => x.MWSKZ == tax_code && x.LAND==pais_id) ? db.IIMPUESTOes.First(x => x.MWSKZ == tax_code && x.LAND == pais_id).KBETR.Value : 0.0M;
+                }
+                impuesto = (D.MONTO_DOC_MD.Value * KBETR);
+            }
+            return impuesto;
+        }
     }
 }

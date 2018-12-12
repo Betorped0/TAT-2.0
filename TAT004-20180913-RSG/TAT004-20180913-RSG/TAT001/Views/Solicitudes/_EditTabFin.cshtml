@@ -156,50 +156,23 @@
                         </div>
                     </div>
                     <script>
-                        var clearing = [];
-                        function getClearing() {
-                            $("#div_clearing").empty();
-                            cuentas();
+                         var clearing = null;
+                            function formaClearing() {
 
-                            asignarSolicitud($('#NUM_DOC').val(), $('#monto_doc_md').val(), true);
-                        }
-                        function formaClearing() {
-                            var tex_abono = document.querySelector(".lbl_cabono").innerHTML;
-                            var tex_cargo = document.querySelector(".lbl_ccargo").innerHTML;
-                            var tex_clearing = document.querySelector(".lbl_cclear").innerHTML;
+                                var monto = toShowNum($('#D_NUM_DOC').val(), $('#dec').val()),
+                                    tsol_id = $("#TSOL_ID").val(),
+                                    isReverso = false,
+                                    num_doc = $('#NUM_DOC').val();
 
-                            getClearing();
-                            $("#div_clearing").empty();
-                            var monto = $('#monto_doc_md').val();
+                                $("#div_clearing").empty();
+                                cuentas(num_doc,tsol_id, monto);
 
-                            var div = "<ul class='collection'><li class='collection-item'>";
-                            //DRS 24.09.18---------------------------------------------+
-                            div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_abono + "</div><div class='col s3'>" + clearing[1] + "</div><div class='col s3'>" + clearing[0] + "</div><div class='col s3 right-align'>" + monto + "</div></div>";
-                            div += "</li><li class='collection-item'>";
-
-                            if (clearing[5] == null) {
-                                //DRS 24.09.18---------------------------------------------
-                                div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + clearing[3] + "</div><div class='col s3'>" + clearing[2] + "</div><div class='col s3 right-align'>" + monto + "</div></div></div>";
-                            } else {
-                                if (clearing[2] != null) {
-                                    if (monto <= clearing[5]) {
-
-                                        div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + clearing[3] + "</div><div class='col s3'>" + clearing[2] + "</div><div class='col s3 right-align'>" + monto + "</div></div>";
-                                        div += "</li><li class='collection-item'>";
-                                        div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>" + tex_clearing + "</div><div class='col s4'>" + clearing[4] + "</div><div class='col s4'>0.00</div></div>";
-                                        div += "</li>";
-                                    } else {
-                                        div += "<div class='row' style='margin-bottom:0;'><div class='col s3'>" + tex_cargo + "</div><div class='col s3'>" + clearing[3] + "</div><div class='col s3'>" + clearing[2] + "</div><div class='col s3'>" + clearing[5] + "</div></div>";
-                                        div += "</li><li class='collection-item'>";
-                                        div += "<div class='row' style='margin-bottom:0;'><div class='col s4'>" + tex_clearing + "</div><div class='col s4'>" + clearing[4] + "</div><div class='col s4'>" + (monto - clearing[5]) + "</div></div>";
-                                        div += "</li>";
-                                    }
+                                var div = "";
+                                if (clearing != null) {
+                                    div = cuentasPorTSol(tsol_id, monto, isReverso);
                                 }
+                                $("#div_clearing").append(div);
                             }
-                            div += "</li>";
-                            div += "</ul>";
-                            $("#div_clearing").append(div);
-                        }
                     </script>
                 </div>
                 <div class="card-panel">
