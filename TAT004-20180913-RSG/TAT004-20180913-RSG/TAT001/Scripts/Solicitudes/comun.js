@@ -680,8 +680,11 @@ $(document).ready(function () {
             var num2 = $('#monto_doc_md').val();//RSG 12.06.2018
 
             asignarPresupuesto(kunnr);
-            var esEdit = $('#NUM_DOC').val() !== undefined;
-            asignarSolicitud(num, num2.replace("$", ""), esEdit);//RSG 12.06.2018 //LEJ 09.07.18
+            if ($('#NUM_DOC').val() !== undefined) {
+                asignarSolicitud($('#NUM_DOC').val(), num2.replace("$", ""), true);//RSG 12.06.2018 //LEJ 09.07.18
+            } else {
+                asignarSolicitud(num, num2.replace("$", ""));//RSG 12.06.2018 //LEJ 09.07.18
+            }
 
         } else {
             msj("toast", 'Verificar valores en los campos de Distribución!'); //16-11-2018

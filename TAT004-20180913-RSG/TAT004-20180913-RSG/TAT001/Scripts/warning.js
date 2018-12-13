@@ -225,8 +225,7 @@ function validarN(id, num, mensaje, icon, color, elem, ii, ban) {
     var campoVal = document.getElementById(id);
     var campo = document.getElementById(elem);
 
-    if (campo !== undefined & campoVal !== undefined) {
-        var value = campoVal.value;
+    if (campo !== null & campoVal !== null) {
         if (condiciones(ii)) {
             
             var valid = ban;
@@ -246,8 +245,8 @@ function validarN(id, num, mensaje, icon, color, elem, ii, ban) {
     }
 }
 function validarNC(id, num, mensaje, icon, color, elem, ii, ban) {
-    var campoVal = document.querySelectorAll("td>." + id);
-    var campo = document.querySelectorAll("td>." + elem);
+    var campoVal = document.querySelectorAll("." + id);
+    var campo = document.querySelectorAll("." + elem);
     for (var i = 0; i < campoVal.length; i++) {
         if (campo !== null & campoVal !== null & campo.length === campoVal.length) {
             var campoInput = $(campoVal[i]).find('input');
