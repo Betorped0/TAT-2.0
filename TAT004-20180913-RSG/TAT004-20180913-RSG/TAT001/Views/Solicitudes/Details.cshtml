@@ -282,7 +282,7 @@
                         {
                             <a href="@Url.Action("Backorder", "Recurrencias", new { id_d = Model.D.NUM_DOC.ToString() })" class="btn-small">Backorder</a>
                         }
-                        if (Model.D.DOCUMENTORECs.Any())
+                        if (Model.D.DOCUMENTORECs.Count() > 1)
                         {
                             if (Model.D.DOCUMENTORECs.FirstOrDefault().NUM_DOC == Model.D.NUM_DOC && Model.D.DOCUMENTORECs.Any(x => x.DOC_REF == 0) && (Model.D.USUARIOC_ID == ViewBag.usuario.ID | Model.D.USUARIOD_ID == ViewBag.usuario.ID))
                             {
@@ -319,7 +319,7 @@
                                 if (elem3 != undefined)
                                     M.Modal.init(elem3, []);
                             </script>
-                            if (Model.D.DOCUMENTORECs.Any())
+                            if (Model.D.DOCUMENTORECs.Count() > 1)
                             {
                                 if (Model.D.DOCUMENTORECs.FirstOrDefault().NUM_DOC == Model.D.NUM_DOC && Model.D.DOCUMENTORECs.Any(x=>x.DOC_REF == 0))
                                 {
