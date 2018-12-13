@@ -84,19 +84,19 @@
                             </a>&nbsp
                             @{ if (item.RUTA_DOCUMENTO.Split('.').Last() == "pdf" || item.RUTA_DOCUMENTO.Split('.').Last() == "jpg" || item.RUTA_DOCUMENTO.Split('.').Last() == "png")
                                 {
-                                    <a data-fancybox data-src="@Request.Url.Authority/@item.RUTA_DOCUMENTO" href="javascript:;">
+                                    <a data-fancybox href="@Url.Content("~/"+@item.RUTA_DOCUMENTO)">
                                         <i class='material-icons blue-text'>search</i>
                                     </a>
                                 }
                                 else if (item.RUTA_DOCUMENTO.Split('.').Last() == "txt")
                                 {
-                                    <a data-fancybox data-type="iframe" data-src="@Request.Url.Authority/@item.RUTA_DOCUMENTO" data-iframe='{"preload":false}' href="javascript:;">
+                                    <a data-fancybox data-type="iframe"  data-iframe='{"preload":false}' href="@Url.Content("~/"+@item.RUTA_DOCUMENTO)">
                                         <i class='material-icons blue-text'>search</i>
                                     </a>
                                 }
                                 else
                                 {
-                                    <a href="@Request.Url.Authority/@item.RUTA_DOCUMENTO">
+                                    <a href="@Url.Content("~/"+@item.RUTA_DOCUMENTO)">
                                         <i class='material-icons blue-text'>search</i>
                                     </a>
                                 }
@@ -137,7 +137,7 @@
             scrollY: "50vh",
             scrollCollapse: true,
             language: {
-                                        "url": "../Scripts/lang/@ViewBag.spras_id"+".json"
+                                        "url": "@Url.Content("~/Scripts/lang/"+@ViewBag.spras_id+".json")"
             }, columnDefs: [
                                         {
                                     targets: [1],
@@ -146,25 +146,25 @@
             ],
             order: [[0, "asc"]],
             initComplete: function () {
-                                        this.api().columns().every(function () {
-                                            var column = this;
-                                            var select = $('<select style="display:initial;" class="browser-default"><option value=""></option></select>')
-                                                .appendTo($(column.footer()).empty())
-                                                .on('change', function () {
-                                                var val = $.fn.dataTable.util.escapeRegex(
+                                                this.api().columns().every(function () {
+                                                    var column = this;
+                                                    var select = $('<select style="display:initial;" class="browser-default"><option value=""></option></select>')
+                                                        .appendTo($(column.footer()).empty())
+                                                        .on('change', function () {
+                                                        var val = $.fn.dataTable.util.escapeRegex(
                                 $(this).val()
-                                                );
-                                                column
-                                                    .search(val ? '^' + val + '$' : '', true, false)
-                                                    .draw();
-                                            });
-                                            column.cells('', column[0]).render('display').sort().unique().each(function (d, j) {
-                                                var val = $('<div/>').html(d).text();
-                                                select.append('<option value="' + val + '">' + val + '</option>');
-                                            });
+                                                        );
+                                                        column
+                                                            .search(val ? '^' + val + '$' : '', true, false)
+                                                            .draw();
+                                                    });
+                                                    column.cells('', column[0]).render('display').sort().unique().each(function (d, j) {
+                                                        var val = $('<div/>').html(d).text();
+                                                        select.append('<option value="' + val + '">' + val + '</option>');
+                                                    });
+                                                });
+                                            }
                                         });
-                                    }
-                                });
 
                                 var a = $('#selecc').val();
                                 table.page.len(a).draw();

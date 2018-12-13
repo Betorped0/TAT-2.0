@@ -56,7 +56,7 @@
     </div>
 }
 <div>
-    @Html.ActionLink("Regresar", "Edit", "Usuarios",null, new { id = "lbl_regresar" })
+    @Html.ActionLink("Regresar", "Edit", "Usuarios",new {usuario_id=Model.ID }, new { id = "lbl_regresar" })
 </div>
 @if (ViewBag.message != null)
 {
