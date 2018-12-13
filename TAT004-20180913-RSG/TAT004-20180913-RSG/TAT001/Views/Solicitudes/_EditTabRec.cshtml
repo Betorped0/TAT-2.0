@@ -5,7 +5,7 @@
         <div class="card-panel">
             <h5 id="hRecurre">Recurrente</h5>
             <input type="hidden" id="txt_trec" />
-            <div class="row" style="margin-bottom:0;">
+            <div class="row" style="overflow:auto;">
                 <p>
                     @*<input type="hidden" value="@Model.DOCUMENTOREC.Count" id="valRec" />*@@*LEJ 31.07.2018---------------------*@
                     @*<label>
@@ -129,12 +129,12 @@
                 </table>
             </div>
             <div class="row" style="margin-bottom:0;">
-                <div class="col s12 m6 offset-m6 right-align">
+                <div class="col s12 m12 l6 offset-l6 right-align">
                     <input type="button" id="btnRango" style="display:none;" class="btn-small" onclick="addRango()" value="Agregar rango" />
                     <input type="button" id="btnDelRango" style="display:none;" class="btn-small" onclick="delRango()" value="Quitar rangos" />
                     @*<input type="button" id="dd" style="" class="btn-small" onclick="enviaRan()" value="Enviar" />*@
                 </div>
-                <div class="col s12 m6 offset-m6">
+                <div class="col s12 m12 l6 offset-l6 right-align">
                     <table class="table_rangos display" id="table_rangos" cellspacing="0" style="width:100%;display:none;font-size:12px;">
                         <!--RSG 01.08.2018-->
                         <thead>
