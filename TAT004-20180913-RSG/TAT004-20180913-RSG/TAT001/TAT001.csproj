@@ -371,7 +371,40 @@
     <Compile Include="Entities\COUNTRy.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\CPS_LISTA_CITIES_Result.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\CPS_LISTA_CLIENTES_Result.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\CPS_LISTA_CLI_PRO_Result.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\CPS_LISTA_CONTACTOS_Result.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\CPS_LISTA_DOCUMENTOP_Result.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\CPS_LISTA_MATERIALES_Result.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\CPS_LISTA_SOCIEDADES_Result.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\CPS_LISTA_SOLICITUDES_POR_APROBAR_Result.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\CPS_LISTA_SOLICITUDES_Result.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\CPS_LISTA_SPRAS_Result.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\CPS_LISTA_STATES_Result.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\CPS_LISTA_USUARIOS_Result.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\CREADOR.cs">
@@ -405,6 +438,12 @@
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\CSP_DOCUMENTOSXUSER_Result.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\CSP_DOCUMENTOSXUSER_test_Result.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\CSP_LISTA_TALL_CUENTA_Result.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\CSP_PERMISO_Result.cs">
@@ -1419,6 +1458,10 @@
     <!--<Content Include="obj\Debug\TAT001.csproj.FileListAbsolute.txt" />
     <Content Include="obj\Debug\TAT001.dll" />
     <Content Include="obj\Debug\TAT001.pdb" />-->
+    <Content Include="PdfTemp\Solicitudes_Consulta\Solicitudes_Consulta09\11\2018.xlsx" />
+    <Content Include="PdfTemp\Solicitudes_Consulta\Solicitudes_Consulta\09\11\2018.xlsx" />
+    <Content Include="PdfTemp\Solicitudes_Consulta\09\11\2018.xlsx" />
+    <Compile Include="Models\Dao\StatesDao.cs" />
     <EntityDeploy Include="Entities\TAT001.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>TAT001.Designer.cs</LastGenOutput>
@@ -1426,10 +1469,6 @@
     <Content Include="Entities\TAT001.edmx.diagram">
       <DependentUpon>TAT001.edmx</DependentUpon>
     </Content>
-    <Content Include="PdfTemp\Solicitudes_Consulta\Solicitudes_Consulta09\11\2018.xlsx" />
-    <Content Include="PdfTemp\Solicitudes_Consulta\Solicitudes_Consulta\09\11\2018.xlsx" />
-    <Content Include="PdfTemp\Solicitudes_Consulta\09\11\2018.xlsx" />
-    <Compile Include="Models\Dao\StatesDao.cs" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\borrador.js" />
     <Content Include="Scripts\dropdowntree.js" />
