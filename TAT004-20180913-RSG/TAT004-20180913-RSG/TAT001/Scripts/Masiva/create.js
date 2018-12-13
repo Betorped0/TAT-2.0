@@ -883,7 +883,6 @@ function procesarHoja2() {
         processData: false,
         async: true,
         success: function (data) {
-
             if (data !== null || data !== "") {
 
                 if (data.length > 1) {
@@ -966,12 +965,13 @@ function addRowH2(t, NUM_DOC, FACTURA, FECHA, PROVEEDOR, PROVEEDOR_NOMBRE, AUTOR
     if (WARNINGS[8] === "") { bloqueo[8] = "disabled"; }
     else { bloqueo[8] = ""; }
 
+    var classProveedor = ERRORES[3] !== "" ? ERRORES[3] : WARNINGS[3];
     var r = t.row.add([
         "<div class='" + clase + "'></div>",
         "<input class='" + ERRORES[0] + WARNINGS[0] + " input_numdoc' style='font-size:12px; text-align:center;' type='text' id='' name='' disabled value='" + NUM_DOC + "'><span hidden>" + NUM_DOC + "</span>",
         "<input class='" + ERRORES[1] + WARNINGS[1] + " input_factura' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo[1] + " value='" + FACTURA + "'><span hidden>" + FACTURA + "</span>",
         "<input class='" + ERRORES[2] + WARNINGS[2] + " input_fechaH2' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo[2] + " value='" + FECHA + "'><span hidden>" + FECHA + "</span>",
-        "<input class='" + ERRORES[3] + WARNINGS[3] + " input_proveedor' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo[3] + " value='" + PROVEEDOR + "'><span hidden>" + PROVEEDOR + "</span>",
+        "<input class='" + classProveedor + " input_proveedor' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo[3] + " value='" + PROVEEDOR + "'><span hidden>" + PROVEEDOR + "</span>",
         "<input class='" + ERRORES[4] + WARNINGS[4] + "' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo[4] + " value='" + PROVEEDOR_NOMBRE + "'><span hidden>" + PROVEEDOR_NOMBRE + "</span>",
         "<input class='" + ERRORES[5] + WARNINGS[5] + " input_autorizacion' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo[5] + " value='" + AUTORIZACION + "'><span hidden>" + AUTORIZACION + "</span>",
         "<input class='" + ERRORES[6] + WARNINGS[6] + " input_fechaH2' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo[6] + " value='" + VENCIMIENTO + "'><span hidden>" + VENCIMIENTO + "</span>",
@@ -1075,10 +1075,11 @@ $('#tab_test2').on('keydown.autocomplete', '.input_proveedor', function () {
     var tablaH1 = $('#tab_test1').DataTable();
 
     var amarillo = $(tr.find("td:eq(" + col_index + ")").children());
-    amarillo = $(amarillo).hasClass("yelloww");
+    //amarillo = $(amarillo).hasClass("yelloww");
+    amarillo.prop('disabled');
 
     if (amarillo) {
-        amarillo = "blue";
+        amarillo = "yelloww blue";
     }
     else {
         amarillo = "";
@@ -1677,7 +1678,7 @@ function addRowH4(t, NUM_DOC, LIGADA, VIGENCIA_DE, VIGENCIA_AL, MATNR, MATKL, DE
         icono = 'done';
         clase = 'green white-text';
     }
-
+    
     var r = t.row.add([
         "<div class='" + clase + "'></div>",
         "<input class='" + ERRORES[0] + " input_numdoc' style='font-size:12px; text-align:center;' type='text' id='' name='' disabled value='" + NUM_DOC + "' title='"+getWarning(ERRORES[0])+"'><span hidden>" + NUM_DOC + "</span>",
