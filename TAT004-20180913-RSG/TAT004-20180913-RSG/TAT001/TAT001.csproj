@@ -1130,6 +1130,7 @@
     <Content Include="images\flags\4x3\sv.png" />
     <Content Include="images\flags\4x3\ve.png" />
     <Content Include="images\flags\4x3\ve.svg" />
+    <Content Include="images\flags\mini\mx.png" />
     <Content Include="images\parallax.jpg" />
     <Content Include="images\play.png" />
     <Content Include="images\playb.png" />
