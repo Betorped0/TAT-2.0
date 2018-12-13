@@ -15,7 +15,7 @@ namespace TAT001.Services
     public class Email
     {
         private readonly TAT001Entities db = new TAT001Entities();
-        public void enviaMailC(decimal id, bool ban, string spras, string UrlDirectory, string page, string image)
+        public void enviaMailC(decimal id, bool ban, string spras, string UrlDirectory, string page, string image, string imageFlag)
         {
             try
             {
@@ -72,7 +72,8 @@ namespace TAT001.Services
                             UrlDirectory = UrlDirectory.Replace("Masiva/setDatos", "Correos/" + page);
                             UrlDirectory = UrlDirectory.Replace("Solicitudes/Cancelar", "Correos/" + page);
                             //UrlDirectory += "/" + dOCUMENTO.NUM_DOC + "?mail=true"; //B20180803 MGC Correos
-                            UrlDirectory += "/" + dOCUMENTO.NUM_DOC + ""; //B20180803 MGC Correos
+                            //UrlDirectory += "/" + dOCUMENTO.NUM_DOC + ""; //B20180803 MGC Correos
+                            UrlDirectory += "/" + dOCUMENTO.NUM_DOC + "?spras=" + spras; //B20180803 MGC Correos
                             HttpWebRequest myRequest = (HttpWebRequest)WebRequest.Create(UrlDirectory);
                             myRequest.Method = "GET";
                             WebResponse myResponse = myRequest.GetResponse();
@@ -83,7 +84,7 @@ namespace TAT001.Services
 
                             //mail.Body = result;//B20180803 MGC Correos
 
-                            mail.AlternateViews.Add(Mail_Body(result, image));//B20180803 MGC Correos
+                            mail.AlternateViews.Add(Mail_Body(result, image, imageFlag));//B20180803 MGC Correos
                             mail.IsBodyHtml = true;//B20180803 MGC Correos
 
                             client.Send(mail);
@@ -98,7 +99,7 @@ namespace TAT001.Services
             }
         }
 
-        private AlternateView Mail_Body(string strr, string path)
+        private AlternateView Mail_Body(string strr, string path, string path2)
         {
 
             ////string path = "";
@@ -106,13 +107,16 @@ namespace TAT001.Services
 
             ////string path = "C:/Users/matias/Documents/GitHub/TAT004/TAT001/images/logo_kellogg.png";// HttpContext.Current.Server.MapPath(@"images/6792532.jpg");
             LinkedResource Img = new LinkedResource(path, MediaTypeNames.Image.Jpeg);
+            LinkedResource Img2 = new LinkedResource(path2, MediaTypeNames.Image.Jpeg);
             Img.ContentId = "logo_img";
+            Img2.ContentId = "flag_img";
 
             strr = strr.Replace("\"miimg_id\"", "cid:logo_img");
+            strr = strr.Replace("\"miflag_id\"", "cid:flag_img");
 
-            AlternateView AV =
-            AlternateView.CreateAlternateViewFromString(strr, null, MediaTypeNames.Text.Html);
+            AlternateView AV = AlternateView.CreateAlternateViewFromString(strr, null, MediaTypeNames.Text.Html);
             AV.LinkedResources.Add(Img);
+            AV.LinkedResources.Add(Img2);
             return AV;
         }
 

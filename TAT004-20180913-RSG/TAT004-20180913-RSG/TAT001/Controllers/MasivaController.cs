@@ -3594,7 +3594,9 @@ namespace TAT001.Controllers
                                 string image = Server.MapPath("~/images/logo_kellogg.png");
                                 Email em = new Email();
                                 string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
-                                em.enviaMailC(f.NUM_DOC, true,spras_id, UrlDirectory, "Index", image);
+                                DOCUMENTO docc = db.DOCUMENTOes.Where(x => x.NUM_DOC == doc.NUM_DOC).First();
+                                string imageFlag = Server.MapPath("~/images/flags/mini/" + docc.PAIS_ID + ".png");
+                                em.enviaMailC(f.NUM_DOC, true,spras_id, UrlDirectory, "Index", image, imageFlag);
 
                                 if (conta.WORKFP.ACCION.TIPO == "B")
                                 {
