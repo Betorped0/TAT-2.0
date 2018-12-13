@@ -179,7 +179,7 @@ namespace TAT001.Controllers
                         string vkorg = "", vtweg = "", spart = "";
                         if (db.CLIENTEs.Where(x => x.KUNNR == payer_id).Count() > 0)
                         {
-                            var clienteH1 = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault();
+                            CLIENTE clienteH1 = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault();
                             vkorg = clienteH1.VKORG;
                             vtweg = clienteH1.VTWEG;
                             spart = clienteH1.SPART;
@@ -292,11 +292,11 @@ namespace TAT001.Controllers
                 List<DOCUMENTO> dd = new List<DOCUMENTO>();
 
                 List<PAI> pp = (from P in db.PAIS.ToList()//ADD RSG 01.11.2018--------------------------------------------------
-                                join C in db.CLIENTEs.Where(x => x.ACTIVO == true).ToList()
+                                join C in db.CLIENTEs.Where(x => x.ACTIVO).ToList()
                                 on P.LAND equals C.LAND
-                                join U in db.USUARIOFs.Where(x => x.USUARIO_ID == User.Identity.Name & x.ACTIVO == true)
+                                join U in db.USUARIOFs.Where(x => x.USUARIO_ID == User.Identity.Name && x.ACTIVO == true)
                                 on new { C.VKORG, C.VTWEG, C.SPART, C.KUNNR } equals new { U.VKORG, U.VTWEG, U.SPART, U.KUNNR }
-                                where P.ACTIVO == true
+                                where P.ACTIVO
                                 select P).DistinctBy(x => x.LAND).ToList();
 
                 for (int i = 2; i < ds1.Tables[0].Rows.Count; i++)
@@ -305,6 +305,13 @@ namespace TAT001.Controllers
                     string tsol = ds1.Tables[0].Rows[i][1].ToString().Trim();
                     string bukrs = ds1.Tables[0].Rows[i][3].ToString().Trim();
                     string land = ds1.Tables[0].Rows[i][4].ToString().Trim();
+                    CLIENTE clienteH1 = null;
+                    string payer_id = ds1.Tables[0].Rows[i][9].ToString().Trim();
+                    if (payer_id.Length < 10) { payer_id = cad.completaCliente(payer_id); }
+                    if (db.CLIENTEs.Where(x => x.KUNNR == payer_id).Count() > 0)
+                    {
+                         clienteH1= db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault();
+                    }
 
                     PAI p = pp.Where(a => a.LANDX == land).FirstOrDefault();
 
@@ -312,6 +319,7 @@ namespace TAT001.Controllers
                     d.NUM_DOC = decimal.Parse(num_doc);
                     d.TSOL_ID = tsol;
                     d.SOCIEDAD_ID = bukrs;
+                    d.CLIENTE = clienteH1;
                     if (p != null)
                         d.PAIS_ID = p.LAND;//ADD RSG 01.11.2018--------------------------------------------------
                     dd.Add(d);
@@ -322,9 +330,10 @@ namespace TAT001.Controllers
                     foreach (DOCUMENTO d in dd)
                     {
                         List<Relacionada> rel = new List<Relacionada>();
-                        for (int i = 2; i < ds2.Tables[0].Rows.Count; i++)
+                        List<DataRow> listRows = getRowsByDocument(ds2.Tables[0], d.NUM_DOC.ToString(), 0);
+                        foreach (DataRow row in listRows)
                         {
-                            string num_doc = ds2.Tables[0].Rows[i][0].ToString().Trim();
+                            string num_doc = row[0].ToString().Trim();
                             if (getNumberDocument(num_doc) == -1)
                                 continue;
 
@@ -332,18 +341,18 @@ namespace TAT001.Controllers
                             {
                                 Relacionada doc = new Relacionada();
 
-                                string factura = ds2.Tables[0].Rows[i][1].ToString().Trim();
-                                string fecha_factura = ds2.Tables[0].Rows[i][2].ToString().Trim();
+                                string factura = row[1].ToString().Trim();
+                                string fecha_factura = row[2].ToString().Trim();
                                 string[] fecha_factura2 = fecha_factura.Split(' ');
-                                string proveedor = ds2.Tables[0].Rows[i][3].ToString().Trim();
-                                string proveedor_nombre = ds2.Tables[0].Rows[i][4].ToString().Trim();
-                                string autorizacion = ds2.Tables[0].Rows[i][5].ToString().Trim();
-                                string vencimiento = ds2.Tables[0].Rows[i][6].ToString().Trim();
+                                string proveedor = row[3].ToString().Trim();
+                                string proveedor_nombre = row[4].ToString().Trim();
+                                string autorizacion = row[5].ToString().Trim();
+                                string vencimiento = row[6].ToString().Trim();
                                 string[] vencimiento2 = vencimiento.Split(' ');
-                                string facturak = ds2.Tables[0].Rows[i][7].ToString().Trim();
-                                string ejerciciok = ds2.Tables[0].Rows[i][8].ToString().Trim();
+                                string facturak = row[7].ToString().Trim();
+                                string ejerciciok = row[8].ToString().Trim();
 
-                                var con = db.FACTURASCONFs.Where(x => x.SOCIEDAD_ID == d.SOCIEDAD_ID & x.PAIS_ID == d.PAIS_ID & x.TSOL == d.TSOL_ID).FirstOrDefault();
+                                var con = db.FACTURASCONFs.Where(x => x.SOCIEDAD_ID == d.SOCIEDAD_ID && x.PAIS_ID == d.PAIS_ID && x.TSOL == d.TSOL_ID).FirstOrDefault();
 
                                 if (con != null)
                                 {
@@ -388,13 +397,13 @@ namespace TAT001.Controllers
 
                                 rel.Add(doc);
                                 lp.Add(doc);
-                                errores.Add(cargaInicialH2(ds2.Tables[0].Rows[i]));
-                                warnings.Add(cargaInicialH2W(ds2.Tables[0].Rows[i]));
+                                errores.Add(cargaInicialH2(row, d.CLIENTE));
+                                warnings.Add(cargaInicialH2W(row));
                             }
                         }
                         if (rel.Where(x => x.NUM_DOC == d.NUM_DOC.ToString()).Count() == 0)
                         {
-                            FACTURASCONF fcon = db.FACTURASCONFs.Where(x => x.SOCIEDAD_ID == d.SOCIEDAD_ID & x.PAIS_ID == d.PAIS_ID && x.TSOL == d.TSOL_ID).FirstOrDefault();
+                            FACTURASCONF fcon = db.FACTURASCONFs.Where(x => x.SOCIEDAD_ID == d.SOCIEDAD_ID && x.PAIS_ID == d.PAIS_ID && x.TSOL == d.TSOL_ID).FirstOrDefault();
                             if (fcon != null)
                             {
                                 Relacionada doc = new Relacionada();
@@ -565,7 +574,7 @@ namespace TAT001.Controllers
                         string vkorg = "", vtweg = "", spart = "";
                         if (db.CLIENTEs.Where(x => x.KUNNR == objInformacion.PAYER_ID).Count() > 0)
                         {
-                            var clienteH1 = db.CLIENTEs.Where(x => x.KUNNR == objInformacion.PAYER_ID).FirstOrDefault();
+                            CLIENTE clienteH1 = db.CLIENTEs.Where(x => x.KUNNR == objInformacion.PAYER_ID).FirstOrDefault();
                             vkorg = clienteH1.VKORG;
                             vtweg = clienteH1.VTWEG;
                             spart = clienteH1.SPART;
@@ -1550,7 +1559,7 @@ namespace TAT001.Controllers
             return regresaRowH1;
         }
 
-        public List<object> cargaInicialH2(DataRow fila)
+        public List<object> cargaInicialH2(DataRow fila, CLIENTE cliente)
         {
             DataSet ds1 = (DataSet)Session["ds1"];
             List<object> regresaRowH2 = new List<object>();//REGRESA LA LISTA DE ERRORES
@@ -1576,11 +1585,11 @@ namespace TAT001.Controllers
                 string t_sol = ds1.Tables[0].Rows[i][1].ToString().Trim();
                 string sociedad = ds1.Tables[0].Rows[i][3].ToString().Trim();
                 string pais = ds1.Tables[0].Rows[i][4].ToString().Trim();
-                pais = db.PAIS.Where(x => x.SOCIEDAD_ID == sociedad & x.LANDX == pais).FirstOrDefault().LAND;
+                pais = db.PAIS.Where(x => x.SOCIEDAD_ID == sociedad && x.LANDX == pais).FirstOrDefault().LAND;
 
                 if (num_doc == num_docH1)
                 {
-                    var con = db.FACTURASCONFs.Where(x => x.SOCIEDAD_ID == sociedad & x.PAIS_ID == pais & x.TSOL == t_sol).FirstOrDefault();
+                    var con = db.FACTURASCONFs.Where(x => x.SOCIEDAD_ID == sociedad && x.PAIS_ID == pais && x.TSOL == t_sol).FirstOrDefault();
 
                     if (IsNumeric(num_doc))
                     {
@@ -1710,9 +1719,10 @@ namespace TAT001.Controllers
 
                     if (con.PROVEEDOR)
                     {
-                        if (proveedor.Length > 0 & proveedor.Length <= 10)
+                        if (proveedor.Length > 0 && proveedor.Length <= 10)
                         {
-                            if (db.PROVEEDORs.Where(x => x.ID == proveedor & x.SOCIEDAD_ID == sociedad).Count() > 0)
+                            //if (db.PROVEEDORs.Where(x => x.ID == proveedor && x.SOCIEDAD_ID == sociedad).Count() > 0)
+                            if(cliente.PROVEEDOR_ID==proveedor)
                             {
                                 regresaRowH2.Add("");
                             }
