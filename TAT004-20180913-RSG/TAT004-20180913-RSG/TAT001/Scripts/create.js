@@ -1465,7 +1465,7 @@ $(window).on('load', function () {
     $('#tipo_cambio').val(toShow5($('#tipo_cambio').val()));
     if (isDuplicado())
         periodo();
-
+    _ff();
     //B20180625 MGC 2018.06.26 Verificar si hay algún borrador mostrar la sección de facturas
     var check = $("#check_facturas").val();
     if (/*!isRelacionada() &&*/ !isReversa()) {
@@ -1592,6 +1592,7 @@ $(window).on('load', function () {
     }
     //Valores en información antes soporte
     copiarTableVistaSop();
+    if (!isDuplicado())
     copiarTableVistaRec(); //ADD RSG 30.10.2018
     //Valores en  distribución    
     copiarTableVista("", borr, ne); //B20180625 MGC 2018.07.02 //Add MGC B20180705 2018.07.05 ne no eliminar
@@ -1727,7 +1728,7 @@ function _ff() {
             error: function (xhr, httpStatusMessage, customErrorMessage) {
                 M.toast({ html: httpStatusMessage });
             },
-            async: true
+            async: false
         });
     }
     var datef = $("#fechaf_vig").val().split(" ")[0];
@@ -1757,7 +1758,7 @@ function _ff() {
             error: function (xhr, httpStatusMessage, customErrorMessage) {
                 M.toast({ html: httpStatusMessage });
             },
-            async: true
+            async: false
         });
     }
 }

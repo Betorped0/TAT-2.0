@@ -266,7 +266,7 @@ function cambiaRec() {
                     var monto = "";
                     ////if (i === 1) {
                     ////if (tipo !== "P") {
-                    if (tipoR !== "2") {
+                    if (tipoR !== "2" || tipoR === "2") {
                         if (tipo === "MM" | tipo === "MC") {
                             ////date = document.getElementById("fechai_vig").value;
                             monto = montoo;
