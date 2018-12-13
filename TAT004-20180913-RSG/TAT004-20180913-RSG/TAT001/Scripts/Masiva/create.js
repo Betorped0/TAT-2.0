@@ -244,7 +244,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_tsol', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item)) {
+            if (!(ui.item) && $(".input_tsol").val() === "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
                 $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                 clearErrors();
@@ -286,7 +286,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_clasificacion', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item)) {
+            if (!(ui.item) && $(".input_clasificacion").val() === "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
                 $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                 clearErrors();
@@ -332,7 +332,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_sociedad', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item)) {
+            if (!(ui.item) && $(".input_sociedad").val() === "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
                 $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                 clearErrors();
@@ -383,7 +383,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_pais', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item)) {
+            if (!(ui.item) && $(".input_pais").val() === "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
                 $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                 clearErrors();
@@ -430,7 +430,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_estado', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item)) {
+            if (!(ui.item) && $(".input_estado").val() === "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
                 $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                 clearErrors();
@@ -476,7 +476,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_ciudad', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item)) {
+            if (!(ui.item) && $(".input_ciudad").val() === "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
                 $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                 clearErrors();
@@ -605,7 +605,7 @@ $('body').on('keydown.autocomplete', '.input_cliente', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item)) {
+            if (!(ui.item) && $(".input_cliente").val() === "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
                 //$(tr.find("td:eq(" + col_index2 + ")").children().addClass("red white-text rojo"));
                 $(tr.find("td:eq(" + col_index2 + ")").children().val(""));
@@ -682,7 +682,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_contacto', function () {
         },
 
         change: function () {
-            if ($(this).val() === "") {
+            if ($(this).val() === "" && $(".input_contacto").val() === "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
                 $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
             }
@@ -830,7 +830,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_moneda', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item)) {
+            if (!(ui.item) && $(".input_moneda").val() === "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
                 $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                 clearErrors();
@@ -881,8 +881,8 @@ function procesarHoja2() {
         cache: false,
         contentType: false,
         processData: false,
+        async: true,
         success: function (data) {
-
             if (data !== null || data !== "") {
 
                 if (data.length > 1) {
@@ -965,12 +965,13 @@ function addRowH2(t, NUM_DOC, FACTURA, FECHA, PROVEEDOR, PROVEEDOR_NOMBRE, AUTOR
     if (WARNINGS[8] === "") { bloqueo[8] = "disabled"; }
     else { bloqueo[8] = ""; }
 
+    var classProveedor = ERRORES[3] !== "" ? ERRORES[3] : WARNINGS[3];
     var r = t.row.add([
         "<div class='" + clase + "'></div>",
         "<input class='" + ERRORES[0] + WARNINGS[0] + " input_numdoc' style='font-size:12px; text-align:center;' type='text' id='' name='' disabled value='" + NUM_DOC + "'><span hidden>" + NUM_DOC + "</span>",
         "<input class='" + ERRORES[1] + WARNINGS[1] + " input_factura' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo[1] + " value='" + FACTURA + "'><span hidden>" + FACTURA + "</span>",
         "<input class='" + ERRORES[2] + WARNINGS[2] + " input_fechaH2' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo[2] + " value='" + FECHA + "'><span hidden>" + FECHA + "</span>",
-        "<input class='" + ERRORES[3] + WARNINGS[3] + " input_proveedor' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo[3] + " value='" + PROVEEDOR + "'><span hidden>" + PROVEEDOR + "</span>",
+        "<input class='" + classProveedor + " input_proveedor' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo[3] + " value='" + PROVEEDOR + "'><span hidden>" + PROVEEDOR + "</span>",
         "<input class='" + ERRORES[4] + WARNINGS[4] + "' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo[4] + " value='" + PROVEEDOR_NOMBRE + "'><span hidden>" + PROVEEDOR_NOMBRE + "</span>",
         "<input class='" + ERRORES[5] + WARNINGS[5] + " input_autorizacion' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo[5] + " value='" + AUTORIZACION + "'><span hidden>" + AUTORIZACION + "</span>",
         "<input class='" + ERRORES[6] + WARNINGS[6] + " input_fechaH2' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo[6] + " value='" + VENCIMIENTO + "'><span hidden>" + VENCIMIENTO + "</span>",
@@ -1074,10 +1075,11 @@ $('#tab_test2').on('keydown.autocomplete', '.input_proveedor', function () {
     var tablaH1 = $('#tab_test1').DataTable();
 
     var amarillo = $(tr.find("td:eq(" + col_index + ")").children());
-    amarillo = $(amarillo).hasClass("yelloww");
+    //amarillo = $(amarillo).hasClass("yelloww");
+    amarillo.prop('disabled');
 
     if (amarillo) {
-        amarillo = "blue";
+        amarillo = "yelloww blue";
     }
     else {
         amarillo = "";
@@ -1119,7 +1121,7 @@ $('#tab_test2').on('keydown.autocomplete', '.input_proveedor', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item)) {
+            if (!(ui.item) && $(".input_proveedor").val() === "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
                 $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                 $(tr.find("td:eq(" + col_index + ")").children().removeClass(amarillo));
@@ -1301,6 +1303,7 @@ function procesarHoja3() {
         cache: false,
         contentType: false,
         processData: false,
+        async: true,
         success: function (data) {
 
             if (data !== null || data !== "") {
@@ -1611,6 +1614,7 @@ function procesarHoja4() {
         cache: false,
         contentType: false,
         processData: false,
+        async: true,
         success: function (data) {
 
             if (data !== null || data !== "") {
@@ -1674,7 +1678,7 @@ function addRowH4(t, NUM_DOC, LIGADA, VIGENCIA_DE, VIGENCIA_AL, MATNR, MATKL, DE
         icono = 'done';
         clase = 'green white-text';
     }
-
+    
     var r = t.row.add([
         "<div class='" + clase + "'></div>",
         "<input class='" + ERRORES[0] + " input_numdoc' style='font-size:12px; text-align:center;' type='text' id='' name='' disabled value='" + NUM_DOC + "' title='"+getWarning(ERRORES[0])+"'><span hidden>" + NUM_DOC + "</span>",
@@ -1751,7 +1755,7 @@ $('#tab_test4').on('keydown.autocomplete', '.input_material', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item)) {
+            if (!(ui.item) && $(".input_material").val() === "") {
                 $(this).addClass("red white-text rojo");
                 $(tr.find("td:eq(" + (col_index - 1) + ")").children().val(""));
                 $(tr.find("td:eq(" + (col_index - 1) + ")").children().removeClass("red white-text rojo"));
@@ -1834,7 +1838,7 @@ $('#tab_test4').on('keydown.autocomplete', '.input_categoria', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item)) {
+            if (!(ui.item) && $(".input_categoria").val() === "") {
                 $(tr.find("td:eq(" + (col_index - 1) + ")").children().val(""));
                 $(tr.find("td:eq(" + (col_index + 1) + ")").children().val(""));
                 $(this).addClass("red white-text rojo");
@@ -2605,6 +2609,7 @@ function procesarHoja5() {
         cache: false,
         contentType: false,
         processData: false,
+        async: true,
         success: function (data) {
 
             if (data !== null || data !== "") {
@@ -3513,6 +3518,7 @@ function guardaDatos() {
         data: formData,
         success: function (data) {
             getDec = data;
+            setDatos(tabla1, tabla2, tabla3, tabla4, tabla5, notasArr);
         },
         error: function (xhr, status, p3, p4) {
             var err = "Error " + " " + status + " " + p3 + " " + p4;
@@ -3521,10 +3527,11 @@ function guardaDatos() {
             document.getElementById("loader").style.display = "none";
             //console.log(err);
         },
-
-        async: true
     });
 
+   
+}
+function setDatos(tabla1, tabla2, tabla3, tabla4, tabla5, notasArr) {
     $.ajax({
         type: "POST",
         url: 'setDatos',
@@ -3535,7 +3542,7 @@ function guardaDatos() {
             if (data !== null | data !== "") {
                 var eliminarId = [];
                 var listaIds = [];
-                var listIdsRechazados=[];
+                var listIdsRechazados = [];
                 listaIds = data.pop();
                 //eliminarId = data;
                 listaIds.forEach(function (element) {
@@ -3645,7 +3652,7 @@ function guardaDatos() {
                         var texto = listaIds[k].split('<');
                         M.toast({ html: 'Documento ' + texto[1] + ' no fue creado, porque no contiene materiales.' });
 
-                    }else {
+                    } else {
                         M.toast({ html: 'Documento ' + listaIds[k] + ' fue creado' });
                     }
                 }
@@ -3664,7 +3671,6 @@ function guardaDatos() {
         }
     });
 }
-
 function cloneTables() {
     var tablaH1c = $('#tab_test1').DataTable();
     var tablaH2c = $('#tab_test2').DataTable();
@@ -3676,7 +3682,8 @@ function cloneTables() {
     $('#tabclon1hd').append("<tr id='titles1d'></tr>");
 
     $('#tab_test1 > thead > tr > th').each(function () {
-        if ($(this).text() !== "LABEL" && $(this).text() !== "ESTATUS") {
+        var id = $(this).prop('id');
+        if (id !== "lbl_estatusH1" && id !== "lbl_vkorg" && id !== "lbl_vtweg" && id !== "lbl_spart") {
             $('#titles1d').append("<th>" + $(this).text() + "</th>");
         }
     });
@@ -3696,7 +3703,8 @@ function cloneTables() {
     $('#tabclon2h').append("<tr id='titles2'></tr>");
 
     $('#tab_test2 > thead > tr > th').each(function () {
-        if ($(this).text() !== "LABEL" && $(this).text() !== "ESTATUS") {
+        var id = $(this).prop('id');
+        if (id !== "lbl_estatusH2") {
             $('#titles2').append("<th>" + $(this).text() + "</th>");
         }
     });
@@ -3715,7 +3723,8 @@ function cloneTables() {
     $('#tabclon3h').append("<tr id='titles3'></tr>");
 
     $('#tab_test3 > thead > tr > th').each(function () {
-        if ($(this).text() !== "LABEL" && $(this).text() !== "ESTATUS") {
+        var id = $(this).prop('id');
+        if (id !== "lbl_estatusH3") {
             $('#titles3').append("<th>" + $(this).text() + "</th>");
         }
     });
@@ -3734,7 +3743,8 @@ function cloneTables() {
     $('#tabclon4h').append("<tr id='titles4'></tr>");
 
     $('#tab_test4 > thead > tr > th').each(function () {
-        if ($(this).text() !== "LABEL" && $(this).text() !== "ESTATUS") {
+        var id = $(this).prop('id');
+        if (id !== "lbl_estatusH4") {
             $('#titles4').append("<th>" + $(this).text() + "</th>");
         }
     });
@@ -3777,7 +3787,7 @@ var tablesToExcel = (function () {
         for (var i = 0; i < tables.length; i++) {
             if (!tables[i].nodeType) tables[i] = document.getElementById(tables[i]);
             for (var j = 0; j < tables[i].rows.length; j++) {
-                rowsXML += '<Row>'
+                rowsXML += '<Row>';
                 for (var k = 0; k < tables[i].rows[j].cells.length; k++) {
                     var dataType = tables[i].rows[j].cells[k].getAttribute("data-type");
                     var dataStyle = tables[i].rows[j].cells[k].getAttribute("data-style");
@@ -3793,7 +3803,7 @@ var tablesToExcel = (function () {
                     };
                     rowsXML += format(tmplCellXML, ctx);
                 }
-                rowsXML += '</Row>'
+                rowsXML += '</Row>';
             }
             ctx = { rows: rowsXML, nameWS: wsnames[i] || 'Sheet' + i };
             worksheetsXML += format(tmplWorksheetXML, ctx);
@@ -3991,4 +4001,130 @@ function dismiss(classe) {
         var toastInstance = M.Toast.getInstance(toastElement[i]);
         toastInstance.dismiss();
     }
+}
+function generarExcel() {
+    document.getElementById("loader").style.display = "initial";
+
+    var tablaH1 = $('#tab_test1').DataTable();
+    var tablaH2 = $('#tab_test2').DataTable();
+    var tablaH3 = $('#tab_test3').DataTable();
+    var tablaH4 = $('#tab_test4').DataTable();
+    var tablaH5 = $('#tab_test5').DataTable();
+    var tabla1 = [], tabla2 = [], tabla3 = [], tabla4 = [];
+    var rowsH1 = [], rowsH2 = [], rowsH3 = [], rowsH4 = [];
+    var a = 0, b = 0, c = 0, d = 0, e = 0;
+    for (var aa = 0; aa < tablaH1.rows().data().length; aa++) {
+        var rowH1 = tablaH1.row(aa).node();
+        var status = $(rowH1).children().eq(0).children().text();
+        var num_doc = $(rowH1).children().eq(1).children().val();
+        var t_sol = $(rowH1).children().eq(2).children().val();
+        var tall_id = $(rowH1).children().eq(3).children().val();;
+        var bukrs = $(rowH1).children().eq(4).children().val();
+        var land = $(rowH1).children().eq(5).children().val();;
+        var estado = $(rowH1).children().eq(6).children().val();
+        var ciudad = $(rowH1).children().eq(7).children().val();
+        var concepto = $(rowH1).children().eq(8).children().val();
+        var notas = $(rowH1).children().eq(9).children().val();
+        var payer_id = $(rowH1).children().eq(10).children().val();
+        var payer_nombre = $(rowH1).children().eq(11).children().val();
+        var contacto_nombre = $(rowH1).children().eq(12).children().val();
+        var contacto_email = $(rowH1).children().eq(13).children().val();
+        var fechai_vig = $(rowH1).children().eq(14).children().val();
+        var fechaf_vig = $(rowH1).children().eq(15).children().val();
+        var moneda_id = $(rowH1).children().eq(16).children().val();
+
+        rowsH1[a] = [num_doc, t_sol, tall_id, bukrs, land, estado, ciudad, concepto, notas, payer_id, payer_nombre, contacto_nombre, contacto_email, fechai_vig, fechaf_vig, moneda_id];
+        a++;
+    }
+
+    for (var bb = 0; bb < tablaH2.rows().data().length; bb++) {
+        var rowH2 = tablaH2.row(bb).node();
+        var statusH2 = $(rowH2).children().eq(0).children().text();
+            var num_docH2 = $(rowH2).children().eq(1).children().val();
+            var facturaH2 = $(rowH2).children().eq(2).children().val();
+            var fecha_facturaH2 = $(rowH2).children().eq(3).children().val();
+            var proveedorH2 = $(rowH2).children().eq(4).children().val();
+            var proveedor_nombreH2 = $(rowH2).children().eq(5).children().val();
+            var autorizacionH2 = $(rowH2).children().eq(6).children().val();
+            var vencimientoH2 = $(rowH2).children().eq(7).children().val();
+            var facturakH2 = $(rowH2).children().eq(8).children().val();
+            var ejerciciokH2 = $(rowH2).children().eq(9).children().val();
+
+            rowsH2[b] = [num_docH2, facturaH2, fecha_facturaH2, proveedorH2, proveedor_nombreH2, autorizacionH2, vencimientoH2, facturakH2, ejerciciokH2];
+            b++;
+    }
+
+    for (var cc = 0; cc < tablaH3.rows().data().length; cc++) {
+        var rowH3 = tablaH3.row(cc).node();
+        var statusH3 = $(rowH3).children().eq(0).children().text();
+            var num_docH3 = $(rowH3).children().eq(1).children().val();
+            var facturaH3 = $(rowH3).children().eq(2).children().val();
+            var bill_docH3 = $(rowH3).children().eq(3).children().val();
+            var ejerciciokH3 = $(rowH3).children().eq(4).children().val();
+            var payer_idH3 = $(rowH3).children().eq(5).children().val();
+            var payer_nombreH3 = $(rowH3).children().eq(6).children().val();
+            var importe_facH3 = $(rowH3).children().eq(7).children().val();
+            var belnrH3 = $(rowH3).children().eq(8).children().val();
+
+            rowsH3[c] = [num_docH3, facturaH3, bill_docH3, ejerciciokH3, payer_idH3, payer_nombreH3, importe_facH3, belnrH3];
+            c++;
+    }
+
+    for (var dd = 0; dd < tablaH4.rows().data().length; dd++) {
+        var rowH4 = tablaH4.row(dd).node();
+        var statusH4 = $(rowH4).children().eq(0).children().text();
+        var num_docH4 = $(rowH4).children().eq(1).children().val();
+        var checkH4 = $(rowH4).children().eq(2).children().children().children().is(':checked');
+        var vigencia_deH4 = $(rowH4).children().eq(3).children().val();
+        var vigencia_alH4 = $(rowH4).children().eq(4).children().val();
+        var matnrH4 = $(rowH4).children().eq(5).children().val();
+        var matklH4 = $(rowH4).children().eq(6).children().val();
+        var descripcionH4 = $(rowH4).children().eq(7).children().val();
+        var montoH4 = $(rowH4).children().eq(8).children().val();
+        var porc_apoyoH4 = $(rowH4).children().eq(9).children().val();
+        var apoyo_piezaH4 = $(rowH4).children().eq(10).children().val();
+        var costo_apoyoH4 = $(rowH4).children().eq(11).children().val();
+        var precio_sugH4 = $(rowH4).children().eq(12).children().val();
+        var volumen_realH4 = $(rowH4).children().eq(13).children().val();
+        var apoyoH4 = $(rowH4).children().eq(14).children().val();
+
+        rowsH4[d] = [num_docH4, checkH4, vigencia_deH4, vigencia_alH4, matnrH4, matklH4, descripcionH4, montoH4, porc_apoyoH4, apoyo_piezaH4, costo_apoyoH4, precio_sugH4, volumen_realH4, apoyoH4];
+        d++;
+    }
+    tabla1 = rowsH1;
+    tabla2 = rowsH2;
+    tabla3 = rowsH3;
+    tabla4 = rowsH4;
+    $.ajax({
+        type: "POST",
+        url: 'DescargarExcel',
+        dataType: "json",
+        data: { "h1": tabla1, "h2": tabla2, "h3": tabla3, "h4": tabla4},
+        async: true,
+        success: function (data) {
+            document.getElementById("loader").style.display = "none";
+            if (data) {
+                var strXML = data.split("TAT001");
+                var strNombre = data.split("\\");
+                var direccion = strXML[strXML.length - 1];
+                direccion = direccion.replace(/ \\/gi, "\\");
+                var mod = direccion.replace(/\\/gi, "/");
+                mod.replace('/', "")
+                var dir = root + mod;
+                var link = document.createElement("a");
+                link.download = "Template Masivas";
+                link.target = '_blank';
+                link.href = dir;
+                document.body.appendChild(link);
+                link.click();
+                link.parentNode.removeChild(link);
+            }
+        },
+
+        error: function (xhr, httpStatusMessage, customErrorMessage) {
+            document.getElementById("loader").style.display = "none";
+            M.toast({ html: 'Error al guardar archivo ' + xhr.status + " : " + httpStatusMessage + " : " + customErrorMessage });
+        }
+    });
+
 }

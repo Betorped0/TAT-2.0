@@ -31,8 +31,8 @@
                                     @Html.LabelFor(model => model.D.TIPO_TECNICO, "Negociación", htmlAttributes: new { @id = "lbl_tiponeg" })
                                 </div>
                                 <div class="input-field col s6">
-                                    @Html.EditorFor(model => model.D.TSOL_ID, new { htmlAttributes = new { @disabled = "disabled", @Value = ViewBag.mat } })
-                                    @Html.LabelFor(model => model.D.TSOL_ID, "Distribución", htmlAttributes: new { @id = "lbl_tipodis" })
+                                    <input type="text" id="tipodis"  disabled="disabled" value="@ViewBag.mat"/>
+                                    <label id="lbl_tipodis" for="tipodis"></label>
                                 </div>
                             </div>
                         </div>

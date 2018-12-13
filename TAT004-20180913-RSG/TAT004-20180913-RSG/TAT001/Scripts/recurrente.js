@@ -158,7 +158,7 @@ $(document).ready(function () {
     });
 
     if (!isDuplicado()) {
-        cambiaCheckRec();
+        cambiaCheckRec(false);
     }
 
     $('body').on('focusout', '#objPORC', function () {
@@ -336,8 +336,9 @@ function cambiaRec() {
     $('#check_objetivoq').prop('checked', false);
 }
 
-function cambiaCheckRec() {
-
+function cambiaCheckRec(load) {
+    if (load == undefined)
+        load = false;
     var anioi = $('#anioi_id'), anioiV = anioi.val() * 1, aniof = $('#aniof_id'), aniofV = aniof.val() * 1,
         periodoi = $('#periodoi_id'), periodoiV = periodoi.val() * 1, periodof = $('#periodof_id'), periodofV = periodof.val() * 1;
 
@@ -358,7 +359,8 @@ function cambiaCheckRec() {
         document.getElementById("btn-peri").checked = true;
         document.getElementById("btn-date").disabled = true;
         document.getElementById("btn-peri").disabled = true;
-        $("#btn-peri").trigger("change");
+        if(!load)
+        $("#btn-peri").trigger("click");
 
     } else {
         document.getElementById("btn-date").disabled = false;
@@ -373,9 +375,11 @@ function cambiaCheckRec() {
         }
         $("#select_neg").prop("disabled", "disabled");
         $("#select_neg").formSelect();
+        if (!load)
         $("#select_neg").change();
     } else {
         $("#select_neg").prop("disabled", false);
+        if (!load)
         $("#select_neg").change();
     }
     var elem = document.getElementById('select_neg');

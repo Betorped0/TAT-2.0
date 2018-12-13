@@ -84,6 +84,7 @@ function selectMaterial(val, desc, tr) {
         unica1 = false;
         if (cat.UNICA)
         {
+            tr.removeClass("nounica");
             tr.addClass("unica");
             tr.find("td:eq(" + (6 + index) + ")").text(cat.DESCRIPCION);
             //Descripción
@@ -91,6 +92,7 @@ function selectMaterial(val, desc, tr) {
         }
         if (!cat.UNICA)
         {
+            tr.removeClass("unica");
             tr.addClass("nounica");
             tr.find("td:eq(" + (6 + index) + ")").text(cat.DESCRIPCION);
             //Descripción

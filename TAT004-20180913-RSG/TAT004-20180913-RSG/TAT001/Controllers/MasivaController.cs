@@ -100,6 +100,7 @@ namespace TAT001.Controllers
                     {
                         string fileExtension = System.IO.Path.GetExtension(file.FileName);
                         string extension = System.IO.Path.GetExtension(file.FileName);
+                        
                         IExcelDataReader reader = ExcelReaderFactory.CreateReader(file.InputStream);
                         DataSet result = reader.AsDataSet();
 
@@ -178,7 +179,7 @@ namespace TAT001.Controllers
                         string vkorg = "", vtweg = "", spart = "";
                         if (db.CLIENTEs.Where(x => x.KUNNR == payer_id).Count() > 0)
                         {
-                            var clienteH1 = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault();
+                            CLIENTE clienteH1 = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault();
                             vkorg = clienteH1.VKORG;
                             vtweg = clienteH1.VTWEG;
                             spart = clienteH1.SPART;
@@ -291,11 +292,11 @@ namespace TAT001.Controllers
                 List<DOCUMENTO> dd = new List<DOCUMENTO>();
 
                 List<PAI> pp = (from P in db.PAIS.ToList()//ADD RSG 01.11.2018--------------------------------------------------
-                                join C in db.CLIENTEs.Where(x => x.ACTIVO == true).ToList()
+                                join C in db.CLIENTEs.Where(x => x.ACTIVO).ToList()
                                 on P.LAND equals C.LAND
-                                join U in db.USUARIOFs.Where(x => x.USUARIO_ID == User.Identity.Name & x.ACTIVO == true)
+                                join U in db.USUARIOFs.Where(x => x.USUARIO_ID == User.Identity.Name && x.ACTIVO == true)
                                 on new { C.VKORG, C.VTWEG, C.SPART, C.KUNNR } equals new { U.VKORG, U.VTWEG, U.SPART, U.KUNNR }
-                                where P.ACTIVO == true
+                                where P.ACTIVO
                                 select P).DistinctBy(x => x.LAND).ToList();
 
                 for (int i = 2; i < ds1.Tables[0].Rows.Count; i++)
@@ -304,6 +305,13 @@ namespace TAT001.Controllers
                     string tsol = ds1.Tables[0].Rows[i][1].ToString().Trim();
                     string bukrs = ds1.Tables[0].Rows[i][3].ToString().Trim();
                     string land = ds1.Tables[0].Rows[i][4].ToString().Trim();
+                    CLIENTE clienteH1 = null;
+                    string payer_id = ds1.Tables[0].Rows[i][9].ToString().Trim();
+                    if (payer_id.Length < 10) { payer_id = cad.completaCliente(payer_id); }
+                    if (db.CLIENTEs.Where(x => x.KUNNR == payer_id).Count() > 0)
+                    {
+                         clienteH1= db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault();
+                    }
 
                     PAI p = pp.Where(a => a.LANDX == land).FirstOrDefault();
 
@@ -311,6 +319,7 @@ namespace TAT001.Controllers
                     d.NUM_DOC = decimal.Parse(num_doc);
                     d.TSOL_ID = tsol;
                     d.SOCIEDAD_ID = bukrs;
+                    d.CLIENTE = clienteH1;
                     if (p != null)
                         d.PAIS_ID = p.LAND;//ADD RSG 01.11.2018--------------------------------------------------
                     dd.Add(d);
@@ -321,9 +330,10 @@ namespace TAT001.Controllers
                     foreach (DOCUMENTO d in dd)
                     {
                         List<Relacionada> rel = new List<Relacionada>();
-                        for (int i = 2; i < ds2.Tables[0].Rows.Count; i++)
+                        List<DataRow> listRows = getRowsByDocument(ds2.Tables[0], d.NUM_DOC.ToString(), 0);
+                        foreach (DataRow row in listRows)
                         {
-                            string num_doc = ds2.Tables[0].Rows[i][0].ToString().Trim();
+                            string num_doc = row[0].ToString().Trim();
                             if (getNumberDocument(num_doc) == -1)
                                 continue;
 
@@ -331,18 +341,18 @@ namespace TAT001.Controllers
                             {
                                 Relacionada doc = new Relacionada();
 
-                                string factura = ds2.Tables[0].Rows[i][1].ToString().Trim();
-                                string fecha_factura = ds2.Tables[0].Rows[i][2].ToString().Trim();
+                                string factura = row[1].ToString().Trim();
+                                string fecha_factura = row[2].ToString().Trim();
                                 string[] fecha_factura2 = fecha_factura.Split(' ');
-                                string proveedor = ds2.Tables[0].Rows[i][3].ToString().Trim();
-                                string proveedor_nombre = ds2.Tables[0].Rows[i][4].ToString().Trim();
-                                string autorizacion = ds2.Tables[0].Rows[i][5].ToString().Trim();
-                                string vencimiento = ds2.Tables[0].Rows[i][6].ToString().Trim();
+                                string proveedor = row[3].ToString().Trim();
+                                string proveedor_nombre = row[4].ToString().Trim();
+                                string autorizacion = row[5].ToString().Trim();
+                                string vencimiento = row[6].ToString().Trim();
                                 string[] vencimiento2 = vencimiento.Split(' ');
-                                string facturak = ds2.Tables[0].Rows[i][7].ToString().Trim();
-                                string ejerciciok = ds2.Tables[0].Rows[i][8].ToString().Trim();
+                                string facturak = row[7].ToString().Trim();
+                                string ejerciciok = row[8].ToString().Trim();
 
-                                var con = db.FACTURASCONFs.Where(x => x.SOCIEDAD_ID == d.SOCIEDAD_ID & x.PAIS_ID == d.PAIS_ID & x.TSOL == d.TSOL_ID).FirstOrDefault();
+                                var con = db.FACTURASCONFs.Where(x => x.SOCIEDAD_ID == d.SOCIEDAD_ID && x.PAIS_ID == d.PAIS_ID && x.TSOL == d.TSOL_ID).FirstOrDefault();
 
                                 if (con != null)
                                 {
@@ -387,13 +397,13 @@ namespace TAT001.Controllers
 
                                 rel.Add(doc);
                                 lp.Add(doc);
-                                errores.Add(cargaInicialH2(ds2.Tables[0].Rows[i]));
-                                warnings.Add(cargaInicialH2W(ds2.Tables[0].Rows[i]));
+                                errores.Add(cargaInicialH2(row, d.CLIENTE));
+                                warnings.Add(cargaInicialH2W(row));
                             }
                         }
                         if (rel.Where(x => x.NUM_DOC == d.NUM_DOC.ToString()).Count() == 0)
                         {
-                            FACTURASCONF fcon = db.FACTURASCONFs.Where(x => x.SOCIEDAD_ID == d.SOCIEDAD_ID & x.PAIS_ID == d.PAIS_ID && x.TSOL == d.TSOL_ID).FirstOrDefault();
+                            FACTURASCONF fcon = db.FACTURASCONFs.Where(x => x.SOCIEDAD_ID == d.SOCIEDAD_ID && x.PAIS_ID == d.PAIS_ID && x.TSOL == d.TSOL_ID).FirstOrDefault();
                             if (fcon != null)
                             {
                                 Relacionada doc = new Relacionada();
@@ -564,7 +574,7 @@ namespace TAT001.Controllers
                         string vkorg = "", vtweg = "", spart = "";
                         if (db.CLIENTEs.Where(x => x.KUNNR == objInformacion.PAYER_ID).Count() > 0)
                         {
-                            var clienteH1 = db.CLIENTEs.Where(x => x.KUNNR == objInformacion.PAYER_ID).FirstOrDefault();
+                            CLIENTE clienteH1 = db.CLIENTEs.Where(x => x.KUNNR == objInformacion.PAYER_ID).FirstOrDefault();
                             vkorg = clienteH1.VKORG;
                             vtweg = clienteH1.VTWEG;
                             spart = clienteH1.SPART;
@@ -612,7 +622,7 @@ namespace TAT001.Controllers
                                 objDistribucion.VIGENCIA_AL = vigencia_al2[0];
 
 
-                                if ((matnr != "" && matkl != "") || (matnr == "" && matkl != ""))
+                                if (matnr == "" && matkl != "")
                                 {
                                     if (listCategorias.Any(x => x.TXT50.ToUpper() == matkl.ToUpper()))
                                     {
@@ -630,7 +640,7 @@ namespace TAT001.Controllers
                                         objDistribucion.DESCRIPCION = "";
                                     }
                                 }
-                                else if (matnr != "" && matkl == "")
+                                else if ((matnr != "" && matkl != "")||(matnr != "" && matkl == ""))
                                 {
 
                                     List<MATERIAL> ListMateriales = materialesDao.ListaMateriales(matnr, vkorg, vtweg, User.Identity.Name);
@@ -1549,7 +1559,7 @@ namespace TAT001.Controllers
             return regresaRowH1;
         }
 
-        public List<object> cargaInicialH2(DataRow fila)
+        public List<object> cargaInicialH2(DataRow fila, CLIENTE cliente)
         {
             DataSet ds1 = (DataSet)Session["ds1"];
             List<object> regresaRowH2 = new List<object>();//REGRESA LA LISTA DE ERRORES
@@ -1575,11 +1585,11 @@ namespace TAT001.Controllers
                 string t_sol = ds1.Tables[0].Rows[i][1].ToString().Trim();
                 string sociedad = ds1.Tables[0].Rows[i][3].ToString().Trim();
                 string pais = ds1.Tables[0].Rows[i][4].ToString().Trim();
-                pais = db.PAIS.Where(x => x.SOCIEDAD_ID == sociedad & x.LANDX == pais).FirstOrDefault().LAND;
+                pais = db.PAIS.Where(x => x.SOCIEDAD_ID == sociedad && x.LANDX == pais).FirstOrDefault().LAND;
 
                 if (num_doc == num_docH1)
                 {
-                    var con = db.FACTURASCONFs.Where(x => x.SOCIEDAD_ID == sociedad & x.PAIS_ID == pais & x.TSOL == t_sol).FirstOrDefault();
+                    var con = db.FACTURASCONFs.Where(x => x.SOCIEDAD_ID == sociedad && x.PAIS_ID == pais && x.TSOL == t_sol).FirstOrDefault();
 
                     if (IsNumeric(num_doc))
                     {
@@ -1709,9 +1719,10 @@ namespace TAT001.Controllers
 
                     if (con.PROVEEDOR)
                     {
-                        if (proveedor.Length > 0 & proveedor.Length <= 10)
+                        if (proveedor.Length > 0 && proveedor.Length <= 10)
                         {
-                            if (db.PROVEEDORs.Where(x => x.ID == proveedor & x.SOCIEDAD_ID == sociedad).Count() > 0)
+                            //if (db.PROVEEDORs.Where(x => x.ID == proveedor && x.SOCIEDAD_ID == sociedad).Count() > 0)
+                            if(cliente.PROVEEDOR_ID==proveedor)
                             {
                                 regresaRowH2.Add("");
                             }
@@ -2850,7 +2861,7 @@ namespace TAT001.Controllers
                     docu.PAIS_ID = land;
                     docu.ESTADO = estado;
                     docu.CIUDAD = ciudad;
-                    docu.PERIODO = cal445.getPeriodo(System.DateTime.Now);
+                    docu.PERIODO = FnCommon.ObtenerPeriodoCalendario445(db,docu.SOCIEDAD_ID, docu.TSOL_ID,User.Identity.Name );
                     docu.EJERCICIO = Convert.ToString(System.DateTime.Now.Year);
 
                     docu.TIPO_TECNICO = "M";///////////////////////////////////////////////CHECK
@@ -4630,5 +4641,268 @@ namespace TAT001.Controllers
 
             return jdlret;
         }
+
+        [HttpPost]
+        public JsonResult DescargarExcel(List<object> h1, List<object> h2, List<object> h3, List<object> h4)
+        {
+            DataTable dtt = ConvertToDatatable(h1, "h1");
+            DataTable dtt2 = ConvertToDatatable(h2, "h2");
+            DataTable dtt3 = ConvertToDatatable(h3, "h3");
+            DataTable dtt4 = ConvertToDatatable(h4, "h4");
+
+            //////CABECERA
+            DataSet dt1 = new DataSet();
+            dt1.Tables.Add(dtt);
+
+            /////DOCUMENTOS RELACIONADOS
+            DataSet dt2 = new DataSet();
+            dt2.Tables.Add(dtt2);
+
+            /////DOCUMENTOS RELACIONADOS MULTIPLES
+            DataSet dt3 = new DataSet();
+            dt3.Tables.Add(dtt3);
+
+            /////MATERIALES
+            DataSet dt4 = new DataSet();
+            dt4.Tables.Add(dtt4);
+            string path = Server.MapPath("~/pdfTemp/DocMasivas/" + User.Identity.Name + ".xlsx");
+            if (System.IO.File.Exists(path))
+            {
+                System.IO.File.Delete(path);
+            }
+            generarExcelHome(dt1, dt2, dt3, dt4, Server.MapPath("~/pdfTemp/"));
+            JsonResult result = Json(path, JsonRequestBehavior.AllowGet);
+            return result;
+        }
+
+        public void generarExcelHome(DataSet dt1, DataSet dt2, DataSet dt3, DataSet dt4, string ruta)
+        { 
+
+            var workbook = new XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("INFORMACIÓN");
+            var WksRelacionada = workbook.Worksheets.Add("RELACIONADA");
+            var WksFacturasmul = workbook.Worksheets.Add("FACTURAS MÚLTIPLES");
+            var WksDistribucion = workbook.Worksheets.Add("DISTRIBUCIÓN");
+            try
+            {
+                //Creamos el encabezado informacion
+                worksheet.Cell("A1").Value = new[]{new {BANNER = "Número de Documento" } };
+                worksheet.Cell("B1").Value = new[]{new {BANNER = "Tipo de Solicitud" } };
+                worksheet.Cell("C1").Value = new[] { new { BANNER = "Clasificación" } };
+                worksheet.Cell("D1").Value = new[] { new { BANNER = "Company Code" } };
+                worksheet.Cell("E1").Value = new[] { new { BANNER = "País" } };
+                worksheet.Cell("F1").Value = new[] { new { BANNER = "Estado" } };
+                worksheet.Cell("G1").Value = new[] { new { BANNER = "Ciudad" } };
+                worksheet.Cell("H1").Value = new[] { new { BANNER = "Concepto" } };
+                worksheet.Cell("I1").Value = new[] { new { BANNER = "Mecánica de Negociación" } };
+                worksheet.Cell("J1").Value = new[] { new { BANNER = "Cliente" } };
+                worksheet.Cell("K1").Value = new[] { new { BANNER = "Nombre" } };
+                worksheet.Cell("L1").Value = new[] { new { BANNER = "Nombre de Contacto" } };
+                worksheet.Cell("M1").Value = new[] { new { BANNER = "Email de Contacto" } };
+                worksheet.Cell("N1").Value = new[] { new { BANNER = "Vigencia (dd/mm/aaaa) o Periodo (mm-aaaa) De" } };
+                worksheet.Cell("O1").Value = new[] { new { BANNER = "Vigencia (dd/mm/aaaa) o Periodo (mm-aaaa) A" } };
+                worksheet.Cell("P1").Value = new[] { new { BANNER = "Moneda" } };
+
+                worksheet.Cell("A" + 2).Value = new[] { new { BANNER = "" } };
+                worksheet.Cell("B" + 2).Value = new[] { new { BANNER = "" } };
+                worksheet.Cell("C" + 2).Value = new[] { new { BANNER = "" } };
+                worksheet.Cell("D" + 2).Value = new[] { new { BANNER = "" } };
+                worksheet.Cell("E" + 2).Value = new[] { new { BANNER = "" } };
+                worksheet.Cell("F" + 2).Value = new[] { new { BANNER = "" } };
+                worksheet.Cell("G" + 2).Value = new[] { new { BANNER = "" } };
+                worksheet.Cell("H" + 2).Value = new[] { new { BANNER = "" } };
+                worksheet.Cell("I" + 2).Value = new[] { new { BANNER = "" } };
+                worksheet.Cell("J" + 2).Value = new[] { new { BANNER = "" } };
+                worksheet.Cell("K" + 2).Value = new[] { new { BANNER = "" } };
+                worksheet.Cell("L" + 2).Value = new[] { new { BANNER = "" } };
+                worksheet.Cell("M" + 2).Value = new[] { new { BANNER = "" } };
+                worksheet.Cell("N" + 2).Value = new[] { new { BANNER = "" } };
+                worksheet.Cell("O" + 2).Value = new[] { new { BANNER = "" } };
+                worksheet.Cell("P" + 2).Value = new[] { new { BANNER = "" } };
+                int cInf= 3;
+                for (int i = 0; i <dt1.Tables[0].Rows.Count; i++)
+                {
+                    DataRow Row = dt1.Tables[0].Rows[i];
+                    worksheet.Cell("A" + cInf).Value = new[] { new { BANNER = Row[0].ToString() } };
+                    worksheet.Cell("B" + cInf).Value = new[] { new { BANNER = Row[1].ToString() } };
+                    worksheet.Cell("C" + cInf).Value = new[] { new { BANNER = Row[2].ToString() } };
+                    worksheet.Cell("D" + cInf).Value = new[] { new { BANNER = Row[3].ToString() } };
+                    worksheet.Cell("E" + cInf).Value = new[] { new { BANNER = Row[4].ToString() } };
+                    worksheet.Cell("F" + cInf).Value = new[] { new { BANNER = Row[5].ToString() } };
+                    worksheet.Cell("G" + cInf).Value = new[] { new { BANNER = Row[6].ToString() } };
+                    worksheet.Cell("H" + cInf).Value = new[] { new { BANNER = Row[7].ToString() } };
+                    worksheet.Cell("I" + cInf).Value = new[] { new { BANNER = Row[8].ToString() } };
+                    worksheet.Cell("J" + cInf).Value = new[] { new { BANNER = Row[9].ToString() } };
+                    worksheet.Cell("K" + cInf).Value = new[] { new { BANNER = Row[10].ToString() } };
+                    worksheet.Cell("L" + cInf).Value = new[] { new { BANNER = Row[11].ToString() } };
+                    worksheet.Cell("M" + cInf).Value = new[] { new { BANNER = Row[12].ToString() } };
+                    worksheet.Cell("N" + cInf).Value = new[] { new { BANNER = Row[13].ToString() } };
+                    worksheet.Cell("O" + cInf).Value = new[] { new { BANNER = Row[14].ToString() } };
+                    worksheet.Cell("P" + cInf).Value = new[] { new { BANNER = Row[15].ToString() } };
+                    cInf++;
+                }
+
+                //Creamos el encabezado Relacionada
+                WksRelacionada.Cell("A1").Value = new[] { new { BANNER = "Número de Documento" } };
+                WksRelacionada.Cell("B1").Value = new[] { new { BANNER = "Factura" } };
+                WksRelacionada.Cell("C1").Value = new[] { new { BANNER = "Fecha Factura" } };
+                WksRelacionada.Cell("D1").Value = new[] { new { BANNER = "Proveedor" } };
+                WksRelacionada.Cell("E1").Value = new[] { new { BANNER = "Nombre del Proveedor" } };
+                WksRelacionada.Cell("F1").Value = new[] { new { BANNER = "Número Autorización" } };
+                WksRelacionada.Cell("G1").Value = new[] { new { BANNER = "Fecha Vencimiento" } };
+                WksRelacionada.Cell("H1").Value = new[] { new { BANNER = "Factura Kellogg" } };
+                WksRelacionada.Cell("I1").Value = new[] { new { BANNER = "Ejercicio Kellogg" } };
+
+                WksRelacionada.Cell("A" + 2).Value = new[] { new { BANNER = "" } };
+                WksRelacionada.Cell("B" + 2).Value = new[] { new { BANNER = "" } };
+                WksRelacionada.Cell("C" + 2).Value = new[] { new { BANNER = "" } };
+                WksRelacionada.Cell("D" + 2).Value = new[] { new { BANNER = "" } };
+                WksRelacionada.Cell("E" + 2).Value = new[] { new { BANNER = "" } };
+                WksRelacionada.Cell("F" + 2).Value = new[] { new { BANNER = "" } };
+                WksRelacionada.Cell("G" + 2).Value = new[] { new { BANNER = "" } };
+                WksRelacionada.Cell("H" + 2).Value = new[] { new { BANNER = "" } };
+                WksRelacionada.Cell("I" + 2).Value = new[] { new { BANNER = "" } };
+                int cRel = 3;
+                for (int i = 0; i <dt2.Tables[0].Rows.Count; i++)
+                {
+                    DataRow Row = dt2.Tables[0].Rows[i];
+                    WksRelacionada.Cell("A" + cRel).Value = new[] { new { BANNER = Row[0].ToString() } };
+                    WksRelacionada.Cell("B" + cRel).Value = new[] { new { BANNER = Row[1].ToString() } };
+                    WksRelacionada.Cell("C" + cRel).Value = new[] { new { BANNER = Row[2].ToString() } };
+                    WksRelacionada.Cell("D" + cRel).Value = new[] { new { BANNER = Row[3].ToString() } };
+                    WksRelacionada.Cell("E" + cRel).Value = new[] { new { BANNER = Row[4].ToString() } };
+                    WksRelacionada.Cell("F" + cRel).Value = new[] { new { BANNER = Row[5].ToString() } };
+                    WksRelacionada.Cell("G" + cRel).Value = new[] { new { BANNER = Row[6].ToString() } };
+                    WksRelacionada.Cell("H" + cRel).Value = new[] { new { BANNER = Row[7].ToString() } };
+                    WksRelacionada.Cell("I" + cRel).Value = new[] { new { BANNER = Row[8].ToString() } };
+                    cRel++;
+                }
+
+                //Creamos el encabezado Facturas Multiples 
+                WksFacturasmul.Cell("A1").Value = new[] { new { BANNER = "Número de Documento" } };
+                WksFacturasmul.Cell("B1").Value = new[] { new { BANNER = "No. Factura Fiscal" } };
+                WksFacturasmul.Cell("C1").Value = new[] { new { BANNER = "Billing" } };
+                WksFacturasmul.Cell("D1").Value = new[] { new { BANNER = "Año" } };
+                WksFacturasmul.Cell("E1").Value = new[] { new { BANNER = "Payer" } };
+                WksFacturasmul.Cell("F1").Value = new[] { new { BANNER = "Customer" } };
+                WksFacturasmul.Cell("G1").Value = new[] { new { BANNER = "Importe por factura" } };
+                WksFacturasmul.Cell("H1").Value = new[] { new { BANNER = "Folio" } };
+
+                WksFacturasmul.Cell("A" + 2).Value = new[] { new { BANNER = "" } };
+                WksFacturasmul.Cell("B" + 2).Value = new[] { new { BANNER = "" } };
+                WksFacturasmul.Cell("C" + 2).Value = new[] { new { BANNER = "" } };
+                WksFacturasmul.Cell("D" + 2).Value = new[] { new { BANNER = "" } };
+                WksFacturasmul.Cell("E" + 2).Value = new[] { new { BANNER = "" } };
+                WksFacturasmul.Cell("F" + 2).Value = new[] { new { BANNER = "" } };
+                WksFacturasmul.Cell("G" + 2).Value = new[] { new { BANNER = "" } };
+                WksFacturasmul.Cell("H" + 2).Value = new[] { new { BANNER = "" } };
+                int cFac = 3;
+                for (int i = 0; i < dt3.Tables[0].Rows.Count; i++)
+                {
+                    DataRow Row = dt3.Tables[0].Rows[i];
+                    string importeFactura = Row[6].ToString() != "" ? Row[6].ToString().Replace("$", "") : "";
+                    WksFacturasmul.Cell("A" + cFac).Value = new[] { new { BANNER = Row[0].ToString() } };
+                    WksFacturasmul.Cell("B" + cFac).Value = new[] { new { BANNER = Row[1].ToString() } };
+                    WksFacturasmul.Cell("C" + cFac).Value = new[] { new { BANNER = Row[2].ToString() } };
+                    WksFacturasmul.Cell("D" + cFac).Value = new[] { new { BANNER = Row[3].ToString() } };
+                    WksFacturasmul.Cell("E" + cFac).Value = new[] { new { BANNER = Row[4].ToString() } };
+                    WksFacturasmul.Cell("F" + cFac).Value = new[] { new { BANNER = Row[5].ToString() } };
+                    WksFacturasmul.Cell("G" + cFac).Value = new[] { new { BANNER = importeFactura } };
+                    WksFacturasmul.Cell("H" + cFac).Value = new[] { new { BANNER = Row[7].ToString() } };
+                    cFac++;
+                }
+
+                //Creamos el encabezado distribucion
+                WksDistribucion.Cell("A1").Value = new[] { new { BANNER = "Número de Documento" } };
+                WksDistribucion.Cell("B1").Value = new[] { new { BANNER = "Ligada a la facturación" } };
+                WksDistribucion.Cell("C1").Value = new[] { new { BANNER = "Vigencia de" } };
+                WksDistribucion.Cell("D1").Value = new[] { new { BANNER = "Vigencia al" } };
+                WksDistribucion.Cell("E1").Value = new[] { new { BANNER = "Material" } };
+                WksDistribucion.Cell("F1").Value = new[] { new { BANNER = "Categoría" } };
+                WksDistribucion.Cell("G1").Value = new[] { new { BANNER = "Descripción" } };
+                WksDistribucion.Cell("H1").Value = new[] { new { BANNER = "Costo Unitario $" } };
+                WksDistribucion.Cell("I1").Value = new[] { new { BANNER = "% de Apoyo" } };
+                WksDistribucion.Cell("J1").Value = new[] { new { BANNER = "Apoyo por pieza $" } };
+                WksDistribucion.Cell("K1").Value = new[] { new { BANNER = "Costo con Apoyo $" } };
+                WksDistribucion.Cell("L1").Value = new[] { new { BANNER = "Precio Sugerido $" } };
+                WksDistribucion.Cell("M1").Value = new[] { new { BANNER = "Volumen" } };
+                WksDistribucion.Cell("N1").Value = new[] { new { BANNER = "Apoyo $" } };
+
+                WksDistribucion.Cell("A" + 2).Value = new[] { new { BANNER = "" } };
+                WksDistribucion.Cell("B" + 2).Value = new[] { new { BANNER = "" } };
+                WksDistribucion.Cell("C" + 2).Value = new[] { new { BANNER = "" } };
+                WksDistribucion.Cell("D" + 2).Value = new[] { new { BANNER = "" } };
+                WksDistribucion.Cell("E" + 2).Value = new[] { new { BANNER = "" } };
+                WksDistribucion.Cell("F" + 2).Value = new[] { new { BANNER = "" } };
+                WksDistribucion.Cell("G" + 2).Value = new[] { new { BANNER = "" } };
+                WksDistribucion.Cell("H" + 2).Value = new[] { new { BANNER = "" } };
+                WksDistribucion.Cell("I" + 2).Value = new[] { new { BANNER = "" } };
+                WksDistribucion.Cell("J" + 2).Value = new[] { new { BANNER = "" } };
+                WksDistribucion.Cell("K" + 2).Value = new[] { new { BANNER = "" } };
+                WksDistribucion.Cell("L" + 2).Value = new[] { new { BANNER = "" } };
+                WksDistribucion.Cell("M" + 2).Value = new[] { new { BANNER = "" } };
+                WksDistribucion.Cell("N" + 2).Value = new[] { new { BANNER = "" } };
+                int cDis = 3;
+
+                for (int i = 0; i < dt4.Tables[0].Rows.Count; i++)
+                {
+                    DataRow Row = dt4.Tables[0].Rows[i];
+                    string ligada = Row[1].ToString();
+                    string costoUnitario = Row[7].ToString() != "" ? Row[7].ToString().Replace("$", ""):"";
+                    string porcentajeApoyo = Row[8].ToString() != "" ? Row[8].ToString().Replace("%", "") : "";
+                    if (porcentajeApoyo != "")
+                    {
+                        if (IsNumeric(porcentajeApoyo))
+                        {
+                            porcentajeApoyo = (Convert.ToDecimal(porcentajeApoyo) /100).ToString();
+                        }
+                        else
+                        {
+                            porcentajeApoyo = "";
+                        }
+                        
+                    }
+                    
+                  
+                    string apoyoPieza = Row[9].ToString() != "" ? Row[9].ToString().Replace("$", "") : "";
+                    string costoApoyo = Row[10].ToString() != "" ? Row[10].ToString().Replace("$", "") : "";
+                    string precioSugerido = Row[11].ToString() != "" ? Row[11].ToString().Replace("$", "") : "";
+                    string apoyo = Row[13].ToString() != "" ? Row[13].ToString().Replace("$", "") : "";
+                    if (ligada == "true")
+                    {
+                        ligada = "x";
+                    }
+                    else
+                    {
+                        ligada = "";
+                    }
+
+                    WksDistribucion.Cell("A" + cDis).Value = new[] { new { BANNER = Row[0].ToString() } };
+                    WksDistribucion.Cell("B" + cDis).Value = new[] { new { BANNER = ligada } };
+                    WksDistribucion.Cell("C" + cDis).Value = new[] { new { BANNER = Row[2].ToString() } };
+                    WksDistribucion.Cell("D" + cDis).Value = new[] { new { BANNER = Row[3].ToString() } };
+                    WksDistribucion.Cell("E" + cDis).Value = new[] { new { BANNER = Row[4].ToString() } };
+                    WksDistribucion.Cell("F" + cDis).Value = new[] { new { BANNER = Row[5].ToString() } };
+                    WksDistribucion.Cell("G" + cDis).Value = new[] { new { BANNER = Row[6].ToString() } };
+                    WksDistribucion.Cell("H" + cDis).Value = new[] { new { BANNER = costoUnitario } };
+                    WksDistribucion.Cell("I" + cDis).Value = new[] { new { BANNER = porcentajeApoyo } };
+                    WksDistribucion.Cell("J" + cDis).Value = new[] { new { BANNER = apoyoPieza } };
+                    WksDistribucion.Cell("K" + cDis).Value = new[] { new { BANNER = costoApoyo } };
+                    WksDistribucion.Cell("L" + cDis).Value = new[] { new { BANNER = precioSugerido } };
+                    WksDistribucion.Cell("M" + cDis).Value = new[] { new { BANNER = Row[12].ToString() } };
+                    WksDistribucion.Cell("N" + cDis).Value = new[] { new { BANNER = apoyo } };
+                    cDis++;
+                }
+
+                var rt = ruta + @"\DocMasivas\" + User.Identity.Name + ".xlsx";
+                workbook.SaveAs(rt);
+            }
+            catch (Exception e)
+            {
+                var ex = e.ToString();
+            }
+
+        }
     }
+
 }

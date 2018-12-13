@@ -1695,9 +1695,13 @@ $(window).on('load', function () {
 function _ff() {
     //var meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
     var datei = $("#fechai_vig").val().split(" ")[0];
-    var _anoi = datei.split('/')[2];
     if (datei !== "") {
-        $.ajax({
+        var lis = datei.split('/');
+        var datesI = new Date(lis[2], lis[1] - 1, lis[0]);
+        datesI.setDate(datesI.getDate() - 1);
+        datei = datesI.getDate() + "/" + (datesI.getMonth() + 1) + "/" + datesI.getFullYear();
+        var _anoi = datei.split('/')[2];
+            $.ajax({
             type: "POST",
             url: 'getPeriodo',
             dataType: "json",
@@ -1706,6 +1710,9 @@ function _ff() {
                 var _xd = data;
                 var pp = parseInt(data);
                 if (pp !== 0) {
+                    pp++;
+                    if (pp == 13)
+                        pp = 1;
                     $("#periodoi_id").val(pp);
                     document.getElementById("btn-peri").checked = true;
                     if (!isDuplicado()) {
@@ -1740,10 +1747,10 @@ function _ff() {
                     //if (!isDuplicado()) {//ADD RSG 28.11.2018
                         $("#aniof_id").val(_anof);
                     //}
-                    $("#btn-peri").trigger("change");
+                    $("#btn-peri").trigger("click");
                 } else {
                     document.getElementById("btn-date").checked = true;
-                    $("#btn-date").trigger("change");
+                    $("#btn-date").trigger("click");
                 }
 
             },

@@ -73,19 +73,19 @@
                     <td>
                         @{ if (item.RUTA_DOCUMENTO.Split('.').Last() == "pdf" || item.RUTA_DOCUMENTO.Split('.').Last() == "jpg" || item.RUTA_DOCUMENTO.Split('.').Last() == "png")
                             {
-                                <a data-fancybox data-src="@item.RUTA_DOCUMENTO" href="javascript:;">
+                                <a data-fancybox data-src="@Request.Url.Authority/@item.RUTA_DOCUMENTO" href="javascript:;">
                                     <i class='material-icons blue-text'>search</i>
                                 </a>
                             }
                             else if (item.RUTA_DOCUMENTO.Split('.').Last() == "txt")
                             {
-                                <a data-fancybox data-type="iframe" data-src="@item.RUTA_DOCUMENTO" data-iframe='{"preload":false}' href="javascript:;">
+                                <a data-fancybox data-type="iframe" data-src="@Request.Url.Authority/@item.RUTA_DOCUMENTO" data-iframe='{"preload":false}' href="javascript:;">
                                     <i class='material-icons blue-text'>search</i>
                                 </a>
                             }
                             else
                             {
-                                <a href="@item.RUTA_DOCUMENTO">
+                                <a href="@Request.Url.Authority/@item.RUTA_DOCUMENTO">
                                     <i class='material-icons blue-text'>search</i>
                                 </a>
                             }

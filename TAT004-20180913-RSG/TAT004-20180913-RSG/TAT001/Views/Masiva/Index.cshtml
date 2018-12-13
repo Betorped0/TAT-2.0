@@ -68,10 +68,10 @@
 
 <div class="row">
     <div class="row left">
-        <a class="btn-small" href="@Url.Action("Archivo", "Masiva", new { varArch = "X"})">
+        <a id="btn_formatoMasiva_" class="btn-small" href="@Url.Action("Archivo", "Masiva", new { varArch = "X"})">
             <i class='material-icons right'>archive</i> <span id="btn_formatoMasiva">FORMATO MASIVA</span>
         </a>
-        <a class="btn-small" href="@Url.Action("Archivo", "Masiva", new { varArch = "L"})">
+        <a id="btn_listadoCP_" class="btn-small" href="@Url.Action("Archivo", "Masiva", new { varArch = "L"})">
             <i class='material-icons right'>archive</i> <span id="btn_listadoCP">LISTADO CLIENTE/PROVEEDOR</span>
         </a>
     </div>
@@ -121,7 +121,7 @@
         }
     </div>
     <div class="col s12 m6 l3" style="padding-top:14px;">
-        <a class="waves-effect waves-light btn-small col s12" id="excelBtn" onclick="cloneTables(), tablesToExcel(['tab_test1clond','tab_test2clon','tab_test3clon','tab_test4clon'], ['Hoja1','Hoja2','Hoja3','Hoja4'], 'TestBook.xls', 'Excel')" disabled>Exportar vista a Excel</a>
+        <a class="waves-effect waves-light btn-small col s12" id="excelBtn" onclick="generarExcel()" disabled>Exportar vista a Excel</a>
     </div>
     <div class="col s12 m6 l3 offset-l3">
         <div class="input-field col s12">
@@ -274,6 +274,14 @@
     });
 
     $("#btn_listadoCP").click(function () {
+        exitClicked = true;
+    });
+
+    $("#btn_formatoMasiva_").click(function () {
+        exitClicked = true;
+    });
+
+    $("#btn_listadoCP_").click(function () {
         exitClicked = true;
     });
     

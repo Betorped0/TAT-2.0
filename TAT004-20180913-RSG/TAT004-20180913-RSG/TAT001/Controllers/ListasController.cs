@@ -674,17 +674,20 @@ namespace TAT001.Controllers
             return cc;
         }
         [HttpPost]
-        public JsonResult clearing(string bukrs, string land, string gall, string ejercicio)
+        public JsonResult clearing(string bukrs, string land, string gall, string ejercicio,
+            string tsol_id,decimal monto, decimal num_doc,string[] categorias=null)
         {
+            bool esNC = false;
+            decimal impuesto = FnCommon.ObtenerImpuesto(db, new DOCUMENTO { NUM_DOC = num_doc, MONTO_DOC_MD = Convert.ToDecimal(monto), SOCIEDAD_ID = bukrs, TSOL_ID = tsol_id }, ref esNC, categorias);
             decimal ejer = decimal.Parse(ejercicio);
+            
 
             var c = (from C in db.CUENTAs
                      where C.SOCIEDAD_ID == bukrs
                      && C.PAIS_ID == land
                      && C.TALL_ID == gall
                      && C.EJERCICIO == ejer
-                     //-----DRS 1.10.2018-----
-                     select new { C.ABONO, NOMBREA = C.CUENTAGL.NOMBRE, C.CARGO, NOMBREC = C.CUENTAGL1.NOMBRE, C.CLEARING, C.LIMITE }).FirstOrDefault();
+                     select new { C.ABONO, NOMBREA = C.CUENTAGL.NOMBRE, C.CARGO, NOMBREC = C.CUENTAGL1.NOMBRE, C.CLEARING, NOMBRECL= C.CUENTAGL2.NOMBRE, C.LIMITE,IMPUESTO=impuesto }).FirstOrDefault();
 
             JsonResult cc = Json("", JsonRequestBehavior.AllowGet);
             if (c != null)

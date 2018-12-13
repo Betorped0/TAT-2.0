@@ -84,27 +84,36 @@
                             </a>&nbsp
                             @{ if (item.RUTA_DOCUMENTO.Split('.').Last() == "pdf" || item.RUTA_DOCUMENTO.Split('.').Last() == "jpg" || item.RUTA_DOCUMENTO.Split('.').Last() == "png")
                                 {
-                                    <a data-fancybox data-src="@item.RUTA_DOCUMENTO" href="javascript:;">
+                                    <a data-fancybox data-src="@Request.Url.Authority/@item.RUTA_DOCUMENTO" href="javascript:;">
                                         <i class='material-icons blue-text'>search</i>
                                     </a>
                                 }
                                 else if (item.RUTA_DOCUMENTO.Split('.').Last() == "txt")
                                 {
-                                    <a data-fancybox data-type="iframe" data-src="@item.RUTA_DOCUMENTO" data-iframe='{"preload":false}' href="javascript:;">
+                                    <a data-fancybox data-type="iframe" data-src="@Request.Url.Authority/@item.RUTA_DOCUMENTO" data-iframe='{"preload":false}' href="javascript:;">
                                         <i class='material-icons blue-text'>search</i>
                                     </a>
                                 }
                                 else
                                 {
-                                    <a href="@item.RUTA_DOCUMENTO">
+                                    <a href="@Request.Url.Authority/@item.RUTA_DOCUMENTO">
                                         <i class='material-icons blue-text'>search</i>
                                     </a>
                                 }
                             }
                             &nbsp
-                            <a class="confirmation" href="@Url.Action("Delete", new { id = item.ID_DOCUMENTO })">
-                                <i class='material-icons red-text'>delete</i>
-                            </a>
+                            <a class="modal-trigger" href="#modal_@item.ID_DOCUMENTO"><i class='material-icons red-text'>delete</i></a>
+                            <a id="actionDelete_@item.ID_DOCUMENTO" href="@Url.Action("Delete", "Ayuda", new { id = item.ID_DOCUMENTO })"></a>
+                            <!-- Modal Delete -->
+                            <div id="modal_@item.ID_DOCUMENTO" class="modal" style=" background-color: #fff; height: 200px; width: 450px;">
+                                <div class="modal-content">
+                                    <p style="font-size: 16px;text-align: left;" class="lbl_eliminar"></p>
+                                </div>
+                                <div class="modal-footer">
+                                    <a class="modal-close waves-effect  btn-flat"><label class="lbl_eliminarNo"></label></a>
+                                    <a onclick="eliminarUsuario('actionDelete_@item.ID_DOCUMENTO')" class="modal-close waves-effect  btn-flat"><label class="lbl_eliminarSi"></label></a>
+                                </div>
+                            </div>
                         </td>
                                     </tr>
                             }
@@ -114,6 +123,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.css" />
     <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.js"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('.modal');
+            var instances = M.Modal.init(elems, options);
+        });
         $(document).ready(function () {
             $('.confirmation').on('click', function (e) {
                                     e.preventDefault;
@@ -183,7 +196,10 @@
     function filterGlobal() {
         $('#table').DataTable().search(
             $('#global_filter').val()).draw();
-    }
+        }
+        function eliminarUsuario(idLink) {
+            $('#' + idLink).get(0).click().click();
+        }
     </script>
 </div>
 <style>

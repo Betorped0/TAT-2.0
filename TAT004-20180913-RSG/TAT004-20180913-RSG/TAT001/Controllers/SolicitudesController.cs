@@ -1056,8 +1056,10 @@ namespace TAT001.Controllers
                     try
                     {
                         docb = db.DOCUMENTBORRs.FirstOrDefault(x => x.USUARIOC_ID == user.ID && x.SOCIEDAD_ID == sociedad_id);
-                        ViewBag.LIGADA = docb.LIGADA;//RSG 09.07.2018
-                        pais_id = docb.PAIS_ID;//RSG 01.08.2018
+                        if (docb!=null) {
+                            ViewBag.LIGADA = docb.LIGADA;//RSG 09.07.2018
+                            pais_id = docb.PAIS_ID;//RSG 01.08.2018
+                        }
                     }
                     catch (Exception e)
                     {
@@ -1065,11 +1067,11 @@ namespace TAT001.Controllers
                     }
 
                     id_pais = db.PAIS.Where(pais => pais.LAND.Equals(pais_id)).FirstOrDefault();//RSG 15.05.2018 //MGC B20180625 MGC 
-                    id_bukrs = db.SOCIEDADs.Where(soc => soc.BUKRS.Equals(sociedad_id) && soc.ACTIVO == true).FirstOrDefault();//RSG 15.05.2018 //MGC B20180625 MGC 
-                    DET_APROBH dah = id_bukrs.DET_APROBH.Where(x => x.PUESTOC_ID == user.PUESTO_ID & x.ACTIVO == true).FirstOrDefault();
+                    id_bukrs = db.SOCIEDADs.FirstOrDefault(soc => soc.BUKRS.Equals(sociedad_id) && soc.ACTIVO);//RSG 15.05.2018 //MGC B20180625 MGC 
+                    DET_APROBH dah = id_bukrs.DET_APROBH.FirstOrDefault(x => x.PUESTOC_ID == user.PUESTO_ID && x.ACTIVO);
                     if (dah == null) { Session["error"] = "Verifique el flujo de la sociedad: " + id_pais.SOCIEDAD_ID; Session["pais"] = null; return RedirectToAction("Index", "Home"); }
                     //if (docb != null)
-                    if (docb != null | dp == "X")//ADD 31.10.2018
+                    if (docb != null || dp == "X")//ADD 31.10.2018
                     {
 
                         if (dp == "X")
@@ -3590,13 +3592,12 @@ namespace TAT001.Controllers
 
         }
 
-        void ObtenerAnalisisSolicitud(DOCUMENTO D, decimal? monto = null)
+        void ObtenerAnalisisSolicitud(DOCUMENTO D, decimal? monto = null,string[] categorias=null)
         {
             FormatosC format = new FormatosC();
             decimal montoProv = 0.0M;
             decimal montoApli = 0.0M;
             decimal remanente = 0.0M;
-            decimal impuesto = 0.0M;
             bool esDocRef = false;
             bool esProv = false;
             bool esNC = false;
@@ -3635,23 +3636,7 @@ namespace TAT001.Controllers
             {
                 remanente = montoProv - montoApli;
             }
-            string[] tsolImp = new string[] { "NC", "NCA", "NCAS", "NCAM", "NCASM", "NCS", "NCI", "NCIA", "NCIAS", "NCIS" };
-            if (tsolImp.Contains(D.TSOL_ID))
-            {
-                decimal KBETR;
-                esNC = true;
-                if (db.DOCUMENTOPs.Any(x => (x.MATKL == "605" || x.MATKL == "207") && x.NUM_DOC == D.NUM_DOC))
-                {
-                    KBETR = db.IIMPUESTOes.First(x => x.MWSKZ == "A0").KBETR.Value;
-                }
-                else
-                {
-                    decimal concecutivo = db.CONPOSAPHs.First(x => x.TIPO_SOL == "NC" && x.SOCIEDAD == D.SOCIEDAD_ID && (x.TIPO_DOC == "YG" || x.TIPO_DOC == "DG")).CONSECUTIVO;
-                    string tax_code = db.CONPOSAPPs.First(x => x.CONSECUTIVO == concecutivo).TAX_CODE;
-                    KBETR = db.IIMPUESTOes.Any(x => x.MWSKZ == tax_code) ? db.IIMPUESTOes.First(x => x.MWSKZ == tax_code).KBETR.Value : 0.0M;
-                }
-                impuesto = (D.MONTO_DOC_MD.Value * KBETR);
-            }
+            decimal impuesto = FnCommon.ObtenerImpuesto(db,D,ref esNC, categorias);
             if (D.TSOL.REVERSO)
             {
                 montoApli = montoApli * -1;
@@ -3661,7 +3646,7 @@ namespace TAT001.Controllers
             ViewBag.montoApli = (esDocRef ? format.toShow(montoApli, ".") : "-");
             ViewBag.remanente = (esProv ? format.toShow(remanente, ".") : "-");
             ViewBag.impuesto = (esNC ? format.toShow(impuesto, ".") : "-");
-            ViewBag.montoTotal = format.toShow(D.MONTO_DOC_MD.Value, ".");
+            ViewBag.montoTotal = format.toShow(D.MONTO_DOC_MD.Value + impuesto, ".");
         }
 
 
@@ -7791,7 +7776,7 @@ namespace TAT001.Controllers
         }
 
         [HttpPost]
-        public JsonResult getSolicitud(string num, string monto, string tsol_id, string sociedad_id, bool esCategoriaUnica, bool edit = false)//RSG 07.06.2018---------------------------------------------
+        public JsonResult getSolicitud(string num, string monto, string tsol_id, string sociedad_id, string[] categorias, bool edit = false)//RSG 07.06.2018---------------------------------------------
         {
             SOLICITUD_MOD sm = new SOLICITUD_MOD();
             FormatosC format = new FormatosC();
@@ -7800,12 +7785,20 @@ namespace TAT001.Controllers
             if (num == null || num == "" || num == "0.00")
             {
                 sm.S_NUM = "";
+
+                // Impuesto
+                bool esNC = false;
+                decimal impuesto = FnCommon.ObtenerImpuesto(db, new DOCUMENTO { NUM_DOC = 0, MONTO_DOC_MD = Convert.ToDecimal(monto), SOCIEDAD_ID = sociedad_id, TSOL_ID = tsol_id }, ref esNC, categorias);
+                if (esNC){sm.S_IMPA = impuesto.ToString(); }
+                else{sm.S_IMPA = "-";}
+
+                sm.S_TOTAL = (Convert.ToDecimal(monto)+ impuesto).ToString();
             }
             else if (edit)
             {
                 decimal num_doc = Convert.ToDecimal(num);
                 DOCUMENTO D = db.DOCUMENTOes.First(x => x.NUM_DOC == num_doc);
-                ObtenerAnalisisSolicitud(D, Convert.ToDecimal(monto));
+                ObtenerAnalisisSolicitud(D, Convert.ToDecimal(monto), categorias);
 
                 sm.S_MONTOB = ViewBag.montoSol;
                 sm.S_MONTOP = ViewBag.montoProv;
@@ -7828,6 +7821,12 @@ namespace TAT001.Controllers
             else
             {
                 decimal num_doc = Convert.ToDecimal(num);
+                // Impuesto
+                bool esNC = false;
+                decimal impuesto = FnCommon.ObtenerImpuesto(db, new DOCUMENTO { NUM_DOC = num_doc, MONTO_DOC_MD = Convert.ToDecimal(monto),SOCIEDAD_ID= sociedad_id ,TSOL_ID=tsol_id}, ref esNC, categorias);
+                if (esNC){sm.S_IMPA = impuesto.ToString();}
+                else{ sm.S_IMPA = "-";}
+
                 var rev = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == num_doc && x.ESTATUS_C == null && x.ESTATUS_WF != "B").ToList();
                 reverso = db.TSOLs.First(x => x.ID == tsol_id).REVERSO;
                 if (rev.Count == 0)
@@ -7841,11 +7840,10 @@ namespace TAT001.Controllers
                     sm.S_MONTOP = rev2.MONTO_DOC_MD.ToString();
                     sm.S_MONTOA = monto;
                     sm.S_REMA = rem2.ToString();
-                    sm.S_IMPA = "-";
                     sm.S_IMPB = "-";
                     sm.S_IMPC = "-";
                     sm.S_RET = "-";
-                    sm.S_TOTAL = monto;
+                    sm.S_TOTAL = (montor2 + impuesto).ToString();
                 }
                 else if (rev.Count == 1)
                 {
@@ -7859,11 +7857,10 @@ namespace TAT001.Controllers
                     sm.S_MONTOP = rev3.MONTO_DOC_MD.ToString();
                     sm.S_MONTOA = sumr3Hijos.ToString();
                     sm.S_REMA = rem3.ToString();
-                    sm.S_IMPA = "-";
                     sm.S_IMPB = "-";
                     sm.S_IMPC = "-";
                     sm.S_RET = "-";
-                    sm.S_TOTAL = monto;
+                    sm.S_TOTAL = (Convert.ToDecimal(monto) + impuesto).ToString();
                 }
                 else if (rev.Count > 1)
                 {
@@ -7882,33 +7879,19 @@ namespace TAT001.Controllers
                     sm.S_MONTOP = rev4.MONTO_DOC_MD.ToString();
                     sm.S_MONTOA = sumr4Hijos.ToString();
                     sm.S_REMA = rem4.ToString();
-                    sm.S_IMPA = "-";
                     sm.S_IMPB = "-";
                     sm.S_IMPC = "-";
                     sm.S_RET = "-";
-                    sm.S_TOTAL = monto;
+                    sm.S_TOTAL = (Convert.ToDecimal(monto) + impuesto).ToString();
                 }
                 if (sm.S_MONTOA != "-" && reverso)
                 {
                     sm.S_MONTOA = "-" + sm.S_MONTOA;
                 }
+
+                
             }
-            string[] tsolImp = new string[] { "NC", "NCA", "NCAS", "NCAM", "NCASM", "NCS", "NCI", "NCIA", "NCIAS", "NCIS" };
-            if (tsolImp.Contains(tsol_id))
-            {
-                decimal KBETR;
-                if (esCategoriaUnica)
-                {
-                    KBETR = db.IIMPUESTOes.First(x => x.MWSKZ == "A0").KBETR.Value;
-                }
-                else
-                {
-                    decimal concecutivo = db.CONPOSAPHs.First(x => x.TIPO_SOL == "NC" && x.SOCIEDAD == sociedad_id && (x.TIPO_DOC == "YG" || x.TIPO_DOC == "DG")).CONSECUTIVO;
-                    string tax_code = db.CONPOSAPPs.First(x => x.CONSECUTIVO == concecutivo).TAX_CODE;
-                    KBETR = db.IIMPUESTOes.First(x => x.MWSKZ == tax_code).KBETR.Value;
-                }
-                sm.S_IMPA = (Convert.ToDecimal(monto) * KBETR).ToString();
-            }
+            
 
             JsonResult cc = Json(sm, JsonRequestBehavior.AllowGet);
             return cc;
