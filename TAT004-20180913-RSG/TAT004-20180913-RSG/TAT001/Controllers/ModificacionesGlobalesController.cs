@@ -3,20 +3,29 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Security;
 using TAT001.Common;
 using TAT001.Entities;
+using TAT001.Filters;
 using TAT001.Models;
 using TAT001.Models.Dao;
+using TAT001.Services;
 
 namespace TAT001.Controllers
 {
+    [Authorize]
     public class ModificacionesGlobalesController : Controller
     {
         readonly TAT001Entities db = new TAT001Entities();
 
+        //------------------DAO´s-------------
         readonly SolicitudesDao solicitudesDao = new SolicitudesDao();
         readonly SociedadesDao sociedadesDao = new SociedadesDao();
+
+        readonly UsuarioLogin usuValidateLogin = new UsuarioLogin();
+
         // GET: ModificacionesGlobales
+        [LoginActive]
         public ActionResult Index()
         {
             int pagina_id = 240;//ID EN BASE DE DATOS
@@ -29,8 +38,18 @@ namespace TAT001.Controllers
             };
             return View(modelView);
         }
+
         public ActionResult ListModAutorizador(string sociedad_id,decimal? num_doci, decimal? num_docf, DateTime? fechai, DateTime? fechaf, string kunnr, string usuarioa_id, string usuario_id)
         {
+            if (!usuValidateLogin.validaUsuario(User.Identity.Name))
+            {
+                FormsAuthentication.SignOut();
+                return Json(new
+                {
+                    redirectUrl = Url.Action("Index", "Home"),
+                    isRedirect = true
+                }, JsonRequestBehavior.AllowGet);
+            }
             int pagina_id = 240;//ID EN BASE DE DATOS
             FnCommon.ObtenerTextos(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
             ViewBag.spras_id = FnCommon.ObtenerSprasId(db, User.Identity.Name);
@@ -43,6 +62,7 @@ namespace TAT001.Controllers
         }
 
         [HttpPost]
+        [LoginActive]
         public ActionResult ListModAutorizador(List<SolicitudPorAprobar> solicitudPorAprobar)
         {
             try
@@ -90,8 +110,18 @@ namespace TAT001.Controllers
 
             return RedirectToAction("Index");
         }
+
         public ActionResult ListModSolicitudes(string sociedad_id, decimal? num_doci, decimal? num_docf, DateTime? fechai, DateTime? fechaf, string kunnr, string usuario_id)
         {
+            if (!usuValidateLogin.validaUsuario(User.Identity.Name))
+            {
+                FormsAuthentication.SignOut();
+                return Json(new
+                {
+                    redirectUrl = Url.Action("Index", "Home"),
+                    isRedirect = true
+                }, JsonRequestBehavior.AllowGet);
+            }
             int pagina_id = 240;//ID EN BASE DE DATOS
             FnCommon.ObtenerTextos(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
             ViewBag.spras_id = FnCommon.ObtenerSprasId(db, User.Identity.Name);
@@ -104,6 +134,7 @@ namespace TAT001.Controllers
         }
 
         [HttpPost]
+        [LoginActive]
         public ActionResult ListModSolicitudes(List<DOCUMENTO> solicitudes)
         {
             try

@@ -14,16 +14,14 @@ namespace TAT001.Models
 {
     public class CartaDEsqueleto
     {
-        iTextSharp.text.Font letraTabNegrita = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 7);
-        iTextSharp.text.Font letraTab = FontFactory.GetFont(FontFactory.HELVETICA, 7);
-        iTextSharp.text.Font negritaPeque = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 11);
-        iTextSharp.text.Font normalPeque = FontFactory.GetFont(FontFactory.HELVETICA, 11);
-        iTextSharp.text.Font normalMasPeque = FontFactory.GetFont(FontFactory.HELVETICA, 8);
-        PdfPTable tablaDatos = new PdfPTable(1);
-        PdfPTable tablaDatos1 = new PdfPTable(2);
-        PdfPTable tablaDatos2 = new PdfPTable(2);
-        PdfPTable tablaDatos3 = new PdfPTable(2);
-        PdfPTable tabComentarios = new PdfPTable(2);
+        readonly iTextSharp.text.Font letraTabNegrita = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 7);
+        readonly iTextSharp.text.Font letraTab = FontFactory.GetFont(FontFactory.HELVETICA, 7);
+        readonly iTextSharp.text.Font negritaPeque = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 11);
+        readonly iTextSharp.text.Font normalPeque = FontFactory.GetFont(FontFactory.HELVETICA, 11);
+        readonly PdfPTable tablaDatos1 = new PdfPTable(2);
+        readonly PdfPTable tablaDatos2 = new PdfPTable(2);
+        readonly PdfPTable tablaDatos3 = new PdfPTable(2);
+        readonly PdfPTable tabComentarios = new PdfPTable(2);
         public int a, b, r;
         private int pos, pos2 = 0,pos3=0;
 
@@ -182,7 +180,6 @@ namespace TAT001.Models
                     else
                     { PdfPCell celda10 = new PdfPCell(new Paragraph("", normalPeque)); celda10.Border = 0; tablaDatos1.AddCell(celda10); }
 
-                    float var = tablaDatos1.TotalHeight;
                     pdfDoc.Add(tablaDatos1);
 
                     //APARTIR DE AQUI VA EL ESTIMADO
@@ -289,7 +286,6 @@ namespace TAT001.Models
                     miFrase.Clear();
                     if (v.monto_x )
                     {
-                        //pdfDoc.Add(new Chunk("\n"));
                         miFrase.Add(new Paragraph(text.Where(x => x.CAMPO == "monto").Select(x => x.TEXTO).First() + " " + v.monto + " " + v.moneda, normalPeque));
                     }
                     else
@@ -376,7 +372,6 @@ namespace TAT001.Models
 
                     //APARTIR DE AQUI VAN LAS FIRMAS
                     //LINEAS PARA LA FIRMA EN UNA TABLA
-                    //pdfDoc.Add(new Chunk("\n"));
                     PdfPCell celFirma1 = new PdfPCell();
                     PdfPCell celFirma2 = new PdfPCell();
 

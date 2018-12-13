@@ -115,8 +115,7 @@ namespace TAT001.Controllers
 
 
                 /////////////////////////////////////////////DATOS PARA LA TABLA 1 MATERIALES EN LA VISTA///////////////////////////////////////
-                bool fact = db.TSOLs.First(ts => ts.ID == d.TSOL_ID).FACTURA;
-
+                
                 FormatosC format = new FormatosC();
                 string decimales = d.PAI.DECIMAL; //B20180730 MGC 2018.07.30 Formatos
 
@@ -162,13 +161,12 @@ namespace TAT001.Controllers
                 cv.numColEncabezado = cabeza;////////NUMERO DE COLUMNAS PARA LAS TABLAS
                 cv.secondTab_x = true;
                 cv.tercerTab_x = true;
+                cv.material_x = (armadoCuerpoTabStr != null && armadoCuerpoTabStr.Any() && !string.IsNullOrEmpty(armadoCuerpoTabStr.First()));
                 cv.costoun_x = true;
                 cv.apoyo_x = true;
                 cv.apoyop_x = true;
                 cv.costoap_x = true;
                 cv.precio_x = true;
-                //cv.apoyoEst_x = true;
-                //cv.apoyoRea_x = true;
                 //B20180726 MGC 2018.07.26
                 cv.volumen_x = true;
                 cv.apoyototal_x = true;
@@ -245,15 +243,14 @@ namespace TAT001.Controllers
                 ViewBag.varligada = varligada;
 
                 //B20180801 MGC Formato
-                //v.monto = monto_enviar;
                 decimal montod = 0;
                 try
                 {
                     montod = Convert.ToDecimal(cv.monto);
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-
+                    Log.ErrorLogApp(e,"CartaD","Create");
                 }
 
                 ViewBag.montoformat = format.toShow(montod, decimales);
@@ -347,9 +344,9 @@ namespace TAT001.Controllers
                 {
                     montod = Convert.ToDecimal(v.monto);
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-
+                    Log.ErrorLogApp(e, "CartaD", "Create");
                 }
 
                 v.monto = format.toShow(montod, decimales);

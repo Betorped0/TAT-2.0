@@ -4498,7 +4498,11 @@ namespace TAT001.Controllers
             {
                 DOCUMENTO d = db.DOCUMENTOes.Find(dOCUMENTO.NUM_DOC);
                 string errorString = "";
-
+                
+                if (d.ESTATUS_WF=="B")
+                {
+                    d.PERIODO = dOCUMENTO.PERIODO;
+                }
                 //ADD RSG 20.08.2018-----------------------------START
                 if (d.TSOL.REVERSO)
                 {
@@ -4515,14 +4519,13 @@ namespace TAT001.Controllers
 
                             db.Entry(docr).State = EntityState.Modified;
                             db.SaveChanges();
-
-                            //return RedirectToAction("Index", "Home");
+                            
                         }
 
                     }
                     catch (Exception e)
                     {
-
+                        Log.ErrorLogApp(e,"Solicitudes","Edit");
                     }
                 }
                 else
@@ -4559,8 +4562,7 @@ namespace TAT001.Controllers
 
                     if (d.DOCUMENTO_REF > 0)
                     {
-                        DOCUMENTO dr = new DOCUMENTO();
-                        dr = db.DOCUMENTOes.Where(doc => doc.NUM_DOC == d.DOCUMENTO_REF).FirstOrDefault();
+                        DOCUMENTO dr = db.DOCUMENTOes.Where(doc => doc.NUM_DOC == d.DOCUMENTO_REF).FirstOrDefault();
                         //dOCUMENTO.TSOL_ID = d.TSOL_ID;
                         d.ESTADO = dr.ESTADO;
                         d.CIUDAD = dr.CIUDAD;

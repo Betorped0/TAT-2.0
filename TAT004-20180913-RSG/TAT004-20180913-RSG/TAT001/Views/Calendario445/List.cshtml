@@ -115,9 +115,13 @@
                     $.ajax({
                         url: me.toElement.getAttribute('url'),
                         success: function (resultView) {
+                            if (resultView.isRedirect) {
+                                window.location = resultView.redirectUrl;
+                            } else {
                             fnCommon.showProcess(false);
                             $('#list').html(resultView);
                             sort();
+                            }
                         }
                     });
                 });
@@ -140,9 +144,13 @@
                     $.ajax({
                         url: me.toElement.getAttribute('url'),
                         success: function (resultView) {
+                            if (resultView.isRedirect) {
+                                window.location = resultView.redirectUrl;
+                            } else {
                             fnCommon.showProcess(false);
                             $('#list').html(resultView);
                             pagination();
+                            }
                         }
                     });
                 });
