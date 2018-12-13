@@ -64,8 +64,8 @@
                     <table class="table mdl-data-table striped" id="tableLayouts" style="width:100%; overflow-x: scroll;">
                         <thead>
                             <tr class="text-left">
-                                <th id="lbl_pais"></th>
                                 <th id="lbl_sociedad"></th>
+                                <th id="lbl_pais"></th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -74,36 +74,36 @@
                             {
                                 string spras_id = ViewBag.spras_id;
 
-                                <tr class="text-left">
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.PAI.LANDX)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.SOCIEDAD.BUKRS)
-                                    </td>
-                                    <td style="text-align: right !important;">
-                                        <a href="@Url.Action("Edit", "LayoutCargaMasiva", new { Id = item.ID})">
-                                            <i class='material-icons green-text'>edit</i>
-                                        </a>
-                                        <a href="@Url.Action("Details", "LayoutCargaMasiva", new { Id = item.ID})">
-                                            <i class='material-icons blue-text'>search</i>
-                                        </a>
+                            <tr class="text-left">
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.SOCIEDAD.BUKRS)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PAI.LANDX)
+                                </td>
+                                <td style="text-align: right !important;">
+                                    <a href="@Url.Action("Edit", "LayoutCargaMasiva", new { Id = item.ID})">
+                                        <i class='material-icons green-text'>edit</i>
+                                    </a>
+                                    <a href="@Url.Action("Details", "LayoutCargaMasiva", new { Id = item.ID})">
+                                        <i class='material-icons blue-text'>search</i>
+                                    </a>
 
-                                        <a id="@item.ID" href="#" onclick="descargarArchivo(this)"><i class='material-icons green-text'>archive</i></a>
-                                        @* <a class="modal-trigger" href="#modal1"><i class='material-icons red-text'>delete</i></a>
-                                        <a id="actionDelete_@item.ID" href="@Url.Action("Delete", "LayoutCargaMasiva", new { layout_id = item.ID})"></a>
-                                        <!-- Modal Delete -->
-                                        <div id="modal1" class="modal">
-                                            <div class="modal-content">
-                                                <p style="color: white;font-size: 16px;" class="lbl_eliminar"></p>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <a class="modal-close waves-effect  btn-flat"><label class="lbl_eliminarNo"></label></a>
-                                                <a onclick="eliminarLayout('actionDelete_@item.ID')" class="modal-close waves-effect  btn-flat"><label class="lbl_eliminarSi"></label></a>
-                                            </div>
-                                        </div>*@
-                                    </td>
-                                </tr>
+                                    <a id="@item.ID" href="#" onclick="descargarArchivo(this)"><i class='material-icons green-text'>archive</i></a>
+                                    @* <a class="modal-trigger" href="#modal1"><i class='material-icons red-text'>delete</i></a>
+            <a id="actionDelete_@item.ID" href="@Url.Action("Delete", "LayoutCargaMasiva", new { layout_id = item.ID})"></a>
+            <!-- Modal Delete -->
+            <div id="modal1" class="modal">
+                <div class="modal-content">
+                    <p style="color: white;font-size: 16px;" class="lbl_eliminar"></p>
+                </div>
+                <div class="modal-footer">
+                    <a class="modal-close waves-effect  btn-flat"><label class="lbl_eliminarNo"></label></a>
+                    <a onclick="eliminarLayout('actionDelete_@item.ID')" class="modal-close waves-effect  btn-flat"><label class="lbl_eliminarSi"></label></a>
+                </div>
+            </div>*@
+                                </td>
+                            </tr>
                             }
                         </tbody>
                     </table>

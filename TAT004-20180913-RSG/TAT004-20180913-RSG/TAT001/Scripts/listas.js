@@ -1,6 +1,6 @@
 ﻿function periodo() {
     var soc = $("#sociedad_id").val();
-    var tsol = (!$("#TSOL_ID").val() ? $("#tsol_id").val() : $("#TSOL_ID").val());
+    var tsol = !$("#TSOL_ID").val() ? $("#tsol_id").val() : $("#TSOL_ID").val();
     var user = $("#USUARIOD_ID").val();
     $.ajax({
         type: "POST",
@@ -9,13 +9,15 @@
         data: { sociedad_id: soc, tsol_id: tsol, usuario_id: user },
 
         success: function (data) {
-            if (data === 0) {
+            if (data === "0") {
                 M.toast({
                     classes: "pWarnning",
                     displayLength: 1000000,
-                    html: '<span style="padding-right:15px;"><i class="material-icons yellow-text">info</i></span> No hay periodo abierto '
+                    html: '<span style="padding-right:15px;"><i class="material-icons yellow-text">info</i></span> No existe periodo abierto '
                     + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'pWarnning\')">Aceptar</button>'
                 });
+                $("#PERIODO").val(null);
+                $("#periodo").val(null);
             } else {
                 $("#PERIODO").val(data);
                 $("#periodo").val(data);
@@ -26,6 +28,39 @@
         },
         async: false
     });
+}
+function cierre() {
+    //string sociedad_id, string tsol_id, int periodo_id, string usuario_id = null
+    var soc = $("#sociedad_id").val();
+    var tsol = !$("#TSOL_ID").val() ? $("#tsol_id").val() : $("#TSOL_ID").val();
+    var periodo = $("#periodo").val() === "" ? 0 : $("#periodo").val();
+    var user = $("#USUARIOD_ID").val();
+    var bool = false;
+    $.ajax({
+        type: "POST",
+        url: root + 'Listas/cierre',
+        dataType: "text",
+        data: { sociedad_id: soc, tsol_id: tsol, periodo_id: periodo, usuario_id: user },
+
+        success: function (data) {
+            if (data !== "X") {
+                M.toast({
+                    classes: "guardarWarnning",
+                    displayLength: 1000000,
+                    html: '<span style="padding-right:15px;"><i class="material-icons yellow-text">info</i></span> No existe periodo abierto '
+                        + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'guardarWarnning\')">Aceptar</button>'
+                });
+                bool = true;
+            } else {
+                bool = false;
+            }
+        },
+        error: function (xhr, httpStatusMessage, customErrorMessage) {
+            M.toast({ html: httpStatusMessage });
+        },
+        async: false
+    });
+    return bool;
 }
 function cuentas(num_doc, tsol_id, monto) {
         var categorias = [];
@@ -53,10 +88,10 @@ function cuentas(num_doc, tsol_id, monto) {
 
     var bool = false;
     clearing = null;
-    var bukrs = ($("#sociedad_id").val() ? $("#sociedad_id").val():$("#D_SOCIEDAD_ID").val()),
+    var bukrs = $("#sociedad_id").val() ? $("#sociedad_id").val():$("#D_SOCIEDAD_ID").val(),
         land = $("#pais_id").val(),
         gall = $("#tall_id").val(),
-        ejercicio = ($("#ejercicio").val() ? $("#ejercicio").val():$("#D_EJERCICIO").val());
+        ejercicio = $("#ejercicio").val() ? $("#ejercicio").val():$("#D_EJERCICIO").val();
     $.ajax({
         type: "POST",
         url: root+'Listas/clearing',
@@ -133,44 +168,12 @@ function asignarPresupuesto(kunnr) {
     });
 
 }
-function cierre() {
-    //string sociedad_id, string tsol_id, int periodo_id, string usuario_id = null
-    var soc = $("#sociedad_id").val();
-    var tsol = (!$("#TSOL_ID").val() ? $("#tsol_id").val() : $("#TSOL_ID").val());
-    var periodo = $("#periodo").val();
-    var user = $("#USUARIOD_ID").val();
-    var bool = false;
-    $.ajax({
-        type: "POST",
-        url: root + 'Listas/cierre',
-        dataType: "text",
-        data: { sociedad_id: soc, tsol_id: tsol, periodo_id: periodo, usuario_id: user },
 
-        success: function (data) {
-            if (data !== "X") {
-                M.toast({
-                    classes: "guardarWarnning",
-                    displayLength: 1000000,
-                    html: '<span style="padding-right:15px;"><i class="material-icons yellow-text">info</i></span> Periodo ' + periodo + ' cerrado '
-                    + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'guardarWarnning\')">Aceptar</button>'
-                });
-                bool = true;
-            } else {
-                bool = false;
-            }
-        },
-        error: function (xhr, httpStatusMessage, customErrorMessage) {
-            M.toast({ html: httpStatusMessage });
-        },
-        async: false
-    });
-    return bool;
-}
 function asignarSolicitud(num, num2,edit) {
     num = toNum(num);
     num2 = toNum(num2);
-    var soc  = ($("#sociedad_id").val() ? $("#sociedad_id").val() : $("#D_SOCIEDAD_ID").val());
-    var tsol = (!$("#TSOL_ID").val() ? $("#tsol_id").val() : $("#TSOL_ID").val());
+    var soc  = $("#sociedad_id").val() ? $("#sociedad_id").val() : $("#D_SOCIEDAD_ID").val();
+    var tsol = !$("#TSOL_ID").val() ? $("#tsol_id").val() : $("#TSOL_ID").val();
     var categorias = [];
     if ($("#select_dis").val() === "C") {
         $("#table_dis > tbody  > tr[role='row']").each(function (indx, row) {
@@ -316,7 +319,7 @@ function cuentasPorTSol(tsol_id, monto, isReverso) {
             var kunnr = $("#payer_id").val(),
                 nombrec = !$("#cli_name").val() ? $("#D_CLIENTE_NAME1").val() : $("#cli_name").val();
             var impuesto = toShow(clearing.IMPUESTO, $('#dec').val()),
-                montot = toShow((monto + clearing.IMPUESTO), $('#dec').val());
+                montot = toShow(monto + clearing.IMPUESTO, $('#dec').val());
             monto = toShow(monto);
             div += "<div class='row' style='margin-bottom:0;'><div class='col s2'>" + tex_payer + "</div><div class='col s3'>" + kunnr + "</div><div class='col s4'>" + nombrec + "</div><div class='col s3 right-align'>" + montot + "</div></div>";
             div += "</li><li class='collection-item'>";
