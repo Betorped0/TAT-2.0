@@ -1,8 +1,6 @@
 ﻿@model TAT001.Entities.NOTICIA
 @using System.Web.Hosting;
 @{
-
-    //ViewBag.Title = "Index";
     ViewBag.pagina_r = 911;
     ViewBag.carpeta_r = 900;
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -48,8 +46,8 @@
         <div class="col s12 l8 offset-l2">
             <div class="card horizontal green white-text">
                 <div class="col s12" style="margin-bottom:0;">
-                    <p>
-                       Se recomienda subir una imagen en formato .jpeg/.jpg con resolucion ideal de 2560 x 390.
+                    <p class="lblMensajeRecomendacion">
+                       
                     </p>
                 </div>
             </div>
@@ -58,7 +56,7 @@
     <div class="form-horizontal">
         <div id="file_Imagen" class="file-field input-field">
             <div class="btn">
-                <span>File</span>
+                <span class="lblFile"></span>
                 <input type="file" class="fileImg" id="fileImg" accept="image/*" />
             </div>
             <div class="file-path-wrapper">
@@ -68,7 +66,7 @@
     </div>
     <div class="parallax-container" style="height:250px;">
         <div class="@*parallax*@">
-            <h5 id="lblPrevia" style="display:none;">Vista Previa</h5>
+            <h5 id="lblPrevia" class="lblVistaPrevia" style="display:none;"></h5>
             <img id="previa" src="" style="height: 200px; position:absolute; width:100%; display:none;" />
         </div>
     </div>
@@ -103,7 +101,7 @@
     </div>
 }
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "Index",null,new { @class="lblRegresar"})
 </div>
 <script>
     var elemdp = document.querySelector('#FECHAI');

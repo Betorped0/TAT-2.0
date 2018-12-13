@@ -51,6 +51,9 @@
     <Reference Include="DocumentFormat.OpenXml, Version=2.7.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
       <HintPath>..\packages\DocumentFormat.OpenXml.2.7.2\lib\net40\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
+    <Reference Include="DotNetZip, Version=1.12.0.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetZip.1.12.0\lib\net20\DotNetZip.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework.BulkInsert, Version=6.0.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.BulkInsert-ef6-ext.6.0.3.1\lib\net45\EntityFramework.BulkInsert.dll</HintPath>
     </Reference>
@@ -889,6 +892,7 @@
     <Compile Include="Models\Dao\SociedadesDao.cs" />
     <Compile Include="Models\SOLICITUD_MOD.cs" />
     <Compile Include="Models\Flujos.cs" />
+    <Compile Include="Models\SolxContabilizar.cs" />
     <Compile Include="Models\TALLT_MOD.cs" />
     <Compile Include="Models\Soporte.cs" />
     <Compile Include="Models\TSOLT_MODBD.cs" />
@@ -2064,12 +2068,12 @@
     <Content Include="Views\Sociedades\EditF.cshtml" />
     <Content Include="Views\Sociedades\CreateF.cshtml" />
     <Content Include="Views\Sociedades\CreateFA.cshtml" />
+    <Content Include="Views\LAContabilizacion\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->
     <Folder Include="App_Data\" />
     <Folder Include="files\Ayuda\" />
-    <Folder Include="Views\LAContabilizacion\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

@@ -1,9 +1,8 @@
 ﻿@model TAT001.Entities.NOTICIA
 @using System.Web.Hosting;
 @{
-    ViewBag.pagina_r = 741;
+    ViewBag.pagina_r = 913;
     ViewBag.carpeta_r = 500;
-    ViewBag.Title = "Delete";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @using (Html.BeginForm())
@@ -11,11 +10,11 @@
     @Html.AntiForgeryToken()
     <div class="row">
         <div class="col l12 m12 s12">
-            <button id="btnEliminar" type="submit" style="float:right;" value="Delete" class="btn btn-default"></button>
+            <button id="btnEliminar" type="submit" style="float:right;" value="Delete" class="lblEliminar btn btn-default"></button>
         </div>
     </div>
     <div class="row">
-        <p>¿Seguro de borrar esta Noticia?</p>
+        <p class="lblMensajeConfirmacion">¿Seguro de borrar esta Noticia?</p>
     </div>
     <div class="row">
         @if (ViewBag.imgnoticia != null)
@@ -39,5 +38,5 @@
     </div>
 }
     <div>
-        @Html.ActionLink("Back to List", "Index")
+        @Html.ActionLink("Back to List", "Index", null, new { @class="lblRegresar"})
     </div>
