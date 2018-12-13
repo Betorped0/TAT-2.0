@@ -1465,7 +1465,7 @@ $(window).on('load', function () {
     $('#tipo_cambio').val(toShow5($('#tipo_cambio').val()));
     if (isDuplicado())
         periodo();
-
+    _ff();
     //B20180625 MGC 2018.06.26 Verificar si hay algún borrador mostrar la sección de facturas
     var check = $("#check_facturas").val();
     if (/*!isRelacionada() &&*/ !isReversa()) {
@@ -1592,6 +1592,7 @@ $(window).on('load', function () {
     }
     //Valores en información antes soporte
     copiarTableVistaSop();
+    if (!isDuplicado())
     copiarTableVistaRec(); //ADD RSG 30.10.2018
     //Valores en  distribución    
     copiarTableVista("", borr, ne); //B20180625 MGC 2018.07.02 //Add MGC B20180705 2018.07.05 ne no eliminar
@@ -1695,9 +1696,13 @@ $(window).on('load', function () {
 function _ff() {
     //var meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
     var datei = $("#fechai_vig").val().split(" ")[0];
-    var _anoi = datei.split('/')[2];
     if (datei !== "") {
-        $.ajax({
+        var lis = datei.split('/');
+        var datesI = new Date(lis[2], lis[1] - 1, lis[0]);
+        datesI.setDate(datesI.getDate() - 1);
+        datei = datesI.getDate() + "/" + (datesI.getMonth() + 1) + "/" + datesI.getFullYear();
+        var _anoi = datei.split('/')[2];
+            $.ajax({
             type: "POST",
             url: 'getPeriodo',
             dataType: "json",
@@ -1706,6 +1711,9 @@ function _ff() {
                 var _xd = data;
                 var pp = parseInt(data);
                 if (pp !== 0) {
+                    pp++;
+                    if (pp == 13)
+                        pp = 1;
                     $("#periodoi_id").val(pp);
                     document.getElementById("btn-peri").checked = true;
                     if (!isDuplicado()) {
@@ -1720,7 +1728,7 @@ function _ff() {
             error: function (xhr, httpStatusMessage, customErrorMessage) {
                 M.toast({ html: httpStatusMessage });
             },
-            async: true
+            async: false
         });
     }
     var datef = $("#fechaf_vig").val().split(" ")[0];
@@ -1740,17 +1748,17 @@ function _ff() {
                     //if (!isDuplicado()) {//ADD RSG 28.11.2018
                         $("#aniof_id").val(_anof);
                     //}
-                    $("#btn-peri").trigger("change");
+                    $("#btn-peri").trigger("click");
                 } else {
                     document.getElementById("btn-date").checked = true;
-                    $("#btn-date").trigger("change");
+                    $("#btn-date").trigger("click");
                 }
 
             },
             error: function (xhr, httpStatusMessage, customErrorMessage) {
                 M.toast({ html: httpStatusMessage });
             },
-            async: true
+            async: false
         });
     }
 }

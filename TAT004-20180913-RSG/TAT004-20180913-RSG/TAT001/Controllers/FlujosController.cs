@@ -349,14 +349,16 @@ namespace TAT001.Controllers
                     Email em = new Email();
                     string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
                     string image = Server.MapPath("~/images/logo_kellogg.png");
+                    DOCUMENTO doc = db.DOCUMENTOes.Where(x => x.NUM_DOC == flujo.NUM_DOC).First();
+                    string imageFlag = Server.MapPath("~/images/flags/mini/" + doc.PAIS_ID + ".png");
                     string spras_id = FnCommon.ObtenerSprasId(db,User.Identity.Name);
                     if (res.Equals("1") || res.Equals("2"))//CORREO
                     {
-                        em.enviaMailC(f.NUM_DOC, true, spras_id, UrlDirectory, "Index", image);
+                        em.enviaMailC(f.NUM_DOC, true, spras_id, UrlDirectory, "Index", image, imageFlag);
                     }
                     else
                     {
-                        em.enviaMailC(f.NUM_DOC, true, spras_id, UrlDirectory, "Details", image);
+                        em.enviaMailC(f.NUM_DOC, true, spras_id, UrlDirectory, "Details", image, imageFlag);
                         return RedirectToAction("Index", "Home");
                     }
                     ////return RedirectToAction("Details", "Solicitudes", new { id = flujo.NUM_DOC });
@@ -706,7 +708,9 @@ namespace TAT001.Controllers
                         Email em = new Email();
                         string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
                         string image = Server.MapPath("~/images/logo_kellogg.png");
-                        em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image);
+                        DOCUMENTO docc = db.DOCUMENTOes.Where(x => x.NUM_DOC == dOCUMENTO.NUM_DOC).First();
+                        string imageFlag = Server.MapPath("~/images/flags/mini/" + docc.PAIS_ID + ".png");
+                        em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image, imageFlag);
 
                         if (conta.WORKFP.ACCION.TIPO == "B")
                         {

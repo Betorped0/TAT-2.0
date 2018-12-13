@@ -430,11 +430,11 @@
                                 <label>
                                     @if (Model.DOCUMENTORECs.Count > 1)
                                     {
-                                        <input id="check_recurrente" type="checkbox" onchange="cambiaCheckRec(this)" checked="checked" />
+                                        <input id="check_recurrente" type="checkbox" onchange="cambiaCheckRec(false)" checked="checked" />
                                     }
                                     else
                                     {
-                                        <input id="check_recurrente" type="checkbox" onchange="cambiaCheckRec(this)" />
+                                        <input id="check_recurrente" type="checkbox" onchange="cambiaCheckRec(false)" />
                                     }
                                     <span id="span_docrec">Documento recurrente</span>
                                 </label>
@@ -442,17 +442,22 @@
                         </div>
                         <div class="col s12">
                             <label class="col s6">
-                                <input name="group1" type="radio" id="btn-date" onchange="cambiaTemp(this.id)" />
-                                <span id="span_pfecha">Por fecha</span> @*B20180801 MGC Textos*@
+                                @if (Model.DOCUMENTORECs.Count > 1)
+                                {
+                                <input name="group1" type="radio" id="btn-date" disabled="disabled" onchange="cambiaTemp(this.id)" />
+                                }
+                                else {
+                            <input name="group1" type="radio" id="btn-date" onchange="cambiaTemp(this.id)" /> }
+                            <span id="span_pfecha">Por fecha</span> @*B20180801 MGC Textos*@
                             </label>
                             <label class="col s6">
                                 @if (Model.DOCUMENTORECs.Count > 1)
                                 {
-                                    <input name="group1" type="radio" checked id="btn-peri" onchange="cambiaTemp(this.id)" />
+                                    <input name="group1" type="radio" checked disabled="disabled" id="btn-peri" onclick="cambiaTemp(this.id)" />
                                 }
                                 else
                                 {
-                                    <input name="group1" type="radio" id="btn-peri" onchange="cambiaTemp(this.id)" />
+                                    <input name="group1" type="radio" id="btn-peri" onclick="cambiaTemp(this.id)" />
                                 }
                                 <span id="span_pperiodo">Por periodo</span> @*B20180801 MGC Textos*@
                             </label>

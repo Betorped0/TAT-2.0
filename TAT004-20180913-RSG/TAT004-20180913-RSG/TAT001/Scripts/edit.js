@@ -1768,10 +1768,21 @@ function _ff() {
                     if (!isDuplicado()) {
                         $("#anioi_id").val(_anoi);
                     }
-                    $("#btn-peri").trigger("change");
+
+                    document.getElementById("periodoi_id").removeAttribute("disabled");
+                    document.getElementById("anioi_id").removeAttribute("disabled");
+                    document.getElementById("periodof_id").removeAttribute("disabled");
+                    document.getElementById("aniof_id").removeAttribute("disabled");
+
+                    document.getElementById("fechai_vig2").setAttribute("disabled", "disabled");
+                    document.getElementById("fechaf_vig2").setAttribute("disabled", "disabled");
+
+                    var elemdpsn = document.querySelectorAll('select');
+                    var instancessn = M.FormSelect.init(elemdpsn, []);
+
                 } else {
                     document.getElementById("btn-date").checked = true;
-                    $("#btn-date").trigger("change");
+                    $("#btn-date").trigger("click");
                 }
             },
             error: function (xhr, httpStatusMessage, customErrorMessage) {

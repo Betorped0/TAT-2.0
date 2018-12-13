@@ -20,7 +20,7 @@
     <span class="lbl_cabono" style="display:none;"></span>
     <span class="lbl_ccargo" style="display:none;"></span>
     <span class="lbl_cclear" style="display:none;"></span>
-
+    <span class="lbl_cpayer" style="display:none;">Payer</span>
     <style>
         #lbl_sap {
             font-size: 12px !important;
@@ -282,7 +282,7 @@
                         {
                             <a href="@Url.Action("Backorder", "Recurrencias", new { id_d = Model.D.NUM_DOC.ToString() })" class="btn-small">Backorder</a>
                         }
-                        if (Model.D.DOCUMENTORECs.Any())
+                        if (Model.D.DOCUMENTORECs.Count() > 1)
                         {
                             if (Model.D.DOCUMENTORECs.FirstOrDefault().NUM_DOC == Model.D.NUM_DOC && Model.D.DOCUMENTORECs.Any(x => x.DOC_REF == 0) && (Model.D.USUARIOC_ID == ViewBag.usuario.ID | Model.D.USUARIOD_ID == ViewBag.usuario.ID))
                             {
@@ -319,7 +319,7 @@
                                 if (elem3 != undefined)
                                     M.Modal.init(elem3, []);
                             </script>
-                            if (Model.D.DOCUMENTORECs.Any())
+                            if (Model.D.DOCUMENTORECs.Count() > 1)
                             {
                                 if (Model.D.DOCUMENTORECs.FirstOrDefault().NUM_DOC == Model.D.NUM_DOC && Model.D.DOCUMENTORECs.Any(x=>x.DOC_REF == 0))
                                 {
@@ -332,13 +332,13 @@
                             <a class="btn-small" id="lbl_wfn" href="@Url.Action("Edit", "Solicitudes", new { id_d = Model.D.NUM_DOC })">Editar</a>
                         }
                     }
-                    if (Model.D.USUARIOC_ID == ViewBag.usuario.ID | Model.D.USUARIOD_ID == ViewBag.usuario.ID)
-                    {
-                        <a class="btn-small" id="lbl_dupp" href="@Url.Action("Create", "Solicitudes", new { id_d = Model.D.NUM_DOC, tsol = Model.D.TSOL_ID, dp = "X" })">Duplicar</a><!--RSG 31.10.2018-->
-                    }
 
 
                 }
+                    @if (Model.D.USUARIOC_ID == ViewBag.usuario.ID | Model.D.USUARIOD_ID == ViewBag.usuario.ID)
+                    {
+                        <a class="btn-small" id="lbl_dupp" href="@Url.Action("Create", "Solicitudes", new { id_d = Model.D.NUM_DOC, tsol = Model.D.TSOL_ID, dp = "X" })">Duplicar</a><!--RSG 31.10.2018-->
+                    }
                 @if (Model.D.FLUJOes.Count == 0)
                 {
                     <a class="btn-small" href="@Url.Action("Nuevo", "Flujos", new { id = Model.D.NUM_DOC })">Enviar</a>

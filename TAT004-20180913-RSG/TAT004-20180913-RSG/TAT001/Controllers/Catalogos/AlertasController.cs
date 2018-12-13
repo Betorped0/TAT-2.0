@@ -81,7 +81,7 @@ namespace TAT001.Controllers.Catalogos
             try
             {
                 WARNINGP warningpAux = modelView.alerta;
-                bool reverso = (warningpAux.TSOL_ID == "Reverso");
+                bool reverso = (warningpAux.TSOL_ID == "REV");
                 string id_padre = "";
                 string tipo_padre = "";
                 string spras_id = FnCommon.ObtenerSprasId(db,User.Identity.Name);

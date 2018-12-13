@@ -13,19 +13,19 @@
 </div>
     <div class="card-panel">
         <div class="row">
-            <div class="col s2">
-                <div class="form-group">
-                    <label id="lbl_pais"></label>
-                    <div class="col-md-10">
-                        @Html.DropDownListFor(model => model.layoutMasiva.LAND, Model.paises, "", new { @disabled = true })
-                    </div>
-                </div>
-            </div>
             <div class="col s4">
                 <div class="form-group">
                     <label id="lbl_sociedad"></label>
                     <div class="col-md-10">
                         @Html.DropDownListFor(model => model.layoutMasiva.SOCIEDAD_ID, Model.sociedades, "", new { @disabled = true })
+                    </div>
+                </div>
+            </div>
+            <div class="col s2">
+                <div class="form-group">
+                    <label id="lbl_pais"></label>
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.layoutMasiva.LAND, Model.paises, "", new { @disabled = true })
                     </div>
                 </div>
             </div>

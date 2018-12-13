@@ -478,8 +478,8 @@ $(document).ready(function () {
         //Set val a DatePicker
         document.querySelectorAll('.input_fe').forEach(function (datePicker) {
             if (datePicker.value) {
-                var dateVal = moment(datePicker.value, 'DD/MM/YYYY');
-                M.Datepicker.getInstance(datePicker).setDate(dateVal._d);
+                ////var dateVal = moment(datePicker.value, 'DD/MM/YYYY');
+                ////M.Datepicker.getInstance(datePicker).setDate(dateVal._d);
             }
         });
 
@@ -680,8 +680,11 @@ $(document).ready(function () {
             var num2 = $('#monto_doc_md').val();//RSG 12.06.2018
 
             asignarPresupuesto(kunnr);
-            if (!$('#NUM_DOC').val())
-            asignarSolicitud(num, num2.replace("$", ""));//RSG 12.06.2018 //LEJ 09.07.18
+            if ($('#NUM_DOC').val() !== undefined) {
+                asignarSolicitud($('#NUM_DOC').val(), num2.replace("$", ""), true);//RSG 12.06.2018 //LEJ 09.07.18
+            } else {
+                asignarSolicitud(num, num2.replace("$", ""));//RSG 12.06.2018 //LEJ 09.07.18
+            }
 
         } else {
             msj("toast", 'Verificar valores en los campos de Distribución!'); //16-11-2018

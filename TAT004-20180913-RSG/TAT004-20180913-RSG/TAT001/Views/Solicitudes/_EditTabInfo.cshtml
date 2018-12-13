@@ -241,7 +241,10 @@
                             }
                         };
                         var instancedp = M.Datepicker.init(elemdp, optionsdp);
-
+                        var estatus_wf = "@Model.ESTATUS_WF";
+                        if (estatus_wf == "B") {
+                            periodo();
+                        }
                     </script>
                     <div class="input-field col s6">
                         @Html.HiddenFor(model => model.EJERCICIO, new { htmlAttributes = new { @class = "form-control" } })
@@ -449,11 +452,11 @@
                                 {
                                     if (Model.DOCUMENTOREC.Count > 1)
                                     {
-                                        <input id="check_recurrente" type="checkbox" onchange="cambiaCheckRec(this)" checked="checked" />
+                                        <input id="check_recurrente" type="checkbox" onchange="cambiaCheckRec(false)" checked="checked" />
                                     }
                                     else
                                     {
-                                        <input id="check_recurrente" type="checkbox" onchange="cambiaCheckRec(this)" />
+                                        <input id="check_recurrente" type="checkbox" onchange="cambiaCheckRec(false)" />
                                     }
                                 }
                                 else
@@ -477,13 +480,13 @@
                             <label class="col s6">
                                 @if (Model.FECHAI_VIG != null)
                                 {
-                                <input name="group1" type="radio" checked id="btn-date" onchange="cambiaTemp(this.id)" />
+                                <input name="group1" type="radio" checked id="btn-date" onclick="cambiaTemp(this.id)" />
                                 }else{
-                                <input name="group1" type="radio" checked id="btn-date" onchange="cambiaTemp(this.id)" />}
+                                <input name="group1" type="radio" checked id="btn-date" onclick="cambiaTemp(this.id)" />}
                                 <span id="sPorFecha">Por fecha</span>
                             </label>
                             <label class="col s6">
-                                <input name="group1" type="radio" id="btn-peri" onchange="cambiaTemp(this.id)" />
+                                <input name="group1" type="radio" id="btn-peri" onclick="cambiaTemp(this.id)" />
                                 <span id="sPorPeriodo">Por periodo</span>
                             </label>
                         </div>
