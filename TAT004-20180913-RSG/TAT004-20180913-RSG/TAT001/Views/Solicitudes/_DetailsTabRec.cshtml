@@ -165,7 +165,7 @@
                                                     {
                                                         @*<td>Contabilizado</td>*@
                                                         TAT001.Services.Estatus es = new TAT001.Services.Estatus();
-                                                         
+
                                                         <td>@es.getText((decimal)iteem.DOC_REF, Session["spras"].ToString())</td>
                                                         <td class="precio">@tol.MONTO_VENTA</td>
                                                         <td class="precio">@(tol.DOCUMENTO.MONTO_DOC_MD)</td>
@@ -314,7 +314,8 @@
                                                         <td></td>
                                                     }
                                                 }
-                                                else {
+                                                else
+                                                {
                                                     <td></td>
                                                 }
                                             </tr>
@@ -396,9 +397,76 @@
                     }
                 </div>
             </div>
-            @*
+
+            <div class="col s12">
+                <div class="card-panel">
+                    <div class="row" style="margin-bottom:0;">
+                        <!--RSG 01.08.2018-->
+                        <p>
+                            <label>
+                                <input id="check_objetivoq" name="check_objetivoq" type="checkbox" onchange="objetivoQ(this.checked);" disabled />
+                                <span id="span_objq">Objetivo Q</span> @*B20180801 MGC Textos*@
+                            </label>
+                            @if (Model.D.OBJETIVOQ == true)
+                            {
+                                <script>
+                                    document.getElementById("check_objetivoq").checked = true;
+                                </script>
+                            }
+                        </p>
+                        @if (Model.D.OBJETIVOQ == true)
+                        {
+                            <div style="overflow:auto;">
+                                <table id="table_objQ" class="display hide" cellspacing="0" style="font-size:12px;">
+                                    <thead>
+                                        <tr>
+                                            <th>NO</th>
+                                            <th>TSOL</th>
+                                            <th>FECHA</th>
+                                            <th>Monto</th>
+                                            <th>Porcentaje</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Q 1</td>
+                                            <td id="obqTSOL"></td>
+                                            <td id="obqFECHA"></td>
+                                            <td id="obqMONTO"></td>
+                                            <td>
+                                                @Html.DisplayFor(model => model.D.OBJQ_PORC, new { htmlAttributes = new { @id = "objPORC", @class = "input_dcp ", @style = "width:150px;font-size:12px;height:2rem;", @onchange = "this.value = toShowPorc(this.value);" } })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        <p>
+                            <div class="input-field col l4 m4 s12">
+                                <select id="sel_nn" name="sel_nn" disabled>
+                                    <option id="opt_mmes" value="1">Mensual</option> @*B20180801 MGC Textos*@
+                                    <option id="opt_tmes" value="3">Trimestral</option> @*B20180801 MGC Textos*@
+                                    <option id="opt_smes" value="6">Semestral</option> @*B20180801 MGC Textos*@
+                                    <option id="opt_ames" value="12">Anual</option> @*B20180801 MGC Textos*@
+                                </select>
+                                @if (Model.D.FRECUENCIA_LIQ == 1)
+                                {
+                                    <input type="text" id="sel_nn" name="sel_nn" disabled value="Mensual"/>}
+                                else if (Model.D.FRECUENCIA_LIQ == 3)
+                                {
+                                    <input type="text" id="sel_nn" name="sel_nn" disabled  value="Trimestral"/>}
+                                else if (Model.D.FRECUENCIA_LIQ == 6)
+                                {
+                                    <input type="text" id="sel_nn" name="sel_nn" disabled  value="Semestral"/>}
+                                else if (Model.D.FRECUENCIA_LIQ == 12)
+                                {
+                                    <input type="text" id="sel_nn" name="sel_nn" disabled  value="Anual"/>}
+                                <label id="lbl_selnn" for="sel_nn">Frecuencia de liquidación</label> @*B20180801 MGC Textos*@
+                            </div>
+                        </p>
+                    </div>
                 </div>
-                </div>*@
+            </div>
         }
     </div>
 </div>

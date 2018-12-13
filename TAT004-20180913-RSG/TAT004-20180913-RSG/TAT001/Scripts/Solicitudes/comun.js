@@ -478,8 +478,8 @@ $(document).ready(function () {
         //Set val a DatePicker
         document.querySelectorAll('.input_fe').forEach(function (datePicker) {
             if (datePicker.value) {
-                var dateVal = moment(datePicker.value, 'DD/MM/YYYY');
-                M.Datepicker.getInstance(datePicker).setDate(dateVal._d);
+                ////var dateVal = moment(datePicker.value, 'DD/MM/YYYY');
+                ////M.Datepicker.getInstance(datePicker).setDate(dateVal._d);
             }
         });
 
