@@ -441,15 +441,17 @@ namespace TAT001.Controllers
                 {
                     //return RedirectToAction("Enviar", "Mails", new { id = flujo.NUM_DOC, index = false, tipo = "A" });
                     Email em = new Email();
+                    DOCUMENTO doc = db.DOCUMENTOes.Where(x => x.NUM_DOC == num_doc).First();
                     string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
                     string image = Server.MapPath("~/images/logo_kellogg.png");
+                    string imageFlag = Server.MapPath("~/images/flags/mini/" + doc.PAIS_ID + ".png");
                     if (res.Equals("1") | res.Equals("2"))//CORREO
                     {
-                        em.enviaMailC(flujo.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image);
+                        em.enviaMailC(flujo.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image, imageFlag);
                     }
                     else
                     {
-                        em.enviaMailC(flujo.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Details", image);
+                        em.enviaMailC(flujo.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Details", image, imageFlag);
                     }
                 }
 
@@ -2664,10 +2666,12 @@ namespace TAT001.Controllers
                                 while (c == "1")
                                 {
                                     Email em = new Email();
+                                    DOCUMENTO doc = db.DOCUMENTOes.Where(x => x.NUM_DOC == dOCUMENTO.NUM_DOC).First();
                                     string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
                                     string image = Server.MapPath("~/images/logo_kellogg.png");
+                                    string imageFlag = Server.MapPath("~/images/flags/mini/" + doc.PAIS_ID + ".png");
                                     ////em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image);
-                                    em.enviaMailC(f.NUM_DOC, true, usuariotextos, UrlDirectory, "Index", image);
+                                    em.enviaMailC(f.NUM_DOC, true, usuariotextos, UrlDirectory, "Index", image, imageFlag);
 
                                     if (conta.WORKFP.ACCION.TIPO == "B")
                                     {
@@ -2775,8 +2779,10 @@ namespace TAT001.Controllers
                                             Email em = new Email();
                                             string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
                                             string image = Server.MapPath("~/images/logo_kellogg.png");
+                                            DOCUMENTO doc = db.DOCUMENTOes.Where(x => x.NUM_DOC == num_doc).First();
+                                            string imageFlag = Server.MapPath("~/images/flags/mini/" + doc.PAIS_ID + ".png");
                                             ////em.enviaMailC(ff.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image);
-                                            em.enviaMailC(ff.NUM_DOC, true, usuariotextos, UrlDirectory, "Index", image);
+                                            em.enviaMailC(ff.NUM_DOC, true, usuariotextos, UrlDirectory, "Index", image, imageFlag);
 
                                             if (conta.WORKFP.ACCION.TIPO == "B")
                                             {
@@ -5581,7 +5587,9 @@ namespace TAT001.Controllers
                             Email em = new Email();
                             string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
                             string image = Server.MapPath("~/images/logo_kellogg.png");
-                            em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image);
+                            DOCUMENTO doc = db.DOCUMENTOes.Where(x => x.NUM_DOC == d.NUM_DOC).First();
+                            string imageFlag = Server.MapPath("~/images/flags/mini/" + doc.PAIS_ID + ".png");
+                            em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image, imageFlag);
 
 
                             if (conta.WORKFP.ACCION.TIPO == "B")
@@ -5808,7 +5816,9 @@ namespace TAT001.Controllers
 
             string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
             string image = Server.MapPath("~/images/logo_kellogg.png");
-            em.enviaMailC(id, true, Session["spras"].ToString(), UrlDirectory, "Cancelacion", image);
+            DOCUMENTO doc = db.DOCUMENTOes.Where(x => x.NUM_DOC == id).First();
+            string imageFlag = Server.MapPath("~/images/flags/mini/" + doc.PAIS_ID + ".png");
+            em.enviaMailC(id, true, Session["spras"].ToString(), UrlDirectory, "Cancelacion", image, imageFlag);
 
             return RedirectToAction("Index", "Home");
         }

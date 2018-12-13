@@ -171,19 +171,6 @@ namespace TAT001.Controllers
             //return RedirectToAction("Cancelacion", dOCUMENTO);
         }
 
-        //public void ConvertHtmlToImage()
-        //{
-        //    Bitmap m_Bitmap = new Bitmap(400, 600);
-        //    PointF point = new PointF(0, 0);
-        //    SizeF maxSize = new System.Drawing.SizeF(500, 500);
-        //    HtmlRenderer.HtmlRender.Render(Graphics.FromImage(m_Bitmap),
-        //                                            "<html><body><p>This is a shitty html code</p>"
-        //                                            + "<p>This is another html line</p></body>",
-        //                                             point, maxSize);
-
-        //    m_Bitmap.Save(@"C:\Test.png", ImageFormat.Png);
-        //}
-
         public ActionResult Cancelacion(decimal id, bool? mail) 
         {
             var dOCUMENTO = db.DOCUMENTOes.Where(x => x.NUM_DOC == id).FirstOrDefault();
@@ -549,18 +536,12 @@ namespace TAT001.Controllers
         }
 
         // GET: Correos/Details/5
-        public ActionResult Details(decimal id, bool? mail)
+        public ActionResult Details(decimal id, bool? mail, string spras)
         {
-            int pagina = 254; //ID EN BASE DE DATOS
-            string u = User.Identity.Name;
-            var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-            ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-            ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-            ViewBag.usuario = user;
-            ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            //ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-            ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            if (spras == "" | spras == null)
+            {
+                spras = "ES";
+            }
 
             if (id == null)
             {
@@ -594,18 +575,18 @@ namespace TAT001.Controllers
             }
 
             ViewBag.mail = mailv;
-            ViewBag.cabecera = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == user.SPRAS_ID & x.CAMPO_ID == "lbl_cabeceraDet").FirstOrDefault().TEXTOS;
-            ViewBag.titulo = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == user.SPRAS_ID & x.CAMPO_ID == "lbl_tituloDet").FirstOrDefault().TEXTOS;
-            ViewBag.opcionDet = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == user.SPRAS_ID & x.CAMPO_ID == "lbl_opcionesDet").FirstOrDefault().TEXTOS;
-            ViewBag.ligaDet = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == user.SPRAS_ID & x.CAMPO_ID == "lbl_ligaDet").FirstOrDefault().TEXTOS;
+            ViewBag.cabecera = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_cabeceraDet").FirstOrDefault().TEXTOS;
+            ViewBag.titulo = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_tituloDet").FirstOrDefault().TEXTOS;
+            ViewBag.opcionDet = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_opcionesDet").FirstOrDefault().TEXTOS;
+            ViewBag.ligaDet = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_ligaDet").FirstOrDefault().TEXTOS;
             //B20180803 MGC Correos............
-            ViewBag.usuarioDet = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == user.SPRAS_ID & x.CAMPO_ID == "lbl_usuario").FirstOrDefault().TEXTOS;
-            ViewBag.usuarioNom = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == user.SPRAS_ID & x.CAMPO_ID == "lbl_nombreUsu").FirstOrDefault().TEXTOS;
-            ViewBag.tipoSol = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == user.SPRAS_ID & x.CAMPO_ID == "lbl_tsol").FirstOrDefault().TEXTOS;
-            ViewBag.cliente = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == user.SPRAS_ID & x.CAMPO_ID == "lbl_cliente").FirstOrDefault().TEXTOS;
-            ViewBag.clasificacion = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == user.SPRAS_ID & x.CAMPO_ID == "lbl_clasificacion").FirstOrDefault().TEXTOS;
-            ViewBag.concepto = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == user.SPRAS_ID & x.CAMPO_ID == "lbl_concepto").FirstOrDefault().TEXTOS;
-            ViewBag.montoDet = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == user.SPRAS_ID & x.CAMPO_ID == "lbl_monto").FirstOrDefault().TEXTOS;
+            ViewBag.usuarioDet = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_usuario").FirstOrDefault().TEXTOS;
+            ViewBag.usuarioNom = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_nombreUsu").FirstOrDefault().TEXTOS;
+            ViewBag.tipoSol = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_tsol").FirstOrDefault().TEXTOS;
+            ViewBag.cliente = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_cliente").FirstOrDefault().TEXTOS;
+            ViewBag.clasificacion = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_clasificacion").FirstOrDefault().TEXTOS;
+            ViewBag.concepto = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_concepto").FirstOrDefault().TEXTOS;
+            ViewBag.montoDet = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_monto").FirstOrDefault().TEXTOS;
             ViewBag.bandera = dOCUMENTO.PAIS_ID;
             return View(dOCUMENTO);
         }
@@ -709,6 +690,7 @@ namespace TAT001.Controllers
             }
             base.Dispose(disposing);
         }
+
         public CLIENTE_MOD SelectCliente(string kunnr)
         {
 
