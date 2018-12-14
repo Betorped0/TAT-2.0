@@ -364,7 +364,7 @@ namespace TAT001.Controllers
                 ca.COMPROMISOKX = v.compromisoK_x;
 
                 ca.SECOND_TABX = v.secondTab_x;
-                //ca.MATERIALX = v.material_x;
+                ca.MATERIALX = v.material_x;
                 ca.COSTO_UNX = v.costoun_x;
                 ca.APOYOX = v.apoyo_x;
                 ca.APOYOPX = v.apoyop_x;
@@ -978,7 +978,7 @@ namespace TAT001.Controllers
                 //B20180720P MGC 2018.07.23
                 cv.secondTab_x = Convert.ToBoolean(cs.SECOND_TABX);
                 cv.costoun_x = Convert.ToBoolean(cs.COSTO_UNX);
-                //cv.material_x = Convert.ToBoolean(cs.MATERIALX);
+                cv.material_x = Convert.ToBoolean(cs.MATERIALX == null || cs.MATERIALX.Value);
                 cv.apoyo_x = Convert.ToBoolean(cs.APOYOX);
                 cv.apoyop_x = Convert.ToBoolean(cs.APOYOPX);
                 cv.costoap_x = Convert.ToBoolean(cs.COSTOAPX);
@@ -1200,6 +1200,7 @@ namespace TAT001.Controllers
                 v.compromisoK_x = Convert.ToBoolean(cs.COMPROMISOKX);
 
                 //B20180720P MGC 2018.07.23
+                v.material_x = Convert.ToBoolean(cs.MATERIALX);
                 v.secondTab_x = Convert.ToBoolean(cs.SECOND_TABX);
                 v.costoun_x = Convert.ToBoolean(cs.COSTO_UNX);
                 v.apoyo_x = Convert.ToBoolean(cs.APOYOX);
@@ -1263,7 +1264,10 @@ namespace TAT001.Controllers
                         foreach (var item2 in con2)
                         {
 
-                            armadoCuerpoTab.Add(item2.MATNR.TrimStart('0'));
+                            if (v.material_x)
+                            {
+                                armadoCuerpoTab.Add(item2.MATNR.TrimStart('0'));
+                            }
                             armadoCuerpoTab.Add(item2.MATKL);
                             armadoCuerpoTab.Add(item2.MAKTX);
 
@@ -1346,7 +1350,10 @@ namespace TAT001.Controllers
                         foreach (var item2 in con3)
                         {
 
-                            armadoCuerpoTab.Add("");
+                            if (v.material_x)
+                            {
+                                armadoCuerpoTab.Add("");
+                            }
                             armadoCuerpoTab.Add(item2.MATKL);
                             armadoCuerpoTab.Add(item2.TXT50);
 
@@ -1406,12 +1413,12 @@ namespace TAT001.Controllers
                     numfilasTabla.Add(contadorTabla);
                 }
 
-                var cabeza = new List<string>
-                {
-                    FnCommonCarta.ObtenerTexto(db, spras_id, "materialC"),
-                    FnCommonCarta.ObtenerTexto(db, spras_id, "categoriaC"),
-                    FnCommonCarta.ObtenerTexto(db, spras_id, "descripcionC")
-                };
+                var cabeza = new List<string>();
+
+                if (v.material_x) { cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "materialC")); }
+                cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "categoriaC"));
+                cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "descripcionC"));
+                
                 if (v.costoun_x ) { cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "costouC")); }
                 if (v.apoyo_x ) { cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "apoyopoC")); }
                 if (v.apoyop_x ) { cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "apoyopiC")); }
