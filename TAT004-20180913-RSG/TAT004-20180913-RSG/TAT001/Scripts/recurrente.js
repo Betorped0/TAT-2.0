@@ -600,7 +600,9 @@ function copiarTableVistaRec() {
         ////var rowsn = 0;
 
         ////var tsol = "";
-        var sol = $("#TSOL_ID").val();
+        ////var sol = $("#TSOL_ID").val();
+        var sol = ($("#tsol_idi").val() ? $("#tsol_idi").val() : $("#tsol_id").val());
+        var tipoR = document.getElementById("txt_trec").value;//RSG 09.07.2018
 
         //var i = 1;
         $('#table_rech > tbody  > tr').each(function () {
@@ -617,37 +619,14 @@ function copiarTableVistaRec() {
             //var control = $(this).find("td.CONTROL").text();
             var porc = $(this).find("td:eq(4)").text();
             var per = $(this).find("td:eq(11)").text();
-            // var autorizacion = $(this).find("td.AUTORIZACION").text();
-
-            //if ($("#check_factura").is(':checked')) {
-
-            //    factura = "<input class=\"FACTURA input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + factura + "\">";
-            //    ffecha[0] = "<input class=\"FECHAV input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + ffecha[0] + "\">";
-            //    prov = "<input class=\"PROVEEDOR input_sop_f input_proveedor\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + prov + "\">";
-            //    control = "<input class=\"CONTROL input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + control + "\">";
-            //    autorizacion = "<input class=\"AUTORIZACION input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + autorizacion + "\">";
-            //    vven[0] = "<input class=\"VENCIMIENTO input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + vven[0] + "\">";
-            //    facturak = "<input class=\"FACTURAK input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + facturak + "\">";
-            //    ejerciciok = "<input class=\"EJERCICIOK input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + ejerciciok + "\">";
-            //    bill_doc = "<input class=\"BILL_DOC input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + bill_doc + "\">";
-            //    belnr = "<input class=\"BELNR input_sop_f\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + belnr + "\">"
-
-            //////}
-            ////if (tipo === "P") {
-            ////    if (pos.trim() === "1") {
-            ////        monto = monto.trim();
-            ////    } else {
-            ////        monto = "<input class=\"MONTO input_rec numberd input_dc monto \" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + monto.trim() + "\">";
-            ////    }
-
-            ////    porc = "<input class=\"PORCENTAJE input_rec numberd input_dc\" style=\"font-size:12px;\" type=\"text\" id=\"\" name=\"\" value=\"" + porc.trim() + "\">";
-            ////} else {
+           
             monto = monto.trim();
             porc = porc.trim();
             ////}
             var t = $('#table_rec').DataTable();
 
-            addRowRecl(t, pos.trim(), sol.trim(), ffecha[0], toShow(monto), toShowPorc(porc), per);
+            ////addRowRecl(t, pos.trim(), sol.trim(), ffecha[0], toShow(monto), toShowPorc(porc), per);
+            addRowRec(t, pos.trim(), ffecha[0], monto, tipoR, "", "P" + per.trim() + "-" + ffecha[0].split('/')[2], lengthT);
             var o = { POS: parseInt(pos.trim()), LIN: 1, PERIODO: per, OBJ1: monto, OBJ2: 0, PORC: porc };
             listaRangos.push(o);
 
@@ -659,6 +638,11 @@ function copiarTableVistaRec() {
         //$('.input_sop_f').trigger('focusout');
     }
 
+    if (!ligada()) {
+        $(".PORCENTAJE").css("display", "none");
+    } else {
+        $(".PORCENTAJE").css("display", "table-cell");
+    }
 }
 
 //function primerDiaT(t, num, date, monto, tipo) {
@@ -890,6 +874,11 @@ function changeFile(campo) {
         if (res) {
             //Nombre duplicado
             M.toast({ html: 'Ya existe un archivo con ese mismo nombre' });
+        } else {
+            if (campo.id == "file_rev") {
+                $("#fileinput_rev").removeClass("invalid");
+                $("#fileinput_rev").addClass("valid");
+            }
         }
     }
 }

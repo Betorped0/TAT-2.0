@@ -89,6 +89,12 @@
                     className: 'mdl-data-table__cell--non-numeric'
                 }
             ],
+            columns: [
+                { name: "ID", searchable: true },
+                { name: "DESC", searchable: true },
+                { name: "ACTIVO", searchable: false },
+                { name: "BUTTONS", searchable: false },
+            ],
             order: [[0, "asc"]],
             initComplete: function () {
                 this.api().columns().every(function () {

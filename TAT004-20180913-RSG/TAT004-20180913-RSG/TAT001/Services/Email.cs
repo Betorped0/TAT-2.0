@@ -8,6 +8,7 @@ using System.Net.Mail;
 using System.Net.Mime;
 using System.Web;
 using System.Web.Mvc;
+using TAT001.Common;
 using TAT001.Entities;
 
 namespace TAT001.Services
@@ -87,6 +88,7 @@ namespace TAT001.Services
                             mail.AlternateViews.Add(Mail_Body(result, image, imageFlag));//B20180803 MGC Correos
                             mail.IsBodyHtml = true;//B20180803 MGC Correos
 
+                            Log.Info("Intenta enviar email-To:"+mailTo +" "+ UrlDirectory);
                             client.Send(mail);
 
                         }
@@ -95,6 +97,9 @@ namespace TAT001.Services
                 }
             }
             catch (Exception e){
+                Log.Info("Error al enviar correo:" + e.Message);
+                if (e.InnerException != null)
+                    Log.Info(e.InnerException.ToString());
                 Console.Write("Error al enviar correo:" +  e.Message);
             }
         }
