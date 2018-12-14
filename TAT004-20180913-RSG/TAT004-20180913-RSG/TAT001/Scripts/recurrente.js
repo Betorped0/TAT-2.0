@@ -898,6 +898,9 @@ function isRecurrente() {
 function isDuplicado() {
     return $("#duplicate").val() !== "";
 }
+function isMultiple() {
+    return $("#check_facturas").val() === "true";
+}
 
 var liquida = [];
 function formaLiquida() {

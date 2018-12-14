@@ -426,6 +426,13 @@ function warning(val1, comp, val2) {
                 }
             ban = (len > 1) & ban & parseFloat(toNum($("#objPORC").val())) > 0;
         }
+    } else if (comp === "FAC") {
+        if (isMultiple()) {
+            len = $("#table_sop > tbody  > tr[role='row']").length;
+            ban = len > 1;
+        } else {
+            ban = true;
+        }
     }
     return ban;
 }
