@@ -23,7 +23,7 @@ namespace TAT001.Controllers
     [Authorize]
     public class SolicitudesController : Controller
     {
-        private TAT001Entities db = new TAT001Entities();
+        readonly TAT001Entities db = new TAT001Entities();
 
         //------------------DAO------------------------------
         readonly TallsDao tallsDao = new TallsDao();
@@ -2018,7 +2018,7 @@ namespace TAT001.Controllers
                                                 apoyo_esti = Convert.ToDecimal(docP.APOYO_EST) / cantmat;
 
                                             }
-                                            catch (Exception e)
+                                            catch (Exception)
                                             {
                                                 apoyo_esti = 0;
                                             }
@@ -2028,7 +2028,7 @@ namespace TAT001.Controllers
                                                 apoyo_real = Convert.ToDecimal(docP.APOYO_REAL) / cantmat;
 
                                             }
-                                            catch (Exception e)
+                                            catch (Exception)
                                             {
                                                 apoyo_real = 0;
                                             }
@@ -2282,7 +2282,7 @@ namespace TAT001.Controllers
                                                 }
                                                 catch (Exception e)
                                                 {
-
+                                                    Log.ErrorLogApp(e, "Solicitudes", "Create-DOCUMENTOM");
                                                 }
                                             }
                                         }
@@ -2293,8 +2293,7 @@ namespace TAT001.Controllers
                                             {
                                                 try
                                                 {
-                                                    DOCUMENTOM docM = new DOCUMENTOM();
-                                                    docM = docml[k];
+                                                    DOCUMENTOM docM = docml[k];
                                                     docM.POS = k + 1;
 
                                                     db.DOCUMENTOMs.Add(docM);
@@ -2302,7 +2301,7 @@ namespace TAT001.Controllers
                                                 }
                                                 catch (Exception e)
                                                 {
-
+                                                    Log.ErrorLogApp(e, "Solicitudes", "Create-DOCUMENTOM");
                                                 }
                                             }
 
@@ -2319,7 +2318,7 @@ namespace TAT001.Controllers
                         }
                         catch (Exception e)
                         {
-
+                            Log.ErrorLogApp(e, "Solicitudes", "Create");
                         }
 
 
@@ -2334,8 +2333,7 @@ namespace TAT001.Controllers
                                 string[] fact = dOCUMENTO.DOCUMENTOF[0].FACTURAK.Split(';');
                                 for (int k = 0; k < fact.Length; k++)
                                 {
-                                    DOCUMENTOF docF = new DOCUMENTOF();
-                                    docF = dOCUMENTO.DOCUMENTOF[0];
+                                    DOCUMENTOF docF = dOCUMENTO.DOCUMENTOF[0];
                                     docF.NUM_DOC = dOCUMENTO.NUM_DOC;
                                     docF.POS = k + 1;
                                     if (fact[k].Length > 4000)
@@ -2367,22 +2365,23 @@ namespace TAT001.Controllers
                                 {
                                     try
                                     {
-                                        DOCUMENTOF docF = new DOCUMENTOF();
-                                        docF = dOCUMENTO.DOCUMENTOF[j];
+                                        DOCUMENTOF docF = dOCUMENTO.DOCUMENTOF[j];
                                         docF.NUM_DOC = dOCUMENTO.NUM_DOC;
                                         db.DOCUMENTOFs.Add(docF);
                                         db.SaveChanges();
                                     }
                                     catch (Exception e)
                                     {
-
+                                        Log.ErrorLogApp(e,"Solicitudes", "Create-DOCUMENTOF");
                                     }
                                 }
                             }
 
                         }
                         catch (Exception e)
-                        { }
+                        {
+                            Log.ErrorLogApp(e, "Solicitudes", "Create-DOCUMENTOF");
+                        }
                         //jemo 12-07-2018 fin
                         //Guardar registros de recurrencias  RSG 28.05.2018------------------
                         if (dOCUMENTO.DOCUMENTOREC != null)
@@ -4642,16 +4641,13 @@ namespace TAT001.Controllers
                             docpl = db.DOCUMENTOPs.Where(docp => docp.NUM_DOC == dOCUMENTO.DOCUMENTO_REF).ToList();
 
                             //Add MGC B20180705 2018.07.05 Agregar materiales agregados en la vista
-                            if (d.TSOL.ADICIONA == true && select_disi == "M" && select_negi == "M")
+                            if (d.TSOL.ADICIONA && select_disi == "M" && select_negi == "M")
                             {
-                                List<DOCUMENTOP_MOD> listvista = new List<DOCUMENTOP_MOD>();
 
                                 for (int h = 0; h < dOCUMENTO.DOCUMENTOP.Count; h++)
                                 {
-                                    DOCUMENTOP docmode = new DOCUMENTOP();
-
                                     string mmatnr = dOCUMENTO.DOCUMENTOP[h].MATNR.TrimStart('0');
-                                    docmode = docpl.Where(dcp => dcp.MATNR.TrimStart('0') == mmatnr).FirstOrDefault();
+                                    DOCUMENTOP docmode = docpl.FirstOrDefault(dcp => dcp.MATNR.TrimStart('0') == mmatnr);
 
                                     //Agregarlo a la lista
                                     if (docmode == null)
@@ -4691,11 +4687,11 @@ namespace TAT001.Controllers
                                     if (docpl[j].MATNR != null && docpl[j].MATNR != "")
                                     {
                                         string mmatnr = docpl[j].MATNR.TrimStart('0');//RSG 07.06.2018
-                                        docmod = dOCUMENTO.DOCUMENTOP.Where(docp => docp.MATNR == mmatnr).FirstOrDefault();
+                                        docmod = dOCUMENTO.DOCUMENTOP.FirstOrDefault(docp => docp.MATNR == mmatnr);
                                     }
                                     else
                                     {
-                                        docmod = dOCUMENTO.DOCUMENTOP.Where(docp => docp.MATKL_ID == docpl[j].MATKL).FirstOrDefault();
+                                        docmod = dOCUMENTO.DOCUMENTOP.FirstOrDefault(docp => docp.MATKL_ID == docpl[j].MATKL);
                                         cat = "C";
                                     }
                                     DOCUMENTOP docP = new DOCUMENTOP();
@@ -4714,7 +4710,6 @@ namespace TAT001.Controllers
                                         docP.CANTIDAD = 1;
                                         docP.MONTO = docmod.MONTO;
                                         docP.PORC_APOYO = docmod.PORC_APOYO;
-                                        //docP.MONTO_APOYO = docmod.MONTO_APOYO;
                                         docP.MONTO_APOYO = docP.MONTO * (docP.PORC_APOYO / 100);
                                         docP.MONTO_APOYO = Math.Round(docP.MONTO_APOYO, 2);//RSG 16.05.2018
                                         docP.PRECIO_SUG = docmod.PRECIO_SUG;
@@ -4735,7 +4730,6 @@ namespace TAT001.Controllers
                                         docP.MATKL = docpl[j].MATKL;
                                         docP.CANTIDAD = 1;
                                         docP.MONTO = docpl[j].MONTO;
-                                        //docP.PORC_APOYO = docpl[j].PORC_APOYO;
                                         docP.MONTO_APOYO = docP.MONTO * (docpl[j].PORC_APOYO / 100);
                                         docP.MONTO_APOYO = docpl[j].MONTO_APOYO;
                                         docP.PRECIO_SUG = docpl[j].PRECIO_SUG;
@@ -4778,7 +4772,7 @@ namespace TAT001.Controllers
                                             apoyo_esti = Convert.ToDecimal(docP.APOYO_EST) / cantmat;
 
                                         }
-                                        catch (Exception e)
+                                        catch (Exception)
                                         {
                                             apoyo_esti = 0;
                                         }
@@ -4788,7 +4782,7 @@ namespace TAT001.Controllers
                                             apoyo_real = Convert.ToDecimal(docP.APOYO_REAL) / cantmat;
 
                                         }
-                                        catch (Exception e)
+                                        catch (Exception)
                                         {
                                             apoyo_real = 0;
                                         }
@@ -4797,8 +4791,7 @@ namespace TAT001.Controllers
                                         {
                                             try
                                             {
-                                                DOCUMENTOM docM = new DOCUMENTOM();
-                                                docM = docml[k];
+                                                DOCUMENTOM docM = docml[k];
                                                 docM.POS = k + 1;
                                                 docM.APOYO_REAL = apoyo_real;
                                                 docM.APOYO_EST = apoyo_esti;
@@ -4808,7 +4801,7 @@ namespace TAT001.Controllers
                                             }
                                             catch (Exception e)
                                             {
-
+                                                Log.ErrorLogApp(e,"Solicitudes", "Edit-DOCUMENTOM");
                                             }
                                         }
                                     }
@@ -4819,8 +4812,7 @@ namespace TAT001.Controllers
                                         {
                                             try
                                             {
-                                                DOCUMENTOM docM = new DOCUMENTOM();
-                                                docM = docml[k];
+                                                DOCUMENTOM docM = docml[k];
                                                 docM.POS = k + 1;
 
                                                 //////db.DOCUMENTOMs.Add(docM);
@@ -4828,7 +4820,7 @@ namespace TAT001.Controllers
                                             }
                                             catch (Exception e)
                                             {
-
+                                                Log.ErrorLogApp(e, "Solicitudes", "Edit-DOCUMENTOM");
                                             }
                                         }
 
@@ -4838,7 +4830,7 @@ namespace TAT001.Controllers
                                 }
                                 catch (Exception e)
                                 {
-
+                                    Log.ErrorLogApp(e, "Solicitudes", "Edit-DOCUMENTOP");
                                 }
 
                             }
@@ -4906,7 +4898,7 @@ namespace TAT001.Controllers
                                             apoyo_esti = Convert.ToDecimal(docP.APOYO_EST) / cantmat;
 
                                         }
-                                        catch (Exception e)
+                                        catch (Exception)
                                         {
                                             apoyo_esti = 0;
                                         }
@@ -4916,7 +4908,7 @@ namespace TAT001.Controllers
                                             apoyo_real = Convert.ToDecimal(docP.APOYO_REAL) / cantmat;
 
                                         }
-                                        catch (Exception e)
+                                        catch (Exception)
                                         {
                                             apoyo_real = 0;
                                         }
@@ -4958,7 +4950,7 @@ namespace TAT001.Controllers
                                             }
                                             catch (Exception e)
                                             {
-
+                                                Log.ErrorLogApp(e, "Solicitudes", "Edit-DOCUMENTOM");
                                             }
                                         }
                                     }
@@ -4978,7 +4970,7 @@ namespace TAT001.Controllers
                                             }
                                             catch (Exception e)
                                             {
-
+                                                Log.ErrorLogApp(e, "Solicitudes", "Edit-DOCUMENTOM");
                                             }
                                         }
 
@@ -4988,7 +4980,7 @@ namespace TAT001.Controllers
                                 }
                                 catch (Exception e)
                                 {
-
+                                    Log.ErrorLogApp(e, "Solicitudes", "Edit-DOCUMENTOP");
                                 }
 
                             }
@@ -4997,7 +4989,7 @@ namespace TAT001.Controllers
                     }
                     catch (Exception e)
                     {
-
+                        Log.ErrorLogApp(e, "Solicitudes", "Edit");
                     }
 
                     foreach (DOCUMENTOP dop in d.DOCUMENTOPs.ToList())
@@ -5079,7 +5071,7 @@ namespace TAT001.Controllers
                     {
                         foreach (DOCUMENTORAN dran in dree.DOCUMENTORANs.ToList())//RSG 01.08.2018
                         {
-                            d.DOCUMENTORECs.Where(x => x.POS == dree.POS).FirstOrDefault().DOCUMENTORANs.Remove(dran);
+                            d.DOCUMENTORECs.FirstOrDefault(x => x.POS == dree.POS).DOCUMENTORANs.Remove(dran);
                         }
                         d.DOCUMENTORECs.Remove(dree);
                     }
@@ -5223,8 +5215,7 @@ namespace TAT001.Controllers
                                     string[] fact = dOCUMENTO.DOCUMENTOF[0].FACTURAK.Split(';');
                                     for (int k = 0; k < fact.Length; k++)
                                     {
-                                        DOCUMENTOF docF = new DOCUMENTOF();
-                                        docF = dOCUMENTO.DOCUMENTOF[0];
+                                        DOCUMENTOF docF = dOCUMENTO.DOCUMENTOF[0];
                                         docF.NUM_DOC = dOCUMENTO.NUM_DOC;
                                         docF.POS = k + 1;
                                         if (fact[k].Length > 4000)
@@ -5256,15 +5247,14 @@ namespace TAT001.Controllers
                                     {
                                         try
                                         {
-                                            DOCUMENTOF docF = new DOCUMENTOF();
-                                            docF = dOCUMENTO.DOCUMENTOF[j];
+                                            DOCUMENTOF docF =  dOCUMENTO.DOCUMENTOF[j];
                                             docF.NUM_DOC = dOCUMENTO.NUM_DOC;
                                             db.DOCUMENTOFs.Add(docF);
                                             db.SaveChanges();
                                         }
                                         catch (Exception e)
                                         {
-
+                                            Log.ErrorLogApp(e,"Solicitudes","Edit");
                                         }
                                     }
                                 }
@@ -5281,8 +5271,7 @@ namespace TAT001.Controllers
                                     string[] _f = dOCUMENTO.DOCUMENTOF[0].FACTURAK.Split(';');
                                     for (int k = 0; k < _f.Length; k++)
                                     {
-                                        DOCUMENTOF docF = new DOCUMENTOF();
-                                        docF = dOCUMENTO.DOCUMENTOF[0];
+                                        DOCUMENTOF docF = dOCUMENTO.DOCUMENTOF[0];
                                         _df[k].NUM_DOC = dOCUMENTO.NUM_DOC;
                                         _df[k].FACTURA = docF.FACTURA;
                                         _df[k].PROVEEDOR = docF.PROVEEDOR;
@@ -5294,6 +5283,7 @@ namespace TAT001.Controllers
                                         _df[k].BELNR = docF.BELNR;
                                         _df[k].IMPORTE_FAC = docF.IMPORTE_FAC;
                                         _df[k].PAYER = docF.PAYER;
+                                        _df[k].FECHA = docF.FECHA;
                                         //paso a una nueva variable
                                         var _dataFac = _df[k];
                                         db.Entry(_dataFac).State = EntityState.Modified;
@@ -5311,9 +5301,8 @@ namespace TAT001.Controllers
                                     string[] _f = dOCUMENTO.DOCUMENTOF[0].FACTURAK.Split(';');
                                     for (int k = 0; k < _f.Length; k++)
                                     {
-                                        DOCUMENTOF docF = new DOCUMENTOF();
+                                        DOCUMENTOF docF = dOCUMENTO.DOCUMENTOF[0];
                                         var _df2 = new DOCUMENTOF();
-                                        docF = dOCUMENTO.DOCUMENTOF[0];
                                         _df2.POS = docF.POS;
                                         _df2.NUM_DOC = dOCUMENTO.NUM_DOC;
                                         _df2.FACTURA = docF.FACTURA;
@@ -5326,6 +5315,7 @@ namespace TAT001.Controllers
                                         _df2.BELNR = docF.BELNR;
                                         _df2.IMPORTE_FAC = docF.IMPORTE_FAC;
                                         _df2.PAYER = docF.PAYER;
+                                        _df2.FECHA = docF.FECHA;
                                         db.DOCUMENTOFs.Add(_df2);
                                         db.SaveChanges();
                                     }
@@ -5333,8 +5323,6 @@ namespace TAT001.Controllers
                             }
                             else if (dOCUMENTO.DOCUMENTOF.Count > 1)
                             {
-                                ////var _df = db.DOCUMENTOFs.Where(_d => _d.NUM_DOC == dOCUMENTO.NUM_DOC).ToList();
-                                var _df2 = new DOCUMENTOF();
                                 if (_df.Count == 1)
                                 {
                                     //Si encuentra solo un registro, lo borro
@@ -5342,9 +5330,8 @@ namespace TAT001.Controllers
                                     db.SaveChanges();
                                     for (var i = 0; i < dOCUMENTO.DOCUMENTOF.Count; i++)
                                     {
-                                        _df2 = new DOCUMENTOF();
-                                        DOCUMENTOF docF = new DOCUMENTOF();
-                                        docF = dOCUMENTO.DOCUMENTOF[i];
+                                        var _df2 = new DOCUMENTOF();
+                                        DOCUMENTOF docF = dOCUMENTO.DOCUMENTOF[i];
                                         _df2.POS = docF.POS;
                                         _df2.NUM_DOC = dOCUMENTO.NUM_DOC;
                                         _df2.FACTURA = docF.FACTURA;
@@ -5357,6 +5344,7 @@ namespace TAT001.Controllers
                                         _df2.BELNR = docF.BELNR;
                                         _df2.IMPORTE_FAC = docF.IMPORTE_FAC;
                                         _df2.PAYER = docF.PAYER;
+                                        _df2.FECHA = docF.FECHA;
                                         //paso a una nueva variable
                                         db.DOCUMENTOFs.Add(_df2);
                                         db.SaveChanges();
@@ -5372,9 +5360,8 @@ namespace TAT001.Controllers
                                     }
                                     for (var i = 0; i < dOCUMENTO.DOCUMENTOF.Count; i++)
                                     {
-                                        _df2 = new DOCUMENTOF();
-                                        DOCUMENTOF docF = new DOCUMENTOF();
-                                        docF = dOCUMENTO.DOCUMENTOF[i];
+                                        var _df2 = new DOCUMENTOF();
+                                        DOCUMENTOF docF = dOCUMENTO.DOCUMENTOF[i];
                                         _df2.POS = docF.POS;
                                         _df2.NUM_DOC = dOCUMENTO.NUM_DOC;
                                         _df2.FACTURA = docF.FACTURA.Trim();
@@ -5387,6 +5374,7 @@ namespace TAT001.Controllers
                                         _df2.BELNR = docF.BELNR.Trim();
                                         _df2.IMPORTE_FAC = docF.IMPORTE_FAC;
                                         _df2.PAYER = docF.PAYER.Trim();
+                                        _df2.FECHA = docF.FECHA;
                                         db.DOCUMENTOFs.Add(_df2);
                                         db.SaveChanges();
                                     }
@@ -5394,10 +5382,14 @@ namespace TAT001.Controllers
                             }
                         }
                         catch (Exception e)
-                        { }
+                        {
+                            Log.ErrorLogApp(e,"Solicitudes","Edit");
+                        }
                         //lej 26-07-2018 fin-----------------
                     }
-                    catch (Exception e) { }
+                    catch (Exception e) {
+                        Log.ErrorLogApp(e, "Solicitudes", "Edit");
+                    }
 
 
 
@@ -5430,18 +5422,15 @@ namespace TAT001.Controllers
                 {
                     foreach (HttpPostedFileBase file in files_soporte)
                     {
-                        if (file != null)
+                        if (file != null && file.ContentLength > 0)
                         {
-                            if (file.ContentLength > 0)
-                            {
-                                numFiles++;
-                            }
+                            numFiles++;
                         }
                     }
                 }
                 catch (Exception e)
                 {
-
+                    Log.ErrorLogApp(e,"Solicitudes","Edit");
                 }
 
                 //Guardar los documentos cargados en la sección de soporte
@@ -5456,7 +5445,7 @@ namespace TAT001.Controllers
 
 
                     //Evaluar que se creo el directorio
-                    if (dir.Equals(""))
+                    if (string.IsNullOrEmpty(dir))
                     {
 
                         int i = 0;
@@ -5473,69 +5462,67 @@ namespace TAT001.Controllers
                             {
                                 clasefile = labels_soporte[indexlabel];
                             }
-                            catch (Exception ex)
+                            catch (Exception )
                             {
                                 clasefile = "";
                             }
-                            if (file != null)
+                            if (file != null && file.ContentLength > 0)
                             {
-                                if (file.ContentLength > 0)
-                                {
-                                    string path = "";
-                                    string filename = file.FileName;
-                                    errorfiles = "";
-                                    //res = SaveFile(file, url, d.NUM_DOC.ToString(), out errorfiles, out path);//RSG 01.08.2018
-                                    res = new Files().SaveFile(file, url, d.NUM_DOC.ToString(), out errorfiles, out path, d.EJERCICIO.ToString());//RSG 01.08.2018
+                                string path = "";
+                                string filename = file.FileName;
+                                errorfiles = "";
+                                //res = SaveFile(file, url, d.NUM_DOC.ToString(), out errorfiles, out path);//RSG 01.08.2018
+                                res = new Files().SaveFile(file, url, d.NUM_DOC.ToString(), out errorfiles, out path, d.EJERCICIO.ToString());//RSG 01.08.2018
 
-                                    if (errorfiles == "")
+                                if (errorfiles == "")
+                                {
+                                    DOCUMENTOA doc = new DOCUMENTOA();
+                                    var ext = System.IO.Path.GetExtension(filename);
+                                    i++;
+                                    doc.NUM_DOC = d.NUM_DOC;
+                                    doc.POS = i;
+                                    doc.TIPO = ext.Replace(".", "");
+                                    try
                                     {
-                                        DOCUMENTOA doc = new DOCUMENTOA();
-                                        var ext = System.IO.Path.GetExtension(filename);
-                                        i++;
-                                        doc.NUM_DOC = d.NUM_DOC;
-                                        doc.POS = i;
-                                        doc.TIPO = ext.Replace(".", "");
-                                        try
+                                        var clasefileM = clasefile.ToUpper();
+                                        doc.CLASE = clasefileM.Substring(0, 3);
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        doc.CLASE = "";
+                                    }
+                                    if (max > 0)
+                                    {
+                                        doc.POS = max + i;
+                                    }
+                                    if (max > 0)
+                                    {
+                                        List<DOCUMENTOA> dda = db.DOCUMENTOAs.Where(a => a.NUM_DOC.Equals(doc.NUM_DOC) & a.CLASE.Equals(doc.CLASE) & a.ACTIVO == true).ToList();
+                                        if (dda.Count > 0)
                                         {
-                                            var clasefileM = clasefile.ToUpper();
-                                            doc.CLASE = clasefileM.Substring(0, 3);
-                                        }
-                                        catch (Exception e)
-                                        {
-                                            doc.CLASE = "";
-                                        }
-                                        if (max > 0)
-                                        {
-                                            doc.POS = max + i;
-                                        }
-                                        if (max > 0)
-                                        {
-                                            List<DOCUMENTOA> dda = db.DOCUMENTOAs.Where(a => a.NUM_DOC.Equals(doc.NUM_DOC) & a.CLASE.Equals(doc.CLASE) & a.ACTIVO == true).ToList();
-                                            if (dda.Count > 0)
+                                            foreach (DOCUMENTOA daa in dda)
                                             {
-                                                foreach (DOCUMENTOA daa in dda)
-                                                {
-                                                    daa.ACTIVO = false;
-                                                    db.Entry(daa).State = EntityState.Modified;
-                                                    db.SaveChanges();
-                                                }
+                                                daa.ACTIVO = false;
+                                                db.Entry(daa).State = EntityState.Modified;
+                                                db.SaveChanges();
                                             }
                                         }
-                                        doc.STEP_WF = 1;
-                                        doc.USUARIO_ID = User.Identity.Name;
-                                        doc.PATH = path;
-                                        doc.ACTIVO = true;
-                                        try
-                                        {
-                                            db.DOCUMENTOAs.Add(doc);
-                                            db.SaveChanges();
-                                        }
-                                        catch (Exception e)
-                                        {
-                                            errorfiles = "" + filename;
-                                        }
+                                    }
+                                    doc.STEP_WF = 1;
+                                    doc.USUARIO_ID = User.Identity.Name;
+                                    doc.PATH = path;
+                                    doc.ACTIVO = true;
+                                    try
+                                    {
+                                        db.DOCUMENTOAs.Add(doc);
+                                        db.SaveChanges();
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        errorfiles = "" + filename;
                                     }
                                 }
+
                             }
                             indexlabel++;
                             if (errorfiles != "")
@@ -5689,9 +5676,9 @@ namespace TAT001.Controllers
                 return HttpNotFound();
             }
             dOCUMENTO_.CLIENTE = db.CLIENTEs.Where(a => a.VKORG.Equals(dOCUMENTO.VKORG)
-                                                    & a.VTWEG.Equals(dOCUMENTO.VTWEG)
-                                                    & a.SPART.Equals(dOCUMENTO.SPART)
-                                                    & a.KUNNR.Equals(dOCUMENTO.PAYER_ID)).First();
+                                                    && a.VTWEG.Equals(dOCUMENTO.VTWEG)
+                                                    && a.SPART.Equals(dOCUMENTO.SPART)
+                                                    && a.KUNNR.Equals(dOCUMENTO.PAYER_ID)).First();
             dOCUMENTO_.DOCUMENTOF = db.DOCUMENTOFs.Where(a => a.NUM_DOC.Equals(dOCUMENTO.NUM_DOC)).ToList();
             DocumentoFlujo DF = new DocumentoFlujo();
             DF.D = dOCUMENTO_;
