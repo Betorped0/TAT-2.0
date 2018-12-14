@@ -2109,6 +2109,7 @@
     <Content Include="Views\Sociedades\CreateF.cshtml" />
     <Content Include="Views\Sociedades\CreateFA.cshtml" />
     <Content Include="Views\LAContabilizacion\Index.cshtml" />
+    <Content Include="Views\Correos\Cancelacion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->
