@@ -227,7 +227,6 @@
     <Compile Include="Controllers\Catalogos\CANALController.cs" />
     <Compile Include="Controllers\Catalogos\ConsoporteController.cs" />
     <Compile Include="Controllers\Catalogos\CuentaController.cs" />
-    <Compile Include="Controllers\Catalogos\CuentasController.cs" />
     <Compile Include="Controllers\Catalogos\DesviacionesTSController.cs" />
     <Compile Include="Controllers\Catalogos\DocRelacionController.cs" />
     <Compile Include="Controllers\Catalogos\GALLController.cs" />
@@ -240,7 +239,6 @@
     <Compile Include="Controllers\Catalogos\TALLsController.cs" />
     <Compile Include="Controllers\Catalogos\TextocvController.cs" />
     <Compile Include="Controllers\Configuracion\ccatController.cs" />
-    <Compile Include="Controllers\Catalogos\ClienteController.cs" />
     <Compile Include="Controllers\Catalogos\ClientesController.cs" />
     <Compile Include="Controllers\Catalogos\ContactoController.cs" />
     <Compile Include="Controllers\Catalogos\LeyendaController.cs" />
@@ -1481,6 +1479,7 @@
     <Content Include="Scripts\Masiva\create.js" />
     <Content Include="Scripts\Masiva\formatosMasiva.js" />
     <Content Include="Scripts\Masiva\validaTabs.js" />
+    <Content Include="Scripts\Masiva\warningm.js" />
     <Content Include="Scripts\messagesCat.js" />
     <Content Include="Scripts\moment-with-locales.js" />
     <Content Include="Scripts\moment-with-locales.min.js" />
@@ -1844,9 +1843,6 @@
     <Content Include="Views\Listas\Det_Aprob.cshtml" />
     <Content Include="Views\Listas\UsuariosPuesto.cshtml" />
     <Content Include="Views\Listas\Grupos.cshtml" />
-    <Content Include="Views\Cliente\Details.cshtml" />
-    <Content Include="Views\Cliente\Edit.cshtml" />
-    <Content Include="Views\Cliente\Index.cshtml" />
     <Content Include="Views\Contacto\Create.cshtml" />
     <Content Include="Views\Contacto\Details.cshtml" />
     <Content Include="Views\Contacto\Edit.cshtml" />
@@ -1876,8 +1872,6 @@
     <Content Include="Views\Clientes\Details.cshtml" />
     <Content Include="Views\Clientes\Edit.cshtml" />
     <Content Include="Views\Clientes\Index.cshtml" />
-    <Content Include="Views\Materiales\Create.cshtml" />
-    <Content Include="Views\Materiales\Delete.cshtml" />
     <Content Include="Views\Materiales\Details.cshtml" />
     <Content Include="Views\Materiales\Edit.cshtml" />
     <Content Include="Views\Materiales\Index.cshtml" />
@@ -1909,8 +1903,6 @@
     <Content Include="Views\Leyenda\Details.cshtml" />
     <Content Include="Views\Leyenda\Edit.cshtml" />
     <Content Include="Views\Proveedor\Index.cshtml" />
-    <Content Include="Views\Proveedor\Create.cshtml" />
-    <Content Include="Views\Proveedor\Delete.cshtml" />
     <Content Include="Views\Proveedor\Details.cshtml" />
     <Content Include="Views\Proveedor\Edit.cshtml" />
     <Content Include="Views\TSOL\Details.cshtml" />
@@ -2011,11 +2003,6 @@
     <Content Include="Views\Consoporte\Details.cshtml" />
     <Content Include="Views\Consoporte\Edit.cshtml" />
     <Content Include="Views\Consoporte\Index.cshtml" />
-    <Content Include="Views\Cuentas\Create.cshtml" />
-    <Content Include="Views\Cuentas\Delete.cshtml" />
-    <Content Include="Views\Cuentas\Details.cshtml" />
-    <Content Include="Views\Cuentas\Edit.cshtml" />
-    <Content Include="Views\Cuentas\Index.cshtml" />
     <Content Include="Views\Cuenta\Create.cshtml" />
     <Content Include="Views\Cuenta\Delete.cshtml" />
     <Content Include="Views\Cuenta\Details.cshtml" />
@@ -2110,6 +2097,7 @@
     <Content Include="Views\Sociedades\CreateFA.cshtml" />
     <Content Include="Views\LAContabilizacion\Index.cshtml" />
     <Content Include="Views\Correos\Cancelacion.cshtml" />
+    <Content Include="Views\Correos\Taxeo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <!--<Folder Include="obj\Debug\TempPE\" />-->

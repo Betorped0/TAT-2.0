@@ -48,8 +48,16 @@ namespace TAT001.Controllers
             FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
             try
             {
+
+                string usuariotextos = "";
+                string u = User.Identity.Name;
+                var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+                usuariotextos = user.SPRAS_ID;
+                Warning w = new Warning();
+                ViewBag.listaValid = w.listaW(null, usuariotextos);
                 string p = Session["pais"].ToString();
                 ViewBag.pais = p + ".svg";
+
             }
             catch
             {
@@ -1392,7 +1400,7 @@ namespace TAT001.Controllers
             }
             else
             {
-                regresaRowH1.Add("red white-text rojo");
+                regresaRowH1.Add("red white-text rojo | Solo se aceptan números");
             }
 
             string land_id = "";
@@ -1413,12 +1421,12 @@ namespace TAT001.Controllers
                 }
                 else
                 {
-                    regresaRowH1.Add("red white-text rojo");
+                    regresaRowH1.Add("red white-text rojo  | Tipo de solicitud no encontrada"); 
                 }
             }
             else
             {
-                regresaRowH1.Add("red white-text rojo");
+                regresaRowH1.Add("red white-text rojo | Se superó la cantidad maxima de caracteres (10)");
             }
 
             List<TALLT> list =tallsDao.ListaTallsConCuenta(TATConstantes.ACCION_LISTA_TALLCONCUENTA, null,spras_id, land_id, DateTime.Now.Year, bukrs);
@@ -1428,7 +1436,7 @@ namespace TAT001.Controllers
             }
             else
             {
-                regresaRowH1.Add("red white-text rojo");
+                regresaRowH1.Add("red white-text rojo | Clasificación no encontrada");
             }
 
             if (land_id != null && land_id != "")
@@ -1436,41 +1444,40 @@ namespace TAT001.Controllers
             if (bukrs.Length == 4)
             {
                 //if (db.SOCIEDADs.Where(x => x.BUKRS == bukrs).Count() > 0)
-                if (soc.BUKRS == bukrs)
+                if (soc != null)
                 {
-                    regresaRowH1.Add("");
+                    if (soc.BUKRS == bukrs)
+                    {
+                        regresaRowH1.Add("");
+                    }
                 }
                 else
                 {
-                    regresaRowH1.Add("red white-text rojo");
+                    regresaRowH1.Add("red white-text rojo  | Sociedad no encontrada"); 
                 }
             }
             else
             {
-                regresaRowH1.Add("red white-text rojo");
+                regresaRowH1.Add("red white-text rojo | Se superó la cantidad maxima de caracteres (4)");
             }
             if (land.Length <= 50)
             {
                 //if (db.PAIS.Where(x => x.LANDX == land & x.SOCIEDAD_ID == bukrs).Select(x => x.LAND).Count() > 0)
                 if (p != null)
                 {
-                    if (p.LAND == land_id)
+                    if (p.LANDX == land)
                     {
                         regresaRowH1.Add("");
-                    }
-                    else
-                    {
-                        regresaRowH1.Add("red white-text rojo");
                     }
                 }
                 else
                 {
-                    regresaRowH1.Add("red white-text rojo");
+                    regresaRowH1.Add("red white-text rojo | País no encontrado");
                 }
             }
             else
             {
-                regresaRowH1.Add("red white-text rojo");
+                regresaRowH1.Add("red white-text rojo | Se superó la cantidad maxima de caracteres (50)");
             }
 
             if (estado.Length <= 50)
@@ -1479,7 +1486,7 @@ namespace TAT001.Controllers
             }
             else
             {
-                regresaRowH1.Add("red white-text rojo");
+                regresaRowH1.Add("red white-text rojo | Se superó la cantidad maxima de caracteres (50)");
             }
 
             if (ciudad.Length <= 50)
@@ -1488,7 +1495,7 @@ namespace TAT001.Controllers
             }
             else
             {
-                regresaRowH1.Add("red white-text rojo");
+                regresaRowH1.Add("red white-text rojo | Se superó la cantidad maxima de caracteres (50)");
             }
 
             if (concepto.Length <= 100)
@@ -1497,7 +1504,7 @@ namespace TAT001.Controllers
             }
             else
             {
-                regresaRowH1.Add("red white-text rojo");
+                regresaRowH1.Add("red white-text rojo | Se superó la cantidad maxima de caracteres (100)");
             }
 
             if (notas.Length <= 255)
@@ -1506,7 +1513,7 @@ namespace TAT001.Controllers
             }
             else
             {
-                regresaRowH1.Add("red white-text rojo");
+                regresaRowH1.Add("red white-text rojo | Se superó la cantidad maxima de caracteres (255)");
             }
 
             if (payer_id.Length <= 10)
@@ -1519,12 +1526,12 @@ namespace TAT001.Controllers
                 }
                 else
                 {
-                    regresaRowH1.Add("red white-text rojo");
+                    regresaRowH1.Add("red white-text rojo | Cliente no encontrado");
                 }
             }
             else
             {
-                regresaRowH1.Add("red white-text rojo");
+                regresaRowH1.Add("red white-text rojo | Se superó la cantidad maxima de caracteres (10)");
             }
 
             regresaRowH1.Add("");
@@ -1543,7 +1550,7 @@ namespace TAT001.Controllers
             }
             else
             {
-                regresaRowH1.Add("red white-text rojo");
+                regresaRowH1.Add("red white-text rojo | Se superó la cantidad maxima de caracteres (50)");
             }
 
             if (contacto_email.Length <= 255)
@@ -1554,12 +1561,12 @@ namespace TAT001.Controllers
                 }
                 else
                 {
-                    regresaRowH1.Add("red white-text rojo");
+                    regresaRowH1.Add("red white-text rojo | Formato invalido");
                 }
             }
             else
             {
-                regresaRowH1.Add("red white-text rojo");
+                regresaRowH1.Add("red white-text rojo | Se superó la cantidad maxima de caracteres (255)");
             }
 
             if (validaRangoFecha(fechai_vig, fechaf_vig))
@@ -1581,12 +1588,12 @@ namespace TAT001.Controllers
                 }
                 else
                 {
-                    regresaRowH1.Add("red white-text rojo");
+                    regresaRowH1.Add("red white-text rojo | Moneda no encontrada");
                 }
             }
             else
             {
-                regresaRowH1.Add("red white-text rojo");
+                regresaRowH1.Add("red white-text rojo | Se superó la cantidad maxima de caracteres (3)");
             }
 
             return regresaRowH1;
@@ -1630,7 +1637,7 @@ namespace TAT001.Controllers
                     }
                     else
                     {
-                        regresaRowH2.Add("red white-text rojo");
+                        regresaRowH2.Add("red white-text rojo | Solo se aceptan números");
                     }
 
                     //if (factura.Length <= 50)
@@ -1644,7 +1651,7 @@ namespace TAT001.Controllers
 
                     if (con.FACTURA)
                     {
-                        if (factura.Length > 0 & factura.Length <= 50)
+                        if (factura.Length > 0 && factura.Length <= 50)
                         {
                             regresaRowH2.Add("");
                         }
@@ -2173,7 +2180,7 @@ namespace TAT001.Controllers
                     }
                     else
                     {
-                        regresaRowH3.Add("red white-text rojo");
+                        regresaRowH3.Add("red white-text rojo | Solo se aceptan números");
                     }
 
                     if (factura.Length <= 50)
@@ -2205,18 +2212,18 @@ namespace TAT001.Controllers
 
                     if (payer_id.Length <= 10)
                     {
-                        if (db.CLIENTEs.Where(x => x.KUNNR == payer_id & x.ACTIVO == true).Count() > 0)
+                        if (db.CLIENTEs.Where(x => x.KUNNR == payer_id & x.ACTIVO).Count() > 0)
                         {
                             regresaRowH3.Add("");
                         }
                         else
                         {
-                            regresaRowH3.Add("red white-text rojo");
+                            regresaRowH3.Add("red white-text rojo | Cliente no encontrado");
                         }
                     }
                     else
                     {
-                        regresaRowH3.Add("red white-text rojo");
+                        regresaRowH3.Add("red white-text rojo | Se superó la cantidad maxima de caracteres (4)");
                     }
 
                     regresaRowH3.Add("");
@@ -2235,7 +2242,7 @@ namespace TAT001.Controllers
                     }
                     else
                     {
-                        regresaRowH3.Add("red white-text rojo");
+                        regresaRowH3.Add("red white-text rojo | Solo se aceptan números");
                     }
 
                     if (belnr.Length <= 10)
@@ -2286,7 +2293,7 @@ namespace TAT001.Controllers
                 }
                 else
                 {
-                    regresaRowH4.Add("red white-text rojo");
+                    regresaRowH4.Add("red white-text rojo | Solo se aceptan números");
                 }
 
                 regresaRowH4.Add("nada");
@@ -2393,12 +2400,12 @@ namespace TAT001.Controllers
                         }
                         else
                         {
-                            regresaRowH4.Add("red white-text rojo | Material no encontrado");
+                            regresaRowH4.Add("red white-text rojo | Categoría no encontrado");
                         }
                     }
                     else
                     {
-                        regresaRowH4.Add("red white-text rojo");
+                        regresaRowH4.Add("red white-text rojo | Material no encontrado");
                     }
                     regresaRowH4.Add("");
                 }
@@ -2482,7 +2489,7 @@ namespace TAT001.Controllers
                         }
                         else if (ListCategoriasDoc.Count() > 0 && ListMaterialesDoc.Count() > 0)
                         {
-                            regresaRowH4.Add("red white-text rojo |  Los materiales no se pueden mezclar con categorias");
+                            regresaRowH4.Add("red white-text rojo |  Los materiales no se pueden mezclar con categorías");
                         }
                         else
                         {
@@ -2491,7 +2498,7 @@ namespace TAT001.Controllers
                     }
                     else
                     {
-                        regresaRowH4.Add("red white-text rojo | Categoria no encontrada");
+                        regresaRowH4.Add("red white-text rojo | Categoría no encontrada");
                     }
                     regresaRowH4.Add("");
                 }
@@ -2624,7 +2631,7 @@ namespace TAT001.Controllers
                         }
                         else
                         {
-                            regresaRowH4.Add("red white-text rojo");
+                            regresaRowH4.Add("red white-text rojo | Solo se aceptan números");
                         }
                     }
                     else
@@ -2635,7 +2642,7 @@ namespace TAT001.Controllers
                         }
                         else
                         {
-                            regresaRowH4.Add("red white-text rojo");
+                            regresaRowH4.Add("red white-text rojo | Solo se aceptan números");
                         }
 
                         
@@ -2726,7 +2733,7 @@ namespace TAT001.Controllers
                         }
                         else
                         {
-                            regresaRowH4.Add("red white-text rojo");
+                            regresaRowH4.Add("red white-text rojo | Solo se aceptan números");
                         }
 
                         if (IsNumeric(fc.toNum(objDistribucion.COSTO_APOYO, miles, decimales)))
@@ -2735,7 +2742,7 @@ namespace TAT001.Controllers
                         }
                         else
                         {
-                            regresaRowH4.Add("red white-text rojo");
+                            regresaRowH4.Add("red white-text rojo | Solo se aceptan números");
                         }
 
                         if (IsNumeric(fc.toNum(objDistribucion.PRECIO_SUG, miles, decimales)))
@@ -2744,7 +2751,7 @@ namespace TAT001.Controllers
                         }
                         else
                         {
-                            regresaRowH4.Add("red white-text rojo");
+                            regresaRowH4.Add("red white-text rojo | Solo se aceptan números");
                         }
 
                         if (IsNumeric(fc.toNum(objDistribucion.VOLUMEN_REAL, miles, decimales)))
@@ -2753,7 +2760,7 @@ namespace TAT001.Controllers
                         }
                         else
                         {
-                            regresaRowH4.Add("red white-text rojo");
+                            regresaRowH4.Add("red white-text rojo | Solo se aceptan números");
                         }
 
                         regresaRowH4.Add("");
@@ -4419,7 +4426,11 @@ namespace TAT001.Controllers
         public int getNumberDocument(string numDocument)
         {
             numDocument = numDocument.Trim();
-            int TempNumDoc = int.Parse(Math.Truncate(string.IsNullOrEmpty(numDocument) ? -1 : double.Parse(numDocument)).ToString());
+            int TempNumDoc = -1;
+            if (IsNumeric(numDocument))
+            {
+                 TempNumDoc = int.Parse(Math.Truncate(string.IsNullOrEmpty(numDocument) ? -1 : double.Parse(numDocument)).ToString());
+            }
             return TempNumDoc;
         }
 

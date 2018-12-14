@@ -16,15 +16,14 @@ namespace TAT001.Controllers.Catalogos
     [LoginActive]
     public class CANALController : Controller
     {
-        private TAT001Entities db = new TAT001Entities();
+        readonly TAT001Entities db = new TAT001Entities();
 
         // GET: CANAL
         public ActionResult Index()
         {
             int pagina_id = 940;//ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
-
-            string spras_id = ViewBag.spras_id;
+            
             return View(db.CANALs.ToList());
         }
 
@@ -33,8 +32,7 @@ namespace TAT001.Controllers.Catalogos
         {
             int pagina_id = 941;//ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
-
-            string spras_id = ViewBag.spras_id;
+            
             return View();
         }
 
@@ -59,8 +57,7 @@ namespace TAT001.Controllers.Catalogos
                     ModelState.AddModelError("Error", "El canal ya existe");
                     int pagina_id = 941;//ID EN BASE DE DATOS
                     FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
-
-                    string spras_id = ViewBag.spras_id;
+                    
                     return View(cANAL);
                 }
             }
@@ -82,8 +79,7 @@ namespace TAT001.Controllers.Catalogos
             }
             int pagina_id = 942;//ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller);
-
-            string spras_id = ViewBag.spras_id;
+            
             return View(cANAL);
         }
 

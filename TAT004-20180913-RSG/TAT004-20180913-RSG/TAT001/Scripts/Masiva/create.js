@@ -94,6 +94,7 @@ function procesarHoja1() {
                     checkRelacionada();
                     var kk = checkRelacionadaMat();
                     clearErrors();
+                    generarWarningH1();
                 }
                 else {
                     if (data) {
@@ -148,23 +149,23 @@ function addRowH1(t, NUM_DOC, TSOL_ID, TALL_ID, SOCIEDAD_ID, PAIS_ID, ESTADO, CI
 
     var r = t.row.add([
         "<div class='" + clase + "'></div>",
-        "<input class='" + ERRORES[0] + " input_numdoc' style='font-size:10px; text-align:center;' type='text' id='' name='' disabled value='" + NUM_DOC + "'><span hidden>" + NUM_DOC + "</span>",
-        "<input class='" + ERRORES[1] + " input_tsol' style='font-size:10px; text-align:center;' type='text' id='' name='' disabled value='" + TSOL_ID + "'><span hidden>" + TSOL_ID + "</span>",
-        "<input class='" + ERRORES[2] + " input_clasificacion' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + TALL_NAME + "'><span hidden>" + TALL_ID + "</span>",
-        "<input class='" + ERRORES[3] + " input_sociedad' style='font-size:10px; text-align:center;' type='text' id='' name='' disabled value='" + SOCIEDAD_ID + "'><span hidden>" + SOCIEDAD_ID + "</span>",
+        "<input class='" + ERRORES[0] + " input_numdoc' style='font-size:10px; text-align:center;' type='text' id='' name='' disabled value='" + NUM_DOC + "' title='" + getWarning(ERRORES[0]) +"'><span hidden>" + NUM_DOC + "</span>",
+        "<input class='" + ERRORES[1] + " input_tsol' style='font-size:10px; text-align:center;' type='text' id='' name='' disabled value='" + TSOL_ID + "' title='" + getWarning(ERRORES[1]) +"'><span hidden>" + TSOL_ID + "</span>",
+        "<input class='" + ERRORES[2] + " input_clasificacion' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + TALL_NAME + "' title='" + getWarning(ERRORES[2]) +"'><span hidden>" + TALL_ID + "</span>",
+        "<input class='" + ERRORES[3] + " input_sociedad' style='font-size:10px; text-align:center;' type='text' id='' name='' disabled value='" + SOCIEDAD_ID + "' title='" + getWarning(ERRORES[3]) +"'><span hidden>" + SOCIEDAD_ID + "</span>",
         //"<input class='" + ERRORES[4] + " input_pais' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + PAIS_ID + "'><span hidden class='span_pais'>" + PAIS_ID + "</span>",
-        "<input class='" + ERRORES[4] + " input_pais' style='font-size:10px; text-align:center;' type='text' id='' name='' disabled value='" + PAIS_NAME + "'><span hidden class='span_pais'>" + PAIS_ID + "</span>",
-        "<input class='" + ERRORES[5] + " input_estado' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + ESTADO + "'><span hidden>" + ESTADO + "</span>",
-        "<input class='" + ERRORES[6] + " input_ciudad' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + CIUDAD + "'><span hidden>" + CIUDAD + "</span>",
-        "<input class='" + ERRORES[7] + " input_concepto' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + CONCEPTO + "'><span hidden>" + CONCEPTO + "</span>",
-        "<input class='" + ERRORES[8] + " input_notas' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + NOTAS + "'><span hidden>" + NOTAS + "</span>",
-        "<input class='" + ERRORES[9] + " input_cliente' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + PAYER_ID + "'><span hidden>" + PAYER_ID + "</span>",
-        "<input class='" + ERRORES[10] + "' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + PAYER_NOMBRE + "'><span hidden>" + PAYER_NOMBRE + "</span>",
-        "<input class='" + ERRORES[11] + " input_contacto' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + CONTACTO_NOMBRE + "'><span hidden>" + CONTACTO_NOMBRE + "</span>",
-        "<input class='" + ERRORES[12] + " input_email' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + CONTACTO_EMAIL + "'><span hidden>" + CONTACTO_EMAIL + "</span>",
-        "<input class='" + ERRORES[13] + " input_fechai' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + FECHAI_VIG + "'><span hidden>" + FECHAI_VIG + "</span>",
-        "<input class='" + ERRORES[14] + " input_fechaf' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + FECHAF_VIG + "'><span hidden>" + FECHAF_VIG + "</span>",
-        "<input class='" + ERRORES[15] + " input_moneda' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + MONEDA_ID + "'><span hidden>" + MONEDA_ID + "</span>",
+        "<input class='" + ERRORES[4] + " input_pais' style='font-size:10px; text-align:center;' type='text' id='' name='' disabled value='" + PAIS_NAME + "' title='" + getWarning(ERRORES[4]) +"'><span hidden class='span_pais'>" + PAIS_ID + "</span>",
+        "<input class='" + ERRORES[5] + " input_estado' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + ESTADO + "' title='" + getWarning(ERRORES[5]) +"'><span hidden>" + ESTADO + "</span>",
+        "<input class='" + ERRORES[6] + " input_ciudad' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + CIUDAD + "' title='" + getWarning(ERRORES[6]) +"'><span hidden>" + CIUDAD + "</span>",
+        "<input class='" + ERRORES[7] + " input_concepto' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + CONCEPTO + "' title='" + getWarning(ERRORES[7]) +"'><span hidden>" + CONCEPTO + "</span>",
+        "<input class='" + ERRORES[8] + " input_notas' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + NOTAS + "' title='" + getWarning(ERRORES[8]) +"'><span hidden>" + NOTAS + "</span>",
+        "<input class='" + ERRORES[9] + " input_cliente' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + PAYER_ID + "' title='" + getWarning(ERRORES[9]) +"'><span hidden>" + PAYER_ID + "</span>",
+        "<input class='" + ERRORES[10] + "' style='font-size:10px; text-align:center;' type='text' id='' name='' disabled value='" + PAYER_NOMBRE + "' title='" + getWarning(ERRORES[10]) +"'><span hidden>" + PAYER_NOMBRE + "</span>",
+        "<input class='" + ERRORES[11] + " input_contacto' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + CONTACTO_NOMBRE + "' title='" + getWarning(ERRORES[11]) +"'><span hidden>" + CONTACTO_NOMBRE + "</span>",
+        "<input class='" + ERRORES[12] + " input_email' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + CONTACTO_EMAIL + "' title='" + getWarning(ERRORES[12]) +"'><span hidden>" + CONTACTO_EMAIL + "</span>",
+        "<input class='" + ERRORES[13] + " input_fechai' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + FECHAI_VIG + "' title='" + getWarning(ERRORES[13]) +"'><span hidden>" + FECHAI_VIG + "</span>",
+        "<input class='" + ERRORES[14] + " input_fechaf' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + FECHAF_VIG + "' title='" + getWarning(ERRORES[14]) +"'><span hidden>" + FECHAF_VIG + "</span>",
+        "<input class='" + ERRORES[15] + " input_moneda' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + MONEDA_ID + "' title='" + getWarning(ERRORES[15]) +"'><span hidden>" + MONEDA_ID + "</span>",
         "<input id='txt_vkorg' value='" + VKORG + "' hidden>",
         "<input id='txt_vtweg' value='" + VTWEG + "' hidden>",
         "<input id='txt_vtweg' value='" + SPART + "' hidden>"
@@ -899,6 +900,7 @@ function procesarHoja2() {
                     $('#tab_test2').css("font-size", "10px");
                     $('#tab_test2').css("display", "table");
                     mostrarAlerta("info", "B", 'Hoja 2 procesada');
+                    generarWarningH2();
                 }
                 else {
                     if (data) {
@@ -1021,6 +1023,14 @@ $('#tab_test2').on('keydown.autocomplete', '.input_factura', function () {
                     clearErrors();
                 }
             });
+        },
+        change: function () {
+            if ($(this).val() === "") {
+                $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
+                $(tr.find("td:eq(" + col_index + ")").children().removeClass(amarillo));
+            }
+            clearErrors();
         }
     });
 });
@@ -1061,6 +1071,14 @@ $('#tab_test2').on('keydown.autocomplete', '.input_fechaH2', function () {
                     clearErrors();
                 }
             });
+        },
+        change: function () {
+            if ($(this).val() === "") {
+                $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
+                $(tr.find("td:eq(" + col_index + ")").children().removeClass(amarillo));
+            }
+            clearErrors();
         }
     });
 });//APLICA PARA AMBAS FECHAS EN H2 FECHA FACTURA Y FECHA VENCIMIENTO
@@ -1218,6 +1236,14 @@ $('#tab_test2').on('keydown.autocomplete', '.input_facturak', function () {
                     clearErrors();
                 }
             });
+        },
+        change: function () {
+            if ($(this).val() === "") {
+                $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
+                $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
+                $(tr.find("td:eq(" + col_index + ")").children().removeClass(amarillo));
+            }
+            clearErrors();
         }
     });
 });
@@ -1319,6 +1345,7 @@ function procesarHoja3() {
                     $('#tab_test3').css("font-size", "10px");
                     $('#tab_test3').css("display", "table");
                     mostrarAlerta("info", "B", 'Hoja 3 procesada');
+                    generarWarningH3();
                 }
                 else {
                     if (data) {
@@ -4128,3 +4155,80 @@ function generarExcel() {
     });
 
 }
+function generarWarningH1() {
+    var elementos = [];
+    var numDoc_index = getTableIndex('#tab_test1', 'lbl_numDocH1');
+    var tSol_index = getTableIndex('#tab_test1', 'lbl_tipoSolicitud');
+    var clasificacion_idex = getTableIndex('#tab_test1', 'lbl_clasificacion');
+    var soc_index = getTableIndex('#tab_test1', 'lbl_sociedad');
+    var pais_index = getTableIndex('#tab_test1', 'lbl_pais');
+    var estado_idex = getTableIndex('#tab_test1', 'lbl_estado');
+    var ciudad_index = getTableIndex('#tab_test1', 'lbl_ciudad');
+    var concepto_index = getTableIndex('#tab_test1', 'lbl_concepto');
+    var notas_index = getTableIndex('#tab_test1', 'lbl_notas');
+    var payer_index = getTableIndex('#tab_test1', 'lbl_payerId');
+    var payerName_index = getTableIndex('#tab_test1', 'lbl_payerNombre');
+    var contato_index = getTableIndex('#tab_test1', 'lbl_contactoNombre');
+    var email_index = getTableIndex('#tab_test1', 'lbl_contactoEmail');
+    var fechaI_index = getTableIndex('#tab_test1', 'lbl_fechaInicio');
+    var fechaF_index = getTableIndex('#tab_test1', 'lbl_fechaFin');
+    var moneda_index = getTableIndex('#tab_test1', 'lbl_moneda');
+
+    elementos.push({ elementIndex: ciudad_index, elementId: 'city_id' });
+    elementos.push({ elementIndex: concepto_index, elementId: 'concepto' });
+    elementos.push({ elementIndex: fechaI_index, elementId: 'fechai_vig' });
+    elementos.push({ elementIndex: fechaF_index, elementId: 'fechaf_vig' });
+    elementos.push({ elementIndex: notas_index, elementId: 'notas_txt' });
+    elementos.push({ elementIndex: email_index, elementId: 'payer_email' });
+    elementos.push({ elementIndex: payer_index, elementId: 'payer_id' });
+    elementos.push({ elementIndex: contato_index, elementId: 'payer_nombre' });
+    elementos.push({ elementIndex: estado_idex, elementId: 'state_id' });
+    elementos.push({ elementIndex: clasificacion_idex, elementId: 'tall_id' });
+    elementos.push({ elementIndex: tSol_index, elementId: 'tsol_id' });
+
+    generarScriptValidaciones('#tab_test1', elementos);
+
+}
+function generarWarningH2() {
+
+    var elementos = [];
+    var numDoc_index = getTableIndex('#tab_test2', 'lbl_numDocH2');
+    var factura_index = getTableIndex('#tab_test2', 'lbl_factura');
+    var facturaFecha_index = getTableIndex('#tab_test2', 'lbl_facturaFecha');
+    var proveedor_index = getTableIndex('#tab_test2', 'lbl_proveedor');
+    var proveedorNombre_index = getTableIndex('#tab_test2', 'lbl_proveedorNombre');
+    var autorizacion_index = getTableIndex('#tab_test2', 'lbl_autorizacion');
+    var vencimiento_index = getTableIndex('#tab_test2', 'lbl_vencimiento');
+    var facturak_index = getTableIndex('#tab_test2', 'lbl_facturak');
+    var ejerciciok_index = getTableIndex('#tab_test2', 'lbl_ejerciciok');
+
+    elementos.push({ elementIndex: factura_index, elementId: 'FACTURA' });
+    elementos.push({ elementIndex: facturaFecha_index, elementId: 'FECHA' });
+    elementos.push({ elementIndex: proveedor_index, elementId: 'PROVEEDOR' });
+    elementos.push({ elementIndex: facturak_index, elementId: 'FACTURAK' });
+    elementos.push({ elementIndex: ejerciciok_index, elementId: 'EJERCICIOK' });
+    generarScriptValidaciones('#tab_test2', elementos);
+}
+function generarWarningH3() {
+    var elementos = [];
+    var numDoc_index = getTableIndex('#tab_test3', 'lbl_numDocH3');
+    var facturaFiscal_index = getTableIndex('#tab_test3', 'lbl_facturaFiscal');
+    var bill_index = getTableIndex('#tab_test3', 'lbl_bill');
+    var ejerciciokH3_index = getTableIndex('#tab_test3', 'lbl_ejerciciokH3');
+    var payerIdH3_index = getTableIndex('#tab_test3', 'lbl_payerIdH3');
+    var payerNombreH3_index = getTableIndex('#tab_test3', 'lbl_payerNombreH3');
+    var importeFac_index = getTableIndex('#tab_test3', 'lbl_importeFac');
+    var folio_index = getTableIndex('#tab_test3', 'lbl_folio');
+
+    elementos.push({ elementIndex: facturaFiscal_index, elementId: 'FACTURA' });
+    elementos.push({ elementIndex: bill_index, elementId: 'BELNR' });
+    elementos.push({ elementIndex: ejerciciokH3_index, elementId: 'EJERCICIOK' });
+    elementos.push({ elementIndex: folio_index, elementId: 'BELNR' });
+
+    generarScriptValidaciones('#tab_test2', elementos);
+
+
+}
+
+
+
