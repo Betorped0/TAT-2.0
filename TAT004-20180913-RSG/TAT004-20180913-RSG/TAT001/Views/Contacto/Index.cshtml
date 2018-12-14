@@ -5,11 +5,28 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
 }
+<script src="//code.jquery.com/jquery-1.12.4.js"></script>
+<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
+<link href="~/Content/dataTable.css" rel="stylesheet" />
+<link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
 <style>
     .pnl-cli {
         background-color: white;
         padding: 5px 15px 5px 15px;
         border-radius: 5px;
+    }
+
+    .dataTables_length {
+        display: none;
+    }
+
+    .dataTables_filter {
+        display: none;
+    }
+
+    .dataTables_scrollHeadInner, .mdl-data-table {
+        width: 100%;
     }
 </style>
 <div class="row">
@@ -41,11 +58,6 @@
         var options = [];
         var instance = M.FormSelect.init(elem, options);
     </script>
-    <script src="//code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-    <script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
-    <link href="~/Content/dataTable.css" rel="stylesheet" />
-    <link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
 
 
     <div class="row">
@@ -89,9 +101,18 @@
                                     <a data-form-method="post" href="@Url.Action("Details", "Contacto", new { vko = item.VKORG, vtw = item.VTWEG, kun = item.KUNNR, spa = item.SPART, id = item.ID })">
                                         <i class='material-icons blue-text'>search</i>
                                     </a>
-                                    <a class="confirmation" href="@Url.Action("Delete", "Contacto", new { id = item.ID })">
-                                        <i class='material-icons red-text'>delete</i>
-                                    </a>
+                                    <a class="modal-trigger" href="#modal_@item.ID"><i class='material-icons red-text'>delete</i></a>
+                                    <a id="actionDelete_@item.ID" href="@Url.Action("Delete", "Contacto", new { id = item.ID })"></a>
+                                    <!-- Modal Delete -->
+                                    <div id="modal_@item.ID" class="modal" style=" background-color: #fff; height: 200px; width: 450px;">
+                                        <div class="modal-content">
+                                            <p style="font-size: 16px;text-align: left;" class="lbl_eliminar"></p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a class="modal-close waves-effect  btn-flat"><label class="lbl_eliminarNo"></label></a>
+                                            <a onclick="eliminarContacto('actionDelete_@item.ID')" class="modal-close waves-effect  btn-flat"><label class="lbl_eliminarSi"></label></a>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         }
@@ -107,52 +128,31 @@
 <div>
     <a href="@Url.Action("Index", "Clientes")" id="btn_return"> </a>
 </div>
-<!-- Modal Trigger -->
-@*<a class="waves-effect waves-light btn modal-trigger" href="#modal1">Modal</a>
 
-<div id="modal1" class="modal" style=" background-color: #B90C46; height: 200px; width: 350px;">
-    <div class="modal-content">
-        <p style="color: white;font-size: 16px;" class="lbl_actualizar"></p>
-    </div>
-    <div class="modal-footer">
-        <a class="modal-close waves-effect  btn-flat"><label class="lbl_No"></label></a>
-        <a onclick="" class="modal-close waves-effect  btn-flat"><label class="lbl_Si"></label></a>
-    </div>
-</div>*@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var elems = document.querySelectorAll('.modal');
-        var instances = M.Modal.init(elems, options);
+       M.Modal.init(elems, options);
     });
-    var root = '@Url.Content("~")';
+      var root = "@Url.Content("~")",
+        spras_id = "@ViewBag.spras_id",
+        urlLanguage = root + "Scripts/lang/" + spras_id + ".json";
     $(document).ready(function () {
-        var i = 0;
-        $('#table tfoot th').each(function () {
-            i++;
-            var title = $(this).text();
-            $(this).html('<input type="text" id="lbl_search' + i + '" />');
-        });
         var table = $('#table').DataTable({
+            scrollX: "50vh",
+            scrollY: "50vh",
+            scrollCollapse: true,
             language: {
-                "url": root+"Scripts/lang/@ViewBag.spras_id"+".json"
-            },
-            columnDefs: [
+                "url": urlLanguage
+            }, columnDefs: [
                 {
-                    targets: [0, 1, 2],
+                    targets: [0,1,2],
                     className: 'mdl-data-table__cell--non-numeric'
                 }
-            ]
+            ],
+            order: [[0, "asc"]]
         });
-        table.columns().every(function () {
-            var that = this;
-            $('input', this.footer()).on('keyup change', function () {
-                if (that.search() !== this.value) {
-                    that
-                        .search(this.value)
-                        .draw();
-                }
-            });
-        })
+
         var a = $('#selecc').val();
         table.page.len(a).draw();
         $('#selecc').on('change', function () {
@@ -168,22 +168,10 @@
         $('#table').DataTable().search(
             $('#global_filter').val()).draw();
     }
-    $('.confirmation').on('click', function (e) {
-        e.preventDefault;
-        return confirm('¿Desea eliminar el contacto?');
-    });
+
+    function eliminarContacto(idLink) {
+        $('#' + idLink).get(0).click().click();
+    }
+
 </script>
-<style>
 
-    .dataTables_length {
-        display: none;
-    }
-
-    .dataTables_filter {
-        display: none;
-    }
-
-    .dataTables_scrollHeadInner, .mdl-data-table {
-        width: 100%;
-    }
-</style>

@@ -46,15 +46,9 @@
                 {
                     <td style="align-items:center;"><a href="@Url.Action("Desactivar", "Proveedor", new { id = item.ID, a=true })"><i class='material-icons red-text'>clear</i></a></td>}
                 <td>
-                    @*<a href="@Url.Action("Edit", "Proveedor", new { id = item.ID })">
-                        <i class='material-icons green-text'>edit</i>
-                    </a>*@
                     <a href="@Url.Action("Details", "Proveedor", new { id = item.ID })">
                         <i class='material-icons blue-text'>search</i>
                     </a>
-                    @*<a href="@Url.Action("Delete", "Proveedor", new { id = item.ID })">
-                        <i class='material-icons red-text'>delete</i>
-                    </a>*@
                 </td>
             </tr>
         }
@@ -106,9 +100,13 @@
                     $.ajax({
                         url: me.toElement.getAttribute('url'),
                         success: function (resultView) {
+                              if (resultView.isRedirect) {
+                            window.location = resultView.redirectUrl;
+                            } else {
                             fnCommon.showProcess(false);
                             $('#list').html(resultView);
                             sort();
+                          }
                         }
                     });
                 });
@@ -131,9 +129,13 @@
                     $.ajax({
                         url: me.toElement.getAttribute('url'),
                         success: function (resultView) {
+                          if (resultView.isRedirect) {
+                            window.location = resultView.redirectUrl;
+                            } else {
                             fnCommon.showProcess(false);
                             $('#list').html(resultView);
                             pagination();
+                          }
                         }
                     });
                 });

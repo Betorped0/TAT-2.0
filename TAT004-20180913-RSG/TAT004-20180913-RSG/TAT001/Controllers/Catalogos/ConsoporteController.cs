@@ -80,10 +80,12 @@ namespace TAT001.Controllers
             {
                 //return RedirectToAction("Pais", "Home");
             }
-            CONSOPORTE consoporte = new CONSOPORTE();
-            consoporte.ACTIVO = true;
-            consoporte.OBLIGATORIO = true;
-             return View(consoporte);
+            CONSOPORTE consoporte = new CONSOPORTE
+            {
+                ACTIVO = true,
+                OBLIGATORIO = true
+            };
+            return View(consoporte);
         }
 
         // POST: Consoporte/Create

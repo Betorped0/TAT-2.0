@@ -45,10 +45,12 @@
         $.ajax({
             url: root + 'Proveedor/List?numRegistros=' + $('#numRegistros').val() + '&&buscar=' + $('input.global_filter').val(),
             success: function (resultView) {
-                fnCommon.showProcess(false);
-                $('#list').html(resultView);
-                pagination();
-                sort();
+                if (resultView.isRedirect) {
+                    window.location = resultView.redirectUrl;
+                } else {
+                    fnCommon.showProcess(false);
+                    $('#list').html(resultView);
+                }
             }
         });
     });
@@ -58,61 +60,14 @@
         var buscar = $('input.global_filter').val();
          $.ajax({
              url: root+'Proveedor/List?numRegistros=' + $('#numRegistros').val() + '&&buscar=' + $('input.global_filter').val(),
-            success: function (resultView) {
-                $('#list').html(resultView);
-                pagination();
-                sort();
+             success: function (resultView) {
+                 if (resultView.isRedirect) {
+                     window.location = resultView.redirectUrl;
+                 } else {
+                     $('#list').html(resultView);
+                 }
             }
         });
     });
-    //-----Pagination
-    function pagination() {
-        var paginationLink = $('.pagination>li>a');
-        for (var i = 0; i < paginationLink.length; i++) {
-            var url = paginationLink.get(i).getAttribute("href");
-            var id = 'link_p' + i;
-            if (url) {
-                paginationLink.get(i).setAttribute("id", id);
-                paginationLink.get(i).setAttribute("url", url);
-                $('#' + id).click(function (me) {
-                    fnCommon.showProcess(true);
-                    $.ajax({
-                        url: me.toElement.getAttribute('url'),
-                        success: function (resultView) {
-                            fnCommon.showProcess(false);
-                            $('#list').html(resultView);
-                            pagination();
-                        }
-                    });
-                });
-            }
-            paginationLink.get(i).removeAttribute("href");
-        }
-    }
-    pagination();
-    //-----Sort
-    function sort() {
-        var sortLink = $('.header>th>a');
-        for (var i = 0; i < sortLink.length; i++) {
-            var url = sortLink.get(i).getAttribute("href");
-            var id = 'link_h' + i;
-            if (url) {
-                sortLink.get(i).setAttribute("id", id);
-                sortLink.get(i).setAttribute("url", url);
-                $('#' + id).click(function (me) {
-                    fnCommon.showProcess(true);
-                    $.ajax({
-                        url: me.toElement.getAttribute('url'),
-                        success: function (resultView) {
-                            fnCommon.showProcess(false);
-                            $('#list').html(resultView);
-                            sort();
-                        }
-                    });
-                });
-            }
-            sortLink.get(i).removeAttribute("href");
-        }
-    }
-    sort();
+    
 </script>
