@@ -184,6 +184,7 @@ $(document).ready(function () {
             //Termina provisional
             $('#btn_guardar').click();
         } else {
+            dismiss('guardarWarnning');
             M.toast({
                 classes: "guardarWarnning",
                 displayLength: 1000000,
