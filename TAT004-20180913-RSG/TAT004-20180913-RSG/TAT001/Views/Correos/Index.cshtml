@@ -317,13 +317,15 @@
     }
     @if (Model.TSOL.REVERSO)
     {
-        textoNotificacionCab = "Reverso Provisión";
-        textoNotificacionCue = "Se le informa que el usuario " + ViewBag.nombreUsuario + " con user id " + ViewBag.idUsuario + " solicitó el Reverso Total/Remanente de una Provisión con los siguientes datos:";
+        textoNotificacionCab = @ViewBag.cabeceraReverso;
+        textoNotificacionCue = @ViewBag.reverso;
+        textoNotificacionCue = textoNotificacionCue.Replace("a1", ViewBag.nombreUsuario).Replace("b1", ViewBag.idUsuario);
     }
     else if (!Model.TSOL.CARTA)
     {
-        textoNotificacionCab = "Solicitud con Soporte Externo";
-        textoNotificacionCue = "Se le informa que el usuario " + ViewBag.nombreUsuario + " con user id " + ViewBag.idUsuario + " procesó solicitud en ICON con soporte externo a la herramienta (ej. Contrato, JBP, Factura, etc) con los siguientes datos:";
+        textoNotificacionCab = @ViewBag.cabeceraSoporte;
+        textoNotificacionCue = @ViewBag.soporteExterno;
+        textoNotificacionCue = textoNotificacionCue.Replace("a1", ViewBag.nombreUsuario).Replace("b1", ViewBag.idUsuario);
     }
 
 
@@ -334,63 +336,65 @@
     @* ------------------------------------------------------------------------LEJ 09-07-18 *@
     @*//B20180803 MGC Correos......................................*@
 
-    @*DIV CON EL CONTENIDO DE LA BARRA DE CABECERA*@
-    <div style="height:60px; background-color:#d11d53; width:100%; z-index:1000;top:0px;left:0px; position:fixed;">
-        @*//B20180803 MGC Correos......................................*@
-        @{ string mail = ViewBag.mail;}
-        @if (mail == "X")
-        {
-            <img src="miimg_id" />
-        }
-        else
-        {
-            <img src="~/images/logo_kellogg.png" />
-        }
-        @*//B20180803 MGC Correos......................................*@
-
-        @if (Model.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().WORKFP.ACCION.TIPO == "A")
-        {
-            <div style="display:inline-block; width:200px;"></div>
-            <h1 style="display:inline; text-align:center;color:white;">Aprobación Manager - @Model.TSOL.TSOLTs.Where(x => x.SPRAS_ID.Equals(Model.USUARIO.SPRAS_ID)).FirstOrDefault().TXT020</h1>
-            @*<h5 style="display:inline; text-align:center;color:white;font-size:30px;">MAIL APROBACIÓN - @Model.TSOL.TSOLTs.Where(x => x.SPRAS_ID.Equals(Model.USUARIO.SPRAS_ID)).FirstOrDefault().TXT020</h5>*@
-        }
-        else
-        {
-            <div style="display:inline-block;width:200px;"></div>
-            @*<h5 style="display:inline; text-align:center;color:white;font-size:30px;">Notificación solicitud - @Model.TSOL.TSOLTs.Where(x => x.SPRAS_ID.Equals(Model.USUARIO.SPRAS_ID)).FirstOrDefault().TXT020</h5>*@
-            <h1 style="display:inline; text-align:center;color:white;">Notificación @textoNotificacionCab</h1>
-        }
-        <img src="miflag_id" style="margin-top:15px; margin-right:15px;" align="right" />
-    </div>
+    @*TABLA CON EL CONTENIDO DE LA BARRA DE CABECERA*@
+    <table class="tg" style="width:100%; height:50px; border-collapse:collapse; background-color:#d11d53;">
+        <tr>
+            <td>
+                <div class="row" style="margin-bottom:0">
+                    <table class="tg" style="width: 100%;border-collapse: collapse;">
+                        <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                            <td>
+                                @{ string mail = ViewBag.mail;}
+                                @if (mail == "X")
+                                {
+                                    <img src="miimg_id" />
+                                }
+                                else
+                                {
+                                    <img src="~/images/logo-kellogg2.png" />
+                                }
+                            </td>
+                            <td style="text-align:center;">
+                                @if (Model.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().WORKFP.ACCION.TIPO == "A")
+                                {
+                                    <h1 style="display:inline; text-align:center;color:white;">@ViewBag.tituloCabeceraAprobacion - @Model.TSOL.TSOLTs.Where(x => x.SPRAS_ID.Equals(Model.USUARIO.SPRAS_ID)).FirstOrDefault().TXT020</h1>
+                                }
+                                else
+                                {
+                                    <h1 style="display:inline; text-align:center;color:white;">@ViewBag.tituloCabeceraNotificacion @textoNotificacionCab</h1>
+                                }
+                            </td>
+                            <td>
+                                <img src="miflag_id" style="margin-right:10px;" align="right" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
 
     @*DIV CON EL CONTENIDO DEBAJO DE LA BARRA DE CABECERA*@
     @if (Model.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().WORKFP.ACCION.TIPO == "A")
     {
-        <div id="line" style="height:60px; width:100%; z-index:1000;top:60px;left:0px; position:fixed;">
-            <table class="tg" style="width: 100%;border-collapse: collapse;">
-                <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
-                    <td class="col s4">
-                        <p style="margin-top:30px;">
-                            <h4 style="margin-bottom:0px;">Favor de revisar y aprobar la siguiente solicitud.</h4>
-                            En caso de no autorizar la solicitud:<br />
-                            1-Dar click en el boton de rechazar.<br />
-                            2-En el correo alterno que se genera, favor de indicar sus comentarios.<br />
-                            3-Deberá dar click en enviar al mensaje.<br />
-                        </p>
-                    </td>
-                    <td>
-                        <div>
-                            @Html.LabelFor(model => model.SOCIEDAD_ID, "BU", new { @style = "color: rgba(0, 0, 0, 1.0);", @id = "lbl_sociedadid" })
-                        </div>
-                        <div class="input-field col s12" style="margin-bottom:0;">
-                            <input type="text" disabled="disabled" style="color: rgba(0, 0, 0, 1.0); background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 120px;margin: 0 0 8px 0;padding: 0;" value="@Model.SOCIEDAD_ID" />
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="col s4" style="text-align:right;">
-                        <a type="button" class="btn-small" id="btn_cancel"
-                           style="height: 32.4px;line-height: 32.4px;
+        <table class="tg" style="width:100%; height:50px; border-collapse:collapse;">
+            <tr>
+                <td>
+                    <div class="row" style="margin-bottom:0">
+                        <table class="tg" style="width: 100%;border-collapse: collapse;">
+                            <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                <td>
+                                    <p>
+                                        <h4 style="margin-bottom:0px;">@ViewBag.tituloBajoCabeceraAprobacion</h4>
+                                        @ViewBag.tituloBajoCabeceraAprobacion1<br />
+                                        @ViewBag.tituloBajoCabeceraAprobacion2<br />
+                                        @ViewBag.tituloBajoCabeceraAprobacion3<br />
+                                        @ViewBag.tituloBajoCabeceraAprobacion4<br />
+                                    </p>
+                                </td>
+                                <td class="col s4" style="text-align:right;">
+                                    <a type="button" class="btn-small" id="btn_cancel"
+                                       style="height: 32.4px;line-height: 32.4px;
                         font-size: 13px;
                         text-decoration: none;
                         color: #fff;
@@ -409,13 +413,13 @@
                         text-transform: uppercase;
                         vertical-align: middle;
                         -webkit-tap-highlight-color: transparent;"
-                           href="mailto:LA_TAT@kellogg.com?Subject=TAT:Approved-@Model.NUM_DOC-@ViewBag.Pos" target="_top">
-                            Aprobar
-                        </a>
-                    </td>
-                    <td class="col s4">
-                        <a type="button" class="btn-small" id="btn_cancel"
-                           style="height: 32.4px;line-height: 32.4px;
+                                       href="mailto:LA_TAT@kellogg.com?Subject=TAT:Approved-@Model.NUM_DOC-@ViewBag.Pos" target="_top">
+                                        @ViewBag.btnAceptar
+                                    </a>
+                                </td>
+                                <td class="col s4">
+                                    <a type="button" class="btn-small" id="btn_cancel"
+                                       style="height: 32.4px;line-height: 32.4px;
                         font-size: 13px;
                         text-decoration: none;
                         color: #fff;
@@ -434,44 +438,61 @@
                         text-transform: uppercase;
                         vertical-align: middle;
                         -webkit-tap-highlight-color: transparent;"
-                           href="mailto:LA_TAT@kellogg.com?Subject=TAT:Rejected-@Model.NUM_DOC-@ViewBag.Pos" onclick="f1();" target="_top">
-                            Rechazar
-                        </a>
-                    </td>
-                </tr>
-            </table>
-        </div>
+                                       href="mailto:LA_TAT@kellogg.com?Subject=TAT:Rejected-@Model.NUM_DOC-@ViewBag.Pos" onclick="f1();" target="_top">
+                                        @ViewBag.btnCancelar
+                                    </a>
+                                </td>
+                                <td>
+                                    <div>
+                                        @Html.LabelFor(model => model.SOCIEDAD_ID, "BU", new { @style = "color: rgba(0, 0, 0, 1.0);", @id = "lbl_sociedadid" })
+                                    </div>
+                                    <div class="input-field col s12" style="margin-bottom:0;">
+                                        <input type="text" disabled="disabled" style="color: rgba(0, 0, 0, 1.0); background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 120px;margin: 0 0 8px 0;padding: 0;" value="@Model.SOCIEDAD_ID" />
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
     }
     else
     {
-        <div id="line" style="height:60px; width:100%; z-index:1000;top:60px;left:0px; position:fixed;">
-            <table class="tg" style="width: 100%;border-collapse: collapse;">
-                <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
-                    <td class="col s4">
-                        <p>
-                            <h4 style="margin-bottom:0px;">
-                                @textoNotificacionCue
-                            </h4>
-                        </p>
-                    </td>
-                    <td>
-                        <div>
-                            @Html.LabelFor(model => model.SOCIEDAD_ID, "BU", new { @style = "color: rgba(0, 0, 0, 1.0);", @id = "lbl_sociedadid" })
-                        </div>
-                        <div class="input-field col s12" style="margin-bottom:0;">
-                            <input type="text" disabled="disabled" style="color: rgba(0, 0, 0, 1.0); background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 120px;margin: 0 0 8px 0;padding: 0;" value="@Model.SOCIEDAD_ID" />
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </div>
+        <table class="tg" style="width:100%; height:50px; border-collapse:collapse;">
+            <tr>
+                <td>
+                    <div class="row" style="margin-bottom:0">
+                        <table class="tg" style="width: 100%;border-collapse: collapse;">
+                            <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                <td class="col s4">
+                                    <p>
+                                        <h4 style="margin-bottom:0px;">
+                                            @textoNotificacionCue
+                                        </h4>
+                                    </p>
+                                </td>
+                                <td>
+                                    <div>
+                                        @Html.LabelFor(model => model.SOCIEDAD_ID, "BU", new { @style = "color: rgba(0, 0, 0, 1.0);", @id = "lbl_sociedadid" })
+                                    </div>
+                                    <div class="input-field col s12" style="margin-bottom:0;">
+                                        <input type="text" disabled="disabled" style="color: rgba(0, 0, 0, 1.0); background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 120px;margin: 0 0 8px 0;padding: 0;" value="@Model.SOCIEDAD_ID" />
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
     }
 
     @*DIV CON EL CONTENIDO DEL CUERPO DEL CORREO*@
 
     @if (Model.TSOL.REVERSO)
     {
-        <table class="tg" style="width: 100%; border-collapse: collapse; margin-top:200px; position:fixed">
+        <table class="tg" style="width: 100%; border-collapse: collapse;">
             <tr style="border-bottom: 1px solid #e0e0e0;">
                 <td>
                     <h4 style="font-family: -apple-system, BlinkMacSystemFont,Segoe UI, Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif; font-size:25px;">
@@ -875,7 +896,7 @@
     }
     else
     {
-        <table class="tg" style="width: 100%; border-collapse: collapse; margin-top:200px; position:fixed">
+        <table class="tg" style="width: 100%; border-collapse: collapse;">
             <tr style="border-bottom: 1px solid #e0e0e0;">
                 <td>
                     <h4 style="font-family: -apple-system, BlinkMacSystemFont,Segoe UI, Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif; font-size:25px;">
