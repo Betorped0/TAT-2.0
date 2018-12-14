@@ -1059,33 +1059,27 @@ $(document).ready(function () {
     $('#btn_guardarh').on("click", function (e) {
         var _miles = $("#miles").val(); //LEJ 09.07.18
         var _decimales = $("#dec").val(); //LEJ 09.07.18
-        //M.toast({ html: "Guardando" })
         document.getElementById("loader").style.display = "flex";//RSG 26.04.2018
-        var msg = 'Verificar valores en los campos de ';
+        var msg = 'Verificar valores en los campos: ';
+        var campos = '';
         var res = true;
         //Evaluar TabInfo values
         var InfoTab = evalInfoTab(true, e);
         if (!InfoTab) {
-            msg += 'Información';
+            campos += 'Información';
             res = InfoTab;
-        }
-        //Evaluar TempTab values
-        var TempTab = evalTempTab(true, e);
-        if (!TempTab) {
-            msg += ' ,Temporalidad';
-            res = TempTab;
         }
         //Evaluar SoporteTab values
         var SoporteTab = evalSoporteTab(true, e);
         if (!SoporteTab) {
-            msg += ' ,Soporte';
+            campos += (campos === '' ? '' : ',') +' Soporte';
             res = SoporteTab;
         }
 
-        //Evaluar SoporteTab values
+        //Evaluar FinancieraTab values
         var FinancieraTab = evalFinancieraTab(true, e);
         if (!FinancieraTab) {
-            msg += ' ,Financiera';
+            campos += (campos === '' ? '' : ',') +' Financiera';
             res = FinancieraTab;
         }
         //jemo inicio 24-07-2018
@@ -1095,10 +1089,11 @@ $(document).ready(function () {
             var monto = parseFloat(toNum($('#monto_dis').val()));
             importe_fac = parseFloat(importe_fac.toFixed(2));
             if (importe_fac !== monto) {
-                msg += ', Importe total de las facturas sea igual al monto en Distribución';
+                campos += (campos === '' ? '' : ',') +' Importe total de las facturas sea igual al monto en Distribución';
                 res = false;
             }
         }
+        msg  += campos;
         //jemo fin 24-07-2018
         msg += '!';
         if (res) {
@@ -1199,6 +1194,7 @@ $(document).ready(function () {
 
             //Termina provisional
             $('#btn_guardar').click();
+            M.toast({ html: "Guardando" });
         } else {
             M.toast({
                 classes: "guardarWarnning",
@@ -1212,33 +1208,29 @@ $(document).ready(function () {
     });
     $('#btn_guardarr').on("click", function (e) {
         document.getElementById("loader").style.display = "initial";//RSG 26.04.2018
-        var msg = 'Verificar valores en los campos de ';
+        var msg = 'Verificar valores en los campos: ';
+        var campos = '';
         var res = true;
         //Evaluar TabInfo values
         var InfoTab = evalInfoTab(true, e);
         if (!InfoTab) {
-            msg += 'Información';
+            campos += (campos === '' ? '' : ',') +'Información';
             res = InfoTab;
-        }
-        //Evaluar TempTab values
-        var TempTab = evalTempTab(true, e);
-        if (!TempTab) {
-            msg += ' ,Temporalidad';
-            res = TempTab;
         }
         //Evaluar SoporteTab values
         var SoporteTab = evalSoporteTab(true, e);
         if (!SoporteTab) {
-            msg += ' ,Soporte';
+            campos += (campos === '' ? '' : ',')+' Soporte';
             res = SoporteTab;
         }
 
-        //Evaluar SoporteTab values
+        //Evaluar FinancieraTab values
         var FinancieraTab = evalFinancieraTab(true, e);
         if (!FinancieraTab) {
-            msg += ' ,Financiera';
+            campos += (campos === '' ? '' : ',') + ' Financiera';
             res = FinancieraTab;
         }
+        msg += campos;
 
         msg += '!';
         if (res) {
@@ -1287,6 +1279,7 @@ $(document).ready(function () {
             copiarSopTableControl(); //Soporte ahora en información
             //Termina provisional
             $('#btn_guardar').click();
+            M.toast({ html: "Guardando" });
         } else {
             M.toast({ html: msg });
             document.getElementById("loader").style.display = "none";//RSG 26.04.2018

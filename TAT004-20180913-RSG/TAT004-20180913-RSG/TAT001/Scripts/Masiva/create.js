@@ -80,7 +80,7 @@ function procesarHoja1() {
                     //INICIO DEL CICLO FOR
                     $.each(data, function (i, dataj) {
                         //if (i % 2 == 0) {//}  CONDICION PARA SOLO PARES
-                        var addedRow = addRowH1(table, dataj.NUM_DOC, dataj.TSOL_ID, dataj.TALL_ID, dataj.SOCIEDAD_ID, dataj.PAIS_ID, dataj.ESTADO, dataj.CIUDAD, dataj.CONCEPTO, dataj.NOTAS, dataj.PAYER_ID, dataj.PAYER_NOMBRE, dataj.CONTACTO_NOMBRE, dataj.CONTACTO_EMAIL, dataj.FECHAI_VIG, dataj.FECHAF_VIG, dataj.MONEDA_ID, dataj.VKORG, dataj.VTWEG, errores[i], dataj.PAIS_NAME, dataj.TALL_NAME, dataj.SPART);
+                        var addedRow = addRowH1(table, dataj.NUM_DOC, dataj.TSOL_ID, dataj.TALL_ID, dataj.SOCIEDAD_ID, dataj.PAIS_ID, dataj.ESTADO, dataj.CIUDAD, dataj.CONCEPTO, dataj.NOTAS, dataj.PAYER_ID, dataj.PAYER_NOMBRE, dataj.CONTACTO_NOMBRE, dataj.CONTACTO_EMAIL, dataj.FECHAI_VIG, dataj.FECHAF_VIG, dataj.MONEDA_ID, dataj.VKORG, dataj.VTWEG, errores[i], dataj.PAIS_NAME, dataj.TALL_NAME, dataj.SPART, dataj.Decimales, dataj.Miles);
                         tsols += "." + dataj.NUM_DOC + "-" + dataj.TSOL_ID;//ADD RSG 05.11.2018
                     }); //FIN DEL FOR
 
@@ -123,7 +123,7 @@ function procesarHoja1() {
     });
 }
 
-function addRowH1(t, NUM_DOC, TSOL_ID, TALL_ID, SOCIEDAD_ID, PAIS_ID, ESTADO, CIUDAD, CONCEPTO, NOTAS, PAYER_ID, PAYER_NOMBRE, CONTACTO_NOMBRE, CONTACTO_EMAIL, FECHAI_VIG, FECHAF_VIG, MONEDA_ID, VKORG, VTWEG, ERRORES, PAIS_NAME, TALL_NAME, SPART) {
+function addRowH1(t, NUM_DOC, TSOL_ID, TALL_ID, SOCIEDAD_ID, PAIS_ID, ESTADO, CIUDAD, CONCEPTO, NOTAS, PAYER_ID, PAYER_NOMBRE, CONTACTO_NOMBRE, CONTACTO_EMAIL, FECHAI_VIG, FECHAF_VIG, MONEDA_ID, VKORG, VTWEG, ERRORES, PAIS_NAME, TALL_NAME, SPART, Decimales, Miles) {
 
     //var clasificacion = "<select id=\"clas\" class=\"miSel\">";
     //$.each(arr1, function (i, data) {
@@ -168,7 +168,9 @@ function addRowH1(t, NUM_DOC, TSOL_ID, TALL_ID, SOCIEDAD_ID, PAIS_ID, ESTADO, CI
         "<input class='" + ERRORES[15] + " input_moneda' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + MONEDA_ID + "' title='" + getWarning(ERRORES[15]) +"'><span hidden>" + MONEDA_ID + "</span>",
         "<input id='txt_vkorg' value='" + VKORG + "' hidden>",
         "<input id='txt_vtweg' value='" + VTWEG + "' hidden>",
-        "<input id='txt_vtweg' value='" + SPART + "' hidden>"
+        "<input id='txt_vtspart' value='" + SPART + "' hidden>",
+        "<input id='txt_vtmiles' value='" + Miles + "' hidden>",
+        "<input id='txt_vtdecimales' value='" + Decimales + "' hidden>"
     ]).draw(false).node();
 
     var td = $(r).children()[0];
@@ -1623,6 +1625,7 @@ $("#tab_mul").click(function () {
 
                 if (jQuery.inArray(num_docH3, arregloNumDoc) !== -1) {
                     $(rowH3).children().eq(1).children().addClass("red white-text rojo");
+                    $(rowH3).children().eq(1).children().prop('title', 'El documento ya tiene facturas asignadas');
                 }
             }
         }
@@ -2618,6 +2621,7 @@ $("#tab_dis").click(function () {
 
                 if (jQuery.inArray(num_docH3, arregloNumDoc) !== -1) {
                     $(rowH3).children().eq(1).children().addClass("red white-text rojo");
+                    $(rowH3).children().eq(1).children().prop('title', 'El documento ya tiene facturas asignadas');
                 }
             }
         }
@@ -2835,6 +2839,7 @@ function checkRelacionada() {
 
             if (jQuery.inArray(num_docH33, arregloNumDoc) !== -1) {
                 $(rowH33).children().eq(1).children().addClass("red white-text rojo");
+                $(rowH33).children().eq(1).children().prop('title', 'El documento ya tiene facturas asignadas');
             }
         }
     }
@@ -3710,7 +3715,7 @@ function cloneTables() {
 
     $('#tab_test1 > thead > tr > th').each(function () {
         var id = $(this).prop('id');
-        if (id !== "lbl_estatusH1" && id !== "lbl_vkorg" && id !== "lbl_vtweg" && id !== "lbl_spart") {
+        if (id !== "lbl_estatusH1" && id !== "lbl_vkorg" && id !== "lbl_vtweg" && id !== "lbl_spart" && id !== "lbl_miles" && id !== "lbl_decimales") {
             $('#titles1d').append("<th>" + $(this).text() + "</th>");
         }
     });

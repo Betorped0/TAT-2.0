@@ -161,7 +161,7 @@ namespace TAT001.Controllers.Configuracion
                     //en automatico estara activa
                     pERMISO_PAGINA.PERMISO = true;
                     db.PERMISO_PAGINA.Add(pERMISO_PAGINA);
-                    //db.SaveChanges();
+                    db.SaveChanges();
                     return RedirectToAction("Index", new { id = int.Parse(idx) });
                 }
             }
