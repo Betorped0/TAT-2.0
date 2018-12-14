@@ -245,10 +245,17 @@ function validarN(id, num, mensaje, icon, color, elem, ii, ban) {
     }
 }
 function validarNC(id, num, mensaje, icon, color, elem, ii, ban) {
-    var campoVal = document.querySelectorAll("." + id);
-    var campo = document.querySelectorAll("." + elem);
+    var isTabla = true;
+    var campoVal = document.querySelectorAll("td>." + id);
+    var campo = document.querySelectorAll("td>." + elem);
+    if (campoVal.length===0) {
+        isTabla = false;
+        campoVal=document.querySelectorAll("." + id);
+        campo=document.querySelectorAll("." + elem);
+    }
+    
     for (var i = 0; i < campoVal.length; i++) {
-        if (campo !== null & campoVal !== null & campo.length === campoVal.length) {
+        if (campo.length === campoVal.length) {
             var campoInput = $(campoVal[i]).find('input');
             var value = campoInput.val();
             if (lista[i].COND.length > 0 & lista[i].COND[0].comp !== 'f') {
@@ -263,16 +270,20 @@ function validarNC(id, num, mensaje, icon, color, elem, ii, ban) {
                     toast(id + "-" + num, 1000000, icon, mensaje, color);
                     if (color === "red") {
                         esInvalidoC(campo[i]);
-                        campo[i].classList.add('invalid');
-                        campo[i].classList.remove('valid');
+                        if (isTabla) {
+                            campo[i].classList.add('invalid');
+                            campo[i].classList.remove('valid');
+                        }
                     }
                     else
                         esWarningC(campo[i]);
                     i = campoVal.length;
                 } else {
                     esValidoC(campo[i]);
-                    campo[i].classList.add('valid');
-                    campo[i].classList.remove('invalid');
+                    if (isTabla) {
+                        campo[i].classList.add('valid');
+                        campo[i].classList.remove('invalid');
+                    }
                     dismiss(id + "-" + tipo_condicion);
 
                 }

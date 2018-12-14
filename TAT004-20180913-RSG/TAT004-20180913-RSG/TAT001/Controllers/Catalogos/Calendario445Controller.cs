@@ -4,19 +4,21 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Security;
 using TAT001.Common;
 using TAT001.Entities;
 using TAT001.Filters;
 using TAT001.Models;
 using TAT001.Models.Dao;
+using TAT001.Services;
 
 namespace TAT001.Controllers.Catalogos
 {
     [Authorize]
-    [LoginActive]
     public class Calendario445Controller : Controller
     {
         readonly TAT001Entities db = new TAT001Entities();
+        readonly UsuarioLogin usuValidateLogin = new UsuarioLogin();
 
         const string CMB_SOCIEDADES= "SOC";
         const string CMB_TIPOSSOLICITUD = "TSOL";
@@ -32,6 +34,7 @@ namespace TAT001.Controllers.Catalogos
 
 
         // GET: Calendario445
+        [LoginActive]
         public ActionResult Index()
         {
             int pagina_id = 530;//ID EN BASE DE DATOS
@@ -49,6 +52,15 @@ namespace TAT001.Controllers.Catalogos
 
         public ActionResult List(string colOrden, string ordenActual, int? numRegistros = 10, int? pagina = 1, string buscar = "")
         {
+            if (!usuValidateLogin.validaUsuario(User.Identity.Name))
+            {
+                FormsAuthentication.SignOut();
+                return Json(new
+                {
+                    redirectUrl = Url.Action("Index", "Home"),
+                    isRedirect = true
+                }, JsonRequestBehavior.AllowGet);
+            }
             int pagina_id = 530; //ID EN BASE DE DATOS
             Calendario445ViewModel modelView = new Calendario445ViewModel();
             ObtenerListado(ref modelView, colOrden, ordenActual, numRegistros, pagina, buscar);
@@ -58,6 +70,15 @@ namespace TAT001.Controllers.Catalogos
 
         public ActionResult ListEx(string colOrden, string ordenActual, int? numRegistros = 10, int? pagina = 1, string buscar = "")
         {
+            if (!usuValidateLogin.validaUsuario(User.Identity.Name))
+            {
+                FormsAuthentication.SignOut();
+                return Json(new
+                {
+                    redirectUrl = Url.Action("Index", "Home"),
+                    isRedirect = true
+                }, JsonRequestBehavior.AllowGet);
+            }
             int pagina_id = 530; //ID EN BASE DE DATOS
             Calendario445ViewModel modelView = new Calendario445ViewModel();
             ObtenerListadoEx(ref modelView, colOrden, ordenActual, numRegistros, pagina, buscar);
@@ -65,6 +86,7 @@ namespace TAT001.Controllers.Catalogos
             return View(modelView);
         }
         // GET: Calendario445/Create
+        [LoginActive]
         public ActionResult Create()
         {
             int pagina_id = 531;//ID EN BASE DE DATOS
@@ -77,6 +99,7 @@ namespace TAT001.Controllers.Catalogos
 
         // POST: Calendario445/Create
         [HttpPost]
+        [LoginActive]
         public ActionResult Create(Calendario445ViewModel modelView)
         {
             int pagina_id = 531;//ID EN BASE DE DATOS
@@ -143,6 +166,7 @@ namespace TAT001.Controllers.Catalogos
             }
         }
 
+        [LoginActive]
         public ActionResult Edit(short ejercicio, int periodo, string sociedad_id, string tsol_id )
         {
             int pagina_id = 532;//ID EN BASE DE DATOS
@@ -163,6 +187,7 @@ namespace TAT001.Controllers.Catalogos
         }
         
         [HttpPost]
+        [LoginActive]
         public ActionResult Edit(Calendario445ViewModel modelView)
         {
             int pagina_id = 532;//ID EN BASE DE DATOS
@@ -194,6 +219,7 @@ namespace TAT001.Controllers.Catalogos
                 return View(modelView);
             }
         }
+
         bool ValidarPeriodoExistente(CALENDARIO_AC calendarioAc)
         {
             int pagina_id = 530;
@@ -252,8 +278,7 @@ namespace TAT001.Controllers.Catalogos
                 return false;
             }
             return true;
-        }
-        
+        }     
         void CargarSelectList(ref Calendario445ViewModel modelView,string[] combos)
         {
             string spras_id = FnCommon.ObtenerSprasId(db,User.Identity.Name);
@@ -286,12 +311,12 @@ namespace TAT001.Controllers.Catalogos
                 }
             }
         }
-        public void ObtenerListado(ref Calendario445ViewModel viewModel, string colOrden = "", string ordenActual = "", int? numRegistros = 10, int? pagina = 1, string buscar = "")
+        void ObtenerListado(ref Calendario445ViewModel viewModel, string colOrden = "", string ordenActual = "", int? numRegistros = 10, int? pagina = 1, string buscar = "")
         {
             int pageIndex = pagina.Value;
             List<CALENDARIO_AC> calendarios445 = db.CALENDARIO_AC.Where(x => x.ACTIVO).ToList();
 
-            viewModel.ordenActual = colOrden;
+            viewModel.ordenActual = (string.IsNullOrEmpty(ordenActual) || !colOrden.Equals(ordenActual) ? colOrden : "");
             viewModel.numRegistros = numRegistros.Value;
             viewModel.buscar = buscar;
 
@@ -384,12 +409,12 @@ namespace TAT001.Controllers.Catalogos
                     break;
             }
         }
-        public void ObtenerListadoEx(ref Calendario445ViewModel viewModel, string colOrden = "", string ordenActual = "", int? numRegistros = 10, int? pagina = 1, string buscar = "")
+        void ObtenerListadoEx(ref Calendario445ViewModel viewModel, string colOrden = "", string ordenActual = "", int? numRegistros = 10, int? pagina = 1, string buscar = "")
         {
             int pageIndex = pagina.Value;
             List<CALENDARIO_EX> calendariosEx445 = db.CALENDARIO_EX.ToList();
 
-            viewModel.ordenActual = colOrden;
+            viewModel.ordenActual = (string.IsNullOrEmpty(ordenActual) || !colOrden.Equals(ordenActual) ? colOrden : "");
             viewModel.numRegistrosEx = numRegistros.Value;
             viewModel.buscar = buscar;
 
@@ -405,61 +430,61 @@ namespace TAT001.Controllers.Catalogos
             {
                 case "SOCIEDAD_ID":
                     if (colOrden.Equals(ordenActual))
-                        viewModel.calendariosEx445 = calendariosEx445.OrderByDescending(m => m.SOCIEDAD_ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                        viewModel.calendariosEx445 = calendariosEx445.OrderByDescending(m => m.SOCIEDAD_ID).ToPagedList(pageIndex, viewModel.numRegistrosEx);
                     else
-                        viewModel.calendariosEx445 = calendariosEx445.OrderBy(m => m.SOCIEDAD_ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                        viewModel.calendariosEx445 = calendariosEx445.OrderBy(m => m.SOCIEDAD_ID).ToPagedList(pageIndex, viewModel.numRegistrosEx);
                     break;
                 case "PERIODO":
                     if (colOrden.Equals(ordenActual))
-                        viewModel.calendariosEx445 = calendariosEx445.OrderByDescending(m => m.PERIODO).ToPagedList(pageIndex, viewModel.numRegistros);
+                        viewModel.calendariosEx445 = calendariosEx445.OrderByDescending(m => m.PERIODO).ToPagedList(pageIndex, viewModel.numRegistrosEx);
                     else
-                        viewModel.calendariosEx445 = calendariosEx445.OrderBy(m => m.PERIODO).ToPagedList(pageIndex, viewModel.numRegistros);
+                        viewModel.calendariosEx445 = calendariosEx445.OrderBy(m => m.PERIODO).ToPagedList(pageIndex, viewModel.numRegistrosEx);
                     break;
 
                 case "TSOL_ID":
                     if (colOrden.Equals(ordenActual))
-                        viewModel.calendariosEx445 = calendariosEx445.OrderByDescending(m => m.TSOL_ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                        viewModel.calendariosEx445 = calendariosEx445.OrderByDescending(m => m.TSOL_ID).ToPagedList(pageIndex, viewModel.numRegistrosEx);
                     else
-                        viewModel.calendariosEx445 = calendariosEx445.OrderBy(m => m.TSOL_ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                        viewModel.calendariosEx445 = calendariosEx445.OrderBy(m => m.TSOL_ID).ToPagedList(pageIndex, viewModel.numRegistrosEx);
                     break;
 
                 case "USUARIO_ID":
                     if (colOrden.Equals(ordenActual))
-                        viewModel.calendariosEx445 = calendariosEx445.OrderByDescending(m => m.USUARIO.ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                        viewModel.calendariosEx445 = calendariosEx445.OrderByDescending(m => m.USUARIO.ID).ToPagedList(pageIndex, viewModel.numRegistrosEx);
                     else
-                        viewModel.calendariosEx445 = calendariosEx445.OrderBy(m => m.USUARIO.ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                        viewModel.calendariosEx445 = calendariosEx445.OrderBy(m => m.USUARIO.ID).ToPagedList(pageIndex, viewModel.numRegistrosEx);
                     break;
 
                 case "EX_FROMF":
                     if (colOrden.Equals(ordenActual))
-                        viewModel.calendariosEx445 = calendariosEx445.OrderByDescending(m => m.EX_FROMF).ToPagedList(pageIndex, viewModel.numRegistros);
+                        viewModel.calendariosEx445 = calendariosEx445.OrderByDescending(m => m.EX_FROMF).ToPagedList(pageIndex, viewModel.numRegistrosEx);
                     else
-                        viewModel.calendariosEx445 = calendariosEx445.OrderBy(m => m.EX_FROMF).ToPagedList(pageIndex, viewModel.numRegistros);
+                        viewModel.calendariosEx445 = calendariosEx445.OrderBy(m => m.EX_FROMF).ToPagedList(pageIndex, viewModel.numRegistrosEx);
                     break;
 
                 case "EX_FROMH":
                     if (colOrden.Equals(ordenActual))
-                        viewModel.calendariosEx445 = calendariosEx445.OrderByDescending(m => m.EX_FROMH).ToPagedList(pageIndex, viewModel.numRegistros);
+                        viewModel.calendariosEx445 = calendariosEx445.OrderByDescending(m => m.EX_FROMH).ToPagedList(pageIndex, viewModel.numRegistrosEx);
                     else
-                        viewModel.calendariosEx445 = calendariosEx445.OrderBy(m => m.EX_FROMH).ToPagedList(pageIndex, viewModel.numRegistros);
+                        viewModel.calendariosEx445 = calendariosEx445.OrderBy(m => m.EX_FROMH).ToPagedList(pageIndex, viewModel.numRegistrosEx);
                     break;
 
                 case "EX_TOF":
                     if (colOrden.Equals(ordenActual))
-                        viewModel.calendariosEx445 = calendariosEx445.OrderByDescending(m => m.EX_TOF).ToPagedList(pageIndex, viewModel.numRegistros);
+                        viewModel.calendariosEx445 = calendariosEx445.OrderByDescending(m => m.EX_TOF).ToPagedList(pageIndex, viewModel.numRegistrosEx);
                     else
-                        viewModel.calendariosEx445 = calendariosEx445.OrderBy(m => m.EX_TOF).ToPagedList(pageIndex, viewModel.numRegistros);
+                        viewModel.calendariosEx445 = calendariosEx445.OrderBy(m => m.EX_TOF).ToPagedList(pageIndex, viewModel.numRegistrosEx);
                     break;
 
                 case "EX_TOH":
                     if (colOrden.Equals(ordenActual))
-                        viewModel.calendariosEx445 = calendariosEx445.OrderByDescending(m => m.EX_TOH).ToPagedList(pageIndex, viewModel.numRegistros);
+                        viewModel.calendariosEx445 = calendariosEx445.OrderByDescending(m => m.EX_TOH).ToPagedList(pageIndex, viewModel.numRegistrosEx);
                     else
-                        viewModel.calendariosEx445 = calendariosEx445.OrderBy(m => m.EX_TOH).ToPagedList(pageIndex, viewModel.numRegistros);
+                        viewModel.calendariosEx445 = calendariosEx445.OrderBy(m => m.EX_TOH).ToPagedList(pageIndex, viewModel.numRegistrosEx);
                     break;
                
                 default:
-                    viewModel.calendariosEx445 = calendariosEx445.OrderBy(m => m.SOCIEDAD_ID).ToPagedList(pageIndex, viewModel.numRegistros);
+                    viewModel.calendariosEx445 = calendariosEx445.OrderBy(m => m.SOCIEDAD_ID).ToPagedList(pageIndex, viewModel.numRegistrosEx);
                     break;
             }
         }

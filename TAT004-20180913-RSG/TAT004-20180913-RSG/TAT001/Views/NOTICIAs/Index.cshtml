@@ -1,7 +1,6 @@
 ﻿@model IEnumerable<TAT001.Entities.NOTICIA>
 @using System.Web.Hosting;
 @{
-    //ViewBag.Title = "Index";
     ViewBag.pagina_r =911;
     ViewBag.carpeta_r = 900;
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -32,7 +31,7 @@
         @Html.ActionLink("Crear", "Create", "Noticias", null, new { @class = "btn-small", @id = "btnCrear" })
     </div>
 </div>
-
+<div class="card-panel">
 <div class="row" style="margin-bottom:0;">
     <div class="input-field col s3 m3 l3">
         <select id="selecc">
@@ -61,16 +60,16 @@
 <table class="table mdl-data-table striped" id="table" style="width:100%;">
     <thead>
         <tr>
-            <th>
+            <th class="lblFechaI">
                 @Html.DisplayNameFor(model => model.FECHAI)
             </th>
-            <th>
+            <th class="lblFechaF">
                 @Html.DisplayNameFor(model => model.FECHAF)
             </th>
-            <th>
+            <th class="lblRuta">
                 @Html.DisplayNameFor(model => model.PATH)
             </th>
-            <th>
+            <th class="lblFechaC">
                 @Html.DisplayNameFor(model => model.FECHAC)
             </th>
             <th></th>
@@ -164,6 +163,7 @@
             $('#global_filter').val()).draw();
     }
 </script>
+    </div>
 <style>
 
     .dataTables_length {

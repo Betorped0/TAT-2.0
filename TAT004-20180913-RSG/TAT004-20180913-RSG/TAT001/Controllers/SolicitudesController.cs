@@ -4498,7 +4498,11 @@ namespace TAT001.Controllers
             {
                 DOCUMENTO d = db.DOCUMENTOes.Find(dOCUMENTO.NUM_DOC);
                 string errorString = "";
-
+                
+                if (d.ESTATUS_WF=="B")
+                {
+                    d.PERIODO = dOCUMENTO.PERIODO;
+                }
                 //ADD RSG 20.08.2018-----------------------------START
                 if (d.TSOL.REVERSO)
                 {
@@ -4515,14 +4519,13 @@ namespace TAT001.Controllers
 
                             db.Entry(docr).State = EntityState.Modified;
                             db.SaveChanges();
-
-                            //return RedirectToAction("Index", "Home");
+                            
                         }
 
                     }
                     catch (Exception e)
                     {
-
+                        Log.ErrorLogApp(e,"Solicitudes","Edit");
                     }
                 }
                 else
@@ -4559,8 +4562,7 @@ namespace TAT001.Controllers
 
                     if (d.DOCUMENTO_REF > 0)
                     {
-                        DOCUMENTO dr = new DOCUMENTO();
-                        dr = db.DOCUMENTOes.Where(doc => doc.NUM_DOC == d.DOCUMENTO_REF).FirstOrDefault();
+                        DOCUMENTO dr = db.DOCUMENTOes.Where(doc => doc.NUM_DOC == d.DOCUMENTO_REF).FirstOrDefault();
                         //dOCUMENTO.TSOL_ID = d.TSOL_ID;
                         d.ESTADO = dr.ESTADO;
                         d.CIUDAD = dr.CIUDAD;
@@ -5114,9 +5116,9 @@ namespace TAT001.Controllers
                                 if (drec.PORC == null)
                                     drec.PORC = 0;
                                 dOCUMENTO.TIPO_RECURRENTE = db.TSOLs.Where(x => x.ID.Equals(dOCUMENTO.TSOL_ID)).FirstOrDefault().TRECU;
-                                if (dOCUMENTO.TIPO_RECURRENTE == "1" & dOCUMENTO.LIGADA == true)
+                                if (dOCUMENTO.TIPO_RECURRENTE == "1" && d.LIGADA == true)
                                     dOCUMENTO.TIPO_RECURRENTE = "2";
-                                if (dOCUMENTO.TIPO_RECURRENTE != "1" & dOCUMENTO.OBJETIVOQ == true)
+                                if (dOCUMENTO.TIPO_RECURRENTE != "1" && d.OBJETIVOQ == true)
                                     dOCUMENTO.TIPO_RECURRENTE = "3";
                                 //RSG 29.07.2018-add----------------------------------
                                 drec.FECHAV = drec.FECHAF;

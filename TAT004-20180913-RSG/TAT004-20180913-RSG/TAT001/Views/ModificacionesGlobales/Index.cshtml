@@ -186,8 +186,12 @@
                 + '&&num_docf=' + num_docf + '&&fechai=' + fechai + '&&fechaf=' + fechaf
                 + '&&kunnr=' + kunnr + '&&usuarioa_id=' + usuarioa_id + '&&usuario_id=' + usuario_id,
             success: function (resultView) {
-                fnCommon.showProcess(false);
-                $('#listModAutorizador').html(resultView);
+                if (resultView.isRedirect) {
+                    window.location = resultView.redirectUrl;
+                } else {
+                    fnCommon.showProcess(false);
+                    $('#listModAutorizador').html(resultView);
+                }
             }
         });
     }
@@ -206,8 +210,12 @@
             url: root + 'ModificacionesGlobales/ListModSolicitudes?sociedad_id=' + sociedad_id + '&num_doci=' + num_doci
                 + '&&num_docf=' + num_docf + '&&fechai=' + fechai + '&&fechaf=' + fechaf + '&&kunnr=' + kunnr + '&&usuario_id=' + usuario_id,
             success: function (resultView) {
-                fnCommon.showProcess(false);
-                $('#listModSolicitudes').html(resultView);
+                if (resultView.isRedirect) {
+                    window.location = resultView.redirectUrl;
+                } else {
+                    fnCommon.showProcess(false);
+                    $('#listModSolicitudes').html(resultView);
+                }
             }
         });
     }

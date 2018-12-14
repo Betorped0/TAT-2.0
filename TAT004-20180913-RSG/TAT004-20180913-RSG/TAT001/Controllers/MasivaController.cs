@@ -42,7 +42,7 @@ namespace TAT001.Controllers
         readonly MaterialesgptDao materialesgptDao = new MaterialesgptDao();
 
         // GET: Masiva
-        public ActionResult Index()
+        public ActionResult Index(string mensaje)
         {
             int pagina = 221; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
@@ -55,25 +55,58 @@ namespace TAT001.Controllers
             {
                 //return RedirectToAction("Pais", "Home");
             }
-
+            ViewBag.Mensaje = mensaje;
             return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Index(string a)
-        {
-            return (null);
-        }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Index(string a)
+        //{
+        //    return (null);
+        //}
 
         public ActionResult Archivo(string varArch)//METODO PARA DESCARGAR EL ARCHIVO DEL SERVER
         {
             Response.ContentType = "application/vnd.ms-excel";
             Response.ContentEncoding = System.Text.Encoding.UTF8;
+            string msj = "";
             if (varArch == "X")
             {
-                Response.AddHeader("Content-Disposition", "attachment; filename = LAYOUT_CARGA_MASIVA.xlsx");
-                Response.TransmitFile(Server.MapPath("~/files/masiva.xlsx"));
+                string p = "";
+                try
+                {
+                    p = Session["pais"].ToString();
+                    LayoutCargaMasivaViewModels layout = new LayoutCargaMasivaViewModels();
+                    layout.layoutMasiva = db.LAYOUT_CARGA.Where(x => x.LAND == p).FirstOrDefault();
+                    if (layout.layoutMasiva !=null)
+                    {
+                        try
+                        {
+                            var path = Path.Combine(Server.MapPath("~/Archivos/LayoutCargaMasiva/"));
+                            string[] nombre = layout.layoutMasiva.RUTA.Split(new[] { "LayoutCargaMasiva" }, StringSplitOptions.None);
+                            if (nombre.Length > 1)
+                            {
+                                path = path + nombre[1];
+
+                                Response.AddHeader("Content-Disposition", "attachment; filename = LAYOUT_CARGA_MASIVA.xlsx");
+                                Response.TransmitFile(path);
+                                Response.End();
+                            }
+                        }catch(Exception e)
+                        {
+                            msj = "Archivo no encontrado";
+                        }
+                    }
+                    else
+                    {
+                        msj = "El país no tiene asociado un layout de carga masiva";
+                    }
+                }
+                catch
+                {
+                    msj = "Favor de seleccionar un país.";
+                }
             }
             else if (varArch == "L")
             {
@@ -81,10 +114,10 @@ namespace TAT001.Controllers
                 carga.GenerarListaCliPro(Server.MapPath("~/pdfTemp/"));
                 Response.AddHeader("Content-Disposition", "attachment; filename = LISTA_CLIENTE_PROVEEDORES.xlsx");
                 Response.TransmitFile(Server.MapPath("~/pdfTemp/ListaClienteProveedores.xlsx"));
+                Response.End();
             }
-            Response.End();
-
-            return RedirectToAction("Index");
+           
+            return RedirectToAction("Index",new { mensaje = msj});
         }
 
         public ActionResult loadExcelMasiva()

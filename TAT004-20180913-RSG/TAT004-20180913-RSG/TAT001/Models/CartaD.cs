@@ -88,6 +88,7 @@ namespace TAT001.Models
         public List<string> listaCuerpo { get; set; }//NUMERO TOTAL DE FILAS CON LA INFO CORRESPONDIENTE QUE POSTERIORMENTE ES DISTRIBUIDA EN LAS TABLAS
         public List<string> numColEncabezado { get; set; }//NUMERO DE COLUMNAS PARA EL ENCABEZADO
         public string material { get; set; }//TEXTO ENCABEZADO
+        public bool material_x { get; set; }
         public string categoria { get; set; }//TEXTO ENCABEZADO
         public string descripcion { get; set; }//TEXTO ENCABEZADO
         public string costoun { get; set; }//TEXTO ENCABEZADO

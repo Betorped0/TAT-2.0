@@ -148,10 +148,22 @@
     function actualizarSolicitudes() {
         var esCambio = ($("#PAYER_NOMBRE").val() != "" || $("#PAYER_EMAIL").val() != "" || $("#ESTADO").val() != "" || $("#CIUDAD").val() != "" || $("#CONCEPTO").val() != "" || $("#NOTAS").val() != "");
         if (registrosSol > 0 && esCambio) {
-            document.getElementById("loader").style.display = "flex";
-            $('#modSolicitudesForm').submit();
+            $("#PAYER_EMAIL").removeClass("invalid");
+            if ($("#PAYER_EMAIL").val() != "" && !validateEmail($("#PAYER_EMAIL").val())) {
+                $("#PAYER_EMAIL").addClass("invalid");
+            } else {
+                document.getElementById("loader").style.display = "flex";
+                $('#modSolicitudesForm').submit();
+            }
         }
+        
        
+        
+       
+    }
+    function validateEmail(email) {
+        var re = /^(([^<>()\[\]\\.,;:\s@@"]+(\.[^<>()\[\]\\.,;:\s@@"]+)*)|(".+"))@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
     }
 
 </script>

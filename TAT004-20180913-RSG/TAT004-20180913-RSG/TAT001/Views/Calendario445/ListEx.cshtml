@@ -6,28 +6,28 @@
     <thead>
         <tr class="header">
             <th>
-                @Html.ActionLink("SOCIEDAD_ID", "ListEx", new { colOrden = "SOCIEDAD_ID", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
+                @Html.ActionLink("SOCIEDAD_ID", "ListEx", new { colOrden = "SOCIEDAD_ID", ordenActual = Model.ordenActual, numRegistros = Model.numRegistrosEx, buscar = Model.buscar })
             </th>
             <th>
-                @Html.ActionLink("PERIODO", "ListEx", new { colOrden = "PERIODO", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
+                @Html.ActionLink("PERIODO", "ListEx", new { colOrden = "PERIODO", ordenActual = Model.ordenActual, numRegistros = Model.numRegistrosEx, buscar = Model.buscar })
             </th>
             <th>
-                @Html.ActionLink("TSOL_ID", "ListEx", new { colOrden = "TSOL_ID", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
+                @Html.ActionLink("TSOL_ID", "ListEx", new { colOrden = "TSOL_ID", ordenActual = Model.ordenActual, numRegistros = Model.numRegistrosEx, buscar = Model.buscar })
             </th>
             <th>
-                @Html.ActionLink("USUARIO_ID", "ListEx", new { colOrden = "USUARIO_ID", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
+                @Html.ActionLink("USUARIO_ID", "ListEx", new { colOrden = "USUARIO_ID", ordenActual = Model.ordenActual, numRegistros = Model.numRegistrosEx, buscar = Model.buscar })
             </th>
             <th>
-                @Html.ActionLink("EX_FROMF", "ListEx", new { colOrden = "EX_FROMF", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
+                @Html.ActionLink("EX_FROMF", "ListEx", new { colOrden = "EX_FROMF", ordenActual = Model.ordenActual, numRegistros = Model.numRegistrosEx, buscar = Model.buscar })
             </th>
             <th>
-                @Html.ActionLink("EX_FROMH", "ListEx", new { colOrden = "EX_FROMH", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
+                @Html.ActionLink("EX_FROMH", "ListEx", new { colOrden = "EX_FROMH", ordenActual = Model.ordenActual, numRegistros = Model.numRegistrosEx, buscar = Model.buscar })
             </th>
             <th>
-                @Html.ActionLink("EX_TOF", "ListEx", new { colOrden = "EX_TOF", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
+                @Html.ActionLink("EX_TOF", "ListEx", new { colOrden = "EX_TOF", ordenActual = Model.ordenActual, numRegistros = Model.numRegistrosEx, buscar = Model.buscar })
             </th>
             <th>
-                @Html.ActionLink("EX_TOH", "ListEx", new { colOrden = "EX_TOH", ordenActual = Model.ordenActual, numRegistros = Model.numRegistros, buscar = Model.buscar })
+                @Html.ActionLink("EX_TOH", "ListEx", new { colOrden = "EX_TOH", ordenActual = Model.ordenActual, numRegistros = Model.numRegistrosEx, buscar = Model.buscar })
             </th>
            
             <th></th>
@@ -72,7 +72,7 @@
     @(Model.calendariosEx445.PageCount < Model.calendariosEx445.PageNumber ? 0 : Model.calendariosEx445.PageNumber)
     - @Model.calendariosEx445.PageCount
 
-    @Html.PagedListPager(Model.calendariosEx445, page => Url.Action("ListEx", new { pagina = page, numRegistros = Model.numRegistros, buscar = Model.buscar, colOrden = Model.ordenActual }))
+    @Html.PagedListPager(Model.calendariosEx445, page => Url.Action("ListEx", new { pagina = page, numRegistros = Model.numRegistrosEx, buscar = Model.buscar, colOrden = Model.ordenActual }))
 </div>
 <script>
     //-----Sort
@@ -89,9 +89,13 @@
                     $.ajax({
                         url: me.toElement.getAttribute('url'),
                         success: function (resultView) {
+                           if (resultView.isRedirect) {
+                                window.location = resultView.redirectUrl;
+                            } else {
                             fnCommon.showProcess(false);
                             $('#listEx').html(resultView);
                             sort();
+                          }
                         }
                     });
                 });
@@ -114,9 +118,13 @@
                     $.ajax({
                         url: me.toElement.getAttribute('url'),
                         success: function (resultView) {
+                            if (resultView.isRedirect) {
+                                window.location = resultView.redirectUrl;
+                            } else {
                             fnCommon.showProcess(false);
                             $('#listEx').html(resultView);
                             pagination();
+                            }
                         }
                     });
                 });

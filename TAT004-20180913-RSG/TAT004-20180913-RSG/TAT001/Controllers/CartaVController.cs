@@ -173,6 +173,7 @@ namespace TAT001.Controllers
                 cv.numColEncabezado = cabeza;////////NUMERO DE COLUMNAS PARA LAS TABLAS
                 cv.secondTab_x = true;
                 cv.tercerTab_x = true;
+                cv.material_x = (armadoCuerpoTab != null && armadoCuerpoTab.Any() && !string.IsNullOrEmpty(armadoCuerpoTab.First().val));
                 cv.costoun_x = true;
                 cv.apoyo_x = true;
                 cv.apoyop_x = true;
@@ -272,7 +273,7 @@ namespace TAT001.Controllers
             if (guardar_param== "guardar_desde_visualizar")
             {
                 v=(CartaV)TempData["v"];
-                monto_enviar=TempData["monto_enviar"] != null ? TempData["monto_enviar"].ToString() : null;
+                monto_enviar=TempData["monto_enviar"]?.ToString();
                 guardar_param = "guardar_param";
             }
         
@@ -298,45 +299,44 @@ namespace TAT001.Controllers
 
                 //Formatos para numeros
 
-                string miles = d.PAI.MILES; //B20180730 MGC 2018.07.30 Formatos
                 string decimales = d.PAI.DECIMAL; //B20180730 MGC 2018.07.30 Formatos
 
                 FormatosC format = new FormatosC(); //B20180730 MGC 2018.07.30 Formatos
 
-                CARTA ca = new CARTA();
-                ca.NUM_DOC = v.num_doc;
-                ca.CLIENTE = v.cliente;
-                ca.CLIENTEX = v.cliente_x;
-                ca.COMPANY = v.company;
-                ca.COMPANYC = v.companyC;
-                ca.COMPANYCC = v.companyCC;
-                ca.COMPANYCCX = v.companyCC_x;
-                ca.COMPANYCX = v.companyC_x;
-                ca.COMPANYX = v.company_x;
-                ca.CONCEPTO = v.concepto;
-                ca.CONCEPTOX = v.concepto_x;
-                ca.DIRECCION = v.direccion;
-                ca.DIRECCIONX = v.direccion_x;
-                //ca.DOCUMENTO = v.DOCUMENTO;
-                ca.ESTIMADO = v.estimado;
-                ca.ESTIMADOX = v.estimado_x;
-                //ca.FECHAC = v.FECHAC;
-                ca.FOLIO = v.folio;
-                ca.FOLIOX = v.folio_x;
-                ca.LEGAL = v.legal;
-                ca.LEGALX = v.legal_x;
-                ca.LUGARFECH = v.lugarFech;
-                ca.LUGARFECHX = v.lugarFech_x;
-                ca.LUGAR = v.lugar;
-                ca.LUGARX = v.lugar_x;
-                ca.MAIL = v.mail;
-                ca.MAILX = v.mail_x;
-                ca.MECANICA = v.mecanica;
-                ca.MECANICAX = v.mecanica_x;
-                ca.NOMBREC = v.nombreC;
-                ca.NOMBRECX = v.nombreC_x;
-                ca.NOMBREE = v.nombreE;
-                ca.NOMBREEX = v.nombreE_x;
+                CARTA ca = new CARTA
+                {
+                    NUM_DOC = v.num_doc,
+                    CLIENTE = v.cliente,
+                    CLIENTEX = v.cliente_x,
+                    COMPANY = v.company,
+                    COMPANYC = v.companyC,
+                    COMPANYCC = v.companyCC,
+                    COMPANYCCX = v.companyCC_x,
+                    COMPANYCX = v.companyC_x,
+                    COMPANYX = v.company_x,
+                    CONCEPTO = v.concepto,
+                    CONCEPTOX = v.concepto_x,
+                    DIRECCION = v.direccion,
+                    DIRECCIONX = v.direccion_x,
+                    ESTIMADO = v.estimado,
+                    ESTIMADOX = v.estimado_x,
+                    FOLIO = v.folio,
+                    FOLIOX = v.folio_x,
+                    LEGAL = v.legal,
+                    LEGALX = v.legal_x,
+                    LUGARFECH = v.lugarFech,
+                    LUGARFECHX = v.lugarFech_x,
+                    LUGAR = v.lugar,
+                    LUGARX = v.lugar_x,
+                    MAIL = v.mail,
+                    MAILX = v.mail_x,
+                    MECANICA = v.mecanica,
+                    MECANICAX = v.mecanica_x,
+                    NOMBREC = v.nombreC,
+                    NOMBRECX = v.nombreC_x,
+                    NOMBREE = v.nombreE,
+                    NOMBREEX = v.nombreE_x
+                };
                 ca.NUM_DOC = v.num_doc;
                 ca.PAYER = v.payerId;
                 ca.PAYERX = v.payerId_x;
@@ -350,9 +350,6 @@ namespace TAT001.Controllers
                 ca.TAXIDX = v.taxid_x;
                 ca.MONTO = v.monto;
                 ca.MONEDA = v.moneda;
-                //ca.TIPO = v.TIPO;
-                //ca.USUARIO = v.USUARIO;
-                //ca.USUARIO_ID = v.USUARIO_ID;
                 ca.USUARIO_ID = User.Identity.Name;
                 ca.FECHAC = DateTime.Now;
 
@@ -367,6 +364,7 @@ namespace TAT001.Controllers
                 ca.COMPROMISOKX = v.compromisoK_x;
 
                 ca.SECOND_TABX = v.secondTab_x;
+                ca.MATERIALX = v.material_x;
                 ca.COSTO_UNX = v.costoun_x;
                 ca.APOYOX = v.apoyo_x;
                 ca.APOYOPX = v.apoyop_x;
@@ -502,9 +500,10 @@ namespace TAT001.Controllers
         public ActionResult getPartialMat(List<DOCUMENTOP_MOD> docs)
         {
 
-            CartaV doc = new CartaV();
-
-            doc.DOCUMENTOP = docs;
+            CartaV doc = new CartaV
+            {
+                DOCUMENTOP = docs
+            };
             return PartialView("~/Views/CartaV/_PartialMatTr.cshtml", doc);
         }
 
@@ -568,7 +567,6 @@ namespace TAT001.Controllers
                 }
 
                 DOCUMENTO d = new DOCUMENTO();
-                PUESTOT pp = new PUESTOT();
 
                 d = db.DOCUMENTOes.Include("SOCIEDAD").Include("USUARIO").Where(a => a.NUM_DOC.Equals(id)).First();
 
@@ -576,7 +574,6 @@ namespace TAT001.Controllers
                 
                 //Formatos para numeros
                 d.PAI = db.PAIS.Where(a => a.LAND.Equals(d.PAIS_ID)).FirstOrDefault();
-                string miles = d.PAI.MILES; //B20180730 MGC 2018.07.30 Formatos
                 string decimales = d.PAI.DECIMAL; //B20180730 MGC 2018.07.30 Formatos
 
                 FormatosC format = new FormatosC(); //B20180730 MGC 2018.07.30 Formatos
@@ -597,7 +594,7 @@ namespace TAT001.Controllers
 
                 /////////////////////////////////////////////DATOS PARA LA TABLA 1 MATERIALES EN LA VISTA///////////////////////////////////////
                 //B20180720P MGC 2018.07.23
-                var con = db.CARTAPs.Select(x => new { x.NUM_DOC, x.POS_ID, x.VIGENCIA_DE, x.VIGENCIA_AL }).Where(a => a.NUM_DOC.Equals(id) & a.POS_ID.Equals(pos)).GroupBy(f => new { f.VIGENCIA_DE, f.VIGENCIA_AL }).ToList();
+                var con = db.CARTAPs.Select(x => new { x.NUM_DOC, x.POS_ID, x.VIGENCIA_DE, x.VIGENCIA_AL }).Where(a => a.NUM_DOC.Equals(id) && a.POS_ID.Equals(pos)).GroupBy(f => new { f.VIGENCIA_DE, f.VIGENCIA_AL }).ToList();
 
                 //B20180710 MGC 2018.07.12 Modificación 9 y 10 dependiendo del campo de factura en tsol............
                 bool fact =  db.TSOLs.Where(ts => ts.ID == d.TSOL_ID).FirstOrDefault().FACTURA;
@@ -621,7 +618,7 @@ namespace TAT001.Controllers
                     //B20180720P MGC 2018.07.23
                   
                     var con2 = db.CARTAPs
-                                          .Where(x => x.NUM_DOC.Equals(id) & x.POS_ID.Equals(pos) && x.VIGENCIA_DE == a1 && x.VIGENCIA_AL == a2)
+                                          .Where(x => x.NUM_DOC.Equals(id) && x.POS_ID.Equals(pos) && x.VIGENCIA_DE == a1 && x.VIGENCIA_AL == a2)
                                           .Join(db.MATERIALs, x => x.MATNR, y => y.ID, (x, y) => new
                                           {
                                               x.NUM_DOC,
@@ -635,8 +632,7 @@ namespace TAT001.Controllers
                                               resta = (x.MONTO - x.MONTO_APOYO),
                                               x.PRECIO_SUG,
                                               x.APOYO_EST,
-                                              x.APOYO_REAL
-                                          ,
+                                              x.APOYO_REAL,
                                               x.VOLUMEN_EST,
                                               x.VOLUMEN_REAL
                                           }) //B20180710 MGC 2018.07.10 Se agregó x.VOLUMEN_EST, x.VOLUMEN_REAL
@@ -649,54 +645,66 @@ namespace TAT001.Controllers
                         foreach (var item2 in con2)
                         {
                             //B20180710 MGC 2018.07.10 Modificaciones para editar los campos de distribución se agrego los objetos
-                            listacuerpoc lc1 = new listacuerpoc();
-                            lc1.val = item2.MATNR.TrimStart('0');
-                            lc1.clase = "ni";
+                            listacuerpoc lc1 = new listacuerpoc
+                            {
+                                val = item2.MATNR.TrimStart('0'),
+                                clase = "ni"
+                            };
                             armadoCuerpoTab.Add(lc1);
 
-                            listacuerpoc lc2 = new listacuerpoc();
-                            lc2.val = item2.MATKL;
-                            lc2.clase = "ni";
+                            listacuerpoc lc2 = new listacuerpoc
+                            {
+                                val = item2.MATKL,
+                                clase = "ni"
+                            };
                             armadoCuerpoTab.Add(lc2);
 
-                            listacuerpoc lc3 = new listacuerpoc();
-                            lc3.val = item2.MAKTX;
-                            lc3.clase = "ni";
+                            listacuerpoc lc3 = new listacuerpoc
+                            {
+                                val = item2.MAKTX,
+                                clase = "ni"
+                            };
                             armadoCuerpoTab.Add(lc3);
 
                             //Costo unitario
-                            listacuerpoc lc4 = new listacuerpoc();
-                            //lc4.val = "$" + Math.Round(item2.MONTO, 2).ToString();//B20180730 MGC 2018.07.30 Formatos
-                            lc4.val = format.toShow(Math.Round(item2.MONTO, 2), decimales);//B20180730 MGC 2018.07.30 Formatos
-                            lc4.clase = "ni";
+                            listacuerpoc lc4 = new listacuerpoc
+                            {
+                                val = format.toShow(Math.Round(item2.MONTO, 2), decimales),//B20180730 MGC 2018.07.30 Formatos
+                                clase = "ni"
+                            };
                             armadoCuerpoTab.Add(lc4);
 
                             //Porcentaje de apoyo
-                            listacuerpoc lc5 = new listacuerpoc();
-                            //lc5.val = Math.Round(item2.PORC_APOYO, 2).ToString() + "%";//B20180730 MGC 2018.07.30 Formatos
-                            lc5.val = format.toShowPorc(Math.Round(item2.PORC_APOYO, 2), decimales);//B20180730 MGC 2018.07.30 Formatos
-                            lc5.clase = "ni";
+                            listacuerpoc lc5 = new listacuerpoc
+                            {
+                                val = format.toShowPorc(Math.Round(item2.PORC_APOYO, 2), decimales),//B20180730 MGC 2018.07.30 Formatos
+                                clase = "ni"
+                            };
                             armadoCuerpoTab.Add(lc5);
 
                             //Apoyo por pieza
-                            listacuerpoc lc6 = new listacuerpoc();
-                            //lc6.val = "$" + Math.Round(item2.MONTO_APOYO, 2).ToString();//B20180730 MGC 2018.07.30 Formatos
-                            lc6.val = format.toShow(Math.Round(item2.MONTO_APOYO, 2), decimales);//B20180730 MGC 2018.07.30 Formatos
-                            lc6.clase = "ni";
+                            listacuerpoc lc6 = new listacuerpoc
+                            {
+                                val = format.toShow(Math.Round(item2.MONTO_APOYO, 2), decimales),//B20180730 MGC 2018.07.30 Formatos
+                                clase = "ni"
+                            };
                             armadoCuerpoTab.Add(lc6);
 
                             //Costo con apoyo
-                            listacuerpoc lc7 = new listacuerpoc();
-                            //lc7.val = "$" + Math.Round(item2.resta, 2).ToString();//B20180730 MGC 2018.07.30 Formatos
-                            lc7.val = format.toShow(Math.Round(item2.resta, 2), decimales);//B20180730 MGC 2018.07.30 Formatos
-                            lc7.clase = "ni";
+                            listacuerpoc lc7 = new listacuerpoc
+                            {
+                                val = format.toShow(Math.Round(item2.resta, 2), decimales),//B20180730 MGC 2018.07.30 Formatos
+                                clase = "ni"
+                            };
                             armadoCuerpoTab.Add(lc7);
 
                             //Precio Sugerido
-                            listacuerpoc lc8 = new listacuerpoc();
-                            //lc8.val = "$" + Math.Round(item2.PRECIO_SUG, 2).ToString();//B20180730 MGC 2018.07.30 Formatos
-                            lc8.val = format.toShow(Math.Round(item2.PRECIO_SUG, 2), decimales);//B20180730 MGC 2018.07.30 Formatos
-                            lc8.clase = "ni";
+                            listacuerpoc lc8 = new listacuerpoc
+                            {
+                                //lc8.val = "$" + Math.Round(item2.PRECIO_SUG, 2).ToString();//B20180730 MGC 2018.07.30 Formatos
+                                val = format.toShow(Math.Round(item2.PRECIO_SUG, 2), decimales),//B20180730 MGC 2018.07.30 Formatos
+                                clase = "ni"
+                            };
                             armadoCuerpoTab.Add(lc8);
 
                             //Modificación 9 y 10 dependiendo del campo de factura en tsol
@@ -705,12 +713,10 @@ namespace TAT001.Controllers
                             listacuerpoc lc9 = new listacuerpoc();
                             if (fact)
                             {
-                                //lc9.val = Math.Round(Convert.ToDecimal(item2.VOLUMEN_REAL), 2).ToString();//B20180730 MGC 2018.07.30 Formatos
                                 lc9.val = format.toShowNum(Math.Round(Convert.ToDecimal(item2.VOLUMEN_REAL), 2), decimales);//B20180730 MGC 2018.07.30 Formatos
                             }
                             else
                             {
-                                //lc9.val = Math.Round(Convert.ToDecimal(item2.VOLUMEN_EST), 2).ToString();//B20180730 MGC 2018.07.30 Formatos
                                 lc9.val = format.toShowNum(Math.Round(Convert.ToDecimal(item2.VOLUMEN_EST), 2), decimales);//B20180730 MGC 2018.07.30 Formatos
                             }
                             lc9.clase = "ni";
@@ -720,12 +726,10 @@ namespace TAT001.Controllers
                             listacuerpoc lc10 = new listacuerpoc();
                             if (fact)
                             {
-                                //lc10.val = "$" + Math.Round(Convert.ToDecimal(item2.APOYO_REAL), 2).ToString();//B20180730 MGC 2018.07.30 Formatos
                                 lc10.val = format.toShow(Math.Round(Convert.ToDecimal(item2.APOYO_REAL), 2), decimales);//B20180730 MGC 2018.07.30 Formatos
                             }
                             else
                             {
-                                //lc10.val = "$" + Math.Round(Convert.ToDecimal(item2.APOYO_EST), 2).ToString();//B20180730 MGC 2018.07.30 Formatos
                                 lc10.val = format.toShow(Math.Round(Convert.ToDecimal(item2.APOYO_EST), 2), decimales);//B20180730 MGC 2018.07.30 Formatos
                             }
                             lc10.clase = "ni";
@@ -737,7 +741,7 @@ namespace TAT001.Controllers
                     else
                     {
                         var con3 = db.CARTAPs
-                                            .Where(x => x.NUM_DOC.Equals(id) & x.POS_ID.Equals(pos) & x.VIGENCIA_DE == a1 && x.VIGENCIA_AL == a2)
+                                            .Where(x => x.NUM_DOC.Equals(id) && x.POS_ID.Equals(pos) && x.VIGENCIA_DE == a1 && x.VIGENCIA_AL == a2)
                                             .Join(db.MATERIALGPs, x => x.MATKL, y => y.ID, (x, y) => new
                                             {
                                                 x.NUM_DOC,
@@ -746,14 +750,12 @@ namespace TAT001.Controllers
                                                 y.ID,
                                                 x.MONTO,
                                                 x.PORC_APOYO,
-                                                //y.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(d.CLIENTE.SPRAS)).FirstOrDefault().TXT50,
                                                 TXT50 = y.DESCRIPCION,//RSG 03.10.2018
                                                 x.MONTO_APOYO,
                                                 resta = (x.MONTO - x.MONTO_APOYO),
                                                 x.PRECIO_SUG,
                                                 x.APOYO_EST,
-                                                x.APOYO_REAL
-                                            ,
+                                                x.APOYO_REAL,
                                                 x.VOLUMEN_EST,
                                                 x.VOLUMEN_REAL
                                             }) //B20180710 MGC 2018.07.10 Se agregó x.VOLUMEN_EST, x.VOLUMEN_REAL})
@@ -764,25 +766,33 @@ namespace TAT001.Controllers
                         foreach (var item2 in con3)
                         {
                             //B20180710 MGC 2018.07.10 Modificaciones para editar los campos de distribución se agrego los objetos
-                            listacuerpoc lc1 = new listacuerpoc();
-                            lc1.val = "";
-                            lc1.clase = "ni";
+                            listacuerpoc lc1 = new listacuerpoc
+                            {
+                                val = "",
+                                clase = "ni"
+                            };
                             armadoCuerpoTab.Add(lc1);
 
-                            listacuerpoc lc2 = new listacuerpoc();
-                            lc2.val = item2.MATKL;
-                            lc2.clase = "ni";
+                            listacuerpoc lc2 = new listacuerpoc
+                            {
+                                val = item2.MATKL,
+                                clase = "ni"
+                            };
                             armadoCuerpoTab.Add(lc2);
 
-                            listacuerpoc lc3 = new listacuerpoc();
-                            lc3.val = item2.TXT50;
-                            lc3.clase = "ni";
+                            listacuerpoc lc3 = new listacuerpoc
+                            {
+                                val = item2.TXT50,
+                                clase = "ni"
+                            };
                             armadoCuerpoTab.Add(lc3);
 
                             //Costo unitario
-                            listacuerpoc lc4 = new listacuerpoc();
-                            lc4.val = format.toShow(0, decimales);//B20180730 MGC 2018.07.30 Formatos
-                            lc4.clase = "ni";
+                            listacuerpoc lc4 = new listacuerpoc
+                            {
+                                val = format.toShow(0, decimales),//B20180730 MGC 2018.07.30 Formatos
+                                clase = "ni"
+                            };
                             armadoCuerpoTab.Add(lc4);
 
                             //Porcentaje de apoyo
@@ -794,35 +804,43 @@ namespace TAT001.Controllers
                             }
                             else if (d.TIPO_TECNICO == "P")
                             {
-                                lc5.val = format.toShowPorc(Math.Round(item2.PORC_APOYO, 2), decimales); ;//B20180730 MGC 2018.07.30 Formatos
+                                lc5.val = format.toShowPorc(Math.Round(item2.PORC_APOYO, 2), decimales);//B20180730 MGC 2018.07.30 Formatos
                             }
 
                             lc5.clase = "ni";
                             armadoCuerpoTab.Add(lc5);
 
                             //Apoyo por pieza
-                            listacuerpoc lc6 = new listacuerpoc();
-                             lc6.val = format.toShow(0, decimales);//B20180730 MGC 2018.07.30 Formatos
-                            lc6.clase = "ni";
+                            listacuerpoc lc6 = new listacuerpoc
+                            {
+                                val = format.toShow(0, decimales),//B20180730 MGC 2018.07.30 Formatos
+                                clase = "ni"
+                            };
                             armadoCuerpoTab.Add(lc6);
 
                             //Costo con apoyo
-                            listacuerpoc lc7 = new listacuerpoc();
-                            lc7.val = format.toShow(0, decimales); //B20180730 MGC 2018.07.30 Formatos
-                            lc7.clase = "ni";
+                            listacuerpoc lc7 = new listacuerpoc
+                            {
+                                val = format.toShow(0, decimales), //B20180730 MGC 2018.07.30 Formatos
+                                clase = "ni"
+                            };
                             armadoCuerpoTab.Add(lc7);
 
                             //Precio Sugerido
-                            listacuerpoc lc8 = new listacuerpoc();
-                            lc8.val = format.toShow(0, decimales); //B20180730 MGC 2018.07.30 Formatos
-                            lc8.clase = "ni";
+                            listacuerpoc lc8 = new listacuerpoc
+                            {
+                                val = format.toShow(0, decimales), //B20180730 MGC 2018.07.30 Formatos
+                                clase = "ni"
+                            };
                             armadoCuerpoTab.Add(lc8);
                             //Modificación 9 y 10 dependiendo del campo de factura en tsol
                             //fact = true es real
 
                             //Volumen
-                            listacuerpoc lc9 = new listacuerpoc();
-                            lc9.val = "";//B20180730 MGC 2018.07.30 Formatos
+                            listacuerpoc lc9 = new listacuerpoc
+                            {
+                                val = ""//B20180730 MGC 2018.07.30 Formatos
+                            };
                             lc9.val = format.toShowNum(0, decimales);//B20180730 MGC 2018.07.30 Formatos
                            
                             lc9.clase = "ni";
@@ -856,15 +874,17 @@ namespace TAT001.Controllers
                     numfilasTabla.Add(contadorTabla);
                 }
 
-                var cabeza = new List<string>();
-                cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "materialC"));
-                cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "categoriaC"));
-                cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "descripcionC"));
-                cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "costouC"));
-                cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "apoyopoC"));
-                cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "apoyopiC"));
-                cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "costoaC"));
-                cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "preciosC"));
+                var cabeza = new List<string>
+                {
+                    FnCommonCarta.ObtenerTexto(db, spras_id, "materialC"),
+                    FnCommonCarta.ObtenerTexto(db, spras_id, "categoriaC"),
+                    FnCommonCarta.ObtenerTexto(db, spras_id, "descripcionC"),
+                    FnCommonCarta.ObtenerTexto(db, spras_id, "costouC"),
+                    FnCommonCarta.ObtenerTexto(db, spras_id, "apoyopoC"),
+                    FnCommonCarta.ObtenerTexto(db, spras_id, "apoyopiC"),
+                    FnCommonCarta.ObtenerTexto(db, spras_id, "costoaC"),
+                    FnCommonCarta.ObtenerTexto(db, spras_id, "preciosC")
+                };
                 //B20180710 MGC 2018.07.12 Apoyo es real o es estimado
                 //fact = true es real
                 //Volumen
@@ -889,10 +909,12 @@ namespace TAT001.Controllers
                 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                 /////////////////////////////////////////////DATOS PARA LA TABLA 2 RECURRENCIAS EN LA VISTA///////////////////////////////////////
-                var cabeza2 = new List<string>();
-                cabeza2.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "posC2"));
-                cabeza2.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "tipoC2"));
-                cabeza2.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "fechaC2"));
+                var cabeza2 = new List<string>
+                {
+                    FnCommonCarta.ObtenerTexto(db, spras_id, "posC2"),
+                    FnCommonCarta.ObtenerTexto(db, spras_id, "tipoC2"),
+                    FnCommonCarta.ObtenerTexto(db, spras_id, "fechaC2")
+                };
                 if (varligada)
                 {
                     cabeza2.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "objetivo"));
@@ -956,6 +978,7 @@ namespace TAT001.Controllers
                 //B20180720P MGC 2018.07.23
                 cv.secondTab_x = Convert.ToBoolean(cs.SECOND_TABX);
                 cv.costoun_x = Convert.ToBoolean(cs.COSTO_UNX);
+                cv.material_x = Convert.ToBoolean(cs.MATERIALX == null || cs.MATERIALX.Value);
                 cv.apoyo_x = Convert.ToBoolean(cs.APOYOX);
                 cv.apoyop_x = Convert.ToBoolean(cs.APOYOPX);
                 cv.costoap_x = Convert.ToBoolean(cs.COSTOAPX);
@@ -987,10 +1010,7 @@ namespace TAT001.Controllers
                 cv.taxid_x = Convert.ToBoolean(cs.TAXIDX);
                 cv.concepto = cs.CONCEPTO;
                 cv.concepto_x = Convert.ToBoolean(cs.CONCEPTOX);
-                //cv.cliente = d.PAYER_NOMBRE;
-                //cv.cliente = cs.PAYER;
                 cv.cliente = cs.CLIENTE;
-                //cv.cliente_x = Convert.ToBoolean(cs.PAYERX);
                 cv.cliente_x = Convert.ToBoolean(cs.CLIENTEX);
                 cv.puesto = cs.PUESTOC;
                 cv.puesto_x = Convert.ToBoolean(cs.PUESTOCX);
@@ -1002,11 +1022,8 @@ namespace TAT001.Controllers
                 cv.lugar_x = Convert.ToBoolean(cs.LUGARX);
                 cv.lugarFech = cs.LUGARFECH;
                 cv.lugarFech_x = Convert.ToBoolean(cs.LUGARFECHX);
-                //cv.payerId = d.CLIENTE.PAYER;
                 cv.payerId = cs.PAYER;
                 cv.payerId_x = Convert.ToBoolean(cs.PAYERX);
-                //cv.payerNom = d.CLIENTE.NAME1;
-                //cv.estimado = d.PAYER_NOMBRE;
                 cv.estimado = cs.ESTIMADO;
                 cv.estimado_x = Convert.ToBoolean(cs.ESTIMADOX);
                 cv.mecanica = cs.MECANICA;
@@ -1046,15 +1063,14 @@ namespace TAT001.Controllers
 
                
                 //B20180801 MGC Formato
-                //v.monto = monto_enviar;
                 decimal montod = 0;
                 try
                 {
                     montod = Convert.ToDecimal(cv.monto);
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-
+                    Log.ErrorLogApp(e, "CartV", "DetailsPos");
                 }
 
                 cv.monto = format.toShow(montod, decimales);
@@ -1105,21 +1121,12 @@ namespace TAT001.Controllers
 
                 //Formatos para numeros
                 d.PAI = db.PAIS.Where(a => a.LAND.Equals(d.PAIS_ID)).FirstOrDefault();
-                string miles = d.PAI.MILES; //B20180730 MGC 2018.07.30 Formatos
                 string decimales = d.PAI.DECIMAL; //B20180730 MGC 2018.07.30 Formatos
 
                 FormatosC format = new FormatosC(); //B20180730 MGC 2018.07.30 Formatos
 
                 //B20180726 MGC 2018.07.26
-                bool fact = false;
-                try
-                {
-                    fact = db.TSOLs.Where(ts => ts.ID == d.TSOL_ID).FirstOrDefault().FACTURA;
-                }
-                catch (Exception)
-                {
-
-                }
+                bool fact =  db.TSOLs.Where(ts => ts.ID == d.TSOL_ID).FirstOrDefault().FACTURA;
                 bool varligada = Convert.ToBoolean(d.LIGADA);
                 List<string> encabezadoFech = new List<string>();
                 List<string> armadoCuerpoTab = new List<string>(); //B20180710 MGC 2018.07.10 Modificaciones para editar los campos de distribución se agrego los objetos
@@ -1131,10 +1138,9 @@ namespace TAT001.Controllers
                 CartaV v = new CartaV();
 
                 //B20180720P MGC 2018.07.23
-                CARTA cs = new CARTA();
-                cs = db.CARTAs.Where(a => a.NUM_DOC.Equals(id) & a.POS.Equals(pos)).First();
+                CARTA cs = db.CARTAs.Where(a => a.NUM_DOC.Equals(id) && a.POS.Equals(pos)).First();
 
-                ViewBag.legal = db.CARTAs.Where(a => a.NUM_DOC.Equals(id) & a.POS.Equals(pos)).First().LEGAL;
+                ViewBag.legal = db.CARTAs.Where(a => a.NUM_DOC.Equals(id) && a.POS.Equals(pos)).First().LEGAL;
 
                 v.num_doc = cs.NUM_DOC;
                 v.pos = pos;
@@ -1144,10 +1150,7 @@ namespace TAT001.Controllers
                 v.taxid_x = Convert.ToBoolean(cs.TAXIDX);
                 v.concepto = cs.CONCEPTO;
                 v.concepto_x = Convert.ToBoolean(cs.CONCEPTOX);
-                //v.cliente = d.PAYER_NOMBRE;
-                //v.cliente = cs.PAYER;
-                v.cliente = cs.CLIENTE;
-                //v.cliente_x = Convert.ToBoolean(cs.PAYERX);
+                 v.cliente = cs.CLIENTE;
                 v.cliente_x = Convert.ToBoolean(cs.CLIENTEX);
                 v.puesto = cs.PUESTOC;
                 v.puesto_x = Convert.ToBoolean(cs.PUESTOCX);
@@ -1159,12 +1162,9 @@ namespace TAT001.Controllers
                 v.lugar_x = Convert.ToBoolean(cs.LUGARX);
                 v.lugarFech = cs.LUGARFECH;
                 v.lugarFech_x = Convert.ToBoolean(cs.LUGARFECHX);
-                //v.payerId = d.CLIENTE.PAYER;
-                //v.payerNom = d.CLIENTE.NAME1;
                 v.payerNom = cs.NOMBREC;
                 v.payerNom_x = Convert.ToBoolean(cs.NOMBRECX);
-                //v.estimado = d.PAYER_NOMBRE;
-                v.estimado = cs.ESTIMADO;
+                 v.estimado = cs.ESTIMADO;
                 v.estimado_x = Convert.ToBoolean(cs.ESTIMADOX);
                 v.mecanica = cs.MECANICA;
                 v.mecanica_x = Convert.ToBoolean(cs.MECANICAX);
@@ -1200,6 +1200,7 @@ namespace TAT001.Controllers
                 v.compromisoK_x = Convert.ToBoolean(cs.COMPROMISOKX);
 
                 //B20180720P MGC 2018.07.23
+                v.material_x = Convert.ToBoolean(cs.MATERIALX);
                 v.secondTab_x = Convert.ToBoolean(cs.SECOND_TABX);
                 v.costoun_x = Convert.ToBoolean(cs.COSTO_UNX);
                 v.apoyo_x = Convert.ToBoolean(cs.APOYOX);
@@ -1207,8 +1208,6 @@ namespace TAT001.Controllers
                 v.costoap_x = Convert.ToBoolean(cs.COSTOAPX);
                 v.precio_x = Convert.ToBoolean(cs.PRECIOX);
                 //B20180726 MGC 2018.07.26
-                //v.apoyoEst_x = Convert.ToBoolean(cs.APOYO_ESTX); //Volumen
-                //v.apoyoRea_x = Convert.ToBoolean(cs.APOYO_REAX); //Apoyo
                 if (fact)
                 {
                     v.volumen_x = Convert.ToBoolean(cs.VOLUMEN_REAX); //Volumen
@@ -1223,7 +1222,7 @@ namespace TAT001.Controllers
 
                 /////////////////////////////////////////////DATOS PARA LA TABLA 1 MATERIALES EN LA VISTA///////////////////////////////////////
                 //B20180720P MGC 2018.07.23
-                var con = db.CARTAPs.Select(x => new { x.NUM_DOC, x.POS_ID, x.VIGENCIA_DE, x.VIGENCIA_AL }).Where(a => a.NUM_DOC.Equals(id) & a.POS_ID.Equals(pos)).GroupBy(f => new { f.VIGENCIA_DE, f.VIGENCIA_AL }).ToList();
+                var con = db.CARTAPs.Select(x => new { x.NUM_DOC, x.POS_ID, x.VIGENCIA_DE, x.VIGENCIA_AL }).Where(a => a.NUM_DOC.Equals(id) && a.POS_ID.Equals(pos)).GroupBy(f => new { f.VIGENCIA_DE, f.VIGENCIA_AL }).ToList();
 
                
 
@@ -1265,7 +1264,10 @@ namespace TAT001.Controllers
                         foreach (var item2 in con2)
                         {
 
-                            armadoCuerpoTab.Add(item2.MATNR.TrimStart('0'));
+                            if (v.material_x)
+                            {
+                                armadoCuerpoTab.Add(item2.MATNR.TrimStart('0'));
+                            }
                             armadoCuerpoTab.Add(item2.MATKL);
                             armadoCuerpoTab.Add(item2.MAKTX);
 
@@ -1325,7 +1327,7 @@ namespace TAT001.Controllers
                         //B20180720P MGC 2018.07.23
 
                         var con3 = db.CARTAPs
-                                            .Where(x => x.NUM_DOC.Equals(id) & x.POS_ID.Equals(pos) & x.VIGENCIA_DE == a1 && x.VIGENCIA_AL == a2)
+                                            .Where(x => x.NUM_DOC.Equals(id) && x.POS_ID.Equals(pos) && x.VIGENCIA_DE == a1 && x.VIGENCIA_AL == a2)
                                             .Join(db.MATERIALGPs, x => x.MATKL, y => y.ID, (x, y) => new
                                             {
                                                 x.NUM_DOC,
@@ -1334,14 +1336,12 @@ namespace TAT001.Controllers
                                                 y.ID,
                                                 x.MONTO,
                                                 x.PORC_APOYO,
-                                                //y.MATERIALGPTs.Where(a => a.SPRAS_ID.Equals(d.CLIENTE.SPRAS)).FirstOrDefault().TXT50,//RSG 03.10.2018
                                                 TXT50 = y.DESCRIPCION,//RSG 03.10.2018
                                                 x.MONTO_APOYO,
                                                 resta = (x.MONTO - x.MONTO_APOYO),
                                                 x.PRECIO_SUG,
                                                 x.APOYO_EST,
-                                                x.APOYO_REAL
-                                            ,
+                                                x.APOYO_REAL,
                                                 x.VOLUMEN_EST,
                                                 x.VOLUMEN_REAL
                                             }) //B20180710 MGC 2018.07.10 Se agregó x.VOLUMEN_EST, x.VOLUMEN_REAL})
@@ -1350,7 +1350,10 @@ namespace TAT001.Controllers
                         foreach (var item2 in con3)
                         {
 
-                            armadoCuerpoTab.Add("");
+                            if (v.material_x)
+                            {
+                                armadoCuerpoTab.Add("");
+                            }
                             armadoCuerpoTab.Add(item2.MATKL);
                             armadoCuerpoTab.Add(item2.TXT50);
 
@@ -1411,16 +1414,17 @@ namespace TAT001.Controllers
                 }
 
                 var cabeza = new List<string>();
-                cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "materialC"));
+
+                if (v.material_x) { cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "materialC")); }
                 cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "categoriaC"));
                 cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "descripcionC"));
+                
                 if (v.costoun_x ) { cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "costouC")); }
                 if (v.apoyo_x ) { cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "apoyopoC")); }
                 if (v.apoyop_x ) { cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "apoyopiC")); }
                 if (v.costoap_x ) { cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "costoaC")); }
                 if (v.precio_x ) { cabeza.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "preciosC")); }
                 //B20180710 MGC 2018.07.12 Apoyo es real o es estimado
-                //fact = true es real
                 //Volumen
                 //B20180726 MGC 2018.07.26
                 if (v.volumen_x )
@@ -1451,10 +1455,12 @@ namespace TAT001.Controllers
                 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                 /////////////////////////////////////////////DATOS PARA LA TABLA 2 RECURRENCIAS EN LA VISTA///////////////////////////////////////
-                var cabeza2 = new List<string>();
-                cabeza2.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "posC2"));
-                cabeza2.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "tipoC2"));
-                cabeza2.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "fechaC2"));
+                var cabeza2 = new List<string>
+                {
+                    FnCommonCarta.ObtenerTexto(db, spras_id, "posC2"),
+                    FnCommonCarta.ObtenerTexto(db, spras_id, "tipoC2"),
+                    FnCommonCarta.ObtenerTexto(db, spras_id, "fechaC2")
+                };
                 if (varligada)
                 {
                     cabeza2.Add(FnCommonCarta.ObtenerTexto(db, spras_id, "objetivo"));
@@ -1532,19 +1538,18 @@ namespace TAT001.Controllers
                 v.listaCuerpo = armadoCuerpoTab;
                 //PARA LA TABLA 2 RECURRENCIAS
                 v.numColEncabezado2 = cabeza2;
-                v.numfilasTabla2 = con4.Count();
+                v.numfilasTabla2 = con4.Count;
                 v.listaCuerpoRec = armadoCuerpoTab2;
 
                 //B20180801 MGC Formato
-                //v.monto = monto_enviar;
                 decimal montod = 0;
                 try
                 {
                     montod = Convert.ToDecimal(v.monto);
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-
+                    Log.ErrorLogApp(e, "CartaV", "DetailsPos");
                 }
 
                 v.monto = format.toShow(montod, decimales);

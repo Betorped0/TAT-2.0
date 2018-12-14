@@ -539,13 +539,13 @@ namespace TAT001.Controllers.Catalogos
                 worksheet.Cell("B1").Value = new[]
             {
                   new {
-                      BANNER = "RANGO"
+                      BANNER = "DESCRIPCIÓN"
                       },
                     };
                 worksheet.Cell("C1").Value = new[]
-            {
+{
                   new {
-                      BANNER = "DESCRIPCION"
+                      BANNER = "INTERVALO"
                       },
                     };
                 for (int i = 2; i <= (lst.Count + 1); i++)
@@ -556,32 +556,33 @@ namespace TAT001.Controllers.Catalogos
                       BANNER       = lst[i-2].ID
                       },
                     };
-                    worksheet.Cell("B" + i).Value = new[]
-                {
-                  new {
-                      BANNER       = lst[i-2].RANGO.ID
-                      },
-                    };
                     var tslt = "";
                     try
                     {
                         string u = User.Identity.Name;
                         USUARIO user = null;
                         user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-                        tslt = lst[i - 2].TSOLTs.Where(x => x.SPRAS_ID == user.SPRAS_ID).FirstOrDefault().TXT020;
+                        tslt = lst[i - 2].TSOLTs.Where(x => x.SPRAS_ID == user.SPRAS_ID).FirstOrDefault().TXT50;
                     }
                     catch (Exception e)
                     {
                         tslt = "";
                     }
-                    worksheet.Cell("C" + i).Value = new[]
+                    worksheet.Cell("B" + i).Value = new[]
                     {
                         new {
                             BANNER       = tslt
                         },
                     };
+                    worksheet.Cell("C" + i).Value = new[]
+{
+                  new {
+                      BANNER       = lst[i-2].RANGO.ID
+                      },
+                    };
                 }
                 var rt = ruta + @"\DocTS" + DateTime.Now.ToShortDateString() + ".xlsx";
+                worksheet.Columns().AdjustToContents();
                 workbook.SaveAs(rt);
             }
             catch (Exception e)

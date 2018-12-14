@@ -312,6 +312,12 @@
     var root = "@Url.Content("~")";
     var auto = $.noConflict();
     ln = "@ViewBag.spras_id";
+
+   // Valida si ocurrio un error al intentar descargar archivo.
+    var Mensaje = '@ViewBag.Mensaje';
+    if (Mensaje) {
+        M.toast({ html: Mensaje });
+        }
 </script>
 
 <style>

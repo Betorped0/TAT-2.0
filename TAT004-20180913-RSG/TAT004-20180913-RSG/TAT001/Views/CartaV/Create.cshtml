@@ -253,8 +253,12 @@
                                     @if (a == 0)
                                     {
                                         <tr style="background-color:#CCCCCC">
-                                            <th style="text-align:center">
-                                                <b>@Model.numColEncabezado[0]</b>
+                                            <th style="text-align:center"><br />
+                                                <b>@Model.numColEncabezado[0]</b><br />
+                                                <label>
+                                                    <input type="checkbox" name="material_x" value="true" id="material_x" @Html.Raw((Model.material_x) ? "checked=\"checked\"" : "") />
+                                                    <span style="height:10px"></span>
+                                                </label>
                                             </th>
                                             <th style="text-align:center">
                                                 <b>@Model.numColEncabezado[1]</b>
@@ -263,52 +267,52 @@
                                                 <b>@Model.numColEncabezado[2]</b>
                                             </th>
                                             <th style="text-align:center">
-                                                <b>@Model.numColEncabezado[3]</b>
+                                                <b>@Model.numColEncabezado[3]</b><br />
                                                 <label>
                                                     <input type="checkbox" name="costoun_x" value="true" id="costoun_x" @Html.Raw((Model.costoun_x) ? "checked=\"checked\"" : "") />
-                                                    <span style="height:1"></span>
+                                                    <span style="height:10px"></span>
                                                 </label>
                                             </th>
                                             <th style="text-align:center">
-                                                <b>@Model.numColEncabezado[4]</b>
+                                                <b>@Model.numColEncabezado[4]</b><br />
                                                 <label>
                                                     <input type="checkbox" name="apoyo_x" value="true" id="apoyo_x" @Html.Raw((Model.apoyo_x) ? "checked=\"checked\"" : "") />
-                                                    <span style="height:1"></span>
+                                                    <span style="height:10px"></span>
                                                 </label>
                                             </th>
                                             <th style="text-align:center">
-                                                <b>@Model.numColEncabezado[5]</b>
+                                                <b>@Model.numColEncabezado[5]</b><br />
                                                 <label>
                                                     <input type="checkbox" name="apoyop_x" value="true" id="apoyop_x" @Html.Raw((Model.apoyop_x) ? "checked=\"checked\"" : "") />
-                                                    <span style="height:1"></span>
+                                                    <span style="height:10px"></span>
                                                 </label>
                                             </th>
                                             <th style="text-align:center">
-                                                <b>@Model.numColEncabezado[6]</b>
+                                                <b>@Model.numColEncabezado[6]</b><br />
                                                 <label>
                                                     <input type="checkbox" name="costoap_x" value="true" id="costoap_x" @Html.Raw((Model.costoap_x) ? "checked=\"checked\"" : "") />
-                                                    <span style="height:1"></span>
+                                                    <span style="height:10px"></span>
                                                 </label>
                                             </th>
                                             <th style="text-align:center">
-                                                <b>@Model.numColEncabezado[7]</b>
+                                                <b>@Model.numColEncabezado[7]</b><br />
                                                 <label>
                                                     <input type="checkbox" name="precio_x" value="true" id="precio_x" @Html.Raw((Model.precio_x) ? "checked=\"checked\"" : "") />
-                                                    <span style="height:1"></span>
+                                                    <span style="height:10px"></span>
                                                 </label>
                                             </th>
                                             <th style="text-align:center">
-                                                <b>@Model.numColEncabezado[8]</b>
+                                                <b>@Model.numColEncabezado[8]</b><br />
                                                 <label>
                                                     <input type="checkbox" name="volumen_x" value="true" id="apoyoEst_x" @Html.Raw((Model.volumen_x) ? "checked=\"checked\"" : "") /> @*//B20180726 MGC 2018.07.26*@
-                                                    <span style="height:1"></span>
+                                                    <span style="height:10px"></span>
                                                 </label>
                                             </th>
                                             <th style="text-align:center">
-                                                <b>@Model.numColEncabezado[9]</b>
+                                                <b>@Model.numColEncabezado[9]</b><br />
                                                 <label>
                                                     <input type="checkbox" name="apoyototal_x" value="true" id="apoyoRea_x" @Html.Raw((Model.apoyototal_x) ? "checked=\"checked\"" : "") /> @*//B20180726 MGC 2018.07.26*@
-                                                    <span style="height:1"></span>
+                                                    <span style="height:10px"></span>
                                                 </label>
                                             </th>
                                         </tr>

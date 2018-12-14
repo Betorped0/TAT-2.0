@@ -968,7 +968,7 @@ namespace TAT001.Controllers
             if (id_cl != null && esBorrador != null && esBorrador.Value)
             {
                 DOCUMENTBORR doc = db.DOCUMENTBORRs.Where(x => x.USUARIOC_ID == User.Identity.Name && (x.PAYER_ID == kunnr || x.PAYER_ID == null)).FirstOrDefault();
-                if (doc != null)
+                if (doc != null && !String.IsNullOrEmpty(doc.PAYER_NOMBRE) && !String.IsNullOrEmpty(doc.PAYER_EMAIL))
                 {
                     id_cl.PAYER_EMAIL = doc.PAYER_EMAIL;
                     id_cl.PAYER_NOMBRE = doc.PAYER_NOMBRE;

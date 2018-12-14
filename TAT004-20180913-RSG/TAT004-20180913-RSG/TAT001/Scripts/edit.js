@@ -1776,6 +1776,10 @@ function _ff() {
 
                     document.getElementById("fechai_vig2").setAttribute("disabled", "disabled");
                     document.getElementById("fechaf_vig2").setAttribute("disabled", "disabled");
+
+                    var elemdpsn = document.querySelectorAll('select');
+                    var instancessn = M.FormSelect.init(elemdpsn, []);
+
                 } else {
                     document.getElementById("btn-date").checked = true;
                     $("#btn-date").trigger("click");

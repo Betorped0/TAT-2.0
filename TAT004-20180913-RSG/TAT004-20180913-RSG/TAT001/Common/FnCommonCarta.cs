@@ -92,7 +92,7 @@ namespace TAT001.Common
                                             MONTO = x.MONTO,
                                             PORC_APOYO = x.PORC_APOYO,
                                             TXT50 = y.DESCRIPCION,//RSG 03.10.2018
-                                                MONTO_APOYO = x.MONTO_APOYO,
+                                            MONTO_APOYO = x.MONTO_APOYO,
                                             RESTA = (x.MONTO - x.MONTO_APOYO),
                                             PRECIO_SUG = x.PRECIO_SUG,
                                             APOYO_EST = x.APOYO_EST,
@@ -146,7 +146,7 @@ namespace TAT001.Common
             }
             else
             {
-                cabeza.Add(ObtenerTexto(db, spras_id, "materialC"));
+                if ((cd != null && cd.material_x) || (cv != null && cv.material_x)) { cabeza.Add(ObtenerTexto(db, spras_id, "materialC")); }
                 cabeza.Add(ObtenerTexto(db, spras_id, "categoriaC"));
                 cabeza.Add(ObtenerTexto(db, spras_id, "descripcionC"));
                 if ((cd != null && cd.costoun_x) || (cv != null && cv.costoun_x)) { cabeza.Add(ObtenerTexto(db, spras_id, "costouC")); }
@@ -203,7 +203,10 @@ namespace TAT001.Common
 
                         };
                     }
-                    armadoCuerpoTabStr.Add(item2.MATNR.TrimStart('0'));
+                    if ((cd != null && cd.material_x) || (cv != null && cv.material_x))
+                    {
+                        armadoCuerpoTabStr.Add(item2.MATNR.TrimStart('0'));
+                    }
                     armadoCuerpoTabStr.Add(item2.DESCRIPCION);
                     armadoCuerpoTabStr.Add(item2.MAKTX);
 
@@ -289,53 +292,68 @@ namespace TAT001.Common
             {
 
                 //B20180710 MGC 2018.07.10 Modificaciones para editar los campos de distribución se agrego los objetos
-                listacuerpoc lc1 = new listacuerpoc();
-                lc1.val = item2.MATNR.TrimStart('0');
-                lc1.clase = "ni";
+                listacuerpoc lc1 = new listacuerpoc
+                {
+                    val = item2.MATNR.TrimStart('0'),
+                    clase = "ni"
+                };
                 armadoCuerpoTab.Add(lc1);
 
-                listacuerpoc lc2 = new listacuerpoc();
-                lc2.val = item2.DESCRIPCION;
-                lc2.clase = "ni";
+                listacuerpoc lc2 = new listacuerpoc
+                {
+                    val = item2.DESCRIPCION,
+                    clase = "ni"
+                };
                 armadoCuerpoTab.Add(lc2);
 
-                listacuerpoc lc3 = new listacuerpoc();
-                lc3.val = item2.MAKTX;
-                lc3.clase = "ni";
+                listacuerpoc lc3 = new listacuerpoc
+                {
+                    val = item2.MAKTX,
+                    clase = "ni"
+                };
                 armadoCuerpoTab.Add(lc3);
 
                 //Costo unitario
-                listacuerpoc lc4 = new listacuerpoc();
-                lc4.val = format.toShow(Math.Round(item2.MONTO, 2), decimales); //B20180730 MGC 2018.07.30 Formatos
-                lc4.clase = "input_oper numberd input_dc mon" + porclass;
+                listacuerpoc lc4 = new listacuerpoc
+                {
+                    val = format.toShow(Math.Round(item2.MONTO, 2), decimales), //B20180730 MGC 2018.07.30 Formatos
+                    clase = "input_oper numberd input_dc mon" + porclass
+                };
                 armadoCuerpoTab.Add(lc4);
 
                 //Porcentaje de apoyo
-                listacuerpoc lc5 = new listacuerpoc();
-                lc5.val = format.toShowPorc(Math.Round(item2.PORC_APOYO, 2), decimales);//B20180730 MGC 2018.07.30 Formatos
-                lc5.clase = "input_oper numberd porc input_dc" + porclass;
+                listacuerpoc lc5 = new listacuerpoc
+                {
+                    val = format.toShowPorc(Math.Round(item2.PORC_APOYO, 2), decimales),//B20180730 MGC 2018.07.30 Formatos
+                    clase = "input_oper numberd porc input_dc" + porclass
+                };
                 armadoCuerpoTab.Add(lc5);
 
                 //Apoyo por pieza
-                listacuerpoc lc6 = new listacuerpoc();
-                lc6.val = format.toShow(Math.Round(item2.MONTO_APOYO, 2), decimales);//B20180730 MGC 2018.07.30 Formatos
-                lc6.clase = "input_oper numberd costoa input_dc mon" + porclass;
+                listacuerpoc lc6 = new listacuerpoc
+                {
+                    val = format.toShow(Math.Round(item2.MONTO_APOYO, 2), decimales),//B20180730 MGC 2018.07.30 Formatos
+                    clase = "input_oper numberd costoa input_dc mon" + porclass
+                };
                 armadoCuerpoTab.Add(lc6);
 
                 //Costo con apoyo
-                listacuerpoc lc7 = new listacuerpoc();
-                lc7.val = format.toShow(Math.Round(item2.RESTA, 2), decimales);//B20180730 MGC 2018.07.30 Formatos
-                lc7.clase = "input_oper numberd costoa input_dc mon" + porclass;//Importante costoa para validación en vista
+                listacuerpoc lc7 = new listacuerpoc
+                {
+                    val = format.toShow(Math.Round(item2.RESTA, 2), decimales),//B20180730 MGC 2018.07.30 Formatos
+                    clase = "input_oper numberd costoa input_dc mon" + porclass//Importante costoa para validación en vista
+                };
                 armadoCuerpoTab.Add(lc7);
 
                 //Precio Sugerido
-                listacuerpoc lc8 = new listacuerpoc();
-                lc8.val = format.toShow(Math.Round(item2.PRECIO_SUG, 2), decimales);//B20180730 MGC 2018.07.30 Formatos
-                lc8.clase = "input_oper numberd input_dc mon" + porclass;
+                listacuerpoc lc8 = new listacuerpoc
+                {
+                    val = format.toShow(Math.Round(item2.PRECIO_SUG, 2), decimales),//B20180730 MGC 2018.07.30 Formatos
+                    clase = "input_oper numberd input_dc mon" + porclass
+                };
                 armadoCuerpoTab.Add(lc8);
 
                 //Modificación 9 y 10 dependiendo del campo de factura en tsol
-                //fact = true es real
                 //Volumen
                 listacuerpoc lc9 = new listacuerpoc();
                 if (fact)
@@ -400,7 +418,10 @@ namespace TAT001.Common
                         APOYO_EST = item2.APOYO_EST
                     };
                 }
-                    armadoCuerpoTabStr.Add("");
+                    if ((cd != null && cd.material_x) || (cv != null && cv.material_x))
+                    {
+                        armadoCuerpoTabStr.Add("");
+                    }
                     armadoCuerpoTabStr.Add(item2.MATKL);
                     MATERIALGP mt = db.MATERIALGPs.Where(x => x.ID == item2.MATKL).FirstOrDefault();//RSG 03.10.2018
                     if (mt != null)
@@ -591,18 +612,20 @@ namespace TAT001.Common
                 DOCUMENTOP_MOD docmod = v.DOCUMENTOP.FirstOrDefault(x => x.MATNR == MATNR.TrimStart('0'));
                 if (docmod != null )
                 {
-                    CARTAP carp = new CARTAP();
-                    //Armado para registro en bd
-                    carp.NUM_DOC = v.num_doc;
-                    carp.POS_ID = pos;
-                    carp.POS = indexp;
-                    carp.MATNR = MATNR;
-                    carp.MATKL = "";
-                    carp.CANTIDAD = 1;
-                    carp.MONTO = docmod.MONTO;
-                    carp.PORC_APOYO = docmod.PORC_APOYO;
-                    carp.MONTO_APOYO = docmod.MONTO_APOYO;
-                    carp.PRECIO_SUG = docmod.PRECIO_SUG;
+                    CARTAP carp = new CARTAP
+                    {
+                        //Armado para registro en bd
+                        NUM_DOC = v.num_doc,
+                        POS_ID = pos,
+                        POS = indexp,
+                        MATNR = MATNR,
+                        MATKL = "",
+                        CANTIDAD = 1,
+                        MONTO = docmod.MONTO,
+                        PORC_APOYO = docmod.PORC_APOYO,
+                        MONTO_APOYO = docmod.MONTO_APOYO,
+                        PRECIO_SUG = docmod.PRECIO_SUG
+                    };
 
                     //Volumen
                     //B20180726 MGC 2018.07.26
@@ -670,18 +693,20 @@ namespace TAT001.Common
 
                 if (docmod != null)
                 {
-                    CARTAP carp = new CARTAP();
-                    //Armado para registro en bd
-                    carp.NUM_DOC = v.num_doc;
-                    carp.POS_ID = pos;
-                    carp.POS = indexp;
-                    carp.MATNR = "";
-                    carp.MATKL = MATKL;
-                    carp.CANTIDAD = 1;
-                    carp.MONTO = docmod.MONTO;
-                    carp.PORC_APOYO = docmod.PORC_APOYO;
-                    carp.MONTO_APOYO = docmod.MONTO_APOYO;
-                    carp.PRECIO_SUG = docmod.PRECIO_SUG;
+                    CARTAP carp = new CARTAP
+                    {
+                        //Armado para registro en bd
+                        NUM_DOC = v.num_doc,
+                        POS_ID = pos,
+                        POS = indexp,
+                        MATNR = "",
+                        MATKL = MATKL,
+                        CANTIDAD = 1,
+                        MONTO = docmod.MONTO,
+                        PORC_APOYO = docmod.PORC_APOYO,
+                        MONTO_APOYO = docmod.MONTO_APOYO,
+                        PRECIO_SUG = docmod.PRECIO_SUG
+                    };
 
                     //Volumen
                     //B20180726 MGC 2018.07.26

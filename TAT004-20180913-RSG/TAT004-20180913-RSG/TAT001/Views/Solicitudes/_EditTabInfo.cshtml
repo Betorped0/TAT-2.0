@@ -241,7 +241,10 @@
                             }
                         };
                         var instancedp = M.Datepicker.init(elemdp, optionsdp);
-
+                        var estatus_wf = "@Model.ESTATUS_WF";
+                        if (estatus_wf == "B") {
+                            periodo();
+                        }
                     </script>
                     <div class="input-field col s6">
                         @Html.HiddenFor(model => model.EJERCICIO, new { htmlAttributes = new { @class = "form-control" } })

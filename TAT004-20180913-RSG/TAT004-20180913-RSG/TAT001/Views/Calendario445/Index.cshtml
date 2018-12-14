@@ -71,26 +71,29 @@
     $('#numRegistros').change(function () {
         fnCommon.showProcess(true);
         $.ajax({
-            url: root + 'Calendario445/List?numRegistros=' + $('#numRegistros').val() + '&&buscar=' + $('input.global_filter').val(),
+            url: root + 'Calendario445/List?numRegistros=' + $('#numRegistros').val() + '&&buscar=' + $('#global_filter').val(),
             success: function (resultView) {
-                fnCommon.showProcess(false);
-                $('#list').html(resultView);
-                pagination('#list');
-                sort('#list');
+                if (resultView.isRedirect) {
+                    window.location = resultView.redirectUrl;
+                } else {
+                    fnCommon.showProcess(false);
+                    $('#list').html(resultView);
+                }
             }
         });
     });
 
     //------Actualizar registros por busqueda
-    $('input.global_filter').keyup(function () {
-        var buscar = $('input.global_filter').val();
+    $('#global_filter').keyup(function () {
          $.ajax({
-             url: root +'Calendario445/List?numRegistros=' + $('#numRegistros').val() + '&&buscar=' + $('input.global_filter').val(),
-            success: function (resultView) {
-                $('#list').html(resultView);
-                pagination('#list');
-                sort('#list');
-            }
+             url: root +'Calendario445/List?numRegistros=' + $('#numRegistros').val() + '&&buscar=' + $('#global_filter').val(),
+             success: function (resultView) {
+                 if (resultView.isRedirect) {
+                     window.location = resultView.redirectUrl;
+                 } else {
+                     $('#list').html(resultView);
+                 }
+             }
         });
     });
 
@@ -99,79 +102,29 @@
     $('#numRegistrosEx').change(function () {
         fnCommon.showProcess(true);
         $.ajax({
-            url: root + 'Calendario445/ListadoEx?numRegistros=' + $('#numRegistros').val() + '&&buscar=' + $('input.global_filter').val(),
+            url: root + 'Calendario445/ListEx?numRegistros=' + $('#numRegistrosEx').val() + '&&buscar=' + $('#global_filterEx').val(),
             success: function (resultView) {
-                fnCommon.showProcess(false);
-                $('#listEx').html(resultView);
-                paginationEx('#listEx');
-                sortEx('#listEx');
+                if (resultView.isRedirect) {
+                    window.location = resultView.redirectUrl;
+                } else {
+                    fnCommon.showProcess(false);
+                    $('#listEx').html(resultView);
+                }
             }
         });
     });
 
     //------Actualizar registros por busqueda
-    $('input.global_filterEx').keyup(function () {
-        var buscar = $('input.global_filterEx').val();
+    $('#global_filterEx').keyup(function () {
         $.ajax({
-            url: root + 'Calendario445/ListadoEx?numRegistros=' + $('#numRegistros').val() + '&&buscar=' + $('input.global_filter').val(),
+            url: root + 'Calendario445/ListEx?numRegistros=' + $('#numRegistrosEx').val() + '&&buscar=' + $('#global_filterEx').val(),
             success: function (resultView) {
-                $('#listEx').html(resultView);
-                paginationEx('#listEx');
-                sortEx('#listEx');
+                if (resultView.isRedirect) {
+                    window.location = resultView.redirectUrl;
+                } else {
+                    $('#listEx').html(resultView);
+                }
             }
         });
     });
-
-  //-----Pagination
-    function pagination(list) {
-        var paginationLink = $(list).find('.pagination>li>a');
-        for (var i = 0; i < paginationLink.length; i++) {
-            var url = paginationLink.get(i).getAttribute("href");
-            var id = (list == '#listEx' ? 'link_hEx' : 'link_h') + i;
-            if (url) {
-                paginationLink.get(i).setAttribute("id", id);
-                paginationLink.get(i).setAttribute("url", url);
-                $('#' + id).click(function (me) {
-                    fnCommon.showProcess(true);
-                    $.ajax({
-                        url: me.toElement.getAttribute('url'),
-                        success: function (resultView) {
-                            fnCommon.showProcess(false);
-                            $(list).html(resultView);
-                            pagination(list);
-                        }
-                    });
-                });
-            }
-            paginationLink.get(i).removeAttribute("href");
-        }
-    }
-    pagination('#list');
-    pagination('#listEx');
-    //-----Sort
-    function sort(list) {
-        var sortLink = $(list).find('.header>th>a');
-        for (var i = 0; i < sortLink.length; i++) {
-            var url = sortLink.get(i).getAttribute("href");
-            var id = (list =='#listEx'?'link_hEx':'link_h') + i;
-            if (url) {
-                sortLink.get(i).setAttribute("id", id);
-                sortLink.get(i).setAttribute("id", id);
-                $('#' + id).click(function (me) {
-                    fnCommon.showProcess(true);
-                    $.ajax({
-                        url: me.toElement.getAttribute('url'),
-                        success: function (resultView) {
-                            fnCommon.showProcess(false);
-                            $(list).html(resultView);
-                            sort(list);
-                        }
-                    });
-                });
-            }
-            sortLink.get(i).removeAttribute("href");
-        }
-    }
-    sort('#list');
-    sort('#listEx');
 </script>

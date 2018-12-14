@@ -832,7 +832,7 @@ namespace TAT001.Controllers.Catalogos
                         if (k == null)
                         {
                             us.KUNNRX = false;
-                            error = ". Error en el ciente";
+                            error = ". Error en el cliente";
                         }
                         else
                         {
@@ -1758,7 +1758,7 @@ namespace TAT001.Controllers.Catalogos
                             if (k == null)
                             {
                                 us.KUNNRX = false;
-                                error = ". Error en el ciente";
+                                error = ". Error en el cliente";
                             }
                             else
                             {

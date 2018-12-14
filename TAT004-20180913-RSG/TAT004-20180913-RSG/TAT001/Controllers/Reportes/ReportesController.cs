@@ -1589,7 +1589,13 @@ namespace TAT001.Controllers.Reportes
                 categorysplit = category.Split(',');
             }
             string year = selectyear;
+            //Canal
+            string[] canalsplit = { };
             string canal = selectcanal;
+            if (!string.IsNullOrEmpty(canal))
+            {
+                canalsplit = canal.Split(',');
+            }
 
             var queryDocs = (from d in db.DOCUMENTOes
                              join c in db.CLIENTEs on new { d.VKORG, d.VTWEG, d.SPART, d.PAYER_ID } equals new { c.VKORG, c.VTWEG, c.SPART, PAYER_ID = c.KUNNR }
@@ -1603,7 +1609,7 @@ namespace TAT001.Controllers.Reportes
                              join mgpt in db.MATERIALGPTs on m.MATERIALGP_ID equals mgpt.MATERIALGP_ID
                              where mgpt.SPRAS_ID == "EN" //user.SPRAS_ID
                                  && d.EJERCICIO == year
-                                 && (!string.IsNullOrEmpty(canal) ? c.CANAL == canal : true)
+                                 && (!string.IsNullOrEmpty(canal) ? canalsplit.Contains(c.CANAL) : true)
                                  && (!string.IsNullOrEmpty(comcode) ? comcodessplit.Contains(d.SOCIEDAD_ID) : true)
                                  && (!string.IsNullOrEmpty(period) ? periodsplit.Contains(d.PERIODO.ToString()) : true)
                                  && (!string.IsNullOrEmpty(quarter) ? quarterperiod.Contains(d.PERIODO.ToString()) : true)

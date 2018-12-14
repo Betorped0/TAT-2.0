@@ -90,6 +90,7 @@ namespace TAT001.Models
         public List<DOCUMENTOP_MOD> DOCUMENTOP { get; set; } //B20180710 MGC 2018.07.13 Modificaciones para editar los campos de distribución
         public List<string> numColEncabezado { get; set; }//NUMERO DE COLUMNAS PARA EL ENCABEZADO
         public string material { get; set; }//TEXTO ENCABEZADO
+        public bool material_x { get; set; }
         public string categoria { get; set; }//TEXTO ENCABEZADO
         public string descripcion { get; set; }//TEXTO ENCABEZADO
         public string costoun { get; set; }//TEXTO ENCABEZADO

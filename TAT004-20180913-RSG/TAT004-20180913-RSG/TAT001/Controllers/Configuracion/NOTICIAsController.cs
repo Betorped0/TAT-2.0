@@ -195,7 +195,7 @@ namespace TAT001.Controllers.Configuracion
         // GET: NOTICIAs/Delete/5
         public ActionResult Delete(long? id)
         {
-            int pagina = 721; //ID EN BASE DE DATOS
+            int pagina = 913; //ID EN BASE DE DATOS
             using (TAT001Entities db = new TAT001Entities())
             {
                 string u = User.Identity.Name;
