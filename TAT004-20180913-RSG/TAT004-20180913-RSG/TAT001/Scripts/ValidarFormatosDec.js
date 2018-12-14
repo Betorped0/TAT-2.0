@@ -650,25 +650,7 @@
         }
     });
 
-    //LEJ 12.07.2018----------------------------------------
-    //Para cuando clicke el checkbox
-    $("input[type=checkbox]").on("click", function (e) {
-        //recupero los datos de lo que clickeo
-        var x = e.target;
-        if (!x.classList.contains("trade"))
-            if (x.checked === true) {
-                revisarChecked(x.id);
-            }
-    });
-
-    function revisarChecked(id) {
-        //deshabilito los checbox, para que solo este 1 checked true
-        $("input[type=checkbox]").each(function () {
-            if ($(this).attr('id') !== id) {
-                $(this).prop('checked', false);
-            }
-        });
-    }
+    
 
     //LEJ 17.07.2018--------------------------------------
     //Saco los nodos span para modificarlos
