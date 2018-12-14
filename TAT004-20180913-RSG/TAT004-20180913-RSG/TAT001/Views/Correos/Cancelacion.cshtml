@@ -444,50 +444,57 @@
                         <table class="tg" style="width: 100%;border-collapse: collapse;">
                             <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
                                 <td class="tg-yw4l">
-                                    <span>@ViewBag.montoSolicitud</span>
+                                    <span>@ViewBag.lblMontoSolicitud</span>
                                 </td>
                                 <td class="tg-yw4l" style="text-align:right">
-                                    <label id="p_vtweg" style="font-weight:bold;">@ViewBag.montoSol</label>
+                                    <h5 id="p_vtweg">@ViewBag.montoSol</h5>
+                                    @*<label id="p_vtweg" style="font-weight:bold;">@ViewBag.montoSol</label>*@
                                 </td>
                             </tr>
+
                             <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
                                 <td class="tg-yw4l">
-                                    <span>@ViewBag.montoProvision</span>
-                                </td>
-                                <td class="tg-yw4l" style="text-align:right">
-                                    <label id="p_kunnr" style="color: #9e9e9e;">@ViewBag.montoProv</label>
-                                </td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
-                                <td class="tg-yw4l">
-                                    <span>@ViewBag.montoAplicado</span>
-                                </td>
-                                <td class="tg-yw4l" style="text-align:right">
-                                    <label id="p_kunnr" style="color: #9e9e9e;">@ViewBag.montoApli</label>
-                                </td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
-                                <td class="tg-yw4l">
-                                    <span>@ViewBag.remanente</span>
-                                </td>
-                                <td style="background-color:@ViewBag.rema_color;text-align:right;">
-                                    <label id="p_kunnr" style="font-weight:bold;">@ViewBag.remanente</label>
-                                </td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
-                                <td class="tg-yw4l">
-                                    <span>@ViewBag.impuesto</span>
+                                    <span>@ViewBag.lblImpuesto</span>
                                 </td>
                                 <td style="text-align:right;">
                                     <label id="p_imp" style="color: #9e9e9e;">@ViewBag.impuesto</label>
                                 </td>
                             </tr>
+
                             <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
                                 <td class="tg-yw4l">
-                                    <span>@ViewBag.montoTotal</span>
+                                    <span>@ViewBag.lblMontoTotal</span>
                                 </td>
                                 <td style="text-align:right">
                                     <label id="p_kunnr" style="color: #9e9e9e;">@ViewBag.montoTotal</label>
+                                </td>
+                            </tr>
+
+                            <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                <td class="tg-yw4l">
+                                    <span>@ViewBag.lblMontoProvision</span>
+                                </td>
+                                <td class="tg-yw4l" style="text-align:right">
+                                    <label id="p_kunnr" style="color: #9e9e9e;">@ViewBag.montoProv</label>
+                                </td>
+                            </tr>
+
+                            <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                <td class="tg-yw4l">
+                                    <span>@ViewBag.lblMontoAplicado</span>
+                                </td>
+                                <td class="tg-yw4l" style="text-align:right">
+                                    <label id="p_kunnr" style="color: #9e9e9e;">@ViewBag.montoApli</label>
+                                </td>
+                            </tr>
+
+                            <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                <td class="tg-yw4l">
+                                    <span>@ViewBag.lblRemanente</span>
+                                </td>
+                                <td style="background-color:@ViewBag.rema_color;text-align:right;">
+                                    <h5 id="p_kunnr">@ViewBag.remanente</h5>
+                                    @*<label id="p_kunnr" style="font-weight:bold;">@ViewBag.remanente</label>*@
                                 </td>
                             </tr>
                         </table>
@@ -549,10 +556,12 @@
                                     <label>@ViewBag.presupuestoCanal</label>
                                 </td>
                                 <td class="tg-yw4l">
-                                    <label id="p_vtweg" style="font-weight:bold;">@ViewBag.vtweg</label>
+                                    @*<label id="p_vtweg" style="font-weight:bold;">@ViewBag.vtweg</label>*@
+                                    <h5 id="p_vtweg">@ViewBag.vtweg</h5>
                                 </td>
                                 <td class="tg-yw4l">
-                                    <label id="p_canal" style="font-weight:bold;">@ViewBag.pcan</label>
+                                    @*<label id="p_canal" style="font-weight:bold;">@ViewBag.pcan</label>*@
+                                    <h5 id="p_canal">@ViewBag.pcan</h5>
                                 </td>
                             </tr>
                             <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
@@ -560,14 +569,17 @@
                                     <label>@ViewBag.preCliBaAgrupador</label>
                                 </td>
                                 <td class="tg-yw4l">
-                                    <label id="p_kunnr" style="font-weight:bold;">@ViewBag.kunnr</label>
+                                    @*<label id="p_kunnr" style="font-weight:bold;">@ViewBag.kunnr</label>*@
+                                    <h5 id="p_kunnr">@ViewBag.kunnr</h5>
                                 </td>
                                 <td class="tg-yw4l">
-                                    <label id="p_banner" style="font-weight:bold;">@ViewBag.pban</label>
+                                    @*<label id="p_banner" style="font-weight:bold;">@ViewBag.pban</label>*@
+                                    <h5 id="p_banner">@ViewBag.pban</h5>
                                 </td>
                             </tr>
                         </table>
                     </div>
+
                     <div class="card-panel" style="transition: box-shadow .25s, -webkit-box-shadow .25s;
                                 padding: 24px;margin: 0.5rem 0 1rem 0;border-radius: 2px;
                                 background-color:#fff;box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);">
@@ -607,7 +619,8 @@
                                     </td>
                                     <td></td>
                                     <td class="tg-yw4l">
-                                        <label id="pc_t" style="font-weight:bold;">@ViewBag.pct</label>
+                                        @*<label id="pc_t" style="font-weight:bold;">@ViewBag.pct</label>*@
+                                        <h5 id="pc_t">@ViewBag.pct</h5>
                                     </td>
                                 </tr>
                                 <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
@@ -616,7 +629,8 @@
                                     </td>
                                     <td></td>
                                     <td class="tg-yw4l">
-                                        <label id="consu" style="font-weight:bold;">@ViewBag.consu</label>
+                                        @*<label id="consu" style="font-weight:bold;">@ViewBag.consu</label>*@
+                                        <h5 id="consu">@ViewBag.consu</h5>
                                     </td>
                                 </tr>
                             </table>
