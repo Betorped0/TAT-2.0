@@ -218,6 +218,8 @@ namespace TAT001.Controllers
                         string spras_id = FnCommon.ObtenerSprasId(db, User.Identity.Name);
 
                         string vkorg = "", vtweg = "", spart = "";
+                        string Paisdecimales = ".";
+                        string Paismiles = ","; 
                         if (db.CLIENTEs.Where(x => x.KUNNR == payer_id).Count() > 0)
                         {
                             CLIENTE clienteH1 = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault();
@@ -252,6 +254,8 @@ namespace TAT001.Controllers
                         {
                             doc.PAIS_ID = p.LAND;//ADD RSG 01.11.2018--------------------------------------------------
                             pLand = p.LAND;
+                            Paisdecimales = p.DECIMAL;
+                            Paismiles=p.MILES;
                         }
                         List<TALLT> list = tallsDao.ListaTallsConCuenta(TATConstantes.ACCION_LISTA_TALLCONCUENTA, null, spras_id, pLand, DateTime.Now.Year, bukrs);
                         if (list.Any(x => x.TXT50 == gall_id))
@@ -266,6 +270,8 @@ namespace TAT001.Controllers
                         doc.VKORG = vkorg;
                         doc.VTWEG = vtweg;
                         doc.SPART = spart;
+                        doc.Decimales = Paisdecimales;
+                        doc.Miles = Paismiles;
                         //var existeCliente = db.CLIENTEs.Where(x => x.KUNNR == payer_id).FirstOrDefault().NAME1;
 
                         //if (existeCliente != null | existeCliente != "")
@@ -355,6 +361,8 @@ namespace TAT001.Controllers
                     }
 
                     PAI p = pp.Where(a => a.LANDX == land).FirstOrDefault();
+                    if (getNumberDocument(num_doc) == -1)
+                        continue;
 
                     DOCUMENTO d = new DOCUMENTO();
                     d.NUM_DOC = decimal.Parse(num_doc);

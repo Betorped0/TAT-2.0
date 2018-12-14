@@ -4,7 +4,7 @@
     app += "var tb = $('" + table + "').DataTable();";
     for (var f = 0; f < fields.length; f++) {
         var fiels = fields[f];
-        for (i = 0; i < lista.length; i++) {
+        for (var i = 0; i < lista.length; i++) {
             if (fiels.elementId === lista[i].ID) {
                 app += "for (var t = 0; t < tb.rows().data().length; t++) {";
                 app += " var row = tb.row(t).node();";
@@ -19,6 +19,7 @@
                 app += lista[i].COLOR + "', this, " + i + ", ban);";
                 app += "}";
                 app += "});";
+                app += "$(row).children().eq('" + fiels.elementIndex + "').children().trigger('" + lista[i].ACTION + "')";
                 app += "}";
             }
         }
@@ -41,7 +42,6 @@ function validar(id, num, mensaje, icon, color, campo, ii, ban) {
                     esWarning(campo);
             } else {
                 esValido(campo);
-                dismiss(id + "-" + tipo_condicion);
             }
         }
     }
@@ -62,35 +62,24 @@ function condiciones(ii) {
     return ban;
 }
 function esValido(campo) {
-    campo.classList.add("valid");
-    campo.classList.remove("invalid");
-    campo.classList.remove("warn");
+
+    //campo.classList.remove("red");
+    //campo.classList.remove("white-text");
+    //campo.classList.remove("rojo");
+    campo.classList.remove("yellow");
 }
 function esInvalido(campo) {
-    campo.classList.add("invalid");
-    campo.classList.remove("valid");
-    campo.classList.remove("warn");
+    if (!campo.disabled) {
+        campo.classList.add("red");
+        campo.classList.add("white-text");
+        campo.classList.add("rojo");
+    }
 }
 function esWarning(campo) {
-    campo.classList.add("warn");
-    campo.classList.remove("valid");
-    campo.classList.remove("invalid");
+    campo.classList.add("yellow");
+    campo.classList.add("white-text");
 }
-function esValidoC(campo) {
-    $(campo).find('input').addClass("valid");
-    $(campo).find('input').removeClass("invalid");
-    $(campo).find('input').removeClass("warn");
-}
-function esInvalidoC(campo) {
-    $(campo).find('input').addClass("invalid");
-    $(campo).find('input').removeClass("valid");
-    $(campo).find('input').removeClass("warn");
-}
-function esWarningC(campo) {
-    campo.classList.add("warn");
-    campo.classList.remove("valid");
-    campo.classList.remove("invalid");
-}
+
 function warning(val1, comp, val2) {
     var ban = false;
     if (comp === '=') {
@@ -167,7 +156,7 @@ function validateEmail(email) {
 }
 function isDate(xx) {
     var currVal = xx;
-    if (currVal === '')
+    if (currVal === '' || currVal === undefined)
         return false;
 
     var rxDatePattern = /^(\d{1,2})(\/|-)(\d{1,2})(\/|-)(\d{4})$/; //Declare Regex
