@@ -4389,6 +4389,7 @@ namespace TAT001.Controllers
             int TempNumDoc = int.Parse(Math.Truncate(string.IsNullOrEmpty(numDocument) ? -1 : double.Parse(numDocument)).ToString());
             return TempNumDoc;
         }
+
         public List<CategoriaMaterial> grupoMaterialesController(List<string> catstabla, string vkorg, string spart, string kunnr, string soc_id, out decimal total)
         {
             TAT001Entities db = new TAT001Entities();
@@ -4561,6 +4562,7 @@ namespace TAT001.Controllers
 
             return lcatmat;
         }
+
         public List<DOCUMENTOM> addCatItems(List<CategoriaMaterial> categorias, string kunnr, string catid,
            string soc_id, decimal numdoc, int posid, DateTime? vig_de, DateTime? vig_a, string neg, string dis, decimal total, decimal totaldoc, string col)
         {

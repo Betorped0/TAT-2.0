@@ -315,38 +315,49 @@
         bandera = bandera + ".png";
     }
 
+    <table class="tg" style="width:100%; height:50px; border-collapse:collapse; background-color:#d11d53;">
+        <tr>
+            <td>
+                <div class="row" style="margin-bottom:0">
+                    <table class="tg" style="width: 100%;border-collapse: collapse;">
+                        <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                            <td>
+                                @{ string mail = ViewBag.mail;}
+                                @if (mail == "X")
+                                {
+                                    <img src="miimg_id" />
+                                }
+                                else
+                                {
+                                    <img src="~/images/logo-kellogg2.png" />
+                                }
+                            </td>
+                            <td style="text-align:center;">
+                                <h1 style="display:inline; text-align:left;color:white;">
+                                    @ViewBag.tituloCabecera
+                                    @if (Model.FLUJOes.Where(x => x.ESTATUS == "R").ToList().Count() > 0)
+                                    {
+                                        <span>@Model.FLUJOes.Where(x => x.ESTATUS == "R").OrderByDescending(x => x.POS).FirstOrDefault().USUARIO.PUESTO.PUESTOTs.Where(x => x.SPRAS_ID.Equals(Model.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50</span>
+                                    }
+                                </h1>
+                            </td>
+                            <td>
+                                <img src="miflag_id" style="margin-right:10px;" align="right" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+
     @*DIV CON EL CONTENIDO DEL CUERPO DEL CORREO*@
-    <table class="tg" style="width: 100%; border-collapse: collapse; position:fixed">
-        <thead style="height:60px; background-color:#d11d53; width:100%;">
-            <tr>
-                <td class="col s2">
-                    @{ string mail = ViewBag.mail;}
-                    @if (mail == "X")
-                    {
-                        <img src="miimg_id" />
-                    }
-                    else
-                    {
-                        <img src="~/images/logo-kellogg2.png" />
-                    }
-                    <h2 style="display:inline; text-align:left;color:white;">
-                        @ViewBag.cabecera
-                        @if (Model.FLUJOes.Where(x => x.ESTATUS == "R").ToList().Count() > 0)
-                        {
-                            <span>@Model.FLUJOes.Where(x => x.ESTATUS == "R").OrderByDescending(x => x.POS).FirstOrDefault().USUARIO.PUESTO.PUESTOTs.Where(x => x.SPRAS_ID.Equals(Model.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50</span>
-                        }
-                    </h2>
-                </td>
-                <td class="col s8">
-                    <img src="miflag_id" style="margin-top:15px; margin-right:15px;" align="right" />
-                </td>
-            </tr>
-        </thead>
+    <table class="tg" style="width: 100%; border-collapse: collapse;">
         <tbody>
             <tr style="border-bottom: 1px solid #e0e0e0;">
                 <td class="col s4">
                     <p>
-                        <h4 style="margin-bottom:0px;">@ViewBag.titulo</h4>
+                        <h4 style="margin-bottom:0px;">@ViewBag.tituloBajoCabecera</h4>
                         1.- @ViewBag.opcionDet
                         <a href="@ViewBag.url@Url.Action("Edit", "Solicitudes", new { id_d = Model.NUM_DOC })">
                             @ViewBag.ligaDet
@@ -367,10 +378,6 @@
                 <td>
                     <h4 style="font-family: -apple-system, BlinkMacSystemFont,Segoe UI, Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif; font-size:25px;">
                         @ViewBag.Title @Model.NUM_DOC
-                        @if (Model.TIPO_RECURRENTE != null)
-                        {
-                            <span style="font-weight: normal;">Documento recurrente</span>
-                        }
                     </h4>
                 </td>
             </tr>
@@ -385,42 +392,49 @@
                             <table class="tg" style="width: 100%;border-collapse: collapse;">
                                 <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
                                     <td>
-                                        @Html.LabelFor(model => model.USUARIOC_ID, "Usuario", new { @style = "color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })
+                                        <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.usuario</label>
                                         @Html.EditorFor(model => model.USUARIOC_ID, new { htmlAttributes = new { @disabled = "disabled", @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; " } })
                                     </td>
                                     <td>
-                                        @Html.LabelFor(model => model.USUARIO.NOMBRE, "Nombre", new { @style = "color: rgba(0, 0, 0, 1.0);", @id = "lbl_manager" })
+                                        <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.usuarioNombre</label>
+                                        @*@Html.LabelFor(model => model.USUARIO.NOMBRE, ViewBag.usuarioNombre, new { @style = "color: rgba(0, 0, 0, 1.0);", @id = "lbl_manager" })*@
                                         @Html.EditorFor(model => model.USUARIO.NOMBRE, new { htmlAttributes = new { @disabled = "disabled", @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; ", @Value = Model.USUARIO.NOMBRE, Model.USUARIO.APELLIDO_P, Model.USUARIO.APELLIDO_M } })
                                     </td>
                                 </tr>
                                 <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
                                     <td>
-                                        @Html.LabelFor(model => model.TSOL_ID, "Tipo solicitud", new { @style = "color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })
+                                        <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.tipoSolicitud</label>
+                                        @*@Html.LabelFor(model => model.TSOL_ID, ViewBag.tipoSolicitud, new { @style = "color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })*@
                                         @Html.EditorFor(model => model.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(model.USUARIO.SPRAS_ID)).FirstOrDefault().TXT020, new { htmlAttributes = new { @disabled = "disabled", @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; " } })
                                     </td>
                                     <td>
-                                        @Html.LabelFor(model => model.TALL_ID, "Clasificación", new { @style = "    color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })
+                                        <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.clasificacion</label>
+                                        @*@Html.LabelFor(model => model.TALL_ID, ViewBag.clasificacion, new { @style = "    color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })*@
                                         @Html.EditorFor(model => model.TALL.TALLTs.Where(a => a.SPRAS_ID.Equals(model.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50, new { htmlAttributes = new { @disabled = "disabled", @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; " } })
                                     </td>
                                 </tr>
                                 <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
                                     <td>
-                                        @Html.LabelFor(model => model.PAYER_ID, "Cliente", new { @style = "    color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })
-                                        @Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @disabled = "disabled", @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; font-weight:bold;" } })
+                                        <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.cliente</label>
+                                        @*@Html.LabelFor(model => model.PAYER_ID, ViewBag.cliente, new { @style = "    color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })*@
+                                        @Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @disabled = "disabled", @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0;" } })
                                     </td>
                                     <td>
-                                        @Html.LabelFor(model => model.PAYER_NOMBRE, "Nombre", new { @style = "    color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })
-                                        @Html.EditorFor(model => model.CLIENTE.NAME1, new { htmlAttributes = new { @disabled = "disabled", @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; font-weight:bold;" } })
+                                        <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.clienteNombre</label>
+                                        @*@Html.LabelFor(model => model.PAYER_NOMBRE, ViewBag.clienteNombre, new { @style = "    color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })*@
+                                        @Html.EditorFor(model => model.CLIENTE.NAME1, new { htmlAttributes = new { @disabled = "disabled", @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0;" } })
                                     </td>
                                 </tr>
                                 <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
                                     <td>
-                                        @Html.LabelFor(model => model.CONCEPTO, "Concepto", new { @style = "color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })
+                                        <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.concepto</label>
+                                        @*@Html.LabelFor(model => model.CONCEPTO, @ViewBag.concepto, new { @style = "color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })*@
                                         @Html.EditorFor(model => model.CONCEPTO, new { htmlAttributes = new { @disabled = "disabled", @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; " } })
                                     </td>
                                     <td>
-                                        @Html.LabelFor(model => model.MONTO_DOC_MD, "Monto", new { @style = "    color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })
-                                        <input type="text" disabled="disabled" style="color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; font-weight:bold" value="@ViewBag.monto" />
+                                        <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.montoDoc</label>
+                                        @*@Html.LabelFor(model => model.MONTO_DOC_MD, @ViewBag.montoDoc, new { @style = "    color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })*@
+                                        <input type="text" disabled="disabled" style="color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0;" value="@ViewBag.monto" />
                                     </td>
                                 </tr>
                             </table>
@@ -428,15 +442,6 @@
                     </div>
                 </td>
                 <td></td>
-            </tr>
-
-            <tr>
-                <td>
-                    <span style="font-weight:bold;">Si se desea ingresar a la solicitud, favor de dar un click  en el siguiente</span>
-                    <a href="@ViewBag.url@Url.Action("Details","Solicitudes", new { id = Model.NUM_DOC })">
-                        link.
-                    </a>
-                </td>
             </tr>
         </tbody>
     </table>
