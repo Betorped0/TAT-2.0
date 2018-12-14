@@ -1481,6 +1481,7 @@
     <Content Include="Scripts\Masiva\create.js" />
     <Content Include="Scripts\Masiva\formatosMasiva.js" />
     <Content Include="Scripts\Masiva\validaTabs.js" />
+    <Content Include="Scripts\Masiva\warningm.js" />
     <Content Include="Scripts\messagesCat.js" />
     <Content Include="Scripts\moment-with-locales.js" />
     <Content Include="Scripts\moment-with-locales.min.js" />

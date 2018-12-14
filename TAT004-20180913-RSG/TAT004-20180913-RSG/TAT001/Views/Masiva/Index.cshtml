@@ -307,55 +307,58 @@
 <script src="~/Scripts/Masiva/create.js"></script><!--LGPP 30.08.2018-->
 <script src="~/Scripts/Masiva/validaTabs.js"></script><!--RSG 26.10.2018-->
 <link href="~/Content/autocomplete.css" rel="stylesheet" />
-
+<div id="validacionesMasivas">
+    <script>
+         var lista1 = [];
+    var lista = @Html.Raw(ViewBag.listaValid);
+    </script>
+    <script src="~/Scripts/Masiva/warningm.js"></script>
+</div>
 <script>
     var root = "@Url.Content("~")";
     var auto = $.noConflict();
     ln = "@ViewBag.spras_id";
-
    // Valida si ocurrio un error al intentar descargar archivo.
     var Mensaje = '@ViewBag.Mensaje';
     if (Mensaje) {
         M.toast({ html: Mensaje });
         }
-</script>
-
-<style>
-    .dataTables_length {
-        display: none;
-    }
-
-    .dataTables_filter {
-        display: none;
-    }
-
-    .dataTables_scrollHeadInner, .mdl-data-table {
-        width: 100%;
-    }
-
-
-</style>
-
-@*<script>
-        //$(".mdl-button").on("click", function () {
-        //    if ($(this).hasClass("valid")) {
-        //        var id = $(this).closest('tr').children().eq(1).children().val();
-        //        var tipo = $(this).closest('tr').children().eq(2).children().val();
-        //        $(this).closest('tr').children().eq(3).children().children().eq(0).children().eq(1).attr('id', id + tipo);
-        //    } else {
-        //        $(this).closest('tr').children().eq(3).children().children().eq(0).children().eq(1).removeAttr('id');
-        //    }
-        function pag() {
-            $(".outRequiredfile").on("change", function () {
-                if ($(this).hasClass("valid")) {
-                    var id = $(this).closest('tr').children().eq(1).children().val();
-                    var tipo = $(this).closest('tr').children().eq(2).children().val();
-                    $(this).closest('tr').children().eq(3).children().children().eq(0).children().eq(1).attr('id', id + tipo);
-                } else {
-                    $(this).closest('tr').children().eq(3).children().children().eq(0).children().eq(1).removeAttr('id');
-                }
-            });
-        }
-        //});
     </script>
-    <button class="btn" onclick="pag();">Page</button>*@
+
+    <style>
+        .dataTables_length {
+            display: none;
+        }
+
+        .dataTables_filter {
+            display: none;
+        }
+
+        .dataTables_scrollHeadInner, .mdl-data-table {
+            width: 100%;
+        }
+    </style>
+
+    @*<script>
+            //$(".mdl-button").on("click", function () {
+            //    if ($(this).hasClass("valid")) {
+            //        var id = $(this).closest('tr').children().eq(1).children().val();
+            //        var tipo = $(this).closest('tr').children().eq(2).children().val();
+            //        $(this).closest('tr').children().eq(3).children().children().eq(0).children().eq(1).attr('id', id + tipo);
+            //    } else {
+            //        $(this).closest('tr').children().eq(3).children().children().eq(0).children().eq(1).removeAttr('id');
+            //    }
+            function pag() {
+                $(".outRequiredfile").on("change", function () {
+                    if ($(this).hasClass("valid")) {
+                        var id = $(this).closest('tr').children().eq(1).children().val();
+                        var tipo = $(this).closest('tr').children().eq(2).children().val();
+                        $(this).closest('tr').children().eq(3).children().children().eq(0).children().eq(1).attr('id', id + tipo);
+                    } else {
+                        $(this).closest('tr').children().eq(3).children().children().eq(0).children().eq(1).removeAttr('id');
+                    }
+                });
+            }
+            //});
+        </script>
+        <button class="btn" onclick="pag();">Page</button>*@
