@@ -353,12 +353,12 @@
                     var data_type = 'data:application/vnd.ms-excel;charset=UTF-8';
                     var table_div = document.getElementById('tableClon');
                     var table_html = table_div.outerHTML.replace(/ /g, '%20');
-                    table_html = table_html.replace("á", "&aacute;");
-                    table_html = table_html.replace("é", "&eacute;");
-                    table_html = table_html.replace("í", "&iacute;");
-                    table_html = table_html.replace("ó", "&oacute;");
-                    table_html = table_html.replace("ú", "&uacute;");
-                    table_html = table_html.replace("ü", "&uuml;");
+                    while (table_html.indexOf('á') != -1) table_html = table_html.replace("á", "&aacute;");
+                    while (table_html.indexOf('é') != -1) table_html = table_html.replace("é", "&eacute;");
+                    while (table_html.indexOf('í') != -1) table_html = table_html.replace("í", "&iacute;");
+                    while (table_html.indexOf('ó') != -1) table_html = table_html.replace("ó", "&oacute;");
+                    while (table_html.indexOf('ú') != -1) table_html = table_html.replace("ú", "&uacute;");
+                    while (table_html.indexOf('ü') != -1) table_html = table_html.replace("ü", "&uuml;");
                     a.href = data_type + ', ' + table_html.replace("ó", "&oacute;").replace("ú", "&uacute;");
                     //setting the file name
                     a.download = 'IntegraciónTS' + postfix + '.xls';

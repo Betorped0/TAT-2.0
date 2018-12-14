@@ -29,6 +29,8 @@ namespace TAT001.Models.Masiva
         public string MONEDA_ID { get; set; }
 
         public string SPART { get; set; }//04-12-2018
+        public string Decimales { get; set; }
+        public string Miles { get; set; }
 
     }
 }

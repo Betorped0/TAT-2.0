@@ -4279,10 +4279,7 @@ function loadFiles(files) {
         contentType: false,
         processData: false,
         success: function (data) {
-
-            if (data !== null || data !== "") {
-
-            }
+            
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             },

@@ -4,7 +4,8 @@ $(document).ready(function () {
         document.getElementById("loader").style.display = "flex";
         var _miles = $("#miles").val(); //LEJ 09.07.18
         var _decimales = $("#dec").val(); //LEJ 09.07.18
-        var msg = 'Verificar valores en los campos de ';
+        var msg = 'Verificar valores en los campos: ';
+        var campos = '';
         var res = true;
         var elem = document.querySelector(".tabs");
         var instance = M.Tabs.getInstance(elem);
@@ -40,38 +41,32 @@ $(document).ready(function () {
         if (index > 0) {
             var InfoTab = evalInfoTab(true, e);
             if (!InfoTab) {
-                msg += 'Información';
+                campos += 'Información';
                 res = InfoTab;
             }
         }
 
         if (index > 0) {
-            //Evaluar TempTab values
-            var TempTab = evalTempTab(true, e);
-            if (!TempTab) {
-                msg += ' ,Temporalidad';
-                res = TempTab;
-            }
             //Evaluar SoporteTab values
             var SoporteTab = evalSoporteTab(true, e);
             if (!SoporteTab) {
-                msg += ' ,Soporte';
+                campos += (campos === '' ? '' : ',') + ' Soporte';
                 res = SoporteTab;
             }
         }
         if (index > 2) {
-            //Evaluar SoporteTab values
+            //Evaluar DistribucionTab values
             var DistTab = evalDistribucionTab(true, e);
             if (!DistTab) {
-                msg += ' ,Distribución';
+                campos += (campos === '' ? '' : ',') + ' Distribución';
                 res = DistTab;
             }
         }
         if (index > 3) {
-            //Evaluar SoporteTab values
+            //Evaluar FinTab values
             var FinancieraTab = evalFinancieraTab(true, e);
             if (!FinancieraTab) {
-                msg += ' ,Financiera';
+                campos += (campos === '' ? '' : ',') + ' Financiera';
                 res = FinancieraTab;
             }
             //jemo inicio 24-07-2018
@@ -80,7 +75,7 @@ $(document).ready(function () {
             if (checkf) {
                 var monto = parseFloat(toNum($('#monto_dis').val()));
                 if (importe_fac !== monto) {
-                    msg += ', Importe total de las facturas sea igual al monto en Distribución';
+                    campos += (campos === '' ? '' : ',') +' Importe total de las facturas sea igual al monto en Distribución';
                     res = false;
                 }
             }
@@ -88,6 +83,7 @@ $(document).ready(function () {
         if (index < 4) {
             $('#monto_doc_md').val($("#monto_dis").val());
         }
+        msg += campos;
         msg += '!';
         if (res) {
             //loadFilesf();
@@ -188,12 +184,12 @@ $(document).ready(function () {
             //Termina provisional
             $('#btn_guardar').click();
         } else {
-            //M.toast({
-            //    classes: "guardarWarnning",
-            //    displayLength: 1000000,
-            //    html: '<span style="padding-right:15px;"><i class="material-icons yellow-text">info</i></span>  ' + msg
-            //        + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'guardarWarnning\')">Aceptar</button>'
-            //});
+            M.toast({
+                classes: "guardarWarnning",
+                displayLength: 1000000,
+                html: '<span style="padding-right:15px;"><i class="material-icons yellow-text">info</i></span>  ' + msg
+                    + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'guardarWarnning\')">Aceptar</button>'
+            });
             document.getElementById("loader").style.display = "none";//RSG 26.04.2018
         }
 
