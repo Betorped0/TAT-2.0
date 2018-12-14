@@ -28,66 +28,71 @@ namespace TAT001.Controllers
                 var _fi = DateTime.Parse(fi);
                 var _ff = DateTime.Parse(ff);
                 var _idN = db.NEGOCIACIONs.Where(x => x.FECHAI == _fi && x.FECHAF == _ff).FirstOrDefault().ID;
-                //var dOCUMENTOes = db.DOCUMENTOes.Where(x => x.PAYER_ID == pay && x.VKORG == vkorg && x.VTWEG == vtweg && x.SPART == spart && x.PAYER_EMAIL == correo && ((x.FECHAC.Value.Day >= _fi.Day && x.FECHAC.Value.Day <= _ff.Day) && x.FECHAC.Value.Month == _ff.Month && x.FECHAC.Value.Year == _ff.Year)).Include(d => d.CLIENTE).Include(d => d.PAI).Include(d => d.SOCIEDAD).Include(d => d.TALL).Include(d => d.TSOL).Include(d => d.USUARIO).ToList();
+                ////var dOCUMENTOes = db.DOCUMENTOes.Where(x => x.PAYER_ID == pay && x.VKORG == vkorg && x.VTWEG == vtweg && x.SPART == spart && x.PAYER_EMAIL == correo && ((x.FECHAC.Value.Day >= _fi.Day && x.FECHAC.Value.Day <= _ff.Day) && x.FECHAC.Value.Month == _ff.Month && x.FECHAC.Value.Year == _ff.Year)).Include(d => d.CLIENTE).Include(d => d.PAI).Include(d => d.SOCIEDAD).Include(d => d.TALL).Include(d => d.TSOL).Include(d => d.USUARIO).ToList();
                 var dOCUMENTOes = db.DOCUMENTOes.Where(x => x.PAYER_ID == pay && x.VKORG == vkorg && x.VTWEG == vtweg && x.SPART == spart && x.PAYER_EMAIL == correo && ((x.FECHAC >= _fi && x.FECHAC <= _ff))).Include(d => d.CLIENTE).Include(d => d.PAI).Include(d => d.SOCIEDAD).Include(d => d.TALL).Include(d => d.TSOL).Include(d => d.USUARIO).ToList();
                 for (int i = 0; i < dOCUMENTOes.Count; i++)
                 {
-                    //si el documentoref es nullo, significa que no depende de alguno otro
-                    if (dOCUMENTOes[i].DOCUMENTO_REF == null)
-                    {
-                        //recupero el numdoc
-                        var de = dOCUMENTOes[i].NUM_DOC;
-                        //sino ecuentra una coincidencia con el criterio discriminatorio se agregan o no a la lista
-                        dz = db.DOCUMENTOAs.Where(x => x.NUM_DOC == de && x.CLASE != "OTR").FirstOrDefault();
-                        if (dz == null || dz != null)
-                        {
-                            if (dOCUMENTOes[i].TSOL.NEGO)//para el ultimo filtro
-                            {
-                                Estatus es = new Estatus();
-                                string estatus = es.getEstatus(dOCUMENTOes[i]);
-                                List<int> ee = new List<int>();
-                                ee.Add(20);
-                                ee.Add(90);
-                                ee.Add(100);
-                                ee.Add(110);
-                                ee.Add(120);
-                                ee.Add(130);
-                                ee.Add(160);
 
-                                List<ESTATUSR> ess = (from e in db.ESTATUSRs.ToList()
-                                                      join n in ee
-                                                      on e.ESTATUS_ID equals n
-                                                      select e).ToList();
+                    PorEnviar pe = new PorEnviar();
+                    if (pe.seEnvia(dOCUMENTOes[i], db, null))
+                        dx.Add(dOCUMENTOes[i]);
 
-                                foreach (ESTATUSR e in ess)
-                                {
-                                    if (System.Text.RegularExpressions.Regex.IsMatch(estatus, e.REGEX))
-                                    {
-                                        dx.Add(dOCUMENTOes[i]);
-                                        break;
-                                    }
-                                }
+                        //////si el documentoref es nullo, significa que no depende de alguno otro
+                        ////if (dOCUMENTOes[i].DOCUMENTO_REF == null)
+                        ////{
+                        ////    //recupero el numdoc
+                        ////    var de = dOCUMENTOes[i].NUM_DOC;
+                        ////    //sino ecuentra una coincidencia con el criterio discriminatorio se agregan o no a la lista
+                        ////    dz = db.DOCUMENTOAs.Where(x => x.NUM_DOC == de && x.CLASE != "OTR").FirstOrDefault();
+                        ////    if (dz == null || dz != null)
+                        ////    {
+                        ////        if (dOCUMENTOes[i].TSOL.NEGO)//para el ultimo filtro
+                        ////        {
+                        ////            Estatus es = new Estatus();
+                        ////            string estatus = es.getEstatus(dOCUMENTOes[i]);
+                        ////            List<int> ee = new List<int>();
+                        ////            ee.Add(20);
+                        ////            ee.Add(90);
+                        ////            ee.Add(100);
+                        ////            ee.Add(110);
+                        ////            ee.Add(120);
+                        ////            ee.Add(130);
+                        ////            ee.Add(160);
 
-                                ////if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[P][R].."))
-                                ////    dx.Add(dOCUMENTOes[i]);
-                                ////else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[R]..[8]"))
-                                ////    dx.Add(dOCUMENTOes[i]);
-                                ////else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[P]..[A]..."))
-                                ////    dx.Add(dOCUMENTOes[i]);
-                                ////else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[P][A]..."))
-                                ////    dx.Add(dOCUMENTOes[i]);
-                                ////else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[E][A]..."))
-                                ////    dx.Add(dOCUMENTOes[i]);
-                                ////else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A].[P]."))
-                                ////    dx.Add(dOCUMENTOes[i]);
-                                ////else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A]..."))
-                                ////    dx.Add(dOCUMENTOes[i]);
-                                ////else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[T]..."))
-                                ////    dx.Add(dOCUMENTOes[i]);
-                                
-                            }
-                        }
-                    }
+                        ////            List<ESTATUSR> ess = (from e in db.ESTATUSRs.ToList()
+                        ////                                  join n in ee
+                        ////                                  on e.ESTATUS_ID equals n
+                        ////                                  select e).ToList();
+
+                        ////            foreach (ESTATUSR e in ess)
+                        ////            {
+                        ////                if (System.Text.RegularExpressions.Regex.IsMatch(estatus, e.REGEX))
+                        ////                {
+                        ////                    dx.Add(dOCUMENTOes[i]);
+                        ////                    break;
+                        ////                }
+                        ////            }
+
+                        ////            ////if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[P][R].."))
+                        ////            ////    dx.Add(dOCUMENTOes[i]);
+                        ////            ////else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[R]..[8]"))
+                        ////            ////    dx.Add(dOCUMENTOes[i]);
+                        ////            ////else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "[P]..[A]..."))
+                        ////            ////    dx.Add(dOCUMENTOes[i]);
+                        ////            ////else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[P][A]..."))
+                        ////            ////    dx.Add(dOCUMENTOes[i]);
+                        ////            ////else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "..[E][A]..."))
+                        ////            ////    dx.Add(dOCUMENTOes[i]);
+                        ////            ////else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A].[P]."))
+                        ////            ////    dx.Add(dOCUMENTOes[i]);
+                        ////            ////else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[A]..."))
+                        ////            ////    dx.Add(dOCUMENTOes[i]);
+                        ////            ////else if (System.Text.RegularExpressions.Regex.IsMatch(estatus, "...[T]..."))
+                        ////            ////    dx.Add(dOCUMENTOes[i]);
+
+                        ////        }
+                        ////    }
+                        ////}
                 }
                 if (dx.Count > 0)
                 {

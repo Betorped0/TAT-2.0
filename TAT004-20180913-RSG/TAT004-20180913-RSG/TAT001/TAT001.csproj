@@ -982,6 +982,7 @@
     <Compile Include="Services\Cancelar.cs" />
     <Compile Include="Services\Duplicado.cs" />
     <Compile Include="Services\ExcelExport.cs" />
+    <Compile Include="Services\PorEnviar.cs" />
     <Compile Include="Services\UsuarioLogin.cs" />
     <Compile Include="Services\Warning.cs" />
     <Compile Include="Services\Presupuesto.cs" />
