@@ -16,7 +16,7 @@ namespace TAT001.Controllers
     [LoginActive]
     public class CuentaController : Controller
     {
-        private TAT001Entities db = new TAT001Entities();
+        readonly TAT001Entities db = new TAT001Entities();
 
         // GET: Cuenta
         public ActionResult Index()
@@ -51,7 +51,7 @@ namespace TAT001.Controllers
             {
                 //return RedirectToAction("Pais", "Home");
             }
-            if (soc == null | pai == null | tal == null | eje == null)
+            if (soc == null || pai == null || tal == null || eje == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -126,7 +126,7 @@ namespace TAT001.Controllers
                 //return RedirectToAction("Pais", "Home");
             }
 
-            if (soc == null | pai == null | tal == null | eje == null)
+            if (soc == null || pai == null || tal == null || eje == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -135,7 +135,6 @@ namespace TAT001.Controllers
             {
                 return HttpNotFound();
             }
-            pagina = 692;
            return View(cUENTA);
         }
 
@@ -149,21 +148,6 @@ namespace TAT001.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(cUENTA).State = EntityState.Modified;
-                string a, b, c, d;
-                a = cUENTA.ABONO.ToString();
-                b = cUENTA.CARGO.ToString();
-                c = cUENTA.CLEARING.ToString();
-                d = cUENTA.LIMITE.ToString();
-
-                if (a.Length > 10) { a = a.Remove(10); }
-                if (b.Length > 10) { b = b.Remove(10); }
-                if (c.Length > 10) { c = c.Remove(10); }
-                if (d.Length > 10) { d = d.Remove(10); }
-
-               /* cUENTA.ABONO = Convert.ToDecimal(a);
-                cUENTA.CARGO = Convert.ToDecimal(b); 
-                cUENTA.CLEARING = Convert.ToDecimal(c);
-                cUENTA.LIMITE = Convert.ToDecimal(d);*/
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

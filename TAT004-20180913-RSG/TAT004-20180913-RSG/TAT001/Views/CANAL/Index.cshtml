@@ -5,6 +5,24 @@
     ViewBag.pagina_r = 940;
     ViewBag.carpeta_r = 500;
 }
+<script src="//code.jquery.com/jquery-1.12.4.js"></script>
+<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
+<link href="~/Content/dataTable.css" rel="stylesheet" />
+<link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
+<style>
+    .dataTables_length {
+        display: none;
+    }
+
+    .dataTables_filter {
+        display: none;
+    }
+
+    .dataTables_scrollHeadInner, .mdl-data-table {
+        width: 100%;
+    }
+</style>
 <div class="row">
     <div class="row right">
         <a href="@Url.Action("Create", "Canal")" id="lblAgregar" class="waves-effect waves-light btn">AGREGAR</a>
@@ -32,11 +50,6 @@
             var options = [];
             var instance = M.FormSelect.init(elem, options);
         </script>
-        <script src="//code.jquery.com/jquery-1.12.4.js"></script>
-        <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-        <script src="//cdn.datatables.net/1.10.16/js/dataTables.material.min.js"></script>
-        <link href="~/Content/dataTable.css" rel="stylesheet" />
-        <link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
         <table class="table mdl-data-table striped" id="table" style="width:100%;">
             <thead>
                 <tr>
@@ -68,13 +81,16 @@
         </table>
     </div>
     <script>
+           var root = "@Url.Content("~")",
+        spras_id = "@ViewBag.spras_id",
+        urlLanguage = root + "Scripts/lang/" + spras_id + ".json";
     $(document).ready(function () {
         var table = $('#table').DataTable({
             scrollX: "50vh",
             scrollY: "50vh",
             scrollCollapse: true,
             language: {
-                "url": "../Scripts/lang/@Session["spras"].ToString()"+".json"
+                "url": urlLanguage
             }, columnDefs: [
                 {
                     targets: [1],
@@ -136,16 +152,3 @@
     }
     </script>
 </div>
-<style>
-    .dataTables_length {
-        display: none;
-    }
-
-    .dataTables_filter {
-        display: none;
-    }
-
-    .dataTables_scrollHeadInner, .mdl-data-table {
-        width: 100%;
-    }
-</style>

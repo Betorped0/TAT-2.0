@@ -12,21 +12,25 @@
 <link href="~/Content/dataTable.css" rel="stylesheet" />
 <link href="//cdn.datatables.net/1.10.16/css/dataTables.material.min.css" rel="stylesheet" />
 
+<style>
+    .dataTables_length {
+        display: none;
+    }
+
+    .dataTables_filter {
+        display: none;
+    }
+
+    .dataTables_scrollHeadInner, .mdl-data-table {
+        width: 100%;
+    }
+</style>
 <div class="row">
     <div class="row right">
-            <a href="@Url.Action("Create", "Cuenta")" id="lblAgregar" class="waves-effect waves-light btn">AGREGAR</a>
+        <a href="@Url.Action("Create", "Cuenta")" id="lblAgregar" class="waves-effect waves-light btn">AGREGAR</a>
     </div>
 </div>
 <div class="card-panel">
-    @*<div class="row" style="height:10px;width:100%;">
-            <div class="col l7 pink darken-1" style="height:10px;padding:0;"></div>
-            <div class="col l3 pink darken-4" style="height:10px;padding:0;">
-                <div class="col l3 pink darken-4" style="height:10px;padding:0;"></div>
-                <div class="col l8 orange" style="height:10px;padding:0;"></div>
-                <div class="col l1 red" style="height:10px;padding:0;"></div>
-            </div>
-            <div class="col l2 yellow" style="height:10px;padding:0;"></div>
-        </div>*@
     <div class="row" style="margin-bottom:0;">
         <div class="input-field col s3 m3 l3">
             <select id="selecc">
@@ -77,40 +81,40 @@
         <tbody>
             @foreach (var item in Model)
             {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SOCIEDAD_ID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PAI.LANDX)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TALL.DESCRIPCION)
-                </td>
-                <td>
-                    @item.EJERCICIO.ToString()
-                </td>
-                <td>
-                    @item.ABONO.ToString()
-                </td>
-                <td>
-                    @item.CARGO.ToString()
-                </td>
-                <td>
-                    @item.CLEARING.ToString()
-                </td>
-                <td>
-                    <a href="@Url.Action("Edit", "Cuenta", new { soc = item.SOCIEDAD_ID, pai = item.PAIS_ID, tal = item.TALL_ID, eje = item.EJERCICIO })">
-                        <i class='material-icons green-text'>edit</i>
-                    </a>&nbsp
-                    <a href="@Url.Action("Details", "Cuenta", new { soc = item.SOCIEDAD_ID, pai = item.PAIS_ID, tal = item.TALL_ID, eje = item.EJERCICIO })">
-                        <i class='material-icons blue-text'>search</i>
-                    </a>&nbsp
-                    @*<a data-form-method="post" href="@Url.Action("Delete", "Cuenta", new { soc = item.SOCIEDAD_ID, pai = item.PAIS_ID, tal = item.TALL_ID, eje = item.EJERCICIO })">
-                <i class='material-icons red-text'>delete</i>
-            </a>*@
-                </td>
-            </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SOCIEDAD_ID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PAI.LANDX)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TALL.DESCRIPCION)
+                    </td>
+                    <td>
+                        @item.EJERCICIO.ToString()
+                    </td>
+                    <td>
+                        @item.ABONO.ToString()
+                    </td>
+                    <td>
+                        @item.CARGO.ToString()
+                    </td>
+                    <td>
+                        @item.CLEARING.ToString()
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Edit", "Cuenta", new { soc = item.SOCIEDAD_ID, pai = item.PAIS_ID, tal = item.TALL_ID, eje = item.EJERCICIO })">
+                            <i class='material-icons green-text'>edit</i>
+                        </a>&nbsp
+                        <a href="@Url.Action("Details", "Cuenta", new { soc = item.SOCIEDAD_ID, pai = item.PAIS_ID, tal = item.TALL_ID, eje = item.EJERCICIO })">
+                            <i class='material-icons blue-text'>search</i>
+                        </a>&nbsp
+                        @*<a data-form-method="post" href="@Url.Action("Delete", "Cuenta", new { soc = item.SOCIEDAD_ID, pai = item.PAIS_ID, tal = item.TALL_ID, eje = item.EJERCICIO })">
+                                <i class='material-icons red-text'>delete</i>
+                            </a>*@
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
@@ -118,13 +122,16 @@
 
 
 <script>
+     var root = "@Url.Content("~")",
+        spras_id = "@ViewBag.spras_id",
+        urlLanguage = root + "Scripts/lang/" + spras_id + ".json";
     $(document).ready(function () {
         var table = $('#table').DataTable({
             scrollX: "50vh",
             scrollY: "50vh",
             scrollCollapse: true,
             language: {
-                "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                "url": urlLanguage
             },
             order: [[2, "asc"]],
             initComplete: function () {
@@ -181,17 +188,4 @@
     }
 
 </script>
-<style>
-    .dataTables_length {
-        display: none;
-    }
-
-    .dataTables_filter {
-        display: none;
-    }
-
-    .dataTables_scrollHeadInner, .mdl-data-table {
-        width: 100%;
-    }
-</style>
 

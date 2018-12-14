@@ -69,9 +69,6 @@
             <a href="@Url.Action("Details", "Materiales", new { id = item.MATERIAL_ID, vkorg=item.VKORG, vtweg=item.VTWEG })">
                 <i class='material-icons blue-text'>search</i>
             </a>
-                @*<a class="confirmation" href="@Url.Action("Delete", "Materiales", new { id = item.MATERIAL_ID, vkorg=item.VKORG, vtweg=item.VTWEG })">
-                    <i class='material-icons red-text'>delete</i>
-                </a>*@
             </td>
         </tr>
         }
@@ -111,10 +108,6 @@
     }
 </div>
 <script>
-    $('.confirmation').on('click', function (e) {
-        e.preventDefault;
-        return confirm('¿Desea eliminar el material?');
-    });
 
 
     //-----Sort
@@ -131,9 +124,13 @@
                     $.ajax({
                         url: me.toElement.getAttribute('url'),
                         success: function (resultView) {
+                        if (resultView.isRedirect) {
+                            window.location = resultView.redirectUrl;
+                        } else {
                             fnCommon.showProcess(false);
                             $('#list').html(resultView);
                             sort();
+                        }
                         }
                     });
                 });
@@ -156,9 +153,13 @@
                     $.ajax({
                         url: me.toElement.getAttribute('url'),
                         success: function (resultView) {
+                             if (resultView.isRedirect) {
+                            window.location = resultView.redirectUrl;
+                            } else {
                             fnCommon.showProcess(false);
                             $('#list').html(resultView);
                             pagination();
+                            }
                         }
                     });
                 });

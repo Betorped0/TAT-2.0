@@ -8,20 +8,23 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using TAT001.Common;
 using TAT001.Entities;
 using TAT001.Filters;
 using TAT001.Models;
+using TAT001.Services;
 
 namespace TAT001.Controllers.Catalogos
 {
     [Authorize]
-    [LoginActive]
     public class ProveedorController : Controller
     {
-        private TAT001Entities db = new TAT001Entities();
+        readonly TAT001Entities db = new TAT001Entities();
+        readonly UsuarioLogin usuValidateLogin = new UsuarioLogin();
 
         // GET: Proveedor
+        [LoginActive]
         public ActionResult Index()
         {
             int pagina_id = 771; //ID EN BASE DE DATOS
@@ -29,8 +32,10 @@ namespace TAT001.Controllers.Catalogos
             ViewBag.pais = Session["pais"] != null ? Session["pais"].ToString() + ".png" : null;
 
 
-            ProveedorViewModel viewModel = new ProveedorViewModel();
-            viewModel.pageSizes = FnCommon.ObtenerCmbPageSize();
+            ProveedorViewModel viewModel = new ProveedorViewModel
+            {
+                pageSizes = FnCommon.ObtenerCmbPageSize()
+            };
             ObtenerListado(ref viewModel);
 
             return View(viewModel);
@@ -38,6 +43,15 @@ namespace TAT001.Controllers.Catalogos
 
         public ActionResult List(string colOrden, string ordenActual, int? numRegistros = 10, int? pagina = 1, string buscar = "")
         {
+            if (!usuValidateLogin.validaUsuario(User.Identity.Name))
+            {
+                FormsAuthentication.SignOut();
+                return Json(new
+                {
+                    redirectUrl = Url.Action("Index", "Home"),
+                    isRedirect = true
+                }, JsonRequestBehavior.AllowGet);
+            }
             int pagina_id = 771; //ID EN BASE DE DATOS
             ProveedorViewModel viewModel = new ProveedorViewModel();
             ObtenerListado(ref viewModel, colOrden, ordenActual, numRegistros, pagina, buscar);
@@ -48,7 +62,7 @@ namespace TAT001.Controllers.Catalogos
         {
             int pageIndex = pagina.Value;
             List<PROVEEDOR> clientes = db.PROVEEDORs.ToList();
-            viewModel.ordenActual = colOrden;
+            viewModel.ordenActual = (string.IsNullOrEmpty(ordenActual) || !colOrden.Equals(ordenActual) ? colOrden : "");
             viewModel.numRegistros = numRegistros.Value;
             viewModel.buscar = buscar;
 
@@ -102,7 +116,9 @@ namespace TAT001.Controllers.Catalogos
                     break;
             }
         }
+        
         // GET: Proveedor/Details/5
+        [LoginActive]
         public ActionResult Details(string id)
         {
             int pagina = 772; //ID EN BASE DE DATOS
@@ -145,95 +161,9 @@ namespace TAT001.Controllers.Catalogos
             return View(pROVEEDOR);
         }
 
-        // GET: Proveedor/Create
-        public ActionResult Create()
-        {
-            int pagina = 774; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
-            {
-                string u = User.Identity.Name;
-                //string u = "admin";
-                var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
-                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(771) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-
-                try
-                {
-                    string p = Session["pais"].ToString();
-                    ViewBag.pais = p + ".svg";
-                }
-                catch
-                {
-                    //ViewBag.pais = "mx.svg";
-                    //return RedirectToAction("Pais", "Home");
-                }
-                Session["spras"] = user.SPRAS_ID;
-                ViewBag.lan = user.SPRAS_ID;
-            }
-            ViewBag.SOCIEDAD_ID = new SelectList(db.SOCIEDADs, "BUKRS", "BUTXT");
-            ViewBag.PAIS_ID = new SelectList(db.PAIS, "LAND", "LANDX");
-            return View();
-        }
-
-        // POST: Proveedor/Create
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
-        // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,NOMBRE,SOCIEDAD_ID,PAIS_ID")] PROVEEDOR pROVEEDOR)
-        {
-            //Valido si ya existe algun registro
-            if (db.PROVEEDORs.Where(x => x.ID == pROVEEDOR.ID).ToList().Count == 0)
-            {
-                //recupero el pais, para que el usuario no lo ingrese
-                var pa = db.SOCIEDADs.Where(x => x.BUKRS == pROVEEDOR.SOCIEDAD_ID).FirstOrDefault();
-                if (ModelState.IsValid)
-                {
-                    pROVEEDOR.PAIS_ID = pROVEEDOR.PAIS_ID;
-                    pROVEEDOR.SOCIEDAD_ID = pROVEEDOR.SOCIEDAD_ID;
-                    pROVEEDOR.ACTIVO = true;
-                    db.PROVEEDORs.Add(pROVEEDOR);
-                    db.SaveChanges();
-                    return RedirectToAction("Index");
-                }
-            }
-            int pagina = 774; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
-            {
-                string u = User.Identity.Name;
-                //string u = "admin";
-                var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
-                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(771) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.error = "Valores Existentes (" + pROVEEDOR.ID + ")";
-                try
-                {
-                    string p = Session["pais"].ToString();
-                    ViewBag.pais = p + ".svg";
-                }
-                catch
-                {
-                    //ViewBag.pais = "mx.svg";
-                    //return RedirectToAction("Pais", "Home");
-                }
-                Session["spras"] = user.SPRAS_ID;
-            }
-            ViewBag.SOCIEDAD_ID = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS");
-            ViewBag.PAIS_ID = new SelectList(db.PAIS, "LAND", "LANDX");
-            return View(pROVEEDOR);
-        }
-
+        
         // GET: Proveedor/Edit/5
+        [LoginActive]
         public ActionResult Edit(string id)
         {
             int pagina = 773; //ID EN BASE DE DATOS
@@ -282,6 +212,7 @@ namespace TAT001.Controllers.Catalogos
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [LoginActive]
         public ActionResult Edit([Bind(Include = "ID,NOMBRE,SOCIEDAD_ID,PAIS_ID,ACTIVO")] PROVEEDOR pROVEEDOR)
         {
             if (ModelState.IsValid)
@@ -331,67 +262,7 @@ namespace TAT001.Controllers.Catalogos
             return View(pROVEEDOR);
         }
 
-        // GET: Proveedor/Delete/5
-        public ActionResult Delete(string id)
-        {
-            int pagina = 775; //ID EN BASE DE DATOS
-            using (TAT001Entities db = new TAT001Entities())
-            {
-                string u = User.Identity.Name;
-                //string u = "admin";
-                var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;;
-                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(771) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-
-                try
-                {
-                    string p = Session["pais"].ToString();
-                    ViewBag.pais = p + ".svg";
-                }
-                catch
-                {
-                    //ViewBag.pais = "mx.svg";
-                    //return RedirectToAction("Pais", "Home");
-                }
-                Session["spras"] = user.SPRAS_ID;
-                ViewBag.lan = user.SPRAS_ID;
-            }
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            PROVEEDOR pROVEEDOR = db.PROVEEDORs.Find(id);
-            if (pROVEEDOR == null)
-            {
-                return HttpNotFound();
-            }
-            return View(pROVEEDOR);
-        }
-
-        // POST: Proveedor/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(string id)
-        {
-            try
-            {
-                PROVEEDOR pROVEEDOR = db.PROVEEDORs.Find(id);
-                pROVEEDOR.ACTIVO = false;
-                db.Entry(pROVEEDOR).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            catch (Exception e)
-            {
-                var y = e.ToString();
-                return View();
-            }
-        }
+        [LoginActive]
         public ActionResult Desactivar(string id, bool a)
         {
             try
@@ -408,7 +279,9 @@ namespace TAT001.Controllers.Catalogos
                 return RedirectToAction("Index");
             }
         }
+
         [HttpPost]
+        [LoginActive]
         public FileResult Descargar()
         {
             var pr = db.PROVEEDORs.ToList();

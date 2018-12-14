@@ -150,7 +150,7 @@ namespace TAT001.Controllers
             if (dOCUMENTO.DOCUMENTO_REF == null)
                 sol = getSolicitud("0.00", dOCUMENTO.MONTO_DOC_MD + "", dOCUMENTO.PAI.DECIMAL);
             else
-                sol = getSolicitud(dOCUMENTO.DOCUMENTO_REF+"", dOCUMENTO.MONTO_DOC_MD + "", dOCUMENTO.PAI.DECIMAL);
+                sol = getSolicitud(dOCUMENTO.DOCUMENTO_REF + "", dOCUMENTO.MONTO_DOC_MD + "", dOCUMENTO.PAI.DECIMAL);
 
             ViewBag.S_IMPA = sol.S_IMPA;
             ViewBag.S_IMPB = sol.S_IMPB;
@@ -161,7 +161,7 @@ namespace TAT001.Controllers
             ViewBag.S_NUM = sol.S_NUM;
             ViewBag.S_REMA = sol.S_REMA;
             ViewBag.rema_color = "";
-            if(format.toNum(sol.S_REMA, dOCUMENTO.PAI.MILES, dOCUMENTO.PAI.DECIMAL) <0)
+            if (format.toNum(sol.S_REMA, dOCUMENTO.PAI.MILES, dOCUMENTO.PAI.DECIMAL) < 0)
                 ViewBag.rema_color = "#F44336 !important";
 
             ViewBag.S_RET = sol.S_RET;
@@ -178,7 +178,7 @@ namespace TAT001.Controllers
             ViewBag.idUsuario = dOCUMENTO.USUARIOC_ID;
             ViewBag.bandera = dOCUMENTO.PAIS_ID;
             //SECCION DE CABECERAS - APROBACION
-            ViewBag.tituloCabeceraAprobacion = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "head_aprobacion").FirstOrDefault().TEXTOS;        
+            ViewBag.tituloCabeceraAprobacion = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "head_aprobacion").FirstOrDefault().TEXTOS;
             ViewBag.tituloBajoCabeceraAprobacion = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "SubHead_aprobacion").FirstOrDefault().TEXTOS;
             ViewBag.tituloBajoCabeceraAprobacion1 = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "SubHead_aprobacion1").FirstOrDefault().TEXTOS;
             ViewBag.tituloBajoCabeceraAprobacion2 = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "SubHead_aprobacion2").FirstOrDefault().TEXTOS;
@@ -224,13 +224,26 @@ namespace TAT001.Controllers
             ViewBag.procesoIcon = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_enProceso").FirstOrDefault().TEXTOS;
             ViewBag.consumido = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_consumido").FirstOrDefault().TEXTOS;
             ViewBag.excedido = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_preDisExcedido").FirstOrDefault().TEXTOS;
+            //SECCION RAZON DE REVERSO
+            ViewBag.headReverso = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "head_reverso").FirstOrDefault().TEXTOS;
+            ViewBag.razonReverso = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_razonReverso").FirstOrDefault().TEXTOS;
+            ViewBag.tipoReverso = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_tipoReverso").FirstOrDefault().TEXTOS;
+            //SECCION PARA DOCUMENTOS RELACIONADOS EN EL REVERSO
+            ViewBag.relacionados = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "tab_relacionados").FirstOrDefault().TEXTOS;
+            ViewBag.relTipo = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "tabhead_tipo").FirstOrDefault().TEXTOS;
+            ViewBag.relDocumento = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "tabhead_documento").FirstOrDefault().TEXTOS;
+            ViewBag.relSap = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "tabhead_sap").FirstOrDefault().TEXTOS;
+            ViewBag.relSociedad = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "tabhead_sociedad").FirstOrDefault().TEXTOS;
+            ViewBag.relPeriodo = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "tabhead_periodo").FirstOrDefault().TEXTOS;
+            ViewBag.relEjercicio = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "tabhead_ejercicio").FirstOrDefault().TEXTOS;
             //SECCION PIE DE LA CANCELACION
-            ViewBag.pie = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_pieCancelacion").FirstOrDefault().TEXTOS;
+            ViewBag.pieAprobacion = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "pie_aprobacion").FirstOrDefault().TEXTOS;
+            ViewBag.pieSoporte = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "pie_soporte").FirstOrDefault().TEXTOS;
             //END LGPP 13.12.2018
             return View(dOCUMENTO);
         }
 
-        public ActionResult Cancelacion(decimal id, bool? mail, string spras) 
+        public ActionResult Cancelacion(decimal id, bool? mail, string spras)
         {
             if (spras == "" | spras == null)
             {
@@ -885,16 +898,16 @@ namespace TAT001.Controllers
             return id_cl;
         }
 
-        public PRESUPUESTO_MOD getPresupuesto(string kunnr,string periodo)
+        public PRESUPUESTO_MOD getPresupuesto(string kunnr, string periodo)
         {
             PRESUPUESTO_MOD pm = new PRESUPUESTO_MOD();
             Presupuesto pr = new Presupuesto();
             pm = pr.getPresupuesto(kunnr, periodo);
-        
+
             return pm;
         }
 
-        public SOLICITUD_MOD getSolicitud(string num, string num2,  string d)//RSG 07.06.2018---------------------------------------------
+        public SOLICITUD_MOD getSolicitud(string num, string num2, string d)//RSG 07.06.2018---------------------------------------------
         {
             TAT001.Models.SOLICITUD_MOD sm = new SOLICITUD_MOD();
             Services.FormatosC format = new FormatosC();
@@ -926,9 +939,9 @@ namespace TAT001.Controllers
                     decimal? rem2 = (rev2.MONTO_DOC_MD - Convert.ToDecimal(num2));
 
                     sm.S_MONTOB = format.toShow(Convert.ToDecimal(num2), d);
-                    sm.S_MONTOP = format.toShow(0,d);
+                    sm.S_MONTOP = format.toShow(0, d);
                     sm.S_MONTOA = "-";
-                    sm.S_REMA = format.toShow((decimal)rem2,d);
+                    sm.S_REMA = format.toShow((decimal)rem2, d);
                     sm.S_IMPA = "-";
                     sm.S_IMPB = "-";
                     sm.S_IMPC = "-";
@@ -944,7 +957,7 @@ namespace TAT001.Controllers
 
                     sm.S_MONTOB = format.toShow(Convert.ToDecimal(num2), d);
                     sm.S_MONTOP = format.toShow((decimal)rev3.MONTO_DOC_MD, d);
-                    sm.S_MONTOA = format.toShow((decimal)rev33.MONTO_DOC_MD- Convert.ToDecimal(num2), d);
+                    sm.S_MONTOA = format.toShow((decimal)rev33.MONTO_DOC_MD - Convert.ToDecimal(num2), d);
                     sm.S_REMA = format.toShow((decimal)rem3 + Convert.ToDecimal(num2), d);
                     sm.S_IMPA = "-";
                     sm.S_IMPB = "-";
@@ -964,15 +977,15 @@ namespace TAT001.Controllers
                     }
                     decimal? rem4 = ((rev4.MONTO_DOC_MD - sum) - (Convert.ToDecimal(num2)));
 
-                    sm.S_MONTOB = format.toShow(Convert.ToDecimal(num2), d); 
+                    sm.S_MONTOB = format.toShow(Convert.ToDecimal(num2), d);
                     sm.S_MONTOP = format.toShow((decimal)rev4.MONTO_DOC_MD, d);
                     sm.S_MONTOA = format.toShow(sum - Convert.ToDecimal(num2), d);
-                    sm.S_REMA = format.toShow((-sum + (decimal)rev4.MONTO_DOC_MD + Convert.ToDecimal(num2)) , d);
+                    sm.S_REMA = format.toShow((-sum + (decimal)rev4.MONTO_DOC_MD + Convert.ToDecimal(num2)), d);
                     sm.S_IMPA = "-";
                     sm.S_IMPB = "-";
                     sm.S_IMPC = "-";
                     sm.S_RET = "-";
-                    sm.S_TOTAL = format.toShow(Convert.ToDecimal(num2), d); 
+                    sm.S_TOTAL = format.toShow(Convert.ToDecimal(num2), d);
                 }
             }
 
