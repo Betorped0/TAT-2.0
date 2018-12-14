@@ -1591,8 +1591,8 @@ $(window).on('load', function () {
         ne = "ne";
     }
     //Valores en información antes soporte
-    copiarTableVistaSop();
-    if (!isDuplicado())
+    copiarTableVistaSop(); var tipoR = document.getElementById("txt_trec").value;//RSG 09.07.2018
+    if (!isDuplicado() || document.getElementById("txt_trec").value == "1")
     copiarTableVistaRec(); //ADD RSG 30.10.2018
     //Valores en  distribución    
     copiarTableVista("", borr, ne); //B20180625 MGC 2018.07.02 //Add MGC B20180705 2018.07.05 ne no eliminar
