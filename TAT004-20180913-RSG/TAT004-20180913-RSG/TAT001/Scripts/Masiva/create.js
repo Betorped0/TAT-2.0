@@ -438,6 +438,10 @@ $('#tab_test1').on('keydown.autocomplete', '.input_estado', function () {
                 $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                 clearErrors();
                 e.target.value = "";
+            } else if ($(".input_estado").val() !== "") {
+                $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+                $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
+                clearErrors();
             }
         },
 
@@ -484,6 +488,10 @@ $('#tab_test1').on('keydown.autocomplete', '.input_ciudad', function () {
                 $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                 clearErrors();
                 e.target.value = "";
+            } else if ($(".input_ciudad").val() !== "") {
+                $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
+                $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
+                clearErrors();
             }
         },
 
@@ -496,65 +504,41 @@ $('#tab_test1').on('keydown.autocomplete', '.input_ciudad', function () {
 
 });
 
-$('#tab_test1').on('keydown.autocomplete', '.input_concepto', function () {
+$('#tab_test1').on('change', '.input_concepto', function () {
     var tr = $(this).closest('tr'); //Obtener el row
-    var row_index = $(this).parent().parent().index();
-    var col_index = $(this).parent().index();
-
-    auto(this).autocomplete({
-        source: function (request, response) {
-            auto.ajax({
-                type: "POST",
-                url: 'concepto',
-                dataType: "json",
-                data: { "Prefix": request.term },
-                success: function (data) {
-                    if (data) {
-                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
-                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
-                    } else {
-                        $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
-                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
-                    }
-                    clearErrors();
-                }
-            });
-        },
-
-        change: function () {
-            if ($(this).val() === "") {
-                $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
-            }
-            clearErrors();
+    var val = $(this).val();
+    var indexConcepto = getTableIndex('#tab_test1', 'lbl_concepto');
+    var colConcepto = tr.find('td:eq(' + indexConcepto + ') input');
+    if (val === "") {
+        colConcepto.addClass("red white-text rojo");
+    } else {
+        if (val.length > 100) {
+            this.title = 'Se superó la cantidad maxima de caracteres(100)';
+            colConcepto.addClass("red white-text rojo");
+        } else {
+            colConcepto.removeClass("red white-text rojo");
         }
-    });
+    }
+    clearErrors();
+
 });
 
-$('#tab_test1').on('keydown.autocomplete', '.input_notas', function () {
+$('#tab_test1').on('change', '.input_notas', function () {
     var tr = $(this).closest('tr'); //Obtener el row
-    var row_index = $(this).parent().parent().index();
-    var col_index = $(this).parent().index();
-
-    auto(this).autocomplete({
-        source: function (request, response) {
-            auto.ajax({
-                type: "POST",
-                url: 'notas',
-                dataType: "json",
-                data: { "Prefix": request.term },
-                success: function (data) {
-                    if (data) {
-                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
-                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
-                    } else {
-                        $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
-                        $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
-                    }
-                    clearErrors();
-                }
-            })
+    var val = $(this).val();
+    var indexnota = getTableIndex('#tab_test1', 'lbl_notas');
+    var colNota = tr.find('td:eq(' + indexnota + ') input');
+    if (val === "") {
+        colNota.addClass("red white-text rojo");
+    } else {
+        if (val.length > 255) {
+            this.title = 'Se superó la cantidad maxima de caracteres(255)';
+            colNota.addClass("red white-text rojo");
+        } else {
+            colNota.removeClass("red white-text rojo");
         }
-    });
+    }
+    clearErrors();
 });
 
 $('body').on('keydown.autocomplete', '.input_cliente', function () {
@@ -1898,60 +1882,65 @@ $('#tab_test4').on('focusout', '.input_cantidades', function () {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
-    var num_docH1 = null, pais = null, getDec = null;
+    var num_docH1 = null, pais = null, getDec = null, getMiles = null;
     var num1 = null, num2 = null;
     var tablaH1 = $('#tab_test1').DataTable();
     var num_docGlobal = tr.find("td:eq(1)").children().val();
 
     var monto = null, porApoyo = null, pieApoyo = null, cosApoyo = null, preSugerido = null, volReal = null, apoyo = null;
 
-    var colMonto = tr.find('td:eq(8) input');
-    var colPorApoyo = tr.find('td:eq(9) input');
-    var colPieApoyo = tr.find('td:eq(10) input');
-    var colCosApoyo = tr.find('td:eq(11) input');
-    var colPreSugerido = tr.find('td:eq(12) input');
-    var colVolReal = tr.find('td:eq(13) input');
-    var colApoyo = tr.find('td:eq(14) input');
+    var indexMonto = getTableIndex('#tab_test4', 'lbl_monto'),
+        indexPorApoyo = getTableIndex('#tab_test4', 'lbl_porcentaje'),
+        indexPieApoyo = getTableIndex('#tab_test4', 'lbl_apoyoPieza'),
+        indexCosApoyo = getTableIndex('#tab_test4', 'lbl_costo'),
+        indexPreSugerido = getTableIndex('#tab_test4', 'lbl_precio'),
+        indexVolReal = getTableIndex('#tab_test4', 'lbl_volumen'),
+        indexApoyo = getTableIndex('#tab_test4', 'lbl_apoyo');
+
+    var colMonto = tr.find('td:eq(' + indexMonto + ') input');//8
+    var colPorApoyo = tr.find('td:eq(' + indexPorApoyo + ') input'); //9
+    var colPieApoyo = tr.find('td:eq(' + indexPieApoyo + ') input');//10
+    var colCosApoyo = tr.find('td:eq(' + indexCosApoyo + ') input');//11
+    var colPreSugerido = tr.find('td:eq(' + indexPreSugerido + ') input');//12
+    var colVolReal = tr.find('td:eq(' + indexVolReal + ') input');//13
+    var colApoyo = tr.find('td:eq(' + indexApoyo + ') input');//14
 
     $(tr.find('td:eq(1)').children().addClass('' + row_index + 'numDoc4'));
     var num_doc = $('.' + row_index + 'numDoc4').val();
 
+    ///OBTENER PAIS , FORMATO DECIMALES Y MILES POR  NUMERO DE DOCUMENTO 
     for (var a = 0; a < tablaH1.rows().data().length; a++) {
         var rowH1 = tablaH1.row(a).node();
         num_docH1 = $(rowH1).children().eq(1).children().val();
+        var indexPais = getTableIndex('#tab_test1', 'lbl_pais');
+        var indexDecimal = getTableIndex('#tab_test1', 'lbl_decimales');
+        var indexMiles = getTableIndex('#tab_test1', 'lbl_miles');
 
         if (num_docH1 === num_doc) {
-            pais = $(rowH1).find('td:eq(5)').children().val();
+            pais = $(rowH1).find('td:eq(' + indexPais + ')').children().val();//5
+            getDec = $(rowH1).find('td:eq(' + indexDecimal + ')').children().val();
+            getMiles = $(rowH1).find('td:eq(' + indexMiles + ')').children().val();
         }
     }
 
-    $.ajax({
-        type: "POST",
-        url: 'getDecimal',
-        dataType: "json",
-        data: { "Pais": pais },
-        async: false,
-        success: function (data) {
-            getDec = data;
-
-            if (getDec === '.') {
-                monto = tr.find('td:eq(8) input').val().replace('$', '').replace(',', '');
-                porApoyo = tr.find('td:eq(9) input').val().replace('%', '').replace(',', '');
-                pieApoyo = tr.find('td:eq(10) input').val().replace('$', '').replace(',', '');
-                cosApoyo = tr.find('td:eq(11) input').val().replace('$', '').replace(',', '');
-                preSugerido = tr.find('td:eq(12) input').val().replace('$', '').replace(',', '');
-                volReal = tr.find('td:eq(13) input').val().replace('$', '').replace(',', '');
-                apoyo = tr.find('td:eq(14) input').val().replace('$', '').replace(',', '');
-            }
-            else {
-                monto = tr.find('td:eq(8) input').val().replace('$', '').replace('.', '').replace(',', '.');
-                porApoyo = tr.find('td:eq(9) input').val().replace('%', '').replace('.', '').replace(',', '.');
-                pieApoyo = tr.find('td:eq(10) input').val().replace('$', '').replace('.', '').replace(',', '.');
-                cosApoyo = tr.find('td:eq(11) input').val().replace('$', '').replace('.', '').replace(',', '.');
-                preSugerido = tr.find('td:eq(12) input').val().replace('$', '').replace('.', '').replace(',', '.');
-                volReal = tr.find('td:eq(13) input').val().replace('$', '').replace('.', '').replace(',', '.');
-                apoyo = tr.find('td:eq(14) input').val().replace('$', '').replace('.', '').replace(',', '.');
-            }
+    if (getDec === '.') {
+        monto = tr.find('td:eq(' + indexMonto+') input').val().replace('$', '').replace(',', ''); //8
+        porApoyo = tr.find('td:eq(' + indexPorApoyo+') input').val().replace('%', '').replace(',', '');//9
+        pieApoyo = tr.find('td:eq('+indexPieApoyo+') input').val().replace('$', '').replace(',', '');//10
+        cosApoyo = tr.find('td:eq(' + indexCosApoyo+') input').val().replace('$', '').replace(',', '');//11
+        preSugerido = tr.find('td:eq(' + indexPreSugerido+') input').val().replace('$', '').replace(',', '');//12
+        volReal = tr.find('td:eq(' + indexVolReal+') input').val().replace('$', '').replace(',', '');//13
+        apoyo = tr.find('td:eq(' + indexApoyo+') input').val().replace('$', '').replace(',', '');//14
+    }
+    else {
+        monto = tr.find('td:eq(' + indexMonto +') input').val().replace('$', '').replace('.', '').replace(',', '.');
+        porApoyo = tr.find('td:eq(' + indexPorApoyo +') input').val().replace('%', '').replace('.', '').replace(',', '.');
+        pieApoyo = tr.find('td:eq(' + indexPieApoyo +') input').val().replace('$', '').replace('.', '').replace(',', '.');
+        cosApoyo = tr.find('td:eq(' + indexCosApoyo +') input').val().replace('$', '').replace('.', '').replace(',', '.');
+        preSugerido = tr.find('td:eq(' + indexPreSugerido +') input').val().replace('$', '').replace('.', '').replace(',', '.');
+        volReal = tr.find('td:eq(' + indexVolReal +') input').val().replace('$', '').replace('.', '').replace(',', '.');
+        apoyo = tr.find('td:eq(' + indexApoyo +') input').val().replace('$', '').replace('.', '').replace(',', '.');
+    }
 
             //VISTA PARA EL MONTO
             if ($.isNumeric(monto)) {
@@ -2159,74 +2148,78 @@ $('#tab_test4').on('focusout', '.input_cantidades', function () {
                     validaApoyo(num2, colApoyo);
                 }
             }
-        }
-    });
+        
 });
 
 $('#tab_test4').on('keydown', '.input_apoyo', function (e) {
     var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
-    var num_docH1 = null, pais = null, getDec = null;
+    var num_docH1 = null, pais = null, getDec = null, getMiles= null;
     var tablaH1 = $('#tab_test1').DataTable();
     var apoyo = null;
 
-    var colMonto = tr.find('td:eq(8) input');
-    var colPorApoyo = tr.find('td:eq(9) input');
-    var colPieApoyo = tr.find('td:eq(10) input');
-    var colCosApoyo = tr.find('td:eq(11) input');
-    var colPreSugerido = tr.find('td:eq(12) input');
-    var colVolReal = tr.find('td:eq(13) input');
-    var colApoyo = tr.find('td:eq(14) input');
+
+    var indexMonto = getTableIndex('#tab_test4', 'lbl_monto'),
+        indexPorApoyo = getTableIndex('#tab_test4', 'lbl_porcentaje'),
+        indexPieApoyo = getTableIndex('#tab_test4', 'lbl_apoyoPieza'),
+        indexCosApoyo = getTableIndex('#tab_test4', 'lbl_costo'),
+        indexPreSugerido = getTableIndex('#tab_test4', 'lbl_precio'),
+        indexVolReal = getTableIndex('#tab_test4', 'lbl_volumen'),
+        indexApoyo = getTableIndex('#tab_test4', 'lbl_apoyo');
+
+    var colMonto = tr.find('td:eq(' + indexMonto + ') input');//8
+    var colPorApoyo = tr.find('td:eq(' + indexPorApoyo + ') input'); //9
+    var colPieApoyo = tr.find('td:eq(' + indexPieApoyo + ') input');//10
+    var colCosApoyo = tr.find('td:eq(' + indexCosApoyo + ') input');//11
+    var colPreSugerido = tr.find('td:eq(' + indexPreSugerido + ') input');//12
+    var colVolReal = tr.find('td:eq(' + indexVolReal + ') input');//13
+    var colApoyo = tr.find('td:eq(' + indexApoyo + ') input');//14
+
 
     $(tr.find('td:eq(1)').children().addClass(row_index + 'numDoc4'));
     var num_doc = $('.' + row_index + 'numDoc4').val();
 
+    ///OBTENER PAIS , FORMATO DECIMALES Y MILES POR  NUMERO DE DOCUMENTO 
     for (var a = 0; a < tablaH1.rows().data().length; a++) {
         var rowH1 = tablaH1.row(a).node();
         num_docH1 = $(rowH1).children().eq(1).children().val();
+        var indexPais = getTableIndex('#tab_test1', 'lbl_pais');
+        var indexDecimal = getTableIndex('#tab_test1', 'lbl_decimales');
+        var indexMiles = getTableIndex('#tab_test1', 'lbl_miles');
 
         if (num_docH1 === num_doc) {
-            pais = $(rowH1).find('td:eq(5)').children().val();
+            pais = $(rowH1).find('td:eq(' + indexPais + ')').children().val();//5
+            getDec = $(rowH1).find('td:eq(' + indexDecimal + ')').children().val();
+            getMiles = $(rowH1).find('td:eq(' + indexMiles + ')').children().val();
         }
     }
+    if (getDec === '.') {
+        apoyo = tr.find('td:eq(14) input').val().replace('$', '').replace(',', '');
+    }
+    else {
+        apoyo = tr.find('td:eq(14) input').val().replace('$', '').replace('.', '').replace(',', '.');
+    }
 
-    $.ajax({
-        type: "POST",
-        url: 'getDecimal',
-        dataType: "json",
-        data: { "Pais": pais },
-        async: false,
-        success: function (data) {
-            getDec = data;
+    //VISTA PARA EL APOYO
+    if (e.keyCode === 13) {
+        e.preventDefault();
 
-            if (getDec === '.') {
-                apoyo = tr.find('td:eq(14) input').val().replace('$', '').replace(',', '');
-            }
-            else {
-                apoyo = tr.find('td:eq(14) input').val().replace('$', '').replace('.', '').replace(',', '.');
-            }
-
-            //VISTA PARA EL APOYO
-            if (e.keyCode === 13) {
-                e.preventDefault();
-
-                if ($.isNumeric(apoyo)) {
-                    colMonto.val(toShow('0', getDec));
-                    colPorApoyo.val(toShowPorc('0', getDec));
-                    colPieApoyo.val(toShow('0', getDec));
-                    colCosApoyo.val(toShow('0', getDec));
-                    colPreSugerido.val(toShow('0', getDec));
-                    colVolReal.val(toShowNum('0', getDec));
-                    colApoyo.val(toShow(apoyo, getDec));
-                }
-
-                colApoyo.blur();
-                checkRelacionadaMat();
-            }
-
-            validaApoyo(apoyo, colApoyo);
+        if ($.isNumeric(apoyo)) {
+            colMonto.val(toShow('0', getDec));
+            colPorApoyo.val(toShowPorc('0', getDec));
+            colPieApoyo.val(toShow('0', getDec));
+            colCosApoyo.val(toShow('0', getDec));
+            colPreSugerido.val(toShow('0', getDec));
+            colVolReal.val(toShowNum('0', getDec));
+            colApoyo.val(toShow(apoyo, getDec));
         }
-    });
+
+        colApoyo.blur();
+        checkRelacionadaMat();
+    }
+
+    validaApoyo(apoyo, colApoyo);
+
 });
 
 
@@ -2528,7 +2521,7 @@ function revisaPorcentajeLigada(num_doc, checked) {
 function ligada(check) {
     var tr = $(check).closest('tr');//Obtener el row
     var tablaH1 = $('#tab_test1').DataTable();
-    var num_docH1 = null, pais = null, getDec = null;
+    var num_docH1 = null, pais = null, getDec = null, getMiles= null;
     var num_docGlobal = tr.find("td:eq(1)").children().val();
 
     var colMonto = tr.find('td:eq(8) input');
@@ -2543,66 +2536,60 @@ function ligada(check) {
     for (var a = 0; a < tablaH1.rows().data().length; a++) {
         var rowH1 = tablaH1.row(a).node();
         num_docH1 = $(rowH1).children().eq(1).children().val();
+        var indexPais = getTableIndex('#tab_test1', 'lbl_pais');
+        var indexDecimal = getTableIndex('#tab_test1', 'lbl_decimales');
+        var indexMiles = getTableIndex('#tab_test1', 'lbl_miles');
 
         if (num_docH1 === num_doc) {
-            pais = $(rowH1).find('td:eq(5)').children().val();
+            pais = $(rowH1).find('td:eq(' + indexPais + ')').children().val();//5
+            getDec = $(rowH1).find('td:eq(' + indexDecimal + ')').children().val();
+            getMiles = $(rowH1).find('td:eq(' + indexMiles + ')').children().val();
         }
     }
+    if (getDec === '.') {
+        apoyo = tr.find('td:eq(14) input').val().replace('$', '').replace(',', '');
+    }
+    else {
+        apoyo = tr.find('td:eq(14) input').val().replace('$', '').replace('.', '').replace(',', '.');
+    }
 
-    $.ajax({
-        type: "POST",
-        url: 'getDecimal',
-        dataType: "json",
-        data: { "Pais": pais },
-        success: function (data) {
-            getDec = data;
+    var porcentajeApoyo = colPorcentaje.val().replace('%', '');
 
-            if (getDec === '.') {
-                apoyo = tr.find('td:eq(14) input').val().replace('$', '').replace(',', '');
-            }
-            else {
-                apoyo = tr.find('td:eq(14) input').val().replace('$', '').replace('.', '').replace(',', '.');
-            }
+    if ($.isNumeric(porcentajeApoyo)) {
+        if (porcentajeApoyo > 0) {
+            colPorcentaje.val(toShowPorc(porcentajeApoyo, getDec));
+        }
+        else {
+            colPorcentaje.addClass("red white-text rojo");
+        }
+    }
+    else {
+        colPorcentaje.addClass("red white-text rojo");
+    }
 
-            var porcentajeApoyo = colPorcentaje.val().replace('%', '');
+    if ($(check).is(":checked")) {
+        colMonto.val(toShow('0', getDec)).attr("disabled", true);
+        colPieApoyo.val(toShow('0', getDec)).attr("disabled", true);
+        colCosApoyo.val(toShow('0', getDec)).attr("disabled", true);
+        colPreSugerido.val(toShow('0', getDec)).attr("disabled", true);
+        colVolReal.val(toShowNum('0', getDec)).attr("disabled", true);
+        colApoyo.val(toShow('0', getDec)).attr("disabled", true);
+        colApoyo.removeClass("red white-text rojo");
+        validaLigada(num_docGlobal);
+        clearErrors();
+    } else {
+        colMonto.val(toShow('0', getDec)).attr("disabled", false);
+        colPorcentaje.removeClass("red white-text rojo");
+        colPieApoyo.val(toShow('0', getDec)).attr("disabled", false);
+        colCosApoyo.val(toShow('0', getDec)).attr("disabled", false);
+        colPreSugerido.val(toShow('0', getDec)).attr("disabled", false);
+        colVolReal.val(toShowNum('0', getDec)).attr("disabled", false);
+        colApoyo.val(toShow('0', getDec)).attr("disabled", false);
+        colApoyo.addClass("red white-text rojo");
+        validaLigada(num_docGlobal);
+        clearErrors();
+    }
 
-            if ($.isNumeric(porcentajeApoyo)) {
-                if (porcentajeApoyo > 0) {
-                    colPorcentaje.val(toShowPorc(porcentajeApoyo, getDec));
-                }
-                else {
-                    colPorcentaje.addClass("red white-text rojo");
-                }
-            }
-            else {
-                colPorcentaje.addClass("red white-text rojo");
-            }
-
-            if ($(check).is(":checked")) {
-                colMonto.val(toShow('0', getDec)).attr("disabled", true);
-                colPieApoyo.val(toShow('0', getDec)).attr("disabled", true);
-                colCosApoyo.val(toShow('0', getDec)).attr("disabled", true);
-                colPreSugerido.val(toShow('0', getDec)).attr("disabled", true);
-                colVolReal.val(toShowNum('0', getDec)).attr("disabled", true);
-                colApoyo.val(toShow('0', getDec)).attr("disabled", true);
-                colApoyo.removeClass("red white-text rojo");
-                validaLigada(num_docGlobal);
-                clearErrors();
-            } else {
-                colMonto.val(toShow('0', getDec)).attr("disabled", false);
-                colPorcentaje.removeClass("red white-text rojo");
-                colPieApoyo.val(toShow('0', getDec)).attr("disabled", false);
-                colCosApoyo.val(toShow('0', getDec)).attr("disabled", false);
-                colPreSugerido.val(toShow('0', getDec)).attr("disabled", false);
-                colVolReal.val(toShowNum('0', getDec)).attr("disabled", false);
-                colApoyo.val(toShow('0', getDec)).attr("disabled", false);
-                colApoyo.addClass("red white-text rojo");
-                validaLigada(num_docGlobal);
-                clearErrors();
-            }
-        },
-        async: false
-    });
 }
 
 $("#tab_dis").click(function () {

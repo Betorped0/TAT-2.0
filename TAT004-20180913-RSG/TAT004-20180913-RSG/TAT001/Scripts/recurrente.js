@@ -359,8 +359,8 @@ function cambiaCheckRec(load) {
         document.getElementById("btn-peri").checked = true;
         document.getElementById("btn-date").disabled = true;
         document.getElementById("btn-peri").disabled = true;
-        if(!load)
-        $("#btn-peri").trigger("click");
+        if (!load)
+            $("#btn-peri").trigger("click");
 
     } else {
         document.getElementById("btn-date").disabled = false;
@@ -376,11 +376,11 @@ function cambiaCheckRec(load) {
         $("#select_neg").prop("disabled", "disabled");
         $("#select_neg").formSelect();
         if (!load)
-        $("#select_neg").change();
+            $("#select_neg").change();
     } else {
         $("#select_neg").prop("disabled", false);
         if (!load)
-        $("#select_neg").change();
+            $("#select_neg").change();
     }
     var elem = document.getElementById('select_neg');
     M.FormSelect.init(elem, []);
@@ -619,7 +619,7 @@ function copiarTableVistaRec() {
             //var control = $(this).find("td.CONTROL").text();
             var porc = $(this).find("td:eq(4)").text();
             var per = $(this).find("td:eq(11)").text();
-           
+
             monto = monto.trim();
             porc = porc.trim();
             ////}
@@ -834,7 +834,8 @@ function setDates(tipo) {
     var fechaIb = document.getElementById('fechai_vig').value;
     var fechaFb = document.getElementById('fechaf_vig').value;
     if (fechaIa != fechaIb || fechaFa != fechaFb)
-        cambiaRec();
+        if (mesesMult(3, periodoi, anioi, periodof, aniof))
+            cambiaRec();
 }
 
 //Evaluar la extensión y tamaño del archivo a cargar
@@ -912,7 +913,7 @@ function formaLiquida() {
     var periodof = parseInt($("#periodof_id").val());
     var anioi = parseInt($("#anioi_id").val());
     var aniof = parseInt($("#aniof_id").val());
-    if (!(periodoi === periodof && anioi == aniof)){
+    if (!(periodoi === periodof && anioi == aniof)) {
         var resta = 0;
         if (aniof - anioi == 0)
             resta = periodof - periodoi + 1;
@@ -958,4 +959,25 @@ function formaLiquida() {
     }
     var elem = document.getElementById("sel_nn");
     M.FormSelect.init(elem, []);
+}
+
+function mesesMult(num, p1, a1, p2, a2) {
+    if (!isRecurrente())
+        return false;
+    var mult = true;
+    ////var per1 = parseInt(p1);
+    ////var ani1 = parseInt(a1);
+    ////var per2 = parseInt(p2);
+    ////var ani2 = parseInt(a2);
+
+    ////var anios = ani2 - ani1;
+    ////var meses = 1 + (per2 - per1) + anios * 12;
+    ////mult = meses % num === 0;
+
+    ////if (!mult)
+    ////    toast("perR", 100000, "error", "Cambiar periodos", "yellow");
+    ////else
+    ////    dismiss("perR")
+
+    return mult;
 }
