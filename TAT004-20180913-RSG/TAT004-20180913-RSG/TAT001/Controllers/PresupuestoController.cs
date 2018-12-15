@@ -5,11 +5,13 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using TAT001.Entities;
+using TAT001.Filters;
 using TAT001.Models;
 
 namespace TAT001.Controllers
 {
     [Authorize]
+    [LoginActive]
     public class PresupuestoController : Controller
     {
         USUARIO user = new USUARIO();

@@ -14,6 +14,7 @@ using System.Web;
 using System.Web.Mvc;
 using TAT001.Common;
 using TAT001.Entities;
+using TAT001.Filters;
 using TAT001.Models;
 using TAT001.Models.Dao;
 using TAT001.Services;
@@ -21,6 +22,7 @@ using TAT001.Services;
 namespace TAT001.Controllers
 {
     [Authorize]
+    [LoginActive]
     public class SolicitudesController : Controller
     {
         readonly TAT001Entities db = new TAT001Entities();

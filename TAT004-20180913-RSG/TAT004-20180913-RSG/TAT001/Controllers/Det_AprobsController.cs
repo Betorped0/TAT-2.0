@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using TAT001.Entities;
-using TAT001.Models;
+using TAT001.Filters;
 
 namespace TAT001.Controllers
 {
     [Authorize]
+    [LoginActive]
     public class Det_AprobsController : Controller
     {
         private TAT001Entities db = new TAT001Entities();
