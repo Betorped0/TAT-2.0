@@ -10,5 +10,6 @@ namespace TAT001.Models
     {
         public decimal NUM_DOC { get; set; }
         public string SOCIEDAD_ID { get; set; }
+        public int STATUS_ID { get; set; }
     }
 }

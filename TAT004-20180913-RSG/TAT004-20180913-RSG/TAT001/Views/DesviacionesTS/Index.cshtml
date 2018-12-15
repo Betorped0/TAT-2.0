@@ -64,7 +64,7 @@
                 string dexEN = item.TS_FORMT.Any(x => x.SPRAS_ID == "EN") ? item.TS_FORMT.First(x => x.SPRAS_ID == "EN").TXT100 : "";
 
                 string pais = item.TS_FORM.Any(x => x.ID == item.ID) ? item.TS_FORM.First(x => x.ID == item.ID).PAI.LANDX : "";
-                string code = item.TS_FORM.Any(x => x.ID == item.ID) ? item.TS_FORM.First(x => x.ID == item.ID).SOCIEDAD.BUTXT : "";
+                string code = item.TS_FORM.Any(x => x.ID == item.ID) ? item.TS_FORM.First(x => x.ID == item.ID).SOCIEDAD.BUKRS : "";
             <tr>
                 <td>
                     @pais
