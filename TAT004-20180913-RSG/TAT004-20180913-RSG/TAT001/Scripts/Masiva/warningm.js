@@ -8,7 +8,7 @@
             if (fiels.elementId === lista[i].ID) {
                 app += "for (var t = 0; t < tb.rows().data().length; t++) {";
                 app += " var row = tb.row(t).node();";
-                app += "$(row).children().eq('" + fiels.elementIndex + "').children().on('" + lista[i].ACTION + "', function (e) {";
+                app += "$(row).children().eq('" + fiels.elementIndex + "').children('input').on('" + lista[i].ACTION + "', function (e) {";
                 app += "var ban = ";
                 for (var j = 0; j < lista[i].COND.length; j++) {
                     app += lista[i].COND[j].andor + "warning(this.value, '" + lista[i].COND[j].comp + "', '" + lista[i].COND[j].val2 + "')" + lista[i].COND[j].orand;
@@ -19,7 +19,7 @@
                 app += lista[i].COLOR + "', this, " + i + ", ban);";
                 app += "}";
                 app += "});";
-                app += "$(row).children().eq('" + fiels.elementIndex + "').children().trigger('" + lista[i].ACTION + "')";
+                app += "$(row).children().eq('" + fiels.elementIndex + "').children('input').trigger('" + lista[i].ACTION + "')";
                 app += "}";
             }
         }
