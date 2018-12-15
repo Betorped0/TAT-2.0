@@ -79,7 +79,7 @@
 
         <div class="row">
             <div class="input-field col s2 g" name="sociedad">
-                <select name="select" id="selec" multiple>
+                <select name="select" id="selec" multiple required>
                     @try
                     {
                         defaul2 = Session["sociedad"] as string[];
@@ -169,7 +169,6 @@
                 string periodo = Session["periodoconsu"].ToString();
                 <div class="input-field col s2" id="selection">
                     <select name="periodoconsu">
-                        <option value="">Todos</option>
                         @for (int i = 1; i < 13; i++)
                         {
                             if (i.ToString() == periodo)
@@ -189,7 +188,6 @@
             {
                 <div class="input-field col s2" id="selection">
                     <select name="periodoconsu">
-                        <option value="" disabled selected>Todos</option>
                         <option value="1">Enero</option>
                         <option value="2">Febrero</option>
                         <option value="3">Marzo</option>
