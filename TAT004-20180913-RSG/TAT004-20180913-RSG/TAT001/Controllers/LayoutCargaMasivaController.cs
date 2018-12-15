@@ -73,7 +73,7 @@ namespace TAT001.Controllers
                 if (PathArchivo != null)
                 {
                     var path = Path.Combine(Server.MapPath("~/Archivos/LayoutCargaMasiva"));
-                    var ruta = path + "/" + modelView.layoutMasiva.LAND + modelView.layoutMasiva.SOCIEDAD_ID + "-" + PathArchivo.FileName;
+                    var ruta = path + "/" + modelView.layoutMasiva.LAND +"_"+ modelView.layoutMasiva.SOCIEDAD_ID + "_" + PathArchivo.FileName;
                     if (!Directory.Exists(path))
                     {
                         DirectoryInfo di = Directory.CreateDirectory(path);
@@ -140,17 +140,20 @@ namespace TAT001.Controllers
                 if (PathArchivo != null)
                 {
                     var path = Path.Combine(Server.MapPath("~/Archivos/LayoutCargaMasiva"));
-                    var ruta = path + "/" + modelView.layoutMasiva.LAND+modelView.layoutMasiva.SOCIEDAD_ID+ "-" + PathArchivo.FileName;
+                    var ruta = path + "/" + modelView.layoutMasiva.LAND + "_" + modelView.layoutMasiva.SOCIEDAD_ID+ "_" + PathArchivo.FileName;
                     if (!Directory.Exists(path))
                     {
                         DirectoryInfo di = Directory.CreateDirectory(path);
+                    }
+                    if (System.IO.File.Exists(rutaAnterior))
+                    {
+                        System.IO.File.Delete(rutaAnterior);
                     }
                     PathArchivo.SaveAs(ruta);
                     layout.RUTA = ruta;
                     db.Entry(layout).State = EntityState.Modified;
                     db.SaveChanges();
-
-                    System.IO.File.Delete(rutaAnterior);
+                    
                     return RedirectToAction("Index");
                 }
                 else
