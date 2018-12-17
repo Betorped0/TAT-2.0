@@ -21,10 +21,12 @@ using System.IO;
 using System.Web.Security;
 using TAT001.Common;
 using TAT001.Models.Dao;
+using TAT001.Filters;
 
 namespace TAT001.Controllers
 {
     [Authorize]//ADD RSG 29.10.2018
+    [LoginActive]
     public class MasivaController : Controller
     {
         private TAT001Entities db = new TAT001Entities();

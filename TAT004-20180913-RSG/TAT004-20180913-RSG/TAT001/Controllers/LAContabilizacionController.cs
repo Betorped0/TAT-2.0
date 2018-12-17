@@ -9,6 +9,7 @@ using TAT001.Common;
 using TAT001.Entities;
 using TAT001.Filters;
 using TAT001.Models;
+using TAT001.Services;
 
 namespace TAT001.Controllers
 {
@@ -30,7 +31,37 @@ namespace TAT001.Controllers
         public ActionResult Descargar()
         {
             List<FileStreamResult> excels = new List<FileStreamResult>();
-            List<SolxContabilizar> doctosxconta = db.DOCUMENTOes.Where(t => t.ESTATUS_SAP == "P").Select(x => new SolxContabilizar {NUM_DOC=x.NUM_DOC,SOCIEDAD_ID= x.SOCIEDAD_ID }).ToList();
+            List<SolxContabilizar> doctosxconta = new List<SolxContabilizar>();
+            var user = db.USUARIOs.Where(t => t.ID == User.Identity.Name).SingleOrDefault();
+            foreach (var cocode in db.SOCIEDADs.Where(t=>t.ACTIVO))
+            {
+                List<CSP_DOCUMENTOSXCOCODE_Result> dOCUMENTOesc = db.CSP_DOCUMENTOSXCOCODE(cocode.BUKRS, user.SPRAS_ID).ToList();
+                List<ESTATU> eec = db.ESTATUS.Where(x => x.ACTIVO == true).ToList();
+                foreach (CSP_DOCUMENTOSXCOCODE_Result item in dOCUMENTOesc)
+                {
+                    SolxContabilizar ld = new SolxContabilizar();
+
+                    ld.NUM_DOC = item.NUM_DOC;
+                    ld.SOCIEDAD_ID = item.SOCIEDAD_ID;
+
+                    if (item.ESTATUS == "R")
+                    {
+                        FLUJO flujo = db.FLUJOes.Include("USUARIO").Where(x => x.NUM_DOC == item.NUM_DOC & x.ESTATUS == "R").OrderByDescending(a => a.POS).FirstOrDefault();
+                        item.ESTATUSS = item.ESTATUSS.Substring(0, 6) +
+                                        (flujo.USUARIO != null ? flujo.USUARIO.PUESTO_ID.ToString() : "") +
+                                        item.ESTATUSS.Substring(6, 2);
+                    }
+                    else
+                    {
+                        item.ESTATUSS = item.ESTATUSS.Substring(0, 6) + " " + item.ESTATUSS.Substring(6, 2); ;
+                    }
+                    Estatus e = new Estatus();
+                    ld.STATUS_ID = e.getID(item.ESTATUSS, ld.NUM_DOC, user.SPRAS_ID, eec);
+                    if(ld.STATUS_ID==90)
+                        doctosxconta.Add(ld);
+                }
+            }
+            //List<SolxContabilizar> doctosxconta = db.DOCUMENTOes.Where(t => t.ESTATUS_SAP == "P").Select(x => new SolxContabilizar {NUM_DOC=x.NUM_DOC,SOCIEDAD_ID= x.SOCIEDAD_ID }).ToList();
             var cocodes = doctosxconta.DistinctBy(x => x.SOCIEDAD_ID).ToList();
             foreach (var co in cocodes)
             {

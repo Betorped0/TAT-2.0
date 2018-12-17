@@ -10,10 +10,13 @@ using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using TAT001.Entities;
+using TAT001.Filters;
 using TAT001.Services;
 
 namespace TAT001.Controllers
 {
+    [Authorize]
+    [LoginActive]
     public class NegociacionesController : Controller
     {
         private TAT001Entities db = new TAT001Entities();

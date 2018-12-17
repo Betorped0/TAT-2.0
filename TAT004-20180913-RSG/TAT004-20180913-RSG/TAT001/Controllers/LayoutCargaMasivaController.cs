@@ -7,12 +7,14 @@ using System.Web;
 using System.Web.Mvc;
 using TAT001.Common;
 using TAT001.Entities;
+using TAT001.Filters;
 using TAT001.Models;
 using TAT001.Models.Dao;
 
 namespace TAT001.Controllers
 {
     [Authorize]
+    [LoginActive]
     public class LayoutCargaMasivaController : Controller
     {
         readonly TAT001Entities db = new TAT001Entities();
@@ -71,7 +73,7 @@ namespace TAT001.Controllers
                 if (PathArchivo != null)
                 {
                     var path = Path.Combine(Server.MapPath("~/Archivos/LayoutCargaMasiva"));
-                    var ruta = path + "/" + modelView.layoutMasiva.LAND + modelView.layoutMasiva.SOCIEDAD_ID + "-" + PathArchivo.FileName;
+                    var ruta = path + "/" + modelView.layoutMasiva.LAND +"_"+ modelView.layoutMasiva.SOCIEDAD_ID + "_" + PathArchivo.FileName;
                     if (!Directory.Exists(path))
                     {
                         DirectoryInfo di = Directory.CreateDirectory(path);
@@ -138,17 +140,20 @@ namespace TAT001.Controllers
                 if (PathArchivo != null)
                 {
                     var path = Path.Combine(Server.MapPath("~/Archivos/LayoutCargaMasiva"));
-                    var ruta = path + "/" + modelView.layoutMasiva.LAND+modelView.layoutMasiva.SOCIEDAD_ID+ "-" + PathArchivo.FileName;
+                    var ruta = path + "/" + modelView.layoutMasiva.LAND + "_" + modelView.layoutMasiva.SOCIEDAD_ID+ "_" + PathArchivo.FileName;
                     if (!Directory.Exists(path))
                     {
                         DirectoryInfo di = Directory.CreateDirectory(path);
+                    }
+                    if (System.IO.File.Exists(rutaAnterior))
+                    {
+                        System.IO.File.Delete(rutaAnterior);
                     }
                     PathArchivo.SaveAs(ruta);
                     layout.RUTA = ruta;
                     db.Entry(layout).State = EntityState.Modified;
                     db.SaveChanges();
-
-                    System.IO.File.Delete(rutaAnterior);
+                    
                     return RedirectToAction("Index");
                 }
                 else

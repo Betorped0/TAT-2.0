@@ -12,16 +12,18 @@ using ClosedXML.Excel;
 using TAT001.Services;
 using System.Web.Script.Serialization;
 using static TAT001.Models.ReportesModel;
+using TAT001.Filters;
 
 namespace TAT001.Controllers
 {
-    //[Authorize]
+    [Authorize]
+    [LoginActive]
     public class HomeController : Controller
     {
         private TAT001Entities db = new TAT001Entities();
 
         // GET: Solicitudes
-        [Authorize]
+        //[Authorize]
         public ActionResult Index(string id)
         {
             using (TAT001Entities db = new TAT001Entities())

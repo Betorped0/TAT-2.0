@@ -5,12 +5,14 @@ using System.Web.Hosting;
 using System.Web.Mvc;
 using TAT001.Common;
 using TAT001.Entities;
+using TAT001.Filters;
 using TAT001.Models;
 using TAT001.Services; //B20180730 MGC 2018.07.30 Formatos
 
 namespace TAT001.Controllers
 {
     [Authorize]
+    [LoginActive]
     public class CartaVController : Controller
     {
         // GET: CartaV

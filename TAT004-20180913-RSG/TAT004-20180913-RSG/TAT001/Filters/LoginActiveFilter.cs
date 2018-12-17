@@ -44,15 +44,18 @@ namespace TAT001.Filters
             using (TAT001Entities db = new TAT001Entities())
             {
                 var existeSession = db.USUARIOLOGs.FirstOrDefault(x => x.USUARIO_ID == username);
-
-                if (existeSession != null && HttpContext.Current.Session.SessionID != existeSession.SESION)
+                if (existeSession != null)
                 {
-                    return false;
+                    if (existeSession != null && HttpContext.Current.Session.SessionID != existeSession.SESION)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
                 }
-                else
-                {
-                    return true;
-                }
+                else return false;
             }
         }
     }

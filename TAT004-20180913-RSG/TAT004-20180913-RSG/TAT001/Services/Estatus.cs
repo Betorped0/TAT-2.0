@@ -430,6 +430,27 @@ namespace TAT001.Services
             }
             return ret;
         }
+        public int getID(string estatus, decimal num_doc, string spras, List<ESTATU> ee)
+        {
+            int ret=0;
+
+            foreach (ESTATU e in ee)
+            {
+                foreach (ESTATUSR reg in e.ESTATUSRs)
+                {
+                    if (System.Text.RegularExpressions.Regex.IsMatch(estatus, reg.REGEX))
+                    {
+                        ESTATUST t = e.ESTATUSTs.FirstOrDefault(x => x.SPRAS_ID == spras);
+                        if (t != null)
+                            ret = t.ESTATUS_ID;
+                        else
+                            ret = e.ID;
+                        return ret;
+                    }
+                }
+            }
+            return ret;
+        }
         public string getClass(string estatus, decimal num_doc, string spras, List<ESTATU> ee)
         {
             string ret = "";

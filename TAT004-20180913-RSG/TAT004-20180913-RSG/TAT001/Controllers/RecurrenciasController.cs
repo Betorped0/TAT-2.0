@@ -13,12 +13,14 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using TAT001.Entities;
+using TAT001.Filters;
 using TAT001.Models;
 using TAT001.Services;
 
 namespace TAT001.Controllers
 {
     [Authorize]
+    [LoginActive]
     public class RecurrenciasController : Controller
     {
         private TAT001Entities db = new TAT001Entities();

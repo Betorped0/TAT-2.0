@@ -15,10 +15,12 @@ using TAT001.Models;
 using TAT001.Services;
 using TAT001.Controllers;
 using ClosedXML.Excel;
+using TAT001.Filters;
 
 namespace TAT001.Controllers
 {
     [Authorize]
+    [LoginActive]
     public class ExcelController : Controller
     {
         private TAT001Entities db = new TAT001Entities();
