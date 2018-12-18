@@ -9,6 +9,9 @@
 <script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
 <link href="~/Content/autocomplete.css" rel="stylesheet" />
 <script src="~/Scripts/autocomplete1.11.4.js"></script>
+
+<span style="display:none;" class="lbl_selecionar_todo"></span>
+<span style="display:none;" class="lbl_deselecionar"></span>
 <div class="row">
     @using (Html.BeginForm("Create", "DesviacionesTS", FormMethod.Post, new { @id = "desviacionesForm" }))
     {
@@ -23,24 +26,30 @@
         <div class="form-horizontal">
             <div class="col s6">
                 <div class="card-panel">
-                    <h5>Traducciones</h5>
                     <div class="row">
                         <div class="input-field col l10 m10" style="margin-bottom:0;">
-                            @Html.LabelFor(model => model.LAND_ID, "LAND_ID", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_pais" })
-                            @Html.EditorFor(model => model.LAND_ID, new { htmlAttributes = new { @class = "form-control", @required = "", @maxlength = 50 } })
-                        </div>
-                        <div class="input-field col l10 m10" style="margin-bottom:0;">
+                            <select name="sociedadesSelected" id="sociedades" multiple>
+                                @{ 
+                                    foreach (var item in (List<SelectListItem>)ViewBag.SOCIEDADES)
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                                }
+                            </select>
                             @Html.LabelFor(model => model.BUKRS_ID, "BUKRS_ID", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_sociedad" })
-                            @Html.EditorFor(model => model.BUKRS_ID, new { htmlAttributes = new { @class = "form-control", @required = "", @maxlength = 50 } })
+                            @*@Html.EditorFor(model => model.BUKRS_ID, new { htmlAttributes = new { @class = "form-control", @required = "", @maxlength = 50 } })*@
                         </div>
+                        <br />
+                        <h5>Traducciones</h5>
+                        <br />
                         <div class="input-field col l10 m10" style="margin-bottom:0;">
                             @Html.Editor("EN", new { htmlAttributes = new { @class = "form-control", @maxlength = "50", @required = "" } })
-                            <label id="lblIngles">Ingles</label>
+                            <label id="lblIngles">EN</label>
 
                         </div>
                         <div class="input-field col l10 m10" style="margin-bottom:0;">
                             @Html.Editor("ES", new { htmlAttributes = new { @class = "form-control", @maxlength = "50", @required = "" } })
-                            <label id="lblEspa">Español</label>
+                            <label id="lblEspa">ES</label>
 
                         </div>
                         <div class="input-field col l4 m10 right" style="margin-bottom:0;">
@@ -63,47 +72,21 @@
 
 <script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
 <script>
-     var root = "@Url.Content("~")";
+    var root = "@Url.Content("~")";
+    //---- Inicializador de componentes Materialize----
+    fnCommon.materializeInit('select');
     //----  Se agrega validaciones al formulario----
     fnCommon.formValidation('desviacionesForm');
-    var auto = $.noConflict(true);
-    auto(document).ready(function () {
-        auto("#BUKRS_ID").autocomplete({
-            source: function (request, response) {
-                fnCommon.autoAjax(root + "Listas/Sociedades", response, { Prefix: request.term }, function (item) { return { label: item.BUKRS, value: item.BUKRS }; });
-            },
-            messages: {
-                noResults: '',
-                results: function (resultsCount) { }
-            },
-            select: function (event, ui) {
-                var label = ui.item.label;
-                var value = ui.item.value;
-            },
-            change: function (e, ui) {
-                if (!(ui.item)) {
-                    e.target.value = "";
-                }
-            }
-        });
-        auto("#LAND_ID").autocomplete({
-            source: function (request, response) {
-                fnCommon.autoAjax(root + "Listas/Paises", response, { Prefix: request.term }, function (item) { return { label: item.LANDX, value: item.LAND }; });
-            },
-            messages: {
-                noResults: '',
-                results: function (resultsCount) { }
-            },
-            select: function (event, ui) {
-                var label = ui.item.label;
-                var value = ui.item.value;
-            },
-            change: function (e, ui) {
-                if (!(ui.item)) {
-                    e.target.value = "";
-                }
-               
-            }
-        });
-    })
+    //-- Actualizar seleccion de Sociedades
+    $('#sociedades').siblings('ul').prepend('<li id=op_select_all><span>Seleccionar todo</span></li>');
+    $('li#op_select_all').on('click', function () {
+        var jq_elem = $(this),
+            jq_elem_span = jq_elem.find('span'),
+            select_all = jq_elem_span.text() == $('.lbl_selecionar_todo').html(),
+            set_text = select_all ? $('.lbl_deselecionar').html() : $('.lbl_selecionar_todo').html();
+        jq_elem_span.text(set_text);
+        jq_elem.siblings('li').filter(function () {
+            return $(this).find('input').prop('checked') != select_all;
+        }).click();
+    });
 </script>

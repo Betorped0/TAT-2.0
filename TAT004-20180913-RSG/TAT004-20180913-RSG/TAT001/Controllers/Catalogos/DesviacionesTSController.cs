@@ -10,6 +10,7 @@ using TAT001.Common;
 using TAT001.Entities;
 using TAT001.Filters;
 using TAT001.Models;
+using TAT001.Models.Dao;
 
 namespace TAT001.Controllers.Catalogos
 {
@@ -18,6 +19,9 @@ namespace TAT001.Controllers.Catalogos
     public class DesviacionesTSController : Controller
     {
         readonly TAT001Entities db = new TAT001Entities();
+
+        //------------------DAO------------------------------
+        readonly SociedadesDao sociedadesDao = new SociedadesDao();
 
         // GET: DesviacionesTS
         public ActionResult Index()
@@ -84,7 +88,7 @@ namespace TAT001.Controllers.Catalogos
                 //ViewBag.pais = "mx.png";
                 //return RedirectToAction("Pais", "Home");
             }
-
+            ViewBag.SOCIEDADES = sociedadesDao.ComboSociedades(TATConstantes.ACCION_LISTA_SOCIEDADES);
             return View();
         }
 
@@ -93,7 +97,7 @@ namespace TAT001.Controllers.Catalogos
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,BUKRS_ID,LAND_ID")] TS_FORM TSFORM, FormCollection collection)
+        public ActionResult Create([Bind(Include = "ID")] TS_FORM TSFORM, FormCollection collection)
         {
 
             int pagina = 1312; //ID EN BASE DE DATOS
@@ -102,57 +106,56 @@ namespace TAT001.Controllers.Catalogos
 
                 if (ModelState.IsValid)
                 {
-                    TS_CAMPO TS = new TS_CAMPO
-                    {
-                        ACTIVO = true,
-                        ID = TSFORM.ID
-                    };
-                    db.TS_CAMPO.Add(TS);
-                    db.SaveChanges();
+                    string socSelectedStr = collection["sociedadesSelected"];
+                    List<string> socSelected = socSelectedStr.Split(',').ToList();
 
-                    TSFORM.POS = TS.ID;
-                    TSFORM.CAMPO = TS.ID.ToString();
-                    TSFORM.ID = TS.ID;
-                    db.TS_FORM.Add(TSFORM);
-                    db.SaveChanges();
+                    foreach (string soc in socSelected) {
+                        TS_CAMPO TS = new TS_CAMPO
+                        {
+                            ACTIVO = true,
+                            ID = TSFORM.ID
+                        };
+                        db.TS_CAMPO.Add(TS);
+                        db.SaveChanges();
+                        string land = db.SOCIEDADs.Find(soc).LAND;
+                
+                        db.TS_FORM.Add(new TS_FORM
+                        {
+                            POS = TS.ID,
+                            CAMPO = TS.ID.ToString(),
+                            ID = TS.ID,
+                            BUKRS_ID = soc,
+                            LAND_ID = land
+                        });
+                        db.SaveChanges();
 
-                    List<TS_FORMT> listTextos = new List<TS_FORMT>();
-                    if (collection.AllKeys.Contains("EN") && !String.IsNullOrEmpty(collection["EN"]))
-                    {
-
-                        TS_FORMT m = new TS_FORMT { SPRAS_ID = "EN", TSFORM_ID = TS.ID, TXT100 = collection["EN"] };
-                        listTextos.Add(m);
-
+                        List<TS_FORMT> listTextos = new List<TS_FORMT>();
+                        if (collection.AllKeys.Contains("EN") && !String.IsNullOrEmpty(collection["EN"]))
+                        {
+                            listTextos.Add(new TS_FORMT { SPRAS_ID = "EN", TSFORM_ID = TS.ID, TXT100 = collection["EN"] });
+                        }
+                        if (collection.AllKeys.Contains("ES") && !String.IsNullOrEmpty(collection["ES"]))
+                        {
+                            listTextos.Add(new TS_FORMT { SPRAS_ID = "ES", TSFORM_ID = TS.ID, TXT100 = collection["ES"] });
+                        }
+                        db.TS_FORMT.AddRange(listTextos);
+                        db.SaveChanges();
                     }
-                    if (collection.AllKeys.Contains("ES") && !String.IsNullOrEmpty(collection["ES"]))
-                    {
-                        TS_FORMT m = new TS_FORMT { SPRAS_ID = "ES", TSFORM_ID = TS.ID, TXT100 = collection["ES"] };
-                        listTextos.Add(m);
-                    }
-                    db.TS_FORMT.AddRange(listTextos);
-
-                    db.SaveChanges();
+                    
                     return RedirectToAction("Index");
                 }
                 
                 FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
 
-                try
-                {
-                    string p = Session["pais"].ToString();
-                    ViewBag.pais = p + ".png";
-                }
-                catch
-                {
-                    //ViewBag.pais = "mx.png";
-                    //return RedirectToAction("Pais", "Home");
-                }
+               
 
                 return View(TSFORM);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Log.ErrorLogApp(e,"DesviacionesTS","Create");
                 FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
+                ViewBag.SOCIEDADES = sociedadesDao.ComboSociedades(TATConstantes.ACCION_LISTA_SOCIEDADES);
                 return View(TSFORM);
             }
         }
