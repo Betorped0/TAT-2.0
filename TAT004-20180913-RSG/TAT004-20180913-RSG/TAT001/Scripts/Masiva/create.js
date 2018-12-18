@@ -4171,7 +4171,7 @@ function generarWarningH1() {
     elementos.push({ elementIndex: fechaI_index, elementId: 'fechai_vig' });
     elementos.push({ elementIndex: fechaF_index, elementId: 'fechaf_vig' });
     elementos.push({ elementIndex: notas_index, elementId: 'notas_txt' });
-    elementos.push({ elementIndex: email_index, elementId: 'payer_email' });
+    elementos.push({ elementIndex: email_index, elementId: 'PAYER_EMAIL' });
     elementos.push({ elementIndex: payer_index, elementId: 'payer_id' });
     elementos.push({ elementIndex: contato_index, elementId: 'payer_nombre' });
     elementos.push({ elementIndex: estado_idex, elementId: 'state_id' });

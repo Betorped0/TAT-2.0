@@ -47,8 +47,8 @@
                     </th>
                     <th class="lbl_Moneda">
                     </th>
-                    <th class="lbl_Idioma">
-                    </th>
+                    @*<th class="lbl_Idioma">
+                    </th>*@
                     <th class="lbl_Activo">
                     </th>
                     <th class="lbl_Region">
@@ -78,9 +78,9 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.WAERS)
                     </td>
-                    <td>
+                    @*<td>
                         @Html.DisplayFor(modelItem => item.SPRAS)
-                    </td>
+                    </td>*@
                     @if ((bool)item.ACTIVO == true)
                     {
                         <td style="align-items:center"><i class='material-icons green-text'>check</i></td>}
@@ -96,10 +96,17 @@
                         </a>&nbsp
                         <a href="@Url.Action("Details", new { id = item.BUKRS })">
                             <i class='material-icons blue-text'>search</i>
-                        </a>&nbsp
+                        </a>
+                        @if (item.ACTIVO) { 
+                        <span>&nbsp</span>
                         <a href="@Url.Action("Flujos", new { id = item.BUKRS })">
                             <i class='material-icons black-text'>assignment_turned_in</i>
                         </a>
+                        <span>&nbsp</span>
+                        <a href="@Url.Action("Details","ccat", new { id = item.BUKRS })">
+                            <i class='material-icons black-text'>settings</i>
+                        </a>
+                                }
                     </td>
                 </tr>
                 }
@@ -116,7 +123,7 @@
                 "url": "../Scripts/lang/@ViewBag.usuario.SPRAS_ID"+".json"
             }, columnDefs: [
                 {
-                    targets: [1],
+                    targets: [0,1,2,3,4,5,6,7,8],
                     className: 'mdl-data-table__cell--non-numeric'
                 }
             ],

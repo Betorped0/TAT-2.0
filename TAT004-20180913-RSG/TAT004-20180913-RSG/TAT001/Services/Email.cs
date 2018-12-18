@@ -75,6 +75,7 @@ namespace TAT001.Services
                             //UrlDirectory += "/" + dOCUMENTO.NUM_DOC + "?mail=true"; //B20180803 MGC Correos
                             //UrlDirectory += "/" + dOCUMENTO.NUM_DOC + ""; //B20180803 MGC Correos
                             UrlDirectory += "/" + dOCUMENTO.NUM_DOC + "?spras=" + spras; //B20180803 MGC Correos
+                            Log.Info("Intenta generar page " + UrlDirectory);
                             HttpWebRequest myRequest = (HttpWebRequest)WebRequest.Create(UrlDirectory);
                             myRequest.Method = "GET";
                             WebResponse myResponse = myRequest.GetResponse();

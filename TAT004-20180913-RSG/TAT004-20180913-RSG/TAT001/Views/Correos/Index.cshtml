@@ -873,7 +873,7 @@
             <tr>
                 <td>
                     <span style="font-weight:bold;">@ViewBag.pieSoporte</span>
-                    <a href="@ViewBag.url@Url.Action(" Details","Solicitudes", new { id=Model.NUM_DOC })">
+                    <a href="@ViewBag.url@Url.Action("Details","Solicitudes", new { id=Model.NUM_DOC })">
                         Link.
                     </a>
                 </td>
@@ -1148,14 +1148,14 @@
                     @if (Model.FLUJOes.OrderByDescending(a => a.POS).FirstOrDefault().WORKFP.ACCION.TIPO == "A")
                     {
                         <span style="font-weight:bold;">@ViewBag.pieAprobacion</span>
-                        <a href="@ViewBag.url@Url.Action(" Details","Solicitudes", new { id=Model.NUM_DOC })">
+                        <a href="@ViewBag.url@Url.Action("Details","Solicitudes", new { id=Model.NUM_DOC })">
                             Link.
                         </a>
                     }
                     else
                     {
                         <span style="font-weight:bold;">@ViewBag.pieSoporte</span>
-                        <a href="@ViewBag.url@Url.Action(" Details","Solicitudes", new { id=Model.NUM_DOC })">
+                        <a href="@ViewBag.url@Url.Action("Details","Solicitudes", new { id=Model.NUM_DOC })">
                             Link.
                         </a>
                     }

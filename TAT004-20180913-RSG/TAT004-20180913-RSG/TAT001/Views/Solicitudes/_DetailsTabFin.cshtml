@@ -172,34 +172,6 @@
                         @Html.EditorFor(model => model.D.MONTO_DOC_ML2, new { htmlAttributes = new { @disabled = "disabled", @class = "precio" } })
                         @Html.LabelFor(model => model.D.MONTO_DOC_ML2, "Monto USD", new { @id = "lbl_montoml2" })
                     </div>
-                    @if (Model.D.TSOL.PADRE)
-                    {
-                        <div class="input-field col s12 m4">
-                            @*@Html.EditorFor(model => model.D.TSOL_ID, new { htmlAttributes = new { @disabled = "disabled" } })*@
-                            @Html.EditorFor(model => model.D.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(model.D.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50, new { htmlAttributes = new { @disabled = "disabled" } })
-                            @Html.LabelFor(model => model.D.TSOL_ID, "Tipo de solicitud", new { @class = "lbl_tsol" })
-                        </div>
-                        <div class="input-field col s6 m4">
-                            @Html.EditorFor(model => model.D.DOCUMENTO_SAP, new { htmlAttributes = new { @disabled = "disabled" } })
-                            @Html.LabelFor(model => model.D.DOCUMENTO_SAP, "No. Documento SAP", new { @id = "lbl_sap" })
-                        </div>
-                        <div class="input-field col s6 m4">
-                            @Html.EditorFor(model => model.D.SOCIEDAD_ID, new { htmlAttributes = new { @disabled = "disabled" } })
-                            @Html.LabelFor(model => model.D.SOCIEDAD_ID, "Company code", new { @class = "lbl_bu" })
-                        </div>
-                        <div class="input-field col s6">
-                            @Html.EditorFor(model => model.D.PERIODO, new { htmlAttributes = new { @disabled = "disabled" } })
-                            @Html.LabelFor(model => model.D.PERIODO, "Periodssso", new { @class = "lbl_periodo" })
-                        </div>
-                        <div class="input-field col s6">
-                            @Html.EditorFor(model => model.D.EJERCICIO, new { htmlAttributes = new { @disabled = "disabled" } })
-                            @Html.LabelFor(model => model.D.EJERCICIO, "Ejercicio", new { @class = "lbl_ejer" })
-                        </div>
-                    }
-                    @*<div class="input-field col s12">
-                    @Html.TextAreaFor(model => model.D.NOTAS, new { @id = "txt_notas", @class = "materialize-textarea", @style = "height:500px;", @disabled = "disabled" })
-                    @Html.LabelFor(model => model.D.NOTAS, "Mecánica de negociación", new { @id = "lbl_notas" })
-                    </div>*@
                 </div>
             </div>
         </div>
