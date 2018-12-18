@@ -33,40 +33,178 @@
     <div class="row">
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <button id="btnGCr" type="submit" value="Create" class="btn btn-default" style="float:right;"></button>
+                <button id="btnGCr" type="submit" value="Create" class="btn btn-default" style="float:right;" disabled="disabled"></button>
             </div>
         </div>
     </div>
-    <div class="col 12 s12 ">
-        <div class="card-panel">
-            <div class="row">
-                <div class="form-horizontal">
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                    <div class="row">
-                        <div class="input-field col l6">
-                            <i class="material-icons prefix">date_range</i>
-                            <input id="FECHAN" name="FECHAN" type="text" class="validate" required onkeyup="borrar(this);" />
-                            <label id="lblEjecutar" for="FECHAN">Se enviará el día</label>
+    <div class="row">
+        <div class="col s12 l6 ">
+            <div class="card-panel">
+                <div class="row">
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        @*<div class="row">
+                                <div class="input-field col l6">
+                                    <i class="material-icons prefix">date_range</i>
+                                    <input id="FECHAN" name="FECHAN" type="text" class="validate" required onkeyup="borrar(this);" />
+                                    <label id="lblEjecutar" for="FECHAN">Se enviará el día</label>
+                                </div>
+                            </div>
+                            <div class="input-field col l6">
+                                <i class="material-icons prefix">date_range</i>
+                                <input id="FECHAI" name="FECHAI" type="text" class="validate" required onkeyup="borrar(this);" onchange="revisaFechas(this);" />
+                                <label id="lblDesde" for="FECHAI">De</label>
+                            </div>
+                            <div class="input-field col l6">
+                                <i class="material-icons prefix">date_range</i>
+                                <input id="FECHAF" name="FECHAF" type="text" class="validate" required onkeyup="borrar(this);" onchange="revisaFechas(this);" />
+                                <label id="lblHasta" for="FECHAF">Hasta</label>
+                            </div>*@
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input type="text" id="txt_titulo" name="txt_titulo" />
+                                <label for="txt_titulo" id="lbl_titulo">Título</label>
+                            </div>
+                            <div class="input-field col s12">
+                                <i class="material-icons prefix">date_range</i>
+                                <input id="FECHAN" name="FECHAN" type="text" class="validate" required onkeyup="borrar(this);" />
+                                <label id="lblEjecutar" for="FECHAN">Desde</label>
+                            </div>
+
                         </div>
+                        @*<div class="row">
+                                <div class="col s12">
+                                    <p>
+                                        <label>
+                                            <input name="group1" type="radio" checked />
+                                            <span>Semanal</span>
+                                        </label>
+                                    </p>
+                                    <p>
+                                        <label>
+                                            <input name="group1" type="radio" />
+                                            <span>Mensual</span>
+                                        </label>
+                                    </p>
+                                </div>
+                            </div>*@
                     </div>
-                    <div class="input-field col l6">
-                        <i class="material-icons prefix">date_range</i>
-                        <input id="FECHAI" name="FECHAI" type="text" class="validate" required onkeyup="borrar(this);" onchange="revisaFechas(this);" />
-                        <label id="lblDesde" for="FECHAI">De</label>
+                </div>
+            </div>
+        </div>
+        <div class="col s12 l6">
+            <div class="card-panel">
+                <div class="row">
+                    @*<h5>Semanal</h5>*@
+                    <div class="input-field col s6">
+                        <input type="number" id="sel_semana" name="sel_semana" />
+                        <label for="sel_semana">Repetir cada:</label>
                     </div>
-                    <div class="input-field col l6">
-                        <i class="material-icons prefix">date_range</i>
-                        <input id="FECHAF" name="FECHAF" type="text" class="validate" required onkeyup="borrar(this);" onchange="revisaFechas(this);" />
-                        <label id="lblHasta" for="FECHAF">Hasta</label>
+                    <div class="input-field col s6">
+                        <select id="txt_tipo" name="txt_tipo" onchange="oculta(this.value)">
+                            <option value="S">Semanas</option>
+                            <option value="M">Meses</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="div_semana" class="row" style="overflow:auto;">
+                    <table style="width:324.8px;border:0;">
+                        <tr style="border:0;">
+                            <td style="border-radius:50%;text-align:center;width:46.4px;" class="day" onclick="selecDay(this)" data-value="D">D</td>
+                            <td style="border-radius:50%;text-align:center;width:46.4px;" class="day" onclick="selecDay(this)" data-value="L">L</td>
+                            <td style="border-radius:50%;text-align:center;width:46.4px;" class="day" onclick="selecDay(this)" data-value="M">M</td>
+                            <td style="border-radius:50%;text-align:center;width:46.4px;" class="day" onclick="selecDay(this)" data-value="X">X</td>
+                            <td style="border-radius:50%;text-align:center;width:46.4px;" class="day" onclick="selecDay(this)" data-value="J">J</td>
+                            <td style="border-radius:50%;text-align:center;width:46.4px;" class="day" onclick="selecDay(this)" data-value="V">V</td>
+                            <td style="border-radius:50%;text-align:center;width:46.4px;" class="day" onclick="selecDay(this)" data-value="S">S</td>
+                        </tr>
+                    </table>
+                    <input type="hidden" id="semana" name="txt_diaSemana" value=" "/>
+                </div>
+                <div id="div_mes" class="row hide">
+                    <div class="row">
+                        <div class="col s12">
+                            <p>
+                                <label>
+                                    <input name="group1" type="radio" checked />
+                                    <span>Día</span>
+                                    <input type="text" maxlength="2" onkeyup="number(this);" style="width:50px;text-align:center" />
+                                    <span>de cada </span>
+                                    <input type="text" maxlength="2" onkeyup="number(this);" style="width:50px;text-align:center" />
+                                    <span>mes(es) </span>
+                                </label>
+                            </p>
+                            <p>
+                                <label>
+                                    <input name="group1" type="radio" />
+                                    <span>El</span>
+                                    <select style="width:80px;display:initial" class="browser-default">
+                                        <option>Primer</option>
+                                        <option>Segundo</option>
+                                        <option>Tercer</option>
+                                        <option>Cuarto</option>
+                                        <option>Último</option>
+                                    </select>
+                                    <select style="width:100px;display:initial" class="browser-default">
+                                        <option>Día</option>
+                                        <option>Domingo</option>
+                                        <option>Lunes</option>
+                                        <option>Martes</option>
+                                        <option>Miércoles</option>
+                                        <option>Jueves</option>
+                                        <option>Sábado</option>
+                                        <option>Domingo</option>
+                                    </select>
+                                    <span> de cada </span>
+                                    <input type="text" maxlength="2" onkeyup="number(this);" style="width:50px;text-align:center" />
+                                    <span> mes </span>
+                                </label>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 }
+<style>
+    .day {
+        background-color: lightgray;
+    }
+
+    .selected {
+        background-color: #26a69a;
+    }
+</style>
 <script>
+    var element = document.querySelectorAll("select");
+    var instance = M.FormSelect.init(element, []);
+    function selecDay(campo) {
+        var lis = document.querySelectorAll(".day");
+        for (var i = 0; i < lis.length; i++) {
+            $(lis[i]).removeClass("selected");
+        }
+        //if ($(campo).hasClass("selected"))
+        //    $(campo).removeClass("selected");
+        //else
+        $(campo).addClass("selected");
+        $("#txt_diaSemana").val()
+    }
+    function number(campo) {
+        if (!$.isNumeric(campo.value)) { campo.value = '' }
+    }
+    function oculta(valor) {
+        if (valor === "M") {
+            $("#div_semana").addClass("hide");
+            $("#div_mes").removeClass("hide");
+        } else {
+            $("#div_semana").removeClass("hide");
+            $("#div_mes").addClass("hide");
+        }
+    }
+
     function revisaFechas(d) {
         var fechai = document.getElementById("FECHAI").value;
         var fechaf = document.getElementById("FECHAF").value;
@@ -139,7 +277,7 @@
         onClose: function (e) {
             var date = $('#FECHAN').val();
             var periodo = date.split("/");
-            
+
         },
         i18n: {
             clear: 'Limpiar',
