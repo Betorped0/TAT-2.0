@@ -158,6 +158,10 @@
             $clone.find('td:eq(0)>input').val(posn);
             $clone.find('td:eq(2)').find(":checkbox").prop("name", "p_" + posn);
             $clone.find('td:eq(4)>input').mask('#' + '@ViewBag.Miles' + '##0' + '@ViewBag.PD' + '00', { reverse: true });
+            if (posn == 5) {
+                $clone.find('td:eq(2)').find(":checkbox").prop("disabled", true);
+                $clone.find('td:eq(4)>input').prop("disabled", true);
+            }
             $TABLE.find('table').append($clone);
         }
         else {

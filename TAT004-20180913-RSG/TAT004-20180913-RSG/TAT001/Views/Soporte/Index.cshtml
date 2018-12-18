@@ -107,7 +107,7 @@
     //----- Configuracion de Tablas-----
     $(document).ready(function () {
         var root = "@Url.Content("~")",
-            urlLanguage = root + "../Scripts/lang/" + spras_id + ".json";
+            urlLanguage = "@Url.Content("~/Scripts/lang/" + @ViewBag.spras_id + ".json")";
         fnCommon.configurarTable('table', '50vh', '50vh', urlLanguage, 'selecc', 'global_filter',[0,1,2]);
     });
 

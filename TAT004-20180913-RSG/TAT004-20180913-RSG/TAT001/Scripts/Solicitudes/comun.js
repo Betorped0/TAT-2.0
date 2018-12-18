@@ -28,8 +28,8 @@ $(document).ready(function () {
         $("label[for='payer_nombre']").addClass("active");
     }
     //Email nombre
-    if ($('#payer_email').val() !== "") {
-        $("label[for='payer_email']").addClass("active");
+    if ($('#PAYER_EMAIL').val() !== "") {
+        $("label[for='PAYER_EMAIL']").addClass("active");
     }
 
     //Soporte
