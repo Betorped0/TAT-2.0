@@ -27,12 +27,16 @@ namespace TAT001.Controllers
                 spras = "ES";
             }
 
+            string pathReplace = "";
+            string[] pathReplaceArr;
             var dOCUMENTO = db.DOCUMENTOes.Where(x => x.NUM_DOC == id).FirstOrDefault();
             var flujo = db.FLUJOes.Where(x => x.NUM_DOC == id).OrderByDescending(o => o.POS).Select(s => s.POS).ToList();
             ViewBag.Pos = flujo[0];
             ViewBag.url = "http://localhost:64497";
             ViewBag.url = "http://192.168.1.77";
-            ViewBag.url = Request.Url.AbsoluteUri.Replace(Request.Url.AbsolutePath, "");
+            pathReplace = Request.Url.AbsoluteUri.Replace(Request.Url.AbsolutePath, "");
+            pathReplaceArr = pathReplace.Split(new string[] { "?spras" },StringSplitOptions.None);
+            ViewBag.url = pathReplaceArr[0];
             //ViewBag.miles = dOCUMENTOes.PAI.MILES;//LEJGG 090718
             //ViewBag.dec = dOCUMENTOes.PAI.DECIMAL;//LEJGG 090718
             FormatosC fc = new FormatosC();
@@ -250,12 +254,17 @@ namespace TAT001.Controllers
                 spras = "ES";
             }
 
+            string pathReplace = "";
+            string[] pathReplaceArr;
             var dOCUMENTO = db.DOCUMENTOes.Where(x => x.NUM_DOC == id).FirstOrDefault();
             var flujo = db.FLUJOes.Where(x => x.NUM_DOC == id).OrderByDescending(o => o.POS).Select(s => s.POS).ToList();
             ViewBag.Pos = flujo[0];
             ViewBag.url = "http://localhost:64497";
             ViewBag.url = "http://192.168.1.77";
             ViewBag.url = Request.Url.AbsoluteUri.Replace(Request.Url.AbsolutePath, "");
+            pathReplace = Request.Url.AbsoluteUri.Replace(Request.Url.AbsolutePath, "");
+            pathReplaceArr = pathReplace.Split(new string[] { "?spras" }, StringSplitOptions.None);
+            ViewBag.url = pathReplaceArr[0];
             //ViewBag.miles = dOCUMENTOes.PAI.MILES;//LEJGG 090718
             //ViewBag.dec = dOCUMENTOes.PAI.DECIMAL;//LEJGG 090718
             FormatosC fc = new FormatosC();
@@ -663,12 +672,18 @@ namespace TAT001.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
+            string pathReplace = "";
+            string[] pathReplaceArr;
             var dOCUMENTO = db.DOCUMENTOes.Where(x => x.NUM_DOC == id).FirstOrDefault();
             ViewBag.workflow = db.FLUJOes.Where(a => a.NUM_DOC.Equals(id)).OrderBy(a => a.POS).ToList();
             ViewBag.acciones = db.FLUJOes.Where(a => a.NUM_DOC.Equals(id) & a.ESTATUS.Equals("P") & a.USUARIOA_ID.Equals(User.Identity.Name)).FirstOrDefault();
             ViewBag.url = "http://localhost:64497";
             ViewBag.url = "http://192.168.1.77";
             ViewBag.url = Request.Url.AbsoluteUri.Replace(Request.Url.AbsolutePath, "");
+            pathReplace = Request.Url.AbsoluteUri.Replace(Request.Url.AbsolutePath, "");
+            pathReplaceArr = pathReplace.Split(new string[] { "?spras" }, StringSplitOptions.None);
+            ViewBag.url = pathReplaceArr[0];
             if (dOCUMENTO == null)
             {
                 return HttpNotFound();

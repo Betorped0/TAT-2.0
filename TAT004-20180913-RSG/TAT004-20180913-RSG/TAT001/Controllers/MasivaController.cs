@@ -623,9 +623,9 @@ namespace TAT001.Controllers
                         string spras_id = FnCommon.ObtenerSprasId(db, User.Identity.Name);
 
                         string vkorg = "", vtweg = "", spart = "";
-                        if (db.CLIENTEs.Where(x => x.KUNNR == objInformacion.PAYER_ID).Count() > 0)
+                        CLIENTE clienteH1 = db.CLIENTEs.Where(x => x.KUNNR == objInformacion.PAYER_ID).FirstOrDefault();
+                        if (clienteH1 != null)
                         {
-                            CLIENTE clienteH1 = db.CLIENTEs.Where(x => x.KUNNR == objInformacion.PAYER_ID).FirstOrDefault();
                             vkorg = clienteH1.VKORG;
                             vtweg = clienteH1.VTWEG;
                             spart = clienteH1.SPART;
@@ -675,9 +675,9 @@ namespace TAT001.Controllers
 
                                 if (matnr == "" && matkl != "")
                                 {
-                                    if (listCategorias.Any(x => x.TXT50.ToUpper() == matkl.ToUpper()))
+                                    MATERIALGPT categoria = listCategorias.Where(x => x.TXT50.ToUpper() == matkl.ToUpper()).FirstOrDefault();
+                                    if (categoria!=null)
                                     {
-                                        var categoria = listCategorias.Where(x => x.TXT50.ToUpper() == matkl.ToUpper()).FirstOrDefault();
                                         objDistribucion.MATNR = "";
                                         objDistribucion.MATKL = categoria.TXT50;
                                         objDistribucion.MATKL_ID = categoria.MATERIALGP_ID;
@@ -695,9 +695,10 @@ namespace TAT001.Controllers
                                 {
 
                                     List<MATERIAL> ListMateriales = materialesDao.ListaMateriales(matnr, vkorg, vtweg, User.Identity.Name);
-                                    if (ListMateriales.Any(x => x.ID == matnr))
+                                    MATERIAL material = ListMateriales.Where(x => x.ID == matnr).FirstOrDefault();
+                                    if (material!=null)
                                     {
-                                        var material = ListMateriales.Where(x => x.ID == matnr).FirstOrDefault();
+                                        
                                         objDistribucion.MATNR = material.ID.TrimStart('0');
                                         var idMatGp = material.MATERIALGP_ID;
                                         objDistribucion.MATKL = db.MATERIALGPs.Where(x => x.ID == idMatGp).FirstOrDefault().DESCRIPCION;
@@ -2338,9 +2339,10 @@ namespace TAT001.Controllers
                             {
                                
                                 List<MATERIAL> ListMateriales = materialesDao.ListaMateriales(miMaterialH4, objInformacion.VKORG, objInformacion.VTWEG, User.Identity.Name);
-                                if (ListMateriales.Any(x => x.ID == miMaterialH4))
+                                MATERIAL miMaterial = ListMateriales.Where(x => x.ID == miMaterialH4).FirstOrDefault();
+
+                                if (miMaterial!=null)
                                 {
-                                    var miMaterial = ListMateriales.Where(x => x.ID == miMaterialH4).FirstOrDefault();
                                     num_material = miMaterial.ID.ToString();
                                     var paso = db.MATERIALGPs.Where(x => x.ID == miMaterial.MATERIALGP_ID).FirstOrDefault();
                                     materiall = paso.UNICA;
@@ -2374,9 +2376,9 @@ namespace TAT001.Controllers
                     var matDistribucion = objDistribucion.MATNR;
                     if (matDistribucion.Length < 18) { matDistribucion = cad.completaMaterial(matDistribucion); }
                     List<MATERIAL> ListMateriales_ = materialesDao.ListaMateriales(matDistribucion, objInformacion.VKORG, objInformacion.VTWEG, User.Identity.Name);
-                    if (ListMateriales_.Any(x => x.ID == matDistribucion))
+                    MATERIAL material = ListMateriales_.Where(x => x.ID == matDistribucion).FirstOrDefault();
+                    if (material!=null)
                     {
-                        var material = ListMateriales_.Where(x => x.ID == matDistribucion).FirstOrDefault();
                         bool tieneHealtyMat = false;
                         List<object> num_mat = new List<object>();
 
@@ -2436,10 +2438,10 @@ namespace TAT001.Controllers
                             //CATEGORIAS
                             try
                             {
-                                if (listCategorias.Any(x => x.TXT50.ToUpper() == categoriaa.ToUpper()))
+                                MATERIALGPT categoriagpt = listCategorias.Where(x => x.TXT50.ToUpper() == categoriaa.ToUpper()).FirstOrDefault();
+                                if (categoriagpt != null)
                                 {
-                                    var categoria_ = listCategorias.Where(x => x.TXT50.ToUpper() == categoriaa.ToUpper()).FirstOrDefault();
-                                    var miCategoria = db.MATERIALGPs.Where(x => x.ID == categoria_.MATERIALGP_ID).FirstOrDefault();
+                                    var miCategoria = db.MATERIALGPs.Where(x => x.ID == categoriagpt.MATERIALGP_ID).FirstOrDefault();
                                     num_categoria = miCategoria.ID.ToString();
                                     categoriaUnica = miCategoria.UNICA;
                                 }
@@ -2469,10 +2471,11 @@ namespace TAT001.Controllers
                         }
                     }
 
-                    if (listCategorias.Any(x => x.TXT50.ToUpper() == objDistribucion.MATKL.ToUpper()))
+
+                    MATERIALGPT categoria_ = listCategorias.Where(x => x.TXT50.ToUpper() == objDistribucion.MATKL.ToUpper()).FirstOrDefault();
+                    if (categoria_!=null)
                     {
-                        var categoria_ = listCategorias.Where(x => x.TXT50.ToUpper() == objDistribucion.MATKL.ToUpper()).FirstOrDefault();
-                        var categoria = db.MATERIALGPs.Where(x => x.ID == categoria_.MATERIALGP_ID).FirstOrDefault();
+                        MATERIALGP categoria = db.MATERIALGPs.Where(x => x.ID == categoria_.MATERIALGP_ID).FirstOrDefault();
 
                         List<object> tieneHealty = new List<object>();
                         List<object> num_cat = new List<object>();
@@ -3572,110 +3575,117 @@ namespace TAT001.Controllers
 
             foreach (DOCUMENTO doc in listD)
             {
-                if (doc.DOCUMENTOPs.Count() != 0)
-                {
-                    var num_docTemp = doc.NUM_DOC;
-                    decimal N_DOC = getSolID(doc.TSOL_ID);
-                    doc.NUM_DOC = N_DOC;
-                    db.DOCUMENTOes.Add(doc);
+                string cierrePeriodo = cierre(doc.SOCIEDAD_ID, doc.TSOL_ID, doc.PERIODO.ToString(), User.Identity.Name);
+                if (cierrePeriodo == "X") { 
+                    if (doc.DOCUMENTOPs.Count() != 0)
+                    {
+                        var num_docTemp = doc.NUM_DOC;
+                        decimal N_DOC = getSolID(doc.TSOL_ID);
+                        doc.NUM_DOC = N_DOC;
+                        db.DOCUMENTOes.Add(doc);
 
-                    try
-                    {
-                        db.SaveChanges();
-                    }
-                    catch (System.Data.Entity.Validation.DbEntityValidationException dbEx)
-                    {
-                        Exception raise = dbEx;
-                        foreach (var validationErrors in dbEx.EntityValidationErrors)
+                        try
                         {
-                            foreach (var validationError in validationErrors.ValidationErrors)
-                            {
-                                string message = string.Format("{0}:{1}",
-                                    validationErrors.Entry.Entity.ToString(),
-                                    validationError.ErrorMessage);
-                                // raise a new exception nesting
-                                // the current instance as InnerException
-                                raise = new InvalidOperationException(message, raise);
-                            }
+                            db.SaveChanges();
                         }
-                        throw raise;
-                    }
-
-                    updateRango(doc.TSOL_ID, doc.NUM_DOC);
-                    guardaArchivos(N_DOC, contadorArchivos);//ALMACENAMOS LOS ARCHIVOS DE SOPORTE
-                    contadorArchivos++;
-                    li.Add(doc.NUM_DOC.ToString());
-
-                    ProcesaFlujo pf = new ProcesaFlujo();
-                    try
-                    {
-                        WORKFV wf = db.WORKFHs.Where(a => a.TSOL_ID.Equals(doc.TSOL_ID)).FirstOrDefault().WORKFVs.OrderByDescending(a => a.VERSION).FirstOrDefault();
-                        if (wf != null)
+                        catch (System.Data.Entity.Validation.DbEntityValidationException dbEx)
                         {
-                            WORKFP wp = wf.WORKFPs.OrderBy(a => a.POS).FirstOrDefault();
-                            FLUJO f = new FLUJO();
-                            f.WORKF_ID = wf.ID;
-                            f.WF_VERSION = wf.VERSION;
-                            f.WF_POS = wp.POS;
-                            f.NUM_DOC = doc.NUM_DOC;
-                            f.POS = 1;
-                            f.LOOP = 1;
-                            f.USUARIOA_ID = doc.USUARIOC_ID;
-                            f.ESTATUS = "I";
-                            f.FECHAC = DateTime.Now;
-                            f.FECHAM = DateTime.Now;
-                            try
+                            Exception raise = dbEx;
+                            foreach (var validationErrors in dbEx.EntityValidationErrors)
                             {
-                                for (int j = 0; j < ds6.Tables[0].Rows.Count; j++)
+                                foreach (var validationError in validationErrors.ValidationErrors)
                                 {
-                                    string num_docNotas = ds6.Tables[0].Rows[j][0].ToString();
+                                    string message = string.Format("{0}:{1}",
+                                        validationErrors.Entry.Entity.ToString(),
+                                        validationError.ErrorMessage);
+                                    // raise a new exception nesting
+                                    // the current instance as InnerException
+                                    raise = new InvalidOperationException(message, raise);
+                                }
+                            }
+                            throw raise;
+                        }
 
-                                    if (num_docTemp.ToString() == num_docNotas)
+                        updateRango(doc.TSOL_ID, doc.NUM_DOC);
+                        guardaArchivos(N_DOC, contadorArchivos);//ALMACENAMOS LOS ARCHIVOS DE SOPORTE
+                        contadorArchivos++;
+                        li.Add(doc.NUM_DOC.ToString());
+
+                        ProcesaFlujo pf = new ProcesaFlujo();
+                        try
+                        {
+                            WORKFV wf = db.WORKFHs.Where(a => a.TSOL_ID.Equals(doc.TSOL_ID)).FirstOrDefault().WORKFVs.OrderByDescending(a => a.VERSION).FirstOrDefault();
+                            if (wf != null)
+                            {
+                                WORKFP wp = wf.WORKFPs.OrderBy(a => a.POS).FirstOrDefault();
+                                FLUJO f = new FLUJO();
+                                f.WORKF_ID = wf.ID;
+                                f.WF_VERSION = wf.VERSION;
+                                f.WF_POS = wp.POS;
+                                f.NUM_DOC = doc.NUM_DOC;
+                                f.POS = 1;
+                                f.LOOP = 1;
+                                f.USUARIOA_ID = doc.USUARIOC_ID;
+                                f.ESTATUS = "I";
+                                f.FECHAC = DateTime.Now;
+                                f.FECHAM = DateTime.Now;
+                                try
+                                {
+                                    for (int j = 0; j < ds6.Tables[0].Rows.Count; j++)
                                     {
-                                        f.COMENTARIO = ds6.Tables[0].Rows[j][1].ToString().Trim();
+                                        string num_docNotas = ds6.Tables[0].Rows[j][0].ToString();
+
+                                        if (num_docTemp.ToString() == num_docNotas)
+                                        {
+                                            f.COMENTARIO = ds6.Tables[0].Rows[j][1].ToString().Trim();
+                                        }
                                     }
                                 }
-                            }
-                            catch { f.COMENTARIO = ""; }
-                            string c = pf.procesa(f, "");
-                            FLUJO conta = db.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
-                            while (c == "1")
-                            {
-                                string image = Server.MapPath("~/images/logo_kellogg.png");
-                                Email em = new Email();
-                                string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
-                                DOCUMENTO docc = db.DOCUMENTOes.Where(x => x.NUM_DOC == doc.NUM_DOC).First();
-                                string imageFlag = Server.MapPath("~/images/flags/mini/" + docc.PAIS_ID + ".png");
-                                em.enviaMailC(f.NUM_DOC, true,spras_id, UrlDirectory, "Index", image, imageFlag);
-
-                                if (conta.WORKFP.ACCION.TIPO == "B")
+                                catch { f.COMENTARIO = ""; }
+                                string c = pf.procesa(f, "");
+                                FLUJO conta = db.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+                                while (c == "1")
                                 {
-                                    WORKFP wpos = db.WORKFPs.Where(x => x.ID == conta.WORKF_ID & x.VERSION == conta.WF_VERSION & x.POS == conta.WF_POS).FirstOrDefault();
-                                    conta.ESTATUS = "A";
-                                    conta.FECHAM = DateTime.Now;
-                                    c = pf.procesa(conta, "");
-                                    conta = db.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+                                    string image = Server.MapPath("~/images/logo_kellogg.png");
+                                    Email em = new Email();
+                                    string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
+                                    DOCUMENTO docc = db.DOCUMENTOes.Where(x => x.NUM_DOC == doc.NUM_DOC).First();
+                                    string imageFlag = Server.MapPath("~/images/flags/mini/" + docc.PAIS_ID + ".png");
+                                    em.enviaMailC(f.NUM_DOC, true, spras_id, UrlDirectory, "Index", image, imageFlag);
 
+                                    if (conta.WORKFP.ACCION.TIPO == "B")
+                                    {
+                                        WORKFP wpos = db.WORKFPs.Where(x => x.ID == conta.WORKF_ID & x.VERSION == conta.WF_VERSION & x.POS == conta.WF_POS).FirstOrDefault();
+                                        conta.ESTATUS = "A";
+                                        conta.FECHAM = DateTime.Now;
+                                        c = pf.procesa(conta, "");
+                                        conta = db.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+
+                                    }
+                                    else
+                                    {
+                                        c = "";
+                                    }
                                 }
-                                else
-                                {
-                                    c = "";
-                                }
+                                Estatus es = new Estatus();//RSG 18.09.2018
+                                DOCUMENTO docE = db.DOCUMENTOes.Find(f.NUM_DOC);
+                                conta.STATUS = es.getEstatus(docE);
+                                db.Entry(conta).State = EntityState.Modified;
+                                db.SaveChanges();
+
+                                contadorNotas++;
                             }
-                            Estatus es = new Estatus();//RSG 18.09.2018
-                            DOCUMENTO docE = db.DOCUMENTOes.Find(f.NUM_DOC);
-                            conta.STATUS = es.getEstatus(docE);
-                            db.Entry(conta).State = EntityState.Modified;
-                            db.SaveChanges();
-
-                            contadorNotas++;
                         }
+                        catch (Exception ee) { }
                     }
-                    catch (Exception ee) { }
+                    else
+                    {
+                        li.Add("<" + doc.NUM_DOC.ToString());
+                    }
                 }
                 else
                 {
-                    li.Add("<" + doc.NUM_DOC.ToString());
+                    li.Add("periodoCerrado" + doc.NUM_DOC.ToString());
                 }
             }
 
@@ -4958,6 +4968,16 @@ namespace TAT001.Controllers
                 var ex = e.ToString();
             }
 
+        }
+        public string cierre(string sociedad_id, string tsol_id, string periodo_id, string usuario_id)
+        {
+            int periodo = int.Parse(periodo_id);
+            bool a = FnCommon.ValidarPeriodoEnCalendario445(db, sociedad_id, tsol_id, periodo, "PRE", usuario_id) ||
+                FnCommon.ValidarPeriodoEnCalendario445(db, sociedad_id, tsol_id, periodo, "CI");
+            if (a)
+                return "X";
+            else
+                return "";
         }
     }
 
