@@ -108,7 +108,7 @@ namespace TAT001.Controllers.Catalogos
                                 {
                                     try
                                     {
-                                        u.ID = uSUARIO.ID.Trim();
+                                        u.ID = uSUARIO.ID.Trim().ToUpper();
                                         u.PASS = uSUARIO.PASS;
                                         u.NOMBRE = uSUARIO.NOMBRE;
                                         u.APELLIDO_P = uSUARIO.APELLIDO_P;
@@ -162,7 +162,13 @@ namespace TAT001.Controllers.Catalogos
                 }
                 else
                 {
-                    TempData["MensajeUsuario"] = "El usuario ya existe. Introduzca un ID de usuario diferente";
+                    if (db.USUARIOs.Find(uSUARIO.ID).ACTIVO==false)
+                    {
+                        TempData["MensajeUsuario"] = "El usuario esta inactivo. Introduzca un ID de usuario diferente";
+                    }
+                    else {
+                        TempData["MensajeUsuario"] = "El usuario ya existe. Introduzca un ID de usuario diferente";
+                    }
                     return View(uSUARIO);
                 }
             }
@@ -2047,7 +2053,7 @@ namespace TAT001.Controllers.Catalogos
 
                 try
                 {
-                    us.ID = da.ID.Trim();
+                    us.ID = da.ID.Trim().ToUpper();
                     us.PASS = da.PASS;
                     us.NOMBRE = da.NOMBRE;
                     us.APELLIDO_P = da.APELLIDO_P;
@@ -2096,7 +2102,7 @@ namespace TAT001.Controllers.Catalogos
                 {
                     USUARIOF uf = new USUARIOF
                     {
-                        USUARIO_ID = da.ID.Trim(),
+                        USUARIO_ID = da.ID.Trim().ToUpper(),
                         VKORG = da.VKORG,
                         VTWEG = da.VTWEG,
                         SPART = da.SPART,

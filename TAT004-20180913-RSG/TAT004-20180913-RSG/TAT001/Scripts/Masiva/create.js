@@ -2964,7 +2964,9 @@ function checkRelacionadaMat() {
     }
 
     for (j = 0; j < cantidadesError.length; j++) {
-        idError[j] = cantidadesError[j].charAt(0);
+        //idError[j] = cantidadesError[j].charAt(0);
+        index = cantidadesError[j].indexOf('-');
+        idError[j] = cantidadesError[j].substr(0, index);
     }
     /////////////////////////////////////////////////////////////////////////FIN/////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////PINTAMOS DE COLOR ROJO LOS MONTOS DE APOYO EN MATERIALES POR NO CUADRAR EN CANTIDADES///////////////////////////////////////////
@@ -2976,6 +2978,7 @@ function checkRelacionadaMat() {
         for (var l = 0; l < idError.length; l++) {
             if (num_docH44 === idError[l]) {
                 $(rowH44).children().eq(1).children().addClass("red white-text rojo errorCantidades");
+                $(rowH44).children().eq(1).children().prop('title', 'El total de distribución es diferente a el total de facturas multiples.');
                 //if (tieneRojo) {
                 //    $(rowH44).children().eq(14).children().addClass("errorCantidades");
                 //}
@@ -3565,17 +3568,20 @@ function setDatos(tabla1, tabla2, tabla3, tabla4, tabla5, notasArr) {
                 listaIds = data.pop();
                 //eliminarId = data;
                 listaIds.forEach(function (element) {
-                    if (element.indexOf('<') >= 0) {
+                    if ((element.indexOf('<') >= 0)) {
                         var DocId = element.split('<')[1];
-                        listIdsRechazados.push(DocId);
+                        listIdsRechazados.push({ idDoc: DocId, msj: "No contiene materiales." });
+                    } else if ((element.indexOf('periodoCerrado') >= 0)) {
+                        var DocIdPeriodo = element.split('periodoCerrado')[1];
+                        listIdsRechazados.push({ idDoc: DocIdPeriodo, msj: "No existe periodo abierto" });
                     }
                 });
 
                 data.forEach(function (numDoc) {
                     var existe = false;
                     numDoc = numDoc.toString();
-                    listIdsRechazados.forEach(function (idDoc) {
-                        if (idDoc === numDoc) {
+                    listIdsRechazados.forEach(function (Doc) {
+                        if (Doc.idDoc === numDoc) {
                             existe = true;
                         }
                     });
@@ -3602,6 +3608,14 @@ function setDatos(tabla1, tabla2, tabla3, tabla4, tabla5, notasArr) {
                             a--;
                         }
                     }
+
+                    listIdsRechazados.forEach(function (Doc) {
+                        if (Doc.idDoc === num_docH1) {
+                            $(rowH1).children().eq(1).children().addClass("red white-text rojo");
+                            $(rowH1).children().eq(1).children().prop('title', Doc.msj);
+
+                        }
+                    });
                 }
 
                 for (var c = 0; c < tablaH2.rows().data().length; c++) {
@@ -3671,11 +3685,17 @@ function setDatos(tabla1, tabla2, tabla3, tabla4, tabla5, notasArr) {
                         var texto = listaIds[k].split('<');
                         M.toast({ html: 'Documento ' + texto[1] + ' no fue creado, porque no contiene materiales.' });
 
-                    } else {
+                    } else if (listaIds[k].indexOf('periodoCerrado') >= 0) {
+                        var texto = listaIds[k].split('periodoCerrado');
+                        M.toast({ html: 'Documento ' + texto[1] + ' no fue creado, porque no existe periodo abierto.' });
+
+                    }
+                    else {
                         M.toast({ html: 'Documento ' + listaIds[k] + ' fue creado' });
                     }
                 }
-
+                
+                clearErrors();
                 //var table = $('#tab_test1').DataTable();
 
                 //if (!table.data().any()) {

@@ -38,7 +38,7 @@ namespace TAT001.Controllers
                     //ViewBag.pais = "mx.svg";
                     //return RedirectToAction("Pais", "Home");
                 }
-                Session["spras"] = user.SPRAS_ID;
+                ViewBag.lan = user.SPRAS_ID;
             }
             return View(db.IIMPUESTOes.Where(x => x.ACTIVO == true).ToList());
         }

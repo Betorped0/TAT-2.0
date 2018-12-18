@@ -7,7 +7,7 @@
 }
 <div class="row">
     <div class="col s12 right-align">
-        @Html.ActionLink("Nuevo", "Create", "TSOL", null, new { @class = "btn-small", @id = "btn_create" })
+        @*@Html.ActionLink("Nuevo", "Create", "TSOL", null, new { @class = "btn-small", @id = "btn_create" })*@
         @using (Html.BeginForm("Descargar", "TSOL", FormMethod.Post, new { @style = "display:initial;" }))
         {
             @*<button id="btnExport" name="excel" class="btn-small" type="submit" value="Excel" onclick="document.getElementById('loader').style.display = 'flex';"></button>*@
@@ -99,7 +99,7 @@
                 scrollY: "50vh",
                 scrollCollapse: true,
                 language: {
-                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                          "url": "@Url.Content("~/Scripts/lang/" + @ViewBag.lan + ".json")"
                 },
                 order: [[2, "asc"]],
                 initComplete: function () {

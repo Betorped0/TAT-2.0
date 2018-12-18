@@ -137,21 +137,21 @@ namespace TAT001.Controllers
                 FormsAuthentication.SetAuthCookie(model.ID, false);
 
                 //var authTicket = new FormsAuthenticationTicket(1, user.ID, DateTime.Now, DateTime.Now.AddMinutes(20), false, user.MIEMBROS.FirstOrDefault().ROL.NOMBRE);
-                var authTicket = new FormsAuthenticationTicket(1, user.ID, DateTime.Now, DateTime.Now.AddDays(1), false, "Administrador");
+                var authTicket = new FormsAuthenticationTicket(1, user.ID.ToUpper(), DateTime.Now, DateTime.Now.AddDays(1), false, "Administrador");
                 string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
                 var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
                 HttpContext.Response.Cookies.Add(authCookie);
                 //return RedirectToAction("Index", "Home");
                 if (returnUrl != null)
                 {
-                    var checkUser = db.USUARIOLOGs.SingleOrDefault(x => x.USUARIO_ID == user.ID);
+                    var checkUser = db.USUARIOLOGs.SingleOrDefault(x => x.USUARIO_ID == user.ID.ToUpper());
 
                     try
                     {
                         if (checkUser == null)
                         {
                             USUARIOLOG usuLog = new USUARIOLOG();
-                            usuLog.USUARIO_ID = user.ID;
+                            usuLog.USUARIO_ID = user.ID.ToUpper();
                             usuLog.POS = 1;
                             usuLog.SESION = System.Web.HttpContext.Current.Session.SessionID;
                             usuLog.NAVEGADOR = Request.Browser.Type;
@@ -165,7 +165,7 @@ namespace TAT001.Controllers
                         }
                         else
                         {
-                            return RedirectToAction("validateLoginView", new { USUARIO_ID = user.ID, returnUrl = returnUrl });
+                            return RedirectToAction("validateLoginView", new { USUARIO_ID = user.ID.ToUpper(), returnUrl = returnUrl });
                             //checkUser.USUARIO_ID = user.ID;
                             //checkUser.POS = 1;
                             //checkUser.SESION = System.Web.HttpContext.Current.Session.SessionID;

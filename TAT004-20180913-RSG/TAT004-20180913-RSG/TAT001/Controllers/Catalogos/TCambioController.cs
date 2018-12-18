@@ -45,7 +45,7 @@ namespace TAT001.Controllers.Catalogos
                     //ViewBag.pais = "mx.svg";
                     //return RedirectToAction("Pais", "Home");
                 }
-                Session["spras"] = user.SPRAS_ID;
+                ViewBag.lan = user.SPRAS_ID;
             }
             return View(db.TCAMBIOs.ToList());
         }

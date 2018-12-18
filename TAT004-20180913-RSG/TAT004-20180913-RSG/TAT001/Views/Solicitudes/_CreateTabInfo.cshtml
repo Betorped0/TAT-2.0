@@ -369,8 +369,8 @@
                         @Html.LabelFor(model => model.PAYER_NOMBRE, "Nombre del contacto", htmlAttributes: new { @class = "control-label col-md-2", @for = "payer_nombre", @id = "lbl_payernom" }) @*B20180801 MGC Textos*@
                     </div>
                     <div class="input-field col s12">
-                        @Html.EditorFor(model => model.PAYER_EMAIL, new { htmlAttributes = new { @id = "payer_email", @class = " " + @ViewBag.relacionada, @type = "email", @maxlength = 250 } })
-                        @Html.LabelFor(model => model.PAYER_EMAIL, "Email de contacto", htmlAttributes: new { @class = "control-label col-md-2", @for = "payer_email", @id = "lbl_payeremail" }) @*B20180801 MGC Textos*@
+                        @Html.EditorFor(model => model.PAYER_EMAIL, new { htmlAttributes = new { @id = "PAYER_EMAIL", @class = " " + @ViewBag.relacionada, @type = "text", @maxlength = 250 } })
+                        @Html.LabelFor(model => model.PAYER_EMAIL, "Email de contacto", htmlAttributes: new { @class = "control-label col-md-2", @for = "PAYER_EMAIL", @id = "lbl_payeremail" }) @*B20180801 MGC Textos*@
                     </div>
 
                     <script>
@@ -409,8 +409,8 @@
                                     var label = ui.item.label;
                                     var value = ui.item.value;
                                     var email = ui.item.mail;
-                                    document.getElementById('payer_email').value = email;
-                                    $("#payer_email").trigger('focusout');
+                                    document.getElementById('PAYER_EMAIL').value = email;
+                                    $("#PAYER_EMAIL").trigger('focusout');
                                 }
                             });
                         })
