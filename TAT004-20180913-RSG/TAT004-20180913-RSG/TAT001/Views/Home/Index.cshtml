@@ -83,7 +83,8 @@
             //var elems = document.querySelectorAll('select');
             //var instances = M.FormSelect.init(elems, []);
             function cambiaUsuario(user_id) {
-                document.location.replace("/?id=" + user_id);
+                ////document.location.replace("/?id=" + user_id);
+                document.location.href = document.location.href.split('/?id=')[0] + "/?id=" + user_id;
             }
         </script>
     }
