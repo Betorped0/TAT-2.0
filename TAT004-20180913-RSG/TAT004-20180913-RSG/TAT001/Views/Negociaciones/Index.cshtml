@@ -41,116 +41,157 @@
     </style>
 </head>
 <body>
-    <div style="height:48px; background-color:#d11d53; width:76%; z-index:1000;top:0px;left:0px; position:fixed; margin-bottom:30px;">
-    </div>
-    <div style="text-align:right; margin-top:65px; width:75%">
-        <p>@ViewBag.cd, @ViewBag.edo, @ViewBag.FechaH</p>
-    </div>
-    <div style="width:75%;">
-        <div style="width:60%; float:left;">
-            <p>
-                @ViewBag.clName<br>
-                @ViewBag.clDir<br>
-            </p>
-        </div>
-        <div style="width:40%; float:left;">
-            <table style="width:100%;" id="table2;" class="table borde;">
-                <thead>
-                    <tr>
-                        <th class="th borde" style="text-align:center;" id="lbl_control">@ViewBag.lbl_control</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="borde">@ViewBag.clPayId</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div style="width:75%; float:left;">
-        <div style="margin-top:20px; width:100%">
-            <br />
-            <p align="justify">
-                <span id="lbl_dear">@ViewBag.lbl_dear </span>@ViewBag.clCon,<br /><br />
-                <span id="lbl_next">@ViewBag.lbl_next</span> @ViewBag.ff.<br />
+    <table class="tg" style="width:100%; border-collapse:collapse;">
+        <tr style="background-color:#d11d53; height:50px;">
+            <td>
+                <div class="row" style="margin-bottom:0">
+                    <table class="tg" style="width: 100%;border-collapse: collapse;">
+                        <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;"></tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    @*DIV CON EL CONTENIDO DEL CUERPO DEL CORREO*@
+    <table class="tg" style="width: 100%; border-collapse:collapse;">
+        <tr style="border-bottom: 1px solid #e0e0e0;">
+            <td style="text-align:right;">
+                <p>@ViewBag.cd, @ViewBag.edo, @ViewBag.FechaH</p>
                 <br />
-                <br />
-                <span id="lbl_pres">@ViewBag.lbl_pres
-                    
-                </span>
-            </p>
-        </div>
-        <div style="margin-top:90px; width:100%; margin-left:20px;">
-            <table style="width:100%;" id="table1" class="table borde">
-                <thead>
-                    <tr>
-                        <th class="texto th borde">
-                            <span id="lbl_numsol">@ViewBag.lbl_numsol</span>
-                        </th>
-                        <th class="texto th borde">
-                            <span id="lbl_vigencia">@ViewBag.lbl_vigencia</span>
-                        </th>
-                        <th class="texto th borde">
-                            <span id="lbl_desc">@ViewBag.lbl_desc</span>
-                        </th>
-                        <th class="texto th borde">
-                            <span id="lbl_soporte">@ViewBag.lbl_soporte</span>
-                        </th>
+            </td>
+        </tr>
+
+        <tr style="border-bottom: 1px solid #e0e0e0;">
+            <td>
+                <table class="tg" style="width: 100%; border-collapse:collapse;">
+                    <tr style="border-bottom: 1px solid #e0e0e0;">
+                        <td>
+                            <p>@ViewBag.clName</p>
+                        </td>
+                        <td style="text-align:right;">
+                            <p><strong>@ViewBag.lbl_control</strong></p>
+                        </td>
+                    </tr>c
+                    <tr style="border-bottom: 1px solid #e0e0e0;">
+                        <td>
+                            <p>@ViewBag.clDir</p>
+                        </td>
+                        <td style="text-align:right;">
+                            <p><strong>@ViewBag.clPayId</strong></p>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
+                </table>
+            </td>
+        </tr>
+
+        <tr style="border-bottom: 1px solid #e0e0e0;">
+            <td>
+                <table class="tg" style="width: 100%; border-collapse:collapse;">
+                    <tr style="border-bottom: 1px solid #e0e0e0;">
+                        <td>
+                            <p align="justify">
+                                <br /><br />
+                                <span id="lbl_dear">@ViewBag.lbl_dear</span>@ViewBag.clCon,<br /><br />
+                                <span id="lbl_next">@ViewBag.lbl_next</span>@ViewBag.ff.<br />
+                                <br /><br />
+                                <span id="lbl_pres">@ViewBag.lbl_pres.</span>
+                                <br /><br /><br /><br />
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <tr style="border-bottom: 1px solid #e0e0e0;">
+            <td>
+                <table style="width:100%;" id="table1" class="table borde">
+                    <thead>
                         <tr>
-                            <td class="borde">
-                                @item.NUM_DOC
-                            </td>
-                            <td class="borde">
-                                @item.FECHAI_VIG.Value.Day/@item.FECHAI_VIG.Value.Month/@item.FECHAI_VIG.Value.Year - @item.FECHAF_VIG.Value.Day/@item.FECHAF_VIG.Value.Month/@item.FECHAF_VIG.Value.Year
-                            </td>
-                            <td class="borde">
-                                @Html.DisplayFor(modelItem => item.CONCEPTO)
-                            </td>
-                            <td class="borde">
-                                @{
-                                    int cont = 1;
-                                    int cont2 = item.DOCUMENTOAs.Where(x => x.ACTIVO).Count();
-                                    foreach (TAT001.Entities.DOCUMENTOA a in item.DOCUMENTOAs.Where(x => x.ACTIVO))
-                                    {
-                                        string spras = ViewBag.spras;
-                                        var t = a.TSOPORTE.TSOPORTETs.Where(x => x.SPRAS_ID == spras).FirstOrDefault();
-                                        if (t != null)
-                                        {
-                                            if (cont == cont2)
-                                            {
-                                                <span>@t.TXT50</span>
-                                            }
-                                            else if (cont2 > 1)
-                                            {
-                                                <span>@t.TXT50, </span>
-                                            }
-                                        }
-                                        cont++;
-                                    }
-                                }
-                            </td>
+                            <th class="texto th borde">
+                                <span id="lbl_numsol">@ViewBag.lbl_numsol</span>
+                            </th>
+                            <th class="texto th borde">
+                                <span id="lbl_vigencia">@ViewBag.lbl_vigencia</span>
+                            </th>
+                            <th class="texto th borde">
+                                <span id="lbl_desc">@ViewBag.lbl_desc</span>
+                            </th>
+                            <th class="texto th borde">
+                                <span id="lbl_soporte">@ViewBag.lbl_soporte</span>
+                            </th>
                         </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-        <div style="width:100%; margin-top:60px;">
-            <hr style="width:400px" />
-            <p style="text-align:center;">
-                @ViewBag.clFunci<br /><br />
-                @ViewBag.clPos <br /><br />
-                @ViewBag.KellCom
-            </p>
-        </div>
-        <div style="width:100%; margin-top:20px;">
-            <a type="button" class="btn-small" id="btn_Ok"
-               style="height: 32.4px;line-height: 32.4px;
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="borde">
+                                    @item.NUM_DOC
+                                </td>
+                                <td class="borde">
+                                    @item.FECHAI_VIG.Value.Day/@item.FECHAI_VIG.Value.Month/@item.FECHAI_VIG.Value.Year - @item.FECHAF_VIG.Value.Day/@item.FECHAF_VIG.Value.Month/@item.FECHAF_VIG.Value.Year
+                                </td>
+                                <td class="borde">
+                                    @Html.DisplayFor(modelItem => item.CONCEPTO)
+                                </td>
+                                <td class="borde">
+                                    @{
+                                        int cont = 1;
+                                        int cont2 = item.DOCUMENTOAs.Where(x => x.ACTIVO).Count();
+                                        foreach (TAT001.Entities.DOCUMENTOA a in item.DOCUMENTOAs.Where(x => x.ACTIVO))
+                                        {
+                                            string spras = ViewBag.spras;
+                                            var t = a.TSOPORTE.TSOPORTETs.Where(x => x.SPRAS_ID == spras).FirstOrDefault();
+                                            if (t != null)
+                                            {
+                                                if (cont == cont2)
+                                                {
+                                                    <span>@t.TXT50</span>
+                                                }
+                                                else if (cont2 > 1)
+                                                {
+                                                    <span>@t.TXT50, </span>
+                                                }
+                                            }
+                                            cont++;
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+
+        <tr style="border-bottom: 1px solid #e0e0e0;">
+            <td>
+                <table class="tg" style="width: 100%; border-collapse:collapse;">
+                    <tr style="border-bottom: 1px solid #e0e0e0;">
+                        <td>
+                            <br /><br />
+                            <hr style="width:400px" />
+                            <p style="text-align:center;">
+                                @ViewBag.clFunci<br /><br />
+                                @ViewBag.clPos <br /><br />
+                                @ViewBag.KellCom
+                            </p>
+                            <br />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <tr style="border-bottom: 1px solid #e0e0e0;">
+            <td>
+                <table class="tg" style="width: 100%; border-collapse:collapse;">
+                    <tr style="border-bottom: 1px solid #e0e0e0;">
+                        <td style="text-align:left;">
+                            <a type="button" class="btn-small" id="btn_Ok"
+                               style="height: 32.4px;line-height: 32.4px;
                         font-size: 13px;
                         text-decoration: none;
                         color: #fff;
@@ -170,11 +211,13 @@
                         vertical-align: middle;
                         margin-right:5px;
                         -webkit-tap-highlight-color: transparent;"
-               href="mailto:LA_TAT@kellogg.com?Subject=De%20Acuerdo-@ViewBag.clPayId.@ViewBag.idf.@ViewBag.vk.@ViewBag.vtw.@ViewBag.clCorreo2" target="_top">
-                De Acuerdo
-            </a>
-            <a type="button" class="btn-small" id="btn_Ok"
-               style="height: 32.4px;line-height: 32.4px;
+                               href="mailto:LA_TAT@kellogg.com?Subject=De%20Acuerdo-@ViewBag.clPayId.@ViewBag.idf.@ViewBag.vk.@ViewBag.vtw.@ViewBag.clCorreo2" target="_top">
+                                De Acuerdo
+                            </a>
+                        </td>
+                        <td style="text-align:left;">
+                            <a type="button" class="btn-small" id="btn_Ok"
+                               style="height: 32.4px;line-height: 32.4px;
                         font-size: 13px;
                         text-decoration: none;
                         color: #fff;
@@ -194,11 +237,15 @@
                         vertical-align: middle;
                         margin-right:5px;
                         -webkit-tap-highlight-color: transparent;"
-               href="mailto:LA_TAT@kellogg.com?Subject=Tengo%20Observaciones-@ViewBag.clPayId.@ViewBag.idf.@ViewBag.vk.@ViewBag.vtw.@ViewBag.clCorreo2" target="_top">
-                Tengo Observaciones
-            </a>
-        </div>
-    </div>
+                               href="mailto:LA_TAT@kellogg.com?Subject=Tengo%20Observaciones-@ViewBag.clPayId.@ViewBag.idf.@ViewBag.vk.@ViewBag.vtw.@ViewBag.clCorreo2" target="_top">
+                                Tengo Observaciones
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 
     @if (ViewBag.textos != null)
     {
