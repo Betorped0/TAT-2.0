@@ -61,6 +61,14 @@ namespace TAT001.Controllers.Catalogos
             }
 
             TS_CAMPO tS_CAMPO = db.TS_CAMPO.Include(x => x.TS_FORM).First(x => x.ID == id);
+            if (!tS_CAMPO.TS_FORMT.Any(x => x.SPRAS_ID == "ES"))
+            {
+                tS_CAMPO.TS_FORMT.Add(new TS_FORMT { SPRAS_ID = "ES", TSFORM_ID = tS_CAMPO.ID, SPRA = db.SPRAS.Find("ES") });
+            }
+            if (!tS_CAMPO.TS_FORMT.Any(x => x.SPRAS_ID == "EN"))
+            {
+                tS_CAMPO.TS_FORMT.Add(new TS_FORMT { SPRAS_ID = "EN", TSFORM_ID = tS_CAMPO.ID, SPRA = db.SPRAS.Find("EN") });
+            }
             return View(tS_CAMPO);
         }
 
