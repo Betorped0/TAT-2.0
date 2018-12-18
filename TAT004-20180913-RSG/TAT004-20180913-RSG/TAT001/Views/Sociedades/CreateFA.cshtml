@@ -78,7 +78,7 @@
                                 <label><input class="input_presu" type="checkbox" name="p_0" /><span></span></label>
                             </td>
                             <td>@Html.DropDownList("NivelesPR", listP1, "", htmlAttributes: new { @class = "browser-default form-control NivelesPR", disabled = true })</td>
-                            <td><input type="text" class="monto" name="monto" /></td>
+                            <td><input type="text" class="monto" name="monto" maxlength="17" /></td>
                             <td>@Html.DropDownList("NivelesMO", listM1, "", htmlAttributes: new { @class = "browser-default form-control NivelesMO", disabled = true })</td>
                             @*<td><label><input class='input_activo' type='checkbox' id='input_activo' name='activof' checked /><span></span></label></td>*@
                             @*<td>
@@ -217,10 +217,10 @@
 
                 var $TABLE = $('#table');
 
-    $(document).on('click', '.table-add', function () {
+    $($TABLE).on('click', '.table-add', function () {
         var pos = $TABLE.find('tr:last>td:eq(0)>input').val();
         if (pos < 5) {
-            var $clone = $TABLE.find('tr.hide').clone(true).removeClass('hide table-line');
+            var $clone = $TABLE.find('tr.hide').clone().removeClass('hide table-line');
             var posn = parseInt(pos) + 1;
             //if ($(".nivelapro").length > 1) {
             //    $(".nivelapro").each(function () {
@@ -231,6 +231,10 @@
             $clone.find('td:eq(0)>input').val(posn);
             $clone.find('td:eq(2)').find(":checkbox").prop("name", "p_" + posn);
             $clone.find('td:eq(4)>input').mask('#' + '@ViewBag.Miles' + '##0' + '@ViewBag.PD' + '00', { reverse: true });
+            if (posn == 5) {
+                $clone.find('td:eq(2)').find(":checkbox").prop("disabled", true);
+                $clone.find('td:eq(4)>input').prop("disabled", true);
+            }
             $TABLE.find('table').append($clone);
         }
         else {
@@ -244,7 +248,7 @@
             $TABLE.find('tr:last').detach();
         }
     });
-    $('.input_presu').change(function () {
+    $(document).on('change', '.input_presu', function () {
         var pos = $(this).closest("tr").find('td:eq(0)>input').val();
         if ($(this).is(':checked')) {
             $(this).closest("tr").find("td:eq(3)>select").prop("required", true);

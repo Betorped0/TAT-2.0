@@ -104,13 +104,13 @@
         $(document).ready(function () {
         
         var spras_id = "@ViewBag.spras_id";
-        var root = "@Url.Content("~")";
+            var root = "@Url.Content("~")";
         var table = $('#table').DataTable({
             scrollX: "50vh",
             scrollY: "50vh",
             scrollCollapse: true,
             language: {
-                "url": root + "/Scripts/lang/" + spras_id + ".json"
+                "url": "@Url.Content("~/Scripts/lang/" + @ViewBag.spras_id + ".json")"
             }, columnDefs: [
                 {
                     targets: [1],

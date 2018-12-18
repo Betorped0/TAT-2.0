@@ -107,7 +107,7 @@
             scrollY: "50vh",
             scrollCollapse: true,
             language: {
-                "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                    "url": "@Url.Content("~/Scripts/lang/" + @ViewBag.lan + ".json")"
             },
             order: [[1, "asc"]],
             initComplete: function () {
