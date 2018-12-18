@@ -1,7 +1,6 @@
 ﻿@model TAT001.Entities.TS_CAMPO
 
 @{
-    //ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.pagina_r = 1313;
     ViewBag.carpeta_r = 500;
@@ -25,74 +24,67 @@
                 </div>
             </div>
         </div>
-        
-        <div class="col s6">
-            <div class="card-panel">
-                <h5>Traducciones</h5>
-                <div class="row">
-                    @foreach (var item in Model.TS_FORM)
-                    {
-                        <div class="input-field col l10 m10" style="margin-bottom:0;">
-                            @Html.LabelFor(model => item.LAND_ID, "LAND_ID", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_pais" })
-                            @Html.EditorFor(model => item.PAI.LANDX, new { htmlAttributes = new { @class = "form-control", @required = "", @maxlength = 50, @readonly = "readonly" } })
-                        </div>
-                        <div class="input-field col l10 m10" style="margin-bottom:0;">
-                            @Html.LabelFor(model => item.BUKRS_ID, "BUKRS_ID", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_sociedad" })
-                            @Html.EditorFor(model => item.SOCIEDAD.BUTXT, new { htmlAttributes = new { @class = "form-control", @required = "", @maxlength = 50, @readonly = "readonly" } })
-                        </div>
-                    }
-
-                    <div class="input-field col l10 m10" style="margin-bottom:0;">
-                        @Html.Editor("EN", new { htmlAttributes = new { @class = "form-control", @maxlength = "50", @required = "" } })
-                        @*@Html.LabelFor(model => item.TXT100, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_DscEN" })*@
-                        <label id="lblIngles">Ingles</label>
-                    </div>
-
-
-                    <div class="input-field col l10 m10" style="margin-bottom:0;">
-                        @Html.Editor("ES", new { htmlAttributes = new { @class = "form-control", @maxlength = "50", @required = "" } })
-                        @*@Html.LabelFor(model => item.TXT100, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_DscES" })*@
-                        <label id="lblEspa">Español</label>
-                        @*<label for="@("A" + Model.TS_FORMT.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().SPRAS_ID)"> @Model.TS_FORMT.Where(a => a.SPRAS_ID.Equals(Session["spras"].ToString())).FirstOrDefault().SPRA.DESCRIPCION</label>*@
-                    </div>
-
-                </div>
-
-                <div class="input-field col l4 m10 right" style="margin-bottom:0;">
-                    <label>
-                        @if (Model.ACTIVO != null && (bool)Model.ACTIVO == true)
+        <div class="form-horizontal">
+            <div class="col s6">
+                <div class="card-panel">
+                    <div class="row">
+                        @foreach (var item in Model.TS_FORM)
                         {
-                            <input type="checkbox" name="ACTIVO" value="true" id="fac" onclick="check()" checked />
-                            <span style="height:0" id="lblActivo"></span>
+                            <div class="input-field col l12 m12" style="margin-bottom:0;">
+                                @Html.LabelFor(model => item.BUKRS_ID, "BUKRS_ID", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_sociedad" })
+                                @Html.EditorFor(model => item.SOCIEDAD.BUKRS, new { htmlAttributes = new { @class = "form-control", @required = "", @maxlength = 50, @readonly = "readonly" } })
+                            </div>
                         }
-                        else
-                        {
-                            <input type="checkbox" name="ACTIVO" value="true" id="fac" onclick="check()" />
-                            <span id="lblActivo"></span>
-                        }
-                    </label>
+                        <div class="input-field col l12 m12" style="margin-bottom:0;">
+                            <h5>Traducciones</h5>
+                        </div>
+                        @{ 
+                            string txtEn = Model.TS_FORMT.First(x => x.SPRAS_ID == "EN").TXT100;
+                            string txtEs = Model.TS_FORMT.First(x => x.SPRAS_ID == "ES").TXT100;
+
+                        <div class="input-field col l12 m12" style="margin-bottom:0;">
+                            @Html.Editor("EN", new { htmlAttributes = new { @class = "form-control", @maxlength = "50", @required = "", @Value = txtEn } })
+                            <label id="lblIngles">EN</label>
+                        </div>
+                        <div class="input-field col l12 m12" style="margin-bottom:0;">
+                            @Html.Editor("ES", new { htmlAttributes = new { @class = "form-control", @maxlength = "50", @required = "", @Value = txtEs } })
+                            <label id="lblEspa">ES</label>
+                        </div>
+                            }
+                        <div class="input-field col l2 m12 right">
+                            <label>
+                                @if (Model.ACTIVO)
+                                {
+                                    <input type="checkbox" name="ACTIVO" value="true" id="fac" onclick="check()" checked />
+                                    <span style="height:0" id="lblActivo"></span>
+                                }
+                                else
+                                {
+                                    <input type="checkbox" name="ACTIVO" value="true" id="fac" onclick="check()" />
+                                    <span id="lblActivo"></span>
+                                }
+                            </label>
+                        </div>
+                    </div>
                 </div>
-                <br />
-                <br />
-                <br />
             </div>
         </div>
-    }
-</div>
-<div style="color:black">
-    @Html.ActionLink("Regresar", "Index")
-</div>
-<script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
-<script>
-    function check() {
-        if ($("#fac").prop('checked'))
-            $("#idfac").prop('checked', true);
-        else
-            $("#idfac").prop('checked', false);
-    }
+            }
+        </div>
+        <div style="color:black">
+            @Html.ActionLink("Regresar", "Index")
+        </div>
+        <script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
+        <script>
+            function check() {
+                if ($("#fac").prop('checked'))
+                    $("#idfac").prop('checked', true);
+                else
+                    $("#idfac").prop('checked', false);
+            }
 
 
-    var elem = document.querySelectorAll('select');
-    var instance = M.FormSelect.init(elem, []);
-    fnCommon.formValidation('desviacionesForm');
-</script>
+            var elem = document.querySelectorAll('select');
+            var instance = M.FormSelect.init(elem, []);
+            fnCommon.formValidation('desviacionesForm');
+        </script>

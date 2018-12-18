@@ -1,7 +1,6 @@
-﻿@model TAT001.Entities.TS_FORM
+﻿@model TAT001.Entities.TS_CAMPO
 
 @{
-    //ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.pagina_r = 1312;
     ViewBag.carpeta_r = 500;
@@ -27,39 +26,33 @@
             <div class="col s6">
                 <div class="card-panel">
                     <div class="row">
-                        <div class="input-field col l10 m10" style="margin-bottom:0;">
-                            <select name="sociedadesSelected" id="sociedades" multiple>
-                                @{ 
-                                    foreach (var item in (List<SelectListItem>)ViewBag.SOCIEDADES)
-                                    {
-                                        <option value="@item.Value">@item.Text</option>
-                                    }
+                        <div class="input-field col l12 m12" style="margin-bottom:0;">
+                            <select name="sociedadesSelected" id="sociedades" multiple required>
+                                @foreach (var item in (List<SelectListItem>)ViewBag.SOCIEDADES)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
                                 }
                             </select>
-                            @Html.LabelFor(model => model.BUKRS_ID, "BUKRS_ID", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_sociedad" })
-                            @*@Html.EditorFor(model => model.BUKRS_ID, new { htmlAttributes = new { @class = "form-control", @required = "", @maxlength = 50 } })*@
+                            <label  class="control-label col-md-2" id="lbl_sociedad"></label>
                         </div>
-                        <br />
-                        <h5>Traducciones</h5>
-                        <br />
-                        <div class="input-field col l10 m10" style="margin-bottom:0;">
+                        <div class="input-field col l12 m12" style="margin-bottom:0;">
+                            <h5>Traducciones</h5>
+                        </div>
+                        <div class="input-field col l12 m12" style="margin-bottom:0;">
                             @Html.Editor("EN", new { htmlAttributes = new { @class = "form-control", @maxlength = "50", @required = "" } })
                             <label id="lblIngles">EN</label>
-
                         </div>
-                        <div class="input-field col l10 m10" style="margin-bottom:0;">
+                        <div class="input-field col l12 m12" style="margin-bottom:0;">
                             @Html.Editor("ES", new { htmlAttributes = new { @class = "form-control", @maxlength = "50", @required = "" } })
                             <label id="lblEspa">ES</label>
-
                         </div>
-                        <div class="input-field col l4 m10 right" style="margin-bottom:0;">
+                        <div class="input-field col l2 m12 right">
                             <label>
                                 <input type="checkbox" name="ACTIVO" value="true" id="fac" readonly="readonly" checked />
                                 <span id="lblActivo"></span>
 
                             </label>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -75,6 +68,7 @@
     var root = "@Url.Content("~")";
     //---- Inicializador de componentes Materialize----
     fnCommon.materializeInit('select');
+    fnCommon.selectRequired();
     //----  Se agrega validaciones al formulario----
     fnCommon.formValidation('desviacionesForm');
     //-- Actualizar seleccion de Sociedades
@@ -88,5 +82,11 @@
         jq_elem.siblings('li').filter(function () {
             return $(this).find('input').prop('checked') != select_all;
         }).click();
+    });
+    //Mostrar process
+    $('#desviacionesForm').submit(function () {
+        if ($('#desviacionesForm').valid()) {
+            document.getElementById("loader").style.display = "flex";
+        }
     });
 </script>
