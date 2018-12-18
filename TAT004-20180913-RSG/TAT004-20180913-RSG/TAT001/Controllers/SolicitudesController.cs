@@ -3912,7 +3912,7 @@ namespace TAT001.Controllers
                 if (rel > 0)
                 {
                     //d = db.DOCUMENTOes.Where(doc => doc.NUM_DOC == rel).Include(a => a.USUARIO).Include(a => a.FLUJOes).FirstOrDefault();
-                    if (d.ESTATUS_WF != "R" & d.ESTATUS_WF != "B")//ADD RSG 30.10.2018
+                    if (d.ESTATUS_WF != "R" && d.ESTATUS_WF != "B" || !(d.USUARIOC_ID == User.Identity.Name || d.USUARIOD_ID == User.Identity.Name))//ADD RSG 30.10.2018
                         return RedirectToAction("Index", "Home");
                     ViewBag.x_ligada = d.LIGADA;//LEJ 30.07.2018
                     tsol = d.TSOL_ID;
