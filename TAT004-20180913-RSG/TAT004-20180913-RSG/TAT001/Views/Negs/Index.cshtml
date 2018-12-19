@@ -6,11 +6,13 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@if (Model.Count() == 0) { 
 <div class="row">
     <div class="col s12 right-align">
         @Html.ActionLink("Crear", "Create", "Negs", null, new { @class = "btn-small", @id = "btnCrear" })
     </div>
 </div>
+}
 <div class="card-panel">
     <div class="row">
         <div class="row" style="margin-bottom:0;">

@@ -480,8 +480,8 @@ $(document).ready(function () {
         for (var i = 0; i < fe.length; i++) {
             var datePicker = fe[i];
             if (datePicker.value) {
-                ////var dateVal = moment(datePicker.value, 'DD/MM/YYYY');
-                ////M.Datepicker.getInstance(datePicker).setDate(dateVal._d);
+                var dateVal = moment(datePicker.value, 'DD/MM/YYYY');
+                M.Datepicker.getInstance(datePicker).setDate(dateVal._d);
             }}
         //fe.forEach(function (datePicker) {
         //    if (datePicker.value) {
