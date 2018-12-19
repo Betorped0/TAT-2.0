@@ -13,7 +13,7 @@
     <div class="row">
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <button id="btnEditar" type="submit" value="Save" class="btn btn-default" style="float:right;"></button>
+                <button id="btnCrearR" type="submit" value="Guardar" class="btn btn-default" style="float:right;"></button>
             </div>
         </div>
     </div>
@@ -64,5 +64,6 @@
     var instance = M.FormSelect.init(elem, []);
 </script>
 <div>
-    @Html.ActionLink("Back to List", "Index", null, new { @id = "lblRegresar" })
+    @*@Html.ActionLink("Back to List", "Index", null, new { @id = "lblRegresar" })*@
+    @Html.ActionLink("Back to List", "Index", "Sociedades", null, new { @id = "lblRegresar" })
 </div>

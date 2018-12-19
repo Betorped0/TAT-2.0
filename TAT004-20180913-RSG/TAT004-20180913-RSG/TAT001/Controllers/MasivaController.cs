@@ -259,7 +259,7 @@ namespace TAT001.Controllers
                             Paisdecimales = p.DECIMAL;
                             Paismiles=p.MILES;
                         }
-                        List<TALLT> list = tallsDao.ListaTallsConCuenta(TATConstantes.ACCION_LISTA_TALLCONCUENTA, null, spras_id, pLand, DateTime.Now.Year, bukrs);
+                        List<TALLT> list = tallsDao.ListaTallsConCuenta(TATConstantes.ACCION_LISTA_TALLTCONCUENTA, null, spras_id, pLand, DateTime.Now.Year, bukrs);
                         if (list.Any(x => x.TXT50 == gall_id))
                         {
                             doc.TALL_ID = list.Where(x => x.TXT50 == gall_id).FirstOrDefault().TALL_ID;
@@ -589,7 +589,7 @@ namespace TAT001.Controllers
         }
 
         public JsonResult validaHoja4()
-        {
+        {  
             DataSet ds1 = (DataSet)Session["ds1"];
             DataSet ds4 = (DataSet)Session["ds4"];
             List<object> ld = new List<object>();
@@ -663,16 +663,28 @@ namespace TAT001.Controllers
                             string volumen_real = row[12].ToString().Trim();
                             string apoyo = row[13].ToString().Trim();
 
-
+                            string fechaI = row[2].ToString().Trim();
+                            string[] fechaInicio = fechaI.Split(' ');
+                            string fechaF = row[3].ToString().Trim();
+                            string[] fechaFin = fechaF.Split(' ');
 
                             if (objInformacion.NUM_DOC == num_doc)
                             {
                                 objDistribucion.NUM_DOC = num_doc;
                                 objDistribucion.LIGADA = ligada;
-                                objDistribucion.VIGENCIA_DE = vigencia_de2[0];
-                                objDistribucion.VIGENCIA_AL = vigencia_al2[0];
-
-
+                                if (fechaInicio[0] == ""){
+                                    objDistribucion.VIGENCIA_DE = vigencia_de2[0];
+                                }
+                                else{
+                                    objDistribucion.VIGENCIA_DE = fechaInicio[0];
+                                }
+                                if (fechaFin[0] == ""){
+                                    objDistribucion.VIGENCIA_AL = vigencia_al2[0];
+                                }
+                                else{
+                                    objDistribucion.VIGENCIA_AL = fechaFin[0];
+                                }
+                                
                                 if (matnr == "" && matkl != "")
                                 {
                                     MATERIALGPT categoria = listCategorias.Where(x => x.TXT50.ToUpper() == matkl.ToUpper()).FirstOrDefault();
@@ -1104,8 +1116,9 @@ namespace TAT001.Controllers
 
             var c = false;
 
-            c = validaRangoFecha(Fecha1, Fecha2);
-            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+            resultadoFechas restultado = new resultadoFechas();
+            restultado=validaRangoFecha(Fecha1, Fecha2);
+           JsonResult cc = Json(restultado, JsonRequestBehavior.AllowGet);
             return cc;
         }
 
@@ -1440,7 +1453,7 @@ namespace TAT001.Controllers
                 regresaRowH1.Add("red white-text rojo | Se superó la cantidad maxima de caracteres (10)");
             }
 
-            List<TALLT> list =tallsDao.ListaTallsConCuenta(TATConstantes.ACCION_LISTA_TALLCONCUENTA, null,spras_id, land_id, DateTime.Now.Year, bukrs);
+            List<TALLT> list =tallsDao.ListaTallsConCuenta(TATConstantes.ACCION_LISTA_TALLTCONCUENTA, null,spras_id, land_id, DateTime.Now.Year, bukrs);
             if (list.Any(x => x.TXT50 == gall_id))
             {
                 regresaRowH1.Add("");
@@ -1580,15 +1593,25 @@ namespace TAT001.Controllers
                 regresaRowH1.Add("red white-text rojo | Se superó la cantidad maxima de caracteres (255)");
             }
 
-            if (validaRangoFecha(fechai_vig, fechaf_vig))
+            resultadoFechas validarFechas = new resultadoFechas();
+            validarFechas = validaRangoFecha(fechai_vig, fechaf_vig);
+            if (validarFechas.status)
             {
                 regresaRowH1.Add("");
                 regresaRowH1.Add("");
             }
             else
             {
-                regresaRowH1.Add("red white-text rojo");
-                regresaRowH1.Add("red white-text rojo");
+                if (validarFechas.tipo == "Rango")
+                {
+                    regresaRowH1.Add("red white-text rojo |Rango invalido");
+                    regresaRowH1.Add("red white-text rojo |Rango invalido");
+                }
+                else
+                {
+                    regresaRowH1.Add("red white-text rojo | Formato invalido");
+                    regresaRowH1.Add("red white-text rojo | Formato invalido");
+                }
             }
 
             if (moneda_id.Length == 3)
@@ -2283,8 +2306,12 @@ namespace TAT001.Controllers
             List<string> ListMaterialesDoc = new List<string>();
             List<string> ListCategoriasDoc = new List<string>();
 
-            string[] vigencia_de2 = objInformacion.FECHAI_VIG.Split(' ');
-            string[] vigencia_al2 = objInformacion.FECHAF_VIG.Split(' ');
+            string[] vigenciaInfo_de2 = objInformacion.FECHAI_VIG.Split(' ');
+            string[] vigenciaInfo_al2 = objInformacion.FECHAF_VIG.Split(' ');
+
+            string[] vigenciaDis_de = objDistribucion.VIGENCIA_DE.Split(' ');
+            string[] vigenciaDis_al = objDistribucion.VIGENCIA_AL.Split(' ');
+
             string colorLigada = "";
             string spras_id = FnCommon.ObtenerSprasId(db, User.Identity.Name);
 
@@ -2309,15 +2336,62 @@ namespace TAT001.Controllers
 
                 regresaRowH4.Add("nada");
 
-                if (validaRangoFecha(vigencia_de2[0], vigencia_al2[0]))
+                resultadoFechas FechasDistribucion = new resultadoFechas();
+                FechasDistribucion = validaRangoFecha(vigenciaDis_de[0], vigenciaDis_al[0]);
+
+                if (FechasDistribucion.status)
                 {
-                    regresaRowH4.Add("");
-                    regresaRowH4.Add("");
+                    resultadoFechas FechaIniInfoDis = new resultadoFechas();
+                    FechaIniInfoDis = validaRangoFecha(vigenciaInfo_de2[0], vigenciaDis_de[0]);
+
+                    if (!FechaIniInfoDis.status)
+                    {
+                        if (FechaIniInfoDis.tipo == "Rango")
+                        {
+                            regresaRowH4.Add("red white-text rojo |  No debe ser menor a la fecha inicial de la solicitud");
+                        }
+                        else
+                        {
+                            regresaRowH4.Add("red white-text rojo |  Formato invalido");
+                        }
+                    }
+                    else
+                    {
+                        regresaRowH4.Add("");
+                    }
+
+                    resultadoFechas FechaFinInfoDis = new resultadoFechas();
+                    FechaFinInfoDis = validaRangoFecha(vigenciaDis_al[0], vigenciaInfo_al2[0]);
+
+                    if (!FechaFinInfoDis.status)
+                    {
+                        if (FechaIniInfoDis.tipo == "Rango")
+                        {
+                            regresaRowH4.Add("red white-text rojo | No debe ser mayor a la fecha final de la solicitud");
+                        }
+                        else
+                        {
+                            regresaRowH4.Add("red white-text rojo | Formato invalido");
+                        }
+                      
+                    }
+                    else
+                    {
+                        regresaRowH4.Add("");
+                    }
                 }
                 else
                 {
-                    regresaRowH4.Add("red white-text rojo");
-                    regresaRowH4.Add("red white-text rojo");
+                    if (FechasDistribucion.tipo == "Rango")
+                    {
+                        regresaRowH4.Add("red white-text rojo |Rango invalido");
+                        regresaRowH4.Add("red white-text rojo |Rango invalido");
+                    }
+                    else
+                    {
+                        regresaRowH4.Add("red white-text rojo | Formato invalido");
+                        regresaRowH4.Add("red white-text rojo | Formato invalido");
+                    }
                 }
 
 
@@ -3799,8 +3873,9 @@ namespace TAT001.Controllers
             }
         }
 
-        public bool validaRangoFecha(string fecha1, string fecha2)
+        public resultadoFechas validaRangoFecha(string fecha1, string fecha2)
         {
+            resultadoFechas resultado = new resultadoFechas();
             bool fecha1_1, fecha2_2 = false;
             int tamanio = 0, tamanio2 = 0;
 
@@ -3838,10 +3913,10 @@ namespace TAT001.Controllers
                 fecha2_2 = false;
             }
 
-            if (fecha1_1 & fecha2_2)
+            if (fecha1_1 && fecha2_2)
             {
                 DateTime fec1, fec2;
-                if (tamanio == 7 & tamanio2 == 7)
+                if (tamanio == 7 || tamanio2 == 7)
                 {
                     fecha1 = validaPeriodoFecha(fecha1, "x");
                     fecha2 = validaPeriodoFecha(fecha2, "");
@@ -3849,13 +3924,15 @@ namespace TAT001.Controllers
                     fec1 = Convert.ToDateTime(fecha1);
                     fec2 = Convert.ToDateTime(fecha2);
 
-                    if (fec1 < fec2)
+                    if (fec1 <= fec2)
                     {
-                        return true;
+                        resultado.status = true;
+                        resultado.tipo = "Rango";
                     }
                     else
                     {
-                        return false;
+                        resultado.status = false;
+                        resultado.tipo = "Rango";
                     }
                 }
                 else
@@ -3863,27 +3940,32 @@ namespace TAT001.Controllers
                     fec1 = Convert.ToDateTime(fecha1);
                     fec2 = Convert.ToDateTime(fecha2);
 
-                    if (fec1 < fec2)
+                    if (fec1 <= fec2)
                     {
-                        return true;
+                        resultado.status = true;
+                        resultado.tipo = "Rango";
                     }
                     else
                     {
-                        return false;
+                        resultado.status = false;
+                        resultado.tipo = "Rango";
                     }
                 }
             }
             else
             {
-                return false;
+                resultado.status = false;
+                resultado.tipo = "Formato";
             }
+
+            return resultado;
         }
 
         public string validaPeso(string cantidad, bool valor)
         {
             if (cantidad != "")
             {
-                if (valor == true)
+                if (valor)
                 {
                     cantidad = "$" + cantidad;
                 }
@@ -4978,6 +5060,70 @@ namespace TAT001.Controllers
                 return "X";
             else
                 return "";
+        }
+        public JsonResult validarFechasDis(string FechaIniDis, string FechaFinDis, string FechaInfoIni, string FechaInfoFin)
+        {
+            List<string> regresaRowH4 = new List<string>();
+            resultadoFechas FechasDistribucion = new resultadoFechas();
+            FechasDistribucion = validaRangoFecha(FechaIniDis, FechaFinDis);
+
+            if (FechasDistribucion.status)
+            {
+                resultadoFechas FechaIniInfoDis = new resultadoFechas();
+                FechaIniInfoDis = validaRangoFecha(FechaInfoIni, FechaIniDis);
+
+                if (!FechaIniInfoDis.status)
+                {
+                    if (FechaIniInfoDis.tipo == "Rango")
+                    {
+                        regresaRowH4.Add("red white-text rojo |  No debe ser menor a la fecha inicial de la solicitud");
+                    }
+                    else
+                    {
+                        regresaRowH4.Add("red white-text rojo |  Formato invalido");
+                    }
+                }
+                else
+                {
+                    regresaRowH4.Add("");
+                }
+
+                resultadoFechas FechaFinInfoDis = new resultadoFechas();
+                FechaFinInfoDis = validaRangoFecha(FechaFinDis, FechaInfoFin);
+
+                if (!FechaFinInfoDis.status)
+                {
+                    if (FechaIniInfoDis.tipo == "Rango")
+                    {
+                        regresaRowH4.Add("red white-text rojo | No debe ser mayor a la fecha final de la solicitud");
+                    }
+                    else
+                    {
+                        regresaRowH4.Add("red white-text rojo | Formato invalido");
+                    }
+
+                }
+                else
+                {
+                    regresaRowH4.Add("");
+                }
+            }
+            else
+            {
+                if (FechasDistribucion.tipo == "Rango")
+                {
+                    regresaRowH4.Add("red white-text rojo |Rango invalido");
+                    regresaRowH4.Add("red white-text rojo |Rango invalido");
+                }
+                else
+                {
+                    regresaRowH4.Add("red white-text rojo | Formato invalido");
+                    regresaRowH4.Add("red white-text rojo | Formato invalido");
+                }
+            }
+
+            JsonResult cc = Json(regresaRowH4, JsonRequestBehavior.AllowGet);
+            return cc;
         }
     }
 

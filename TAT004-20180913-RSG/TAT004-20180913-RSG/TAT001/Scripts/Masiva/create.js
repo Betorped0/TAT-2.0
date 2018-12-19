@@ -742,13 +742,23 @@ $('#tab_test1').on('keydown.autocomplete', '.input_fechai', function () {
                 dataType: "json",
                 data: { "Fecha1": request.term, "Fecha2": fecha2 },
                 success: function (data) {
-                    if (data) {
+                    if (data.status) {
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
                         $(tr.find("td:eq(" + col_index2 + ")").children().removeClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().prop('title', ''));
+                        $(tr.find("td:eq(" + col_index2 + ")").children().prop('title', ''));
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                     } else {
+                       var msj = "";
+                        if (data.tipo === "Formato") {
+                            msj = "Formato invalido";
+                        } else {
+                            msj = "Rango invalido";
+                        }
                         $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
                         $(tr.find("td:eq(" + col_index2 + ")").children().addClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().prop('title', msj));
+                        $(tr.find("td:eq(" + col_index2 + ")").children().prop('title', msj));
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                     }
                     clearErrors();
@@ -774,13 +784,23 @@ $('#tab_test1').on('keydown.autocomplete', '.input_fechaf', function () {
                 dataType: "json",
                 data: { "Fecha1": fecha1, "Fecha2": request.term },
                 success: function (data) {
-                    if (data) {
+                    if (data.status) {
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
                         $(tr.find("td:eq(" + col_index2 + ")").children().removeClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().prop('title',''));
+                        $(tr.find("td:eq(" + col_index2 + ")").children().prop('title', ''));
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                     } else {
+                        var msj = "";
+                        if (data.tipo === "Formato") {
+                            msj = "Formato invalido";
+                        } else {
+                            msj = "Rango invalido";
+                        }
                         $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
                         $(tr.find("td:eq(" + col_index2 + ")").children().addClass("red white-text rojo"));
+                        $(tr.find("td:eq(" + col_index + ")").children().prop('title', msj));
+                        $(tr.find("td:eq(" + col_index2 + ")").children().prop('title', msj));
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                     }
                     clearErrors();
@@ -1697,8 +1717,8 @@ function addRowH4(t, NUM_DOC, LIGADA, VIGENCIA_DE, VIGENCIA_AL, MATNR, MATKL, DE
         "<div class='" + clase + "'></div>",
         "<input class='" + ERRORES[0] + " input_numdoc' style='font-size:12px; text-align:center;' type='text' id='' name='' disabled value='" + NUM_DOC + "' title='"+getWarning(ERRORES[0])+"'><span hidden>" + NUM_DOC + "</span>",
         "<p style='text-align:center;' class='" + ERRORES[1] + "'><label><input type='checkbox' class='filled-in ligada' " + check + " onchange='ligada(this);'/><span></span></label></p>",
-        "<input class='" + ERRORES[2] + " input_fechai' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + VIGENCIA_DE + "' title='" + getWarning(ERRORES[2]) +"'><span hidden>" + VIGENCIA_DE + "</span>",
-        "<input class='" + ERRORES[3] + " input_fechaf' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + VIGENCIA_AL + "' title='" + getWarning(ERRORES[3]) +"'><span hidden>" + VIGENCIA_AL + "</span>",
+        "<input class='" + ERRORES[2] + " input_fechaDis' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + VIGENCIA_DE + "' title='" + getWarning(ERRORES[2]) +"'><span hidden>" + VIGENCIA_DE + "</span>",
+        "<input class='" + ERRORES[3] + " input_fechaDis' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + VIGENCIA_AL + "' title='" + getWarning(ERRORES[3]) +"'><span hidden>" + VIGENCIA_AL + "</span>",
         "<input class='" + ERRORES[4] + " input_material' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + MATNR + "' title='" + getWarning(ERRORES[4]) +"'><span hidden>" + MATNR + "</span>",
         "<input class='" + ERRORES[5] + " input_categoria' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + MATKL + "' title='" + getWarning(ERRORES[5]) +"'><span hidden>" + MATKL_ID + "</span>",
         "<input class='" + ERRORES[6] + "' style='font-size:10px; text-align:center;' type='text' id='' name='' value='" + DESCRIPCION + "'' title='" + getWarning(ERRORES[6]) +"'><span hidden>" + DESCRIPCION + "</span>",
@@ -1716,9 +1736,87 @@ function addRowH4(t, NUM_DOC, LIGADA, VIGENCIA_DE, VIGENCIA_AL, MATNR, MATKL, DE
 
     return r;
 }
+$('#tab_test4').on('focusout', '.input_fechaDis', function () {
+    var tr = $(this).closest('tr');
 
+    var indexFI = getTableIndex('#tab_test4', 'lbl_fechaInicioH4');
+    var indexFF = getTableIndex('#tab_test4', 'lbl_fechaFinH4');
+    var indexnumDoc = getTableIndex('#tab_test4', 'lbl_numDocH4');
+    var num_doc = $(tr).children().eq(indexnumDoc).children().val();
+    var fechaInicio = $(tr).children().eq(indexFI).children().val();
+    var fechaFin = $(tr).children().eq(indexFF).children().val();
+
+    var fechaIH1 = "", fechaFH1 = "";
+    var indexFechaIni = getTableIndex('#tab_test1', 'lbl_fechaInicio');
+    var indexFechaFin = getTableIndex('#tab_test1', 'lbl_fechaFin');
+    var indexH1numDoc = getTableIndex('#tab_test1', 'lbl_numDocH1');
+    
+    var tablaH1 = $('#tab_test1').DataTable();
+
+    for (var c = 0; c < tablaH1.rows().data().length; c++) {
+        var rowH1 = tablaH1.row(c).node();
+        var num_docH1 = $(rowH1).children().eq(indexH1numDoc).children().val();
+        if (num_doc === num_docH1) {
+            fechaIH1 = $(rowH1).children().eq(indexFechaIni).children().val();
+            fechaFH1 = $(rowH1).children().eq(indexFechaFin).children().val();
+            break;
+        }
+    }
+    $.ajax({
+        type: "POST",
+        url: 'validarFechasDis',
+        dataType: "json",
+        data: { "FechaIniDis": fechaInicio, "FechaFinDis": fechaFin, "FechaInfoIni": fechaIH1, "FechaInfoFin": fechaFH1 },
+        success: function (data) {
+            if (data !== null | data !== "") {
+                if (data[0] === "") {
+                    $(tr).children().eq(indexFI).children().removeClass("red white-text rojo");
+                    $(tr).children().eq(indexFI).children().prop('title', '');
+                } else {
+                    $(tr).children().eq(indexFI).children().addClass("red white-text rojo");
+                    $(tr).children().eq(indexFI).children().prop('title', getWarning(data[0]));
+                }
+                if (data[1] === "") {
+                    $(tr).children().eq(indexFF).children().removeClass("red white-text rojo");
+                    $(tr).children().eq(indexFF).children().prop('title','');
+                } else {
+                    $(tr).children().eq(indexFF).children().addClass("red white-text rojo");
+                    $(tr).children().eq(indexFF).children().prop('title', getWarning(data[1]));
+                }
+                clearErrors();
+            }
+        }
+    });
+    
+});
+function isDate(xx) {
+    var currVal = xx;
+    if (currVal === '' || currVal === undefined)
+        return false;
+
+    var rxDatePattern = /^(\d{1,2})(\/|-)(\d{1,2})(\/|-)(\d{4})$/; //Declare Regex
+    var dtArray = currVal.match(rxDatePattern); // is format OK?
+
+    if (dtArray === null)
+        return false;
+
+    //Checks for mm/dd/yyyy format.
+    dtMonth = dtArray[3];
+    dtDay = dtArray[1];
+    dtYear = dtArray[5];
+
+    if (dtMonth < 1 || dtMonth > 12) return false;
+
+    else if (dtDay < 1 || dtDay > 31) return false;
+    else if ((dtMonth === 4 || dtMonth === 6 || dtMonth === 9 || dtMonth === 11) && dtDay === 31) return false;
+    else if (dtMonth === 2) {
+        var isleap = (dtYear % 4 === 0 && (dtYear % 100 !== 0 || dtYear % 400 === 0));
+        if (dtDay > 29 || (dtDay === 29 && !isleap)) return false;
+    }
+    return true;
+}
 $('#tab_test4').on('keydown.autocomplete', '.input_material', function () {
-    var tr = $(this).closest('tr'); //Obtener el row
+            var tr = $(this).closest('tr'); //Obtener el row
     var row_index = $(this).parent().parent().index();
     var col_index = $(this).parent().index();
     col_index = col_index + 2;
@@ -3611,7 +3709,7 @@ function setDatos(tabla1, tabla2, tabla3, tabla4, tabla5, notasArr) {
 
                     listIdsRechazados.forEach(function (Doc) {
                         if (Doc.idDoc === num_docH1) {
-                            $(rowH1).children().eq(1).children().addClass("red white-text rojo");
+                            $(rowH1).children().eq(1).children().addClass("yellow white-text");
                             $(rowH1).children().eq(1).children().prop('title', Doc.msj);
 
                         }
@@ -3686,8 +3784,8 @@ function setDatos(tabla1, tabla2, tabla3, tabla4, tabla5, notasArr) {
                         M.toast({ html: 'Documento ' + texto[1] + ' no fue creado, porque no contiene materiales.' });
 
                     } else if (listaIds[k].indexOf('periodoCerrado') >= 0) {
-                        var texto = listaIds[k].split('periodoCerrado');
-                        M.toast({ html: 'Documento ' + texto[1] + ' no fue creado, porque no existe periodo abierto.' });
+                        var msjTexto = listaIds[k].split('periodoCerrado');
+                        M.toast({ html: 'Documento ' + msjTexto[1] + ' no fue creado, porque no existe periodo abierto.' });
 
                     }
                     else {
@@ -3695,7 +3793,6 @@ function setDatos(tabla1, tabla2, tabla3, tabla4, tabla5, notasArr) {
                     }
                 }
                 
-                clearErrors();
                 //var table = $('#tab_test1').DataTable();
 
                 //if (!table.data().any()) {
@@ -4006,7 +4103,7 @@ function getTableIndex(table, idColumna) {
 function getWarning(texto) {
     msj = "";
     if (texto) {
-        error = texto.split(' | ');
+        error = texto.split('|');
         if (error.length > 1) {
             msj = error[1];
         }

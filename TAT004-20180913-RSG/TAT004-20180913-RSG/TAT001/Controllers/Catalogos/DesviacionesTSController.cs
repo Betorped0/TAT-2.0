@@ -45,10 +45,10 @@ namespace TAT001.Controllers.Catalogos
         }
 
         // GET: DesviacionesTS/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(int id)
         {
             int pagina = 1311; //ID EN BASE DE DATOS
-            FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
+            FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller, 1312);
             try
             {
                 string p = Session["pais"].ToString();
@@ -60,17 +60,16 @@ namespace TAT001.Controllers.Catalogos
                 //return RedirectToAction("Pais", "Home");
             }
 
-            if (id == null)
+            TS_CAMPO tS_CAMPO = db.TS_CAMPO.Include(x => x.TS_FORM).First(x => x.ID == id);
+            if (!tS_CAMPO.TS_FORMT.Any(x => x.SPRAS_ID == "ES"))
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                tS_CAMPO.TS_FORMT.Add(new TS_FORMT { SPRAS_ID = "ES", TSFORM_ID = tS_CAMPO.ID, SPRA = db.SPRAS.Find("ES") });
             }
-
-            var des = db.TS_CAMPO.Where(x => x.ID == id).FirstOrDefault();
-            if (id == null)
+            if (!tS_CAMPO.TS_FORMT.Any(x => x.SPRAS_ID == "EN"))
             {
-                return HttpNotFound();
+                tS_CAMPO.TS_FORMT.Add(new TS_FORMT { SPRAS_ID = "EN", TSFORM_ID = tS_CAMPO.ID, SPRA = db.SPRAS.Find("EN") });
             }
-            return View(des);
+            return View(tS_CAMPO);
         }
 
         // GET: DesviacionesTS/Create
@@ -97,7 +96,7 @@ namespace TAT001.Controllers.Catalogos
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID")] TS_FORM TSFORM, FormCollection collection)
+        public ActionResult Create([Bind(Include = "ID,ACTIVO")] TS_CAMPO tS_CAMPO, FormCollection collection)
         {
 
             int pagina = 1312; //ID EN BASE DE DATOS
@@ -112,8 +111,8 @@ namespace TAT001.Controllers.Catalogos
                     foreach (string soc in socSelected) {
                         TS_CAMPO TS = new TS_CAMPO
                         {
-                            ACTIVO = true,
-                            ID = TSFORM.ID
+                            ACTIVO = tS_CAMPO.ACTIVO,
+                            ID = tS_CAMPO.ID
                         };
                         db.TS_CAMPO.Add(TS);
                         db.SaveChanges();
@@ -149,14 +148,14 @@ namespace TAT001.Controllers.Catalogos
 
                
 
-                return View(TSFORM);
+                return View(tS_CAMPO);
             }
             catch (Exception e)
             {
                 Log.ErrorLogApp(e,"DesviacionesTS","Create");
                 FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
                 ViewBag.SOCIEDADES = sociedadesDao.ComboSociedades(TATConstantes.ACCION_LISTA_SOCIEDADES);
-                return View(TSFORM);
+                return View(tS_CAMPO);
             }
         }
 
@@ -164,7 +163,7 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Edit(int id)
         {
             int pagina = 1313; //ID EN BASE DE DATOS
-            FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
+            FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller, 1312);
             try
             {
                 string p = Session["pais"].ToString();
@@ -175,27 +174,16 @@ namespace TAT001.Controllers.Catalogos
                 //ViewBag.pais = "mx.png";
                 //return RedirectToAction("Pais", "Home");
             }
-
-            var des = db.TS_CAMPO.Where(x => x.ID == id).FirstOrDefault();
-            if (des == null)
+            TS_CAMPO tS_CAMPO = db.TS_CAMPO.Include(x=>x.TS_FORM).First(x=>x.ID==id);
+            if (!tS_CAMPO.TS_FORMT.Any(x=>x.SPRAS_ID=="ES"))
             {
-                return HttpNotFound();
+                tS_CAMPO.TS_FORMT.Add(new TS_FORMT { SPRAS_ID = "ES", TSFORM_ID = tS_CAMPO.ID ,SPRA=db.SPRAS.Find("ES") });
             }
-            TS_CAMPO tSOPORTE = db.TS_CAMPO.Find(id);
-            tSOPORTE.TS_FORM = db.TS_FORM.Where(x => x.ID == id).ToList();
-            if (tSOPORTE.TS_FORMT.Count > 0)
-                foreach (var e in tSOPORTE.TS_FORMT)
-                {
-                    if (e.SPRAS_ID == "EN")
-                        ViewBag.EN = e.TXT100;
-                    if (e.SPRAS_ID == "ES")
-                        ViewBag.ES = e.TXT100;
-                    if (e.SPRAS_ID == "PT")
-                        ViewBag.PT = e.TXT100;
-                }
-            ViewBag.SPRAS = db.SPRAS.ToList();
-            ViewBag.des = db.TSOLTs.ToList();
-            return View(tSOPORTE);
+            if (!tS_CAMPO.TS_FORMT.Any(x => x.SPRAS_ID == "EN"))
+            {
+                tS_CAMPO.TS_FORMT.Add(new TS_FORMT { SPRAS_ID = "EN", TSFORM_ID = tS_CAMPO.ID, SPRA = db.SPRAS.Find("EN") });
+            }
+            return View(tS_CAMPO);
         }
 
         // POST: DesviacionesTS/Edit/5
@@ -212,24 +200,19 @@ namespace TAT001.Controllers.Catalogos
                 
                 var materialtextos = db.TS_FORMT.Where(t => t.TSFORM_ID == tc.ID).ToList();
                 db.TS_FORMT.RemoveRange(materialtextos);
-                List<TS_FORMT> ListmATERIALTs = new List<TS_FORMT>();
+                List<TS_FORMT> textos = new List<TS_FORMT>();
                 if (collection.AllKeys.Contains("EN") && !String.IsNullOrEmpty(collection["EN"]))
                 {
                     TS_FORMT m = new TS_FORMT { SPRAS_ID = "EN", TSFORM_ID = tc.ID, TXT100 = collection["EN"] };
-                    ListmATERIALTs.Add(m);
+                    textos.Add(m);
 
                 }
                 if (collection.AllKeys.Contains("ES") && !String.IsNullOrEmpty(collection["ES"]))
                 {
                     TS_FORMT m = new TS_FORMT { SPRAS_ID = "ES", TSFORM_ID = tc.ID, TXT100 = collection["ES"] };
-                    ListmATERIALTs.Add(m);
+                    textos.Add(m);
                 }
-                if (collection.AllKeys.Contains("PT") && !String.IsNullOrEmpty(collection["PT"]))
-                {
-                    TS_FORMT m = new TS_FORMT { SPRAS_ID = "PT", TSFORM_ID = tc.ID, TXT100 = collection["PT"] };
-                    ListmATERIALTs.Add(m);
-                }
-                db.TS_FORMT.AddRange(ListmATERIALTs);
+                db.TS_FORMT.AddRange(textos);
 
                 db.SaveChanges();
                 return RedirectToAction("Index");

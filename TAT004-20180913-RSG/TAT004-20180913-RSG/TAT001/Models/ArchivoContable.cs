@@ -155,7 +155,7 @@ namespace TAT001.Models
                 {
                     return msj;
                 }
-                tab.FECHA_DOCU = Periodo(doc);
+                tab.FECHA_DOCU = PeriodoSap(doc);
                 if (tab.FECHA_DOCU == "")
                 {
                     return "Configure rango para fecha contable";
@@ -298,22 +298,9 @@ namespace TAT001.Models
                 sw.Close();
             }
         }
-        private void Importe(DOCUMENTO doc)
-        {
-            try
-            {
-                decimal provicion = Convert.ToDecimal(db.DOCUMENTOes.Where(x => x.NUM_DOC == doc.DOCUMENTO_REF).Select(x => x.MONTO_DOC_MD).SingleOrDefault());
-                decimal docs = Convert.ToDecimal(db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == doc.DOCUMENTO_REF && x.NUM_DOC <= doc.NUM_DOC).Sum(x=>x.MONTO_DOC_MD));
-            }
-            catch (Exception e)
-            {
-
-            }
-            
-        }
         private string Referencia(string campo, DOCUMENTO doc, List<DOCUMENTOF> docf, CLIENTE clien, int pos)
         {
-            if (string.IsNullOrEmpty(campo)==false)
+            if (!string.IsNullOrEmpty(campo))
             {
                 string[] cc = campo.Trim().Split('+');
                 string[] indes = new string[cc.Length];
@@ -339,9 +326,7 @@ namespace TAT001.Models
                         catch (Exception e) { Console.Write(e.Message.ToString()); }
                         try
                         {
-                            if (docf.Count > 0)
-                            {
-                                if (indes[index] != "X")
+                            if (docf.Count > 0 && indes[index] != "X")
                                 {
                                     //if (unico)
                                     //{
@@ -357,7 +342,6 @@ namespace TAT001.Models
                                     //    }
                                     //    txt = txt.Substring(0, txt.Length - 1);
                                     //}
-                                }
                             }
                         }
                         catch (Exception e) { Console.Write(e.Message); }
@@ -369,7 +353,7 @@ namespace TAT001.Models
                                 indes[index] = "X";
                             }
                         }
-                        catch (Exception e) { Console.Write(e.Message); }
+                        catch (Exception e) { Log.ErrorLogApp(e, "ArchivoContable", "Referencia"); }
                         index++;
                     }
                 }
@@ -389,60 +373,46 @@ namespace TAT001.Models
                 return "";
             }
         }
-        private string Periodo(DOCUMENTO doc)
+        private string PeriodoSap(DOCUMENTO doc)
         {
             DateTime hoy = DateTime.Today;
-            hoy = hoy.AddMonths(-1);
-            int ant = hoy.Month;
-            //hoy = hoy.AddMonths(2);
-            //int sig = hoy.Month;
-            hoy = DateTime.Today;
-            List<CALENDARIO_AC> calend = db.CALENDARIO_AC.Where(x => x.PERIODO >= ant && x.PERIODO <= hoy.Month && x.SOCIEDAD_ID == doc.SOCIEDAD_ID && x.TSOL_ID == doc.TSOL_ID).ToList();
-            List<PERIODO445> peri = db.PERIODO445.Where(x => x.PERIODO >= ant && x.PERIODO <= hoy.Month && x.EJERCICIO == hoy.Year).ToList();
-            if (calend.Count == 2 && peri.Count == 2)
+
+            PERIODO445 periodoSap = db.PERIODO445.FirstOrDefault(x => x.PERIODO == doc.PERIODO && x.EJERCICIO == int.Parse(doc.EJERCICIO));
+
+            if (periodoSap!=null)
             {
-                DateTime periodo = new DateTime(peri[1].EJERCICIO, peri[1].PERIODO, peri[1].DIA_NATURAL);
-                periodo = periodo.Add(calend[1].CIE_TOH);
-                DateTime calendario = calend[1].PRE_FROMF;
-                if (hoy >= calendario && hoy <= periodo)
+                int periodoAnt = (doc.PERIODO == 1 ? 12 : doc.PERIODO.Value - 1);
+                int periodoSig = (doc.PERIODO == 12 ? 1 : doc.PERIODO.Value + 1);
+                int ejercicioAnt = (doc.PERIODO == 1 ? int.Parse(doc.EJERCICIO) - 1 : int.Parse(doc.EJERCICIO));
+                int ejercicioSig = (doc.PERIODO == 12 ? int.Parse(doc.EJERCICIO) + 1 : int.Parse(doc.EJERCICIO));
+                PERIODO445 periodoSapAnt = db.PERIODO445.FirstOrDefault(x => x.PERIODO == periodoAnt && x.EJERCICIO == ejercicioAnt);
+                PERIODO445 periodoSapSig = db.PERIODO445.FirstOrDefault(x => x.PERIODO == periodoSig && x.EJERCICIO == ejercicioSig);
+
+                DateTime fechaPeriodoAct = new DateTime(int.Parse(doc.EJERCICIO), doc.PERIODO.Value, periodoSap.DIA_NATURAL);
+                DateTime? fechaPeriodoAnt = (periodoSapAnt != null ? (DateTime?)new DateTime(ejercicioAnt, periodoAnt, periodoSapAnt.DIA_NATURAL) : null);
+                DateTime? fechaPeriodoSig = (periodoSapSig != null ? (DateTime?)new DateTime(ejercicioSig, periodoSig, periodoSapSig.DIA_NATURAL) : null);
+
+                if (hoy > fechaPeriodoAnt && hoy<= fechaPeriodoAct)
                 {
                     return hoy.ToString("MM-dd-yyyy");
                 }
-                else if (hoy > periodo)
+                else if(hoy <= fechaPeriodoAnt)
                 {
-                    return periodo.ToString("MM-dd-yyyy");
+                    return fechaPeriodoAnt.Value.ToString("MM-dd-yyyy");
+                }
+                else if(hoy <= fechaPeriodoSig)
+                {
+                    return fechaPeriodoSig.Value.ToString("MM-dd-yyyy");
                 }
                 else
                 {
-                    hoy = new DateTime(peri[0].EJERCICIO, peri[0].PERIODO, peri[0].DIA_NATURAL);
-                    return hoy.ToString("MM-dd-yyyy");
+                    return "";
                 }
             }
             else
             {
                 return "";
             }
-        }
-        private DateTime Fecha(string id_fecha, DateTime fech)
-        {
-            DateTime fecha = DateTime.Today;
-            switch (id_fecha)
-            {
-                case "U":
-                    fecha = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
-                    fecha = fecha.AddMonths(1).AddDays(-1);
-                    break;
-                case "P":
-                    fecha = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
-                    break;
-                case "H":
-                    fecha = DateTime.Today;
-                    break;
-                default:
-                    fecha = fech;
-                    break;
-            }
-            return fecha;
         }
         private string Detalle(DOCUMENTO doc, ref List<DetalleContab> contas, ref CONPOSAPH enca, List<DOCUMENTOF> docf, bool hijo, int pos)
         {
@@ -460,10 +430,6 @@ namespace TAT001.Models
             string grupo = "";
             string materi = "";
             string factura = "";
-            //var iva = (from c in db.CUENTAs
-            //           join i in db.IIMPUESTOes on c.IMPUESTO equals i.MWSKZ
-            //           where i.LAND == doc.PAIS_ID && c.TALL_ID == doc.TALL_ID && i.ACTIVO == true
-            //           select new { i.MWSKZ, i.KBETR }).Single();
 
             try
             {
@@ -474,6 +440,7 @@ namespace TAT001.Models
                 }
                 catch (Exception f)
                 {
+                    Log.ErrorLogApp(f, "ArchivoContable", "Detalle");
                     return "No se encontro datos de configuracion para detalle contable";
                 }
                 try
@@ -482,6 +449,7 @@ namespace TAT001.Models
                 }
                 catch (Exception g)
                 {
+                    Log.ErrorLogApp(g, "ArchivoContable", "Detalle");
                     return "No se encontro datos de cliente para detalle contable";
                 }
                 try
@@ -493,6 +461,7 @@ namespace TAT001.Models
                 }
                 catch (Exception h)
                 {
+                    Log.ErrorLogApp(h, "ArchivoContable", "Detalle");
                     return "No se encontro datos de cuenta para detalle contable";
                 }
                 try
@@ -501,34 +470,28 @@ namespace TAT001.Models
                     string pais = "";//ADD RSG 26.10.2018
                     if (taxl != null)
                         pais = db.TAX_LAND.Where(x => x.ACTIVO == true && x.PAIS_ID == doc.PAIS_ID).Select(x => x.PAIS_ID).Single();
-                    if (String.IsNullOrEmpty(pais) == false)
-                    {
-                        if (enca.TIPO_DOC == "DG" || enca.TIPO_DOC == "BB" || enca.TIPO_DOC == "KG" || enca.TIPO_DOC == "KR")
+                    if (!String.IsNullOrEmpty(pais) && (enca.TIPO_DOC == "DG" || enca.TIPO_DOC == "BB" || enca.TIPO_DOC == "KG" || enca.TIPO_DOC == "KR"))
                         {
                             try
                             {
                                 taxh = db.TAXEOHs.Where(x => x.PAIS_ID == doc.PAIS_ID && x.SOCIEDAD_ID == doc.SOCIEDAD_ID && x.KUNNR == clien.KUNNR && x.CONCEPTO_ID == doc.CONCEPTO_ID).Single();
                             }
-                            catch (Exception)
+                            catch (Exception z)
                             {
-                                return "No se encontro datos de configuracion de taxeo";
+                            Log.ErrorLogApp(z, "ArchivoContable", "Detalle");
+                            return "No se encontro datos de configuracion de taxeo";
                             }
                         }
-
-                    }
                 }
                 catch (Exception z)
                 {
+                    Log.ErrorLogApp(z,"ArchivoContable","Detalle");
                 }
 
                 try
                 {
-                    if (doc.PAIS_ID == "CO")
-                    {
-                        if (enca.TIPO_DOC == "DG" || enca.TIPO_DOC == "BB")
-                        {
+                    if (doc.PAIS_ID == "CO" && (enca.TIPO_DOC == "DG" || enca.TIPO_DOC == "BB")) { 
                             taxp = db.TAXEOPs.Where(x => x.PAIS_ID == doc.PAIS_ID && x.SOCIEDAD_ID == doc.SOCIEDAD_ID && x.KUNNR == clien.KUNNR && x.CONCEPTO_ID == doc.CONCEPTO_ID).ToList();
-                        }
                     }
                 }
                 catch (Exception)
@@ -539,7 +502,7 @@ namespace TAT001.Models
                 {
                     factura = docf[0].FACTURA;
                 }
-                if (String.IsNullOrEmpty(clien.EXPORTACION) == false)
+                if (!String.IsNullOrEmpty(clien.EXPORTACION))
                 {
                     try
                     {
@@ -553,7 +516,7 @@ namespace TAT001.Models
 
                 for (int i = 0; i < conp.Count; i++)
                 {
-                    if (String.IsNullOrWhiteSpace(conp[i].TAX_CODE) == false && String.IsNullOrEmpty(conp[i].TAX_CODE) == false)
+                    if (!String.IsNullOrWhiteSpace(conp[i].TAX_CODE) && !String.IsNullOrEmpty(conp[i].TAX_CODE))
                     {
                         string impuesto = conp[i].TAX_CODE;
                         if (padre > 0)
@@ -564,7 +527,7 @@ namespace TAT001.Models
                         {
                             impuesto = conp[i].TAX_CODE;
                         }
-                        impu = db.IIMPUESTOes.Where(x => x.LAND == doc.PAIS_ID && x.MWSKZ == impuesto && x.ACTIVO == true).SingleOrDefault();
+                        impu = db.IIMPUESTOes.Where(x => x.LAND == doc.PAIS_ID && x.MWSKZ == impuesto && x.ACTIVO).SingleOrDefault();
                     }
                     else
                     {
@@ -572,13 +535,15 @@ namespace TAT001.Models
                     }
                     if (conp[i].POSICION == 1)
                     {
-                        DetalleContab conta = new DetalleContab();
-                        conta.POS_TYPE = conp[i].KEY;
-                        conta.ACCOUNT = cuent.ABONO.ToString();
-                        conta.COMP_CODE = doc.SOCIEDAD_ID;
-                        conta.BUS_AREA = conp[i].BUS_AREA;
-                        conta.POST_KEY = conp[i].POSTING_KEY;
-                        conta.TEXT = doc.CONCEPTO;
+                        DetalleContab conta = new DetalleContab
+                        {
+                            POS_TYPE = conp[i].KEY,
+                            ACCOUNT = cuent.ABONO.ToString(),
+                            COMP_CODE = doc.SOCIEDAD_ID,
+                            BUS_AREA = conp[i].BUS_AREA,
+                            POST_KEY = conp[i].POSTING_KEY,
+                            TEXT = doc.CONCEPTO
+                        };
                         conta.BALANCE = Conversion(Convert.ToDecimal(doc.MONTO_DOC_MD), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC).ToString();
                         if (conp[i].POSTING_KEY == "11")
                         {
@@ -706,17 +671,19 @@ namespace TAT001.Models
                         {
                             for (int j = 0; j < docm.Count; j++)
                             {
-                                DetalleContab conta = new DetalleContab();
-                                conta.POS_TYPE = conp[i].KEY;
-                                conta.COMP_CODE = doc.SOCIEDAD_ID;
-                                conta.BUS_AREA = conp[i].BUS_AREA;
-                                conta.POST_KEY = conp[i].POSTING_KEY;
-                                conta.TEXT = doc.CONCEPTO;
-                                //conta.REF_KEY1 = clien.STCD1;
-                                //conta.REF_KEY3 = clien.NAME1;
-                                conta.SALES_ORG = clien.VKORG;
-                                conta.DIST_CHANEL = clien.VTWEG;
-                                conta.DIVISION = clien.SPART;
+                                DetalleContab conta = new DetalleContab
+                                {
+                                    POS_TYPE = conp[i].KEY,
+                                    COMP_CODE = doc.SOCIEDAD_ID,
+                                    BUS_AREA = conp[i].BUS_AREA,
+                                    POST_KEY = conp[i].POSTING_KEY,
+                                    TEXT = doc.CONCEPTO,
+                                    //conta.REF_KEY1 = clien.STCD1;
+                                    //conta.REF_KEY3 = clien.NAME1;
+                                    SALES_ORG = clien.VKORG,
+                                    DIST_CHANEL = clien.VTWEG,
+                                    DIVISION = clien.SPART
+                                };
                                 if (enca.TIPO_DOC != "RN" && doc.PAIS_ID != "CO")
                                 {
                                     conta.CUSTOMER = doc.PAYER_ID;
@@ -882,9 +849,9 @@ namespace TAT001.Models
                                         {
                                             material = db.MATERIALs.Where(y => y.ID == materi).Single();
                                             grupos = conp[i].MATERIALGP.Split('+');
-                                            grupo = grupos.Where(x => x == material.MATERIALGP_ID).FirstOrDefault();
+                                            grupo = grupos.FirstOrDefault(x => x == material.MATERIALGP_ID);
                                         }
-                                        if (String.IsNullOrEmpty(grupo) == false)
+                                        if (!String.IsNullOrEmpty(grupo))
                                         {
                                             conta.TAX_CODE = conp[i].TAXCODEGP;
                                         }
@@ -917,17 +884,19 @@ namespace TAT001.Models
                         {
                             for (int j = 0; j < docp.Count; j++)
                             {
-                                DetalleContab conta = new DetalleContab();
-                                conta.POS_TYPE = conp[i].KEY;
-                                conta.COMP_CODE = doc.SOCIEDAD_ID;
-                                conta.BUS_AREA = conp[i].BUS_AREA;
-                                conta.POST_KEY = conp[i].POSTING_KEY;
-                                conta.TEXT = doc.CONCEPTO;
-                                //conta.REF_KEY1 = clien.STCD1;
-                                //conta.REF_KEY3 = clien.NAME1;
-                                conta.SALES_ORG = clien.VKORG;
-                                conta.DIST_CHANEL = clien.VTWEG;
-                                conta.DIVISION = clien.SPART;
+                                DetalleContab conta = new DetalleContab
+                                {
+                                    POS_TYPE = conp[i].KEY,
+                                    COMP_CODE = doc.SOCIEDAD_ID,
+                                    BUS_AREA = conp[i].BUS_AREA,
+                                    POST_KEY = conp[i].POSTING_KEY,
+                                    TEXT = doc.CONCEPTO,
+                                    //conta.REF_KEY1 = clien.STCD1;
+                                    //conta.REF_KEY3 = clien.NAME1;
+                                    SALES_ORG = clien.VKORG,
+                                    DIST_CHANEL = clien.VTWEG,
+                                    DIVISION = clien.SPART
+                                };
 
                                 if (enca.TIPO_DOC != "RN" && doc.PAIS_ID != "CO")
                                 {
@@ -1094,13 +1063,13 @@ namespace TAT001.Models
                                         {
                                             material = db.MATERIALs.Where(y => y.ID == materi).Single();
                                             grupos = conp[i].MATERIALGP.Split('+');
-                                            grupo = grupos.Where(x => x == material.MATERIALGP_ID).FirstOrDefault();
+                                            grupo = grupos.FirstOrDefault(x => x == material.MATERIALGP_ID);
                                         }
                                         else
                                         {
                                             grupo = docp[j].MATKL;
                                         }
-                                        if (String.IsNullOrEmpty(grupo) == false)
+                                        if (!String.IsNullOrEmpty(grupo))
                                         {
                                             conta.TAX_CODE = conp[i].TAXCODEGP;
                                         }
@@ -1114,13 +1083,10 @@ namespace TAT001.Models
                                         }
                                     }
                                 }
-                                if (enca.TIPO_DOC == "DG")// || enca.TIPO_DOC == "BB")
+                                if (enca.TIPO_DOC == "DG" && doc.PAIS_ID != "CO")// || enca.TIPO_DOC == "BB")
                                 {
-                                    if (doc.PAIS_ID != "CO")
-                                    {
                                         conta.REF_KEY1 = conp[i].REF_KEY1;
                                         conta.REF_KEY3 = conp[i].REF_KEY3;
-                                    }
                                 }
                                 contas.Add(conta);
                                 if (enca.TIPO_DOC == "RN" || enca.TIPO_DOC == "KR" || enca.TIPO_DOC == "KG")
@@ -1131,9 +1097,11 @@ namespace TAT001.Models
                         }
                         if (enca.TIPO_DOC == "BB")
                         {
-                            DetalleContab conta = new DetalleContab();
-                            conta.POS_TYPE = conp[i].KEY;
-                            conta.ACCOUNT = cuent.CLEARING.ToString();
+                            DetalleContab conta = new DetalleContab
+                            {
+                                POS_TYPE = conp[i].KEY,
+                                ACCOUNT = cuent.CLEARING.ToString()
+                            };
                             if (unico)
                             {
                                 conta.BALANCE = (Conversion(Convert.ToDecimal(docf[pos].IMPORTE_FAC * impu.KBETR), clien.EXPORTACION, Convert.ToDecimal(cambio.UKURS), ref conta.AMOUNT_LC)).ToString();
@@ -1175,7 +1143,7 @@ namespace TAT001.Models
         }
         public decimal Conversion(decimal cantidad, string exportacion, decimal conversion, ref string amount)
         {
-            if (String.IsNullOrEmpty(exportacion) == false)
+            if (!String.IsNullOrEmpty(exportacion))
             {
                 amount = cantidad.ToString();
                 return Decimal.Round(cantidad / conversion, 2);
