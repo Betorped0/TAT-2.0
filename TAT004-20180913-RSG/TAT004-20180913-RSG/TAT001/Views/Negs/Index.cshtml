@@ -1,16 +1,14 @@
-﻿@model IEnumerable<TAT001.Entities.NEGOCIACION>
+﻿@model IEnumerable<TAT001.Entities.NEGOCIACION2>
 
 @{
     ViewBag.pagina_r = 901;
     ViewBag.carpeta_r = 500;
-    //ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var xid = 1;
 }
 
 <div class="row">
     <div class="col s12 right-align">
-        @Html.ActionLink("Crear", "Create", "Negs", new { @class = "btn-small", @id = "btnCrear" })
+        @Html.ActionLink("Crear", "Create", "Negs", null, new { @class = "btn-small", @id = "btnCrear" })
     </div>
 </div>
 <div class="card-panel">
@@ -43,17 +41,15 @@
         <table class="table mdl-data-table striped" id="table" style="width:100%;">
             <thead>
                 <tr>
-                    <th>
-                        #
+                    <th class="lblId">
+                        ID
+                    </th>
+                    <th class="lblTitulo">
+                        Título
                     </th>
                     <th id="lblDesde">
-                        @Html.DisplayNameFor(model => model.FECHAI)
                     </th>
-                    <th id="lblHasta">
-                        @Html.DisplayNameFor(model => model.FECHAF)
-                    </th>
-                    <th id="lblEnvio">
-                        @Html.DisplayNameFor(model => model.FECHAN)
+                    <th id="lblFrecuencia">
                     </th>
                     <th></th>
                 </tr>
@@ -61,26 +57,41 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
-                        <td>
-                            @(xid++)
-                        </td>
-                        <td>
-                            @item.FECHAI.Year/@item.FECHAI.Month/@item.FECHAI.Day
-                        </td>
-                        <td>
-                            @item.FECHAF.Year/@item.FECHAF.Month/@item.FECHAF.Day
-                        </td>
-                        <td>
-                            @item.FECHAN.Year/@item.FECHAN.Month/@item.FECHAN.Day
-                        </td>
+                <tr>
+                    <td>
+                        @item.ID
+                    </td>
+                    <td>
+                        @item.TITULO
+                    </td>
+                    <td>
+                        @item.FINICIO.Year/@item.FINICIO.Month/@item.FINICIO.Day
+                    </td>
+                        @{
+                            if (item.FRECUENCIA == "S" && ViewBag.lan == "ES")
+                            {
+                            <td>Semanal</td>
+                        }
+                        else if (item.FRECUENCIA == "S" && ViewBag.lan == "EN")
+                        {
+                            <td>Weekly</td>
+                        }
+                        if (item.FRECUENCIA == "M" && ViewBag.lan == "ES")
+                        {
+                            <td>Mensual</td>
+                        }
+                        else if (item.FRECUENCIA == "M" && ViewBag.lan == "EN")
+                        {
+                            <td>Montly</td>
+                        }
+                        }
                         <td>
                             <a data-form-method="post" href="@Url.Action("Edit", "Negs", new { id = item.ID})">
                                 <i class='material-icons green-text'>edit</i>
                             </a>
-                            <a data-form-method="post" href="@Url.Action("Delete", "Negs",new { id = item.ID})">
+                            @*<a data-form-method="post" href="@Url.Action("Delete", "Negs",new { id = item.ID})">
                                 <i class='material-icons red-text'>delete</i>
-                            </a>
+                            </a>*@
                         </td>
                     </tr>
                 }
@@ -93,32 +104,13 @@
                     scrollY: "50vh",
                     scrollCollapse: true,
                     language: {
-                        "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                        "url": "@Url.Content("~/Scripts/lang/" + @ViewBag.lan + ".json")"
                     }, columnDefs: [
                         {
                             targets: "_all",
                             className: 'mdl-data-table__cell--non-numeric'
                         }
-                    ],
-                    initComplete: function () {
-                        this.api().columns().every(function () {
-                            var column = this;
-                            var select = $('<select style="display:initial;" class="browser-default"><option value=""></option></select>')
-                                .appendTo($(column.footer()).empty())
-                                .on('change', function () {
-                                    var val = $.fn.dataTable.util.escapeRegex(
-                                        $(this).val()
-                                    );
-                                    column
-                                        .search(val ? '^' + val + '$' : '', true, false)
-                                        .draw();
-                                });
-                            column.cells('', column[0]).render('display').sort().unique().each(function (d, j) {
-                                var val = $('<div/>').html(d).text();
-                                select.append('<option value="' + val + '">' + val + '</option>');
-                            });
-                        });
-                    }
+                    ]
                 });
 
                 var a = $('#selecc').val();
@@ -131,22 +123,6 @@
                     filterGlobal();
                 });
 
-                $('#table tbody').on('click', 'td.details-control', function () {
-                    var tr = $(this).closest('tr');
-                    var row = table.row(tr);
-
-                    if (row.child.isShown()) {
-                        // This row is already open - close it
-                        row.child.hide();
-                        tr.removeClass('shown');
-                    }
-                    else {
-                        // Open this row
-                        var child = format(row.data(), row, tr);
-                        if (child != undefined) {
-                        }
-                    }
-                });
             });
             function filterGlobal() {
                 $('#table').DataTable().search(

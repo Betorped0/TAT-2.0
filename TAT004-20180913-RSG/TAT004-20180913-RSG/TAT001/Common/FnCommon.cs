@@ -251,6 +251,61 @@ namespace TAT001.Common
                     new SelectListItem{Text="5",Value="5"}
             };
         }
+        public static List<SelectListItem> ObtenerCmbFrecuencia(string SPRAS_ID)
+        {
+            if(SPRAS_ID=="ES")
+            return new List<SelectListItem> {
+                    new SelectListItem{Text="Semana(s)",Value="S"},
+                    new SelectListItem{Text="Mes(es)",Value="M"}
+            };
+            else
+                return new List<SelectListItem> {
+                    new SelectListItem{Text="Week(s)",Value="S"},
+                    new SelectListItem{Text="Month(s)",Value="M"}
+            };
+        }
+        public static List<SelectListItem> ObtenerCmbDias(string SPRAS_ID)
+        {
+            if (SPRAS_ID == "ES")
+                return new List<SelectListItem> {
+                    new SelectListItem{Text="Domingo",Value="D"},
+                    new SelectListItem{Text="Lunes",Value="L"},
+                    new SelectListItem{Text="Martes",Value="M"},
+                    new SelectListItem{Text="Miércoles",Value="X"},
+                    new SelectListItem{Text="Jueves",Value="J"},
+                    new SelectListItem{Text="Viernes",Value="V"},
+                    new SelectListItem{Text="Sábado",Value="S"}
+            };
+            else
+                return new List<SelectListItem> {
+                    new SelectListItem{Text="Sunday",Value="D"},
+                    new SelectListItem{Text="Monday",Value="L"},
+                    new SelectListItem{Text="Tuesday",Value="M"},
+                    new SelectListItem{Text="Wednesday",Value="X"},
+                    new SelectListItem{Text="Thursday",Value="J"},
+                    new SelectListItem{Text="Friday",Value="V"},
+                    new SelectListItem{Text="Saturday",Value="S"}
+            };
+        }
+        public static List<SelectListItem> ObtenerCmbOrdinales(string SPRAS_ID)
+        {
+            if (SPRAS_ID == "ES")
+                return new List<SelectListItem> {
+                    new SelectListItem{Text="Primer",Value="1"},
+                    new SelectListItem{Text="Segundo",Value="2"},
+                    new SelectListItem{Text="Tercer",Value="3"},
+                    new SelectListItem{Text="Cuarto",Value="4"},
+                    new SelectListItem{Text="Último",Value="5"}
+            };
+            else
+                return new List<SelectListItem> {
+                    new SelectListItem{Text="First",Value="1"},
+                    new SelectListItem{Text="Second",Value="2"},
+                    new SelectListItem{Text="Third",Value="3"},
+                    new SelectListItem{Text="Fourth",Value="4"},
+                    new SelectListItem{Text="Last",Value="5"}
+            };
+        }
         public static decimal ObtenerImpuesto(TAT001Entities db, DOCUMENTO D, ref bool esNC, string[] categorias=null)
         {
             decimal impuesto = 0.0M;
