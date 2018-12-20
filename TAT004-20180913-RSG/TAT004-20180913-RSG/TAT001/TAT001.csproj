@@ -636,6 +636,9 @@
     <Compile Include="Entities\NEGOCIACION.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\NEGOCIACION2.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\NOTICIA.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>

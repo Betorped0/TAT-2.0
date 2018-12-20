@@ -504,7 +504,9 @@
                                     var selects = ["periodoi_id", "anioi_id", "periodof_id", "aniof_id"];
                                     for (var i = 0; i < selects.length; i++) {
                                         if (document.getElementById(selects[i]).options.item(0).value == "") {
-                                            document.getElementById(selects[i]).options.item(0).remove();
+                                            try {
+                                                document.getElementById(selects[i]).options.item(0).remove();
+                                            } catch(e){}
                                         }
                                     }
                                 }

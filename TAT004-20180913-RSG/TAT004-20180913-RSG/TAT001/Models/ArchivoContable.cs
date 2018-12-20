@@ -376,8 +376,8 @@ namespace TAT001.Models
         private string PeriodoSap(DOCUMENTO doc)
         {
             DateTime hoy = DateTime.Today;
-
-            PERIODO445 periodoSap = db.PERIODO445.FirstOrDefault(x => x.PERIODO == doc.PERIODO && x.EJERCICIO == int.Parse(doc.EJERCICIO));
+            int ejer = int.Parse(doc.EJERCICIO);
+            PERIODO445 periodoSap = db.PERIODO445.FirstOrDefault(x => x.PERIODO == doc.PERIODO && x.EJERCICIO == ejer);
 
             if (periodoSap!=null)
             {

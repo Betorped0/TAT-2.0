@@ -33,4 +33,9 @@ namespace TAT001.Models.Masiva
 
 
     }
+    public class resultadoFechas
+    {
+        public bool status { get; set; }
+        public string tipo { get; set; }
+    }
 }
