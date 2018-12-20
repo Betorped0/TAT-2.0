@@ -16,6 +16,7 @@ namespace TAT001.Services
     public class Email
     {
         private readonly TAT001Entities db = new TAT001Entities();
+
         public void enviaMailC(decimal id, bool ban, string spras, string UrlDirectory, string page, string image, string imageFlag)
         {
             try
@@ -31,7 +32,7 @@ namespace TAT001.Services
                                                                 && a.SPART.Equals(dOCUMENTO.SPART)
                                                                 && a.KUNNR.Equals(dOCUMENTO.PAYER_ID)).First();
                         var workflow = db.FLUJOes.Where(a => a.NUM_DOC.Equals(id)).OrderByDescending(a => a.POS).FirstOrDefault();
-                        
+
                         string mailt = ConfigurationManager.AppSettings["mailt"];
                         string mtest = ConfigurationManager.AppSettings["mailtest"]; //B20180803 MGC Correos
                         string mailTo = "";
@@ -89,7 +90,7 @@ namespace TAT001.Services
                             mail.AlternateViews.Add(Mail_Body(result, image, imageFlag));//B20180803 MGC Correos
                             mail.IsBodyHtml = true;//B20180803 MGC Correos
 
-                            Log.Info("Intenta enviar email-To:"+mailTo +" "+ UrlDirectory);
+                            Log.Info("Intenta enviar email-To:" + mailTo + " " + UrlDirectory);
                             client.Send(mail);
 
                         }
@@ -97,11 +98,76 @@ namespace TAT001.Services
                     }
                 }
             }
-            catch (Exception e){
+            catch (Exception e)
+            {
                 Log.Info("Error al enviar correo:" + e.Message);
                 if (e.InnerException != null)
                     Log.Info(e.InnerException.ToString());
-                Console.Write("Error al enviar correo:" +  e.Message);
+                Console.Write("Error al enviar correo:" + e.Message);
+            }
+        }
+
+        public void enviaMailB(string usu, string usu2, string spras, string UrlDirectory, string page, string image, string imageFlag)
+        {
+            USUARIO usuInf1 = db.USUARIOs.Where(x => x.ID == usu).FirstOrDefault();
+
+            try
+            {
+                string mailt = ConfigurationManager.AppSettings["mailt"];
+                string mtest = ConfigurationManager.AppSettings["mailtest"]; //B20180803 MGC Correos
+                string mailTo = "";
+
+                if (mtest == "X")
+                    mailTo = "rogelio.sanchez@sf-solutionfactory.com"; //B20180803 MGC Correos
+                else
+                    mailTo = usuInf1.EMAIL;
+
+                CONMAIL conmail = db.CONMAILs.Find(mailt);
+
+                if (conmail != null)
+                {
+                    System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage(conmail.MAIL, mailTo);
+                    SmtpClient client = new SmtpClient();
+                    if (conmail.SSL)
+                    {
+                        client.Port = (int)conmail.PORT;
+                        client.EnableSsl = conmail.SSL;
+                        client.UseDefaultCredentials = false;
+                        client.Credentials = new NetworkCredential(conmail.MAIL, conmail.PASS);
+                    }
+                    else
+                    {
+                        client.UseDefaultCredentials = true;
+                        client.Credentials = new NetworkCredential(conmail.MAIL, conmail.PASS);
+                    }
+                    client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    client.Host = conmail.HOST;
+                    mail.Subject = "BACKUP" + usu + "-" + DateTime.Now.ToShortTimeString();
+                    mail.IsBodyHtml = true;
+                    UrlDirectory = UrlDirectory.Replace("Usuarios/AddBackup", "Correos/" + page);
+                    UrlDirectory += "/?usu=" + usu + "&usu2=" + usu2 + "&spras=" + spras; 
+                    Log.Info("Intenta generar page " + UrlDirectory);
+                    HttpWebRequest myRequest = (HttpWebRequest)WebRequest.Create(UrlDirectory);
+                    myRequest.Method = "GET";
+                    WebResponse myResponse = myRequest.GetResponse();
+                    StreamReader sr = new StreamReader(myResponse.GetResponseStream(), System.Text.Encoding.UTF8);
+                    string result = sr.ReadToEnd();
+                    sr.Close();
+                    myResponse.Close();
+                    mail.AlternateViews.Add(Mail_Body(result, image, imageFlag));
+                    mail.IsBodyHtml = true;
+
+                    Log.Info("Intenta enviar email-To:" + mailTo + " " + UrlDirectory);
+                    client.Send(mail);
+
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Info("Error al enviar correo:" + e.Message);
+                if (e.InnerException != null)
+                    Log.Info(e.InnerException.ToString());
+                Console.Write("Error al enviar correo:" + e.Message);
             }
         }
 

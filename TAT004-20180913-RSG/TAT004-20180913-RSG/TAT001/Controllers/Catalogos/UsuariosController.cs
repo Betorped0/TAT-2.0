@@ -2507,6 +2507,17 @@ namespace TAT001.Controllers.Catalogos
                             }
                             db.DELEGARs.Add(delegado);
                             db.SaveChanges();
+
+                            //SECCION PARA MANDAR CORREO 
+                            Email em = new Email();
+                            USUARIO usu = db.USUARIOs.Where(x => x.ID == delegar.USUARIO_ID).FirstOrDefault();
+                            string paisFlag = db.SOCIEDADs.Where(x => x.BUKRS == usu.BUNIT).FirstOrDefault().LAND;
+                            string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
+                            string image = Server.MapPath("~/images/logo_kellogg.png");               
+                            string imageFlag = Server.MapPath("~/images/flags/mini/" + paisFlag + ".png");
+                            em.enviaMailB(delegar.USUARIO_ID, delegar.USUARIOD_ID, Session["spras"].ToString(), UrlDirectory, "Backup", image, imageFlag);
+                            //FIN SECCION CORREO
+
                             return RedirectToAction("Details", new { usuario_id = delegar.USUARIO_ID });
                         }
                         catch (Exception e)
@@ -2534,6 +2545,17 @@ namespace TAT001.Controllers.Catalogos
                         }
                         db.DELEGARs.Add(delegado);
                         db.SaveChanges();
+
+                        //SECCION PARA MANDAR CORREO 
+                        Email em = new Email();
+                        USUARIO usu = db.USUARIOs.Where(x => x.ID == delegar.USUARIO_ID).FirstOrDefault();
+                        string paisFlag = db.SOCIEDADs.Where(x => x.BUKRS == usu.BUNIT).FirstOrDefault().LAND;
+                        string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
+                        string image = Server.MapPath("~/images/logo_kellogg.png");
+                        string imageFlag = Server.MapPath("~/images/flags/mini/" + paisFlag + ".png");
+                        em.enviaMailB(delegar.USUARIO_ID, delegar.USUARIOD_ID, Session["spras"].ToString(), UrlDirectory, "Backup", image, imageFlag);
+                        //FIN SECCION CORREO
+
                         return RedirectToAction("Details", new { usuario_id = delegar.USUARIO_ID });
                     }
                     catch (Exception e)

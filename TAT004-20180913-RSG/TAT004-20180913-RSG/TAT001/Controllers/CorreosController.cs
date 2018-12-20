@@ -446,6 +446,71 @@ namespace TAT001.Controllers
             return View(dOCUMENTO);
         }
 
+        public ActionResult Backup(string usu, string usu2, string spras)
+        {
+            USUARIO usuario1 = db.USUARIOs.Where(x => x.ID == usu).FirstOrDefault();
+
+            if (spras == "" | spras == null)
+            {
+                spras = "ES";
+            }
+            List<CSP_DOCUMENTOSXUSER2_Result> dOCUMENTOes = db.CSP_DOCUMENTOSXUSER2(usu, spras).ToList();
+            //dOCUMENTOes = dOCUMENTOes.Where(x => x.ESTATUS == "N" & x.ESTATUS_WF_USER == "P");
+
+            //string pathReplace = "";
+            //string[] pathReplaceArr;
+          
+            //ViewBag.url = "http://localhost:64497";
+            //ViewBag.url = "http://192.168.1.77";
+            //ViewBag.url = Request.Url.AbsoluteUri.Replace(Request.Url.AbsolutePath, "");
+            //pathReplace = Request.Url.AbsoluteUri.Replace(Request.Url.AbsolutePath, "");
+            //pathReplaceArr = pathReplace.Split(new string[] { "?spras" }, StringSplitOptions.None);
+            //ViewBag.url = pathReplaceArr[0];        
+
+            ////ADD LGPP 13.12.2018
+            //ViewBag.nombreUsuario = db.USUARIOs.Where(x => x.ID == usu).FirstOrDefault().NOMBRE;
+            //ViewBag.idUsuario = usu;
+            //ViewBag.bandera = db.SOCIEDADs.Where(x => x.BUKRS == usuario1.BUNIT).FirstOrDefault().LAND;
+            ////SECCION DE CABECERAS
+            //ViewBag.tituloCabecera = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_cabCancelacion").FirstOrDefault().TEXTOS;
+            //ViewBag.tituloBajoCabecera = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_cabInfCancelacion").FirstOrDefault().TEXTOS;
+            ////SECCION DE INFORMACION DEL USUARIO
+            //ViewBag.usuario = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_usuario").FirstOrDefault().TEXTOS;
+            //ViewBag.usuarioNombre = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_nombreUsu").FirstOrDefault().TEXTOS;
+            //ViewBag.tipoSolicitud = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_tsol").FirstOrDefault().TEXTOS;
+            //ViewBag.clasificacion = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_clasificacion").FirstOrDefault().TEXTOS;
+            //ViewBag.cliente = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_cliente").FirstOrDefault().TEXTOS;
+            //ViewBag.clienteNombre = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_nombreCli").FirstOrDefault().TEXTOS;
+            ////SECCION DE ANALISIS DE SOLICITUD
+            //ViewBag.analisisSolicitud = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "head_analisis").FirstOrDefault().TEXTOS;
+            //ViewBag.lblMontoSolicitud = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_montoSolicitud").FirstOrDefault().TEXTOS;
+            //ViewBag.lblMontoProvision = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_montoProvision").FirstOrDefault().TEXTOS;
+            //ViewBag.lblMontoAplicado = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_montoAplicado").FirstOrDefault().TEXTOS;
+            //ViewBag.lblRemanente = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_remanente").FirstOrDefault().TEXTOS;
+            //ViewBag.lblImpuesto = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_impuesto").FirstOrDefault().TEXTOS;
+            //ViewBag.lblMontoTotal = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_montoTotal").FirstOrDefault().TEXTOS;
+            ////SECCION DE VIGENCIA
+            //ViewBag.vigencia = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "head_vigencia").FirstOrDefault().TEXTOS;
+            //ViewBag.vigenciaDe = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_vigenciaDe").FirstOrDefault().TEXTOS;
+            //ViewBag.vigenciaA = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_vigenciaA").FirstOrDefault().TEXTOS;
+            //ViewBag.concepto = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_concepto").FirstOrDefault().TEXTOS;
+            //ViewBag.montoDoc = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_montoDoc").FirstOrDefault().TEXTOS;
+            ////SECCION DE ANALISIS DE PRESUPUESTO
+            //ViewBag.analisisPresupuesto = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "head_presupuesto").FirstOrDefault().TEXTOS;
+            //ViewBag.fechaCarga = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_ultFechCarga").FirstOrDefault().TEXTOS;
+            //ViewBag.presupuestoCanal = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_presupuestoCanal").FirstOrDefault().TEXTOS;
+            //ViewBag.preCliBaAgrupador = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_preCliBaAgrupador").FirstOrDefault().TEXTOS;
+            //ViewBag.registroSap = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_registroSap").FirstOrDefault().TEXTOS;
+            //ViewBag.procesoIcon = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_enProceso").FirstOrDefault().TEXTOS;
+            //ViewBag.consumido = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_consumido").FirstOrDefault().TEXTOS;
+            //ViewBag.excedido = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_preDisExcedido").FirstOrDefault().TEXTOS;
+            ////SECCION PIE DE LA CANCELACION
+            //ViewBag.pie = db.TEXTOes.Where(x => x.PAGINA_ID == 254 & x.SPRAS_ID == spras & x.CAMPO_ID == "lbl_pieCancelacion").FirstOrDefault().TEXTOS;
+            ////END LGPP 13.12.2018
+
+            return View();
+        }
+
         public ActionResult Taxeo(decimal id, bool? mail)
         {
             var dOCUMENTO = db.DOCUMENTOes.Where(x => x.NUM_DOC == id).FirstOrDefault();
