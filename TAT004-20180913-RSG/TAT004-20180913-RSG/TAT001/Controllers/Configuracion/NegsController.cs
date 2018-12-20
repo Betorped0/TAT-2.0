@@ -103,6 +103,7 @@ namespace TAT001.Controllers
             if (ModelState.IsValid)
             {
                 NEGOCIACION2 nego = new NEGOCIACION2();
+                var proximaFecha = FnCommon.obtenerProximaFecha(nEGOCIACION, col["group1"]);
                 nego.FRECUENCIA_N = nEGOCIACION.FRECUENCIA_N;
                 nego.TITULO = nEGOCIACION.TITULO;
                 nego.FRECUENCIA = nEGOCIACION.FRECUENCIA;
@@ -200,6 +201,7 @@ namespace TAT001.Controllers
             if (ModelState.IsValid)
             {
                 NEGOCIACION2 nego = db.NEGOCIACION2.Find(nEGOCIACION.ID);
+                var proximaFecha = FnCommon.obtenerProximaFecha(nEGOCIACION, col["group1"]);
                 nego.FRECUENCIA_N = nEGOCIACION.FRECUENCIA_N;
                 nego.TITULO = nEGOCIACION.TITULO;
                 nego.FRECUENCIA = nEGOCIACION.FRECUENCIA;
