@@ -63,6 +63,12 @@ namespace TAT001.Services
                 actual.ESTATUS = f.ESTATUS;
                 if (!reve)
                     db.FLUJOes.Add(actual);
+                else
+                {
+                    FLUJO ff = db.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC & x.POS == f.POS).FirstOrDefault();
+                    ff.ESTATUS = "A";
+                    db.Entry(ff).State = EntityState.Modified;
+                }
 
                 if (!draft)//NO ES BORRADOR
                 {
