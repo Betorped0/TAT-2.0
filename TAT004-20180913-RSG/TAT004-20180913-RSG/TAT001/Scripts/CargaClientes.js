@@ -204,11 +204,12 @@ function Carga() {
     if (doc > 0 || cliente !== null || cliente !== "cli=") {
         if (message === "" || message === null || message.endsWith('mes=')) {
             if (us1 !== "" && us1 !== "ni1=" && us1 !== null && us6 !== "" && us6 !== "ni6=" && us6 !== null) {
+
+                document.getElementById("loader").style.display = "flex";
                 var table = $('#table').DataTable();
                 table.destroy();
                 habilitar();
                 var datos = $('#tabla').serializeArray();
-                document.getElementById("loader").style.display = "flex";
                 $.ajax({
                     type: "POST",
                     url: 'Agregar',
