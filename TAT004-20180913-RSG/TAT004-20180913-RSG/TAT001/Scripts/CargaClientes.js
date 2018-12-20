@@ -113,7 +113,7 @@ $("#files").on('change', function() {
         var filename = file.name;
         if (evaluarExt(filename)) {
             mostrarAlerta("info", "B", 'Archivo: ' + filename);
-            loadExcelDis(file);
+            loadExcel(file);
             onclick = checkoff();
             sessionStorage.setItem("num", filenum);
             $('#files').val("");
@@ -145,7 +145,7 @@ function evaluarExt(filename) {
     }
 }
 
-function loadExcelDis(file) {
+function loadExcel(file) {
     esFile = true;
     document.getElementById("loader").style.display = "initial";
     var formData = new FormData();
@@ -162,9 +162,10 @@ function loadExcelDis(file) {
         contentType: false,
         processData: false,
         success: function (data) {
-            if (data === "NO VALIDO"){
+            if (data === "NO VALIDO") {
+                Limpiar();
                 M.toast({
-                    html: "Archivo con numero de columnas incorrecto"
+                    html: "Revisar número de columnas y filas. Máximo 2,000 Registros."
                 });
                 document.getElementById("loader").style.display = "none";
             } else if ((data !== null || data !== "") && !data.isRedirect) {
@@ -189,81 +190,24 @@ function loadExcelDis(file) {
     });
 }
 
-function addRow(t, POS, br, cc, p, c, nc, n0, n1, n2, n3, n4, n5, n6, n7, v, b, ba, ca, ex, co, ec, me) {
-    var r = addRowl(
-        t,
-        POS,
-        "<label><input class='input_bor' type='checkbox' id='' name='bor' onclick='checkoff();' value='" + br + "'><span></span></label>",
-        "<input class='input_coc' style='font-size:12px;' type='text' id='' name='coc' value='" + cc + "' onchange='Comprobar()'><span  style='display: none;'>" + cc + "</span>",
-        "<input class='input_pai' style='font-size:12px;' type='text' id='' name='pai' value='" + p + "' onchange='Comprobar()'><span  style='display: none;'>" + p + "</span>",
-        "<input class='input_cli' disabled='true' style='font-size:12px;' type='text' id='' name='cli' value='" + c + "' onchange='Comprobar()'><span  style='display: none;'>" + c + "</span>",
-        "<input class='input_noc' style='font-size:12px;' type='text' id='' name='noc' value='" + nc + "' onchange='Comprobar()'><span  style='display: none;'>" + nc + "</span>",
-        "<input class='input_ni0' style='font-size:12px;' type='text' id='' name='ni0' value='" + n0 + "' onchange='Comprobar()'><span  style='display: none;'>" + n0 + "</span>",
-        "<input class='input_ni1' style='font-size:12px;' type='text' id='' name='ni1' value='" + n1 + "' onchange='Comprobar()'><span  style='display: none;'>" + n1 + "</span>",
-        "<input class='input_ni2' style='font-size:12px;' type='text' id='' name='ni2' value='" + n2 + "' onchange='Comprobar()'><span  style='display: none;'>" + n2 + "</span>",
-        "<input class='input_ni3' style='font-size:12px;' type='text' id='' name='ni3' value='" + n3 + "' onchange='Comprobar()'><span  style='display: none;'>" + n3 + "</span>",
-        "<input class='input_ni4' style='font-size:12px;' type='text' id='' name='ni4' value='" + n4 + "' onchange='Comprobar()'><span  style='display: none;'>" + n4 + "</span>",
-        "<input class='input_ni5' style='font-size:12px;' type='text' id='' name='ni5' value='" + n5 + "' onchange='Comprobar()'><span  style='display: none;'>" + n5 + "</span>",
-        "<input class='input_ni6' style='font-size:12px;' type='text' id='' name='ni6' value='" + n6 + "' onchange='Comprobar()'><span  style='display: none;'>" + n6 + "</span>",
-        "<input class='input_ni7' style='font-size:12px;' type='text' id='' name='ni7' value='" + n7 + "' onchange='Comprobar()'><span  style='display: none;'>" + n7 + "</span>",
-        "<input class='input_ven' style='font-size:12px;' type='text' id='' name='ven' value='" + v + "' onchange='Comprobar()'><span  style='display: none;'>" + v + "</span>",
-        "<input class='input_ban' disabled='true' style='font-size:12px;' type='text' id='' name='ban' value='" + b + "' onchange='Comprobar()'><span  style='display: none;'>" + b + "</span>",
-        "<input class='input_baa' style='font-size:12px;' type='text' id='' name='baa' value='" + ba + "' onchange='Comprobar()'><span  style='display: none;'>" + ba + "</span>",
-        "<input class='input_can' style='font-size:12px;' type='text' id='' name='can' value='" + ca + "' onchange='Comprobar()'><span  style='display: none;'>" + ca+ "</span>",
-        "<input class='input_exp' style='font-size:12px;' type='text' id='' name='exp' value='" + ex + "' onchange='Comprobar()'><span  style='display: none;'>" + ex + "</span>",
-        "<input class='input_con' style='font-size:12px;' type='text' id='' name='con' value='" + co + "' onchange='Comprobar()'><span  style='display: none;'>" + co + "</span>",
-        "<input class='input_eco' type='email' style='font-size:12px;' type='text' id='' name='eco' value='" + ec + "' onchange='Comprobar()'><span  style='display: none;'>" + ec + "</span>",
-        "<input class='input_mes' type='hidden' name='mes' value='" + me + "'><span class='input_mes' style='font-size:12px;'>" + me + "</span>"
-    );
-    return r;
-}
-
-function addRowl(t, pos, br, cc, p, c, nc, n0, n1, n2, n3, n4, n5, n6, n7, v, b, ba, ca, ex, co, ec, me) {
-    var r = t.row.add([
-        br,
-        cc,
-        p,
-        c,
-        nc,
-        n0,
-        n1,
-        n2,
-        n3,
-        n4,
-        n5,
-        n6,
-        n7,
-        v,
-        b,
-        ba,
-        ca,
-        ex,
-        co,
-        ec,
-        me
-    ]).draw(false).node();
-    return r;
-}
-
 function Carga() {
     var rowNum = $('#table>tbody').find('.input_bor').length;
     if (rowNum === 0) {
         return;
     }
-    var table = $('#table').DataTable();
-    table.destroy();
-    habilitar();
-    var datos = $('#tabla').serializeArray();
+    
     var message = $('.input_mes').serialize();
     var cliente = $('.input_cli').serialize();
-    //console.log(datos);
-    //console.log(message);
     var us1 = $('.input_ni1').serialize();
     var us6 = $('.input_ni6').serialize();
     var doc = sessionStorage.getItem("num");
     if (doc > 0 || cliente !== null || cliente !== "cli=") {
         if (message === "" || message === null || message.endsWith('mes=')) {
             if (us1 !== "" && us1 !== "ni1=" && us1 !== null && us6 !== "" && us6 !== "ni6=" && us6 !== null) {
+                var table = $('#table').DataTable();
+                table.destroy();
+                habilitar();
+                var datos = $('#tabla').serializeArray();
                 document.getElementById("loader").style.display = "flex";
                 $.ajax({
                     type: "POST",
@@ -300,11 +244,14 @@ function Carga() {
         mostrarAlerta("info", "E", "Seleccione un archivo");
 }
 
-function Comprobar() {
+function Comprobar(indx) {
+    var i = indx*20;
     habilitar();
     var datos = $('#tabla').serializeArray();
-    creart('Comprobar', datos);
-    //mostrarAlerta("info", "A", "Vista Actualizada");
+    var row = [
+        datos[i + 1], datos[i + 2], datos[i + 3], datos[i + 4], datos[i + 5], datos[i + 6], datos[i + 7], datos[i + 8], datos[i + 9], datos[i + 10],
+        datos[i + 11],datos[i + 12], datos[i + 13], datos[i + 14], datos[i + 15], datos[i + 16], datos[i + 17], datos[i + 18], datos[i + 19], datos[i + 20]];
+    creart('Comprobar', row, indx);
 }
 
 function Borrar() {
@@ -380,222 +327,27 @@ function Actualizar() {
     }
 }
 
-function creart(metodo, datos) {
+function creart(metodo, datos, indx) {
+    document.getElementById("loader").style.display = "flex";
     $.ajax({
         type: "POST",
         url: metodo,
-        dataType: "json",
         data: datos,
         success: function (data) {
             if ((data !== null || data !== "") && !data.isRedirect) {
-                
                 var table = $('#table').DataTable();
-                table.clear().draw();
-                $.each(data, function (i, dataj) {
-
-                    var bor = i;
-                    var coc = dataj.BUKRS;
-                    var pai = dataj.LAND;
-                    var cli = dataj.KUNNR;
-                    var noc = dataj.CLIENTE_N;
-                    var ni0 = dataj.ID_US0;
-                    var ni1 = dataj.ID_US1;
-                    var ni2 = dataj.ID_US2;
-                    var ni3 = dataj.ID_US3;
-                    var ni4 = dataj.ID_US4;
-                    var ni5 = dataj.ID_US5;
-                    var ni6 = dataj.ID_US6;
-                    var ni7 = dataj.ID_US7;
-                    var ven = dataj.ID_PROVEEDOR;
-                    var ban = dataj.BANNER;
-                    var baa = dataj.BANNERG;
-                    var can = dataj.CANAL;
-                    var exp = dataj.EXPORTACION;
-                    var cont = dataj.CONTACTO;
-                    var eco = dataj.CONTACTOE;
-                    var mes = dataj.MESS;
-
-                    if (mes === null)
-                        mes = "";
-
-                    //identificacion de error
-                    if (coc.indexOf('?') !== -1) {
-                        coc = coc.slice(0, -1);
-                        var cocx = true;
-                    }
-                    if (pai.indexOf('?') !== -1) {
-                        pai = pai.slice(0, -1);
-                        var paix = true;
-                    }
-                    if (cli.indexOf('?') !== -1) {
-                        cli = cli.slice(0, -1);
-                        var clix = true;
-                    }
-                    if (noc.indexOf('?') !== -1) {
-                        noc = noc.slice(0, -1);
-                        var nocx = true;
-                    }
-                    if (ni0.indexOf('?') !== -1) {
-                        ni0 = ni0.slice(0, -1);
-                        var ni0x = true;
-                    }
-                    if (ni1.indexOf('?') !== -1) {
-                        ni1 = ni1.slice(0, -1);
-                        var ni1x = true;
-                    }
-                    if (ni2.indexOf('?') !== -1) {
-                        ni2 = ni2.slice(0, -1);
-                        var ni2x = true;
-                    }
-                    if (ni3.indexOf('?') !== -1) {
-                        ni3 = ni3.slice(0, -1);
-                        var ni3x = true;
-                    }
-                    if (ni4.indexOf('?') !== -1) {
-                        ni4 = ni4.slice(0, -1);
-                        var ni4x = true;
-                    }
-                    if (ni5.indexOf('?') !== -1) {
-                        ni5 = ni5.slice(0, -1);
-                        var ni5x = true;
-                    }
-                    if (ni6.indexOf('?') !== -1) {
-                        ni6 = ni6.slice(0, -1);
-                        var ni6x = true;
-                    }
-                    if (ni7.indexOf('?') !== -1) {
-                        ni7 = ni7.slice(0, -1);
-                        var ni7x = true;
-                    }
-                    if (ven.indexOf('?') !== -1) {
-                        ven = ven.slice(0, -1);
-                        var venx = true;
-                    }
-                    if (can.indexOf('?') !== -1) {
-                        can = can.slice(0, -1);
-                        var canx = true;
-                    }
-                    if (eco.indexOf('?') !== -1) {
-                        eco = eco.slice(0, -1);
-                        var ecox = true;
-                    }//Termina identificacion
-
-                    //Quitar Ceros
-                    var cam = cli.split("");
-                    var con = 0;
-                    for (var i = 0; i < 10; i++) {
-                        if (cam[i] == 0) {
-                            con++;
-                        }
-                        else {
-                            i = 9;
-                        }
-                    }
-                    cli = cli.substring(con, i);
-
-                    cam = ban.split("");
-                    con = 0;
-                    for (var i = 0; i < 10; i++) {
-                        if (cam[i] == 0) {
-                            con++;
-                        }
-                        else {
-                            i = 9;
-                        }
-                    }
-                    ban = ban.substring(con, i);
-
-                    cam = baa.split("");
-                    con = 0;
-                    for (var i = 0; i < 10; i++) {
-                        if (cam[i] == 0) {
-                            con++;
-                        }
-                        else {
-                            i = 9;
-                        }
-                    }
-                    baa = baa.substring(con, i);
-
-                    cam = ven.split("");
-                    con = 0;
-                    for (var i = 0; i < 10; i++) {
-                        if (cam[i] == 0) {
-                            con++;
-                        }
-                        else {
-                            i = 9;
-                        }
-                    }
-                    ven = ven.substring(con, i);
-                    //Termina quitar ceros
-
-                    var addedRow = addRow(table, dataj.POS, bor, coc, pai, cli, noc, ni0, ni1, ni2, ni3, ni4, ni5, ni6, ni7, ven, ban, baa, can, exp, cont, eco, mes);
-
-                    //Pintar de rojo las celdas
-                    var cols = addedRow.cells[1];
-                    if (cocx === true) {
-                        $(cols).addClass("red");
-                    }
-                    cols = addedRow.cells[2];
-                    if (paix === true) {
-                        $(cols).addClass("red");
-                    }
-                    cols = addedRow.cells[3];
-                    if (clix === true) {
-                        $(cols).addClass("red");
-                    }
-                    cols = addedRow.cells[4];
-                    if (nocx === true) {
-                        $(cols).addClass("red");
-                    }
-                    cols = addedRow.cells[5];
-                    if (ni0x === true) {
-                        $(cols).addClass("red");
-                    }
-                    cols = addedRow.cells[6];
-                    if (ni1x === true) {
-                        $(cols).addClass("red");
-                    }
-                    cols = addedRow.cells[7];
-                    if (ni2x === true) {
-                        $(cols).addClass("red");
-                    }
-                    cols = addedRow.cells[8];
-                    if (ni3x === true) {
-                        $(cols).addClass("red");
-                    }
-                    cols = addedRow.cells[9];
-                    if (ni4x === true) {
-                        $(cols).addClass("red");
-                    }
-                    cols = addedRow.cells[10];
-                    if (ni5x === true) {
-                        $(cols).addClass("red");
-                    }
-                    cols = addedRow.cells[11];
-                    if (ni6x === true) {
-                        $(cols).addClass("red");
-                    }
-                    cols = addedRow.cells[12];
-                    if (ni7x === true) {
-                        $(cols).addClass("red");
-                    }
-                    cols = addedRow.cells[13];
-                    if (venx === true) {
-                        $(cols).addClass("red");
-                    }
-                    cols = addedRow.cells[16];
-                    if (canx === true) {
-                        $(cols).addClass("red");
-                    }
-                    cols = addedRow.cells[19];
-                    if (ecox === true) {
-                        $(cols).addClass("red");
-                    }
-                });
-                $('#table').css("font-size", "12px");
-                $('#table').css("display", "table");
+               
+                if (metodo === "Comprobar") {
+                    //$('#table').DataTable().destroy();
+                    $('#table tbody tr')[indx]=data;
+                } else {
+                    table.clear().draw();
+                    $('#table').DataTable().destroy();
+                    $('#table tbody').html(data);
+                    $('#table').css("font-size", "12px");
+                    $('#table').css("display", "table");
+                    formato();
+                }
                 document.getElementById("loader").style.display = "none";
             }
             else {
