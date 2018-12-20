@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -60,6 +61,7 @@ namespace TAT001.Controllers.Catalogos
             FnCommon.ObtenerTextos(db,pagina_id, User.Identity.Name, this.ControllerContext.Controller);
             return View(viewModel);
         }
+
         void ObtenerListado(ref ClienteViewModel viewModel, string colOrden="", string ordenActual="", int? numRegistros = 10, int? pagina = 1, string buscar = "")
         {
             int pageIndex = pagina.Value;
@@ -314,6 +316,7 @@ namespace TAT001.Controllers.Catalogos
             }
             return View();
         }
+
         [HttpPost]
         [LoginActive]
         public ActionResult Carga(IEnumerable<HttpPostedFileBase> files)
@@ -327,9 +330,10 @@ namespace TAT001.Controllers.Catalogos
             }
             return View();
         }
+
         [HttpPost]
         [AllowAnonymous]
-        public JsonResult LoadExcel()
+        public ActionResult LoadExcel()
         {
             string uz = User.Identity.Name;
             var userz = db.USUARIOs.Where(a => a.ID.Equals(uz)).FirstOrDefault();
@@ -342,190 +346,73 @@ namespace TAT001.Controllers.Catalogos
                     isRedirect = true
                 });
             }
-            List<DET_AGENTE1> ld = new List<DET_AGENTE1>();
-
+            List<Clientes> clientes = new List<Clientes>();
             if (Request.Files.Count > 0)
             {
                 HttpPostedFileBase file = Request.Files["FileUpload"];
                 IExcelDataReader reader = ExcelReaderFactory.CreateReader(file.InputStream);
                 DataSet result = reader.AsDataSet();
                 DataTable dt = result.Tables[0];
-                if (dt.Columns.Count!=19)
+                DataTable dtClientes = new DataTable("Clientes");
+
+                dtClientes.Columns.Add("BUKRS", typeof(String));
+                dtClientes.Columns.Add("LAND", typeof(String));
+                dtClientes.Columns.Add("KUNNR", typeof(String));
+                dtClientes.Columns.Add("VKORG", typeof(String));
+                dtClientes.Columns.Add("VTWEG", typeof(String));
+                dtClientes.Columns.Add("SPART", typeof(String));
+                dtClientes.Columns.Add("CLIENTE_N", typeof(String));
+                dtClientes.Columns.Add("ID_US0", typeof(String));
+                dtClientes.Columns.Add("ID_US1", typeof(String));
+                dtClientes.Columns.Add("ID_US2", typeof(String));
+                dtClientes.Columns.Add("ID_US3", typeof(String));
+                dtClientes.Columns.Add("ID_US4", typeof(String));
+                dtClientes.Columns.Add("ID_US5", typeof(String));
+                dtClientes.Columns.Add("ID_US6", typeof(String));
+                dtClientes.Columns.Add("ID_US7", typeof(String));
+                dtClientes.Columns.Add("ID_PROVEEDOR", typeof(String));
+                dtClientes.Columns.Add("BANNER", typeof(String));
+                dtClientes.Columns.Add("BANNERG", typeof(String));
+                dtClientes.Columns.Add("CANAL", typeof(String));
+                dtClientes.Columns.Add("EXPORTACION", typeof(String));
+                dtClientes.Columns.Add("CONTACTO", typeof(String));
+                dtClientes.Columns.Add("CONTACTOE", typeof(String));
+                dtClientes.Columns.Add("MESS", typeof(String));
+
+                int i = 0;
+                foreach (DataRow row in dt.Rows)
                 {
-                    return Json("NO VALIDO", JsonRequestBehavior.AllowGet); 
+                    if (i > 0)
+                    {
+                        row.ItemArray[2]=Completa(!string.IsNullOrEmpty(row.ItemArray[2].ToString())? row.ItemArray[2].ToString().Trim(): null, 10);
+                        row.ItemArray[12] = Completa(!string.IsNullOrEmpty(row.ItemArray[12].ToString()) ? row.ItemArray[12].ToString().Trim() : null, 10);
+                        row.ItemArray[13] = Completa(!string.IsNullOrEmpty(row.ItemArray[13].ToString()) ? row.ItemArray[13].ToString().Trim() : null, 10);
+                        row.ItemArray[14] = Completa(!string.IsNullOrEmpty(row.ItemArray[14].ToString()) ? row.ItemArray[14].ToString().Trim() : null, 10);
+
+                        dtClientes.Rows.Add(row.ItemArray);
+                    }
+                    i++;
                 }
-                ld = ObjAList1(dt);
+
+                if (dt.Columns.Count != 19)
+                {
+                    return Json("NO VALIDO", JsonRequestBehavior.AllowGet);
+                }
+                SqlParameter param = new SqlParameter("@CLIENTES", dtClientes)
+                {
+                    SqlDbType = SqlDbType.Structured,
+                    TypeName = "dbo.ClientesTableType"
+                };
+                clientes = db.Database.SqlQuery<Clientes>("CSP_MASIVA_CLIENTES @CLIENTES",
+                param).ToList();
+                // clientes = ObjAList1Valid(dt);
 
                 reader.Close();
             }
-
-            List<Clientes> cc = new List<Clientes>();
-            List<Clientes> ccErr = new List<Clientes>();
-
-            foreach (DET_AGENTE1 da in ld)
-            {
-                int cont = 1;
-                string messa = "";
-                Clientes cl = new Clientes();
-                Cryptography c = new Cryptography();
-                string[] ids = new string[8];
-                bool[] idsx = new bool[8];
-
-                cl.BUKRS = da.BUKRS.Replace(" ", "");
-                cl.BUKRSX = true;
-                cl.LAND = da.LAND.Replace(" ", "");
-                cl.LANDX = true;
-                cl.KUNNR = da.KUNNR.Replace(" ", "");
-                cl.KUNNRX = true;
-                cl.CLIENTE_N = da.CLIENTE_N;
-                ids[0] = da.ID_US0.Replace(" ", "");
-                idsx[0] = true;
-                ids[1] = da.ID_US1.Replace(" ", "");
-                idsx[1] = true;
-                ids[2] = da.ID_US2.Replace(" ", "");
-                idsx[2] = true;
-                ids[3] = da.ID_US3.Replace(" ", "");
-                idsx[3] = true;
-                ids[4] = da.ID_US4.Replace(" ", "");
-                idsx[4] = true;
-                ids[5] = da.ID_US5.Replace(" ", "");
-                idsx[5] = true;
-                ids[6] = da.ID_US6.Replace(" ", "");
-                idsx[6] = true;
-                ids[7] = da.ID_US7.Replace(" ", "");
-                idsx[7] = true;
-                cl.ID_PROVEEDOR = da.ID_PROVEEDOR.Replace(" ", "");
-                cl.ID_PROVEEDORX = true;
-                cl.BANNER = da.BANNER.Replace(" ", "");
-                cl.BANNERG = da.BANNERG.Replace(" ", "");
-                cl.CANAL = da.CANAL.Replace(" ", "");
-                cl.CANALX = true;
-                cl.EXPORTACION = da.EXPORTACION.Replace(" ", "");
-                cl.CONTACTO = da.CONTACTO;
-                cl.CONTACTOE = da.CONTACTOE.Replace(" ", "");
-                cl.CONTACTOEX = true;
-
-                ////-------------------------------CoCode
-                if (!db.PAIS.Any(x => x.SOCIEDAD_ID==cl.BUKRS & x.ACTIVO))
-                {
-                        cl.BUKRSX = false;
-                    cl.BUKRS = cl.BUKRS + "?";
-                    messa = cont + ". Error con el CoCode<br/>";
-                    cont++;
-                }
-
-                ////-------------------------------Pais
-                if (!db.PAIS.Any(x => x.LAND==cl.LAND & x.ACTIVO))
-                {
-                    cl.LANDX = false;
-                    cl.LAND = cl.LAND + "?";
-                    messa = cont + ". Error con el Pais<br/>";
-                    cont++;
-                }
-
-                ////-------------------------------CLIENTE
-                if (da.VKORG==null)
-                {
-                    cl.KUNNRX = false;
-                    cl.KUNNR = cl.KUNNR + "?";
-                    messa = cont + ". Error con el Cliente<br/>";
-                    cont++;
-                }
-
-                ////-------------------------------NOMBRE DEL CLIENTE
-                if (string.IsNullOrEmpty(cl.CLIENTE_N) )
-                {
-                    cl.CLIENTE_N = cl.CLIENTE_N + "?";
-                    messa = cont + ". Error con el Nombre del Cliente<br/>";
-                    cont++;
-                }
-
-                ////-------------------------------Niveles
-                for (int i = 0; i < 8; i++)
-                {
-                    if (ids[i] != null && ids[i] != "")
-                    {
-                        var usuario = ids[i];
-                        if (!db.USUARIOs.Any(x => x.ID==usuario & x.ACTIVO==true))
-                            idsx[i] = false;
-                        else if (string.IsNullOrEmpty(ids[i]) && (i == 1 || i == 6))
-                            idsx[i] = false;
-                        var puesto = db.USUARIOs.Where(x => x.ID == usuario & x.ACTIVO == true).Select(x => x.PUESTO_ID).FirstOrDefault();
-                        if (puesto == 1 || puesto == 14)
-                        {
-                            idsx[i] = false;
-                        }
-                        if ((puesto != 8 && i == 6) || (puesto != 9 && i == 7))
-                        {
-                            idsx[i] = false;
-                        }
-                    }
-                    if (!idsx[i])
-                    {
-                        ids[i] = ids[i] + "?";
-                        messa = messa + cont + ". Error en el nivel " + i + "<br/>";
-                        cont++;
-                    }
-                }
-                cl.ID_US0 = ids[0];
-                cl.ID_US0X = idsx[0];
-                cl.ID_US1 = ids[1];
-                cl.ID_US1X = idsx[1];
-                cl.ID_US2 = ids[2];
-                cl.ID_US2X = idsx[2];
-                cl.ID_US3 = ids[3];
-                cl.ID_US3X = idsx[3];
-                cl.ID_US4 = ids[4];
-                cl.ID_US4X = idsx[4];
-                cl.ID_US5 = ids[5];
-                cl.ID_US5X = idsx[5];
-                cl.ID_US6 = ids[6];
-                cl.ID_US6X = idsx[6];
-                cl.ID_US7 = ids[7];
-                cl.ID_US7X = idsx[7];
-
-                ////-------------------------------ID_PROVEEDOR
-                    if (!string.IsNullOrEmpty(cl.ID_PROVEEDOR) && !db.PROVEEDORs.Any(x => x.ID==cl.ID_PROVEEDOR))
-                    {
-                        cl.ID_PROVEEDORX = false;
-                        cl.ID_PROVEEDOR = cl.ID_PROVEEDOR + "?";
-                        messa = messa + cont + ". Error en el vendor<br/>";
-                        cont++;
-                    }
-                
-                ////-------------------------------CANAL
-                if (!string.IsNullOrEmpty(cl.CANAL) && !db.CANALs.Any(x => x.CANAL1 == cl.CANAL))
-                {
-                        cl.CANALX = false;
-                        cl.CANAL = cl.CANAL + "?";
-                        messa = messa + cont + ". Error en el canal<br/>";
-                        cont++;
-                }
-
-                ////-------------------------------EMAIL
-                    if (!string.IsNullOrEmpty(cl.CONTACTO) && !ComprobarEmail(cl.CONTACTOE) )
-                    {
-                        cl.CONTACTOEX = false;
-                        cl.CONTACTOE = cl.CONTACTOE + "?";
-                        messa = messa + cont + ". Error en el correo<br/>";
-                        cont++;
-                    }
-                
-
-                da.MESS = messa;
-                cl.MESS = da.MESS;
-                if (string.IsNullOrEmpty(messa)) {
-                    cc.Add(cl);
-                }
-                else
-                {
-                    ccErr.Add(cl);
-                }
-            }
-            ccErr.AddRange(cc);
-            return Json(ccErr, JsonRequestBehavior.AllowGet);
-            //  return View("CargaList",cc);
+            
+            return View("CargaList", clientes);
         }
+
         [HttpPost]
         public JsonResult Agregar()
         {
@@ -730,6 +617,7 @@ namespace TAT001.Controllers.Catalogos
             JsonResult jl = Json(cont, JsonRequestBehavior.AllowGet);
             return jl;
         }
+
         [HttpPost]
         public JsonResult Comprobar()
         {
@@ -1017,6 +905,7 @@ namespace TAT001.Controllers.Catalogos
             JsonResult jl = Json(cc, JsonRequestBehavior.AllowGet);
             return jl;
         }
+
         [HttpPost]
         public JsonResult Actualizar()
         {
@@ -1135,6 +1024,7 @@ namespace TAT001.Controllers.Catalogos
             JsonResult jl = Json(cc, JsonRequestBehavior.AllowGet);
             return jl;
         }
+
         [HttpPost]
         public FileResult Descargar()
         {
@@ -1211,27 +1101,6 @@ namespace TAT001.Controllers.Catalogos
             }
         }
 
-        public static bool ComprobarEmail(string email)
-        {
-            String sFormato;
-            sFormato = "\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*";
-            if (Regex.IsMatch(email, sFormato))
-            {
-                if (Regex.Replace(email, sFormato, String.Empty).Length == 0)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
-        }
-
         private string Completa(string s, int longitud)
         {
             string cadena = "";
@@ -1251,31 +1120,55 @@ namespace TAT001.Controllers.Catalogos
             }
             return cadena;
         }
-
-        private List<DET_AGENTE1> ObjAList1(DataTable dt)
+        
+        /***private List<Clientes> ObjAList1Valid(DataTable dt)
         {
             List<DET_AGENTE1> ld = new List<DET_AGENTE1>();
+            List<Clientes> cc = new List<Clientes>();
+            List<Clientes> ccErr = new List<Clientes>();
 
-            var rowsc = dt.Rows.Count;
-            var columnsc = dt.Columns.Count;
-            var rows = 1;
             var pos = 1;
 
-            for (int i = rows; i < rowsc; i++)
+            for (int i = 1; i < dt.Rows.Count; i++)
             {
                 DET_AGENTE1 doc = new DET_AGENTE1();
-                CLIENTE existeCliente = null;
-                doc.POS = Convert.ToInt32(pos);
+                Clientes cl = new Clientes();
 
-                //CoCode
-                doc.BUKRS = (dt.Rows[i][0]!=null? dt.Rows[i][0].ToString().ToUpper():null);
-                //Pais
+
+                CLIENTE existeCliente = null;
+                int cont = 1;
+                string messa = "";
+                string[] ids = new string[8];
+                bool[] idsx = new bool[8];
+
+                doc.POS = Convert.ToInt32(pos);
+                
+                //////-------------------------------CoCode
+                doc.BUKRS = (dt.Rows[i][0]?.ToString().ToUpper());
+                cl.BUKRS = doc.BUKRS.Replace(" ", "");
+                cl.BUKRSX = db.PAIS.Any(x => x.SOCIEDAD_ID == cl.BUKRS && x.ACTIVO);
+                if (!cl.BUKRSX)
+                {
+                    cl.BUKRS = cl.BUKRS + "?";
+                    messa = cont + ". Error con el CoCode<br/>";
+                    cont++;
+                }
+
+                ////-------------------------------Pais
                 doc.LAND = dt.Rows[i][1].ToString().ToUpper();
-                //Cliente
+                cl.LAND = doc.LAND.Replace(" ", "");
+                cl.LANDX = db.PAIS.Any(x => x.LAND == cl.LAND && x.ACTIVO);               
+                if (!cl.LANDX)
+                {
+                    cl.LAND = cl.LAND + "?";
+                    messa = cont + ". Error con el Pais<br/>";
+                    cont++;
+                }
+
+                ////-------------------------------CLIENTE
                 doc.KUNNR = dt.Rows[i][2].ToString();
                 doc.KUNNR = Completa(doc.KUNNR, 10);
-
-                existeCliente = db.CLIENTEs.Where(cc => cc.KUNNR == doc.KUNNR & cc.ACTIVO).FirstOrDefault();
+                existeCliente = db.CLIENTEs.Where(x => x.KUNNR == doc.KUNNR && x.ACTIVO).FirstOrDefault();
                 if (!String.IsNullOrEmpty(dt.Rows[i][3].ToString()))
                 {
                     doc.CLIENTE_N = dt.Rows[i][3].ToString().Replace(',', ' ').ToUpper();
@@ -1292,124 +1185,204 @@ namespace TAT001.Controllers.Catalogos
                     doc.VTWEG = existeCliente.VTWEG;
                     doc.SPART = existeCliente.SPART;
                 }
-                //Manager
-                doc.ID_US0 = (dt.Rows[i][4] != null ? dt.Rows[i][4].ToString().ToUpper() : null);
-                //Nivel 1
-                doc.ID_US1 = (dt.Rows[i][5] != null ? dt.Rows[i][5].ToString().ToUpper() : null);
-                //Nivel 2
-                doc.ID_US2 = (dt.Rows[i][6] != null ? dt.Rows[i][6].ToString().ToUpper() : null);
-                //Nivel 3
-                doc.ID_US3 = (dt.Rows[i][7] != null ? dt.Rows[i][7].ToString().ToUpper() : null);
-                //Nivel 4
-                doc.ID_US4 = (dt.Rows[i][8] != null ? dt.Rows[i][8].ToString().ToUpper() : null);
-                //Nivel 5
-                doc.ID_US5 = (dt.Rows[i][9] != null ? dt.Rows[i][9].ToString().ToUpper() : null);
-                //Nivel 6
-                doc.ID_US6 = (dt.Rows[i][10] != null ? dt.Rows[i][10].ToString().ToUpper() : null);
-                //Nivel 7
-                doc.ID_US7 = (dt.Rows[i][11] != null ? dt.Rows[i][11].ToString().ToUpper() : null);
+                cl.KUNNR = doc.KUNNR.Replace(" ", "");
+                cl.KUNNRX = (doc.VKORG != null);
+                if (!cl.KUNNRX)
+                {
+                    cl.KUNNR = cl.KUNNR + "?";
+                    messa = cont + ". Error con el Cliente<br/>";
+                    cont++;
+                }
+                ////-------------------------------NOMBRE DEL CLIENTE
+                cl.CLIENTE_N = doc.CLIENTE_N;
+                if (string.IsNullOrEmpty(cl.CLIENTE_N))
+                {
+                    cl.CLIENTE_N = cl.CLIENTE_N + "?";
+                    messa = cont + ". Error con el Nombre del Cliente<br/>";
+                    cont++;
+                }
 
+                //Manager
+                doc.ID_US0 = (dt.Rows[i][4]?.ToString().ToUpper());
+                ids[0] = doc.ID_US0.Replace(" ", "");
+                idsx[0] = true;
+                //Nivel 1
+                doc.ID_US1 = (dt.Rows[i][5]?.ToString().ToUpper());
+                ids[1] = doc.ID_US1.Replace(" ", "");
+                idsx[1] = true;
+                //Nivel 2
+                doc.ID_US2 = (dt.Rows[i][6]?.ToString().ToUpper());
+                ids[2] = doc.ID_US2.Replace(" ", "");
+                idsx[2] = true;
+                //Nivel 3
+                doc.ID_US3 = (dt.Rows[i][7]?.ToString().ToUpper());
+                ids[3] = doc.ID_US3.Replace(" ", "");
+                idsx[3] = true;
+                //Nivel 4
+                doc.ID_US4 = (dt.Rows[i][8]?.ToString().ToUpper());
+                ids[4] = doc.ID_US4.Replace(" ", "");
+                idsx[4] = true;
+                //Nivel 5
+                doc.ID_US5 = (dt.Rows[i][9]?.ToString().ToUpper());
+                ids[5] = doc.ID_US5.Replace(" ", "");
+                idsx[5] = true;
+                //Nivel 6
+                doc.ID_US6 = (dt.Rows[i][10]?.ToString().ToUpper());
+                ids[6] = doc.ID_US6.Replace(" ", "");
+                idsx[6] = true;
+                //Nivel 7
+                doc.ID_US7 = (dt.Rows[i][11]?.ToString().ToUpper());
+                ids[7] = doc.ID_US7.Replace(" ", "");
+                idsx[7] = true;
+
+                for (int j = 0; j < 8; j++)
+                {
+                    if (ids[j] != null && ids[j] != "")
+                    {
+                        var usuario = ids[j];
+                        if (!db.USUARIOs.Any(x => x.ID == usuario && x.ACTIVO == true))
+                            idsx[j] = false;
+                        else if (string.IsNullOrEmpty(ids[j]) && (i == 1 || i == 6))
+                            idsx[j] = false;
+                        var puesto = db.USUARIOs.Where(x => x.ID == usuario && x.ACTIVO == true).Select(x => x.PUESTO_ID).FirstOrDefault();
+                        if (puesto == 1 || puesto == 14)
+                        {
+                            idsx[j] = false;
+                        }
+                        if ((puesto != 8 && i == 6) || (puesto != 9 && i == 7))
+                        {
+                            idsx[j] = false;
+                        }
+                    }
+                    if (!idsx[j])
+                    {
+                        ids[j] = ids[j] + "?";
+                        messa = messa + cont + ". Error en el nivel " + i + "<br/>";
+                        cont++;
+                    }
+                }
+                cl.ID_US0 = ids[0];
+                cl.ID_US0X = idsx[0];
+                cl.ID_US1 = ids[1];
+                cl.ID_US1X = idsx[1];
+                cl.ID_US2 = ids[2];
+                cl.ID_US2X = idsx[2];
+                cl.ID_US3 = ids[3];
+                cl.ID_US3X = idsx[3];
+                cl.ID_US4 = ids[4];
+                cl.ID_US4X = idsx[4];
+                cl.ID_US5 = ids[5];
+                cl.ID_US5X = idsx[5];
+                cl.ID_US6 = ids[6];
+                cl.ID_US6X = idsx[6];
+                cl.ID_US7 = ids[7];
+                cl.ID_US7X = idsx[7];
+
+                ////-------------------------------ID_PROVEEDOR
                 if (!String.IsNullOrEmpty(dt.Rows[i][12].ToString()))
-                //if (string.IsNullOrEmpty(dt.Rows[i][12]==null?"": dt.Rows[i][12].ToString()))
                 {
                     doc.ID_PROVEEDOR = dt.Rows[i][12].ToString();
                 }
                 else
                 {
-                    if (existeCliente == null)
-                    {
-                        doc.ID_PROVEEDOR = "";
-                    }
-                    else
-                    {
-                        doc.ID_PROVEEDOR = (existeCliente.PROVEEDOR_ID == null ? "" : existeCliente.PROVEEDOR_ID);
-                    }
+                    doc.ID_PROVEEDOR = existeCliente == null?"": (existeCliente.PROVEEDOR_ID ?? "");                 
                 }
                 doc.ID_PROVEEDOR = Completa(doc.ID_PROVEEDOR, 10);
+                cl.ID_PROVEEDOR = doc.ID_PROVEEDOR.Replace(" ", "");
+                cl.ID_PROVEEDORX = !(!string.IsNullOrEmpty(cl.ID_PROVEEDOR) && !db.PROVEEDORs.Any(x => x.ID == cl.ID_PROVEEDOR));
+                if (!cl.ID_PROVEEDORX)
+                {
+                    cl.ID_PROVEEDOR = cl.ID_PROVEEDOR + "?";
+                    messa = messa + cont + ". Error en el vendor<br/>";
+                    cont++;
+                }
+                
                 //Banner
-
                 if (!String.IsNullOrEmpty(dt.Rows[i][13].ToString()))
-                //if(string.IsNullOrEmpty(dt.Rows[i][13] == null ? "" : dt.Rows[i][13].ToString()))
                 {
                     doc.BANNER = dt.Rows[i][13].ToString();
                 }
                 else
                 {
-                    if (existeCliente == null)
-                    {
-                        doc.BANNER = "";
-                    }
-                    else
-                    {
-                        doc.BANNER = (existeCliente.BANNER == null ? "" : existeCliente.BANNER);
-                    }
+                    doc.BANNER = existeCliente == null?"": (existeCliente.BANNER ?? "");
                 }
                 doc.BANNER = Completa(doc.BANNER, 10);
+                cl.BANNER = doc.BANNER.Replace(" ", "");
+
                 //Banner Agrupador
                 if (!String.IsNullOrEmpty(dt.Rows[i][14].ToString()))
-                //if (string.IsNullOrEmpty(dt.Rows[i][14] == null ? "" : dt.Rows[i][14].ToString()))
                 {
                     doc.BANNERG = dt.Rows[i][14].ToString();
                 }
                 else
                 {
-                    if (existeCliente == null)
-                    {
-                        doc.BANNERG = "";
-                    }
-                    else
-                    {
-                        doc.BANNERG = (existeCliente.BANNERG == null ? "" : existeCliente.BANNERG);
-                    }
+                    doc.BANNERG = existeCliente == null?"": (existeCliente.BANNERG ?? "");
                 }
                 doc.BANNERG = Completa(doc.BANNERG, 10);
+                cl.BANNERG = doc.BANNERG.Replace(" ", "");
 
-                //Canal
-                //if (string.IsNullOrEmpty(dt.Rows[i][15] == null ? "" : dt.Rows[i][15].ToString()))
+                ////-------------------------------CANAL
                 if (!String.IsNullOrEmpty(dt.Rows[i][15].ToString()))
                 {
                     doc.CANAL = dt.Rows[i][15].ToString();
                 }
                 else
                 {
-                    if (existeCliente == null)
-                    {
-                        doc.CANAL = "";
-                    }
-                    else
-                    {
-                        doc.CANAL = (existeCliente.CANAL == null ? "" : existeCliente.CANAL);
-                    }
+                    doc.CANAL = existeCliente == null?"": (existeCliente.CANAL ?? "");      
                 }
+                cl.CANAL = doc.CANAL.Replace(" ", "");
+                cl.CANALX = !(!string.IsNullOrEmpty(cl.CANAL) && !db.CANALs.Any(x => x.CANAL1 == cl.CANAL));
+                if (!cl.CANALX)
+                {
+                    cl.CANAL = cl.CANAL + "?";
+                    messa = messa + cont + ". Error en el canal<br/>";
+                }
+
                 //EXPORTACION
                 if (!String.IsNullOrEmpty(dt.Rows[i][16].ToString()))
-                //if (string.IsNullOrEmpty(dt.Rows[i][16] == null ? "" : dt.Rows[i][16].ToString()))
                 {
                     doc.EXPORTACION = dt.Rows[i][16].ToString();
                 }
                 else
                 {
-                    if (existeCliente == null)
-                    {
-                        doc.EXPORTACION = "";
-                    }
-                    else
-                    {
-                        doc.EXPORTACION = (existeCliente.EXPORTACION == null ? "" : existeCliente.EXPORTACION);
-                    }
+                    doc.EXPORTACION = existeCliente == null?"": (existeCliente.EXPORTACION ?? "");
                 }
-                //CONTACTO
-                doc.CONTACTO = (dt.Rows[i][17] != null ? dt.Rows[i][17].ToString().ToUpper() : null);
-                //Contacto Emal
-               
-                doc.CONTACTOE = (dt.Rows[i][18]!= null ? dt.Rows[i][18].ToString().ToUpper() : null);
+                cl.EXPORTACION = doc.EXPORTACION.Replace(" ", "");
 
+                //CONTACTO
+                doc.CONTACTO = (dt.Rows[i][17]?.ToString().ToUpper());
+                cl.CONTACTO = doc.CONTACTO;
+
+                ////-------------------------------EMAIL
+                doc.CONTACTOE = dt.Rows[i][18]?.ToString().ToUpper();
+                cl.CONTACTOE = doc.CONTACTOE.Replace(" ", "");
+                cl.CONTACTOEX = ComprobarEmail(cl.CONTACTOE);
+                if (!cl.CONTACTOEX)
+                {
+                    cl.CONTACTOE = cl.CONTACTOE + "?";
+                    messa = messa + cont + ". Error en el correo<br/>";
+                }
 
                 ld.Add(doc);
                 pos++;
+
+                doc.MESS = messa;
+                cl.MESS = doc.MESS;
+                if (string.IsNullOrEmpty(messa))
+                {
+                    cc.Add(cl);
+                }
+                else
+                {
+                    ccErr.Add(cl);
+                }
             }
-            return ld;
-        }
+           
+
+            ccErr.AddRange(cc);
+            return ccErr;
+            
+        }*/
 
         private List<DET_AGENTE1> ObjAList2(string[,] dt, int rowsc)
         {
@@ -1716,9 +1689,28 @@ namespace TAT001.Controllers.Catalogos
             JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
             return cc;
         }
-        
 
-       
-        
+        bool ComprobarEmail(string email)
+        {
+            String sFormato;
+            sFormato = "\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*";
+            if (Regex.IsMatch(email, sFormato))
+            {
+                if (Regex.Replace(email, sFormato, String.Empty).Length == 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+
     }
 }
