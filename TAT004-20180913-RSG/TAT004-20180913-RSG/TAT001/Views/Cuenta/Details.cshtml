@@ -15,18 +15,6 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-
-    @*<div class="row">
-            <div class="row" style="height:10px;width:100%;">
-                <div class="col l7 pink darken-1" style="height:10px;padding:0;"></div>
-                <div class="col l3 pink darken-4" style="height:10px;padding:0;">
-                    <div class="col l3 pink darken-4" style="height:10px;padding:0;"></div>
-                    <div class="col l8 orange" style="height:10px;padding:0;"></div>
-                    <div class="col l1 red" style="height:10px;padding:0;"></div>
-                </div>
-                <div class="col l2 yellow" style="height:10px;padding:0;"></div>
-            </div>
-        </div>*@
     <div class="card-panel">
         <div class="row">
             <div class="col s6 m6 l6">
@@ -45,7 +33,7 @@
                     </div>
 
                     <div class="input-field col l10 m10" style="margin-bottom:0;">
-                        @Html.EditorFor(model => model.EJERCICIO, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.Editor("EJERCICIO", new { htmlAttributes = new { @class = "form-control", @readonly = "readonly",@Value=Convert.ToInt16(Model.EJERCICIO) } })
                         @Html.LabelFor(model => model.EJERCICIO, htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_ejercicio" })
                     </div>
                 </div>
