@@ -455,7 +455,7 @@ namespace TAT001.Controllers
                 spras = "ES";
             }
             List<CSP_DOCUMENTOSXUSER2_Result> dOCUMENTOes = db.CSP_DOCUMENTOSXUSER2(usu, spras).ToList();
-            //dOCUMENTOes = dOCUMENTOes.Where(x => x.ESTATUS == "N" & x.ESTATUS_WF_USER == "P");
+            //dOCUMENTOes = dOCUMENTOes.Where(x => x.ESTATUS == "N" & x.ESTATUS_WF_USER == "P").ToList();
 
             //string pathReplace = "";
             //string[] pathReplaceArr;
