@@ -339,7 +339,7 @@ function creart(metodo, datos, indx) {
                
                 if (metodo === "Comprobar") {
                     //$('#table').DataTable().destroy();
-                    $('#table tbody tr')[indx]=data;
+                    $('#table tbody tr').get(0).outerHTML=data;
                 } else {
                     table.clear().draw();
                     $('#table').DataTable().destroy();
