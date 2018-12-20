@@ -26,7 +26,6 @@ using TAT001.Filters;
 namespace TAT001.Controllers
 {
     [Authorize]//ADD RSG 29.10.2018
-    [LoginActive]
     public class MasivaController : Controller
     {
         private TAT001Entities db = new TAT001Entities();
@@ -34,8 +33,7 @@ namespace TAT001.Controllers
         private Calendario445 cal445 = new Calendario445();
         private TCambio tcambio = new TCambio();
         private Cadena cad = new Cadena();
-        private UsuarioLogin usuValidateLogin = new UsuarioLogin();
-
+        readonly UsuarioLogin usuValidateLogin = new UsuarioLogin();
 
         //------------------DAO------------------------------
         readonly TallsDao tallsDao = new TallsDao();
@@ -44,6 +42,8 @@ namespace TAT001.Controllers
         readonly MaterialesgptDao materialesgptDao = new MaterialesgptDao();
 
         // GET: Masiva
+
+        [LoginActive]
         public ActionResult Index(string mensaje)
         {
             int pagina = 221; //ID EN BASE DE DATOS
@@ -132,6 +132,15 @@ namespace TAT001.Controllers
 
         public ActionResult loadExcelMasiva()
         {
+            if (!usuValidateLogin.validaUsuario(User.Identity.Name))
+            {
+                FormsAuthentication.SignOut();
+                return Json(new
+                {
+                    redirectUrl = Url.Action("Index", "Home"),
+                    isRedirect = true
+                }, JsonRequestBehavior.AllowGet);
+            }
 
             if (Request.Files.Count > 0)
             {
@@ -180,6 +189,15 @@ namespace TAT001.Controllers
 
         public JsonResult validaHoja1()
         {
+            if (!usuValidateLogin.validaUsuario(User.Identity.Name))
+            {
+                FormsAuthentication.SignOut();
+                return Json(new
+                {
+                    redirectUrl = Url.Action("Index", "Home"),
+                    isRedirect = true
+                }, JsonRequestBehavior.AllowGet);
+            }
             DataSet ds1 = (DataSet)Session["ds1"];
             List<object> lp = new List<object>();
             List<object> validacion = new List<object>();
@@ -328,6 +346,15 @@ namespace TAT001.Controllers
 
         public JsonResult validaHoja2()
         {
+            if (!usuValidateLogin.validaUsuario(User.Identity.Name))
+            {
+                FormsAuthentication.SignOut();
+                return Json(new
+                {
+                    redirectUrl = Url.Action("Index", "Home"),
+                    isRedirect = true
+                }, JsonRequestBehavior.AllowGet);
+            }
             DataSet ds2 = (DataSet)Session["ds2"];
             List<object> lp = new List<object>();
             List<object> general = new List<object>();
@@ -502,6 +529,15 @@ namespace TAT001.Controllers
 
         public JsonResult validaHoja3()
         {
+            if (!usuValidateLogin.validaUsuario(User.Identity.Name))
+            {
+                FormsAuthentication.SignOut();
+                return Json(new
+                {
+                    redirectUrl = Url.Action("Index", "Home"),
+                    isRedirect = true
+                }, JsonRequestBehavior.AllowGet);
+            }
             DataSet ds1 = (DataSet)Session["ds1"];
             DataSet ds3 = (DataSet)Session["ds3"];
             List<object> lp = new List<object>();
@@ -589,7 +625,16 @@ namespace TAT001.Controllers
         }
 
         public JsonResult validaHoja4()
-        {  
+        {
+            if (!usuValidateLogin.validaUsuario(User.Identity.Name))
+            {
+                FormsAuthentication.SignOut();
+                return Json(new
+                {
+                    redirectUrl = Url.Action("Index", "Home"),
+                    isRedirect = true
+                }, JsonRequestBehavior.AllowGet);
+            }
             DataSet ds1 = (DataSet)Session["ds1"];
             DataSet ds4 = (DataSet)Session["ds4"];
             List<object> ld = new List<object>();
@@ -835,6 +880,15 @@ namespace TAT001.Controllers
 
         public JsonResult validaHoja5()
         {
+            if (!usuValidateLogin.validaUsuario(User.Identity.Name))
+            {
+                FormsAuthentication.SignOut();
+                return Json(new
+                {
+                    redirectUrl = Url.Action("Index", "Home"),
+                    isRedirect = true
+                }, JsonRequestBehavior.AllowGet);
+            }
             string idioma = FnCommon.ObtenerSprasId(db, User.Identity.Name);
             DataSet ds5 = (DataSet)Session["ds1"];
             List<object> la = new List<object>();
@@ -1802,7 +1856,7 @@ namespace TAT001.Controllers
                             }
                             else
                             {
-                                regresaRowH2.Add("red white-text rojo");
+                                regresaRowH2.Add("red white-text rojo | Proveedor no encontrado");
                             }
                         }
                         else
@@ -2866,6 +2920,15 @@ namespace TAT001.Controllers
 
         public JsonResult setArchivos()
         {
+            if (!usuValidateLogin.validaUsuario(User.Identity.Name))
+            {
+                FormsAuthentication.SignOut();
+                return Json(new
+                {
+                    redirectUrl = Url.Action("Index", "Home"),
+                    isRedirect = true
+                }, JsonRequestBehavior.AllowGet);
+            }
             bool c;
             HttpPostedFileBase[] archivosArr = new HttpPostedFileBase[Request.Files.Count];
 
@@ -2892,6 +2955,16 @@ namespace TAT001.Controllers
 
         public JsonResult setDatos(List<object> h1, List<object> h2, List<object> h3, List<object> h4, List<object> h5, List<object> notas)
         {
+            if (!usuValidateLogin.validaUsuario(User.Identity.Name))
+            {
+                FormsAuthentication.SignOut();
+                return Json(new
+                {
+                    redirectUrl = Url.Action("Index", "Home"),
+                    isRedirect = true
+                }, JsonRequestBehavior.AllowGet);
+            }
+
             DataTable dtt = ConvertToDatatable(h1, "h1");
             DataTable dtt2 = ConvertToDatatable(h2, "h2");
             DataTable dtt3 = ConvertToDatatable(h3, "h3");
@@ -3551,36 +3624,11 @@ namespace TAT001.Controllers
                                         {
                                             tipo = clasefile.ToUpper().Substring(0, 3);
                                             //VERIFICAMOS EL TIPO DE SOPORTE
-                                            if (tipo == "FAC")
-                                            {
-                                                var exist = docupA.Where(x => x.NUM_DOC == Convert.ToDecimal(num_docH5) & x.CLASE == tipo).FirstOrDefault();
 
-                                                //SI YA EXISTE UN TIPO DE SOPORTE FACTURA NO INSERTAMOS UNO NUEVO
-                                                if (exist == null)
-                                                {
-                                                    DOCUMENTOA doc = new DOCUMENTOA();
-                                                    doc.NUM_DOC = Convert.ToInt32(num_docH5);
-                                                    doc.POS = l;
-                                                    doc.TIPO = Path.GetExtension(nombre_archivoInList).Replace(".", "");
-                                                    try
-                                                    {
-                                                        doc.CLASE = clasefile.ToUpper().Substring(0, 3);
-                                                    }
-                                                    catch (Exception e)
-                                                    {
-                                                        doc.CLASE = "";
-                                                    }
+                                            var exist = docupA.Where(x => x.NUM_DOC == Convert.ToDecimal(num_docH5) && x.CLASE == tipo).FirstOrDefault();
 
-                                                    doc.STEP_WF = 1;
-                                                    doc.USUARIO_ID = u;
-                                                    doc.PATH = nombre_archivoInList;
-                                                    doc.ACTIVO = true;
-
-                                                    docupA.Add(doc);
-                                                    listaArchivos.Add(file);
-                                                }
-                                            }
-                                            else
+                                            //SI YA EXISTE UN TIPO DE SOPORTE FACTURA NO INSERTAMOS UNO NUEVO
+                                            if (exist == null)
                                             {
                                                 DOCUMENTOA doc = new DOCUMENTOA();
                                                 doc.NUM_DOC = Convert.ToInt32(num_docH5);
@@ -4793,6 +4841,16 @@ namespace TAT001.Controllers
         [HttpPost]
         public JsonResult DescargarExcel(List<object> h1, List<object> h2, List<object> h3, List<object> h4)
         {
+            if (!usuValidateLogin.validaUsuario(User.Identity.Name))
+            {
+                FormsAuthentication.SignOut();
+                return Json(new
+                {
+                    redirectUrl = Url.Action("Index", "Home"),
+                    isRedirect = true
+                }, JsonRequestBehavior.AllowGet);
+            }
+
             DataTable dtt = ConvertToDatatable(h1, "h1");
             DataTable dtt2 = ConvertToDatatable(h2, "h2");
             DataTable dtt3 = ConvertToDatatable(h3, "h3");

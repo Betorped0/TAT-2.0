@@ -524,11 +524,11 @@
                                 <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
                                     <td>
                                         <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.relPeriodo</label>
-                                        @Html.EditorFor(model => model.PERIODO, new { htmlAttributes = new { @disabled = "disabled", @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; " } })
+                                        @Html.EditorFor(model => model.PERIODO, new { htmlAttributes = new { @disabled = "disabled", @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0;" } })
                                     </td>
                                     <td>
                                         <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.relEjercicio</label>
-                                        @Html.EditorFor(model => model.EJERCICIO, new { htmlAttributes = new { @disabled = "disabled", @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; ", @Value = Model.USUARIO.NOMBRE, Model.USUARIO.APELLIDO_P, Model.USUARIO.APELLIDO_M } })
+                                        @Html.EditorFor(model => model.EJERCICIO, new { htmlAttributes = new { @disabled = "disabled", @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0;" } })
                                     </td>
                                 </tr>
 
@@ -547,19 +547,6 @@
 
                                 <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
                                     <td>
-                                        <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.cliente</label>
-                                        @*@Html.LabelFor(model => model.PAYER_ID, ViewBag.cliente, new { @style = "    color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })*@
-                                        @Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @disabled = "disabled", @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0;" } })
-                                    </td>
-                                    <td>
-                                        <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.clienteNombre</label>
-                                        @*@Html.LabelFor(model => model.PAYER_NOMBRE, ViewBag.clienteNombre, new { @style = "    color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })*@
-                                        @Html.EditorFor(model => model.CLIENTE.NAME1, new { htmlAttributes = new { @disabled = "disabled", @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0;" } })
-                                    </td>
-                                </tr>
-
-                                <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
-                                    <td>
                                         <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.concepto</label>
                                         @*@Html.LabelFor(model => model.CONCEPTO, @ViewBag.concepto, new { @style = "color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })*@
                                         @Html.EditorFor(model => model.CONCEPTO, new { htmlAttributes = new { @disabled = "disabled", @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; " } })
@@ -567,7 +554,20 @@
                                     <td>
                                         <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.montoDoc</label>
                                         @*@Html.LabelFor(model => model.MONTO_DOC_MD, @ViewBag.montoDoc, new { @style = "    color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })*@
-                                        <input type="text" disabled="disabled" style="color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0;" value="@ViewBag.monto" />
+                                        <input type="text" disabled="disabled" style="color:rgba(0, 0, 0, 1.0); background-color:transparent; border:none; border-bottom:1px dotted rgba(0, 0, 0, 1.0); border-radius:0; outline:none; height:30px; width:100%; margin:0 0 8px 0; padding:0; font-weight:bold;" value="@ViewBag.monto" />
+                                    </td>
+                                </tr>
+
+                                <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                    <td>
+                                        <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.cliente</label>
+                                        @*@Html.LabelFor(model => model.PAYER_ID, ViewBag.cliente, new { @style = "    color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })*@
+                                        @Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @disabled = "disabled", @style = "color:rgba(0, 0, 0, 1.0); background-color:transparent; border:none; border-bottom:1px dotted rgba(0, 0, 0, 1.0); border-radius:0; outline:none; height:30px; width:100%; margin:0 0 8px 0; padding:0; font-weight:bold;" } })
+                                    </td>
+                                    <td>
+                                        <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.clienteNombre</label>
+                                        @*@Html.LabelFor(model => model.PAYER_NOMBRE, ViewBag.clienteNombre, new { @style = "    color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })*@
+                                        @Html.EditorFor(model => model.CLIENTE.NAME1, new { htmlAttributes = new { @disabled = "disabled", @style = "color:rgba(0, 0, 0, 1.0); background-color:transparent; border:none; border-bottom:1px dotted rgba(0, 0, 0, 1.0); border-radius:0; outline:none; height:30px; width:100%; margin:0 0 8px 0; padding:0; font-weight:bold;" } })
                                     </td>
                                 </tr>
                             </table>
@@ -580,18 +580,18 @@
                                 padding: 24px;margin: 0.5rem 0 1rem 0;border-radius: 2px;
                                 background-color:#fff;box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);">
 
-                        <h5 style="font-size:20px;margin:5px;">@ViewBag.headReverso</h5>
+                        @*<h5 style="font-size:20px;margin:5px;">@ViewBag.headReverso</h5>*@
 
                         <div class="row" style="margin-bottom:0">
                             <table class="tg" style="width: 100%;border-collapse: collapse;">
                                 <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
-                                    <td>
-                                        <span>@ViewBag.razonReverso</span>
-                                    </td>
-                                    <td style="text-align:right">
-                                        <label id="p_vtweg" style="font-weight:bold;">@Model.DOCUMENTOR.COMENTARIO</label>
-                                    </td>
-                                </tr>
+                                        <td>
+                                            <span>@ViewBag.razonReverso</span>
+                                        </td>
+                                        <td style="text-align:right">
+                                            <label id="p_vtweg" style="font-weight:bold;">@Model.DOCUMENTOR.COMENTARIO</label>
+                                        </td>
+                                    </tr>
                                 <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
                                     <td class="tg-yw4l">
                                         <span>@ViewBag.tipoReverso</span>
@@ -674,103 +674,9 @@
             </tr>
 
             <tr>
-                @using (TAT001Entities db = new TAT001Entities())
-                {
-                    List
-                    <DOCUMENTO> inf = new List<DOCUMENTO>();
-                    inf = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == Model.NUM_DOC).ToList();
-                    if (Model.DOCUMENTO_REF != null)
-                    {
-                        <td style="width:50%;padding:5px;vertical-align:baseline;">
-                            <div class="card-panel" style="transition: box-shadow .25s, -webkit-box-shadow .25s;
-                                padding: 24px;margin: 0.5rem 0 1rem 0;border-radius: 2px;
-                                background-color:#fff;box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);">
-                                <h5 style="font-size:20px;margin:5px;">@ViewBag.relacionados</h5>
-
-                                <div class="row" style="margin-bottom:0">
-                                    <table class="table striped" id="table" style="width:100%;">
-                                        <thead>
-                                            <tr class="header">
-                                                <th>
-                                                    <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.relTipo</label>
-                                                    @*@Html.LabelFor(model => model.TSOL_ID, ViewBag.relTipo)*@
-                                                </th>
-                                                <th>
-                                                    <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.relDocumento</label>
-                                                    @*@Html.LabelFor(model => model.NUM_DOC, ViewBag.relDocumento)*@
-                                                </th>
-                                                <th>
-                                                    <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.relSap</label>
-                                                    @*@Html.LabelFor(model => model.DOCUMENTO_SAP, @ViewBag.relSap)*@
-                                                </th>
-                                                <th>
-                                                    <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.relSociedad</label>
-                                                    @*@Html.LabelFor(model => model.SOCIEDAD_ID, @ViewBag.relSociedad)*@
-                                                </th>
-                                                <th>
-                                                    <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.relPeriodo</label>
-                                                    @*@Html.LabelFor(model => model.PERIODO, @ViewBag.relPeriodo)*@
-                                                </th>
-                                                <th>
-                                                    <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.relEjercicio</label>
-                                                    @*@Html.LabelFor(model => model.EJERCICIO, ViewBag.relEjercicio)*@
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody style="text-align:center;">
-                                            <tr rowspan=2>
-                                                <td>
-                                                    @Model.TSOL.TSOLTs.Where(x => x.SPRAS_ID == "ES").FirstOrDefault().TXT010
-                                                </td>
-                                                <td>
-                                                    @Model.NUM_DOC
-                                                </td>
-                                                <td>
-                                                    @Model.DOCUMENTO_SAP
-                                                </td>
-                                                <td>
-                                                    @Model.SOCIEDAD_ID
-                                                </td>
-                                                <td>
-                                                    @Model.PERIODO
-                                                </td>
-                                                <td>
-                                                    @Model.EJERCICIO
-                                                </td>
-                                            </tr>
-                                            @if (inf.Count() > 0)
-                                            {
-                                                foreach (var miCi in inf)
-                                                {
-                                                    <tr>
-                                                        <td>
-                                                            @miCi.TSOL.TSOLTs.Where(x => x.SPRAS_ID == ViewBag.spras_id).FirstOrDefault().TXT010
-                                                        </td>
-                                                        <td>
-                                                            <a href="@Url.Action("Details", new { id = miCi.NUM_DOC })">@miCi.NUM_DOC</a>
-                                                        </td>
-                                                        <td>
-                                                            @miCi.DOCUMENTO_SAP
-                                                        </td>
-                                                        <td>
-                                                            @miCi.SOCIEDAD_ID
-                                                        </td>
-                                                        <td>
-                                                            @miCi.PERIODO
-                                                        </td>
-                                                        <td>
-                                                            @miCi.EJERCICIO
-                                                        </td>
-                                                    </tr>
-                                                }
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </td>
-                    }
-                }
+                <td>
+                    <input type="text" style="outline:none; height:30px; width:100%; display:none;" value="@ViewBag.monto" />
+                </td>
 
                 <td>
                     <div class="card-panel" style="transition: box-shadow .25s, -webkit-box-shadow .25s;
@@ -825,7 +731,7 @@
                                         </td>
                                         <td></td>
                                     </tr>
-                                    <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                    <tr style="border-bottom: 1px solid #e0e0e0; height:35px;">
                                         <td class="tg-yw4l" colspan="2">
                                             <label>Por registrar en SAP</label>
                                         </td>
@@ -866,6 +772,102 @@
                                 </table>
                             </div>
                         </div>
+
+                        @using (TAT001Entities db = new TAT001Entities())
+                        {
+                            List
+                            <DOCUMENTO> inf = new List<DOCUMENTO>();
+                            inf = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == Model.NUM_DOC).ToList();
+                            if (Model.DOCUMENTO_REF != null)
+                            {
+                                <div class="card-panel" style="transition: box-shadow .25s, -webkit-box-shadow .25s;
+                                padding: 24px;margin: 0.5rem 0 1rem 0;border-radius: 2px;
+                                background-color:#fff;box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);">
+                                    <h5 style="font-size:20px;margin:5px;">@ViewBag.relacionados</h5>
+
+                                    <div class="row" style="margin-bottom:0">
+                                        <table class="table striped" id="table" style="width:100%;">
+                                            <thead>
+                                                <tr class="header">
+                                                    <th>
+                                                        <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.relTipo</label>
+                                                        @*@Html.LabelFor(model => model.TSOL_ID, ViewBag.relTipo)*@
+                                                    </th>
+                                                    <th>
+                                                        <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.relDocumento</label>
+                                                        @*@Html.LabelFor(model => model.NUM_DOC, ViewBag.relDocumento)*@
+                                                    </th>
+                                                    <th>
+                                                        <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.relSap</label>
+                                                        @*@Html.LabelFor(model => model.DOCUMENTO_SAP, @ViewBag.relSap)*@
+                                                    </th>
+                                                    <th>
+                                                        <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.relSociedad</label>
+                                                        @*@Html.LabelFor(model => model.SOCIEDAD_ID, @ViewBag.relSociedad)*@
+                                                    </th>
+                                                    <th>
+                                                        <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.relPeriodo</label>
+                                                        @*@Html.LabelFor(model => model.PERIODO, @ViewBag.relPeriodo)*@
+                                                    </th>
+                                                    <th>
+                                                        <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.relEjercicio</label>
+                                                        @*@Html.LabelFor(model => model.EJERCICIO, ViewBag.relEjercicio)*@
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody style="text-align:center;">
+                                                <tr rowspan=2>
+                                                    <td>
+                                                        @Model.TSOL.TSOLTs.Where(x => x.SPRAS_ID == "ES").FirstOrDefault().TXT010
+                                                    </td>
+                                                    <td>
+                                                        @Model.NUM_DOC
+                                                    </td>
+                                                    <td>
+                                                        @Model.DOCUMENTO_SAP
+                                                    </td>
+                                                    <td>
+                                                        @Model.SOCIEDAD_ID
+                                                    </td>
+                                                    <td>
+                                                        @Model.PERIODO
+                                                    </td>
+                                                    <td>
+                                                        @Model.EJERCICIO
+                                                    </td>
+                                                </tr>
+                                                @if (inf.Count() > 0)
+                                                {
+                                                    foreach (var miCi in inf)
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                @miCi.TSOL.TSOLTs.Where(x => x.SPRAS_ID == ViewBag.spras_id).FirstOrDefault().TXT010
+                                                            </td>
+                                                            <td>
+                                                                <a href="@Url.Action("Details", new { id = miCi.NUM_DOC })">@miCi.NUM_DOC</a>
+                                                            </td>
+                                                            <td>
+                                                                @miCi.DOCUMENTO_SAP
+                                                            </td>
+                                                            <td>
+                                                                @miCi.SOCIEDAD_ID
+                                                            </td>
+                                                            <td>
+                                                                @miCi.PERIODO
+                                                            </td>
+                                                            <td>
+                                                                @miCi.EJERCICIO
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            }
+                        }
                     </div>
                 </td>
             </tr>

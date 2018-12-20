@@ -1,7 +1,6 @@
 ﻿@model TAT001.Models.Cliente
 
 @{
-    //ViewBag.Title = "Carga de clientes";
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.pagina_r = 631;
     ViewBag.carpeta_r = 500;
@@ -53,6 +52,7 @@
             <div class="file-path-wrapper">
                 <input class="file-path validate" type="text">
             </div>
+            *Máximo 2,000 Registros
         </div>
     </div>
     <div class="row">
@@ -72,7 +72,7 @@
                                 <th id="thead_cocode">CoCode</th>
                                 <th id="thead_pais">País</th>
                                 <th id="thead_cliente">Cliente</th>
-                                <th id="thead_nombre_cliente">Nombre cliente</th>
+                                <th id="thead_nombre_cliente" style="text-align: left;">Nombre cliente</th>
                                 <th id="thead_nivel0">Nivel 0</th>
                                 <th id="thead_nivel1">Nivel 1</th>
                                 <th id="thead_nivel2">Nivel 2</th>
@@ -86,9 +86,9 @@
                                 <th id="thead_banner_agrupador">Banner Agrupador</th>
                                 <th id="thead_canal">Canal</th>
                                 <th id="thead_exportador">Exportacion</th>
-                                <th id="thead_contacto">Contacto</th>
-                                <th id="thead_email_contacto">Email Contacto</th>
-                                <th id="thead_mensaje">Mensaje</th>
+                                <th id="thead_contacto" style="text-align: left;">Contacto</th>
+                                <th id="thead_email_contacto" style="text-align: left;">Email Contacto</th>
+                                <th id="thead_mensaje" style="text-align: left;">Mensaje</th>
                             </tr>
                         </thead>
                         <tbody>

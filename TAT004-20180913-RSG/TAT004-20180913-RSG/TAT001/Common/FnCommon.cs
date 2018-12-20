@@ -471,7 +471,8 @@ namespace TAT001.Common
         {
             decimal impuesto = 0.0M;
             string[] tsolImp = new string[] { "NC", "NCA", "NCAS", "NCAM", "NCASM", "NCS", "NCI", "NCIA", "NCIAS", "NCIS" };
-            string pais_id = db.SOCIEDADs.Find(D.SOCIEDAD_ID).LAND;
+            //string pais_id = db.SOCIEDADs.Find(D.SOCIEDAD_ID).LAND;
+            string pais_id = D.PAIS_ID;
             if (tsolImp.Contains(D.TSOL_ID))
             {
                 decimal KBETR;
