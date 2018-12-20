@@ -40,8 +40,8 @@ namespace TAT001.Controllers
         // GET: Cuenta/Details/5
         public ActionResult Details(string soc, string pai, string tal, int? eje)
         {
-            int pagina = 693; //ID EN BASE DE DATOS
-            FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
+            int pagina = 694; //ID EN BASE DE DATOS
+            FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller,693);
             try
             {
                 string p = Session["pais"].ToString();

@@ -23,20 +23,9 @@ namespace TAT001.Controllers.Catalogos
         public ActionResult Index()
         {
             int pagina = 790; //ID EN BASE DE DATOS
-            USUARIO user = null;
-            using (TAT001Entities db = new TAT001Entities())
-            {
-                string u = User.Identity.Name;
-                //string u = "admin";
-                user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user; ViewBag.returnUrl = Request.Url.PathAndQuery;
-                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(790) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-
+            FnCommon.ObtenerConfPage(db, pagina, User.Identity.Name, this.ControllerContext.Controller);
+            string u = User.Identity.Name;
+            USUARIO user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();           
                 try
                 {
                     string p = Session["pais"].ToString();
@@ -49,8 +38,8 @@ namespace TAT001.Controllers.Catalogos
                 }
                 Session["spras"] = user.SPRAS_ID;
                 ViewBag.lan = user.SPRAS_ID;
-            }
-            var tSOLs = db.TSOLs.Include(t => t.RANGO).Include(t => t.TSOL2).Include(x => x.TSOLTs).Where(x=>x.ACTIVO == true).ToList();
+
+            var tSOLs = db.TSOLs.Include(t => t.RANGO).Include(t => t.TSOL2).Include(x => x.TSOLTs).ToList();
             return View(tSOLs);
         }
 

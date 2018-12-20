@@ -53,6 +53,7 @@
                 <th id="lblRangoId">
                     @Html.DisplayNameFor(model => model.TSOL2.DESCRIPCION)
                 </th>
+                <th class="lblObliga"></th>
                 <th></th>
             </tr>
         </thead>
@@ -79,6 +80,12 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.RANGO.ID)
                 </td>
+                @if ((bool)item.ACTIVO == true)
+                {
+                    <td style="align-items:center"><i class='material-icons green-text'>check</i></td>}
+                else
+                {
+                    <td style="align-items:center;"><i class='material-icons red-text'>clear</i></td>}
                 <td>
                     <a data-form-method="post" href="@Url.Action("Edit", "TSol", new { id = item.ID })">
                         <i class='material-icons green-text'>edit</i>
