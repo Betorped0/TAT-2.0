@@ -408,8 +408,8 @@ namespace TAT001.Controllers.Catalogos
                     TypeName = "dbo.ClientesTableType"
                 };
                 db.Database.CommandTimeout = 6000;
-                clientes = db.Database.SqlQuery<Clientes>("CSP_MASIVA_CLIENTES @CLIENTES",
-                param).ToList();
+                clientes = db.Database.SqlQuery<Clientes>("CSP_MASIVA_CLIENTES @ACCION,@CLIENTES",
+                new SqlParameter("@ACCION", TATConstantes.ACCION_MASIVA_CLIENTES_PROCESAR),param).ToList();
 
                 reader.Close();
             }
@@ -431,7 +431,6 @@ namespace TAT001.Controllers.Catalogos
                     isRedirect = true
                 });
             }
-            List<DET_AGENTE1> ld = new List<DET_AGENTE1>();
 
             var coc = Request["coc"].Split(',');
             var pai = Request["pai"].Split(',');
@@ -523,102 +522,51 @@ namespace TAT001.Controllers.Catalogos
                 tablas[i, 19] = mes[i];
             }
 
-            ld = ObjAList2(tablas, rows);
-            int cont = 0;
+            List<DET_AGENTE1>  ld = ObjAList2(tablas, rows);
 
-            foreach (DET_AGENTE1 da in ld)
-            {
-                CLIENTEF cl = new CLIENTEF();
+            DataTable dtClientes = new DataTable("Clientes");
 
-                if (da.MESS == null || da.MESS == "")
-                {
-                    ////Agregar a CLIENTEF
-                    cl.VKORG = da.VKORG;
-                    cl.VTWEG = da.VTWEG;
-                    cl.SPART = da.SPART;
-                    cl.KUNNR = da.KUNNR;
-                    List<CLIENTEF> clientesF = db.CLIENTEFs.Where(x => x.KUNNR.Equals(cl.KUNNR)).ToList();
-                    CLIENTE cl1 = db.CLIENTEs.Where(x => x.KUNNR.Equals(cl.KUNNR)).FirstOrDefault();
-                    if (!clientesF.Any())
-                    {
-                        cl.VERSION = 1;
-                        cl.FECHAC = DateTime.Today;
-                        cl.FECHAM = null;
-                    }
-                    else
-                    {
-                        cl.VERSION = clientesF.Count + 1;
-                        cl.FECHAC = null;
-                        cl.FECHAM = DateTime.Today;
-                        //Actualizar a 0 Actiovo
-                        CLIENTEF clienteF = clientesF.FirstOrDefault(x=>x.ACTIVO);
-                        if (clienteF!=null) {
-                            clienteF.ACTIVO = false;
-                            db.Entry(clienteF).State = EntityState.Modified;
-                            db.SaveChanges();
-                        }
-                    }
-                    cl.USUARIO0_ID = (!string.IsNullOrEmpty(da.ID_US0) ?da.ID_US0.Trim():null);
-                    cl.USUARIO1_ID = (!string.IsNullOrEmpty(da.ID_US1) ? da.ID_US1.Trim() : null);
-                    cl.USUARIO2_ID = (!string.IsNullOrEmpty(da.ID_US2) ? da.ID_US2.Trim() : null);
-                    cl.USUARIO3_ID = (!string.IsNullOrEmpty(da.ID_US3) ? da.ID_US3.Trim() : null);
-                    cl.USUARIO4_ID = (!string.IsNullOrEmpty(da.ID_US4) ? da.ID_US4.Trim() : null);
-                    cl.USUARIO5_ID = (!string.IsNullOrEmpty(da.ID_US5) ? da.ID_US5.Trim() : null);
-                    cl.USUARIO6_ID = (!string.IsNullOrEmpty(da.ID_US6) ? da.ID_US6.Trim() : null);
-                    cl.USUARIO7_ID = (!string.IsNullOrEmpty(da.ID_US7) ? da.ID_US7.Trim() : null);
-                    cl.ACTIVO = true;
+            dtClientes.Columns.Add("BUKRS", typeof(String)); //--0
+            dtClientes.Columns.Add("LAND", typeof(String));  //--1
+            dtClientes.Columns.Add("KUNNR", typeof(String)); //--2
+            dtClientes.Columns.Add("VKORG", typeof(String));
+            dtClientes.Columns.Add("VTWEG", typeof(String));
+            dtClientes.Columns.Add("SPART", typeof(String));
+            dtClientes.Columns.Add("CLIENTE_N", typeof(String)); //--3
+            dtClientes.Columns.Add("ID_US0", typeof(String)); //--4
+            dtClientes.Columns.Add("ID_US1", typeof(String)); //--5
+            dtClientes.Columns.Add("ID_US2", typeof(String)); //--6
+            dtClientes.Columns.Add("ID_US3", typeof(String)); //--7
+            dtClientes.Columns.Add("ID_US4", typeof(String)); //--8
+            dtClientes.Columns.Add("ID_US5", typeof(String)); //--9
+            dtClientes.Columns.Add("ID_US6", typeof(String)); //--10
+            dtClientes.Columns.Add("ID_US7", typeof(String)); //--11
+            dtClientes.Columns.Add("ID_PROVEEDOR", typeof(String)); //--12
+            dtClientes.Columns.Add("BANNER", typeof(String)); //--13
+            dtClientes.Columns.Add("BANNERG", typeof(String)); //--14
+            dtClientes.Columns.Add("CANAL", typeof(String)); //--15
+            dtClientes.Columns.Add("EXPORTACION", typeof(String)); //--16
+            dtClientes.Columns.Add("CONTACTO", typeof(String)); //--17
+            dtClientes.Columns.Add("CONTACTOE", typeof(String)); //--18
+            dtClientes.Columns.Add("MESS", typeof(String));
 
-                    ////Modificar a CLIENTE
-                    cl1.NAME1 = (!string.IsNullOrEmpty(da.CLIENTE_N) ? da.CLIENTE_N.Trim() : cl1.NAME1);
-                    cl1.PROVEEDOR_ID = (!string.IsNullOrEmpty(da.ID_PROVEEDOR) ? da.ID_PROVEEDOR.Trim() : cl1.PROVEEDOR_ID);
-                    cl1.LAND = (!string.IsNullOrEmpty(da.LAND) ? da.LAND.Trim() : cl1.LAND);
-                    cl1.BANNER = (!string.IsNullOrEmpty(da.BANNER) ? da.BANNER.Trim() : cl1.BANNER);
-                    cl1.BANNERG = (!string.IsNullOrEmpty(da.BANNERG) ? da.BANNERG.Trim() : cl1.BANNERG);
-                    cl1.CANAL = (!string.IsNullOrEmpty(da.CANAL) ? da.CANAL.Trim() : cl1.CANAL);
-                    cl1.EXPORTACION = (!string.IsNullOrEmpty(da.EXPORTACION) ? da.EXPORTACION.Trim() : cl1.EXPORTACION);
-                    cl1.CONTAC = (!string.IsNullOrEmpty(da.CONTACTO) ? da.CONTACTO.Trim() : cl1.CONTAC);
-                    cl1.CONT_EMAIL = (!string.IsNullOrEmpty(da.CONTACTOE ) ? da.CONTACTOE.Trim() : cl1.CONT_EMAIL);
-                    db.Entry(cl1).State = EntityState.Modified;
-                    
-                    ////Agregar a contacto
-                    if (da.CONTACTO != null)
-                    {
-                        CONTACTOC co = new CONTACTOC();
-                        db.CONTACTOCs.Where(x => (x.DEFECTO != null && x.DEFECTO.Value) && x.VKORG == da.VKORG
-                        && x.SPART== da.SPART && x.KUNNR == da.KUNNR).ToList().ForEach(x=>
-                        {
-                            x.DEFECTO = false;
-                            db.Entry(x).State = EntityState.Modified;
-                        });
-                        if (!db.CONTACTOCs.Any(x=>x.EMAIL== (da.CONTACTOE != null ? da.CONTACTOE.Trim() : null) && x.NOMBRE== (da.CONTACTO != null ? da.CONTACTO.Trim() : null) && x.KUNNR==da.KUNNR))
-                        {
-                            co.NOMBRE = (!string.IsNullOrEmpty(da.CONTACTO) ? da.CONTACTO.Trim() : null);
-                            co.EMAIL = (!string.IsNullOrEmpty(da.CONTACTOE) ? da.CONTACTOE.Trim() : null);
-                            co.VKORG = da.VKORG;
-                            co.VTWEG = da.VTWEG;
-                            co.SPART = da.SPART;
-                            co.KUNNR = da.KUNNR;
-                            co.ACTIVO = true;
-                            co.DEFECTO = true;
-                            db.CONTACTOCs.Add(co);
-                        }
-                        else
-                        {
-                            co = db.CONTACTOCs.FirstOrDefault(x => x.EMAIL == da.CONTACTOE.Trim() && x.NOMBRE == da.CONTACTO.Trim() && x.KUNNR == da.KUNNR);
-                            co.DEFECTO = true;
-                            co.ACTIVO = true;
-                            db.Entry(co).State = EntityState.Modified;
-                        }
-
-                    }
-                    ////Guardar cambios en db
-                    db.CLIENTEFs.Add(cl);
-                    db.SaveChanges();
-                    cont++;
-                }
+            foreach (DET_AGENTE1 row in ld) {
+                
+                dtClientes.Rows.Add(new object[] {
+                        row.BUKRS, row.LAND, row.KUNNR,row.VKORG,row.VTWEG,row.SPART, row.CLIENTE_N,
+                        row.ID_US0, row.ID_US1,row.ID_US2,row.ID_US3, row.ID_US4,row.ID_US5, row.ID_US6,row.ID_US7,
+                        row.ID_PROVEEDOR, row.BANNER, row.BANNERG,row.CANAL, row.EXPORTACION, row.CONTACTO, row.CONTACTOE,""});
             }
 
-            JsonResult jl = Json(cont, JsonRequestBehavior.AllowGet);
+            SqlParameter param = new SqlParameter("@CLIENTES", dtClientes)
+            {
+                SqlDbType = SqlDbType.Structured,
+                TypeName = "dbo.ClientesTableType"
+            };
+            db.Database.ExecuteSqlCommand("CSP_MASIVA_CLIENTES @ACCION,@CLIENTES",
+            new SqlParameter("@ACCION", TATConstantes.ACCION_MASIVA_CLIENTES_GUARDAR), param);
+            
+            JsonResult jl = Json(ld.Count, JsonRequestBehavior.AllowGet);
             return jl;
         }
 
@@ -699,8 +647,8 @@ namespace TAT001.Controllers.Catalogos
                 SqlDbType = SqlDbType.Structured,
                 TypeName = "dbo.ClientesTableType"
             };
-            List<Clientes> clientes = db.Database.SqlQuery<Clientes>("CSP_MASIVA_CLIENTES @CLIENTES",
-            param).ToList();
+            List<Clientes> clientes = db.Database.SqlQuery<Clientes>("CSP_MASIVA_CLIENTES @ACCION,@CLIENTES",
+            new SqlParameter("@ACCION", TATConstantes.ACCION_MASIVA_CLIENTES_PROCESAR),param).ToList();
 
             return View("CargaList", clientes);
 

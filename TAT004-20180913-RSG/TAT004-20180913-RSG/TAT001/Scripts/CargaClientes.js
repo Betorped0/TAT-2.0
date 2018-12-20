@@ -245,8 +245,9 @@ function Carga() {
         mostrarAlerta("info", "E", "Seleccione un archivo");
 }
 
-function Comprobar(indx) {
-    var i = indx*20;
+function Comprobar(me) {
+    var indx = (me.parentNode.parentNode.rowIndex-1);
+    var i = indx * 20;
     habilitar();
     var datos = $('#tabla').serializeArray();
     var row = [
@@ -258,23 +259,23 @@ function Comprobar(indx) {
 function Borrar() {
     var rowNum = $('#table>tbody').find('.input_bor').length;
     var check = false;
+    var porBorrar = [];
     $('#table>tbody').find('.input_bor').each(function (indx, checkInput) {
         if (checkInput.checked) {
             check = checkInput.checked;
+            porBorrar.push({ value: indx});
         }
     });
     if (rowNum === 0 || !check) {
         return;
     }
     var table = $('#table').DataTable();
-    var rows = $('.input_bor').serializeArray();
-    for (var i = rows.length; i > 0; i--) {
-        var num = rows[i-1].value;
+    for (var i = porBorrar.length; i > 0; i--) {
+        var num = porBorrar[i-1].value;
         table.row(num).remove().draw();
     }
     rowNum = $('#table>tbody').find('.input_bor').length;
     if (rowNum >0) {
-        Comprobar();
         $('#idBorrar').attr('disabled', 'disabled');
     } else {
         Iniciar();
@@ -339,8 +340,7 @@ function creart(metodo, datos, indx) {
                 var table = $('#table').DataTable();
                
                 if (metodo === "Comprobar") {
-                    //$('#table').DataTable().destroy();
-                    $('#table tbody tr').get(0).outerHTML=data;
+                    $('#table tbody tr').get(indx).outerHTML=data;
                 } else {
                     table.clear().draw();
                     $('#table').DataTable().destroy();
