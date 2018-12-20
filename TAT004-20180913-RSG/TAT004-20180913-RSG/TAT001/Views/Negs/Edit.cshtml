@@ -50,7 +50,7 @@
                             </div>
                             <div class="input-field col s12">
                                 <i class="material-icons prefix">date_range</i>
-                                <input id="FINICIO" name="FINICIO" type="text" class="validate" required onkeyup="borrar(this);" value="@Model.FINICIO.ToString("dd/MM/yyyy")" />
+                                <input id="FINICIO" name="FINICIO" type="text" class="validate datepicker" required onkeyup="borrar(this);" value="@Model.FINICIO.ToString("dd/MM/yyyy")" />
                                 <label id="lblDesde" for="FINICIO">Desde</label>
                             </div>
 
@@ -64,7 +64,7 @@
                 <div class="row">
                     @*<h5>Semanal</h5>*@
                     <div class="input-field col s6">
-                        @Html.EditorFor(model=>model.FRECUENCIA_N, new { htmlAttributes=new { required = true, @type="number", min="1" } })
+                        @Html.EditorFor(model => model.FRECUENCIA_N, new { htmlAttributes = new { required = true, @type = "number", min = "1" } })
                         <label for="sel_semana" id="lblRepetir">Repetir cada:</label>
                     </div>
                     <div class="input-field col s6">
@@ -92,7 +92,7 @@
                                 <label>
                                     <input name="group1" value="1" type="radio" />
                                     <span class="lblDia">Día</span>
-                                    @Html.EditorFor(model => model.DIA_MES, new { htmlAttributes = new { @maxlength = "2",@type="text", @onkeyup = "number(this);", style = "width:50px;text-align:center" } })
+                                    @Html.EditorFor(model => model.DIA_MES, new { htmlAttributes = new { @maxlength = "2", @type = "text", @onkeyup = "number(this);", style = "width:50px;text-align:center" } })
                                     <span class="lblDe_cada">de cada </span>
                                     @*<input type="text" maxlength="2" onkeyup="number(this);" style="width:50px;text-align:center" />*@
                                 </label>
@@ -123,7 +123,9 @@
         background-color: #26a69a;
     }
 </style>
+<script type="text/javascript" src="~/Scripts/moment.min.js"></script>
 <script src="~/Scripts/messagesCat.js"></script>
+<script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
 <script>
             var lista = @Html.Raw(ViewBag.mensajes);
 </script>
@@ -215,47 +217,18 @@
         }
     }
 
-    function revisaFechas(d) {
-        var fechai = document.getElementById("FECHAI").value;
-        var fechaf = document.getElementById("FECHAF").value;
-        if (fechaf != "" && fechai != "") {
-            var datei = new Date(fechai.split("/")[2], parseInt(fechai.split("/")[1]) - 1, fechai.split("/")[0]);
-            var datef = new Date(fechaf.split("/")[2], parseInt(fechaf.split("/")[1]) - 1, fechaf.split("/")[0]);
-            if (datei > datef) {
-                M.toast({ html: 'Secuencia de fechas incorrecta' });
-                d.value = "";
-                d.classList.remove("valid");
-                d.classList.add("invalid");
-            }
-        }
-    }
-
     function borrar(field) {
         field.value = "";
     }
 
-    var elemdp3 = document.querySelector('#FINICIO');
-    var optionsdp3 = {
-        format: 'dd/mm/yyyy',
-        onClose: function (e) {
-            var date = $('#FINICIO').val();
-            var periodo = date.split("/");
-
-        },
-        i18n: {
-            clear: 'Limpiar',
-            today: 'Hoy',
-            done: 'Seleccionar',
-            previousMonth: '‹',
-            nextMonth: '›',
-            months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-            monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-            weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
-            weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-            weekdaysAbbrev: ['D', 'L', 'M', 'X', 'J', 'V', 'S']
-        }
-    };
-    var instancedp3 = M.Datepicker.init(elemdp3, optionsdp3);
+fnCommon.materializeInit('datepicker', '@ViewBag.lan');
+    var d = new Date();
+    var periodo_inicio = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    var datei = moment(periodo_inicio);
+    var fechaI = $('#FINICIO'),
+        fechaIM = M.Datepicker.getInstance(fechaI);
+    fechaIM.options.minDate = datei;
+    fechaIM.setDate(periodo_inicio, true);
 </script>
 <div>
     @Html.ActionLink("Back to List", "Index", null, new { id = "lblRegresar" })

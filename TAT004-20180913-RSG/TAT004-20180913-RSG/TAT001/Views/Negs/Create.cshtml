@@ -32,7 +32,7 @@
     <div class="row">
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <button id="btnGCr" type="submit" value="Create" class="btn btn-default" style="float:right;" ></button>
+                <button id="btnGCr" type="submit" value="Create" class="btn btn-default" style="float:right;"></button>
             </div>
         </div>
     </div>
@@ -63,13 +63,13 @@
                             </div>*@
                         <div class="row">
                             <div class="input-field col s12">
-                                @Html.EditorFor(model=>model.TITULO, new { htmlAttributes = new { required = true } })
+                                @Html.EditorFor(model => model.TITULO, new { htmlAttributes = new { required = true } })
                                 @*<input type="text" id="txt_titulo" name="txt_titulo" />*@
                                 <label for="txt_titulo" id="lblTitulo">Título</label>
                             </div>
                             <div class="input-field col s12">
                                 <i class="material-icons prefix">date_range</i>
-                                <input id="FINICIO" name="FINICIO" type="text" class="validate" required onkeyup="borrar(this);" />
+                                <input id="FINICIO" name="FINICIO" type="text" class="validate datepicker" required onkeyup="borrar(this);" />
                                 <label id="lblDesde" for="FINICIO">Desde</label>
                             </div>
 
@@ -103,8 +103,8 @@
                         <label for="sel_semana" id="lblRepetir">Repetir cada:</label>
                     </div>
                     <div class="input-field col s6">
-                            @Html.DropDownList("FRECUENCIA", null, htmlAttributes: new { @class = "form-control", required = true, @onchange = "oculta(this.value)" })
-                            @*<select id="FRECUENCIA" required name="FRECUENCIA" onchange="oculta(this.value)">
+                        @Html.DropDownList("FRECUENCIA", null, htmlAttributes: new { @class = "form-control", required = true, @onchange = "oculta(this.value)" })
+                        @*<select id="FRECUENCIA" required name="FRECUENCIA" onchange="oculta(this.value)">
                                 <option value="S">Semanas</option>
                                 <option value="M">Meses</option>
                             </select>*@
@@ -122,7 +122,7 @@
                             <td style="border-radius:50%;text-align:center;width:46.4px;" class="day lblS" onclick="selecDay(this)" data-value="S">S</td>
                         </tr>
                     </table>
-                    <input type="hidden" id="DIA_SEMANA" name="DIA_SEMANA" value=""/>
+                    <input type="hidden" id="DIA_SEMANA" name="DIA_SEMANA" value="" />
                 </div>
                 <div id="div_mes" class="row hide">
                     <div class="row">
@@ -142,24 +142,24 @@
                                     <span class="lblEl">El</span>
                                     @Html.DropDownList("ORDINAL_MES", null, htmlAttributes: new { @class = "browser-default", @style = "width:90px;display:inline" })
                                     @*<select style="width:80px;display:initial" id="ORDINAL_MES" name="ORDINAL_MES" class="browser-default">
-            <option value="1">Primer</option>
-            <option value="2">Segundo</option>
-            <option value="3">Tercer</option>
-            <option value="4">Cuarto</option>
-            <option value="5">Último</option>
-        </select>*@
+                                            <option value="1">Primer</option>
+                                            <option value="2">Segundo</option>
+                                            <option value="3">Tercer</option>
+                                            <option value="4">Cuarto</option>
+                                            <option value="5">Último</option>
+                                        </select>*@
                                     @Html.DropDownList("ORDINAL_DSEMANA", null, htmlAttributes: new { @class = "browser-default", @style = "width:100px;display:inline" })
                                     @*<select style="width:100px;display:initial" id="ORDINAL_DSEMANA" name="ORDINAL_DSEMANA" class="browser-default">
-                                    <option value="D">Domingo</option>
-                                    <option value="L">Lunes</option>
-                                    <option value="M">Martes</option>
-                                    <option value="X">Miércoles</option>
-                                    <option value="J">Jueves</option>
-                                    <option value="V">Viernes</option>
-                                    <option value="S">Sábado</option>
-                                    </select>*@
-                                <span class="lblDe_cada"> de cada </span>
-                                @*<input type="text" maxlength="2" onkeyup="number(this);" style="width:50px;text-align:center" />*@
+                                        <option value="D">Domingo</option>
+                                        <option value="L">Lunes</option>
+                                        <option value="M">Martes</option>
+                                        <option value="X">Miércoles</option>
+                                        <option value="J">Jueves</option>
+                                        <option value="V">Viernes</option>
+                                        <option value="S">Sábado</option>
+                                        </select>*@
+                                    <span class="lblDe_cada"> de cada </span>
+                                    @*<input type="text" maxlength="2" onkeyup="number(this);" style="width:50px;text-align:center" />*@
                                 </label>
                             </p>
                         </div>
@@ -178,7 +178,9 @@
         background-color: #26a69a;
     }
 </style>
+<script type="text/javascript" src="~/Scripts/moment.min.js"></script>
 <script src="~/Scripts/messagesCat.js"></script>
+<script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
 <script>
             var lista = @Html.Raw(ViewBag.mensajes);
 </script>
@@ -209,7 +211,7 @@
             }
         });
     });
-    //toast("tcambio", 100000, "priority_high", lista[1].DESCRIPCION, "red", lista[0].DESCRIPCION);
+
     $("#FRECUENCIA").change(function (e) {
         if ($(this).val() == "M") {
             $("#DIA_MES").prop("required", true);
@@ -241,7 +243,7 @@
     }
     function number(campo) {
         if (!$.isNumeric(campo.value)) { campo.value = '' }
-        if (parseInt(campo.value) > 30 || parseInt(campo.value)<1) { campo.value = '' }
+        if (parseInt(campo.value) > 30 || parseInt(campo.value) < 1) { campo.value = '' }
     }
     function oculta(valor) {
         if (valor === "M") {
@@ -253,94 +255,16 @@
         }
     }
 
-    function revisaFechas(d) {
-        var fechai = document.getElementById("FECHAI").value;
-        var fechaf = document.getElementById("FECHAF").value;
-        if (fechaf != "" && fechai != "") {
-            var datei = new Date(fechai.split("/")[2], parseInt(fechai.split("/")[1]) - 1, fechai.split("/")[0]);
-            var datef = new Date(fechaf.split("/")[2], parseInt(fechaf.split("/")[1]) - 1, fechaf.split("/")[0]);
-            if (datei > datef) {
-                M.toast({ html: 'Secuencia de fechas incorrecta' });
-                d.value = "";
-                d.classList.remove("valid");
-                d.classList.add("invalid");
-            }
-        }
-    }
-
     function borrar(field) {
         field.value = "";
     }
-    var elemdp = document.querySelector('#FECHAI');
-    var optionsdp = {
-        format: 'dd/mm/yyyy',
-        onClose: function (e) {
-            var date = $('#FECHAI').val();
-            var periodo = date.split("/");
-
-            $('#periodo').val(periodo[1]);
-        },
-        i18n: {
-            clear: 'Limpiar',
-            today: 'Hoy',
-            done: 'Seleccionar',
-            previousMonth: '‹',
-            nextMonth: '›',
-            months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-            monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-            weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
-            weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-            weekdaysAbbrev: ['D', 'L', 'M', 'X', 'J', 'V', 'S']
-        }
-    };
-    var instancedp = M.Datepicker.init(elemdp, optionsdp);
-
-    var elemdp2 = document.querySelector('#FECHAF');
-    var optionsdp2 = {
-        format: 'dd/mm/yyyy',
-        onClose: function (e) {
-            var date = $('#FECHAF').val();
-            var periodo = date.split("/");
-
-            $('#periodo').val(periodo[1]);
-        },
-        i18n: {
-            clear: 'Limpiar',
-            today: 'Hoy',
-            done: 'Seleccionar',
-            previousMonth: '‹',
-            nextMonth: '›',
-            months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-            monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-            weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
-            weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-            weekdaysAbbrev: ['D', 'L', 'M', 'X', 'J', 'V', 'S']
-        }
-    };
-    var instancedp2 = M.Datepicker.init(elemdp2, optionsdp2);
-
-    var elemdp3 = document.querySelector('#FINICIO');
-    var optionsdp3 = {
-        format: 'dd/mm/yyyy',
-        onClose: function (e) {
-            var date = $('#FINICIO').val();
-            var periodo = date.split("/");
-
-        },
-        i18n: {
-            clear: 'Limpiar',
-            today: 'Hoy',
-            done: 'Seleccionar',
-            previousMonth: '‹',
-            nextMonth: '›',
-            months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-            monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-            weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
-            weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-            weekdaysAbbrev: ['D', 'L', 'M', 'X', 'J', 'V', 'S']
-        }
-    };
-    var instancedp3 = M.Datepicker.init(elemdp3, optionsdp3);
+    fnCommon.materializeInit('datepicker', '@ViewBag.lan');
+    var d = new Date();
+    var periodo_inicio = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    var datei = moment(periodo_inicio);
+    var fechaI = $('#FINICIO'),
+        fechaIM = M.Datepicker.getInstance(fechaI);
+    fechaIM.options.minDate = datei;
 </script>
 <div>
     @Html.ActionLink("Back to List", "Index", null, new { id = "lblRegresar" })
