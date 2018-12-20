@@ -70,7 +70,7 @@ namespace TAT001.Controllers
             var cONFDIST_CAT = db.CONFDIST_CAT.Where(i => i.SOCIEDAD_ID == id).FirstOrDefault();
             if (cONFDIST_CAT == null)
             {
-                return RedirectToAction("Index");
+                return RedirectToAction("Create", new { id = id});
                 ////return HttpNotFound();
             }
             ViewBag.porcad = (cONFDIST_CAT.PORC_AD == true) ? "True" : "False";
@@ -78,7 +78,7 @@ namespace TAT001.Controllers
         }
 
         // GET: ccat/Create
-        public ActionResult Create()
+        public ActionResult Create(string id)
         {
             int pagina_id = 874; //ID EN BASE DE DATOS
             FnCommon.ObtenerConfPage(db, pagina_id, User.Identity.Name, this.ControllerContext.Controller, 871);
@@ -87,7 +87,7 @@ namespace TAT001.Controllers
             lstb.Add(true);
             lstb.Add(false);
             ViewBag.CAMPO = new SelectList(db.CAMPOZKE24, "CAMPO", "CAMPO");
-            ViewBag.SOCIEDAD_ID = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS");
+            ViewBag.SOCIEDAD_ID = new SelectList(db.SOCIEDADs, "BUKRS", "BUKRS", id);
             ViewBag.bools = new SelectList(lstb);
             return View();
         }
@@ -107,7 +107,7 @@ namespace TAT001.Controllers
                     {
                         if (db.CONFDIST_CAT.Any(x => x.SOCIEDAD_ID == cONFDIST_CAT.SOCIEDAD_ID && x.CAMPO == cONFDIST_CAT.CAMPO && x.ACTIVO == true))
                         {
-                            return RedirectToAction("Index");
+                            return RedirectToAction("Details", new { id = cONFDIST_CAT.SOCIEDAD_ID });
                         }
                         else
                         {
@@ -134,7 +134,7 @@ namespace TAT001.Controllers
                         db.CONFDIST_CAT.Add(cf);
                     }
                     db.SaveChanges();
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Details", new { id = cONFDIST_CAT.SOCIEDAD_ID });
                 }
             }
             catch (Exception e)
@@ -221,7 +221,7 @@ namespace TAT001.Controllers
                 {
                     db.Entry(cf).State = EntityState.Modified;
                     db.SaveChanges();
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Details", new { id = cf.SOCIEDAD_ID });
                 }
             }
             catch (Exception e)

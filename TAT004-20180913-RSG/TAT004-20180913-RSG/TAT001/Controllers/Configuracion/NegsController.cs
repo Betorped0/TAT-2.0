@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
+using TAT001.Common;
 using TAT001.Entities;
 using TAT001.Filters;
 
@@ -21,19 +21,9 @@ namespace TAT001.Controllers
         public ActionResult Index()
         {
             int pagina = 901; //ID EN BASE DE DATOS
-            USUARIO user = null;
-            using (TAT001Entities db = new TAT001Entities())
-            {
-                string u = User.Identity.Name;
-                //string u = "admin";
-                user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user;
-                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
+            string u = User.Identity.Name;
+            USUARIO user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+            FnCommon.ObtenerConfPage(db, pagina, u, this.ControllerContext.Controller);
 
                 try
                 {
@@ -47,8 +37,7 @@ namespace TAT001.Controllers
                 }
                 Session["spras"] = user.SPRAS_ID;
                 ViewBag.lan = user.SPRAS_ID;
-            }
-            return View(db.NEGOCIACIONs.Where(a => a.ACTIVO == true).ToList());
+            return View(db.NEGOCIACION2.ToList());
         }
 
         // GET: Negs/Details/5
@@ -70,33 +59,23 @@ namespace TAT001.Controllers
         public ActionResult Create()
         {
             int pagina = 903; //ID EN BASE DE DATOS
-            USUARIO user = null;
-            using (TAT001Entities db = new TAT001Entities())
-            {
-                string u = User.Identity.Name;
-                //string u = "admin";
-                user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user;
-                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(901) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-
-                try
+            string u = User.Identity.Name;
+            USUARIO user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+            FnCommon.ObtenerConfPage(db, pagina, u, this.ControllerContext.Controller,901);
+            ViewBag.mensajes = JsonConvert.SerializeObject(db.MENSAJES.Where(a => (a.PAGINA_ID.Equals(901) || a.PAGINA_ID.Equals(0)) && a.SPRAS.Equals(user.SPRAS_ID)).ToList(), Formatting.Indented);
+            try
                 {
                     string p = Session["pais"].ToString();
                     ViewBag.pais = p + ".svg";
                 }
                 catch
                 {
-                    //ViewBag.pais = "mx.svg";
-                    //return RedirectToAction("Pais", "Home");
                 }
-                Session["spras"] = user.SPRAS_ID;
+            ViewBag.FRECUENCIA = new SelectList(FnCommon.ObtenerCmbFrecuencia(user.SPRAS_ID), "Value", "Text");
+            ViewBag.ORDINAL_DSEMANA = new SelectList(FnCommon.ObtenerCmbDias(user.SPRAS_ID), "Value", "Text");
+            ViewBag.ORDINAL_MES = new SelectList(FnCommon.ObtenerCmbOrdinales(user.SPRAS_ID), "Value", "Text");
+            Session["spras"] = user.SPRAS_ID;
                 ViewBag.lan = user.SPRAS_ID;
-            }
             return View();
         }
 
@@ -105,113 +84,95 @@ namespace TAT001.Controllers
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,FECHAI,FECHAF,FECHAN")] NEGOCIACION nEGOCIACION)
+        public ActionResult Create([Bind(Include = "ID,TITULO,FINICIO,FRECUENCIA,FRECUENCIA_N,DIA_SEMANA,DIA_MES,ORDINAL_MES,ORDINAL_DSEMANA")] NEGOCIACION2 nEGOCIACION, FormCollection col)
         {
-            DateTime _ff = DateTime.Parse(nEGOCIACION.FECHAN.ToString());
-            //validamos que no este vacio
-            if (nEGOCIACION.FECHAF != null & nEGOCIACION.FECHAI != null)
+            int pagina = 903; //ID EN BASE DE DATOS
+            string u = User.Identity.Name;
+            USUARIO user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+            FnCommon.ObtenerConfPage(db, pagina, u, this.ControllerContext.Controller, 901);
+            ViewBag.mensajes = JsonConvert.SerializeObject(db.MENSAJES.Where(a => (a.PAGINA_ID.Equals(901) || a.PAGINA_ID.Equals(0)) && a.SPRAS.Equals(user.SPRAS_ID)).ToList(), Formatting.Indented);
+            try
             {
-                var _ffnpr = _ff.AddDays(0);
-                var _fpr = db.NEGOCIACIONs.Where(x => x.FECHAN == nEGOCIACION.FECHAN).FirstOrDefault();
-                //si es nullo,significa que es permitida la fecha de envio, que no cuenta con un antecedente
-                if (_fpr == null)
+                string p = Session["pais"].ToString();
+                ViewBag.pais = p + ".svg";
+            }
+            catch
+            {
+            }
+            ViewBag.lan = user.SPRAS_ID;
+            if (ModelState.IsValid)
+            {
+                NEGOCIACION2 nego = new NEGOCIACION2();
+                nego.FRECUENCIA_N = nEGOCIACION.FRECUENCIA_N;
+                nego.TITULO = nEGOCIACION.TITULO;
+                nego.FRECUENCIA = nEGOCIACION.FRECUENCIA;
+                nego.FINICIO = nEGOCIACION.FINICIO;
+                if(nego.FRECUENCIA=="S")
                 {
-                    //validamos que la fecha final sea mayor a la anterior
-                    if (nEGOCIACION.FECHAI <= nEGOCIACION.FECHAF)
+                    nego.DIA_SEMANA = nEGOCIACION.DIA_SEMANA;
+                }
+                else if(nego.FRECUENCIA=="M")
+                {
+                    if (col["group1"] == "1")
                     {
-                        if (ModelState.IsValid)
-                        {
-                            nEGOCIACION.FECHAN = nEGOCIACION.FECHAN;
-                            nEGOCIACION.ACTIVO = true;
-                            db.NEGOCIACIONs.Add(nEGOCIACION);
-                            db.SaveChanges();
-                            return RedirectToAction("Index");
-                        }
+                        nego.DIA_MES = nEGOCIACION.DIA_MES;
+                    }
+                    else
+                    {
+                        nego.ORDINAL_DSEMANA = nEGOCIACION.ORDINAL_DSEMANA;
+                        nego.ORDINAL_MES = nEGOCIACION.ORDINAL_MES;
                     }
                 }
-                //si esta desactivado se activa
-                if (_fpr.ACTIVO == false) {
-                    //if (_fpr.FECHAI == nEGOCIACION.FECHAI && _fpr.FECHAF == nEGOCIACION.FECHAF) {
-                        _fpr.ACTIVO = true;
-                        _fpr.FECHAI = nEGOCIACION.FECHAI;
-                        _fpr.FECHAN = nEGOCIACION.FECHAN;
-                    db.Entry(_fpr).State = EntityState.Modified;
-                        db.SaveChanges();
-                        return RedirectToAction("Index");
-                    //}
-                }
-            }
-            int pagina = 903; //ID EN BASE DE DATOS
-            USUARIO user = null;
-            using (TAT001Entities db = new TAT001Entities())
-            {
-                string u = User.Identity.Name;
-                //string u = "admin";
-                user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user;
-                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(901) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.error = "Fecha <Hasta> Existente";
+                db.NEGOCIACION2.Add(nego);
+                db.SaveChanges();
                 try
                 {
-                    string p = Session["pais"].ToString();
-                    ViewBag.pais = p + ".svg";
+                    return RedirectToAction("Index");
                 }
-                catch
+                catch(Exception e)
                 {
-                    //ViewBag.pais = "mx.svg";
-                    //return RedirectToAction("Pais", "Home");
+                    return View("Error");
                 }
-                Session["spras"] = user.SPRAS_ID;
-                ViewBag.lan = user.SPRAS_ID;
             }
-            return View(nEGOCIACION);
+            else
+            {
+                ViewBag.FRECUENCIA = new SelectList(FnCommon.ObtenerCmbFrecuencia(user.SPRAS_ID), "Value", "Text");
+                ViewBag.ORDINAL_DSEMANA = new SelectList(FnCommon.ObtenerCmbDias(user.SPRAS_ID), "Value", "Text");
+                ViewBag.ORDINAL_MES = new SelectList(FnCommon.ObtenerCmbOrdinales(user.SPRAS_ID), "Value", "Text");
+                return View(nEGOCIACION);
+            }          
         }
 
         // GET: Negs/Edit/5
-        public ActionResult Edit(long? id)
+        public ActionResult Edit(int id)
         {
             int pagina = 902; //ID EN BASE DE DATOS
-            USUARIO user = null;
-            using (TAT001Entities db = new TAT001Entities())
-            {
-                string u = User.Identity.Name;
-                //string u = "admin";
-                user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user;
-                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(901) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-
-                try
+            string u = User.Identity.Name;
+            USUARIO user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+            FnCommon.ObtenerConfPage(db, pagina, u, this.ControllerContext.Controller, 901);
+            ViewBag.mensajes = JsonConvert.SerializeObject(db.MENSAJES.Where(a => (a.PAGINA_ID.Equals(901) || a.PAGINA_ID.Equals(0)) && a.SPRAS.Equals(user.SPRAS_ID)).ToList(), Formatting.Indented);
+            try
                 {
                     string p = Session["pais"].ToString();
                     ViewBag.pais = p + ".svg";
                 }
                 catch
                 {
-                    //ViewBag.pais = "mx.svg";
-                    //return RedirectToAction("Pais", "Home");
                 }
                 Session["spras"] = user.SPRAS_ID;
                 ViewBag.lan = user.SPRAS_ID;
-            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            NEGOCIACION nEGOCIACION = db.NEGOCIACIONs.Where(x => x.ID == id).FirstOrDefault();
+            NEGOCIACION2 nEGOCIACION = db.NEGOCIACION2.Where(x => x.ID == id).FirstOrDefault();
             if (nEGOCIACION == null)
             {
                 return HttpNotFound();
             }
+            ViewBag.FRECUENCIA = new SelectList(FnCommon.ObtenerCmbFrecuencia(user.SPRAS_ID), "Value", "Text",nEGOCIACION.FRECUENCIA);
+            ViewBag.ORDINAL_DSEMANA = new SelectList(FnCommon.ObtenerCmbDias(user.SPRAS_ID), "Value", "Text", nEGOCIACION.ORDINAL_DSEMANA);
+            ViewBag.ORDINAL_MES = new SelectList(FnCommon.ObtenerCmbOrdinales(user.SPRAS_ID), "Value", "Text", nEGOCIACION.ORDINAL_MES);
             return View(nEGOCIACION);
         }
 
@@ -220,54 +181,62 @@ namespace TAT001.Controllers
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,FECHAI,FECHAF,FECHAN")] NEGOCIACION nEGOCIACION)
+        public ActionResult Edit([Bind(Include = "ID,TITULO,FINICIO,FRECUENCIA,FRECUENCIA_N,DIA_SEMANA,DIA_MES,ORDINAL_MES,ORDINAL_DSEMANA")] NEGOCIACION2 nEGOCIACION, FormCollection col)
         {
-            DateTime _ff = DateTime.Parse(nEGOCIACION.FECHAF.ToString());
-            var _ng = db.NEGOCIACIONs.Where(x => x.ID == nEGOCIACION.ID).FirstOrDefault();
+            int pagina = 902; //ID EN BASE DE DATOS
+            string u = User.Identity.Name;
+            USUARIO user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
+            FnCommon.ObtenerConfPage(db, pagina, u, this.ControllerContext.Controller, 901);
+            ViewBag.mensajes = JsonConvert.SerializeObject(db.MENSAJES.Where(a => (a.PAGINA_ID.Equals(901) || a.PAGINA_ID.Equals(0)) && a.SPRAS.Equals(user.SPRAS_ID)).ToList(), Formatting.Indented);
+            try
+            {
+                string p = Session["pais"].ToString();
+                ViewBag.pais = p + ".svg";
+            }
+            catch
+            {
+            }
+            ViewBag.lan = user.SPRAS_ID;
             if (ModelState.IsValid)
             {
-                var _ffnpr = _ff.AddDays(1);
-                var _fpr = db.NEGOCIACIONs.Where(x => x.FECHAN == _ffnpr).FirstOrDefault();
-                //si es nullo,significa que es permitida la fecha de envio, que no cuenta con un antecedente
-                if (_fpr == null)
+                NEGOCIACION2 nego = db.NEGOCIACION2.Find(nEGOCIACION.ID);
+                nego.FRECUENCIA_N = nEGOCIACION.FRECUENCIA_N;
+                nego.TITULO = nEGOCIACION.TITULO;
+                nego.FRECUENCIA = nEGOCIACION.FRECUENCIA;
+                nego.FINICIO = nEGOCIACION.FINICIO;
+                if (nego.FRECUENCIA == "S")
                 {
-                    _ng.FECHAI = nEGOCIACION.FECHAI;
-                    _ng.FECHAF = nEGOCIACION.FECHAF;
-                    _ng.FECHAN = _ff.AddDays(1);
-                    db.Entry(_ng).State = EntityState.Modified;
-                    db.SaveChanges();
-                    return RedirectToAction("Index");
+                    nego.DIA_SEMANA = nEGOCIACION.DIA_SEMANA;
+                    nego.DIA_MES = null;
+                    nego.ORDINAL_DSEMANA = null;
+                    nego.ORDINAL_MES = null;
                 }
+                else if (nego.FRECUENCIA == "M")
+                {
+                    nego.DIA_SEMANA = null;
+                    if (col["group1"] == "1")
+                    {
+                        nego.DIA_MES = nEGOCIACION.DIA_MES;
+                        nego.ORDINAL_DSEMANA = null;
+                        nego.ORDINAL_MES = null;
+                    }
+                    else
+                    {
+                        nego.DIA_MES = null;
+                        nego.ORDINAL_DSEMANA = nEGOCIACION.ORDINAL_DSEMANA;
+                        nego.ORDINAL_MES = nEGOCIACION.ORDINAL_MES;
+                    }
+                }
+                db.SaveChanges();
+                return RedirectToAction("Index");
             }
-            int pagina = 902; //ID EN BASE DE DATOS
-            USUARIO user = null;
-            using (TAT001Entities db = new TAT001Entities())
+            else
             {
-                string u = User.Identity.Name;
-                //string u = "admin";
-                user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-                ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-                ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
-                ViewBag.usuario = user;
-                ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-                ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(901) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-                ViewBag.error = "Fecha <Hasta> Existente";
-                try
-                {
-                    string p = Session["pais"].ToString();
-                    ViewBag.pais = p + ".svg";
-                }
-                catch
-                {
-                    //ViewBag.pais = "mx.svg";
-                    //return RedirectToAction("Pais", "Home");
-                }
-                Session["spras"] = user.SPRAS_ID;
-                ViewBag.lan = user.SPRAS_ID;
+                ViewBag.FRECUENCIA = new SelectList(FnCommon.ObtenerCmbFrecuencia(user.SPRAS_ID), "Value", "Text");
+                ViewBag.ORDINAL_DSEMANA = new SelectList(FnCommon.ObtenerCmbDias(user.SPRAS_ID), "Value", "Text");
+                ViewBag.ORDINAL_MES = new SelectList(FnCommon.ObtenerCmbOrdinales(user.SPRAS_ID), "Value", "Text");
+                return View(nEGOCIACION);
             }
-            return View(nEGOCIACION);
         }
 
         // GET: Negs/Delete/5

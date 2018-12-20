@@ -31,6 +31,7 @@ namespace TAT001.Services
                                                                 && a.VTWEG.Equals(dOCUMENTO.VTWEG)
                                                                 && a.SPART.Equals(dOCUMENTO.SPART)
                                                                 && a.KUNNR.Equals(dOCUMENTO.PAYER_ID)).First();
+
                         var workflow = db.FLUJOes.Where(a => a.NUM_DOC.Equals(id)).OrderByDescending(a => a.POS).FirstOrDefault();
 
                         string mailt = ConfigurationManager.AppSettings["mailt"];
@@ -39,7 +40,7 @@ namespace TAT001.Services
                         if (mtest == "X")
                             mailTo = "rogelio.sanchez@sf-solutionfactory.com"; //B20180803 MGC Correos
                         else
-                            mailTo = workflow.USUARIO.EMAIL;
+                            mailTo = workflow.USUARIO1.EMAIL;
                         CONMAIL conmail = db.CONMAILs.Find(mailt);
                         if (conmail != null)
                         {
@@ -66,6 +67,7 @@ namespace TAT001.Services
                             else
                                 mail.Subject = workflow.ESTATUS + dOCUMENTO.NUM_DOC + "-" + DateTime.Now.ToShortTimeString();
                             mail.IsBodyHtml = true;
+                            mail.Subject += workflow.USUARIOA_ID;
 
                             UrlDirectory = UrlDirectory.Replace("Solicitudes/Create", "Correos/" + page);
                             UrlDirectory = UrlDirectory.Replace("Solicitudes/Details", "Correos/" + page);

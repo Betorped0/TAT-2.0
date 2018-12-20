@@ -1,7 +1,6 @@
 ﻿@model TAT001.Entities.TS_CAMPO
 
 @{
-    //ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.pagina_r = 1311;
     ViewBag.carpeta_r = 500;
@@ -17,42 +16,38 @@
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-        foreach (var item in Model.TS_FORMT)
-        {
-            @Html.HiddenFor(model => item.SPRAS_ID)
-        }
+        
         <div class="col s6 ">
             <div class="card-panel">
-                <h5 id="hdTr">Traducciones</h5>
-                <br />
                 <div class="row">
                     @foreach (var item in Model.TS_FORM)
                     {
                         <div class="input-field col l10 m10" style="margin-bottom:0;">
-                            @Html.LabelFor(model => item.LAND_ID, "LAND_ID", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_pais" })
-                            @Html.EditorFor(model => item.PAI.LANDX, new { htmlAttributes = new { @class = "form-control", @required = "", @maxlength = 50, @readonly = "readonly" } })
-                        </div>
-                        <div class="input-field col l10 m10" style="margin-bottom:0;">
                             @Html.LabelFor(model => item.BUKRS_ID, "BUKRS_ID", htmlAttributes: new { @class = "control-label col-md-2", @id = "lbl_sociedad" })
-                            @Html.EditorFor(model => item.SOCIEDAD.BUTXT, new { htmlAttributes = new { @class = "form-control", @required = "", @maxlength = 50, @readonly = "readonly" } })
+                            @Html.EditorFor(model => item.SOCIEDAD.BUKRS, new { htmlAttributes = new { @class = "form-control", @required = "", @maxlength = 50, @readonly = "readonly" } })
                         </div>
                     }
+                    <div class="input-field col l10 m10" style="margin-bottom:0;">
+                        <h5>Traducciones</h5>
+                    </div>
+                    @{
+                        string txtEn = Model.TS_FORMT.First(x => x.SPRAS_ID == "EN").TXT100;
+                        string txtEs = Model.TS_FORMT.First(x => x.SPRAS_ID == "ES").TXT100;
 
-                    @foreach (var item in Model.TS_FORMT)
-                    {
-                        <div class=" input-field col s12">
-
-                            @Html.EditorFor(modelItem => item.TXT100, new { htmlAttributes = new { @disabled = "disabled" } })
-                            <label for="TXT100">@item.SPRA.DESCRIPCION</label>
-
+                        <div class="input-field col l12 m12" style="margin-bottom:0;">
+                            @Html.Editor("EN", new { htmlAttributes = new { @class = "form-control", @maxlength = "50", @required = "", @Value = txtEn , @readonly = "readonly" } })
+                            <label id="lblIngles">EN</label>
+                        </div>
+                        <div class="input-field col l12 m12" style="margin-bottom:0;">
+                            @Html.Editor("ES", new { htmlAttributes = new { @class = "form-control", @maxlength = "50", @required = "", @Value = txtEs, @readonly = "readonly" } })
+                            <label id="lblEspa">ES</label>
                         </div>
                     }
 
                 </div>
                 <div>
 
-                    @if ((bool)Model.ACTIVO == true)
+                    @if (Model.ACTIVO)
                     {
                         <i class='material-icons green-text'>check</i>}
                     else

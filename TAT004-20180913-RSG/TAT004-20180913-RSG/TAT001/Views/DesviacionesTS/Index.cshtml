@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<TAT001.Entities.TS_CAMPO>
-
+@using TAT001.Entities
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.pagina_r = 1310;
@@ -41,16 +41,14 @@
         <table class="table mdl-data-table striped" id="table" style="width:100%;">
             <thead>
                 <tr>
-                    <th id="lbl_pais">
-
-                    </th>
                     <th id="lbl_sociedad">
 
                     </th>
-                    <th id="lbl_DesES">
+                    <th id="lbl_DesEN">
 
                     </th>
-                    <th id="lbl_DesEN">
+
+                    <th id="lbl_DesES">
 
                     </th>
                     <th id="lblAct">
@@ -60,25 +58,22 @@
             </thead>
             @foreach (var item in Model)
             {
-                string dexEs = item.TS_FORMT.Any(x => x.SPRAS_ID == "ES") ? item.TS_FORMT.First(x => x.SPRAS_ID == "ES").TXT100 : "";
-                string dexEN = item.TS_FORMT.Any(x => x.SPRAS_ID == "EN") ? item.TS_FORMT.First(x => x.SPRAS_ID == "EN").TXT100 : "";
+                List<TS_FORMT> tS_FORMT= item.TS_FORMT.ToList();
+                string dexEs = tS_FORMT.Any(x => x.SPRAS_ID == "ES") ? tS_FORMT.First(x => x.SPRAS_ID == "ES").TXT100 : "";
+                string dexEN = tS_FORMT.Any(x => x.SPRAS_ID == "EN") ? tS_FORMT.First(x => x.SPRAS_ID == "EN").TXT100 : "";
 
-                string pais = item.TS_FORM.Any(x => x.ID == item.ID) ? item.TS_FORM.First(x => x.ID == item.ID).PAI.LANDX : "";
-                string code = item.TS_FORM.Any(x => x.ID == item.ID) ? item.TS_FORM.First(x => x.ID == item.ID).SOCIEDAD.BUKRS : "";
+                string code = item.TS_FORM.Any(x => x.POS == item.ID) ? item.TS_FORM.First(x => x.POS == item.ID).BUKRS_ID : "";
             <tr>
-                <td>
-                    @pais
-                </td>
                 <td>
                     @code
                 </td>
                 <td>
-                    @dexEs
-                </td>
-                <td>
                     @dexEN
                 </td>
-                @if ((bool)item.ACTIVO == true)
+                <td>
+                    @dexEs
+                </td>
+                @if (item.ACTIVO)
                 {
                     <td style="align-items:center"><i class='material-icons green-text'>check</i></td>
                 }
@@ -102,7 +97,7 @@
     </div>
     <script>
         $(document).ready(function () {
-        
+
         var spras_id = "@ViewBag.spras_id";
             var root = "@Url.Content("~")";
         var table = $('#table').DataTable({
@@ -110,10 +105,10 @@
             scrollY: "50vh",
             scrollCollapse: true,
             language: {
-                "url": "@Url.Content("~/Scripts/lang/" + @ViewBag.spras_id + ".json")"
+                "url":root+"Scripts/lang/" + spras_id + ".json",
             }, columnDefs: [
                 {
-                    targets: [1],
+                    targets: [0,1,2],
                     className: 'mdl-data-table__cell--non-numeric'
                 }
             ],
