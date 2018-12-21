@@ -195,7 +195,8 @@ function Carga() {
     if (rowNum === 0) {
         return;
     }
-    
+
+    document.getElementById("loader").style.display = "flex";
     var message = $('.input_mes').serialize();
     var cliente = $('.input_cli').serialize();
     var us1 = $('.input_ni1').serialize();
@@ -205,7 +206,6 @@ function Carga() {
         if (message === "" || message === null || message.endsWith('mes=')) {
             if (us1 !== "" && us1 !== "ni1=" && us1 !== null && us6 !== "" && us6 !== "ni6=" && us6 !== null) {
 
-                document.getElementById("loader").style.display = "flex";
                 var table = $('#table').DataTable();
                 table.destroy();
                 habilitar();
@@ -235,14 +235,20 @@ function Carga() {
                     async: true
                 });
             }
-            else
+            else {
+                document.getElementById("loader").style.display = "none";
                 mostrarAlerta("info", "E", "Los niveles 1 y 6 no pueden quedar vacios");
+            }
         }
-        else
+        else {
+            document.getElementById("loader").style.display = "none";
             mostrarAlerta("info", "E", "Hay errores por corregir");
+        }
     }
-    else
+    else {
+        document.getElementById("loader").style.display = "none";
         mostrarAlerta("info", "E", "Seleccione un archivo");
+    }
 }
 
 function Comprobar(me) {
