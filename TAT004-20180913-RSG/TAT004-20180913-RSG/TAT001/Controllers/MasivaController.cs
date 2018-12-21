@@ -4871,12 +4871,12 @@ namespace TAT001.Controllers
             /////MATERIALES
             DataSet dt4 = new DataSet();
             dt4.Tables.Add(dtt4);
-            string path = Server.MapPath("~/pdfTemp/DocMasivas/" + User.Identity.Name + ".xlsx");
+            string path = Server.MapPath("~/PdfTemp/DocMasivas/" + User.Identity.Name + ".xlsx");
             if (System.IO.File.Exists(path))
             {
                 System.IO.File.Delete(path);
             }
-            generarExcelHome(dt1, dt2, dt3, dt4, Server.MapPath("~/pdfTemp/"));
+            generarExcelHome(dt1, dt2, dt3, dt4, Server.MapPath("~/PdfTemp/"));
             JsonResult result = Json(path, JsonRequestBehavior.AllowGet);
             return result;
         }
