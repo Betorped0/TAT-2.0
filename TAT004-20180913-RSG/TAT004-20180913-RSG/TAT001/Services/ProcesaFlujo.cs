@@ -17,6 +17,7 @@ namespace TAT001.Services
             bool draft = false;
             bool reve = false;
             bool liga = false;
+            bool cero = false;
             if (recurrente == "X")
                 recurrent = true;
             if (recurrente == "B")
@@ -25,6 +26,8 @@ namespace TAT001.Services
                 reve = true;
             if (recurrente == "L")
                 liga = true;
+            if (recurrente == "0")
+                cero = true;
             //ADD RSG 01.11.2018----------------------
             string correcto = String.Empty;
             TAT001Entities db = new TAT001Entities();
@@ -85,14 +88,15 @@ namespace TAT001.Services
                     }
                     else
                     {
-                        if (d.TIPO_RECURRENTE == "1" || liga)
+                        if (d.TIPO_RECURRENTE == "1" || liga || d.TIPO_RECURRENTE == "6" || d.TIPO_RECURRENTE == "7" || d.TIPO_RECURRENTE == "8")
                         {
                             WORKFP autoriza = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) && a.VERSION.Equals(actual.WF_VERSION) && a.ACCION_ID == 5).FirstOrDefault();
                             next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) && a.VERSION.Equals(actual.WF_VERSION) && a.POS == autoriza.NS_ACCEPT).FirstOrDefault();
                         }
                         else
                         {
-                            WORKFP autoriza = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) && a.VERSION.Equals(actual.WF_VERSION) && a.ACCION_ID == 14).FirstOrDefault();
+                            int acc = 14;
+                            WORKFP autoriza = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) && a.VERSION.Equals(actual.WF_VERSION) && a.ACCION_ID == acc).FirstOrDefault();
                             next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) && a.VERSION.Equals(actual.WF_VERSION) && a.POS == autoriza.POS).FirstOrDefault();
                         }
 
@@ -207,7 +211,8 @@ namespace TAT001.Services
                         }
                         else
                         {
-                            WORKFP autoriza = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) && a.VERSION.Equals(actual.WF_VERSION) && a.ACCION_ID == 14).FirstOrDefault();
+                            int acc = 14;
+                            WORKFP autoriza = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) && a.VERSION.Equals(actual.WF_VERSION) && a.ACCION_ID == acc).FirstOrDefault();
                             next = db.WORKFPs.Where(a => a.ID.Equals(actual.WORKF_ID) && a.VERSION.Equals(actual.WF_VERSION) && a.POS == autoriza.POS).FirstOrDefault();
                         }
                     }
@@ -480,7 +485,9 @@ namespace TAT001.Services
                                 ArchivoContable sa = new ArchivoContable();
                                 List<ArchivoC> ac = new List<ArchivoC>();
                                 ////string file = sa.generarArchivo(d.NUM_DOC, 0, 0);
-                                string file = sa.generarArchivo(d.NUM_DOC, 0, 0, "F", ref ac);
+                                string file = "";
+                                if(!cero)
+                                file = sa.generarArchivo(d.NUM_DOC, 0, 0, "F", ref ac);
                                 ////string file = "";
 
                                 if (file == "")

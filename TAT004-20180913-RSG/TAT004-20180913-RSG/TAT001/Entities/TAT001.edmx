@@ -812,15 +812,15 @@
           <Property Name="DOCUMENTO_REF" Type="decimal" Precision="10" Scale="0" />
           <Property Name="CONCEPTO" Type="nvarchar" MaxLength="100" />
           <Property Name="NOTAS" Type="nvarchar" MaxLength="255" />
-          <Property Name="MONTO_DOC_MD" Type="decimal" Precision="13" Scale="2" />
+          <Property Name="MONTO_DOC_MD" Type="decimal" Precision="18" Scale="5" />
           <Property Name="MONTO_FIJO_MD" Type="decimal" Precision="13" Scale="2" />
           <Property Name="MONTO_BASE_GS_PCT_MD" Type="decimal" Precision="13" Scale="2" />
           <Property Name="MONTO_BASE_NS_PCT_MD" Type="decimal" Precision="13" Scale="2" />
-          <Property Name="MONTO_DOC_ML" Type="decimal" Precision="13" Scale="2" />
+          <Property Name="MONTO_DOC_ML" Type="decimal" Precision="18" Scale="5" />
           <Property Name="MONTO_FIJO_ML" Type="decimal" Precision="13" Scale="2" />
           <Property Name="MONTO_BASE_GS_PCT_ML" Type="decimal" Precision="13" Scale="2" />
           <Property Name="MONTO_BASE_NS_PCT_ML" Type="decimal" Precision="13" Scale="2" />
-          <Property Name="MONTO_DOC_ML2" Type="decimal" Precision="13" Scale="2" />
+          <Property Name="MONTO_DOC_ML2" Type="decimal" Precision="18" Scale="5" />
           <Property Name="MONTO_FIJO_ML2" Type="decimal" Precision="13" Scale="2" />
           <Property Name="MONTO_BASE_GS_PCT_ML2" Type="decimal" Precision="13" Scale="2" />
           <Property Name="MONTO_BASE_NS_PCT_ML2" Type="decimal" Precision="13" Scale="2" />
@@ -1045,11 +1045,11 @@
           <Property Name="MONTO_APOYO" Type="decimal" Precision="13" Scale="5" Nullable="false" />
           <Property Name="PRECIO_SUG" Type="decimal" Precision="13" Scale="5" Nullable="false" />
           <Property Name="VOLUMEN_EST" Type="decimal" Precision="13" Scale="5" Nullable="false" />
-          <Property Name="VOLUMEN_REAL" Type="decimal" Precision="13" Scale="5" />
+          <Property Name="VOLUMEN_REAL" Type="decimal" Precision="18" Scale="5" />
           <Property Name="APOYO_REAL" Type="decimal" Precision="13" Scale="5" />
           <Property Name="VIGENCIA_DE" Type="date" />
           <Property Name="VIGENCIA_AL" Type="date" />
-          <Property Name="APOYO_EST" Type="decimal" Precision="13" Scale="5" />
+          <Property Name="APOYO_EST" Type="decimal" Precision="18" Scale="5" />
         </EntityType>
         <EntityType Name="DOCUMENTOR">
           <Key>
@@ -1400,7 +1400,7 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="TITULO" Type="nvarchar" MaxLength="250" Nullable="false" />
           <Property Name="FINICIO" Type="date" Nullable="false" />
           <Property Name="FRECUENCIA" Type="nchar" MaxLength="1" Nullable="false" />
@@ -1742,8 +1742,8 @@
           <Property Name="DESCR" Type="nvarchar" MaxLength="50" />
           <Property Name="ACTIVO" Type="bit" Nullable="false" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'TAT004.dbo.TAB_CAMPO' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'TAT004.dbo.TAB_CAMPO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TAB_CAMPO">
           <Key>
             <PropertyRef Name="TAB_ID" />
@@ -2280,8 +2280,8 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.TAB_CAMPO' no tiene definida ning
           <Property Name="ID_ZC" Type="nvarchar" MaxLength="5" Nullable="false" />
           <Property Name="DESCRIPCION" Type="nvarchar" MaxLength="50" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'TAT004.dbo.CARPETAV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'TAT004.dbo.CARPETAV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="CARPETAV">
           <Key>
             <PropertyRef Name="USUARIO_ID" />
@@ -2293,8 +2293,8 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.CARPETAV' no tiene definida ningu
           <Property Name="TXT50" Type="nvarchar" MaxLength="50" />
           <Property Name="ICON" Type="nvarchar" MaxLength="20" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'TAT004.dbo.CREADOR' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'TAT004.dbo.CREADOR' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="CREADOR">
           <Key>
             <PropertyRef Name="ID" />
@@ -2310,8 +2310,8 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.CREADOR' no tiene definida ningun
           <Property Name="BUKRS" Type="nchar" MaxLength="4" />
           <Property Name="LAND" Type="nchar" MaxLength="2" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'TAT004.dbo.CREADOR2' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'TAT004.dbo.CREADOR2' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="CREADOR2">
           <Key>
             <PropertyRef Name="ID" />
@@ -2328,8 +2328,8 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.CREADOR2' no tiene definida ningu
           <Property Name="BUKRS" Type="nchar" MaxLength="4" />
           <Property Name="LAND" Type="nchar" MaxLength="2" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'TAT004.dbo.DET_APROBV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'TAT004.dbo.DET_APROBV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="DET_APROBV">
           <Key>
             <PropertyRef Name="BUKRS" />
@@ -2341,8 +2341,8 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.DET_APROBV' no tiene definida nin
           <Property Name="TXT50" Type="nvarchar" MaxLength="50" />
           <Property Name="SPRAS_ID" Type="nchar" MaxLength="2" Nullable="false" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'TAT004.dbo.DOCUMENTOV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'TAT004.dbo.DOCUMENTOV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="DOCUMENTOV">
           <Key>
             <PropertyRef Name="POS" />
@@ -2417,8 +2417,8 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.DOCUMENTOV' no tiene definida nin
           <Property Name="CIUDAD" Type="nvarchar" MaxLength="50" />
           <Property Name="ESTADO" Type="nvarchar" MaxLength="50" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'TAT004.dbo.PAGINAV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'TAT004.dbo.PAGINAV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="PAGINAV">
           <Key>
             <PropertyRef Name="ID" />
@@ -2443,8 +2443,8 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.PAGINAV' no tiene definida ningun
           <Property Name="GrupoText" Type="nvarchar" MaxLength="25" />
           <Property Name="Orden" Type="int" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'TAT004.dbo.WARNINGV' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="WARNINGV">
           <Key>
             <PropertyRef Name="PAGINA_ID" />
@@ -7254,15 +7254,15 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Property Name="DOCUMENTO_REF" Type="Decimal" Precision="10" Scale="0" />
           <Property Name="CONCEPTO" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="NOTAS" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="MONTO_DOC_MD" Type="Decimal" Precision="13" Scale="2" />
+          <Property Name="MONTO_DOC_MD" Type="Decimal" Precision="18" Scale="5" />
           <Property Name="MONTO_FIJO_MD" Type="Decimal" Precision="13" Scale="2" />
           <Property Name="MONTO_BASE_GS_PCT_MD" Type="Decimal" Precision="13" Scale="2" />
           <Property Name="MONTO_BASE_NS_PCT_MD" Type="Decimal" Precision="13" Scale="2" />
-          <Property Name="MONTO_DOC_ML" Type="Decimal" Precision="13" Scale="2" />
+          <Property Name="MONTO_DOC_ML" Type="Decimal" Precision="18" Scale="5" />
           <Property Name="MONTO_FIJO_ML" Type="Decimal" Precision="13" Scale="2" />
           <Property Name="MONTO_BASE_GS_PCT_ML" Type="Decimal" Precision="13" Scale="2" />
           <Property Name="MONTO_BASE_NS_PCT_ML" Type="Decimal" Precision="13" Scale="2" />
-          <Property Name="MONTO_DOC_ML2" Type="Decimal" Precision="13" Scale="2" />
+          <Property Name="MONTO_DOC_ML2" Type="Decimal" Precision="18" Scale="5" />
           <Property Name="MONTO_FIJO_ML2" Type="Decimal" Precision="13" Scale="2" />
           <Property Name="MONTO_BASE_GS_PCT_ML2" Type="Decimal" Precision="13" Scale="2" />
           <Property Name="MONTO_BASE_NS_PCT_ML2" Type="Decimal" Precision="13" Scale="2" />
@@ -7519,11 +7519,11 @@ advertencia 6002: La tabla o vista 'TAT004.dbo.WARNINGV' no tiene definida ningu
           <Property Name="MONTO_APOYO" Type="Decimal" Precision="13" Scale="5" Nullable="false" />
           <Property Name="PRECIO_SUG" Type="Decimal" Precision="13" Scale="5" Nullable="false" />
           <Property Name="VOLUMEN_EST" Type="Decimal" Precision="13" Scale="5" Nullable="false" />
-          <Property Name="VOLUMEN_REAL" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="VOLUMEN_REAL" Type="Decimal" Precision="18" Scale="5" />
           <Property Name="APOYO_REAL" Type="Decimal" Precision="13" Scale="5" />
           <Property Name="VIGENCIA_DE" Type="DateTime" Precision="0" />
           <Property Name="VIGENCIA_AL" Type="DateTime" Precision="0" />
-          <Property Name="APOYO_EST" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="APOYO_EST" Type="Decimal" Precision="18" Scale="5" />
           <NavigationProperty Name="DOCUMENTO" Relationship="Self.FK_DOCUMENTOP_DOCUMENTO" FromRole="DOCUMENTOP" ToRole="DOCUMENTO" />
           <NavigationProperty Name="DOCUMENTOMs" Relationship="Self.FK_DOCUMENTOM_DOCUMENTOP" FromRole="DOCUMENTOP" ToRole="DOCUMENTOM" />
         </EntityType>

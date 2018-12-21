@@ -96,12 +96,12 @@ namespace TAT001.Services
                 ////if (dOCUMENTO != null)
                 ////{
 
-                    dOCUMENTO.TSOL_ID = tsol;
-                    dOCUMENTO.NUM_DOC = 0;
-                    ////foreach (DOCUMENTOP pos in dOCpADRE.DOCUMENTOPs)
-                    ////{
+                dOCUMENTO.TSOL_ID = tsol;
+                dOCUMENTO.NUM_DOC = 0;
+                ////foreach (DOCUMENTOP pos in dOCpADRE.DOCUMENTOPs)
+                ////{
 
-                    ////}
+                ////}
                 ////}
             }
 
@@ -110,9 +110,9 @@ namespace TAT001.Services
             dOCUMENTO.MONEDA_ID = id_bukrs.WAERS;
             dOCUMENTO.PERIODO = Convert.ToInt32(DateTime.Now.ToString("MM"));
             dOCUMENTO.EJERCICIO = Convert.ToString(DateTime.Now.Year);
-            dOCUMENTO.TIPO_RECURRENTE = dOCpADRE.TIPO_RECURRENTE;
+            dOCUMENTO.TIPO_RECURRENTE = (int.Parse(dOCpADRE.TIPO_RECURRENTE) + 5).ToString();
             dOCUMENTO.FECHAD = theTime;
-            
+
 
             ////HTTPPOST
             DOCUMENTO d = new DOCUMENTO();
@@ -149,7 +149,7 @@ namespace TAT001.Services
 
             //Obtener SOCIEDAD_ID                     
             dOCUMENTO.SOCIEDAD_ID = id_bukrs.BUKRS;
-            
+
             //CANTIDAD_EV > 1 si son recurrentes
             dOCUMENTO.CANTIDAD_EV = 1;
 
@@ -190,7 +190,7 @@ namespace TAT001.Services
             {
                 return 0;
             }
-            
+
             //MONTO_DOC_ML2 
             var MONTO_DOC_ML2 = dOCUMENTO.MONTO_DOC_ML2;
             dOCUMENTO.MONTO_DOC_ML2 = Convert.ToDecimal(MONTO_DOC_ML2);
@@ -260,7 +260,7 @@ namespace TAT001.Services
                         ////{
                         ////    cat = "C";
                         ////}
-                       
+
                         if (dOCpADRE.TIPO_RECURRENTE.Equals("1") || dOCpADRE.TIPO_RECURRENTE.Equals("2") || dOCpADRE.TIPO_RECURRENTE.Equals("3"))
                         {
                             DOCUMENTOP docP = new DOCUMENTOP();
@@ -352,6 +352,7 @@ namespace TAT001.Services
                             dOCUMENTO.PORC_APOYO = 0;
                         }
                     }
+                    decimal suma_monto = 0;
                     if (!(dOCpADRE.TIPO_RECURRENTE == "1" && listcat.Count == 0))
                     {
                         foreach (DOCUMENTOP docP in dOCUMENTO.DOCUMENTOPs)
@@ -403,6 +404,10 @@ namespace TAT001.Services
                                             docP.APOYO_REAL += docM.APOYO_REAL;
                                             docP.APOYO_EST += docM.APOYO_EST;
                                             docP.PORC_APOYO += (decimal)docM.PORC_APOYO;
+                                            if (docM.APOYO_REAL != null)
+                                                suma_monto += (decimal)docM.APOYO_REAL;
+                                            if (docM.APOYO_EST != null)
+                                                suma_monto += (decimal)docM.APOYO_EST;
                                             docP.DOCUMENTOMs.Add(docM);
                                         }
                                         catch (Exception e)
@@ -426,6 +431,11 @@ namespace TAT001.Services
                                             docP.APOYO_REAL += docM.APOYO_REAL;
                                             docP.APOYO_EST += docM.APOYO_EST;
                                             docP.PORC_APOYO += (decimal)docM.PORC_APOYO;
+                                            if (docM.APOYO_REAL != null)
+                                                suma_monto += (decimal)docM.APOYO_REAL;
+                                            if (docM.APOYO_EST != null)
+                                                suma_monto += (decimal)docM.APOYO_EST;
+
                                             cont++;
                                         }
                                         catch (Exception e)
@@ -442,6 +452,15 @@ namespace TAT001.Services
                             }
                         }
                     }
+                    if (dOCUMENTO.MONTO_DOC_MD != suma_monto && dOCUMENTO.TIPO_RECURRENTE != "6")
+                        dOCUMENTO.MONTO_DOC_MD = suma_monto;
+                    suma_monto = 0;
+                    foreach (DOCUMENTOP docP in dOCUMENTO.DOCUMENTOPs)
+                    {
+                        suma_monto += (decimal)docP.APOYO_EST + (decimal)docP.APOYO_REAL;
+                    }
+                    if (suma_monto == 0)
+                        dOCUMENTO.MONTO_DOC_MD = 0;
                 }
             }
             catch (Exception e)
@@ -521,6 +540,10 @@ namespace TAT001.Services
             //RSG 28.05.2018----------------------------------------------
             drecc.DOC_REF = dOCUMENTO.NUM_DOC;
             drecc.ESTATUS = "P";
+            if ((dOCpADRE.TIPO_RECURRENTE) != "1")
+            {
+                drecc.FECHAF = drecc.FECHAF.Value.AddDays(1);
+            }
             db.Entry(drecc).State = EntityState.Modified;
 
             if (dOCpADRE.TIPO_RECURRENTE == "2" || dOCpADRE.TIPO_RECURRENTE == "3")
@@ -582,19 +605,29 @@ namespace TAT001.Services
                         //Email em = new Email();
                         //em.enviaMail(f.NUM_DOC, true);
                     }
-                    if (dOCpADRE.TIPO_RECURRENTE == "1" || recurrente == "L")
+                    if (dOCpADRE.TIPO_RECURRENTE == "1" || recurrente == "L" )
                     {
                         conta = db.FLUJOes.Where(a => a.NUM_DOC.Equals(f.NUM_DOC)).OrderByDescending(a => a.POS).FirstOrDefault();
                         conta.USUARIOA_ID = user.ID;
                         conta.ESTATUS = "A";
                         conta.FECHAM = DateTime.Now;
-                        pf.procesa(conta, "");
+                        string cero = "";
+                        if (dOCUMENTO.MONTO_DOC_MD == 0)
+                        {
+                            cero = "0";
+                        }
+                        pf.procesa(conta, cero);
                         //RSG 28.05.2018 -----------------------------------
                         conta = db.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
                         doc = db.DOCUMENTOes.Find(f.NUM_DOC);
                         conta.STATUS = es.getEstatus(doc);
                         db.Entry(conta).State = EntityState.Modified;
-                        db.SaveChanges();
+                        if (dOCUMENTO.MONTO_DOC_MD == 0)
+                        {
+                            doc.ESTATUS_C = "C";
+                            db.Entry(doc).State = EntityState.Modified;
+                        }
+                            db.SaveChanges();
                     }
                 }
             }

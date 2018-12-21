@@ -3516,7 +3516,9 @@ namespace TAT001.Controllers
                     Recurrente r = new Recurrente();
                     bool ban = true;
                     if (ban)
+                    {
                         r.creaRecurrente(drec.NUM_DOC, drec.DOCUMENTO.TSOL_ID, hoy, drec.POS);
+                    }
                 }
                 catch(Exception ex)
                 {
