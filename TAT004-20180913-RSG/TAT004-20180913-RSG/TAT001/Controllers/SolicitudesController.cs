@@ -2434,6 +2434,8 @@ namespace TAT001.Controllers
                                         drec.FECHAF = cal.getNextViernes((DateTime)drec.FECHAF);
                                     else
                                         drec.FECHAF = cal.getNextLunes((DateTime)drec.FECHAF);
+                                    if (dOCUMENTO.DOCUMENTOREC.Count > 1 && dOCUMENTO.LIGADA == true)//RSG 20.12.2018
+                                        drec.FECHAF = drec.FECHAF.Value.AddDays(-1);
                                     drec.EJERCICIO = drec.FECHAV.Value.Year;
                                     if (dOCUMENTO.TIPO_RECURRENTE == "1")
                                         drec.PERIODO = cal.getPeriodo(drec.FECHAV.Value);
