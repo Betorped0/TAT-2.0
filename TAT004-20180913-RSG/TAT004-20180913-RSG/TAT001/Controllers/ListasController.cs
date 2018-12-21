@@ -678,7 +678,7 @@ namespace TAT001.Controllers
             string tsol_id,decimal monto, decimal num_doc,string[] categorias=null)
         {
             bool esNC = false;
-            decimal impuesto = FnCommon.ObtenerImpuesto(db, new DOCUMENTO { NUM_DOC = num_doc, MONTO_DOC_MD = Convert.ToDecimal(monto), SOCIEDAD_ID = bukrs, TSOL_ID = tsol_id }, ref esNC, categorias);
+            decimal impuesto = FnCommon.ObtenerImpuesto(db, new DOCUMENTO {NUM_DOC = num_doc, MONTO_DOC_MD = Convert.ToDecimal(monto), SOCIEDAD_ID = bukrs, TSOL_ID = tsol_id, PAIS_ID = land}, ref esNC, categorias);
             decimal ejer = decimal.Parse(ejercicio);
             
 
