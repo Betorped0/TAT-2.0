@@ -46,8 +46,12 @@ function soportes(tsol, spras) {
         //dataType: "json",
         data: { tsol: tsol },
         success: function (data) {
+            if (data === "1") {
+                if (ligada())
+                    data = "2";
+            }
             $("#txt_trec").val(data);
-            if (data !== "1") {
+            if (data !== "1" && data !== "2" && data !== "3") {
                 //$("#tabs_rec").addClass("disabled");
                 $("#check_recurrente").prop("checked", false);
                 $("#check_recurrente").attr("disabled", "disabled");

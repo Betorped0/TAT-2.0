@@ -3533,7 +3533,7 @@ namespace TAT001.Controllers
         {
             DateTime hoy = DateTime.Parse(fecha);
             ////List <DOCUMENTOL> docs = db.DOCUMENTOLs.Where(a => a.FECHAF == hoy).ToList();
-            List <DOCUMENTOREC> drecc = db.DOCUMENTORECs.Where(a => a.FECHAF == hoy && a.ESTATUS == "E").ToList();
+            List<DOCUMENTOREC> drecc = db.DOCUMENTORECs.Where(a => a.FECHAF == hoy && a.ESTATUS == "E").ToList();
             foreach (DOCUMENTOREC drec in drecc)
             {
                 Recurrente r = new Recurrente(); bool ban = true;
@@ -3543,6 +3543,22 @@ namespace TAT001.Controllers
                 }
             }
             return RedirectToAction("Ejecutar");
+        }
+
+        public ActionResult Calcular(decimal id_d)
+        {
+            DOCUMENTO doc = db.DOCUMENTOes.Find(id_d);
+            ////List <DOCUMENTOL> docs = db.DOCUMENTOLs.Where(a => a.FECHAF == hoy).ToList();
+            List<DOCUMENTOREC> drecc = db.DOCUMENTORECs.Where(a => a.DOC_REF == id_d && a.ESTATUS == "E").ToList();
+            foreach (DOCUMENTOREC drec in drecc)
+            {
+                Recurrente r = new Recurrente(); bool ban = true;
+                if (ban)
+                {
+                    r.calcDistribucion(drec.NUM_DOC, drec.DOCUMENTO.TSOL_ID, drec.FECHAF.Value, drec.POS);
+                }
+            }
+            return RedirectToAction("Index", "Home");
         }
     }
 }
