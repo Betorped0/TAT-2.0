@@ -874,7 +874,7 @@ namespace TAT001.Controllers.Catalogos
                 {
                     doc.BUKRS = dt[i, 0].ToUpper();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     doc.BUKRS = null;
                 } //CoCode
@@ -882,7 +882,7 @@ namespace TAT001.Controllers.Catalogos
                 {
                     doc.LAND = dt[i, 1].ToUpper();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     doc.LAND = null;
                 } //Pais
@@ -891,17 +891,17 @@ namespace TAT001.Controllers.Catalogos
                     doc.KUNNR = dt[i, 2];
                     doc.KUNNR = Completa(doc.KUNNR, 10);
 
-                    CLIENTE u = clientes.Where(x => x.KUNNR.Equals(doc.KUNNR)).FirstOrDefault();
+                    CLIENTE u = clientes.FirstOrDefault(x => x.KUNNR.Equals(doc.KUNNR));
                     if (u == null)
                     {
-                        u = db.CLIENTEs.Where(cc => cc.KUNNR.Equals(doc.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
+                        u = db.CLIENTEs.FirstOrDefault(cc => cc.KUNNR.Equals(doc.KUNNR) && cc.ACTIVO);
                         if (u == null)
                             doc.VKORG = null;
                         else
                             clientes.Add(u);
                     }
 
-                    CLIENTE c = clientes.Where(cc => cc.KUNNR.Equals(doc.KUNNR) & cc.ACTIVO == true).FirstOrDefault();
+                    CLIENTE c = clientes.FirstOrDefault(cc => cc.KUNNR.Equals(doc.KUNNR) && cc.ACTIVO);
                     if (c != null)
                     {
                         doc.VKORG = c.VKORG;
@@ -913,7 +913,7 @@ namespace TAT001.Controllers.Catalogos
                         doc.VKORG = null;
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     doc.KUNNR = null;
                 } //Cliente
@@ -921,7 +921,7 @@ namespace TAT001.Controllers.Catalogos
                 {
                     doc.CLIENTE_N = dt[i, 3];
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     doc.CLIENTE_N = null;
                 } //Nombre Cliente
@@ -929,7 +929,7 @@ namespace TAT001.Controllers.Catalogos
                 {
                     doc.ID_US0 = dt[i, 4];
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     doc.ID_US0 = null;
                 } //Nivel 0
@@ -937,7 +937,7 @@ namespace TAT001.Controllers.Catalogos
                 {
                     doc.ID_US1 = dt[i, 5];
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     doc.ID_US1 = null;
                 } //Nivel 1
@@ -945,7 +945,7 @@ namespace TAT001.Controllers.Catalogos
                 {
                     doc.ID_US2 = dt[i, 6];
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     doc.ID_US2 = null;
                 } //Nivel 2
@@ -953,7 +953,7 @@ namespace TAT001.Controllers.Catalogos
                 {
                     doc.ID_US3 = dt[i, 7];
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     doc.ID_US3 = null;
                 } //Nivel 3
@@ -961,7 +961,7 @@ namespace TAT001.Controllers.Catalogos
                 {
                     doc.ID_US4 = dt[i, 8];
                 }
-                catch (Exception e)
+                catch (Exception )
                 {
                     doc.ID_US4 = null;
                 } //Nivel 4
@@ -969,7 +969,7 @@ namespace TAT001.Controllers.Catalogos
                 {
                     doc.ID_US5 = dt[i, 9];
                 }
-                catch (Exception e)
+                catch (Exception )
                 {
                     doc.ID_US5 = null;
                 } //Nivel 5
@@ -977,7 +977,7 @@ namespace TAT001.Controllers.Catalogos
                 {
                     doc.ID_US6 = dt[i, 10];
                 }
-                catch (Exception e)
+                catch (Exception )
                 {
                     doc.ID_US6 = null;
                 } //Nivel 6
@@ -985,7 +985,7 @@ namespace TAT001.Controllers.Catalogos
                 {
                     doc.ID_US7 = dt[i, 11];
                 }
-                catch (Exception e)
+                catch (Exception )
                 {
                     doc.ID_US7 = null;
                 } //Nivel 7
@@ -994,7 +994,7 @@ namespace TAT001.Controllers.Catalogos
                     doc.ID_PROVEEDOR = dt[i, 12];
                     doc.ID_PROVEEDOR = Completa(doc.ID_PROVEEDOR, 10);
                 }
-                catch (Exception e)
+                catch (Exception )
                 {
                     doc.ID_PROVEEDOR = null;
                 } //Vendor
@@ -1003,7 +1003,7 @@ namespace TAT001.Controllers.Catalogos
                     doc.BANNER = dt[i, 13];
                     doc.BANNER = Completa(doc.BANNER, 10);
                 }
-                catch (Exception e)
+                catch (Exception )
                 {
                     doc.BANNER = null;
                 } //Banner
@@ -1012,7 +1012,7 @@ namespace TAT001.Controllers.Catalogos
                     doc.BANNERG = dt[i, 14];
                     doc.BANNERG = Completa(doc.BANNERG, 10);
                 }
-                catch (Exception e)
+                catch (Exception )
                 {
                     doc.BANNERG = null;
                 } //Banner Agrupador
@@ -1020,7 +1020,7 @@ namespace TAT001.Controllers.Catalogos
                 {
                     doc.CANAL = dt[i, 15];
                 }
-                catch (Exception e)
+                catch (Exception )
                 {
                     doc.CANAL = null;
                 } //Canal
@@ -1028,7 +1028,7 @@ namespace TAT001.Controllers.Catalogos
                 {
                     doc.EXPORTACION = dt[i, 16];
                 }
-                catch (Exception e)
+                catch (Exception )
                 {
                     doc.EXPORTACION = null;
                 } //Exportacion
@@ -1036,7 +1036,7 @@ namespace TAT001.Controllers.Catalogos
                 {
                     doc.CONTACTO = dt[i, 17];
                 }
-                catch (Exception e)
+                catch (Exception )
                 {
                     doc.CONTACTO = null;
                 } //Contacto
@@ -1044,7 +1044,7 @@ namespace TAT001.Controllers.Catalogos
                 {
                     doc.CONTACTOE = dt[i, 18];
                 }
-                catch (Exception e)
+                catch (Exception )
                 {
                     doc.CONTACTOE = null;
                 } //Email de contacto
@@ -1052,7 +1052,7 @@ namespace TAT001.Controllers.Catalogos
                 {
                     doc.MESS = dt[i, 19];
                 }
-                catch (Exception e)
+                catch (Exception )
                 {
                     doc.MESS = null;
                 } //Mensaje

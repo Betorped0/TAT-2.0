@@ -306,41 +306,62 @@
         <div class="col s12 m6 l6">
             @using (TAT001Entities db = new TAT001Entities())
             {
-                List<DOCUMENTO>
-                inf = new List<DOCUMENTO>
-                ();
-                inf = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == Model.D.NUM_DOC).ToList();
+                List<DOCUMENTO>inf =  db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == Model.D.NUM_DOC).ToList();
                 <div class="card-panel">
                     <div class="row" style="overflow:auto;">
-                        <h5>Relacionados</h5>
+                        <h5 id="headRela">Relacionados</h5>
                         <div class="col s12">
                             <table class="table striped" id="table" style="width:100%; font-size:12px;">
                                 <thead>
                                     <tr class="header">
                                         <th>
-                                            @Html.LabelFor(model => model.D.TSOL_ID, "Tipo")
+                                            <label id="lblTipo"></label>
                                         </th>
                                         <th>
-                                            @Html.LabelFor(model => model.D.NUM_DOC, "Documento")
+                                            <label id="lbl_doc"></label>
                                         </th>
                                         <th>
-                                            @Html.LabelFor(model => model.D.DOCUMENTO_SAP, "SAP")
+                                            <label id="lbl_sap"></label>
                                         </th>
                                         <th>
-                                            @Html.LabelFor(model => model.D.SOCIEDAD_ID, "Sociedad")
+                                            <label id="lbl_soc"></label>
                                         </th>
                                         <th>
-                                            @Html.LabelFor(model => model.D.PERIODO, "Periodo")
+                                            <label id="lbl_per"></label>
                                         </th>
                                         <th>
-                                            @Html.LabelFor(model => model.D.EJERCICIO, "Ejercicio")
+                                            <label id="lbl_eje"></label>
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @if (Model.D.TSOL.REVERSO && db.DOCUMENTOes.Any(x => x.NUM_DOC == Model.D.DOCUMENTO_REF))    
+                                    {
+                                        DOCUMENTO docProv = db.DOCUMENTOes.First(x => x.NUM_DOC == Model.D.DOCUMENTO_REF);
+                                        <tr>
+                                            <td>
+                                                @docProv.TSOL.TSOLTs.First(x => x.SPRAS_ID == ViewBag.spras_id).TXT010
+                                            </td>
+                                            <td>
+                                                <a href="@Url.Action("Details", new { id = docProv.NUM_DOC })">@docProv.NUM_DOC</a>
+                                            </td>
+                                            <td>
+                                                @docProv.DOCUMENTO_SAP
+                                            </td>
+                                            <td>
+                                                @docProv.SOCIEDAD_ID
+                                            </td>
+                                            <td>
+                                                @docProv.PERIODO
+                                            </td>
+                                            <td>
+                                                @docProv.EJERCICIO
+                                            </td>
+                                        </tr>
+                                    }
                                     <tr>
                                         <td>
-                                            @Model.D.TSOL.TSOLTs.Where(x => x.SPRAS_ID == ViewBag.spras_id).FirstOrDefault().TXT010
+                                            @Model.D.TSOL.TSOLTs.First(x => x.SPRAS_ID == ViewBag.spras_id).TXT010
                                         </td>
                                         <td>
                                             @Model.D.NUM_DOC
@@ -386,7 +407,6 @@
                                     }
                                 </tbody>
                             </table>
-                            @* } *@
                         </div>
                     </div>
                 </div>
