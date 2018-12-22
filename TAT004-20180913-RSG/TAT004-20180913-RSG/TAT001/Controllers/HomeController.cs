@@ -259,6 +259,8 @@ namespace TAT001.Controllers
                         if (item.nRecurrentes == 0)
                             ld.BUTTON += " disabled";
                     }
+                    if (item.nRecurrentes > 0)
+                        ld.BUTTON = "expand_more";
                     ld.NUM_DOC = item.NUM_DOC;
                     ld.NUM_DOC_TEXT = item.NUM_DOC_TEXT;
                     ld.SOCIEDAD_ID = item.SOCIEDAD_ID;

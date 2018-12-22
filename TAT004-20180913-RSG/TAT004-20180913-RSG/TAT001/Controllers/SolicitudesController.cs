@@ -2434,6 +2434,8 @@ namespace TAT001.Controllers
                                         drec.FECHAF = cal.getNextViernes((DateTime)drec.FECHAF);
                                     else
                                         drec.FECHAF = cal.getNextLunes((DateTime)drec.FECHAF);
+                                    if (dOCUMENTO.DOCUMENTOREC.Count > 1 && dOCUMENTO.LIGADA == true)//RSG 20.12.2018
+                                        drec.FECHAF = drec.FECHAF.Value.AddDays(-1);
                                     drec.EJERCICIO = drec.FECHAV.Value.Year;
                                     if (dOCUMENTO.TIPO_RECURRENTE == "1")
                                         drec.PERIODO = cal.getPeriodo(drec.FECHAV.Value);
@@ -7767,7 +7769,7 @@ namespace TAT001.Controllers
         }
 
         [HttpPost]
-        public JsonResult getSolicitud(string num, string monto, string tsol_id, string sociedad_id, string[] categorias, bool edit = false)//RSG 07.06.2018---------------------------------------------
+        public JsonResult getSolicitud(string num, string monto, string tsol_id, string sociedad_id, string[] categorias, string land, bool edit = false)//RSG 07.06.2018---------------------------------------------
         {
             SOLICITUD_MOD sm = new SOLICITUD_MOD();
             FormatosC format = new FormatosC();
@@ -7779,7 +7781,7 @@ namespace TAT001.Controllers
 
                 // Impuesto
                 bool esNC = false;
-                decimal impuesto = FnCommon.ObtenerImpuesto(db, new DOCUMENTO { NUM_DOC = 0, MONTO_DOC_MD = Convert.ToDecimal(monto), SOCIEDAD_ID = sociedad_id, TSOL_ID = tsol_id }, ref esNC, categorias);
+                decimal impuesto = FnCommon.ObtenerImpuesto(db, new DOCUMENTO { NUM_DOC = 0, MONTO_DOC_MD = Convert.ToDecimal(monto), SOCIEDAD_ID = sociedad_id, TSOL_ID = tsol_id,PAIS_ID= land }, ref esNC, categorias);
                 if (esNC){sm.S_IMPA = impuesto.ToString(); }
                 else{sm.S_IMPA = "-";}
 
@@ -7814,7 +7816,7 @@ namespace TAT001.Controllers
                 decimal num_doc = Convert.ToDecimal(num);
                 // Impuesto
                 bool esNC = false;
-                decimal impuesto = FnCommon.ObtenerImpuesto(db, new DOCUMENTO { NUM_DOC = num_doc, MONTO_DOC_MD = Convert.ToDecimal(monto),SOCIEDAD_ID= sociedad_id ,TSOL_ID=tsol_id}, ref esNC, categorias);
+                decimal impuesto = FnCommon.ObtenerImpuesto(db, new DOCUMENTO { NUM_DOC = num_doc, MONTO_DOC_MD = Convert.ToDecimal(monto),SOCIEDAD_ID= sociedad_id ,TSOL_ID=tsol_id, PAIS_ID = land }, ref esNC, categorias);
                 if (esNC){sm.S_IMPA = impuesto.ToString();}
                 else{ sm.S_IMPA = "-";}
 

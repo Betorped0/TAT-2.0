@@ -48,8 +48,15 @@ function getExcelMasivas(file) {
         processData: false,
         async: true,
         success: function (data) {
-            InicializarTablas();
-            procesarHoja1();
+            if (data !== null || data !== "") {
+                if (data.isRedirect) {
+                    window.onbeforeunload = false;
+                    window.location = data.redirectUrl;
+                } else {
+                    InicializarTablas();
+                    procesarHoja1();
+                }
+            }
         },
         error: function (xhr, httpStatusMessage, customErrorMessage) {
             document.getElementById("loader").style.display = "none";
@@ -71,40 +78,43 @@ function procesarHoja1() {
         contentType: false,
         processData: false,
         success: function (data) {
-
             if (data !== null || data !== "") {
+                if (data.isRedirect) {
+                    window.onbeforeunload = false;
+                    window.location = data.redirectUrl;
+                } else {
+                    if (data.length > 1) {
+                        var errores = data.pop();
 
-                if (data.length > 1) {
-                    var errores = data.pop();
+                        //INICIO DEL CICLO FOR
+                        $.each(data, function (i, dataj) {
+                            //if (i % 2 == 0) {//}  CONDICION PARA SOLO PARES
+                            var addedRow = addRowH1(table, dataj.NUM_DOC, dataj.TSOL_ID, dataj.TALL_ID, dataj.SOCIEDAD_ID, dataj.PAIS_ID, dataj.ESTADO, dataj.CIUDAD, dataj.CONCEPTO, dataj.NOTAS, dataj.PAYER_ID, dataj.PAYER_NOMBRE, dataj.CONTACTO_NOMBRE, dataj.CONTACTO_EMAIL, dataj.FECHAI_VIG, dataj.FECHAF_VIG, dataj.MONEDA_ID, dataj.VKORG, dataj.VTWEG, errores[i], dataj.PAIS_NAME, dataj.TALL_NAME, dataj.SPART, dataj.Decimales, dataj.Miles);
+                            tsols += "." + dataj.NUM_DOC + "-" + dataj.TSOL_ID;//ADD RSG 05.11.2018
+                        }); //FIN DEL FOR
 
-                    //INICIO DEL CICLO FOR
-                    $.each(data, function (i, dataj) {
-                        //if (i % 2 == 0) {//}  CONDICION PARA SOLO PARES
-                        var addedRow = addRowH1(table, dataj.NUM_DOC, dataj.TSOL_ID, dataj.TALL_ID, dataj.SOCIEDAD_ID, dataj.PAIS_ID, dataj.ESTADO, dataj.CIUDAD, dataj.CONCEPTO, dataj.NOTAS, dataj.PAYER_ID, dataj.PAYER_NOMBRE, dataj.CONTACTO_NOMBRE, dataj.CONTACTO_EMAIL, dataj.FECHAI_VIG, dataj.FECHAF_VIG, dataj.MONEDA_ID, dataj.VKORG, dataj.VTWEG, errores[i], dataj.PAIS_NAME, dataj.TALL_NAME, dataj.SPART, dataj.Decimales, dataj.Miles);
-                        tsols += "." + dataj.NUM_DOC + "-" + dataj.TSOL_ID;//ADD RSG 05.11.2018
-                    }); //FIN DEL FOR
-
-                    $('#tab_test1').css("font-size", "10px");
-                    $('#tab_test1').css("display", "table");
-                    mostrarAlerta("info", "B", 'Hoja 1 procesada');
-                    procesarHoja2();
-                    procesarHoja3();
-                    procesarHoja4();
-                    procesarHoja5();
-                    checkRelacionada();
-                    var kk = checkRelacionadaMat();
-                    clearErrors();
-                    generarWarningH1();
-                }
-                else {
-                    if (data) {
-                        if (data.toString().length > 0)
-                            mostrarAlerta("info", "A", data);
+                        $('#tab_test1').css("font-size", "10px");
+                        $('#tab_test1').css("display", "table");
+                        mostrarAlerta("info", "B", 'Hoja 1 procesada');
+                        procesarHoja2();
+                        procesarHoja3();
+                        procesarHoja4();
+                        procesarHoja5();
+                        checkRelacionada();
+                        var kk = checkRelacionadaMat();
+                        clearErrors();
+                        generarWarningH1();
                     }
-                    document.getElementById("loader").style.display = "none";
+                    else {
+                        if (data) {
+                            if (data.toString().length > 0)
+                                mostrarAlerta("info", "A", data);
+                        }
+                        document.getElementById("loader").style.display = "none";
+                    }
                 }
             }
-            
+
             cargaInicialSpin[0] = true;
             if (jQuery.inArray(false, cargaInicialSpin) === -1) {
                 checkRelacionada();
@@ -891,27 +901,31 @@ function procesarHoja2() {
         async: true,
         success: function (data) {
             if (data !== null || data !== "") {
+                if (data.isRedirect) {
+                    window.onbeforeunload = false;
+                    window.location = data.redirectUrl;
+                } else {
+                    if (data.length > 1) {
+                        var warnings = data.pop();
+                        var errores = data.pop();
 
-                if (data.length > 1) {
-                    var warnings = data.pop();
-                    var errores = data.pop();
+                        //INICIO DEL CICLO FOR
+                        $.each(data, function (i, dataj) {
+                            if (dataj.NUM_DOC !== undefined)
+                                var addedRow = addRowH2(table, dataj.NUM_DOC, dataj.FACTURA, dataj.FECHA, dataj.PROVEEDOR, dataj.PROVEEDOR_NOMBRE, dataj.AUTORIZACION, dataj.VENCIMIENTO, dataj.FACTURAK, dataj.EJERCICIOK, errores[i], warnings[i]);
 
-                    //INICIO DEL CICLO FOR
-                    $.each(data, function (i, dataj) {
-                        if (dataj.NUM_DOC !== undefined)
-                            var addedRow = addRowH2(table, dataj.NUM_DOC, dataj.FACTURA, dataj.FECHA, dataj.PROVEEDOR, dataj.PROVEEDOR_NOMBRE, dataj.AUTORIZACION, dataj.VENCIMIENTO, dataj.FACTURAK, dataj.EJERCICIOK, errores[i], warnings[i]);
+                        }); //FIN DEL FOR
 
-                    }); //FIN DEL FOR
-
-                    $('#tab_test2').css("font-size", "10px");
-                    $('#tab_test2').css("display", "table");
-                    mostrarAlerta("info", "B", 'Hoja 2 procesada');
-                    generarWarningH2();
-                }
-                else {
-                    if (data) {
-                        if (data.toString().length > 0)
-                            mostrarAlerta("info", "A", data);
+                        $('#tab_test2').css("font-size", "10px");
+                        $('#tab_test2').css("display", "table");
+                        mostrarAlerta("info", "B", 'Hoja 2 procesada');
+                        generarWarningH2();
+                    }
+                    else {
+                        if (data) {
+                            if (data.toString().length > 0)
+                                mostrarAlerta("info", "A", data);
+                        }
                     }
                 }
             }
@@ -979,7 +993,7 @@ function addRowH2(t, NUM_DOC, FACTURA, FECHA, PROVEEDOR, PROVEEDOR_NOMBRE, AUTOR
         "<input class='" + ERRORES[0] + WARNINGS[0] + " input_numdoc' style='font-size:12px; text-align:center;' type='text' id='' name='' disabled value='" + NUM_DOC + "'><span hidden>" + NUM_DOC + "</span>",
         "<input class='" + ERRORES[1] + WARNINGS[1] + " input_factura' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo[1] + " value='" + FACTURA + "'><span hidden>" + FACTURA + "</span>",
         "<input class='" + ERRORES[2] + WARNINGS[2] + " input_fechaH2' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo[2] + " value='" + FECHA + "'><span hidden>" + FECHA + "</span>",
-        "<input class='" + classProveedor + " input_proveedor' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo[3] + " value='" + PROVEEDOR + "'><span hidden>" + PROVEEDOR + "</span>",
+        "<input class='" + classProveedor + " input_proveedor' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo[3] + " value='" + PROVEEDOR + "'  title='" + getWarning(ERRORES[3]) +"'><span hidden>" + PROVEEDOR + "</span>",
         "<input class='" + ERRORES[4] + WARNINGS[4] + "' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo[4] + " value='" + PROVEEDOR_NOMBRE + "'><span hidden>" + PROVEEDOR_NOMBRE + "</span>",
         "<input class='" + ERRORES[5] + WARNINGS[5] + " input_autorizacion' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo[5] + " value='" + AUTORIZACION + "'><span hidden>" + AUTORIZACION + "</span>",
         "<input class='" + ERRORES[6] + WARNINGS[6] + " input_fechaH2' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo[6] + " value='" + VENCIMIENTO + "'><span hidden>" + VENCIMIENTO + "</span>",
@@ -1339,24 +1353,28 @@ function procesarHoja3() {
         success: function (data) {
 
             if (data !== null || data !== "") {
+                if (data.isRedirect) {
+                    window.onbeforeunload = false;
+                    window.location = data.redirectUrl;
+                } else {
+                    if (data.length > 1) {
+                        var errores = data.pop();
 
-                if (data.length > 1) {
-                    var errores = data.pop();
+                        //INICIO DEL CICLO FOR
+                        $.each(data, function (i, dataj) {
+                            var addedRow = addRowH3(table, dataj.NUM_DOC, dataj.FACTURA, dataj.BILL_DOC, dataj.EJERCICIOK, dataj.PAYER, dataj.PAYER_NOMBRE, dataj.IMPORTE_FAC, dataj.BELNR, errores[i]);
+                        }); //FIN DEL FOR
 
-                    //INICIO DEL CICLO FOR
-                    $.each(data, function (i, dataj) {
-                        var addedRow = addRowH3(table, dataj.NUM_DOC, dataj.FACTURA, dataj.BILL_DOC, dataj.EJERCICIOK, dataj.PAYER, dataj.PAYER_NOMBRE, dataj.IMPORTE_FAC, dataj.BELNR, errores[i]);
-                    }); //FIN DEL FOR
-
-                    $('#tab_test3').css("font-size", "10px");
-                    $('#tab_test3').css("display", "table");
-                    mostrarAlerta("info", "B", 'Hoja 3 procesada');
-                    generarWarningH3();
-                }
-                else {
-                    if (data) {
-                        if (data.toString().length > 0)
-                            mostrarAlerta("info", "A", data);
+                        $('#tab_test3').css("font-size", "10px");
+                        $('#tab_test3').css("display", "table");
+                        mostrarAlerta("info", "B", 'Hoja 3 procesada');
+                        generarWarningH3();
+                    }
+                    else {
+                        if (data) {
+                            if (data.toString().length > 0)
+                                mostrarAlerta("info", "A", data);
+                        }
                     }
                 }
             }
@@ -1639,7 +1657,54 @@ $("#tab_mul").click(function () {
 
 /////////////////////////////////////////////////////////HOJA 4 FUNCIONES Y ASIGNACIONES////////////////////////////////////////////////////////
 function procesarHoja4() {
-    var table = $('#tab_test4').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" }, "order": [1, 'asc']  });
+    var table = $('#tab_test4').DataTable({
+        language: { "url": "../Scripts/lang/" + ln + ".json" }, "order": [1, 'asc'],
+        "drawCallback": function (settings) {
+            var api = this.api();
+            var rows = api.rows({ page: 'all' }).nodes();
+            var aData = new Array();
+
+            api.column(1, { page: 'all' }).data().each(function (group, i) {
+                var indexApoyo = getTableIndex('#tab_test4', 'lbl_apoyo');
+                var indexNumDoc = getTableIndex('#tab_test4', 'lbl_numDocH4');
+                var apoyot4 = $(rows).eq(i).children().eq(indexApoyo).children().val();
+                var num_doc = $(rows).eq(i).children().eq(indexNumDoc).children().val();
+                apoyot4 = toNum(apoyot4, ',', '.');
+
+                //var vals = api.row(api.row($(rows).eq(i)).index()).data();
+                var apoyo = apoyot4 ? parseFloat(apoyot4) : 0;
+
+                if (typeof aData[group] === 'undefined') {
+                    aData[group] = new Array();
+                    aData[group].rows = [];
+                    aData[group].apoyo = [];
+                    aData[group].numDoc = [];
+                }
+
+                aData[group].rows.push(i);
+                aData[group].apoyo.push(apoyo);
+                aData[group].numDoc.push(num_doc);
+                
+
+            });
+            var idx = 0;
+            for (var office in aData) {
+
+                idx = Math.max.apply(Math, aData[office].rows);
+                if (idx >= 0) {
+                    var sum = 0;
+                    $.each(aData[office].apoyo, function (k, v) {
+                        sum = sum + v;
+                    });
+                    $(rows).eq(idx).after(
+                        '<tr class="group" id="grupo' + aData[office].numDoc[0] + '"><td colspan="14"><b>TOTAL</b></td>' +
+                        '<td><b>' + toShow(sum, '.') + '</b></td></tr>'
+                    );
+                }
+
+            }
+        }
+    });
 
     $.ajax({
         type: "POST",
@@ -1652,23 +1717,27 @@ function procesarHoja4() {
         success: function (data) {
 
             if (data !== null || data !== "") {
+                if (data.isRedirect) {
+                    window.onbeforeunload = false;
+                    window.location = data.redirectUrl;
+                } else {
+                    if (data.length > 1) {
+                        var errores = data.pop();
 
-                if (data.length > 1) {
-                    var errores = data.pop();
+                        //INICIO DEL CICLO FOR
+                        $.each(data, function (i, dataj) {
+                            addRowH4(table, dataj.NUM_DOC, dataj.LIGADA, dataj.VIGENCIA_DE, dataj.VIGENCIA_AL, dataj.MATNR, dataj.MATKL, dataj.DESCRIPCION, dataj.MONTO, dataj.PORC_APOYO, dataj.APOYO_PIEZA, dataj.COSTO_APOYO, dataj.PRECIO_SUG, dataj.VOLUMEN_REAL, dataj.APOYO, errores[i], dataj.MATKL_ID);
+                        }); //FIN DEL FOR
 
-                    //INICIO DEL CICLO FOR
-                    $.each(data, function (i, dataj) {
-                        addRowH4(table, dataj.NUM_DOC, dataj.LIGADA, dataj.VIGENCIA_DE, dataj.VIGENCIA_AL, dataj.MATNR, dataj.MATKL, dataj.DESCRIPCION, dataj.MONTO, dataj.PORC_APOYO, dataj.APOYO_PIEZA, dataj.COSTO_APOYO, dataj.PRECIO_SUG, dataj.VOLUMEN_REAL, dataj.APOYO, errores[i], dataj.MATKL_ID);
-                    }); //FIN DEL FOR
-
-                    $('#tab_test4').css("font-size", "10px");
-                    $('#tab_test4').css("display", "table");
-                    mostrarAlerta("info", "B", 'Hoja 4 procesada');
-                }
-                else {
-                    if (data) {
-                        if (data.toString().length > 0)
-                            mostrarAlerta("info", "A", data);
+                        $('#tab_test4').css("font-size", "10px");
+                        $('#tab_test4').css("display", "table");
+                        mostrarAlerta("info", "B", 'Hoja 4 procesada');
+                    }
+                    else {
+                        if (data) {
+                            if (data.toString().length > 0)
+                                mostrarAlerta("info", "A", data);
+                        }
                     }
                 }
             }
@@ -1728,7 +1797,7 @@ function addRowH4(t, NUM_DOC, LIGADA, VIGENCIA_DE, VIGENCIA_AL, MATNR, MATKL, DE
         "<input class='" + ERRORES[10] + " input_cantidades' style='font-size:10px; text-align:center;' type='text' id='' name='' disabled value='" + COSTO_APOYO + "' ' title='" + getWarning(ERRORES[10]) +"'><span hidden>" + COSTO_APOYO + "</span>",
         "<input class='" + ERRORES[11] + " input_cantidades' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo + " value='" + PRECIO_SUG + "'' title='" + getWarning(ERRORES[11]) +"'><span hidden>" + PRECIO_SUG + "</span>",
         "<input class='" + ERRORES[12] + " input_cantidades' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo + " value='" + VOLUMEN_REAL + "' ' title='" + getWarning(ERRORES[12]) +"'><span hidden>" + VOLUMEN_REAL + "</span>",
-        "<input class='" + ERRORES[13] + " input_cantidades input_apoyo' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo + " value='" + APOYO + "' ' title='" + getWarning(ERRORES[13]) +"'><span hidden>" + APOYO + "</span>"
+        "<input class='" + ERRORES[13] + " input_apoyo' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo + " value='" + APOYO + "' ' title='" + getWarning(ERRORES[13]) +"'><span hidden>" + APOYO + "</span>"
     ]).draw(false).node();
 
     var td = $(r).children()[0];
@@ -2246,60 +2315,61 @@ $('#tab_test4').on('focusout', '.input_cantidades', function () {
                     validaApoyo(num2, colApoyo);
                 }
             }
-        
+    getTotalApoyo(num_doc);
 });
 
 $('#tab_test4').on('keydown', '.input_apoyo', function (e) {
-    var tr = $(this).closest('tr'); //Obtener el row
-    var row_index = $(this).parent().parent().index();
-    var num_docH1 = null, pais = null, getDec = null, getMiles= null;
-    var tablaH1 = $('#tab_test1').DataTable();
-    var apoyo = null;
 
-
-    var indexMonto = getTableIndex('#tab_test4', 'lbl_monto'),
-        indexPorApoyo = getTableIndex('#tab_test4', 'lbl_porcentaje'),
-        indexPieApoyo = getTableIndex('#tab_test4', 'lbl_apoyoPieza'),
-        indexCosApoyo = getTableIndex('#tab_test4', 'lbl_costo'),
-        indexPreSugerido = getTableIndex('#tab_test4', 'lbl_precio'),
-        indexVolReal = getTableIndex('#tab_test4', 'lbl_volumen'),
-        indexApoyo = getTableIndex('#tab_test4', 'lbl_apoyo');
-
-    var colMonto = tr.find('td:eq(' + indexMonto + ') input');//8
-    var colPorApoyo = tr.find('td:eq(' + indexPorApoyo + ') input'); //9
-    var colPieApoyo = tr.find('td:eq(' + indexPieApoyo + ') input');//10
-    var colCosApoyo = tr.find('td:eq(' + indexCosApoyo + ') input');//11
-    var colPreSugerido = tr.find('td:eq(' + indexPreSugerido + ') input');//12
-    var colVolReal = tr.find('td:eq(' + indexVolReal + ') input');//13
-    var colApoyo = tr.find('td:eq(' + indexApoyo + ') input');//14
-
-
-    $(tr.find('td:eq(1)').children().addClass(row_index + 'numDoc4'));
-    var num_doc = $('.' + row_index + 'numDoc4').val();
-
-    ///OBTENER PAIS , FORMATO DECIMALES Y MILES POR  NUMERO DE DOCUMENTO 
-    for (var a = 0; a < tablaH1.rows().data().length; a++) {
-        var rowH1 = tablaH1.row(a).node();
-        num_docH1 = $(rowH1).children().eq(1).children().val();
-        var indexPais = getTableIndex('#tab_test1', 'lbl_pais');
-        var indexDecimal = getTableIndex('#tab_test1', 'lbl_decimales');
-        var indexMiles = getTableIndex('#tab_test1', 'lbl_miles');
-
-        if (num_docH1 === num_doc) {
-            pais = $(rowH1).find('td:eq(' + indexPais + ')').children().val();//5
-            getDec = $(rowH1).find('td:eq(' + indexDecimal + ')').children().val();
-            getMiles = $(rowH1).find('td:eq(' + indexMiles + ')').children().val();
-        }
-    }
-    if (getDec === '.') {
-        apoyo = tr.find('td:eq(14) input').val().replace('$', '').replace(',', '');
-    }
-    else {
-        apoyo = tr.find('td:eq(14) input').val().replace('$', '').replace('.', '').replace(',', '.');
-    }
-
-    //VISTA PARA EL APOYO
     if (e.keyCode === 13) {
+        var tr = $(this).closest('tr'); //Obtener el row
+        var row_index = $(this).parent().parent().index();
+        var num_docH1 = null, pais = null, getDec = null, getMiles = null;
+        var tablaH1 = $('#tab_test1').DataTable();
+        var apoyo = null;
+
+
+        var indexMonto = getTableIndex('#tab_test4', 'lbl_monto'),
+            indexPorApoyo = getTableIndex('#tab_test4', 'lbl_porcentaje'),
+            indexPieApoyo = getTableIndex('#tab_test4', 'lbl_apoyoPieza'),
+            indexCosApoyo = getTableIndex('#tab_test4', 'lbl_costo'),
+            indexPreSugerido = getTableIndex('#tab_test4', 'lbl_precio'),
+            indexVolReal = getTableIndex('#tab_test4', 'lbl_volumen'),
+            indexApoyo = getTableIndex('#tab_test4', 'lbl_apoyo');
+
+        var colMonto = tr.find('td:eq(' + indexMonto + ') input');//8
+        var colPorApoyo = tr.find('td:eq(' + indexPorApoyo + ') input'); //9
+        var colPieApoyo = tr.find('td:eq(' + indexPieApoyo + ') input');//10
+        var colCosApoyo = tr.find('td:eq(' + indexCosApoyo + ') input');//11
+        var colPreSugerido = tr.find('td:eq(' + indexPreSugerido + ') input');//12
+        var colVolReal = tr.find('td:eq(' + indexVolReal + ') input');//13
+        var colApoyo = tr.find('td:eq(' + indexApoyo + ') input');//14
+
+
+        $(tr.find('td:eq(1)').children().addClass(row_index + 'numDoc4'));
+        var num_doc = $('.' + row_index + 'numDoc4').val();
+
+        ///OBTENER PAIS , FORMATO DECIMALES Y MILES POR  NUMERO DE DOCUMENTO 
+        for (var a = 0; a < tablaH1.rows().data().length; a++) {
+            var rowH1 = tablaH1.row(a).node();
+            num_docH1 = $(rowH1).children().eq(1).children().val();
+            var indexPais = getTableIndex('#tab_test1', 'lbl_pais');
+            var indexDecimal = getTableIndex('#tab_test1', 'lbl_decimales');
+            var indexMiles = getTableIndex('#tab_test1', 'lbl_miles');
+
+            if (num_docH1 === num_doc) {
+                pais = $(rowH1).find('td:eq(' + indexPais + ')').children().val();//5
+                getDec = $(rowH1).find('td:eq(' + indexDecimal + ')').children().val();
+                getMiles = $(rowH1).find('td:eq(' + indexMiles + ')').children().val();
+            }
+        }
+        if (getDec === '.') {
+            apoyo = tr.find('td:eq(14) input').val().replace('$', '').replace(',', '');
+        }
+        else {
+            apoyo = tr.find('td:eq(14) input').val().replace('$', '').replace('.', '').replace(',', '.');
+        }
+
+        //VISTA PARA EL APOYO
         e.preventDefault();
 
         if ($.isNumeric(apoyo)) {
@@ -2314,10 +2384,11 @@ $('#tab_test4').on('keydown', '.input_apoyo', function (e) {
 
         colApoyo.blur();
         checkRelacionadaMat();
+        getTotalApoyo(num_doc);
+
+
+        validaApoyo(apoyo, colApoyo);
     }
-
-    validaApoyo(apoyo, colApoyo);
-
 });
 
 
@@ -2729,18 +2800,23 @@ function procesarHoja5() {
         success: function (data) {
 
             if (data !== null || data !== "") {
-                if (data.length > 1) {
-                    var textos = data.pop();
-                    var tsol = data.pop();
-                    //INICIO DEL CICLO FOR
-                    for (var i = 0; i < data.length; i++) {
-                        addRowH5(table, data[i], textos[i], tsol[i]);
-                    }
-                    //FIN DEL FOR
+                if (data.isRedirect) {
+                    window.onbeforeunload = false;
+                    window.location = data.redirectUrl;
+                } else {
+                    if (data.length > 1) {
+                        var textos = data.pop();
+                        var tsol = data.pop();
+                        //INICIO DEL CICLO FOR
+                        for (var i = 0; i < data.length; i++) {
+                            addRowH5(table, data[i], textos[i], tsol[i]);
+                        }
+                        //FIN DEL FOR
 
-                    $('#tab_test5').css("font-size", "10px");
-                    $('#tab_test5').css("display", "table");
-                    mostrarAlerta("info", "B", 'Hoja 5 procesada');
+                        $('#tab_test5').css("font-size", "10px");
+                        $('#tab_test5').css("display", "table");
+                        mostrarAlerta("info", "B", 'Hoja 5 procesada');
+                    }
                 }
             }
             cargaInicialSpin[4] = true;
@@ -2762,7 +2838,7 @@ function procesarHoja5() {
                     var data = table.row(this).data();
                     var val = $(this).val();
                     var indexTipo = getTableIndex('#tab_test5', 'lbl_tipo');
-                    if ($(this).hasClass("valid") | val !== "") {//ADD RSG 29.10.2018
+                    if ($(this).hasClass("valid") || val !== "") {//ADD RSG 29.10.2018
                         $(this).closest('tr').children().eq(0).children().removeClass("red");
                         $(this).closest('tr').children().eq(0).children().addClass("green");
                         $(this).closest('tr').children().eq(0).children().text("Ok");
@@ -2778,7 +2854,8 @@ function procesarHoja5() {
                 });
 
                 $("#tab_test5").on("change", ".outRequiredfile", function () {
-                    if ($(this).hasClass("valid")) {
+                    var val = $(this).val();
+                    if ($(this).hasClass("valid") || val !== "") {
                         var id = $(this).closest('tr').children().eq(1).children().val();
                         var tipo = $(this).closest('tr').children().eq(2).children().val();
                         $(this).closest('tr').children().eq(3).children().children().eq(0).children().eq(1).attr('id', id + tipo);
@@ -3573,7 +3650,7 @@ function guardaDatos() {
             if (idArchivoH5 === (num_docH5 + descripcionH5)) {
                 var archivo = document.getElementById(num_docH5 + descripcionH5).files[0];
 
-                if (idArchivoH5.includes("*")) {
+                if (idArchivoH5.indexOf("*")>-1) {
                     rowsH5[e] = [num_docH5 + descripcionH5 + "*" + archivo.name + archivo.size];
                     rowsArc[e] = archivo;
                     formData.append("archivos[]", archivo);
@@ -3637,8 +3714,14 @@ function guardaDatos() {
         contentType: false,
         data: formData,
         success: function (data) {
-            getDec = data;
-            setDatos(tabla1, tabla2, tabla3, tabla4, tabla5, notasArr);
+            if (data !== null || data !== "") {
+                if (data.isRedirect) {
+                    window.onbeforeunload = false;
+                    window.location = data.redirectUrl;
+                } else {
+                    setDatos(tabla1, tabla2, tabla3, tabla4, tabla5, notasArr);
+                }
+            }
         },
         error: function (xhr, status, p3, p4) {
             var err = "Error " + " " + status + " " + p3 + " " + p4;
@@ -3646,7 +3729,7 @@ function guardaDatos() {
                 err = JSON.parse(xhr.responseText).Message;
             document.getElementById("loader").style.display = "none";
             //console.log(err);
-        },
+        }
     });
 
    
@@ -3660,144 +3743,149 @@ function setDatos(tabla1, tabla2, tabla3, tabla4, tabla5, notasArr) {
         async: true,
         success: function (data) {
             if (data !== null | data !== "") {
-                var eliminarId = [];
-                var listaIds = [];
-                var listIdsRechazados = [];
-                listaIds = data.pop();
-                //eliminarId = data;
-                listaIds.forEach(function (element) {
-                    if ((element.indexOf('<') >= 0)) {
-                        var DocId = element.split('<')[1];
-                        listIdsRechazados.push({ idDoc: DocId, msj: "No contiene materiales." });
-                    } else if ((element.indexOf('periodoCerrado') >= 0)) {
-                        var DocIdPeriodo = element.split('periodoCerrado')[1];
-                        listIdsRechazados.push({ idDoc: DocIdPeriodo, msj: "No existe periodo abierto" });
-                    }
-                });
-
-                data.forEach(function (numDoc) {
-                    var existe = false;
-                    numDoc = numDoc.toString();
-                    listIdsRechazados.forEach(function (Doc) {
-                        if (Doc.idDoc === numDoc) {
-                            existe = true;
+                if (data.isRedirect) {
+                    window.onbeforeunload = false;
+                    window.location = data.redirectUrl;
+                } else {
+                    var eliminarId = [];
+                    var listaIds = [];
+                    var listIdsRechazados = [];
+                    listaIds = data.pop();
+                    //eliminarId = data;
+                    listaIds.forEach(function (element) {
+                        if ((element.indexOf('<') >= 0)) {
+                            var DocId = element.split('<')[1];
+                            listIdsRechazados.push({ idDoc: DocId, msj: "No contiene materiales." });
+                        } else if ((element.indexOf('periodoCerrado') >= 0)) {
+                            var DocIdPeriodo = element.split('periodoCerrado')[1];
+                            listIdsRechazados.push({ idDoc: DocIdPeriodo, msj: "No existe periodo abierto" });
                         }
                     });
-                    if (!existe)
-                        eliminarId.push(numDoc);
-                });
 
-                var tablaH1 = $('#tab_test1').DataTable();
-                var tablaH2 = $('#tab_test2').DataTable();
-                var tablaH3 = $('#tab_test3').DataTable();
-                var tablaH4 = $('#tab_test4').DataTable();
-                var tablaH5 = $('#tab_test5').DataTable();
-
-                for (var a = 0; a < tablaH1.rows().data().length; a++) {
-                    var rowH1 = tablaH1.row(a).node();
-                    var rowH11 = tablaH1.row(a);
-                    var num_docH1 = $(rowH1).children().eq(1).children().val();
-
-                    for (var b = 0; b < eliminarId.length; b++) {
-                        num_doc = eliminarId[b];
-
-                        if (num_doc === num_docH1) {
-                            rowH11.remove().draw();
-                            a--;
-                        }
-                    }
-
-                    listIdsRechazados.forEach(function (Doc) {
-                        if (Doc.idDoc === num_docH1) {
-                            $(rowH1).children().eq(1).children().addClass("yellow white-text");
-                            $(rowH1).children().eq(1).children().prop('title', Doc.msj);
-
-                        }
+                    data.forEach(function (numDoc) {
+                        var existe = false;
+                        numDoc = numDoc.toString();
+                        listIdsRechazados.forEach(function (Doc) {
+                            if (Doc.idDoc === numDoc) {
+                                existe = true;
+                            }
+                        });
+                        if (!existe)
+                            eliminarId.push(numDoc);
                     });
-                }
 
-                for (var c = 0; c < tablaH2.rows().data().length; c++) {
-                    var rowH2 = tablaH2.row(c).node();
-                    var rowH22 = tablaH2.row(c);
-                    var num_docH2 = $(rowH2).children().eq(1).children().val();
+                    var tablaH1 = $('#tab_test1').DataTable();
+                    var tablaH2 = $('#tab_test2').DataTable();
+                    var tablaH3 = $('#tab_test3').DataTable();
+                    var tablaH4 = $('#tab_test4').DataTable();
+                    var tablaH5 = $('#tab_test5').DataTable();
 
-                    for (var d = 0; d < eliminarId.length; d++) {
-                        num_doc = eliminarId[d];
+                    for (var a = 0; a < tablaH1.rows().data().length; a++) {
+                        var rowH1 = tablaH1.row(a).node();
+                        var rowH11 = tablaH1.row(a);
+                        var num_docH1 = $(rowH1).children().eq(1).children().val();
 
-                        if (num_doc === num_docH2) {
-                            rowH22.remove().draw();
-                            c--;
+                        for (var b = 0; b < eliminarId.length; b++) {
+                            num_doc = eliminarId[b];
+
+                            if (num_doc === num_docH1) {
+                                rowH11.remove().draw();
+                                a--;
+                            }
+                        }
+
+                        listIdsRechazados.forEach(function (Doc) {
+                            if (Doc.idDoc === num_docH1) {
+                                $(rowH1).children().eq(1).children().addClass("yellow white-text");
+                                $(rowH1).children().eq(1).children().prop('title', Doc.msj);
+
+                            }
+                        });
+                    }
+
+                    for (var c = 0; c < tablaH2.rows().data().length; c++) {
+                        var rowH2 = tablaH2.row(c).node();
+                        var rowH22 = tablaH2.row(c);
+                        var num_docH2 = $(rowH2).children().eq(1).children().val();
+
+                        for (var d = 0; d < eliminarId.length; d++) {
+                            num_doc = eliminarId[d];
+
+                            if (num_doc === num_docH2) {
+                                rowH22.remove().draw();
+                                c--;
+                            }
                         }
                     }
-                }
 
-                for (var e = 0; e < tablaH3.rows().data().length; e++) {
-                    var rowH3 = tablaH3.row(e).node();
-                    var rowH33 = tablaH3.row(e);
-                    var num_docH3 = $(rowH3).children().eq(1).children().val();
+                    for (var e = 0; e < tablaH3.rows().data().length; e++) {
+                        var rowH3 = tablaH3.row(e).node();
+                        var rowH33 = tablaH3.row(e);
+                        var num_docH3 = $(rowH3).children().eq(1).children().val();
 
-                    for (var f = 0; f < eliminarId.length; f++) {
-                        num_doc = eliminarId[f];
+                        for (var f = 0; f < eliminarId.length; f++) {
+                            num_doc = eliminarId[f];
 
-                        if (num_doc === num_docH3) {
-                            rowH33.remove().draw();
-                            e--;
+                            if (num_doc === num_docH3) {
+                                rowH33.remove().draw();
+                                e--;
+                            }
                         }
                     }
-                }
 
-                for (var g = 0; g < tablaH4.rows().data().length; g++) {
-                    var rowH4 = tablaH4.row(g).node();
-                    var rowH44 = tablaH4.row(g);
-                    var num_docH4 = $(rowH4).children().eq(1).children().val();
+                    for (var g = 0; g < tablaH4.rows().data().length; g++) {
+                        var rowH4 = tablaH4.row(g).node();
+                        var rowH44 = tablaH4.row(g);
+                        var num_docH4 = $(rowH4).children().eq(1).children().val();
 
-                    for (var h = 0; h < eliminarId.length; h++) {
-                        num_doc = eliminarId[h];
+                        for (var h = 0; h < eliminarId.length; h++) {
+                            num_doc = eliminarId[h];
 
-                        if (num_doc === num_docH4) {
-                            rowH44.remove().draw();
-                            g--;
+                            if (num_doc === num_docH4) {
+                                rowH44.remove().draw();
+                                g--;
+                            }
                         }
                     }
-                }
 
-                for (var i = 0; i < tablaH5.rows().data().length; i++) {
-                    var rowH5 = tablaH5.row(i).node();
-                    var rowH55 = tablaH5.row(i);
-                    var num_docH5 = $(rowH5).children().eq(1).children().val();
+                    for (var i = 0; i < tablaH5.rows().data().length; i++) {
+                        var rowH5 = tablaH5.row(i).node();
+                        var rowH55 = tablaH5.row(i);
+                        var num_docH5 = $(rowH5).children().eq(1).children().val();
 
-                    for (var j = 0; j < eliminarId.length; j++) {
-                        num_doc = eliminarId[j];
+                        for (var j = 0; j < eliminarId.length; j++) {
+                            num_doc = eliminarId[j];
 
-                        if (num_doc === num_docH5) {
-                            rowH55.remove().draw();
-                            i--;
+                            if (num_doc === num_docH5) {
+                                rowH55.remove().draw();
+                                i--;
+                            }
                         }
                     }
-                }
 
-                document.getElementById("loader").style.display = "none";
+                    document.getElementById("loader").style.display = "none";
 
-                for (var k = 0; k < listaIds.length; k++) {
-                    if (listaIds[k].indexOf('<') >= 0) {
-                        var texto = listaIds[k].split('<');
-                        M.toast({ html: 'Documento ' + texto[1] + ' no fue creado, porque no contiene materiales.' });
+                    for (var k = 0; k < listaIds.length; k++) {
+                        if (listaIds[k].indexOf('<') >= 0) {
+                            var texto = listaIds[k].split('<');
+                            M.toast({ html: 'Documento ' + texto[1] + ' no fue creado, porque no contiene materiales.' });
 
-                    } else if (listaIds[k].indexOf('periodoCerrado') >= 0) {
-                        var msjTexto = listaIds[k].split('periodoCerrado');
-                        M.toast({ html: 'Documento ' + msjTexto[1] + ' no fue creado, porque no existe periodo abierto.' });
+                        } else if (listaIds[k].indexOf('periodoCerrado') >= 0) {
+                            var msjTexto = listaIds[k].split('periodoCerrado');
+                            M.toast({ html: 'Documento ' + msjTexto[1] + ' no fue creado, porque no existe periodo abierto.' });
 
+                        }
+                        else {
+                            M.toast({ html: 'Documento ' + listaIds[k] + ' fue creado' });
+                        }
                     }
-                    else {
-                        M.toast({ html: 'Documento ' + listaIds[k] + ' fue creado' });
-                    }
-                }
-                
-                //var table = $('#tab_test1').DataTable();
 
-                //if (!table.data().any()) {
-                //    location.reload();
-                //}
+                    //var table = $('#tab_test1').DataTable();
+
+                    //if (!table.data().any()) {
+                    //    location.reload();
+                    //}
+                }
             }
         },
 
@@ -4060,6 +4148,7 @@ function InicializarTablas() {
     $('#tab_mul').removeClass("red white-text rojo");
     $('#tab_dis').removeClass("red white-text rojo");
     $('#tab_arc').removeClass("red white-text rojo");
+    $('#miMas').val('');
 }
 function getCategoria(mat) {
     
@@ -4240,20 +4329,27 @@ function generarExcel() {
         success: function (data) {
             document.getElementById("loader").style.display = "none";
             if (data) {
-                var strXML = data.split("TAT001");
-                var strNombre = data.split("\\");
-                var direccion = strXML[strXML.length - 1];
-                direccion = direccion.replace(/ \\/gi, "\\");
-                var mod = direccion.replace(/\\/gi, "/");
-                mod.replace('/', "")
-                var dir = root + mod;
-                var link = document.createElement("a");
-                link.download = "Template Masivas";
-                link.target = '_blank';
-                link.href = dir;
-                document.body.appendChild(link);
-                link.click();
-                link.parentNode.removeChild(link);
+                if (data.isRedirect) {
+                    window.onbeforeunload = false;
+                    window.location = data.redirectUrl;
+                } else {
+                    var strXML = data.split("PdfTemp");
+                    var strNombre = data.split("\\");
+                    var direccion = strXML[strXML.length - 1];
+                    direccion = direccion.replace(/ \\/gi, "\\");
+                    var mod = direccion.replace(/\\/gi, "/");
+                    mod.replace('/', "");
+                    mod = "PdfTemp" + mod;
+                    var dir = root + mod;
+                    var link = document.createElement("a");
+                    link.download = "Template Masivas";
+                    link.target = '_blank';
+                    link.href = dir;
+                    document.body.appendChild(link);
+                    link.click();
+                    link.parentNode.removeChild(link);
+                    InicializarTablas();
+                }
             }
         },
 
@@ -4339,5 +4435,21 @@ function generarWarningH3() {
 
 }
 
+function getTotalApoyo(numDoc) {
+    var total = 0;
+    var tablaH4 = $('#tab_test4').DataTable();
+    var indexNumDoc = getTableIndex('#tab_test4', 'lbl_numDocH4');
+    var lbl_apoyo = getTableIndex('#tab_test4', 'lbl_apoyo');
 
+    for (var a = 0; a < tablaH4.rows().data().length; a++) {
+        var rowH4 = tablaH4.row(a).node();
+        var num_docH4 = $(rowH4).children().eq(indexNumDoc).children().val();
+        var apoyo = $(rowH4).children().eq(lbl_apoyo).children().val();
+        if (numDoc === num_docH4) {
+            total = total + toNum(apoyo, ',', '.');
+        }
+    }
+    var sum = toShow(total, '.');
+    $('#grupo' + numDoc).children().eq(1).children().text(sum);
+}
 

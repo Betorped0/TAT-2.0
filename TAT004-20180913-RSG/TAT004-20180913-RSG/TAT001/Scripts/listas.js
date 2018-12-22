@@ -174,6 +174,7 @@ function asignarSolicitud(num, num2,edit) {
     num2 = toNum(num2);
     var soc  = $("#sociedad_id").val() ? $("#sociedad_id").val() : $("#D_SOCIEDAD_ID").val();
     var tsol = !$("#TSOL_ID").val() ? $("#tsol_id").val() : $("#TSOL_ID").val();
+    var land = $("#pais_id").val();
     var categorias = [];
     if ($("#select_dis").val() === "C") {
         $("#table_dis > tbody  > tr[role='row']").each(function (indx, row) {
@@ -200,7 +201,7 @@ function asignarSolicitud(num, num2,edit) {
             type: "POST",
             url: 'getSolicitud',
             dataType: "json",
-            data: { num: num, monto: num2, tsol_id: tsol, sociedad_id: soc, categorias: categorias, edit: edit },
+            data: { num: num, monto: num2, tsol_id: tsol, sociedad_id: soc, categorias: categorias, land: land, edit: edit },
 
             success: function (data) {
 

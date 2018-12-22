@@ -77,7 +77,7 @@
                     <div class="input-field col s12">
                         <i class="material-icons prefix oc" style="display:none;">date_range</i>
                         @*@Html.HiddenFor(model => model.FECHAI, new { htmlAttributes = new { @class = "form-control datepicker" } })*@
-                        <input id="FECHAI" name="FECHAI" type="text" class="validate oc" style="display:none;" />
+                        <input id="FECHAI" required name="FECHAI" type="text" class="validate oc datepicker" style="display:none;" />
                         <label for="FECHAI" class="oc" style="display:none;">Fecha Inicio</label>
                     </div>
                 </div>
@@ -85,7 +85,7 @@
                     <div class="input-field col s12">
                         <i class="material-icons prefix oc" style="display:none;">date_range</i>
                         @*@Html.HiddenFor(model => model.FECHAF, new { htmlAttributes = new { @class = "form-control datepicker" } })*@
-                        <input id="FECHAF" name="FECHAF" type="text" class="validate oc" style="display:none;" />
+                        <input id="FECHAF" name="FECHAF" required type="text" class="validate oc datepicker" style="display:none;" />
                         <label for="FECHAF" class="oc" style="display:none;">Fecha Termino</label>
                     </div>
                 </div>
@@ -95,48 +95,30 @@
     <div class="row">
         <div class="form-group right-align right" style=" display: inline-block;">
             <input id="btnCancelar" type="button" value="Cancelar" class="btn-small red" style="display:none;" />
-            <input id="btnAp" type="button" value="Guardar" class="btn-small" style="display:none;" />
-            <button id="btnCrear" type="submit" value="Create" class="btn-small" style="display:none;">X</button>
+            @*<input id="btnAp" type="button" value="Guardar" class="btn-small" style="display:none;" />*@
+            <button id="btnCrear" type="submit" value="Guardar" class="btn-small" style="display:none;">Guardar</button>
         </div>
     </div>
 }
 <div>
     @Html.ActionLink("Back to List", "Index",null,new { @class="lblRegresar"})
 </div>
+<script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
+<script type="text/javascript" src="~/Scripts/moment.min.js"></script>
 <script>
-    var elemdp = document.querySelector('#FECHAI');
-    var optionsdp = {
-        format: 'dd/mm/yyyy',
-        i18n: {
-            clear: 'Limpiar',
-            today: 'Hoy',
-            done: 'Seleccionar',
-            previousMonth: '‹',
-            nextMonth: '›',
-            months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-            monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-            weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
-            weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-            weekdaysAbbrev: ['D', 'L', 'M', 'X', 'J', 'V', 'S']
-        }
-    };
-    var instancedp = M.Datepicker.init(elemdp, optionsdp);
+    jQuery(function ($) {
+        $('form').bind('submit', function (e) {
+                //Realizar guardado
+                var res = loadImage();
+                if (res != "0") {
+                    //POST
+                    return;
+            }
+            e.preventDefault();
+        });
+    });
+    fnCommon.materializeInit('datepicker', '@ViewBag.lan');
+    fnCommon.setDateRange('FECHAI', 'FECHAF', null);  
+    fnCommon.setDateRange('FECHAF',null,'FECHAI');
 
-    var elemdp_ = document.querySelector('#FECHAF');
-    var optionsdp_ = {
-        format: 'dd/mm/yyyy',
-        i18n: {
-            clear: 'Limpiar',
-            today: 'Hoy',
-            done: 'Seleccionar',
-            previousMonth: '‹',
-            nextMonth: '›',
-            months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-            monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-            weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
-            weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-            weekdaysAbbrev: ['D', 'L', 'M', 'X', 'J', 'V', 'S']
-        }
-    };
-    var instancedp1 = M.Datepicker.init(elemdp_, optionsdp_);
 </script>
