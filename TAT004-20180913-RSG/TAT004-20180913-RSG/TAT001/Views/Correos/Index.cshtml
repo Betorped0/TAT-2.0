@@ -538,19 +538,21 @@
                                         @*@Html.LabelFor(model => model.TSOL_ID, ViewBag.tipoSolicitud, new { @style = "color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })*@
                                         @Html.EditorFor(model => model.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(model.USUARIO.SPRAS_ID)).FirstOrDefault().TXT020, new { htmlAttributes = new { @disabled = "disabled", @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; " } })
                                     </td>
-                                    <td>
-                                        <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.clasificacion</label>
-                                        @*@Html.LabelFor(model => model.TALL_ID, ViewBag.clasificacion, new { @style = "    color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })*@
-                                        @Html.EditorFor(model => model.TALL.TALLTs.Where(a => a.SPRAS_ID.Equals(model.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50, new { htmlAttributes = new { @disabled = "disabled", @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; " } })
-                                    </td>
-                                </tr>
 
-                                <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
                                     <td>
                                         <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.concepto</label>
                                         @*@Html.LabelFor(model => model.CONCEPTO, @ViewBag.concepto, new { @style = "color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })*@
                                         @Html.EditorFor(model => model.CONCEPTO, new { htmlAttributes = new { @disabled = "disabled", @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; " } })
                                     </td>
+                                </tr>
+
+                                <tr style="border-bottom: 1px solid #e0e0e0;height: 35px;">
+                                    <td>
+                                        <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.clasificacion</label>
+                                        @*@Html.LabelFor(model => model.TALL_ID, ViewBag.clasificacion, new { @style = "    color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })*@
+                                        @Html.EditorFor(model => model.TALL.TALLTs.Where(a => a.SPRAS_ID.Equals(model.USUARIO.SPRAS_ID)).FirstOrDefault().TXT50, new { htmlAttributes = new { @disabled = "disabled", @style = "color: rgba(0, 0, 0, 1.0);background-color: transparent;border: none;border-bottom: 1px dotted rgba(0, 0, 0, 1.0);border-radius: 0;outline: none;height: 30px;width: 100%;margin: 0 0 8px 0;padding: 0; " } })
+                                    </td>
+
                                     <td>
                                         <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.montoDoc</label>
                                         @*@Html.LabelFor(model => model.MONTO_DOC_MD, @ViewBag.montoDoc, new { @style = "    color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })*@
@@ -564,6 +566,9 @@
                                         @*@Html.LabelFor(model => model.PAYER_ID, ViewBag.cliente, new { @style = "    color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })*@
                                         @Html.EditorFor(model => model.PAYER_ID, new { htmlAttributes = new { @disabled = "disabled", @style = "color:rgba(0, 0, 0, 1.0); background-color:transparent; border:none; border-bottom:1px dotted rgba(0, 0, 0, 1.0); border-radius:0; outline:none; height:30px; width:100%; margin:0 0 8px 0; padding:0; font-weight:bold;" } })
                                     </td>
+                                </tr>
+
+                                <tr>
                                     <td>
                                         <label style="color: rgba(0, 0, 0, 1.0);">@ViewBag.clienteNombre</label>
                                         @*@Html.LabelFor(model => model.PAYER_NOMBRE, ViewBag.clienteNombre, new { @style = "    color: rgba(0, 0, 0, 1.0);", @id = "lbl_userid" })*@

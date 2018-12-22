@@ -384,6 +384,7 @@
     <Compile Include="Entities\CPS_LISTA_DOCUMENTOP_Result.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\CPS_LISTA_DOC_MATERIALES_Result.cs" />
     <Compile Include="Entities\CPS_LISTA_MATERIALES_Result.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
@@ -636,6 +637,7 @@
     <Compile Include="Entities\NEGOCIACION.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\NEGOCIACION2.cs" />
     <Compile Include="Entities\NOTICIA.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>

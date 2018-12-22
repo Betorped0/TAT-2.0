@@ -112,6 +112,7 @@ namespace TAT001.Services
         public void enviaMailB(string usu, string usu2, string spras, string UrlDirectory, string page, string image, string imageFlag)
         {
             USUARIO usuInf1 = db.USUARIOs.Where(x => x.ID == usu).FirstOrDefault();
+            USUARIO usuInf2 = db.USUARIOs.Where(x => x.ID == usu2).FirstOrDefault();
 
             try
             {
@@ -122,7 +123,7 @@ namespace TAT001.Services
                 if (mtest == "X")
                     mailTo = "rogelio.sanchez@sf-solutionfactory.com"; //B20180803 MGC Correos
                 else
-                    mailTo = usuInf1.EMAIL;
+                    mailTo = usuInf2.EMAIL;
 
                 CONMAIL conmail = db.CONMAILs.Find(mailt);
 
@@ -144,7 +145,7 @@ namespace TAT001.Services
                     }
                     client.DeliveryMethod = SmtpDeliveryMethod.Network;
                     client.Host = conmail.HOST;
-                    mail.Subject = "BACKUP" + usu + "-" + DateTime.Now.ToShortTimeString();
+                    mail.Subject = "BACKUP" + "-" + usuInf1.NOMBRE + " " + usuInf1.APELLIDO_P + " " + usuInf1.APELLIDO_M + "-" + DateTime.Now.ToShortTimeString();
                     mail.IsBodyHtml = true;
                     UrlDirectory = UrlDirectory.Replace("Usuarios/AddBackup", "Correos/" + page);
                     UrlDirectory += "/?usu=" + usu + "&usu2=" + usu2 + "&spras=" + spras; 
