@@ -1657,7 +1657,54 @@ $("#tab_mul").click(function () {
 
 /////////////////////////////////////////////////////////HOJA 4 FUNCIONES Y ASIGNACIONES////////////////////////////////////////////////////////
 function procesarHoja4() {
-    var table = $('#tab_test4').DataTable({ language: { "url": "../Scripts/lang/" + ln + ".json" }, "order": [1, 'asc']  });
+    var table = $('#tab_test4').DataTable({
+        language: { "url": "../Scripts/lang/" + ln + ".json" }, "order": [1, 'asc'],
+        "drawCallback": function (settings) {
+            var api = this.api();
+            var rows = api.rows({ page: 'all' }).nodes();
+            var aData = new Array();
+
+            api.column(1, { page: 'all' }).data().each(function (group, i) {
+                var indexApoyo = getTableIndex('#tab_test4', 'lbl_apoyo');
+                var indexNumDoc = getTableIndex('#tab_test4', 'lbl_numDocH4');
+                var apoyot4 = $(rows).eq(i).children().eq(indexApoyo).children().val();
+                var num_doc = $(rows).eq(i).children().eq(indexNumDoc).children().val();
+                apoyot4 = toNum(apoyot4, ',', '.');
+
+                //var vals = api.row(api.row($(rows).eq(i)).index()).data();
+                var apoyo = apoyot4 ? parseFloat(apoyot4) : 0;
+
+                if (typeof aData[group] === 'undefined') {
+                    aData[group] = new Array();
+                    aData[group].rows = [];
+                    aData[group].apoyo = [];
+                    aData[group].numDoc = [];
+                }
+
+                aData[group].rows.push(i);
+                aData[group].apoyo.push(apoyo);
+                aData[group].numDoc.push(num_doc);
+                
+
+            });
+            var idx = 0;
+            for (var office in aData) {
+
+                idx = Math.max.apply(Math, aData[office].rows);
+                if (idx >= 0) {
+                    var sum = 0;
+                    $.each(aData[office].apoyo, function (k, v) {
+                        sum = sum + v;
+                    });
+                    $(rows).eq(idx).after(
+                        '<tr class="group" id="grupo' + aData[office].numDoc[0] + '"><td colspan="14"><b>TOTAL</b></td>' +
+                        '<td><b>' + toShow(sum, '.') + '</b></td></tr>'
+                    );
+                }
+
+            }
+        }
+    });
 
     $.ajax({
         type: "POST",
@@ -1750,7 +1797,7 @@ function addRowH4(t, NUM_DOC, LIGADA, VIGENCIA_DE, VIGENCIA_AL, MATNR, MATKL, DE
         "<input class='" + ERRORES[10] + " input_cantidades' style='font-size:10px; text-align:center;' type='text' id='' name='' disabled value='" + COSTO_APOYO + "' ' title='" + getWarning(ERRORES[10]) +"'><span hidden>" + COSTO_APOYO + "</span>",
         "<input class='" + ERRORES[11] + " input_cantidades' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo + " value='" + PRECIO_SUG + "'' title='" + getWarning(ERRORES[11]) +"'><span hidden>" + PRECIO_SUG + "</span>",
         "<input class='" + ERRORES[12] + " input_cantidades' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo + " value='" + VOLUMEN_REAL + "' ' title='" + getWarning(ERRORES[12]) +"'><span hidden>" + VOLUMEN_REAL + "</span>",
-        "<input class='" + ERRORES[13] + " input_cantidades input_apoyo' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo + " value='" + APOYO + "' ' title='" + getWarning(ERRORES[13]) +"'><span hidden>" + APOYO + "</span>"
+        "<input class='" + ERRORES[13] + " input_apoyo' style='font-size:10px; text-align:center;' type='text' id='' name='' " + bloqueo + " value='" + APOYO + "' ' title='" + getWarning(ERRORES[13]) +"'><span hidden>" + APOYO + "</span>"
     ]).draw(false).node();
 
     var td = $(r).children()[0];
@@ -2268,60 +2315,61 @@ $('#tab_test4').on('focusout', '.input_cantidades', function () {
                     validaApoyo(num2, colApoyo);
                 }
             }
-        
+    getTotalApoyo(num_doc);
 });
 
 $('#tab_test4').on('keydown', '.input_apoyo', function (e) {
-    var tr = $(this).closest('tr'); //Obtener el row
-    var row_index = $(this).parent().parent().index();
-    var num_docH1 = null, pais = null, getDec = null, getMiles= null;
-    var tablaH1 = $('#tab_test1').DataTable();
-    var apoyo = null;
 
-
-    var indexMonto = getTableIndex('#tab_test4', 'lbl_monto'),
-        indexPorApoyo = getTableIndex('#tab_test4', 'lbl_porcentaje'),
-        indexPieApoyo = getTableIndex('#tab_test4', 'lbl_apoyoPieza'),
-        indexCosApoyo = getTableIndex('#tab_test4', 'lbl_costo'),
-        indexPreSugerido = getTableIndex('#tab_test4', 'lbl_precio'),
-        indexVolReal = getTableIndex('#tab_test4', 'lbl_volumen'),
-        indexApoyo = getTableIndex('#tab_test4', 'lbl_apoyo');
-
-    var colMonto = tr.find('td:eq(' + indexMonto + ') input');//8
-    var colPorApoyo = tr.find('td:eq(' + indexPorApoyo + ') input'); //9
-    var colPieApoyo = tr.find('td:eq(' + indexPieApoyo + ') input');//10
-    var colCosApoyo = tr.find('td:eq(' + indexCosApoyo + ') input');//11
-    var colPreSugerido = tr.find('td:eq(' + indexPreSugerido + ') input');//12
-    var colVolReal = tr.find('td:eq(' + indexVolReal + ') input');//13
-    var colApoyo = tr.find('td:eq(' + indexApoyo + ') input');//14
-
-
-    $(tr.find('td:eq(1)').children().addClass(row_index + 'numDoc4'));
-    var num_doc = $('.' + row_index + 'numDoc4').val();
-
-    ///OBTENER PAIS , FORMATO DECIMALES Y MILES POR  NUMERO DE DOCUMENTO 
-    for (var a = 0; a < tablaH1.rows().data().length; a++) {
-        var rowH1 = tablaH1.row(a).node();
-        num_docH1 = $(rowH1).children().eq(1).children().val();
-        var indexPais = getTableIndex('#tab_test1', 'lbl_pais');
-        var indexDecimal = getTableIndex('#tab_test1', 'lbl_decimales');
-        var indexMiles = getTableIndex('#tab_test1', 'lbl_miles');
-
-        if (num_docH1 === num_doc) {
-            pais = $(rowH1).find('td:eq(' + indexPais + ')').children().val();//5
-            getDec = $(rowH1).find('td:eq(' + indexDecimal + ')').children().val();
-            getMiles = $(rowH1).find('td:eq(' + indexMiles + ')').children().val();
-        }
-    }
-    if (getDec === '.') {
-        apoyo = tr.find('td:eq(14) input').val().replace('$', '').replace(',', '');
-    }
-    else {
-        apoyo = tr.find('td:eq(14) input').val().replace('$', '').replace('.', '').replace(',', '.');
-    }
-
-    //VISTA PARA EL APOYO
     if (e.keyCode === 13) {
+        var tr = $(this).closest('tr'); //Obtener el row
+        var row_index = $(this).parent().parent().index();
+        var num_docH1 = null, pais = null, getDec = null, getMiles = null;
+        var tablaH1 = $('#tab_test1').DataTable();
+        var apoyo = null;
+
+
+        var indexMonto = getTableIndex('#tab_test4', 'lbl_monto'),
+            indexPorApoyo = getTableIndex('#tab_test4', 'lbl_porcentaje'),
+            indexPieApoyo = getTableIndex('#tab_test4', 'lbl_apoyoPieza'),
+            indexCosApoyo = getTableIndex('#tab_test4', 'lbl_costo'),
+            indexPreSugerido = getTableIndex('#tab_test4', 'lbl_precio'),
+            indexVolReal = getTableIndex('#tab_test4', 'lbl_volumen'),
+            indexApoyo = getTableIndex('#tab_test4', 'lbl_apoyo');
+
+        var colMonto = tr.find('td:eq(' + indexMonto + ') input');//8
+        var colPorApoyo = tr.find('td:eq(' + indexPorApoyo + ') input'); //9
+        var colPieApoyo = tr.find('td:eq(' + indexPieApoyo + ') input');//10
+        var colCosApoyo = tr.find('td:eq(' + indexCosApoyo + ') input');//11
+        var colPreSugerido = tr.find('td:eq(' + indexPreSugerido + ') input');//12
+        var colVolReal = tr.find('td:eq(' + indexVolReal + ') input');//13
+        var colApoyo = tr.find('td:eq(' + indexApoyo + ') input');//14
+
+
+        $(tr.find('td:eq(1)').children().addClass(row_index + 'numDoc4'));
+        var num_doc = $('.' + row_index + 'numDoc4').val();
+
+        ///OBTENER PAIS , FORMATO DECIMALES Y MILES POR  NUMERO DE DOCUMENTO 
+        for (var a = 0; a < tablaH1.rows().data().length; a++) {
+            var rowH1 = tablaH1.row(a).node();
+            num_docH1 = $(rowH1).children().eq(1).children().val();
+            var indexPais = getTableIndex('#tab_test1', 'lbl_pais');
+            var indexDecimal = getTableIndex('#tab_test1', 'lbl_decimales');
+            var indexMiles = getTableIndex('#tab_test1', 'lbl_miles');
+
+            if (num_docH1 === num_doc) {
+                pais = $(rowH1).find('td:eq(' + indexPais + ')').children().val();//5
+                getDec = $(rowH1).find('td:eq(' + indexDecimal + ')').children().val();
+                getMiles = $(rowH1).find('td:eq(' + indexMiles + ')').children().val();
+            }
+        }
+        if (getDec === '.') {
+            apoyo = tr.find('td:eq(14) input').val().replace('$', '').replace(',', '');
+        }
+        else {
+            apoyo = tr.find('td:eq(14) input').val().replace('$', '').replace('.', '').replace(',', '.');
+        }
+
+        //VISTA PARA EL APOYO
         e.preventDefault();
 
         if ($.isNumeric(apoyo)) {
@@ -2336,10 +2384,11 @@ $('#tab_test4').on('keydown', '.input_apoyo', function (e) {
 
         colApoyo.blur();
         checkRelacionadaMat();
+        getTotalApoyo(num_doc);
+
+
+        validaApoyo(apoyo, colApoyo);
     }
-
-    validaApoyo(apoyo, colApoyo);
-
 });
 
 
@@ -2789,7 +2838,7 @@ function procesarHoja5() {
                     var data = table.row(this).data();
                     var val = $(this).val();
                     var indexTipo = getTableIndex('#tab_test5', 'lbl_tipo');
-                    if ($(this).hasClass("valid") | val !== "") {//ADD RSG 29.10.2018
+                    if ($(this).hasClass("valid") || val !== "") {//ADD RSG 29.10.2018
                         $(this).closest('tr').children().eq(0).children().removeClass("red");
                         $(this).closest('tr').children().eq(0).children().addClass("green");
                         $(this).closest('tr').children().eq(0).children().text("Ok");
@@ -2805,7 +2854,8 @@ function procesarHoja5() {
                 });
 
                 $("#tab_test5").on("change", ".outRequiredfile", function () {
-                    if ($(this).hasClass("valid")) {
+                    var val = $(this).val();
+                    if ($(this).hasClass("valid") || val !== "") {
                         var id = $(this).closest('tr').children().eq(1).children().val();
                         var tipo = $(this).closest('tr').children().eq(2).children().val();
                         $(this).closest('tr').children().eq(3).children().children().eq(0).children().eq(1).attr('id', id + tipo);
@@ -4098,6 +4148,7 @@ function InicializarTablas() {
     $('#tab_mul').removeClass("red white-text rojo");
     $('#tab_dis').removeClass("red white-text rojo");
     $('#tab_arc').removeClass("red white-text rojo");
+    $('#miMas').val('');
 }
 function getCategoria(mat) {
     
@@ -4282,12 +4333,13 @@ function generarExcel() {
                     window.onbeforeunload = false;
                     window.location = data.redirectUrl;
                 } else {
-                    var strXML = data.split("TAT001");
+                    var strXML = data.split("PdfTemp");
                     var strNombre = data.split("\\");
                     var direccion = strXML[strXML.length - 1];
                     direccion = direccion.replace(/ \\/gi, "\\");
                     var mod = direccion.replace(/\\/gi, "/");
-                    mod.replace('/', "")
+                    mod.replace('/', "");
+                    mod = "PdfTemp" + mod;
                     var dir = root + mod;
                     var link = document.createElement("a");
                     link.download = "Template Masivas";
@@ -4296,6 +4348,7 @@ function generarExcel() {
                     document.body.appendChild(link);
                     link.click();
                     link.parentNode.removeChild(link);
+                    InicializarTablas();
                 }
             }
         },
@@ -4382,5 +4435,21 @@ function generarWarningH3() {
 
 }
 
+function getTotalApoyo(numDoc) {
+    var total = 0;
+    var tablaH4 = $('#tab_test4').DataTable();
+    var indexNumDoc = getTableIndex('#tab_test4', 'lbl_numDocH4');
+    var lbl_apoyo = getTableIndex('#tab_test4', 'lbl_apoyo');
 
+    for (var a = 0; a < tablaH4.rows().data().length; a++) {
+        var rowH4 = tablaH4.row(a).node();
+        var num_docH4 = $(rowH4).children().eq(indexNumDoc).children().val();
+        var apoyo = $(rowH4).children().eq(lbl_apoyo).children().val();
+        if (numDoc === num_docH4) {
+            total = total + toNum(apoyo, ',', '.');
+        }
+    }
+    var sum = toShow(total, '.');
+    $('#grupo' + numDoc).children().eq(1).children().text(sum);
+}
 

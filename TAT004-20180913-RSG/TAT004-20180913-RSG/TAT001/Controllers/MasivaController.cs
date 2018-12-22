@@ -1856,7 +1856,7 @@ namespace TAT001.Controllers
                             }
                             else
                             {
-                                regresaRowH2.Add("red white-text rojo | Proveedor no encontrado");
+                                regresaRowH2.Add("red white-text rojo | El cliente no tiene un proveedor asignado");
                             }
                         }
                         else

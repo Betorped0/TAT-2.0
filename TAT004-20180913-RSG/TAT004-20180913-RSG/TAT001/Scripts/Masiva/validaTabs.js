@@ -1,16 +1,18 @@
-﻿function filterGlobal(tab) {
-    $('#tab_test' + tab).DataTable().search(
-        $('#global_filter').val()).draw();
+﻿function filterGlobal(table, tab) {
+    if ($(tab).hasClass("active")) {
+        $('#tab_test' + table).DataTable().search(
+            $('#global_filter').val()).draw();
+    }
 }
 
 
 $(document).ready(function () {
     $('input.global_filter').on('keyup click', function () {//ADD RSG 29.10.2018
-        filterGlobal("1");
-        filterGlobal("2");
-        filterGlobal("3");
-        filterGlobal("4");
-        filterGlobal("5");
+        filterGlobal("1","#tab_info");
+        filterGlobal("2","#tab_rel");
+        filterGlobal("3","#tab_mul");
+        filterGlobal("4","#tab_dis");
+        filterGlobal("5","#tab_arc");
     });
 });
 
