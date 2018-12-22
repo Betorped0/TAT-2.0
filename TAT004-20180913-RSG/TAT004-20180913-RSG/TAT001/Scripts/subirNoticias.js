@@ -11,7 +11,7 @@
         $('#previa').css('display', 'none');
         $('#lblPrevia').css('display', 'none');
         $('#btnCancelar').css('display', 'none');
-        $('#btnAp').css('display', 'none');
+        $('#btnCrear').css('display', 'none');
         //document.getElementById("fileImg").value = "";
         $("#fileImg").val('');
         $("#lblImgText").val('');
@@ -103,9 +103,9 @@ function preview(input) {
         $('#previa').css('display', 'block');
         $('#lblPrevia').css('display', 'block');
         $('#btnCancelar').css('display', 'inline-block');
-        $('#btnAp').css('display', 'inline-block');
+        $('#btnCrear').css('display', 'inline-block');
         $('.oc').css('display', 'block');
-        cargarDaPic();
+        //cargarDaPic();
     }
 }
 
