@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.UI.WebControls;
@@ -85,7 +86,7 @@ namespace TAT001.Controllers
             ViewBag.ID_Clasificacion = new SelectList(db.DOCTOCLASIFTs.Where(t => t.SPRAS_ID == spras_id), "ID_Clasificacion", "Texto");
             if (ModelState.IsValid)
             {
-                if (Ruta_Documento.ContentType != "application/x-msdownload")
+                if (!ExtensionesNS.Contains(Ruta_Documento.ContentType))
                 {
                     if (Ruta_Documento.ContentLength < 31457280 && Ruta_Documento.ContentLength > 0)//30 MB
                     {
@@ -93,10 +94,10 @@ namespace TAT001.Controllers
 
                         var fileName = Path.GetFileName(Ruta_Documento.FileName);
                         dOCTOAYUDA.RUTA_DOCUMENTO = Path.Combine(
-                            Server.MapPath("~/Archivos/DoctosAyuda"), fileName);
+                            Server.MapPath("~/Archivos/DoctosAyuda"),dOCTOAYUDA.ID_DOCUMENTO+"_"+fileName);
                         Ruta_Documento.SaveAs(dOCTOAYUDA.RUTA_DOCUMENTO);
 
-                        dOCTOAYUDA.RUTA_DOCUMENTO = "Archivos/DoctosAyuda/" + Ruta_Documento.FileName;
+                        dOCTOAYUDA.RUTA_DOCUMENTO = "Archivos/DoctosAyuda/" + dOCTOAYUDA.ID_DOCUMENTO+"_"+ Ruta_Documento.FileName;
                         db.DOCTOAYUDAs.Add(dOCTOAYUDA);
                         db.SaveChanges();
                         return RedirectToAction("Index");
@@ -159,10 +160,10 @@ namespace TAT001.Controllers
                             //Guarda el nuevo archivo
                             var fileName = Path.GetFileName(Ruta_Documento.FileName);
                             dOCTOAYUDA.RUTA_DOCUMENTO = Path.Combine(
-                                Server.MapPath("~/Archivos/DoctosAyuda"), fileName);
+                                Server.MapPath("~/Archivos/DoctosAyuda"),dOCTOAYUDA.ID_DOCUMENTO+"_"+fileName);
                             Ruta_Documento.SaveAs(dOCTOAYUDA.RUTA_DOCUMENTO);
 
-                            actdOCTOAYUDA.RUTA_DOCUMENTO = "Archivos/DoctosAyuda/" + Ruta_Documento.FileName;
+                            actdOCTOAYUDA.RUTA_DOCUMENTO = "Archivos/DoctosAyuda/" +dOCTOAYUDA.ID_DOCUMENTO+"_"+Ruta_Documento.FileName;
                             actdOCTOAYUDA.NOMBRE = dOCTOAYUDA.NOMBRE;
                             actdOCTOAYUDA.ACTIVO = dOCTOAYUDA.ACTIVO;
                             db.SaveChanges();
@@ -238,10 +239,16 @@ namespace TAT001.Controllers
                     inicial = "D";
                 else
                     inicial = "O";
-                if(clasi==1 || clasi==2)
-                    ult_docto = db.DOCTOAYUDAs.Where(t => t.ID_CLASIFICACION == 1 || t.ID_CLASIFICACION==2).OrderByDescending(t => t.ID_DOCUMENTO).First();
+                if (clasi == 1 || clasi == 2)
+                {
+                    var doctos = db.DOCTOAYUDAs.Where(t => t.ID_CLASIFICACION == 1 || t.ID_CLASIFICACION == 2).ToList();
+                    ult_docto = doctos.OrderByDescending(x => Convert.ToInt32(Regex.Replace(x.ID_DOCUMENTO, @"[^\d]", ""))).First();
+                }
                 else
-                    ult_docto = db.DOCTOAYUDAs.Where(t => t.ID_CLASIFICACION ==clasi).OrderByDescending(t => t.ID_DOCUMENTO).First();
+                {
+                    var doctos = db.DOCTOAYUDAs.Where(t => t.ID_CLASIFICACION == clasi).ToList();
+                    ult_docto = doctos.OrderByDescending(x => Convert.ToInt32(Regex.Replace(x.ID_DOCUMENTO, @"[^\d]", ""))).First();
+                }
                 return inicial+ (Convert.ToInt16(ult_docto.ID_DOCUMENTO.Substring(1, ult_docto.ID_DOCUMENTO.Length-1)) + 1);
             }
             catch (Exception e)
