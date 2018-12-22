@@ -139,7 +139,7 @@ namespace TAT001.Services
                     docRe.DOC_REF = dre.DOC_REF;
                     docRe.EJERCICIO = dre.EJERCICIO;
                     docRe.ESTATUS = dre.ESTATUS;
-                    docRe.FECHAF = dre.FECHAF;
+                    docRe.FECHAF = dre.FECHAV;
                     docRe.FECHAV = dre.FECHAV;
                     docRe.MONTO_BASE = dre.MONTO_BASE;
                     docRe.MONTO_FIJO = dre.MONTO_FIJO;

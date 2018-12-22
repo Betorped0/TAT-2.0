@@ -34,7 +34,14 @@
             <div class="col s12 m12 l12" style="font-size:12px;">
                 <div class="card-panel">
                     <div class="row">
-                        <h5>Recurrencia</h5>
+                        @if (Model.D.DOCUMENTORECs.Count() > 1)
+                        {
+                            <h5 class="tab_recT">Recurrencia</h5>
+                        }
+                        else if (Model.D.DOCUMENTORECs.Count() > 0)
+                        {
+                            <h5 class="tab_ligT">Ligada</h5>
+                        }
                     </div>
                     @{ var caso = Model.D.TIPO_RECURRENTE; if (caso == "6") { caso = "1"; } }
 

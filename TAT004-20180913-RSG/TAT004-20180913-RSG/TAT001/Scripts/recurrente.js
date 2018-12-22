@@ -615,7 +615,12 @@ function copiarTableVistaRec() {
             var ffecha = fecha.split(' ');
 
             //var prov = $(this).find("td.PROVEEDOR").text();
-            var monto = $(this).find("td:eq(3)").text();
+            var monto = "";
+            if (tipoR !== "1") {
+                monto = $(this).find("td:eq(3)").text();
+            } else {
+                monto = toNum($("#MONTO_DOC_MD").val());
+            }
             //var control = $(this).find("td.CONTROL").text();
             var porc = $(this).find("td:eq(4)").text();
             var per = $(this).find("td:eq(11)").text();
@@ -627,8 +632,10 @@ function copiarTableVistaRec() {
 
             ////addRowRecl(t, pos.trim(), sol.trim(), ffecha[0], toShow(monto), toShowPorc(porc), per);
             addRowRec(t, pos.trim(), ffecha[0], monto, tipoR, "", "P" + per.trim() + "-" + ffecha[0].split('/')[2], lengthT);
-            var o = { POS: parseInt(pos.trim()), LIN: 1, PERIODO: per, OBJ1: monto, OBJ2: 0, PORC: porc };
-            listaRangos.push(o);
+            if (tipoR !== "1") {
+                var o = { POS: parseInt(pos.trim()), LIN: 1, PERIODO: per, OBJ1: monto, OBJ2: 0, PORC: porc };
+                listaRangos.push(o);
+            }
 
             //Quitar el row
             $(this).remove();

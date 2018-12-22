@@ -87,6 +87,10 @@
             <div class="row right">
                 @if (Model.D.ESTATUS_C != "C")
                 {
+                    if (Model.D.LIGADA == true && Model.D.ESTATUS_SAP == null && (Model.D.TIPO_RECURRENTE == "7" || Model.D.TIPO_RECURRENTE == "8") && ViewBag.accion != null)
+                    {
+                        <a class="btn-small" id="lbl_calc" href="@Url.Action("Create", "Solicitudes", new { id_d = Model.D.NUM_DOC })">Calcular</a><!--RSG 31.10.2018-->
+                    }
                     if (Model.D.TSOL.CARTA)
                     {
                         @* ---DRS 13.10.2018--- *@
@@ -94,14 +98,14 @@
                         <ul id='list_carta' class='dropdown-content'>
                             @*
 
-                                @* ---DRS 14.10.2018--- *@
+                    @* ---DRS 14.10.2018--- *@
                             <li><a href="@Url.Action("Lista", "CartaV", new { id = Model.D.NUM_DOC, swf = Model.D.ESTATUS_WF })" id="lbl_list">Lista de cartas</a></li> @*//B20180720P MGC Guardar Carta*@
                             @*@if (Model.D.ESTATUS_WF.Equals("S") && (Model.D.USUARIOD_ID == User.Identity.Name))*@
                             @if (Model.D.ESTATUS_WF.Equals("S") && (ViewBag.acciones.USUARIOA_ID.ToUpper() == User.Identity.Name))
                             {
                                 <li><a href="@Url.Action("Create", "CartaV", new { id = Model.D.NUM_DOC })" id="lbl_genc">Generar carta</a></li>
                             }
-                            else if (Model.D.ESTATUS_WF.Equals("F")|| Model.D.ESTATUS_WF.Equals("P") || Model.D.ESTATUS_WF.Equals("S") || Model.D.ESTATUS_WF.Equals("R"))
+                            else if (Model.D.ESTATUS_WF.Equals("F") || Model.D.ESTATUS_WF.Equals("P") || Model.D.ESTATUS_WF.Equals("S") || Model.D.ESTATUS_WF.Equals("R"))
                             {
                                 <li><a href="@Url.Action("Create", "CartaD", new { id = Model.D.NUM_DOC })" id="lbl_genc">Imprimir</a></li>
                             }
@@ -144,7 +148,7 @@
                                 var instance = M.FloatingActionButton.init(elem, options);
                             </script>
                             @*<a id="lbl_wfa" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="A" })">Aprobar</a>
-                                <a id="lbl_wfr" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="R" })">Rechazar</a>*@
+                    <a id="lbl_wfr" class="btn-small  " href="@Url.Action(" Procesa", "Flujos" , new { id=Model.D.NUM_DOC, accion="R" })">Rechazar</a>*@
                             <a class="btn-small modal-trigger" href="#modal1" onclick="aprobar()">Aprobar</a>
                             <a class="btn-small modal-trigger" href="#modal1" onclick="rechazar()">Rechazar</a>
                         }
@@ -287,7 +291,7 @@
                         {
                             if (Model.D.DOCUMENTORECs.FirstOrDefault().NUM_DOC == Model.D.NUM_DOC && Model.D.DOCUMENTORECs.Any(x => x.DOC_REF == 0) && (Model.D.USUARIOC_ID == ViewBag.usuario.ID | Model.D.USUARIOD_ID == ViewBag.usuario.ID))
                             {
-                            <a href="@Url.Action("Cancelar", "Recurrencias", new { id = Model.D.NUM_DOC })" class="btn-small">Cancelar recurrencia</a>
+                                <a href="@Url.Action("Cancelar", "Recurrencias", new { id = Model.D.NUM_DOC })" class="btn-small">Cancelar recurrencia</a>
                             }
                         }
                     }
@@ -322,9 +326,9 @@
                             </script>
                             if (Model.D.DOCUMENTORECs.Count() > 1 && Model.D.ESTATUS_WF != "B")
                             {
-                                if (Model.D.DOCUMENTORECs.FirstOrDefault().NUM_DOC == Model.D.NUM_DOC && Model.D.DOCUMENTORECs.Any(x=>x.DOC_REF == 0))
+                                if (Model.D.DOCUMENTORECs.FirstOrDefault().NUM_DOC == Model.D.NUM_DOC && Model.D.DOCUMENTORECs.Any(x => x.DOC_REF == 0))
                                 {
-                                <a href="@Url.Action("Cancelar", "Recurrencias", new { id = Model.D.NUM_DOC })" class="btn-small">Cancelar recurrencia</a>
+                                    <a href="@Url.Action("Cancelar", "Recurrencias", new { id = Model.D.NUM_DOC })" class="btn-small">Cancelar recurrencia</a>
                                 }
                             }
                         }
@@ -334,12 +338,11 @@
                         }
                     }
 
-
                 }
-                    @if (Model.D.USUARIOC_ID == ViewBag.usuario.ID | Model.D.USUARIOD_ID == ViewBag.usuario.ID)
-                    {
-                        <a class="btn-small" id="lbl_dupp" href="@Url.Action("Create", "Solicitudes", new { id_d = Model.D.NUM_DOC, tsol = Model.D.TSOL_ID, dp = "X" })">Duplicar</a><!--RSG 31.10.2018-->
-                    }
+                @if (Model.D.USUARIOC_ID == ViewBag.usuario.ID | Model.D.USUARIOD_ID == ViewBag.usuario.ID)
+                {
+                    <a class="btn-small" id="lbl_dupp" href="@Url.Action("Create", "Solicitudes", new { id_d = Model.D.NUM_DOC, tsol = Model.D.TSOL_ID, dp = "X" })">Duplicar</a><!--RSG 31.10.2018-->
+                }
                 @if (Model.D.FLUJOes.Count == 0)
                 {
                     <a class="btn-small" href="@Url.Action("Nuevo", "Flujos", new { id = Model.D.NUM_DOC })">Enviar</a>
@@ -364,9 +367,12 @@
                         <li class="tab col s2"><a href="#supp" id="tab_soporte">Soporte</a></li>
                     }
                     <li class="tab col s2"><a href="#dist" id="tab_dis">Distribución</a></li>
-                    @if (Model.D.DOCUMENTORECs.Count > 0)
+                    @if (Model.D.DOCUMENTORECs.Count > 1)
                     {
-                        <li class="tab col s2"><a href="#recu" id="tab_rec">Recurrencia</a></li><!--RSG 09.07.2018 ADD-->
+                        <li class="tab col s2"><a href="#recu" id="tab_rec"><span class="tab_recT">Recurrencia</span></a></li><!--RSG 09.07.2018 ADD-->
+                    }else if (Model.D.DOCUMENTORECs.Count > 0)
+                    {
+                        <li class="tab col s2"><a href="#recu" id="tab_rec"><span class="tab_ligT">Ligada</span></a></li><!--RSG 09.07.2018 ADD-->
                     }
                     @if (ViewBag.acciones != null & ViewBag.accion == "T")
                     {

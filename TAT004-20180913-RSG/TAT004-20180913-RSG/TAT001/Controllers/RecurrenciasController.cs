@@ -3532,29 +3532,14 @@ namespace TAT001.Controllers
         public ActionResult EjecutarLigada(string fecha)
         {
             DateTime hoy = DateTime.Parse(fecha);
-            List <DOCUMENTOL> docs = db.DOCUMENTOLs.Where(a => a.FECHAF == hoy).ToList();
-            foreach (DOCUMENTOL drec in docs)
+            ////List <DOCUMENTOL> docs = db.DOCUMENTOLs.Where(a => a.FECHAF == hoy).ToList();
+            List <DOCUMENTOREC> drecc = db.DOCUMENTORECs.Where(a => a.FECHAF == hoy && a.ESTATUS == "E").ToList();
+            foreach (DOCUMENTOREC drec in drecc)
             {
-                try
+                Recurrente r = new Recurrente(); bool ban = true;
+                if (ban)
                 {
-                    ProcesaFlujo pf = new ProcesaFlujo();
-                    FLUJO conta = db.FLUJOes.Where(a => a.NUM_DOC.Equals(drec.NUM_DOC)).OrderByDescending(a => a.POS).FirstOrDefault();
-                    //conta.USUARIOA_ID = User.Identity.Name;
-                    conta.ESTATUS = "A";
-                    conta.FECHAM = DateTime.Now;
-                    pf.procesa(conta, "");
-
-                    conta = db.FLUJOes.Where(x => x.NUM_DOC == drec.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
-                    DOCUMENTO doc = db.DOCUMENTOes.Find(drec.NUM_DOC);
-                    Estatus es = new Estatus();
-                    conta.STATUS = es.getEstatus(doc);
-                    drec.ESTATUS = true;
-                    db.Entry(conta).State = EntityState.Modified;
-                    db.SaveChanges();
-                }
-                catch
-                {
-
+                    r.calcDistribucion(drec.NUM_DOC, drec.DOCUMENTO.TSOL_ID, hoy, drec.POS);
                 }
             }
             return RedirectToAction("Ejecutar");

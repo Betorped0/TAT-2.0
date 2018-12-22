@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
@@ -144,46 +145,57 @@ namespace TAT001.Controllers
                 //return RedirectToAction("Index", "Home");
                 if (returnUrl != null)
                 {
-                    var checkUser = db.USUARIOLOGs.SingleOrDefault(x => x.USUARIO_ID == user.ID.ToUpper());
+                    bool us = false;
+                    string utest = ConfigurationManager.AppSettings["userTest"];
+                    if (utest == null)
+                        utest = "";
+                    if (utest == "X")
+                        us = true;
 
-                    try
+                    if (!us)
                     {
-                        if (checkUser == null)
+                        var checkUser = db.USUARIOLOGs.SingleOrDefault(x => x.USUARIO_ID == user.ID.ToUpper());
+
+                        try
                         {
-                            USUARIOLOG usuLog = new USUARIOLOG();
-                            usuLog.USUARIO_ID = user.ID.ToUpper();
-                            usuLog.POS = 1;
-                            usuLog.SESION = System.Web.HttpContext.Current.Session.SessionID;
-                            usuLog.NAVEGADOR = Request.Browser.Type;
-                            usuLog.UBICACION = System.Environment.UserName + " - " + RegionInfo.CurrentRegion.DisplayName;
-                            usuLog.FECHA = DateTime.Now;
-                            usuLog.LOGIN = true;
-                            db.USUARIOLOGs.Add(usuLog);
-                            db.SaveChanges();
-                            Session["userlog"] = usuLog;
-                            return Redirect(returnUrl);
+                            if (checkUser == null)
+                            {
+                                USUARIOLOG usuLog = new USUARIOLOG();
+                                usuLog.USUARIO_ID = user.ID.ToUpper();
+                                usuLog.POS = 1;
+                                usuLog.SESION = System.Web.HttpContext.Current.Session.SessionID;
+                                usuLog.NAVEGADOR = Request.Browser.Type;
+                                usuLog.UBICACION = System.Environment.UserName + " - " + RegionInfo.CurrentRegion.DisplayName;
+                                usuLog.FECHA = DateTime.Now;
+                                usuLog.LOGIN = true;
+                                db.USUARIOLOGs.Add(usuLog);
+                                db.SaveChanges();
+                                Session["userlog"] = usuLog;
+                                return Redirect(returnUrl);
+                            }
+                            else
+                            {
+                                return RedirectToAction("validateLoginView", new { USUARIO_ID = user.ID.ToUpper(), returnUrl = returnUrl });
+                                //checkUser.USUARIO_ID = user.ID;
+                                //checkUser.POS = 1;
+                                //checkUser.SESION = System.Web.HttpContext.Current.Session.SessionID;
+                                //checkUser.NAVEGADOR = Request.Browser.Type;
+                                //checkUser.UBICACION = RegionInfo.CurrentRegion.DisplayName;
+                                //checkUser.FECHA = DateTime.Now;
+                                //checkUser.LOGIN = true;
+                                //db.SaveChanges();
+                                //Session["userlog"] = checkUser;
+                                //return Redirect(returnUrl);
+                            }
+
                         }
-                        else
+                        catch
                         {
-                            return RedirectToAction("validateLoginView", new { USUARIO_ID = user.ID.ToUpper(), returnUrl = returnUrl });
-                            //checkUser.USUARIO_ID = user.ID;
-                            //checkUser.POS = 1;
-                            //checkUser.SESION = System.Web.HttpContext.Current.Session.SessionID;
-                            //checkUser.NAVEGADOR = Request.Browser.Type;
-                            //checkUser.UBICACION = RegionInfo.CurrentRegion.DisplayName;
-                            //checkUser.FECHA = DateTime.Now;
-                            //checkUser.LOGIN = true;
-                            //db.SaveChanges();
-                            //Session["userlog"] = checkUser;
-                            //return Redirect(returnUrl);
+
                         }
-
                     }
-                    catch
-                    {
-
-                    }
-
+                    USUARIOLOG usuLog2 = new USUARIOLOG();
+                    Session["userlog"] = usuLog2;
                     return Redirect(returnUrl);
                 }
                 return RedirectToAction("Index", "Home");
@@ -207,16 +219,27 @@ namespace TAT001.Controllers
             {
                 Session["pais"] = null;
                 USUARIOLOG usu = new USUARIOLOG();
-                usu = (USUARIOLOG)Session["userlog"];
-                if (usu != null)
+
+                bool us = false;
+                string utest = ConfigurationManager.AppSettings["userTest"];
+                if (utest == null)
+                    utest = "";
+                if (utest == "X")
+                    us = true;
+
+                if (!us)
                 {
-                    var checkUser = db.USUARIOLOGs.SingleOrDefault(x => x.USUARIO_ID == usu.USUARIO_ID);
-                    if (checkUser != null)
-                        if (checkUser.SESION == System.Web.HttpContext.Current.Session.SessionID)
-                        {
-                            db.Entry(checkUser).State = System.Data.Entity.EntityState.Deleted;
-                            db.SaveChanges();
-                        }
+                    usu = (USUARIOLOG)Session["userlog"];
+                    if (usu != null)
+                    {
+                        var checkUser = db.USUARIOLOGs.SingleOrDefault(x => x.USUARIO_ID == usu.USUARIO_ID);
+                        if (checkUser != null)
+                            if (checkUser.SESION == System.Web.HttpContext.Current.Session.SessionID)
+                            {
+                                db.Entry(checkUser).State = System.Data.Entity.EntityState.Deleted;
+                                db.SaveChanges();
+                            }
+                    }
                 }
                 FormsAuthentication.SignOut();
                 return RedirectToAction("Index", "Home");

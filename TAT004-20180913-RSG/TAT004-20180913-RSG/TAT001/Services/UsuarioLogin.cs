@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 using TAT001.Entities;
@@ -12,16 +13,27 @@ namespace TAT001.Services
 
         public bool validaUsuario(string usuario)
         {
-            var existeUsuario = db.USUARIOLOGs.SingleOrDefault(x => x.USUARIO_ID == usuario);
-            
-            if(existeUsuario != null && System.Web.HttpContext.Current.Session.SessionID != existeUsuario.SESION)
+            bool us = false;
+            string utest = ConfigurationManager.AppSettings["userTest"];
+            if (utest == null)
+                utest = "";
+            if (utest == "X")
+                us = true;
+
+            if (!us)
             {
-                return false;
+                var existeUsuario = db.USUARIOLOGs.SingleOrDefault(x => x.USUARIO_ID == usuario);
+
+                if (existeUsuario != null && System.Web.HttpContext.Current.Session.SessionID != existeUsuario.SESION)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
             }
-            else
-            {
-                return true;
-            }
+            return true;
         }
     }
 }
