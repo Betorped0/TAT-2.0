@@ -555,6 +555,12 @@ namespace TAT001.Controllers
                 Email em = new Email();
                 DOCUMENTO doc = db.DOCUMENTOes.Where(x => x.NUM_DOC == n_doc).First();
                 string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
+                string[] ss = UrlDirectory.Split('/');
+                UrlDirectory = "";
+                for (int i = 0; i< ss.Length-1; i++) {
+                    UrlDirectory += ss[i]+"/";
+                }
+                UrlDirectory += n_doc;
                 string image = Server.MapPath("~/images/logo_kellogg.png");
                 string imageFlag = Server.MapPath("~/images/flags/mini/" + doc.PAIS_ID + ".png");
                 ////em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image);
