@@ -180,7 +180,7 @@ namespace TAT001.Controllers.Catalogos
             CargarSelectList(ref modelView, new string[] {
                 CMB_SOCIEDADES +","+ modelView.calendario445.SOCIEDAD_ID,
                 CMB_PERIODOS + "," + modelView.calendario445.PERIODO,
-                CMB_EJERCICIO + "," + modelView.calendario445.EJERCICIO,
+                CMB_EJERCICIO,
                 CMB_TIPOSSOLICITUD + "," + modelView.calendario445.TSOL_ID});
 
             return View(modelView);
@@ -215,6 +215,7 @@ namespace TAT001.Controllers.Catalogos
                 CargarSelectList(ref modelView, new string[] {
                     CMB_SOCIEDADES + "," + modelView.calendario445.SOCIEDAD_ID,
                     CMB_PERIODOS + "," + modelView.calendario445.PERIODO,
+                    CMB_EJERCICIO,
                     CMB_TIPOSSOLICITUD + "," + modelView.calendario445.TSOL_ID });
                 return View(modelView);
             }
@@ -249,19 +250,26 @@ namespace TAT001.Controllers.Catalogos
         {
             int pagina_id = 530;
 
-            if (calendarioAc.PRE_FROMF > calendarioAc.PRE_TOF
-                || calendarioAc.CIE_FROMF > calendarioAc.CIE_TOF
-                || calendarioAc.PRE_TOF > calendarioAc.CIE_FROMF)
+            DateTime? fechaIPre = new DateTime(calendarioAc.PRE_FROMF.Year, calendarioAc.PRE_FROMF.Month, calendarioAc.PRE_FROMF.Day, calendarioAc.PRE_FROMH.Hours, calendarioAc.PRE_FROMH.Minutes, calendarioAc.PRE_FROMH.Seconds);
+            DateTime? fechaFPre = new DateTime(calendarioAc.PRE_TOF.Year, calendarioAc.PRE_TOF.Month, calendarioAc.PRE_TOF.Day, calendarioAc.PRE_TOH.Hours, calendarioAc.PRE_TOH.Minutes, calendarioAc.PRE_TOH.Seconds);
+
+            DateTime? fechaICi = new DateTime(calendarioAc.CIE_FROMF.Year, calendarioAc.CIE_FROMF.Month, calendarioAc.CIE_FROMF.Day, calendarioAc.CIE_FROMH.Hours, calendarioAc.CIE_FROMH.Minutes, calendarioAc.CIE_FROMH.Seconds);
+            DateTime? fechaFCi = new DateTime(calendarioAc.CIE_TOF.Year, calendarioAc.CIE_TOF.Month, calendarioAc.CIE_TOF.Day, calendarioAc.CIE_TOH.Hours, calendarioAc.CIE_TOH.Minutes, calendarioAc.CIE_TOH.Seconds);
+
+            if (fechaIPre > fechaFPre
+                || fechaICi > fechaFCi
+                || fechaFPre > fechaICi)
             {
                 ViewBag.mnjError = FnCommon.ObtenerTextoMnj(db,pagina_id, "lbl_mnjErrorRangoFechas",User.Identity.Name);
                 return false;
             }
+            
             CALENDARIO_AC calendarioAux = db.CALENDARIO_AC.Where(x => x.SOCIEDAD_ID == calendarioAc.SOCIEDAD_ID
                 && x.EJERCICIO == calendarioAc.EJERCICIO
                 && x.TSOL_ID == calendarioAc.TSOL_ID
                 && x.PERIODO != calendarioAc.PERIODO
-                && ((calendarioAc.PRE_FROMF>=x.PRE_FROMF && calendarioAc.PRE_FROMF<=x.CIE_TOF)
-                || (calendarioAc.CIE_TOF >= x.PRE_FROMF && calendarioAc.CIE_TOF <= x.CIE_TOF))).FirstOrDefault();
+                && ((fechaIPre >= DbFunctions.CreateDateTime(x.PRE_FROMF.Year, x.PRE_FROMF.Month, x.PRE_FROMF.Day, x.PRE_FROMH.Hours, x.PRE_FROMH.Minutes, x.PRE_FROMH.Seconds) && fechaIPre <= DbFunctions.CreateDateTime(x.CIE_TOF.Year, x.CIE_TOF.Month, x.CIE_TOF.Day, x.CIE_TOH.Hours, x.CIE_TOH.Minutes, x.CIE_TOH.Seconds))
+                || (fechaFCi >= DbFunctions.CreateDateTime(x.PRE_FROMF.Year, x.PRE_FROMF.Month, x.PRE_FROMF.Day, x.PRE_FROMH.Hours, x.PRE_FROMH.Minutes, x.PRE_FROMH.Seconds) && fechaFCi <= DbFunctions.CreateDateTime(x.CIE_TOF.Year, x.CIE_TOF.Month, x.CIE_TOF.Day, x.CIE_TOH.Hours, x.CIE_TOH.Minutes, x.CIE_TOH.Seconds)))).FirstOrDefault();
             if (calendarioAux != null)
             {
                 ViewBag.mnjError = String.Format(FnCommon.ObtenerTextoMnj(db, pagina_id, "lbl_mnjTraslapeEnPeriodo", User.Identity.Name), calendarioAux.PERIODO);
