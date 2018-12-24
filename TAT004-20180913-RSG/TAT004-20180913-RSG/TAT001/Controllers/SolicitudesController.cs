@@ -545,7 +545,42 @@ namespace TAT001.Controllers
         public ActionResult Reversar(decimal id, string tsol)
         {
             Services.Reversa r = new Services.Reversa();
-            decimal a = r.creaReversa(id.ToString(), "RP");
+            decimal n_doc = 0;
+            string a = r.creaReversa(id.ToString(), "RP", ref n_doc);
+            ProcesaFlujo pf = new ProcesaFlujo();
+
+            FLUJO conta = db.FLUJOes.Where(x => x.NUM_DOC == n_doc).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+            while (a == "1")
+            {
+                Email em = new Email();
+                DOCUMENTO doc = db.DOCUMENTOes.Where(x => x.NUM_DOC == n_doc).First();
+                string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
+                string[] ss = UrlDirectory.Split('/');
+                UrlDirectory = "";
+                for (int i = 0; i< ss.Length-1; i++) {
+                    UrlDirectory += ss[i]+"/";
+                }
+                UrlDirectory += n_doc;
+                string image = Server.MapPath("~/images/logo_kellogg.png");
+                string imageFlag = Server.MapPath("~/images/flags/mini/" + doc.PAIS_ID + ".png");
+                ////em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image);
+                em.enviaMailC(n_doc, true, Session["spras"].ToString(), UrlDirectory, "Index", image, imageFlag, 1);
+
+                if (conta.WORKFP.ACCION.TIPO == "B")
+                {
+                    WORKFP wpos = db.WORKFPs.Where(x => x.ID == conta.WORKF_ID & x.VERSION == conta.WF_VERSION & x.POS == conta.WF_POS).FirstOrDefault();
+                    conta.ESTATUS = "A";
+                    conta.FECHAM = DateTime.Now;
+                    a = pf.procesa(conta, "");
+                    conta = db.FLUJOes.Where(x => x.NUM_DOC == n_doc).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+
+                }
+                else
+                {
+                    a = "";
+                }
+            }
+
             return RedirectToAction("Index", "Home");
         }
         // GET: Solicitudes/Create
@@ -5796,7 +5831,7 @@ namespace TAT001.Controllers
             string image = Server.MapPath("~/images/logo_kellogg.png");
             DOCUMENTO doc = db.DOCUMENTOes.Where(x => x.NUM_DOC == id).First();
             string imageFlag = Server.MapPath("~/images/flags/mini/" + doc.PAIS_ID + ".png");
-            em.enviaMailC(id, true, Session["spras"].ToString(), UrlDirectory, "Cancelacion", image, imageFlag);
+            em.enviaMailC(id, true, Session["spras"].ToString(), UrlDirectory, "Cancelacion", image, imageFlag, 1);
 
             return RedirectToAction("Index", "Home");
         }

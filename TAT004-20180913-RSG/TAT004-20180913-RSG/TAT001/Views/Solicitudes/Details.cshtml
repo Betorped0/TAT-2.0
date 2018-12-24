@@ -87,9 +87,9 @@
             <div class="row right">
                 @if (Model.D.ESTATUS_C != "C")
                 {
-                    if (Model.D.LIGADA == true && Model.D.ESTATUS_SAP == null && (Model.D.TIPO_RECURRENTE == "7" || Model.D.TIPO_RECURRENTE == "8") && ViewBag.accion != null)
+                    if (Model.D.LIGADA == true && (Model.D.ESTATUS_SAP == null || Model.D.ESTATUS_SAP == "P") && (Model.D.TIPO_RECURRENTE == "7" || Model.D.TIPO_RECURRENTE == "8") && ViewBag.accion != null)
                     {
-                        <a class="btn-small" id="lbl_calc" href="@Url.Action("Create", "Solicitudes", new { id_d = Model.D.NUM_DOC })">Calcular</a><!--RSG 31.10.2018-->
+                        <a class="btn-small" id="lbl_calc" href="@Url.Action("Calcular", "Recurrencias", new { id_d = Model.D.NUM_DOC })">Calcular</a><!--RSG 31.10.2018-->
                     }
                     if (Model.D.TSOL.CARTA)
                     {

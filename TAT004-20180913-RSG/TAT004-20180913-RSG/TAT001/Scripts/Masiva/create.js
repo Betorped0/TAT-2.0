@@ -310,6 +310,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_clasificacion', function () {
         select: function (event, ui) {
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
+            $(tr.find("td:eq(" + col_index + ")").children().prop('title', ''));
             var idTall = tr.find("td:eq(" + col_index + ")").children('span');
             idTall.text(ui.item.TallId);
             clearErrors();
@@ -451,6 +452,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_estado', function () {
             } else if ($(".input_estado").val() !== "") {
                 $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
                 $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
+                $(tr.find("td:eq(" + col_index + ")").children().prop('title', ''));
                 clearErrors();
             }
         },
@@ -458,6 +460,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_estado', function () {
         select: function (event, ui) {
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
+            $(tr.find("td:eq(" + col_index + ")").children().prop('title', ''));
             clearErrors();
         }
     });
@@ -501,6 +504,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_ciudad', function () {
             } else if ($(".input_ciudad").val() !== "") {
                 $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
                 $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
+                $(tr.find("td:eq(" + col_index + ")").children().prop('title', ''));
                 clearErrors();
             }
         },
@@ -508,6 +512,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_ciudad', function () {
         select: function (event, ui) {
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
+            $(tr.find("td:eq(" + col_index + ")").children().prop('title', ''));
             clearErrors();
         }
     });
@@ -526,6 +531,7 @@ $('#tab_test1').on('change', '.input_concepto', function () {
             this.title = 'Se superó la cantidad maxima de caracteres(100)';
             colConcepto.addClass("red white-text rojo");
         } else {
+            this.title = '';
             colConcepto.removeClass("red white-text rojo");
         }
     }
@@ -545,6 +551,7 @@ $('#tab_test1').on('change', '.input_notas', function () {
             this.title = 'Se superó la cantidad maxima de caracteres(255)';
             colNota.addClass("red white-text rojo");
         } else {
+            this.title = '';
             colNota.removeClass("red white-text rojo");
         }
     }
@@ -624,6 +631,7 @@ $('body').on('keydown.autocomplete', '.input_cliente', function () {
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
             //$(tr.find("td:eq(" + col_index2 + ")").children().removeClass("red white-text rojo"));
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
+            $(tr.find("td:eq(" + col_index + ")").children().prop('title', ''));
             clearErrors();
         }
     });
@@ -649,6 +657,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_contacto', function () {
                         if (data) {
                             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
                             $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
+                            $(tr.find("td:eq(" + col_index + ")").children().prop('title', ''));
                         } else {
                             $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
                             $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
@@ -666,6 +675,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_contacto', function () {
                         if (data) {
                             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
                             $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
+                            $(tr.find("td:eq(" + col_index + ")").children().prop('title', ''));
                         } else {
                             $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
                             $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
@@ -696,6 +706,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_contacto', function () {
             }
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
+            $(tr.find("td:eq(" + col_index + ")").children().prop('title', ''));
             clearErrors();
         }
     });
@@ -717,6 +728,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_email', function () {
                     if (data) {
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
+                        $(tr.find("td:eq(" + col_index + ")").children().prop('title', ''));
                     } else {
                         $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
@@ -850,6 +862,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_moneda', function () {
             if (!(ui.item) && $(".input_moneda").val() === "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
                 $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
+                $(tr.find("td:eq(" + col_index + ")").children().prop('title', 'Moneda'));
                 clearErrors();
                 e.target.value = "";
             }
@@ -858,6 +871,7 @@ $('#tab_test1').on('keydown.autocomplete', '.input_moneda', function () {
         select: function (event, ui) {
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
+            $(tr.find("td:eq(" + col_index + ")").children().prop('title', ''));
             clearErrors();
         }
     });
@@ -1034,6 +1048,7 @@ $('#tab_test2').on('keydown.autocomplete', '.input_factura', function () {
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                         $(tr.find("td:eq(" + col_index + ")").children().addClass(amarillo));
+                        $(tr.find("td:eq(" + col_index + ")").children().prop('title', ''));
                     }
                     else {
                         $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
@@ -1082,6 +1097,7 @@ $('#tab_test2').on('keydown.autocomplete', '.input_fechaH2', function () {
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                         $(tr.find("td:eq(" + col_index + ")").children().addClass(amarillo));
+                        $(tr.find("td:eq(" + col_index + ")").children().prop('title', ''));
                     }
                     else {
                         $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
@@ -1175,6 +1191,7 @@ $('#tab_test2').on('keydown.autocomplete', '.input_proveedor', function () {
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
             $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
             $(tr.find("td:eq(" + col_index + ")").children().addClass(amarillo));
+            $(tr.find("td:eq(" + col_index + ")").children().prop('title', ''));
             clearErrors();
         }
     });
@@ -1207,6 +1224,7 @@ $('#tab_test2').on('keydown.autocomplete', '.input_autorizacion', function () {
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                         $(tr.find("td:eq(" + col_index + ")").children().addClass(amarillo));
+                        $(tr.find("td:eq(" + col_index + ")").children().prop('title', ''));
                     }
                     else {
                         $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
@@ -1247,6 +1265,7 @@ $('#tab_test2').on('keydown.autocomplete', '.input_facturak', function () {
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                         $(tr.find("td:eq(" + col_index + ")").children().addClass(amarillo));
+                        $(tr.find("td:eq(" + col_index + ")").children().prop('title', ''));
                     }
                     else {
                         $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
@@ -1295,6 +1314,7 @@ $('#tab_test2').on('keydown.autocomplete', '.input_ejerciciok', function () {
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
                         $(tr.find("td:eq(" + col_index + ")").children().addClass(amarillo));
+                        $(tr.find("td:eq(" + col_index + ")").children().prop('title', ''));
                     } else {
                         $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
@@ -1445,6 +1465,7 @@ $('#tab_test3').on('keydown.autocomplete', '.input_facturaH3', function () {
                     if (data) {
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
+                        $(tr.find("td:eq(" + col_index + ")").children().prop('title', ''));
                         clearErrors();
                         //validarErrores("tab_test2");
                     } else {
@@ -1483,6 +1504,7 @@ $('#tab_test3').on('keydown.autocomplete', '.input_bill', function () {
                     if (data) {
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
+                        $(tr.find("td:eq(" + col_index + ")").children().prop('title', ''));
                     } else {
                         $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
@@ -1518,6 +1540,7 @@ $('#tab_test3').on('keydown.autocomplete', '.input_ejerciciokH3', function () {
                     if (data) {
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
+                        $(tr.find("td:eq(" + col_index + ")").children().prop('title', ''));
                         clearErrors();
                         //validarErrores("tab_test2");
                     } else {
@@ -1577,9 +1600,11 @@ $('#tab_test3').on('keydown.autocomplete', '.input_importe', function () {
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
                         $(tr.find("td:eq(" + col_index + ")").children().val(data));
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
+                        $(tr.find("td:eq(" + col_index + ")").children().prop('title', ''));
                     } else {
                         $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
+                        $(tr.find("td:eq(" + col_index + ")").children().prop('title', 'Importe'));
                     }
                     clearErrors();
                 }
@@ -1590,6 +1615,7 @@ $('#tab_test3').on('keydown.autocomplete', '.input_importe', function () {
             if ($(this).val() === "") {
                 $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
                 $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
+                $(tr.find("td:eq(" + col_index + ")").children().prop('title', 'Importe'));
             }
             clearErrors();
         }
@@ -1612,6 +1638,7 @@ $('#tab_test3').on('keydown.autocomplete', '.input_belnr', function () {
                     if (data) {
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
+                        $(tr.find("td:eq(" + col_index + ")").children().prop('title', ''));
                     } else {
                         $(tr.find("td:eq(" + col_index + ")").children().addClass("red white-text rojo"));
                         $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
@@ -4430,7 +4457,7 @@ function generarWarningH3() {
     elementos.push({ elementIndex: ejerciciokH3_index, elementId: 'EJERCICIOK' });
     elementos.push({ elementIndex: folio_index, elementId: 'BELNR' });
 
-    generarScriptValidaciones('#tab_test2', elementos);
+    generarScriptValidaciones('#tab_test3', elementos);
 
 
 }

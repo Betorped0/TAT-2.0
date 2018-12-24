@@ -90,7 +90,7 @@
                                                     <th id="lbl_rec_backorder">BackOrder</th>
                                                     <th id="lbl_rec_ventareal">Venta real</th>
                                                 }
-                                                <th id="lbl_rec_ncreverso">NC o Reverso</th>
+                                                <th id="lbl_rec_ncreverso">NC, OP o Reverso</th>
                                                 <th id="lbl_rec_monto">Monto</th>
                                             }
                                         }
@@ -158,7 +158,7 @@
                                         {
                                             <td>Cancelado</td>
                                         }
-                                        else if (iteem.ESTATUS != "P")
+                                        else if (iteem.ESTATUS != "P" && iteem.ESTATUS != "E")
                                         {
                                             <td>Pendiente</td>
                                         }
@@ -263,7 +263,9 @@
                                                     {
                                                         if (ran.PORCENTAJE == tol.DOCUMENTO.PORC_APOYO)
                                                         {
-                                                            <td>Contabilizado</td>
+                                                        TAT001.Services.Estatus es = new TAT001.Services.Estatus();
+
+                                                            <td>@es.getText((decimal)iteem.DOC_REF, Session["spras"].ToString())</td>
                                                             <td class="precio">@tol.MONTO_VENTA</td>
                                                             <td class="precio">@(tol.DOCUMENTO.MONTO_DOC_MD)</td>
                                                             if (Model.D.DOCUMENTORECs.Count > 1)

@@ -17,7 +17,7 @@ namespace TAT001.Services
     {
         private readonly TAT001Entities db = new TAT001Entities();
 
-        public void enviaMailC(decimal id, bool ban, string spras, string UrlDirectory, string page, string image, string imageFlag)
+        public void enviaMailC(decimal id, bool ban, string spras, string UrlDirectory, string page, string image, string imageFlag, int? pos = null)
         {
             try
             {
@@ -40,7 +40,12 @@ namespace TAT001.Services
                         if (mtest == "X")
                             mailTo = "rogelio.sanchez@sf-solutionfactory.com"; //B20180803 MGC Correos
                         else
-                            mailTo = workflow.USUARIO1.EMAIL;
+                        {
+                            if (pos == null)
+                                mailTo = workflow.USUARIO1.EMAIL;
+                            else if (pos == 1)
+                                mailTo = dOCUMENTO.USUARIO.EMAIL;
+                        }
                         CONMAIL conmail = db.CONMAILs.Find(mailt);
                         if (conmail != null)
                         {
@@ -67,7 +72,11 @@ namespace TAT001.Services
                             else
                                 mail.Subject = workflow.ESTATUS + dOCUMENTO.NUM_DOC + "-" + DateTime.Now.ToShortTimeString();
                             mail.IsBodyHtml = true;
-                            mail.Subject += workflow.USUARIOA_ID;
+                            //mail.Subject += workflow.USUARIOA_ID;
+                            if (pos == null)
+                                mail.Subject += " " + workflow.USUARIOA_ID;
+                            else if (pos == 1)
+                                mail.Subject += " " + dOCUMENTO.USUARIOC_ID;
 
                             UrlDirectory = UrlDirectory.Replace("Solicitudes/Create", "Correos/" + page);
                             UrlDirectory = UrlDirectory.Replace("Solicitudes/Details", "Correos/" + page);
@@ -75,6 +84,7 @@ namespace TAT001.Services
                             UrlDirectory = UrlDirectory.Replace("Flujos/Procesa", "Correos/" + page);
                             UrlDirectory = UrlDirectory.Replace("Masiva/setDatos", "Correos/" + page);
                             UrlDirectory = UrlDirectory.Replace("Solicitudes/Cancelar", "Correos/" + page);
+                            UrlDirectory = UrlDirectory.Replace("Solicitudes/Reversar", "Correos/" + page);
                             //UrlDirectory += "/" + dOCUMENTO.NUM_DOC + "?mail=true"; //B20180803 MGC Correos
                             //UrlDirectory += "/" + dOCUMENTO.NUM_DOC + ""; //B20180803 MGC Correos
                             UrlDirectory += "/" + dOCUMENTO.NUM_DOC + "?spras=" + spras; //B20180803 MGC Correos
@@ -148,7 +158,7 @@ namespace TAT001.Services
                     mail.Subject = "BACKUP" + "-" + usuInf1.NOMBRE + " " + usuInf1.APELLIDO_P + " " + usuInf1.APELLIDO_M + "-" + DateTime.Now.ToShortTimeString();
                     mail.IsBodyHtml = true;
                     UrlDirectory = UrlDirectory.Replace("Usuarios/AddBackup", "Correos/" + page);
-                    UrlDirectory += "/?usu=" + usu + "&usu2=" + usu2 + "&spras=" + spras; 
+                    UrlDirectory += "/?usu=" + usu + "&usu2=" + usu2 + "&spras=" + spras;
                     Log.Info("Intenta generar page " + UrlDirectory);
                     HttpWebRequest myRequest = (HttpWebRequest)WebRequest.Create(UrlDirectory);
                     myRequest.Method = "GET";
