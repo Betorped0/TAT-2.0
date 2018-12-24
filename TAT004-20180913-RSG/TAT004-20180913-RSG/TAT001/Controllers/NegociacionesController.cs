@@ -15,8 +15,7 @@ using TAT001.Services;
 
 namespace TAT001.Controllers
 {
-    [Authorize]
-    [LoginActive]
+    [AllowAnonymous]
     public class NegociacionesController : Controller
     {
         private TAT001Entities db = new TAT001Entities();

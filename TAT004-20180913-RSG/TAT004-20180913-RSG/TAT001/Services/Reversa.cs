@@ -10,7 +10,7 @@ namespace TAT001.Services
 {
     public class Reversa
     {
-        public decimal creaReversa(string id_d, string tsol)
+        public string creaReversa(string id_d, string tsol, ref decimal num_doc)
         {
             string dates = DateTime.Now.ToString("dd/MM/yyyy");
             DateTime theTime = DateTime.ParseExact(dates, //"06/04/2018 12:00:00 a.m."
@@ -511,6 +511,7 @@ namespace TAT001.Services
                     ////conta.FECHAM = DateTime.Now;
                     ////pf.procesa(conta, "");
                     //RSG 28.05.2018 -----------------------------------
+                    //RSG 24.12.2018 -----------------------------------
 
                     FLUJO conta = db.FLUJOes.Where(x => x.NUM_DOC == f.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
                     Estatus es = new Estatus();//RSG 18.09.2018
@@ -518,6 +519,9 @@ namespace TAT001.Services
                     conta.STATUS = es.getEstatus(doc);
                     db.Entry(conta).State = EntityState.Modified;
                     db.SaveChanges();
+
+                    num_doc = f.NUM_DOC;
+                    return c;
                 }
             }
             catch (Exception ee)
@@ -525,12 +529,11 @@ namespace TAT001.Services
                 if (errorString == "")
                 {
                     errorString = ee.Message.ToString();
-                    return 0;
+                    return "0";
                 }
                 //ViewBag.error = errorString;
             }
-
-            return dOCUMENTO.NUM_DOC;
+            return "";
         }
 
 
