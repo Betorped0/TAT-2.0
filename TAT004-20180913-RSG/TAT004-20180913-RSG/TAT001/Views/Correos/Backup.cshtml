@@ -315,6 +315,7 @@
 <body>
     @{ TAT001Entities db = new TAT001Entities();
        Estatus est = new Estatus();
+       FormatosC fc = new FormatosC();
     }
     @{
         string cabecera = ViewBag.tituloBajoCabecera;
@@ -423,6 +424,7 @@
                             <tbody style="text-align:center;">
                                 @foreach (CSP_DOCUMENTOSXUSER2_Result item in Model)
                                 {
+                                    string land = db.SOCIEDADs.Where(x => x.BUKRS == item.SOCIEDAD_ID).FirstOrDefault().LAND;
                                     <tr>
                                         <td>
                                             @item.NUM_DOC
@@ -434,7 +436,7 @@
                                             @item.PERIODO
                                         </td>
                                         <td>
-                                            @est.getText(item.NUM_DOC, u.SPRAS_ID);
+                                            @est.getText(item.NUM_DOC, u.SPRAS_ID)
                                         </td>
                                         <td>
                                             @item.PAYER_ID
@@ -449,7 +451,7 @@
                                             @item.TXT50
                                         </td>
                                         <td>
-                                            @item.IMPORTE
+                                            @fc.toShow(Convert.ToDecimal(item.MONTO_DOC_MD), db.PAIS.Where(x => x.LAND == land).FirstOrDefault().DECIMAL)
                                         </td>
                                     </tr>
                                 }
