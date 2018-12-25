@@ -3320,7 +3320,7 @@ namespace TAT001.Controllers
                         dp.APOYO_EST = D.MONTO_DOC_MD * dp.PORC_APOYO / 100;
                     else
                         dp.APOYO_REAL = D.MONTO_DOC_MD * dp.PORC_APOYO / 100;
-                    foreach(DOCUMENTOM dm in dp.DOCUMENTOMs)
+                    foreach (DOCUMENTOM dm in dp.DOCUMENTOMs)
                     {
                         if (dOCpADRE.TSOL.PADRE)
                             dm.APOYO_EST = dp.APOYO_EST * dm.PORC_APOYO / 100;
@@ -3520,7 +3520,7 @@ namespace TAT001.Controllers
                         r.creaRecurrente(drec.NUM_DOC, drec.DOCUMENTO.TSOL_ID, hoy, drec.POS);
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
 
                 }
@@ -3558,6 +3558,46 @@ namespace TAT001.Controllers
                     r.calcDistribucion(drec.NUM_DOC, drec.DOCUMENTO.TSOL_ID, drec.FECHAF.Value, drec.POS);
                 }
             }
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost]
+        public ActionResult BackorderPos()
+        {
+            bool ban = true;
+            decimal id_d = decimal.Parse(Request.Form["backorder_num"].ToString());
+            List<DOCUMENTOREC> ddrec = db.DOCUMENTORECs.Where(x => x.NUM_DOC == id_d).ToList();
+
+            foreach (DOCUMENTOREC drec in ddrec.Where(x => x.DOC_REF != 0))
+            {
+                try
+                {
+                    DOCUMENTO D = db.DOCUMENTOes.Where(x => x.NUM_DOC == drec.DOC_REF).FirstOrDefault();
+                    DOCUMENTOL dl = db.DOCUMENTOLs.Where(x => x.NUM_DOC == drec.DOC_REF).Include(x => x.DOCUMENTO).FirstOrDefault();
+                    FormatosC fc = new FormatosC();
+                    string BACKORDER = Request.Form["back_" + drec.POS].ToString();
+                    BACKORDER = fc.toNum(BACKORDER, dl.DOCUMENTO.PAI.MILES, dl.DOCUMENTO.PAI.DECIMAL).ToString();
+                    dl.BACKORDER = decimal.Parse(BACKORDER);
+                    db.Entry(dl).State = EntityState.Modified;
+
+                    DOCUMENTO dOCpADRE = db.DOCUMENTOes.Where(x => x.NUM_DOC == drec.NUM_DOC).FirstOrDefault();
+                    foreach (DOCUMENTORAN dran in dOCpADRE.DOCUMENTORECs.FirstOrDefault(x => x.POS == drec.POS).DOCUMENTORANs)
+                    {
+                        if ((dl.MONTO_VENTA + dl.BACKORDER)> dran.OBJETIVOI)
+                        {
+                            D.PORC_APOYO = dran.PORCENTAJE;
+                            break;
+                        }
+                    }
+                    db.Entry(D).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    Console.Write(e.Message.ToString());
+                }
+            }
+
             return RedirectToAction("Index", "Home");
         }
     }

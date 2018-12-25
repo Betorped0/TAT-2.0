@@ -129,7 +129,13 @@
                     else
                     {
                         <div class="input-field col s6">
-                            <input value="@ViewBag.MONTO_DIS" id="monto_dis" type="text" class="@ViewBag.reversa" />
+                            @if (ViewBag.caso2 == null)
+                            {
+                                <input value="@ViewBag.MONTO_DIS" id="monto_dis" type="text" class="@ViewBag.reversa" />
+                            }
+                            else
+                            {
+                                <input value="@ViewBag.MONTO_DIS" id="monto_dis" type="text" class="@ViewBag.reversa" disabled ="disabled"/>}
                             <label id="lbl_montodis" for="monto_dis">Monto</label>@*B20180801 MGC Textos*@
                         </div>
                         <div class="input-field col s6">

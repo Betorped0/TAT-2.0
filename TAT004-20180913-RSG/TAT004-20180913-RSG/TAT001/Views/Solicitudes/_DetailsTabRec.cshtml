@@ -30,6 +30,25 @@
             {
                 rtol.Add(tol);
             }
+            List<decimal> open = new List<decimal>();
+            DOCUMENTO d = Model.D.DOCUMENTORECs.FirstOrDefault().DOCUMENTO;
+            if (d.DOCUMENTORECs.Any(x => x.ESTATUS == "P"))
+            {
+                if (d.FRECUENCIA_LIQ == 1)
+                {
+                    open.Add(d.DOCUMENTORECs.Last(x => x.ESTATUS == "P").POS);
+                }
+                else
+                {
+                    if (d.DOCUMENTORECs.Last(x => x.ESTATUS == "P").POS % d.FRECUENCIA_LIQ == 0)
+                    {
+                        for (int j = d.DOCUMENTORECs.Last(x => x.ESTATUS == "P").POS - 1; j < d.DOCUMENTORECs.Last(x => x.ESTATUS == "P").POS - d.FRECUENCIA_LIQ - 1; j--)
+                        {
+                            open.Add(d.DOCUMENTORECs.ElementAt(j).POS);
+                        }
+                    }
+                }
+            }
 
             <div class="col s12 m12 l12" style="font-size:12px;">
                 <div class="card-panel">
@@ -47,223 +66,147 @@
 
                     <div class="row" style="overflow:auto;">
                         <div class="col s12">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th id="thead_rnumero">Pos</th>
-                                        <th id="thead_rperiodo">Periodo</th>
-                                        <th id="thead_rtiposol">Tipo</th>
-                                        <th id="thead_rnumsol">No solicitud TAT</th>
-                                        <th id="thead_rfecha">Fecha</th>
-                                        @if (caso != "1")
-                                        {
-                                            <th id="thead_rporc">%</th>
-                                        }
-                                        @if (Model.D.LIGADA != null && Model.D.LIGADA.Value && Model.D.DOCUMENTORECs.Count > 1)
-                                        {
-                                            <th id="lbl_rec_obj">Objetivo</th>
-                                        }
-                                        else if (Model.D.LIGADA != null && Model.D.LIGADA.Value)
-                                        {
-                                        }
-                                        else
-                                        {
-                                            <th id="thead_rmonto">Monto</th>
-                                        }
-                                        <th id="thead_estatus">Estatus</th>
-
-                                        @if (ViewBag.recs.Count > 0 && Model.D.LIGADA.Value)
-                                        {
-                                            <th id="lbl_rec_venta">Venta del periodo</th>
-                                            if (Model.D.DOCUMENTORECs.Count > 1)
+                            @using (Html.BeginForm("BackorderPos", "Recurrencias"))
+                            {
+                                bool backorder = false;
+                                @Html.AntiForgeryToken()
+                                <div class="row right-align hide" id="div_back">
+                                    <div class="col s12">
+                                        <input type="hidden" name="backorder_num" id="backorder_num" value="@Model.D.DOCUMENTORECs.First().NUM_DOC" />
+                                        <input type="submit" value="Enviar backorder" class="btn-small" />
+                                    </div>
+                                </div>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th id="thead_rnumero">Pos</th>
+                                            <th id="thead_rperiodo">Periodo</th>
+                                            <th id="thead_rtiposol">Tipo</th>
+                                            <th id="thead_rnumsol">No solicitud TAT</th>
+                                            <th id="thead_rfecha">Fecha</th>
+                                            @if (caso != "1")
                                             {
-                                                <th id="lbl_rec_montoprov">Monto provisión</th>
+                                                <th id="thead_rporc">%</th>
+                                            }
+                                            @if (Model.D.LIGADA != null && Model.D.LIGADA.Value && Model.D.DOCUMENTORECs.Count > 1)
+                                            {
+                                                <th id="lbl_rec_obj">Objetivo</th>
+                                            }
+                                            else if (Model.D.LIGADA != null && Model.D.LIGADA.Value)
+                                            {
                                             }
                                             else
                                             {
-                                                <th id="lbl_rec_monto_sol">Monto de solicitud</th>
+                                                <th id="thead_rmonto">Monto</th>
                                             }
-                                            if (Model.D.DOCUMENTORECs.Count > 1)
-                                            {
-                                                if (Model.D.PAI.BACKORDER)
-                                                {
-                                                    <th id="lbl_rec_backorder">BackOrder</th>
-                                                    <th id="lbl_rec_ventareal">Venta real</th>
-                                                }
-                                                <th id="lbl_rec_ncreverso">NC, OP o Reverso</th>
-                                                <th id="lbl_rec_monto">Monto</th>
-                                            }
-                                        }
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var iteem in Model.D.DOCUMENTORECs)
-                                    {
-                                        @*<tr id="rec-@iteem.POS" onclick="muestraRan(this.id);">*@
-                                    <tr id="rec-@iteem.POS">
-                                        <td>@iteem.POS/@Model.D.DOCUMENTORECs.Count()</td>
-                                        @{ string periodo = "P" + iteem.PERIODO + "-" + iteem.EJERCICIO; }
-                                        <td>@periodo</td>
-                                        <td>@Model.D.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(ViewBag.spras_id)).FirstOrDefault().TXT50</td>
-                                        @if (iteem.DOC_REF > 0)
-                                        {
-                                            <td><a href="@Url.Action("Details", new { id = iteem.DOC_REF })">@iteem.DOC_REF</a></td>
-                                        }
-                                        else
-                                        {
-                                            <td>No generado</td>
-                                        }
-                                        @if (iteem.ESTATUS != "C" & iteem.ESTATUS != "P")
-                                        {
-                                            <td>No generado</td>
-                                        }
-                                        else
-                                        {
-                                            <td>@iteem.FECHAV.Value.ToShortDateString()</td>}
+                                            <th id="thead_estatus">Estatus</th>
 
-                                        @*@if (!(ViewBag.recs.Count > 0 & iteem.DOC_REF != null & iteem.DOC_REF != 0))
-        {*@
-                                        @if (Model.D.LIGADA == true)
-                                        {
-                                            if (iteem.DOCUMENTORANs.Count > 0)
+                                            @if (ViewBag.recs.Count > 0 && Model.D.LIGADA.Value)
                                             {
-                                                foreach (TAT001.Entities.DOCUMENTORAN ran in iteem.DOCUMENTORANs.Where(x => x.LIN == 1))//RSG 20.09.2018
+                                                <th id="lbl_rec_venta">Venta del periodo</th>
+                                                if (Model.D.DOCUMENTORECs.Count > 1)
                                                 {
-                                                    if (caso != "1")
+                                                    <th id="lbl_rec_montoprov">Monto provisión</th>
+                                                }
+                                                else
+                                                {
+                                                    <th id="lbl_rec_monto_sol">Monto de solicitud</th>
+                                                }
+                                                if (Model.D.DOCUMENTORECs.Count > 1)
+                                                {
+                                                    if (Model.D.PAI.BACKORDER)
                                                     {
-                                                        <td class="porcentaje">@ran.PORCENTAJE</td>}
-                                                    if (Model.D.DOCUMENTORECs.Count > 1)
-                                                    {
-                                                        <td class="precio">@ran.OBJETIVOI</td>
+                                                        <th id="lbl_rec_backorder">BackOrder</th>
+                                                        <th id="lbl_rec_ventareal">Venta real + BO</th>
                                                     }
+                                                    <th id="lbl_rec_ncreverso">NC, OP o Reverso</th>
+                                                    <th id="lbl_rec_monto">Monto</th>
                                                 }
                                             }
-                                            else
-                                            {
-                                                if (caso != "1")
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var iteem in Model.D.DOCUMENTORECs)
+                                        {
+                                            @*<tr id="rec-@iteem.POS" onclick="muestraRan(this.id);">*@
+                                            <tr id="rec-@iteem.POS">
+                                                <td>@iteem.POS/@Model.D.DOCUMENTORECs.Count()</td>
+                                                @{ string periodo = "P" + iteem.PERIODO + "-" + iteem.EJERCICIO; }
+                                                <td>@periodo</td>
+                                                <td>@Model.D.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(ViewBag.spras_id)).FirstOrDefault().TXT50</td>
+                                                @if (iteem.DOC_REF > 0)
                                                 {
-                                                    <td class="porcentaje">@iteem.PORC</td>}
-                                                <td class="precio">@iteem.MONTO_BASE</td>
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if (caso != "1")
-                                            {
-                                                <td class="porcentaje">@Math.Round(iteem.PORC.Value, 2)</td>
-                                            }
-                                            <td class="precio">@iteem.MONTO_BASE</td>
-                                        }
-                                        @if (iteem.ESTATUS == "C")
-                                        {
-                                            <td>Cancelado</td>
-                                        }
-                                        else if (iteem.ESTATUS != "P" && iteem.ESTATUS != "E")
-                                        {
-                                            <td>Pendiente</td>
-                                        }
-                                        else if (!Model.D.LIGADA.Value)
-                                        {
-                                            TAT001.Services.Estatus es = new TAT001.Services.Estatus();
-
-                                            <td>@es.getText((decimal)iteem.DOC_REF, Session["spras"].ToString())</td>
-                                        }
-
-
-                                        @if (ViewBag.recs.Count > 0 & iteem.DOC_REF != null & iteem.DOC_REF != 0)
-                                        {
-                                            foreach (DOCUMENTOL tol in ttol.Where(x => x.NUM_DOC == iteem.DOC_REF).FirstOrDefault().DOCUMENTOLs)
-                                            {
-                                                if (iteem.DOCUMENTORANs.Where(x => x.LIN == 1).FirstOrDefault().PORCENTAJE == tol.DOCUMENTO.PORC_APOYO)
+                                                    <td><a href="@Url.Action("Details", new { id = iteem.DOC_REF })">@iteem.DOC_REF</a></td>
+                                                }
+                                                else
                                                 {
-                                                    @*<td>Contabilizado</td>*@
-                                                    TAT001.Services.Estatus es = new TAT001.Services.Estatus();
+                                                    <td>No generado</td>
+                                                }
+                                                @if (iteem.ESTATUS != "C" & iteem.ESTATUS != "P")
+                                                {
+                                                    <td>No generado</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@iteem.FECHAV.Value.ToShortDateString()</td>}
 
-                                                    <td>@es.getText((decimal)iteem.DOC_REF, Session["spras"].ToString())</td>
-                                                    <td class="precio">@tol.MONTO_VENTA</td>
-                                                    <td class="precio">@(tol.DOCUMENTO.MONTO_DOC_MD)</td>
-                                                    if (Model.D.DOCUMENTORECs.Count > 1)
+                                                @*@if (!(ViewBag.recs.Count > 0 & iteem.DOC_REF != null & iteem.DOC_REF != 0))
+                            {*@
+                                                @if (Model.D.LIGADA == true)
+                                                {
+                                                    if (iteem.DOCUMENTORANs.Count > 0)
                                                     {
-                                                        if (Model.D.PAI.BACKORDER)
+                                                        foreach (TAT001.Entities.DOCUMENTORAN ran in iteem.DOCUMENTORANs.Where(x => x.LIN == 1))//RSG 20.09.2018
                                                         {
-                                                            if (tol.BACKORDER != null)
+                                                            if (caso != "1")
                                                             {
-                                                                <td class="precio">@(tol.BACKORDER)</td>
-                                                                <td class="precio">@(tol.MONTO_VENTA + tol.BACKORDER)</td>
-                                                            }
-                                                            else
+                                                                <td class="porcentaje">@ran.PORCENTAJE</td>}
+                                                            if (Model.D.DOCUMENTORECs.Count > 1)
                                                             {
-                                                                <td class="precio">0.00</td>
-                                                                <td class="precio">0.00</td>
+                                                                <td class="precio">@ran.OBJETIVOI</td>
                                                             }
                                                         }
-                                                        if (rtol.Where(a => a.DOCUMENTO_REF == tol.NUM_DOC).FirstOrDefault() != null)
+                                                    }
+                                                    else
+                                                    {
+                                                        if (caso != "1")
                                                         {
-                                                            <td>@rtol.Where(a => a.DOCUMENTO_REF == tol.NUM_DOC).FirstOrDefault().TSOL_ID</td>
-                                                            <td class="precio">@rtol.Where(a => a.DOCUMENTO_REF == tol.NUM_DOC).FirstOrDefault().MONTO_DOC_MD</td>
-                                                        }
-                                                        else
-                                                        {
-                                                            <td></td>
-                                                            <td></td>
-                                                        }
+                                                            <td class="porcentaje">@iteem.PORC</td>}
+                                                        <td class="precio">@iteem.MONTO_BASE</td>
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    if (Model.D.DOCUMENTORECs.Count > 1)
+                                                    if (caso != "1")
                                                     {
-                                                        if (Model.D.PAI.BACKORDER)
-                                                        {
-                                                            <td></td>
-                                                            <td></td>
-                                                        }
-                                                        <td></td>
-                                                        <td></td>
+                                                        <td class="porcentaje">@Math.Round(iteem.PORC.Value, 2)</td>
                                                     }
+                                                    <td class="precio">@iteem.MONTO_BASE</td>
                                                 }
-                                            }
-                                        }
-                                        else if (ViewBag.recs.Count > 0)
-                                        {
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            if (Model.D.DOCUMENTORECs.Count > 1)
-                                            {
-                                                if (Model.D.PAI.BACKORDER)
+                                                @if (iteem.ESTATUS == "C")
                                                 {
-                                                    <td></td>
-                                                    <td></td>
+                                                    <td>Cancelado</td>
                                                 }
-                                                <td></td>
-                                                <td></td>
-                                            }
-                                        }
-                                    </tr>
-                                        foreach (TAT001.Entities.DOCUMENTORAN ran in iteem.DOCUMENTORANs.Where(x => x.LIN > 1))//RSG 20.09.2018
-                                        {
-                                            @*<tr class="ran-@ran.POS" style="display:none;background-color:rgba(242, 242, 242, 0.5);">
-                                            *@
-                                            <tr class="ran-@ran.POS" style="background-color:rgba(242, 242, 242, 0.5);">
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td class="porcentaje">@ran.PORCENTAJE</td>
-                                                <td class="precio">@ran.OBJETIVOI</td>
+                                                else if (iteem.ESTATUS != "P" && iteem.ESTATUS != "E")
+                                                {
+                                                    <td>Pendiente</td>
+                                                }
+                                                else if (!Model.D.LIGADA.Value)
+                                                {
+                                                    TAT001.Services.Estatus es = new TAT001.Services.Estatus();
+
+                                                    <td>@es.getText((decimal)iteem.DOC_REF, Session["spras"].ToString())</td>
+                                                }
+
 
                                                 @if (ViewBag.recs.Count > 0 & iteem.DOC_REF != null & iteem.DOC_REF != 0)
                                                 {
                                                     foreach (DOCUMENTOL tol in ttol.Where(x => x.NUM_DOC == iteem.DOC_REF).FirstOrDefault().DOCUMENTOLs)
                                                     {
-                                                        if (ran.PORCENTAJE == tol.DOCUMENTO.PORC_APOYO)
+                                                        if (iteem.DOCUMENTORANs.Where(x => x.LIN == 1).FirstOrDefault().PORCENTAJE == tol.DOCUMENTO.PORC_APOYO)
                                                         {
-                                                        TAT001.Services.Estatus es = new TAT001.Services.Estatus();
+                                                            @*<td>Contabilizado</td>*@
+                                                            TAT001.Services.Estatus es = new TAT001.Services.Estatus();
 
                                                             <td>@es.getText((decimal)iteem.DOC_REF, Session["spras"].ToString())</td>
                                                             <td class="precio">@tol.MONTO_VENTA</td>
@@ -272,16 +215,23 @@
                                                             {
                                                                 if (Model.D.PAI.BACKORDER)
                                                                 {
-                                                                    if (tol.BACKORDER != null)
+                                                                    if (tol.BACKORDER == null)
                                                                     {
-                                                                        <td class="precio">@(tol.BACKORDER)</td>
-                                                                        <td class="precio">@(tol.MONTO_VENTA + tol.BACKORDER)</td>
+                                                                        tol.BACKORDER = 0;
+                                                                    }
+                                                                    if (iteem.ESTATUS == "P" && open.Contains(iteem.POS))
+                                                                    {
+                                                                        backorder = true;
+                                                                        <td class="">
+                                                                            <input type="text" class="precio" value="@(tol.BACKORDER)" onchange="this.value = toShow(this.value)" id="back_@iteem.POS" name="back_@iteem.POS" />
+                                                                        </td>
                                                                     }
                                                                     else
                                                                     {
-                                                                        <td class="precio">0.00</td>
-                                                                        <td class="precio">0.00</td>
+                                                                        <td class="precio">@(tol.BACKORDER)</td>
                                                                     }
+                                                                    <td class="precio">@(tol.MONTO_VENTA + tol.BACKORDER)</td>
+
                                                                 }
                                                                 if (rtol.Where(a => a.DOCUMENTO_REF == tol.NUM_DOC).FirstOrDefault() != null)
                                                                 {
@@ -329,15 +279,114 @@
                                                         <td></td>
                                                     }
                                                 }
-                                                else
-                                                {
-                                                    <td></td>
-                                                }
                                             </tr>
+                                            foreach (TAT001.Entities.DOCUMENTORAN ran in iteem.DOCUMENTORANs.Where(x => x.LIN > 1))//RSG 20.09.2018
+                                            {
+                                                @*<tr class="ran-@ran.POS" style="display:none;background-color:rgba(242, 242, 242, 0.5);">
+                                                *@
+                                                <tr class="ran-@ran.POS" style="background-color:rgba(242, 242, 242, 0.5);">
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td class="porcentaje">@ran.PORCENTAJE</td>
+                                                    <td class="precio">@ran.OBJETIVOI</td>
+
+                                                    @if (ViewBag.recs.Count > 0 & iteem.DOC_REF != null & iteem.DOC_REF != 0)
+                                                    {
+                                                        foreach (DOCUMENTOL tol in ttol.Where(x => x.NUM_DOC == iteem.DOC_REF).FirstOrDefault().DOCUMENTOLs)
+                                                        {
+                                                            if (ran.PORCENTAJE == tol.DOCUMENTO.PORC_APOYO)
+                                                            {
+                                                                TAT001.Services.Estatus es = new TAT001.Services.Estatus();
+
+                                                                <td>@es.getText((decimal)iteem.DOC_REF, Session["spras"].ToString())</td>
+                                                                <td class="precio">@tol.MONTO_VENTA</td>
+                                                                <td class="precio">@(tol.DOCUMENTO.MONTO_DOC_MD)</td>
+                                                                if (Model.D.DOCUMENTORECs.Count > 1)
+                                                                {
+                                                                    if (Model.D.PAI.BACKORDER)
+                                                                    {
+                                                                        if (tol.BACKORDER == null)
+                                                                        {
+                                                                            tol.BACKORDER = 0;
+                                                                        }
+                                                                        if (iteem.ESTATUS == "P")
+                                                                        {
+                                                                            backorder = true;
+                                                                            <td class="">
+                                                                                <input type="text" class="precio" value="@(tol.BACKORDER)" onchange="this.value = toShow(this.value)" id="back_@iteem.POS" name="back_@iteem.POS" />
+                                                                            </td>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td class="precio">@(tol.BACKORDER)</td>
+                                                                        }
+                                                                        <td class="precio">@(tol.MONTO_VENTA + tol.BACKORDER)</td>
+                                                                    }
+                                                                    if (rtol.Where(a => a.DOCUMENTO_REF == tol.NUM_DOC).FirstOrDefault() != null)
+                                                                    {
+                                                                        <td>@rtol.Where(a => a.DOCUMENTO_REF == tol.NUM_DOC).FirstOrDefault().TSOL_ID</td>
+                                                                        <td class="precio">@rtol.Where(a => a.DOCUMENTO_REF == tol.NUM_DOC).FirstOrDefault().MONTO_DOC_MD</td>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                    }
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                if (Model.D.DOCUMENTORECs.Count > 1)
+                                                                {
+                                                                    if (Model.D.PAI.BACKORDER)
+                                                                    {
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                    }
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    else if (ViewBag.recs.Count > 0)
+                                                    {
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        if (Model.D.DOCUMENTORECs.Count > 1)
+                                                        {
+                                                            if (Model.D.PAI.BACKORDER)
+                                                            {
+                                                                <td></td>
+                                                                <td></td>
+                                                            }
+                                                            <td></td>
+                                                            <td></td>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <td></td>
+                                                    }
+                                                </tr>
+                                            }
                                         }
-                                    }
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                                if (backorder)
+                                {
+                                    <script>
+                                        $("#div_back").removeClass("hide");
+                                    </script>
+                                }
+                            }
                         </div>
                         <script>
                             function muestraRan(id) {
@@ -465,16 +514,16 @@
                                         <option id="opt_smes" value="6">Semestral</option> @*B20180801 MGC Textos*@
                                         <option id="opt_ames" value="12">Anual</option> @*B20180801 MGC Textos*@
                                     </select>
-                                    @if (Model.D.FRECUENCIA_LIQ == 1)
+                                    @if (Model.D.DOCUMENTORECs.First().DOCUMENTO.FRECUENCIA_LIQ == 1)
                                     {
                                         <input type="text" id="sel_nn" name="sel_nn" disabled value="Mensual" />}
-                                    else if (Model.D.FRECUENCIA_LIQ == 3)
+                                    else if (Model.D.DOCUMENTORECs.First().DOCUMENTO.FRECUENCIA_LIQ == 3)
                                     {
                                         <input type="text" id="sel_nn" name="sel_nn" disabled value="Trimestral" />}
-                                    else if (Model.D.FRECUENCIA_LIQ == 6)
+                                    else if (Model.D.DOCUMENTORECs.First().DOCUMENTO.FRECUENCIA_LIQ == 6)
                                     {
                                         <input type="text" id="sel_nn" name="sel_nn" disabled value="Semestral" />}
-                                    else if (Model.D.FRECUENCIA_LIQ == 12)
+                                    else if (Model.D.DOCUMENTORECs.First().DOCUMENTO.FRECUENCIA_LIQ == 12)
                                     {
                                         <input type="text" id="sel_nn" name="sel_nn" disabled value="Anual" />}
                                     <label id="lbl_selnn" for="sel_nn">Frecuencia de liquidación</label> @*B20180801 MGC Textos*@

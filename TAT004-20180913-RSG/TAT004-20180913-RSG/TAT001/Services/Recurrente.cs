@@ -1046,7 +1046,24 @@ namespace TAT001.Services
 
             //RSG 28.05.2018----------------------------------------------
             drecc.DOC_REF = dOCUMENTO.NUM_DOC;
-            drecc.ESTATUS = "P";
+            if (dOCpADRE.FRECUENCIA_LIQ == 1)
+            {
+                drecc.ESTATUS = "P";
+            }else if(dOCpADRE.FRECUENCIA_LIQ > 1)
+            {
+                if (drecc.POS % dOCpADRE.FRECUENCIA_LIQ == 0)
+                {
+                    drecc.ESTATUS = "P";
+                    List<DOCUMENTOREC> dreccc = db.DOCUMENTORECs.Where(a => a.NUM_DOC == dOCpADRE.NUM_DOC && a.POS < posicion && a.ESTATUS == "B").ToList();
+                    foreach(DOCUMENTOREC dr in dreccc)
+                    {
+                        dr.ESTATUS = "P";
+                        db.Entry(dr).State = EntityState.Modified;
+                    }
+                }
+                else
+                    drecc.ESTATUS = "B";
+            }
             ////if ((dOCpADRE.TIPO_RECURRENTE) != "1" && dOCpADRE.DOCUMENTORECs.Count > 1)
             ////{
             ////    drecc.FECHAF = drecc.FECHAF.Value.AddDays(1);

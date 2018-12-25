@@ -1059,6 +1059,14 @@ namespace TAT001.Controllers
                                                                       //    resta = resta / (docsp.Count - mayores);
                                                                       ////while (resta != 0)
 
+                        if (d.DOCUMENTOLs.Count > 0)
+                        {
+                            if (d.DOCUMENTOLs.First().BACKORDER == null)
+                                d.DOCUMENTOLs.First().BACKORDER = 0;
+                            d.MONTO_DOC_MD = ( d.DOCUMENTOLs.First().MONTO_VENTA + d.DOCUMENTOLs.First().BACKORDER) * d.PORC_APOYO / 100;
+                            ViewBag.caso2 = "X";
+                        }
+
                         decimal suma = 0;
                         foreach (DOCUMENTOP_MOD ddp in docsp)
                         {
@@ -2127,6 +2135,7 @@ namespace TAT001.Controllers
                                                     DOCUMENTOM dm = dep.DOCUMENTOMs.Where(x => x.POS == docM.POS).FirstOrDefault();
                                                     //docM.APOYO_EST = ;
                                                     docM.APOYO_REAL = dm.APOYO_EST;
+                                                    docM.APOYO_REAL = dOCUMENTO.MONTO_DOC_MD * dm.PORC_APOYO / 100;
                                                     docM.MATNR = dm.MATNR;
                                                     //dmm.NUM_DOC = dm.NUM_DOC;
                                                     docM.PORC_APOYO = dm.PORC_APOYO;
@@ -2136,6 +2145,9 @@ namespace TAT001.Controllers
                                                     docM.VIGENCIA_DE = dm.VIGENCIA_DE;
 
                                                     docP.DOCUMENTOMs.Add(docM);
+
+                                                    docP.APOYO_REAL += docM.APOYO_REAL;
+                                                    docP.PORC_APOYO += (decimal)docM.PORC_APOYO;
                                                 }
                                             }
 
@@ -2181,17 +2193,17 @@ namespace TAT001.Controllers
                                             ////    }
                                             ////}
 
-                                            if (d.LIGADA == true & d != null)
-                                            {
-                                                foreach (DOCUMENTOP dep in d.DOCUMENTOPs.Where(x => x.POS == docP.POS))
-                                                {
-                                                    docP.APOYO_REAL += dep.APOYO_EST;
-                                                    //docP.APOYO_EST += dep.;
-                                                    docP.PORC_APOYO += (decimal)dep.PORC_APOYO;
-                                                }
+                                            //////if (d.LIGADA == true & d != null)
+                                            //////{
+                                            //////    foreach (DOCUMENTOP dep in d.DOCUMENTOPs.Where(x => x.POS == docP.POS))
+                                            //////    {
+                                            //////        docP.APOYO_REAL += dep.APOYO_EST;
+                                            //////        //docP.APOYO_EST += dep.;
+                                            //////        docP.PORC_APOYO += (decimal)dep.PORC_APOYO;
+                                            //////    }
 
-                                                db.SaveChanges();//RSG
-                                            }
+                                            //////    db.SaveChanges();//RSG
+                                            //////}
                                         }
                                         //Se agrego para las relacionadas //B20180618 v1 MGC 2018.06.18--------------------------------------
                                     }
