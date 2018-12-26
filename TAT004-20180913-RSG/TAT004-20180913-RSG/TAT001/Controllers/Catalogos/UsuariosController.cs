@@ -162,7 +162,8 @@ namespace TAT001.Controllers.Catalogos
                 }
                 else
                 {
-                    if (db.USUARIOs.Find(uSUARIO.ID).ACTIVO==false)
+                    USUARIO u = db.USUARIOs.Find(uSUARIO.ID);
+                    if (u.ACTIVO==false)
                     {
                         TempData["MensajeUsuario"] = "El usuario esta inactivo. Introduzca un ID de usuario diferente";
                     }
