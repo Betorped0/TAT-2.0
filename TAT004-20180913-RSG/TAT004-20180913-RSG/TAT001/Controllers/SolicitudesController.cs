@@ -1,5 +1,6 @@
 using EntityFramework.BulkInsert.Extensions;
 using ExcelDataReader;
+using MoreLinq;
 using Newtonsoft.Json;
 using SimpleImpersonation;
 using System;
@@ -19,7 +20,7 @@ using TAT001.Models;
 using TAT001.Models.Dao;
 using TAT001.Services;
 
-namespace TAT001.Controllers
+namespace TAT001.ControllersE
 {
     [Authorize]
     [LoginActive]
@@ -334,6 +335,7 @@ namespace TAT001.Controllers
                         string errorString = "";
                         var _cartap = db.CARTAPs.Where(p => p.NUM_DOC == num_doc && p.POS_ID == pos).ToList();
                         var _dp = db.DOCUMENTOPs.Where(d => d.NUM_DOC == num_doc).ToList();
+                        List<DOCUMENTOREC> _dRE = db.DOCUMENTORECs.Where(d => d.NUM_DOC == num_doc).ToList();
                         DOCUMENTO _dc = db.DOCUMENTOes.Where(d => d.NUM_DOC == num_doc).FirstOrDefault();
                         SOCIEDAD id_bukrs = new SOCIEDAD();
                         id_bukrs = db.SOCIEDADs.Where(soc => soc.BUKRS == _dc.SOCIEDAD_ID).FirstOrDefault();
@@ -369,6 +371,16 @@ namespace TAT001.Controllers
                                 else if (!_dc.TSOL.FACTURA)
                                 {
                                     MONTO_DOC_MD += decimal.Parse(_dp[j].APOYO_EST.ToString());
+                                }
+
+                                if(_dc.TIPO_RECURRENTE == "1")
+                                {
+                                    foreach(DOCUMENTOREC dr in _dRE)
+                                    {
+                                        dr.MONTO_BASE = MONTO_DOC_MD;
+                                        db.Entry(dr).State = EntityState.Modified;
+                                    }
+                                    db.SaveChanges();
                                 }
                             }
                         }

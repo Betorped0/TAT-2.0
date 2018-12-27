@@ -164,8 +164,8 @@ namespace TAT001.Controllers
                      ref cabeza3,
                     ref armadoCuerpoTab3,
                     ref rowsObjQs,
-                    false);
-               
+                false, format.toShow((decimal)d.MONTO_DOC_MD, decimales));//RSG 27.12.2018
+
                 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                 //TABLA 1 MATERIALES
@@ -466,7 +466,7 @@ namespace TAT001.Controllers
                      ref cabeza3,
                     ref armadoCuerpoTab3,
                     ref rowsObjQs,
-                    true);
+                    true, v.monto);//ADD RSG 27.12.2018
                 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                 //MARCA DE AGUA
@@ -963,7 +963,8 @@ namespace TAT001.Controllers
                             armadoCuerpoTab2.Add(item.PORC.Value.ToString("##.00"));
                         }
                         else {
-                            armadoCuerpoTab2.Add(format.toShow(Math.Round(item.MONTO_BASE.Value, 2), decimales));
+                            ////armadoCuerpoTab2.Add(format.toShow(Math.Round(item.MONTO_BASE.Value, 2), decimales));
+                            armadoCuerpoTab2.Add(format.toShow(Math.Round(decimal.Parse(cs.MONTO), 2), decimales));
                             armadoCuerpoTab2.Add("");
                         }
                     }
@@ -1508,7 +1509,8 @@ namespace TAT001.Controllers
                         }
                         else
                         {
-                            armadoCuerpoTab2.Add(format.toShow(Math.Round(item.MONTO_BASE.Value, 2), decimales));
+                            ////armadoCuerpoTab2.Add(format.toShow(Math.Round(item.MONTO_BASE.Value, 2), decimales));
+                            armadoCuerpoTab2.Add(format.toShow(Math.Round(decimal.Parse(v.monto), 2), decimales));
                         }
                     }
                 }

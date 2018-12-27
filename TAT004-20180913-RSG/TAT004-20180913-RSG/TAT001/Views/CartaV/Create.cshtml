@@ -519,13 +519,19 @@
                                         @{int pos2 = 0; }
                                         @for (int i = 0; i < Model.numfilasTabla2; i++)
                                         {
-                                            <tr>
-                                                @for (int j = 0; j < cols2; j++)
+                                        <tr>
+                                            @for (int j = 0; j < cols2; j++)
+                                            {
+                                                if (!ViewBag.varligada && j == 3)
+                                                {
+                                                    <td style='text-align:center;' class="cl_monto">@Model.listaCuerpoRec[pos2]</td> }
+                                                else
                                                 {
                                                     <td style='text-align:center;'>@Model.listaCuerpoRec[pos2]</td>
-                                                    pos2++;
                                                 }
-                                            </tr>
+                                                pos2++;
+                                            }
+                                        </tr>
                                         }
                                     </table>
                                 </div>

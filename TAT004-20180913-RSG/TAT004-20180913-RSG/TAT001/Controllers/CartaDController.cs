@@ -152,7 +152,7 @@ namespace TAT001.Controllers
                     ref cabeza3, 
                     ref armadoCuerpoTab3,
                     ref rowsObjQs,
-                    false);
+                    false, format.toShow((decimal)d.MONTO_DOC_MD, decimales));//RSG 27.12.2018
 
                 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -316,7 +316,7 @@ namespace TAT001.Controllers
                      ref cabeza3,
                     ref armadoCuerpoTab3,
                     ref rowsObjQs,
-                    true);
+                    true, format.toShow((decimal)d.MONTO_DOC_MD, decimales));//RSG 27.12.2018
 
                 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -769,7 +769,7 @@ namespace TAT001.Common
                  ref List<string> cabeza3,
                  ref List<string> armadoCuerpoTab3,
                  ref int rowsObjQs,
-                 bool esPdf)
+                 bool esPdf, string monto)
         {
             FormatosC format = new FormatosC();
             string decimales = d.PAI.DECIMAL; //B20180730 MGC 2018.07.30 Formatos
@@ -846,7 +846,8 @@ namespace TAT001.Common
                     }
                     else
                     {
-                        armadoCuerpoTab2.Add(format.toShow(Math.Round(item.MONTO_BASE.Value, 2), decimales));
+                        ////armadoCuerpoTab2.Add(format.toShow(Math.Round(item.MONTO_BASE.Value, 2), decimales));
+                        armadoCuerpoTab2.Add(monto);//ADD RSG 27.12.2018
                         if (!esPdf)
                         {
                             armadoCuerpoTab2.Add("");
