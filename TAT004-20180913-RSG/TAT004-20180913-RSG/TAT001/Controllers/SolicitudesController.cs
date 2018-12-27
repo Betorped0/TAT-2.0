@@ -5878,8 +5878,8 @@ namespace TAT001.Controllers
 
                 }
             }
-
-            return RedirectToAction("Index", "Home");
+            return null;
+            //return RedirectToAction("Index", "Home");
         }
         [HttpPost]
         [AllowAnonymous]

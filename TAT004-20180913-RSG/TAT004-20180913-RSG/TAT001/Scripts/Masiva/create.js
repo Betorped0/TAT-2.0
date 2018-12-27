@@ -1963,9 +1963,10 @@ $('#tab_test4').on('keydown.autocomplete', '.input_material', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item) && $(".input_material").val() === "") {
+            if (!(ui.item)) {
                 $(this).addClass("red white-text rojo");
-                $(tr.find("td:eq(" + (col_index - 1) + ")").children().val(""));
+                $(tr.find("td:eq(" + (col_index - 1) + ")").children('input').val(""));
+                $(tr.find("td:eq(" + (col_index - 1) + ")").children('span').text(""));
                 $(tr.find("td:eq(" + (col_index - 1) + ")").children().removeClass("red white-text rojo"));
                 $(tr.find("td:eq(" + col_index + ")").children().val(""));
                 $(tr.find("td:eq(" + col_index + ")").children().removeClass("red white-text rojo"));
@@ -1981,7 +1982,8 @@ $('#tab_test4').on('keydown.autocomplete', '.input_material', function () {
             var desc = label.split('-');
             $(materialDes).val(desc[1]);
             var cat = getCategoria(value);
-            $(categoria).val(cat.DESCRIPCION);
+            $(tr.find("td:eq(" + (col_index - 1) + ")").children('input').val(cat.DESCRIPCION));
+            $(tr.find("td:eq(" + (col_index - 1) + ")").children('span').text(cat.CATEGORIA_ID));
             
             $(categoria).removeClass("red white-text rojo");
             $(this).removeClass("red white-text rojo");
@@ -2046,11 +2048,12 @@ $('#tab_test4').on('keydown.autocomplete', '.input_categoria', function () {
         },
 
         change: function (e, ui) {
-            if (!(ui.item) && $(".input_categoria").val() === "") {
+            if (!(ui.item)) {
                 $(tr.find("td:eq(" + (col_index - 1) + ")").children().val(""));
                 $(tr.find("td:eq(" + (col_index + 1) + ")").children().val(""));
                 $(this).addClass("red white-text rojo");
                 $(tr.find("td:eq(" + col_index + ")").children().removeClass("ui-autocomplete-loading"));
+                $(tr.find("td:eq(" + col_index + ")").children('span').text(""));
                 clearErrors();
                 e.target.value = "";
             }
@@ -2446,7 +2449,14 @@ function healtyMaterialCategoria(num_doc) {
         data: { "materialCategorias": rowsMaterial },
         async: true,
         success: function (data) {
+            categorias = false;
             if (data !== null | data !== "") {
+                data.forEach(function (element) {
+                    if ((element.Material === "" || element.Material === null) && (element.Categoria !== "" && element.Categoria !== null)) {
+                        categorias = true;
+                    }
+                });
+
                 var tablaH4 = $('#tab_test4').DataTable();
 
                 for (var a = 0; a < tablaH4.rows().data().length; a++) {
@@ -2462,14 +2472,15 @@ function healtyMaterialCategoria(num_doc) {
                         for (i = 0; i < data.length; i++) {
                             var obj = data[i];
                             var mat = (obj.Material !== "" && obj.Material !== null) ? trimStart('0', obj.Material) : "";
-                            if (obj.Categoria === categoria && material === mat) {
+                            var cat = (obj.Categoria !== "" && obj.Categoria !== null) ? obj.Categoria : "";
+                            if (categoria === cat && material === mat) {
                                 var colCategoria = $(rowH4).children().eq(indexCategoria);
                                 var colMaterial = $(rowH4).children().eq(indexMaterial);
                                 var inputCategoria = colCategoria.children('input');
                                 var inputMaterial = colMaterial.children('input');
 
                                 if (obj.Error) {
-                                    if ((obj.Categoria !== "" && obj.Categoria !== null) && (obj.Material !== "" && obj.Material!==null)) {
+                                    if ((obj.Categoria !== "" && obj.Categoria !== null) && (obj.Material !== "" && obj.Material !== null)) {
                                         inputMaterial.prop('title', obj.Msj);
                                         inputCategoria.prop('title', "");
                                         colMaterial.children().addClass('red white-text rojo');
@@ -2481,10 +2492,22 @@ function healtyMaterialCategoria(num_doc) {
                                         colMaterial.children().removeClass('red white-text rojo');
                                     }
                                 } else {
-                                    inputMaterial.prop('title', "");
-                                    inputCategoria.prop('title', "");
-                                    colMaterial.children().removeClass('red white-text rojo');
-                                    colCategoria.children().removeClass('red white-text rojo');
+                                    if ((obj.Categoria === "" || obj.Categoria === null) && (obj.Material === "" || obj.Material === null)) {
+
+                                        if (categorias) {
+                                            colCategoria.children().addClass('red white-text rojo');
+                                            colMaterial.children().removeClass('red white-text rojo');
+                                        } else {
+                                            colMaterial.children().addClass('red white-text rojo');
+                                            colCategoria.children().removeClass('red white-text rojo');
+                                        }
+                                    }
+                                    else {
+                                        inputMaterial.prop('title', "");
+                                        inputCategoria.prop('title', "");
+                                        colMaterial.children().removeClass('red white-text rojo');
+                                        colCategoria.children().removeClass('red white-text rojo');
+                                    }
                                 }
                             }
                         }
