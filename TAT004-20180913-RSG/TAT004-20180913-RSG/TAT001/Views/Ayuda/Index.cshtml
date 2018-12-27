@@ -90,7 +90,7 @@
                                 }
                                 else if (item.RUTA_DOCUMENTO.Split('.').Last() == "txt")
                                 {
-                                    <a data-fancybox data-type="iframe"  data-iframe='{"preload":false}' href="@Url.Content("~/"+@item.RUTA_DOCUMENTO)">
+                                    <a data-fancybox data-type="iframe" data-iframe='{"preload":false}' href="@Url.Content("~/"+@item.RUTA_DOCUMENTO)">
                                         <i class='material-icons blue-text'>search</i>
                                     </a>
                                 }
@@ -115,18 +115,16 @@
                                 </div>
                             </div>
                         </td>
-                                    </tr>
-                            }
-</tbody>
+                    </tr>
+                }
+            </tbody>
         </table>
     </div>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.css" />
     <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/fnCommon.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var elems = document.querySelectorAll('.modal');
-            var instances = M.Modal.init(elems, options);
-        });
+        fnCommon.materializeInit('modal');
         $(document).ready(function () {
             $('.confirmation').on('click', function (e) {
                                     e.preventDefault;
