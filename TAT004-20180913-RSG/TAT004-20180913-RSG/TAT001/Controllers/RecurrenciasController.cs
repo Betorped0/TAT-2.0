@@ -3401,6 +3401,8 @@ namespace TAT001.Controllers
                 foreach (DOCUMENTOREC dR in docRes)
                 {
                     dR.ESTATUS = "C";
+                    if (docRe.OBJETIVOQ == true)
+                        dR.ESTATUS_Q = "C";
                     db.Entry(dR).State = EntityState.Modified;
                 }
                 db.SaveChanges();
@@ -3517,7 +3519,9 @@ namespace TAT001.Controllers
                     bool ban = true;
                     if (ban)
                     {
-                        r.creaRecurrente(drec.NUM_DOC, drec.DOCUMENTO.TSOL_ID, hoy, drec.POS);
+                        int x = r.creaRecurrente(drec.NUM_DOC, drec.DOCUMENTO.TSOL_ID, hoy, drec.POS, false);
+                        if (drec.DOCUMENTO.OBJETIVOQ == true)
+                            r.creaRecurrente(drec.NUM_DOC, drec.DOCUMENTO.TSOL_ID, hoy, drec.POS, true);
                     }
                 }
                 catch (Exception ex)
@@ -3539,7 +3543,9 @@ namespace TAT001.Controllers
                 Recurrente r = new Recurrente(); bool ban = true;
                 if (ban)
                 {
-                    r.calcDistribucion(drec.NUM_DOC, drec.DOCUMENTO.TSOL_ID, hoy, drec.POS);
+                    int x = r.calcDistribucion(drec.NUM_DOC, drec.DOCUMENTO.TSOL_ID, hoy, drec.POS, false);
+                    if (drec.DOCUMENTO.OBJETIVOQ == true)
+                        r.calcDistribucion(drec.NUM_DOC, drec.DOCUMENTO.TSOL_ID, hoy, drec.POS, true);
                 }
             }
             return RedirectToAction("Ejecutar");
@@ -3555,7 +3561,16 @@ namespace TAT001.Controllers
                 Recurrente r = new Recurrente(); bool ban = true;
                 if (ban)
                 {
-                    r.calcDistribucion(drec.NUM_DOC, drec.DOCUMENTO.TSOL_ID, drec.FECHAF.Value, drec.POS);
+                    r.calcDistribucion(drec.NUM_DOC, drec.DOCUMENTO.TSOL_ID, drec.FECHAF.Value, drec.POS, false);
+                }
+            }
+            drecc = db.DOCUMENTORECs.Where(a => a.NUM_DOC_Q == id_d && a.ESTATUS_Q == "E").ToList();
+            foreach (DOCUMENTOREC drec in drecc)
+            {
+                Recurrente r = new Recurrente(); bool ban = true;
+                if (ban)
+                {
+                    r.calcDistribucion(drec.NUM_DOC, drec.DOCUMENTO.TSOL_ID, drec.FECHAF.Value, drec.POS, true);
                 }
             }
             return RedirectToAction("Index", "Home");
@@ -3583,7 +3598,7 @@ namespace TAT001.Controllers
                     DOCUMENTO dOCpADRE = db.DOCUMENTOes.Where(x => x.NUM_DOC == drec.NUM_DOC).FirstOrDefault();
                     foreach (DOCUMENTORAN dran in dOCpADRE.DOCUMENTORECs.FirstOrDefault(x => x.POS == drec.POS).DOCUMENTORANs)
                     {
-                        if ((dl.MONTO_VENTA + dl.BACKORDER)> dran.OBJETIVOI)
+                        if ((dl.MONTO_VENTA + dl.BACKORDER) > dran.OBJETIVOI)
                         {
                             D.PORC_APOYO = dran.PORCENTAJE;
                             break;

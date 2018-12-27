@@ -864,6 +864,7 @@
           <Property Name="CUENTAPL" Type="numeric" Precision="10" Scale="0" />
           <Property Name="EXCEDE_PRES" Type="char" MaxLength="1" />
           <Property Name="CUENTACL" Type="numeric" Precision="10" Scale="0" />
+          <Property Name="TSOL_LIG" Type="nvarchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="DOCUMENTOA">
           <Key>
@@ -1091,6 +1092,8 @@
           <Property Name="PORC" Type="decimal" Precision="13" Scale="5" />
           <Property Name="DOC_REF" Type="numeric" Precision="10" Scale="0" />
           <Property Name="FECHAV" Type="date" />
+          <Property Name="NUM_DOC_Q" Type="numeric" Precision="10" Scale="0" />
+          <Property Name="ESTATUS_Q" Type="nchar" MaxLength="1" />
         </EntityType>
         <EntityType Name="DOCUMENTOSAP">
           <Key>
@@ -7326,6 +7329,7 @@ warning 6002: The table/view 'TAT004.dbo.WARNINGV' does not have a primary key d
           <NavigationProperty Name="DOCUMENTOSAP" Relationship="Self.FK_DOCUMENTOSAP_DOCUMENTO" FromRole="DOCUMENTO" ToRole="DOCUMENTOSAP" />
           <NavigationProperty Name="DOCUMENTOTS" Relationship="Self.FK_DOCUMENTOTS_DOCUMENTO" FromRole="DOCUMENTO" ToRole="DOCUMENTOTS" />
           <NavigationProperty Name="FLUJOes" Relationship="Self.FK_FLUJO_DOCUMENTO" FromRole="DOCUMENTO" ToRole="FLUJO" />
+          <Property Name="TSOL_LIG" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="DOCUMENTOA">
           <Key>
@@ -7572,6 +7576,8 @@ warning 6002: The table/view 'TAT004.dbo.WARNINGV' does not have a primary key d
           <Property Name="FECHAV" Type="DateTime" Precision="0" />
           <NavigationProperty Name="DOCUMENTO" Relationship="Self.FK_DOCUMENTOREC_DOCUMENTO" FromRole="DOCUMENTOREC" ToRole="DOCUMENTO" />
           <NavigationProperty Name="DOCUMENTORANs" Relationship="Self.FK_DOCUMENTORAN_DOCUMENTOREC" FromRole="DOCUMENTOREC" ToRole="DOCUMENTORAN" />
+          <Property Name="NUM_DOC_Q" Type="Decimal" Precision="10" Scale="0" />
+          <Property Name="ESTATUS_Q" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
         </EntityType>
         <EntityType Name="DOCUMENTOSAP">
           <Key>
@@ -14158,6 +14164,7 @@ warning 6002: The table/view 'TAT004.dbo.WARNINGV' does not have a primary key d
           <EntitySetMapping Name="DOCUMENTOes">
             <EntityTypeMapping TypeName="TAT001Model.DOCUMENTO">
               <MappingFragment StoreEntitySet="DOCUMENTO">
+                <ScalarProperty Name="TSOL_LIG" ColumnName="TSOL_LIG" />
                 <ScalarProperty Name="NUM_DOC" ColumnName="NUM_DOC" />
                 <ScalarProperty Name="TSOL_ID" ColumnName="TSOL_ID" />
                 <ScalarProperty Name="TALL_ID" ColumnName="TALL_ID" />
@@ -14449,6 +14456,8 @@ warning 6002: The table/view 'TAT004.dbo.WARNINGV' does not have a primary key d
           <EntitySetMapping Name="DOCUMENTORECs">
             <EntityTypeMapping TypeName="TAT001Model.DOCUMENTOREC">
               <MappingFragment StoreEntitySet="DOCUMENTOREC">
+                <ScalarProperty Name="ESTATUS_Q" ColumnName="ESTATUS_Q" />
+                <ScalarProperty Name="NUM_DOC_Q" ColumnName="NUM_DOC_Q" />
                 <ScalarProperty Name="NUM_DOC" ColumnName="NUM_DOC" />
                 <ScalarProperty Name="POS" ColumnName="POS" />
                 <ScalarProperty Name="FECHAF" ColumnName="FECHAF" />

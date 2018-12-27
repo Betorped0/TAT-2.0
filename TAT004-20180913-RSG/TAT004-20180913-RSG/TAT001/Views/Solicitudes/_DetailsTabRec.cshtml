@@ -128,6 +128,8 @@
                                     <tbody>
                                         @foreach (var iteem in Model.D.DOCUMENTORECs)
                                         {
+                                            TAT001Entities db = new TAT001Entities();
+                                            DOCUMENTO drel = db.DOCUMENTOes.FirstOrDefault(x => x.DOCUMENTO_REF == iteem.DOC_REF);
                                             @*<tr id="rec-@iteem.POS" onclick="muestraRan(this.id);">*@
                                             <tr id="rec-@iteem.POS">
                                                 <td>@iteem.POS/@Model.D.DOCUMENTORECs.Count()</td>
@@ -151,7 +153,7 @@
                                                     <td>@iteem.FECHAV.Value.ToShortDateString()</td>}
 
                                                 @*@if (!(ViewBag.recs.Count > 0 & iteem.DOC_REF != null & iteem.DOC_REF != 0))
-                            {*@
+                                                    {*@
                                                 @if (Model.D.LIGADA == true)
                                                 {
                                                     if (iteem.DOCUMENTORANs.Count > 0)
@@ -203,7 +205,7 @@
                                                 {
                                                     foreach (DOCUMENTOL tol in ttol.Where(x => x.NUM_DOC == iteem.DOC_REF).FirstOrDefault().DOCUMENTOLs)
                                                     {
-                                                        if (iteem.DOCUMENTORANs.Where(x => x.LIN == 1).FirstOrDefault().PORCENTAJE == tol.DOCUMENTO.PORC_APOYO)
+                                                        if (iteem.DOCUMENTORANs.Where(x => x.LIN == 1).FirstOrDefault().PORCENTAJE == tol.DOCUMENTO.PORC_APOYO || !iteem.DOCUMENTORANs.Any(x => x.PORCENTAJE == tol.DOCUMENTO.PORC_APOYO))
                                                         {
                                                             @*<td>Contabilizado</td>*@
                                                             TAT001.Services.Estatus es = new TAT001.Services.Estatus();
@@ -219,7 +221,7 @@
                                                                     {
                                                                         tol.BACKORDER = 0;
                                                                     }
-                                                                    if (iteem.ESTATUS == "P" && open.Contains(iteem.POS))
+                                                                    if (iteem.ESTATUS == "P" && open.Contains(iteem.POS) && drel == null && iteem.DOCUMENTORANs.Any(x => x.PORCENTAJE == tol.DOCUMENTO.PORC_APOYO))
                                                                     {
                                                                         backorder = true;
                                                                         <td class="">
@@ -312,7 +314,7 @@
                                                                         {
                                                                             tol.BACKORDER = 0;
                                                                         }
-                                                                        if (iteem.ESTATUS == "P")
+                                                                        if (iteem.ESTATUS == "P" && open.Contains(iteem.POS) && drel == null)
                                                                         {
                                                                             backorder = true;
                                                                             <td class="">
@@ -441,10 +443,17 @@
                                         periodoE = "P" + iteem.PERIODO + "-" + iteem.EJERCICIO;
 
                                         <tr>
-                                            <td>Q @iteem.POS</td>
+                                            <td>Q@(iteem.POS)</td>
                                             <td>@periodoE</td>
                                             <td>@Model.D.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(ViewBag.spras_id)).FirstOrDefault().TXT50</td>
-                                            <td>No generado</td>
+                                            @if (iteem.NUM_DOC_Q != null)
+                                            {
+                                                <td><a href="@Url.Action("Details", new { id = iteem.NUM_DOC_Q })">@iteem.NUM_DOC_Q</a></td>
+                                            }
+                                            else
+                                            {
+                                                <td>No generado</td>
+                                            }
                                             <td>@fechaE</td>
                                             <td class="porcentaje">@Model.D.OBJQ_PORC</td>
 
@@ -452,7 +461,20 @@
                                             {
                                                 <td class="precio">@ran.OBJETIVOI</td>
                                             }
-                                            <td>Pendiente</td>
+                                            @if (iteem.ESTATUS_Q == "C")
+                                            {
+                                                <td>Cancelado</td>
+                                            }
+                                            else if (iteem.ESTATUS_Q != "P" && iteem.ESTATUS_Q != "E")
+                                            {
+                                                <td>Pendiente</td>
+                                            }
+                                            else
+                                            {
+                                                TAT001.Services.Estatus es = new TAT001.Services.Estatus();
+
+                                                <td>@es.getText((decimal)iteem.NUM_DOC_Q, Session["spras"].ToString())</td>
+                                            }
                                         </tr>
                                     }
                                 </tbody>
@@ -528,6 +550,22 @@
                                         <input type="text" id="sel_nn" name="sel_nn" disabled value="Anual" />}
                                     <label id="lbl_selnn" for="sel_nn">Frecuencia de liquidación</label> @*B20180801 MGC Textos*@
                                 </div>
+                            </p>
+
+                            <p>
+                                @if (Model.D.TSOL_LIG != null)
+                                {
+                                    <div class="input-field col l4 m4 s12">
+                                        @{
+
+                                            TAT001Entities db = new TAT001Entities();
+                                            string spras = ViewBag.spras_id.ToString();
+                                            string texto = db.TSOLTs.FirstOrDefault(x => x.TSOL_ID == Model.D.TSOL_LIG && x.SPRAS_ID == spras).TXT50;
+                                            <input type="text" id="sel_nnL" name="sel_nnL" disabled value="@texto" />
+                                        }
+                                        <label id="lbl_Mselnn" for="sel_nnL">Método de liquidación</label> @*B20180801 MGC Textos*@
+                                    </div>
+                                }
                             </p>
                         </div>
                     </div>

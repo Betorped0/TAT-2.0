@@ -110,6 +110,7 @@ namespace TAT001.Entities
         public Nullable<decimal> CUENTAPL { get; set; }
         public string EXCEDE_PRES { get; set; }
         public Nullable<decimal> CUENTACL { get; set; }
+        public string TSOL_LIG { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CARTA> CARTAs { get; set; }

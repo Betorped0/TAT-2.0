@@ -10,7 +10,7 @@ namespace TAT001.Services
 {
     public class Reversa
     {
-        public string creaReversa(string id_d, string tsol, ref decimal num_doc)
+        public string creaReversa(string id_d, string tsol, ref decimal num_doc, bool total = false)
         {
             string dates = DateTime.Now.ToString("dd/MM/yyyy");
             DateTime theTime = DateTime.ParseExact(dates, //"06/04/2018 12:00:00 a.m."
@@ -195,11 +195,12 @@ namespace TAT001.Services
                             docP.PORC_APOYO = docpl[j].PORC_APOYO;
                             docP.MONTO_APOYO = docpl[j].MONTO_APOYO;
                             docP.PRECIO_SUG = docpl[j].PRECIO_SUG;
-                            docP.VOLUMEN_EST = docpl[j].VOLUMEN_EST;
+                            ////docP.VOLUMEN_EST = docpl[j].VOLUMEN_EST;
                             docP.VIGENCIA_DE = docpl[j].VIGENCIA_DE;
                             docP.VIGENCIA_AL = docpl[j].VIGENCIA_AL;
-                            docP.APOYO_EST = docpl[j].APOYO_EST;
-                            docP.APOYO_REAL = docpl[j].APOYO_REAL;
+                            ////docP.APOYO_EST = docpl[j].APOYO_EST;
+                            docP.APOYO_REAL = docpl[j].APOYO_EST;//RSG 26.12.2018
+                            docP.VOLUMEN_REAL = docpl[j].VOLUMEN_EST;//RSG 26.12.2018
 
                             //Verificar si hay materiales en las relacionadas
                             if (docsrelp.Count > 0)
@@ -222,8 +223,10 @@ namespace TAT001.Services
                                     decimal docr_vr = Convert.ToDecimal(docrel[k].VOLUMEN_REAL);
                                     decimal docr_ar = Convert.ToDecimal(docrel[k].APOYO_REAL);
 
-                                    docP.VOLUMEN_EST -= docr_vr;
-                                    docP.APOYO_EST -= docr_ar;
+                                    ////docP.VOLUMEN_EST -= docr_vr;
+                                    ////docP.APOYO_EST -= docr_ar;
+                                    docP.VOLUMEN_REAL -= docr_vr;//RSG 26.12.2018
+                                    docP.APOYO_REAL -= docr_ar;//RSG 26.12.2018
 
                                     if (dis == "C")
                                     {
@@ -235,14 +238,14 @@ namespace TAT001.Services
                             }
 
                             //Siempre tiene que ser igual a 0
-                            if (docP.VOLUMEN_EST < 0)
+                            if (docP.VOLUMEN_REAL < 0)
                             {
-                                docP.VOLUMEN_EST = 0;
+                                docP.VOLUMEN_REAL = 0;
                             }
-                            if (docP.APOYO_EST < 0)
+                            if (docP.APOYO_REAL < 0)
                             {
-                                resta += (decimal)docP.APOYO_EST;//ADD RSG 15.11.2018
-                                docP.APOYO_EST = 0;
+                                resta += (decimal)docP.APOYO_REAL;
+                                docP.APOYO_REAL = 0;
                             }
 
                             docP.MATNR = docpl[j].MATNR.TrimStart('0');//RSG 07.06.2018
@@ -271,13 +274,13 @@ namespace TAT001.Services
                     {
                         foreach (DOCUMENTOP_MOD ddp in docsp)
                         {
-                            if (ddp.APOYO_EST > 0)
+                            if (ddp.APOYO_REAL > 0)
                             {
-                                ddp.APOYO_EST += resta;
-                                if (ddp.APOYO_EST <= 0)
+                                ddp.APOYO_REAL += resta;
+                                if (ddp.APOYO_REAL <= 0)
                                 {
-                                    resta = (decimal)ddp.APOYO_EST;
-                                    ddp.APOYO_EST = 0;
+                                    resta = (decimal)ddp.APOYO_REAL;
+                                    ddp.APOYO_REAL = 0;
                                 }
                                 else
                                     resta = 0;
@@ -329,8 +332,9 @@ namespace TAT001.Services
                 foreach (DOCUMENTOM dm in dpp.DOCUMENTOMs)
                 {
                     DOCUMENTOM dmm = new DOCUMENTOM();
-                    dmm.APOYO_EST = dm.APOYO_EST;
-                    dmm.APOYO_REAL = dm.APOYO_REAL;
+                    ////dmm.APOYO_EST = dm.APOYO_EST;
+                    ////dmm.APOYO_REAL = dm.APOYO_REAL;
+                    dmm.APOYO_REAL = dm.APOYO_EST;
                     dmm.MATNR = dm.MATNR;
                     //dmm.NUM_DOC = dm.NUM_DOC;
                     dmm.PORC_APOYO = dm.PORC_APOYO;
@@ -344,7 +348,8 @@ namespace TAT001.Services
                 }
 
                 dOCUMENTO.DOCUMENTOPs.Add(ddp);
-                dOCUMENTO.MONTO_DOC_MD += ddp.APOYO_EST;
+                ////dOCUMENTO.MONTO_DOC_MD += ddp.APOYO_EST;
+                dOCUMENTO.MONTO_DOC_MD += ddp.APOYO_REAL;
             }
 
             foreach (DOCUMENTOP dpp in dOCpADRE.DOCUMENTOPs)
