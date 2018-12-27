@@ -21,23 +21,27 @@ namespace TAT001.Controllers
         private TAT001Entities db = new TAT001Entities();
 
         // GET: Negociaciones
-        public ActionResult Index(string pay, string vkorg, string vtweg, string spart, string correo, string fi, string ff)
+        ////public ActionResult Index(string pay, string vkorg, string vtweg, string spart, string correo, string fi, string ff)
+        public ActionResult Index(string pay, string vkorg, string vtweg, string spart, string correo, string fn)
         {
             DOCUMENTOA dz = null;
             List<DOCUMENTO> dx = new List<DOCUMENTO>();
             try
             {
-                var _fi = DateTime.Parse(fi);
-                var _ff = DateTime.Parse(ff);
-                var _idN = db.NEGOCIACIONs.Where(x => x.FECHAI == _fi && x.FECHAF == _ff).FirstOrDefault().ID;
-                ////var dOCUMENTOes = db.DOCUMENTOes.Where(x => x.PAYER_ID == pay && x.VKORG == vkorg && x.VTWEG == vtweg && x.SPART == spart && x.PAYER_EMAIL == correo && ((x.FECHAC.Value.Day >= _fi.Day && x.FECHAC.Value.Day <= _ff.Day) && x.FECHAC.Value.Month == _ff.Month && x.FECHAC.Value.Year == _ff.Year)).Include(d => d.CLIENTE).Include(d => d.PAI).Include(d => d.SOCIEDAD).Include(d => d.TALL).Include(d => d.TSOL).Include(d => d.USUARIO).ToList();
-                var dOCUMENTOes = db.DOCUMENTOes.Where(x => x.PAYER_ID == pay && x.VKORG == vkorg && x.VTWEG == vtweg && x.SPART == spart && x.PAYER_EMAIL == correo && ((x.FECHAC >= _fi && x.FECHAC <= _ff))).Include(d => d.CLIENTE).Include(d => d.PAI).Include(d => d.SOCIEDAD).Include(d => d.TALL).Include(d => d.TSOL).Include(d => d.USUARIO).ToList();
-                for (int i = 0; i < dOCUMENTOes.Count; i++)
+                var _fn = DateTime.Parse(fn);
+                var _idN = db.NEGOCIACIONs.Where(x => x.ID == 1 && x.FECHAN == _fn && x.ACTIVO).FirstOrDefault();
+                if (_idN != null)
                 {
+                    var _fi = _idN.FECHAI;
+                    var _ff = _idN.FECHAF;
+                    ////var dOCUMENTOes = db.DOCUMENTOes.Where(x => x.PAYER_ID == pay && x.VKORG == vkorg && x.VTWEG == vtweg && x.SPART == spart && x.PAYER_EMAIL == correo && ((x.FECHAC.Value.Day >= _fi.Day && x.FECHAC.Value.Day <= _ff.Day) && x.FECHAC.Value.Month == _ff.Month && x.FECHAC.Value.Year == _ff.Year)).Include(d => d.CLIENTE).Include(d => d.PAI).Include(d => d.SOCIEDAD).Include(d => d.TALL).Include(d => d.TSOL).Include(d => d.USUARIO).ToList();
+                    var dOCUMENTOes = db.DOCUMENTOes.Where(x => x.PAYER_ID == pay && x.VKORG == vkorg && x.VTWEG == vtweg && x.SPART == spart && x.PAYER_EMAIL == correo && ((x.FECHAC >= _fi && x.FECHAC <= _ff))).Include(d => d.CLIENTE).Include(d => d.PAI).Include(d => d.SOCIEDAD).Include(d => d.TALL).Include(d => d.TSOL).Include(d => d.USUARIO).ToList();
+                    for (int i = 0; i < dOCUMENTOes.Count; i++)
+                    {
 
-                    PorEnviar pe = new PorEnviar();
-                    if (pe.seEnvia(dOCUMENTOes[i], db, null))
-                        dx.Add(dOCUMENTOes[i]);
+                        PorEnviar pe = new PorEnviar();
+                        if (pe.seEnvia(dOCUMENTOes[i], db, null))
+                            dx.Add(dOCUMENTOes[i]);
 
                         //////si el documentoref es nullo, significa que no depende de alguno otro
                         ////if (dOCUMENTOes[i].DOCUMENTO_REF == null)
@@ -95,85 +99,86 @@ namespace TAT001.Controllers
                         ////        }
                         ////    }
                         ////}
-                }
-                if (dx.Count > 0)
-                {
-                    var uId = dx[0].USUARIOC_ID;
-                    var clUsu = db.USUARIOs.Where(x => x.ID == uId).FirstOrDefault();
-                    var clSoc = dx[0].SOCIEDAD_ID;
-                    int n = 0;
-                    var isNumeric = int.TryParse(dx[0].CIUDAD, out n);
-                    var clCd = "";
-                    var clEdo = "";
-                    if (isNumeric)
-                    {
-                        int c = Convert.ToInt32(dx[0].CIUDAD);
-                        var cd = db.CITIES.Where(i => i.ID == c).FirstOrDefault();
-                        var edo = db.STATES.Where(i => i.ID == cd.STATE_ID).FirstOrDefault();
-                        clCd = cd.NAME;
-                        clEdo = edo.NAME;
                     }
-                    else
+                    if (dx.Count > 0)
                     {
-                        clCd = dx[0].CIUDAD;
-                        clEdo = dx[0].ESTADO;
+                        var uId = dx[0].USUARIOC_ID;
+                        var clUsu = db.USUARIOs.Where(x => x.ID == uId).FirstOrDefault();
+                        var clSoc = dx[0].SOCIEDAD_ID;
+                        int n = 0;
+                        var isNumeric = int.TryParse(dx[0].CIUDAD, out n);
+                        var clCd = "";
+                        var clEdo = "";
+                        if (isNumeric)
+                        {
+                            int c = Convert.ToInt32(dx[0].CIUDAD);
+                            var cd = db.CITIES.Where(i => i.ID == c).FirstOrDefault();
+                            var edo = db.STATES.Where(i => i.ID == cd.STATE_ID).FirstOrDefault();
+                            clCd = cd.NAME;
+                            clEdo = edo.NAME;
+                        }
+                        else
+                        {
+                            clCd = dx[0].CIUDAD;
+                            clEdo = dx[0].ESTADO;
+                        }
+                        ViewBag.clCorreo = clUsu.EMAIL;
+                        var cl = db.CLIENTEs.Where(a => a.KUNNR == pay & a.VKORG == vkorg).FirstOrDefault();
+                        ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(905)) && a.SPRAS_ID.Equals(cl.SPRAS)).ToList();
+                        ViewBag.clCon = cl.CONTAC;
+                        ViewBag.clName = cl.NAME1;
+                        ViewBag.clDir = cl.STRAS_GP;
+                        DateTime hoy = DateTime.Now;
+                        ViewBag.fi = _fi.ToShortDateString();
+                        ViewBag.ff = _fn.ToShortDateString();
+                        ViewBag.clPayId = pay;
+                        ViewBag.clFunci = clUsu.NOMBRE + " " + clUsu.APELLIDO_P + " " + clUsu.APELLIDO_M;
+                        ViewBag.clPos = db.PUESTOTs.Where(x => x.PUESTO_ID == clUsu.PUESTO_ID && x.SPRAS_ID == "ES").Select(s => s.TXT50).FirstOrDefault();
+                        ViewBag.FechaH = DateTime.Now.ToShortDateString();
+                        ViewBag.KellCom = db.SOCIEDADs.Where(s => s.BUKRS == clSoc).Select(r => r.NAME1).FirstOrDefault();
+                        ViewBag.cd = clCd;
+                        ViewBag.edo = clEdo;
+                        ViewBag.idf = _idN.ID;
+                        ViewBag.vk = vkorg;
+                        ViewBag.vtw = vtweg;
+                        ViewBag.clCorreo2 = correo.Replace('@', '/').Replace('.', '*').Replace('-', '#');
+                        ViewBag.spras = cl.SPRAS;
+                        List<TEXTO> tt = db.TEXTOes.Where(x => x.PAGINA_ID == 905 && x.SPRAS_ID == cl.SPRAS).ToList();
+                        try { ViewBag.lbl_control = tt.FirstOrDefault(x => x.CAMPO_ID == "lbl_control").TEXTOS; } catch { }
+                        try
+                        {
+                            ViewBag.lbl_dear = tt.FirstOrDefault(x => x.CAMPO_ID == "lbl_dear").TEXTOS;
+                        }
+                        catch { ViewBag.lbl_dear = ""; }
+                        try
+                        {
+                            ViewBag.lbl_next = tt.FirstOrDefault(x => x.CAMPO_ID == "lbl_next").TEXTOS;
+                        }
+                        catch { ViewBag.lbl_next = ""; }
+                        try
+                        {
+                            ViewBag.lbl_pres = tt.FirstOrDefault(x => x.CAMPO_ID == "lbl_pres").TEXTOS;
+                        }
+                        catch { ViewBag.lbl_pres = ""; }
+                        try
+                        {
+                            ViewBag.lbl_numsol = tt.FirstOrDefault(x => x.CAMPO_ID == "lbl_numsol").TEXTOS;
+                        }
+                        catch { ViewBag.lbl_numsol = ""; }
+                        try
+                        {
+                            ViewBag.lbl_vigencia = tt.FirstOrDefault(x => x.CAMPO_ID == "lbl_vigencia").TEXTOS;
+                        }
+                        catch { ViewBag.lbl_vigencia = ""; }
+                        try
+                        {
+                            ViewBag.lbl_desc = tt.FirstOrDefault(x => x.CAMPO_ID == "lbl_desc").TEXTOS;
+                        }
+                        catch { ViewBag.lbl_desc = ""; }
+                        try
+                        { ViewBag.lbl_soporte = tt.FirstOrDefault(x => x.CAMPO_ID == "lbl_soporte").TEXTOS; }
+                        catch { ViewBag.lbl_soporte = ""; }
                     }
-                    ViewBag.clCorreo = clUsu.EMAIL;
-                    var cl = db.CLIENTEs.Where(a => a.KUNNR == pay & a.VKORG == vkorg).FirstOrDefault();
-                    ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(905)) && a.SPRAS_ID.Equals(cl.SPRAS)).ToList();
-                    ViewBag.clCon = cl.CONTAC;
-                    ViewBag.clName = cl.NAME1;
-                    ViewBag.clDir = cl.STRAS_GP;
-                    DateTime hoy = DateTime.Now;
-                    ViewBag.fi = fi;
-                    ViewBag.ff = ff;
-                    ViewBag.clPayId = pay;
-                    ViewBag.clFunci = clUsu.NOMBRE + " " + clUsu.APELLIDO_P + " " + clUsu.APELLIDO_M;
-                    ViewBag.clPos = db.PUESTOTs.Where(x => x.PUESTO_ID == clUsu.PUESTO_ID && x.SPRAS_ID == "ES").Select(s => s.TXT50).FirstOrDefault();
-                    ViewBag.FechaH = DateTime.Now.ToShortDateString();
-                    ViewBag.KellCom = db.SOCIEDADs.Where(s => s.BUKRS == clSoc).Select(r => r.NAME1).FirstOrDefault();
-                    ViewBag.cd = clCd;
-                    ViewBag.edo = clEdo;
-                    ViewBag.idf = _idN;
-                    ViewBag.vk = vkorg;
-                    ViewBag.vtw = vtweg;
-                    ViewBag.clCorreo2 = correo.Replace('@', '/').Replace('.', '*').Replace('-', '#');
-                    ViewBag.spras = cl.SPRAS;
-                    List<TEXTO> tt = db.TEXTOes.Where(x => x.PAGINA_ID == 905 && x.SPRAS_ID == cl.SPRAS).ToList();
-                    try { ViewBag.lbl_control = tt.FirstOrDefault(x => x.CAMPO_ID == "lbl_control").TEXTOS; } catch { }
-                    try
-                    {
-                        ViewBag.lbl_dear = tt.FirstOrDefault(x => x.CAMPO_ID == "lbl_dear").TEXTOS;
-                    }
-                    catch { ViewBag.lbl_dear = ""; }
-                    try
-                    {
-                        ViewBag.lbl_next = tt.FirstOrDefault(x => x.CAMPO_ID == "lbl_next").TEXTOS;
-                    }
-                    catch { ViewBag.lbl_next = ""; }
-                    try
-                    {
-                        ViewBag.lbl_pres = tt.FirstOrDefault(x => x.CAMPO_ID == "lbl_pres").TEXTOS;
-                    }
-                    catch { ViewBag.lbl_pres = ""; }
-                    try
-                    {
-                        ViewBag.lbl_numsol = tt.FirstOrDefault(x => x.CAMPO_ID == "lbl_numsol").TEXTOS;
-                    }
-                    catch { ViewBag.lbl_numsol = ""; }
-                    try
-                    {
-                        ViewBag.lbl_vigencia = tt.FirstOrDefault(x => x.CAMPO_ID == "lbl_vigencia").TEXTOS;
-                    }
-                    catch { ViewBag.lbl_vigencia = ""; }
-                    try
-                    {
-                        ViewBag.lbl_desc = tt.FirstOrDefault(x => x.CAMPO_ID == "lbl_desc").TEXTOS;
-                    }
-                    catch { ViewBag.lbl_desc = ""; }
-                    try
-                    { ViewBag.lbl_soporte = tt.FirstOrDefault(x => x.CAMPO_ID == "lbl_soporte").TEXTOS; }
-                    catch { ViewBag.lbl_soporte = ""; }
                 }
             }
             catch (Exception e)
