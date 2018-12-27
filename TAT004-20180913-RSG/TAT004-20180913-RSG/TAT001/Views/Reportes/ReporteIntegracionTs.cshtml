@@ -188,7 +188,6 @@
 
             $(document).ready(function () {
                 $("#excelBtn").click(function () {
-                    $("#table").trigger("filterReset");
                     $('#table').trigger('destroyPager');
                     $('#table').trigger('destroy');
                     var pager = $('#table tfoot').html();

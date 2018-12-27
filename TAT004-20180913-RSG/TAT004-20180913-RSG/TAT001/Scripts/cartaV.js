@@ -319,6 +319,16 @@ function updateFooter(flag) {
     }
 
     $('#lbl_monto').text(texto);
+    if (varligada === "False") {
+        try {
+            var divs = document.getElementsByClassName("cl_monto");
+            [].slice.call(divs).forEach(function (div) {
+                if (div.nodeName !== 'INPUT' & div.nodeName !== 'SELECT' & div.nodeName !== 'TABLE' & div.nodeName !== 'TEXTAREA')
+                    div.innerHTML = toShow(total);
+            });
+        }
+        catch{}
+    }
 }
 
 function totalFooter() {
