@@ -4488,7 +4488,7 @@ namespace TAT001.Controllers
                             objMC.Error = true;
                             objMC.Msj = " Los materiales no se pueden mezclar con categorias";
                         }
-                        else if (totalMateriales > 0 && totalHealty > 0)
+                        else if (totalMateriales > 1 && totalHealty > 0)
                         {
                             objMC.Error = true;
                             objMC.Msj = " Las categorías unicas no se pueden mezclar con otras categorias y/o Materiales";
@@ -4510,7 +4510,7 @@ namespace TAT001.Controllers
                             objMC.Error = true;
                             objMC.Msj = " Los materiales no se pueden mezclar con categorias";
                         }
-                        else if (totalCategoria > 0 && totalHealty > 0)
+                        else if (totalCategoria > 1 && totalHealty > 0)
                         {
                             objMC.Error = true;
                             objMC.Msj = " Las categorías unicas no se pueden mezclar con otras categorias y/o Materiales";
