@@ -661,17 +661,34 @@ namespace TAT001.Controllers
             return cc;
         }
         [HttpPost]
-        public JsonResult soportes(string tsol, string spras)
+        public JsonResult soportes(string tsol, string spras, string bo)
         {
-            var c = (from C in db.CONSOPORTEs
-                     join T in db.TSOPORTETs
-                     on C.TSOPORTE_ID equals T.TSOPORTE_ID
-                     where C.TSOL_ID == tsol
-                     && T.SPRAS_ID == spras
-                     select new { C.TSOPORTE_ID, C.OBLIGATORIO, T.TXT50 });
-
-            JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
-            return cc;
+            if (bo != "X")
+            {
+                var c = (from C in db.CONSOPORTEs
+                         join T in db.TSOPORTETs
+                         on C.TSOPORTE_ID equals T.TSOPORTE_ID
+                         where C.TSOL_ID == tsol
+                         && T.SPRAS_ID == spras
+                         select new { C.TSOPORTE_ID, C.OBLIGATORIO, T.TXT50 });
+                JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+                return cc;
+            }
+            else
+            {
+                var c = (from C in db.CONSOPORTEs
+                         join T in db.TSOPORTETs
+                         on C.TSOPORTE_ID equals T.TSOPORTE_ID
+                         where (C.TSOL_ID == tsol
+                         && T.SPRAS_ID == spras)
+                         select new { C.TSOPORTE_ID, C.OBLIGATORIO, T.TXT50 }).ToList();
+                var ca = (from T in db.TSOPORTETs
+                         where  T.TSOPORTE_ID == "BO" && T.SPRAS_ID == spras
+                          select new { T.TSOPORTE_ID, OBLIGATORIO = true, T.TXT50 }).ToList();
+                c.AddRange(ca);
+                JsonResult cc = Json(c, JsonRequestBehavior.AllowGet);
+                return cc;
+            }
         }
         [HttpPost]
         public JsonResult clearing(string bukrs, string land, string gall, string ejercicio,

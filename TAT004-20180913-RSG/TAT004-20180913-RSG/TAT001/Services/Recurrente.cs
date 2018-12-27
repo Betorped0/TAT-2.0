@@ -179,38 +179,38 @@ namespace TAT001.Services
             //Estatus wf
             dOCUMENTO.ESTATUS_WF = "P";
 
-            ///////////////////Montos
-            //MONTO_DOC_MD
-            var MONTO_DOC_MD = dOCUMENTO.MONTO_DOC_MD;
-            dOCUMENTO.MONTO_DOC_MD = Convert.ToDecimal(MONTO_DOC_MD);
+            ///////////////////////Montos
+            //////MONTO_DOC_MD
+            ////var MONTO_DOC_MD = dOCUMENTO.MONTO_DOC_MD;
+            ////dOCUMENTO.MONTO_DOC_MD = Convert.ToDecimal(MONTO_DOC_MD);
 
-            //Obtener el monto de la sociedad
-            TCambio tc = new TCambio();
-            dOCUMENTO.MONTO_DOC_ML = tc.getValSoc(id_bukrs.WAERS, dOCUMENTO.MONEDA_ID, Convert.ToDecimal(dOCUMENTO.MONTO_DOC_MD), out errorString);
-            if (!String.IsNullOrEmpty(errorString))
-            {
-                return 0;
-            }
+            //////Obtener el monto de la sociedad
+            ////TCambio tc = new TCambio();
+            ////dOCUMENTO.MONTO_DOC_ML = tc.getValSoc(id_bukrs.WAERS, dOCUMENTO.MONEDA_ID, Convert.ToDecimal(dOCUMENTO.MONTO_DOC_MD), out errorString);
+            ////if (!String.IsNullOrEmpty(errorString))
+            ////{
+            ////    return 0;
+            ////}
 
-            //MONTO_DOC_ML2 
-            var MONTO_DOC_ML2 = dOCUMENTO.MONTO_DOC_ML2;
-            dOCUMENTO.MONTO_DOC_ML2 = Convert.ToDecimal(MONTO_DOC_ML2);
+            //////MONTO_DOC_ML2 
+            ////var MONTO_DOC_ML2 = dOCUMENTO.MONTO_DOC_ML2;
+            ////dOCUMENTO.MONTO_DOC_ML2 = Convert.ToDecimal(MONTO_DOC_ML2);
 
-            //MONEDAL_ID moneda de la sociedad
-            dOCUMENTO.MONEDAL_ID = id_bukrs.WAERS;
+            //////MONEDAL_ID moneda de la sociedad
+            ////dOCUMENTO.MONEDAL_ID = id_bukrs.WAERS;
 
-            //MONEDAL2_ID moneda en USD
-            dOCUMENTO.MONEDAL2_ID = "USD";
+            //////MONEDAL2_ID moneda en USD
+            ////dOCUMENTO.MONEDAL2_ID = "USD";
 
-            //Tipo cambio de la moneda de la sociedad TIPO_CAMBIOL
-            dOCUMENTO.TIPO_CAMBIOL = tc.getUkurs(id_bukrs.WAERS, dOCUMENTO.MONEDA_ID, out errorString);
+            //////Tipo cambio de la moneda de la sociedad TIPO_CAMBIOL
+            ////dOCUMENTO.TIPO_CAMBIOL = tc.getUkurs(id_bukrs.WAERS, dOCUMENTO.MONEDA_ID, out errorString);
 
-            //Tipo cambio dolares TIPO_CAMBIOL2
-            dOCUMENTO.TIPO_CAMBIOL2 = tc.getUkursUSD(dOCUMENTO.MONEDA_ID, "USD", out errorString);
-            if (!String.IsNullOrEmpty(errorString))
-            {
-                return 0;
-            }
+            //////Tipo cambio dolares TIPO_CAMBIOL2
+            ////dOCUMENTO.TIPO_CAMBIOL2 = tc.getUkursUSD(dOCUMENTO.MONEDA_ID, "USD", out errorString);
+            ////if (!String.IsNullOrEmpty(errorString))
+            ////{
+            ////    return 0;
+            ////}
             //Obtener datos del payer
             CLIENTE payer = getCliente(dOCUMENTO.PAYER_ID);
 
@@ -464,7 +464,8 @@ namespace TAT001.Services
                             }
                         }
                     }
-                    if (dOCUMENTO.MONTO_DOC_MD != suma_monto && dOCUMENTO.TIPO_RECURRENTE != "6")
+                    //if (dOCUMENTO.MONTO_DOC_MD != suma_monto && dOCUMENTO.TIPO_RECURRENTE != "6")
+                    if ((dOCUMENTO.MONTO_DOC_MD - suma_monto) > decimal.Parse("0.00000001") && dOCUMENTO.TIPO_RECURRENTE != "6")
                         dOCUMENTO.MONTO_DOC_MD = suma_monto;
                     suma_monto = 0;
                     foreach (DOCUMENTOP docP in dOCUMENTO.DOCUMENTOPs)
@@ -479,6 +480,37 @@ namespace TAT001.Services
             {
 
             }
+            ///////////////////Montos
+            //MONTO_DOC_MD
+            var MONTO_DOC_MD = dOCUMENTO.MONTO_DOC_MD;
+            dOCUMENTO.MONTO_DOC_MD = Convert.ToDecimal(MONTO_DOC_MD);
+
+            //Obtener el monto de la sociedad
+            TCambio tc = new TCambio();
+            dOCUMENTO.MONTO_DOC_ML = tc.getValSoc(id_bukrs.WAERS, dOCUMENTO.MONEDA_ID, Convert.ToDecimal(dOCUMENTO.MONTO_DOC_MD), out errorString);
+            if (!String.IsNullOrEmpty(errorString))
+            {
+                return 0;
+            }
+            
+            //MONEDAL_ID moneda de la sociedad
+            dOCUMENTO.MONEDAL_ID = id_bukrs.WAERS;
+
+            //MONEDAL2_ID moneda en USD
+            dOCUMENTO.MONEDAL2_ID = "USD";
+
+            //Tipo cambio de la moneda de la sociedad TIPO_CAMBIOL
+            dOCUMENTO.TIPO_CAMBIOL = tc.getUkurs(id_bukrs.WAERS, dOCUMENTO.MONEDA_ID, out errorString);
+
+            //Tipo cambio dolares TIPO_CAMBIOL2
+            dOCUMENTO.TIPO_CAMBIOL2 = tc.getUkursUSD(dOCUMENTO.MONEDA_ID, "USD", out errorString);
+            if (!String.IsNullOrEmpty(errorString))
+            {
+                return 0;
+            }
+            //MONTO_DOC_ML2 
+            var MONTO_DOC_ML2 = dOCUMENTO.MONTO_DOC_MD / dOCUMENTO.TIPO_CAMBIOL2;
+            dOCUMENTO.MONTO_DOC_ML2 = Convert.ToDecimal(MONTO_DOC_ML2);
             //RSG 26.10.2018------------------------------------------
             if (dOCpADRE.DOCUMENTOFs != null)
             {
@@ -767,38 +799,38 @@ namespace TAT001.Services
                 d = db.DOCUMENTOes.Where(doc => doc.NUM_DOC == dOCUMENTO.DOCUMENTO_REF).FirstOrDefault();
             }
 
-            ///////////////////Montos
-            //MONTO_DOC_MD
-            var MONTO_DOC_MD = dOCUMENTO.MONTO_DOC_MD;
-            dOCUMENTO.MONTO_DOC_MD = Convert.ToDecimal(MONTO_DOC_MD);
+            ///////////////////////Montos
+            //////MONTO_DOC_MD
+            ////var MONTO_DOC_MD = dOCUMENTO.MONTO_DOC_MD;
+            ////dOCUMENTO.MONTO_DOC_MD = Convert.ToDecimal(MONTO_DOC_MD);
 
-            //Obtener el monto de la sociedad
-            TCambio tc = new TCambio();
-            dOCUMENTO.MONTO_DOC_ML = tc.getValSoc(id_bukrs.WAERS, dOCUMENTO.MONEDA_ID, Convert.ToDecimal(dOCUMENTO.MONTO_DOC_MD), out errorString);
-            if (!String.IsNullOrEmpty(errorString))
-            {
-                return 0;
-            }
+            //////Obtener el monto de la sociedad
+            ////TCambio tc = new TCambio();
+            ////dOCUMENTO.MONTO_DOC_ML = tc.getValSoc(id_bukrs.WAERS, dOCUMENTO.MONEDA_ID, Convert.ToDecimal(dOCUMENTO.MONTO_DOC_MD), out errorString);
+            ////if (!String.IsNullOrEmpty(errorString))
+            ////{
+            ////    return 0;
+            ////}
 
-            //MONTO_DOC_ML2 
-            var MONTO_DOC_ML2 = dOCUMENTO.MONTO_DOC_ML2;
-            dOCUMENTO.MONTO_DOC_ML2 = Convert.ToDecimal(MONTO_DOC_ML2);
+            //////MONTO_DOC_ML2 
+            ////var MONTO_DOC_ML2 = dOCUMENTO.MONTO_DOC_ML2;
+            ////dOCUMENTO.MONTO_DOC_ML2 = Convert.ToDecimal(MONTO_DOC_ML2);
 
-            //MONEDAL_ID moneda de la sociedad
-            dOCUMENTO.MONEDAL_ID = id_bukrs.WAERS;
+            //////MONEDAL_ID moneda de la sociedad
+            ////dOCUMENTO.MONEDAL_ID = id_bukrs.WAERS;
 
-            //MONEDAL2_ID moneda en USD
-            dOCUMENTO.MONEDAL2_ID = "USD";
+            //////MONEDAL2_ID moneda en USD
+            ////dOCUMENTO.MONEDAL2_ID = "USD";
 
-            //Tipo cambio de la moneda de la sociedad TIPO_CAMBIOL
-            dOCUMENTO.TIPO_CAMBIOL = tc.getUkurs(id_bukrs.WAERS, dOCUMENTO.MONEDA_ID, out errorString);
+            //////Tipo cambio de la moneda de la sociedad TIPO_CAMBIOL
+            ////dOCUMENTO.TIPO_CAMBIOL = tc.getUkurs(id_bukrs.WAERS, dOCUMENTO.MONEDA_ID, out errorString);
 
-            //Tipo cambio dolares TIPO_CAMBIOL2
-            dOCUMENTO.TIPO_CAMBIOL2 = tc.getUkursUSD(dOCUMENTO.MONEDA_ID, "USD", out errorString);
-            if (!String.IsNullOrEmpty(errorString))
-            {
-                return 0;
-            }
+            //////Tipo cambio dolares TIPO_CAMBIOL2
+            ////dOCUMENTO.TIPO_CAMBIOL2 = tc.getUkursUSD(dOCUMENTO.MONEDA_ID, "USD", out errorString);
+            ////if (!String.IsNullOrEmpty(errorString))
+            ////{
+            ////    return 0;
+            ////}
 
             List<CategoriaMaterial> listcatm = new List<CategoriaMaterial>();
             List<DOCUMENTOM_MOD> listmatm = new List<DOCUMENTOM_MOD>();
@@ -1030,7 +1062,7 @@ namespace TAT001.Services
                             }
                         }
                     }
-                    if (dOCUMENTO.MONTO_DOC_MD != suma_monto && dOCUMENTO.TIPO_RECURRENTE != "6")
+                    if ((dOCUMENTO.MONTO_DOC_MD - suma_monto) > decimal.Parse("0.00000001") && dOCUMENTO.TIPO_RECURRENTE != "6")
                         dOCUMENTO.MONTO_DOC_MD = suma_monto;
                     suma_monto = 0;
                     foreach (DOCUMENTOP docP in dOCUMENTO.DOCUMENTOPs)
@@ -1045,6 +1077,39 @@ namespace TAT001.Services
             {
 
             }
+
+            ///////////////////Montos
+            //MONTO_DOC_MD
+            var MONTO_DOC_MD = dOCUMENTO.MONTO_DOC_MD;
+            dOCUMENTO.MONTO_DOC_MD = Convert.ToDecimal(MONTO_DOC_MD);
+
+            //Obtener el monto de la sociedad
+            TCambio tc = new TCambio();
+            dOCUMENTO.MONTO_DOC_ML = tc.getValSoc(id_bukrs.WAERS, dOCUMENTO.MONEDA_ID, Convert.ToDecimal(dOCUMENTO.MONTO_DOC_MD), out errorString);
+            if (!String.IsNullOrEmpty(errorString))
+            {
+                return 0;
+            }
+
+
+            //MONEDAL_ID moneda de la sociedad
+            dOCUMENTO.MONEDAL_ID = id_bukrs.WAERS;
+
+            //MONEDAL2_ID moneda en USD
+            dOCUMENTO.MONEDAL2_ID = "USD";
+
+            //Tipo cambio de la moneda de la sociedad TIPO_CAMBIOL
+            dOCUMENTO.TIPO_CAMBIOL = tc.getUkurs(id_bukrs.WAERS, dOCUMENTO.MONEDA_ID, out errorString);
+
+            //Tipo cambio dolares TIPO_CAMBIOL2
+            dOCUMENTO.TIPO_CAMBIOL2 = tc.getUkursUSD(dOCUMENTO.MONEDA_ID, "USD", out errorString);
+            if (!String.IsNullOrEmpty(errorString))
+            {
+                return 0;
+            }
+            //MONTO_DOC_ML2 
+            var MONTO_DOC_ML2 = dOCUMENTO.MONTO_DOC_MD / dOCUMENTO.TIPO_CAMBIOL2;
+            dOCUMENTO.MONTO_DOC_ML2 = Convert.ToDecimal(MONTO_DOC_ML2);
 
             ////Rangos ran = new Rangos();
             ////decimal N_DOC = ran.getSolID(dOCUMENTO.TSOL_ID);
