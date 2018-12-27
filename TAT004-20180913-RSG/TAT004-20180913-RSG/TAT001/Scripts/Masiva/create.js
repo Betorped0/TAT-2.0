@@ -1686,51 +1686,28 @@ $("#tab_mul").click(function () {
 function procesarHoja4() {
     var table = $('#tab_test4').DataTable({
         language: { "url": "../Scripts/lang/" + ln + ".json" }, "order": [1, 'asc'],
-        "drawCallback": function (settings) {
-            var api = this.api();
-            var rows = api.rows({ page: 'all' }).nodes();
-            var aData = new Array();
-
-            api.column(1, { page: 'all' }).data().each(function (group, i) {
+        rowGroup: {
+            startRender: null,
+            endRender: function (rows, group) {
                 var indexApoyo = getTableIndex('#tab_test4', 'lbl_apoyo');
-                var indexNumDoc = getTableIndex('#tab_test4', 'lbl_numDocH4');
-                var apoyot4 = $(rows).eq(i).children().eq(indexApoyo).children().val();
-                var num_doc = $(rows).eq(i).children().eq(indexNumDoc).children().val();
-                apoyot4 = toNum(apoyot4, ',', '.');
-
-                //var vals = api.row(api.row($(rows).eq(i)).index()).data();
-                var apoyo = apoyot4 ? parseFloat(apoyot4) : 0;
-
-                if (typeof aData[group] === 'undefined') {
-                    aData[group] = new Array();
-                    aData[group].rows = [];
-                    aData[group].apoyo = [];
-                    aData[group].numDoc = [];
-                }
-
-                aData[group].rows.push(i);
-                aData[group].apoyo.push(apoyo);
-                aData[group].numDoc.push(num_doc);
-                
-
-            });
-            var idx = 0;
-            for (var office in aData) {
-
-                idx = Math.max.apply(Math, aData[office].rows);
-                if (idx >= 0) {
-                    var sum = 0;
-                    $.each(aData[office].apoyo, function (k, v) {
-                        sum = sum + v;
-                    });
-                    $(rows).eq(idx).after(
-                        '<tr class="group" id="grupo' + aData[office].numDoc[0] + '"><td colspan="14"><b>TOTAL</b></td>' +
-                        '<td><b>' + toShow(sum, '.') + '</b></td></tr>'
-                    );
-                }
-
-            }
+                var ApoyoGroup = rows
+                    .data()
+                    .pluck(indexApoyo)
+                    .reduce(function (a, b) {
+                        var html = $.parseHTML(b);
+                        var apoyo = 0;
+                        if (html.length > 1) {
+                            apoyo = toNum(html[0].value, ',', '.');
+                        }
+                        return a + apoyo;
+                    }, 0);
+                return $('<tr/>')
+                    .append('<td colspan="14"><b>TOTAL</b></td>')
+                    .append('<td><b>' + toShow(ApoyoGroup, '.') + '</b></td>');
+            },
+            dataSrc: 1
         }
+       
     });
 
     $.ajax({
@@ -4198,7 +4175,6 @@ function InicializarTablas() {
     $('#tab_mul').removeClass("red white-text rojo");
     $('#tab_dis').removeClass("red white-text rojo");
     $('#tab_arc').removeClass("red white-text rojo");
-    $('#miMas').val('');
 }
 function getCategoria(mat) {
     

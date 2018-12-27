@@ -1537,6 +1537,7 @@
     <Content Include="Scripts\DataTables\datatables.js" />
     <Content Include="Scripts\DataTables\datatables.min.css" />
     <Content Include="Scripts\DataTables\datatables.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.rowGroup.min.js" />
     <Content Include="Scripts\DataTables\Editor-2019-01-02-1.8.1\css\editor.bootstrap.css" />
     <Content Include="Scripts\DataTables\Editor-2019-01-02-1.8.1\css\editor.bootstrap.min.css" />
     <Content Include="Scripts\DataTables\Editor-2019-01-02-1.8.1\css\editor.bootstrap4.css" />
