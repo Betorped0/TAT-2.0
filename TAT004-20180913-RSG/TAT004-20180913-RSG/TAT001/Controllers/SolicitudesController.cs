@@ -191,8 +191,15 @@ namespace TAT001.Controllers
             if (DF.D.DOCUMENTORECs.Count == 0)
             {
                 DOCUMENTOREC dr = db.DOCUMENTORECs.Where(x => x.DOC_REF == DF.D.NUM_DOC).FirstOrDefault();
+                if(dr == null)
+                    dr = db.DOCUMENTORECs.Where(x => x.NUM_DOC_Q == DF.D.NUM_DOC).FirstOrDefault();
                 if (dr != null)
+                {
+                    DF.D.OBJETIVOQ = dr.DOCUMENTO.OBJETIVOQ;
+                    DF.D.OBJQ_PORC = dr.DOCUMENTO.OBJQ_PORC;
+                    DF.D.TSOL_LIG = dr.DOCUMENTO.TSOL_LIG;
                     DF.D.DOCUMENTORECs = db.DOCUMENTORECs.Where(x => x.NUM_DOC == dr.NUM_DOC).ToList();
+                }
             }
             List<DOCUMENTO> recs = (from D in DF.D.DOCUMENTORECs
                                     join N in db.DOCUMENTOes.Where(x => x.USUARIOC_ID == DF.D.USUARIOC_ID).ToList()
@@ -1551,6 +1558,13 @@ namespace TAT001.Controllers
             Warning w = new Warning();
             ViewBag.listaValid = w.listaW(d.SOCIEDAD_ID, usuariotextos);
 
+            var aa = (from n in db.TSOLTs.Where(x => x.SPRAS_ID == usuariotextos)
+                      join t in db.TSOL_TREE
+                      on n.TSOL_ID equals t.TSOL_ID
+                      where n.TSOL.FACTURA
+                      select new { n.TSOL_ID, n.TXT50 }).DistinctBy(x=>x.TSOL_ID).ToList();
+            ViewBag.TSOL_LIG = new SelectList(aa, "TSOL_ID", "TXT50", d.TSOL_LIG);
+
             return View(d);
         }
 
@@ -1566,7 +1580,7 @@ namespace TAT001.Controllers
             "MONTO_BASE_NS_PCT_ML2,IMPUESTO,FECHAI_VIG,FECHAF_VIG,ESTATUS_EXT,SOLD_TO_ID,PAYER_ID,GRUPO_CTE_ID,CANAL_ID," +
             "MONEDA_ID,TIPO_CAMBIO,NO_FACTURA,FECHAD_SOPORTE,METODO_PAGO,NO_PROVEEDOR,PASO_ACTUAL,AGENTE_ACTUAL,FECHA_PASO_ACTUAL," +
             "VKORG,VTWEG,SPART,HORAC,FECHAC_PLAN,FECHAC_USER,HORAC_USER,CONCEPTO,PORC_ADICIONAL,PAYER_NOMBRE,PAYER_EMAIL," +
-            "MONEDAL_ID,MONEDAL2_ID,TIPO_CAMBIOL,TIPO_CAMBIOL2,DOCUMENTOP, DOCUMENTOF, DOCUMENTOREC, GALL_ID, USUARIOD_ID, OBJQ_PORC, DOCUMENTORAN")] DOCUMENTO dOCUMENTO,
+            "MONEDAL_ID,MONEDAL2_ID,TIPO_CAMBIOL,TIPO_CAMBIOL2,DOCUMENTOP, DOCUMENTOF, DOCUMENTOREC, GALL_ID, USUARIOD_ID, OBJQ_PORC, DOCUMENTORAN,TSOL_LIG")] DOCUMENTO dOCUMENTO,
                 IEnumerable<HttpPostedFileBase> files_soporte, string notas_soporte, string[] labels_soporte, string unafact,
                 string FECHAD_REV, string TREVERSA, string select_neg, string select_dis, string select_negi, string select_disi,
                 string bmonto_apoyo, string catmat, string borrador_param, string monedadis, string chk_ligada, string sel_nn, string check_objetivoq,
@@ -2862,7 +2876,93 @@ namespace TAT001.Controllers
                                 db1.SaveChanges();
                             }
                         }
+                        if (dOCUMENTO.DOCUMENTO_REF!= null && d != null)
+                        {
+                            bool nota = false;
+                            DOCUMENTOREC drec = db.DOCUMENTORECs.FirstOrDefault(x => x.DOC_REF == d.NUM_DOC);
+                            if (drec == null)
+                                drec = db.DOCUMENTORECs.FirstOrDefault(x => x.NUM_DOC_Q == d.NUM_DOC);
+                            if (drec != null)
+                            {
+                                if (drec.DOCUMENTO.OBJETIVOQ == true)
+                                {
+                                    DOCUMENTORAN dra = drec.DOCUMENTORANs.FirstOrDefault(x => x.LIN == 1);
+                                    if (dra.OBJETIVOI == null)
+                                    {
+                                        dra.OBJETIVOI = 0;
+                                    }
+                                    DOCUMENTOL dl = d.DOCUMENTOLs.FirstOrDefault(x => x.POS == drec.POS);
+                                    if (dl.BACKORDER == null)
+                                        dl.BACKORDER = 0;
+                                    if ((dl.MONTO_VENTA + dl.BACKORDER) > dra.OBJETIVOI)
+                                    {
+                                        nota = true;
+                                    }
+                                    if (nota)
+                                    {
+                                        decimal n_doc = 0;
+                                        Reversa r = new Reversa();
+                                        string a = r.creaReversa(drec.NUM_DOC_Q.ToString(), dOCUMENTO.TSOL_ID, ref n_doc, true);
+                                    }
+                                    else
+                                    {
+                                        decimal n_doc = 0;
+                                        Reversa r = new Reversa();
+                                        string a = r.creaReversa(drec.NUM_DOC_Q.ToString(), "CPR", ref n_doc, true);
+                                        DOCUMENTO dOCUMENTOR = db.DOCUMENTOes.Find(n_doc);
+                                        ////DOCUMENTO docPadre = db.DOCUMENTOes.Find(dOCUMENTOR.DOCUMENTO_REF);
+                                        List<DOCUMENTO> dd = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == (dOCUMENTOR.DOCUMENTO_REF) && x.ESTATUS_C != "C" && x.ESTATUS_WF != "B").ToList();
+                                        if (dOCUMENTOR.TSOL.REVERSO)
+                                        {
+                                            if (dd.Where(x => !x.TSOL.REVERSO && x.ESTATUS_WF != "A").ToList().Count == 0)
+                                            {
+                                                using (TAT001Entities db1 = new TAT001Entities())
+                                                {
+                                                    decimal num_doc = dd.First(x => x.TSOL.REVERSO).NUM_DOC;
+                                                    FLUJO ff = db1.FLUJOes.Where(x => x.NUM_DOC == num_doc).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+                                                    ff.FECHAM = DateTime.Now;
+                                                    ff.ESTATUS = "A";
+                                                    string c = pf.procesa(ff, "C");
+                                                    FLUJO conta = db.FLUJOes.Where(x => x.NUM_DOC == ff.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+                                                    while (c == "1")
+                                                    {
+                                                        Email em = new Email();
+                                                        string UrlDirectory = Request.Url.GetLeftPart(UriPartial.Path);
+                                                        string image = Server.MapPath("~/images/logo_kellogg.png");
+                                                        DOCUMENTO doc = db.DOCUMENTOes.Where(x => x.NUM_DOC == num_doc).First();
+                                                        string imageFlag = Server.MapPath("~/images/flags/mini/" + doc.PAIS_ID + ".png");
+                                                        ////em.enviaMailC(ff.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image);
+                                                        em.enviaMailC(ff.NUM_DOC, true, usuariotextos, UrlDirectory, "Index", image, imageFlag);
 
+                                                        if (conta.WORKFP.ACCION.TIPO == "B")
+                                                        {
+                                                            WORKFP wpos = db.WORKFPs.Where(x => x.ID == conta.WORKF_ID && x.VERSION == conta.WF_VERSION && x.POS == conta.WF_POS).FirstOrDefault();
+                                                            conta.ESTATUS = "A";
+                                                            conta.FECHAM = DateTime.Now;
+                                                            c = pf.procesa(conta, "");
+                                                            conta = db.FLUJOes.Where(x => x.NUM_DOC == ff.NUM_DOC).Include(x => x.WORKFP).OrderByDescending(x => x.POS).FirstOrDefault();
+
+                                                        }
+                                                        else
+                                                        {
+                                                            c = "";
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        using (TAT001Entities db1 = new TAT001Entities())
+                                        {
+                                            decimal num_ref = (decimal)dOCUMENTOR.DOCUMENTO_REF;
+                                            DOCUMENTO referencia = db1.DOCUMENTOes.Find(num_ref);
+                                            referencia.ESTATUS = "R";
+                                            db1.Entry(referencia).State = EntityState.Modified;
+                                            db1.SaveChanges();
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         return RedirectToAction("Index", "Home");
                     }
                     catch (Exception e)
@@ -5878,8 +5978,8 @@ namespace TAT001.Controllers
 
                 }
             }
-
-            return RedirectToAction("Index", "Home");
+            return null;
+            //return RedirectToAction("Index", "Home");
         }
         [HttpPost]
         [AllowAnonymous]
