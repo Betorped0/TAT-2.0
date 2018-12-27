@@ -167,106 +167,106 @@
                     @if (Model.OBJETIVOQ == true & ViewBag.duplicate == null)
                     {
                         <script>
-                                    document.getElementById("check_objetivoq").checked = true;
+                            document.getElementById("check_objetivoq").checked = true;
                         </script>
                     }
                     <script>
-                                function objetivoQ(ban) {
-                                    $(".objqT").remove();
-                                    if (ban) {
-                                        var lengthT = $("table#table_rec tbody tr[role='row']").length;
-                                        if (lengthT > 0) {
-                                            document.getElementById('table_objQ').classList.remove("hide");
-                                            var total = 0;
-                                            var porc = 0;
-                                            var fecha = "";
-                                            var tsol = "";
-                                            $("#table_rec > tbody  > tr[role='row']").each(function () {
-                                                fecha = ($(this).find("td.FECHA").text());
-                                                tsol = $(this).find("td.TSOL").text();
+                        function objetivoQ(ban) {
+                            $(".objqT").remove();
+                            if (ban) {
+                                var lengthT = $("table#table_rec tbody tr[role='row']").length;
+                                if (lengthT > 0) {
+                                    document.getElementById('table_objQ').classList.remove("hide");
+                                    var total = 0;
+                                    var porc = 0;
+                                    var fecha = "";
+                                    var tsol = "";
+                                    $("#table_rec > tbody  > tr[role='row']").each(function () {
+                                        fecha = ($(this).find("td.FECHA").text());
+                                        tsol = $(this).find("td.TSOL").text();
 
 
-                                                var pos = $(this).find("td.POS").text().split("/")[0];
-                                                if (pos != "1") {
-                                                    var tr = "";
-                                                    tr += "<tr class='objqT'>"
-                                                    tr += "<td>Q " + pos + "</td>"
-                                                    tr += "<td>" + tsol + "</td>";
-                                                    tr += "<td>" + fecha + "</td>";
-                                                    total = 0;
-                                                    for (var i = 0; i < listaRangos.length; i++) {
-                                                        var poss = listaRangos[i].LIN;
-                                                        if (poss == 1 & pos == listaRangos[i].POS)
-                                                            total += parseFloat(toNum(listaRangos[i].OBJ1));
-                                                    }
-                                                    tr += "<td>" + toShow(total) + "</td>";
-                                                    tr += "<td>" + 0 + "</td>";
-                                                    tr += "</tr>"
-                                                    $("#table_objQ tbody").append(tr);
-                                                } else {
-                                                    total = 0;
-                                                    for (var i = 0; i < listaRangos.length; i++) {
-                                                        var poss = listaRangos[i].LIN;
-                                                        if (poss == 1 & pos == listaRangos[i].POS)
-                                                            total += parseFloat(toNum(listaRangos[i].OBJ1));
-                                                    }
-                                                    document.getElementById("obqTSOL").innerText = tsol;
-                                                    document.getElementById("obqFECHA").innerText = fecha;
-                                                    document.getElementById("obqMONTO").innerText = toShow(total);
-                                                }
-                                            });
-                                        }
-                                    }
-                                    else {
-                                        document.getElementById('table_objQ').classList.add("hide");
-                                    }
-                                    $("#table_objQ").DataTable();
-                                }
-                                function updateObjQ() {
-                                    $(".objqT").remove();
-                                    var lengthT = $("table#table_rec tbody tr[role='row']").length;
-                                    if (lengthT > 0) {
-                                        var total = 0;
-                                        var porc = 0;
-                                        var fecha = "";
-                                        var tsol = "";
-                                        $("#table_rec > tbody  > tr[role='row']").each(function () {
-                                            fecha = ($(this).find("td.FECHA").text());
-                                            tsol = $(this).find("td.TSOL").text();
-
-
-                                            var pos = $(this).find("td.POS").text().split("/")[0];
-                                            if (pos != "1") {
-                                                var tr = "";
-                                                tr += "<tr class='objqT'>"
-                                                tr += "<td>Q " + pos + "</td>"
-                                                tr += "<td>" + tsol + "</td>";
-                                                tr += "<td>" + fecha + "</td>";
-                                                total = 0;
-                                                for (var i = 0; i < listaRangos.length; i++) {
-                                                    var poss = listaRangos[i].LIN;
-                                                    if (poss == 1 & pos == listaRangos[i].POS)
-                                                        total += parseFloat(toNum(listaRangos[i].OBJ1));
-                                                }
-                                                tr += "<td>" + toShow(total) + "</td>";
-                                                tr += "<td>" + 0 + "</td>";
-                                                tr += "</tr>"
-                                                $("#table_objQ tbody").append(tr);
-                                            } else {
-                                                total = 0;
-                                                for (var i = 0; i < listaRangos.length; i++) {
-                                                    var poss = listaRangos[i].LIN;
-                                                    if (poss == 1 & pos == listaRangos[i].POS)
-                                                        total += parseFloat(toNum(listaRangos[i].OBJ1));
-                                                }
-                                                document.getElementById("obqTSOL").innerText = tsol;
-                                                document.getElementById("obqFECHA").innerText = fecha;
-                                                document.getElementById("obqMONTO").innerText = toShow(total);
+                                        var pos = $(this).find("td.POS").text().split("/")[0];
+                                        if (pos != "1") {
+                                            var tr = "";
+                                            tr += "<tr class='objqT'>"
+                                            tr += "<td>Q " + pos + "</td>"
+                                            tr += "<td>" + tsol + "</td>";
+                                            tr += "<td>" + fecha + "</td>";
+                                            total = 0;
+                                            for (var i = 0; i < listaRangos.length; i++) {
+                                                var poss = listaRangos[i].LIN;
+                                                if (poss == 1 & pos == listaRangos[i].POS)
+                                                    total += parseFloat(toNum(listaRangos[i].OBJ1));
                                             }
-                                        });
-                                    }
-                                    $("#table_objQ").DataTable();
+                                            tr += "<td>" + toShow(total) + "</td>";
+                                            tr += "<td>" + 0 + "</td>";
+                                            tr += "</tr>"
+                                            $("#table_objQ tbody").append(tr);
+                                        } else {
+                                            total = 0;
+                                            for (var i = 0; i < listaRangos.length; i++) {
+                                                var poss = listaRangos[i].LIN;
+                                                if (poss == 1 & pos == listaRangos[i].POS)
+                                                    total += parseFloat(toNum(listaRangos[i].OBJ1));
+                                            }
+                                            document.getElementById("obqTSOL").innerText = tsol;
+                                            document.getElementById("obqFECHA").innerText = fecha;
+                                            document.getElementById("obqMONTO").innerText = toShow(total);
+                                        }
+                                    });
                                 }
+                            }
+                            else {
+                                document.getElementById('table_objQ').classList.add("hide");
+                            }
+                            $("#table_objQ").DataTable();
+                        }
+                        function updateObjQ() {
+                            $(".objqT").remove();
+                            var lengthT = $("table#table_rec tbody tr[role='row']").length;
+                            if (lengthT > 0) {
+                                var total = 0;
+                                var porc = 0;
+                                var fecha = "";
+                                var tsol = "";
+                                $("#table_rec > tbody  > tr[role='row']").each(function () {
+                                    fecha = ($(this).find("td.FECHA").text());
+                                    tsol = $(this).find("td.TSOL").text();
+
+
+                                    var pos = $(this).find("td.POS").text().split("/")[0];
+                                    if (pos != "1") {
+                                        var tr = "";
+                                        tr += "<tr class='objqT'>"
+                                        tr += "<td>Q " + pos + "</td>"
+                                        tr += "<td>" + tsol + "</td>";
+                                        tr += "<td>" + fecha + "</td>";
+                                        total = 0;
+                                        for (var i = 0; i < listaRangos.length; i++) {
+                                            var poss = listaRangos[i].LIN;
+                                            if (poss == 1 & pos == listaRangos[i].POS)
+                                                total += parseFloat(toNum(listaRangos[i].OBJ1));
+                                        }
+                                        tr += "<td>" + toShow(total) + "</td>";
+                                        tr += "<td>" + 0 + "</td>";
+                                        tr += "</tr>"
+                                        $("#table_objQ tbody").append(tr);
+                                    } else {
+                                        total = 0;
+                                        for (var i = 0; i < listaRangos.length; i++) {
+                                            var poss = listaRangos[i].LIN;
+                                            if (poss == 1 & pos == listaRangos[i].POS)
+                                                total += parseFloat(toNum(listaRangos[i].OBJ1));
+                                        }
+                                        document.getElementById("obqTSOL").innerText = tsol;
+                                        document.getElementById("obqFECHA").innerText = fecha;
+                                        document.getElementById("obqMONTO").innerText = toShow(total);
+                                    }
+                                });
+                            }
+                            $("#table_objQ").DataTable();
+                        }
                     </script>
                 </p>
                 <div style="overflow:auto;">
@@ -302,6 +302,12 @@
                             <option id="opt_ames" value="12">Anual</option> @*B20180801 MGC Textos*@
                         </select>
                         <label id="lbl_selnn" for="sel_nn">Frecuencia de liquidación</label> @*B20180801 MGC Textos*@
+                    </div>
+                </p>
+                <p>
+                    <div class="input-field col l4 m4 s12">
+                        @Html.DropDownList("TSOL_LIG", null, "", htmlAttributes: new { @id = "TSOL_LIG", @class = "form-control  " })
+                        <label id="lbl_Mselnn" for="TSOL_LIG">Método de liquidación</label> @*B20180801 MGC Textos*@
                     </div>
                 </p>
             </div>

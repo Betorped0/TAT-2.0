@@ -150,6 +150,8 @@ namespace TAT001.Services
                                 else
                                 {
                                     DOCUMENTOREC docPadre = db.DOCUMENTORECs.Where(x => x.DOC_REF == actual.NUM_DOC).FirstOrDefault();
+                                    if(docPadre==null)
+                                        docPadre = db.DOCUMENTORECs.Where(x => x.NUM_DOC_Q == actual.NUM_DOC).FirstOrDefault();
                                     FLUJO ff = db.FLUJOes.Where(x => x.NUM_DOC == docPadre.NUM_DOC && x.WORKFP.ACCION_ID == 5).FirstOrDefault();
                                     nuevo.USUARIOA_ID = ff.USUARIOA_ID;
                                     nuevo.USUARIOD_ID = ff.USUARIOD_ID;

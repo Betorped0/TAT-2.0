@@ -33,6 +33,8 @@ namespace TAT001.Entities
         public Nullable<decimal> PORC { get; set; }
         public Nullable<decimal> DOC_REF { get; set; }
         public Nullable<System.DateTime> FECHAV { get; set; }
+        public Nullable<decimal> NUM_DOC_Q { get; set; }
+        public string ESTATUS_Q { get; set; }
     
         public virtual DOCUMENTO DOCUMENTO { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
