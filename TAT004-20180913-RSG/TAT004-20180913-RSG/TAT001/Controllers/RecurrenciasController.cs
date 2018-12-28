@@ -3400,9 +3400,18 @@ namespace TAT001.Controllers
                 List<DOCUMENTOREC> docRes = db.DOCUMENTORECs.Where(x => x.NUM_DOC.Equals(id) && x.ESTATUS != "P").ToList();
                 foreach (DOCUMENTOREC dR in docRes)
                 {
-                    dR.ESTATUS = "C";
-                    if (docRe.OBJETIVOQ == true)
-                        dR.ESTATUS_Q = "C";
+                    if (dR.ESTATUS == "B")
+                    {
+                        dR.ESTATUS = "P";
+                        if (docRe.OBJETIVOQ == true)
+                            dR.ESTATUS_Q = "P";
+                    }
+                    else if(dR.ESTATUS != "P")
+                    {
+                        dR.ESTATUS = "C";
+                        if (docRe.OBJETIVOQ == true)
+                            dR.ESTATUS_Q = "C";
+                    } 
                     db.Entry(dR).State = EntityState.Modified;
                 }
                 db.SaveChanges();
