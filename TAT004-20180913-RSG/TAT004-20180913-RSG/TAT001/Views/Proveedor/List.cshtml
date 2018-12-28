@@ -98,7 +98,7 @@
                 $('#' + id).click(function (me) {
                     fnCommon.showProcess(true);
                     $.ajax({
-                        url: me.toElement.getAttribute('url'),
+                        url: me.target.getAttribute('url'),
                         success: function (resultView) {
                               if (resultView.isRedirect) {
                             window.location = resultView.redirectUrl;
@@ -127,7 +127,7 @@
                 $('#' + id).click(function (me) {
                     fnCommon.showProcess(true);
                     $.ajax({
-                        url: me.toElement.getAttribute('url'),
+                        url: me.target.getAttribute('url'),
                         success: function (resultView) {
                           if (resultView.isRedirect) {
                             window.location = resultView.redirectUrl;

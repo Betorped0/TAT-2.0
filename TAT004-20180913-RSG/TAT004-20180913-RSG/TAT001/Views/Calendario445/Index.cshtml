@@ -37,7 +37,7 @@
                     <label for="global_filter" id="lbl_search">Buscar</label>
                 </div>
             </div>
-            <div id="list">
+            <div id="list" style="overflow-x: auto;">
                 @Html.Partial("List", Model)
             </div>
         </div>
@@ -53,7 +53,7 @@
                     <label for="global_filter" id="lbl_search">Buscar</label>
                 </div>
             </div>
-            <div id="listEx">
+            <div id="listEx" style="overflow-x: auto;">
                 @Html.Partial("ListEx", Model)
             </div>
         </div>
