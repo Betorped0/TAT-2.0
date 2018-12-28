@@ -1581,9 +1581,9 @@ namespace TAT001.ControllersE
             var aa = (from n in db.TSOLTs.Where(x => x.SPRAS_ID == usuariotextos)
                       join t in db.TSOL_TREE
                       on n.TSOL_ID equals t.TSOL_ID
-                      where n.TSOL.FACTURA
-                      select new { n.TSOL_ID, n.TXT50 }).DistinctBy(x=>x.TSOL_ID).ToList();
-            ViewBag.TSOL_LIG = new SelectList(aa, "TSOL_ID", "TXT50", d.TSOL_LIG);
+                      where n.TSOL.FACTURA && !n.TSOL_ID.StartsWith("O")
+                      select new { n.TSOL_ID, n.TXT020 }).DistinctBy(x=>x.TSOL_ID).DistinctBy(x=>x.TXT020).ToList();
+            ViewBag.TSOL_LIG = new SelectList(aa, "TSOL_ID", "TXT020", d.TSOL_LIG);
 
             return View(d);
         }
@@ -3268,9 +3268,9 @@ namespace TAT001.ControllersE
             var aa = (from n in db.TSOLTs.Where(x => x.SPRAS_ID == usuariotextos)
                       join t in db.TSOL_TREE
                       on n.TSOL_ID equals t.TSOL_ID
-                      where n.TSOL.FACTURA
-                      select new { n.TSOL_ID, n.TXT50 }).DistinctBy(x => x.TSOL_ID).ToList();
-            ViewBag.TSOL_LIG = new SelectList(aa, "TSOL_ID", "TXT50", dOCUMENTO.TSOL_LIG);
+                      where n.TSOL.FACTURA && !n.TSOL_ID.StartsWith("O")
+                      select new { n.TSOL_ID, n.TXT020 }).DistinctBy(x=>x.TSOL_ID).DistinctBy(x=>x.TXT020).ToList();
+            ViewBag.TSOL_LIG = new SelectList(aa, "TSOL_ID", "TXT020", dOCUMENTO.TSOL_LIG);
 
             return View(dOCUMENTO);
         }
@@ -4653,9 +4653,9 @@ namespace TAT001.ControllersE
             var aa = (from n in db.TSOLTs.Where(x => x.SPRAS_ID == spras)
                       join t in db.TSOL_TREE
                       on n.TSOL_ID equals t.TSOL_ID
-                      where n.TSOL.FACTURA
-                      select new { n.TSOL_ID, n.TXT50 }).DistinctBy(x => x.TSOL_ID).ToList();
-            ViewBag.TSOL_LIG = new SelectList(aa, "TSOL_ID", "TXT50", d.TSOL_LIG);
+                      where n.TSOL.FACTURA && !n.TSOL_ID.StartsWith("O")
+                      select new { n.TSOL_ID, n.TXT020 }).DistinctBy(x=>x.TSOL_ID).DistinctBy(x=>x.TXT020).ToList();
+            ViewBag.TSOL_LIG = new SelectList(aa, "TSOL_ID", "TXT020", d.TSOL_LIG);
 
             return View(d);
         }
@@ -4719,6 +4719,7 @@ namespace TAT001.ControllersE
                     //ADD RSG 20.08.2018-----------------------------START
 
                     d.ESTADO = dOCUMENTO.ESTADO;
+                    d.TSOL_LIG = dOCUMENTO.TSOL_LIG;
                     d.CIUDAD = dOCUMENTO.CIUDAD;
                     d.CONCEPTO = dOCUMENTO.CONCEPTO;
                     d.NOTAS = dOCUMENTO.NOTAS;
@@ -5875,9 +5876,9 @@ namespace TAT001.ControllersE
             var aa = (from n in db.TSOLTs.Where(x => x.SPRAS_ID == usuariotextos)
                       join t in db.TSOL_TREE
                       on n.TSOL_ID equals t.TSOL_ID
-                      where n.TSOL.FACTURA
-                      select new { n.TSOL_ID, n.TXT50 }).DistinctBy(x => x.TSOL_ID).ToList();
-            ViewBag.TSOL_LIG = new SelectList(aa, "TSOL_ID", "TXT50", dOCUMENTO.TSOL_LIG);
+                      where n.TSOL.FACTURA && !n.TSOL_ID.StartsWith("O")
+                      select new { n.TSOL_ID, n.TXT020 }).DistinctBy(x=>x.TSOL_ID).DistinctBy(x=>x.TXT020).ToList();
+            ViewBag.TSOL_LIG = new SelectList(aa, "TSOL_ID", "TXT020", dOCUMENTO.TSOL_LIG);
 
             return View(dOCUMENTO);
         }
