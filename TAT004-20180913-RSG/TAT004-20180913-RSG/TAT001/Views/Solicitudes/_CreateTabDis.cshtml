@@ -129,7 +129,7 @@
                     else
                     {
                         <div class="input-field col s6">
-                            @if (ViewBag.caso2 == null)
+                            @if (ViewBag.caso2 == null && ViewBag.caso1 == null)
                             {
                                 <input value="@ViewBag.MONTO_DIS" id="monto_dis" type="text" class="@ViewBag.reversa" />
                             }

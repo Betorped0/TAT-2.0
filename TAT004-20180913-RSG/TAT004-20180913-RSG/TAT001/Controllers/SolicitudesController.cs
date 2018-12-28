@@ -1089,6 +1089,10 @@ namespace TAT001.ControllersE
                                 ViewBag.backorder = "X";
                             }
                         }
+                        if(d.TIPO_RECURRENTE == "6")
+                        {
+                            ViewBag.caso1 = "X";
+                        }
 
                         decimal suma = 0;
                         foreach (DOCUMENTOP_MOD ddp in docsp)

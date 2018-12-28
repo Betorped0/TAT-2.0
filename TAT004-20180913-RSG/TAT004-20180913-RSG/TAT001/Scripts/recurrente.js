@@ -909,6 +909,9 @@ function isDuplicado() {
 function isMultiple() {
     return $("#check_facturas").val() === "true";
 }
+function isCaso1() {
+    return $("#txt_caso1").val() === "X";
+}
 
 var liquida = [];
 function formaLiquida() {
