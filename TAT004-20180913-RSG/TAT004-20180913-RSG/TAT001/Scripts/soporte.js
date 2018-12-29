@@ -1,13 +1,16 @@
 ﻿
 function soportes(tsol, spras) {
     var texto = document.querySelector(".span_fileload").innerHTML;
+    var backorder = document.getElementById("txt_backorder").value;
+    if (backorder === undefined)
+        backorder = "";
     $.ajax({
         url: "../Listas/Soportes",
         type: "POST",
         async: false,
         timeout: 30000,
         dataType: "json",
-        data: { tsol: tsol, spras: spras },
+        data: { tsol: tsol, spras: spras, bo: backorder },
         success: function (data) {
             var pp = $.map(data, function (item) {
                 return { tsoporte: item.TSOPORTE_ID, oblig: item.OBLIGATORIO, txt50: item.TXT50 };

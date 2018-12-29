@@ -429,7 +429,7 @@ namespace TAT001.Common
                     }
                     else
                     {
-                        proximafecha = new DateTime(modelo.FINICIO.Year, modelo.FINICIO.Month, (int)modelo.DIA_MES).AddMonths(1);
+                        proximafecha = new DateTime(modelo.FINICIO.Year, modelo.FINICIO.Month, (int)modelo.DIA_MES).AddMonths(modelo.FRECUENCIA_N);
                     }
                 }
                 else

@@ -1084,6 +1084,14 @@ namespace TAT001.ControllersE
                                 d.DOCUMENTOLs.First().BACKORDER = 0;
                             d.MONTO_DOC_MD = ( d.DOCUMENTOLs.First().MONTO_VENTA + d.DOCUMENTOLs.First().BACKORDER) * d.PORC_APOYO / 100;
                             ViewBag.caso2 = "X";
+                            if (d.DOCUMENTOLs.First().BACKORDER > 0)
+                            {
+                                ViewBag.backorder = "X";
+                            }
+                        }
+                        if(d.TIPO_RECURRENTE == "6")
+                        {
+                            ViewBag.caso1 = "X";
                         }
 
                         decimal suma = 0;
@@ -1573,9 +1581,9 @@ namespace TAT001.ControllersE
             var aa = (from n in db.TSOLTs.Where(x => x.SPRAS_ID == usuariotextos)
                       join t in db.TSOL_TREE
                       on n.TSOL_ID equals t.TSOL_ID
-                      where n.TSOL.FACTURA
-                      select new { n.TSOL_ID, n.TXT50 }).DistinctBy(x=>x.TSOL_ID).ToList();
-            ViewBag.TSOL_LIG = new SelectList(aa, "TSOL_ID", "TXT50", d.TSOL_LIG);
+                      where n.TSOL.FACTURA && !n.TSOL_ID.StartsWith("O")
+                      select new { n.TSOL_ID, n.TXT020 }).DistinctBy(x=>x.TSOL_ID).DistinctBy(x=>x.TXT020).ToList();
+            ViewBag.TSOL_LIG = new SelectList(aa, "TSOL_ID", "TXT020", d.TSOL_LIG);
 
             return View(d);
         }
@@ -3257,6 +3265,13 @@ namespace TAT001.ControllersE
             Warning w = new Warning();
             ViewBag.listaValid = w.listaW(dOCUMENTO.SOCIEDAD_ID, usuariotextos);
 
+            var aa = (from n in db.TSOLTs.Where(x => x.SPRAS_ID == usuariotextos)
+                      join t in db.TSOL_TREE
+                      on n.TSOL_ID equals t.TSOL_ID
+                      where n.TSOL.FACTURA && !n.TSOL_ID.StartsWith("O")
+                      select new { n.TSOL_ID, n.TXT020 }).DistinctBy(x=>x.TSOL_ID).DistinctBy(x=>x.TXT020).ToList();
+            ViewBag.TSOL_LIG = new SelectList(aa, "TSOL_ID", "TXT020", dOCUMENTO.TSOL_LIG);
+
             return View(dOCUMENTO);
         }
         [HttpPost]
@@ -4635,6 +4650,12 @@ namespace TAT001.ControllersE
 
             //Tab_Fin Análisis Solicitud
             ObtenerAnalisisSolicitud(d);
+            var aa = (from n in db.TSOLTs.Where(x => x.SPRAS_ID == spras)
+                      join t in db.TSOL_TREE
+                      on n.TSOL_ID equals t.TSOL_ID
+                      where n.TSOL.FACTURA && !n.TSOL_ID.StartsWith("O")
+                      select new { n.TSOL_ID, n.TXT020 }).DistinctBy(x=>x.TSOL_ID).DistinctBy(x=>x.TXT020).ToList();
+            ViewBag.TSOL_LIG = new SelectList(aa, "TSOL_ID", "TXT020", d.TSOL_LIG);
 
             return View(d);
         }
@@ -4651,11 +4672,13 @@ namespace TAT001.ControllersE
             "MONTO_BASE_NS_PCT_ML2,IMPUESTO,FECHAI_VIG,FECHAF_VIG,ESTATUS_EXT,SOLD_TO_ID,PAYER_ID,GRUPO_CTE_ID,CANAL_ID," +
             "MONEDA_ID,TIPO_CAMBIO,NO_FACTURA,FECHAD_SOPORTE,METODO_PAGO,NO_PROVEEDOR,PASO_ACTUAL,AGENTE_ACTUAL,FECHA_PASO_ACTUAL," +
             "VKORG,VTWEG,SPART,HORAC,FECHAC_PLAN,FECHAC_USER,HORAC_USER,CONCEPTO,PORC_ADICIONAL,PAYER_NOMBRE,PAYER_EMAIL," +
-            "MONEDAL_ID,MONEDAL2_ID,TIPO_CAMBIOL,TIPO_CAMBIOL2,DOCUMENTOP, DOCUMENTOF, DOCUMENTOREC, GALL_ID, USUARIOD_ID, OBJQ_PORC, DOCUMENTORAN")] DOCUMENTO dOCUMENTO,
+            "MONEDAL_ID,MONEDAL2_ID,TIPO_CAMBIOL,TIPO_CAMBIOL2,DOCUMENTOP, DOCUMENTOF, DOCUMENTOREC, GALL_ID, USUARIOD_ID, OBJQ_PORC, DOCUMENTORAN,TSOL_LIG")] DOCUMENTO dOCUMENTO,
                 IEnumerable<HttpPostedFileBase> files_soporte, string notas_soporte, string[] labels_soporte, string unafact,
                 string FECHAD_REV, string TREVERSA, string select_neg, string select_dis, string select_negi, string select_disi,
                 string bmonto_apoyo, string catmat, string txt_sop_borr, string txt_flujo, string chk_ligada)
         {
+            USUARIO user = db.USUARIOs.Find(User.Identity.Name);
+            string usuariotextos = user.SPRAS_ID;
             if (ModelState.IsValid)
             {
                 DOCUMENTO d = db.DOCUMENTOes.Find(dOCUMENTO.NUM_DOC);
@@ -4696,6 +4719,7 @@ namespace TAT001.ControllersE
                     //ADD RSG 20.08.2018-----------------------------START
 
                     d.ESTADO = dOCUMENTO.ESTADO;
+                    d.TSOL_LIG = dOCUMENTO.TSOL_LIG;
                     d.CIUDAD = dOCUMENTO.CIUDAD;
                     d.CONCEPTO = dOCUMENTO.CONCEPTO;
                     d.NOTAS = dOCUMENTO.NOTAS;
@@ -5726,7 +5750,7 @@ namespace TAT001.ControllersE
                             string image = Server.MapPath("~/images/logo_kellogg.png");
                             DOCUMENTO doc = db.DOCUMENTOes.Where(x => x.NUM_DOC == d.NUM_DOC).First();
                             string imageFlag = Server.MapPath("~/images/flags/mini/" + doc.PAIS_ID + ".png");
-                            em.enviaMailC(f.NUM_DOC, true, Session["spras"].ToString(), UrlDirectory, "Index", image, imageFlag);
+                            em.enviaMailC(f.NUM_DOC, true, usuariotextos, UrlDirectory, "Index", image, imageFlag);
 
 
                             if (conta.WORKFP.ACCION.TIPO == "B")
@@ -5848,6 +5872,13 @@ namespace TAT001.ControllersE
             ViewBag.df = DF;
             //LEJ 24.07.2018------------------------------------------------------------
             ViewBag.horaServer = DateTime.Now.Date.ToString().Split(new[] { ' ' }, 2)[1];//RSG 01.08.2018
+
+            var aa = (from n in db.TSOLTs.Where(x => x.SPRAS_ID == usuariotextos)
+                      join t in db.TSOL_TREE
+                      on n.TSOL_ID equals t.TSOL_ID
+                      where n.TSOL.FACTURA && !n.TSOL_ID.StartsWith("O")
+                      select new { n.TSOL_ID, n.TXT020 }).DistinctBy(x=>x.TSOL_ID).DistinctBy(x=>x.TXT020).ToList();
+            ViewBag.TSOL_LIG = new SelectList(aa, "TSOL_ID", "TXT020", dOCUMENTO.TSOL_LIG);
 
             return View(dOCUMENTO);
         }

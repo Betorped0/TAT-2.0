@@ -8,7 +8,7 @@
     var root = "@Url.Content("~")";
 </script>
 <link rel="stylesheet" type="text/css" href="~/Scripts/DataTables/datatables.min.css" />
-<script type="text/javascript"  src="~/Scripts/DataTables/datatables.min.js"></script>
+<script type="text/javascript" src="~/Scripts/DataTables/datatables.min.js"></script>
 <script src="~/Scripts/create.js"></script>
 <script src="~/Scripts/Solicitudes/comun.js"></script>
 <script src="~/Scripts/formatos.js"></script>
@@ -45,6 +45,8 @@ $(document).ready(function () {
 <span class="lbl_ccargo" style="display:none;"></span>
 <span class="lbl_cclear" style="display:none;"></span>
 <span class="lbl_cpayer" style="display:none;">Payer</span>
+<input type="hidden" id="txt_backorder" name="txt_backorder" value="@ViewBag.backorder" />
+<input type="hidden" id="txt_caso1" name="txt_caso1" value="@ViewBag.caso1" />
 @* ------------------------------------------------------------------------LEJ 09-07-18 *@
 <div class="row" style="margin-bottom:0">
     @{TAT001.Entities.USUARIO us = ViewBag.usuario;

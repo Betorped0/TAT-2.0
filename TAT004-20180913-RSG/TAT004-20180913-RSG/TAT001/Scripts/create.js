@@ -2108,6 +2108,10 @@ function copiarTableVista(update, borr, ne) { //Add MGC B20180705 2018.07.05 Cam
                 vol = volumen_real;
                 total = apoyo_real;
             }
+            if (isCaso1()) {
+                vol = volumen_est;
+                total = apoyo_est;
+            }
 
 
             var t = $('#table_dis').DataTable();
@@ -2154,6 +2158,9 @@ function copiarTableVista(update, borr, ne) { //Add MGC B20180705 2018.07.05 Cam
                 //if (vreversa == "preversa") {
                 reversa = vreversa;
                 //}
+            }
+            if (isCaso1()) {
+                reversa = "preversa";
             }
 
             var calculo = "";

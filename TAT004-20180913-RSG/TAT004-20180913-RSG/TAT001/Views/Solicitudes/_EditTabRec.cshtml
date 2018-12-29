@@ -9,9 +9,9 @@
                 <p>
                     @*<input type="hidden" value="@Model.DOCUMENTOREC.Count" id="valRec" />*@@*LEJ 31.07.2018---------------------*@
                     @*<label>
-                            <input id="check_recurrente" type="checkbox" onchange="cambiaRec(this)" />
-                            <span>Documento recurrente</span>
-                        </label>*@
+                <input id="check_recurrente" type="checkbox" onchange="cambiaRec(this)" />
+                <span>Documento recurrente</span>
+            </label>*@
                 </p>
                 <input type="hidden" id="txt_trec" />
                 <table class="table_rec display" id="table_rec" cellspacing="0" style="width:100%;display:none">
@@ -302,6 +302,12 @@
                             <option id="opt_ames" value="12">Anual</option> @*B20180801 MGC Textos*@
                         </select>
                         <label id="lbl_selnn" for="sel_nn">Frecuencia de liquidación / Orden de pago</label> @*B20180801 MGC Textos*@
+                    </div>
+                </p>
+                <p>
+                    <div class="input-field col l4 m4 s12">
+                        @Html.DropDownList("TSOL_LIG", null, "", htmlAttributes: new { @id = "TSOL_LIG", @class = "form-control  " })
+                        <label id="lbl_Mselnn" for="TSOL_LIG">Método de liquidación</label> @*B20180801 MGC Textos*@
                     </div>
                 </p>
             </div>

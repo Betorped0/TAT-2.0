@@ -202,6 +202,14 @@ namespace TAT001.Controllers
             {
                 NEGOCIACION2 nego = db.NEGOCIACION2.Find(nEGOCIACION.ID);
                 var proximaFecha = FnCommon.obtenerProximaFecha(nEGOCIACION, col["group1"]);
+
+                NEGOCIACION nn = db.NEGOCIACIONs.Find(1);
+                nn.FECHAI = new DateTime();
+                nn.FECHAF = proximaFecha;
+                nn.FECHAN = proximaFecha;
+                nn.ACTIVO = true;
+                db.Entry(nn).State = EntityState.Modified;
+
                 nego.FRECUENCIA_N = nEGOCIACION.FRECUENCIA_N;
                 nego.TITULO = nEGOCIACION.TITULO;
                 nego.FRECUENCIA = nEGOCIACION.FRECUENCIA;
