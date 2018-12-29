@@ -35,7 +35,7 @@
     </script>
 }
 
-@using (Html.BeginForm("ExportReporteTrackingTS", "Reportes", FormMethod.Post, new { @style = "display:inline;" }))
+@using (Html.BeginForm("ExportReporteTrackingTS", "Reportes", FormMethod.Post, new { id = "exportForm", @style = "display:inline;" }))
 {
     if (ViewBag.Display)
     {
@@ -47,9 +47,24 @@
                 <input type="hidden" name="selectedUsuarioF" value="@((ViewBag.selectedUsuarioF == null)?String.Empty:ViewBag.selectedUsuarioF)" />
                 <input type="hidden" name="selectedCliente" value="@((ViewBag.selectedCliente == null)?String.Empty:ViewBag.selectedCliente)" />
                 <input type="hidden" name="selectedTipoSolicitud" value="@((ViewBag.selectedTipoSolicitud == null)?String.Empty:ViewBag.selectedTipoSolicitud)" />
-                <button id="btnExport" name="excel" class="btn-small" type="submit">Exportar</button>
+                <input type="hidden" id="selectedsubfilters" name="selectedsubfilters" value="" />
+                <button id="btnExport" name="excel" class="btn-small" type="button">Exportar</button>
             </div>
         </div>
+        <script>
+            $(document).ready(function () {
+                $(document).on('click', '#btnExport', function () {
+                    $("#selectedsubfilters").val("");
+                    $("select.tablesorter-filter").each(function (index, element) {
+                        if ($("option:selected", this).attr('parsed') != undefined)
+                            $("#selectedsubfilters").val($("#selectedsubfilters").val() + $(this).attr('data-column') + "|ST|" + $("option:selected", this).val() + "|T,T|");
+                        else
+                            $("#selectedsubfilters").val($("#selectedsubfilters").val() + $(this).attr('data-column') + "|ST||T,T|");
+                    });
+                    $('#exportForm').submit();
+                });
+            });
+        </script>
     }
 }
 
@@ -443,36 +458,36 @@
                     @foreach (var itemvar in ViewBag.tabla_reporte)
                     {
                         TAT001.Models.ReportesModel.TrackingTS item = itemvar.GetType().GetProperty("tracking").GetValue(itemvar, null);
-                    <tr>
-                        <td>@item.CO_CODE </td>
-                        <td>@item.PAIS </td>
-                        @*<td onclick="document.location='@Url.Action(" Details", "Solicitudes" , new { id=item.NUMERO_SOLICITUD })'" style="cursor:pointer">@item.NUMERO_SOLICITUD </td>*@
-                        <td><a href="@Url.Action("Details", "Solicitudes", new { id = item.NUMERO_SOLICITUD })" style="cursor:pointer">@item.NUMERO_SOLICITUD </a></td>
-                        <td>@item.NUMERO_CLIENTE </td>
-                        <td>@item.CLIENTE </td>
-                        <td>@item.TIPO_SOLICITUD </td>
-                        <td>
-                            @{
-                                //string est = (Html.DisplayFor(modelItem => item.f.STATUS)).ToString();
+                        <tr>
+                            <td>@item.CO_CODE </td>
+                            <td>@item.PAIS </td>
+                            @*<td onclick="document.location='@Url.Action(" Details", "Solicitudes" , new { id=item.NUMERO_SOLICITUD })'" style="cursor:pointer">@item.NUMERO_SOLICITUD </td>*@
+                            <td><a href="@Url.Action("Details", "Solicitudes", new { id = item.NUMERO_SOLICITUD })" style="cursor:pointer">@item.NUMERO_SOLICITUD </a></td>
+                            <td>@item.NUMERO_CLIENTE </td>
+                            <td>@item.CLIENTE </td>
+                            <td>@item.TIPO_SOLICITUD </td>
+                            <td>
+                                @{
+                                    //string est = (Html.DisplayFor(modelItem => item.f.STATUS)).ToString();
 
-                                //TAT001.Services.Estatus c = new TAT001.Services.Estatus();
-                                //c.getText(est, item.NUMERO_SOLICITUD);
-                            }
-                            @*@c.getText(est, item.NUMERO_SOLICITUD)*@
-                            @item.STATUS_STRING
-                        </td>
-                        <td>@item.FECHA_STRING </td>
-                        <td>@item.HORA_STRING </td>
-                        <td>@item.TIEMPO_TRANSCURRIDO_STRING </td>
-                        <td>@item.SEMANA </td>
-                        <td>@item.PERIODO </td>
-                        <td>@item.ANIO </td>
-                        <td>@item.USUARIO </td>
-                        <td>@item.ROL </td>
-                        <td>@item.USUARIO_ACCION </td>
-                        <td>@item.COMENTARIO </td>
-                        <td>@item.NUMERO_CORRECCIONES_STRING </td>
-                    </tr>
+                                    //TAT001.Services.Estatus c = new TAT001.Services.Estatus();
+                                    //c.getText(est, item.NUMERO_SOLICITUD);
+                                }
+                                @*@c.getText(est, item.NUMERO_SOLICITUD)*@
+                                @item.STATUS_STRING
+                            </td>
+                            <td>@item.FECHA_STRING </td>
+                            <td>@item.HORA_STRING </td>
+                            <td>@item.TIEMPO_TRANSCURRIDO_STRING </td>
+                            <td>@item.SEMANA </td>
+                            <td>@item.PERIODO </td>
+                            <td>@item.ANIO </td>
+                            <td>@item.USUARIO </td>
+                            <td>@item.ROL </td>
+                            <td>@item.USUARIO_ACCION </td>
+                            <td>@item.COMENTARIO </td>
+                            <td>@item.NUMERO_CORRECCIONES_STRING </td>
+                        </tr>
                     }
                 </tbody>
             </table>

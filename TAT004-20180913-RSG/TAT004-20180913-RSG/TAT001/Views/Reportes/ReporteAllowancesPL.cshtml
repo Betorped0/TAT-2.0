@@ -37,7 +37,7 @@
     </script>
 }
 
-@using (Html.BeginForm("ExportReporteAllowancesPL", "Reportes", FormMethod.Post, new { @style = "display:inline;" }))
+@using (Html.BeginForm("ExportReporteAllowancesPL", "Reportes", FormMethod.Post, new { id = "exportForm", @style = "display:inline;" }))
 {
     if (ViewBag.Display)
     {
@@ -50,9 +50,24 @@
                 <input type="hidden" name="selectedcategory" value="@((ViewBag.selectedcategory == null)?String.Empty:ViewBag.selectedcategory)" />
                 <input type="hidden" name="selectedyear" value="@((ViewBag.selectedyear == null)?String.Empty:ViewBag.selectedyear)" />
                 <input type="hidden" name="selectedcanal" value="@((ViewBag.selectedcanal == null)?String.Empty:ViewBag.selectedcanal)" />
-                <button id="btnExport" name="excel" class="btn-small" type="submit">Exportar</button>
+                <input type="hidden" id="selectedsubfilters" name="selectedsubfilters" value="" />
+                <button id="btnExport" name="excel" class="btn-small" type="button">Exportar</button>
             </div>
         </div>
+        <script>
+            $(document).ready(function () {
+                $(document).on('click', '#btnExport', function () {
+                    $("#selectedsubfilters").val("");
+                    $("select.tablesorter-filter").each(function (index, element) {
+                        if ($("option:selected", this).attr('parsed') != undefined)
+                            $("#selectedsubfilters").val($("#selectedsubfilters").val() + $(this).attr('data-column') + "|ST|" + $("option:selected", this).val() + "|T,T|");
+                        else
+                            $("#selectedsubfilters").val($("#selectedsubfilters").val() + $(this).attr('data-column') + "|ST||T,T|");
+                    });
+                    $('#exportForm').submit();
+                });
+            });
+        </script>
     }
 }
 

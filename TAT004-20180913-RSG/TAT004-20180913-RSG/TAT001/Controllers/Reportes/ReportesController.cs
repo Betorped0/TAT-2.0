@@ -823,7 +823,19 @@ namespace TAT001.Controllers.Reportes
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_campo_97"))).FirstOrDefault().TEXTOS, "MontoProvision_STRING", true));
 
             var datos = GenerarConcentrado(Request["selectedcocode"], Request["selectedyear"], Request["selectedperiod"], Request["selectedpais"], Request["selectedcampos"]);
-            string nombreArchivo = ExcelExport.generarExcelHome(columnas, datos, "Concentrado", Server.MapPath(ExcelExport.getRuta()));
+            string[] subfiltros = Request["selectedsubfilters"].Split(new string[] { "|T,T|" }, StringSplitOptions.None);
+            string[] subfiltros_ordenado = subfiltros;
+            for (int index = 0; index < subfiltros.Length; index++)
+            {
+                string temp_subfiltro = subfiltros[index];
+                string[] subfiltroArray = temp_subfiltro.Split(new string[] { "|ST|" }, StringSplitOptions.None);
+                if (!String.IsNullOrEmpty(subfiltroArray[0]))
+                    if (subfiltroArray.Length < 2)
+                        subfiltros_ordenado[Convert.ToInt32(subfiltroArray[0])] = string.Empty;
+                    else
+                        subfiltros_ordenado[Convert.ToInt32(subfiltroArray[0])] = subfiltroArray[1];
+            }
+            string nombreArchivo = ExcelExport.generarExcel(columnas, datos, "Concentrado", Server.MapPath(ExcelExport.getRuta()), subfiltros_ordenado);
             return File(Server.MapPath(ExcelExport.getRuta() + nombreArchivo), "application /vnd.openxmlformats-officedocument.spreadsheetml.sheet", nombreArchivo);
         }
 
@@ -2029,7 +2041,19 @@ namespace TAT001.Controllers.Reportes
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_ALLOWANCE_TOTALES"))).FirstOrDefault().TEXTOS, "ALLOWANCE_TOTALES_STRING", true));
 
             var datos = GenerarAllowancesPL(Request["selectedcocode"], Request["selectedq"], Request["selectedperiod"], Request["selectedpayer"], Request["selectedcategory"], Request["selectedyear"], Request["selectedcanal"]);
-            string nombreArchivo = ExcelExport.generarExcelHome(columnas, datos, "AllowancesPL", Server.MapPath(ExcelExport.getRuta()));
+            string[] subfiltros = Request["selectedsubfilters"].Split(new string[] { "|T,T|" }, StringSplitOptions.None);
+            string[] subfiltros_ordenado = subfiltros;
+            for (int index = 0; index < subfiltros.Length; index++)
+            {
+                string temp_subfiltro = subfiltros[index];
+                string[] subfiltroArray = temp_subfiltro.Split(new string[] { "|ST|" }, StringSplitOptions.None);
+                if (!String.IsNullOrEmpty(subfiltroArray[0]))
+                    if (subfiltroArray.Length < 2)
+                        subfiltros_ordenado[Convert.ToInt32(subfiltroArray[0])] = string.Empty;
+                    else
+                        subfiltros_ordenado[Convert.ToInt32(subfiltroArray[0])] = subfiltroArray[1];
+            }
+            string nombreArchivo = ExcelExport.generarExcel(columnas, datos, "AllowancesPL", Server.MapPath(ExcelExport.getRuta()), subfiltros_ordenado);
             return File(Server.MapPath(ExcelExport.getRuta() + nombreArchivo), "application /vnd.openxmlformats-officedocument.spreadsheetml.sheet", nombreArchivo);
         }
 
@@ -2396,7 +2420,20 @@ namespace TAT001.Controllers.Reportes
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_KLCHUSD"))).FirstOrDefault().TEXTOS, "KLCH_USD_STRING"));
 
             var datos = GenerarAllowancesB(Request["selectedcocode"], Request["selectedquarter"], Request["selectedperiod"], Request["selectedyear"]);
-            string nombreArchivo = ExcelExport.generarExcelHome(columnas, datos, "AllowancesBalance", Server.MapPath(ExcelExport.getRuta()));
+            string[] subfiltros = Request["selectedsubfilters"].Split(new string[] { "|T,T|" }, StringSplitOptions.None);
+            string[] subfiltros_ordenado = subfiltros;
+            for(int index = 0; index < subfiltros.Length; index++)
+            {
+                string temp_subfiltro = subfiltros[index];
+                string[] subfiltroArray = temp_subfiltro.Split(new string[] { "|ST|" }, StringSplitOptions.None);
+                if(!String.IsNullOrEmpty(subfiltroArray[0]))
+                    if (subfiltroArray.Length < 2)
+                        subfiltros_ordenado[Convert.ToInt32(subfiltroArray[0])] = string.Empty;
+                    else
+                        subfiltros_ordenado[Convert.ToInt32(subfiltroArray[0])] = subfiltroArray[1];
+            }
+
+            string nombreArchivo = ExcelExport.generarExcel(columnas, datos, "AllowancesBalance", Server.MapPath(ExcelExport.getRuta()), subfiltros_ordenado);
             return File(Server.MapPath(ExcelExport.getRuta() + nombreArchivo), "application /vnd.openxmlformats-officedocument.spreadsheetml.sheet", nombreArchivo);
         }
 
@@ -2627,7 +2664,19 @@ namespace TAT001.Controllers.Reportes
             columnas.Add(new ExcelExportColumn(db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.CAMPO_ID.Equals("head_beneficio_USD"))).FirstOrDefault().TEXTOS, "BENEFICIO_IMPACTO_MRL_USD_STRING"));
 
             var datos = GenerarMRLTS(Request["selectedcocode"], Int32.Parse(Request["selecteddperiod"]), Int32.Parse(Request["selectedaperiod"]), Request["selectedyear"]);
-            string nombreArchivo = ExcelExport.generarExcelHome(columnas, datos, "MRLTS", Server.MapPath(ExcelExport.getRuta()));
+            string[] subfiltros = Request["selectedsubfilters"].Split(new string[] { "|T,T|" }, StringSplitOptions.None);
+            string[] subfiltros_ordenado = subfiltros;
+            for (int index = 0; index < subfiltros.Length; index++)
+            {
+                string temp_subfiltro = subfiltros[index];
+                string[] subfiltroArray = temp_subfiltro.Split(new string[] { "|ST|" }, StringSplitOptions.None);
+                if (!String.IsNullOrEmpty(subfiltroArray[0]))
+                    if (subfiltroArray.Length < 2)
+                        subfiltros_ordenado[Convert.ToInt32(subfiltroArray[0])] = string.Empty;
+                    else
+                        subfiltros_ordenado[Convert.ToInt32(subfiltroArray[0])] = subfiltroArray[1];
+            }
+            string nombreArchivo = ExcelExport.generarExcel(columnas, datos, "MRLTS", Server.MapPath(ExcelExport.getRuta()), subfiltros_ordenado);
             return File(Server.MapPath(ExcelExport.getRuta() + nombreArchivo), "application /vnd.openxmlformats-officedocument.spreadsheetml.sheet", nombreArchivo);
         }
 
@@ -2817,7 +2866,19 @@ namespace TAT001.Controllers.Reportes
             {
                 reporte.Add((TrackingTS)(dato.GetType().GetProperty("tracking").GetValue(dato, null)));
             }
-            string nombreArchivo = ExcelExport.generarExcelHome(columnas, reporte, "TrackingTS", Server.MapPath(ExcelExport.getRuta()));
+            string[] subfiltros = Request["selectedsubfilters"].Split(new string[] { "|T,T|" }, StringSplitOptions.None);
+            string[] subfiltros_ordenado = subfiltros;
+            for (int index = 0; index < subfiltros.Length; index++)
+            {
+                string temp_subfiltro = subfiltros[index];
+                string[] subfiltroArray = temp_subfiltro.Split(new string[] { "|ST|" }, StringSplitOptions.None);
+                if (!String.IsNullOrEmpty(subfiltroArray[0]))
+                    if (subfiltroArray.Length < 2)
+                        subfiltros_ordenado[Convert.ToInt32(subfiltroArray[0])] = string.Empty;
+                    else
+                        subfiltros_ordenado[Convert.ToInt32(subfiltroArray[0])] = subfiltroArray[1];
+            }
+            string nombreArchivo = ExcelExport.generarExcel(columnas, reporte, "TrackingTS", Server.MapPath(ExcelExport.getRuta()), subfiltros_ordenado);
             return File(Server.MapPath(ExcelExport.getRuta() + nombreArchivo), "application /vnd.openxmlformats-officedocument.spreadsheetml.sheet", nombreArchivo);
         }
 

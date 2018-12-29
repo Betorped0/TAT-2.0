@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<TAT001.Entities.DOCUMENTO>
 
 @{
-                /**/
+    /**/
 
-                //ViewBag.Title = "Páginas";
-                Layout = "~/Views/Shared/_Layout.cshtml";
-                ViewBag.pagina_r = 1100;
-                ViewBag.carpeta_r = 1106;
-                List<Tuple<decimal, decimal>> negAmount = new List<Tuple<decimal, decimal>>();
+    //ViewBag.Title = "Páginas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.pagina_r = 1100;
+    ViewBag.carpeta_r = 1106;
+    List<Tuple<decimal, decimal>> negAmount = new List<Tuple<decimal, decimal>>();
 }
 @if (!ViewBag.Display)
 {
@@ -33,7 +33,7 @@
     </script>
 }
 
-@using (Html.BeginForm("ExportReporteMRLTS", "Reportes", FormMethod.Post, new { @style = "display:inline;" }))
+@using (Html.BeginForm("ExportReporteMRLTS", "Reportes", FormMethod.Post, new { id = "exportForm", @style = "display:inline;" }))
 {
     if (ViewBag.Display)
     {
@@ -43,9 +43,24 @@
                 <input type="hidden" name="selecteddperiod" value="@((ViewBag.selecteddperiod == null)?String.Empty:ViewBag.selecteddperiod)" />
                 <input type="hidden" name="selectedaperiod" value="@((ViewBag.selectedaperiod == null)?String.Empty:ViewBag.selectedaperiod)" />
                 <input type="hidden" name="selectedyear" value="@((ViewBag.selectedyear == null)?String.Empty:ViewBag.selectedyear)" />
-                <button id="btnExport" name="excel" class="btn-small" type="submit">Exportar</button>
+                <input type="hidden" id="selectedsubfilters" name="selectedsubfilters" value="" />
+                <button id="btnExport" name="excel" class="btn-small" type="button">Exportar</button>
             </div>
         </div>
+        <script>
+            $(document).ready(function () {
+                $(document).on('click', '#btnExport', function () {
+                    $("#selectedsubfilters").val("");
+                    $("select.tablesorter-filter").each(function (index, element) {
+                        if ($("option:selected", this).attr('parsed') != undefined)
+                            $("#selectedsubfilters").val($("#selectedsubfilters").val() + $(this).attr('data-column') + "|ST|" + $("option:selected", this).val() + "|T,T|");
+                        else
+                            $("#selectedsubfilters").val($("#selectedsubfilters").val() + $(this).attr('data-column') + "|ST||T,T|");
+                    });
+                    $('#exportForm').submit();
+                });
+            });
+        </script>
     }
 }
 
@@ -359,36 +374,36 @@
                     @foreach (TAT001.Models.ReportesModel.MRLTS item in ViewBag.tabla_reporte)
                     {
                         // TAT001.Models.ReportesModel.MRLTS item = itemvar.GetType().GetProperty("renglon").GetValue(itemvar, null);
-                    <tr>
-                        <td>@item.CO_CODE </td>
-                        <td>@item.PAIS </td>
-                        <td><a href="@Url.Action("Details", "Solicitudes", new { id = item.NUMERO_SOLICITUD })" style="cursor:pointer">@item.NUMERO_SOLICITUD </a></td>
-                        <td>@item.FECHA_SOLICITUD_STRING </td>
-                        <td>@item.PERIODO_CONTABLE_STRING </td>
-                        <td>@item.ANIO_CONTABLE</td>
-                        <td>@item.NUMERO_DOCUMENTO_SAP </td>
-                        <td>@item.NUMERO_REVERSO_SAP </td>
-                        <td>@item.FECHA_REVERSO_STRING </td>
-                        <td>@item.PERIODO_CONTABLE_REVERSO </td>
-                        <td>@item.COMENTARIOS_REVERSO_PROVISION_STRING </td>
-                        <td>@item.TIPO_SOLICITUD </td>
-                        <td>@item.ESTATUS_STRING </td>
-                        <td>@item.CONCEPTO_SOLICITUD </td>
-                        <td>@item.DE_STRING </td>
-                        <td>@item.A_STRING </td>
-                        <td>@item.CLASIFICACION </td>
-                        <td>@item.NUMERO_CLIENTE </td>
-                        <td>@item.CLIENTE </td>
-                        <td>@item.MONTO_PROVISION_STRING </td>
-                        <td>@item.MONTO_NCOP_STRING </td>
-                        <td>@item.MONTO_REVERSO_STRING </td>
-                        <td>@item.BENEFICIO_IMPACTO_MRL_STRING </td>
-                        <td>@item.EXPENSE_RECOGNITION_STRING </td>
-                        <td>@item.MONTO_PROVISION_USD_STRING </td>
-                        <td>@item.MONTO_NCOP_USD_STRING </td>
-                        <td>@item.MONTO_REVERSO_USD_STRING </td>
-                        <td>@item.BENEFICIO_IMPACTO_MRL_USD_STRING </td>
-                    </tr>
+                        <tr>
+                            <td>@item.CO_CODE </td>
+                            <td>@item.PAIS </td>
+                            <td><a href="@Url.Action("Details", "Solicitudes", new { id = item.NUMERO_SOLICITUD })" style="cursor:pointer">@item.NUMERO_SOLICITUD </a></td>
+                            <td>@item.FECHA_SOLICITUD_STRING </td>
+                            <td>@item.PERIODO_CONTABLE_STRING </td>
+                            <td>@item.ANIO_CONTABLE</td>
+                            <td>@item.NUMERO_DOCUMENTO_SAP </td>
+                            <td>@item.NUMERO_REVERSO_SAP </td>
+                            <td>@item.FECHA_REVERSO_STRING </td>
+                            <td>@item.PERIODO_CONTABLE_REVERSO </td>
+                            <td>@item.COMENTARIOS_REVERSO_PROVISION_STRING </td>
+                            <td>@item.TIPO_SOLICITUD </td>
+                            <td>@item.ESTATUS_STRING </td>
+                            <td>@item.CONCEPTO_SOLICITUD </td>
+                            <td>@item.DE_STRING </td>
+                            <td>@item.A_STRING </td>
+                            <td>@item.CLASIFICACION </td>
+                            <td>@item.NUMERO_CLIENTE </td>
+                            <td>@item.CLIENTE </td>
+                            <td>@item.MONTO_PROVISION_STRING </td>
+                            <td>@item.MONTO_NCOP_STRING </td>
+                            <td>@item.MONTO_REVERSO_STRING </td>
+                            <td>@item.BENEFICIO_IMPACTO_MRL_STRING </td>
+                            <td>@item.EXPENSE_RECOGNITION_STRING </td>
+                            <td>@item.MONTO_PROVISION_USD_STRING </td>
+                            <td>@item.MONTO_NCOP_USD_STRING </td>
+                            <td>@item.MONTO_REVERSO_USD_STRING </td>
+                            <td>@item.BENEFICIO_IMPACTO_MRL_USD_STRING </td>
+                        </tr>
                     }
                 </tbody>
             </table>
