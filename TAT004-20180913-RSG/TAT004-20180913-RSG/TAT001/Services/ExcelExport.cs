@@ -28,7 +28,7 @@ namespace TAT001.Services
                         if(!string.IsNullOrEmpty(subfiltros[index]))
                         {
                             aplicarSubfiltros = true;
-                            valido[registro] = (data[registro].GetType().GetProperty(columnas[index].columnaDatos).GetValue(data[registro], null) == subfiltros[index]);
+                            valido[registro] = (data[registro].GetType().GetProperty(columnas[index].columnaDatos).GetValue(data[registro], null).ToString() == subfiltros[index].ToString());
                             if (!valido[registro])
                                 break;
                         }
