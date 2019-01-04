@@ -206,10 +206,10 @@ function Carga() {
         if (message === "" || message === null || message.endsWith('mes=')) {
             if (us1 !== "" && us1 !== "ni1=" && us1 !== null && us6 !== "" && us6 !== "ni6=" && us6 !== null) {
 
-                var table = $('#table').DataTable();
-                table.destroy();
                 habilitar();
                 var datos = $('#tabla').serializeArray();
+                var table = $('#table').DataTable();
+                table.destroy();
                 $.ajax({
                     type: "POST",
                     url: 'Agregar',
