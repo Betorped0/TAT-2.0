@@ -206,10 +206,10 @@ function Carga() {
         if (message === "" || message === null || message.endsWith('mes=')) {
             if (us1 !== "" && us1 !== "ni1=" && us1 !== null && us6 !== "" && us6 !== "ni6=" && us6 !== null) {
 
-                habilitar();
-                var datos = $('#tabla').serializeArray();
                 var table = $('#table').DataTable();
                 table.destroy();
+                habilitar();
+                var datos = $('#tabla').serializeArray();
                 $.ajax({
                     type: "POST",
                     url: 'Agregar',
@@ -346,7 +346,7 @@ function creart(metodo, datos, indx) {
                 var table = $('#table').DataTable();
                
                 if (metodo === "Comprobar") {
-                    $('#table tbody tr').get(indx).outerHTML=data;
+                    $('#table tbody tr').get(indx).innerHTML = data;
                 } else {
                     table.clear().draw();
                     $('#table').DataTable().destroy();
